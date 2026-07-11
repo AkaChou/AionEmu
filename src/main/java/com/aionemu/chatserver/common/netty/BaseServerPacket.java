@@ -1,92 +1,95 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.common.netty;
 
 /**
+ * 服务端出站网络包基类。
+ * Base class for outbound server network packets.
+ *
  * @author ATracer
  */
 public abstract class BaseServerPacket extends AbstractPacket {
 
     /**
-     * @param opCode
+     * 使用操作码创建服务端包。
+     * Creates a server packet with the given opcode.
+     *
+     * Opcode
      */
     public BaseServerPacket(int opCode) {
         super(opCode);
     }
 
     /**
-     * @param buf
-     * @param value
+     * 向缓冲区写入 int。
+     * Writes an int to the buffer.
+     *
+     * @param buf 数据包写入器 / Packet writer
+     * Integer value
      */
     protected final void writeD(PacketWriter buf, int value) {
         buf.writeD(value);
     }
 
     /**
-     * @param buf
-     * @param value
+     * 向缓冲区写入 short。
+     * Writes a short to the buffer.
+     *
+     * @param buf 数据包写入器 / Packet writer
+     * @param value 短整数值 / Short value
      */
     protected final void writeH(PacketWriter buf, int value) {
         buf.writeH(value);
     }
 
     /**
-     * @param buf
-     * @param value
+     * 向缓冲区写入 byte。
+     * Writes a byte to the buffer.
+     *
+     * @param buf 数据包写入器 / Packet writer
+     * Byte value
      */
     protected final void writeC(PacketWriter buf, int value) {
         buf.writeC(value);
     }
 
     /**
-     * Write double to buffer.
+     * 向缓冲区写入 double。
+     * Writes a double to the buffer.
      *
-     * @param buf
-     * @param value
+     * @param buf 数据包写入器 / Packet writer
+     * @param value 双精度值 / Double value
      */
     protected final void writeDF(PacketWriter buf, double value) {
         buf.writeDF(value);
     }
 
     /**
-     * Write float to buffer.
+     * 向缓冲区写入 float。
+     * Writes a float to the buffer.
      *
-     * @param buf
-     * @param value
+     * @param buf 数据包写入器 / Packet writer
+     * @param value 单精度值 / Float value
      */
     protected final void writeF(PacketWriter buf, float value) {
         buf.writeF(value);
     }
 
     /**
-     * @param buf
-     * @param data
+     * 向缓冲区写入字节数组。
+     * Writes a byte array to the buffer.
+     *
+     * @param buf 数据包写入器 / Packet writer
+     * @param data 字节数据 / Byte data
      */
     protected final void writeB(PacketWriter buf, byte[] data) {
         buf.writeB(data);
     }
 
     /**
-     * Write String to buffer
+     * 向缓冲区写入以 \\0 结尾的字符串。
+     * Writes a null-terminated string to the buffer.
      *
-     * @param buf
-     * @param text
+     * @param buf 数据包写入器 / Packet writer
+     * @param text 文本内容，可为 null / Text content, may be null
      */
     protected final void writeS(PacketWriter buf, String text) {
         if (text == null) {
@@ -101,8 +104,11 @@ public abstract class BaseServerPacket extends AbstractPacket {
     }
 
     /**
-     * @param buf
-     * @param data
+     * 向缓冲区写入 long。
+     * Writes a long to the buffer.
+     *
+     * @param buf 数据包写入器 / Packet writer
+     * @param data 长整数值 / Long value
      */
     protected final void writeQ(PacketWriter buf, long data) {
         buf.writeQ(data);

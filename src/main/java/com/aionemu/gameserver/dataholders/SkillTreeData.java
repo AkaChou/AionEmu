@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.skillengine.model.SkillLearnTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 技能树数据容器，按职业/阵营/等级哈希与技能 ID 双索引学习模板。
+ * Skill tree data holder, dual-indexing learn templates by class/race/level hash and skill id.
+ *
  * @author ATracer
  */
 @XmlRootElement(name = "skill_tree")
@@ -44,6 +31,10 @@ public class SkillTreeData {
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
 
+	/**
+	 * JAXB 反序列化完成后，将学习模板写入双索引并释放列表。
+	 * After JAXB unmarshalling, indexes learn templates into both maps and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SkillLearnTemplate template : skillTemplates) {
 			addTemplate(template);
@@ -74,20 +65,23 @@ public class SkillTreeData {
 	}
 
 	/**
-	 * @return the templates
+	 * 返回按职业/阵营/等级哈希索引的学习模板映射。
+	 * Returns the learn-template map indexed by class/race/level hash.
+	 *
+	 * @return 哈希到模板列表的映射 / map of hash to template list
 	 */
 	public IntObjectHashMap<ArrayList<SkillLearnTemplate>> getTemplates() {
 		return templates;
 	}
 
 	/**
-	 * Perform search for: - class specific skills (race = ALL) - class and race
-	 * specific skills - non-specific skills (race = ALL, class = ALL)
-	 * 
-	 * @param playerClass
-	 * @param level
-	 * @param race
-	 * @return SkillLearnTemplate[]
+	 * 查找可学习技能：职业+阵营专用、职业通用、全职业通用三类。
+	 * Finds learnable skills: class+race specific, class-only, and general (all class/race).
+	 *
+	 * player class
+	 * level
+	 * 阵营 / race
+	 * @return 匹配的学习模板数组 / matching learn templates
 	 */
 	public SkillLearnTemplate[] getTemplatesFor(PlayerClass playerClass, int level, Race race) {
 		List<SkillLearnTemplate> newSkills = new ArrayList<SkillLearnTemplate>();
@@ -111,6 +105,14 @@ public class SkillTreeData {
 		return newSkills.toArray(new SkillLearnTemplate[newSkills.size()]);
 	}
 
+	/**
+	 * 按技能 ID 返回全部学习模板。
+	 * Returns all learn templates for the given skill id.
+	 *
+	 * skill id
+	 *
+	 * @param skillId @return 学习模板数组 / learn template array
+	 */
 	public SkillLearnTemplate[] getTemplatesForSkill(int skillId) {
 		List<SkillLearnTemplate> searchSkills = new ArrayList<SkillLearnTemplate>();
 
@@ -121,10 +123,24 @@ public class SkillTreeData {
 		return searchSkills.toArray(new SkillLearnTemplate[searchSkills.size()]);
 	}
 
+	/**
+	 * 判断技能是否出现在技能树中（可学习）。
+	 * Returns whether the skill appears in the skill tree (is learnable).
+	 *
+	 * skill id
+	 *
+	 * @param skillId @return 是否可学习 / whether it is a learned skill
+	 */
 	public boolean isLearnedSkill(int skillId) {
 		return templatesById.get(skillId) != null;
 	}
 
+	/**
+	 * 返回全部学习模板条目总数。
+	 * Returns the total number of learn-template entries.
+	 *
+	 * @return 模板条目总数 / total entry count
+	 */
 	public int size() {
 		int size = 0;
 		for (Integer key : templates.keys()) {

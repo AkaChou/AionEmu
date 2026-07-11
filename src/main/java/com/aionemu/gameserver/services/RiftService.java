@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -43,19 +27,24 @@ import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.rift.RiftOpenRunnable;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
-
+ * 裂隙服务，管理世界裂隙开关、刷怪与定时计划。
+ * Rift service managing world rifts open/close, spawns, and schedules.
+ *
+ * @author Rinzler (Encom)
+ */
 public class RiftService {
 	private static volatile ObjectProvider<RiftService> instanceProvider;
 	private RiftSchedule riftSchedule;
+	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, RiftLocation> locations;
 	private final Lock closing = new ReentrantLock();
-	private static final int duration = CustomConfig.RIFT_DURATION;
 	private Map<Integer, RiftLocation> activeRifts = new HashMap<>();
 
+	/**
+	 * 初始化裂隙地点数据。
+	 * Initializes rift location data.
+	 */
 	public void initRiftLocations() {
 		if (CustomConfig.RIFT_ENABLED) {
 			locations = DataManager.RIFT_DATA.getRiftLocations();
@@ -64,17 +53,41 @@ public class RiftService {
 		}
 	}
 
+	/**
+	 * 初始化裂隙并加载定时计划。
+	 * Initializes rifts and loads the schedule.
+	 */
 	public void initRifts() {
-		if (CustomConfig.RIFT_ENABLED) {
-			riftSchedule = RiftSchedule.load();
+		reloadSchedule();
+	}
+
+	/**
+	 * 重载裂隙 Cron 计划（先取消旧任务）。
+	 * Reloads the rift cron schedule (cancels previous tasks first).
+	 */
+	public synchronized void reloadSchedule() {
+		RiftSchedule newSchedule = CustomConfig.RIFT_ENABLED ? RiftSchedule.load() : null;
+		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.clear();
+		riftSchedule = newSchedule;
+		if (riftSchedule != null) {
 			for (Rift rift : riftSchedule.getRiftsList()) {
 				for (String openTimes : rift.getOpenTime()) {
-					GameCronServices.cronService().schedule(new RiftOpenRunnable(rift.getWorldId()), openTimes);
+					Runnable task = new RiftOpenRunnable(rift.getWorldId());
+					scheduledTasks.add(task);
+					GameCronServices.cronService().schedule(task, openTimes);
 				}
 			}
 		}
 	}
 
+	/**
+	 * 校验裂隙 ID 或世界 ID 是否有效。
+	 * Validates whether the rift id or world id is valid.
+	 *
+	 * @param id 裂隙/世界 ID / rift or world id
+	 * whether valid
+	 */
 	public boolean isValidId(int id) {
 		if (isRift(id)) {
 			return getRiftLocations().keySet().contains(id);
@@ -92,6 +105,13 @@ public class RiftService {
 		return id < 10000;
 	}
 
+	/**
+	 * 按裂隙 ID 或世界 ID 开启裂隙。
+	 * Opens rifts by rift id or world id.
+	 *
+	 * @param id 裂隙 / 世界 ID / rift or world id
+	 * @return 是否成功开启 / whether opened
+	 */
 	public boolean openRifts(int id) {
 		if (isValidId(id)) {
 			if (isRift(id)) {
@@ -116,6 +136,13 @@ public class RiftService {
 		return false;
 	}
 
+	/**
+	 * 按裂隙 ID 或世界 ID 关闭裂隙。
+	 * Closes rifts by rift id or world id.
+	 *
+	 * @param id 裂隙 / 世界 ID / rift or world id
+	 * @return 是否成功关闭 / whether closed
+	 */
 	public boolean closeRifts(int id) {
 		if (isValidId(id)) {
 			if (isRift(id)) {
@@ -138,6 +165,12 @@ public class RiftService {
 		return false;
 	}
 
+	/**
+	 * 开启指定裂隙地点并在结束后自动关闭。
+	 * Opens the given rift location and auto-closes after duration.
+	 *
+	 * rift location
+	 */
 	public void openRifts(RiftLocation location) {
 		location.setOpened(true);
 		GameGameplayServices.riftManager().spawnRift(location);
@@ -152,9 +185,15 @@ public class RiftService {
 			public void run() {
 				closeRifts();
 			}
-		}, duration * 3600 * 1000);
+		}, CustomConfig.RIFT_DURATION * 3600 * 1000);
 	}
 
+	/**
+	 * 关闭单个裂隙地点并删除刷怪。
+	 * Closes a single rift location and deletes its spawns.
+	 *
+	 * rift location
+	 */
 	public void closeRift(RiftLocation location) {
 		location.setOpened(false);
 		for (VisibleObject npc : new ArrayList<VisibleObject>(location.getSpawned())) {
@@ -164,6 +203,10 @@ public class RiftService {
 		location.getSpawned().clear();
 	}
 
+	/**
+	 * 关闭全部活动裂隙。
+	 * Closes all active rifts.
+	 */
 	public void closeRifts() {
 		List<RiftLocation> rifts;
 		closing.lock();
@@ -178,18 +221,43 @@ public class RiftService {
 		}
 	}
 
+	/**
+	 * 获取裂隙持续时长（小时）。
+	 * Returns the rift duration in hours.
+	 *
+	 * @return 持续小时数 / duration hours
+	 */
 	public int getDuration() {
-		return duration;
+		return CustomConfig.RIFT_DURATION;
 	}
 
+	/**
+	 * 按 ID 获取裂隙地点。
+	 * Returns the rift location by id.
+	 *
+	 * @param id 地点 ID / location id
+	 * location
+	 */
 	public RiftLocation getRiftLocation(int id) {
 		return locations.get(id);
 	}
 
+	/**
+	 * 获取全部裂隙地点。
+	 * Returns all rift locations.
+	 *
+	 * locations map
+	 */
 	public Map<Integer, RiftLocation> getRiftLocations() {
 		return locations;
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring Provider）。
+	 * Returns the service singleton (prefers Spring provider).
+	 *
+	 * service instance
+	 */
 	public static RiftService getInstance() {
 		ObjectProvider<RiftService> provider = instanceProvider;
 		if (provider == null) {
@@ -198,6 +266,12 @@ public class RiftService {
 		return provider.getIfAvailable(() -> RiftServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<RiftService> instanceProvider) {
 		RiftService.instanceProvider = instanceProvider;
 	}

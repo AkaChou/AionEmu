@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -44,10 +28,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Rentus Base 副本 NPC AI：Infernal Kuhara The Volatile（@AIName "infernal_kuhara_the_volatile"），继承 AggressiveNpcAI2。
+ * Rentus Base instance NPC AI: Infernal Kuhara The Volatile (@AIName "infernal_kuhara_the_volatile"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("infernal_kuhara_the_volatile")
 public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 {
@@ -140,7 +126,7 @@ public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The Reian Quartermaster found an oil barrel.\nKuhara will be hurt if you make it explode.
+					// 雷安军需官发现油桶。\n 引爆可伤害库哈拉。 / The Reian Quartermaster found an oil barrel.\nKuhara will be hurt if you make it explode.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Kuhara_Barrel_Spawn, 0);
 				}
 			}
@@ -152,7 +138,7 @@ public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Kuhara used up all his energy. His defenses will be very weak for a short while.
+					// 库哈拉耗尽全部能量，防御将短��极��。 / Kuhara used up all his energy. His defenses will be very weak for a short while.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Kuhara_StatDown, 5000);
 				}
 			}

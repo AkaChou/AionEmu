@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
@@ -26,6 +12,9 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 
 /**
+ * 客户端包洪泛过滤器：按 opcode 配置最小间隔，支持热重载。
+ * Client packet flood filter: per-opcode min intervals with hot reload support.
+ *
  * @author KID
  */
 @Slf4j
@@ -34,6 +23,12 @@ public class PacketFloodFilter {
 	private static volatile ObjectProvider<PacketFloodFilter> instanceProvider;
 
 
+	/**
+	 * 获取过滤器单例（优先 Spring Provider）。
+	 * Returns the filter singleton (prefers Spring provider).
+	 *
+	 * @return 过滤器实例 / filter instance
+	 */
 	public static PacketFloodFilter getInstance() {
 		ObjectProvider<PacketFloodFilter> provider = instanceProvider;
 		if (provider == null) {
@@ -42,33 +37,63 @@ public class PacketFloodFilter {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
+	 * Injects Spring ObjectProvider to override the static singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<PacketFloodFilter> provider) {
 		instanceProvider = provider;
 	}
 
-	private int[] packets;
-	private short maxClientRequest = 0x2ff;
+	/**
+	 * 按 opcode 索引的最小请求间隔（毫秒）；0 表示不限制。
+	 * Min request interval ms by opcode; 0 means unlimited.
+	 */
+	private volatile int[] packets = new int[0x2ff];
 
+	/**
+	 * 构造并加载配置。
+	 * Constructs and loads configuration.
+	 */
 	public PacketFloodFilter() {
+		reload();
+	}
+
+	/**
+	 * 重新加载 pff.properties；加载失败时保留原表。
+	 * Reloads pff.properties; keeps previous table on load failure.
+	 */
+	public void reload() {
 		if (SecurityConfig.PFF_ENABLE) {
 			int cnt = 0;
-			packets = new int[maxClientRequest];
+			int[] reloadedPackets = new int[0x2ff];
 			try {
 				java.util.Properties props = PropertiesUtils.load(Config.configFile("administration/pff.properties").getPath());
 				for (Object key : props.keySet()) {
 					String str = (String) key;
-					packets[Integer.decode(str)] = Integer.valueOf(props.getProperty(str).trim());
+					reloadedPackets[Integer.decode(str)] = Integer.valueOf(props.getProperty(str).trim());
 					cnt++;
 				}
 			} catch (IOException e) {
-				log.error("Can't read pff.properties", e);
+				log.error(I18n.get("log.ee4945d40d71", e));
+				return;
 			}
-			log.info("PacketFloodFilter initialized with " + cnt + " packets.");
+			packets = reloadedPackets;
+			log.info(I18n.get("log.20b577511b63", cnt));
 		} else {
-			log.info("PacketFloodFilter disabled.");
+			packets = new int[0x2ff];
+			log.info(I18n.get("log.c044ce589649"));
 		}
 	}
 
+	/**
+	 * 返回当前 opcode 间隔表（热重载后引用可能变化）。
+	 * Returns the current opcode interval table (reference may change after reload).
+	 *
+	 * interval array
+	 */
 	public final int[] getPackets() {
 		return this.packets;
 	}

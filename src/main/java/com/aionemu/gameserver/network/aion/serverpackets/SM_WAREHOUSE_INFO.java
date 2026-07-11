@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 
 /**
+ * 同步仓库物品列表的服务端包（可分片发送）。
+ * Server packet that syncs a warehouse item list (may be sent in chunks).
+ *
  * @author kosyachok
  */
 public class SM_WAREHOUSE_INFO extends AionServerPacket {
@@ -37,6 +24,13 @@ public class SM_WAREHOUSE_INFO extends AionServerPacket {
 	private int expandLvl;
 	private Player player;
 
+	/**
+	 * @param items         仓库物品集合 / warehouse item collection
+	 * warehouse type
+	 * @param expandLvl     仓库扩展等级 / warehouse expand level
+	 * @param firstPacket   是否为首包 / whether this is the first packet
+	 * 玩家 / player
+	 */
 	public SM_WAREHOUSE_INFO(Collection<Item> items, int warehouseType, int expandLvl, boolean firstPacket,
 			Player player) {
 		this.warehouseType = warehouseType;
@@ -62,6 +56,12 @@ public class SM_WAREHOUSE_INFO extends AionServerPacket {
 		}
 	}
 
+	/**
+	 * 写出仓库物品信息。
+	 * Writes warehouse item info.
+	 *
+	 * item
+	 */
 	private void writeItemInfo(Item item) {
 		ItemTemplate itemTemplate = item.getItemTemplate();
 		writeD(item.getObjectId());

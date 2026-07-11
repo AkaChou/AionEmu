@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.trade;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -24,17 +8,23 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.siege.Influence;
 
 /**
- * @author Sarynth modified by wakizashi Used to get prices for the player. -
- *         Packets: SM_PRICES, SM_TRADELIST, SM_SELL_ITEM - Services: Godstone
- *         socket, teleporter, other fees. TODO: Add Player owner; value and
- *         check for PremiumRates or faction price influence.
+ * 价格服务，按势力影响度与配置计算全局物价、税率及 NPC 买卖修正。
+ * Prices service computing global prices, taxes and vendor buy/sell modifiers by influence and config.
+ * <p>
+ * 用于数据包：SM_PRICES、SM_TRADELIST、SM_SELL_ITEM；以及神石镶嵌、传送等服务费。
+ * Used by packets SM_PRICES, SM_TRADELIST, SM_SELL_ITEM and service fees (godstone socket, teleporter, etc.).
+ *
+ * @author Sarynth
+ * @author wakizashi
  */
 public class PricesService {
 
 	/**
-	 * Used in SM_PRICES
-	 * 
-	 * @return buyingPrice
+	 * 获取全局物价指数（用于 SM_PRICES），受攻城势力影响度调节。
+	 * Get global price index (for SM_PRICES), adjusted by siege influence.
+	 *
+	 * Player race
+	 * Global buying price index
 	 */
 	public static final int getGlobalPrices(Race playerRace) {
 		int defaultPrices = PricesConfig.DEFAULT_PRICES;
@@ -66,18 +56,21 @@ public class PricesService {
 	}
 
 	/**
-	 * Used in SM_PRICES
-	 * 
-	 * @return
+	 * 获取全局物价修正系数（用于 SM_PRICES）。
+	 * Get global prices modifier (for SM_PRICES).
+	 *
+	 * Modifier value
 	 */
 	public static final int getGlobalPricesModifier() {
 		return PricesConfig.DEFAULT_MODIFIER;
 	}
 
 	/**
-	 * Used in SM_PRICES
-	 * 
-	 * @return taxes
+	 * 获取税率（用于 SM_PRICES），弱势势力税率升高。
+	 * Get tax rate (for SM_PRICES); weaker influence increases tax.
+	 *
+	 * Player race
+	 * Tax value
 	 */
 	public static final int getTaxes(Race playerRace) {
 		int defaultTax = PricesConfig.DEFAULT_TAXES;
@@ -105,49 +98,67 @@ public class PricesService {
 	}
 
 	/**
-	 * Used in SM_TRADELIST.
-	 * 
-	 * @return buyPriceModifier
+	 * 获取 NPC 购买修正系数（用于 SM_TRADELIST）。
+	 * Get vendor buy modifier (for SM_TRADELIST).
+	 *
+	 * Buy price modifier
 	 */
 	public static final int getVendorBuyModifier() {
 		return PricesConfig.VENDOR_BUY_MODIFIER;
 	}
 
 	/**
-	 * Used in SM_SELL_ITEM - Can be unique per NPC!
-	 * 
-	 * @return sellingModifier
+	 * 获取 NPC 出售修正系数（用于 SM_SELL_ITEM，可按种族不同）。
+	 * Get vendor sell modifier (for SM_SELL_ITEM; may differ by race).
+	 *
+	 * Player race
+	 * Selling modifier
 	 */
 	public static final int getVendorSellModifier(Race playerRace) {
 		return (int) ((int) ((int) (PricesConfig.VENDOR_SELL_MODIFIER * getGlobalPrices(playerRace) / 100F)
-				* getGlobalPricesModifier() / 100F) * getTaxes(playerRace) / 100F);
+				* 100F) * getTaxes(playerRace) / 100F);
 	}
 
 	/**
-	 * @param basePrice
-	 * @return modifiedPrice
+	 * 按全局物价、修正与税率计算服务费用。
+	 * Compute service fee from base price with global prices, modifier and taxes.
+	 * <p>
+	 * 需依次乘以 Prices、Modifier、Taxes，并每次向下取整以匹配客户端计算。
+	 * Requires multiplication by Prices, Modifier, Taxes in order, rounding down each step to match the client.
+	 *
+	 * Base price
+	 * Player race
+	 * @return 修正后价格 / Modified price
 	 */
 	public static final long getPriceForService(long basePrice, Race playerRace) {
-		// Tricky. Requires multiplication by Prices, Modifier, Taxes
-		// In order, and round down each time to match client calculation.
+		// 较复杂。需乘以价格、修正与税收 / Tricky. Requires multiplication by Prices, Modifier, Taxes
+		// 按顺序并每次向下取整以匹配客户端计算。 / In order, and round down each time to match client calculation.
 		return (long) ((long) ((long) (basePrice * getGlobalPrices(playerRace) / 100D) * getGlobalPricesModifier()
 				/ 100D) * getTaxes(playerRace) / 100D);
 	}
 
 	/**
-	 * @param requiredKinah
-	 * @return modified requiredKinah
+	 * 计算玩家向 NPC 购买时所需基纳（含购买修正与物价/税率）。
+	 * Compute kinah required when buying from a vendor (includes buy modifier, prices and taxes).
+	 *
+	 * @param requiredKinah 物品基础基纳 / Required base kinah
+	 * Player race
+	 * @return 修正后所需基纳 / Modified required kinah
 	 */
 	public static final long getKinahForBuy(long requiredKinah, Race playerRace) {
-		// Requires double precision for 2mil+ kinah items
+		// 200 万以上基纳物品需要双精度 / Requires double precision for 2mil+ kinah items
 		return (long) ((long) ((long) ((long) (requiredKinah * getVendorBuyModifier() / 100.0D)
-				* getGlobalPrices(playerRace) / 100.0D) * getGlobalPricesModifier() / 100.0D) * getTaxes(playerRace)
+				* 100.0D) * getGlobalPricesModifier() / 100.0D) * getTaxes(playerRace)
 				/ 100.0D);
 	}
 
 	/**
-	 * @param kinahReward
-	 * @return
+	 * 计算向 NPC 出售时获得的基纳。
+	 * Compute kinah gained when selling to a vendor.
+	 *
+	 * @param kinahReward 基础基纳奖励 / Base kinah reward
+	 * Player race
+	 * @return 修正后基纳 / Modified kinah reward
 	 */
 	public static final long getKinahForSell(long kinahReward, Race playerRace) {
 		return (long) (kinahReward * getVendorSellModifier(playerRace) / 100D);

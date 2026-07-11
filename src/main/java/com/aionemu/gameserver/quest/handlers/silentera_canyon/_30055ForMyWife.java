@@ -8,8 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
- * @author Ritsu
+ * 寂静峡谷任务脚本：For My Wife（任务 ID 30055）。
+ * Silentera Canyon quest script: For My Wife (quest ID 30055).
  *
+ * @author Ritsu
  */
 public class _30055ForMyWife extends QuestHandler  {
 

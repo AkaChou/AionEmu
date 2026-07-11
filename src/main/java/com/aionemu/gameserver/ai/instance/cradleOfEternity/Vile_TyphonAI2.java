@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -37,10 +21,13 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author Rinzler, Ranastic (Encom)
-/****/
-
+/**
+ * Cradle Of Eternity 副本 NPC AI：Vile Typhon（@AIName "Vile_Typhon"），继承 AggressiveNpcAI2。
+ * Cradle Of Eternity instance NPC AI: Vile Typhon (@AIName "Vile_Typhon"), extends AggressiveNpcAI2.
+ *
+ * @author Rinzler
+ * @author Ranastic (Encom)
+ */
 @AIName("Vile_Typhon")
 public class Vile_TyphonAI2 extends AggressiveNpcAI2
 {

@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.effect.Effects;
+import com.aionemu.gameserver.skillengine.effect.FlyoffEffect;
 import com.aionemu.gameserver.skillengine.effect.HealOverTimeEffect;
 import org.junit.jupiter.api.Test;
 
@@ -62,6 +63,16 @@ class EffectTest {
 		heal.calculate(effect, HealType.MP);
 
 		assertEquals(1, effect.getSuccessEffect().size());
+	}
+
+	@Test
+	void flyoffUsesRetailSkillAddEffectType() {
+		Effect effect = new Effect(null, null, skillTemplate(), 1, 0);
+		effect.setIsForcedEffect(true);
+
+		new FlyoffEffect().calculate(effect);
+
+		assertEquals(SkillMoveType.FLYOFF, effect.getSkillMoveType());
 	}
 
 	private static SkillTemplate skillTemplate() {

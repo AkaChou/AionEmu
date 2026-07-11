@@ -6,6 +6,10 @@ import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.Equipmen
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 装备预设方案列表包：下发各槽位装备配置。
+ * Equipment preset list packet: per-slot equipment configurations.
+ */
 public class SM_EQUIPMENT_SETTING extends AionServerPacket {
 
 	private final Collection<EquipmentSetting> equipmentSettings;

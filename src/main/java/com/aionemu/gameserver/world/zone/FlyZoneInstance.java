@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -24,14 +8,32 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
+ * 飞行区域实例：进出时设置/清除 {@link ZoneType#FLY} 标记，并审计非法飞行离开。
+ * Fly zone instance: sets/clears the {@link ZoneType#FLY} flag on enter/leave, and audits illegal flying leave.
+ *
  * @author MrPoke
  */
 public class FlyZoneInstance extends ZoneInstance {
 
+	/**
+	 * 创建飞行区域实例。
+	 * Create a fly zone instance.
+	 *
+	 * map id
+	 * @param template 区域模板信息 / zone template info
+	 */
 	public FlyZoneInstance(int mapId, ZoneInfo template) {
 		super(mapId, template);
 	}
 
+	/**
+	 * 进入飞行区并设置 FLY 区域类型。
+	 * Enter fly zone and set the FLY zone type.
+	 *
+	 * creature
+	 *
+	 * @param creature @return 是否成功进入 / whether enter succeeded
+	 */
 	@Override
 	public synchronized boolean onEnter(Creature creature) {
 		if (super.onEnter(creature)) {
@@ -42,6 +44,14 @@ public class FlyZoneInstance extends ZoneInstance {
 		}
 	}
 
+	/**
+	 * 离开飞行区并清除 FLY 区域类型；若仍处于飞行状态则记录审计。
+	 * Leave fly zone and clear the FLY zone type; audit if still flying.
+	 *
+	 * creature
+	 *
+	 * @param creature @return 是否成功离开 / whether leave succeeded
+	 */
 	@Override
 	public synchronized boolean onLeave(Creature creature) {
 		if (super.onLeave(creature)) {

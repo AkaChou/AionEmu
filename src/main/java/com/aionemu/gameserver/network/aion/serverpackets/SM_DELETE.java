@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -21,32 +5,27 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * This packet is informing client that some AionObject is no longer visible.
+ * 可见对象删除包：通知客户端某 AionObject 不再可见，并控制移除动画速度。
+ * Informs the client that an AionObject is no longer visible, with removal animation speed.
  *
  * @author -Nemesiss-
  * @update FrozenKiller
  */
 public class SM_DELETE extends AionServerPacket {
 
-	/**
-	 * Object that is no longer visible.
-	 */
+	/** 不再可见的对象 ID / object id no longer visible */
 	private final int objectId;
 	private final int time;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param object
+	 * @param object 将从客户端视野移除的对象 / object to despawn on the client
+	 * @param time   移除动画速度；15 为特殊值 / removal animation speed; 15 is a special value
 	 */
 	public SM_DELETE(AionObject object, int time) {
 		this.objectId = object.getObjectId();
 		this.time = time;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeD(objectId);

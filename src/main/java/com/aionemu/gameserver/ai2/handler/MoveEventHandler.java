@@ -1,30 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 
 /**
+ * 移动事件处理器，负责移动校验与到达目标时的后续处理。
+ * Handles move events: move validation and arrival handling.
+ *
  * @author ATracer Rework: Angry Catster
  */
 public class MoveEventHandler {
 
 	/**
-	 * @param npcAI
+	 * 移动校验：通知控制器移动，并检查目标是否过远。
+	 * Validates movement: notifies controller of move and checks if the target is too far.
+	 *
+	 * NPC AI instance
 	 */
 	public static final void onMoveValidate(NpcAI2 npcAI) {
 		npcAI.getOwner().getController().onMove();
@@ -32,7 +22,10 @@ public class MoveEventHandler {
 	}
 
 	/**
-	 * @param npcAI
+	 * 移动到达：通知控制器移动，并处理目标已到达。
+	 * Handles arrival: notifies controller of move and processes target reached.
+	 *
+	 * NPC AI instance
 	 */
 	public static final void onMoveArrived(NpcAI2 npcAI) {
 		npcAI.getOwner().getController().onMove();

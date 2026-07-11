@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -24,12 +8,18 @@ import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.utils.stats.CalculationType;
 
+/**
+ * PhysicalAttack 函数，用于属性相关逻辑。
+ * Physical Attack Function for stats logic.
+ */
+
 class PhysicalAttackFunction extends StatFunction {
 
 	PhysicalAttackFunction() {
 		stat = StatEnum.PHYSICAL_ATTACK;
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat, CalculationType... calculationTypes) {
 		float power = stat.getOwner().getGameStats().getPower().getCurrent();
@@ -41,6 +31,7 @@ class PhysicalAttackFunction extends StatFunction {
 		stat.setBaseRate(power / 100f);
 	}
 
+	/** 返回 priority / Returns the priority */
 	@Override
 	public int getPriority() {
 		return 30;

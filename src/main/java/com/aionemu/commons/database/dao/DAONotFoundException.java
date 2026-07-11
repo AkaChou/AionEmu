@@ -1,10 +1,10 @@
 package com.aionemu.commons.database.dao;
 
 /**
- * DAO未找到异常
+ * DAO 未找到异常
  * DAO Not Found Exception
  *
- * 当请求的DAO实现类未找到时抛出此异常。
+ * 当请求的 DAO 实现类未找到时抛出此异常。
  * This exception is thrown when the requested DAO implementation
  * cannot be found in the DAO registry.
  *
@@ -14,7 +14,7 @@ package com.aionemu.commons.database.dao;
 public class DAONotFoundException extends DAOException {
 
     /**
-     * 序列化版本ID
+ * 序列化版本 ID
      * Serialization version ID
      */
     private static final long serialVersionUID = 4241980426435305296L;
@@ -30,7 +30,7 @@ public class DAONotFoundException extends DAOException {
      * 使用指定的错误消息构造异常
      * Constructs exception with specified message
      *
-     * @param message 错误消息 / Error message
+     * Error message
      */
     public DAONotFoundException(String message) {
         super(message);
@@ -40,7 +40,7 @@ public class DAONotFoundException extends DAOException {
      * 使用指定的错误消息和原因构造异常
      * Constructs exception with specified message and cause
      *
-     * @param message 错误消息 / Error message
+     * Error message
      * @param cause 异常原因 / Cause of exception
      */
     public DAONotFoundException(String message, Throwable cause) {

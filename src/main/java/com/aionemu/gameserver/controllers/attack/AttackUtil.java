@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.attack;
 
 import java.util.ArrayList;
@@ -45,12 +29,21 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 攻击伤害与命中状态计算工具类。
+ * Utility for attack damage and hit-status calculations.
+ *
  * @author ATracer
  */
 public class AttackUtil {
 
 	/**
-	 * Calculate physical attack result for auto attacks
+	 * 计算物理自动攻击的结果列表。
+	 * Calculates physical auto-attack results.
+	 *
+	 * attacker
+	 * attacked
+	 *
+	 * @return 攻击结果列表 / list of attack results
 	 */
 	public static List<AttackResult> calculateAutoAttackPhysical(Creature attacker, Creature attacked) {
 	    List<AttackResult> attackList = new ArrayList<>();
@@ -70,6 +63,15 @@ public class AttackUtil {
 	    return attackList;
 	}
 
+	/**
+	 * 应用物理自动攻击的防御与修正后伤害。
+	 * Applies physical auto-attack defense and damage adjustments.
+	 *
+	 * attacker
+	 * attacked
+	 * raw damage
+	 * @return 修正后伤害 / adjusted damage
+	 */
 	private static float applyPhysicalAutoAttackModifiers(Creature attacker, Creature attacked, float damage) {
 		float pDef = attacked.getGameStats().getPDef().getBonus() + StatFunctions.getMovementModifier(attacked,
 				StatEnum.PHYSICAL_DEFENSE, attacked.getGameStats().getPDef().getBase());
@@ -80,6 +82,14 @@ public class AttackUtil {
 		return StatFunctions.adjustDamages(attacker, attacked, damage, 0, true, SkillElement.NONE);
 	}
 
+	/**
+	 * 返回物理武器本次攻击的命中段数。
+	 * Returns the hit count for a physical weapon attack.
+	 *
+	 * attacker
+	 * whether main hand
+	 * hit count
+	 */
 	private static int getPhysicalHitCount(Creature attacker, boolean mainHand) {
 		if (!(attacker instanceof Player)) {
 			return 1;
@@ -89,6 +99,12 @@ public class AttackUtil {
 		return weapon == null ? 1 : Rnd.get(1, weapon.getItemTemplate().getWeaponStats().getHitCount());
 	}
 
+	/**
+	 * 对结果列表应用全局伤害倍率，并保证非闪避命中至少为 1。
+	 * Applies the global damage multiplier; non-dodge hits are at least 1.
+	 *
+	 * @param attackList 攻击结果列表 / attack result list
+	 */
 	private static void applyDamageMultiplier(List<AttackResult> attackList) {
 		for (AttackResult result : attackList) {
 			AttackStatus status = result.getAttackStatus();
@@ -101,6 +117,14 @@ public class AttackUtil {
 		}
 	}
 
+	/**
+	 * 若任一方为 NPC，则按 AI 修正结果列表中的伤害。
+	 * If either side is an NPC, adjusts damages via AI hooks.
+	 *
+	 * attacker
+	 * attacked
+	 * @param attackResults 攻击结果列表 / attack results
+	 */
 	private static void modifyDamageByNpcAi(Creature attacker, Creature attacked, List<AttackResult> attackResults) {
 		if (!(attacker instanceof Npc || attacked instanceof Npc)) {
 			return;
@@ -110,6 +134,15 @@ public class AttackUtil {
 		}
 	}
 
+	/**
+	 * 按 NPC AI 修正单次伤害。
+	 * Adjusts a single damage value via NPC AI hooks.
+	 *
+	 * attacker
+	 * attacked
+	 * raw damage
+	 * @return 修正后伤害 / adjusted damage
+	 */
 	private static int modifyDamageByNpcAi(Creature attacker, Creature attacked, int damage) {
 		if (attacker instanceof Npc) {
 			damage = attacker.getAi2().modifyOwnerDamage(damage);
@@ -121,9 +154,12 @@ public class AttackUtil {
 	}
 
 	/**
-	 * 计算格挡后的伤害 - 官服5.8机制
-	 * 盾牌防御伤害削减为70%（橙色盾牌+10以上），武器防御伤害削减为40%
-	 * 盾牌有最大防御值（伤害承受上限）限制，过载时按最大值计算
+	 * 计算格挡后的伤害（官服 5.8 机制：盾牌/武器减伤与盾牌上限）。
+	 * Calculates blocked damage (retail 5.8: shield/weapon reduce and shield max block).
+	 *
+	 * attacked
+	 * raw damage
+	 * @return 格挡后伤害 / damage after block
 	 */
 	private static int calculateBlockedDamage(Creature attacked, int damage) {
 		// 检查是否有盾牌
@@ -167,6 +203,17 @@ public class AttackUtil {
 		return damage;
 	}
 
+	/**
+	 * 计算魔法自动攻击结果。
+	 * Calculates magical auto-attack results.
+	 *
+	 * attacker
+	 * attacked
+	 * @param elem 技能元素 / skill element
+	 * calculation types
+	 *
+	 * @return 攻击结果列表 / list of attack results
+	 */
 	public static List<AttackResult> calculateMagAttackResult(Creature attacker, Creature attacked, SkillElement elem,
 			CalculationType... calculationTypes) {
 		AttackStatus status = calculateMagicalStatus(attacker, attacked, 100, false, true);
@@ -179,6 +226,15 @@ public class AttackUtil {
 		return attackList;
 	}
 
+	/**
+	 * 应用魔法自动攻击的防御、暴击与元素修正。
+	 * Applies magical auto-attack defense, critical and element adjustments.
+	 *
+	 * attacker
+	 * attacked
+	 * @param elem 技能元素 / skill element
+	 * @param attackList 攻击结果列表 / attack result list
+	 */
 	private static void applyMagicalAutoAttackModifiers(Creature attacker, Creature attacked, SkillElement elem,
 			List<AttackResult> attackList) {
 		for (AttackResult result : attackList) {
@@ -198,6 +254,14 @@ public class AttackUtil {
 		}
 	}
 
+	/**
+	 * 按武器命中段数追加额外物理命中。
+	 * Appends extra physical hits based on weapon hit count.
+	 *
+	 * attacker
+	 * attack status
+	 * @param attackList 攻击结果列表 / attack result list
+	 */
 	private static void applyAdditionalHitCount(Creature attacker, AttackStatus status, List<AttackResult> attackList) {
 		if (!(attacker instanceof Player) || status == AttackStatus.DODGE || status == AttackStatus.RESIST) {
 			return;
@@ -217,65 +281,57 @@ public class AttackUtil {
 	}
 
 	/**
-	 * 技能随机伤害计算 - 参考4.8项目
+	 * 按真端随机伤害表的 20 个等概率区间对技能伤害做波动。
+	 * Randomizes skill damage using the retail table's 20 equally likely ranges.
+	 *
+	 * @param randomDamageType 随机伤害类型 / random damage type
+	 * raw damage
+	 * @return 波动后伤害 / randomized damage
 	 */
 	private static float randomizeDamage(int randomDamageType, float damage) {
-		int randomChance = Rnd.get(100);
+		return damage * getRandomDamagePercent(randomDamageType, Rnd.get(20)) / 100f;
+	}
+
+	static int getRandomDamagePercent(int randomDamageType, int range) {
 		switch (randomDamageType) {
 		case 1:
-			if (randomChance <= 35) {
-				damage *= 0.5f;
-			} else if (randomChance <= 70) {
-				// 保持不变
-			} else {
-				damage *= 1.5f;
-			}
-			break;
+			return range < 7 ? 50 : range < 13 ? 100 : 150;
 		case 2:
-			if (randomChance <= 70) {
-				damage *= 0.6f;
-			} else {
-				damage *= 2.0f;
-			}
-			break;
+			return range < 14 ? 60 : 200;
 		case 3:
-			if (randomChance <= 35) {
-				damage *= 0.9f;
-			} else if (randomChance <= 70) {
-				// 保持不变
-			} else {
-				damage *= 1.1f;
-			}
-			break;
+			return range < 7 ? 90 : range < 13 ? 100 : 110;
 		case 6:
-			if (randomChance > 70) {
-				damage *= 2.0f;
-			}
-			break;
-		case 4:
-		case 5:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-			// 无伤害波动
-			break;
+			return range < 14 ? 100 : 200;
 		default:
-			damage *= (Rnd.get(25, 100) * 0.02f);
-			break;
+			return 100;
 		}
-		return damage;
 	}
 
 	/**
-	 * Calculate physical attack status and damage
+	 * 计算物理攻击状态与伤害（委托自动攻击计算）。
+	 * Calculates physical attack status and damage (delegates to auto-attack).
+	 *
+	 * attacker
+	 * attacked
+	 *
+	 * @return 攻击结果列表 / list of attack results
 	 */
 	public static List<AttackResult> calculatePhysicalAttackResult(Creature attacker, Creature attacked) {
 	    return calculateAutoAttackPhysical(attacker, attacked);
 	}
 
 	/**
-	 * Generate attack results based on weapon hit count
+	 * 按武器命中段数拆分物理伤害并生成攻击结果。
+	 * Splits physical damage by weapon hit count into attack results.
+	 *
+	 * attacker
+	 * attacked
+	 * whether main hand
+	 * hit count
+	 * total damage
+	 * attack status
+	 * @param attackList 结果列表（输出） / output result list
+	 * attack result list
 	 */
 	private static final List<AttackResult> splitPhysicalDamage(final Creature attacker, final Creature attacked,
 			boolean mainHand, int hitCount, int damage, AttackStatus status, List<AttackResult> attackList) {
@@ -316,7 +372,7 @@ public class AttackUtil {
 						: ((Player) attacker).getEquipment().getOffHandWeaponType();
 				damage = (int) calculateWeaponCritical(attacked, damage, weaponType,
 						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
-				// Proc Stumble/Stagger on Crit calculation
+				// 暴击时触发绊倒/踉跄计算 / Proc Stumble/Stagger on Crit calculation
 				if (mainHand) {
 					applyEffectOnCritical((Player) attacker, attacked, 0);
 				}
@@ -339,6 +395,14 @@ public class AttackUtil {
 		return attackList;
 	}
 
+	/**
+	 * 将总伤害拆分为多段命中伤害数组。
+	 * Splits total damage into per-hit damage values.
+	 *
+	 * hit count
+	 * total damage
+	 * per-hit damages
+	 */
 	static int[] splitPhysicalDamageValues(int hitCount, int damage) {
 		int[] hitDamages = new int[Math.max(1, hitCount)];
 		hitDamages[0] = damage;
@@ -349,23 +413,47 @@ public class AttackUtil {
 	}
 
 	/**
-	 * @param attacked
-	 * @param damages
-	 * @param weaponType
-	 * @param stat
-	 * @return
+	 * 计算武器暴击伤害（无额外暴击伤害加成）。
+	 * Calculates weapon critical damage (no extra crit add).
+	 *
+	 * attacked
+	 * raw damage
+	 * weapon type
+	 * @param stat 暴击减伤属性 / critical damage reduce stat
+	 * @return 暴击后伤害 / damage after critical
 	 */
 	private static float calculateWeaponCritical(Creature attacked, float damages, WeaponType weaponType,
 			StatEnum stat) {
 		return calculateWeaponCritical(attacked, damages, weaponType, 0, stat);
 	}
 
+	/**
+	 * 计算武器暴击伤害（含额外暴击伤害加成）。
+	 * Calculates weapon critical damage including extra crit add.
+	 *
+	 * attacked
+	 * raw damage
+	 * weapon type
+	 * @param critAddDmg 额外暴击伤害 / extra critical damage
+	 * @param stat 暴击减伤属性 / critical damage reduce stat
+	 * @return 暴击后伤害 / damage after critical
+	 */
 	private static float calculateWeaponCritical(Creature attacked, float damages, WeaponType weaponType,
 			int critAddDmg, StatEnum stat) {
 		int fortitude = attacked instanceof Player ? attacked.getGameStats().getStat(stat, 0).getCurrent() : 0;
 		return Math.round(damages * calculateWeaponCriticalMultiplier(weaponType, stat, fortitude, critAddDmg));
 	}
 
+	/**
+	 * 计算武器暴击倍率系数。
+	 * Calculates the weapon critical damage multiplier.
+	 *
+	 * weapon type
+	 * @param stat 暴击减伤属性 / critical damage reduce stat
+	 * @param fortitude 坚韧/暴击减伤当前值 / fortitude current value
+	 * @param critAddDmg 额外暴击伤害 / extra critical damage
+	 * critical multiplier
+	 */
 	static float calculateWeaponCriticalMultiplier(WeaponType weaponType, StatEnum stat, int fortitude, int critAddDmg) {
 		float coefficient = 1.5f;
 		if (stat == StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE && weaponType != null) {
@@ -391,18 +479,21 @@ public class AttackUtil {
 	}
 
 	/**
-	 * @param effect
-	 * @param skillDamage
-	 * @param modifier     (damage from modifiers)
-	 * @param func         (add/percent)
-	 * @param randomDamage
-	 * @param accMod
-	 * @param criticalProb
-	 * @param critAddDmg
-	 * @param cannotMiss
-	 * @param shared
-	 * @param ignoreShield
-	 * @param isMainHand
+	 * 计算技能物理/主攻结果，写入 Effect 的伤害与攻击状态。
+	 * Calculates skill physical/main-attack result and writes damage/status into the Effect.
+	 *
+	 * effect
+	 * skill damage
+	 * @param modifier 伤害修正器 / damage modifier
+	 * @param func 加成方式（加算/百分比） / add or percent function
+	 * @param randomDamage 随机伤害类型 / random damage type
+	 * accuracy modifier
+	 * critical probability
+	 * @param critAddDmg 额外暴击伤害 / extra critical damage
+	 * @param cannotMiss 是否不可未命中 / whether cannot miss
+	 * @param shared 是否分摊伤害 / whether damage is shared
+	 * @param ignoreShield 是否忽略护盾 / whether to ignore shield
+	 * whether main hand
 	 */
 	public static void calculateSkillResult(Effect effect, int skillDamage, ActionModifier modifier, Func func,
 			int randomDamage, int accMod, int criticalProb, int critAddDmg, boolean cannotMiss, boolean shared,
@@ -413,12 +504,8 @@ public class AttackUtil {
 		float damage = 0;
 		int baseAttack = 0;
 		/**
-		 * - Some Archdaeva equipment will give boosted combat stats against certain
-		 * monster types. - If the gear and the monster type match, you will get bonus
-		 * damage. - Some items focus on a single monster type while others can affect
-		 * multiple types. - There are four monster types in total: Warrior, Assassin,
-		 * Mage, and Special.
-		 */
+	 * 部分高阶守护者装备对特定怪物类型提供战斗属性加成。 / - Some Archdaeva equipment will give boosted combat stats against certain monster types. - If the gear and the monster type match, you will get bonus damage. - Some items focus on a single monster type while others can affect multiple types. - There are four monster types in total: Warrior, Assassin, Mage, and Special
+	 */
 		if (effector.getEffectController().hasAbnormalEffect(22987)
 				&& effector.getEffectController().hasAbnormalEffect(22988)
 				&& effector.getEffectController().hasAbnormalEffect(22989)
@@ -454,7 +541,7 @@ public class AttackUtil {
 					effector.getAttackType().getMagicalElement(), isMainHand);
 		}
 
-		// add skill damage
+		// 添加技能伤害 / add skill damage
 		if (func != null) {
 			switch (func) {
 			case ADD:
@@ -468,7 +555,7 @@ public class AttackUtil {
 			}
 		}
 
-		// add bonus damage
+		// 添加额外伤害 / add bonus damage
 		if (modifier != null) {
 			int bonus = modifier.analyze(effect);
 			switch (modifier.getFunc()) {
@@ -486,7 +573,7 @@ public class AttackUtil {
 		float damageMultiplier = effector.getObserveController().getBasePhysicalDamageMultiplier(true);
 		damage = Math.round(damage * damageMultiplier);
 
-		// implementation of random damage for skills like Stunning Shot, etc
+		// 眩晕射击等技能的随机伤害实现 / implementation of random damage for skills like Stunning Shot, etc
 		if (randomDamage > 0) {
 			// 【修复】使用 randomizeDamage 方法计算随机伤害
 			damage = randomizeDamage(randomDamage, damage);
@@ -497,7 +584,7 @@ public class AttackUtil {
 				WeaponType weaponType = ((Player) effector).getEquipment().getMainHandWeaponType();
 				damage = (int) calculateWeaponCritical(effected, damage, weaponType, critAddDmg,
 						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
-				// Proc Stumble/Stagger on Crit calculation
+				// 暴击时触发绊倒/踉跄计算 / Proc Stumble/Stagger on Crit calculation
 				applyEffectOnCritical((Player) effector, effected, effect.getSkillId());
 			} else {
 				damage = (int) calculateWeaponCritical(effected, damage, null, critAddDmg,
@@ -545,11 +632,15 @@ public class AttackUtil {
 	}
 
 	/**
-	 * @param effect
-	 * @param effected
-	 * @param damage
-	 * @param status
-	 * @param hitType
+	 * 将伤害结果写回 Effect，并可选触发护盾检测。
+	 * Writes the damage result back into the Effect and optionally checks shields.
+	 *
+	 * effect
+	 * effected
+	 * damage
+	 * attack status
+	 * hit type
+	 * @param ignoreShield 是否忽略护盾 / whether to ignore shield
 	 */
 	private static void calculateEffectResult(Effect effect, Creature effected, int damage, AttackStatus status,
 			HitType hitType, boolean ignoreShield) {
@@ -573,21 +664,23 @@ public class AttackUtil {
 	}
 
 	/**
-	 * @param effect
-	 * @param skillDamage
-	 * @param element
-	 * @param position
-	 * @param useMagicBoost
-	 * @param criticalProb
-	 * @param critAddDmg
-	 * @return
+	 * 计算持续魔法技能（DoT）的单次伤害。
+	 * Calculates a single tick of magical over-time (DoT) skill damage.
+	 *
+	 * effect
+	 * skill damage
+	 * skill element
+	 * tick position
+	 * @param useMagicBoost 是否使用魔法增强 / whether to use magic boost
+	 * critical probability
+	 * @param critAddDmg 额外暴击伤害 / extra critical damage
+	 * tick damage
 	 */
 	public static int calculateMagicalOverTimeSkillResult(Effect effect, int skillDamage, SkillElement element,
 			int position, boolean useMagicBoost, int criticalProb, int critAddDmg) {
 		Creature effector = effect.getEffector();
 		Creature effected = effect.getEffected();
 
-		// TODO is damage multiplier used on dot?
 		float damageMultiplier = effector.getObserveController().getBaseMagicalDamageMultiplier();
 
 		int damage = Math.round(StatFunctions.calculateMagicalSkillDamage(effect.getEffector(), effect.getEffected(),
@@ -595,7 +688,7 @@ public class AttackUtil {
 				* damageMultiplier);
 
 		AttackStatus status = effect.getAttackStatus();
-		// calculate attack status only if it has not been forced already
+		// 仅在尚未强制时计算攻击状态 / calculate attack status only if it has not been forced already
 		if (status == AttackStatus.NORMALHIT && position == 1) {
 			status = calculateMagicalStatus(effector, effected, criticalProb, true, effect.getSkillTemplate().isMcritApplied());
 		}
@@ -631,10 +724,13 @@ public class AttackUtil {
 	}
 
 	/**
-	 * @param effect
-	 * @param skillDamage
-	 * @param modifier
-	 * @param element
+	 * 计算魔法技能结果（使用默认参数的便捷重载）。
+	 * Calculates magical skill result (convenience overload with defaults).
+	 *
+	 * effect
+	 * skill damage
+	 * @param modifier 伤害修正器 / damage modifier
+	 * skill element
 	 */
 	public static void calculateMagicalSkillResult(Effect effect, int skillDamage, ActionModifier modifier,
 			SkillElement element) {
@@ -642,6 +738,23 @@ public class AttackUtil {
 				false);
 	}
 
+	/**
+	 * 计算魔法技能完整结果并写入 Effect。
+	 * Calculates full magical skill result and writes it into the Effect.
+	 *
+	 * effect
+	 * skill damage
+	 * @param modifier 伤害修正器 / damage modifier
+	 * skill element
+	 * @param useMagicBoost 是否使用魔法增强 / whether to use magic boost
+	 * @param useKnowledge 是否使用知识属性 / whether to use knowledge
+	 * @param noReduce 是否不做减伤 / whether to skip reduction
+	 * @param func 加成方式 / add or percent function
+	 * critical probability
+	 * @param critAddDmg 额外暴击伤害 / extra critical damage
+	 * @param shared 是否分摊伤害 / whether damage is shared
+	 * @param ignoreShield 是否忽略护盾 / whether to ignore shield
+	 */
 	public static void calculateMagicalSkillResult(Effect effect, int skillDamage, ActionModifier modifier,
 			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce, Func func,
 			int criticalProb, int critAddDmg, boolean shared, boolean ignoreShield) {
@@ -659,7 +772,7 @@ public class AttackUtil {
 			damages = skillDamage;
 		}
 
-		// add bonus damage
+		// 添加额外伤害 / add bonus damage
 		if (modifier != null) {
 			bonus = modifier.analyze(effect);
 			switch (modifier.getFunc()) {
@@ -716,23 +829,38 @@ public class AttackUtil {
 	}
 
 	/**
-	 * Manage attack status rate
+	 * 计算物理攻击状态（默认参数便捷重载）。
+	 * Calculates physical attack status (convenience overload with defaults).
 	 *
-	 * @return AttackStatus
-	 * @source http://www.aionsource.com/forum/mechanic-analysis/42597-character-stats-xp-dp-origin-gerbator-team-july-2009
-	 *         -a.html
+	 * attacker
+	 * attacked
+	 * whether main hand
+	 * attack status
 	 */
 	public static AttackStatus calculatePhysicalStatus(Creature attacker, Creature attacked, boolean isMainHand) {
 		return calculatePhysicalStatus(attacker, attacked, isMainHand, 0, 100, false, false);
 	}
 
+	/**
+	 * 计算物理攻击状态：闪避/格挡/招架与暴击组合。
+	 * Calculates physical attack status: dodge/block/parry and critical combinations.
+	 *
+	 * attacker
+	 * attacked
+	 * whether main hand
+	 * accuracy modifier
+	 * critical probability
+	 * @param isSkill 是否技能攻击 / whether skill attack
+	 * @param cannotMiss 是否不可未命中 / whether cannot miss
+	 * attack status
+	 */
 	public static AttackStatus calculatePhysicalStatus(Creature attacker, Creature attacked, boolean isMainHand,
 			int accMod, int criticalProb, boolean isSkill, boolean cannotMiss) {
 		AttackStatus status = AttackStatus.NORMALHIT;
 
 		if (!cannotMiss) { // Parry can only be done with weapon, blocking - with a shield. These
-							// limitations don't apply to npc. Retail npc don't need a shield or weapon to
-							// block/parry
+							// 限制不适用于 NPC。正式服 NPC 不需要护盾或武器即可 / limitations don't apply to npc. Retail npc don't need a shield or weapon to
+							// 格挡/招架 / block/parry
 			if (!isSkill && StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod)) {
 				status = AttackStatus.DODGE;
 			} else if (attacked instanceof Player && ((Player) attacked).getEquipment().isShieldEquipped()
@@ -748,7 +876,8 @@ public class AttackUtil {
 			}
 		} else {
 			/**
-			 * Check AlwaysDodge Check AlwaysParry Check AlwaysBlock
+			 * AlwaysParry / AlwaysBlock。 / AlwaysParry / AlwaysBlock。
+	 * Check AlwaysDodge, AlwaysParry, AlwaysBlock
 			 */
 			StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod);
 			StatFunctions.calculatePhysicalParryRate(attacker, attacked, accMod);
@@ -775,14 +904,33 @@ public class AttackUtil {
 	}
 
 	/**
-	 * Every + 100 delta of (MR - MA) = + 10% to resist<br>
-	 * if the difference is 1000 = 100% resist
+	 * 计算魔法攻击状态（默认应用魔法暴击）。
+	 * Calculates magical attack status (applies magical critical by default).
+	 * <p>
+	 * Every +100 delta of (MR - MA) = +10% resist; difference of 1000 = 100% resist.
+	 *
+	 * attacker
+	 * attacked
+	 * critical probability
+	 * @param isSkill 是否技能攻击 / whether skill attack
+	 * attack status
 	 */
 	public static AttackStatus calculateMagicalStatus(Creature attacker, Creature attacked, int criticalProb,
 			boolean isSkill) {
 		return calculateMagicalStatus(attacker, attacked, criticalProb, isSkill, true);
 	}
 
+	/**
+	 * 计算魔法攻击状态：抵抗与魔法暴击。
+	 * Calculates magical attack status: resist and magical critical.
+	 *
+	 * attacker
+	 * attacked
+	 * critical probability
+	 * @param isSkill 是否技能攻击 / whether skill attack
+	 * @param applyMcrit 是否应用魔法暴击 / whether to apply magical critical
+	 * attack status
+	 */
 	public static AttackStatus calculateMagicalStatus(Creature attacker, Creature attacked, int criticalProb,
 			boolean isSkill, boolean applyMcrit) {
 		if (!isSkill) {
@@ -798,6 +946,12 @@ public class AttackUtil {
 		return AttackStatus.NORMALHIT;
 	}
 
+	/**
+	 * 取消所有以该目标为首目标的施法。
+	 * Cancels casts from anyone currently targeting this creature as first target.
+	 *
+	 * target creature
+	 */
 	public static void cancelCastOn(final Creature target) {
 		target.getKnownList().doOnAllPlayers(new Visitor<Player>() {
 
@@ -820,6 +974,13 @@ public class AttackUtil {
 		});
 	}
 
+	/**
+	 * 若生物正在对该目标施法则取消当前技能。
+	 * Cancels the creature's current skill if it is casting on the target.
+	 *
+	 * caster
+	 * target
+	 */
 	private static void cancelCast(Creature creature, Creature target) {
 		if (target != null && creature.getCastingSkill() != null) {
 			if (creature.getCastingSkill().getFirstTarget().equals(target)) {
@@ -829,14 +990,22 @@ public class AttackUtil {
 	}
 
 	/**
-	 * Send a packet to everyone who is targeting creature.
+	 * 清除所有玩家对该生物的选中目标。
+	 * Clears this creature as the selected target for all observing players.
 	 *
-	 * @param object
+	 * target creature
 	 */
 	public static void removeTargetFrom(final Creature object) {
 		removeTargetFrom(object, false);
 	}
 
+	/**
+	 * 清除选中该生物的玩家目标；可选仅在不可见时清除。
+	 * Clears players targeting this creature; optionally only when they cannot see it.
+	 *
+	 * target creature
+	 * @param validateSee 是否校验可见性 / whether to validate visibility
+	 */
 	public static void removeTargetFrom(final Creature object, final boolean validateSee) {
 		object.getKnownList().doOnAllPlayers(new Visitor<Player>() {
 
@@ -845,12 +1014,12 @@ public class AttackUtil {
 				if (validateSee && observer.getTarget() == object) {
 					if (!observer.canSee(object)) {
 						observer.setTarget(null);
-						// retail packet (//fsc 0x44 dhdd 0 0 0 0) right after SM_PLAYER_STATE
+						// 正式服数据包 / retail packet (//fsc 0x44 dhdd 0 0 0 0) right after SM_PLAYER_STATE
 						PacketSendUtility.sendPacket(observer, new SM_TARGET_SELECTED(observer));
 					}
 				} else if (observer.getTarget() == object) {
 					observer.setTarget(null);
-					// retail packet (//fsc 0x44 dhdd 0 0 0 0) right after SM_PLAYER_STATE
+					// 正式服数据包 / retail packet (//fsc 0x44 dhdd 0 0 0 0) right after SM_PLAYER_STATE
 					PacketSendUtility.sendPacket(observer, new SM_TARGET_SELECTED(observer));
 				}
 			}
@@ -858,13 +1027,18 @@ public class AttackUtil {
 	}
 
 	/**
-	 * Author "KorLightNing" ### Some specific skills will not be affected ###
+	 * 判断技能是否自带硬直类效果（暴击触发硬直时应跳过）。
+	 * Returns whether the skill already applies stagger/stumble-like effects (skip crit procs).
+	 *
+	 * skill id
+	 * @return 是否自带相关效果 / whether skill already applies the effect
+	 * @author KorLightNing
 	 */
 	public static boolean isSkillEffect(int skillId) {
 		switch (skillId) {
-		/********************
-		 * [Stagger Effect] *
-		 ********************/
+		/**
+	 * 【踉跄效果】 / Stagger Effect
+	 */
 		case 1054: // Finishing Arrow I.
 		case 1055: // Finishing Arrow II.
 		case 1056: // Finishing Arrow III.
@@ -934,9 +1108,9 @@ public class AttackUtil {
 		case 4522: // Sonic Gust I.
 		case 4523: // Sonic Gust II.
 		case 4790: // [ArchDaeva] Sonic Gust 5.1
-			/********************
-			 * [Stumble Effect] *
-			 ********************/
+			/**
+	 * 【绊倒效果】 / Stumble Effect
+	 */
 		case 519: // Explosion Of Rage I.
 		case 520: // Explosion Of Rage II.
 		case 521: // Explosion Of Rage III.
@@ -1072,9 +1246,9 @@ public class AttackUtil {
 		case 4594: // Shadowfall V.
 		case 4595: // Shadowfall VI.
 		case 4596: // Shadowfall VII.
-			/***********************
-			 * [Openaerial Effect] *
-			 ***********************/
+			/**
+	 * 【空中击飞效果】 / Openaerial Effect
+	 */
 		case 545: // Aerial Lockdown I.
 		case 546: // Aerial Lockdown II.
 		case 547: // Aerial Lockdown III.
@@ -1107,9 +1281,9 @@ public class AttackUtil {
 		case 3412: // Binding Rune VII.
 		case 3413: // Binding Rune VIII.
 		case 3414: // Binding Rune IX.
-			/*******************
-			 * [Pulled Effect] *
-			 *******************/
+			/**
+	 * **************** [Pulled Effect] * *****************
+	 */
 		case 326: // Sweeping Hook.
 		case 2967: // Illusion Chains.
 		case 4721: // [ArchDaeva] Illusion Chains 5.1
@@ -1126,10 +1300,18 @@ public class AttackUtil {
 		return false;
 	}
 
+	/**
+	 * 物理暴击时按武器类型尝试触发硬直/踉跄类效果。
+	 * On physical critical, attempts to apply stagger/stumble based on weapon type.
+	 *
+	 * attacking player
+	 * attacked
+	 * @param returnSkill 触发来源技能 ID（0 表示普通攻击） / source skill id (0 for auto-attack)
+	 */
 	public static void applyEffectOnCritical(Player attacker, Creature attacked, int returnSkill) {
 		int skillId = 0;
 
-		// players with Remove Shock cant be effected
+		// 拥有解除感电的玩家不受影响 / players with Remove Shock cant be effected
 		for (Effect ef : attacked.getEffectController().getAbnormalEffects()) {
 			if (ef.getSkillId() == 1968) {
 				return;
@@ -1159,8 +1341,8 @@ public class AttackUtil {
 		if (skillId == 0) {
 			return;
 		}
-		// On retail this effect apply on each crit with 10% of base chance plus bonus
-		// effect penetration calculated above
+		// 正式服该效果每次暴击以基础几率 10% 加额外加成触发。 / On retail this effect apply on each crit with 10% of base chance plus bonus
+		// 效果穿透已在上方计算 / effect penetration calculated above
 		if (Rnd.get(100) > (6 * attacked.getPulledMulti())) {
 			return;
 		}

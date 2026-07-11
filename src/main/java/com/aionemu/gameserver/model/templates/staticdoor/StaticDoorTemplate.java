@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.staticdoor;
 
 import java.util.EnumSet;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.geoEngine.bounding.BoundingBox;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 
 /**
+ * 静态 Door 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Wakizashi
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -57,14 +44,17 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	@XmlTransient
 	EnumSet<StaticDoorState> states = EnumSet.noneOf(StaticDoorState.class);
 
+	/** 返回 x / Returns the x */
 	public Float getX() {
 		return x;
 	}
 
+	/** 返回 y / Returns the y */
 	public Float getY() {
 		return y;
 	}
 
+	/** 返回 z / Returns the z */
 	public Float getZ() {
 		return z;
 	}
@@ -83,21 +73,25 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 		return keyId;
 	}
 
+	/** 返回模板 ID / Returns the template id */
 	@Override
 	public int getTemplateId() {
 		return 300001;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return "door";
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	@Override
 	public int getNameId() {
 		return 0;
 	}
 
+	/** 返回 initial states / Returns the initial states */
 	public EnumSet<StaticDoorState> getInitialStates() {
 		if (statesHex != null) {
 			int radix = 16;
@@ -115,10 +109,12 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 		return states;
 	}
 
+	/** 返回 mesh file / Returns the mesh file */
 	public String getMeshFile() {
 		return meshFile;
 	}
 
+	/** 返回 bounding box / Returns the bounding box */
 	public BoundingBox getBoundingBox() {
 		if (box == null) {
 			return null;
@@ -126,6 +122,7 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 		return box.getBoundingBox();
 	}
 
+	/** 返回门类型 / Returns the door type*/
 	public DoorType getDoorType() {
 		return type;
 	}

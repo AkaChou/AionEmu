@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,8 +13,9 @@ import com.aionemu.loginserver.dao.AccountTimeDAO;
 import com.aionemu.loginserver.model.AccountTime;
 
 /**
- * MySQL8 AccountTime DAO implementation
- * 
+ * 账号会话/惩罚时间 DAO 的 MySQL 8 实现。
+ * MySQL 8 AccountTimeDAO implementation.
+ *
  * @author Updated for MySQL 8
  */
 @Slf4j
@@ -22,10 +25,10 @@ public class MySQL8AccountTimeDAO extends AccountTimeDAO {
     @Override
     public boolean updateAccountTime(final int accountId, final AccountTime accountTime) {
         String query = "REPLACE INTO account_time (account_id, last_active, expiration_time, " + "session_duration, accumulated_online, accumulated_rest, penalty_end) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setLong(1, accountId);
             st.setTimestamp(2, accountTime.getLastLoginTime());
             st.setTimestamp(3, accountTime.getExpirationTime());
@@ -33,12 +36,12 @@ public class MySQL8AccountTimeDAO extends AccountTimeDAO {
             st.setLong(5, accountTime.getAccumulatedOnlineTime());
             st.setLong(6, accountTime.getAccumulatedRestTime());
             st.setTimestamp(7, accountTime.getPenaltyEnd());
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update account time for account: " + accountId, e);
+            log.error(I18n.get("log.ff2d8c2ec1de", accountId, e));
         }
-        
+
         return false;
     }
 
@@ -46,12 +49,12 @@ public class MySQL8AccountTimeDAO extends AccountTimeDAO {
     public AccountTime getAccountTime(int accountId) {
         String query = "SELECT * FROM account_time WHERE account_id = ?";
         AccountTime accountTime = null;
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setLong(1, accountId);
-            
+
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
                     accountTime = new AccountTime();
@@ -64,9 +67,9 @@ public class MySQL8AccountTimeDAO extends AccountTimeDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error("Can't get account time for account: " + accountId, e);
+            log.error(I18n.get("log.acdac4f0d5c7", accountId, e));
         }
-        
+
         return accountTime;
     }
 

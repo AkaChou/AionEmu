@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Stolen Harbinger Call（@AIName "stolen_harbinger_call"），继承 NpcAI2。
+ * Reshanta zone NPC AI: Stolen Harbinger Call (@AIName "stolen_harbinger_call"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("stolen_harbinger_call")
 public class Stolen_Harbinger_CallAI2 extends NpcAI2
 {

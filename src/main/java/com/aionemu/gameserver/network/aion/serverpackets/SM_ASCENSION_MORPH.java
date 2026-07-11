@@ -1,33 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * ascension quest's morph
- * 
+ * 向客户端同步飞升任务变身状态的服务端包。
+ * Server packet synchronizing ascension-quest morph state to the client.
+ *
  * @author wylovech
  */
 public class SM_ASCENSION_MORPH extends AionServerPacket {
 
 	private int inascension;
 
+	/**
+	 * 构造飞升变身状态包。
+	 * Creates an ascension morph state packet.
+	 *
+	 * @param inascension 是否处于飞升变身（1=变身） / whether currently morphed for ascension (1 = morph)
+	 */
 	public SM_ASCENSION_MORPH(int inascension) {
 		this.inascension = inascension;
 	}

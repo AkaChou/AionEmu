@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.taskmanager;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -28,44 +12,110 @@ import org.quartz.CronExpression;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
 
+import lombok.Getter;
+
+/**
+ * 基于 Cron 表达式的服务器周期任务抽象基类。
+ * Abstract base for server periodic tasks driven by a Cron expression.
+ *
+ * <p>从服务器变量加载上次运行时间，按 Cron 调度下次执行，并在运行后回写下次时间。
+ * Loads last run time from server variables, schedules the next run by Cron, and stores the next run time after execution.</p>
+ */
 public abstract class AbstractCronTask implements Runnable {
+
+	/**
+	 * Cron 表达式字符串。
+	 * Cron expression string.
+	 */
+	@Getter
 	private String cronExpressionString;
+
+	/**
+	 * 解析后的 Cron 表达式。
+	 * Parsed Cron expression.
+	 */
 	private CronExpression runExpression;
+
+	/**
+	 * 下次运行时间（Unix 秒）。
+	 * Next run time (Unix seconds).
+	 */
+	@Getter
 	private int runTime;
+
+	/**
+	 * 两次触发之间的周期（毫秒）。
+	 * Period between two triggers in milliseconds.
+	 */
+	@Getter
 	private long period;
 
-	public final int getRunTime() {
-		return runTime;
-	}
-
+	/**
+	 * 获取距离应运行时刻的延迟（毫秒）；0 表示应立即处理。
+	 * Delay until the task should run (ms); 0 means it should be handled now.
+	 *
+	 * @return 延迟毫秒数 / Delay in milliseconds
+	 */
 	abstract protected long getRunDelay();
 
+	/**
+	 * 构造早期钩子（解析 Cron 前）。
+	 * Early construction hook (before Cron parse).
+	 */
 	protected void preInit() {
 	}
 
+	/**
+	 * 构造晚期钩子（解析 Cron 后）。
+	 * Late construction hook (after Cron parse).
+	 */
 	protected void postInit() {
 	}
 
-	public final String getCronExpressionString() {
-		return cronExpressionString;
-	}
-
+	/**
+	 * 服务器变量键名，用于持久化下次运行时间。
+	 * Server-variable key used to persist the next run time.
+	 *
+	 * Variable name
+	 */
 	abstract protected String getServerTimeVariable();
 
-	public long getPeriod() {
-		return period;
-	}
-
+	/**
+	 * 任务主体执行前钩子。
+	 * Hook before the main task body.
+	 */
 	protected void preRun() {
 	}
 
+	/**
+	 * 执行实际任务逻辑。
+	 * Execute the actual task logic.
+	 */
 	abstract protected void executeTask();
 
+	/**
+	 * 若构造时已到点，是否允许立即执行一次。
+	 * Whether an immediate run is allowed when already due at construction.
+	 *
+	 * 若 allowed 则为 true / True if allowed
+	 */
 	abstract protected boolean canRunOnInit();
 
+	/**
+	 * 任务主体执行后钩子。
+	 * Hook after the main task body.
+	 */
 	protected void postRun() {
 	}
 
+	/**
+	 * 使用 Cron 表达式初始化任务并安排下次调度。
+	 * Initialize with a Cron expression and schedule the next run.
+	 *
+	 * Cron expression
+	 * Invalid expression。 / Invalid expression.
+	 * Expression is null
+	 */
 	public AbstractCronTask(String cronExpression) throws ParseException {
 		if (cronExpression == null)
 			throw new NullPointerException("cronExpressionString");
@@ -88,10 +138,18 @@ public abstract class AbstractCronTask implements Runnable {
 		scheduleNextRun();
 	}
 
+	/**
+	 * 通过 Cron 服务安排下次触发。
+	 * Schedule the next trigger via the Cron service.
+	 */
 	private void scheduleNextRun() {
 		GameCronServices.cronService().schedule(this, cronExpressionString, true);
 	}
 
+	/**
+	 * 计算并持久化下次运行时间到服务器变量。
+	 * Compute and persist the next run time into server variables.
+	 */
 	private void saveNextRunTime() {
 		Date nextDate = runExpression.getTimeAfter(new Date());
 		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
@@ -99,6 +157,10 @@ public abstract class AbstractCronTask implements Runnable {
 		dao.store(getServerTimeVariable(), runTime);
 	}
 
+	/**
+	 * 若仍有延迟则再调度；否则执行 preRun / 任务 / 保存 / postRun。
+	 * task / save / postRun. / task / save / postRun.
+	 */
 	@Override
 	public final void run() {
 		if (getRunDelay() > 0) {

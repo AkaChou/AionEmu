@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +17,8 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_MACBAN_LIST;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 
 /**
- * This is authentication packet that gs will send to login server for
- * registration.
+ * GS→LS：游戏服向登录服注册并鉴权。
+ * GS→LS: GameServer authentication/registration packet to LoginServer.
  *
  * @author -Nemesiss-
  */
@@ -42,32 +26,39 @@ import com.aionemu.loginserver.service.LoginThreadPoolServices;
 public class CM_GS_AUTH extends GsClientPacket {
 
     /**
-     * Password for authentication
+     * 鉴权密码。
+     * Password for authentication.
      */
     private String password;
     /**
-     * Id of GameServer
+     * 游戏服 ID。
+     * Id of GameServer.
      */
     private byte gameServerId;
     /**
-     * Maximum number of players that this Gameserver can accept.
+     * 最大在线人数。
+     * Maximum number of players this GameServer can accept.
      */
     private int maxPlayers;
     /**
-     * Port of this Gameserver.
+     * 游戏服端口。
+     * Port of this GameServer.
      */
     private int port;
     /**
-     * Default address for server
+     * 默认对外地址。
+     * Default address for server.
      */
     private byte[] defaultAddress;
     /**
-     * List of IPRanges for this gameServer
+     * 本游戏服 IP 段列表。
+     * List of IPRanges for this GameServer.
      */
     private List<IPRange> ipRanges;
 
     /**
-     * {@inheritDoc}
+     * 读取 GS ID、默认地址、IP 段、端口、人数上限与密码。
+     * Reads GS id, default address, IP ranges, port, max players, and password.
      */
     @Override
     protected void readImpl() {
@@ -84,7 +75,7 @@ public class CM_GS_AUTH extends GsClientPacket {
             try {
                 ipRanges.add(new IPRange(min, max, address));
             } catch (IllegalArgumentException e) {
-                log.warn("Skipping malformed IP range entry #{} in CM_GS_AUTH: {}", i, e.getMessage());
+                log.warn(I18n.get("log.7d4955b67564", i, e.getMessage()));
             }
         }
 
@@ -94,7 +85,8 @@ public class CM_GS_AUTH extends GsClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 注册游戏服；成功则进入 AUTHED 并下发 MAC 封禁列表，否则关闭连接。
+     * Registers GameServer; on success enters AUTHED and sends MAC ban list, otherwise closes connection.
      */
     @Override
     protected void runImpl() {
@@ -103,7 +95,7 @@ public class CM_GS_AUTH extends GsClientPacket {
         GsAuthResponse resp = GameServerTable.registerGameServer(client, gameServerId, defaultAddress, ipRanges, port, maxPlayers, password);
         switch (resp) {
             case AUTHED:
-                log.info("Gameserver #" + gameServerId + " is now online.");
+                log.info(I18n.get("log.8317d73f1707", gameServerId));
                 client.setState(State.AUTHED);
                 client.sendPacket(new SM_GS_AUTH_RESPONSE(resp));
                 LoginThreadPoolServices.threadPoolManager().schedule(new Runnable() {

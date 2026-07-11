@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +26,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 物品模板数据容器，持有并索引全部 {@link ItemTemplate}，支持热重载与限制清理。
+ * Item template data holder, indexing all {@link ItemTemplate} instances with reload and restriction cleanup support.
+ *
  * @author Luno
  */
 @XmlRootElement(name = "item_templates")
@@ -61,6 +50,10 @@ public class ItemData extends ReloadableData {
 	@XmlTransient
 	Map<Integer, ItemTemplate> allItems;
 
+	/**
+	 * JAXB 反序列化完成后，按模板 ID 建立索引并释放原始列表。
+	 * After JAXB unmarshalling, indexes templates by id and clears the raw list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		items = new IntObjectHashMap<ItemTemplate>();
 		allItems = new HashMap<Integer, ItemTemplate>();
@@ -81,6 +74,10 @@ public class ItemData extends ReloadableData {
 		its = null;
 	}
 
+	/**
+	 * 根据清理规则覆盖物品的交易 / 出售 / 仓库存取掩码。
+	 * sell / warehouse storage masks. / sell / warehouse storage masks.
+	 */
 	public void cleanup() {
 		for (ItemCleanupTemplate ict : DataManager.ITEM_CLEAN_UP.getList()) {
 			ItemTemplate template = items.get(ict.getId());
@@ -105,29 +102,66 @@ public class ItemData extends ReloadableData {
 		}
 	}
 
+	/**
+	 * 按物品 ID 获取物品模板。
+	 * Returns the item template for the given item id.
+	 *
+	 * item id
+	 *
+	 * @param itemId @return 物品模板或 null / item template or null
+	 */
 	public ItemTemplate getItemTemplate(int itemId) {
 		return items.get(itemId);
 	}
 
+	/**
+	 * 返回全部物品模板映射。
+	 * Returns the full item template map.
+	 *
+	 * @return ID 到物品模板的映射 / map of id to item template
+	 */
 	public Map<Integer, ItemTemplate> getAllItems() {
 		return allItems;
 	}
 
 	/**
-	 * @return items.size()
+	 * 返回已加载的物品模板数量。
+	 * Returns the number of loaded item templates.
+	 *
+	 * template count
 	 */
 	public int size() {
 		return items.size();
 	}
 
+	/**
+	 * 返回按等级分组的魔石模板映射。
+	 * Returns manastone templates grouped by level.
+	 *
+	 * @return 等级到魔石列表的映射 / map of level to manastone list
+	 */
 	public Map<Integer, List<ItemTemplate>> getManastones() {
 		return manastones;
 	}
 
+	/**
+	 * 按宠物 ID 获取宠物蛋模板。
+	 * Returns the pet-egg template for the given pet id.
+	 *
+	 * pet id
+	 *
+	 * @param petId @return 宠物蛋模板或 null / pet-egg template or null
+	 */
 	public ItemTemplate getPetEggTemplate(int petId) {
 		return petEggs.get(petId);
 	}
 
+	/**
+	 * 热重载物品模板 XML 并通知管理员。
+	 * Hot-reloads item templates from XML and notifies the admin.
+	 *
+	 * @param admin 触发重载的管理员 / admin who triggered the reload
+	 */
 	@Override
 	public void reload(Player admin) {
 		try {
@@ -142,7 +176,7 @@ public class ItemData extends ReloadableData {
 			DataManager.ITEM_DATA.setData(newTemplates);
 		} catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "Item templates reload failed!");
-			log.error("Item templates reload failed!", e);
+			log.error(I18n.get("log.b18c257924d5", e));
 		} finally {
 			PacketSendUtility.sendMessage(admin,
 					"Item templates reload Success! Total loaded: " + DataManager.ITEM_DATA.size());
@@ -161,6 +195,13 @@ public class ItemData extends ReloadableData {
 		this.afterUnmarshal(null, null);
 	}
 
+	/**
+	 * 按描述字符串查找匹配的物品描述（忽略大小写）。
+	 * Finds a matching item description by string (case-insensitive).
+	 *
+	 * @param descr 物品描述 / item description
+	 * @return 匹配的描述，未找到则为空串 / matched description or empty string
+	 */
 	public String getItemDescr(String descr) {
 		for (ItemTemplate it : items.values()) {
 			if (descr.equalsIgnoreCase(it.getDescr())) {
@@ -170,6 +211,13 @@ public class ItemData extends ReloadableData {
 		return "";
 	}
 
+	/**
+	 * 按描述字符串返回对应物品 ID。
+	 * Returns the item id matching the given description.
+	 *
+	 * @param descr 物品描述 / item description
+	 * @return 物品 ID，未找到则为 0 / item id or 0
+	 */
 	public int giveItemIdOf(String descr) {
 		for (ItemTemplate it : items.values()) {
 			if (descr.equalsIgnoreCase(it.getDescr())) {
@@ -179,6 +227,12 @@ public class ItemData extends ReloadableData {
 		return 0;
 	}
 
+	/**
+	 * 返回内部物品模板哈希表。
+	 * Returns the internal item template hash map.
+	 *
+	 * @return 物品模板映射 / item template map
+	 */
 	public IntObjectHashMap<ItemTemplate> getItemData() {
 		return items;
 	}

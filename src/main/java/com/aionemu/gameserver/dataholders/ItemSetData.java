@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -30,6 +14,9 @@ import com.aionemu.gameserver.model.templates.itemset.ItemSetTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 物品套装数据容器，按套装 ID 与部件物品 ID 索引 {@link ItemSetTemplate}。
+ * Item-set data holder, indexing {@link ItemSetTemplate} by set id and part item id.
+ *
  * @author ATracer
  */
 @XmlRootElement(name = "item_sets")
@@ -41,10 +28,14 @@ public class ItemSetData {
 
 	private IntObjectHashMap<ItemSetTemplate> sets;
 
-	// key: item id, value: associated item set template
-	// This should provide faster search of the item template set by item id
+	// 键：物品 ID；值：关联物品套装模板 / key: item id, value: associated item set template
+	// 这应能按物品 ID 更快搜索物品模板集。 / This should provide faster search of the item template set by item id
 	private IntObjectHashMap<ItemSetTemplate> setItems;
 
+	/**
+	 * JAXB 反序列化完成后，建立套装 ID 与部件物品 ID 双重索引。
+	 * After JAXB unmarshalling, builds dual indexes by set id and part item id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		sets = new IntObjectHashMap<ItemSetTemplate>();
 		setItems = new IntObjectHashMap<ItemSetTemplate>();
@@ -52,7 +43,7 @@ public class ItemSetData {
 		for (ItemSetTemplate set : itemsetList) {
 			sets.put(set.getId(), set);
 
-			// Add reference to the ItemSetTemplate from
+			// 添加对 ItemSetTemplate 的引用，来自 / Add reference to the ItemSetTemplate from
 			for (ItemPart part : set.getItempart()) {
 				setItems.put(part.getItemid(), set);
 			}
@@ -61,23 +52,34 @@ public class ItemSetData {
 	}
 
 	/**
-	 * @param itemSetId
-	 * @return
+	 * 按套装 ID 获取套装模板。
+	 * Returns the item-set template for the given set id.
+	 *
+	 * item-set id
+	 *
+	 * @param itemSetId @return 套装模板或 null / item-set template or null
 	 */
 	public ItemSetTemplate getItemSetTemplate(int itemSetId) {
 		return sets.get(itemSetId);
 	}
 
 	/**
-	 * @param itemId
-	 * @return
+	 * 按部件物品 ID 获取所属套装模板。
+	 * Returns the item-set template associated with the given part item id.
+	 *
+	 * part item id
+	 *
+	 * @param itemId @return 套装模板或 null / item-set template or null
 	 */
 	public ItemSetTemplate getItemSetTemplateByItemId(int itemId) {
 		return setItems.get(itemId);
 	}
 
 	/**
-	 * @return itemSets.size()
+	 * 返回已加载的套装数量。
+	 * Returns the number of loaded item sets.
+	 *
+	 * set count
 	 */
 	public int size() {
 		return sets.size();

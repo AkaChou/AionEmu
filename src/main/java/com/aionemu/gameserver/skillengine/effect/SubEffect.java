@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 子效果配置：在主效果成功时按概率触发额外技能。
+ * Sub-effect config: triggers an extra skill by chance when the main effect succeeds.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,19 +24,31 @@ public class SubEffect {
 	private boolean addEffect = false;
 
 	/**
-	 * @return the skillId
+	 * 获取子效果技能 ID。
+	 * Returns the sub-effect skill id.
+	 *
+	 * skill id
 	 */
 	public int getSkillId() {
 		return skillId;
 	}
 
 	/**
-	 * @return the chance
+	 * 获取触发概率（0–100）。
+	 * Returns the trigger chance (0–100).
+	 *
+	 * chance
 	 */
 	public int getChance() {
 		return chance;
 	}
 
+	/**
+	 * 是否按印记爆发层数作为技能等级。
+	 * Whether skill level is taken from signet burst count.
+	 *
+	 * @return true 表示使用印记层数 / true if using signet burst count
+	 */
 	public boolean isAddEffect() {
 		return addEffect;
 	}

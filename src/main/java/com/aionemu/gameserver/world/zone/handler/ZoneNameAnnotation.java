@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone.handler;
 
 import java.lang.annotation.ElementType;
@@ -22,11 +6,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author MrPoke
+ * 将区域脚本类绑定到一个或多个区域名称（空格分隔）。
+ * Binds a zone-script class to one or more zone names (space-separated).
  *
+ * @author MrPoke
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ZoneNameAnnotation {
+
+	/**
+	 * 区域名称列表，以空格分隔。
+	 * Zone name list, separated by spaces.
+	 *
+	 * @return 区域名称字符串 / zone name string
+	 */
 	String value();
 }

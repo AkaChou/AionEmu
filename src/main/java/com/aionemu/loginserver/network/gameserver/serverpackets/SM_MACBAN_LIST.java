@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import java.util.Map;
@@ -26,18 +8,30 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
 import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
+ * LS→GS：同步当前 MAC 封禁列表。
+ * LS→GS: synchronize the current MAC ban list.
  *
  * @author KID
- *
  */
 public class SM_MACBAN_LIST extends GsServerPacket {
 
+    /**
+     * MAC 封禁条目映射。
+     * Map of banned MAC entries.
+     */
     private Map<String, BannedMacEntry> bannedList;
 
+    /**
+     * 构造 MAC 封禁列表同步包（从保护服务快照当前列表）。
+     * Constructs a MAC ban list sync packet (snapshots the current list from protection services).
+     */
     public SM_MACBAN_LIST() {
         this.bannedList = LoginProtectionServices.bannedMacManager().getMap();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void writeImpl(GsConnection con) {
         writeC(9);

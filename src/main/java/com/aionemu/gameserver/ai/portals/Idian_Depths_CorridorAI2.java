@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -24,10 +8,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 传送门/传送点 AI：Idian Depths Corridor（@AIName "idian_depths_corridor"），继承 ActionItemNpcAI2。
+ * Portal/teleporter AI: Idian Depths Corridor (@AIName "idian_depths_corridor"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("idian_depths_corridor")
 public class Idian_Depths_CorridorAI2 extends ActionItemNpcAI2
 {

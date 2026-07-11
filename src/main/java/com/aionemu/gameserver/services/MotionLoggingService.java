@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -55,6 +41,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 技能动作时间采集服务：记录客户端动作耗时，支持 SQL 持久化与 XML 导出，用于校准技能动作时间表。
+ * Skill motion timing service: records client motion times, supports SQL persistence and XML export for calibrating skill motion tables.
+ *
  * @author kecimis
  */
 @Slf4j
@@ -68,6 +57,12 @@ public class MotionLoggingService {
 
 	private boolean started = false;
 
+	/**
+	 * 获取服务单例（优先 Spring 提供者）。
+	 * Returns the service singleton (preferring the Spring provider).
+	 *
+	 * service instance
+	 */
 	public static final MotionLoggingService getInstance() {
 		ObjectProvider<MotionLoggingService> provider = instanceProvider;
 		if (provider != null) {
@@ -76,19 +71,38 @@ public class MotionLoggingService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Injects the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<MotionLoggingService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 启动动作日志采集。
+	 * Starts motion logging collection.
+	 */
 	public void start() {
 		if (started) {
 			return;
 		}
 		this.started = true;
-		// load data from sql
+		// 从 SQL 加载数据 / load data from sql
 		this.loadFromSql();
 	}
 
+	/**
+	 * 记录玩家某次技能动作的客户端时间与距离。
+	 * Logs client time and distance for a player skill motion.
+	 *
+	 * 玩家 / player
+	 * @param sk 技能模板 / skill template
+	 * @param clientTime 客户端时间 / client time
+	 * distance
+	 */
 	public void logTime(Player player, SkillTemplate sk, int clientTime, double distance) {
 		int currentAttackSpeed = 0;
 		if (!started) {
@@ -111,7 +125,7 @@ public class MotionLoggingService {
 		WeaponType mainHandWeapon = player.getEquipment().getMainHandWeaponType();
 		WeaponType offHandWeapon = player.getEquipment().getOffHandWeaponType();
 		String motionName = motion.getName();
-		// clientTime is send from client
+		// clientTime 由客户端发送 / clientTime is send from client
 		int baseTime = clientTime;// adjusted time
 
 		if (motion.getInstantSkill()) {
@@ -128,16 +142,16 @@ public class MotionLoggingService {
 		if (sk.getAmmoSpeed() != 0) {
 			ammoTime = Math.round(distance / sk.getAmmoSpeed() * 1000);// checked with client
 		}
-		// adjusting with ammospeed
+		// 按弹药速度调整 / adjusting with ammospeed
 		baseTime -= ammoTime;
 
-		// adjust clientTime if play speed is not 100
+		// 若播放速度不是 100 则调整 clientTime / adjust clientTime if play speed is not 100
 		if (motion.getSpeed() != 100) {
 			baseTime /= motion.getSpeed();
 			baseTime *= 100;
 		}
 
-		// logging
+		// 日志 / logging
 		if (advancedLog) {
 			PacketSendUtility.sendMessage(player, "skillId: " + sk.getSkillId() + " motionName: " + motionName);
 			PacketSendUtility.sendMessage(player, "attackSpeed: " + currentAttackSpeed + " mainHand: "
@@ -156,18 +170,15 @@ public class MotionLoggingService {
 
 		// create WeaponTypeWrapper
 		WeaponTypeWrapper weapon = new WeaponTypeWrapper(mainHandWeapon, offHandWeapon);
-		// check if its present
+		// 检查是否存在 / check if its present
 		if (this.isPresent(motionName, weapon, skillId, currentAttackSpeed, race, gender)) {
-			log.info("motionName: " + motionName + " weapon: "
-					+ (offHandWeapon != null ? "dual" : mainHandWeapon.toString()) + " skillId: " + skillId
-					+ " currentAttackSpeed: " + currentAttackSpeed + "baseTime: " + baseTime + " storedTime: "
-					+ this.getTime(motionName, weapon, skillId, currentAttackSpeed, race, gender));
+			log.info(I18n.get("log.a4a1d59f05a4", motionName, (offHandWeapon != null ? "dual" : mainHandWeapon.toString()), skillId, currentAttackSpeed, baseTime, this.getTime(motionName, weapon, skillId, currentAttackSpeed, race, gender)));
 			PacketSendUtility.sendMessage(player, "Its already stored. storedTime: "
 					+ this.getTime(motionName, weapon, skillId, currentAttackSpeed, race, gender));
 			return;
 		}
 
-		// addtime
+		// 添加时间 / addtime
 		if (this.addTime(motionName, weapon, skillId, currentAttackSpeed, race, gender, baseTime)) {
 			PacketSendUtility.sendMessage(player,
 					"BaseTime: " + baseTime + " for motion: " + motionName + " was added.");
@@ -177,15 +188,23 @@ public class MotionLoggingService {
 		}
 	}
 
+	/**
+	 * 生成分析文件（当前为空实现）。
+	 * Creates analysis files (currently a no-op).
+	 */
 	public void createAnalyzeFiles() {
 
 	}
 
+	/**
+	 * 汇总动作数据并导出最终 XML。
+	 * Aggregates motion data and exports the final XML.
+	 */
 	public void createFinalFile() {
 		MotionData motionData = new MotionData();
 		List<MotionTime> motionTimes = motionData.getMotionTimes();
 
-		// create results
+		// 创建结果 / create results
 		TreeMap<String, List<WeaponTime>> results = new TreeMap<String, List<WeaponTime>>();
 		for (Entry<String, MotionLog> entry : motionsMap.entrySet()) {
 			WeaponTime weaponTimeAm = new WeaponTime(Race.ASMODIANS, Gender.MALE);
@@ -229,7 +248,7 @@ public class MotionLoggingService {
 				weaponTimes.add(weaponTimeAf);
 				weaponTimes.add(weaponTimeEm);
 				weaponTimes.add(weaponTimeEf);
-				// fill results
+				// 填充结果 / fill results
 				results.put(entry.getKey(), weaponTimes);
 			}
 		}
@@ -258,12 +277,12 @@ public class MotionLoggingService {
 			motion.setName(entry.getKey());
 
 			for (WeaponTime wt : entry.getValue()) {
-				// process values
+				// 处理数值 / process values
 				TreeMap<WeaponTypeWrapper, Integer> map = wt.process();
 
 				StringBuilder sb = new StringBuilder();
 				boolean first = true;
-				// create time
+				// 创建时间 / create time
 				for (WeaponTypeWrapper weapon : listofWeapons) {
 					if (first) {
 						sb.append((map.containsKey(weapon) ? map.get(weapon) : "0"));
@@ -292,10 +311,17 @@ public class MotionLoggingService {
 			}
 			motionTimes.add(motion);
 		}
-		// marshall the final xml file
+		// 编组最终 XML 文件 / marshall the final xml file
 		marshallFile(motionData, "data/static_data/skills/new_motion_times.xml");
 	}
 
+	/**
+	 * 将模板对象 JAXB 序列化到文件。
+	 * Marshals a template object to a file via JAXB.
+	 *
+	 * template object
+	 * @param file 输出路径 / output path
+	 */
 	public static void marshallFile(Object templates, String file) {
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(templates.getClass());
@@ -303,20 +329,14 @@ public class MotionLoggingService {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			marshaller.marshal(templates, new FileOutputStream(Config.dataFile(file)));
 		} catch (JAXBException e) {
-			log.error("Failed to marshal motion data to {}", file, e);
+			log.error(I18n.get("log.a34c1da0cbcb", file, e));
 		} catch (FileNotFoundException e) {
-			log.error("Motion data output file not found: {}", file, e);
+			log.error(I18n.get("log.23cf814a22a6", file, e));
 		}
 	}
 
 	/**
-	 * method used to recalculate time to base, cap or given attackspeed
-	 * 
-	 * @param method
-	 * @param weapon
-	 * @param attackSpeed
-	 * @param time
-	 * @return
+	 * 按基础值/上限/给定攻速重算时间。 / method used to recalculate time to base, cap or given attackspeed.
 	 */
 	private int recalculate(String method, WeaponTypeWrapper weapon, int attackSpeed, int time) {
 		int finalTime = 0;
@@ -366,7 +386,7 @@ public class MotionLoggingService {
 			try {
 				speed = Float.parseFloat(method);
 			} catch (Exception e) {
-				// log
+				// 日志 / log
 			}
 		}
 		finalTime = Math.round((float) time / (float) attackSpeed * speed);
@@ -374,7 +394,11 @@ public class MotionLoggingService {
 		return finalTime;
 	}
 
-	// save to sql
+	// 保存到 SQL / save to sql
+	/**
+	 * 将采集到的动作时间写入数据库。
+	 * Persists collected motion times to the database.
+	 */
 	public void saveToSql() {
 		Connection con = null;
 
@@ -420,13 +444,17 @@ public class MotionLoggingService {
 			}
 			stmt.close();
 		} catch (SQLException e) {
-			log.error("MotionLoggingService", e);
+			log.error(I18n.get("log.59fa1e0145de", e));
 		} finally {
 			DatabaseFactory.close(con);
 		}
 	}
 
-	// load from sql
+	// 从 SQL 加载 / load from sql
+	/**
+	 * 从数据库加载动作时间。
+	 * Loads motion times from the database.
+	 */
 	public void loadFromSql() {
 		Connection con = null;
 
@@ -455,7 +483,7 @@ public class MotionLoggingService {
 					race = Race.valueOf(sRace);
 					gender = Gender.valueOf(sGender);
 				} catch (Exception e) {
-					log.info("cant load gender or race for motion_name: " + motionName);
+					log.info(I18n.get("log.bd04b9af9457", motionName));
 				} finally {
 					this.addTime(motionName, weapon, skillId, attackSpeed, race, gender, time);
 				}
@@ -463,12 +491,16 @@ public class MotionLoggingService {
 			resultSet.close();
 			stmt.close();
 		} catch (SQLException e) {
-			log.error("MotionLoggingService", e);
+			log.error(I18n.get("log.59fa1e0145de", e));
 		} finally {
 			DatabaseFactory.close(con);
 		}
 	}
 
+	/**
+	 * 清空内存后从数据库重新加载动作时间。
+	 * Clears memory and reloads motion times from the database.
+	 */
 	public void reloadFromSql() {
 		this.clearMotions();
 		this.loadFromSql();
@@ -497,6 +529,19 @@ public class MotionLoggingService {
 		return 0;
 	}
 
+	/**
+	 * 添加或更新一条动作时间样本。
+	 * Adds or updates a motion time sample.
+	 *
+	 * motion name
+	 * @param weapon 武器类型包装 / weapon wrapper
+	 * skill id
+	 * @param currentAttackSpeed 当前攻击速度 / attack speed
+	 * 阵营 / race
+	 * gender
+	 * @param clientTime 客户端时间 / client time
+	 * @return 是否新增成功 / whether newly added
+	 */
 	public boolean addTime(String motionName, WeaponTypeWrapper weapon, int skillId, int currentAttackSpeed, Race race,
 			Gender gender, int clientTime) {
 		if (!motionsMap.containsKey(motionName)) {
@@ -511,16 +556,32 @@ public class MotionLoggingService {
 		}
 	}
 
+	/**
+	 * 开关高级日志输出。
+	 * Toggles advanced logging output.
+	 *
+	 * @param bol 是否开启 / whether enabled
+	 */
 	public void setAdvancedLog(boolean bol) {
 		this.advancedLog = bol;
 	}
 
+	/**
+	 * 是否开启高级日志。
+	 * Whether advanced logging is enabled.
+	 *
+	 * whether enabled
+	 */
 	public boolean getAdvancedLog() {
 		return this.advancedLog;
 	}
 
+	/**
+	 * 默认构造并打印启动日志。
+	 * Default constructor that logs service startup.
+	 */
 	public MotionLoggingService() {
-		log.info("MotionLoggingService started.");
+		log.info(I18n.get("log.ef112ac23508"));
 	}
 
 	@SuppressWarnings("synthetic-access")
@@ -734,8 +795,8 @@ public class MotionLoggingService {
 			TreeMap<WeaponTypeWrapper, Integer> weaponMap = new TreeMap<WeaponTypeWrapper, Integer>();
 
 			for (Entry<WeaponTypeWrapper, List<Integer>> entry2 : values.entrySet()) {
-				// logic to calculate one value per weaponType
-				// count the element with the most occurencies
+				// 按 weaponType 计算一个值的逻辑 / logic to calculate one value per weaponType
+				// 统计出现次数最多的元素 / count the element with the most occurencies
 				int finalValue = 0;
 				int maxFrequency = 0;
 				int value = 0;
@@ -747,16 +808,15 @@ public class MotionLoggingService {
 						value = i;
 					}
 				}
-				log.info("[MotionLoggingService] maxFrequency: " + maxFrequency + " value: " + value + " size: "
-						+ entry2.getValue().size());
-				// if frequency of given value is higher than 70% take it, otherwise do
-				// Arithmetic mean
+				log.info(I18n.get("log.610325e4b2f3", maxFrequency, value, entry2.getValue().size()));
+				// 若给定值频率高于 70% 则采用，否则 / if frequency of given value is higher than 70% take it, otherwise do
+				// 算术平均 / Arithmetic mean
 				if (Math.round((float) entry2.getValue().size() * 0.7f) <= maxFrequency) {
 					finalValue = value;
 				} else {
 					finalValue = total / entry2.getValue().size();
 				}
-				log.info("[MotionLoggingService] weaponTime.process() finalValue: " + finalValue);
+				log.info(I18n.get("log.41911f5d1ef5", finalValue));
 				weaponMap.put(entry2.getKey(), finalValue);
 			}
 			return weaponMap;
@@ -766,7 +826,7 @@ public class MotionLoggingService {
 	private int calculateFrequency(List<Integer> list, int value) {
 		int frequency = 0;
 
-		// 10% tolerance
+		// 10% 容差 / 10% tolerance
 		int min = Math.round(value * 0.90f);
 		int max = Math.round(value * 1.1f);
 		for (Integer i : list) {

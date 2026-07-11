@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -40,10 +24,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 伊迪安动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IdianAction")
@@ -51,21 +35,24 @@ public class IdianAction extends AbstractItemAction {
 	@XmlAttribute(name = "setId")
 	protected int polishSetId;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		int idianKinah = 68647;
 		if (parentItem == null || targetItem == null) {
-			// The item cannot be found.
+			// 找不到该物品。 / The item cannot be found.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
 		if (parentItem.getItemTemplate().getLevel() > targetItem.getItemTemplate().getLevel()) {
-			// You cannot socket Idian to the selected item. The Idian's level is too high.
+			// 无法向所选物品镶嵌伊迪安。伊迪安等级过高。 / You cannot socket Idian to the selected item. The Idian's level is too high.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_POLISH_WRONG_LEVEL);
 			return false;
 		}
 		if (targetItem.hasRetuning()) {
-			// You need to tune your equipment before socketing Idian.
+			// 镶嵌伊迪安前须先调谐装备。 / You need to tune your equipment before socketing Idian.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_POLISH_NEED_IDENTIFY);
 			return false;
 		}
@@ -80,6 +67,7 @@ public class IdianAction extends AbstractItemAction {
 				&& targetItem.getItemTemplate().isCanIdian();
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		final int parentItemId = parentItem.getItemId();
@@ -89,11 +77,12 @@ public class IdianAction extends AbstractItemAction {
 				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, 3000, 0, 0),
 				true);
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
 				player.removeItemCoolDown(parentItem.getItemTemplate().getUseLimits().getDelayId());
-				// Canceled %0 Idian socketing.
+				// 已取消 %0 的伊迪安镶嵌。 / Canceled %0 Idian socketing.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_POLISH_CANCELED(targetItem.getNameId()));
 				PacketSendUtility.broadcastPacket(player,
 						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, parentItemId, 0, 2, 0), true);
@@ -102,6 +91,7 @@ public class IdianAction extends AbstractItemAction {
 		};
 		player.getObserveController().attach(observer);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -117,7 +107,7 @@ public class IdianAction extends AbstractItemAction {
 							SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_FAILED(new DescriptionId(parentNameId)));
 					return;
 				}
-				// %0's Idian is fully charged.
+				// %0 的伊迪安已充满。 / %0's Idian is fully charged.
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_POLISH_SUCCEED(targetItem.getItemTemplate().getNameId()));
 				IdianStone idianStone = targetItem.getIdianStone();
@@ -138,6 +128,7 @@ public class IdianAction extends AbstractItemAction {
 		}, 3000));
 	}
 
+	/** 返回 polish set id / Returns the polish set id */
 	public int getPolishSetId() {
 		return polishSetId;
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.commons.utils.Rnd;
@@ -31,25 +15,33 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Set;
 
 /**
-* Author (Encom)
-* Rework: MATTY (ADev.Team)
-* Retail: https://youtu.be/kCY-3m2Mukw
-**/
+ * 火焰神殿副本事件处理器。
+ * Instance event handler for Fire Temple.
+ *
+ * @author Encom
+ * @author MATTY (ADev.Team
+ */
 
 @InstanceID(320100000)
 public class FireTempleInstance extends GeneralInstanceHandler
 {
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
             case 212846: //Kromede The Corrupt.
 			    spawnKromedeTreasureChest();
-				//sendMsg("[SUCCES]: You have finished <Fire Temple>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Fire Temple>");
             break;
 			case 214621: //Vile Judge Kromede.
 				spawnKromedeTreasureChest();
-				//sendMsg("[SUCCES]: You have finished <Fire Temple>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Fire Temple>");
             break;
 		}
 	}
@@ -73,10 +65,16 @@ public class FireTempleInstance extends GeneralInstanceHandler
 	
 	private void announceKromedeOrnate() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//I need a Kromede's Ornate Key to open it.
+					// 需要克罗梅德的华丽钥匙才能打开。 / I need a Kromede's Ornate Key to open it.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111313, player.getObjectId(), 2));
 				}
 			}
@@ -84,10 +82,16 @@ public class FireTempleInstance extends GeneralInstanceHandler
 	}
 	private void announceKromedeBrilliant() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//I need a Kromede's Brilliant Key to open it.
+					// 需要克罗梅德的辉煌钥匙才能打开。 / I need a Kromede's Brilliant Key to open it.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111314, player.getObjectId(), 2));
 				}
 			}
@@ -95,16 +99,28 @@ public class FireTempleInstance extends GeneralInstanceHandler
 	}
 	private void announceKromedeDazzling() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//I need a Kromede's Dazzling Key to open it.
+					// 需要克罗梅德的炫目钥匙才能打开。 / I need a Kromede's Dazzling Key to open it.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111315, player.getObjectId(), 2));
 				}
 			}
 		});
 	}
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -121,7 +137,7 @@ public class FireTempleInstance extends GeneralInstanceHandler
 			case 214621: //Vile Judge Kromede.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053994, 1)); //Kromede's Key Bundle.
                     }
                 }
@@ -166,11 +182,17 @@ public class FireTempleInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
 		
-        // Random spawns of bosses
+        // Boss 随机生成 / Random spawns of bosses
         if (Rnd.get(1, 100) > 25) { // Blue Crystal Molgat
             spawn(212839, 127.1218f, 176.1912f, 99.67548f, (byte) 15);
         } else { // elite mob spawns
@@ -222,6 +244,12 @@ public class FireTempleInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,8 +37,12 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.transfers.TransferablePlayer;
-@Slf4j
 
+/**
+ * 游戏服向登录服发送玩家跨服/角色转移控制数据的服务端包。
+ * Server packet that transfers player cross-server/character transfer control data to the login server.
+ */
+@Slf4j
 public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	public static final byte CHARACTER_INFORMATION = 1;
 	public static final byte ERROR = 2;
@@ -63,12 +53,26 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	private String result;
 	private int taskId;
 
+	/**
+	 * 构造仅含任务 ID 的转移控制包。
+	 * Constructs a transfer-control packet with task id only.
+	 *
+	 * @param type 控制类型 / control type
+	 * task id
+	 */
 	public SM_PTRANSFER_CONTROL(byte type, int taskId) {
 		super(14);
 		this.type = type;
 		this.taskId = taskId;
 	}
 
+	/**
+	 * 构造携带可转移玩家数据的控制包。
+	 * Constructs a transfer-control packet with transferable player data.
+	 *
+	 * @param type 控制类型 / control type
+	 * @param tp 可转移玩家 / transferable player
+	 */
 	public SM_PTRANSFER_CONTROL(byte type, TransferablePlayer tp) {
 		super(14);
 		this.type = type;
@@ -76,12 +80,28 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 		this.player = tp.player;
 	}
 
+	/**
+	 * 构造携带可转移玩家与结果文本的控制包。
+	 * Constructs a transfer-control packet with transferable player and result text.
+	 *
+	 * @param type 控制类型 / control type
+	 * @param tp 可转移玩家 / transferable player
+	 * result text
+	 */
 	public SM_PTRANSFER_CONTROL(byte type, TransferablePlayer tp, String result) {
 		super(14);
 		this.type = type;
 		this.result = result;
 	}
 
+	/**
+	 * 构造携带任务 ID 与结果文本的控制包。
+	 * Constructs a transfer-control packet with task id and result text.
+	 *
+	 * @param type 控制类型 / control type
+	 * task id
+	 * result text
+	 */
 	public SM_PTRANSFER_CONTROL(byte type, int taskId, String result) {
 		super(14);
 		this.type = type;
@@ -89,6 +109,10 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 		this.result = result;
 	}
 
+	/**
+	 * 按控制类型写入任务状态或完整角色转移数据。
+	 * Writes task status or full character-transfer payload by control type.
+	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {
 		writeC(type);
@@ -176,7 +200,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			writeF(player.getZ());
 			writeC(player.getHeading());
 			writeD(player.getWorldId());
-			// inventory
+			// 背包 / inventory
 			List<Item> inv = DAOManager.getDAO(InventoryDAO.class).loadStorageDirect(player.getObjectId(),
 					StorageType.CUBE);
 			writeD(inv.size());
@@ -306,7 +330,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 				writeD(id);
 			}
 			PlayerSkillList skillList = player.getSkillList();
-			// discard stigma skills
+			// 丢弃烙印之石技能 / discard stigma skills
 			List<PlayerSkillEntry> skills = new ArrayList<PlayerSkillEntry>();
 			for (PlayerSkillEntry sk : skillList.getAllSkills()) {
 				if (!sk.isStigma()) {
@@ -339,8 +363,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			List<QuestState> quests = new ArrayList<QuestState>();
 			for (QuestState qs : qsl.getQuests().values()) {
 				if (qs == null) {
-					log.warn("there are null quest on player " + player.getName() + ". taskId #" + taskId
-							+ ". transfer skip that");
+					log.warn(I18n.get("log.ae410cf2be90", player.getName(), taskId));
 					continue;
 				}
 				quests.add(qs);
@@ -351,7 +374,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 				writeS(qs.getStatus().toString());
 				writeD(qs.getQuestVars().getQuestVars());
 				writeD(qs.getCompleteCount());
-				// writeS() next repeat time
+				writeS(qs.getNextRepeatTime() == null ? null : qs.getNextRepeatTime().toString());
 				writeD(qs.getReward());
 			}
 		}

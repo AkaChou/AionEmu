@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -29,13 +13,23 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
+ * 元素森林副本事件处理器。
+ * Instance event handler for Elementis Forest.
+ *
  * @author Luzien
  */
+
 @InstanceID(300260000)
 public class ElementisForestInstance extends GeneralInstanceHandler {
-
+	/** 已刷怪标记 / spawned flag */
 	private byte spawned = 0;
 
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		switch (npc.getNpcId()) {
@@ -54,6 +48,13 @@ public class ElementisForestInstance extends GeneralInstanceHandler {
 		}
 	}
 
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
 	public void onEnterZone(Player player, ZoneInstance zone) {
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("CANYONGUARDS_RAVINE_300260000")) {
@@ -70,6 +71,13 @@ public class ElementisForestInstance extends GeneralInstanceHandler {
 		}
 	}
 
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {

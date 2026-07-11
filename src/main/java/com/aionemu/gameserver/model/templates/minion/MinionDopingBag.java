@@ -1,34 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.minion;
 
 import java.util.Arrays;
 
 /**
+ * 守护灵 DopingBag 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author jacjozs this copy Pet_Bag
  */
 public class MinionDopingBag {
 	private int[] itemBag = null;
 	private boolean isDirty = false;
 
+	/** 设置食物物品 / Sets the food item*/
 	public void setFoodItem(int itemId) {
 		setItem(itemId, 0);
 	}
 
+	/** 返回食物物品 / Returns the food item*/
 	public int getFoodItem() {
 		if (itemBag == null || itemBag.length < 1) {
 			return 0;
@@ -36,10 +25,12 @@ public class MinionDopingBag {
 		return itemBag[0];
 	}
 
+	/** 设置 drink item / Sets the drink item */
 	public void setDrinkItem(int itemId) {
 		setItem(itemId, 1);
 	}
 
+	/** 返回 drink item / Returns the drink item */
 	public int getDrinkItem() {
 		if (itemBag == null || itemBag.length < 2) {
 			return 0;
@@ -48,11 +39,10 @@ public class MinionDopingBag {
 	}
 
 	/**
-	 * Adds or removes item to the bag
+	 * 添加或移除物品到 bag。 / Adds or removes item to the bag
 	 *
 	 * @param itemId - item Id, or 0 to remove
 	 * @param slot   - slot number; 0 for food, 1 for drink, the rest are for
-	 *               scrolls
 	 */
 	public void setItem(int itemId, int slot) {
 		if (itemBag == null) {
@@ -68,6 +58,7 @@ public class MinionDopingBag {
 		}
 	}
 
+	/** 返回 scrolls used / Returns the scrolls used */
 	public int[] getScrollsUsed() {
 		if (itemBag == null || itemBag.length < 3) {
 			return new int[0];

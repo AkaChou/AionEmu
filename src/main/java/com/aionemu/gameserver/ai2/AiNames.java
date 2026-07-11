@@ -1,27 +1,19 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 /**
+ * 常用 AI 注册名称枚举，避免硬编码字符串。
+ * Enumeration of common AI registration names to avoid hard-coded strings.
+ *
  * @author ATracer
  */
 public enum AiNames {
 
-	GENERAL_NPC("general"), DUMMY_NPC("dummy"), AGGRESSIVE_NPC("aggressive");
+	/** 通用 NPC AI / General NPC AI */
+	GENERAL_NPC("general"),
+	/** 空壳/哑元 NPC AI / Dummy NPC AI */
+	DUMMY_NPC("dummy"),
+	/** 主动攻击型 NPC AI / Aggressive NPC AI */
+	AGGRESSIVE_NPC("aggressive");
 
 	private final String name;
 
@@ -29,6 +21,12 @@ public enum AiNames {
 		this.name = name;
 	}
 
+	/**
+	 * 获取 AI 注册名称字符串。
+	 * Returns the AI registration name string.
+	 *
+	 * name
+	 */
 	public String getName() {
 		return name;
 	}

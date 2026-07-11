@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.geometry;
 
 import com.aionemu.gameserver.model.templates.zone.Point2D;
@@ -21,19 +5,20 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * This class implements cylinder area
- * 
+ * 圆柱区域，用于几何相关逻辑。
+ * Cylinder Area for geometry logic.
+ *
  * @author SoulKeeper
  */
 public class CylinderArea extends AbstractArea {
 
 	/**
-	 * Center of cylinder
+	 * 圆柱中心 / Center of cylinder
 	 */
 	private final float centerX;
 
 	/**
-	 * Center of cylinder
+	 * 圆柱中心 / Center of cylinder
 	 */
 	private final float centerY;
 
@@ -43,8 +28,8 @@ public class CylinderArea extends AbstractArea {
 	private final float radius;
 
 	/**
-	 * Creates new cylinder with given radius
-	 * 
+	 * 创建新 cylinder 给定 radius。 / Creates new cylinder with given radius
+	 *
 	 * @param zoneName center of the circle
 	 * @param worldId radius of the circle
 	 * @param center   min z
@@ -55,8 +40,8 @@ public class CylinderArea extends AbstractArea {
 	}
 
 	/**
-	 * Creates new cylider with given radius
-	 * 
+	 * 创建新 cylider 给定 radius。 / Creates new cylider with given radius
+	 *
 	 * @param zoneName      center coord
 	 * @param worldId      center coord
 	 * @param x radius of the circle
@@ -125,6 +110,7 @@ public class CylinderArea extends AbstractArea {
 		}
 	}
 
+	/** 矩形相交 / intersects Rectangle. */
 	@Override
 	public boolean intersectsRectangle(RectangleArea area) {
 		if (area.getMinZ() > getMaxZ() || area.getMaxZ() < getMinZ()) {

@@ -9,8 +9,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
+ * 寂静峡谷任务脚本：Jotun Jaunt（任务 ID 30057）。
+ * Silentera Canyon quest script: Jotun Jaunt (quest ID 30057).
+ *
  * @author Ritsu
- * 
  */
 public class _30057JotunJaunt extends QuestHandler {
 

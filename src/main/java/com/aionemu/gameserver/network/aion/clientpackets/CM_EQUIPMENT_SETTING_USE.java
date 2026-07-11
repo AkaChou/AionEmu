@@ -15,10 +15,22 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 应用装备预设方案的客户端包。
+ * Client packet that applies an equipment preset configuration.
+ */
 public class CM_EQUIPMENT_SETTING_USE extends AionClientPacket {
 
 	private final List<EquipmentSettingUseAction> actions = new ArrayList<EquipmentSettingUseAction>();
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_EQUIPMENT_SETTING_USE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -31,11 +16,22 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.TownService;
 
+/**
+ * 向客户端同步玩家房屋所有权与维护状态信息的服务端包。
+ * Server packet that synchronizes the player's house ownership and maintenance status to the client.
+ */
 public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 
 	private Player player;
 	private House activeHouse;
 
+	/**
+	 * 构造房屋所有者信息包。
+	 * Creates a house owner info packet.
+	 *
+	 * 玩家 / player
+	 * @param activeHouse 当前活跃房屋，可为 null / active house, may be null
+	 */
 	public SM_HOUSE_OWNER_INFO(Player player, House activeHouse) {
 		this.player = player;
 		this.activeHouse = activeHouse;
@@ -72,8 +68,8 @@ public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 				writeC(0);
 			} else {
 				int weeks = (int) (Math.round(diff / GameHousingServices.maintenanceTask().getPeriod()));
-				
-				// Check if today is Sunday (day 7)
+
+				// 检查今天是否为周日（第 7 天） / Check if today is Sunday (day 7)
 				ZonedDateTime now = ZonedDateTime.now();
 				if (now.getDayOfWeek() != DayOfWeek.SUNDAY) {
 					weeks++;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.common.legacy;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -33,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Loot 队伍 Rules，用于团队2相关逻辑。
+ * Loot Group Rules for team 2 logic.
+ *
  * @author ATracer, xTz
  */
 public class LootGroupRules {
@@ -167,8 +154,10 @@ public class LootGroupRules {
 		this.nrMisc = nrMisc;
 	}
 
+	/** 设置 players in roll / Sets the players in roll */
 	public void setPlayersInRoll(final Collection<Player> players, int time, final int index, final int npcId) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				for (Player player : players) {
@@ -208,22 +197,27 @@ public class LootGroupRules {
 		this.nrRoundRobin = nrRoundRobin;
 	}
 
+	/** 返回 misc / Returns the misc */
 	public int getMisc() {
 		return misc;
 	}
 
+	/** 添加 item to be distributed / Adds item to be distributed */
 	public void addItemToBeDistributed(DropItem dropItem) {
 		itemsToBeDistributed.add(dropItem);
 	}
 
+	/** 包含掉落物品 / Contain Drop Item */
 	public boolean containDropItem(DropItem dropItem) {
 		return itemsToBeDistributed.contains(dropItem);
 	}
 
+	/** 移除 item to be distributed / Removes item to be distributed */
 	public void removeItemToBeDistributed(DropItem dropItem) {
 		itemsToBeDistributed.remove(dropItem);
 	}
 
+	/** 返回 items to be distributed / Returns the items to be distributed */
 	public List<DropItem> getItemsToBeDistributed() {
 		return itemsToBeDistributed;
 	}

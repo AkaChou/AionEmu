@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.Iterator;
@@ -30,9 +14,9 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * Object of this class is containing <tt>WorldMapTemplate</tt> objects for all
- * world maps. World maps are defined in data/static_data/world_maps.xml file.
- * 
+ * 世界地图数据容器，持有全部地图模板，数据源为 data/static_data/world_maps.xml。
+ * World maps data holder containing all {@link WorldMapTemplate} objects, loaded from data/static_data/world_maps.xml.
+ *
  * @author Luno
  */
 @XmlRootElement(name = "world_maps")
@@ -44,6 +28,10 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 
 	protected IntObjectHashMap<WorldMapTemplate> worldIdMap = new IntObjectHashMap<WorldMapTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，将地图模板按地图 ID 建索引。
+	 * After JAXB unmarshalling, indexes map templates by map id.
+	 */
 	protected void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (WorldMapTemplate map : worldMaps) {
 			worldIdMap.put(map.getMapId(), map);
@@ -51,7 +39,10 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 返回地图模板列表的迭代器。
+	 * Returns an iterator over the world map templates.
+	 *
+	 * @return 地图模板迭代器 / map template iterator
 	 */
 	@Override
 	public Iterator<WorldMapTemplate> iterator() {
@@ -59,17 +50,22 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	}
 
 	/**
-	 * Returns the count of maps.
-	 * 
-	 * @return worldMaps.size()
+	 * 返回已加载的地图数量。
+	 * Returns the number of loaded maps.
+	 *
+	 * map count
 	 */
 	public int size() {
 		return worldMaps == null ? 0 : worldMaps.size();
 	}
 
 	/**
-	 * @param worldId
-	 * @return
+	 * 按世界 ID 获取地图模板。
+	 * Returns the world map template for the given world id.
+	 *
+	 * 世界 ID / world id
+	 *
+	 * @param worldId @return 地图模板，不存在则为 null / map template or null
 	 */
 	public WorldMapTemplate getTemplate(int worldId) {
 		return worldIdMap.get(worldId);

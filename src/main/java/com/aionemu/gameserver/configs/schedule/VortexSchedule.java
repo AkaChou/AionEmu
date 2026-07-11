@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.schedule;
 
 import java.nio.charset.StandardCharsets;
@@ -30,23 +14,41 @@ import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
 
 /**
+ * Vortex 漩涡入侵活动时间表配置。
+ * Vortex invasion event schedule configuration.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlRootElement(name = "vortex_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class VortexSchedule {
+	/**
+	 * Vortex 列表。
+	 * List of vortexes.
+	 */
 	@XmlElement(name = "vortex", required = true)
 	private List<Vortex> vortexsList;
 
+	/**
+	 * 获取 Vortex 列表。
+	 * Returns the vortex list.
+	 */
 	public List<Vortex> getVortexsList() {
 		return vortexsList;
 	}
 
+	/**
+	 * 设置 Vortex 列表。
+	 * Sets the vortex list.
+	 */
 	public void setInvasionsList(List<Vortex> vortexList) {
 		this.vortexsList = vortexList;
 	}
 
+	/**
+	 * 从 XML 加载时间表。
+	 * Loads the schedule from XML.
+	 */
 	public static VortexSchedule load() {
 		VortexSchedule vs;
 		try {
@@ -58,27 +60,54 @@ public class VortexSchedule {
 		return vs;
 	}
 
+	/**
+	 * 单个 Vortex 的时间表条目。
+	 * Schedule entry for a single vortex.
+	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "vortex")
 	public static class Vortex {
+		/**
+	 * 漩涡 ID / Vortex ID
+	 */
 		@XmlAttribute(required = true)
 		private int id;
 
+		/**
+		 * 入侵时间列表。
+		 * List of invasion times.
+		 */
 		@XmlElement(name = "invasionTime", required = true)
 		private List<String> invasionTimes;
 
+		/**
+		 * 获取 Vortex ID。
+		 * Returns the vortex ID.
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * 设置 Vortex ID。
+		 * Sets the vortex ID.
+		 */
 		public void setId(int id) {
 			this.id = id;
 		}
 
+		/**
+		 * 获取入侵时间列表。
+		 * Returns the invasion times.
+		 */
 		public List<String> getInvasionTimes() {
 			return invasionTimes;
 		}
 
+		/**
+		 * 设置入侵时间列表。
+		 * Sets the invasion times.
+		 */
 		public void setInvasionTimes(List<String> invasionTimes) {
 			this.invasionTimes = invasionTimes;
 		}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.broker;
 
 import com.aionemu.gameserver.model.PlayerClass;
@@ -25,9 +9,14 @@ import com.aionemu.gameserver.model.broker.filter.BrokerPlayerClassExtraFilter;
 import com.aionemu.gameserver.model.broker.filter.BrokerRecipeFilter;
 import com.aionemu.gameserver.model.gameobjects.Item;
 
+/**
+ * 经纪行物品掩码枚举。
+ * Broker Item Mask enumeration.
+ */
+
 public enum BrokerItemMask {
 	/**
-	 * Weapons Section + Sub Categories
+	 * 武器分区 + 子分类 / Weapons Section + Sub Categories
 	 */
 	WEAPON(9010, new BrokerMinMaxFilter(1000, 1023), null, true),
 	WEAPON_SWORD(1000, new BrokerContainsFilter(1000), BrokerItemMask.WEAPON, false),
@@ -46,7 +35,7 @@ public enum BrokerItemMask {
 	WEAPON_KEYHAMMER(1022, new BrokerContainsFilter(1022), BrokerItemMask.WEAPON, false),
 
 	/**
-	 * Armor Section + Sub Categories
+	 * 防具分区 + 子分类 / Armor Section + Sub Categories
 	 */
 	ARMOR(9020, new BrokerMinMaxFilter(1101, 1160), null, true),
 	ARMOR_CLOTHING(8010, new BrokerContainsFilter(1100, 1110, 1120, 1130, 1140), BrokerItemMask.ARMOR, true),
@@ -83,7 +72,7 @@ public enum BrokerItemMask {
 	ARMOR_WINGS(1870, new BrokerContainsFilter(1870), BrokerItemMask.ARMOR, false),
 
 	/**
-	 * Accessory Section + Sub Categories
+	 * 饰品分区 + 子分类 / Accessory Section + Sub Categories
 	 */
 	ACCESSORY(9030, new BrokerMinMaxFilter(1200, 1872), null, true),
 	ACCESSORY_EARRINGS(1200, new BrokerContainsFilter(1200), BrokerItemMask.ACCESSORY, false),
@@ -95,113 +84,179 @@ public enum BrokerItemMask {
 	ACCESSORY_BRACELET(1872, new BrokerContainsFilter(1872), BrokerItemMask.ACCESSORY, false),
 
 	/**
-	 * Skill related Section + Sub Categories
+	 * 技能相关分区 + 子分类 / Skill related Section + Sub Categories
 	 */
 	SKILL_RELATED(9040, new BrokerContainsFilter(1400, 1695), null, true),
 	SKILL_RELATED_STIGMA(1400, new BrokerContainsFilter(1400), BrokerItemMask.SKILL_RELATED, true),
+	/** 技能相关烙印之石（剑星） / Skill Related Stigma Gladiator */
 	SKILL_RELATED_STIGMA_GLADIATOR(6010, new BrokerPlayerClassExtraFilter(1400, PlayerClass.GLADIATOR),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（守护星） / Skill Related Stigma Templar */
 	SKILL_RELATED_STIGMA_TEMPLAR(6011, new BrokerPlayerClassExtraFilter(1400, PlayerClass.TEMPLAR),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（杀星） / Skill Related Stigma Assassin */
 	SKILL_RELATED_STIGMA_ASSASSIN(6012, new BrokerPlayerClassExtraFilter(1400, PlayerClass.ASSASSIN),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（弓星） / Skill Related Stigma Ranger */
 	SKILL_RELATED_STIGMA_RANGER(6013, new BrokerPlayerClassExtraFilter(1400, PlayerClass.RANGER),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（魔道星） / Skill Related Stigma Sorcerer */
 	SKILL_RELATED_STIGMA_SORCERER(6014, new BrokerPlayerClassExtraFilter(1400, PlayerClass.SORCERER),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（精灵星） / Skill Related Stigma Spiritmaster */
 	SKILL_RELATED_STIGMA_SPIRITMASTER(6015, new BrokerPlayerClassExtraFilter(1400, PlayerClass.SPIRIT_MASTER),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（治愈星） / Skill Related Stigma Cleric */
 	SKILL_RELATED_STIGMA_CLERIC(6016, new BrokerPlayerClassExtraFilter(1400, PlayerClass.CLERIC),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（护法星） / Skill Related Stigma Chanter */
 	SKILL_RELATED_STIGMA_CHANTER(6017, new BrokerPlayerClassExtraFilter(1400, PlayerClass.CHANTER),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（枪炮星） / Skill Related Stigma Gunslinger */
 	SKILL_RELATED_STIGMA_GUNSLINGER(6018, new BrokerPlayerClassExtraFilter(1400, PlayerClass.GUNSLINGER),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（吟游星） / Skill Related Stigma Songweaver */
 	SKILL_RELATED_STIGMA_SONGWEAVER(6019, new BrokerPlayerClassExtraFilter(1400, PlayerClass.SONGWEAVER),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
+	/** 技能相关烙印之石（机甲星） / Skill Related Stigma Aethertech */
 	SKILL_RELATED_STIGMA_AETHERTECH(6020, new BrokerPlayerClassExtraFilter(1400, PlayerClass.AETHERTECH),
 			BrokerItemMask.SKILL_RELATED_STIGMA, false),
 
+	/** 技能相关技能手册 / Skill Related Skill Manual */
 	SKILL_RELATED_SKILL_MANUAL(1695, new BrokerContainsFilter(1695), BrokerItemMask.SKILL_RELATED, true),
+	/** 技能相关技能手册（剑星） / Skill Related Skill Manual Gladiator */
 	SKILL_RELATED_SKILL_MANUAL_GLADIATOR(6020, new BrokerPlayerClassExtraFilter(1695, PlayerClass.GLADIATOR),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（守护星） / Skill Related Skill Manual Templar */
 	SKILL_RELATED_SKILL_MANUAL_TEMPLAR(6021, new BrokerPlayerClassExtraFilter(1695, PlayerClass.TEMPLAR),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（杀星） / Skill Related Skill Manual Assassin */
 	SKILL_RELATED_SKILL_MANUAL_ASSASSIN(6022, new BrokerPlayerClassExtraFilter(1695, PlayerClass.ASSASSIN),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（弓星） / Skill Related Skill Manual Ranger */
 	SKILL_RELATED_SKILL_MANUAL_RANGER(6023, new BrokerPlayerClassExtraFilter(1695, PlayerClass.RANGER),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（魔道星） / Skill Related Skill Manual Sorcerer */
 	SKILL_RELATED_SKILL_MANUAL_SORCERER(6024, new BrokerPlayerClassExtraFilter(1695, PlayerClass.SORCERER),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/**
+	 * 技能 RELATED 技能 MANUALSPIRITMASTER。
+	 * Skill Related Skill Manual Spiritmaster.
+	 */
 	SKILL_RELATED_SKILL_MANUAL_SPIRITMASTER(6025, new BrokerPlayerClassExtraFilter(1695, PlayerClass.SPIRIT_MASTER),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（治愈星） / Skill Related Skill Manual Cleric */
 	SKILL_RELATED_SKILL_MANUAL_CLERIC(6026, new BrokerPlayerClassExtraFilter(1695, PlayerClass.CLERIC),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（护法星） / Skill Related Skill Manual Chanter */
 	SKILL_RELATED_SKILL_MANUAL_CHANTER(6027, new BrokerPlayerClassExtraFilter(1695, PlayerClass.CHANTER),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（枪炮星） / Skill Related Skill Manual Gunslinger */
 	SKILL_RELATED_SKILL_MANUAL_GUNSLINGER(6028, new BrokerPlayerClassExtraFilter(1695, PlayerClass.GUNSLINGER),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（吟游星） / Skill Related Skill Manual Songweaver */
 	SKILL_RELATED_SKILL_MANUAL_SONGWEAVER(6029, new BrokerPlayerClassExtraFilter(1695, PlayerClass.SONGWEAVER),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
+	/** 技能相关技能手册（机甲星） / Skill Related Skill Manual Aethertech */
 	SKILL_RELATED_SKILL_MANUAL_AETHERTECH(6030, new BrokerPlayerClassExtraFilter(1695, PlayerClass.AETHERTECH),
 			BrokerItemMask.SKILL_RELATED_SKILL_MANUAL, false),
 
 	/**
-	 * Housing + Sub Categories
+	 * 房屋 + 子分类 / Housing + Sub Categories
 	 */
 	HOME_DECOR(9070, new BrokerContainsFilter(1710, 1711), null, true),
+	/** Home Decor Out Door / Home Decor Out Door */
 	HOME_DECOR_OUT_DOOR(1710, new BrokerContainsFilter(1710), BrokerItemMask.HOME_DECOR, false),
+	/** Home Decor In Door / Home Decor In Door */
 	HOME_DECOR_IN_DOOR(1711, new BrokerContainsFilter(1711), BrokerItemMask.HOME_DECOR, false),
 
+	/** 家具 / Furniture. */
 	FURNITURE(9080, new BrokerContainsFilter(1700, 1701, 1702, 1703, 1704), null, true),
+	/** Furniture Out Door / Furniture Out Door */
 	FURNITURE_OUT_DOOR(1703, new BrokerContainsFilter(1703), BrokerItemMask.FURNITURE, false),
+	/** Furniture In Door / Furniture In Door */
 	FURNITURE_IN_DOOR(8070, new BrokerContainsFilter(1700, 1701, 1702), BrokerItemMask.FURNITURE, true),
+	/** Furniture In Door Wall Mounted / Furniture In Door Wall Mounted */
 	FURNITURE_IN_DOOR_WALL_MOUNTED(1700, new BrokerContainsFilter(1700), BrokerItemMask.FURNITURE_IN_DOOR, false),
+	/** Furniture In Door Free Standing / Furniture In Door Free Standing */
 	FURNITURE_IN_DOOR_FREE_STANDING(1701, new BrokerContainsFilter(1701), BrokerItemMask.FURNITURE_IN_DOOR, false),
+	/** Furniture In Door Rugs / Furniture In Door Rugs */
 	FURNITURE_IN_DOOR_RUGS(1702, new BrokerContainsFilter(1702), BrokerItemMask.FURNITURE_IN_DOOR, false),
+	/** Furniture In Door Out Door / Furniture In Door Out Door */
 	FURNITURE_IN_DOOR_OUT_DOOR(1704, new BrokerContainsFilter(1704), BrokerItemMask.FURNITURE, false),
 
 	/**
-	 * Craft Section + Sub Categories
+	 * 制作分区 + 子分类 / Craft Section + Sub Categories
 	 */
 	CRAFT(9050, new BrokerContainsFilter(1520, 1522), null, true),
+	/** 制作材料。 / Craft Materials. */
 	CRAFT_MATERIALS(1520, new BrokerContainsFilter(1520), BrokerItemMask.CRAFT, true),
+	/** Craft Materials Collection / Craft Materials Collection */
 	CRAFT_MATERIALS_COLLECTION(6030, new BrokerContainsExtraFilter(15200), BrokerItemMask.CRAFT_MATERIALS, false),
+	/** Craft Materials Gain / Craft Materials Gain */
 	CRAFT_MATERIALS_GAIN(6031, new BrokerContainsExtraFilter(15201), BrokerItemMask.CRAFT_MATERIALS, false),
+	/** Craft Materials Parts / Craft Materials Parts */
 	CRAFT_MATERIALS_PARTS(6032, new BrokerContainsExtraFilter(15202), BrokerItemMask.CRAFT_MATERIALS, false),
+	/** Craft Design / Craft Design */
 	CRAFT_DESIGN(1522, new BrokerContainsFilter(1522), BrokerItemMask.CRAFT, true),
+	/** Craft Design Weaponsmithing / Craft Design Weaponsmithing */
 	CRAFT_DESIGN_WEAPONSMITHING(6040, new BrokerRecipeFilter(40002, 1522), BrokerItemMask.CRAFT_DESIGN, false),
+	/** Craft Design Armorsmithing / Craft Design Armorsmithing */
 	CRAFT_DESIGN_ARMORSMITHING(6041, new BrokerRecipeFilter(40003, 1522), BrokerItemMask.CRAFT_DESIGN, false),
+	/** Craft Design Tailoring / Craft Design Tailoring */
 	CRAFT_DESIGN_TAILORING(6042, new BrokerRecipeFilter(40004, 1522), BrokerItemMask.CRAFT_DESIGN, false),
+	/** Craft Design Handicrafting / Craft Design Handicrafting */
 	CRAFT_DESIGN_HANDICRAFTING(6043, new BrokerRecipeFilter(40008, 1522), BrokerItemMask.CRAFT_DESIGN, false),
+	/** Craft Design Alchemy / Craft Design Alchemy */
 	CRAFT_DESIGN_ALCHEMY(6044, new BrokerRecipeFilter(40007, 1522), BrokerItemMask.CRAFT_DESIGN, false),
+	/** Craft Design Cooking / Craft Design Cooking */
 	CRAFT_DESIGN_COOKING(6045, new BrokerRecipeFilter(40001, 1522), BrokerItemMask.CRAFT_DESIGN, false),
+	/** Craft Design Construction / Craft Design Construction */
 	CRAFT_DESIGN_CONSTRUCTION(6046, new BrokerRecipeFilter(40010, 1522), BrokerItemMask.CRAFT_DESIGN, false),
 
 	/**
-	 * Consumables Section + Sub Categories
+	 * 消耗品分区 + 子分类 / Consumables Section + Sub Categories
 	 */
 	CONSUMABLES(9060,
 			new BrokerContainsFilter(1410, 1600, 1620, 1640, 1650, 1660, 16603, 1661, 1665, 1670, 1680, 1690, 16912,
 					1692, 1693, 1694, 1696, 1873, 1900),
 			null, true),
+	/** Consumables Food / Consumables Food */
 	CONSUMABLES_FOOD(1600, new BrokerContainsFilter(1600), BrokerItemMask.CONSUMABLES, false),
+	/** Consumables Potion / Consumables Potion */
 	CONSUMABLES_POTION(1620, new BrokerContainsFilter(1620), BrokerItemMask.CONSUMABLES, false),
+	/** Consumables Scroll / Consumables Scroll */
 	CONSUMABLES_SCROLL(7060, new BrokerContainsFilter(1640), BrokerItemMask.CONSUMABLES, false),
+	/** Consumables Modify / Consumables Modify */
 	CONSUMABLES_MODIFY(8060, new BrokerContainsFilter(1650, 1660, 1665, 1670, 16603, 1680, 1692, 16912, 1873),
 			BrokerItemMask.CONSUMABLES, true),
+	/**
+	 * 消耗品·修改强化石。 / CONSUMABLESMODIFYENCHANTMENTSTONE。 Consumables Modify Enchantment Stone
+	 */
 	CONSUMABLES_MODIFY_ENCHANTMENT_STONE(1660, new BrokerContainsFilter(1660), BrokerItemMask.CONSUMABLES_MODIFY,
 			false),
+	/** Consumables Modify Manastone / Consumables Modify Manastone */
 	CONSUMABLES_MODIFY_MANASTONE(1670, new BrokerContainsFilter(1670), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/** Consumables Modify Tempering / Consumables Modify Tempering */
 	CONSUMABLES_MODIFY_TEMPERING(7064, new BrokerContainsExtraFilter(16603), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/** Consumables Modify Godstone / Consumables Modify Godstone */
 	CONSUMABLES_MODIFY_GODSTONE(1680, new BrokerContainsFilter(1680), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/** Consumables Modify Dye / Consumables Modify Dye */
 	CONSUMABLES_MODIFY_DYE(7061, new BrokerContainsFilter(1692), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/** Consumables Modify Paint / Consumables Modify Paint */
 	CONSUMABLES_MODIFY_PAINT(7065, new BrokerContainsExtraFilter(16912), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/**
+	 * 消耗品·修改增幅石。 / CONSUMABLESMODIFYAMPLIFICATIONSTONE。 Consumables Modify Amplification Stone
+	 */
 	CONSUMABLES_MODIFY_AMPLIFICATION_STONE(7066, new BrokerContainsFilter(1665), BrokerItemMask.CONSUMABLES_MODIFY,
 			false),
+	/** Consumables Modify Reduction Stone / Consumables Modify Reduction Stone */
 	CONSUMABLES_MODIFY_REDUCTION_STONE(1650, new BrokerContainsFilter(1650), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/** Consumables Modify Essence Core / Consumables Modify Essence Core */
 	CONSUMABLES_MODIFY_ESSENCE_CORE(1873, new BrokerContainsFilter(1873), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/** Consumables Modify Other / Consumables Modify Other */
 	CONSUMABLES_MODIFY_OTHER(7063, new BrokerContainsFilter(1661), BrokerItemMask.CONSUMABLES_MODIFY, false),
+	/** Consumables Other / Consumables Other */
 	CONSUMABLES_OTHER(7062, new BrokerContainsFilter(1410, 1690, 1693, 1694, 1696, 1900), BrokerItemMask.CONSUMABLES,
 			false),
 
@@ -209,6 +264,7 @@ public enum BrokerItemMask {
 	 * Other Section
 	 */
 	OTHER(7070, new BrokerContainsFilter(1850, 1860, 1880, 1881, 1887), null, false),
+	/** 未知 / Unknown. */
 	UNKNOWN(1, new BrokerContainsFilter(0), null, false);
 
 	private int typeId;
@@ -223,14 +279,21 @@ public enum BrokerItemMask {
 		this.childrenExist = childrenExist;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return typeId;
 	}
 
+	/**
+	 * @param item Whether matches / Whether matches
+	 */
 	public boolean isMatches(Item item) {
 		return filter.accept(item.getItemTemplate());
 	}
 
+	/**
+	 * @param maskId Whether children mask / Whether children mask
+	 */
 	public boolean isChildrenMask(int maskId) {
 		for (BrokerItemMask p = parent; p != null; p = p.parent) {
 			if (p.typeId == maskId) {
@@ -240,6 +303,7 @@ public enum BrokerItemMask {
 		return false;
 	}
 
+	/** 按 ID 返回 broker mask / Returns the broker mask by id */
 	public static BrokerItemMask getBrokerMaskById(int id) {
 		for (BrokerItemMask mt : values()) {
 			if (mt.typeId == id) {
@@ -249,6 +313,9 @@ public enum BrokerItemMask {
 		return UNKNOWN;
 	}
 
+	/**
+	 * @return Whether children / Whether children
+	 */
 	public boolean hasChildren() {
 		return childrenExist;
 	}

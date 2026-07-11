@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.container;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.services.LifeStatsRestoreService;
 
 /**
+ * NPCLife 属性，用于属性相关逻辑。
+ * Npc Life Stats for stats logic.
+ *
  * @author ATracer
  */
 public class NpcLifeStats extends CreatureLifeStats<Npc> {
@@ -42,19 +29,17 @@ public class NpcLifeStats extends CreatureLifeStats<Npc> {
 
 	@Override
 	protected void onIncreaseMp(TYPE type, int value, int skillId, LOG log) {
-		// nothing todo
 	}
 
 	@Override
 	protected void onReduceHp() {
-		// nothing todo
 	}
 
 	@Override
 	protected void onReduceMp() {
-		// nothing todo
 	}
 
+	/** 触发恢复任务 / Trigger restore task */
 	@Override
 	public void triggerRestoreTask() {
 		restoreLock.lock();
@@ -67,6 +52,7 @@ public class NpcLifeStats extends CreatureLifeStats<Npc> {
 		}
 	}
 
+	/** Start resting / Start resting */
 	public void startResting() {
 		triggerRestoreTask();
 	}

@@ -1,20 +1,3 @@
-/**
- * This file is part of aion-engine <aion-engine.com>
- *
- *  aion-engine is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  aion-engine is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with aion-engine.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.aionemu.gameserver.quest.handlers.reshanta;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -25,6 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 雷山塔任务脚本：A Fruitful Partnership（任务 ID 2767）。
+ * Reshanta quest script: A Fruitful Partnership (quest ID 2767).
+ */
 public class _2767AFruitfulPartnership extends QuestHandler {
 
 	private final static int questId = 2767;

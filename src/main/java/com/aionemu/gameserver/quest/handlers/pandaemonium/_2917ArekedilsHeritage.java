@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 潘德莫尼姆任务脚本：Arekedils Heritage（任务 ID 2917）。
+ * Pandaemonium quest script: Arekedils Heritage (quest ID 2917).
  */
 public class _2917ArekedilsHeritage extends QuestHandler {
 

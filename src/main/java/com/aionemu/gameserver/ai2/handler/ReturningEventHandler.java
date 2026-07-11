@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 
 /**
+ * 返回出生点事件处理器，负责 NPC 不在家 / 回到家时的移动、重生与空闲恢复。
+ * Handles return-home events: movement, respawn, and idle recovery when NPC is away from or back at home.
+ *
  * @author ATracer
  * @modified Yon (Aion Reconstruction Project) -- added handling to {@link #onNotAtHome(NpcAI2)} for when the entity cannot move;
  * removed deprecated method calls
@@ -33,7 +20,10 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 public class ReturningEventHandler {
 
 	/**
-	 * @param npcAI
+	 * 不在出生点时触发：进入 RETURNING，按路径行走、归家移动，或删除后在原点重生。
+	 * Fired when not at home: enters RETURNING, walks routes, moves home, or deletes and respawns at origin.
+	 *
+	 * NPC AI instance
 	 */
 	public static void onNotAtHome(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -58,7 +48,6 @@ public class ReturningEventHandler {
 				if (npc.isDeleteDelayed()) {
 					onBackHome(npcAI);
 				} else {
-					//FIXME: Maybe there's better handling here?
 					/*
 					 * The idea is the entity cannot move, but has been moved from its spawn...
 					 * so instead of moving it back to spawn (not possible), it should just
@@ -77,7 +66,10 @@ public class ReturningEventHandler {
 	}
 
 	/**
-	 * @param npcAI
+	 * 回到出生点时触发：切回空闲、播放空闲表情并通知控制器归家。
+	 * Fired when back at home: returns to idle, plays idle emote, and notifies controller of return.
+	 *
+	 * NPC AI instance
 	 */
 	public static void onBackHome(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {

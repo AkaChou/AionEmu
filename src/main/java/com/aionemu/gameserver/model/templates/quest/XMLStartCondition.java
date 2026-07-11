@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.quest;
 
 import java.util.List;
@@ -35,10 +19,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * Checks quest start conditions, listed in quest_data.xml
- * 
+ * XMLStartCondition 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author antness
- * @reworked vlog
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestStartConditions")
@@ -59,7 +43,7 @@ public class XMLStartCondition {
 	@XmlElement(name = "equipped", type = Integer.class)
 	protected List<Integer> equipped;
 
-	/** Check, if the player has finished listed quests */
+	/** 检查玩家是否已完成列出的任务。 / Check, if the player has finished listed quests */
 	private boolean checkFinishedQuests(QuestStateList qsl) {
 		if (finished != null && finished.size() > 0) {
 			for (FinishedQuestCond fqc : finished) {
@@ -81,7 +65,7 @@ public class XMLStartCondition {
 		return true;
 	}
 
-	/** Check, if the player has not finished listed quests */
+	/** 检查玩家是否未完成列出的任务。 / Check, if the player has not finished listed quests */
 	private boolean checkUnfinishedQuests(QuestStateList qsl) {
 		if (unfinished != null && unfinished.size() > 0) {
 			for (Integer questId : unfinished) {
@@ -93,7 +77,7 @@ public class XMLStartCondition {
 		return true;
 	}
 
-	/** Check, if the player has not acquired listed quests */
+	/** 检查玩家是否未接取列出的任务。 / Check, if the player has not acquired listed quests */
 	private boolean checkNoAcquiredQuests(QuestStateList qsl) {
 		if (noacquired != null && noacquired.size() > 0) {
 			for (Integer questId : noacquired) {
@@ -106,7 +90,7 @@ public class XMLStartCondition {
 		return true;
 	}
 
-	/** Check, if the player has acquired listed quests */
+	/** 检查玩家是否已接取列出的任务。 / Check, if the player has acquired listed quests */
 	private boolean checkAcquiredQuests(QuestStateList qsl) {
 		if (acquired != null && acquired.size() > 0) {
 			for (Integer questId : acquired) {
@@ -135,7 +119,9 @@ public class XMLStartCondition {
 		return true;
 	}
 
-	/** Check all conditions */
+	/**
+	 * Check all conditions
+	 */
 	public boolean check(Player player, boolean warn) {
 		QuestStateList qsl = player.getQuestStateList();
 		return checkFinishedQuests(qsl) && checkUnfinishedQuests(qsl) && checkAcquiredQuests(qsl)
@@ -143,13 +129,14 @@ public class XMLStartCondition {
 	}
 
 	private boolean checkReward(int questId, int neededReward, int currentReward) {
-		// Temporary exceptions-quests till abyss entry quests work with correct reward
+		// 在欧比斯入场任务奖励正确前的临时例外任务。 / Temporary exceptions-quests till abyss entry quests work with correct reward
 		if (neededReward != currentReward && questId != 2947 && questId != 1922) {
 			return false;
 		}
 		return true;
 	}
 
+	/** 返回 finished preconditions / Returns the finished preconditions */
 	public List<FinishedQuestCond> getFinishedPreconditions() {
 		return finished;
 	}

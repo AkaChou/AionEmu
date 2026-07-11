@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -39,6 +24,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+
+/**
+ * Useable 物品对象。
+ * Useable Item Object game object.
+ */
 
 public class UseableItemObject extends HouseObject<HousingUseableItem> {
 
@@ -78,6 +68,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		}
 	}
 
+	/** 使用时 / on Use. */
 	@Override
 	public void onUse(final Player player) {
 		if (!usingPlayer.compareAndSet(null, player)) {
@@ -155,6 +146,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		final int ownerId = getOwnerHouse().getOwnerId();
 		final int usedCount = useCount == null ? 0 : currentUseCount + 1;
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), 0, 9));
@@ -162,6 +154,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 				warnAndRelease(player, null);
 			}
 
+			/** 物品已使用 / itemused. */
 			@Override
 			public void itemused(Item item) {
 				abort();
@@ -172,6 +165,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), delay, 8));
 		player.getController().addTask(TaskId.HOUSE_OBJECT_USE,
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/** 运行 / run. */
 					@Override
 					public void run() {
 						try {
@@ -226,7 +220,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 								int cooldownSeconds;
 								
 								if (cd == null || cd == 0) {
-									// Reset at midnight (next day 00:00)
+									// 午夜重置（次日 00:00） / Reset at midnight (next day 00:00)
 									ZonedDateTime now = ZonedDateTime.now();
 									ZonedDateTime midnight = now.plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
 									cooldownSeconds = (int) ((midnight.toInstant().toEpochMilli() - now.toInstant().toEpochMilli()) / 1000);
@@ -260,10 +254,12 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		super.expireEnd(player);
 	}
 
+	/** 设置 must give last reward / Sets the must give last reward */
 	public void setMustGiveLastReward(boolean mustGiveLastReward) {
 		this.mustGiveLastReward = mustGiveLastReward;
 	}
 
+	/** 到期结束 / Expire End */
 	@Override
 	public void expireEnd(Player player) {
 		final int descId = getObjectTemplate().getNameId();
@@ -277,6 +273,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		}
 	}
 
+	/** 是否立即过期 / Whether expire now */
 	@Override
 	public boolean canExpireNow() {
 		if (mustGiveLastReward) {
@@ -285,6 +282,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		return usingPlayer.get() == null;
 	}
 
+	/** Write usage data / Write usage data */
 	public void writeUsageData(ByteBuffer buffer) {
 		entryWriter.writeMe(buffer);
 	}

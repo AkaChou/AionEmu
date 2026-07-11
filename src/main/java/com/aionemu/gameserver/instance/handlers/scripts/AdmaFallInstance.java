@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,16 +19,25 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Map;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/** Source: https://www.youtube.com/watch?v=wqwUrBYN85A
-/****/
+/**
+ * 阿德玛陷落副本事件处理器。
+ * Instance event handler for Adma Fall.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301600000)
 public class AdmaFallInstance extends GeneralInstanceHandler
 {
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -58,7 +51,7 @@ public class AdmaFallInstance extends GeneralInstanceHandler
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
                         dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188057620, 1)); //Chaotic Dimension Stone Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
 						switch (Rnd.get(1, 2)) {
@@ -85,48 +78,84 @@ public class AdmaFallInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
         doors = instance.getDoors();
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 220417: //Steward Zeetrum.
 			    doors.get(1).setOpen(true);
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 2000);
 			break;
 			case 220418: //Lady Karemiwen Adma.
 			    doors.get(28).setOpen(true);
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 2000);
 			break;
 			case 220427: //Reaper Of Adma Castle.
 			    spawn(806205, 532.3307f, 510.2517f, 197.94453f, (byte) 60); //Adma's Fall Exit.
 				spawn(806220, 525.2205f, 510.08893f, 197.72095f, (byte) 44); //Adma Family Coffers.
-			    //sendMsg("[SUCCES]: You have finished <Adma's Fall>");
+			    // 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Adma's Fall>");
 			break;
 		}
 	}
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -138,6 +167,10 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 		}, time);
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
         doors.clear();

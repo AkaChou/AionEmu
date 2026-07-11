@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
@@ -55,23 +41,36 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 欧比斯登陆点（Abyss Landing）服务：救赎/先驱登陆点等级、积分、刷怪与广播。
+ * Abyss Landing service: Redemption/Harbinger landing levels, points, spawns and broadcasts.
+ */
 @Slf4j
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
 	private static Map<Integer, LandingLocation> abyssLanding;
 	private final ConcurrentMap<Integer, Landing<?>> activeLanding = new ConcurrentHashMap<Integer, Landing<?>>();
-	private final int questRate = AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE;
 
+	/**
+	 * 从静态数据与数据库加载登陆点并全部启动。
+	 * Load landing locations from static data and DB, then start all of them.
+	 */
 	public void initLandingLocations() {
 		abyssLanding = DataManager.LANDING_LOCATION_DATA.getLandingLocations();
 		DAOManager.getDAO(AbyssLandingDAO.class).loadLandingLocations(abyssLanding);
 		for (LandingLocation loc : getLandingLocations().values()) {
 			startLanding(loc.getId());
 		}
-		log.info("[AbyssLandingService] Loaded " + abyssLanding.size() + " Locations");
+		log.info(I18n.get("log.c7417b6d4d56", abyssLanding.size()));
 	}
 
+	/**
+	 * 启动指定登陆点（按当前等级）。
+	 * Start the landing at the given id using its current level.
+	 *
+	 * @param id 登陆点 ID / landing location id
+	 */
 	public void startLanding(final int id) {
 		Landing<?> land = new AbyssLanding(abyssLanding.get(id));
 		if (activeLanding.putIfAbsent(id, land) != null) {
@@ -80,6 +79,12 @@ public class AbyssLandingService {
 		land.start(getLandingLocation(id).getLevel());
 	}
 
+	/**
+	 * 停止指定登陆点。
+	 * Stop the landing at the given id.
+	 *
+	 * @param id 登陆点 ID / landing location id
+	 */
 	public void stopLanding(int id) {
 		Landing<?> landing = activeLanding.remove(id);
 		if (landing == null) {
@@ -88,6 +93,13 @@ public class AbyssLandingService {
 		landing.stop();
 	}
 
+	/**
+	 * 按状态刷出登陆点相关 NPC。
+	 * Spawn landing NPCs for the given location and state.
+	 *
+	 * landing location
+	 * spawn state
+	 */
 	public static void spawn(LandingLocation loc, LandingStateType estate) {
 		if (estate.equals(estate)) {
 		}
@@ -102,6 +114,12 @@ public class AbyssLandingService {
 		}
 	}
 
+	/**
+	 * 清除指定登陆点已刷出的 NPC。
+	 * Despawn NPCs at the given landing location.
+	 *
+	 * landing location
+	 */
 	public static void despawn(LandingLocation loc) {
 		if (loc.getSpawned() == null) {
 			return;
@@ -117,6 +135,14 @@ public class AbyssLandingService {
 		loc.getSpawned().clear();
 	}
 
+	/**
+	 * 更新救赎登陆点积分（胜负加减），并检查是否升级。
+	 * Update Redemption landing points (add/subtract by outcome) and check for level-up.
+	 *
+	 * @param points 积分变化量 / points delta
+	 * @param type 积分类型 / points category
+	 * @param win 是否胜利加分 / true to gain points
+	 */
 	public void updateRedemptionLanding(int points, LandingPointsEnum type, boolean win) {
 		LandingLocation loc = redemptionLanding();
 		if (win) {
@@ -134,7 +160,7 @@ public class AbyssLandingService {
 				loc.setArtifactPoints(loc.getArtifactPoints() + points);
 				break;
 			case QUEST:
-				loc.setQuestPoints(loc.getQuestPoints() + (points * questRate));
+				loc.setQuestPoints(loc.getQuestPoints() + (points * AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE));
 				break;
 			case MONUMENT:
 				loc.setMonumentsPoints(loc.getMonumentsPoints() + points);
@@ -174,10 +200,10 @@ public class AbyssLandingService {
 				}
 				break;
 			case QUEST:
-				if (loc.getQuestPoints() < (points * questRate)) {
+				if (loc.getQuestPoints() < (points * AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE)) {
 					return;
 				} else {
-					loc.setQuestPoints(loc.getQuestPoints() - (points * questRate));
+					loc.setQuestPoints(loc.getQuestPoints() - (points * AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE));
 				}
 				break;
 			case MONUMENT:
@@ -207,6 +233,14 @@ public class AbyssLandingService {
 		onUpdate();
 	}
 
+	/**
+	 * 更新先驱登陆点积分（胜负加减），并检查是否升级。
+	 * Update Harbinger landing points (add/subtract by outcome) and check for level-up.
+	 *
+	 * @param points 积分变化量 / points delta
+	 * @param type 积分类型 / points category
+	 * @param win 是否胜利加分 / true to gain points
+	 */
 	public void updateHarbingerLanding(int points, LandingPointsEnum type, boolean win) {
 		LandingLocation loc = harbingerLanding();
 		if (win) {
@@ -224,7 +258,7 @@ public class AbyssLandingService {
 				loc.setArtifactPoints(loc.getArtifactPoints() + points);
 				break;
 			case QUEST:
-				loc.setQuestPoints(loc.getQuestPoints() + (points * questRate));
+				loc.setQuestPoints(loc.getQuestPoints() + (points * AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE));
 				break;
 			case MONUMENT:
 				loc.setMonumentsPoints(loc.getMonumentsPoints() + points);
@@ -264,10 +298,10 @@ public class AbyssLandingService {
 				}
 				break;
 			case QUEST:
-				if (loc.getQuestPoints() < (points * questRate)) {
+				if (loc.getQuestPoints() < (points * AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE)) {
 					return;
 				} else {
-					loc.setQuestPoints(loc.getQuestPoints() - (points * questRate));
+					loc.setQuestPoints(loc.getQuestPoints() - (points * AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE));
 				}
 				break;
 			case MONUMENT:
@@ -297,6 +331,15 @@ public class AbyssLandingService {
 		onUpdate();
 	}
 
+	/**
+	 * 向全服广播登陆点积分获取/失去公告。
+	 * Broadcast a landing-points gain/loss announcement to all players.
+	 *
+	 * @param pl 触发玩家 / source player
+	 * @param race 阵营描述 ID / race description id
+	 * @param name 目标名称描述 ID / target name description id
+	 * points amount
+	 */
 	public void AnnounceToPoints(final Player pl, final DescriptionId race, final DescriptionId name, final int points,
 			final LandingPointsEnum type) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -304,19 +347,19 @@ public class AbyssLandingService {
 			public void visit(Player player) {
 				switch (type) {
 				case SIEGE:
-					// %0 has occupied %0 and the Landing is now enhanced.
+					// %0 占领了 %0，登陆点已增强。 / %0 has occupied %0 and the Landing is now enhanced.
 					PacketSendUtility.sendPacket(player,
 							SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_OCCUPY(race, name));
 					break;
 				case BASE:
-					// %0 has occupied %1 Base and the Landing is now enhanced.
+					// %0 已占领 %1 基地，登陆点已增强。 / %0 has occupied %1 Base and the Landing is now enhanced.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
 							.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_OCCUPY_BASECAMP(race, name.toString()));
 					break;
 				case QUEST:
-					// Completed quest has contributed %0 points to the Landing.
+					// 已完成任务为登陆点贡献了 %0 点。 / Completed quest has contributed %0 points to the Landing.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_POINT_QUEST_GAIN(points));
-					// %0's completed quest has enhanced the Landing.
+					// %0 已完成的任务增强了登陆点。 / %0's completed quest has enhanced the Landing.
 					PacketSendUtility.sendPacket(player,
 							SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_QUEST(pl.getName()));
 					break;
@@ -325,6 +368,13 @@ public class AbyssLandingService {
 		});
 	}
 
+	/**
+	 * 检查救赎登陆点是否因积分变化而升级/降级。
+	 * Check whether Redemption landing should level up/down after a points change.
+	 *
+	 * current points
+	 * @param gain 是否为获得积分 / true if points were gained
+	 */
 	public void checkRedemptionLanding(int points, boolean gain) {
 		int level = 0;
 		if (points >= 0 && points <= 199999) {
@@ -352,6 +402,13 @@ public class AbyssLandingService {
 		}
 	}
 
+	/**
+	 * 检查先驱登陆点是否因积分变化而升级/降级。
+	 * Check whether Harbinger landing should level up/down after a points change.
+	 *
+	 * current points
+	 * @param gain 是否为获得积分 / true if points were gained
+	 */
 	public void checkHarbingerLanding(int points, boolean gain) {
 		int level = 0;
 		if (points >= 0 && points <= 199999) {
@@ -379,6 +436,12 @@ public class AbyssLandingService {
 		}
 	}
 
+	/**
+	 * 救赎登陆点升级处理（刷怪、广播、发包）。
+	 * Handle Redemption landing level-up (spawn, broadcast, packets).
+	 *
+	 * new level
+	 */
 	public void levelUpRedemptionLanding(int level) {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
@@ -386,7 +449,7 @@ public class AbyssLandingService {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// Landing Level Up.
+				// 登陆点升级。 / Landing Level Up.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_UP_LIGHT);
 				PacketSendUtility.sendPacket(player,
 						new SM_ABYSS_LANDING_LEVEL(0, redemptionLanding().getLevel(), redemptionLanding().getLevel()));
@@ -394,6 +457,12 @@ public class AbyssLandingService {
 		});
 	}
 
+	/**
+	 * 先驱登陆点升级处理（刷怪、广播、发包）。
+	 * Handle Harbinger landing level-up (spawn, broadcast, packets).
+	 *
+	 * new level
+	 */
 	public void levelUpHarbingerLanding(int level) {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
@@ -401,7 +470,7 @@ public class AbyssLandingService {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// Landing Level Up.
+				// 登陆点升级。 / Landing Level Up.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_UP_DARK);
 				PacketSendUtility.sendPacket(player,
 						new SM_ABYSS_LANDING_LEVEL(1, harbingerLanding().getLevel(), harbingerLanding().getLevel()));
@@ -409,6 +478,12 @@ public class AbyssLandingService {
 		});
 	}
 
+	/**
+	 * 先驱登陆点降级处理。
+	 * Handle Harbinger landing level-down.
+	 *
+	 * new level
+	 */
 	public void onHarbingerLandingLevelDown(int level) {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
@@ -416,7 +491,7 @@ public class AbyssLandingService {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// Landing Weakened.
+				// 登陆点削弱。 / Landing Weakened.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_DOWN);
 				PacketSendUtility.sendPacket(player,
 						new SM_ABYSS_LANDING_LEVEL(1, harbingerLanding().getLevel(), harbingerLanding().getLevel()));
@@ -424,6 +499,12 @@ public class AbyssLandingService {
 		});
 	}
 
+	/**
+	 * 救赎登陆点降级处理。
+	 * Handle Redemption landing level-down.
+	 *
+	 * new level
+	 */
 	public void onRedemptionLandingLevelDown(int level) {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
@@ -431,7 +512,7 @@ public class AbyssLandingService {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// Landing Weakened.
+				// 登陆点削弱。 / Landing Weakened.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_DOWN);
 				PacketSendUtility.sendPacket(player,
 						new SM_ABYSS_LANDING_LEVEL(0, redemptionLanding().getLevel(), redemptionLanding().getLevel()));
@@ -439,8 +520,13 @@ public class AbyssLandingService {
 		});
 	}
 
-	/**
-	 * MONUMENT
+		/**
+	 * 纪念碑相关奖励积分入账。
+	 * Apply monument reward points for the given race/location.
+	 *
+	 * 阵营 / race
+	 * @param id 纪念碑/地点 ID / monument or location id
+	 * points
 	 */
 	public void onRewardMonuments(Race race, int id, int points) {
 		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
@@ -455,6 +541,14 @@ public class AbyssLandingService {
 		AbyssLandingSpecialService.onSave(lsl);
 	}
 
+	/**
+	 * 纪念碑被摧毁时的积分处理。
+	 * Apply monument-death point changes for the given race/location.
+	 *
+	 * 阵营 / race
+	 * @param id 纪念碑/地点 ID / monument or location id
+	 * points
+	 */
 	public void onDieMonuments(Race race, int id, int points) {
 		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
 		if (race == Race.ELYOS) {
@@ -470,8 +564,13 @@ public class AbyssLandingService {
 		AbyssLandingSpecialService.onSave(lsl);
 	}
 
-	/**
-	 * COMMANDER
+		/**
+	 * 指挥官相关奖励积分入账。
+	 * Apply commander reward points for the given race/location.
+	 *
+	 * 阵营 / race
+	 * @param id 地点 ID / location id
+	 * points
 	 */
 	public void onRewardCommander(Race race, int id, int points) {
 		if (race == Race.ASMODIANS) {
@@ -483,6 +582,14 @@ public class AbyssLandingService {
 		}
 	}
 
+	/**
+	 * 指挥官阵亡时的积分处理。
+	 * Apply commander-death point changes for the given race/location.
+	 *
+	 * 阵营 / race
+	 * @param id 地点 ID / location id
+	 * points
+	 */
 	public void onDieCommander(Race race, int id, int points) {
 		if (race == Race.ELYOS) {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, true);
@@ -495,8 +602,12 @@ public class AbyssLandingService {
 		}
 	}
 
-	/**
-	 * FACILITY
+		/**
+	 * 设施相关奖励积分入账。
+	 * Apply facility reward points for the given race.
+	 *
+	 * 阵营 / race
+	 * points
 	 */
 	public void onRewardFacility(Race race, int points) {
 		if (race == Race.ASMODIANS) {
@@ -508,6 +619,12 @@ public class AbyssLandingService {
 		}
 	}
 
+	/**
+	 * 玩家进入世界时同步登陆点状态包。
+	 * Sync landing-state packets when a player enters the world.
+	 *
+	 * @param player 进入世界的玩家 / entering player
+	 */
 	public void onEnterWorld(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_ABYSS_LANDING());
 		PacketSendUtility.sendPacket(player,
@@ -516,6 +633,10 @@ public class AbyssLandingService {
 				new SM_ABYSS_LANDING_LEVEL(1, harbingerLanding().getLevel(), harbingerLanding().getLevel()));
 	}
 
+	/**
+	 * 持久化/刷新全部登陆点状态。
+	 * Persist or refresh all landing locations.
+	 */
 	public void onUpdate() {
 		getDAO().updateLocation(getLandingLocation(redemptionLanding().getId()));
 		getDAO().updateLocation(getLandingLocation(harbingerLanding().getId()));
@@ -525,10 +646,22 @@ public class AbyssLandingService {
 		return DAOManager.getDAO(AbyssLandingDAO.class);
 	}
 
+	/**
+	 * 向指定玩家发送登陆点状态包。
+	 * Send landing-state packets to the given player.
+	 *
+	 * target player
+	 */
 	public void sendPacketToPlayer(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_ABYSS_LANDING());
 	}
 
+	/**
+	 * 获取 AbyssLandingService 单例（Spring 提供者优先，否则 holder）。
+	 * Return the AbyssLandingService singleton (Spring provider first, else holder).
+	 *
+	 * service instance
+	 */
 	public static AbyssLandingService getInstance() {
 		ObjectProvider<AbyssLandingService> provider = instanceProvider;
 		if (provider == null) {
@@ -537,6 +670,12 @@ public class AbyssLandingService {
 		return provider.getIfAvailable(() -> AbyssLandingService.SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 getInstance 使用。
+	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AbyssLandingService> instanceProvider) {
 		AbyssLandingService.instanceProvider = instanceProvider;
 	}
@@ -545,18 +684,43 @@ public class AbyssLandingService {
 		protected static final AbyssLandingService instance = new AbyssLandingService();
 	}
 
+	/**
+	 * 按 ID 获取登陆点。
+	 * Get a landing location by id.
+	 *
+	 * @param id 登陆点 ID / landing location id
+	 * landing location
+	 */
 	public LandingLocation getLandingLocation(int id) {
 		return abyssLanding.get(id);
 	}
 
+	/**
+	 * 返回救赎登陆点。
+	 * Return the Redemption landing location.
+	 *
+	 * @return 救赎登陆点 / Redemption landing
+	 */
 	public LandingLocation redemptionLanding() {
 		return abyssLanding.get(1);
 	}
 
+	/**
+	 * 返回先驱登陆点。
+	 * Return the Harbinger landing location.
+	 *
+	 * @return 先驱登陆点 / Harbinger landing
+	 */
 	public LandingLocation harbingerLanding() {
 		return abyssLanding.get(2);
 	}
 
+	/**
+	 * 返回全部登陆点映射。
+	 * Return the map of all landing locations.
+	 *
+	 * location map
+	 */
 	public static Map<Integer, LandingLocation> getLandingLocations() {
 		return abyssLanding;
 	}

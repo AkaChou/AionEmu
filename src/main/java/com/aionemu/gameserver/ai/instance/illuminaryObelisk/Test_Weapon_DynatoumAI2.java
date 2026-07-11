@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -41,10 +25,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Illuminary Obelisk 副本 NPC AI：Test Weapon Dynatoum（@AIName "test_weapon_dynatoum"），继承 AggressiveNpcAI2。
+ * Illuminary Obelisk instance NPC AI: Test Weapon Dynatoum (@AIName "test_weapon_dynatoum"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("test_weapon_dynatoum")
 public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 {
@@ -61,15 +47,16 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 			switch (getNpcId()) {
 				case 233740: //Test Weapon Dynatoum.
 					/**
-					 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
+					 * 约有 6 分钟击杀首领，启动封印前全队须就绪。
+	 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					 */
-					//The Test Weapon Dynatoum's bomb timer has begun its countdown.
+					// 试验武器迪纳图姆的炸弹计时已开始倒计时。 / The Test Weapon Dynatoum's bomb timer has begun its countdown.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402143, 0);
-					//Test Weapon Dynatoum will go off in 5 minutes.
+					// 试验武器迪纳图姆将在 5 分钟后引爆。 / Test Weapon Dynatoum will go off in 5 minutes.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402144, 60000);
-					//Test Weapon Dynatoum will go off in 1 minute.
+					// 试验武器迪纳图姆将在 1 分钟后引爆。 / Test Weapon Dynatoum will go off in 1 minute.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402145, 300000);
-					//Test Weapon Dynatoum has detonated.
+					// 试验武器迪纳图姆已引爆。 / Test Weapon Dynatoum has detonated.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402146, 360000);
 					testDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override

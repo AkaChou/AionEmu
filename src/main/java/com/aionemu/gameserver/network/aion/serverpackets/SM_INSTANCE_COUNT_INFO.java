@@ -1,29 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端发送实例地图与实例 ID 计数信息的服务端包。
+ * Server packet that sends instance map and instance-id count info to the client.
+ */
 public class SM_INSTANCE_COUNT_INFO extends AionServerPacket {
 
 	private int mapId;
 	private int instanceId;
 
+	/**
+	 * 使用地图 ID 与实例 ID 构造计数信息包。
+	 * Creates a count-info packet for the given map id and instance id.
+	 *
+	 * map id
+	 * instance id
+	 */
 	public SM_INSTANCE_COUNT_INFO(int mapId, int instanceId) {
 		this.mapId = mapId;
 		this.instanceId = instanceId;

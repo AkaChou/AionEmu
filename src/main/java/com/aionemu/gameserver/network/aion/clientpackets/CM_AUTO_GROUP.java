@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +26,11 @@ import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+
+/**
+ * 自动匹配/副本排队窗口操作的客户端包。
+ * Client packet for auto-group and instance matchmaking window actions.
+ */
 @Slf4j
 
 public class CM_AUTO_GROUP extends AionClientPacket {
@@ -90,15 +79,15 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			GameBattlefieldServices.engulfedOphidanBridgeService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.ironWallWarfrontService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.idgelDomeService().showWindow(player, instanceMaskId);
-			// Ver. 5.1
+			// 版本 5.1 / Ver. 5.1
 			GameFeatureServices.asyunatarService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.idgelDomeLandmarkService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.suspiciousOphidanBridgeService().showWindow(player, instanceMaskId);
-			// Ver. 5.3
+			// 版本 5.3 / Ver. 5.3
 			GameBattlefieldServices.hallOfTenacityService().showWindow(player, instanceMaskId);
-			// Ver. 5.6
+			// 版本 5.6 / Ver. 5.6
 			GameBattlefieldServices.grandArenaTrainingCampService().showWindow(player, instanceMaskId);
-			// Ver. 5.8
+			// 版本 5.8 / Ver. 5.8
 			GameBattlefieldServices.idRunService().showWindow(player, instanceMaskId);
 			break;
 		case 105:

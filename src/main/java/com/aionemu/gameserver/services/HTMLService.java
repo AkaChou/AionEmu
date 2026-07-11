@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -44,14 +29,22 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
- * Use this service to send raw html to the client.
- * 
+ * HTML 问卷/引导服务，向客户端推送原始 HTML 并处理引导奖励。
+ * HTML questionnaire/guide service pushing raw HTML to clients and handling guide rewards.
+ *
  * @author lhw, xTz
  */
 @Slf4j(topic = "ITEM_HTML_LOG")
 public class HTMLService {
 
 
+	/**
+	 * 根据引导模板生成可下发的 HTML 内容。
+	 * Builds deliverable HTML content from a guide template.
+	 *
+	 * guide template
+	 * HTML string
+	 */
 	public static String getHTMLTemplate(GuideTemplate template) {
 		String context = GameStaticDataServices.htmlCache().getHTML("guideTemplate.xhtml");
 
@@ -69,6 +62,12 @@ public class HTMLService {
 		return context;
 	}
 
+	/**
+	 * 向全体在线玩家推送同一份问卷 HTML。
+	 * Pushes the same survey HTML to all online players.
+	 *
+	 * HTML content
+	 */
 	public static void pushSurvey(final String html) {
 		final int messageId = GameWorldBootstrapServices.idFactory().nextId();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -80,10 +79,25 @@ public class HTMLService {
 		});
 	}
 
+	/**
+	 * 向指定玩家展示 HTML 页面。
+	 * Shows an HTML page to the given player.
+	 *
+	 * 玩家 / player
+	 * HTML content
+	 */
 	public static void showHTML(Player player, String html) {
 		sendData(player, GameWorldBootstrapServices.idFactory().nextId(), html);
 	}
 
+	/**
+	 * 将 HTML 按包分片发送给玩家。
+	 * Sends HTML to the player, splitting into packets when needed.
+	 *
+	 * 玩家 / player
+	 * message id
+	 * HTML content
+	 */
 	public static void sendData(Player player, int messageId, String html) {
 		byte packet_count = (byte) Math.ceil(html.length() / (Short.MAX_VALUE - 8) + 1);
 		if (packet_count < 256) {
@@ -99,12 +113,18 @@ public class HTMLService {
 					String sub = html.substring(from, to);
 					player.getClientConnection().sendPacket(new SM_QUESTIONNAIRE(messageId, i, packet_count, sub));
 				} catch (Exception e) {
-					log.error("htmlservice.sendData", e);
+					log.error(I18n.get("log.5db6e71d2d57", e));
 				}
 			}
 		}
 	}
 
+	/**
+	 * 按等级/职业/种族向玩家发送适用的引导 HTML。
+	 * Sends applicable guide HTML to the player by level/class/race.
+	 *
+	 * 玩家 / player
+	 */
 	public static void sendGuideHtml(Player player) {
 		if (player.getLevel() > 1) {
 			GuideTemplate[] surveyTemplate = DataManager.GUIDE_HTML_DATA.getTemplatesFor(player.getPlayerClass(),
@@ -121,6 +141,12 @@ public class HTMLService {
 		}
 	}
 
+	/**
+	 * 玩家登录时重发未领取的引导 HTML。
+	 * Re-sends unfinished guide HTML when the player logs in.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void onPlayerLogin(Player player) {
 		if (player == null)
 			return;
@@ -134,11 +160,19 @@ public class HTMLService {
 					sendData(player, guide.getGuideId(), getHTMLTemplate(template));
 				}
 			} else {
-				log.warn("Null guide template for title: {}", guide.getTitle());
+				log.warn(I18n.get("log.c8c7b640eacd", guide.getTitle()));
 			}
 		}
 	}
 
+	/**
+	 * 根据玩家选择发放引导奖励物品。
+	 * Grants guide reward items based on the player's selection.
+	 *
+	 * 玩家 / player
+	 * questionnaire message id
+	 * @param items 选中的物品 ID 列表 / selected item ids
+	 */
 	public static void getReward(Player player, int messageId, List<Integer> items) {
 		if (player == null || messageId < 1) {
 			return;
@@ -176,8 +210,7 @@ public class HTMLService {
 			for (SurveyTemplate item : templates) {
 				ItemService.addItem(player, item.getItemId(), item.getCount());
 				if (LoggingConfig.LOG_ITEM) {
-					log.info(String.format("[ITEM] Item Guide ID/Count - %d/%d to player %s.", item.getItemId(),
-							item.getCount(), player.getName()));
+					log.info(I18n.get("log.0a8239250ae2", item.getItemId(), item.getCount(), player.getName()));
 				}
 			}
 			DAOManager.getDAO(GuideDAO.class).deleteGuide(guide.getGuideId());
@@ -185,6 +218,14 @@ public class HTMLService {
 		}
 	}
 
+	/**
+	 * 按选中物品 ID 过滤调查模板。
+	 * Filters survey templates by selected item ids.
+	 *
+	 * @param surveys 全部调查项 / all surveys
+	 * @param items 选中物品 ID / selected item ids
+	 * @return 匹配的模板列表 / matched templates
+	 */
 	private static List<SurveyTemplate> getSurveyTemplates(List<SurveyTemplate> surveys, List<Integer> items) {
 		List<SurveyTemplate> templates = new ArrayList<SurveyTemplate>();
 		for (SurveyTemplate survey : surveys) {
@@ -195,6 +236,13 @@ public class HTMLService {
 		return templates;
 	}
 
+	/**
+	 * 按标题向玩家发送指定引导 HTML。
+	 * Sends a specific guide HTML to the player by title.
+	 *
+	 * @param player 玩家 / player
+	 * @param title 引导标题 / guide title
+	 */
 	public static void sendGuideHtml(Player player, String title) {
 		GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(title);
 		if (template != null) {

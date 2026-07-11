@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
@@ -66,19 +53,33 @@ import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import java.util.Map;
 
 /**
- * This class is for controlling Creatures [npc's, players etc]
+ * 生物控制器基类，管理 NPC/玩家等生物的移动、攻击、技能与区域逻辑。
+ * Base controller for creatures (NPCs, players, etc.) managing movement, attacks, skills and zones.
  *
  * @author -Nemesiss-, ATracer(2009-09-29), Sarynth
  * @modified by Wakizashi
+ * @param <T> 所有者生物类型 / owner creature type
  */
+
 @Slf4j
 public abstract class CreatureController<T extends Creature> extends VisibleObjectController<Creature> {
 
+	/** 任务 ID 到 Future 的映射 / Map from task id to Future */
 	private final Map<Integer, Future<?>> tasks = new ConcurrentHashMap<Integer, Future<?>>();
+	/** 地形区域碰撞材质角色 / Terrain zone collision material actor */
 	private volatile TerrainZoneCollisionMaterialActor terrainMaterialActor;
+	/** 治疗技能增益倍率。 / Healing skill boost multiplier. */
 	private float healingSkillBoost = 1.0f;
+	/** 简易攻击类型。 / Simple attack type. */
 	private int SimpleAttackType;
 
+	/**
+	 * 当对象离开视野时回调。
+	 * Callback when an object leaves sight.
+	 *
+	 * @param object 离开视野的对象 / the object leaving sight
+	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
+	 */
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		super.notSee(object, isOutOfRange);
@@ -88,7 +89,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Perform tasks on Creature starting to move
+	 * 生物开始移动时执行的任务。
+	 * Perform tasks when the creature starts moving.
+	 *
 	 */
 	public void onStartMove() {
 		getOwner().getObserveController().notifyMoveObservers();
@@ -96,7 +99,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Perform tasks on Creature move in progress
+	 * 生物移动过程中执行的任务。
+	 * Perform tasks while the creature is moving.
+	 *
 	 */
 	public void onMove() {
 		notifyAIOnMove();
@@ -104,59 +109,72 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Perform tasks on Creature stop move
+	 * 生物停止移动时执行的任务。
+	 * Perform tasks when the creature stops moving.
+	 *
 	 */
 	public void onStopMove() {
 		notifyAIOnMove();
 	}
 
 	/**
-	 * Perform tasks on Creature return at home
+	 * 生物返回出生点时执行的任务。
+	 * Perform tasks when the creature returns home.
+	 *
 	 */
 	public void onReturnHome() {
 	}
 
 	/**
-	 * Notify everyone in knownlist about move event
+	 * 通知已知列表中的对象发生了移动事件。
+	 * Notify everyone in the known list about the move event.
+	 *
 	 */
 	protected void notifyAIOnMove() {
 		GameMovementLoopServices.movementNotifyTask().add(getOwner());
 	}
 
 	/**
-	 * Refresh completely zone irrespective of the current zone
+	 * 无论当前区域如何，完整刷新区域。
+	 * Refresh zones completely irrespective of the current zone.
+	 *
 	 */
 	public void refreshZoneImpl() {
 		getOwner().revalidateZones();
 	}
 
 	/**
-	 * Zone update mask management
+	 * 区域更新掩码管理。
+	 * Zone update mask management.
+	 *
 	 */
 	public final void updateZone() {
 		GameMovementLoopServices.zoneUpdateService().add(getOwner());
 	}
 
 	/**
-	 * Will be called by ZoneManager when creature enters specific zone
+	 * 进入区域时回调。
+	 * Callback when entering a zone.
 	 *
-	 * @param zoneInstance
+	 * @param zoneInstance 进入的区域实例 / entered zone instance
 	 */
 	public void onEnterZone(ZoneInstance zoneInstance) {
 	}
 
 	/**
-	 * Will be called by ZoneManager when player leaves specific zone
+	 * 离开区域时回调。
+	 * Callback when leaving a zone.
 	 *
-	 * @param zoneInstance
+	 * @param zoneInstance 离开的区域实例 / left zone instance
 	 */
 	public void onLeaveZone(ZoneInstance zoneInstance) {
 	}
 
 	/**
-	 * Perform tasks on Creature death
+	 * 生物死亡时的处理。
+	 * Handles creature death.
 	 *
-	 * @param lastAttacker
+	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	public void onDie(Creature lastAttacker) {
 		this.getOwner().getMoveController().abortMove();
@@ -174,8 +192,15 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Perform tasks when Creature was attacked //TODO may be pass only Skill object
-	 * - but need to add properties in it
+	 * 受到攻击时的完整处理（含技能与日志类型）。
+	 * Full on-attack handling including skill and log type.
+	 *
+	 * attacker
+	 * skill id
+	 * @param type 伤害类型 / damage type
+	 * damage
+	 * @param notifyAttack 是否通知攻击 / whether to notify attack
+	 * @param log 日志类型 / log type
 	 */
 	public void onAttack(final Creature attacker, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log) {
 		if (damage != 0 && !((getOwner() instanceof Npc) && ((Npc) getOwner()).isBoss())) {
@@ -200,8 +225,8 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 			}
 		}
 
-		// Do NOT notify attacked observers if the damage is 0 and shield is up (means
-		// the attack has been absorbed)
+		// 伤害为 0 且护盾存在时不要通知受击观察者。 / Do NOT notify attacked observers if the damage is 0 and shield is up (means
+		// 攻击已被吸收） / the attack has been absorbed)
 		if (damage == 0 && getOwner().getEffectController().isUnderShield()) {
 			notifyAttack = false;
 		}
@@ -209,9 +234,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 			getOwner().getObserveController().notifyAttackedObservers(attacker);
 		}
 
-		// Reduce the damage to exactly what is required to ensure death.
-		// - Important that we don't include 7k worth of damage when the
-		// creature only has 100 hp remaining. (For AggroList dmg count.)
+		// 将伤害降到恰好能确保死亡所需。 / Reduce the damage to exactly what is required to ensure death.
+		// 重要：不要在……时计入 7000 伤害 / - Important that we don't include 7k worth of damage when the
+		// 生物仅剩 100 生命。（用于仇恨列表伤害统计。） / creature only has 100 hp remaining. (For AggroList dmg count.)
 		if (damage > getOwner().getLifeStats().getCurrentHp()) {
 			damage = getOwner().getLifeStats().getCurrentHp() + 1;
 		}
@@ -235,7 +260,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		}
 		getOwner().incrementAttackedCount();
 
-		// notify all NPC's around that creature is attacking me
+		// 通知周围所有 NPC：该生物正在攻击我 / notify all NPC's around that creature is attacking me
 		getOwner().getKnownList().doOnAllNpcs(new Visitor<Npc>() {
 			@Override
 			public void visit(Npc object) {
@@ -245,19 +270,36 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Perform tasks when Creature was attacked
+	 * 受到攻击的简化重载。
+	 * Simplified on-attack overload.
+	 *
+	 * attacker
+	 * skill id
+	 * damage
+	 * @param notifyAttack 是否通知攻击 / whether to notify attack
 	 */
 	public final void onAttack(Creature creature, int skillId, final int damage, boolean notifyAttack) {
 		this.onAttack(creature, skillId, TYPE.REGULAR, damage, notifyAttack, LOG.REGULAR);
 	}
 
+	/**
+	 * 受到攻击的简化重载（无技能）。
+	 * Simplified on-attack overload without skill.
+	 *
+	 * attacker
+	 * damage
+	 * @param notifyAttack 是否通知攻击 / whether to notify attack
+	 */
 	public final void onAttack(Creature creature, final int damage, boolean notifyAttack) {
 		this.onAttack(creature, 0, TYPE.REGULAR, damage, notifyAttack, LOG.REGULAR);
 	}
 
 	/**
-	 * @param hopType
-	 * @param value
+	 * 恢复生命/魔法等属性。
+	 * Restores life/mp or similar stats.
+	 *
+	 * heal type
+	 * @param value 恢复数值 / restore value
 	 */
 	public void onRestore(HealType hopType, int value) {
 		switch (hopType) {
@@ -276,52 +318,71 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Perform drop operation
+	 * 处理掉落。
+	 * Handles drops.
 	 *
-	 * @param player
+	 * @param player 获得掉落的玩家 / player receiving drops
 	 */
 	public void doDrop(Player player) {
 	}
 
 	/**
-	 * Perform reward operation
+	 * 处理击杀奖励。
+	 * Handles kill rewards.
+	 *
 	 */
 	public void doReward() {
 	}
 
 	/**
-	 * This method should be overriden in more specific controllers
+	 * 处理玩家对话请求。
+	 * Handles a player dialog request.
 	 *
-	 * @param player
+	 * requesting player
 	 */
 	public void onDialogRequest(Player player) {
 	}
 
+	/**
+	 * 获取简易攻击类型。
+	 * Gets the simple attack type.
+	 *
+	 * @return attack type / 攻击类型 / attack type。 / attack type / 攻击类型 / attack type
+	 */
 	public int getSimpleAttackType() {
 		return this.SimpleAttackType;
 	}
 
+	/**
+	 * 设置简易攻击类型。
+	 * Sets the simple attack type.
+	 *
+	 * attack type
+	 */
 	public void setSimpleAttackType(int attackType) {
 		this.SimpleAttackType = attackType;
 	}
 
 	/**
-	 * @param target
-	 * @param time
+	 * 攻击指定目标。
+	 * Attacks the specified target.
+	 *
+	 * attack target
+	 * @param time 攻击时间参数 / attack timing parameter
 	 */
 	public void attackTarget(final Creature target, int time) {
 		boolean addAttackObservers = true;
-		/**
-		 * Check all prerequisites
-		 */
+	/**
+	 * 检查全部前置条件。 / Check all prerequisites
+	 */
 		if (target == null || !getOwner().canAttack() || getOwner().getLifeStats().isAlreadyDead()
 				|| !getOwner().isSpawned()) {
 			return;
 		}
 
-		/**
-		 * Calculate and apply damage
-		 */
+	/**
+	 * 计算并应用伤害 / Calculate and apply damage
+	 */
 		int attackType = 0;
 		List<AttackResult> attackResult;
 		if (getOwner().getAttackType() == ItemAttackType.PHYSICAL) {
@@ -355,7 +416,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Stops movements
+	 * 停止移动。
+	 * Stops movement.
+	 *
 	 */
 	public void stopMoving() {
 		Creature owner = getOwner();
@@ -364,35 +427,49 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Handle Dialog_Select
+	 * 处理对话选项选择。
+	 * Handles dialog option selection.
 	 *
-	 * @param dialogId
-	 * @param player
-	 * @param questId
+	 * dialog id
+	 * 玩家 / player
+	 * quest id
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @param unk 未知参数 / unknown parameter
 	 */
-	public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex, int unk) {
-		// TODO Auto-generated method stub
+	public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex) {
 	}
 
 	/**
-	 * @param taskId
-	 * @return
+	 * 获取指定任务。
+	 * Gets the task for the given id.
+	 *
+	 * task id
+	 *
+	 * @param taskId @return 任务 Future，可能为 null / task Future, may be null / 任务 Future，可能为 null / task Future, may be null
 	 */
 	public Future<?> getTask(TaskId taskId) {
 		return tasks.get(taskId.ordinal());
 	}
 
 	/**
-	 * @param taskId
-	 * @return
+	 * 是否存在指定任务。
+	 * Whether a task with the given id exists.
+	 *
+	 * task id
+	 *
+	 * @param taskId true if present / 存在则为 true / true if present。 / true if present / 存在则为 true / true if present
 	 */
 	public boolean hasTask(TaskId taskId) {
 		return tasks.containsKey(taskId.ordinal());
 	}
 
 	/**
-	 * @param taskId
-	 * @return
+	 * 是否存在已调度且未完成的指定任务。
+	 * Whether a scheduled unfinished task with the given id exists.
+	 *
+	 * task id
+	 *
+	 * @param taskId true if present / 存在则为 true / true if present。 / true if present / 存在则为 true / true if present
 	 */
 	public boolean hasScheduledTask(TaskId taskId) {
 		Future<?> task = tasks.get(taskId.ordinal());
@@ -400,7 +477,12 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * @param taskId
+	 * 取消并移除指定任务。
+	 * Cancels and removes the task with the given id.
+	 *
+	 * task id
+	 *
+	 * @param taskId cancelled Future / 被取消的 Future / cancelled Future。 / cancelled Future / 被取消的 Future / cancelled Future
 	 */
 	public Future<?> cancelTask(TaskId taskId) {
 		Future<?> task = tasks.remove(taskId.ordinal());
@@ -411,10 +493,11 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * If task already exist - it will be canceled
+	 * 添加或替换任务。
+	 * Adds or replaces a task.
 	 *
-	 * @param taskId
-	 * @param task
+	 * task id
+	 * task Future
 	 */
 	public void addTask(TaskId taskId, Future<?> task) {
 		cancelTask(taskId);
@@ -422,7 +505,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Cancel all tasks associated with this controller (when deleting object)
+	 * 取消所有可取消任务。
+	 * Cancels all cancellable tasks.
+	 *
 	 */
 	public void cancelAllTasks() {
 		while (hasCancellableTasks()) {
@@ -445,6 +530,11 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		return false;
 	}
 
+	/**
+	 * 从世界中删除所有者。
+	 * Deletes the owner from the world.
+	 *
+	 */
 	@Override
 	public void delete() {
 		cancelAllTasks();
@@ -452,23 +542,34 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Die by reducing HP to 0
+	 * 使所有者死亡。
+	 * Kills the owner.
+	 *
 	 */
 	public void die() {
 		getOwner().getLifeStats().reduceHp(getOwner().getLifeStats().getCurrentHp() + 1, getOwner());
 	}
 
 	/**
-	 * Use skill with default level 1
+	 * 使用默认等级的技能。
+	 * Uses a skill at default level.
+	 *
+	 * skill id
+	 *
+	 * @param skillId whether successful / 是否成功 / whether successful。 / whether successful / 是否成功 / whether successful
 	 */
 	public final boolean useSkill(int skillId) {
 		return useSkill(skillId, 1);
 	}
 
 	/**
-	 * @param skillId
-	 * @param skillLevel
-	 * @return true if successful usage
+	 * 使用指定等级的技能。
+	 * Uses a skill at the given level.
+	 *
+	 * skill id
+	 * skill level
+	 *
+	 * @return whether successful / true if successful usage
 	 */
 	public boolean useSkill(int skillId, int skillLevel) {
 		try {
@@ -478,15 +579,16 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 				return skill.useSkill();
 			}
 		} catch (Exception ex) {
-			log.error("Exception during skill use: " + skillId, ex);
+			log.error(I18n.get("log.1f5bd67c5dae", skillId, ex));
 		}
 		return false;
 	}
 
 	/**
-	 * Notify hate value to all visible creatures
+	 * 向仇恨列表广播仇恨值。
+	 * Broadcasts hate value to the aggro list.
 	 *
-	 * @param value
+	 * hate value
 	 */
 	public void broadcastHate(int value) {
 		for (VisibleObject visibleObject : getOwner().getKnownList().getKnownObjectsSnapshot()) {
@@ -496,6 +598,11 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		}
 	}
 
+	/**
+	 * 中止当前施法。
+	 * Aborts the current cast.
+	 *
+	 */
 	public void abortCast() {
 		Creature creature = getOwner();
 		Skill skill = creature.getCastingSkill();
@@ -509,7 +616,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Cancel current skill and remove cooldown
+	 * 取消当前技能。
+	 * Cancels the current skill.
+	 *
 	 */
 	public void cancelCurrentSkill() {
 		if (getOwner().getCastingSkill() == null) {
@@ -534,12 +643,18 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
-	 * Cancel use Item
+	 * 取消物品使用，基类默认不处理。
+	 * Cancels item use; the base implementation is a no-op.
+	 *
 	 */
 	public void cancelUseItem() {
-		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * 消失时回调。
+	 * Callback on despawn.
+	 *
+	 */
 	@Override
 	public void onDespawn() {
 		if (terrainMaterialActor != null) {
@@ -577,14 +692,31 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		}
 	}
 
+	/**
+	 * 获取治疗技能增益倍率。
+	 * Gets the healing skills boost multiplier.
+	 *
+	 * @return boost multiplier / 增益倍率 / boost multiplier。 / boost multiplier / 增益倍率 / boost multiplier
+	 */
 	public float getHealingSkillsBoost() {
 		return healingSkillBoost;
 	}
 
+	/**
+	 * 设置治疗技能增益倍率。
+	 * Sets the healing skills boost multiplier.
+	 *
+	 * @param value 增益倍率 / boost multiplier
+	 */
 	public void setHealingSkillsBoost(float value) {
 		this.healingSkillBoost = value;
 	}
 
+	/**
+	 * 生成后回调。
+	 * Callback after spawn.
+	 *
+	 */
 	@Override
 	public void onAfterSpawn() {
 		super.onAfterSpawn();

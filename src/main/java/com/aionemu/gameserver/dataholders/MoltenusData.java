@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -32,9 +16,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 熔岩领主（Moltenus）活动地点数据容器，持有并索引全部 {@link MoltenusLocation}。
+ * Moltenus event location data holder, indexing all {@link MoltenusLocation} instances.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "moltenus")
 public class MoltenusData {
@@ -44,16 +30,32 @@ public class MoltenusData {
 	@XmlTransient
 	private Map<Integer, MoltenusLocation> moltenus = new LinkedHashMap<Integer, MoltenusLocation>();
 
+	/**
+	 * JAXB 反序列化完成后，将模板转为按 ID 索引的地点映射。
+	 * After JAXB unmarshalling, builds the id-indexed location map from templates.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MoltenusTemplate template : moltenusTemplates) {
 			moltenus.put(template.getId(), new MoltenusLocation(template));
 		}
 	}
 
+	/**
+	 * 返回已加载的 Moltenus 地点数量。
+	 * Returns the number of loaded Moltenus locations.
+	 *
+	 * location count
+	 */
 	public int size() {
 		return moltenus.size();
 	}
 
+	/**
+	 * 返回全部 Moltenus 地点映射。
+	 * Returns the full Moltenus location map.
+	 *
+	 * @return ID 到地点的映射 / map of id to location
+	 */
 	public Map<Integer, MoltenusLocation> getMoltenusLocations() {
 		return moltenus;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -31,19 +15,35 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 基础复活挂载效果：死亡时按基础复活逻辑处理并清理状态。
+ * Base resurrect attach effect: handles death via base resurrect logic and cleanup.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ResurrectBaseEffect")
 public class ResurrectBaseEffect extends ResurrectEffect {
+	/**
+	 * 计算本效果是否成功命中/生效，并写入效果上下文。
+	 * Calculates whether this effect succeeds and writes into the effect context.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		calculate(effect, null, null);
 	}
 
+	/**
+	 * 将效果应用到目标（加入控制器或立即结算）。
+	 * Applies the effect to the target (controller attach or immediate settlement).
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 挂载死亡观察以触发基础复活。
+	 * Attaches death observer to trigger base resurrect.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		final Creature effected = effect.getEffected();
@@ -68,6 +68,10 @@ public class ResurrectBaseEffect extends ResurrectEffect {
 		}
 	}
 
+	/**
+	 * 清理基础复活相关状态。
+	 * Cleans up base-resurrect related state.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 	}

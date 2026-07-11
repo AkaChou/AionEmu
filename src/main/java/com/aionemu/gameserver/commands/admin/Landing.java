@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -22,12 +6,23 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
+/**
+ * 管理员欧比斯登陆点命令：刷新状态或调整天族/魔族登陆点等级。
+ * Admin abyss landing command: refresh state or set Elyos/Asmodian landing level.
+ */
 public class Landing extends AdminCommand
 {
     public Landing() {
         super("landing");
     }
-	
+
+    /**
+     * 处理 help/update/level 子命令。
+     * Handle help/update/level subcommands.
+     *
+     * @param admin 执行命令的管理员 / Admin executing the command
+     * @param params 子命令与参数 / Subcommand and arguments
+     */
     @Override
     public void execute(Player admin, String... params) {
         if (params.length != 0) {
@@ -60,17 +55,24 @@ public class Landing extends AdminCommand
             }
         }
     }
-	
+
     private void showHelp(Player admin) {
         PacketSendUtility.sendMessage(admin, "[Help: Landing Command]\n"
         + " Use Ex: //landing level elyos 8.\n"
         + " Notice: This command uses smart matching. You may abbreviate most commands.\n" );
     }
-	
+
     private void showHelpLevel(Player admin) {
         PacketSendUtility.sendMessage(admin, "Syntax: //landing level [Elyos/Asmodians] [Lvl 1-8]\n");
     }
-	
+
+    /**
+     * 参数错误时显示帮助。
+     * Show help on invalid arguments.
+     *
+     * @param player 接收提示的玩家 / Player receiving the hint
+     * Failure message
+     */
     @Override
     public void onFail(Player player, String message) {
         showHelp(player);

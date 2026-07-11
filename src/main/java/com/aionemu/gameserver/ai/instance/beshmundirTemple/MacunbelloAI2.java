@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -39,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Beshmundir Temple 副本 NPC AI：Macunbello（@AIName "macunbello"），继承 AggressiveNpcAI2。
+ * Beshmundir Temple instance NPC AI: Macunbello (@AIName "macunbello"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("macunbello")
 public class MacunbelloAI2 extends AggressiveNpcAI2
 {
@@ -67,7 +53,7 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isHome.compareAndSet(true, false)) {
 			getPosition().getWorldMapInstance().getDoors().get(467).setOpen(false);
-			//Whoever ye may be, thou shalt not escape this curse.
+			// 无论你是谁，都无法逃脱此诅咒。 / Whoever ye may be, thou shalt not escape this curse.
 			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500063, getObjectId(), 0, 0);
 			startMacumbelloRightHandEvent();
 		}
@@ -92,9 +78,9 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 				if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
 					phase = Phase.RIGHT_HAND;
 					cancelActiveEventTask();
-					//Come forth, my faithful servants!
+					// 出来吧，我忠诚的仆从们！ / Come forth, my faithful servants!
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500060, getObjectId(), 0, 0);
-					//Hurry and devour these foolish Daevas!
+					// 快去吞噬这些愚蠢的守护者！ / Hurry and devour these foolish Daevas!
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500061, getObjectId(), 0, 3000);
 					canThink = false;
 					EmoteManager.emoteStopAttacking(getOwner());

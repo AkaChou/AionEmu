@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -27,6 +13,9 @@ import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 查找队伍/申请组队相关操作的客户端包。
+ * Client packet for find-group recruit and apply operations.
+ *
  * @author cura, MrPoke
  */
 @Slf4j
@@ -45,6 +34,14 @@ public class CM_FIND_GROUP extends AionClientPacket {
 	private int instanceId;
 	private int minMembers;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_FIND_GROUP(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -77,14 +74,12 @@ public class CM_FIND_GROUP extends AionClientPacket {
 			playerObjId = readD();
 			break;
 		case 0x06: // apply create
+		case 0x07: // apply update
 			playerObjId = readD();
 			message = readS();
 			groupType = readC();
 			classId = readC();
 			level = readC();
-			break;
-		case 0x07: // apply update
-			// TODO need packet check
 			break;
 		case 0x08: // register InstanceGroup
 			instanceId = readD();
@@ -95,8 +90,7 @@ public class CM_FIND_GROUP extends AionClientPacket {
 		case 0x0A:
 			break;
 		default:
-			// log.error("Unknown find group packet? 0x" +
-			// Integer.toHexString(action).toUpperCase());
+			// log.error(I18n.get("log.8239177b4631", // Integer.toHexString(action).toUpperCase()));
 			break;
 		}
 	}
@@ -118,7 +112,8 @@ public class CM_FIND_GROUP extends AionClientPacket {
 			GameRuntimeServices.findGroupService().addFindGroupList(player, action, message, groupType);
 			break;
 		case 0x03:
-			GameRuntimeServices.findGroupService().updateFindGroupList(player, message, playerObjId);
+		case 0x07:
+			GameRuntimeServices.findGroupService().updateFindGroupList(player, action, message, playerObjId);
 			break;
 		case 0x08:
 			GameRuntimeServices.findGroupService().registerInstanceGroup(player, 0x0E, instanceId, message, minMembers,

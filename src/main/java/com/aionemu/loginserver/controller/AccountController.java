@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.controller;
 
 import java.sql.Timestamp;
@@ -47,51 +29,60 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_
 import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.utils.AccountUtils;
 
+import lombok.experimental.UtilityClass;
+
 /**
- * This class is resposible for controlling all account actions
+ * 账号动作总控：登录、重连、踢人及 GS 角色数统计。
+ * Controls all account actions: login, reconnect, kick and GS character counts.
  *
  * @author KID
  * @author SoulKeeper
  */
+@UtilityClass
 public class AccountController {
 
     /**
-     * Map with accounts that are active on LoginServer or joined GameServer and
-     * are not authenticated yet.
+     * 当前在登录服上、或已加入游戏服但尚未完成认证的账号连接。
+     * Accounts active on LoginServer or joined GameServer but not yet authenticated.
      */
-    private static final Map<Integer, LoginConnection> accountsOnLS = new ConcurrentHashMap<Integer, LoginConnection>();
-    /**
-     * Map with accounts that are reconnecting to LoginServer ie was joined
-     * GameServer.
-     */
-    private static final Map<Integer, ReconnectingAccount> reconnectingAccounts = new ConcurrentHashMap<Integer, ReconnectingAccount>();
-    /**
-     * Map with characters count on each gameserver and accounts
-     */
-    private static final Map<Integer, Map<Integer, Integer>> accountsGSCharacterCounts = new ConcurrentHashMap<Integer, Map<Integer, Integer>>();
+    private final Map<Integer, LoginConnection> accountsOnLS = new ConcurrentHashMap<Integer, LoginConnection>();
 
     /**
-     * Removes account from list of connections
-     *
-     * @param account account
+     * 正在从游戏服快速重连回登录服的账号。
+     * Accounts reconnecting to LoginServer after joining GameServer.
      */
-    public static synchronized void removeAccountOnLS(Account account) {
+    private final Map<Integer, ReconnectingAccount> reconnectingAccounts = new ConcurrentHashMap<Integer, ReconnectingAccount>();
+
+    /**
+     * 各账号在各游戏服上的角色数量。
+     * Character counts per gameserver for each account.
+     */
+    private final Map<Integer, Map<Integer, Integer>> accountsGSCharacterCounts = new ConcurrentHashMap<Integer, Map<Integer, Integer>>();
+
+    /**
+     * 从登录服连接列表移除账号。
+     * Removes account from list of LoginServer connections.
+     *
+     * @param account 账号 / Account
+     */
+    public synchronized void removeAccountOnLS(Account account) {
         accountsOnLS.remove(account.getId());
     }
 
     /**
-     * This method is for answering GameServer question about account
-     * authentication on GameServer side.
+     * 响应游戏服侧的账号会话校验请求。
+     * Answers GameServer question about account authentication on GS side.
      *
-     * @param key
-     * @param gsConnection
+     * @param key 会话密钥 / Session key
+     * @param gsConnection 游戏服连接 / GameServer connection
      */
-    public static synchronized void checkAuth(SessionKey key, GsConnection gsConnection) {
+    public synchronized void checkAuth(SessionKey key, GsConnection gsConnection) {
         LoginConnection con = accountsOnLS.get(key.accountId);
 
         if (con != null && con.getSessionKey().checkSessionKey(key)) {
             /**
-             * account is successful logged in on gs remove it from here
+             * 账号已在游戏服成功登录，从登录服列表移除。
+             * Account successfully logged in on GS; remove it from here.
              */
             accountsOnLS.remove(key.accountId);
 
@@ -99,8 +90,8 @@ public class AccountController {
             Account acc = con.getAccount();
 
             /**
-             * Add account to accounts on GameServer list and update accounts
-             * last server
+             * 加入游戏服在线列表并更新上次服务器。
+             * Add account to GameServer list and update last server.
              */
             gsi.addAccountToGameServer(acc);
 
@@ -110,32 +101,35 @@ public class AccountController {
             long toll = DAOManager.getDAO(PremiumDAO.class).getPoints(acc.getId());
             long luna = DAOManager.getDAO(PremiumDAO.class).getLuna(acc.getId());
             /**
-             * Send response to GameServer
+             * 向游戏服发送认证结果。
+             * Send auth response to GameServer.
              */
             gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, true, acc.getName(), acc.getAccessLevel(), acc.getMembership(), toll, luna, acc.getReturn()));
         } else {
-            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, false, null, (byte) 0, (byte) 0, 0, 0, (byte)0));
+            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, false, null, (byte) 0, (byte) 0, 0, 0, (byte) 0));
         }
     }
 
     /**
-     * Add account to reconnectionAccount list
+     * 将账号加入重连列表。
+     * Adds account to reconnection list.
      *
-     * @param acc
+     * @param acc 重连账号 / Reconnecting account
      */
-    public static synchronized void addReconnectingAccount(ReconnectingAccount acc) {
+    public synchronized void addReconnectingAccount(ReconnectingAccount acc) {
         reconnectingAccounts.put(acc.getAccount().getId(), acc);
     }
 
     /**
-     * Check if reconnecting account may auth.
+     * 校验快速重连账号是否允许重新认证。
+     * Checks whether a reconnecting account may re-authenticate.
      *
-     * @param accountId id of account
-     * @param loginOk loginOk
-     * @param reconnectKey reconnect key
-     * @param client aion client
+     * 账号 ID / Account id
+     * @param loginOk 登录确认码 / Login ok token
+     * Reconnect key
+     * @param client 客户端连接 / Aion client connection
      */
-    public static synchronized void authReconnectingAccount(int accountId, int loginOk, int reconnectKey, LoginConnection client) {
+    public synchronized void authReconnectingAccount(int accountId, int loginOk, int reconnectKey, LoginConnection client) {
         ReconnectingAccount reconnectingAccount = reconnectingAccounts.remove(accountId);
 
         if (reconnectingAccount != null && reconnectingAccount.getReconnectionKey() == reconnectKey) {
@@ -152,31 +146,32 @@ public class AccountController {
     }
 
     /**
-     * Tries to authentificate account.<br>
-     * If success returns {@link AionAuthResponse#AUTHED} and sets account
-     * object to connection.<br>
-     * If {@link com.aionemu.loginserver.configs.Config#ACCOUNT_AUTO_CREATION}
-     * is enabled - creates new account.<br>
+     * 尝试登录账号。<br>
+     * 成功时返回 {@link AionAuthResponse#AUTHED} 并将账号绑定到连接。<br>
+     * 若启用 {@link com.aionemu.loginserver.configs.Config#ACCOUNT_AUTO_CREATION} 则自动建号。
+     * Tries to authenticate account.<br>
+     * On success returns {@link AionAuthResponse#AUTHED} and binds account to connection.<br>
+     * Creates a new account when {@link com.aionemu.loginserver.configs.Config#ACCOUNT_AUTO_CREATION} is enabled.
      *
-     * @param name name of account
-     * @param password password of account
-     * @param connection connection for account
-     * @return Response with error code
+     * Account name
+     * Password
+     * Login connection
+     * @return 认证结果码 / Auth response with error code
      */
-    public static AionAuthResponse login(String name, String password, LoginConnection connection) {
-        // if ip is banned
+    public AionAuthResponse login(String name, String password, LoginConnection connection) {
+        // 若 IP 被封禁 / if ip is banned
         if (LoginProtectionServices.bannedIpService().isBanned(connection.getIP())) {
             return AionAuthResponse.BAN_IP;
         }
 
         Account account = loadAccount(name);
 
-        // Try to create new account
+        // 尝试创建新账号。 / Try to create new account
         if (account == null && Config.ACCOUNT_AUTO_CREATION) {
             account = createAccount(name, password);
         }
 
-        // If account not found and not created
+        // 若账号未找到且未创建 / If account not found and not created
         if (account == null) {
             return AionAuthResponse.INVALID_PASSWORD;
         }
@@ -185,41 +180,41 @@ public class AccountController {
             return AionAuthResponse.GM_ONLY;
         }
 
-        // check for paswords beeing equals
+        // 检查密码是否相等 / check for paswords beeing equals
         if (!account.getPasswordHash().equals(AccountUtils.encodePassword(password))) {
             return AionAuthResponse.INVALID_PASSWORD;
         }
 
-        // check for paswords beeing equals
+        // 检查密码是否相等 / check for paswords beeing equals
         if (account.getActivated() != 1) {
             return AionAuthResponse.INVALID_PASSWORD;
         }
 
-        // If account expired
+        // 若账号过期 / If account expired
         if (AccountTimeController.isAccountExpired(account)) {
             return AionAuthResponse.TIME_EXPIRED;
         }
 
-        // if account is banned
+        // 若账号被封禁 / if account is banned
         if (AccountTimeController.isAccountPenaltyActive(account)) {
             return AionAuthResponse.BAN_IP;
         }
 
-        // if account is restricted to some ip or mask
+        // 若账号限制于某些 IP 或掩码 / if account is restricted to some ip or mask
         if (account.getIpForce() != null) {
             if (!NetworkUtils.checkIPMatching(account.getIpForce(), connection.getIP())) {
                 return AionAuthResponse.BAN_IP;
             }
         }
 
-        // Do not allow to login two times with same account
+        // 不允许同一账号重复登录 / Do not allow to login two times with same account
         synchronized (AccountController.class) {
             if (GameServerTable.isAccountOnAnyGameServer(account)) {
                 GameServerTable.kickAccountFromGameServer(account);
                 return AionAuthResponse.ALREADY_LOGGED_IN;
             }
 
-            // If someone is at loginserver, he should be disconnected
+            // 若有人在登录服，应断开其连接 / If someone is at loginserver, he should be disconnected
             if (accountsOnLS.containsKey(account.getId())) {
                 LoginConnection aionConnection = accountsOnLS.remove(account.getId());
 
@@ -232,20 +227,21 @@ public class AccountController {
 
         AccountTimeController.updateOnLogin(account);
 
-        // if everything was OK
+        // 若一切正常 / if everything was OK
         getAccountDAO().updateLastIp(account.getId(), connection.getIP());
-        // last mac is updated after receiving packet from gameserver
+        // 收到游戏服务器数据包后更新 last mac / last mac is updated after receiving packet from gameserver
         getAccountDAO().updateMembership(account.getId());
 
         return AionAuthResponse.AUTHED;
     }
 
     /**
-     * Kicks account from LoginServer and GameServers
+     * 从登录服与游戏服踢出指定账号。
+     * Kicks account from LoginServer and GameServers.
      *
-     * @param accountId account ID to kick
+     * @param accountId 要踢出的账号 ID / Account ID to kick
      */
-    public static void kickAccount(int accountId) {
+    public void kickAccount(int accountId) {
         synchronized (AccountController.class) {
             for (GameServerInfo gsi : GameServerTable.getGameServers()) {
                 if (gsi.isAccountOnGameServer(accountId)) {
@@ -261,24 +257,27 @@ public class AccountController {
     }
 
     /**
-     * Refresh last_mac of account
+     * 刷新账号的 last_mac。
+     * Refreshes last_mac of account.
      *
-     * @param accountId id of account
-     * @param address new macAdress
-     * @return refreshed or not
+     * 账号 ID / Account id
+     * New MAC address
+     *
+     * @return 是否刷新成功 / Whether refresh succeeded
      */
-    public static boolean refreshAccountsLastMac(int accountId, String address) {
+    public boolean refreshAccountsLastMac(int accountId, String address) {
         return getAccountDAO().updateLastMac(accountId, address);
     }
 
     /**
-     * Loads account from DB and returns it, or returns null if account was not
-     * loaded
+     * 按名称从数据库加载账号；不存在则返回 null。
+     * Loads account from DB by name; returns null if not found.
      *
-     * @param name acccount name
-     * @return loaded account or null
+     * Account name
+     *
+     * @param name @return 已加载账号，或 null / Loaded account or null
      */
-    public static Account loadAccount(String name) {
+    public Account loadAccount(String name) {
         Account account = getAccountDAO().getAccount(name);
         if (account != null) {
             account.setAccountTime(getAccountTimeDAO().getAccountTime(account.getId()));
@@ -286,7 +285,14 @@ public class AccountController {
         return account;
     }
 
-    public static Account loadAccount(int id) {
+    /**
+     * 按 ID 从数据库加载账号；不存在则返回 null。
+     * Loads account from DB by id; returns null if not found.
+     *
+     * @param id 账号 ID / Account id
+     * @return 已加载账号，或 null / Loaded account or null
+     */
+    public Account loadAccount(int id) {
         Account account = getAccountDAO().getAccount(id);
         if (account != null) {
             account.setAccountTime(getAccountTimeDAO().getAccountTime(id));
@@ -295,14 +301,15 @@ public class AccountController {
     }
 
     /**
-     * Creates new account and stores it in DB. Returns account object in case
-     * of success or null if failed
+     * 创建新账号并写入数据库；成功返回账号对象，失败返回 null。
+     * Creates new account and stores it in DB; returns account on success or null on failure.
      *
-     * @param name account name
-     * @param password account password
-     * @return account object or null
+     * Account name
+     * Account password
+     *
+     * @return 账号对象或 null / Account object or null
      */
-    public static Account createAccount(String name, String password) {
+    public Account createAccount(String name, String password) {
         String passwordHash = AccountUtils.encodePassword(password);
         Account account = new Account();
 
@@ -311,7 +318,7 @@ public class AccountController {
         account.setAccessLevel((byte) 0);
         account.setMembership((byte) 0);
         account.setActivated((byte) 1);
-        account.setReturn((byte)0);
+        account.setReturn((byte) 0);
         account.setReturnEnd(new Timestamp(System.currentTimeMillis()));
 
         if (getAccountDAO().insertAccount(account)) {
@@ -321,28 +328,32 @@ public class AccountController {
     }
 
     /**
-     * Returns {@link com.aionemu.loginserver.dao.AccountDAO}, just a shortcut
+     * 获取 {@link AccountDAO} 快捷方法。
+     * Shortcut for {@link AccountDAO}.
      *
-     * @return {@link com.aionemu.loginserver.dao.AccountDAO}
+     * Account DAO
      */
-    private static AccountDAO getAccountDAO() {
+    private AccountDAO getAccountDAO() {
         return DAOManager.getDAO(AccountDAO.class);
     }
 
     /**
-     * Returns {@link com.aionemu.loginserver.dao.AccountTimeDAO}, just a
-     * shortcut
+     * 获取 {@link AccountTimeDAO} 快捷方法。
+     * Shortcut for {@link AccountTimeDAO}.
      *
-     * @return {@link com.aionemu.loginserver.dao.AccountTimeDAO}
+     * Account time DAO
      */
-    private static AccountTimeDAO getAccountTimeDAO() {
+    private AccountTimeDAO getAccountTimeDAO() {
         return DAOManager.getDAO(AccountTimeDAO.class);
     }
 
     /**
-     * @param accountId
+     * 向各游戏服请求该账号的角色数量。
+     * Requests character counts for the account from all game servers.
+     *
+     * @param accountId 账号 ID / Account id
      */
-    public static synchronized void loadGSCharactersCount(int accountId) {
+    public synchronized void loadGSCharactersCount(int accountId) {
         GsConnection gsc = null;
         Map<Integer, Integer> accountCharacterCount = new ConcurrentHashMap<Integer, Integer>();
         accountsGSCharacterCounts.put(accountId, accountCharacterCount);
@@ -363,10 +374,13 @@ public class AccountController {
     }
 
     /**
-     * @param accountId
-     * @return
+     * 判断是否已收集齐该账号在所有游戏服的角色数。
+     * Whether all GS character counts for the account have been collected.
+     *
+     * @param accountId 账号 ID / Account id
+     * @return 是否已齐全 / Whether all counts are present
      */
-    public static synchronized boolean hasAllGSCharacterCounts(int accountId) {
+    public synchronized boolean hasAllGSCharacterCounts(int accountId) {
         Map<Integer, Integer> characterCount = accountsGSCharacterCounts.get(accountId);
 
         if (characterCount != null) {
@@ -379,11 +393,12 @@ public class AccountController {
     }
 
     /**
-     * SM_SERVER_LIST call
+     * 向指定账号发送服务器列表包 {@link SM_SERVER_LIST}。
+     * Sends {@link SM_SERVER_LIST} to the given account.
      *
-     * @param accountId
+     * @param accountId 账号 ID / Account id
      */
-    public static void sendServerListFor(int accountId) {
+    public void sendServerListFor(int accountId) {
         LoginConnection connection = accountsOnLS.get(accountId);
         if (connection != null) {
             connection.sendPacket(new SM_SERVER_LIST());
@@ -391,20 +406,26 @@ public class AccountController {
     }
 
     /**
-     * @param accountId
-     * @return
+     * 返回该账号各游戏服角色数的不可变视图。
+     * Returns an unmodifiable view of GS character counts for the account.
+     *
+     * @param accountId 账号 ID / Account id
+     * @return 角色数映射，可能为 null / Character-count map, or null
      */
-    public static Map<Integer, Integer> getGSCharacterCountsFor(int accountId) {
+    public Map<Integer, Integer> getGSCharacterCountsFor(int accountId) {
         Map<Integer, Integer> characterCount = accountsGSCharacterCounts.get(accountId);
         return characterCount == null ? null : Collections.unmodifiableMap(new HashMap<Integer, Integer>(characterCount));
     }
 
     /**
-     * @param accountId
-     * @param gsid
-     * @param characterCount
+     * 记录某账号在指定游戏服上的角色数量。
+     * Records character count for an account on a specific gameserver.
+     *
+     * 账号 ID / Account id
+     * GameServer id
+     * Character count
      */
-    public static synchronized void addGSCharacterCountFor(int accountId, int gsid, int characterCount) {
+    public synchronized void addGSCharacterCountFor(int accountId, int gsid, int characterCount) {
         accountsGSCharacterCounts
             .computeIfAbsent(accountId, id -> new ConcurrentHashMap<Integer, Integer>())
             .put(gsid, characterCount);

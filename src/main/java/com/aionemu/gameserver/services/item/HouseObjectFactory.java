@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -44,8 +29,21 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.item.actions.SummonHouseObjectAction;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
+/**
+ * 房屋物件工厂，按模板创建房屋可放置对象。
+ * House object factory creating placeable house objects from templates.
+ */
 public final class HouseObjectFactory {
 
+	/**
+	 * createNew 方法。
+	 * createNew method.
+	 *
+	 * house
+	 * objectId
+	 * objectTemplateId
+	 * result
+	 */
 	public static HouseObject<?> createNew(House house, int objectId, int objectTemplateId) {
 		PlaceableHouseObject template = DataManager.HOUSING_OBJECT_DATA.getTemplateById(objectTemplateId);
 		if ((template instanceof HousingChair)) {
@@ -75,6 +73,14 @@ public final class HouseObjectFactory {
 		return new PassiveObject(house, objectId, template.getTemplateId());
 	}
 
+	/**
+	 * createNew 方法。
+	 * createNew method.
+	 *
+	 * house
+	 * itemTemplate
+	 * result
+	 */
 	public static HouseObject<?> createNew(House house, ItemTemplate itemTemplate) {
 		if (itemTemplate.getActions() == null) {
 			throw new IllegalArgumentException("template actions null");

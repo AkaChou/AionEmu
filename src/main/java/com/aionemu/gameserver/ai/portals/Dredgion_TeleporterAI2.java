@@ -22,6 +22,11 @@ import com.aionemu.gameserver.services.instance.InstanceService;
  */
 
 @AIName("dredgion_teleporter") // Название AI
+
+/**
+ * 传送门/传送点 AI：Dredgion Teleporter（@AIName "dredgion_teleporter"），继承 ActionItemNpcAI2。
+ * Portal/teleporter AI: Dredgion Teleporter (@AIName "dredgion_teleporter"), extends ActionItemNpcAI2.
+ */
 public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
 
     private static final byte TELEPORT_HEADING = (byte) 25;

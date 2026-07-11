@@ -1,30 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 
 /**
+ * 服务器变量数据访问抽象层。
+ * DAO for server-wide key-value variables persistence.
+ *
  * @author Ben
  */
 public abstract class ServerVariablesDAO implements DAO {
 
 	/**
-	 * {@inheritDoc}
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -32,14 +22,21 @@ public abstract class ServerVariablesDAO implements DAO {
 	}
 
 	/**
-	 * Loads the server variables stored in the database
-	 * 
-	 * @returns variable stored in database
+	 * 加载指定服务器变量。
+	 * Loads a server variable stored in the database.
+	 *
+	 * variable name
+	 * @return 变量整数值 / variable integer value
 	 */
 	public abstract int load(String var);
 
 	/**
-	 * Stores the server variables
+	 * 保存服务器变量。
+	 * Stores a server variable.
+	 *
+	 * variable name
+	 * variable value
+	 * @return 是否保存成功 / true if stored
 	 */
 	public abstract boolean store(String var, int value);
 

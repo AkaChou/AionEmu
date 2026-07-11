@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +9,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 外形变换效果：在变身基础上可对 NPC 保持中立，并移除隐身。
+ * Shape-change effect: transform that may mark the player neutral to NPCs and strips hide.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,8 +22,9 @@ public class ShapeChangeEffect extends TransformEffect {
     private boolean neutralToNpc = false;
 
 	/**
-	* Remove HideEffect
-	*/
+	 * 可选设置对 NPC 中立，移除施法者隐身，再执行变身开始逻辑。
+	 * Optionally sets admin-neutral, removes hide on the effector, then starts the transform.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
         if (neutralToNpc && effect.getEffected() instanceof Player) {
@@ -49,6 +38,10 @@ public class ShapeChangeEffect extends TransformEffect {
 		super.startEffect(effect, null);
 	}
 
+	/**
+	 * 取消对 NPC 中立并结束变身。
+	 * Clears admin-neutral and ends the transform.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
         if (neutralToNpc && effect.getEffected() instanceof Player) {

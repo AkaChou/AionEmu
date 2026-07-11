@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -23,13 +7,24 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.PetitionService;
 
+/**
+ * 同步客服工单（Petition）状态的服务端包；无工单时写出空结构。
+ * Server packet that synchronizes GM petition status; writes an empty structure when none is open.
+ */
 public class SM_PETITION extends AionServerPacket {
 	private Petition petition;
 
+	/**
+	 * 构造无工单（清空客户端工单 UI）的包。
+	 * Creates a packet that clears the client petition UI.
+	 */
 	public SM_PETITION() {
 		this.petition = null;
 	}
 
+	/**
+	 * active petition
+	 */
 	public SM_PETITION(Petition petition) {
 		this.petition = petition;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.model.account.AccountTime;
@@ -21,54 +5,67 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**
- * In this packet LoginServer is answering on GameServer request about valid
- * authentication data and also sends account name of user that is
- * authenticating on GameServer.
- * 
+ * 登录服对游戏服账号鉴权请求的响应包，返回鉴权结果与账号信息。
+ * LoginServer reply to a GameServer account-auth request with result and account details.
+ *
  * @author -Nemesiss-
  */
 public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 
+	/**
+	 * 构造函数。
+	 * Constructor.
+	 *
+	 * @param opCode 操作码 opcode
+	 */
 	public CM_ACOUNT_AUTH_RESPONSE(int opCode) {
 		super(opCode);
 	}
 
 	/**
-	 * accountId
+	 * 账号 ID。
+	 * Account id.
 	 */
 	private int accountId;
 
 	/**
-	 * result - true = authed
+	 * 鉴权结果（true=通过）。
+	 * Auth result (true = authenticated).
 	 */
 	private boolean result;
 
 	/**
-	 * accountName [if response is ok]
+	 * 账号名（鉴权成功时有效）。
+	 * Account name (present when response is ok).
 	 */
 	private String accountName;
 	/**
-	 * accountTime
+	 * 账号在线/休息累计时间。
+	 * Accumulated online/rest account time.
 	 */
 	private AccountTime accountTime;
 	/**
-	 * access level - regular/gm/admin
+	 * 权限等级（普通/GM/Admin）。
+	 * Access level (regular/gm/admin).
 	 */
 	private byte accessLevel;
 	/**
-	 * Membership - regular/premium
+	 * 会员等级（普通/高级）。
+	 * Membership (regular/premium).
 	 */
 	private byte membership;
 
 	/**
-	 * Toll
+	 * Toll 点数。
+	 * Toll points.
 	 */
 	private long toll;
 
 	private long luna;
 
 	/**
-	 * {@inheritDoc}
+	 * 读取鉴权结果及成功时的账号详情。
+	 * Reads auth result and, when successful, account details.
 	 */
 	@Override
 	public void readImpl() {
@@ -90,7 +87,8 @@ public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 将鉴权结果转交 LoginServer 门面，完成客户端登录流程。
+	 * Forwards the auth result to the LoginServer facade to finish client login.
 	 */
 	@Override
 	public void runImpl() {

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -33,10 +17,12 @@ import java.util.Map;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cygnea 区域 NPC AI：Guard Post Generator（@AIName "vritra_power_device"），继承 NpcAI2。
+ * Cygnea zone NPC AI: Guard Post Generator (@AIName "vritra_power_device"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("vritra_power_device")
 public class GuardPostGeneratorAI2 extends NpcAI2
 {
@@ -71,7 +57,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 						deviceBroken2.setEntityId(953);
 						objects.put(230413, SpawnEngine.spawnObject(deviceBroken2, 1));
 				    }
-			    }, 300000); //5 Minutes.
+			    }, 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 230416: //Guard Post Generator.
 				SpawnTemplate deviceBroken3 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230417, 1755.8412f, 1714.2434f, 199.66138f, (byte) 0);
@@ -86,7 +72,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 						deviceBroken4.setEntityId(1191);
 						objects.put(230416, SpawnEngine.spawnObject(deviceBroken4, 1));
 				    }
-			    }, 300000); //5 Minutes.
+			    }, 300000); //5 分钟。 / 5 Minutes.
 			break;
 		}
 	}

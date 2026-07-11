@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.model.PlayerClass;
@@ -21,18 +5,32 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * GM 指令：切换管理员自身职业。
+ * GM command handler that switches the admin's player class.
+ *
  * @author Alcapwnd
- * @Rework dezalmado
+ * @modified dezalmado
  */
 public class CmdChangeClass extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即执行职业切换。
+	 * Creates the handler and immediately runs the class-change logic.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 目标职业名（如 warrior、assassin） / target class name (e.g. warrior, assassin)
+	 */
 	public CmdChangeClass(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 按参数中的职业名切换管理员职业并触发升级刷新。
+	 * Switches the admin's class by name and triggers player upgrade refresh.
+	 */
 	public void run() {
-		// Only for admins !
+		// 仅管理员！ / Only for admins !
 		byte classId;
 		String ClassChoose = params;
 		if (ClassChoose.equalsIgnoreCase("warrior")) {

@@ -1,24 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 /**
- * Represents a player who has been blocked
- * 
+ * Blocked 玩家游戏对象。
+ * Blocked Player game object.
+ *
  * @author Ben
  */
 public class BlockedPlayer {
@@ -35,18 +20,22 @@ public class BlockedPlayer {
 		this.reason = reason;
 	}
 
+	/** 返回对象 ID / Returns the obj id */
 	public int getObjId() {
 		return pcd.getPlayerObjId();
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return pcd.getName();
 	}
 
+	/** 返回 reason / Returns the reason */
 	public String getReason() {
 		return reason;
 	}
 
+	/** 设置 reason / Sets the reason */
 	public synchronized void setReason(String reason) {
 		this.reason = reason;
 	}

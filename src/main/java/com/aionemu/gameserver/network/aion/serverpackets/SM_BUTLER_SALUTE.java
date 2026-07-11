@@ -1,28 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 管家（Butler）敬礼/互动动画相关的服务端包。
+ * interaction animation. / interaction animation.
+ *
  * @author Ranastic
  */
-
 public class SM_BUTLER_SALUTE extends AionServerPacket {
 	private int playerObjId;
 	private int isInside;
@@ -31,6 +17,17 @@ public class SM_BUTLER_SALUTE extends AionServerPacket {
 	private int unk3;
 	private int unk4;
 
+	/**
+	 * 构造管家敬礼包。
+	 * Builds a butler salute packet.
+	 *
+	 * @param unk1 未知字段 1 / unknown field 1
+	 * @param unk2 未知字段 2 / unknown field 2
+	 * @param unk3 未知字段 3 / unknown field 3
+	 * @param unk4 未知字段 4 / unknown field 4
+	 * player object id
+	 * @param isInside 是否在屋内 / whether inside
+	 */
 	public SM_BUTLER_SALUTE(int unk1, int unk2, int unk3, int unk4, int playerObjId, int isInside) {
 		this.unk1 = unk1;
 		this.unk2 = unk2;

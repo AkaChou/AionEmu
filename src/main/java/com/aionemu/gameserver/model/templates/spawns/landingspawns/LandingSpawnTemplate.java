@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.landingspawns;
 
 import com.aionemu.gameserver.model.landing.LandingStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+
+/**
+ * 登陆刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 public class LandingSpawnTemplate extends SpawnTemplate {
 	private int id;
@@ -34,26 +23,34 @@ public class LandingSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 e state type / Returns the e state type */
 	public LandingStateType getEStateType() {
 		return landingType;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/** 设置 e state type / Sets the e state type */
 	public void setEStateType(LandingStateType landingLevel) {
 		this.landingType = landingLevel;
 	}
 
+	/** 是否登陆打开 / Whether landing open */
 	public final boolean isLandingOpen() {
 		return !landingType.equals(LandingStateType.NONE);
 	}
 
+	/**
+	 * @return Whether landing closed / Whether landing closed
+	 */
 	public final boolean isLandingClosed() {
 		return landingType.equals(LandingStateType.NONE);
 	}

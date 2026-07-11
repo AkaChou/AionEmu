@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.properties;
 
 import java.util.Iterator;
@@ -24,7 +8,20 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
+/**
+ * 目标物种属性处理器：按 PC/NPC 过滤受影响列表。
+ * Target species property handler: filters the effected list by PC/NPC.
+ */
 public class TargetSpeciesProperty {
+
+	/**
+	 * 按目标物种过滤受影响单位。
+	 * Filters effected creatures by target species.
+	 *
+	 * @param skill 技能上下文 / skill context
+	 * @param properties 目标筛选属性 / target filter properties
+	 * always true
+	 */
 	public static boolean set(final Skill skill, Properties properties) {
 		TargetSpeciesAttribute value = properties.getTargetSpecies();
 		final List<Creature> effectedList = skill.getEffectedList();

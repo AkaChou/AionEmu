@@ -12,28 +12,43 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 重置技能与物品冷却时间的管理命令（{@code //cooldown}）。
+ * Admin command that resets skill and item cooldowns ({@code //cooldown}).
+ */
 public class Cooldown extends AdminCommand {
 
+    /**
+     * 注册命令名为 {@code cooldown}。
+     * Registers the command name {@code cooldown}.
+     */
     public Cooldown() {
         super("cooldown");
     }
 
+    /**
+     * 重置自身或指定在线玩家的全部冷却。
+     * Resets all cooldowns for self or a named online player.
+     *
+     * admin
+     * @param params 可选玩家名 / optional player name
+     */
     @Override
     public void execute(Player admin, String... params) {
         Player target = admin;
-        
+
         if (params.length > 0) {
             String targetName = params[0];
             target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
-            
+
             if (target == null) {
                 PacketSendUtility.sendMessage(admin, "Player " + targetName + " not found online.");
                 return;
             }
         }
-        
+
         resetAllCooldowns(target);
-        
+
         PacketSendUtility.sendMessage(admin, "All cooldowns have been reset for " + target.getName() + ".");
         if (!admin.equals(target)) {
             PacketSendUtility.sendMessage(target, "Your cooldowns have been reset by an administrator.");
@@ -41,11 +56,14 @@ public class Cooldown extends AdminCommand {
     }
 
     /**
-     * Reset all cooldowns (skills and items)
+     * 重置技能与物品的全部冷却时间。
+     * Resets all skill and item cooldowns.
+     *
+     * target player
      */
     private void resetAllCooldowns(Player player) {
         List<Integer> delayIds = new ArrayList<Integer>();
-        
+
         if (player.getSkillCoolDowns() != null && !player.getSkillCoolDowns().isEmpty()) {
             long currentTime = System.currentTimeMillis();
             for (Entry<Integer, Long> en : player.getSkillCoolDowns().entrySet()) {
@@ -70,6 +88,13 @@ public class Cooldown extends AdminCommand {
         }
     }
 
+    /**
+     * 执行失败时的语法提示。
+     * Syntax hint on failure.
+     *
+     * admin
+     * error message
+     */
     @Override
     public void onFail(Player player, String message) {
         PacketSendUtility.sendMessage(player, "Syntax: //cooldown <playerName>");

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -34,15 +18,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Rolandas 
+ * 管理员房屋拍卖命令：按区域/类型上架、随机上架或下架房屋。
+ * Admin housing-auction command: lists, randomly lists, or removes houses from auction.
+ *
+ * @author Rolandas
  * @modified Luzien
  */
 public class Auction extends AdminCommand {
 
+	/**
+	 * 注册 {@code //auction} 命令。
+	 * Registers the {@code //auction} command.
+	 */
 	public Auction() {
 		super("auction");
 	}
 
+	/**
+	 * 执行拍卖管理：add/remove/addrandom 子命令。
+	 * Executes auction management: add/remove/addrandom subcommands.
+	 *
+	 * admin
+	 * @param params 参数：子命令与区域/类型/价格等 / subcommand and zone/type/price args
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 1) {
@@ -152,10 +150,10 @@ public class Auction extends AdminCommand {
 					continue;
 				}
 				if (house.getStatus() == HouseStatus.SELL_WAIT) {
-					// check to see if the bid entry exists
+					// 检查竞价条目是否存在 / check to see if the bid entry exists
 					HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
 					if (entry == null) {
-						// reset status
+						// 重置状态 / reset status
 						house.setStatus(HouseStatus.ACTIVE);
 					} else {
 						continue;
@@ -257,10 +255,10 @@ public class Auction extends AdminCommand {
 					continue;
 				}
 				if (house.getStatus() == HouseStatus.SELL_WAIT) {
-					// check to see if the bid entry exists
+					// 检查竞价条目是否存在 / check to see if the bid entry exists
 					HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
 					if (entry == null) {
-						// reset status
+						// 重置状态 / reset status
 						house.setStatus(HouseStatus.ACTIVE);
 					} else {
 						continue;
@@ -285,6 +283,13 @@ public class Auction extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时输出 {@code //auction} 用法。
+	 * Prints {@code //auction} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax:\n"

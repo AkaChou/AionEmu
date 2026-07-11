@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -21,15 +5,24 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 
 /**
+ * 狂风旋涡观察者：玩家从 12 外进入 12 内时触发。
+ * Gale cyclone observer: fires when the player moves from beyond 12 into range 12.
  *
  * @author xTz
  */
 public abstract class GaleCycloneObserver extends ActionObserver {
 
+	/** 被观察玩家 / Observed player */
 	private Player player;
+	/** 旋涡生物 / Cyclone creature */
 	private Creature creature;
+	/** 上一次距离 / Previous distance */
 	private double oldRange;
 
+	/**
+	 * 玩家 / player
+	 * cyclone creature
+	 */
 	public GaleCycloneObserver(Player player, Creature creature) {
 		super(ObserverType.MOVE);
 		this.player = player;
@@ -52,5 +45,9 @@ public abstract class GaleCycloneObserver extends ActionObserver {
 		oldRange = newRange;
 	}
 
+	/**
+	 * 玩家进入旋涡有效范围时调用。
+	 * Called when the player enters the cyclone effective range.
+	 */
 	public abstract void onMove();
 }

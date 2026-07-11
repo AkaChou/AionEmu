@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -54,16 +39,28 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 挑战任务服务，管理城镇/军团挑战任务列表、完成结算与奖励。
+ * Challenge task service managing town/legion challenge lists, completion and rewards.
+ */
 @Slf4j
 public class ChallengeTaskService {
 	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
+	/** 城镇 ID → 挑战任务映射。 / Town id → challenge task map. */
 	private Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
+	/** 军团 ID → 挑战任务映射。 / Legion id → challenge task map. */
 	private Map<Integer, Map<Integer, ChallengeTask>> legionTasks;
 
 	private static class SingletonHolder {
 		protected static final ChallengeTaskService instance = new ChallengeTaskService();
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final ChallengeTaskService getInstance() {
 		ObjectProvider<ChallengeTaskService> provider = instanceProvider;
 		if (provider != null) {
@@ -72,16 +69,34 @@ public class ChallengeTaskService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<ChallengeTaskService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 构造服务并初始化任务缓存。
+	 * Constructs the service and initializes task caches.
+	 */
 	public ChallengeTaskService() {
 		cityTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
 		legionTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
-		log.info("ChallengeTaskService initialized.");
+		log.info(I18n.get("log.e300214dba9a"));
 	}
 
+	/**
+	 * 向玩家展示指定所有者的挑战任务列表。
+	 * Shows the challenge task list for the given owner to the player.
+	 *
+	 * 玩家 / player
+	 * challenge type
+	 * @param ownerId 所有者 ID（城镇/军团） / owner id (town/legion)
+	 */
 	public void showTaskList(Player player, ChallengeType challengeType, int ownerId) {
 		if (CustomConfig.CHALLENGE_TASKS_ENABLED) {
 			int ownerLevel = 0;
@@ -103,6 +118,16 @@ public class ChallengeTaskService {
 		}
 	}
 
+	/**
+	 * 构建可用挑战任务列表（加载缓存、补齐新任务）。
+	 * Builds the available challenge task list (loads cache and creates missing tasks).
+	 *
+	 * 玩家 / player
+	 * challenge type
+	 * owner id
+	 * @param ownerLevel 所有者等级 / owner level
+	 * @return 可用任务列表 / available tasks
+	 */
 	private List<ChallengeTask> buildTaskList(Player player, ChallengeType challengeType, int ownerId, int ownerLevel) {
 		Map<Integer, Map<Integer, ChallengeTask>> taskMap = null;
 		if (challengeType == ChallengeType.LEGION) {
@@ -155,6 +180,13 @@ public class ChallengeTaskService {
 		return availableTasks;
 	}
 
+	/**
+	 * 挑战子任务完成时的分发入口。
+	 * Entry point when a challenge sub-quest is finished.
+	 *
+	 * 玩家 / player
+	 * quest id
+	 */
 	public void onChallengeQuestFinish(Player player, int questId) {
 		ChallengeTaskTemplate taskTemplate = DataManager.CHALLENGE_DATA.getTaskByQuestId(questId);
 		switch (taskTemplate.getType()) {
@@ -167,6 +199,14 @@ public class ChallengeTaskService {
 		}
 	}
 
+	/**
+	 * 处理城镇挑战任务完成：加分、升级与奖励。
+	 * Handles town challenge completion: points, level-up and rewards.
+	 *
+	 * 玩家 / player
+	 * task template
+	 * quest id
+	 */
 	private void onCityTaskFinish(Player player, ChallengeTaskTemplate taskTemplate, int questId) {
 		int townId = GameHousingServices.townService().getTownIdByPosition(player);
 		if (cityTasks.get(townId) == null) {
@@ -211,6 +251,14 @@ public class ChallengeTaskService {
 		}
 	}
 
+	/**
+	 * 处理军团挑战任务完成：累计贡献并在整任务完成后按贡献发奖。
+	 * Handles legion challenge completion: tracks contribution and mails rewards by rank.
+	 *
+	 * 玩家 / player
+	 * task template
+	 * quest id
+	 */
 	private void onLegionTaskFinish(Player player, ChallengeTaskTemplate taskTemplate, int questId) {
 		if (player.getLegion() == null) {
 			return;
@@ -283,6 +331,15 @@ public class ChallengeTaskService {
 		}
 	}
 
+	/**
+	 * 判断军团是否满足指定等级的挑战升级条件。
+	 * Returns whether the legion meets the challenge requirement to raise the given level.
+	 *
+	 * legion id
+	 *
+	 * @param legionLevel 目标军团等级 / target legion level
+	 * @param legionLevel @return 可升级返回 true / true if allowed
+	 */
 	public boolean canRaiseLegionLevel(int legionId, int legionLevel) {
 		Map<Integer, ChallengeTask> tasks;
 		if (legionTasks.containsKey(legionId)) {

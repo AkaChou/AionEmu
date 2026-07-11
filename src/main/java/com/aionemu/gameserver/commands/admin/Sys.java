@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,16 +13,36 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.List;
 
 /**
- * @author lord_rex //sys info - System Informations //sys memory - Memory Informations //sys gc - Garbage Collector
- *         //sys shutdown <seconds> <announceInterval> - Call shutdown //sys restart <seconds> <announceInterval> - Call
- *         restart //sys threadpool - Thread pools info
+ * 服务器系统信息与关机/重启控制管理员命令。
+ * Admin command for server system info and shutdown/restart control.
+ * <p>
+ * //sys info - 系统信息 / System informations<br>
+ * Memory informations<br>
+ * //sys gc - 垃圾回收 / Garbage collector<br>
+ * Call shutdown<br>
+ * Call restart<br>
+ * //sys threadpool - 线程池信息 / Thread pools info
+ * </p>
+ *
+ * @author lord_rex
  */
 public class Sys extends AdminCommand {
 
+	/**
+	 * 构造 sys 命令。
+	 * Creates the sys command.
+	 */
 	public Sys() {
 		super("sys");
 	}
 
+	/**
+	 * 执行系统信息、内存、GC、关机、重启或线程池查询。
+	 * Runs system info, memory, GC, shutdown, restart, or thread-pool dump.
+	 *
+	 * @param player 执行 GM / Admin player
+	 * @param params 子命令与参数 / Subcommand and args
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -50,32 +54,32 @@ public class Sys extends AdminCommand {
 		}
 
 		if (params[0].equals("info")) {
-			// Time
+			// 时间 / Time
 			PacketSendUtility.sendMessage(player, "System Informations at: " + AEInfos.getRealTime().toString());
 
-			// Version Infos
+			// 版本信息 / Version Infos
 			for (String line : AEVersions.getFullVersionInfo())
 				PacketSendUtility.sendMessage(player, line);
 
-			// OS Infos
+			// OS 信息 / OS Infos
 			for (String line : AEInfos.getOSInfo())
 				PacketSendUtility.sendMessage(player, line);
 
-			// CPU Infos
+			// CPU 信息 / CPU Infos
 			for (String line : AEInfos.getCPUInfo())
 				PacketSendUtility.sendMessage(player, line);
 
-			// JRE Infos
+			// JRE 信息 / JRE Infos
 			for (String line : AEInfos.getJREInfo())
 				PacketSendUtility.sendMessage(player, line);
 
-			// JVM Infos
+			// JVM 信息 / JVM Infos
 			for (String line : AEInfos.getJVMInfo())
 				PacketSendUtility.sendMessage(player, line);
 		}
 
 		else if (params[0].equals("memory")) {
-			// Memory Infos
+			// 内存信息 / Memory Infos
 			for (String line : AEInfos.getMemoryInfo())
 				PacketSendUtility.sendMessage(player, line);
 		}
@@ -126,6 +130,13 @@ public class Sys extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Usage: //sys info | //sys memory | //sys gc | //sys restart <countdown time> <announce delay> | //sys shutdown <countdown time> <announce delay>");

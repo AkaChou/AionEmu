@@ -1,5 +1,7 @@
 package com.aionemu.commons.database;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * This class provides a series of static methods for executing database operations,
  * including queries, stored procedure calls, inserts and updates.
  *
- * 所有数据库操作都通过DatabaseFactory获取连接，并确保正确关闭资源。
+ * 所有数据库操作都通过 DatabaseFactory 获取连接，并确保正确关闭资源。
  * All database operations obtain connections through DatabaseFactory and ensure proper resource cleanup.
  */
 @Slf4j
@@ -29,7 +31,7 @@ public final class DB {
      * 执行查询操作
      * Execute a select query
      *
-     * @param query 查询SQL语句 / The SQL query statement
+ * @param query 查询 SQL 语句 / The SQL query statement
      * @param reader 结果集处理器 / The result set handler
      * @return 查询是否成功 / Whether the query was successful
      */
@@ -41,9 +43,10 @@ public final class DB {
      * 执行查询操作，支持错误消息
      * Execute a select query with error message support
      *
-     * @param query 查询SQL语句 / The SQL query statement
+ * @param query 查询 SQL 语句 / The SQL query statement
      * @param reader 结果集处理器 / The result set handler
-     * @param errMsg 错误消息 / Error message
+     * Error message
+     *
      * @return 查询是否成功 / Whether the query was successful
      */
     public static boolean select(String query, ReadStH reader, String errMsg) {
@@ -62,9 +65,9 @@ public final class DB {
             return true;
         } catch (Exception var17) {
             if (errMsg == null) {
-                log.warn("Error executing select query: {}", query, var17);
+                log.warn(I18n.get("log.47cff7ac9cfa", query, var17));
             } else {
-                log.warn("{} query={}", errMsg, query, var17);
+                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var17));
             }
             return false;
         } finally {
@@ -76,7 +79,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var16) {
-                log.warn("Failed to close DB connection", var16);
+                log.warn(I18n.get("log.687eec966cd6", var16));
             }
         }
     }
@@ -99,7 +102,8 @@ public final class DB {
      *
      * @param query 存储过程调用语句 / The stored procedure call statement
      * @param reader 结果集处理器 / The result set handler
-     * @param errMsg 错误消息 / Error message
+     * Error message
+     *
      * @return 调用是否成功 / Whether the call was successful
      */
     public static boolean call(String query, ReadStH reader, String errMsg) {
@@ -118,9 +122,9 @@ public final class DB {
             return true;
         } catch (Exception var17) {
             if (errMsg == null) {
-                log.warn("Error calling stored procedure: {}", query, var17);
+                log.warn(I18n.get("log.7e2c163a97cb", query, var17));
             } else {
-                log.warn("{} query={}", errMsg, query, var17);
+                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var17));
             }
             return false;
         } finally {
@@ -132,7 +136,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var16) {
-                log.warn("Failed to close DB connection", var16);
+                log.warn(I18n.get("log.687eec966cd6", var16));
             }
         }
     }
@@ -141,8 +145,9 @@ public final class DB {
      * 执行插入或更新操作
      * Execute an insert or update operation
      *
-     * @param query SQL语句 / The SQL statement
-     * @return 操作是否成功 / Whether the operation was successful
+ * The SQL statement
+     *
+     * @param query @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query) {
         return insertUpdate(query, null, null);
@@ -152,8 +157,9 @@ public final class DB {
      * 执行插入或更新操作，支持错误消息
      * Execute an insert or update operation with error message support
      *
-     * @param query SQL语句 / The SQL statement
-     * @param errMsg 错误消息 / Error message
+ * The SQL statement
+     * Error message
+     *
      * @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query, String errMsg) {
@@ -164,9 +170,10 @@ public final class DB {
      * 执行插入或更新操作，支持批处理
      * Execute an insert or update operation with batch support
      *
-     * @param query SQL语句 / The SQL statement
+ * The SQL statement
+     *
      * @param batch 批处理处理器 / The batch handler
-     * @return 操作是否成功 / Whether the operation was successful
+     * @param batch @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query, IUStH batch) {
         return insertUpdate(query, batch, null);
@@ -176,9 +183,10 @@ public final class DB {
      * 执行插入或更新操作，支持批处理和错误消息
      * Execute an insert or update operation with batch and error message support
      *
-     * @param query SQL语句 / The SQL statement
+ * The SQL statement
      * @param batch 批处理处理器 / The batch handler
-     * @param errMsg 错误消息 / Error message
+     * Error message
+     *
      * @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query, IUStH batch, String errMsg) {
@@ -196,9 +204,9 @@ public final class DB {
             return true;
         } catch (Exception var16) {
             if (errMsg == null) {
-                log.warn("Failed to execute insert/update query: {}", query, var16);
+                log.warn(I18n.get("log.b9dc77234b58", query, var16));
             } else {
-                log.warn("{} query={}", errMsg, query, var16);
+                log.warn(I18n.get("log.6b2012065d8f", errMsg, query, var16));
             }
             return false;
         } finally {
@@ -210,7 +218,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var15) {
-                log.warn("Failed to close DB connection", var15);
+                log.warn(I18n.get("log.687eec966cd6", var15));
             }
         }
     }
@@ -219,8 +227,9 @@ public final class DB {
      * 开始一个新的事务
      * Begin a new transaction
      *
-     * @return 事务对象 / Transaction object
-     * @throws SQLException 如果创建事务失败 / If creating transaction fails
+     * Transaction object
+     *
+     * @return @throws SQLException 如果创建事务失败 / If creating transaction fails
      */
     public static Transaction beginTransaction() throws SQLException {
         Connection con = DatabaseFactory.getConnection();
@@ -231,8 +240,9 @@ public final class DB {
      * 创建预处理语句
      * Create a prepared statement
      *
-     * @param sql SQL语句 / The SQL statement
-     * @return 预处理语句对象 / PreparedStatement object
+ * The SQL statement
+     *
+     * @param sql @return 预处理语句对象 / PreparedStatement object
      */
     public static PreparedStatement prepareStatement(String sql) {
         return prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
@@ -242,10 +252,11 @@ public final class DB {
      * 创建预处理语句，支持结果集类型和并发性设置
      * Create a prepared statement with result set type and concurrency settings
      *
-     * @param sql SQL语句 / The SQL statement
+ * The SQL statement
+     *
      * @param resultSetType 结果集类型 / Result set type
      * @param resultSetConcurrency 结果集并发性 / Result set concurrency
-     * @return 预处理语句对象 / PreparedStatement object
+     * @param resultSetConcurrency @return 预处理语句对象 / PreparedStatement object
      */
     public static PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) {
         Connection c = null;
@@ -255,12 +266,12 @@ public final class DB {
             c = DatabaseFactory.getConnection();
             ps = c.prepareStatement(sql, resultSetType, resultSetConcurrency);
         } catch (Exception var8) {
-            log.error("Can't create PreparedStatement for query: {}", sql, var8);
+            log.error(I18n.get("log.077dab038e28", sql, var8));
             if (c != null) {
                 try {
                     c.close();
                 } catch (SQLException var7) {
-                    log.error("Can't close connection after exception", var7);
+                    log.error(I18n.get("log.9a42eb3319dc", var7));
                 }
             }
         }
@@ -279,7 +290,7 @@ public final class DB {
         try {
             return statement.executeUpdate();
         } catch (Exception var2) {
-            log.error("Can't execute update for PreparedStatement", var2);
+            log.error(I18n.get("log.bfed240a7aa7", var2));
             return -1;
         }
     }
@@ -307,7 +318,7 @@ public final class DB {
         try {
             rs = statement.executeQuery();
         } catch (Exception var3) {
-            log.error("Error while executing query", var3);
+            log.error(I18n.get("log.85a2b5d243d2", var3));
         }
         return rs;
     }
@@ -321,14 +332,14 @@ public final class DB {
     public static void close(PreparedStatement statement) {
         try {
             if (statement.isClosed()) {
-                log.warn("Attempt to close PreparedStatement that is closed already", new Exception());
+                log.warn(I18n.get("log.dd9382c5d293", new Exception()));
                 return;
             }
             Connection c = statement.getConnection();
             statement.close();
             c.close();
         } catch (Exception var2) {
-            log.error("Error while closing PreparedStatement", var2);
+            log.error(I18n.get("log.a3f261348388", var2));
         }
     }
 }

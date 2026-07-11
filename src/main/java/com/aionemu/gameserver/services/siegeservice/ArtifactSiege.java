@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -43,19 +29,34 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-@Slf4j
 
+/**
+ * 神器据点攻城：首领击杀后结算归属、落地/前哨/RVR 连锁。
+ * Artifact siege that resolves ownership and landing/outpost/RVR side-effects after boss kill.
+ */
+@Slf4j
 public class ArtifactSiege extends Siege<ArtifactLocation> {
 
+	/**
+	 * artifact location
+	 */
 	public ArtifactSiege(ArtifactLocation siegeLocation) {
 		super(siegeLocation);
 	}
 
+	/**
+	 * 初始化神器攻城首领。
+	 * Initializes the artifact siege boss.
+	 */
 	@Override
 	protected void onSiegeStart() {
 		initSiegeBoss();
 	}
 
+	/**
+	 * 结束神器攻城：结算占领、重刷和平 NPC、清理区域并立即重启。
+	 * Finishes the artifact siege: resolves capture, respawns peace NPCs, clears zones and restarts.
+	 */
 	@Override
 	protected void onSiegeFinish() {
 		unregisterSiegeBossListeners();
@@ -64,7 +65,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 			onCapture();
 			broadcastUpdate(getSiegeLocation());
 		} else {
-			log.error("Artifact siege (artifactId:" + getSiegeLocationId() + ") ended without killing a boss.");
+			log.error(I18n.get("log.6b626befcbb0", getSiegeLocationId()));
 		}
 		spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
 		DAOManager.getDAO(SiegeDAO.class).updateLocation(getSiegeLocation());
@@ -82,6 +83,10 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		startSiege(getSiegeLocationId());
 	}
 
+	/**
+	 * 根据伤害胜方更新神器归属，并处理落地/前哨/RVR 连锁。
+	 * Updates artifact ownership from the damage winner and applies landing/outpost/RVR side-effects.
+	 */
 	protected void onCapture() {
 		SiegeRaceCounter wRaceCounter = getSiegeCounter().getWinnerRaceCounter();
 		getSiegeLocation().setRace(wRaceCounter.getSiegeRace());
@@ -116,7 +121,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				}
 			});
 		}
-		// Abyss Landing 4.9
+		// 欧比斯登陆 4.9 / Abyss Landing 4.9
 		if (getSiegeLocation().getLocationId() == 1224 || getSiegeLocation().getLocationId() == 1401
 				|| getSiegeLocation().getLocationId() == 1402 || getSiegeLocation().getLocationId() == 1403) {
 			if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
@@ -131,7 +136,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(8000, LandingPointsEnum.ARTIFACT, false);
 			}
 		}
-		// Outpost 5.8
+		// 前哨 5.8 / Outpost 5.8
 		if (getSiegeLocation().getLocationId() >= 8011 && getSiegeLocation().getLocationId() <= 8017
 				|| getSiegeLocation().getLocationId() >= 9011 && getSiegeLocation().getLocationId() <= 9017) {
 			if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
@@ -157,7 +162,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 			}
 		}
 
-		// Iluma/Norsvold Artifact 5.8
+		// 伊卢玛/诺斯沃尔德神器 5.8 / Iluma/Norsvold Artifact 5.8
 		if (getSiegeLocation().getLocationId() == 8021 || getSiegeLocation().getLocationId() == 9021) {
 			if (SiegeRace.BALAUR != getSiegeLocation().getRace()) {
 				switch (getSiegeLocation().getLocationId()) {
@@ -212,11 +217,24 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		}
 	}
 
+	/**
+	 * 神器攻城为无限模式。
+	 * Artifact sieges are endless.
+	 *
+	 * always true
+	 */
 	@Override
 	public boolean isEndless() {
 		return true;
 	}
 
+	/**
+	 * 神器攻城不累计欧比斯点数（空实现）。
+	 * Artifact sieges do not accumulate abyss points (no-op).
+	 *
+	 * @param player 玩家 / player
+	 * @param abysPoints 欧比斯点数 / abyss points
+	 */
 	@Override
 	public void addAbyssPoints(Player player, int abysPoints) {
 	}

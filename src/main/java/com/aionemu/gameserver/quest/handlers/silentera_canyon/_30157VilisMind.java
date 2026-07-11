@@ -12,8 +12,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
- * @author Ritsu
+ * 寂静峡谷任务脚本：Vilis Mind（任务 ID 30157）。
+ * Silentera Canyon quest script: Vilis Mind (quest ID 30157).
  *
+ * @author Ritsu
  */
 public class _30157VilisMind extends QuestHandler {
 

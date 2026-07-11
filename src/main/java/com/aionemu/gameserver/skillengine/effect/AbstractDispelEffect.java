@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,10 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 
+/**
+ * 驱散效果基类：按类别与目标槽位移除受影响者身上的效果。
+ * Base class for dispel effects: removes effects on the target by category and slot.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbstractDispelEffect")
 public class AbstractDispelEffect extends EffectTemplate {
@@ -36,9 +24,23 @@ public class AbstractDispelEffect extends EffectTemplate {
 	@XmlAttribute(name = "dispel_level")
 	protected int dispelLevel;
 
+	/**
+	 * 无参应用入口（子类覆盖并指定驱散类别）。
+	 * No-arg apply entry (subclasses override with a concrete dispel category).
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void applyEffect(Effect effect) {
 	}
 
+	/**
+	 * 按驱散类别与目标槽位移除效果，驱散层数与强度随技能等级缩放。
+	 * Removes effects by dispel category and target slot; count and power scale with skill level.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 * @param type 驱散类别 / dispel category
+	 * @param slot 目标槽位 / target slot
+	 */
 	public void applyEffect(Effect effect, DispelCategoryType type, SkillTargetSlot slot) {
 		boolean isItemTriggered = effect.getItemTemplate() != null;
 		int count = value + delta * effect.getSkillLevel();

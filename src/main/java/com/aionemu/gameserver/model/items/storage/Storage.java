@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items.storage;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -34,9 +18,11 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
+ * 仓库，用于物品相关逻辑。
+ * Storage for items logic.
+ *
  * @author KID, ATracer
  */
 public abstract class Storage implements IStorage {
@@ -46,7 +32,7 @@ public abstract class Storage implements IStorage {
 	private StorageType storageType;
 	private Queue<Item> deletedItems;
 	/**
-	 * Can be of 2 types: UPDATED and UPDATE_REQUIRED
+	 * 可为 UPDATED 与 UPDATE_REQUIRED 两种类型。 / Can be of 2 types: UPDATED and UPDATE_REQUIRED
 	 */
 	private PersistentState persistentState = PersistentState.UPDATED;
 
@@ -62,16 +48,19 @@ public abstract class Storage implements IStorage {
 		}
 	}
 
+	/** 获取基纳。 / Returns the kinah. */
 	@Override
 	public long getKinah() {
 		return kinahItem == null ? 0 : kinahItem.getItemCount();
 	}
 
+	/** 获取基纳物品。 / Returns the kinah item. */
 	@Override
 	public Item getKinahItem() {
 		return kinahItem;
 	}
 
+	/** 获取仓库类型。 / Returns the storage type. */
 	@Override
 	public StorageType getStorageType() {
 		return storageType;
@@ -91,9 +80,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * Decrease kinah by {@code amount} but check first that its enough in storage
-	 * 
-	 * @return true if decrease was successful
+	 * 减少基纳（先检查存量是否足够）。 / Decrease kinah by {@code amount} but check first that its enough in storage.
 	 */
 	boolean tryDecreaseKinah(long amount, Player actor) {
 		if (getKinah() >= amount) {
@@ -121,7 +108,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * increase item count and return left count
+	 * 增加物品数量并返回剩余数量 / increase item count and return left count
 	 */
 	long increaseItemCount(Item item, long count, ItemUpdateType updateType, Player actor) {
 		long leftCount = item.increaseItemCount(count);
@@ -152,12 +139,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * This method should be called only for new items added to inventory (loading
-	 * from DB) If item is equiped - will be put to equipment if item is unequiped -
-	 * will be put to default bag for now Kinah is stored separately as it will be
-	 * used frequently
-	 * 
-	 * @param item
+	 * 仅用于新加入背包的物品（从 DB 加载）；已装备则放入装备栏。 / This method should be called only for new items added to inventory (loading from DB) If item is equiped - will be put to equipment if item is unequiped - will be put to default bag for now Kinah is stored separately as it will be used frequently.
 	 */
 	@Override
 	public void onLoadHandler(Item item) {
@@ -177,7 +159,6 @@ public abstract class Storage implements IStorage {
 		item.setItemLocation(storageType.getId());
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 		ItemPacketService.sendStorageUpdatePacket(actor, storageType, item);
-		// TODO: move to ItemService
 		GameEngineServices.questEngine().onItemGet(new QuestEnv(null, actor, 0, 0), item.getItemTemplate().getTemplateId());
 		if (item.getItemTemplate().isQuestUpdateItem()) {
 			actor.getController().updateZone();
@@ -186,7 +167,7 @@ public abstract class Storage implements IStorage {
 		return item;
 	}
 
-	// a bit misleading name - but looks like its used only for equipment
+	// 名称略有误导——但似乎仅用于装备 / a bit misleading name - but looks like its used only for equipment
 	Item put(Item item, Player actor) {
 		if (!itemStorage.putItem(item)) {
 			return null;
@@ -198,7 +179,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * Remove item from storage without changing its state
+	 * 移除物品从 storage 无 changing 其 state。 / Remove item from storage without changing its state
 	 */
 	@Override
 	public Item remove(Item item) {
@@ -206,14 +187,14 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * Delete item from storage and mark for DB update. QUEST_REWARD delete type
+	 * 删除物品从 storage 并 mark 用于 DB 更新 .QUEST_REWARD 删除 type。 / Delete item from storage and mark for DB update. QUEST_REWARD delete type
 	 */
 	Item delete(Item item, Player actor) {
 		return delete(item, ItemDeleteType.QUEST_REWARD, actor);
 	}
 
 	/**
-	 * Delete item from storage and mark for DB update
+	 * 删除物品从 storage 并 mark 用于 DB 更新。 / Delete item from storage and mark for DB update
 	 */
 	Item delete(Item item, ItemDeleteType deleteType, Player actor) {
 		if (remove(item) != null) {
@@ -259,11 +240,13 @@ public abstract class Storage implements IStorage {
 		return decreaseItemCount(item, count, updateType, actor) == 0;
 	}
 
+	/** 按物品 ID 返回 first item / Returns the first item by item id */
 	@Override
 	public Item getFirstItemByItemId(int itemId) {
 		return this.itemStorage.getFirstItemById(itemId);
 	}
 
+	/** 返回物品基纳 / Returns the items with kinah*/
 	@Override
 	public List<Item> getItemsWithKinah() {
 		List<Item> items = this.itemStorage.getItems();
@@ -273,26 +256,31 @@ public abstract class Storage implements IStorage {
 		return items;
 	}
 
+	/** 获取物品。 / Returns the items. */
 	@Override
 	public List<Item> getItems() {
 		return this.itemStorage.getItems();
 	}
 
+	/** 返回按物品 ID 的物品 / Returns the items by item id */
 	@Override
 	public List<Item> getItemsByItemId(int itemId) {
 		return this.itemStorage.getItemsById(itemId);
 	}
 
+	/** 返回 deleted items / Returns the deleted items */
 	@Override
 	public Queue<Item> getDeletedItems() {
 		return deletedItems;
 	}
 
+	/** 返回按对象 ID 的物品 / Returns the item by obj id */
 	@Override
 	public Item getItemByObjId(int itemObjId) {
 		return this.itemStorage.getItemByObjId(itemObjId);
 	}
 
+	/** 返回按物品 ID 的物品数量 / Returns the item count by item id */
 	@Override
 	public long getItemCountByItemId(int itemId) {
 		List<Item> temp = this.itemStorage.getItemsById(itemId);
@@ -306,15 +294,20 @@ public abstract class Storage implements IStorage {
 		return cnt;
 	}
 
+	/** 是否已满。 / Whether Full. */
 	@Override
 	public boolean isFull() {
 		return this.itemStorage.isFull();
 	}
 
+	/**
+	 * @return Whether full special cube / Whether full special cube
+	 */
 	public boolean isFullSpecialCube() {
 		return this.itemStorage.isFullSpecialCube();
 	}
 
+	/** 是否已满。 / Whether Full. */
 	public boolean isFull(int inventory) {
 		if (inventory > 0) {
 			return isFullSpecialCube();
@@ -322,6 +315,7 @@ public abstract class Storage implements IStorage {
 		return isFull();
 	}
 
+	/** 返回 free slots / Returns the free slots */
 	public int getFreeSlots(int inventory) {
 		if (inventory > 0) {
 			return getSpecialCubeFreeSlots();
@@ -329,39 +323,47 @@ public abstract class Storage implements IStorage {
 		return getFreeSlots();
 	}
 
+	/** 返回 special cube free slots / Returns the special cube free slots */
 	public int getSpecialCubeFreeSlots() {
 		return this.itemStorage.getSpecialCubeFreeSlots();
 	}
 
+	/** 返回 free slots / Returns the free slots */
 	@Override
 	public int getFreeSlots() {
 		return this.itemStorage.getFreeSlots();
 	}
 
+	/** 设置限制。 / Sets the limit. */
 	public boolean setLimit(int limit) {
 		return this.itemStorage.setLimit(limit);
 	}
 
+	/** 获取限制。 / Returns the limit. */
 	@Override
 	public int getLimit() {
 		return this.itemStorage.getLimit();
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	@Override
 	public final PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	@Override
 	public final void setPersistentState(PersistentState persistentState) {
 		this.persistentState = persistentState;
 	}
 
+	/** 大小 / size. */
 	@Override
 	public int size() {
 		return itemStorage.size();
 	}
 
+	/** 清空。 / Clear. */
 	public void clear() {
 		for (Item i : itemStorage.getItems()) {
 			remove(i);

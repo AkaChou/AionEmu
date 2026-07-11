@@ -11,6 +11,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 西奥博莫斯任务脚本：Stoneof Mabolo（任务 ID 3058）。
+ * Theobomos quest script: Stoneof Mabolo (quest ID 3058).
+ *
  * @author Leunam
  */
 public class _3058StoneofMabolo extends QuestHandler {

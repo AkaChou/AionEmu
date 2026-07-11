@@ -1,30 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 治疗类型：生命/魔法/神圣力/飞行值。
+ * MP / DP / FP. / MP / DP / FP.
+ *
  * @author ATracer
  */
 @XmlType(name = "HealType")
 @XmlEnum
 public enum HealType {
 
-	HP, MP, DP, FP;
+	/** 生命值 / Hit points */
+	HP,
+	/** 魔法值 / Mana points */
+	MP,
+	/** 神圣力 / Divine points */
+	DP,
+	/** 飞行值 / Flight points */
+	FP;
 }

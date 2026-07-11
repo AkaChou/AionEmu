@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
@@ -40,12 +26,21 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
+ * 烙印（Stigma）服务，处理装备/卸下烙印、技能授予、套装强化与登录校验。
+ * Stigma service handling equip/unequip, skill grants, set enchant bonuses, and login validation.
+ *
  * @author Wnkrz (Encom)
  */
 @Slf4j
-
 public class StigmaService {
 
+	/**
+	 * 按品质返回烙印装备消耗基纳。
+	 * Returns the kinah cost to equip a stigma by item quality.
+	 *
+	 * @param item 烙印道具 / stigma item
+	 * price
+	 */
 	private static int getPriceByQuality(Item item) {
 		int price = 0;
 		switch (item.getItemTemplate().getItemQuality()) {
@@ -64,6 +59,15 @@ public class StigmaService {
 		return price;
 	}
 
+	/**
+	 * 装备烙印时校验槽位/职业/基纳，授予对应技能并检查连结与套装。
+	 * On stigma equip, validates slot/class/kinah, grants skills, and checks linked skills and set bonuses.
+	 *
+	 * 玩家 / player
+	 * @param resultItem 装备的烙印 / equipped stigma item
+	 * @param slot 装备槽位 / equipment slot
+	 * whether successful
+	 */
 	public static boolean notifyEquipAction(final Player player, Item resultItem, long slot) {
 		if (resultItem.getItemTemplate().isStigma()) {
 			if (ItemSlot.isRegularStigma(slot)) {
@@ -78,7 +82,7 @@ public class StigmaService {
 			}
 			Stigma stigmaInfo = resultItem.getItemTemplate().getStigma();
 			if (stigmaInfo == null) {
-				log.warn("Stigma info missing for item: " + resultItem.getItemTemplate().getTemplateId());
+				log.warn(I18n.get("log.eb1508f439a1", resultItem.getItemTemplate().getTemplateId()));
 				return false;
 			}
 			if (player.getInventory().getKinah() < getPriceByQuality(resultItem)) {
@@ -113,6 +117,14 @@ public class StigmaService {
 		return true;
 	}
 
+	/**
+	 * 卸下烙印时移除技能、连结技能与套装加成。
+	 * On stigma unequip, removes skills, linked skills, and set bonuses as needed.
+	 *
+	 * @param player 玩家 / player
+	 * @param resultItem 卸下的烙印 / unequipped stigma item
+	 * @return 是否允许卸下 / whether unequip is allowed
+	 */
 	public static boolean notifyUnequipAction(Player player, Item resultItem) {
 		if (player.getEquipment().isSlotEquipped(ItemSlot.STIGMA_SPECIAL.getSlotIdMask())
 				&& resultItem.getEquipmentSlot() != ItemSlot.STIGMA_SPECIAL.getSlotIdMask()) {
@@ -157,6 +169,13 @@ public class StigmaService {
 		return true;
 	}
 
+	/**
+	 * 按套装等级为已有烙印技能叠加强化等级。
+	 * Applies set-bonus enchant levels to existing stigma skills.
+	 *
+	 * @param player 玩家 / player
+	 * @param enchantLevel 强化等级 / enchant level
+	 */
 	public static void addStigmaSetEnchant(Player player, int enchantLevel) {
 		for (PlayerSkillEntry skill : player.getSkillList().getStigmaSkills()) {
 			player.getSkillList().addStigmaSkill(player, skill.getSkillId(), 1 + enchantLevel + player.getStigmaSet());
@@ -164,6 +183,13 @@ public class StigmaService {
 		}
 	}
 
+	/**
+	 * 强化连结技能相关烙印技能等级。
+	 * Updates stigma skill levels for linked-skill enchant.
+	 *
+	 * @param player 玩家 / player
+	 * @param enchantLevel 强化等级 / enchant level
+	 */
 	public static void enchanteLinkedSkill(Player player, int enchantLevel) {
 		for (PlayerSkillEntry skill : player.getSkillList().getStigmaSkills()) {
 			player.getSkillList().addStigmaSkill(player, skill.getSkillId(), 1 + enchantLevel + player.getStigmaSet());
@@ -171,6 +197,12 @@ public class StigmaService {
 		}
 	}
 
+	/**
+	 * 移除套装加成后，按单件强化等级重建烙印技能。
+	 * After set-bonus removal, rebuilds stigma skills from per-item enchant levels.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void removeStigmaSetEnchant(Player player) {
 		for (Item resultItem : player.getEquipment().getEquippedItemsAllStigma()) {
 			for (int i = 1; i <= player.getLevel(); i++) {
@@ -188,6 +220,13 @@ public class StigmaService {
 		}
 	}
 
+	/**
+	 * 根据 6 件烙印强化等级设置套装加成值。
+	 * Sets the stigma set bonus value from the enchant levels of 6 equipped stigmas.
+	 *
+	 * @param player 玩家 / player
+	 * @param list 已装备烙印模板 ID 列表 / equipped stigma template ids
+	 */
 	public static void checkStigmaEnchant(Player player, List<Integer> list) {
 		for (Item item : player.getEquipment().getEquippedItemsAllStigma()) {
 			if (list.size() >= 6) {
@@ -208,6 +247,12 @@ public class StigmaService {
 		}
 	}
 
+	/**
+	 * 登录时重建烙印技能、校验槽位/前置技能/职业，并检查连结条件。
+	 * On login, rebuilds stigma skills, validates slots/prereqs/class, and checks linked conditions.
+	 *
+	 * 玩家 / player
+	 */
 	public static void onPlayerLogin(Player player) {
 		List<Item> equippedItems = player.getEquipment().getEquippedItemsAllStigma();
 		List<Integer> Stigma = player.getEquipment().getEquippedItemsAllStigmaIds();
@@ -259,10 +304,17 @@ public class StigmaService {
 				}
 			}
 		}
-		/** Stigma Linked Skills **/
+		/** 烙印关联技能 / Stigma Linked Skills */
 		StigmaLinkedService.checkEquipConditions(player, Stigma);
 	}
 
+	/**
+	 * 按等级、任务进度与会员权限计算可用常规烙印槽数量。
+	 * Computes available regular stigma slot count from level, quest progress, and membership.
+	 *
+	 * 玩家 / player
+	 * slot count
+	 */
 	private static int getPossibleStigmaCount(Player player) {
 		if (player == null || player.getLevel() < 20) {
 			return 0;
@@ -303,6 +355,14 @@ public class StigmaService {
 		return 0;
 	}
 
+	/**
+	 * 判断当前已装备烙印是否落在玩家可用槽位范围内。
+	 * Returns whether the equipped stigma is within the player's available slot range.
+	 *
+	 * 玩家 / player
+	 * @param item 烙印道具 / stigma item
+	 * whether valid
+	 */
 	private static boolean isPossibleEquippedStigma(Player player, Item item) {
 		if (player == null || item == null || !item.getItemTemplate().isStigma()) {
 			return false;

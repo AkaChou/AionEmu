@@ -1,40 +1,36 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.model;
 
 import lombok.Getter;
 
 /**
+ * 角色阵营（种族）枚举。
+ * Player race (faction) enumeration.
+ *
  * @author ATracer
  */
 public enum Race {
 
-    ELYOS(0),
-    ASMODIANS(1);
     /**
-     * id of race
+     * 天族 / Elyos
+     */
+    ELYOS(0),
+    /**
+     * 魔族 / Asmodians
+     */
+    ASMODIANS(1);
+
+    /**
+     * 种族 ID。
+     * Race identifier.
      */
     @Getter
     private int raceId;
 
     /**
-     * @param raceId
+     * 构造种族枚举。
+     * Constructs a race enum value.
+     *
+     * race id
      */
     private Race(int raceId) {
         this.raceId = raceId;

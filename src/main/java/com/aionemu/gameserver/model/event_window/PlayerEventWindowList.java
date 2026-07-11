@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.event_window;
 
 import java.sql.Timestamp;
@@ -28,6 +12,9 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 玩家活动窗口列表，用于活动窗口相关逻辑。
+ * Player Event Window List for event window logic.
+ *
  * @author Ranastic
  */
 public class PlayerEventWindowList implements EventWindowList<Player> {
@@ -40,17 +27,19 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 		}
 	}
 
+	/** 返回全部 / Returns the all*/
 	public PlayerEventWindowEntry[] getAll() {
 		ArrayList<PlayerEventWindowEntry> arrayList = new ArrayList<PlayerEventWindowEntry>(entry.values());
 		return arrayList.toArray(new PlayerEventWindowEntry[arrayList.size()]);
 	}
 
+	/** 返回基础 / Returns the basic*/
 	public PlayerEventWindowEntry[] getBasic() {
 		return entry.values().toArray(new PlayerEventWindowEntry[entry.size()]);
 	}
 
 	/**
-	 * add player event window list
+	 * 添加玩家 eventwindow 列表。 / add player event window list
 	 */
 	private synchronized boolean add(Player player, int remaining, Timestamp timestamp, int Time,
 			PersistentState persistentState) {
@@ -60,13 +49,14 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 		return true;
 	}
 
+	/** 添加。 / Add. */
 	@Override
 	public boolean add(Player player, int remaining, Timestamp timestamp, int Time) {
 		return add(player, remaining, timestamp, Time, PersistentState.NEW);
 	}
 
 	/**
-	 * remove player event window list
+	 * 移除玩家 eventwindow 列表。 / remove player event window list
 	 */
 	@Override
 	public synchronized boolean remove(Player player, int remaining) {

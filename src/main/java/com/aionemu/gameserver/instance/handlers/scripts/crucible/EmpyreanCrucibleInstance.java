@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -48,18 +32,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 天界熔炉副本事件处理器。
+ * Instance event handler for Empyrean Crucible.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300300000)
 public class EmpyreanCrucibleInstance extends CrucibleInstance
 {
+	/** 阶段 / stage */
 	private byte stage;
+	/**
+	 * 是否 stage4 为 done/ 是否 stage4 为 done。 / whether stage 4 is done / whether stage 4 is done
+	 */
 	private boolean isDoneStage4 = false;
+	/**
+	 * 是否 stage6round2 为 done/ 是否 stage6round2 为 done。 / whether stage 6 round 2 is done / whether stage 6 round 2 is done
+	 */
 	private boolean isDoneStage6Round2 = false;
+	/**
+	 * 是否 stage6round1 为 done/ 是否 stage6round1 为 done。 / whether stage 6 round 1 is done / whether stage 6 round 1 is done
+	 */
 	private boolean isDoneStage6Round1 = false;
+	/** NPC 列表 / NPC list */
 	private List<Npc> npcs = new ArrayList<Npc>();
+	/** 天界阶段列表 / empyrean stage list */
 	private List<EmpyreanStage> empyreanStage = new ArrayList<EmpyreanStage>();
 	
 	private class EmpyreanStage {
@@ -79,6 +78,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -90,6 +95,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
         ItemService.addItem(player, 186000124, 5); //Worthiness Ticket.
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		boolean isNew = !instanceReward.containPlayer(player.getObjectId());
@@ -97,7 +108,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		addItems(player);
 		if (isNew && stage > 0) {
 			moveToReadyRoom(player);
-			//Training is in progress. You must stay in the Ready Room until you can join.
+			// 训练进行中。须留在准备室直至可加入。 / Training is in progress. You must stay in the Ready Room until you can join.
 			sendMsgByRace(1401082, Race.PC_ALL, 2000);
 		}
 		CruciblePlayerReward playerReward = getPlayerReward(player.getObjectId());
@@ -113,6 +124,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	
 	private void sendPacket(final int points, final int nameId) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
@@ -131,9 +148,19 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	private void sendEventPacket(final StageType type, final int time) {
 		this.stageType = type;
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendPacket(player, new SM_INSTANCE_STAGE_INFO(2, type.getId(), type.getType()));
@@ -143,6 +170,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}, time);
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		if (npcs.contains(npc)) {
@@ -151,7 +184,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		EmpyreanStage es = getEmpyreanStage(npc);
 		int point = 0;
 		switch (npc.getNpcId()) {
-			//STAGE 1 [Kaisinel Version - End Of Stage: ~10,000 Points]
+			// 第 1 阶段【凯希内尔版本 - 阶段结束：约 10000 分】 / STAGE 1 [Kaisinel Version - End Of Stage: ~10,000 Points]
 			case 205395: //Kaisinel Gladiator Apprentice.
 			case 205396: //Kaisinel Templar Apprentice.
 			case 205397: //Kaisinel Assassin Apprentice.
@@ -168,7 +201,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217481: //Kaisinel Spiritmaster Apprentice.
 			case 217482: //Kaisinel Cleric Apprentice.
 			case 217483: //Kaisinel Chanter Apprentice.
-			//STAGE 1 [Marchutan Version - End Of Stage: ~10,000 Points]
+			// 第 1 阶段【玛尔库坦版本 - 阶段结束：约 10000 分】 / STAGE 1 [Marchutan Version - End Of Stage: ~10,000 Points]
 			case 205404: //Marchutan Gladiator Apprentice.
 			case 205405: //Marchutan Templar Apprentice.
 			case 205406: //Marchutan Assassin Apprentice.
@@ -191,7 +224,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217493: //Instructor Geor.
 			    point += 2000;
 			break;
-			//STAGE 2 [End Of Stage: ~21,000 Points]
+			// 第 2 阶段【阶段结束：约 21000 分】 / STAGE 2 [End Of Stage: ~21,000 Points]
 			case 217502: //Veteran Nunu Rake Warrior.
 			case 217503: //Veteran Nunu Gatherer.
 			case 217504: //Seasoned Nunu Lookout.
@@ -207,7 +240,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217510: //Grand Chieftain Kasika.
 			    point += 2500;
 			break;
-			//STAGE 3 [End Of Stage: ~34,000 Points]
+			// 第 3 阶段【阶段结束：约 34000 分】 / STAGE 3 [End Of Stage: ~34,000 Points]
 			case 217511: //Dust Spirit.
             case 217512: //Blaze Spirit.
             case 217513: //Waterdrop Spirit.
@@ -236,7 +269,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217528: //Tran Of Wind.
                 point += 2040;
             break;
-			//STAGE 4 [End Of Stage: ~48,000 Points]
+			// 第 4 阶段【阶段结束：约 48000 分】 / STAGE 4 [End Of Stage: ~48,000 Points]
 			case 217557: //Assailant.
             case 217558: //Trooper.
 			    point += 500;
@@ -260,7 +293,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217567: //Commander Bakarma.
 			    point += 1200;
             break;
-			//STAGE 5 [Azoturan Version - [End Of Stage: ~63,000 Points]
+			// 第 5 阶段【阿佐图兰版本 - 阶段结束：约 63000 分】 / STAGE 5 [Azoturan Version - [End Of Stage: ~63,000 Points]
 			case 217529: //Enhanced Pretor.
 			    point += 500;
 			break;
@@ -279,7 +312,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217544: //Supervisor Magnis.
 			    point += 2500;
 			break;
-			//STAGE 5 [Steel Rake Version - [End Of Stage: ~63,000 Points]
+			// 第 5 阶段【钢耙版本 - 阶段结束：约 63000 分】 / STAGE 5 [Steel Rake Version - [End Of Stage: ~63,000 Points]
 			case 217545: //Steel Rake Sailor.
 			case 217547: //Steel Rake Elite Vaegir.
 			case 217548: //Steel Rake Archer.
@@ -295,7 +328,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217556: //Brass-Eye Grogget.
 			    point += 2500;
 			break;
-			//STAGE 6 [End Of Stage: ~81,000 Points]
+			// 第 6 阶段【阶段结束：约 81000 分】 / STAGE 6 [End Of Stage: ~81,000 Points]
 			case 217568: //Elite Graveknight Warrior.
 			    point += 1000;
 			break;
@@ -307,7 +340,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217573: //Spectral Warrior.
                 point += 2000;
 			break;
-			//STAGE 7 [Asmodians Version - [End Of Stage: ~105,000 Points]
+			// 第 7 阶段【魔族版本 - 阶段结束：约 105000 分】 / STAGE 7 [Asmodians Version - [End Of Stage: ~105,000 Points]
 			case 217578: //Boreas.
 			case 217579: //Jumentis.
 			case 217580: //Charna.
@@ -315,7 +348,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217586: //Miriya.
 			    point += 4800;
 			break;
-			//STAGE 7 [Elyos Version - [End Of Stage: ~105,000 Points]
+			// 第 7 阶段【天族版本 - 阶段结束：约 105000 分】 / STAGE 7 [Elyos Version - [End Of Stage: ~105,000 Points]
 			case 217582: //Traufnir.
 			case 217583: //Sigyn.
 			case 217584: //Sif.
@@ -323,7 +356,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217587: //Aud.
                 point += 4800;
 			break;
-            //STAGE 8 [End Of Stage: ~141,000 Points]
+            // 第 8 阶段【阶段结束：约 141000 分】 / STAGE 8 [End Of Stage: ~141,000 Points]
             case 217588: //Kromede The Corrupt.
 			case 217589: //Vile Judge Kromede.
 			case 217590: //Queen Alukina.
@@ -332,7 +365,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217593: //RM-1337C.
 			    point += 7200;
 			break;
-			//STAGE 9 [End Of Stage: ~199,000 Points]
+			// 第 9 阶段【阶段结束：约 199000 分】 / STAGE 9 [End Of Stage: ~199,000 Points]
             case 217594: //Crab Norris.
 			case 217595: //King Consierd.
 			case 217596: //Takun The Terrible.
@@ -341,8 +374,8 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217599: //Kamara.
                 point += 9666;
 			break;
-			//STAGE 10 [End Of Stage: ~498,000 Points]
-			//(players will earn about 193,000 Points by slaying Tahabata Pyrelord)
+			// 第 10 阶段【阶段结束：约 498000 分】 / STAGE 10 [End Of Stage: ~498,000 Points]
+			// （击杀塔哈巴塔炎主约可得 193000 点） / (players will earn about 193,000 Points by slaying Tahabata Pyrelord)
 			case 217600: //Anuhart Scourge.
 			case 217601: //Anuhart Willwarper.
 			case 217602: //Anuhart Priest.
@@ -361,25 +394,25 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217609: //Vanktrist.
                 point += 82000;
 			break;
-			//STAGE BONUS 2//
+			// 阶段奖励 2 / STAGE BONUS 2//
 			case 217737: //King Saam.
 			    point += 3500;
 			break;
-			//STAGE BONUS 3//
+			// 阶段奖励 3 / STAGE BONUS 3//
 			case 217740: //Seismik.
 			case 217741: //Splashdown.
 			case 217742: //Crematorux.
 			case 217743: //Windlash.
                 point += 500;
 			break;
-			//STAGE BONUS 4//
+			// 阶段奖励 4 / STAGE BONUS 4//
 			case 217745: //Wind Drakie.
 			case 217746: //Water Drakie.
 			case 217747: //Earth Drakie.
 			case 217748: //Thunder Drakie.
                 point += 50;
 			break;
-			//STAGE BONUS 6//
+			// 阶段奖励 6 / STAGE BONUS 6//
 			case 217750: //Administrator Arminos.
                 point += 4000;
 			break;
@@ -387,8 +420,8 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			sendPacket(point, npc.getObjectTemplate().getNameId());
 		} switch (npc.getNpcId()) {
 		   /**
-			* Kaisinel Version
-			*/
+	 * Kaisinel Version
+	 */
 			case 217476:
 			case 217477:
 			case 217478:
@@ -399,9 +432,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217478).isEmpty() &&
 				    getNpcs(217479).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_1_ROUND_2, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217480, 336.585f, 341.21777f, 96.090935f, (byte) 11, 2000);
 				    sp(217481, 333.94592f, 349.2856f, 96.090935f, (byte) 119, 3000);
@@ -419,9 +452,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217482).isEmpty() &&
 				    getNpcs(217483).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_1_ROUND_3, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
                     sp(205395, 336.585f, 341.21777f, 96.090935f, (byte) 11, 2000);
 				    sp(205396, 333.94592f, 349.2856f, 96.090935f, (byte) 119, 3000);
@@ -439,9 +472,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(205397).isEmpty() &&
 				    getNpcs(205398).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_1_ROUND_4, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
                     sp(205399, 336.585f, 341.21777f, 96.090935f, (byte) 11, 2000);
 				    sp(205400, 333.94592f, 349.2856f, 96.090935f, (byte) 119, 3000);
@@ -459,16 +492,16 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(205401).isEmpty() &&
 				    getNpcs(205402).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_1_ROUND_5, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217484, 345.3899f, 349.10034f, 96.09097f, (byte) 0, 2000); //Instructor Munus.
 				}
             break;
 		   /**
-			* Marchutan Version
-			*/
+	 * Marchutan Version
+	 */
 			case 217485:
 			case 217486:
 			case 217487:
@@ -479,9 +512,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217487).isEmpty() &&
 				    getNpcs(217488).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_1_ROUND_2, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217489, 336.585f, 341.21777f, 96.090935f, (byte) 11, 2000);
 				    sp(217490, 333.94592f, 349.2856f, 96.090935f, (byte) 119, 3000);
@@ -499,9 +532,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217491).isEmpty() &&
 				    getNpcs(217492).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_1_ROUND_3, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
                     sp(205404, 336.585f, 341.21777f, 96.090935f, (byte) 11, 2000);
 				    sp(205405, 333.94592f, 349.2856f, 96.090935f, (byte) 119, 3000);
@@ -519,9 +552,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(205406).isEmpty() &&
 				    getNpcs(205407).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_1_ROUND_4, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
                     sp(205408, 336.585f, 341.21777f, 96.090935f, (byte) 11, 2000);
 				    sp(205409, 333.94592f, 349.2856f, 96.090935f, (byte) 119, 3000);
@@ -539,9 +572,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(205410).isEmpty() &&
 				    getNpcs(205411).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_1_ROUND_5, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217493, 345.3899f, 349.10034f, 96.09097f, (byte) 0, 2000); //Instructor Geor.
 				}
@@ -550,11 +583,11 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217493: //Instructor Geor.
 				despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_1, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
-				//A Worthiness Ticket Box has appeared in the Illusion Stadium.
+				// 准备室出现了资格票箱。 / A Worthiness Ticket Box has appeared in the Illusion Stadium.
 				sendMsgByRace(1400975, Race.PC_ALL, 6000);
                 spawn(217756, 345.66763f, 355.47922f, 96.154961f, (byte) 0, 79); //Worthiness Ticket Box.
 				spawn(217756, 349.04822f, 357.50226f, 96.154961f, (byte) 0, 280); //Worthiness Ticket Box.
@@ -571,7 +604,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    if (getNpc(217503) == null &&
 					    getNpc(217504) == null) {
 					    startStage2Round2();
-					    //You have eliminated all enemies in Round %0.
+					    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    }
 				    break;
@@ -580,7 +613,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					    getNpc(217507) == null &&
 					    getNpc(217504) == null) {
 					    startStage2Round3();
-					    //You have eliminated all enemies in Round %0.
+					    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    }
 				    break;
@@ -592,7 +625,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			        getNpc(217502) == null &&
 				    getNpc(217504) == null) {
 				    startStage2Round2();
-				    //You have eliminated all enemies in Round %0.
+				    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				    sendMsgByRace(1400929, Race.PC_ALL, 0);
 			    }
 			break;
@@ -603,7 +636,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    if (getNpc(217502) == null &&
 				        getNpc(217503) == null) {
 				        startStage2Round2();
-					    //You have eliminated all enemies in Round %0.
+					    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    }
 				    break;
@@ -612,7 +645,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					    getNpc(217507) == null &&
 					    getNpc(217508) == null) {
 					    startStage2Round3();
-					    //You have eliminated all enemies in Round %0.
+					    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    }
 				    break;
@@ -626,13 +659,13 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				        getNpc(217504) == null &&
 				        getNpc(217508) == null) {
 				        startStage2Round3();
-					    //You have eliminated all enemies in Round %0.
+					    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    }
 				    break;
 			    } if (es != null && !es.containNpc()) {
 				    startStage2Round5();
-				    //You have eliminated all enemies in Round %0.
+				    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				    sendMsgByRace(1400929, Race.PC_ALL, 0);
 			    }
 			break;
@@ -646,14 +679,14 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				            getNpc(217504) == null &&
 					        getNpc(217507) == null) {
 					        startStage2Round3();
-					        //You have eliminated all enemies in Round %0.
+					        //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					        sendMsgByRace(1400929, Race.PC_ALL, 0);
 						}
 					break;
 					case START_STAGE_2_ROUND_4:
 					    if (getNpc(217505) == null) {
 					        startStage4Round4_1();
-					        //You have eliminated all enemies in Round %0.
+					        //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					        sendMsgByRace(1400929, Race.PC_ALL, 0);
 						}
 					break;
@@ -662,17 +695,17 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217500:
 			case 217509:
 				despawnNpc(npc);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sendEventPacket(StageType.START_STAGE_2_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				sp(217505, 341.95056f, 334.77692f, 96.09093f, (byte) 0, 2000);
                 sp(217508, 344.17813f, 334.42462f, 96.090935f, (byte) 0, 2000);
 			break;
 			case 217505:
 			    despawnNpc(npc);
-			    //You have eliminated all enemies in Round %0.
+			    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 			    sendMsgByRace(1400929, Race.PC_ALL, 0);
 			    if (getNpc(217508) == null) {
 				    startStage4Round4_1();
@@ -680,7 +713,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 			case 217506:
 			    despawnNpc(npc);
-			    //You have eliminated all enemies in Round %0.
+			    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 			    sendMsgByRace(1400929, Race.PC_ALL, 0);
 			    if (es != null && !es.containNpc()) {
 				   startStage2Round5();
@@ -690,32 +723,44 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217501:
 				despawnNpc(npc);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						sp(217737, 334.49496f, 349.2322f, 96.090935f, (byte) 0, 4000);
 						sendEventPacket(StageType.START_BONUS_STAGE_2, 2000);
-						//Round %0 begins!
+						//第 %0 轮开始！ / Round %0 begins!
 						sendMsgByRace(1400928, Race.PC_ALL, 4000);
-						//You have eliminated all enemies in Round %0.
+						//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 						sendMsgByRace(1400929, Race.PC_ALL, 0);
-						//You can earn an additional reward if you catch the Saam King.
+						// 若捕获萨阿姆王可获得额外奖励。 / You can earn an additional reward if you catch the Saam King.
 						sendMsgByRace(1400978, Race.PC_ALL, 6000);
-						//King Saam will disappear in 30 seconds!
+						// 萨阿姆王将在 30 秒后消失！ / King Saam will disappear in 30 seconds!
 						sendMsgByRace(1400979, Race.PC_ALL, 10000);
                         sp(799569, 345.25f, 349.24f, 96.09097f, (byte) 0, 60000);
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							/**
+							 * 处理 run。
+							 * Handle run.
+							 */
 							@Override
 							public void run() {
 								if (getNpc(217737) != null) {
 									GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+										/**
+										 * 处理 run。
+										 * Handle run.
+										 */
 										@Override
 										public void run() {
 											if (getNpc(217737) != null) {
 												despawnNpc(getNpc(217737));
 												sendEventPacket(StageType.PASS_GROUP_STAGE_2, 0);
-												//You have eliminated all enemies in Round %0.
+												//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 												sendMsgByRace(1400929, Race.PC_ALL, 2000);
-												//You have passed Stage %0!
+												//你已通过第 %0 阶段！ / You have passed Stage %0!
 												sendMsgByRace(1400930, Race.PC_ALL, 4000);
 											}
 										}
@@ -728,9 +773,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 			case 217737:
 				sendEventPacket(StageType.PASS_GROUP_STAGE_2, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 			break;
 			case 217511:
@@ -743,9 +788,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217513).isEmpty() &&
 					getNpcs(217514).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_3_ROUND_2, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217515, 336.32092f, 345.0251f, 96.090935f, (byte) 0, 6000);
 					sp(217516, 347.16144f, 361.89084f, 96.09093f, (byte) 0, 6000);
@@ -771,9 +816,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    getNpcs(217517).isEmpty() &&
 				    getNpcs(217518).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_3_ROUND_3, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 				    sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217519, 351.08026f, 341.61298f, 96.090935f, (byte) 0, 2000);
 				    sp(217521, 333.4532f, 354.7357f, 96.09094f, (byte) 0, 2000);
@@ -793,9 +838,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217521).isEmpty() &&
 					getNpcs(217522).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_3_ROUND_4, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217524, 349.66446f, 341.4752f, 96.090965f, (byte) 0, 2000);
 					sp(217525, 338.32742f, 356.29636f, 96.090935f, (byte) 0, 2000);
@@ -813,9 +858,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    getNpcs(217525).isEmpty() &&
 				    getNpcs(217526).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_3_ROUND_5, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 				    sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217527, 335.37524f, 346.34567f, 96.09094f, (byte) 0, 2000);
 				    sp(217528, 335.36105f, 353.16922f, 96.09094f, (byte) 0, 2000);
@@ -827,12 +872,16 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			    if (getNpcs(217527).isEmpty() &&
 			        getNpcs(217528).isEmpty()) {
 				    sendEventPacket(StageType.START_BONUS_STAGE_3, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 				    sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217744, 342.45215f, 349.339f, 96.09096f, (byte) 0, 2000); //Administrator Arminos.
 				    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					    /**
+					     * 处理 run。
+					     * Handle run.
+					     */
 					    @Override
 					    public void run() {
 						    startBonusStage3();
@@ -848,7 +897,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    case START_STAGE_4_ROUND_1:
 				    if (getNpcs(217557).isEmpty() &&
 					    getNpcs(217559).isEmpty()) {
-						//You have eliminated all enemies in Round %0.
+						//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 						sendMsgByRace(1400929, Race.PC_ALL, 0);
 					    sp(217558, 330.27792f, 339.2779f, 96.09093f, (byte) 6);
 					    sp(217558, 328.08972f, 346.3553f, 96.090904f, (byte) 1);
@@ -868,12 +917,16 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    case START_STAGE_4_ROUND_1:
 					    if (getNpcs(217558).isEmpty()) {
 						    sendEventPacket(StageType.START_STAGE_4_ROUND_2, 2000);
-						    //Round %0 begins!
+						    //第 %0 轮开始！ / Round %0 begins!
 						    sendMsgByRace(1400928, Race.PC_ALL, 4000);
 						    sp(217559, 330.53665f, 349.23523f, 96.09093f, (byte) 0, 6000);
 						    sp(217562, 334.89508f, 363.78442f, 96.090904f, (byte) 105, 6000);
 						    sp(217560, 334.61942f, 334.80353f, 96.090904f, (byte) 15, 6000);
 						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 							    public void run() {
 								    List<Npc> round = new ArrayList<Npc>();
@@ -898,9 +951,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				despawnNpc(npc);
 				if (es != null && !es.containNpc()) {
 					sendEventPacket(StageType.START_STAGE_4_ROUND_4, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217567, 345.73895f, 349.49786f, 96.09097f, (byte) 0, 6000);
 				}
@@ -918,15 +971,15 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217567:
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_4_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 3000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
-				//A large number of Balaur Troopers descend from the Dredgion.
+				// 大批龙族士兵从战舰降下。 / A large number of Balaur Troopers descend from the Dredgion.
 				sendMsgByRace(1400999, Race.PC_ALL, 6000);
-				//A large number of Balaur Troopers descend from the Dredgion.
+				// 大批龙族士兵从战舰降下。 / A large number of Balaur Troopers descend from the Dredgion.
 				sendMsgByRace(1400999, Race.PC_ALL, 54000);
-				//A large number of Balaur Troopers descend from the Dredgion.
+				// 大批龙族士兵从战舰降下。 / A large number of Balaur Troopers descend from the Dredgion.
 				sendMsgByRace(1400999, Race.PC_ALL, 110000);
 				sp(217653, 327.76917f, 349.26215f, 96.09092f, (byte) 0, 6000);
 				sp(217651, 364.8972f, 349.25653f, 96.09114f, (byte) 60, 18000);
@@ -939,6 +992,10 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				sp(217653, 361.13452f, 358.90424f, 96.091156f, (byte) 65, 130000);
 				sp(217652, 346.34402f, 329.9449f, 96.09091f, (byte) 30, 142000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						sp(217653, 331.53894f, 339.8832f, 96.09091f, (byte) 10);
@@ -956,11 +1013,15 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217653).isEmpty()) {
 					sp(217749, 340.59f, 349.32166f, 96.09096f, (byte) 0, 2000); //Administrator Arminos.
 					sendEventPacket(StageType.START_BONUS_STAGE_4, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							startBonusStage4();
@@ -969,15 +1030,15 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				}
 			break;
 		   /**
-			* STAGE 5 [Azoturan Version]
-			*/
+	 * 阶段说明。 / STAGE 5 [Azoturan Version] / STAGE 5 [Azoturan Version]
+	 */
 			case 217529:
 				despawnNpc(npc);
 				if (getNpcs(217529).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_5_ROUND_2, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217530, 1263.1987f, 778.4129f, 358.6056f, (byte) 30, 4000);
 					sp(217531, 1260.1381f, 778.84644f, 358.60562f, (byte) 30, 4000);
@@ -990,9 +1051,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				if (getNpcs(217530).isEmpty() &&
 				    getNpcs(217531).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_5_ROUND_3, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217543, 1260.0372f, 796.80334f, 358.60562f, (byte) 30, 4000);
 				}
@@ -1000,9 +1061,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217543:
 			    despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_5_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217532, 1246.4855f, 796.90735f, 358.6056f, (byte) 2000);
                 sp(217533, 1259.5508f, 784.5548f, 358.60562f, (byte) 3000);
@@ -1022,9 +1083,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217535).isEmpty() &&
 				    getNpcs(217536).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_5_ROUND_5, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				    sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217544, 1260.0372f, 796.80334f, 358.60562f, (byte) 30, 4000);
 				}
@@ -1032,15 +1093,15 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217544:
 				despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_5, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205339, 1260.1465f, 795.07495f, 358.60562f, (byte) 30);
 			break;
 		   /**
-			* STAGE 5 [Steel Rake Version]
-			*/
+	 * 阶段说明。 / STAGE 5 [Steel Rake Version] / STAGE 5 [Steel Rake Version]
+	 */
 			case 217547:
 			case 217548:
 			case 217549:
@@ -1058,9 +1119,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				if (getNpcs(217550).isEmpty() &&
 				    getNpcs(217545).isEmpty()) {
 				    sendEventPacket(StageType.START_STAGE_5_ROUND_2, 2000);
-				    //Round %0 begins!
+				    //第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    switch (Rnd.get(1, 2)) {
 				        case 1:
@@ -1076,9 +1137,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217552: //Madame Bovariki.
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_5_ROUND_3, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(281128, 1253.3123f, 789.38385f, 358.60562f, (byte) 119); //Manduri Feed.
                 sp(281129, 1260.2015f, 800.14886f, 358.6056f, (byte) 16); //Manduri Water Barrel.
@@ -1089,9 +1150,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				despawnNpcs(getNpcs(281128)); //Manduri Feed.
                 despawnNpcs(getNpcs(281129)); //Manduri Water Barrel.
 				sendEventPacket(StageType.START_STAGE_5_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				switch (Rnd.get(1, 2)) {
 				    case 1:
@@ -1123,9 +1184,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				despawnNpc(getNpc(281114));
 				despawnNpc(getNpc(281322));
 				sendEventPacket(StageType.START_STAGE_5_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217556, 1260.0372f, 796.80334f, 358.60562f, (byte) 30, 4000);
 			break;
@@ -1133,26 +1194,26 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				despawnNpc(npc);
 				despawnNpcs(getNpcs(701199));
 				sendEventPacket(StageType.START_STAGE_5_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217556, 1260.0372f, 796.80334f, 358.60562f, (byte) 30, 4000);
 			break;
 			case 217556:
 				despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_5, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205339, 1260.1465f, 795.07495f, 358.60562f, (byte) 30);
 			break;
 			case 217568:
 				despawnNpc(npc);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				if (isDoneStage6Round1 && getNpcs(217568).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_6_ROUND_2, 2000);
@@ -1160,6 +1221,10 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					sp(217569, 1643.7776f, 161.63562f, 126f, (byte) 46, 6000);
 					sp(217569, 1639.7843f, 142.09268f, 126f, (byte) 40, 6000);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							sp(217569, 1614.6377f, 164.04999f, 126.00113f, (byte) 3);
@@ -1176,9 +1241,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    getNpcs(217569).isEmpty() &&
 					getNpcs(217570).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_6_ROUND_3, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					sp(217572, 1629.5837f, 138.38435f, 126f, (byte) 30, 2000);
                     sp(217569, 1635.01535f, 150.01535f, 126f, (byte) 45, 2000);
@@ -1188,12 +1253,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217572:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_6_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217573, 1626.7312f, 156.94821f, 126.0f, (byte) 91, 2000); //Spectral Warrior.
-				//A Worthiness Ticket Box has appeared in the Ready Room.
+				// 准备室出现了资格票箱。 / A Worthiness Ticket Box has appeared in the Ready Room.
 				sendMsgByRace(1400977, Race.PC_ALL, 1000);
 				spawn(218783, 1589.1693f, 149.36415f, 128.20398f, (byte) 0, 86); //Treasure Box.
 				spawn(218783, 1590.0830f, 153.50758f, 128.20398f, (byte) 0, 292); //Treasure Box.
@@ -1201,30 +1266,38 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217573: //Spectral Warrior.
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_BONUS_STAGE_6, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
-				//Administrator Arminos will disappear in 30 seconds!
+				// 管理员阿尔米诺斯将在 30 秒后消失！ / Administrator Arminos will disappear in 30 seconds!
 				sendMsgByRace(1401016, Race.PC_ALL, 8000);
-				//Administrator Arminos will disappear in 10 seconds!
+				// 管理员阿尔米诺斯将在 10 秒后消失！ / Administrator Arminos will disappear in 10 seconds!
 				sendMsgByRace(1401017, Race.PC_ALL, 20000);
-				//Administrator Arminos will disappear in 5 seconds!
+				// 管理员阿尔米诺斯将在 5 秒后消失！ / Administrator Arminos will disappear in 5 seconds!
 				sendMsgByRace(1401018, Race.PC_ALL, 25000);
 				sp(217750, 1626.7312f, 156.94821f, 126.0f, (byte) 91, 2000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						if (getNpc(217750) != null) { //Administrator Arminos.
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									if (getNpc(217750) != null) {
 										despawnNpc(getNpc(217750));
 										sendEventPacket(StageType.PASS_GROUP_STAGE_6, 0);
-										//You have eliminated all enemies in Round %0.
+										//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 										sendMsgByRace(1400929, Race.PC_ALL, 2000);
-										//You have passed Stage %0!
+										//你已通过第 %0 阶段！ / You have passed Stage %0!
 										sendMsgByRace(1400930, Race.PC_ALL, 4000);
 										sp(205340, 1625.08f, 159.15f, 126f, (byte) 0);
 									}
@@ -1236,22 +1309,21 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
             break;
 			case 217750: //Administrator Arminos.
 				sendEventPacket(StageType.PASS_GROUP_STAGE_6, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205340, 1625.08f, 159.15f, 126f, (byte) 0);
             break;
 		   /**
-			* Stage 7 is not same for player "Elyos/Asmodians"
-			* [Asmodians Version]
-			*/
+	 * 第 7 阶段天族/魔族版本不同。【魔族版本】 / Stage 7 is not same for player "Elyos/Asmodians" [Asmodians Version]
+	 */
 			case 217578:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_2, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217579, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
@@ -1259,9 +1331,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 despawnNpc(npc);
 				sendMsg(1400929);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_3, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217580, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
@@ -1269,9 +1341,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 despawnNpc(npc);
 				sendMsg(1400929);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217581, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
@@ -1279,67 +1351,67 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 despawnNpc(npc);
 				sendMsg(1400929);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217586, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
             case 217586:
                 despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_7, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
                 sp(205341, 1783.0873f, 796.8426f, 469.35013f, (byte) 0);
 				sp(217759, 1784.4686f, 792.8891f, 469.35013f, (byte) 0); //Empyrean Box.
             break;
 		   /**
-			* [Elyos Version]
-			*/
+	 * [Elyos Version]
+	 */
 			case 217582:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_2, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217583, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
             case 217583:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_3, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217584, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
             case 217584:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217585, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
             case 217585:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217587, 1783.0873f, 796.8426f, 469.35013f, (byte) 0, 2000);
             break;
             case 217587:
                 despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_7, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
                 sp(205341, 1783.0873f, 796.8426f, 469.35013f, (byte) 0);
 				sp(217759, 1784.4686f, 792.8891f, 469.35013f, (byte) 0); //Empyrean Box.
@@ -1348,63 +1420,63 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217589: //Vile Judge Kromede.
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_8_ROUND_2, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217590, 1794.9225f, 1756.2131f, 304.1f, (byte) 55, 2000);
 			break;
 			case 217590:
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_8_ROUND_3, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217591, 1791.1407f, 1777.92f, 304.1f, (byte) 76, 2000);
 			break;
 			case 217591:
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_8_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217592, 1764.3282f, 1744.4377f, 304.1f, (byte) 80, 2000);
 			break;
 			case 217592:
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_8_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217593, 1786.7078f, 1757.4915f, 303.8f, (byte) 49, 2000);
 			break;
 			case 217593:
 				despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_8, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205342, 1776.757f , 1764.624f, 303.695f, (byte) 90);
 			break;
 			case 217594:
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_9_ROUND_2, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217595, 1328.4663f, 1711.2297f, 317.6f, (byte) 44, 2000);
 			break;
 			case 217595:
 				despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_9_ROUND_3, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217596, 1311.87f, 1731.36f, 315.674f, (byte) 43, 2000);
 				sp(217597, 1298.89f, 1743.77f, 316.07f, (byte) 108, 2000);
@@ -1419,9 +1491,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 if (getNpcs(217596).isEmpty() &&
 				    getNpcs(217597).isEmpty()) {
 					sendEventPacket(StageType.START_STAGE_9_ROUND_4, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				    sendMsgByRace(1400929, Race.PC_ALL, 0);
                     sp(217598, 1311.5238f, 1755.2079f, 317.1f, (byte) 97, 2000);
                 }
@@ -1429,18 +1501,18 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217598:
 			    despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_9_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217599, 1304.2659f, 1722.2467f, 316.5f, (byte) 23, 2000);
             break;
             case 217599:
                 despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_9, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205343, 1324.5742f, 1739.683f, 316.4109f, (byte) 8, 2000);
             break;
@@ -1452,9 +1524,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    getNpcs(217601).isEmpty() &&
 					getNpcs(217602).isEmpty()) {
                     sendEventPacket(StageType.START_STAGE_10_ROUND_2, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 				    sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				    //You have eliminated all enemies in Round %0.
+				    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217603, 1744.6332f, 1280.0349f, 394.3f, (byte) 9, 2000);
 				    sp(217604, 1756.2661f, 1305.561f, 394.3f, (byte) 97, 6000);
@@ -1472,9 +1544,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					getNpcs(217605).isEmpty() &&
 					getNpcs(217606).isEmpty()) {
                     sendEventPacket(StageType.START_STAGE_10_ROUND_3, 2000);
-					//Round %0 begins!
+					//第 %0 轮开始！ / Round %0 begins!
 				    sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				    //You have eliminated all enemies in Round %0.
+				    //你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				    sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(700441, 1742.39f, 1289.59f, 394.237f, (byte) 9, 2000);
 			        sp(700441, 1782.32f, 1272.74f, 394.237f, (byte) 36, 2000);
@@ -1485,27 +1557,27 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 despawnNpc(npc);
 				despawnNpcs(getNpcs(700441));
 				sendEventPacket(StageType.START_STAGE_10_ROUND_4, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217608, 1754.8065f, 1303.702f, 394.3f, (byte) 100, 2000);
             break;
 			case 217608:
 			    despawnNpc(npc);
                 sendEventPacket(StageType.START_STAGE_10_ROUND_5, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
                 sp(217609, 1765.6692f, 1288.092f, 394.3f, (byte) 30, 2000);
             break;
 			case 217609:
 			    despawnNpc(npc);
 				sendEventPacket(StageType.PASS_GROUP_STAGE_10, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
                 sp(205344, 1764.6368f, 1288.831f, 394.23755f, (byte) 77);
             break;
@@ -1518,21 +1590,37 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		sp(217742, 332.12f, 349.22f, 96.1f, (byte) 0);
 		sp(217743, 346.42f, 335.1f, 96.1f, (byte) 87);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Spirits will disappear in 30 seconds!
+				// 精灵将在 30 秒后消失！ / Spirits will disappear in 30 seconds!
 				sendMsgByRace(1401010, Race.PC_ALL, 0);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
-						//Spirits will disappear in 10 seconds!
+						// 精灵将在 10 秒后消失！ / Spirits will disappear in 10 seconds!
 						sendMsgByRace(1401011, Race.PC_ALL, 0);
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							/**
+							 * 处理 run。
+							 * Handle run.
+							 */
 							@Override
 							public void run() {
-								//Spirits will disappear in 5 seconds!
+								// 精灵将在 5 秒后消失！ / Spirits will disappear in 5 seconds!
 								sendMsgByRace(1401012, Race.PC_ALL, 0);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+									/**
+									 * 处理 run。
+									 * Handle run.
+									 */
 									@Override
 									public void run() {
 										despawnNpc(getNpc(217740));
@@ -1541,11 +1629,11 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 										despawnNpc(getNpc(217743));
 										despawnNpc(getNpc(217744)); //Administrator Arminos.
 										sendEventPacket(StageType.PASS_GROUP_STAGE_3, 0);
-										//You have eliminated all enemies in Round %0.
+										//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 										sendMsgByRace(1400929, Race.PC_ALL, 2000);
-										//You have passed Stage %0!
+										//你已通过第 %0 阶段！ / You have passed Stage %0!
 										sendMsgByRace(1400930, Race.PC_ALL, 4000);
-										//A Worthiness Ticket Box has appeared in the Ready Room.
+										// 准备室出现了资格票箱。 / A Worthiness Ticket Box has appeared in the Ready Room.
 										sendMsgByRace(1400976, Race.PC_ALL, 6000);
 										sp(205331, 345.25f, 349.24f, 96.09097f, (byte) 0);
 										sp(217735, 378.9331f, 346.74878f, 96.74762f, (byte) 0);
@@ -1560,7 +1648,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	}
 	
 	private void startBonusStage4() {
-		//Round %0 begins!
+		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 3000);
 		sp(217778, 346.2f, 366.85f, 96.55f, (byte) 1);
 		sp(217747, 346.2204f, 367.52002f, 96.090904f, (byte) 60, 3000);
@@ -1598,6 +1686,10 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		sp(217747, 345.4836f, 367.3886f, 96.090904f, (byte) 60, 99000);
 		sp(217747, 345.80862f, 366.0682f, 96.09092f, (byte) 60, 102000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				despawnNpcs(getNpcs(217745));
@@ -1607,9 +1699,9 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				despawnNpc(getNpc(217749)); //Administrator Arminos.
 				despawnNpc(getNpc(217778)); //Gate.
 				sendEventPacket(StageType.PASS_GROUP_STAGE_4, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205338, 345.25f, 349.24f, 96.09097f, (byte) 0);
 			}
@@ -1621,6 +1713,10 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		round.add(sp(217508, 334.06754f, 339.84393f, 96.09091f, (byte) 0));
 		empyreanStage.add(new EmpyreanStage(round));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				List<Npc> round1 = new ArrayList<Npc>();
@@ -1633,12 +1729,16 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	
 	private void startStage4Round3() {
 		sendEventPacket(StageType.START_STAGE_4_ROUND_3, 2000);
-		//Round %0 begins!
+		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 4000);
 		sp(217563, 339.70975f, 333.54272f, 96.090904f, (byte) 20, 6000);
 		sp(217564, 342.92892f, 333.43994f, 96.09092f, (byte) 18, 6000);
 		sp(217565, 341.55396f, 330.70847f, 96.09093f, (byte) 23, 16000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				List<Npc> round = new ArrayList<Npc>();
@@ -1651,7 +1751,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	
 	private void startStage2Round2() {
 		sendEventPacket(StageType.START_STAGE_2_ROUND_2, 2000);
-		//Round %0 begins!
+		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 4000);
 		sp(217502, 328.78433f, 348.77353f, 96.09092f, (byte) 0, 2000);
 		sp(217508, 329.01874f, 343.79257f, 96.09092f, (byte) 0, 2000);
@@ -1660,7 +1760,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	}
 	
 	private void startStage2Round3() {
-		//Round %0 begins!
+		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 4000);
 		sendEventPacket(StageType.START_STAGE_2_ROUND_3, 2000);
 		switch (Rnd.get(1, 2)) {
@@ -1674,7 +1774,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	}
 	
 	private void startStage2Round5() {
-		//Round %0 begins!
+		//第 %0 轮开始！ / Round %0 begins!
 		sendMsgByRace(1400928, Race.PC_ALL, 4000);
 		sendEventPacket(StageType.START_STAGE_2_ROUND_5, 2000);
 		switch (Rnd.get(1, 2)) {
@@ -1693,6 +1793,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}
 	}
 	
+	/**
+	 * 结算并发放奖励。
+	 * Settle and grant rewards.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void doReward(Player player) {
 		CruciblePlayerReward playerReward = getPlayerReward(player.getObjectId());
@@ -1707,6 +1813,10 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(instanceReward, InstanceScoreType.END_PROGRESS));
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		super.onInstanceDestroy();
@@ -1714,18 +1824,31 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		empyreanStage.clear();
 	}
 	
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	@Override
 	public boolean onReviveEvent(final Player player) {
 		super.onReviveEvent(player);
 		moveToReadyRoom(player);
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param p 玩家 / p
+			 */
 			@Override
 			public void visit(Player p) {
 				if (player.getObjectId() == p.getObjectId()) {
-					//You failed the training and have been sent to the Ready Room.
+					// 你训练失败，已被送往准备室。 / You failed the training and have been sent to the Ready Room.
 					PacketSendUtility.sendPacket(p, new SM_SYSTEM_MESSAGE(1400932));
 				} else {
-					//"Player Name" failed the training and has been sent to the Ready Room.
+					// “玩家名”训练失败，已被送往准备室。 / "Player Name" failed the training and has been sent to the Ready Room.
 					PacketSendUtility.sendPacket(p, new SM_SYSTEM_MESSAGE(1400933, player.getName()));
 				}
 			}
@@ -1751,12 +1874,18 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		return true;
 	}
 	
+	/**
+	 * 副本阶段变更时处理。
+	 * Handle instance stage change.
+	 *
+	 * @param type 阶段类型 / stage type
+	 */
 	@Override
 	public void onChangeStage(final StageType type) {
 		switch (type) {
 			case START_STAGE_1_ELEVATOR:
 				sendEventPacket(type, 0);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				stage = 1;
 				sp(799573, 384.51f, 352.61078f, 96.747635f, (byte) 83);
@@ -1782,7 +1911,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				despawnNpcs(getNpcs(217756)); //Worthiness Ticket Box.
 				stage = 2;
 				sendEventPacket(StageType.START_STAGE_2_ROUND_1, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				sp(217503, 325.71194f, 352.81027f, 96.09092f, (byte) 0, 2000);
 				sp(217502, 325.78696f, 346.07263f, 96.090904f, (byte) 0, 3000);
@@ -1794,7 +1923,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				despawnNpcs(getNpcs(799569));
 				stage = 3;
 				sendEventPacket(StageType.START_STAGE_3_ROUND_1, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				sp(217512, 344.23056f, 347.89594f, 96.09096f, (byte) 0, 3000);
 				sp(217513, 341.09082f, 337.95187f, 96.09097f, (byte) 0, 3000);
@@ -1825,7 +1954,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				sendEventPacket(type, 0);
 				despawnNpc(getNpc(217735));
 				sendEventPacket(StageType.START_STAGE_4_ROUND_1, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				stage = 4;
 				sp(217557, 328.88104f, 349.55392f, 96.090904f, (byte) 0, 3000);
@@ -1839,18 +1968,18 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				crucibleTeleport(1260.15f, 812.34f, 358.6056f, (byte) 90);
 				sendEventPacket(type, 2000);
 			break;
-			//Stage 5 [Azoturan Version]
+			// 第 5 阶段【阿佐图兰版本】 / Stage 5 [Azoturan Version]
 			case START_AZOTURAN_STAGE_5_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				sendEventPacket(type, 2000);
 				sp(217529, 1263.1987f, 778.4129f, 358.6056f, (byte) 30, 2000);
                 sp(217529, 1260.1381f, 778.84644f, 358.60562f, (byte) 30, 2000);
                 sp(217529, 1257.3065f, 778.35016f, 358.60562f, (byte) 30, 2000);
 			break;
-			//Stage 5 [Steel Rake Version]
+			// 第 5 阶段【钢耙版本】 / Stage 5 [Steel Rake Version]
 			case START_STEEL_RAKE_STAGE_5_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				sendEventPacket(type, 2000);
 				sp(217549, 1263.1987f, 778.4129f, 358.6056f, (byte) 30, 2000);
@@ -1866,12 +1995,16 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 			case START_STAGE_6_ROUND_1:
 				sendEventPacket(type, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				sp(217568, 1636.7102f, 166.87984f, 126f, (byte) 60, 2000);
                 sp(217568, 1619.4432f, 153.83188f, 126f, (byte) 60, 2000);
                 sp(217568, 1636.6416f, 164.15344f, 126f, (byte) 60, 2000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						sp(217568, 1638.7107f, 165.40533f, 126f, (byte) 60);
@@ -1889,7 +2022,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 			case START_STAGE_7_ROUND_1:
 				sendEventPacket(type, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 			break;
 			case START_STAGE_8:
@@ -1901,7 +2034,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 			case START_STAGE_8_ROUND_1:
 				sendEventPacket(type, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				switch (Rnd.get(1, 2)) {
 				    case 1:
@@ -1921,7 +2054,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			break;
 			case START_STAGE_9_ROUND_1:
 				sendEventPacket(type, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				sp(217594, 1282.5399f, 1755.8711f, 317.4f, (byte) 105, 2000);
 			break;
@@ -1934,7 +2067,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
             break;
             case START_STAGE_10_ROUND_1:
                 sendEventPacket(type, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
                 sp(217600, 1771.213f, 1302.0781f, 394.3f, (byte) 82, 2000);
                 sp(217601, 1774.4563f, 1302.1516f, 394.3f, (byte) 82, 2000);
@@ -1984,6 +2117,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		CruciblePlayerReward reward = getPlayerReward(player.getObjectId());
@@ -1993,16 +2132,28 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		}
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onExitInstance(Player player) {
 		removeItems(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-		//"Player Name" dropped out of training and left the Crucible.
+		// “玩家名”退出训练并离开了试炼场。 / "Player Name" dropped out of training and left the Crucible.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400962, player.getName()));
 	}
 	
@@ -2013,6 +2164,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		storage.decreaseByItemId(186000134, storage.getItemCountByItemId(186000134)); //Worthiness Ticket.
 	}
 	
+	/**
+	 * 玩家停止训练时处理。
+	 * Handle a player stopping training.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onStopTraining(Player player) {
 		doReward(player);
@@ -2020,6 +2177,10 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -2038,6 +2199,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		return npc;
 	}
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -2045,8 +2212,8 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 		   /**
-			* Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness.
-			*/
+	 * 交给“熔炉仲裁者”以重新加入战斗并证明自身价值 / Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness
+	 */
 			case 217735: //Worthiness Ticket Box (Fin Stage 3)
 			case 217756: //Worthiness Ticket Box (Fin Stage 1)
 				for (Player player: instance.getPlayersInside()) {

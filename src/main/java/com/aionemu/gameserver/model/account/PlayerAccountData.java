@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.account;
 
 import java.sql.Timestamp;
@@ -30,10 +15,9 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 
 /**
- * This class is holding information about player, that is displayed on char selection screen, such as: player commondata, player's appearance and creation/deletion time.
- * 
- * @see PlayerCommonData
- * @see PlayerAppearance
+ * 玩家账号数据，用于账号相关逻辑。
+ * Player Account Data for account logic.
+ *
  * @author Luno
  */
 public class PlayerAccountData {
@@ -54,17 +38,20 @@ public class PlayerAccountData {
 		this.legionMember = legionMember;
 	}
 
+	/** 返回 char ban info / Returns the char ban info */
 	public CharacterBanInfo getCharBanInfo() {
 		return cbi;
 	}
 
+	/** 返回 creation date / Returns the creation date */
 	public Timestamp getCreationDate() {
 		return creationDate;
 	}
 
 	/**
-	 * Sets deletion date.
-	 * 
+	 * 设置 deletiondate。
+	 * Sets deletion date
+	 *
 	 * @param deletionDate
 	 */
 	public void setDeletionDate(Timestamp deletionDate) {
@@ -72,8 +59,9 @@ public class PlayerAccountData {
 	}
 
 	/**
-	 * Get deletion date.
-	 * 
+	 * 获取 deletiondate。
+	 * Get deletion date
+	 *
 	 * @return Timestamp date when char should be deleted.
 	 */
 	public Timestamp getDeletionDate() {
@@ -81,8 +69,9 @@ public class PlayerAccountData {
 	}
 
 	/**
-	 * Get time in seconds when this player will be deleted ( 0 if player was not set to be deleted ). Время возвращается с учетом временной зоны сервера.
-	 * 
+	 * 获取时间 secondswhen 玩家 bedeleted0 玩家 wasbedeleted。
+	 * Get time in seconds when this player will be deleted ( 0 if player was not set to be deleted ). Время возвращается с учетом временной зоны сервера
+	 *
 	 * @return deletion time in seconds
 	 */
 	public int getDeletionTimeInSeconds() {
@@ -118,6 +107,7 @@ public class PlayerAccountData {
 		this.playerCommonData = playerCommonData;
 	}
 
+	/** 返回 appereance / Returns the appereance */
 	public PlayerAppearance getAppereance() {
 		return appereance;
 	}
@@ -137,8 +127,8 @@ public class PlayerAccountData {
 	}
 
 	/**
-	 * Returns true if player is a legion member
-	 * 
+	 * 返回若为真则玩家为军团成员。 / Returns true if player is a legion member
+	 *
 	 * @return true or false
 	 */
 	public boolean isLegionMember() {

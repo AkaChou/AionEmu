@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.zone;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 
 /**
+ * 材料区域模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 public class MaterialZoneTemplate extends ZoneTemplate {
@@ -32,7 +19,7 @@ public class MaterialZoneTemplate extends ZoneTemplate {
 		setXmlName(geometry.getName() + "_" + mapId);
 		BoundingBox box = (BoundingBox) geometry.getWorldBound();
 		Vector3f center = box.getCenter();
-		// don't use polygons for small areas, they are bugged in Java API
+		// 小区域不要用多边形，Java API 有缺陷 / don't use polygons for small areas, they are bugged in Java API
 		if (geometry.getName().indexOf("CYLINDER") != -1 || geometry.getName().indexOf("CONE") != -1
 				|| geometry.getName().indexOf("H_COLUME") != -1) {
 			areaType = AreaType.CYLINDER;

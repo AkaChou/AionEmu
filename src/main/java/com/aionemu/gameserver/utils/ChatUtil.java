@@ -1,49 +1,95 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils;
 
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
+ * 聊天消息链接格式化工具。
+ * Chat message link formatting utility.
+ *
  * @author antness
  */
 public class ChatUtil {
 
+	/**
+	 * 将世界坐标格式化为可点击位置链接。
+	 * Formats a world position as a clickable location link.
+	 *
+	 * @param label 链接显示文本 / Link display label
+	 * @param pos 世界坐标 / World position
+	 * @return 位置链接字符串 / Position link string
+	 */
 	public static String position(String label, WorldPosition pos) {
 		return position(label, pos.getMapId(), pos.getX(), pos.getY(), pos.getZ());
 	}
 
+	/**
+	 * 将地图坐标格式化为可点击位置链接。
+	 * Formats map coordinates as a clickable location link.
+	 *
+	 * @param label 链接显示文本 / Link display label
+	 * World map id
+	 * @param x X 坐标 / X coordinate
+	 * @param y Y 坐标 / Y coordinate
+	 * @param z Z 坐标 / Z coordinate
+	 * @return 位置链接字符串 / Position link string
+	 */
 	public static String position(String label, long worldId, float x, float y, float z) {
-		// TODO: need rework for abyss map
-		return String.format("[pos:%s;%d %f %f %f -1]", label, worldId, x, y, z);
+		return String.format("[pos:%s;%d %f %f %f %d]", label, worldId, x, y, z, getMapPart(worldId, x, y, z));
 	}
 
+	static int getMapPart(long worldId, float x, float y, float z) {
+		if (worldId != 400010000) {
+			return -1;
+		}
+		if (z > 1800 && z < 2800 && x > 1600 && x < 2700 && y > 1400 && y < 2500) {
+			return 2;
+		}
+		return z > 2250 ? 3 : 1;
+	}
+
+	/**
+	 * 将物品 ID 格式化为物品链接。
+	 * Formats an item id as an item link.
+	 *
+	 * Item id
+	 *
+	 * @param itemId @return 物品链接字符串 / Item link string
+	 */
 	public static String item(long itemId) {
 		return String.format("[item: %d]", itemId);
 	}
 
+	/**
+	 * 将配方 ID 格式化为配方链接。
+	 * Formats a recipe id as a recipe link.
+	 *
+	 * Recipe id
+	 *
+	 * @param recipeId @return 配方链接字符串 / Recipe link string
+	 */
 	public static String recipe(long recipeId) {
 		return String.format("[recipe: %d]", recipeId);
 	}
 
+	/**
+	 * 将任务 ID 格式化为任务链接。
+	 * Formats a quest id as a quest link.
+	 *
+	 * Quest id
+	 *
+	 * @param questId @return 任务链接字符串 / Quest link string
+	 */
 	public static String quest(int questId) {
 		return String.format("[quest: %d]", questId);
 	}
 
+	/**
+	 * 从可能带前缀的管理名称中提取真实角色名。
+	 * Extracts the real character name from an admin name that may include a prefix.
+	 *
+	 * @param name 管理名称 / Admin name
+	 * @return 真实角色名 / Real character name
+	 */
 	public static String getRealAdminName(String name) {
 		int index = name.lastIndexOf(" ");
 		if (index == -1) {

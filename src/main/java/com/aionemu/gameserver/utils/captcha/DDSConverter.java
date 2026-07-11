@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.captcha;
 
 import java.awt.image.BufferedImage;
@@ -21,27 +5,55 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
+ * BufferedImage → DXT1 DDS 转换器（无透明），供 CAPTCHA 纹理下发客户端。
+ * Converts {@link BufferedImage} to DXT1 DDS (no transparency) for CAPTCHA client textures.
+ *
  * @author Cura
  */
 public class DDSConverter {
 
+	/** DDS 头标志：包含 CAPS / DDS header flag: CAPS present */
 	private static final int DDSD_CAPS = 0x0001;
+	/** DDS 头标志：包含高度。 / DDS header flag: height present. */
 	private static final int DDSD_HEIGHT = 0x0002;
+	/** DDS 头标志：包含宽度。 / DDS header flag: width present. */
 	private static final int DDSD_WIDTH = 0x0004;
+	/** DDS 头标志：包含像素格式。 / DDS header flag: pixel format present. */
 	private static final int DDSD_PIXELFORMAT = 0x1000;
+	/** DDSheaderflagmipmap 次数 present / DDS header flag: mipmap count present */
 	private static final int DDSD_MIPMAPCOUNT = 0x20000;
+	/** DDS 头标志：线性尺寸。 / DDS header flag: linear size. */
 	private static final int DDSD_LINEARSIZE = 0x80000;
+	/** 像素格式标志：FourCC / Pixel format flag: FourCC */
 	private static final int DDPF_FOURCC = 0x0004;
+	/** CAPS 标志：纹理 / CAPS flag: texture */
 	private static final int DDSCAPS_TEXTURE = 0x1000;
 
+	/**
+	 * 简单 RGB 颜色（无 alpha），用于 DXT1 端点与距离计算。
+	 * Simple RGB color (no alpha) for DXT1 endpoints and distance.
+	 */
 	protected static class Color {
 
+		/** 红分量。 / Red component. */
 		private int r, g, b;
 
+		/**
+		 * 构造黑色。
+		 * Constructs black.
+		 */
 		public Color() {
 			this.r = this.g = this.b = 0;
 		}
 
+		/**
+		 * 按 RGB 分量构造。
+		 * Constructs from RGB components.
+		 *
+		 * @param r 红 / red
+		 * @param g 绿 / green
+		 * @param b 蓝 / blue
+		 */
 		public Color(int r, int g, int b) {
 			this.r = r;
 			this.g = g;
@@ -82,6 +94,13 @@ public class DDSConverter {
 		}
 	}
 
+	/**
+	 * 将图片转为无透明 DXT1 DDS 字节缓冲。
+	 * Converts an image to a no-transparency DXT1 DDS byte buffer.
+	 *
+	 * @param image 源图；null 则返回 null / source image; null yields null
+	 * DDS buffer
+	 */
 	public static ByteBuffer convertToDxt1NoTransparency(BufferedImage image) {
 		if (image == null) {
 			return null;
@@ -123,6 +142,14 @@ public class DDSConverter {
 		return buffer;
 	}
 
+	/**
+	 * 写入 DXT1 DDS 文件头。
+	 * Writes the DXT1 DDS file header.
+	 *
+	 * target buffer
+	 * width
+	 * height
+	 */
 	protected static void buildHeaderDxt1(ByteBuffer buffer, int width, int height) {
 		buffer.rewind();
 		buffer.put((byte) 'D');
@@ -154,6 +181,13 @@ public class DDSConverter {
 		buffer.position(buffer.position() + 12); // 3 unused double-words
 	}
 
+	/**
+	 * 在 4x4 块中找欧氏距离最远的两个颜色索引。
+	 * Finds the two color indices with the largest Euclidean distance in a 4x4 block.
+	 *
+	 * 16 colors
+	 * endpoint indices
+	 */
 	protected static int[] determineExtremeColors(Color[] colors) {
 		int farthest = Integer.MIN_VALUE;
 		int[] ex = new int[2];
@@ -171,6 +205,14 @@ public class DDSConverter {
 		return ex;
 	}
 
+	/**
+	 * 按两端点插值调色板，为每像素选择最近索引并打包位掩码。
+	 * Builds interpolated palette from endpoints and packs nearest-index bitmask.
+	 *
+	 * block colors
+	 * endpoint indices
+	 * @return 32 位索引掩码 / 32-bit index mask
+	 */
 	protected static long computeBitMask(Color[] colors, int[] extremaIndices) {
 		Color[] colorPoints = new Color[] { null, null, new Color(), new Color() };
 		colorPoints[0] = colors[extremaIndices[0]];
@@ -201,6 +243,13 @@ public class DDSConverter {
 		return bitmask;
 	}
 
+	/**
+	 * RGB888 颜色压成 RGB565 像素值。
+	 * Packs an RGB888 color into an RGB565 pixel value.
+	 *
+	 * color
+	 * RGB565 value
+	 */
 	protected static int getPixel565(Color color) {
 		int r = color.r >> 3;
 		int g = color.g >> 2;
@@ -208,6 +257,13 @@ public class DDSConverter {
 		return r << 11 | g << 5 | b;
 	}
 
+	/**
+	 * 从 RGB565 像素还原颜色分量。
+	 * Expands an RGB565 pixel into color components.
+	 *
+	 * RGB565 value
+	 * color
+	 */
 	protected static Color getColor565(int pixel) {
 		Color color = new Color();
 
@@ -218,6 +274,13 @@ public class DDSConverter {
 		return color;
 	}
 
+	/**
+	 * 从 ARGB 像素数组提取 RGB888 颜色。
+	 * Extracts RGB888 colors from ARGB pixel array.
+	 *
+	 * ARGB pixels
+	 * color array
+	 */
 	protected static Color[] getColors888(int[] pixels) {
 		Color[] colors = new Color[pixels.length];
 
@@ -230,6 +293,14 @@ public class DDSConverter {
 		return colors;
 	}
 
+	/**
+	 * 两颜色的平方欧氏距离。
+	 * Squared Euclidean distance between two colors.
+	 *
+	 * @param ca 颜色 A / color A
+	 * @param cb 颜色 B / color B
+	 * squared distance
+	 */
 	protected static int distance(Color ca, Color cb) {
 		return (cb.r - ca.r) * (cb.r - ca.r) + (cb.g - ca.g) * (cb.g - ca.g) + (cb.b - ca.b) * (cb.b - ca.b);
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
 
 /**
+ * 抽象房屋对象模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -51,32 +38,39 @@ public abstract class AbstractHouseObject extends VisibleObjectTemplate {
 	@XmlAttribute(name = "can_dye")
 	protected boolean canDye;
 
+	/** 返回模板 ID / Returns the template id */
 	@Override
 	public int getTemplateId() {
 		return id;
 	}
 
+	/** 返回 talking distance / Returns the talking distance */
 	public float getTalkingDistance() {
 		return talkingDistance;
 	}
 
+	/** 返回 quality / Returns the quality */
 	public ItemQuality getQuality() {
 		return quality;
 	}
 
+	/** 获取分类。 / Returns the category. */
 	public HousingCategory getCategory() {
 		return category;
 	}
 
+	/** 返回 can dye / Returns the can dye */
 	public boolean getCanDye() {
 		return canDye;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	@Override
 	public int getNameId() {
 		return nameId;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return null;

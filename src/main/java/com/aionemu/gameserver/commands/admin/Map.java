@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
@@ -27,8 +11,10 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
- * @author Rolandas
+ * 管理员地图实例控制命令：冻结/解冻实例内 NPC AI，或输出移动广播统计。
+ * Admin map-instance control command: freeze/unfreeze NPC AI in the instance, or dump movement broadcast stats.
  *
+ * @author Rolandas
  */
 public class Map extends AdminCommand {
 
@@ -36,6 +22,13 @@ public class Map extends AdminCommand {
 		super("map");
 	}
 
+	/**
+	 * 处理 freeze、unfreeze 或 stats 子命令。
+	 * Handle freeze, unfreeze or stats subcommands.
+	 *
+	 * @param admin 执行命令的管理员 / Admin executing the command
+	 * Subcommand
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		WorldMapInstance instance = admin.getPosition().getWorldMapInstance();
@@ -54,7 +47,14 @@ public class Map extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, line);
 		}
 	}
-	
+
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "usage: //map freeze | unfreeze | stats");

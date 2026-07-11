@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +6,8 @@ import java.nio.ByteBuffer;
 import com.aionemu.commons.utils.Rnd;
 
 /**
- * Crypt will encrypt server packet and decrypt client packet.
+ * 连接级加解密器：加密服务端包、解密客户端包，并混淆操作码。
+ * Per-connection crypt that encrypts server packets, decrypts client packets and obfuscates opcodes.
  *
  * @author hack99
  * @author kao
@@ -32,23 +17,24 @@ import com.aionemu.commons.utils.Rnd;
 public class Crypt {
 
 	/**
-	 * Second byte of server packet must be equal to this
+	 * 服务端包第二字节必须等于该静态码。
+	 * Second byte of server packet must equal this static code.
 	 */
 	public final static byte staticServerPacketCode = 0x56; // 5.8
 	/**
-	 * Crypt is enabled after first server packet was send.
+	 * 在首个服务端包发出后启用加密。
+	 * Crypt is enabled after the first server packet was sent.
 	 */
 	private boolean isEnabled;
 	private EncryptionKeyPair packetKey = null;
 
 	/**
-	 * Enable crypt key - generate random key that will be used to encrypt second
-	 * server packet [first one is unencrypted] and decrypt client packets. This
-	 * method is called from SM_KEY server packet, that packet sends key to aion
-	 * client.
+	 * 启用加密密钥：生成随机密钥用于加密后续服务端包并解密客户端包。
+	 * 由 SM_KEY 调用，将密钥发送给 Aion 客户端。
+	 * Enables the crypt key — generates a random key used to encrypt subsequent server packets
+	 * and decrypt client packets. Called from SM_KEY which sends the key to the Aion client.
 	 *
-	 * @return "false key" that should by used by aion client to encrypt/decrypt
-	 *         packets.
+	 * @return 发给客户端的“伪密钥” / "false key" for the Aion client
 	 */
 	public final int enableKey() {
 		if (packetKey != null) {
@@ -56,7 +42,8 @@ public class Crypt {
 		}
 
 		/**
-		 * rnd key - this will be used to encrypt/decrypt packet
+		 * 随机密钥，用于包加解密
+		 * rnd key — used to encrypt/decrypt packets
 		 */
 		int key = Rnd.nextInt();
 
@@ -65,16 +52,18 @@ public class Crypt {
 		log.debug("new encrypt key: " + packetKey);
 
 		/**
-		 * false key that will be sent to aion client in SM_KEY packet
+		 * 经变换后发给客户端的伪密钥
+		 * false key sent to aion client in SM_KEY
 		 */
 		return (key ^ 0xCD92E4D5) + 0x3FF2CCD7; // 5.8 EU
 	}
 
 	/**
-	 * Decrypt client packet from this ByteBuffer.
+	 * 解密缓冲区中的客户端包。
+	 * Decrypts the client packet from this buffer.
 	 *
-	 * @param buf
-	 * @return true if decryption was successful.
+	 * @param buf 待解密缓冲区 / buffer to decrypt
+	 * @return 解密是否成功 / true if decryption succeeded
 	 */
 	public final boolean decrypt(ByteBuffer buf) {
 		if (!isEnabled) {
@@ -85,13 +74,15 @@ public class Crypt {
 	}
 
 	/**
-	 * Encrypt server packet from this ByteBuffer.
+	 * 加密缓冲区中的服务端包；首包不加密并开启后续加密。
+	 * Encrypts the server packet from this buffer; first packet is unencrypted and enables crypt.
 	 *
-	 * @param buf
+	 * @param buf 待加密缓冲区 / buffer to encrypt
 	 */
 	public final void encrypt(ByteBuffer buf) {
 		if (!isEnabled) {
 			/**
+			 * 首包不加密
 			 * first packet is not encrypted
 			 */
 			isEnabled = true;
@@ -102,10 +93,11 @@ public class Crypt {
 	}
 
 	/**
-	 * Server packet opcodec obfuscation.
+	 * 服务端操作码混淆。
+	 * Server packet opcode obfuscation.
 	 *
-	 * @param op
-	 * @return obfuscated opcodec
+	 * @param op 原始操作码 / raw opcode
+	 * @return 混淆后的操作码 / obfuscated opcode
 	 */
 	public static final int encodeOpcodec(int op) {
 		return (op + 0xD5) ^ 0xD5; // 5.8 EU

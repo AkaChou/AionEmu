@@ -1,19 +1,3 @@
-/*
- * This file is part of aion-unique <aion-unique.org>.
- *
- * aion-unique is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aion-unique is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aion-unique.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.heiron;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -26,13 +10,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
- * Go to Draupnir Cave in Asmodae and get Blue Balaur Blood (186000035) (2) and Balaur Rainbow Scales (186000036) (6)
- * for Brosia (204601). Go to Brosia to choose your reward.
- * 
+ * 希隆任务脚本：The Tigraki Agreement（任务 ID 1687）。
+ * Heiron quest script: The Tigraki Agreement (quest ID 1687). Go to Draupnir Cave in Asmodae and get Blue Balaur Blood (186000035) (2) and Balaur Rainbow Scales (186000036) (6) for Brosia (204601). Go to Brosia to choose your reward.
+ *
  * @author Balthazar
  * @reworked vlog
  */
-
 public class _1687TheTigrakiAgreement extends QuestHandler {
 
 	private final static int questId = 1687;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -24,9 +8,23 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_AP
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 创造力面板变形服务，处理变形技能学习与附魔。
+ * Creativity panel transformation service handling transform skill learn/enchant.
+ */
 public class CreativityTransfoService {
 	private static volatile ObjectProvider<CreativityTransfoService> instanceProvider;
 
+	/**
+	 * 应用变形效果。
+	 * Applies transformation effects.
+	 *
+	 * 玩家 / player
+	 * type
+	 * size
+	 * @param id ID / id
+	 * point
+	 */
 	public void onTransfoApply(Player player, int type, int size, int id, int point) {
 		if (id >= 7 && id <= 14 || id >= 401 && id <= 408) {
 			learnTransfo(player, id, point);
@@ -34,6 +32,14 @@ public class CreativityTransfoService {
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(type, size, id, point));
 	}
 
+	/**
+	 * 学习变形。
+	 * Learns a transformation.
+	 *
+	 * 玩家 / player
+	 * @param id ID / id
+	 * point
+	 */
 	public void learnTransfo(Player player, int id, int point) {
 		if (point >= 1) {
 			switch (id) {
@@ -107,7 +113,7 @@ public class CreativityTransfoService {
 					player.getSkillList().addSkill(player, 4768, point + 1); // Transformation: Avatar Of Wind (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
 					player.getSkillList().addSkill(player, 4807, point + 1); // Transformation: Avatar Of Wind
-																				// (Asmodians)
+																				// （魔族） / (Asmodians)
 				}
 				break;
 			case 404:
@@ -115,7 +121,7 @@ public class CreativityTransfoService {
 					player.getSkillList().addSkill(player, 4752, point + 1); // Transformation: Avatar Of Fire (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
 					player.getSkillList().addSkill(player, 4804, point + 1); // Transformation: Avatar Of Fire
-																				// (Asmodians)
+																				// （魔族） / (Asmodians)
 				}
 				break;
 			case 406:
@@ -123,7 +129,7 @@ public class CreativityTransfoService {
 					player.getSkillList().addSkill(player, 4757, point + 1); // Transformation: Avatar Of Water (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
 					player.getSkillList().addSkill(player, 4805, point + 1); // Transformation: Avatar Of Water
-																				// (Asmodians)
+																				// （魔族） / (Asmodians)
 				}
 				break;
 			case 408:
@@ -131,7 +137,7 @@ public class CreativityTransfoService {
 					player.getSkillList().addSkill(player, 4762, point + 1); // Transformation: Avatar Of Earth (Elyos)
 				} else if (player.getRace() == Race.ASMODIANS) {
 					player.getSkillList().addSkill(player, 4806, point + 1); // Transformation: Avatar Of Earth
-																				// (Asmodians)
+																				// （魔族） / (Asmodians)
 				}
 				break;
 			}
@@ -236,6 +242,14 @@ public class CreativityTransfoService {
 		}
 	}
 
+	/**
+	 * 附魔变形。
+	 * Enchants a transformation.
+	 *
+	 * 玩家 / player
+	 * @param id ID / id
+	 * point
+	 */
 	public void enchantTransfo(Player player, int id, int point) {
 		if (point >= 1) {
 			player.getCP().addPoint(player, id, point);
@@ -244,6 +258,11 @@ public class CreativityTransfoService {
 		}
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static CreativityTransfoService getInstance() {
 		ObjectProvider<CreativityTransfoService> provider = instanceProvider;
 		if (provider != null) {
@@ -252,6 +271,12 @@ public class CreativityTransfoService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CreativityTransfoService> provider) {
 		instanceProvider = provider;
 	}

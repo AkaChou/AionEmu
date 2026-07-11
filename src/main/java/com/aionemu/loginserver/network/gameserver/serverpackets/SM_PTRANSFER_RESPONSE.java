@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.model.Account;
@@ -26,22 +8,63 @@ import com.aionemu.loginserver.service.ptransfer.PlayerTransferResultStatus;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
 
 /**
+ * LS→GS：角色跨服转移结果/指令响应（按状态分发不同载荷）。
+ * LS→GS: player transfer result/command response (payload varies by result status).
+ *
  * @author KID
  */
 public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
 
+    /**
+     * 转移结果状态。
+     * Transfer result status.
+     */
     private PlayerTransferResultStatus result;
+    /**
+     * 目标账号（SEND_INFO 时使用）。
+     * Target account (used for SEND_INFO).
+     */
     private Account account;
+    /**
+     * 转移请求（SEND_INFO 时使用）。
+     * Transfer request (used for SEND_INFO).
+     */
     private PlayerTransferRequest request;
+    /**
+     * 任务 ID。
+     * Task id.
+     */
     private int taskId;
+    /**
+     * 错误原因（ERROR 时使用）。
+     * Error reason (used for ERROR).
+     */
     private String reason;
+    /**
+     * 转移任务（PERFORM_ACTION 时使用）。
+     * Transfer task (used for PERFORM_ACTION).
+     */
     private PlayerTransferTask task;
 
+    /**
+     * 构造成功类响应（仅任务 ID）。
+     * Constructs an OK-style response (task id only).
+     *
+     * result status
+     * task id
+     */
     public SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus result, int taskId) {
         this.result = result;
         this.taskId = taskId;
     }
 
+    /**
+     * 构造发送角色信息响应。
+     * Constructs a SEND_INFO response with transfer request payload.
+     *
+     * result status
+     * transfer request
+     */
     public SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus result, PlayerTransferRequest request) {
         this.result = result;
         this.request = request;
@@ -49,17 +72,35 @@ public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
         this.taskId = request.taskId;
     }
 
+    /**
+     * 构造错误响应（含原因）。
+     * Constructs an ERROR response with reason text.
+     *
+     * result status
+     * task id
+     * error reason
+     */
     public SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus result, int taskId, String reason) {
         this.result = result;
         this.taskId = taskId;
         this.reason = reason;
     }
 
+    /**
+     * 构造执行转移动作响应。
+     * Constructs a PERFORM_ACTION response with transfer task payload.
+     *
+     * result status
+     * @param task 转移任务 / transfer task
+     */
     public SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus result, PlayerTransferTask task) {
         this.result = result;
         this.task = task;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void writeImpl(GsConnection con) {
         writeC(12);

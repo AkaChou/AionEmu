@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：The Red Mane Report（任务 ID 2514）。
+ * Beluslan quest script: The Red Mane Report (quest ID 2514).
  */
 public class _2514TheRedManeReport extends QuestHandler {
 

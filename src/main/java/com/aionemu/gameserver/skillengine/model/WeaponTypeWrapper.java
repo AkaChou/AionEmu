@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.services.MotionLoggingService;
 
 /**
+ * 武器类型包装：主/副手组合，用于动作时间查表与比较。
+ * Weapon type wrapper: main/off-hand pair for motion-time lookup and compare.
+ *
  * @author kecimis
  */
 public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
@@ -29,6 +16,13 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	private WeaponType mainHand = null;
 	private WeaponType offHand = null;
 
+	/**
+	 * 构造武器类型包装；双手持有时归一为单手剑双持键。
+	 * Builds wrapper; dual-wield both hands normalize to dual 1H sword key.
+	 *
+	 * main hand
+	 * off hand
+	 */
 	public WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) {
 		if (mainHand != null && offHand != null) {
 			this.mainHand = WeaponType.SWORD_1H;
@@ -39,10 +33,12 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * 相等比较（主/副手与外层服务）。
+	 * Equality by main/off-hand and outer service.
+	 *
+	 * object
+	 * whether equal
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -68,16 +64,23 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 		return true;
 	}
 
+	/**
+	 * 字符串表示。
+	 * String representation.
+	 *
+	 * description
+	 */
 	@Override
 	public String toString() {
 		return "mainHandType=\"" + (mainHand != null ? mainHand.toString() : "null") + "\"" + " offHandType=\""
 				+ (offHand != null ? offHand.toString() : "null");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * 哈希码。
+	 * Hash code.
+	 *
+	 * hash
 	 */
 	@Override
 	public int hashCode() {
@@ -89,6 +92,13 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 		return result;
 	}
 
+	/**
+	 * 比较武器包装（用于排序/查表）。
+	 * Compares weapon wrappers (for sort/lookup).
+	 *
+	 * @param o 另一个包装 / other wrapper
+	 * compare result
+	 */
 	@Override
 	public int compareTo(WeaponTypeWrapper o) {
 		if (mainHand == null || o.getMainHand() == null) {
@@ -103,10 +113,22 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 			return mainHand.toString().compareTo(o.getMainHand().toString());
 	}
 
+	/**
+	 * 获取主手武器类型。
+	 * Gets main-hand weapon type.
+	 *
+	 * main hand
+	 */
 	public WeaponType getMainHand() {
 		return this.mainHand;
 	}
 
+	/**
+	 * 获取副手武器类型。
+	 * Gets off-hand weapon type.
+	 *
+	 * off hand
+	 */
 	public WeaponType getOffHand() {
 		return this.offHand;
 	}

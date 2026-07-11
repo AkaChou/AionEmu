@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.idfactory;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.BitSet;
 import java.util.Collection;
@@ -34,47 +19,47 @@ import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 
 /**
- * This class is responsible for id generation for all Aion-Emu objects.<br>
- * This class is Thread-Safe.<br>
- * This class is designed to be very strict with id usage. Any illegal operation
- * will throw {@link IDFactoryError}
+ * 线程安全的可回收整数 ID 分配器；非法操作抛出 {@link IDFactoryError}。
+ * Thread-safe recyclable integer ID allocator; illegal operations throw {@link IDFactoryError}.
  *
  * @author SoulKeeper
  */
 @Slf4j
 public class IDFactory {
 
+	/**
+	 * Spring ObjectProvider，优先于静态单例。
+	 * Spring ObjectProvider preferred over the static singleton.
+	 */
 	private static volatile ObjectProvider<IDFactory> instanceProvider;
 	/**
-	 * Bitset that is used for all id's.<br>
-	 * We are allowing BitSet to grow over time, so in the end it can be as big as
-	 * {@link Integer#MAX_VALUE}
+	 * 已占用 ID 的 BitSet（可增长至 {@link Integer#MAX_VALUE}）。
+	 * BitSet of taken IDs (may grow up to {@link Integer#MAX_VALUE}).
 	 */
 	private final BitSet idList;
 
 	/**
-	 * Synchronization of bitset
+	 * BitSet 同步锁。
+	 * Lock for BitSet synchronization.
 	 */
 	private final ReentrantLock lock;
 
 	/**
-	 * Id that will be used as minimal on next id request
+	 * 下次分配时的搜索起点。
+	 * Search start for the next free id.
 	 */
 	private volatile int nextMinId = 1;
 
 	/**
-	 * Returns next free id.
-	 *
-	 * @return next free id
-	 * @throws IDFactoryError if there is no free id's
+	 * 构造并锁定数据库中已使用的 ID。
+	 * Construct and lock IDs already used in the database.
 	 */
-
 	public IDFactory() {
 		idList = new BitSet();
 		lock = new ReentrantLock();
 		lockIds(0);
-		// Here should be calls to all IDFactoryAwareDAO implementations to initialize
-		// used values in IDFactory
+		// 此处应调用所有 IDFactoryAwareDAO 实现以初始化。 / Here should be calls to all IDFactoryAwareDAO implementations to initialize
+		// IDFactory 中使用的值 / used values in IDFactory
 		lockIds(DAOManager.getDAO(PlayerDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(InventoryDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(PlayerRegisteredItemsDAO.class).getUsedIDs());
@@ -82,9 +67,15 @@ public class IDFactory {
 		lockIds(DAOManager.getDAO(MailDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(GuideDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(HousesDAO.class).getUsedIDs());
-		log.info("IDFactory: " + getUsedCount() + " id's used.");
+		log.info(I18n.get("log.b00d0337832b", getUsedCount()));
 	}
 
+	/**
+	 * 获取 IDFactory 实例（优先 Spring 提供者）。
+	 * Get the IDFactory instance (Spring provider preferred).
+	 *
+	 * Instance
+	 */
 	public static final IDFactory getInstance() {
 		ObjectProvider<IDFactory> provider = instanceProvider;
 		if (provider == null) {
@@ -93,34 +84,47 @@ public class IDFactory {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * Provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<IDFactory> instanceProvider) {
 		IDFactory.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 分配下一个空闲 ID。
+	 * Allocate the next free id.
+	 *
+	 * Next free id
+	 * If no free ids remain
+	 */
 	public int nextId() {
 		try {
 			lock.lock();
 
 			int id;
 			if (nextMinId == Integer.MIN_VALUE) {
-				// Error will be thrown few lines later, we have no more free id's.
-				// BitSet will throw IllegalArgumentException if nextMinId is negative
+				// 稍后几行会抛错：已无空闲 ID。 / Error will be thrown few lines later, we have no more free id's.
+				// 若 nextMinId 为负，BitSet 将抛出 IllegalArgumentException / BitSet will throw IllegalArgumentException if nextMinId is negative
 				id = Integer.MIN_VALUE;
 			} else {
 				id = idList.nextClearBit(nextMinId);
 			}
 
-			// If BitSet reached Integer.MAX_VALUE size and returned last free id before -
-			// it will return
-			// Intger.MIN_VALUE as the next id, so we must catch such case and throw error
-			// (no free id's left)
+			// 若 BitSet 达到 Integer.MAX_VALUE 并返回最后一个空闲 ID—— / If BitSet reached Integer.MAX_VALUE size and returned last free id before -
+			// 它将返回 / it will return
+			// Integer.MIN_VALUE 作为下一 ID 时须捕获并抛错。 / Intger.MIN_VALUE as the next id, so we must catch such case and throw error
+			// （无空闲 ID） / (no free id's left)
 			if (id == Integer.MIN_VALUE) {
 				throw new IDFactoryError("All id's are used, please clear your database");
 			}
 			idList.set(id);
 
-			// It ok to have Integer OverFlow here, on next ID request IDFactory will throw
-			// error
+			// 此处 Integer 溢出可接受；下次申请 ID 时 IDFactory 会抛错。 / It ok to have Integer OverFlow here, on next ID request IDFactory will throw
+			// 错误 / error
 			nextMinId = id + 1;
 			return id;
 		} finally {
@@ -129,10 +133,11 @@ public class IDFactory {
 	}
 
 	/**
-	 * Locks given ids.
+	 * 锁定给定 ID（已占用则抛错）。
+	 * Lock the given ids (throws if already taken).
 	 *
-	 * @param ids ids to lock
-	 * @throws IDFactoryError if some of the id's were locked before
+	 * @param ids 要锁定的 ID / Ids to lock
+	 * If some ids were already locked
 	 */
 	private void lockIds(int... ids) {
 		try {
@@ -150,10 +155,11 @@ public class IDFactory {
 	}
 
 	/**
-	 * Locks given ids.
+	 * 锁定给定 ID 集合（已占用则抛错）。
+	 * Lock the given id collection (throws if already taken).
 	 *
-	 * @param ids ids to lock
-	 * @throws IDFactoryError if some of the id's were locked before
+	 * @param ids 要锁定的 ID / Ids to lock
+	 * If some ids were already locked
 	 */
 	public void lockIds(Iterable<Integer> ids) {
 		try {
@@ -171,10 +177,11 @@ public class IDFactory {
 	}
 
 	/**
-	 * Releases given id
+	 * 释放给定 ID。
+	 * Release the given id.
 	 *
-	 * @param id id to release
-	 * @throws IDFactoryError if id was not taken earlier
+	 * @param id 要释放的 ID / Id to release
+	 * If the id was not taken。 / If the id was not taken.
 	 */
 	public void releaseId(int id) {
 		try {
@@ -192,6 +199,13 @@ public class IDFactory {
 		}
 	}
 
+	/**
+	 * 批量释放 ID。
+	 * Release a collection of ids.
+	 *
+	 * @param ids 要释放的 ID 集合 / Ids to release
+	 * If any id was not taken。 / If any id was not taken.
+	 */
 	public void releaseIds(Collection<Integer> ids) {
 		if (GenericValidator.isBlankOrNull(ids)) {
 			return;
@@ -215,9 +229,10 @@ public class IDFactory {
 	}
 
 	/**
-	 * Returns amount of used ids
+	 * 返回已占用 ID 数量。
+	 * Amount of used ids.
 	 *
-	 * @return amount of used ids
+	 * Used count
 	 */
 	public int getUsedCount() {
 		try {
@@ -228,9 +243,17 @@ public class IDFactory {
 		}
 	}
 
+	/**
+	 * 静态单例持有者。
+	 * Static singleton holder.
+	 */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 
+		/**
+		 * 单例实例。
+		 * Singleton instance.
+		 */
 		protected static final IDFactory instance = new IDFactory();
 	}
 }

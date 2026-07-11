@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.agentFight;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 代理人战争相关 NPC AI：Veille Aetheric Concentrator（@AIName "veille_aetheric_concentrator"），继承 ActionItemNpcAI2。
+ * Agent-fight related NPC AI: Veille Aetheric Concentrator (@AIName "veille_aetheric_concentrator"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("veille_aetheric_concentrator")
 public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 {
@@ -54,36 +40,36 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
-		    //Veille's Aetheric Concentrator I
+		    // 维勒以太集中器 / Veille's Aetheric Concentrator I
 			case 296907:
 				if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceVeilleI();
 					AI2Actions.targetCreature(Veille_Aetheric_ConcentratorAI2.this, getPosition().getWorldMapInstance().getNpc(235064)); //Empowered Veille.
 				    AI2Actions.useSkill(Veille_Aetheric_ConcentratorAI2.this, 20107); //Defense Aether.
 				} else {
-					//You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
+					// 使用天族/魔族化身失败。需重新汇聚力量并召唤。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 		    break;
-			//Veille's Aetheric Concentrator II
+			// 维勒以太集中器 II / Veille's Aetheric Concentrator II
 			case 296908:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceVeilleII();
 				    AI2Actions.targetCreature(Veille_Aetheric_ConcentratorAI2.this, getPosition().getWorldMapInstance().getNpc(235064)); //Empowered Veille.
 				    AI2Actions.useSkill(Veille_Aetheric_ConcentratorAI2.this, 20108); //Elemental Resistance Aether.
 				} else {
-					//You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
+					// 使用天族/魔族化身失败。需重新汇聚力量并召唤。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 			break;
-			//Veille's Aetheric Concentrator III
+			// 维勒以太集中器 III / Veille's Aetheric Concentrator III
 			case 296909:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceVeilleII();
 				    AI2Actions.targetCreature(Veille_Aetheric_ConcentratorAI2.this, getPosition().getWorldMapInstance().getNpc(235064)); //Empowered Veille.
 				    AI2Actions.useSkill(Veille_Aetheric_ConcentratorAI2.this, 20109); //Power Aether.
 				} else {
-					//You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
+					// 使用天族/魔族化身失败。需重新汇聚力量并召唤。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 			break;
@@ -95,7 +81,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The first Sphere of Mirage has been activated.
+				// 第一幻影球已激活。 / The first Sphere of Mirage has been activated.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_FIRST_OBJECT_ON);
 			}
 		});
@@ -104,7 +90,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The second Sphere of Mirage has been activated. Kaisinel's Agent Veille prepares to cast the Empyrean Lord's blessing.
+				// 第二幻影球已激活。凯希内尔代理人维勒准备施放主神祝福。 / The second Sphere of Mirage has been activated. Kaisinel's Agent Veille prepares to cast the Empyrean Lord's blessing.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_SECOND_OBJECT_ON);
 			}
 		});
@@ -113,7 +99,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//You may use the Sphere of Mirage again.
+				// 你可再次使用幻影球。 / You may use the Sphere of Mirage again.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_CAN_USE_OBJECT, 120000);
 			}
 		});

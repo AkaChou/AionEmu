@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Crucible Challenge 副本 NPC AI：Crucible Rift（@AIName "cruciblerift"），继承 ActionItemNpcAI2。
+ * Crucible Challenge instance NPC AI: Crucible Rift (@AIName "cruciblerift"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("cruciblerift")
 public class CrucibleRiftAI2 extends ActionItemNpcAI2
 {
@@ -100,7 +86,7 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//A Crucible Rift has appeared at the spot where Vanktrist vanished. I'd better go investigate!
+					// 万克特里斯特消失处出现试炼裂隙。我得去调查！ / A Crucible Rift has appeared at the spot where Vanktrist vanished. I'd better go investigate!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111482, player.getObjectId(), 2));
 				}
 			}
@@ -112,7 +98,7 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Hmm, just as I suspected... Tiamat's Balaur have infiltrated the Crucible.
+					// 嗯，正如我所料……提亚马特的龙族已渗透试炼场。 / Hmm, just as I suspected... Tiamat's Balaur have infiltrated the Crucible.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111483, player.getObjectId(), 2));
 				}
 			}
@@ -124,7 +110,7 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Weird. It looks like a Crucible... just not OUR Crucible. I wonder who it belongs to?
+					// 奇怪。看起来像试炼场……但不是我们的。不知道属于谁？ / Weird. It looks like a Crucible... just not OUR Crucible. I wonder who it belongs to?
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111484, player.getObjectId(), 2));
 				}
 			}

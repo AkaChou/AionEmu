@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -31,7 +15,22 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_RESPONSE;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 社交服务，处理好友与黑名单的增删改。
+ * Social service that handles friend and block-list add/remove/update.
+ */
 public class SocialService {
+
+	/**
+	 * 将目标加入玩家黑名单。
+	 * Adds the target to the player's block list.
+	 *
+	 * operator
+	 * @param blockedPlayer 被屏蔽玩家 / blocked player
+	 * block reason
+	 *
+	 * @return 若 added 则为 true / true if added
+	 */
 	public static boolean addBlockedUser(Player player, Player blockedPlayer, String reason) {
 		if (DAOManager.getDAO(BlockListDAO.class).addBlockedUser(player.getObjectId(), blockedPlayer.getObjectId(),
 				reason)) {
@@ -44,6 +43,15 @@ public class SocialService {
 		return false;
 	}
 
+	/**
+	 * 从玩家黑名单中移除指定用户。
+	 * Removes the given user from the player's block list.
+	 *
+	 * operator
+	 *
+	 * @param blockedUserId 被屏蔽玩家 objectId / blocked player object id
+	 * @param blockedUserId 若 removed 则为 true / true if removed
+	 */
 	public static boolean deleteBlockedUser(Player player, int blockedUserId) {
 		if (DAOManager.getDAO(BlockListDAO.class).delBlockedUser(player.getObjectId(), blockedUserId)) {
 			player.getBlockList().remove(blockedUserId);
@@ -55,6 +63,16 @@ public class SocialService {
 		return false;
 	}
 
+	/**
+	 * 更新黑名单条目的屏蔽原因。
+	 * Updates the block reason for a blocked player entry.
+	 *
+	 * operator
+	 * @param target 黑名单条目 / blocked player entry
+	 * new reason
+	 *
+	 * @return 有变更且持久化成功返回 true / true if changed and persisted
+	 */
 	public static boolean setBlockedReason(Player player, BlockedPlayer target, String reason) {
 		if (!target.getReason().equals(reason)) {
 			if (DAOManager.getDAO(BlockListDAO.class).setReason(player.getObjectId(), target.getObjId(), reason)) {
@@ -66,6 +84,13 @@ public class SocialService {
 		return false;
 	}
 
+	/**
+	 * 建立双向好友关系并同步双方好友列表。
+	 * Creates a mutual friendship and syncs both friend lists.
+	 *
+	 * first player
+	 * second player
+	 */
 	public static void makeFriends(Player friend1, Player friend2) {
 		DAOManager.getDAO(FriendListDAO.class).addFriends(friend1, friend2);
 		friend1.getFriendList().addFriend(new Friend(friend2.getCommonData()));
@@ -78,6 +103,13 @@ public class SocialService {
 				.sendPacket(new SM_FRIEND_RESPONSE(friend1.getName(), SM_FRIEND_RESPONSE.TARGET_ADDED));
 	}
 
+	/**
+	 * 删除好友关系；对方在线时同步通知。
+	 * Deletes a friendship; notifies the other side if online.
+	 *
+	 * @param deleter 发起删除的玩家 / player who deletes
+	 * @param exFriend2Id 被删除好友 objectId / former friend object id
+	 */
 	public static void deleteFriend(Player deleter, int exFriend2Id) {
 		if (DAOManager.getDAO(FriendListDAO.class).delFriends(deleter.getObjectId(), exFriend2Id)) {
 			Player friend2Player = PlayerService.getCachedPlayer(exFriend2Id);
@@ -101,6 +133,14 @@ public class SocialService {
 		}
 	}
 
+	/**
+	 * 设置好友备注并刷新好友列表包。
+	 * Sets a friend note and refreshes the friend list packet.
+	 *
+	 * operator
+	 * friend entry
+	 * note
+	 */
 	public static void setFriendNote(Player player, Friend friend, String notice) {
 		friend.setNote(notice);
 		DAOManager.getDAO(FriendListDAO.class).setFriendNote(player.getObjectId(), friend.getOid(), notice);

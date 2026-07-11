@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -31,10 +15,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Dynamic Iluma Monster（@AIName "dynamic_iluma_monster"），继承 AggressiveNpcAI2。
+ * RvR-related NPC AI: Dynamic Iluma Monster (@AIName "dynamic_iluma_monster"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("dynamic_iluma_monster")
 public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {	
 
@@ -98,50 +84,50 @@ public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {
 	private void spawnLF6EventDoor() {
 		switch (Rnd.get(1, 4)) {
 			case 1:
-				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Portal.
+				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //传送门。 / Portal.
 			    spawn(240887, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Archon Warrior.
-				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Portal.
+				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //传送门。 / Portal.
 				spawn(240888, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Archon Mage.
-				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Portal.
+				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //传送门。 / Portal.
 				spawn(240889, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Archon Scout.
-				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Portal.
+				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //传送门。 / Portal.
 				spawn(240890, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Archon Marksman.
 			break;
 			case 2:
-				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Portal.
+				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //传送门。 / Portal.
 			    spawn(240888, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Archon Mage.
-				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Portal.
+				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //传送门。 / Portal.
 				spawn(240889, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Archon Scout.
-				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Portal.
+				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //传送门。 / Portal.
 				spawn(240890, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Archon Marksman.
-				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Portal.
+				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //传送门。 / Portal.
 				spawn(240887, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Archon Warrior.
 			break;
 			case 3:
-				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Portal.
+				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //传送门。 / Portal.
 			    spawn(240889, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Archon Scout.
-				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Portal.
+				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //传送门。 / Portal.
 				spawn(240890, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Archon Marksman.
-				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Portal.
+				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //传送门。 / Portal.
 				spawn(240887, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Archon Warrior.
-				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Portal.
+				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //传送门。 / Portal.
 				spawn(240888, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Archon Mage.
 			break;
 			case 4:
-				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Portal.
+				spawn(241053, 804.516f, 1842.256f, 305.86325f, (byte) 0); //传送门。 / Portal.
 			    spawn(240890, 804.516f, 1842.256f, 305.86325f, (byte) 0); //Archon Marksman.
-				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Portal.
+				spawn(241053, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //传送门。 / Portal.
 				spawn(240887, 1865.9077f, 2071.3066f, 344.01154f, (byte) 0); //Archon Warrior.
-				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Portal.
+				spawn(241053, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //传送门。 / Portal.
 				spawn(240888, 2436.7002f, 1326.0476f, 224.875f, (byte) 0); //Archon Mage.
-				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Portal.
+				spawn(241053, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //传送门。 / Portal.
 				spawn(240889, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Archon Scout.
 			break;
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				despawnNpc(241053); //Portal.
+				despawnNpc(241053); //传送门。 / Portal.
 			}
 		}, 60000);
 	}

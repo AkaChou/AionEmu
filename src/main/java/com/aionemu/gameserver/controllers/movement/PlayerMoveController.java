@@ -1,33 +1,36 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.movement;
 
 import com.aionemu.gameserver.configs.main.FallDamageConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 
+/**
+ * 玩家移动控制器，额外处理坠落伤害累计与结算。
+ * Player move controller with fall-damage accumulation and settlement.
+ */
 public class PlayerMoveController extends PlayableMoveController<Player> {
+
+	/** 累计坠落距离 / Accumulated fall distance */
 	private float fallDistance;
+	/** Last fall Z / Last fall Z */
 	private float lastFallZ;
 
+	/**
+	 * 使用指定玩家构造控制器。
+	 * Construct the controller for the given player.
+	 *
+	 * Player owner
+	 */
 	public PlayerMoveController(Player owner) {
 		super(owner);
 	}
 
+	/**
+	 * 更新坠落中状态并在超过阈值时计算伤害。
+	 * Update falling state and calculate damage when the threshold is exceeded.
+	 *
+	 * Current Z
+	 */
 	public void updateFalling(float newZ) {
 		if (lastFallZ != 0) {
 			fallDistance += lastFallZ - newZ;
@@ -39,6 +42,10 @@ public class PlayerMoveController extends PlayableMoveController<Player> {
 		owner.getObserveController().notifyMoveObservers();
 	}
 
+	/**
+	 * 停止坠落并结算最终坠落伤害。
+	 * Stop falling and settle the final fall damage.
+	 */
 	public void stopFalling() {
 		if (lastFallZ != 0) {
 			if (!owner.isFlying()) {
@@ -50,6 +57,10 @@ public class PlayerMoveController extends PlayableMoveController<Player> {
 		}
 	}
 
+	/**
+	 * 技能施放时设置为立即移动掩码。
+	 * Set the immediate movement mask during skill cast.
+	 */
 	@Override
 	public void skillMovement() {
 		this.movementMask = MovementMask.IMMEDIATE;

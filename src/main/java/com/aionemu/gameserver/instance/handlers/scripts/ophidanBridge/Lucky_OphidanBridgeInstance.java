@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.ophidanBridge;
 
 import com.aionemu.commons.utils.Rnd;
@@ -32,13 +16,22 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Map;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 幸运奥菲丹桥副本事件处理器。
+ * Instance event handler for Lucky Ophidan Bridge.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301320000)
 public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 {
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -148,6 +141,12 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -183,16 +182,16 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 			case 235771: //Velkur Aetherknife.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052612, 1)); //Vera's Treasure Crate.
 					}
 				}
 			break;
-			case 702658: //Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+			case 702658: //修道院箱子。 / Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
-			case 702659: //Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+			case 702659: //高级修道院箱子。 / Noble Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 			case 802180: //Ophidan Bridge Opportunity Bundle.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
@@ -203,6 +202,12 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -211,13 +216,13 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 			case 235769: //Velkur Aethercaster.
 			case 235770: //Velkur Aetherpriest.
 			case 235771: //Velkur Aetherknife.
-				//sendMsg("[SUCCES]: You have finished <[Lucky] Ophidan Bridge>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <[Lucky] Ophidan Bridge>");
 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //Abbey Box.
+				        spawn(702658, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //修道院箱子。 / Abbey Box.
 					break;
 					case 2:
-					    spawn(702659, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //Noble Abbey Box.
+					    spawn(702659, 349.57327f, 495.25214f, 606.76013f, (byte) 91); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				}
 				spawn(730868, 350.18478f, 490.73065f, 606.34015f, (byte) 1); //Ophidan Bridge Exit.
@@ -237,6 +242,12 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);

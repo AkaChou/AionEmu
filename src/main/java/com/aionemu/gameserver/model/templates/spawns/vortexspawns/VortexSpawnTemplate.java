@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.vortexspawns;
 
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
+
+/**
+ * 漩涡刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 public class VortexSpawnTemplate extends SpawnTemplate {
 	private int id;
@@ -34,26 +23,36 @@ public class VortexSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 获取状态类型。 / Returns the state type. */
 	public VortexStateType getStateType() {
 		return stateType;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/** 设置状态类型。 / Sets the state type. */
 	public void setStateType(VortexStateType stateType) {
 		this.stateType = stateType;
 	}
 
+	/**
+	 * @return Whether invasion / Whether invasion
+	 */
 	public final boolean isInvasion() {
 		return stateType.equals(VortexStateType.INVASION);
 	}
 
+	/**
+	 * @return 是否 peace / 是否 peace。 / Whether peace / Whether peace
+	 */
 	public final boolean isPeace() {
 		return stateType.equals(VortexStateType.PEACE);
 	}

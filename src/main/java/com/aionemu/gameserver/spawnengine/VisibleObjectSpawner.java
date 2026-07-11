@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
@@ -142,25 +129,31 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.CreatureAwareKnownList;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
+/**
+ * 可见对象刷怪器：根据刷怪模板创建 NPC、采集物、攻城单位等并刷入世界。
+ * Visible object spawner: creates NPCs, gatherables, siege units and more from spawn templates.
+ * <p>
+ * 文件体量较大，方法级注释在后续迭代补充；本类仅维护类级双语说明。
+ * Large file; method-level docs deferred. Class-level bilingual docs only for now.
+ */
 @Slf4j
-
 public class VisibleObjectSpawner {
 
     
     private static final java.util.concurrent.ConcurrentHashMap<Integer, NpcStatsTemplate> ORIGINAL_STATS = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
-     * Scale NPC attributes based on configuration rates
-     * HP, Physical Attack, Magical Attack, Accuracy, Physical Defense, Magical Defense, Evasion
+     * @param objId 按配置倍率缩放 NPC 属性（生命、物攻 / 魔攻、命中、物防/魔防、回避等）。
+     * @return Scale NPC attributes by config rates (HP, physical / magical attack, accuracy, defenses, evasion).
      */
     protected static NpcTemplate RatedTemplate(int objId) {
         NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(objId);
         if (npcTemplate == null) {
-            log.error("No Template Found For NPC ID: " + objId);
+            log.error(I18n.get("log.e37e95107d9d", objId));
             return null;
         }
         
-        // Store original stats on first access
+        // 首次访问时保存原始属性 / Store original stats on first access
         if (!ORIGINAL_STATS.containsKey(objId)) {
             NpcStatsTemplate originalStats = cloneStats(npcTemplate.getStatsTemplate());
             ORIGINAL_STATS.put(objId, originalStats);
@@ -198,25 +191,25 @@ public class VisibleObjectSpawner {
         
         if (npcTemplate.getLevel() >= 1 && rating != NpcRating.JUNK) {
             
-            // ===== HP =====
+            // ===== 生命值 ===== / ===== HP =====
             currentStats.setMaxHp((int) (originalStats.getMaxHp() * RateHP));
             
-            // ===== POWER (Magical Attack) =====
+            // ===== 力量（魔法攻击） ===== / ===== POWER (Magical Attack) =====
             currentStats.setPower((int) (originalStats.getPower() * RatePW));
             
-            // ===== PHYSICAL ATTACK =====
+            // ===== 物理攻击 ===== / ===== PHYSICAL ATTACK =====
             currentStats.setMainHandAttack((int) (originalStats.getMainHandAttack() * RatePW));
             
-            // ===== ACCURACY =====
+            // ===== 命中 ===== / ===== ACCURACY =====
             currentStats.setMainHandAccuracy((int) (originalStats.getMainHandAccuracy() * RatePW));
             
-            // ===== PHYSICAL DEFENSE =====
+            // ===== 物理防御 ===== / ===== PHYSICAL DEFENSE =====
             currentStats.setPdef((int) (originalStats.getPdef() * RatePW));
             
-            // ===== MAGICAL DEFENSE =====
+            // ===== 魔法防御 ===== / ===== MAGICAL DEFENSE =====
             currentStats.setMdef((int) (originalStats.getMdef() * RatePW));
             
-            // ===== EVASION =====
+            // ===== 闪避 ===== / ===== EVASION =====
             currentStats.setEvasion((int) (originalStats.getEvasion() * RatePW));
             
             if (log.isDebugEnabled()) {
@@ -235,7 +228,8 @@ public class VisibleObjectSpawner {
     }
     
     /**
-     * Clone NpcStatsTemplate - only for stats we need
+     * 克隆 NpcStatsTemplate（仅复制所需属性）。
+     * Clone NpcStatsTemplate for required stats only.
      */
     private static NpcStatsTemplate cloneStats(NpcStatsTemplate original) {
         NpcStatsTemplate clone = new NpcStatsTemplate();
@@ -243,22 +237,22 @@ public class VisibleObjectSpawner {
         // HP
         clone.setMaxHp(original.getMaxHp());
         
-        // Power (Magical Attack)
+        // 力量（魔法攻击） / Power (Magical Attack)
         clone.setPower(original.getPower());
         
-        // Physical Attack
+        // 物理攻击 / Physical Attack
         clone.setMainHandAttack(original.getMainHandAttack());
         
-        // Accuracy
+        // 命中 / Accuracy
         clone.setMainHandAccuracy(original.getMainHandAccuracy());
         
-        // Physical Defense
+        // 物理防御 / Physical Defense
         clone.setPdef(original.getPdef());
         
-        // Magical Defense
+        // 魔法防御 / Magical Defense
         clone.setMdef(original.getMdef());
         
-        // Evasion
+        // 闪避 / Evasion
         clone.setEvasion(original.getEvasion());
         
         return clone;
@@ -281,7 +275,7 @@ public class VisibleObjectSpawner {
         
         NpcTemplate npcTemplate = RatedTemplate(objectId);
         if (npcTemplate == null) {
-            log.error("<No Template For NPC> " + String.valueOf(objectId));
+            log.error(I18n.get("log.b1ee12e6edee", String.valueOf(objectId)));
             return null;
         }
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
@@ -297,8 +291,8 @@ public class VisibleObjectSpawner {
         try {
             SpawnEngine.bringIntoWorld(npc, spawn, instanceIndex);
         } catch (Exception ex) {
-            log.error("Error during spawn of npc {}, world {}, x-y {}-{}", new Object[] { npcTemplate.getTemplateId(), spawn.getWorldId(), spawn.getX(), spawn.getY() });
-            log.error("Npc {} will be despawned", npcTemplate.getTemplateId(), ex);
+            log.error(I18n.get("log.25b31202cf98", new Object[] { npcTemplate.getTemplateId(), spawn.getWorldId(), spawn.getX(), spawn.getY() }));
+            log.error(I18n.get("log.0b740221960f", npcTemplate.getTemplateId(), ex));
             com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(npc);
         }
         return npc;

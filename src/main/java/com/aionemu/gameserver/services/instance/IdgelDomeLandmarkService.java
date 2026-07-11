@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.instance;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -39,8 +25,10 @@ import com.aionemu.gameserver.world.World;
 
 /****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 伊吉尔穹顶地标战报名服务，管理开启窗口与冷却。
+ * Idgel Dome Landmark registration service managing open windows and cooldowns.
+ */
+
 @Slf4j
 
 public class IdgelDomeLandmarkService {
@@ -50,12 +38,20 @@ public class IdgelDomeLandmarkService {
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 123;
 
+	/**
+	 * initLandmark 方法。
+	 * initLandmark method.
+	 */
 	public void initLandmark() {
 		if (AutoGroupConfig.IDGEL_DOME_LANDMARK_ENABLED) {
-			log.info("Idgel Dome Landmark 5.1");
-			// Idgel Dome Landmark MON-WED "11PM-00AM"
+			log.info(I18n.get("log.27a2c41e1650"));
+			// 伊杰尔穹顶地标 一/三 23:00–00:00 / Idgel Dome Landmark MON-WED "11PM-00AM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startLandmarkRegistration();
 				}
@@ -66,6 +62,10 @@ public class IdgelDomeLandmarkService {
 	private void startUregisterLandmarkTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
@@ -96,17 +96,29 @@ public class IdgelDomeLandmarkService {
 				if (instanceMaskId > 0) {
 					PacketSendUtility.sendPacket(player,
 							new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon));
-					// You can now participate in the Idgel Dome Landmark battle.
+					// 你现在可参与伊杰尔穹顶地标战。 / You can now participate in the Idgel Dome Landmark battle.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDLDF5_Fortress_War);
 				}
 			}
 		}
 	}
 
+	/**
+	 * isLandmarkAvailable 方法。
+	 * isLandmarkAvailable method.
+	 * result
+	 */
 	public boolean isLandmarkAvailable() {
 		return this.registerAvailable;
 	}
 
+	/**
+	 * getInstanceMaskId 方法。
+	 * getInstanceMaskId method.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
 		if (level < minLevel || level >= capLevel) {
@@ -115,14 +127,34 @@ public class IdgelDomeLandmarkService {
 		return maskId;
 	}
 
+	/**
+	 * 添加冷却。
+	 * Adds a cooldown.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void addCoolDown(Player player) {
 		this.playersWithCooldown.add(player.getObjectId());
 	}
 
+	/**
+	 * 是否处于冷却。
+	 * Whether cooldown is active.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
 	}
 
+	/**
+	 * 显示报名窗口。
+	 * Shows the registration window.
+	 *
+	 * 玩家 / player
+	 * instanceMaskId
+	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
 			return;
@@ -136,6 +168,11 @@ public class IdgelDomeLandmarkService {
 		protected static final IdgelDomeLandmarkService instance = new IdgelDomeLandmarkService();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static IdgelDomeLandmarkService getInstance() {
 		ObjectProvider<IdgelDomeLandmarkService> provider = instanceProvider;
 		if (provider != null) {
@@ -144,6 +181,12 @@ public class IdgelDomeLandmarkService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<IdgelDomeLandmarkService> provider) {
 		instanceProvider = provider;
 	}

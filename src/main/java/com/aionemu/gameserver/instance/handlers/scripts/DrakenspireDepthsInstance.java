@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -51,31 +35,48 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 龙脊深渊副本事件处理器。
+ * Instance event handler for Drakenspire Depths.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301390000)
 public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 
-	private int deathChar;
-	private Race sealSceneRace;
-	private int drakenspireProtector;
-	private Future<?> drakenspireTask;
+	/** death char / death char */
+		private int deathChar;
+	/** sealscene 种族 / seal scene race */
+		private Race sealSceneRace;
+	/** drakenspire protector / drakenspire protector */
+		private int drakenspireProtector;
+	/** drakenspire 任务 / drakenspire task */
+		private Future<?> drakenspireTask;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+	/** 对象 / objects */
+		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		doors = instance.getDoors();
-		//** Breakwall Twin's Boss **//
+		//** 破壁双生首领 / Breakwall Twin's Boss *//
 		SpawnTemplate IDsealFire1st = SpawnEngine.addNewSingleTimeSpawn(301390000, 702695, 558.32593f, 152.40855f, 1683.0303f, (byte) 0);
 		IDsealFire1st.setEntityId(408);
 		objects.put(702695, SpawnEngine.spawnObject(IDsealFire1st, instanceId));
-		//** Breakwall Twin's Boss **//
+		//** 破壁双生首领 / Breakwall Twin's Boss *//
 		SpawnTemplate IDsealFire2st = SpawnEngine.addNewSingleTimeSpawn(301390000, 702696, 558.32593f, 212.02460f, 1683.0303f, (byte) 0);
 		IDsealFire2st.setEntityId(409);
 		objects.put(702696, SpawnEngine.spawnObject(IDsealFire2st, instanceId));
@@ -101,6 +102,12 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -113,12 +120,22 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
 		if (sealSceneRace == null) {
             sealSceneRace = player.getRace();
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 				    spawnIDSealScene01();
@@ -127,6 +144,12 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
         }
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -141,9 +164,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			case 236116: //Elite Deathchar Patroler.
 				deathChar++;
 				if (deathChar == 4) {
-				    //The Lava Protector and Heatvent Protector are sharing the Fount.
+				    // 熔岩守护者与热风口守护者共享泉源。 / The Lava Protector and Heatvent Protector are sharing the Fount.
 					sendMsgByRace(1402682, Race.PC_ALL, 0);
-					//When both Protectors are defeated at the same time, the Fount is destroyed and the Protectors can no longer resurrect.
+					// 同时击败两名守护者时泉源被毁，守护者无法再复活。 / When both Protectors are defeated at the same time, the Fount is destroyed and the Protectors can no longer resurrect.
 					sendMsgByRace(1402683, Race.PC_ALL, 10000);
 					if (player != null) {
 				        switch (player.getRace()) {
@@ -164,6 +187,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209684, 498.12088f, 206.94075f, 1688.1917f, (byte) 0);
@@ -174,6 +201,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						break;
 						case ASMODIANS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209749, 498.12088f, 206.94075f, 1688.1917f, (byte) 0);
@@ -190,6 +221,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209684, 497.9484f, 147.90346f, 1688.2479f, (byte) 1);
@@ -200,6 +235,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						break;
 						case ASMODIANS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209749, 497.9484f, 147.90346f, 1688.2479f, (byte) 1);
@@ -216,7 +255,7 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				deleteNpc(702404); //Twin's Firewall.
 				deleteNpc(702695); //Breakwall Twin's Boss.
 				deleteNpc(702696); //Breakwall Twin's Boss.
-				//The Protectors' Fount has been destroyed and they will not be resurrected.
+				// 守护者之泉已被摧毁，他们无法再复活。 / The Protectors' Fount has been destroyed and they will not be resurrected.
 				sendMsgByRace(1402688, Race.PC_ALL, 0);
 				Npc lavaProtector = instance.getNpc(236225); //Fountless Lava Protector.
 			    Npc heatventProtector = instance.getNpc(236226); //Fountless Heatvent Protector.
@@ -225,6 +264,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				        switch (player.getRace()) {
 					        case ELYOS:
 							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							        /**
+							         * 处理 run。
+							         * Handle run.
+							         */
 							        @Override
 								    public void run() {
 										spawn(209690, 552.93365f, 155.68227f, 1683.7301f, (byte) 0);
@@ -234,9 +277,13 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								    }
 							    }, 2000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								    /**
+								     * 处理 run。
+								     * Handle run.
+								     */
 								    @Override
 									public void run() {
-										//The Empyrean Elite started to advance.
+										// 天族/魔族精锐开始推进。 / The Empyrean Elite started to advance.
 										sendMsgByRace(1402994, Race.PC_ALL, 0);
 									    spawn(209694, 583.8417f, 177.45332f, 1683.7301f, (byte) 8);
 										spawn(209695, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
@@ -248,46 +295,62 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									}
 								}, 10000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								    /**
+								     * 处理 run。
+								     * Handle run.
+								     */
 								    @Override
 									public void run() {
 									    deleteNpc(209694);
 										deleteNpc(209695);
-										//Eliminate the Fetid Phantomscorch Master and choose a path to proceed.
+										// 消灭恶臭幻焰大师并选择前进路径。 / Eliminate the Fetid Phantomscorch Master and choose a path to proceed.
 										sendMsgByRace(1402995, Race.PC_ALL, 0);
-										//Obtain the Crossroads Choice Key carried by the Fetid Phantomscorch Master.
+										// 获取恶臭幻焰大师携带的十字路口选择钥匙。 / Obtain the Crossroads Choice Key carried by the Fetid Phantomscorch Master.
 										sendMsgByRace(1403121, Race.PC_ALL, 10000);
 										spawn(209698, 583.8417f, 177.45332f, 1683.7301f, (byte) 8);
 										spawn(209700, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
 									}
 								}, 15000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+									/**
+									 * 处理 run。
+									 * Handle run.
+									 */
 									@Override
 									public void run() {
 										Npc Masionel = getNpc(209698);
-										//Thanks to you, the Detachment got through without any losses. Excellent work!
+										// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
 										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
-										//This place is protected by a dark power. It cannot be destroyed.
+										// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
 										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
-										//Just let me blast us a path...
+										// 让我炸开一条路…… / Just let me blast us a path...
 										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
 									}
 								}, 25000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+									/**
+									 * 处理 run。
+									 * Handle run.
+									 */
 									@Override
 									public void run() {
 										killNpc(getNpcs(731580));
 										Npc Masionel = getNpc(209698);
-										//Detachment Demolisher has opened the path to the next area.
+										// 分遣队爆破手已打开通往下一区域的道路。 / Detachment Demolisher has opened the path to the next area.
 										sendMsgByRace(1402689, Race.PC_ALL, 0);
-										//We can get through now.
+										// 现在可以通过了。 / We can get through now.
 										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
-										//Please take care.
+										// 请多保重。 / Please take care.
 										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
 									}
 								}, 30000);
 							break;
 							case ASMODIANS:
 							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							        /**
+							         * 处理 run。
+							         * Handle run.
+							         */
 							        @Override
 								    public void run() {
 										spawn(209755, 552.93365f, 155.68227f, 1683.7301f, (byte) 0);
@@ -297,9 +360,13 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								    }
 							    }, 2000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								    /**
+								     * 处理 run。
+								     * Handle run.
+								     */
 								    @Override
 									public void run() {
-										//The Empyrean Elite started to advance.
+										// 天族/魔族精锐开始推进。 / The Empyrean Elite started to advance.
 										sendMsgByRace(1402994, Race.PC_ALL, 0);
 									    spawn(209759, 583.8417f, 177.45332f, 1683.7301f, (byte) 8);
 										spawn(209760, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
@@ -311,40 +378,52 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									}
 								}, 10000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								    /**
+								     * 处理 run。
+								     * Handle run.
+								     */
 								    @Override
 									public void run() {
 									    deleteNpc(209759);
 										deleteNpc(209760);
-										//Eliminate the Fetid Phantomscorch Master and choose a path to proceed.
+										// 消灭恶臭幻焰大师并选择前进路径。 / Eliminate the Fetid Phantomscorch Master and choose a path to proceed.
 										sendMsgByRace(1402995, Race.PC_ALL, 0);
-										//Obtain the Crossroads Choice Key carried by the Fetid Phantomscorch Master.
+										// 获取恶臭幻焰大师携带的十字路口选择钥匙。 / Obtain the Crossroads Choice Key carried by the Fetid Phantomscorch Master.
 										sendMsgByRace(1403121, Race.PC_ALL, 10000);
 										spawn(209763, 583.8417f, 177.45332f, 1683.7301f, (byte) 8);
 										spawn(209765, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
 									}
 								}, 15000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+									/**
+									 * 处理 run。
+									 * Handle run.
+									 */
 									@Override
 									public void run() {
 										Npc Parsia = getNpc(209763);
-										//Thanks to you, the Detachment got through without any losses. Excellent work!
+										// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
 										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
-										//This place is protected by a dark power. It cannot be destroyed.
+										// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
 										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
-										//Just let me blast us a path...
+										// 让我炸开一条路…… / Just let me blast us a path...
 										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
 									}
 								}, 25000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+									/**
+									 * 处理 run。
+									 * Handle run.
+									 */
 									@Override
 									public void run() {
 										killNpc(getNpcs(731580));
 										Npc Parsia = getNpc(209763);
-										//Detachment Demolisher has opened the path to the next area.
+										// 分遣队爆破手已打开通往下一区域的道路。 / Detachment Demolisher has opened the path to the next area.
 										sendMsgByRace(1402689, Race.PC_ALL, 0);
-										//We can get through now.
+										// 现在可以通过了。 / We can get through now.
 										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
-										//Please take care.
+										// 请多保重。 / Please take care.
 										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
 									}
 								}, 30000);
@@ -366,13 +445,17 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				        switch (player.getRace()) {
 					        case ELYOS:
 							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							        /**
+							         * 处理 run。
+							         * Handle run.
+							         */
 							        @Override
 								    public void run() {
-								        //Orissan begins to Ascend through Ascension Dominance.
+								        // 奥里桑开始通过飞升压制升空。 / Orissan begins to Ascend through Ascension Dominance.
 										sendMsgByRace(1402693, Race.PC_ALL, 0);
-										//Orissan has Ascended through Ascension Dominance.
+										// 奥里桑已通过飞升压制升空。 / Orissan has Ascended through Ascension Dominance.
 										sendMsgByRace(1402694, Race.PC_ALL, 8000);
-										//Slay Orissan before the next Ascension Dominance begins.
+										// 在下一次飞升压制开始前击杀奥里桑。 / Slay Orissan before the next Ascension Dominance begins.
 										sendMsgByRace(1402698, Race.PC_ALL, 16000);
 										spawn(209704, 821.6019f, 523.7112f, 1706.6428f, (byte) 33);
 										spawn(209705, 815.1346f, 522.75665f, 1706.7778f, (byte) 32);
@@ -381,13 +464,17 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						    break;
 						    case ASMODIANS:
 							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							        /**
+							         * 处理 run。
+							         * Handle run.
+							         */
 							        @Override
 								    public void run() {
-								        //Orissan begins to Ascend through Ascension Dominance.
+								        // 奥里桑开始通过飞升压制升空。 / Orissan begins to Ascend through Ascension Dominance.
 										sendMsgByRace(1402693, Race.PC_ALL, 0);
-										//Orissan has Ascended through Ascension Dominance.
+										// 奥里桑已通过飞升压制升空。 / Orissan has Ascended through Ascension Dominance.
 										sendMsgByRace(1402694, Race.PC_ALL, 8000);
-										//Slay Orissan before the next Ascension Dominance begins.
+										// 在下一次飞升压制开始前击杀奥里桑。 / Slay Orissan before the next Ascension Dominance begins.
 										sendMsgByRace(1402698, Race.PC_ALL, 16000);
 										spawn(209769, 821.6019f, 523.7112f, 1706.6428f, (byte) 33);
 										spawn(209770, 815.1346f, 522.75665f, 1706.7778f, (byte) 32);
@@ -405,6 +492,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 					    case ELYOS:
 							sendMovie(player, 914);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209706, 810.4212f, 550.19934f, 1701.044f, (byte) 31);
@@ -412,6 +503,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 10000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209710, 807.78894f, 578.7186f, 1701.0446f, (byte) 34);
@@ -421,6 +516,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209712, 811.5f, 583.0642f, 1701.0447f, (byte) 32);
@@ -433,29 +532,37 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 20000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									Npc Masionel = getNpc(209712);
-									//Thanks to you, the Detachment got through without any losses. Excellent work!
+									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
-									//This place is protected by a dark power. It cannot be destroyed.
+									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
-									//Just let me blast us a path...
+									// 让我炸开一条路…… / Just let me blast us a path...
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 35000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									killNpc(getNpcs(700546));
 									Npc Masionel = getNpc(209712);
-									//The detachment continues to advance.
+									// 分遣队继续推进。 / The detachment continues to advance.
 									sendMsgByRace(1403000, Race.PC_ALL, 0);
-									//Glide at the Soulfade Labyrinth to use the wind road.
+									// 在魂消迷宫滑翔以使用风道。 / Glide at the Soulfade Labyrinth to use the wind road.
 									sendMsgByRace(1402941, Race.PC_ALL, 5000);
-									//We can get through now.
+									// 现在可以通过了。 / We can get through now.
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
-									//Please take care.
+									// 请多保重。 / Please take care.
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
 								}
 							}, 50000);
@@ -463,6 +570,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						case ASMODIANS:
 							sendMovie(player, 914);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209771, 810.4212f, 550.19934f, 1701.044f, (byte) 31);
@@ -470,6 +581,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 10000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209775, 807.78894f, 578.7186f, 1701.0446f, (byte) 34);
@@ -479,6 +594,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209777, 811.5f, 583.0642f, 1701.0447f, (byte) 32);
@@ -491,29 +610,37 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 20000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									Npc Parsia = getNpc(209777);
-									//Thanks to you, the Detachment got through without any losses. Excellent work!
+									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
-									//This place is protected by a dark power. It cannot be destroyed.
+									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
-									//Just let me blast us a path...
+									// 让我炸开一条路…… / Just let me blast us a path...
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 35000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									killNpc(getNpcs(700546));
 									Npc Parsia = getNpc(209777);
-									//The detachment continues to advance.
+									// 分遣队继续推进。 / The detachment continues to advance.
 									sendMsgByRace(1403000, Race.PC_ALL, 0);
-									//Glide at the Soulfade Labyrinth to use the wind road.
+									// 在魂消迷宫滑翔以使用风道。 / Glide at the Soulfade Labyrinth to use the wind road.
 									sendMsgByRace(1402941, Race.PC_ALL, 5000);
-									//We can get through now.
+									// 现在可以通过了。 / We can get through now.
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
-									//Please take care.
+									// 请多保重。 / Please take care.
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
 								}
 							}, 50000);
@@ -526,6 +653,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209722, 631.6413f, 847.15717f, 1599.8486f, (byte) 90);
@@ -533,6 +664,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 5000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									spawn(209720, 635.39325f, 886.9716f, 1600.7146f, (byte) 90);
@@ -542,66 +677,98 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 10000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawnIDSeal4ThStageElyos();
 								}
 							}, 12000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									spawnEmpyreanLordsSiegeWeapon();
-									//The Empyrean Lord's Stormcannon is being charged for the Empyrean Firestorm.
+									// 主神的风暴加农正在为天火风暴充能。 / The Empyrean Lord's Stormcannon is being charged for the Empyrean Firestorm.
 									sendMsgByRace(1402703, Race.PC_ALL, 0);
-									//Defend the Detachment and its siege weapons from the Guhena Legion.
+									// 保护分遣队及其攻城武器免受古赫纳军团攻击。 / Defend the Detachment and its siege weapons from the Guhena Legion.
 									sendMsgByRace(1402705, Race.PC_ALL, 5000);
-									//If the Detachment loses too many soldiers, they will not be able to assist during the battle against Beritra.
+									// 若分遣队损失过多士兵，将无法在对抗贝里特拉时协助。 / If the Detachment loses too many soldiers, they will not be able to assist during the battle against Beritra.
 									sendMsgByRace(1402706, Race.PC_ALL, 10000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									spawnWaveDoor();
-									//The Guhena Legion has detected intruders and will begin attacking.
+									// 古赫纳军团发现入侵者，即将进攻。 / The Guhena Legion has detected intruders and will begin attacking.
 									sendMsgByRace(1402704, Race.PC_ALL, 0);
 								}
 							}, 25000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal1();
 									doors.get(271).setOpen(true);
-									//The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
+									// 古赫纳军团指挥官维尔沙已出现。必须击败所有队长与指挥官。 / The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
 									sendMsgByRace(1402710, Race.PC_ALL, 0);
 								}
 							}, 30000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal2();
-									//The Guhena Legion's second wave of attack has started. There will be three more attack waves.
+									// 古赫纳军团第二波进攻开始。还将有三波。 / The Guhena Legion's second wave of attack has started. There will be three more attack waves.
 									sendMsgByRace(1402707, Race.PC_ALL, 0);
 								}
 							}, 65000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    startRaidSeal2_1();
 								}
 							}, 67000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal3();
 									doors.get(267).setOpen(true);
-									//The Guhena Legion's third wave of attack has started. There will be two more attack waves.
+									// 古赫纳军团第三波进攻开始。还将有两波。 / The Guhena Legion's third wave of attack has started. There will be two more attack waves.
 									sendMsgByRace(1402708, Race.PC_ALL, 0);
 								}
 							}, 87000);
 						break;
 						case ASMODIANS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawn(209787, 631.6413f, 847.15717f, 1599.8486f, (byte) 90);
@@ -609,6 +776,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 5000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									spawn(209785, 635.39325f, 886.9716f, 1600.7146f, (byte) 90);
@@ -618,60 +789,88 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								}
 							}, 10000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawnIDSeal4ThStageAsmodians();
 								}
 							}, 12000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									spawnEmpyreanLordsSiegeWeapon();
-									//The Empyrean Lord's Stormcannon is being charged for the Empyrean Firestorm.
+									// 主神的风暴加农正在为天火风暴充能。 / The Empyrean Lord's Stormcannon is being charged for the Empyrean Firestorm.
 									sendMsgByRace(1402703, Race.PC_ALL, 0);
-									//Defend the Detachment and its siege weapons from the Guhena Legion.
+									// 保护分遣队及其攻城武器免受古赫纳军团攻击。 / Defend the Detachment and its siege weapons from the Guhena Legion.
 									sendMsgByRace(1402705, Race.PC_ALL, 5000);
-									//If the Detachment loses too many soldiers, they will not be able to assist during the battle against Beritra.
+									// 若分遣队损失过多士兵，将无法在对抗贝里特拉时协助。 / If the Detachment loses too many soldiers, they will not be able to assist during the battle against Beritra.
 									sendMsgByRace(1402706, Race.PC_ALL, 10000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    spawnWaveDoor();
-									//The Guhena Legion has detected intruders and will begin attacking.
+									// 古赫纳军团发现入侵者，即将进攻。 / The Guhena Legion has detected intruders and will begin attacking.
 									sendMsgByRace(1402704, Race.PC_ALL, 0);
 								}
 							}, 25000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal1();
 									doors.get(271).setOpen(true);
-									//The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
+									// 古赫纳军团指挥官维尔沙已出现。必须击败所有队长与指挥官。 / The Guhena Legion's Commander Virtsha has appeared. You must defeat every captain and commander.
 									sendMsgByRace(1402710, Race.PC_ALL, 0);
 								}
 							}, 30000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal2();
-									//The Guhena Legion's second wave of attack has started. There will be three more attack waves.
+									// 古赫纳军团第二波进攻开始。还将有三波。 / The Guhena Legion's second wave of attack has started. There will be three more attack waves.
 									sendMsgByRace(1402707, Race.PC_ALL, 0);
 								}
 							}, 65000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 								    startRaidSeal2_1();
 								}
 							}, 67000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal3();
 									doors.get(267).setOpen(true);
-									//The Guhena Legion's third wave of attack has started. There will be two more attack waves.
+									// 古赫纳军团第三波进攻开始。还将有两波。 / The Guhena Legion's third wave of attack has started. There will be two more attack waves.
 									sendMsgByRace(1402708, Race.PC_ALL, 0);
 								}
 							}, 87000);
@@ -685,26 +884,34 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal4();
 									startRaidSeal5();
 									doors.get(7).setOpen(true);
 									doors.get(310).setOpen(true);
-									//The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
+									// 古赫纳军团第四波进攻开始。还将有一波。 / The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
 									sendMsgByRace(1402709, Race.PC_ALL, 0);
 								}
 							}, 15000);
 						break;
 						case ASMODIANS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal4();
 									startRaidSeal5();
 									doors.get(7).setOpen(true);
 									doors.get(310).setOpen(true);
-									//The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
+									// 古赫纳军团第四波进攻开始。还将有一波。 / The Guhena Legion's fourth wave of attack has started. There will be one more attack wave.
 									sendMsgByRace(1402709, Race.PC_ALL, 0);
 								}
 							}, 15000);
@@ -718,24 +925,32 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal6();
 									doors.get(210).setOpen(true);
 									doors.get(312).setOpen(true);
-									//The Detachment has suffered severe losses and will not be able to assist any further.
+									// 分遣队损失惨重，无法再提供协助。 / The Detachment has suffered severe losses and will not be able to assist any further.
 									sendMsgByRace(1402712, Race.PC_ALL, 0);
 								}
 							}, 15000);
 						break;
 						case ASMODIANS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal6();
 									doors.get(210).setOpen(true);
 									doors.get(312).setOpen(true);
-									//The Detachment has suffered severe losses and will not be able to assist any further.
+									// 分遣队损失惨重，无法再提供协助。 / The Detachment has suffered severe losses and will not be able to assist any further.
 									sendMsgByRace(1402712, Race.PC_ALL, 0);
 								}
 							}, 15000);
@@ -749,22 +964,30 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 					    case ELYOS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal3();
 									startRaidSeal4();
-									//The Detachment has suffered heavy losses and can only assist in limited capacity.
+									// 分遣队损失严重，仅能有限协助。 / The Detachment has suffered heavy losses and can only assist in limited capacity.
 									sendMsgByRace(1402713, Race.PC_ALL, 0);
 								}
 							}, 15000);
 						break;
 						case ASMODIANS:
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    /**
+							     * 处理 run。
+							     * Handle run.
+							     */
 							    @Override
 								public void run() {
 									startRaidSeal3();
 									startRaidSeal4();
-									//The Detachment has suffered heavy losses and can only assist in limited capacity.
+									// 分遣队损失严重，仅能有限协助。 / The Detachment has suffered heavy losses and can only assist in limited capacity.
 									sendMsgByRace(1402713, Race.PC_ALL, 0);
 								}
 							}, 15000);
@@ -777,69 +1000,85 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				if (player != null) {
 				    switch (player.getRace()) {
 				        case ELYOS:
-						    //The Flamesquelch Legion is in disaray from the loss of its commanders.
+						    // 灭焰军团因指挥官阵亡而陷入混乱。 / The Flamesquelch Legion is in disaray from the loss of its commanders.
 							sendMsgByRace(1403007, Race.PC_ALL, 0);
-						    //The Detachment has suffered some losses, but can assist at almost full capacity.
+						    // 分遣队有所损失，但仍几乎可全力协助。 / The Detachment has suffered some losses, but can assist at almost full capacity.
 							sendMsgByRace(1402714, Race.PC_ALL, 5000);
-							//You have successfully protected the Detachment. They will assist you during the battle against Beritra.
+							// 你成功保护了分遣队。他们将在对抗贝里特拉时协助你。 / You have successfully protected the Detachment. They will assist you during the battle against Beritra.
 							sendMsgByRace(1402715, Race.PC_ALL, 10000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									Npc Masionel = getNpc(209720);
-									//Thanks to you, the Detachment got through without any losses. Excellent work!
+									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
-									//This place is protected by a dark power. It cannot be destroyed.
+									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
-									//Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
+									// 黑暗阻挡了道路。是时候使用主神的攻城武器了。 / Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501318, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									killNpc(getNpcs(700545));
 									Npc Masionel = getNpc(209720);
 									spawnEternalAltarOfTormentEntrance();
-									//The Empyrean Lord's Stormcannon has blown open the Seal of Darkness.
+									// 主神的风暴加农已轰开黑暗封印。 / The Empyrean Lord's Stormcannon has blown open the Seal of Darkness.
 									sendMsgByRace(1402711, Race.PC_ALL, 0);
-									//Charge complete! Fire!!
+									// 充能完成！开火！！ / Charge complete! Fire!!
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501320, Masionel.getObjectId(), 0, 0);
-									//Thank you. Now, let's bring the fight to Beritra!
+									// 谢谢。现在，让我们把战斗带给贝里特拉！ / Thank you. Now, let's bring the fight to Beritra!
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501321, Masionel.getObjectId(), 0, 6000);
 								}
 							}, 30000);
 						break;
 						case ASMODIANS:
-						    //The Flamesquelch Legion is in disaray from the loss of its commanders.
+						    // 灭焰军团因指挥官阵亡而陷入混乱。 / The Flamesquelch Legion is in disaray from the loss of its commanders.
 							sendMsgByRace(1403007, Race.PC_ALL, 0);
-						    //The Detachment has suffered some losses, but can assist at almost full capacity.
+						    // 分遣队有所损失，但仍几乎可全力协助。 / The Detachment has suffered some losses, but can assist at almost full capacity.
 							sendMsgByRace(1402714, Race.PC_ALL, 5000);
-							//You have successfully protected the Detachment. They will assist you during the battle against Beritra.
+							// 你成功保护了分遣队。他们将在对抗贝里特拉时协助你。 / You have successfully protected the Detachment. They will assist you during the battle against Beritra.
 							sendMsgByRace(1402715, Race.PC_ALL, 10000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									Npc Parsia = getNpc(209785);
-									//Thanks to you, the Detachment got through without any losses. Excellent work!
+									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
-									//This place is protected by a dark power. It cannot be destroyed.
+									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
-									//Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
+									// 黑暗阻挡了道路。是时候使用主神的攻城武器了。 / Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501318, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									killNpc(getNpcs(700545));
 									Npc Parsia = getNpc(209785);
 									spawnEternalAltarOfTormentEntrance();
-									//The Empyrean Lord's Stormcannon has blown open the Seal of Darkness.
+									// 主神的风暴加农已轰开黑暗封印。 / The Empyrean Lord's Stormcannon has blown open the Seal of Darkness.
 									sendMsgByRace(1402711, Race.PC_ALL, 0);
-									//Charge complete! Fire!!
+									// 充能完成！开火！！ / Charge complete! Fire!!
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501320, Parsia.getObjectId(), 0, 0);
-									//Thank you. Now, let's bring the fight to Beritra!
+									// 谢谢。现在，让我们把战斗带给贝里特拉！ / Thank you. Now, let's bring the fight to Beritra!
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501321, Parsia.getObjectId(), 0, 6000);
 								}
 							}, 30000);
@@ -880,6 +1119,12 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						beritra1.getEffectController().removeEffect(21612); //Everlasting Life.
 						spawn(236247, 127.77517f, 508.3428f, 1749.8322f, (byte) 8); //Beritra [Dragon Form]
 						instance.doOnAllPlayers(new Visitor<Player>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
 							@Override
 							public void visit(Player player) {
 								if (player.isOnline()) {
@@ -902,6 +1147,12 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						beritra2.getEffectController().removeEffect(21612); //Everlasting Life.
 						spawn(236247, 127.77517f, 508.3428f, 1749.8322f, (byte) 8); //Beritra [Dragon Form]
 						instance.doOnAllPlayers(new Visitor<Player>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
 							@Override
 							public void visit(Player player) {
 								if (player.isOnline()) {
@@ -924,6 +1175,12 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						beritra3.getEffectController().removeEffect(21612); //Everlasting Life.
 						spawn(236247, 127.77517f, 508.3428f, 1749.8322f, (byte) 8); //Beritra [Dragon Form]
 						instance.doOnAllPlayers(new Visitor<Player>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
 							@Override
 							public void visit(Player player) {
 								if (player.isOnline()) {
@@ -937,15 +1194,18 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				despawnNpc(npc);
 			break;
 			/**
-			 * If player kill <Beritra> they are removed from instance!!!
-			 * Coz, player must removed <3 Seal> before fight "Beritra Dragon Form"
-			 */
+	 * 若玩家击杀贝里特拉将移出副本！须先移除 3 枚封印再战龙形态。 / If player kill <Beritra> they are removed from instance!!! Coz, player must removed <3 Seal> before fight "Beritra Dragon Form"
+	 */
 			case 236244: //Beritra.
 			case 236245: //Enraged Beritra.
 			case 236246: //Crazed Beritra.
 			    despawnNpc(npc);
 				sendMsg("[EPIC FAIL]: You should not kill <Beritra>, you had to remove the 3 seal :( ");
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						if (!isInstanceDestroyed) {
@@ -963,13 +1223,17 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 				        case ELYOS:
 						    sendMovie(player, 916);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									spawnIDSealSceneEnding();
 									drakenspireTask.cancel(true);
-									//The Seal of Darkness has been destroyed.
+									// 黑暗封印已被摧毁。 / The Seal of Darkness has been destroyed.
 									sendMsgByRace(1403008, Race.PC_ALL, 0);
-									//A reaction is taking place within the agent's weapon.
+									// 代理人的武器内部正在发生反应。 / A reaction is taking place within the agent's weapon.
 									sendMsgByRace(1403012, Race.PC_ALL, 5000);
 									sendMsg("[Congratulation]: you finish <Drakenspire Depths>");
 									spawn(731548, 147.01088f, 517.9374f, 1749.5007f, (byte) 2); //Drakenspire Depths Exit.
@@ -978,11 +1242,17 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									spawn(833012, 152.30666f, 522.0088f, 1749.5466f, (byte) 88); //Cloak Of Balaur Lord Beritra.
 									spawn(833015, 161.93251f, 518.47626f, 1749.4482f, (byte) 59); //Sacred Beast Of Balaur Lord Beritra.
 									Npc Masionel = getNpc(209739);
-									//Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
+									// 贝里特拉或许逃脱了，但我们已拿下龙脊深渊。干得好。 / Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501326, Masionel.getObjectId(), 0, 12000);
-									//Beritra has fled! He may have escaped, but we gave him something to remember us by!
+									// 贝里特拉逃走了！他或许逃脱，但我们给他留下了深刻印象！ / Beritra has fled! He may have escaped, but we gave him something to remember us by!
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501327, Masionel.getObjectId(), 0, 22000);
 									instance.doOnAllPlayers(new Visitor<Player>() {
+										/**
+										 * 处理 visit。
+										 * Handle visit.
+										 *
+										 * @param player 玩家 / player
+										 */
 										@Override
 										public void visit(Player player) {
 											if (player.isOnline()) {
@@ -996,13 +1266,17 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 						case ASMODIANS:
 						    sendMovie(player, 916);
 						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/**
+								 * 处理 run。
+								 * Handle run.
+								 */
 								@Override
 								public void run() {
 									spawnIDSealSceneEnding();
 									drakenspireTask.cancel(true);
-									//The Seal of Darkness has been destroyed.
+									// 黑暗封印已被摧毁。 / The Seal of Darkness has been destroyed.
 									sendMsgByRace(1403008, Race.PC_ALL, 0);
-									//A reaction is taking place within the agent's weapon.
+									// 代理人的武器内部正在发生反应。 / A reaction is taking place within the agent's weapon.
 									sendMsgByRace(1403012, Race.PC_ALL, 5000);
 									sendMsg("[Congratulation]: you finish <Drakenspire Depths>");
 									spawn(731548, 147.01088f, 517.9374f, 1749.5007f, (byte) 2); //Drakenspire Depths Exit.
@@ -1011,11 +1285,17 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									spawn(833012, 152.30666f, 522.0088f, 1749.5466f, (byte) 88); //Cloak Of Balaur Lord Beritra.
 									spawn(833015, 161.93251f, 518.47626f, 1749.4482f, (byte) 59); //Sacred Beast Of Balaur Lord Beritra.
 									Npc Parsia = getNpc(209804);
-									//Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
+									// 贝里特拉或许逃脱了，但我们已拿下龙脊深渊。干得好。 / Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501326, Parsia.getObjectId(), 0, 12000);
-									//Beritra has fled! He may have escaped, but we gave him something to remember us by!
+									// 贝里特拉逃走了！他或许逃脱，但我们给他留下了深刻印象！ / Beritra has fled! He may have escaped, but we gave him something to remember us by!
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501327, Parsia.getObjectId(), 0, 22000);
 									instance.doOnAllPlayers(new Visitor<Player>() {
+										/**
+										 * 处理 visit。
+										 * Handle visit.
+										 *
+										 * @param player 玩家 / player
+										 */
 										@Override
 										public void visit(Player player) {
 											if (player.isOnline()) {
@@ -1033,26 +1313,42 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	}
 	
 	private void startDrakenspireTimer() {
-		//Beritra transforms into a dragon.
+		// 贝里特拉变身为龙。 / Beritra transforms into a dragon.
 		sendMsgByRace(1402721, Race.PC_ALL, 0);
-		//Beritra will disappear when the relic is completely extracted in 7 minutes.
+		// 遗物将在 7 分钟后提取完毕，贝里特拉将消失。 / Beritra will disappear when the relic is completely extracted in 7 minutes.
 		sendMsgByRace(1402722, Race.PC_ALL, 10000);
-		//Beritra will disappear when the relic is completely extracted in a moment.
+		// 遗物即将提取完毕，贝里特拉将消失。 / Beritra will disappear when the relic is completely extracted in a moment.
 		sendMsgByRace(1402726, Race.PC_ALL, 390000);
-		//Beritra will disappear when the relic is completely extracted in 5 minutes.
+		// 遗物将在 5 分钟后提取完毕，贝里特拉将消失。 / Beritra will disappear when the relic is completely extracted in 5 minutes.
 		this.sendMessage(1402724, 2 * 60 * 1000);
-		//Beritra will disappear when the relic is completely extracted in 1 minute.
+		// 遗物将在 1 分钟后提取完毕，贝里特拉将消失。 / Beritra will disappear when the relic is completely extracted in 1 minute.
 		this.sendMessage(1402725, 6 * 60 * 1000);
-		//The extraction of the Balaur Lord's Relic is complete and Beritra has disappeared.
+		// 龙主遗物提取完成，贝里特拉已消失。 / The extraction of the Balaur Lord's Relic is complete and Beritra has disappeared.
 		this.sendMessage(1402720, 7 * 60 * 1000);
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
 				    drakenspireTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
+								/**
+								 * 处理 visit。
+								 * Handle visit.
+								 *
+								 * @param player 玩家 / player
+								 */
 								@Override
 								public void visit(Player player) {
 									onExitInstance(player);
@@ -1067,9 +1363,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
     }
 	
 	private void spawnIDSealScene01() {
-		//Advance into Drakenspire Depths with your allies.
+		// 与盟友一起挺进龙脊深渊。 / Advance into Drakenspire Depths with your allies.
 		sendMsgByRace(1402991, Race.PC_ALL, 10000);
-		//Choose a path to proceed.
+		// 选择前进路径。 / Choose a path to proceed.
 		sendMsgByRace(1402992, Race.PC_ALL, 60000);
         final int pcGuard1 = sealSceneRace == Race.ASMODIANS ? 209744 : 209679;
 		final int pcGuard2 = sealSceneRace == Race.ASMODIANS ? 209744 : 209679;
@@ -1134,6 +1430,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	
 	private void raidSeal(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -1148,6 +1448,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			}
 		}, 1000);
 	}
+	/**
+	 * 处理 startRaidSeal1。
+	 * Handle startRaidSeal1.
+	 */
 	
 	public void startRaidSeal1() {
 	    raidSeal((Npc)spawn(236204, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
@@ -1155,18 +1459,30 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		raidSeal((Npc)spawn(236205, 686.8446f, 823.1334f, 1610.0796f, (byte) 46));
 		raidSeal((Npc)spawn(236205, 689.8247f, 826.4868f, 1610.1107f, (byte) 46));
 	}
+	/**
+	 * 处理 startRaidSeal2。
+	 * Handle startRaidSeal2.
+	 */
 	
 	public void startRaidSeal2() {
 	    raidSeal((Npc)spawn(236206, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
 		raidSeal((Npc)spawn(236206, 637.02356f, 787.7114f, 1596.4082f, (byte) 29));
 		raidSeal((Npc)spawn(236235, 635.31866f, 789.59717f, 1596.6062f, (byte) 30));
 	}
+	/**
+	 * 处理 startRaidSeal2_1。
+	 * Handle startRaidSeal2_1.
+	 */
 	
 	public void startRaidSeal2_1() {
 		raidSeal((Npc)spawn(236206, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
 		raidSeal((Npc)spawn(236206, 637.02356f, 787.7114f, 1596.4082f, (byte) 29));
 		raidSeal((Npc)spawn(236206, 635.31866f, 789.59717f, 1596.6062f, (byte) 30));
 	}
+	/**
+	 * 处理 startRaidSeal3。
+	 * Handle startRaidSeal3.
+	 */
 	
 	public void startRaidSeal3() {
 	    raidSeal((Npc)spawn(236216, 686.8446f, 823.1334f, 1610.0796f, (byte) 46));
@@ -1174,12 +1490,20 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		raidSeal((Npc)spawn(236216, 579.17377f, 823.6274f, 1609.9344f, (byte) 14));
 		raidSeal((Npc)spawn(236216, 582.5257f, 820.4343f, 1609.9154f, (byte) 15));
 	}
+	/**
+	 * 处理 startRaidSeal4。
+	 * Handle startRaidSeal4.
+	 */
 	
 	public void startRaidSeal4() {
 		raidSeal((Npc)spawn(236220, 632.9971f, 788.14307f, 1596.5493f, (byte) 28));
 		raidSeal((Npc)spawn(236220, 637.02356f, 787.7114f, 1596.4082f, (byte) 29));
 		raidSeal((Npc)spawn(236220, 635.31866f, 789.59717f, 1596.6062f, (byte) 30));
 	}
+	/**
+	 * 处理 startRaidSeal5。
+	 * Handle startRaidSeal5.
+	 */
 	
 	public void startRaidSeal5() {
 		raidSeal((Npc)spawn(236218, 574.2141f, 879.9431f, 1600.7627f, (byte) 0));
@@ -1188,6 +1512,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		raidSeal((Npc)spawn(236219, 703.3903f, 880.198f, 1604.7985f, (byte) 62));
 		raidSeal((Npc)spawn(236236, 702.1438f, 877.7707f, 1604.4375f, (byte) 59));
 	}
+	/**
+	 * 处理 startRaidSeal6。
+	 * Handle startRaidSeal6.
+	 */
 	
 	public void startRaidSeal6() {
 		raidSeal((Npc)spawn(236217, 576.9567f, 939.24054f, 1620.987f, (byte) 104));
@@ -1200,6 +1528,12 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -1209,9 +1543,19 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -1228,6 +1572,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -1271,11 +1619,21 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		doors.clear();
 		isInstanceDestroyed = true;
 	}
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());

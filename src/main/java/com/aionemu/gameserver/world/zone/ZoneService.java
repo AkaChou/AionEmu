@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -65,21 +51,40 @@ import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * @author ATracer modified by antness
+ * 区域服务：加载区域脚本、按地图构建区域实例、创建材质碰撞区。
+ * Zone service: loads zone scripts, builds zone instances per map, creates material collision zones.
+ *
+ * @author ATracer
+ * @author antness
  */
 @Slf4j
 public final class ZoneService implements GameEngine {
 
+	/** 可选 Spring 单例提供者 / optional Spring singleton provider */
 	private static volatile ObjectProvider<ZoneService> instanceProvider;
+	/** 按地图 ID 索引的区域信息 / zone info indexed by map id */
 	private IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
+	/** 区域名称 → 脚本处理器类 / zone name → script handler class */
 	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
+	/** 区域名称 → 可碰撞处理器实例 / zone name → collidable handler instance */
 	private final Map<ZoneName, ZoneHandler> collidableHandlers = new ConcurrentHashMap<ZoneName, ZoneHandler>();
+	/** 默认空处理器 / default no-op handler */
 	public static final ZoneHandler DUMMY_ZONE_HANDLER = new GeneralZoneHandler();
 
+	/**
+	 * 从静态数据初始化区域索引。
+	 * Initialize the zone index from static data.
+	 */
 	public ZoneService() {
 		this.zoneByMapIdMap = DataManager.ZONE_DATA.getZones();
 	}
 
+	/**
+	 * 获取单例：优先 Spring 提供者，否则回退内部持有者。
+	 * Get the singleton: prefer Spring provider, otherwise fall back to the internal holder.
+	 *
+	 * zone service
+	 */
 	public static ZoneService getInstance() {
 		ObjectProvider<ZoneService> provider = instanceProvider;
 		if (provider != null) {
@@ -88,16 +93,34 @@ public final class ZoneService implements GameEngine {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 设置 Spring 单例提供者。
+	 * Set the Spring singleton provider.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<ZoneService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 内部单例持有者。
+	 * Internal singleton holder.
+	 */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 
 		protected static final ZoneService instance = new ZoneService();
 	}
 
+	/**
+	 * 为指定区域名称创建新的处理器实例；无脚本则返回默认空处理器。
+	 * Create a new handler instance for the given zone name; returns the dummy handler if none is registered.
+	 *
+	 * zone name
+	 *
+	 * @param zoneName @return 区域处理器 / zone handler
+	 */
 	public ZoneHandler getNewZoneHandler(ZoneName zoneName) {
 		ZoneHandler zoneHandler = collidableHandlers.get(zoneName);
 		if (zoneHandler != null) {
@@ -108,7 +131,7 @@ public final class ZoneService implements GameEngine {
 			try {
 				zoneHandler = zoneClass.getDeclaredConstructor().newInstance();
 			} catch (ReflectiveOperationException ex) {
-				log.warn("Can't instantiate zone handler " + zoneName, ex);
+				log.warn(I18n.get("log.8cafdba4d507", zoneName, ex));
 			}
 		}
 		if (zoneHandler == null) {
@@ -118,7 +141,10 @@ public final class ZoneService implements GameEngine {
 	}
 
 	/**
-	 * @param handler
+	 * 根据 {@link ZoneNameAnnotation} 注册区域处理器类。
+	 * Register a zone handler class based on {@link ZoneNameAnnotation}.
+	 *
+	 * handler class
 	 */
 	public final void addZoneHandlerClass(Class<? extends ZoneHandler> handler) {
 		ZoneNameAnnotation idAnnotation = handler.getAnnotation(ZoneNameAnnotation.class);
@@ -132,19 +158,32 @@ public final class ZoneService implements GameEngine {
 					}
 					handlers.put(zoneName, handler);
 				} catch (Exception e) {
-					log.warn("Missing ZoneName: " + idAnnotation.value());
+					log.warn(I18n.get("log.20f41b75299b", idAnnotation.value()));
 				}
 			}
 		}
 	}
 
+	/**
+	 * 将处理器类直接绑定到指定区域名称。
+	 * Bind a handler class directly to the given zone name.
+	 *
+	 * zone name
+	 * handler class
+	 */
 	public final void addZoneHandlerClass(ZoneName zoneName, Class<? extends ZoneHandler> handler) {
 		handlers.put(zoneName, handler);
 	}
 
+	/**
+	 * 加载区域脚本处理器。
+	 * Load zone script handlers.
+	 *
+	 * progress latch
+	 */
 	@Override
 	public void load(CountDownLatch progressLatch) {
-		log.info("Zone engine load started");
+		log.info(I18n.get("log.b89b79895cf7"));
 
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
@@ -153,9 +192,9 @@ public final class ZoneService implements GameEngine {
 
 		try {
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.world.zone.scripts"));
-			log.info("Loaded " + handlers.size() + " zone handlers.");
+			log.info(I18n.get("log.fed3fa674a5b", handlers.size()));
 		} catch (IllegalStateException e) {
-			log.warn("Can't initialize instance handlers.", e.getMessage());
+			log.warn(I18n.get("log.673c69d49b31", e.getMessage()));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize instance handlers.", e);
 		} finally {
@@ -165,16 +204,24 @@ public final class ZoneService implements GameEngine {
 		}
 	}
 
+	/**
+	 * 关闭服务并清空已注册处理器。
+	 * Shut down the service and clear registered handlers.
+	 */
 	@Override
 	public void shutdown() {
-		log.info("Zone engine shutdown started");
+		log.info(I18n.get("log.28d38de81d63"));
 		handlers.clear();
-		log.info("Zone engine shutdown complete");
+		log.info(I18n.get("log.0d5ebaf38acd"));
 	}
 
 	/**
-	 * @param mapId
-	 * @return
+	 * 按世界地图 ID 构建全部区域实例（含全图默认区与类型特化区）。
+	 * Build all zone instances for a world map id (full-map default plus type-specific zones).
+	 *
+	 * map id
+	 *
+	 * @param mapId @return 区域名称 → 区域实例 / zone name → zone instance
 	 */
 	public Map<ZoneName, ZoneInstance> getZoneInstancesByWorldId(int mapId) {
 		Map<ZoneName, ZoneInstance> zones = new HashMap<ZoneName, ZoneInstance>();
@@ -214,7 +261,7 @@ public final class ZoneService implements GameEngine {
 				for (int artifactId : area.getZoneTemplate().getSiegeId()) {
 					SiegeLocation artifact = DataManager.SIEGE_LOCATION_DATA.getArtifacts().get(artifactId);
 					if (artifact == null) {
-						log.warn("Missing siege location data for zone " + area.getZoneTemplate().getName().name());
+						log.warn(I18n.get("log.58679a0b704d", area.getZoneTemplate().getName().name()));
 					} else {
 						artifact.addZone((SiegeZoneInstance) instance);
 					}
@@ -237,6 +284,13 @@ public final class ZoneService implements GameEngine {
 		return zones;
 	}
 
+	/**
+	 * 按区域名称判断是否为入侵区并校验。
+	 * Determine by zone name whether this is an invasion zone and validate it.
+	 *
+	 * @param area 区域信息 / zone info
+	 * @return 入侵区域实例，或 null / invasion zone instance, or null
+	 */
 	private InvasionZoneInstance getIZI(ZoneInfo area) {
 		if (area.getZoneTemplate().getName().name().equals("WAILING_CLIFFS_220050000")
 				|| area.getZoneTemplate().getName().name().equals("BALTASAR_CEMETERY_220050000")
@@ -254,6 +308,13 @@ public final class ZoneService implements GameEngine {
 		return null;
 	}
 
+	/**
+	 * 校验并创建与旋涡位置关联的入侵区域。
+	 * Validate and create an invasion zone linked to a vortex location.
+	 *
+	 * @param area 区域信息 / zone info
+	 * @return 入侵区域实例，或 null / invasion zone instance, or null
+	 */
 	private InvasionZoneInstance validateZone(ZoneInfo area) {
 		int mapId = area.getZoneTemplate().getMapid();
 		VortexLocation vortex = DataManager.VORTEX_DATA.getVortexLocation(mapId);
@@ -266,11 +327,13 @@ public final class ZoneService implements GameEngine {
 	}
 
 	/**
-	 * Method for single instances of meshes (if specified in mesh_materials.xml)
-	 * 
-	 * @param geometry
-	 * @param worldId
-	 * @param materialId
+	 * 为 mesh_materials 中指定的网格创建材质区域模板。
+	 * Create a material zone template for a mesh specified in mesh_materials.
+	 *
+	 * geometry
+	 * world map id
+	 * material id
+	 * @param failOnMissing 缺失时是否严格失败 / whether to fail strictly when missing
 	 */
 	public void createMaterialZoneTemplate(Spatial geometry, int worldId, int materialId, boolean failOnMissing) {
 		ZoneName zoneName = null;
@@ -317,7 +380,7 @@ public final class ZoneService implements GameEngine {
 		}
 		if (zoneInfo == null) {
 			MaterialZoneTemplate zoneTemplate = new MaterialZoneTemplate(geometry, worldId);
-			// maybe add to zone data if needed search ?
+			// 若需要搜索或许加入区域数据？ / maybe add to zone data if needed search ?
 			Area zoneInfoArea = null;
 			if (zoneTemplate.getSphere() != null) {
 				zoneInfoArea = new SphereArea(zoneName, worldId, zoneTemplate.getSphere().getX(),
@@ -340,20 +403,24 @@ public final class ZoneService implements GameEngine {
 	}
 
 	/**
-	 * Method for dynamic zone template creation for geometries; could be saved
-	 * later in XML
-	 * 
-	 * @param geometry
-	 * @param regionId   - generated by RegionUtil from Bounding Volume center
-	 *                   coordinates
-	 * @param worldId
-	 * @param materialId
+	 * 为动态几何体创建材质区域模板（可后续存 XML）；regionId 由 RegionUtil 根据包围体中心生成。
+	 * Create a material zone template for dynamic geometry (may be saved to XML later);
+	 * regionId is generated by RegionUtil from the bounding-volume center.
+	 *
+	 * geometry
+	 * region id
+	 * world map id
+	 * material id
 	 */
 	public void createMaterialZoneTemplate(Spatial geometry, int regionId, int worldId, int materialId) {
 		geometry.setName(geometry.getName() + "_" + regionId);
 		createMaterialZoneTemplate(geometry, worldId, materialId, false);
 	}
 
+	/**
+	 * 将可碰撞材质区域模板排序后写回 ZoneData。
+	 * Sort collidable material zone templates and persist them via ZoneData.
+	 */
 	public void saveMaterialZones() {
 		List<ZoneTemplate> templates = new ArrayList<ZoneTemplate>();
 		for (WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.group.events;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 玩家队伍 Leaved 活动，用于团队2相关逻辑。
+ * Player Group Leaved Event for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember, PlayerGroup> {
@@ -48,6 +35,7 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 		super(alliance, player, reason);
 	}
 
+	/** 处理活动。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		team.removeMember(leavedPlayer.getObjectId());
@@ -62,7 +50,7 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 		case BAN:
 		case LEAVE:
 			// PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_SECEDE); //
-			// client side?
+			// 客户端侧？ / client side?
 			if (team.onlineMembers() <= 1) {
 				PlayerGroupService.disband(team);
 			} else {
@@ -81,6 +69,7 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 
 		if (leavedPlayer.isInInstance()) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/** 运行 / run. */
 				@Override
 				public void run() {
 					if (!leavedPlayer.isInGroup2()) {
@@ -93,6 +82,7 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 		}
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public boolean apply(PlayerGroupMember member) {
 		Player player = member.getObject();
@@ -104,7 +94,6 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_HE_LEAVE_PARTY(leavedPlayer.getName()));
 			break;
 		case BAN:
-			// TODO find out empty strings (Retail has +2 empty strings
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_HE_IS_BANISHED(leavedPlayer.getName()));
 			break;
 		}

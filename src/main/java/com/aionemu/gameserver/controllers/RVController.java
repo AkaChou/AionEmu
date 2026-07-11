@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -40,21 +24,46 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 裂隙 / 旋涡（Rift/Vortex）控制器，处理入口确认、传送与通行人数同步。
+ * Rift/Vortex controller handling entry confirmation, teleport and used-entry sync.
+ */
 public class RVController extends NpcController {
+
+	/** 是否为裂隙主端（可接受通行）。 / Whether this is the master side of the rift. */
 	private boolean isMaster = false;
+	/** 是否为入侵旋涡。 / Whether this is an invasion vortex. */
 	private boolean isVortex = false;
+	/** 已通过旋涡的玩家映射。 / Map of players who have passed through the vortex. */
 	protected Map<Integer, Player> passedPlayers = new LinkedHashMap<Integer, Player>();
+	/** 从端（出口）生成模板。 / Slave (exit) spawn template. */
 	private SpawnTemplate slaveSpawnTemplate;
+	/** 从属 NPC / Slave NPC */
 	private Npc slave;
+	/** 最低可进入等级。 / Minimum entry level. */
 	private Integer minLevel;
+	/** 最高可进入等级。 / Maximum entry level. */
 	private Integer maxLevel;
+	/** 预计消失时间（秒级时间戳）。 / Expected despawn time as epoch seconds. */
 	private int deSpawnedTime;
+	/** 最大可通行人数。 / Maximum number of entries. */
 	private Integer maxEntries;
+	/** 消耗的欧比斯点数。 / Abyss points cost. */
 	private Integer abyssPoint;
+	/** 当前是否接受通行。 / Whether entries are currently accepted. */
 	private boolean isAccepting;
+	/** 已使用的通行次数。 / Number of used entries. */
 	private int usedEntries = 0;
+	/** 裂隙模板枚举。 / Rift template enum. */
 	private RiftEnum riftTemplate;
 
+	/**
+	 * 根据从端 NPC 与裂隙模板构造控制器。
+	 * Constructs the controller from a slave NPC and rift template.
+	 *
+	 * @param slave 从端 NPC，主端时非 null / slave NPC, non-null on master side
+	 * rift template
+	 */
 	public RVController(Npc slave, RiftEnum riftTemplate) {
 		this.riftTemplate = riftTemplate;
 		this.isVortex = riftTemplate.isVortex();
@@ -73,6 +82,12 @@ public class RVController extends NpcController {
 		}
 	}
 
+	/**
+	 * 处理玩家对话请求，弹出通行确认窗。
+	 * Handles player dialog requests and shows the entry confirmation window.
+	 *
+	 * requesting player
+	 */
 	@Override
 	public void onDialogRequest(Player player) {
 		if (!isMaster && !isAccepting) {
@@ -81,6 +96,12 @@ public class RVController extends NpcController {
 		onRequest(player);
 	}
 
+	/**
+	 * 按旋涡或普通裂隙弹出确认并在同意后传送。
+	 * Shows vortex or normal-rift confirmation and teleports on accept.
+	 *
+	 * requesting player
+	 */
 	private void onRequest(Player player) {
 		if (isVortex) {
 			RequestResponseHandler responseHandler = new RequestResponseHandler(getOwner()) {
@@ -142,6 +163,14 @@ public class RVController extends NpcController {
 		}
 	}
 
+	/**
+	 * 校验玩家是否允许通行（等级、人数、接受状态等）。
+	 * Validates whether the player is allowed to pass (level, capacity, accepting state, etc.).
+	 *
+	 * requesting player
+	 *
+	 * @param player @return 是否允许通行 / whether passage is allowed
+	 */
 	private boolean onAccept(Player player) {
 		if (!isAccepting) {
 			return false;
@@ -161,10 +190,21 @@ public class RVController extends NpcController {
 		return true;
 	}
 
+	/**
+	 * 玩家拒绝通行确认。
+	 * Handles player denial of the entry confirmation.
+	 *
+	 * @param player 拒绝的玩家 / denying player
+	 * always true
+	 */
 	private boolean onDeny(Player player) {
 		return true;
 	}
 
+	/**
+	 * 删除时通知裂隙消失并从生成列表移除。
+	 * On delete, notifies rift despawn and removes from the spawn list.
+	 */
 	@Override
 	public void onDelete() {
 		RiftInformer.sendRiftDespawn(getOwner().getWorldId(), getOwner().getObjectId());
@@ -172,55 +212,135 @@ public class RVController extends NpcController {
 		super.onDelete();
 	}
 
+	/**
+	 * 是否为主端。
+	 * Whether this is the master side.
+	 *
+	 * @return 若 master 则为 true / true if master
+	 */
 	public boolean isMaster() {
 		return isMaster;
 	}
 
+	/**
+	 * 是否为旋涡。
+	 * Whether this is a vortex.
+	 *
+	 * @return 若 vortex 则为 true / true if vortex
+	 */
 	public boolean isVortex() {
 		return isVortex;
 	}
 
+	/**
+	 * 获取最大通行人数。
+	 * Gets the maximum entry count.
+	 *
+	 * @return 最大通行人数 / max entries
+	 */
 	public Integer getMaxEntries() {
 		return maxEntries;
 	}
 
+	/**
+	 * 获取欧比斯点消耗。
+	 * Gets the abyss point cost.
+	 *
+	 * abyss points
+	 */
 	public Integer getAbyssPoint() {
 		return abyssPoint;
 	}
 
+	/**
+	 * 获取最低等级限制。
+	 * Gets the minimum level limit.
+	 *
+	 * min level
+	 */
 	public Integer getMinLevel() {
 		return minLevel;
 	}
 
+	/**
+	 * 获取最高等级限制。
+	 * Gets the maximum level limit.
+	 *
+	 * max level
+	 */
 	public Integer getMaxLevel() {
 		return maxLevel;
 	}
 
+	/**
+	 * 获取裂隙模板。
+	 * Gets the rift template.
+	 *
+	 * rift template
+	 */
 	public RiftEnum getRiftTemplate() {
 		return riftTemplate;
 	}
 
+	/**
+	 * 获取从端 NPC。
+	 * Gets the slave NPC.
+	 *
+	 * slave NPC
+	 */
 	public Npc getSlave() {
 		return slave;
 	}
 
+	/**
+	 * 获取已使用通行次数。
+	 * Gets the used entry count.
+	 *
+	 * 已使用次数。
+	 * used entries.
+	 */
 	public int getUsedEntries() {
 		return usedEntries;
 	}
 
+	/**
+	 * 获取剩余存活秒数。
+	 * Gets remaining lifetime in seconds.
+	 *
+	 * @return 剩余秒数 / remaining seconds
+	 */
 	public int getRemainTime() {
 		return deSpawnedTime - (int) (System.currentTimeMillis() / 1000);
 	}
 
+	/**
+	 * 获取已通过旋涡的玩家映射。
+	 * Gets the map of players who passed the vortex.
+	 *
+	 * @return 已通过玩家 / passed players
+	 */
 	public Map<Integer, Player> getPassedPlayers() {
 		return passedPlayers;
 	}
 
+	/**
+	 * 同步已通行人数并广播裂隙信息。
+	 * Syncs used entries and broadcasts rift info.
+	 *
+	 * @param invasion 是否为入侵旋涡模式 / whether invasion vortex mode
+	 */
 	public void syncPassed(boolean invasion) {
 		usedEntries = invasion ? passedPlayers.size() : ++usedEntries;
 		RiftInformer.sendRiftInfo(getWorldsList(this));
 	}
 
+	/**
+	 * 构建需要同步的世界 ID 列表。
+	 * Builds the list of world ids that need sync.
+	 *
+	 * @param controller 裂隙控制器 / rift controller
+	 * world id array
+	 */
 	private int[] getWorldsList(RVController controller) {
 		int first = controller.getOwner().getWorldId();
 		if (controller.isMaster()) {

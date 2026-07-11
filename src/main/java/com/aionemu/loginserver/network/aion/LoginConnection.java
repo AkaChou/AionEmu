@@ -1,31 +1,6 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion;
 
-import lombok.extern.slf4j.Slf4j;
-import java.nio.ByteBuffer;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.ArrayDeque;
-import java.util.Deque;
-
-import javax.crypto.SecretKey;
-
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.PacketProcessor;
@@ -37,9 +12,18 @@ import com.aionemu.loginserver.network.factories.AionPacketHandlerFactory;
 import com.aionemu.loginserver.network.ncrypt.CryptEngine;
 import com.aionemu.loginserver.network.ncrypt.EncryptedRSAKeyPair;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
+import java.nio.ByteBuffer;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import javax.crypto.SecretKey;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Object representing connection between LoginServer and Aion Client.
+ * 登录服与 Aion 客户端之间的连接对象。
+ * Connection object between the login server and an Aion client.
  *
  * @author -Nemesiss-
  */
@@ -47,73 +31,98 @@ import com.aionemu.loginserver.network.ncrypt.KeyGen;
 public class LoginConnection extends AConnection {
 
     /**
-     * PacketProcessor for executing packets.
+     * 执行客户端包的包处理器。
+     * Packet processor for client packets.
      */
     private final static PacketProcessor<LoginConnection> processor = new PacketProcessor<LoginConnection>(1, 8, 50, 3);
     /**
-     * Server Packet "to send" Queue
+     * 待发送服务端包队列。
+     * Outgoing server-packet queue.
      */
     private final Deque<AionServerPacket> sendMsgQueue = new ArrayDeque<AionServerPacket>();
     /**
-     * Unique Session Id of this connection
+     * 本连接唯一会话 ID。
+     * Unique session id of this connection.
      */
+    @Getter
     private int sessionId = hashCode();
     /**
-     * Account object for this connection. if state = AUTHED_LOGIN account cant
-     * be null.
+     * 本连接绑定的账号；状态为 AUTHED_LOGIN 时不为 null。
+     * Bound account; non-null when state is AUTHED_LOGIN.
      */
+    @Getter
+    @Setter
     private Account account;
     /**
-     * Crypt to encrypt/decrypt packets
+     * 加解密引擎。
+     * Crypt engine for encrypt/decrypt.
      */
     private CryptEngine cryptEngine;
     /**
-     * True if this user is connecting to GS.
+     * 是否已进入游戏服连接流程。
+     * Whether this user is joining a game server.
      */
     private boolean joinedGs;
     /**
-     * Scrambled key pair for RSA
+     * RSA 加扰密钥对。
+     * Scrambled RSA key pair.
      */
     private EncryptedRSAKeyPair encryptedRSAKeyPair;
     /**
-     * Session Key for this connection.
+     * 本连接会话密钥。
+     * Session key for this connection.
      */
+    @Getter
+    @Setter
     private SessionKey sessionKey;
     /**
-     * Current state of this connection
+     * 当前连接状态。
+     * Current connection state.
      */
+    @Getter
+    @Setter
     private State state;
 
     /**
-     * Possible states of AionConnection
+     * Aion 连接可能的状态。
+     * Possible states of an Aion connection.
      */
     public static enum State {
 
         /**
-         * Means that client just connects
+         * 客户端刚连上。
+         * Client just connected.
          */
         CONNECTED,
         /**
-         * Means that clients GameGuard is authenticated
+         * GameGuard 已通过。
+         * GameGuard authenticated.
          */
         AUTHED_GG,
         /**
-         * Means that client is logged in.
+         * 账号登录完成。
+         * Client logged in.
          */
         AUTHED_LOGIN
     }
 
+    /**
+     * 基于传输创建登录连接。
+     * Create a login connection on the given transport.
+     *
+     * Connection transport
+     */
     public LoginConnection(ConnectionTransport transport) {
         super(transport, 8192 * 2, 8192 * 2);
     }
 
     /**
-     * Called by the transport frame handler. ByteBuffer data contains one packet that should be
-     * processed.
+     * 传输层回调：处理缓冲中的一包数据（解密、解析并投递执行）。
+     * Transport callback: process one packet from the buffer (decrypt, parse, execute).
      *
-     * @param data
-     * @return True if data was processed correctly, False if some error
-     * occurred and connection should be closed NOW.
+     * Packet data
+     *
+     * @param data @return 成功为 true；失败需立即关闭连接 / True on success; false means close now
      */
     @Override
     protected final boolean processData(ByteBuffer data) {
@@ -124,7 +133,8 @@ public class LoginConnection extends AConnection {
         AionClientPacket pck = AionPacketHandlerFactory.handle(data, this);
 
         /**
-         * Execute packet only if packet exist (!= null) and read was ok.
+         * 仅当包存在且读取成功时执行。
+         * Execute only when packet exists and read succeeded.
          */
         if ((pck != null) && pck.read()) {
             processor.executePacket(pck);
@@ -134,12 +144,11 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * This method will be called by the transport frame handler, and will be repeated till
-     * return false.
+     * 传输层回调：向缓冲写入下一待发包，无数据返回 false。
+     * Transport callback: write next pending packet; false when queue empty.
      *
-     * @param data
-     * @return True if data was written to buffer, False indicating that there
-     * are not any more data to write.
+     * @param data 写出缓冲 / Write buffer
+     * @return 写入了数据则为 true / True if data was written
      */
     @Override
     protected final synchronized boolean writeData(ByteBuffer data) {
@@ -156,11 +165,10 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * This method is called by the transport when connection is ready to be
-     * closed.
+     * 连接可关闭时由传输调用；返回调用 onDisconnect 前的延迟（毫秒）。
+     * Called by transport when close is ready; delay in ms before onDisconnect.
      *
-     * @return time in ms after witch onDisconnect() method will be called.
-     * Always return 0.
+     * Always 0
      */
     @Override
     protected final long getDisconnectionDelay() {
@@ -173,7 +181,8 @@ public class LoginConnection extends AConnection {
     @Override
     protected final void onDisconnect() {
         /**
-         * Remove account only if not joined GameServer yet.
+         * 尚未进入游戏服时才从 LS 移除账号。
+         * Remove account from LS only if not yet joined GS.
          */
         if ((account != null) && !joinedGs) {
             AccountController.removeAccountOnLS(account);
@@ -186,15 +195,15 @@ public class LoginConnection extends AConnection {
      */
     @Override
     protected final void onServerClose() {
-        // TODO mb some packet should be send to client before closing?
         close( /* packet, */true);
     }
 
     /**
-     * Decrypt packet.
+     * 解密入站包。
+     * Decrypt inbound packet.
      *
-     * @param buf
-     * @return true if success
+     * @param buf 数据缓冲 / Data buffer
+     * True on success
      */
     private boolean decrypt(ByteBuffer buf) {
         int size = buf.remaining();
@@ -202,17 +211,18 @@ public class LoginConnection extends AConnection {
         boolean ret = cryptEngine.decrypt(buf.array(), offset, size);
 
         if (!ret) {
-            log.warn("Wrong checksum from client: " + this);
+            log.warn(I18n.get("log.9a856e31c496", this));
         }
 
         return ret;
     }
 
     /**
-     * Encrypt packet.
+     * 加密出站包。
+     * Encrypt outbound packet.
      *
-     * @param buf
-     * @return encrypted packet size.
+     * @param buf 数据缓冲 / Data buffer
+     * @return 加密后包体大小 / Encrypted payload size
      */
     public final int encrypt(ByteBuffer buf) {
         int size = buf.limit() - 2;
@@ -224,14 +234,15 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * Sends AionServerPacket to this client.
+     * 向客户端发送服务端包。
+     * Send a server packet to this client.
      *
-     * @param bp AionServerPacket to be sent.
+     * @param bp 待发送包 / Packet to send
      */
     public final synchronized void sendPacket(AionServerPacket bp) {
         /**
-         * Connection is already closed or waiting for last (close packet) to be
-         * sent
+         * 连接已关闭或正在发送关闭包。
+         * Connection already closed or waiting for close packet.
          */
         if (isWriteDisabled()) {
             return;
@@ -243,21 +254,18 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * Its guaranted that closePacket will be sent before closing connection,
-     * but all past and future packets wont. Connection will be closed by
-     * the transport, and onDisconnect() method will be called to clear all
-     * other things. forced means that server shouldn't wait with removing this
-     * connection.
+     * 保证关闭包先于断开发送；清空其它待发包。forced 表示不等待清理。
+     * Guarantee closePacket is sent before disconnect; drop other queued packets. forced skips wait.
      *
-     * @param closePacket Packet that will be send before closing.
-     * @param forced have no effect in this implementation.
+     * @param closePacket 关闭前发送的包 / Packet sent before close
+     * @param forced 本实现无实际影响 / Has no effect in this implementation
      */
     public final synchronized void close(AionServerPacket closePacket, boolean forced) {
         if (isWriteDisabled()) {
             return;
         }
 
-        log.info("sending packet: " + closePacket + " and closing connection after that.");
+        log.info(I18n.get("log.38bd4ad41d74", closePacket));
 
         pendingClose = true;
         isForcedClosing = forced;
@@ -267,95 +275,35 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * Return Scrambled modulus
+     * 返回加扰后的 RSA 模数。
+     * Return scrambled RSA modulus.
      *
-     * @return Scrambled modulus
+     * Scrambled modulus
      */
     public final byte[] getEncryptedModulus() {
         return encryptedRSAKeyPair.getEncryptedModulus();
     }
 
     /**
-     * Return RSA private key
+     * 返回 RSA 私钥。
+     * Return RSA private key.
      *
-     * @return rsa private key
+     * RSA private key
      */
     public final RSAPrivateKey getRSAPrivateKey() {
         return (RSAPrivateKey) encryptedRSAKeyPair.getRSAKeyPair().getPrivate();
     }
 
     /**
-     * Returns unique sessionId of this connection.
-     *
-     * @return SessionId
-     */
-    public final int getSessionId() {
-        return sessionId;
-    }
-
-    /**
-     * Current state of this connection
-     *
-     * @return state
-     */
-    public final State getState() {
-        return state;
-    }
-
-    /**
-     * Set current state of this connection
-     *
-     * @param state
-     */
-    public final void setState(State state) {
-        this.state = state;
-    }
-
-    /**
-     * Returns Account object that this client logged in or null
-     *
-     * @return Account
-     */
-    public final Account getAccount() {
-        return account;
-    }
-
-    /**
-     * Set Account object for this connection.
-     *
-     * @param account
-     */
-    public final void setAccount(Account account) {
-        this.account = account;
-    }
-
-    /**
-     * Returns Session Key of this connection
-     *
-     * @return SessionKey
-     */
-    public final SessionKey getSessionKey() {
-        return sessionKey;
-    }
-
-    /**
-     * Set Session Key for this connection
-     *
-     * @param sessionKey
-     */
-    public final void setSessionKey(SessionKey sessionKey) {
-        this.sessionKey = sessionKey;
-    }
-
-    /**
-     * Set joinedGs value to true
+     * 标记已进入游戏服。
+     * Mark that the client joined a game server.
      */
     public final void setJoinedGs() {
         joinedGs = true;
     }
 
     /**
-     * @return String info about this connection
+     * @return 连接描述信息 / Connection description
      */
     @Override
     public String toString() {
@@ -363,25 +311,32 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * This method should no be modified, hashcode in this class is used to
-     * ensure that each connection hash unique id
+     * 勿改：hashCode 用于保证连接唯一 ID。
+     * Do not change: hashCode ensures each connection has a unique id.
      *
-     * @return unique identifier
+     * Unique identifier
      */
     @Override
     public int hashCode() {
         return super.hashCode();
     }
 
+    /**
+     * 立即关闭连接。
+     * Close the connection immediately.
+     */
     public void closeNow() {
         this.close(false);
     }
 
+    /**
+     * 连接初始化：设置状态、生成密钥并发送 SM_INIT。
+     * Initialize connection: set state, generate keys and send SM_INIT.
+     */
     @Override
     protected void initialized() {
-        // TODO Auto-generated method stub
         state = State.CONNECTED;
-        log.info("Connection attemp from: " + getIP());
+        log.info(I18n.get("log.1ecf9752f093", getIP()));
         encryptedRSAKeyPair = KeyGen.getEncryptedRSAKeyPair();
         SecretKey blowfishKey = KeyGen.generateBlowfishKey();
 
@@ -389,7 +344,8 @@ public class LoginConnection extends AConnection {
         cryptEngine.updateKey(blowfishKey.getEncoded());
 
         /**
-         * Send Init packet
+         * 发送 Init 包。
+         * Send Init packet.
          */
         sendPacket(new SM_INIT(this, blowfishKey));
     }

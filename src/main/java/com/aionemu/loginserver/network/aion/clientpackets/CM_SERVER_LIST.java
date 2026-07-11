@@ -1,24 +1,4 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion.clientpackets;
-
-import java.nio.ByteBuffer;
 
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
@@ -26,33 +6,41 @@ import com.aionemu.loginserver.network.aion.AionAuthResponse;
 import com.aionemu.loginserver.network.aion.AionClientPacket;
 import com.aionemu.loginserver.network.aion.LoginConnection;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_FAIL;
+import java.nio.ByteBuffer;
 
 /**
+ * 客户端请求服务器列表：校验会话后加载角色数并下发列表。
+ * Client server-list request: validate session then load character counts and list.
+ *
  * @author -Nemesiss-
  */
 public class CM_SERVER_LIST extends AionClientPacket {
 
     /**
-     * accountId is part of session key - its used for security purposes
+     * 会话密钥中的 accountId，用于安全校验。
+     * accountId part of session key for security checks.
      */
     private int accountId;
     /**
-     * loginOk is part of session key - its used for security purposes
+     * 会话密钥中的 loginOk，用于安全校验。
+     * loginOk part of session key for security checks.
      */
     private int loginOk;
 
     /**
-     * Constructs new instance of <tt>CM_SERVER_LIST </tt> packet.
+     * 构造 CM_SERVER_LIST 包。
+     * Construct CM_SERVER_LIST packet.
      *
-     * @param buf
-     * @param client
+     * @param buf 包体数据 / Packet data
+     * Login connection
      */
     public CM_SERVER_LIST(ByteBuffer buf, LoginConnection client) {
         super(buf, client, 0x05);
     }
 
     /**
-     * {@inheritDoc}
+     * 读取 accountId、loginOk 及预留字段。
+     * Read accountId, loginOk and reserved field.
      */
     @Override
     protected void readImpl() {
@@ -62,7 +50,8 @@ public class CM_SERVER_LIST extends AionClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 校验会话；无 GS 则失败，否则加载角色计数。
+     * Validate session; fail if no GS, otherwise load character counts.
      */
     @Override
     protected void runImpl() {
@@ -75,8 +64,8 @@ public class CM_SERVER_LIST extends AionClientPacket {
             }
         } else {
             /**
-             * Session key is not ok - inform client that smth went wrong - dc
-             * client
+             * 会话密钥不匹配：通知客户端并断开。
+             * Session key mismatch: notify client and disconnect.
              */
             con.close(new SM_LOGIN_FAIL(AionAuthResponse.SYSTEM_ERROR), false);
         }

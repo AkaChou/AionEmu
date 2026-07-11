@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import java.util.List;
@@ -28,27 +14,62 @@ import com.aionemu.gameserver.questEngine.handlers.template.ReportToMany;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 多步汇报类任务的 XML 数据模型（依次对话多个 NPC），注册 {@link ReportToMany} 模板。
+ * XML data model for multi-step report quests (talk to NPCs in sequence); registers {@link ReportToMany}.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ReportToManyData")
 public class ReportToManyData extends XMLQuest {
+
+	/**
+	 * 触发任务的起始物品 ID（可选）。
+	 * Start item id that triggers the quest (optional).
+	 */
 	@XmlAttribute(name = "start_item_id")
 	protected int startItemId;
 
+	/**
+	 * 接取任务的起始 NPC ID 列表。
+	 * Start NPC ids that offer the quest.
+	 */
 	@XmlAttribute(name = "start_npc_ids")
 	protected List<Integer> startNpcIds;
 
+	/**
+	 * 最终交还的结束 NPC ID 列表。
+	 * Final end NPC ids for turn-in.
+	 */
 	@XmlAttribute(name = "end_npc_ids")
 	protected List<Integer> endNpcIds;
 
+	/**
+	 * 起始对话 dialog ID。
+	 * Start dialogue dialog id.
+	 */
 	@XmlAttribute(name = "start_dialog_id")
 	protected int startDialog;
 
+	/**
+	 * 结束对话 dialog ID。
+	 * End dialogue dialog id.
+	 */
 	@XmlAttribute(name = "end_dialog_id")
 	protected int endDialog;
 
+	/**
+	 * 中间各步 NPC 对话配置列表。
+	 * Intermediate NPC dialogue step configs.
+	 */
 	@XmlElement(name = "npc_infos", required = true)
 	protected List<NpcInfos> npcInfos;
 
+	/**
+	 * 注册 {@link ReportToMany} 模板；构建 NPC→配置映射并计算最大变量。
+	 * Registers {@link ReportToMany}; builds NPC→info map and max variable.
+	 *
+	 * Quest engine
+	 */
 	@Override
 	public void register(QuestEngine questEngine) {
 		int maxVar = 0;

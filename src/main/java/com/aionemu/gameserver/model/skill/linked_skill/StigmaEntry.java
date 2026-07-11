@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill.linked_skill;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
+ * Stigma 条目，用于技能相关逻辑。
+ * Stigma Entry for skill logic.
+ *
  * @author DrNism
  */
 public abstract class StigmaEntry {
@@ -32,14 +19,17 @@ public abstract class StigmaEntry {
 		this.itemName = itemName;
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public final int getItemId() {
 		return itemId;
 	}
 
+	/** 获取物品名称。 / Returns the item name. */
 	public final String getItemName() {
 		return DataManager.ITEM_DATA.getItemTemplate(itemId).getName();
 	}
 
+	/** 获取技能模板。 / Returns the skill template. */
 	public final ItemTemplate getSkillTemplate() {
 		return DataManager.ITEM_DATA.getItemTemplate(getItemId());
 	}

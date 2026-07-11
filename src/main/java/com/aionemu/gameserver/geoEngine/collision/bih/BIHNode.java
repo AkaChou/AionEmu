@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.collision.bih;
 
 import static java.lang.Math.max;
@@ -32,68 +16,155 @@ import com.aionemu.gameserver.geoEngine.math.Triangle;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
 /**
- * Bounding Interval Hierarchy. Based on: Instant Ray Tracing: The Bounding
- * Interval Hierarchy By Carsten Wächter and Alexander Keller
+ * 包围区间层次（BIH）节点。基于 Carsten Wächter 与 Alexander Keller 的
+ * “Instant Ray Tracing: The Bounding Interval Hierarchy”。
+ * Bounding Interval Hierarchy node. Based on: Instant Ray Tracing: The Bounding
+ * Interval Hierarchy By Carsten Wächter and Alexander Keller.
  */
 public final class BIHNode {
 
+	/** 叶节点三角形区间左下标。 / Leaf triangle range left index. */
 	private int leftIndex, rightIndex;
+	/** 左子节点。 / Left child node. */
 	private BIHNode left;
+	/** 右子节点。 / Right child node. */
 	private BIHNode right;
+	/** 左分割平面。 / Left split plane. */
 	private float leftPlane;
+	/** 右分割平面。 / Right split plane. */
 	private float rightPlane;
+	/** 分割轴；3 表示叶节点。 / Split axis; 3 marks a leaf. */
 	private int axis;
 
+	/**
+	 * 构造叶节点，覆盖三角形区间 [{@code l}, {@code r}]。
+	 * Constructs a leaf covering triangle range [{@code l}, {@code r}].
+	 *
+	 * @param l 左下标 / left index
+	 * @param r 右下标 / right index
+	 */
 	public BIHNode(int l, int r) {
 		leftIndex = l;
 		rightIndex = r;
 		axis = 3; // indicates leaf
 	}
 
+	/**
+	 * 构造内节点，指定分割轴。
+	 * Constructs an inner node with the given split axis.
+	 *
+	 * split axis 0/1/2
+	 */
 	public BIHNode(int axis) {
 		this.axis = axis;
 	}
 
+	/**
+	 * 空构造。
+	 * Default constructor.
+	 */
 	public BIHNode() {
 	}
 
+	/**
+	 * 返回左子节点。
+	 * Returns the left child.
+	 *
+	 * left child
+	 */
 	public BIHNode getLeftChild() {
 		return left;
 	}
 
+	/**
+	 * 设置左子节点。
+	 * Sets the left child.
+	 *
+	 * @param left 左子节点 / left child
+	 */
 	public void setLeftChild(BIHNode left) {
 		this.left = left;
 	}
 
+	/**
+	 * 返回左分割平面。
+	 * Returns the left split plane.
+	 *
+	 * left plane
+	 */
 	public float getLeftPlane() {
 		return leftPlane;
 	}
 
+	/**
+	 * 设置左分割平面。
+	 * Sets the left split plane.
+	 *
+	 * left plane
+	 */
 	public void setLeftPlane(float leftPlane) {
 		this.leftPlane = leftPlane;
 	}
 
+	/**
+	 * 返回右子节点。
+	 * Returns the right child.
+	 *
+	 * right child
+	 */
 	public BIHNode getRightChild() {
 		return right;
 	}
 
+	/**
+	 * 设置右子节点。
+	 * Sets the right child.
+	 *
+	 * @param right 右子节点 / right child
+	 */
 	public void setRightChild(BIHNode right) {
 		this.right = right;
 	}
 
+	/**
+	 * 返回右分割平面。
+	 * Returns the right split plane.
+	 *
+	 * right plane
+	 */
 	public float getRightPlane() {
 		return rightPlane;
 	}
 
+	/**
+	 * 设置右分割平面。
+	 * Sets the right split plane.
+	 *
+	 * right plane
+	 */
 	public void setRightPlane(float rightPlane) {
 		this.rightPlane = rightPlane;
 	}
 
+	/**
+	 * BIH 遍历栈数据，保存节点与当前 t 区间。
+	 * Stack entry for BIH traversal holding a node and its t-range.
+	 */
 	public static final class BIHStackData {
 
+		/** 待遍历节点。 / Node to visit. */
 		private final BIHNode node;
+		/** Range minimum t / Range minimum t */
 		private final float min, max;
 
+		/**
+		 * 构造栈数据。
+		 * Constructs stack data.
+		 *
+		 * node
+		 * min t
+		 * max t
+		 */
 		BIHStackData(BIHNode node, float min, float max) {
 			this.node = node;
 			this.min = min;
@@ -102,8 +173,16 @@ public final class BIHNode {
 	}
 
 	/**
-	 * @param col
-	 * @param box
+	 * 以包围盒与可碰撞对象做树遍历相交测试（当前叶处理未计入命中）。
+	 * Traverses the tree for intersection against a bounding box and collidable
+	 * (leaf hits are currently not accumulated).
+	 *
+	 * @param col 可碰撞对象 / collidable
+	 * bounding box
+	 * @param worldMatrix 世界变换矩阵 / world matrix
+	 * owning BIH tree
+	 * @param results 结果收集器 / collision results
+	 * hit count
 	 */
 	public final int intersectWhere(Collidable col, BoundingBox box, Matrix4f worldMatrix, BIHTree tree,
 			CollisionResults results) {
@@ -131,8 +210,8 @@ public final class BIHNode {
 				float minExt = minExts[a];
 
 				if (node.leftPlane < node.rightPlane) {
-					// means there's a gap in the middle
-					// if the box is in that gap, we stop there
+					// 表示中间有间隙 / means there's a gap in the middle
+					// 若盒子在该间隙中，则在此停止 / if the box is in that gap, we stop there
 					if (minExt > node.leftPlane && maxExt < node.rightPlane) {
 						continue stackloop;
 					}
@@ -166,8 +245,16 @@ public final class BIHNode {
 	}
 
 	/**
-	 * @param r
-	 * @param worldMatrix
+	 * 暴力遍历所有叶三角形与射线求交（调试/对照用）。
+	 * Brute-force traversal intersecting the ray with all leaf triangles (debug/reference).
+	 *
+	 * @param r 射线 / ray
+	 * @param worldMatrix 世界变换矩阵 / world matrix
+	 * owning BIH tree
+	 * scene min t
+	 * scene max t
+	 * @param results 结果收集器 / collision results
+	 * hit count
 	 */
 	public final int intersectBrute(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
 			CollisionResults results) {
@@ -194,7 +281,7 @@ public final class BIHNode {
 				node = nearNode;
 			}
 
-			// a leaf
+			// 一片叶子 / a leaf
 			for (int i = node.leftIndex; i <= node.rightIndex; i++) {
 				tree.getTriangle(i, v1, v2, v3);
 
@@ -217,6 +304,19 @@ public final class BIHNode {
 		return cols;
 	}
 
+	/**
+	 * 射线与 BIH 树的精确相交测试：将射线变换到局部空间，剪枝遍历叶三角形并写回世界空间命中。
+	 * Precise ray–BIH intersection: transforms the ray into local space, prunes
+	 * traversal over leaf triangles and records hits in world space.
+	 *
+	 * @param r 射线（结束后会恢复原 origin/direction） / ray (origin/direction restored after)
+	 * @param worldMatrix 世界变换矩阵 / world matrix
+	 * owning BIH tree
+	 * scene min t
+	 * scene max t
+	 * @param results 结果收集器 / collision results
+	 * hit count
+	 */
 	public final int intersectWhere(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
 			CollisionResults results) {
 
@@ -230,7 +330,7 @@ public final class BIHNode {
 
 		inv.mult(r.getOrigin(), r.getOrigin());
 
-		// Fixes rotation collision bug
+		// 修复旋转碰撞缺陷 / Fixes rotation collision bug
 		inv.multNormal(r.getDirection(), r.getDirection());
 		// inv.multNormalAcross(r.getDirection(), r.getDirection());
 
@@ -257,7 +357,7 @@ public final class BIHNode {
 			while (node.axis != 3) { // while node is not a leaf
 				int a = node.axis;
 
-				// find the origin and direction value for the given axis
+				// 查找给定轴的原点与方向值 / find the origin and direction value for the given axis
 				float origin = origins[a];
 				float invDirection = invDirections[a];
 
@@ -296,7 +396,7 @@ public final class BIHNode {
 				}
 			}
 
-			// a leaf
+			// 一片叶子 / a leaf
 			for (int i = node.leftIndex; i <= node.rightIndex; i++) {
 				tree.getTriangle(i, v1, v2, v3);
 
@@ -313,7 +413,7 @@ public final class BIHNode {
 					Vector3f contactNormal = Triangle.computeTriangleNormal(v1, v2, v3, null);
 					Vector3f contactPoint = new Vector3f(d).multLocal(t).addLocal(o);
 					float worldSpaceDist = o.distance(contactPoint);
-					// fix invisible walls
+					// 修复隐形墙 / fix invisible walls
 					if (worldSpaceDist > r.limit) {
 						continue;
 					}

@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 
@@ -27,25 +12,40 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_TABS;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 请求军团历史/仓库历史分页标签的客户端包。
+ * Client packet requesting legion history/warehouse-history tab pages.
+ *
  * @author Simple, xTz
  */
 @Slf4j
 public class CM_LEGION_TABS extends AionClientPacket {
 
-
 	private int page;
 	private int tab;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_LEGION_TABS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取军团页签类型与页码。
+	 * Reads legion tab type and page number.
+	 */
 	@Override
 	protected void readImpl() {
 		page = readD();
 		tab = readC();
 	}
-
+	/**
+	 * 发送军团历史或仓库历史分页数据。
+	 * Sends legion history or warehouse-history page data.
+	 */
 	@Override
 	protected void runImpl() {
 		Player activePlayer = getConnection().getActivePlayer();
@@ -53,21 +53,21 @@ public class CM_LEGION_TABS extends AionClientPacket {
 		if (activePlayer.getLegion() != null) {
 
 			/**
-			 * Max page is 16 for legion history
-			 */
-			if (page > 16) {
+	 * 军团历史最多 16 页 / Max page is 16 for legion history
+	 */
+			if (page < 0 || page > 16) {
 				return;
 			}
 			switch (tab) {
 			/**
-			 * History Tab
-			 */
+	 * 历史页签 / History Tab
+	 */
 			case 0: // legion history
 			case 2: // legion WH history
 				Collection<LegionHistory> history = activePlayer.getLegion().getLegionHistoryByTabId(tab);
 				/**
-				 * If history size is less than page*8 return
-				 */
+	 * 若历史条数不足 page*8 则返回 / If history size is less than page*8 return
+	 */
 				if (history.size() < page * 8) {
 					return;
 				}
@@ -75,15 +75,9 @@ public class CM_LEGION_TABS extends AionClientPacket {
 					PacketSendUtility.sendPacket(activePlayer, new SM_LEGION_TABS(history, page, tab));
 				}
 				break;
-			/**
-			 * Reward Tab
-			 */
-			case 1:
-				// TODO Reward Tab Page
-				break;
 			}
 		} else {
-			log.warn("Player " + activePlayer.getName() + " was requested null legion");
+			log.warn(I18n.get("log.a169a1174c51", activePlayer.getName()));
 		}
 	}
 }

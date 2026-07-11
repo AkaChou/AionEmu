@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.actions.PlayerMode;
@@ -24,8 +8,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.world.World;
 
 /**
- * Packet about player flying teleport movement.
- * 
+ * 飞行传送/气流移动过程中的位置同步客户端包。
+ * Client packet for position sync during flight-teleport or windstream movement.
+ *
  * @author -Nemesiss-, Sweetkr, KID
  */
 public class CM_MOVE_IN_AIR extends AionClientPacket {
@@ -36,11 +21,13 @@ public class CM_MOVE_IN_AIR extends AionClientPacket {
 	private byte locationId;
 	@SuppressWarnings("unused")
 	private int worldId;
-
 	/**
-	 * Constructs new instance of <tt>CM_MOVE_IN_AIR </tt> packet
-	 * 
-	 * @param opcode
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_MOVE_IN_AIR(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

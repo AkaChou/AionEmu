@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.alliance.events;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,6 +6,11 @@ import com.aionemu.gameserver.model.team2.common.events.AlwaysTrueTeamEvent;
 import com.aionemu.gameserver.model.team2.common.events.PlayerLeavedEvent.LeaveReson;
 import com.google.common.base.Predicate;
 
+/**
+ * 联盟 Disband 活动，用于团队2相关逻辑。
+ * Alliance Disband Event for team 2 logic.
+ */
+
 public class AllianceDisbandEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 	private final PlayerAlliance alliance;
 
@@ -29,11 +18,13 @@ public class AllianceDisbandEvent extends AlwaysTrueTeamEvent implements Predica
 		this.alliance = alliance;
 	}
 
+	/** 处理活动。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		alliance.applyOnMembers(this);
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public boolean apply(Player player) {
 		alliance.onEvent(new PlayerAllianceLeavedEvent(alliance, player, LeaveReson.DISBAND));

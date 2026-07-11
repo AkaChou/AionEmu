@@ -1,19 +1,7 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -76,6 +64,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
+ * 运行时技能实例：驱动施法流程、目标选择、效果应用与结束。
+ * Runtime skill instance: drives cast flow, targeting, effect application and end.
+ *
  * @author ATracer Modified by Wakzashi
  */
 @Slf4j
@@ -108,6 +99,7 @@ public class Skill {
 	private Future<?> castingTask = null;
 	private long castStart = 0;
 	/**
+	 * 依赖 BOOST_CASTING_TIME 的持续时间。
 	 * Duration that depends on BOOST_CASTING_TIME
 	 */
 	private int duration;
@@ -119,33 +111,37 @@ public class Skill {
 	public enum SkillMethod {
 		CAST, ITEM, PASSIVE, PROVOKED;
 	}
-
-
 	/**
-	 * Each skill is a separate object upon invocation Skill level will be populated
-	 * from player SkillList
-	 * 
-	 * @param skillTemplate
-	 * @param effector
-	 * @param firstTarget
+	 * 构造运行时技能实例。
+	 * Constructs a runtime skill instance.
+	 *
 	 */
 	public Skill(SkillTemplate skillTemplate, Player effector, Creature firstTarget) {
 		this(skillTemplate, effector, effector.getSkillList().getSkillLevel(skillTemplate.getSkillId()), firstTarget, null);
 	}
 
+	/**
+	 * 构造运行时技能实例。
+	 * Constructs a runtime skill instance.
+	 *
+	 */
 	public Skill(SkillTemplate skillTemplate, Player effector, Creature firstTarget, int skillLevel) {
 		this(skillTemplate, effector, skillLevel, firstTarget, null);
 	}
 
+	/**
+	 * 获取充能技能模板。
+	 * Gets charge skill template.
+	 *
+	 * charge template
+	 */
 	public ChargeSkillTemplate getChargeTemplate() {
 		return chargeTemplate;
 	}
-
 	/**
-	 * @param skillTemplate
-	 * @param effector
-	 * @param skillLvl
-	 * @param firstTarget
+	 * 构造运行时技能实例。
+	 * Constructs a runtime skill instance.
+	 *
 	 */
 	public Skill(SkillTemplate skillTemplate, Creature effector, int skillLvl, Creature firstTarget, ItemTemplate itemTemplate) {
 		this.effectedList = new ArrayList<Creature>();
@@ -168,11 +164,11 @@ public class Skill {
 			skillMethod = SkillMethod.PROVOKED;
 		}
 	}
-
 	/**
-	 * Check if the skill can be used
-	 * 
-	 * @return True if the skill can be used
+	 * 校验当前是否可使用该技能。
+	 * Validates whether the skill can be used now.
+	 *
+	 * whether usable
 	 */
 	public boolean canUseSkill() {
 		Properties properties = skillTemplate.getProperties();
@@ -184,7 +180,7 @@ public class Skill {
 		if (!preCastCheck()) {
 			return false;
 		}
-		// check for counter skill
+		// 检查反击技能 / check for counter skill
 		if (effector instanceof Player) {
 			Player player = (Player) effector;
 			if (this.skillTemplate.getCounterSkill() != null) {
@@ -225,27 +221,39 @@ public class Skill {
 			}
 		}
 
-		// TODO: Enable non-targeted, non-point AOE skills to trigger.
+		// 空对象目标施法无效；自身与范围技能仍可在无命中目标时激活。 / Empty object-target casts are invalid; self-targeted and area skills can still activate without a hit target.
 		if (targetType == 0 && effectedList.size() == 0 && firstTargetAttribute != FirstTargetAttribute.ME && targetRangeAttribute != TargetRangeAttribute.AREA) {
 			log.debug("targettype failed");
 			return false;
 		}
 		return true;
 	}
-
 	/**
-	 * Skill entry point
-	 * 
-	 * @return true if usage is successfull
+	 * 使用技能（含动画）。
+	 * Uses the skill (with animation).
+	 *
+	 * whether succeeded
 	 */
 	public boolean useSkill() {
 		return useSkill(true, true);
 	}
 
+	/**
+	 * 使用技能（无动画）。
+	 * Uses the skill without animation.
+	 *
+	 * whether succeeded
+	 */
 	public boolean useNoAnimationSkill() {
 		return useSkill(false, true);
 	}
 
+	/**
+	 * 使用技能（跳过属性校验）。
+	 * Uses the skill without property checks.
+	 *
+	 * whether succeeded
+	 */
 	public boolean useWithoutPropSkill() {
 		return useSkill(false, false);
 	}
@@ -268,15 +276,14 @@ public class Skill {
 		boostSkillCost = 0;
 		getSkillSkinData();
 
-		// notify skill use observers
+		// 通知技能使用观察者 / notify skill use observers
 		if (skillMethod == SkillMethod.CAST) {
 			effector.getObserveController().notifySkilluseObservers(this);
 		}
-		// start casting
+		// 开始施法 / start casting
 		effector.setCasting(this);
 
-		// log skill time if effector instance of player
-		// TODO config
+		// 若施法者为玩家则记录技能时间 / log skill time if effector instance of player
 		if (effector instanceof Player) {
 			GameFeatureServices.motionLoggingService().logTime((Player) effector, this.getSkillTemplate(), this.getHitTime(), MathUtil.getDistance(effector, firstTarget));
 		}
@@ -290,7 +297,7 @@ public class Skill {
 		if (setCooldowns) {
 			this.setCooldowns();
 		}
-		// send packets to start casting
+		// 发送数据包以开始施法 / send packets to start casting
 		if (skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) {
 			startCast();
 			if (effector instanceof Npc) {
@@ -322,6 +329,14 @@ public class Skill {
 		}
 	}
 
+	/**
+	 * 计算烙印附魔冷却。
+	 * Computes stigma enchant cooldown.
+	 *
+	 * skill
+	 * base cooldown
+	 * cooldown
+	 */
 	public int StigmaEnchantCoolDown(Skill skill, int cooldown) {
 		if (skill == null) {
 			return 0;
@@ -525,7 +540,7 @@ public class Skill {
 		case 4595: // Shadowfall
 		case 4596: // Shadowfall
 			return cooldown - 6 * SkillLevel;
-		case 600: // Magical Defense
+		case 600: // 魔法防御 / Magical Defense
 		case 641: // Unraveling Assault
 		case 642: // Unraveling Assault
 		case 643: // Unraveling Assault
@@ -585,39 +600,39 @@ public class Skill {
 		case 752: // Revival Wave
 		case 753: // Revival Wave
 		case 754: // Revival Wave
-		case 849: // Trap Of Slowing
-		case 850: // Trap Of Slowing
-		case 851: // Trap Of Slowing
-		case 852: // Trap Of Slowing
-		case 853: // Trap Of Slowing
-		case 854: // Trap Of Slowing
-		case 855: // Trap Of Slowing
-		case 856: // Trap Of Slowing
-		case 857: // Trap Of Slowing
-		case 858: // Trap Of Slowing
-		case 859: // Trap Of Slowing
-		case 860: // Trap Of Slowing
-		case 861: // Trap Of Slowing
-		case 862: // Trap Of Slowing
-		case 863: // Trap Of Slowing
-		case 864: // Trap Of Slowing
+		case 849: // 减速陷阱 / Trap Of Slowing
+		case 850: // 减速陷阱 / Trap Of Slowing
+		case 851: // 减速陷阱 / Trap Of Slowing
+		case 852: // 减速陷阱 / Trap Of Slowing
+		case 853: // 减速陷阱 / Trap Of Slowing
+		case 854: // 减速陷阱 / Trap Of Slowing
+		case 855: // 减速陷阱 / Trap Of Slowing
+		case 856: // 减速陷阱 / Trap Of Slowing
+		case 857: // 减速陷阱 / Trap Of Slowing
+		case 858: // 减速陷阱 / Trap Of Slowing
+		case 859: // 减速陷阱 / Trap Of Slowing
+		case 860: // 减速陷阱 / Trap Of Slowing
+		case 861: // 减速陷阱 / Trap Of Slowing
+		case 862: // 减速陷阱 / Trap Of Slowing
+		case 863: // 减速陷阱 / Trap Of Slowing
+		case 864: // 减速陷阱 / Trap Of Slowing
 		case 888: // Hunter's Might
-		case 962: // Skybound Trap
-		case 963: // Skybound Trap
-		case 964: // Skybound Trap
-		case 965: // Skybound Trap
-		case 966: // Skybound Trap
-		case 967: // Skybound Trap
-		case 968: // Skybound Trap
-		case 969: // Skybound Trap
-		case 970: // Skybound Trap
-		case 971: // Skybound Trap
-		case 972: // Skybound Trap
-		case 973: // Skybound Trap
-		case 974: // Skybound Trap
-		case 975: // Skybound Trap
-		case 976: // Skybound Trap
-		case 977: // Skybound Trap
+		case 962: // 缚天陷阱 / Skybound Trap
+		case 963: // 缚天陷阱 / Skybound Trap
+		case 964: // 缚天陷阱 / Skybound Trap
+		case 965: // 缚天陷阱 / Skybound Trap
+		case 966: // 缚天陷阱 / Skybound Trap
+		case 967: // 缚天陷阱 / Skybound Trap
+		case 968: // 缚天陷阱 / Skybound Trap
+		case 969: // 缚天陷阱 / Skybound Trap
+		case 970: // 缚天陷阱 / Skybound Trap
+		case 971: // 缚天陷阱 / Skybound Trap
+		case 972: // 缚天陷阱 / Skybound Trap
+		case 973: // 缚天陷阱 / Skybound Trap
+		case 974: // 缚天陷阱 / Skybound Trap
+		case 975: // 缚天陷阱 / Skybound Trap
+		case 976: // 缚天陷阱 / Skybound Trap
+		case 977: // 缚天陷阱 / Skybound Trap
 		case 1006: // Ripthread Shot
 		case 1007: // Ripthread Shot
 		case 1008: // Ripthread Shot
@@ -731,22 +746,22 @@ public class Skill {
 		case 1305: // Wintry Armor
 		case 1306: // Wintry Armor
 		case 1307: // Wintry Armor
-		case 1308: // Ice Sheet
-		case 1309: // Ice Sheet
-		case 1310: // Ice Sheet
-		case 1311: // Ice Sheet
-		case 1312: // Ice Sheet
-		case 1313: // Ice Sheet
-		case 1314: // Ice Sheet
-		case 1315: // Ice Sheet
-		case 1316: // Ice Sheet
-		case 1317: // Ice Sheet
-		case 1318: // Ice Sheet
-		case 1319: // Ice Sheet
-		case 1320: // Ice Sheet
-		case 1321: // Ice Sheet
-		case 1322: // Ice Sheet
-		case 1323: // Ice Sheet
+		case 1308: // 冰面 / Ice Sheet
+		case 1309: // 冰面 / Ice Sheet
+		case 1310: // 冰面 / Ice Sheet
+		case 1311: // 冰面 / Ice Sheet
+		case 1312: // 冰面 / Ice Sheet
+		case 1313: // 冰面 / Ice Sheet
+		case 1314: // 冰面 / Ice Sheet
+		case 1315: // 冰面 / Ice Sheet
+		case 1316: // 冰面 / Ice Sheet
+		case 1317: // 冰面 / Ice Sheet
+		case 1318: // 冰面 / Ice Sheet
+		case 1319: // 冰面 / Ice Sheet
+		case 1320: // 冰面 / Ice Sheet
+		case 1321: // 冰面 / Ice Sheet
+		case 1322: // 冰面 / Ice Sheet
+		case 1323: // 冰面 / Ice Sheet
 		case 1339: // Sleeping Storm
 		case 1402: // Elemental Ward
 		case 1460: // Manifest Tornado
@@ -954,12 +969,12 @@ public class Skill {
 		case 2922: // Empyrean Providence
 		case 3904: // Reverse Condition
 			return cooldown - 120 * SkillLevel;
-		// ArchDaeva Transformation 5.1 [Elyos]
+		// 高阶守护者变身 5.1【天族】 / ArchDaeva Transformation 5.1 [Elyos]
 		case 4752: // Transformation: Avatar Of Fire.
 		case 4757: // Transformation: Avatar Of Water.
 		case 4762: // Transformation: Avatar Of Earth.
 		case 4768: // Transformation: Avatar Of Wind.
-			// ArchDaeva Transformation 5.1 [Asmodians]
+			// 高阶守护者变身 5.1【魔族】 / ArchDaeva Transformation 5.1 [Asmodians]
 		case 4804: // Transformation: Avatar Of Fire.
 		case 4805: // Transformation: Avatar Of Water.
 		case 4806: // Transformation: Avatar Of Earth.
@@ -970,7 +985,7 @@ public class Skill {
 	}
 
 	protected void calculateSkillDuration() {
-		// Skills that are not affected by boost casting time
+		// 不受施法速度提升影响的技能 / Skills that are not affected by boost casting time
 		duration = 0;
 		if (isCastTimeFixed()) {
 			duration = skillTemplate.getDuration();
@@ -992,8 +1007,8 @@ public class Skill {
 			}
 		}
 
-		// 70% of base skill duration cap
-		// No cast speed cap for skill Summoning Alacrity I(skillId: 3779) and Nimble Fingers I(skillId: 913)
+		// 基础技能持续时间上限的 70% / 70% of base skill duration cap
+		// 技能召唤迅捷 I（3779）与灵巧手指 I（913）无施法速度上限。 / No cast speed cap for skill Summoning Alacrity I(skillId: 3779) and Nimble Fingers I(skillId: 913)
 		if (!effector.getEffectController().hasAbnormalEffect(3779) && !effector.getEffectController().hasAbnormalEffect(913)) { // 4.8
 			int baseDurationCap = Math.round(skillTemplate.getDuration() * 0.3f);
 			if (duration < baseDurationCap) {
@@ -1019,15 +1034,16 @@ public class Skill {
 
 		Player player = (Player) effector;
 
-		// if player is without weapon, dont check animation time
+		// 玩家无武器时不检查动画时间 / if player is without weapon, dont check animation time
 		if (player.getEquipment().getMainHandWeaponType() == null) {
 			return true;
 		}
 
 		/**
-		 * exceptions for certain skills -herb and mana treatment -traps
+		 * 部分技能例外：药草/法力治疗、陷阱。
+	 * exceptions for certain skills - herb and mana treatment - traps
 		 */
-		// dont check herb , mana treatment and concentration enhancement
+		// 不检查草药、法力治疗与专注增强 / dont check herb , mana treatment and concentration enhancement
 		switch (this.getSkillId()) { // 4.8
 		case 245: // Bandage Heal
 		case 246: // Herb Treatment I
@@ -1095,7 +1111,7 @@ public class Skill {
 			return true;
 		}
 
-		// adjust client time with ammotime
+		// 按弹药时间调整客户端时间 / adjust client time with ammotime
 		long ammoTime = 0;
 		double distance = MathUtil.getDistance(effector, firstTarget);
 		if (getSkillTemplate().getAmmoSpeed() != 0) {
@@ -1103,7 +1119,7 @@ public class Skill {
 		}
 		clientTime -= ammoTime;
 
-		// adjust servertime with motion play speed
+		// 按动作播放速度调整服务器时间 / adjust servertime with motion play speed
 		if (motion.getSpeed() != 100) {
 			serverTime /= 100f;
 			serverTime *= (float) motion.getSpeed();
@@ -1111,12 +1127,12 @@ public class Skill {
 
 		Stat2 attackSpeed = player.getGameStats().getAttackSpeed();
 
-		// adjust serverTime with attackSpeed
+		// 按攻击速度调整服务器时间 / adjust serverTime with attackSpeed
 		if (attackSpeed.getBase() != attackSpeed.getCurrent()) {
 			serverTime *= ((float) attackSpeed.getCurrent() / (float) attackSpeed.getBase());
 		}
 
-		// tolerance
+		// 容差 / tolerance
 		if (duration == 0) {
 			serverTime *= 0.9f;
 		} else {
@@ -1128,12 +1144,12 @@ public class Skill {
 			this.serverTime = (int) ammoTime;
 		} else {
 			if (clientTime < finalTime) {
-				// check for no animation Hacks
+				// 检查无动画作弊 / check for no animation Hacks
 				if (SecurityConfig.NO_ANIMATION) {
 					float clientTme = clientTime;
 					float serverTme = serverTime;
 					float checkTme = clientTme / serverTme;
-					// check if values are too low
+					// 检查数值是否过低 / check if values are too low
 					if (clientTime < 0 || checkTme < SecurityConfig.NO_ANIMATION_VALUE) {
 						if (SecurityConfig.NO_ANIMATION_KICK) {
 							player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
@@ -1144,7 +1160,7 @@ public class Skill {
 						return false;
 					}
 				}
-				log.warn("Possible modified client_skills:" + this.getSkillId() + " (clientTime<finalTime:" + clientTime + "/" + finalTime + ") player Name: " + player.getName());
+				log.warn(I18n.get("log.eeb3651188c5", this.getSkillId(), clientTime, finalTime, player.getName()));
 			}
 			this.serverTime = hitTime;
 		}
@@ -1153,7 +1169,7 @@ public class Skill {
 	}
 
 	/**
-	 * Penalty success skill
+	 * 惩罚成功技能 / Penalty success skill
 	 */
 	private void startPenaltySkill() {
 		int penaltySkill = skillTemplate.getPenaltySkillId();
@@ -1164,7 +1180,7 @@ public class Skill {
 	}
 
 	/**
-	 * Skin Skill
+	 * 外观技能 / Skin Skill
 	 */
 	private void getSkillSkinData() {
 		if (effector instanceof Player && ((Player) effector).getSkillSkinList() != null) {
@@ -1181,7 +1197,7 @@ public class Skill {
 	}
 
 	/**
-	 * Start casting of skill
+	 * 开始施放技能 / Start casting of skill
 	 */
 	private void startCast() {
 		int targetObjId = firstTarget != null ? firstTarget.getObjectId() : 0;
@@ -1212,9 +1228,10 @@ public class Skill {
 			PacketSendUtility.broadcastPacketAndReceive(effector, new SM_ITEM_USAGE_ANIMATION(effector.getObjectId(), firstTarget.getObjectId(), (this.itemObjectId == 0 ? 0 : this.itemObjectId), itemTemplate.getTemplateId(), this.duration, 0, 0));
 		}
 	}
-
 	/**
-	 * Set this skill as canceled
+	 * 取消施法。
+	 * Cancels casting.
+	 *
 	 */
 	public void cancelCast() {
 		if (castingTask != null) {
@@ -1231,7 +1248,7 @@ public class Skill {
 			return;
 		}
 
-		// charge skill 4.3
+		// 充能技能 4.3 / charge skill 4.3
 		if (chargeTemplate != null) {
 			int time = (int) (System.currentTimeMillis() - castStart);
 			time += 100; // 100ms leeway
@@ -1254,12 +1271,12 @@ public class Skill {
 			effector.setSkillCoolDown(skillTemplate.getDelayId(), skillTemplate.getCooldown() * 100 + System.currentTimeMillis());
 		}
 
-		// if target out of range
+		// 若目标超出范围 / if target out of range
 		if (skillTemplate == null) {
 			return;
 		}
 
-		// Check if target is out of skill range
+		// 检查目标是否超出技能范围 / Check if target is out of skill range
 		Properties properties = skillTemplate.getProperties();
 		if (properties != null && !properties.endCastValidate(this)) {
 			effector.getController().cancelCurrentSkill();
@@ -1286,7 +1303,8 @@ public class Skill {
 		}
 
 		/**
-		 * try removing item, if its not possible return to prevent exploits
+		 * 尝试移除物品；若不可行则返回以防止利用。
+	 * Try removing item; if not possible return to prevent exploits
 		 */
 		if (effector instanceof Player && skillMethod == SkillMethod.ITEM) {
 			Item item = ((Player) effector).getInventory().getItemByObjId(this.itemObjectId);
@@ -1301,7 +1319,8 @@ public class Skill {
 			}
 		}
 		/**
-		 * Create effects and precalculate result
+		 * 创建效果并预计算结果。
+	 * Create effects and precalculate result
 		 */
 
 		int spellStatus = 0;
@@ -1319,7 +1338,7 @@ public class Skill {
 						blockedStance = true;
 					}
 				}
-				// Force RESIST status if AOE spell spread must be blocked
+				// 若须阻止 AOE 法术扩散则强制 RESIST 状态 / Force RESIST status if AOE spell spread must be blocked
 				if (blockAOESpread) {
 					effect.setAttackStatus(AttackStatus.RESIST);
 				}
@@ -1332,7 +1351,7 @@ public class Skill {
 				spellStatus = effect.getSpellStatus().getId();
 				dashStatus = effect.getDashStatus().getId();
 
-				// Block AOE propagation if firstTarget resists the spell
+				// 若首目标抵抗法术则阻止 AOE 传播 / Block AOE propagation if firstTarget resists the spell
 				if ((!blockAOESpread) && (effect.getAttackStatus() == AttackStatus.RESIST) && (isTargetAOE())) {
 					blockAOESpread = true;
 				}
@@ -1349,7 +1368,7 @@ public class Skill {
 				}
 			}
 
-			// exception for point point skills(example Ice Sheet)
+			// 点对点技能例外（如冰面） / exception for point point skills(example Ice Sheet)
 			if (effectedList.isEmpty() && this.isPointPointSkill()) {
 				Effect effect = new Effect(this, null, 0, itemTemplate);
 				effect.initialize();
@@ -1371,7 +1390,7 @@ public class Skill {
 			}
 		}
 
-		// Check Chain Skill Trigger Rate
+		// 检查连锁技能触发率 / Check Chain Skill Trigger Rate
 		if (CustomConfig.SKILL_CHAIN_TRIGGERRATE) {
 			int chainProb = skillTemplate.getChainSkillProb();
 			if (this.chainCategory != null && !blockedChain) {
@@ -1382,15 +1401,16 @@ public class Skill {
 		}
 
 		/**
-		 * set variables for chaincondition check
-		 */
+	 * 设置 variableschaincondition。
+	 * set variables for chaincondition check
+	 */
 		if (effector instanceof Player && this.chainSuccess && this.chainCategory != null) {
 			((Player) effector).getChainSkills().addChainSkill(this.chainCategory, this.isMulticast());
 		}
 
 		/**
-		 * Perform necessary actions (use mp,dp items etc)
-		 */
+	 * 执行必要动作（消耗 MP/DP、物品等）。 / Perform necessary actions (use mp,dp items etc)
+	 */
 		Actions skillActions = skillTemplate.getActions();
 		if (skillActions != null) {
 			for (Action action : skillActions.getActions()) {
@@ -1403,8 +1423,8 @@ public class Skill {
 			GameEngineServices.questEngine().onUseSkill(env, skillTemplate.getSkillId());
 		}
 
-		// 【修复】只在客户端未发送有效hitTime时才由服务端计算
-		// 原条件存在运算符优先级问题，导致非HEAL技能的hitTime被错误覆盖
+		// 【修复】只在客户端未发送有效 hitTime 时才由服务端计算
+		// 原条件存在运算符优先级问题，导致非 HEAL 技能的 hitTime 被错误覆盖
 		// 修复后：确保 hitTime <= 0 时才由服务端计算，保留客户端发送的有效值
 		if ((skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) && getSkillTemplate().getSubType() != SkillSubType.HEAL && hitTime <= 0) {
 			if (skillskinHitTIme > 0) {
@@ -1430,17 +1450,23 @@ public class Skill {
 		}
 	}
 
+	/**
+	 * 对目标列表应用效果。
+	 * Applies effects to the target list.
+	 *
+	 * effects
+	 */
 	public void applyEffect(List<Effect> effects) {
 		/**
-		 * Apply effects to effected objects
-		 */
+	 * Apply effects to effected objects
+	 */
 		for (Effect effect : effects) {
 			effect.applyEffect();
 		}
 
 		/**
-		 * Use penalty skill (now 100% success)
-		 */
+	 * 使用惩罚技能（当前 100% 成功）。 / Use penalty skill (now 100% success)
+	 */
 		if (!blockedPenaltySkill) {
 			startPenaltySkill();
 		}
@@ -1480,7 +1506,7 @@ public class Skill {
 	}
 
 	/**
-	 * Schedule actions/effects of skill (channeled skills)
+	 * @param delay 调度技能动作 / 效果（引导类技能）。 / Schedule actions/effects of skill (channeled skills)
 	 */
 	private void schedule(int delay) {
 		castingTask = GameThreadPoolServices.threadPoolManager().schedule(this::endCast, delay);
@@ -1503,178 +1529,242 @@ public class Skill {
 		Conditions skillConditions = skillTemplate.getUseconditions();
 		return skillConditions != null ? skillConditions.validate(this) : true;
 	}
-
 	/**
-	 * @param value is the changeMpConsumptionValue to set
+	 * 设置技能消耗加成。
+	 * Sets skill cost boost.
+	 *
+	 * boost value
 	 */
 	public void setBoostSkillCost(int value) {
 		boostSkillCost = value;
 	}
-
 	/**
-	 * @return the changeMpConsumptionValue
+	 * 获取技能消耗加成。
+	 * Gets skill cost boost.
+	 *
+	 * boost value
 	 */
 	public int getBoostSkillCost() {
 		return boostSkillCost;
 	}
-
 	/**
-	 * @return the effectedList
+	 * 获取受影响目标列表。
+	 * Gets list of effected creatures.
+	 *
+	 * effected list
 	 */
 	public List<Creature> getEffectedList() {
 		return effectedList;
 	}
-
 	/**
-	 * @return the effector
+	 * 获取施法者。
+	 * Gets the effector.
+	 *
+	 * effector
 	 */
 	public Creature getEffector() {
 		return effector;
 	}
-
 	/**
-	 * @return the skillLevel
+	 * 获取技能等级。
+	 * Gets skill level.
+	 *
+	 * level
 	 */
 	public int getSkillLevel() {
 		return skillLevel;
 	}
-
 	/**
-	 * @return the skillId
+	 * 获取技能 ID。
+	 * Gets skill id.
+	 *
+	 * skill id
 	 */
 	public int getSkillId() {
 		return skillTemplate.getSkillId();
 	}
-
 	/**
-	 * @return the skillStackLvl
+	 * 获取技能堆叠等级。
+	 * Gets skill stack level.
+	 *
+	 * stack level
 	 */
 	public int getSkillStackLvl() {
 		return skillStackLvl;
 	}
-
 	/**
-	 * @return the conditionChangeListener
+	 * 获取移动条件监听器。
+	 * Gets start-moving condition listener.
+	 *
+	 * listener
 	 */
 	public StartMovingListener getConditionChangeListener() {
 		return conditionChangeListener;
 	}
-
 	/**
-	 * @return the skillTemplate
+	 * 获取技能模板。
+	 * Gets skill template.
+	 *
+	 * template
 	 */
 	public SkillTemplate getSkillTemplate() {
 		return skillTemplate;
 	}
-
 	/**
-	 * @return the firstTarget
+	 * 获取主目标。
+	 * Gets first target.
+	 *
+	 * first target
 	 */
 	public Creature getFirstTarget() {
 		return firstTarget;
 	}
-
 	/**
-	 * @param firstTarget the firstTarget to set
+	 * 设置主目标。
+	 * Sets first target.
+	 *
+	 * first target
 	 */
 	public void setFirstTarget(Creature firstTarget) {
 		this.firstTarget = firstTarget;
 	}
-
 	/**
-	 * @return true or false
+	 * 是否被动技能。
+	 * Whether passive skill.
+	 *
+	 * whether passive
 	 */
 	public boolean isPassive() {
 		return skillTemplate.getActivationAttribute() == ActivationAttribute.PASSIVE;
 	}
-
 	/**
-	 * @return the firstTargetRangeCheck
+	 * 是否检查主目标距离。
+	 * Whether first-target range is checked.
+	 *
+	 * whether checked
 	 */
 	public boolean isFirstTargetRangeCheck() {
 		return firstTargetRangeCheck;
 	}
-
 	/**
-	 * @param firstTargetAttribute the firstTargetAttribute to set
+	 * 设置主目标属性。
+	 * Sets first-target attribute.
+	 *
+	 * @param firstTargetAttribute 主目标属性 / first target attribute
 	 */
 	public void setFirstTargetAttribute(FirstTargetAttribute firstTargetAttribute) {
 		this.firstTargetAttribute = firstTargetAttribute;
 	}
-
 	/**
-	 * @return true if the present skill is a non-targeted, non-point AOE skill
+	 * 是否非指向 AOE。
+	 * Whether non-target AOE.
+	 *
+	 * whether
 	 */
 	public boolean checkNonTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.AREA);
 	}
-
 	/**
-	 * @return true if the present skill is a targeted AOE skill
+	 * 是否目标 AOE。
+	 * Whether target AOE.
+	 *
+	 * whether
 	 */
 	public boolean isTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.TARGET && targetRangeAttribute == TargetRangeAttribute.AREA);
 	}
-
 	/**
-	 * @return true if the present skill is a self buff includes items (such as scroll buffs)
+	 * 是否自身增益。
+	 * Whether self buff.
+	 *
+	 * whether
 	 */
 	public boolean isSelfBuff() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.ONLYONE && skillTemplate.getSubType() == SkillSubType.BUFF && !skillTemplate.isDeityAvatar());
 	}
-
 	/**
-	 * @return true if the present skill has self as first target
+	 * 主目标是否自身。
+	 * Whether first target is self.
+	 *
+	 * whether
 	 */
 	public boolean isFirstTargetSelf() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME);
 	}
-
 	/**
-	 * @return true if the present skill is a Point skill
+	 * 是否地点技能。
+	 * Whether point skill.
+	 *
+	 * whether
 	 */
 	public boolean isPointSkill() {
 		return (this.firstTargetAttribute == FirstTargetAttribute.POINT);
 	}
-
 	/**
-	 * @param firstTargetRangeCheck the firstTargetRangeCheck to set
+	 * 设置是否检查主目标距离。
+	 * Sets first-target range check flag.
+	 *
+	 * whether check
 	 */
 	public void setFirstTargetRangeCheck(boolean firstTargetRangeCheck) {
 		this.firstTargetRangeCheck = firstTargetRangeCheck;
 	}
-
 	/**
-	 * @param itemTemplate the itemTemplate to set
+	 * 设置关联物品模板。
+	 * Sets related item template.
+	 *
+	 * item template
 	 */
 	public void setItemTemplate(ItemTemplate itemTemplate) {
 		this.itemTemplate = itemTemplate;
 	}
 
+	/**
+	 * 获取关联物品模板。
+	 * Gets related item template.
+	 *
+	 * item template
+	 */
 	public ItemTemplate getItemTemplate() {
 		return this.itemTemplate;
 	}
 
+	/**
+	 * 设置物品对象 ID。
+	 * Sets item object id.
+	 *
+	 * @param id 对象 ID / object id
+	 */
 	public void setItemObjectId(int id) {
 		this.itemObjectId = id;
 	}
 
+	/**
+	 * 获取物品对象 ID。
+	 * Gets item object id.
+	 *
+	 * object id
+	 */
 	public int getItemObjectId() {
 		return this.itemObjectId;
 	}
-
 	/**
-	 * @param targetRangeAttribute the targetRangeAttribute to set
+	 * 设置目标范围属性。
+	 * Sets target range attribute.
+	 *
+	 * range attribute
 	 */
 	public void setTargetRangeAttribute(TargetRangeAttribute targetRangeAttribute) {
 		this.targetRangeAttribute = targetRangeAttribute;
 	}
-
 	/**
-	 * @param targetType
-	 * @param x
-	 * @param y
-	 * @param z
+	 * 设置目标类型与坐标。
+	 * Sets target type and coordinates.
+	 *
+	 * target type
+	 * @param x X
+	 * @param y Y
+	 * @param z Z
 	 */
 	public void setTargetType(int targetType, float x, float y, float z) {
 		this.targetType = targetType;
@@ -1682,14 +1772,14 @@ public class Skill {
 		this.y = y;
 		this.z = z;
 	}
-
 	/**
-	 * Calculated position after skill
-	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param h
+	 * 设置目标位置与朝向。
+	 * Sets target position and heading.
+	 *
+	 * @param x X
+	 * @param y Y
+	 * @param z Z
+	 * @param h 朝向 / heading
 	 */
 	public void setTargetPosition(float x, float y, float z, byte h) {
 		this.x = x;
@@ -1698,35 +1788,69 @@ public class Skill {
 		this.h = h;
 	}
 
+	/**
+	 * 设置施法持续时间。
+	 * Sets cast duration.
+	 *
+	 * @param t 时长 / duration
+	 */
 	public void setDuration(int t) {
 		this.duration = t;
 	}
 
+	/**
+	 * 获取目标 X。
+	 * Gets target X.
+	 *
+	 * @return X
+	 */
 	public float getX() {
 		return x;
 	}
 
+	/**
+	 * 获取目标 Y。
+	 * Gets target Y.
+	 *
+	 * @return Y
+	 */
 	public float getY() {
 		return y;
 	}
 
+	/**
+	 * 获取目标 Z。
+	 * Gets target Z.
+	 *
+	 * @return Z
+	 */
 	public float getZ() {
 		return z;
 	}
 
+	/**
+	 * 获取目标朝向。
+	 * Gets target heading.
+	 *
+	 * 朝向 / heading
+	 */
 	public final byte getH() {
 		return h;
 	}
-
 	/**
-	 * @return Returns the time.
+	 * 获取命中时间。
+	 * Gets hit time.
+	 *
+	 * hit time
 	 */
 	public int getHitTime() {
 		return hitTime;
 	}
-
 	/**
-	 * @param time The time to set.
+	 * 设置命中时间。
+	 * Sets hit time.
+	 *
+	 * time
 	 */
 	public void setHitTime(int time) {
 		this.hitTime = time;
@@ -1778,28 +1902,28 @@ public class Skill {
 		case 1417: // Curse Of Roots
 		case 3589: // Fear Shriek
 		case 3775: // Fear
-			// ArchDaeva Transformation 5.1 [Elyos]
+			// 高阶守护者变身 5.1【天族】 / ArchDaeva Transformation 5.1 [Elyos]
 		case 4752: // Transformation: Avatar Of Fire.
 		case 4757: // Transformation: Avatar Of Water.
 		case 4762: // Transformation: Avatar Of Earth.
 		case 4768: // Transformation: Avatar Of Wind.
-			// ArchDaeva Transformation 5.1 [Asmodians]
+			// 高阶守护者变身 5.1【魔族】 / ArchDaeva Transformation 5.1 [Asmodians]
 		case 4804: // Transformation: Avatar Of Fire.
 		case 4805: // Transformation: Avatar Of Water.
 		case 4806: // Transformation: Avatar Of Earth.
 		case 4807: // Transformation: Avatar Of Wind.
-			// Fissure Of Oblivion 5.1
+			// 遗忘裂隙 5.1 / Fissure Of Oblivion 5.1
 		case 4808: // Transformation: Avatar Of Fire.
 		case 4813: // Transformation: Avatar Of Water.
 		case 4818: // Transformation: Avatar Of Earth.
 		case 4824: // Transformation: Avatar Of Wind.
-			// Elyos [Guardian General]
+			// 天族【守护者将军】 / Elyos [Guardian General]
 		case 11885: // Transformation: Guardian General I
 		case 11886: // Transformation: Guardian General II
 		case 11887: // Transformation: Guardian General III
 		case 11888: // Transformation: Guardian General IV
 		case 11889: // Transformation: Guardian General V
-			// Asmodians [Guardian General]
+			// 魔族【守护者将军】 / Asmodians [Guardian General]
 		case 11890: // Transformation: Guardian General I
 		case 11891: // Transformation: Guardian General II
 		case 11892: // Transformation: Guardian General III
@@ -1810,12 +1934,25 @@ public class Skill {
 		return false;
 	}
 
+	/**
+	 * 是否地面技能。
+	 * Whether ground skill.
+	 *
+	 * whether
+	 */
 	public boolean isGroundSkill() {
 		return skillTemplate.isGroundSkill();
 	}
 
+	/**
+	 * 判断是否应影响该可见对象。
+	 * Whether the visible object should be affected.
+	 *
+	 * visible object
+	 * whether affect
+	 */
 	public boolean shouldAffectTarget(VisibleObject object) {
-		// If creature is at least 2 meters above the terrain, ground skill cannot be applied
+		// 生物离地至少 2 米时无法施加地面技能。 / If creature is at least 2 meters above the terrain, ground skill cannot be applied
 		if (GeoDataConfig.GEO_ENABLE) {
 			if (isGroundSkill()) {
 				if ((object.getZ() - GameWorldServices.geoService().getZ(object) > 1.0f) || (object.getZ() - GameWorldServices.geoService().getZ(object) < -2.0f)) {
@@ -1827,18 +1964,42 @@ public class Skill {
 		return true;
 	}
 
+	/**
+	 * 设置连锁类别。
+	 * Sets chain category.
+	 *
+	 * category
+	 */
 	public void setChainCategory(String chainCategory) {
 		this.chainCategory = chainCategory;
 	}
 
+	/**
+	 * 获取连锁类别。
+	 * Gets chain category.
+	 *
+	 * category
+	 */
 	public String getChainCategory() {
 		return this.chainCategory;
 	}
 
+	/**
+	 * 获取技能方法类型。
+	 * Gets skill method type.
+	 *
+	 * method
+	 */
 	public SkillMethod getSkillMethod() {
 		return this.skillMethod;
 	}
 
+	/**
+	 * 是否点对点技能。
+	 * Whether point-to-point skill.
+	 *
+	 * whether
+	 */
 	public boolean isPointPointSkill() {
 		if (this.getSkillTemplate().getProperties().getFirstTarget() == FirstTargetAttribute.POINT && this.getSkillTemplate().getProperties().getTargetType() == TargetRangeAttribute.POINT) {
 			return true;
@@ -1846,14 +2007,31 @@ public class Skill {
 		return false;
 	}
 
+	/**
+	 * 是否多重施放。
+	 * Whether multicast.
+	 *
+	 * whether
+	 */
 	public boolean isMulticast() {
 		return this.isMultiCast;
 	}
 
+	/**
+	 * 设置多重施放标记。
+	 * Sets multicast flag.
+	 *
+	 * whether multicast
+	 */
 	public void setIsMultiCast(boolean isMultiCast) {
 		this.isMultiCast = isMultiCast;
 	}
 
+	/**
+	 * 停止充能。
+	 * Stops charging.
+	 *
+	 */
 	public void stopCharging() {
 		if (chargeTemplate == null) {
 			return;

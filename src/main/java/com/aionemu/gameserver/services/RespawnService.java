@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * NPC 尸体消散与重生调度服务。
+ * Service for scheduling NPC corpse decay and respawn.
+ *
  * @author ATracer, Source, xTz
  */
 public class RespawnService {
@@ -40,8 +27,12 @@ public class RespawnService {
 	private static final int WITH_DROP_DECAY = 5 * 60 * 1000;
 
 	/**
-	 * @param npc
-	 * @return Future<?>
+	 * 根据掉落情况调度 NPC 尸体消散任务。
+	 * Schedules NPC corpse decay based on current drop state.
+	 *
+	 * target NPC
+	 *
+	 * @param npc @return 消散任务句柄 / decay task handle
 	 */
 	public static Future<?> scheduleDecayTask(Npc npc) {
 		int decayInterval;
@@ -57,12 +48,26 @@ public class RespawnService {
 		return scheduleDecayTask(npc, decayInterval);
 	}
 
+	/**
+	 * 按指定间隔调度 NPC 尸体消散任务。
+	 * Schedules NPC corpse decay after the given interval.
+	 *
+	 * target NPC
+	 *
+	 * @param decayInterval 消散延迟（毫秒） / decay delay in milliseconds
+	 * @param decayInterval @return 消散任务句柄 / decay task handle
+	 */
 	public static Future<?> scheduleDecayTask(Npc npc, long decayInterval) {
 		return GameThreadPoolServices.threadPoolManager().schedule(new DecayTask(npc.getObjectId()), decayInterval);
 	}
 
 	/**
-	 * @param visibleObject
+	 * 按刷新模板的重生时间调度可见对象重生。
+	 * Schedules respawn of a visible object using its spawn template interval.
+	 *
+	 * visible object
+	 *
+	 * @param visibleObject @return 重生任务句柄 / respawn task handle
 	 */
 	public static final Future<?> scheduleRespawnTask(VisibleObject visibleObject) {
 		final int interval = visibleObject.getSpawn().getRespawnTime();
@@ -72,8 +77,12 @@ public class RespawnService {
 	}
 
 	/**
-	 * @param spawnTemplate
-	 * @param instanceId
+	 * 在指定副本实例中执行一次重生。
+	 * Performs a single respawn in the given instance.
+	 *
+	 * spawn template
+	 * instance id
+	 * @return 重生后的可见对象，不可重生时为 null / respawned object, or null if not allowed
 	 */
 	private static final VisibleObject respawn(SpawnTemplate spawnTemplate, final int instanceId) {
 		if (spawnTemplate.isTemporarySpawn() && !spawnTemplate.getTemporarySpawn().canSpawn()
@@ -92,6 +101,10 @@ public class RespawnService {
 		return SpawnEngine.spawnObject(spawnTemplate, instanceId);
 	}
 
+	/**
+	 * 尸体消散任务，到时删除对应可见对象。
+	 * Decay task that deletes the corresponding visible object when due.
+	 */
 	private static class DecayTask implements Runnable {
 
 		private final int npcId;
@@ -109,6 +122,10 @@ public class RespawnService {
 		}
 	}
 
+	/**
+	 * 重生任务，取消旧 RESPAWN 任务后按模板重生。
+	 * Respawn task that cancels the old RESPAWN task then respawns from the template.
+	 */
 	private static class RespawnTask implements Runnable {
 
 		private final SpawnTemplate spawn;

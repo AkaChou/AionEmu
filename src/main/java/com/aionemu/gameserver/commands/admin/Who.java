@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import java.util.Collection;
@@ -24,12 +8,27 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 列出在线玩家（可按种族/会员过滤）的管理员命令。
+ * Admin command to list online players, optionally filtered by race or membership.
+ */
 public class Who extends AdminCommand {
 
+	/**
+	 * 构造 who 命令。
+	 * Creates the who command.
+	 */
 	public Who() {
 		super("who");
 	}
 
+	/**
+	 * 输出在线角色名、种族与账号；可选 ely/asmo/member 过滤。
+	 * Prints online characters with race and account; optional ely/asmo/member filter.
+	 *
+	 * 执行 GM / Admin player
+	 * Optional ely|asmo|member|premium。 / Optional ely|asmo|member|premium
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 

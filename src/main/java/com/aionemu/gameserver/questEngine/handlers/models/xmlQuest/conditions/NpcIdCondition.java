@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.conditions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,20 +10,25 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * 按当前可见 NPC 模板 ID 与配置值比较的条件。
+ * Condition that compares the visible NPC template id against a configured value.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcIdCondition")
 public class NpcIdCondition extends QuestCondition {
 
+	/** 期望的 NPC 模板 ID / Expected NPC template id */
 	@XmlAttribute(required = true)
 	protected int values;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.gameserver.questEngine.handlers.template.xmlQuest.condition.
-	 * QuestCondition#doCheck(com.aionemu.gameserver .questEngine.model.QuestEnv)
+	/**
+	 * 比较当前可见对象的 NPC ID 与配置值。
+	 * Compares the visible object's NPC id with the configured value.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 比较是否成立 / Whether the comparison holds
 	 */
 	@Override
 	public boolean doCheck(QuestEnv env) {

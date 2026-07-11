@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,6 +13,10 @@ import com.aionemu.gameserver.model.templates.pet.PetDopingEntry;
 
 import com.aionemu.commons.utils.collections.ShortObjectHashMap;
 
+/**
+ * 宠物药剂（doping）数据容器，按 short ID 索引条目。
+ * Pet doping data holder, indexing entries by short id.
+ */
 @XmlRootElement(name = "dopings")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PetDopingData {
@@ -39,6 +27,10 @@ public class PetDopingData {
 	@XmlTransient
 	private ShortObjectHashMap<PetDopingEntry> dopingsById = new ShortObjectHashMap<PetDopingEntry>();
 
+	/**
+	 * JAXB 反序列化完成后，将药剂条目写入 ID 索引并释放列表。
+	 * After JAXB unmarshalling, indexes doping entries by id and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetDopingEntry dope : list) {
 			dopingsById.put(dope.getId(), dope);
@@ -47,10 +39,23 @@ public class PetDopingData {
 		list = null;
 	}
 
+	/**
+	 * 返回已加载的药剂条目数量。
+	 * Returns the number of loaded doping entries.
+	 *
+	 * entry count
+	 */
 	public int size() {
 		return dopingsById.size();
 	}
 
+	/**
+	 * 按 ID 获取宠物药剂模板。
+	 * Returns the pet doping template for the given id.
+	 *
+	 * @param id 药剂 ID / doping id
+	 * @return 药剂条目，不存在则为 null / doping entry or null
+	 */
 	public PetDopingEntry getDopingTemplate(short id) {
 		return dopingsById.get(id);
 	}

@@ -1,42 +1,45 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world;
 
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 /**
+ * 三维世界地图实例：按 X/Y/Z 划分区域（欧比斯等立体地图）。
+ * Three-dimensional world-map instance: partitions by X/Y/Z (abyss and similar vertical maps).
+ *
  * @author ATracer
  */
 public class WorldMap3DInstance extends WorldMapInstance {
 
 	/**
-	 * @param parent
-	 * @param instanceId
+	 * 构造 3D 地图实例。
+	 * Construct a 3D map instance.
+	 *
+	 * @param parent 父级世界地图 / parent world map
+	 * instance id
 	 */
 	public WorldMap3DInstance(WorldMap parent, int instanceId) {
 		super(parent, instanceId);
 	}
 
+	/**
+	 * 按 X/Y/Z 坐标取得 3D 地图区域。
+	 * Resolve the 3D map region for X/Y/Z.
+	 *
+	 * @param x 坐标 X / X coordinate
+	 * @param y 坐标 Y / Y coordinate
+	 * @param z 坐标 Z / Z coordinate
+	 * map region
+	 */
 	@Override
 	public MapRegion getRegion(float x, float y, float z) {
 		int regionId = RegionUtil.get3dRegionId(x, y, z);
 		return regions.get(regionId);
 	}
 
+	/**
+	 * 初始化全部 3D 区域并建立邻接关系。
+	 * Initialize all 3D regions and wire neighbour links.
+	 */
 	protected void initMapRegions() {
 		int size = this.getParent().getWorldSize();
 		float maxZ = Math.round((float) size / regionSize) * regionSize;
@@ -51,7 +54,7 @@ public class WorldMap3DInstance extends WorldMapInstance {
 			}
 		}
 
-		// Add Neighbour
+		// 添加邻居 / Add Neighbour
 		for (int x = 0; x <= size; x = x + regionSize) {
 			for (int y = 0; y <= size; y = y + regionSize) {
 				for (int z = 0; z < maxZ; z = z + regionSize) {
@@ -76,6 +79,14 @@ public class WorldMap3DInstance extends WorldMapInstance {
 		}
 	}
 
+	/**
+	 * 按 3D 区域 ID 创建地图区域及关联 Zone。
+	 * Create a map region and related zones for a 3D region id.
+	 *
+	 * region id
+	 *
+	 * @param regionId @return 新建的地图区域 / newly created map region
+	 */
 	@Override
 	protected MapRegion createMapRegion(int regionId) {
 		float startX = RegionUtil.getXFrom3dRegionId(regionId);
@@ -85,11 +96,23 @@ public class WorldMap3DInstance extends WorldMapInstance {
 		return new MapRegion(regionId, this, zones);
 	}
 
+	/**
+	 * 3D 实例不为个人实例。
+	 * 3D instances are never personal.
+	 *
+	 * always false
+	 */
 	@Override
 	public boolean isPersonal() {
 		return false;
 	}
 
+	/**
+	 * 3D 实例无个人所有者。
+	 * 3D instances have no personal owner.
+	 *
+	 * always 0
+	 */
 	@Override
 	public int getOwnerId() {
 		return 0;

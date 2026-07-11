@@ -1,8 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load legacy collection classes.
- */
 package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -21,9 +16,21 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 数学区域对象控制器，按反应类型为进入范围的生物注册观察者。
+ * Math-object controller that registers observers for creatures entering range by reaction type.
+ */
 public class MathController extends VisibleObjectController<MathObject> {
+
+	/** 已注册的生物观察者映射。 / Map of registered creature observers. */
 	Map<Creature, MathObjectObserver> observers = new LinkedHashMap<Creature, MathObjectObserver>();
 
+	/**
+	 * 符合反应类型的生物进入范围时注册观察者。
+	 * Registers an observer when a creature matching the reaction type enters range.
+	 *
+	 * @param object 进入视野的可见对象 / the visible object entering sight
+	 */
 	@Override
 	public void see(VisibleObject object) {
 		super.see(object);
@@ -41,6 +48,13 @@ public class MathController extends VisibleObjectController<MathObject> {
 		observer.moved();
 	}
 
+	/**
+	 * 生物离开范围时移除观察者并清理调度。
+	 * Removes the observer and clears schedules when a creature leaves range.
+	 *
+	 * @param object 离开视野的可见对象 / the visible object leaving sight
+	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
+	 */
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		super.notSee(object, isOutOfRange);
@@ -72,6 +86,13 @@ public class MathController extends VisibleObjectController<MathObject> {
 	 * ((MathObject)this.getOwner()).setMaster(master); return
 	 * ((MathObject)this.getOwner()).getMaster(); }
 	 */
+
+	/**
+	 * 延迟后删除本数学对象。
+	 * Deletes this math object after a delay.
+	 *
+	 * @param delay 延迟毫秒数 / delay in milliseconds
+	 */
 	public void onDelete(int delay) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
@@ -82,6 +103,10 @@ public class MathController extends VisibleObjectController<MathObject> {
 		}, delay);
 	}
 
+	/**
+	 * 删除数学对象，同时清理主人与所有观察者。
+	 * Deletes the math object, also clearing its master and all observers.
+	 */
 	@Override
 	public void delete() {
 		if (this.getOwner().getMaster() != null) {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player.motion;
 
 import java.util.HashMap;
@@ -21,6 +5,11 @@ import java.util.Map;
 
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+
+/**
+ * Motion 游戏对象。
+ * Motion game object.
+ */
 
 public class Motion implements IExpirable {
 	static final Map<Integer, Integer> motionType = new HashMap<Integer, Integer>();
@@ -35,17 +24,17 @@ public class Motion implements IExpirable {
 		motionType.put(7, 3);
 		motionType.put(8, 4);
 		////////////////////
-		// Motion 3.9
+		// 动作 3.9 / Motion 3.9
 		motionType.put(10, 1);
 		motionType.put(19, 2);
 		////////////////////
-		// Motion 4.5
+		// 动作 4.5 / Motion 4.5
 		motionType.put(11, 1);
 		motionType.put(12, 2);
 		motionType.put(13, 3);
 		motionType.put(14, 4);
 		////////////////////
-		// Motion 4.7
+		// 动作 4.7 / Motion 4.7
 		motionType.put(15, 1);
 		motionType.put(16, 2);
 		motionType.put(17, 3);
@@ -55,29 +44,29 @@ public class Motion implements IExpirable {
 		motionType.put(21, 1);
 		motionType.put(22, 2);
 		////////////////////
-		// Motion 4.8
+		// 动作 4.8 / Motion 4.8
 		motionType.put(23, 1);
 		motionType.put(24, 2);
 		motionType.put(25, 3);
 		motionType.put(26, 4);
 		////////////////////
-		// Motion 5.0
+		// 动作 5.0 / Motion 5.0
 		motionType.put(27, 1);
 		motionType.put(28, 2);
 		motionType.put(29, 3);
 		motionType.put(30, 4);
-		// Shop 2
+		// 商店 2 / Shop 2
 		motionType.put(31, 1);
 		// CHN Vip Shop 5.1
 		motionType.put(32, 1);
-		// KR Halloween 5.3
+		// KR 万圣节 5.3 / KR Halloween 5.3
 		motionType.put(33, 1);
-		// Skating 5.3
+		// 滑冰 5.3 / Skating 5.3
 		motionType.put(34, 1);
 		motionType.put(35, 2);
 		motionType.put(36, 3);
 		motionType.put(37, 4);
-		// Pajamas 5.6
+		// 睡衣 5.6 / Pajamas 5.6
 		motionType.put(38, 1);
 	}
 
@@ -91,10 +80,12 @@ public class Motion implements IExpirable {
 		this.active = isActive;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回剩余时间 / Returns the remaining time */
 	public int getRemainingTime() {
 		if (deletionTime == 0) {
 			return 0;
@@ -102,28 +93,34 @@ public class Motion implements IExpirable {
 		return deletionTime - (int) (System.currentTimeMillis() / 1000);
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		return active;
 	}
 
+	/** 设置 active / Sets the active */
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
+	/** 获取过期时间。 / Returns the expire time. */
 	@Override
 	public int getExpireTime() {
 		return deletionTime;
 	}
 
+	/** 到期结束 / Expire End */
 	@Override
 	public void expireEnd(Player player) {
 		player.getMotions().remove(id);
 	}
 
+	/** 过期消息。 / Expire Message. */
 	@Override
 	public void expireMessage(Player player, int time) {
 	}
 
+	/** 是否立即过期 / Whether expire now */
 	@Override
 	public boolean canExpireNow() {
 		return true;

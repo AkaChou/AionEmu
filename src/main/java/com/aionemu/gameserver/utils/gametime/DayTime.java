@@ -1,24 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.gametime;
 
 /**
+ * 游戏内时段枚举（晨/午/晚/夜）。
+ * In-game day-time period enum (morning/afternoon/evening/night).
+ *
  * @author ATracer
  */
 public enum DayTime {
-	MORNING, AFTERNOON, EVENING, NIGHT
+	/**
+	 * 早晨。
+	 * Morning.
+	 */
+	MORNING,
+	/**
+	 * 下午。
+	 * Afternoon.
+	 */
+	AFTERNOON,
+	/**
+	 * 傍晚。
+	 * Evening.
+	 */
+	EVENING,
+	/**
+	 * 夜晚。
+	 * Night.
+	 */
+	NIGHT
 }

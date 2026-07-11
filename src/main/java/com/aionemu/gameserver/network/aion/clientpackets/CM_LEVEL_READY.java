@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -62,15 +46,33 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
+/**
+ * 地图加载完成就绪通知的客户端包。
+ * Client packet notifying that the level/map has finished loading.
+ */
 public class CM_LEVEL_READY extends AionClientPacket {
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_LEVEL_READY(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 本包无载荷。
+	 * This packet has no payload.
+	 */
 	@Override
 	protected void readImpl() {
 	}
-
+	/**
+	 * 地图就绪后同步玩家信息、房屋对象与保护状态。
+	 * After map ready, syncs player info, house objects, and protection state.
+	 */
 	@Override
 	protected void runImpl() {
 		Player activePlayer = getConnection().getActivePlayer();
@@ -118,42 +120,42 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		if (!WorldMapType.getWorld(activePlayer.getWorldId()).isPersonal()) {
 			sendPacket(new SM_SYSTEM_MESSAGE(1390122, activePlayer.getPosition().getInstanceId()));
 		}
-		// Rift
+		// 裂隙 / Rift
 		RiftInformer.sendRiftsInfo(activePlayer);
-		// Territory
+		// 领地 / Territory
 		GameRuntimeServices.territoryService().onEnterWorld(activePlayer);
-		// Town 3.9
+		// 城镇 3.9 / Town 3.9
 		GameHousingServices.townService().onEnterWorld(activePlayer);
-		// Protector Conqueror
+		// 守护者/征服者 / Protector Conqueror
 		GameFeatureServices.protectorConquerorService().onEnterMap(activePlayer);
-		// Base 4.3
+		// 基地 4.3 / Base 4.3
 		GameFeatureServices.baseService().onEnterBaseWorld(activePlayer);
-		// Shugo Imperial Tomb 4.3
+		// 术古皇陵 4.3 / Shugo Imperial Tomb 4.3
 		ShugoImperialTombSpawnManager.sendImperialStatus(activePlayer);
-		// Abyss Landing 4.9.1
+		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
 		GameLocationBootstrapServices.abyssLandingService().onEnterWorld(activePlayer);
-		// Tower Of Eternity 5.0
+		// 永恒之塔 5.0 / Tower Of Eternity 5.0
 		GameLocationBootstrapServices.towerOfEternityService().onEnterTowerWorld(activePlayer);
-		// Outpost 5.8
+		// 前哨 5.8 / Outpost 5.8
 		GameLocationBootstrapServices.outpostService().onEnterOutpostWorld(activePlayer);
 		activePlayer.getEffectController().updatePlayerEffectIcons();
 		sendPacket(SM_CUBE_UPDATE.cubeSize(StorageType.CUBE, activePlayer));
 		TeleportService2.archdaevaTransformation(activePlayer);
 		TeleportService2.playerTransformation(activePlayer);
 		TeleportService2.instanceTransformation(activePlayer);
-		// BattleField Union 5.3
+		// 战场联合 5.3 / BattleField Union 5.3
 		// GameCoreGameplayServices.battlefieldUnionService().onEnterWorld(activePlayer);
-		// Pet
+		// 宠物 / Pet
 		Pet pet = activePlayer.getPet();
 		if (pet != null && !pet.isSpawned()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(pet);
 		}
-		// Summon
+		// 召唤 / Summon
 		Summon summon = activePlayer.getSummon();
 		if (summon != null && !summon.isSpawned()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
 		}
-		// Minion
+		// 随从 / Minion
 		Minion minion = activePlayer.getMinion();
 		if (minion != null && !minion.isSpawned()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(minion);

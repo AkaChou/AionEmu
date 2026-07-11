@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.heiron;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -30,9 +18,12 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
+/**
+ * 希隆任务脚本：A Storm Of Vengeance（任务 ID 14153）。
+ * Heiron quest script: A Storm Of Vengeance (quest ID 14153).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _14153A_Storm_Of_Vengeance extends QuestHandler {
 
     private final static int questId = 14153;

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player.CreativityPanel.stats;
 
 import java.util.ArrayList;
@@ -27,12 +11,23 @@ import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
+/**
+ * 创造力属性：意志，按等级变更意志加成。
+ * Creativity stat: Will; applies will bonus by rank.
+ */
 public class Will implements StatOwner {
 
 	private static volatile ObjectProvider<Will> instanceProvider;
 
 	private List<IStatFunction> will = new ArrayList<IStatFunction>();
 
+	/**
+	 * 属性变更时重算。
+	 * Recalculates when the stat changes.
+	 *
+	 * 玩家 / player
+	 * point
+	 */
 	public void onChange(Player player, int point) {
 		if (point >= 1) {
 			will.clear();
@@ -46,6 +41,11 @@ public class Will implements StatOwner {
 		}
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static Will getInstance() {
 		ObjectProvider<Will> provider = instanceProvider;
 		if (provider != null) {
@@ -54,6 +54,12 @@ public class Will implements StatOwner {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<Will> provider) {
 		instanceProvider = provider;
 	}

@@ -1,40 +1,36 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.movement;
 
 import com.aionemu.gameserver.model.gameobjects.Summon;
 
 /**
+ * 召唤物移动控制器。
+ * Summon move controller.
+ *
  * @author ATracer
  */
 public class SummonMoveController extends PlayableMoveController<Summon> {
 
+	/**
+	 * 使用指定召唤物构造控制器。
+	 * Construct the controller for the given summon.
+	 *
+	 * Summon owner
+	 */
 	public SummonMoveController(Summon owner) {
 		super(owner);
 	}
 
 	/**
-	 * 
+	 * 向当前目标对象移动，默认不处理。
+	 * Move toward the current target object; the default implementation is a no-op.
 	 */
 	public void moveToTargetObject() {
-		// TODO Auto-generated method stub
-
 	}
 
+	/**
+	 * 技能施放时设置为立即移动掩码。
+	 * Set the immediate movement mask during skill cast.
+	 */
 	@Override
 	public void skillMovement() {
 		this.movementMask = MovementMask.IMMEDIATE;

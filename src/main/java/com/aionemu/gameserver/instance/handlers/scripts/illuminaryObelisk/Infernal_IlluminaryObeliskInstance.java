@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.illuminaryObelisk;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -50,62 +34,77 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
-Author (Encom)
-
-You start at the top of the instance so you need to move down as fast as you can.
-If you die inside you will restart at the entrance of the instance.  
-The tower has two floors, bridges on east and west are connected to the second floor and north and south bridges are connected to the first floor.  
-An elevator in the center connects both floors.  
-Four Shield Units must be defended from monsters, and each shield needs to charge 3 phases, when all shields are at third phase the final boss will spawn.  
-Cannons are located around the shield units, enter them with the right item and make wide area damage to the monsters.
-
-Special Features:
-Successfully defend the towers and the final boss will appear.
-You will need to collect the items, defend the towers and then the "Boss" will appear.
-Updrafts are placed around the map so you can travel faster between floors and bridges, if you fall outside the updraft it will instant kill you.
-The rolls of the party members is important, designate a person to collect the items, another for the cannons, and to defend the shield units.
-**/
+ * 炼狱辉耀方尖碑副本事件处理器。
+ * Instance event handler for Infernal Illuminary Obelisk.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301370000)
 public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 {
+	/** 开始时间 / start time */
 	private long startTime;
-	private Race videoRace;
-	private int illuminaryWave;
-	private Future<?> instanceTimer;
-	//Eastern Shield Wave.
-	private Future<?> easternTaskE1;
-	private Future<?> easternTaskE2;
-	private Future<?> easternTaskE3;
-	private Future<?> easternTaskE4;
-	//Western Shield Wave.
-	private Future<?> westernTaskW1;
-	private Future<?> westernTaskW2;
-	private Future<?> westernTaskW3;
-	private Future<?> westernTaskW4;
-	//Southern Shield Wave.
-	private Future<?> southernTaskS1;
-	private Future<?> southernTaskS2;
-	private Future<?> southernTaskS3;
-	private Future<?> southernTaskS4;
-	//Northern Shield Wave.
-	private Future<?> northernTaskN1;
-	private Future<?> northernTaskN2;
-	private Future<?> northernTaskN3;
-	private Future<?> northernTaskN4;
+	/** 视频种族 / video race */
+		private Race videoRace;
+	/** illuminary wave / illuminary wave */
+		private int illuminaryWave;
+	/** 副本计时器 / instance timer */
+		private Future<?> instanceTimer;
+	// 东部护盾波次。 / Eastern Shield Wave.
+	/** eastern 任务 e1 / eastern task e1 */
+		private Future<?> easternTaskE1;
+	/** eastern 任务 e2 / eastern task e2 */
+		private Future<?> easternTaskE2;
+	/** eastern 任务 e3 / eastern task e3 */
+		private Future<?> easternTaskE3;
+	/** eastern 任务 e4 / eastern task e4 */
+		private Future<?> easternTaskE4;
+	// 西部护盾波次。 / Western Shield Wave.
+	/** western 任务 w1 / western task w1 */
+		private Future<?> westernTaskW1;
+	/** western 任务 w2 / western task w2 */
+		private Future<?> westernTaskW2;
+	/** western 任务 w3 / western task w3 */
+		private Future<?> westernTaskW3;
+	/** western 任务 w4 / western task w4 */
+		private Future<?> westernTaskW4;
+	// 南部护盾波次。 / Southern Shield Wave.
+	/** southern 任务 s1 / southern task s1 */
+		private Future<?> southernTaskS1;
+	/** southern 任务 s2 / southern task s2 */
+		private Future<?> southernTaskS2;
+	/** southern 任务 s3 / southern task s3 */
+		private Future<?> southernTaskS3;
+	/** southern 任务 s4 / southern task s4 */
+		private Future<?> southernTaskS4;
+	// 北部护盾波次。 / Northern Shield Wave.
+	/** northern 任务 n1 / northern task n1 */
+		private Future<?> northernTaskN1;
+	/** northern 任务 n2 / northern task n2 */
+		private Future<?> northernTaskN2;
+	/** northern 任务 n3 / northern task n3 */
+		private Future<?> northernTaskN3;
+	/** northern 任务 n4 / northern task n4 */
+		private Future<?> northernTaskN4;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> illuminaryTask1 = new ArrayList<>();
-	private final List<Future<?>> illuminaryTask2 = new ArrayList<>();
-	private final List<Future<?>> illuminaryTask3 = new ArrayList<>();
-	private final List<Future<?>> illuminaryTask4 = new ArrayList<>();
+	/** illuminary task1 / illuminary task1 */
+		private final List<Future<?>> illuminaryTask1 = new ArrayList<>();
+	/** illuminary task2 / illuminary task2 */
+		private final List<Future<?>> illuminaryTask2 = new ArrayList<>();
+	/** illuminary task3 / illuminary task3 */
+		private final List<Future<?>> illuminaryTask3 = new ArrayList<>();
+	/** illuminary task4 / illuminary task4 */
+		private final List<Future<?>> illuminaryTask4 = new ArrayList<>();
 	
    /**
-	* Reward:
-	* After a successful capture of the boss you will get a small chance of obtaining mythical wings, and a variety of items.
-	* Boxes are for all the members and the wings only for one person in the group.
-	*/
+	 * 奖励：成功捕获 Boss 后有几率获得…… / Reward: After a successful capture of the boss you will get a small chance of obtaining mythical wings, and a variety of items. Boxes are for all the members and the wings only for one person in the group
+	 */
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -114,8 +113,8 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			case 702018: //Supply Box.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053100, 1)); //Pure Dynatoum's Equipment Crux Box.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
@@ -127,27 +126,33 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 					}
 				}
 			break;
-			case 702658: //Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+			case 702658: //修道院箱子。 / Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
-			case 702659: //Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+			case 702659: //高级修道院箱子。 / Noble Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 		   /**
-			* Each "Shield Generator" unit needs 3 ide items, 12 items in total, you can find them all around the instance.
-			*/
+	 * 每台“护盾发生器”需要 3 个理念物品，共 12 个，可在副本各处找到 / Each "Shield Generator" unit needs 3 ide items, 12 items in total, you can find them all around the instance
+	 */
 			case 730884: //Flourishing Idium.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000289, 3));
 			break;
 		   /**
-			* Bombs to use the cannons appear in chests around the instance in a different place every time, collect them too.
-			*/
+	 * 用于大炮的炸弹出现在副本各处的箱子中，位置每次不同，请一并收集 / Bombs to use the cannons appear in chests around the instance in a different place every time, collect them too
+	 */
 			case 730885: //Danuar Cannonballs.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000290, 3));
 			break;
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -155,32 +160,42 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
 	private void startIlluminaryTimer() {
-		//The weakened protective shield will disappear in 30 minutes.
+		// 弱化防护盾将在 30 分钟后消失。 / The weakened protective shield will disappear in 30 minutes.
 		this.sendMessage(1402129, 1 * 60 * 1000);
-		//The weakened protective shield will disappear in 25 minutes.
+		// 弱化防护盾将在 25 分钟后消失。 / The weakened protective shield will disappear in 25 minutes.
 		this.sendMessage(1402130, 5 * 60 * 1000);
-		//The weakened protective shield will disappear in 20 minutes.
+		// 弱化防护盾将在 20 分钟后消失。 / The weakened protective shield will disappear in 20 minutes.
 		this.sendMessage(1402131, 10 * 60 * 1000);
-		//The weakened protective shield will disappear in 15 minutes.
+		// 弱化防护盾将在 15 分钟后消失。 / The weakened protective shield will disappear in 15 minutes.
 		this.sendMessage(1402132, 15 * 60 * 1000);
-		//The weakened protective shield will disappear in 10 minutes.
+		// 弱化防护盾将在 10 分钟后消失。 / The weakened protective shield will disappear in 10 minutes.
 		this.sendMessage(1402133, 20 * 60 * 1000);
-		//The weakened protective shield will disappear in 5 minutes.
+		// 弱化防护盾将在 5 分钟后消失。 / The weakened protective shield will disappear in 5 minutes.
 		this.sendMessage(1402134, 25 * 60 * 1000);
-		//The weakened protective shield will disappear in 1 minute.
+		// 弱化防护盾将在 1 分钟后消失。 / The weakened protective shield will disappear in 1 minute.
 		this.sendMessage(1402235, 29 * 60 * 1000);
-		//The shield surrounding the Infernal Illuminary Obelisk has disappeared. Pashid's Destruction Unit has attacked the area.
+		// 炼狱光明方尖碑周围护盾已消失。帕希德破坏部队已进攻该区域。 / The shield surrounding the Infernal Illuminary Obelisk has disappeared. Pashid's Destruction Unit has attacked the area.
 		this.sendMessage(1402424, 30 * 60 * 1000);
-		//The Remodeled Dynatoum has destroyed the shield generator teleporter.
+		// 改造的迪纳图姆摧毁了护盾发生器传送器。 / The Remodeled Dynatoum has destroyed the shield generator teleporter.
 		this.sendMessage(1402429, 31 * 60 * 1000);
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		super.onInstanceCreate(instance);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
 			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					startIlluminaryTimer();
@@ -193,13 +208,8 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* Shield Units:
-	* Its a good idea to start powering the shields once you have 6 ide shield items.
-	* Help collect the remaining pieces together in the other bridges.
-	* Once you charge a shield with one of the items, a wave of monster will appear, help that person and kill the mobs.
-	* Protect the shield units from monsters while you charge them up to the 3rd phase.
-	* Once all shields are at the 3rd phase no more monsters will spawn.
-	*/
+	 * 护盾单元：建议在……后开始为护盾充能。 / Shield Units: Its a good idea to start powering the shields once you have 6 ide shield items. Help collect the remaining pieces together in the other bridges. Once you charge a shield with one of the items, a wave of monster will appear, help that person and kill the mobs. Protect the shield units from monsters while you charge them up to the 3rd phase. Once all shields are at the 3rd phase no more monsters will spawn
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -207,12 +217,12 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			    if (player.getInventory().decreaseByItemId(164000289, 3)) {
 					startEasternTask();
 					startEasternShield1();
-					//An Abyss Gate has opened near the eastern power shield generator.
-					//Infiltration by Pashid Destruction Unit is underway.
+					// 东部护盾能量发生器附近开启了欧比斯之门。 / An Abyss Gate has opened near the eastern power shield generator.
+					// 帕希德破坏部队渗透进行中。 / Infiltration by Pashid Destruction Unit is underway.
 					sendMsgByRace(1402224, Race.PC_ALL, 1000);
 					spawn(702014, 255.7926f, 338.22058f, 325.56473f, (byte) 0, 60); //Pashid Infiltration Gate.
 				} else {
-					//You need a Crystalline Idium Piece to charge the generator.
+					// 需要结晶伊迪姆碎片为发生器充能。 / You need a Crystalline Idium Piece to charge the generator.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402211));
 				}
 			break;
@@ -220,12 +230,12 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			    if (player.getInventory().decreaseByItemId(164000289, 3)) {
 					startWesternTask();
 					startWesternShield1();
-					//An Abyss Gate has opened near the western power shield generator.
-					//Infiltration by Pashid Destruction Unit is underway.
+					// 西部护盾能量发生器附近开启了欧比斯之门。 / An Abyss Gate has opened near the western power shield generator.
+					// 帕希德破坏部队渗透进行中。 / Infiltration by Pashid Destruction Unit is underway.
 					sendMsgByRace(1402225, Race.PC_ALL, 1000);
 					spawn(702015, 255.7034f, 171.83853f, 325.81653f, (byte) 0, 18); //Pashid Infiltration Gate.
 				} else {
-					//You need a Crystalline Idium Piece to charge the generator.
+					// 需要结晶伊迪姆碎片为发生器充能。 / You need a Crystalline Idium Piece to charge the generator.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402211));
 				}
 			break;
@@ -233,12 +243,12 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			    if (player.getInventory().decreaseByItemId(164000289, 3)) {
 					startSouthernTask();
 					startSouthernShield1();
-					//An Abyss Gate has opened near the southern power shield generator.
-					//Infiltration by Pashid Destruction Unit is underway.
+					// 南部护盾能量发生器附近开启了欧比斯之门。 / An Abyss Gate has opened near the southern power shield generator.
+					// 帕希德破坏部队渗透进行中。 / Infiltration by Pashid Destruction Unit is underway.
 					sendMsgByRace(1402226, Race.PC_ALL, 1000);
 					spawn(702016, 343.12021f, 254.10585f, 291.62302f, (byte) 0, 34); //Pashid Infiltration Gate.
 				} else {
-					//You need a Crystalline Idium Piece to charge the generator.
+					// 需要结晶伊迪姆碎片为发生器充能。 / You need a Crystalline Idium Piece to charge the generator.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402211));
 				}
 			break;
@@ -246,17 +256,23 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			    if (player.getInventory().decreaseByItemId(164000289, 3)) {
 					startNorthernTask();
 					startNorthernShield1();
-					//An Abyss Gate has opened near the northern power shield generator.
-					//Infiltration by Pashid Destruction Unit is underway.
+					// 北部护盾能量发生器附近开启了欧比斯之门。 / An Abyss Gate has opened near the northern power shield generator.
+					// 帕希德破坏部队渗透进行中。 / Infiltration by Pashid Destruction Unit is underway.
 					sendMsgByRace(1402227, Race.PC_ALL, 1000);
 					spawn(702017, 169.55626f, 254.52907f, 293.04276f, (byte) 0, 17); //Pashid Infiltration Gate.
 				} else {
-					//You need a Crystalline Idium Piece to charge the generator.
+					// 需要结晶伊迪姆碎片为发生器充能。 / You need a Crystalline Idium Piece to charge the generator.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402211));
 				}
 			break;
 			case 730886: //Shield Control Room Teleporter.
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -266,14 +282,8 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 				});
 			break;
 		   /**
-			* Defense Cannons:
-			* Each Shield Unit has a defense cannon that can be used.
-			* This cannons do powerful wide area damage attacks.
-			* In order to use them you need to have Bomb items.
-			* When a shield is charged completely a cannon will spawn to help in the defense of the area.
-			* Determining a person to use the cannon and positioning before the mobs come is a recommended.
-			* Bombs to use the cannons appear in chests around the instance in a different place every time, collect them too.
-			*/
+	 * 防御加农：每个护盾单元配有防御加农。 / Defense Cannons: Each Shield Unit has a defense cannon that can be used. This cannons do powerful wide area damage attacks. In order to use them you need to have Bomb items. When a shield is charged completely a cannon will spawn to help in the defense of the area. Determining a person to use the cannon and positioning before the mobs come is a recommended. Bombs to use the cannons appear in chests around the instance in a different place every time, collect them too
+	 */
 			case 702009: //Danuar Cannon.
 			case 702021: //Danuar Cannon.
 			case 702022: //Danuar Cannon.
@@ -285,9 +295,8 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* If a "Shield" is destroyed, you must start again from the 1st phase
-	* You can heal the shield with a restoration skill.
-	*/
+	 * 若“护盾”被摧毁，须从第 1 阶段重新开始。 / If a "Shield" is destroyed, you must start again from the 1st phase You can heal the shield with a restoration skill
+	 */
 	@Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
@@ -314,9 +323,13 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(234732)); //Pashid Destruction Unit Prime Fleshmender.
 				killNpc(getNpcs(234733)); //Pashid Destruction Unit Prime Reserve.
 				killNpc(getNpcs(234734)); //Pashid Destruction Unit Prime Skirmisher.
-				//The eastern shield power generator has been destroyed.
+				// 东部护盾能量发生器已被摧毁。 / The eastern shield power generator has been destroyed.
 				sendMsgByRace(1402139, Race.PC_ALL, 0);
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						spawn(702010, 255.47392f, 293.56177f, 321.18497f, (byte) 89); //Eastern Shield Generator.
@@ -345,9 +358,13 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(234732)); //Pashid Destruction Unit Prime Fleshmender.
 				killNpc(getNpcs(234733)); //Pashid Destruction Unit Prime Reserve.
 				killNpc(getNpcs(234734)); //Pashid Destruction Unit Prime Skirmisher.
-				//The western shield power generator has been destroyed.
+				// 西部护盾能量发生器已被摧毁。 / The western shield power generator has been destroyed.
 				sendMsgByRace(1402140, Race.PC_ALL, 0);
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						spawn(702011, 255.55742f, 216.03549f, 321.21344f, (byte) 30); //Western Shield Generator.
@@ -376,9 +393,13 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(234732)); //Pashid Destruction Unit Prime Fleshmender.
 				killNpc(getNpcs(234733)); //Pashid Destruction Unit Prime Reserve.
 				killNpc(getNpcs(234734)); //Pashid Destruction Unit Prime Skirmisher.
-				//The southern shield power generator has been destroyed.
+				// 南部护盾能量发生器已被摧毁。 / The southern shield power generator has been destroyed.
 				sendMsgByRace(1402141, Race.PC_ALL, 0);
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						spawn(702012, 294.20718f, 254.60352f, 295.7729f, (byte) 60); //Southern Shield Generator.
@@ -407,9 +428,13 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(234732)); //Pashid Destruction Unit Prime Fleshmender.
 				killNpc(getNpcs(234733)); //Pashid Destruction Unit Prime Reserve.
 				killNpc(getNpcs(234734)); //Pashid Destruction Unit Prime Skirmisher.
-				//The northern shield power generator has been destroyed.
+				// 北部护盾能量发生器已被摧毁。 / The northern shield power generator has been destroyed.
 				sendMsgByRace(1402142, Race.PC_ALL, 0);
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						spawn(702013, 216.97739f, 254.4616f, 295.77353f, (byte) 0); //Northern Shield Generator.
@@ -435,15 +460,15 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			break;
 			case 234686: //Remodeled Dynatoum.
 				despawnNpc(npc);
-				//sendMsg("[SUCCES]: You have finished <[Infernal] Illuminary Obelisk>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <[Infernal] Illuminary Obelisk>");
 				spawn(702018, 258.84213f, 251.32626f, 455.12192f, (byte) 105); //Supply Box.
 				spawn(730905, 255.36038f, 254.56577f, 455.12015f, (byte) 105); //[Infernal] Illuminary Obelisk Exit.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 252.05019f, 257.85583f, 455.12195f, (byte) 105); //Abbey Box.
+				        spawn(702658, 252.05019f, 257.85583f, 455.12195f, (byte) 105); //修道院箱子。 / Abbey Box.
 					break;
 					case 2:
-					    spawn(702659, 252.05019f, 257.85583f, 455.12195f, (byte) 105); //Noble Abbey Box.
+					    spawn(702659, 252.05019f, 257.85583f, 455.12195f, (byte) 105); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
 			break;
@@ -451,49 +476,71 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
     }
 	
 	//===========================//
-	//=== Eastern Shield Task ===//
+	// === 东部护盾任务 === / === Eastern Shield Task ===//
 	//===========================//
 	protected void startEasternTask() {
 		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startEasternShield2();
 				easternTaskE1.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702218, 255.56438f, 297.59488f, 321.39154f, (byte) 29); //Eastern Defence Charge 01.
             }
         }, 120000)); //...2Min
 		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startEasternShield3();
 				easternTaskE2.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702219, 255.56438f, 297.59488f, 321.39154f, (byte) 29); //Eastern Defence Charge 02.
             }
         }, 240000)); //...4Min
 		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startEasternShield4();
 				easternTaskE3.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
 		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				spawn(702220, 255.56438f, 297.59488f, 321.39154f, (byte) 29); //Eastern Defence Charge 03.
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 						illuminaryWave++;
@@ -506,49 +553,71 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
 	//===========================//
-	//=== Western Shield Task ===//
+	// === 西部护盾任务 === / === Western Shield Task ===//
 	//===========================//
 	protected void startWesternTask() {
 		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startWesternShield2();
 				westernTaskW1.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702221, 255.38777f, 212.00926f, 321.37292f, (byte) 90); //Western Defence Charge 01.
             }
         }, 120000)); //...2Min
 		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startWesternShield3();
 				westernTaskW2.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702222, 255.38777f, 212.00926f, 321.37292f, (byte) 90); //Western Defence Charge 02.
             }
         }, 240000)); //...4Min
 		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startWesternShield4();
 				westernTaskW3.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
 		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				spawn(702223, 255.38777f, 212.00926f, 321.37292f, (byte) 90); //Western Defence Charge 03.
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 						illuminaryWave++;
@@ -561,49 +630,71 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
 	//==========================//
-	//== Southern Shield Task ==//
+	// == 南部护盾任务 == / == Southern Shield Task ==//
 	//==========================//
 	protected void startSouthernTask() {
 		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startSouthernShield2();
 				southernTaskS1.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702224, 298.13452f, 254.48087f, 295.93027f, (byte) 119); //Southern Defence Charge 01.
             }
         }, 120000)); //...2Min
 		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startSouthernShield3();
 				southernTaskS2.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702225, 298.13452f, 254.48087f, 295.93027f, (byte) 119); //Southern Defence Charge 02.
             }
         }, 240000)); //...4Min
 		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startSouthernShield4();
 				southernTaskS3.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
 		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				spawn(702226, 298.13452f, 254.48087f, 295.93027f, (byte) 119); //Southern Defence Charge 03.
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 						illuminaryWave++;
@@ -616,49 +707,71 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
 	//==========================//
-	//== Northern Shield Task ==//
+	// == 北部护盾任务 == / == Northern Shield Task ==//
 	//==========================//
 	protected void startNorthernTask() {
 		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startNorthernShield2();
 				northernTaskN1.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702227, 212.96484f, 254.4526f, 295.90784f, (byte) 60); //Northern Defence Charge 01.
             }
         }, 120000)); //...2Min
 		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startNorthernShield3();
 				northernTaskN2.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(702228, 212.96484f, 254.4526f, 295.90784f, (byte) 60); //Northern Defence Charge 02.
             }
         }, 240000)); //...4Min
 		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startNorthernShield4();
 				northernTaskN3.cancel(true);
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
 		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				spawn(702229, 212.96484f, 254.4526f, 295.90784f, (byte) 60); //Northern Defence Charge 03.
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 						illuminaryWave++;
@@ -671,15 +784,14 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* The higher the phase of the charge will spawn more difficult monsters, in the 3rd phase elite monsters will spawn.
-	* Charging a shield to the 3rd phase continuously can be hard because of all the mobs you will have to handle.
-	* A few easy monsters will spawn after a certain time if you leave the shield unit alone.
-	* After all units have been charged to the 3rd phase, defeat the remaining monsters.
-	****************************
-	* Eastern Shield Generator *
-	****************************/
+	 * 充能阶段越高，刷新的怪物越强。 / The higher the phase of the charge will spawn more difficult monsters, in the 3rd phase elite monsters will spawn. Charging a shield to the 3rd phase continuously can be hard because of all the mobs you will have to handle. A few easy monsters will spawn after a certain time if you leave the shield unit alone. After all units have been charged to the 3rd phase, defeat the remaining monsters. *************************** Eastern Shield Generator * **************************
+	 */
 	private void startEasternShield1() {
 		easternTaskE1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -690,6 +802,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		easternTaskE1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -702,6 +818,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startEasternShield2() {
 		easternTaskE2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -712,6 +832,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		easternTaskE2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -724,6 +848,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startEasternShield3() {
 		easternTaskE3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -734,6 +862,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		easternTaskE3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -746,6 +878,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startEasternShield4() {
 		easternTaskE4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -756,6 +892,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		easternTaskE4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -767,11 +907,15 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	
-   /****************************
-	* Western Shield Generator *
-	****************************/
+   /**
+	 * 西部护盾发生器 / ************************* Western Shield Generator
+	 */
 	private void startWesternShield1() {
 		westernTaskW1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -782,6 +926,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		westernTaskW1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -794,6 +942,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startWesternShield2() {
 		westernTaskW2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -804,6 +956,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		westernTaskW2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -816,6 +972,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startWesternShield3() {
 		westernTaskW3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -826,6 +986,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		westernTaskW3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -838,6 +1002,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startWesternShield4() {
 		westernTaskW4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -848,6 +1016,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		westernTaskW4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -859,11 +1031,15 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	
-	/***************************
-	* Southern Shield Generator *
-	****************************/
+	/**
+	 * 南部护盾发生器 / ************************ Southern Shield Generator
+	 */
 	private void startSouthernShield1() {
 		southernTaskS1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -874,6 +1050,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		southernTaskS1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -886,6 +1066,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startSouthernShield2() {
 		southernTaskS2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -896,6 +1080,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		southernTaskS2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -908,6 +1096,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startSouthernShield3() {
 		southernTaskS3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -918,6 +1110,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		southernTaskS3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -930,6 +1126,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startSouthernShield4() {
 		southernTaskS4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -940,6 +1140,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		southernTaskS4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -951,11 +1155,15 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	
-	/****************************
-	* Northern Shield Generator *
-	****************************/
+	/**
+	 * 北部护盾发生器 / ************************* Northern Shield Generator
+	 */
 	private void startNorthernShield1() {
 		northernTaskN1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -966,6 +1174,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		northernTaskN1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -978,6 +1190,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startNorthernShield2() {
 		northernTaskN2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -988,6 +1204,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		northernTaskN2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1000,6 +1220,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startNorthernShield3() {
 		northernTaskN3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1010,6 +1234,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		northernTaskN3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234730, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1022,6 +1250,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	private void startNorthernShield4() {
 		northernTaskN4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234720, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1032,6 +1264,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		northernTaskN4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(234725, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1045,6 +1281,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	
 	private void rushIlluminary(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -1061,10 +1301,8 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* Activate The Seal:
-	* When all shield units have been charged up to the 3rd phase, you can activate the passage to the final boss.
-	* When you activate the seal the final boss will appear and the fight will begin.
-	*/
+	 * 激活封印：当所有护盾单元充能至…… / Activate The Seal: When all shield units have been charged up to the 3rd phase, you can activate the passage to the final boss. When you activate the seal the final boss will appear and the fight will begin
+	 */
 	private void shieldControl() {
 		if (illuminaryWave == 4) {
 			deleteNpc(702010); //Eastern Shield Generator.
@@ -1075,16 +1313,16 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 			deleteNpc(702015); //Western Pashid Infiltration Gate.
 			deleteNpc(702016); //Southern Pashid Infiltration Gate.
 			deleteNpc(702017); //Northern Pashid Infiltration Gate.
-			//The shield is activated and the Pashid Destruction Unit is retreating.
-			//The Shield Control Room Teleporter has appeared.
+			// 护盾已激活，帕希德破坏部队正在撤退。 / The shield is activated and the Pashid Destruction Unit is retreating.
+			// 护盾控制室传送器已出现。 / The Shield Control Room Teleporter has appeared.
 			sendMsgByRace(1402202, Race.PC_ALL, 0);
-			//Shield Chamber Teleport Device appeared.
+			// 护盾室传送装置已出现。 / Shield Chamber Teleport Device appeared.
 			sendMsgByRace(1403146, Race.PC_ALL, 10000);
-			//Shield Complete.
+			// 护盾完成。 / Shield Complete.
 			spawn(702217, 255.31036f, 254.66649f, 455.12018f, (byte) 91);
-			//Shield Defence Complete.
+			// 护盾防御完成。 / Shield Defence Complete.
 			spawn(702287, 255.13590f, 254.21944f, 337.96027f, (byte) 109);
-			//Shield Control Room Teleporter.
+			// 护盾控制室传送器。 / Shield Control Room Teleporter.
 			spawn(730886, 255.47392f, 293.56177f, 321.18497f, (byte) 89);
 			spawn(730886, 255.55742f, 216.03549f, 321.21344f, (byte) 30);
 			spawn(730886, 294.20718f, 254.60352f, 295.77290f, (byte) 60);
@@ -1127,6 +1365,12 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -1139,6 +1383,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -1148,9 +1396,19 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -1169,15 +1427,33 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
+	/**
+	 * 移除相关物品。
+	 * Remove related items.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
@@ -1185,6 +1461,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(164000290, storage.getItemCountByItemId(164000290));
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		stopInstanceTask1();
@@ -1249,6 +1529,12 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}
 		return null;
 	}
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -21,16 +5,18 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerAppearance;
 
 /**
- * Class that is responsible for loading/storing player appearance
- * 
+ * 玩家外观数据访问对象，负责加载/存储玩家外观。
+ * Player appearance data access object responsible for loading/storing player appearance.
+ *
  * @author SoulKeeper
  */
 public abstract class PlayerAppearanceDAO implements DAO {
 
 	/**
-	 * Returns unique identifier for PlayerAppearanceDAO
-	 * 
-	 * @return unique identifier for PlayerAppearanceDAO
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -38,32 +24,32 @@ public abstract class PlayerAppearanceDAO implements DAO {
 	}
 
 	/**
-	 * Loads player apperance DAO by player ID.<br>
-	 * Returns null if not found in database
-	 * 
-	 * @param playerId player id
-	 * @return player appearance or null
+	 * 按玩家 ID 加载外观；数据库中不存在时返回 null。
+	 * Loads player appearance by player ID; returns null if not found in database.
+	 *
+	 * player id
+	 * @return 玩家外观，或 null / player appearance or null
 	 */
 	public abstract PlayerAppearance load(int playerId);
 
 	/**
-	 * Saves player appearance in database.<br>
-	 * Actually calls
-	 * {@link #store(int, com.aionemu.gameserver.model.gameobjects.player.PlayerAppearance)}
-	 * 
-	 * @param player whos appearance to store
-	 * @return true, if sql query was successful, false overwise
+	 * 保存玩家外观到数据库；实际调用 {@link #store(int, PlayerAppearance)}。
+	 * Saves player appearance to the database; actually calls {@link #store(int, PlayerAppearance)}.
+	 *
+	 * @param player 需要存储外观的玩家 / player whose appearance to store
+	 * @return 若 the SQL query was successful 则为 true / true if the SQL query was successful
 	 */
 	public final boolean store(Player player) {
 		return store(player.getObjectId(), player.getPlayerAppearance());
 	}
 
 	/**
-	 * Stores appearance in database
-	 * 
-	 * @param id               player id
-	 * @param playerAppearance player appearance
-	 * @return true, if sql query was successful, false overwise
+	 * 将外观写入数据库。
+	 * Stores appearance in the database.
+	 *
+	 * @param id 玩家 ID / player id
+	 * player appearance
+	 * 若 the SQL query was successful 则为 true / true if the SQL query was successful
 	 */
 	public abstract boolean store(int id, PlayerAppearance playerAppearance);
 }

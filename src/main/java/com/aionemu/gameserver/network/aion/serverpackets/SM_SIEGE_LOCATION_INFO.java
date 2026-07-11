@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -32,17 +18,31 @@ import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.SiegeService;
+/**
+ * 向客户端同步全部或单个攻城地点信息。
+ * Server packet synchronizing all or a single siege location info to the client.
+ */
 @Slf4j
 
 public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 	private int infoType;
 	private Map<Integer, SiegeLocation> locations;
 
+	/**
+	 * 构造默认的 SM_SIEGE_LOCATION_INFO 包。
+	 * Creates a default SM_SIEGE_LOCATION_INFO packet.
+	 */
 	public SM_SIEGE_LOCATION_INFO() {
 		this.infoType = 0;
 		locations = GameFeatureServices.siegeService().getSiegeLocations();
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SIEGE_LOCATION_INFO 包。
+	 * Creates a SM_SIEGE_LOCATION_INFO packet with the given parameters.
+	 *
+	 * @param loc 攻城地点 / siege location
+	 */
 	public SM_SIEGE_LOCATION_INFO(SiegeLocation loc) {
 		this.infoType = 1;
 		locations = new HashMap<>();
@@ -66,7 +66,7 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 			writeD(legionId);
 			if (legionId != 0) {
 				if (GameCoreGameplayServices.legionService().getLegion(legionId) == null) {
-					log.error("Can't find or load legion with id " + legionId);
+					log.error(I18n.get("log.6ea33edea84b", legionId));
 				} else {
 					emblem = GameCoreGameplayServices.legionService().getLegion(legionId).getLegionEmblem();
 				}
@@ -95,7 +95,7 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 			writeD(10000);
 			writeD(0x00);
 
-			// 5.3 unk protocol
+			// 5.3 未知协议 / 5.3 unk protocol
 			writeH(0x00);
 			writeD(22597);
 			writeD(0x00);

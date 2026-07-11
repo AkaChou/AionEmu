@@ -1,24 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.geo;
 
 /**
+ * 地理数据工作模式。
+ * Geo-data operating mode.
+ *
  * @author ATracer
  */
 public enum GeoType {
-	GEO_MESHES, NO_GEO
+	/** 使用真实网格碰撞。 / Use real mesh collision. */
+	GEO_MESHES,
+	/** 不使用地理数据。 / Disable geo data. */
+	NO_GEO
 }

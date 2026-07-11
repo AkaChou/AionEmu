@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.tribe;
 
 import java.util.Collections;
@@ -26,6 +10,11 @@ import jakarta.xml.bind.annotation.XmlList;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.TribeClass;
+
+/**
+ * 部落模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Tribe")
@@ -54,6 +43,7 @@ public class Tribe {
 	@XmlAttribute(required = true)
 	protected TribeClass name;
 
+	/** 返回敌对 / Returns the aggressive*/
 	public List<TribeClass> getAggressive() {
 		if (aggressive == null) {
 			aggressive = Collections.emptyList();
@@ -61,6 +51,7 @@ public class Tribe {
 		return this.aggressive;
 	}
 
+	/** 返回 hostile / Returns the hostile */
 	public List<TribeClass> getHostile() {
 		if (hostile == null) {
 			hostile = Collections.emptyList();
@@ -68,6 +59,7 @@ public class Tribe {
 		return this.hostile;
 	}
 
+	/** 返回 friendly / Returns the friendly */
 	public List<TribeClass> getFriendly() {
 		if (friendly == null) {
 			friendly = Collections.emptyList();
@@ -75,6 +67,7 @@ public class Tribe {
 		return this.friendly;
 	}
 
+	/** 返回 neutral / Returns the neutral */
 	public List<TribeClass> getNeutral() {
 		if (neutral == null) {
 			neutral = Collections.emptyList();
@@ -82,6 +75,7 @@ public class Tribe {
 		return this.neutral;
 	}
 
+	/** 返回无 / Returns the none*/
 	public List<TribeClass> getNone() {
 		if (none == null) {
 			none = Collections.emptyList();
@@ -89,6 +83,7 @@ public class Tribe {
 		return this.none;
 	}
 
+	/** 返回 support / Returns the support */
 	public List<TribeClass> getSupport() {
 		if (support == null) {
 			support = Collections.emptyList();
@@ -96,22 +91,27 @@ public class Tribe {
 		return this.support;
 	}
 
+	/** 获取基础。 / Returns the base. */
 	public TribeClass getBase() {
 		return base;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public TribeClass getName() {
 		return name;
 	}
 
+	/** 是否为守卫。 / Whether guard. */
 	public final boolean isGuard() {
 		return name.isGuard();
 	}
 
+	/** 是否基础 / Whether basic */
 	public final boolean isBasic() {
 		return name.isBasicClass();
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		return name + " (" + base + ")";

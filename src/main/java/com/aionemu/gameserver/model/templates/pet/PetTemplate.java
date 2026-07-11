@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.pet;
 
 import java.util.ArrayList;
@@ -29,6 +13,9 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.stats.PetStatsTemplate;
 
 /**
+ * 宠物模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author IlBuono
  */
 @XmlAccessorType(XmlAccessType.NONE)
@@ -56,18 +43,22 @@ public class PetTemplate {
 	@XmlTransient
 	Boolean hasPlayerFuncs = null;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return nameId;
 	}
 
+	/** 返回 pet functions / Returns the pet functions */
 	public List<PetFunction> getPetFunctions() {
 		if (hasPlayerFuncs == null) {
 			hasPlayerFuncs = false;
@@ -89,6 +80,7 @@ public class PetTemplate {
 		return petFunctions;
 	}
 
+	/** 获取仓库函数。 / Returns the warehouse function. */
 	public PetFunction getWarehouseFunction() {
 		if (petFunctions == null)
 			return null;
@@ -100,7 +92,7 @@ public class PetTemplate {
 	}
 
 	/**
-	 * Used to write to SM_PET packet, so checks only needed ones
+	 * @param type 用于写入 SM_PET 包，仅检查所需项。 / Used to write to SM_PET packet, so checks only needed ones
 	 */
 	public boolean ContainsFunction(PetFunctionType type) {
 		if (type.getId() < 0) {
@@ -127,10 +119,12 @@ public class PetTemplate {
 		return null;
 	}
 
+	/** 获取宠物属性。 / Returns the pet stats. */
 	public PetStatsTemplate getPetStats() {
 		return petStats;
 	}
 
+	/** 返回 condition reward / Returns the condition reward */
 	public final int getConditionReward() {
 		return conditionReward;
 	}

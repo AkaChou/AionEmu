@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.steelRake;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,15 +20,24 @@ import java.util.Map;
 
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 钢耙号副本事件处理器。
+ * Instance event handler for Steel Rake.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300100000)
 public class SteelRakeInstance extends GeneralInstanceHandler {
-
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -164,7 +157,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			case 215081: //Brass-Eye Grogget.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051416, 1)); //Grogget's Fabled Weapon Chest.
 					}
 				}
@@ -221,6 +214,12 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -274,6 +273,12 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc)  {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -287,22 +292,22 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			case 215056: //Warden Tantaka.
 /* 				spawn(215421, 471.095f, 576.663f, 887.46f, (byte) 30); //Treasure Box.
 				spawn(215421, 451.161f, 575.938f, 887.41f, (byte) 30); //Treasure Box. */
-				//The door is open and you can now access The Brig.
+				// 门已打开，现在可进入禁闭室。 / The door is open and you can now access The Brig.
 				sendMsgByRace(1400249, Race.PC_ALL, 2000);
 				spawn(730200, 461.898f, 487.228f, 877.713f, (byte) 0, 30); //The Brig Entrance.
 			break;
 			case 215064: //Collector Memekin.
 			case 215065: //Discerner Werikiki.
-				//The door is open and you can now access Grogget's Safe.
+				// 门已打开，现在可进入格罗格特保险箱。 / The door is open and you can now access Grogget's Safe.
 				sendMsgByRace(1400248, Race.PC_ALL, 2000);
 			break;
 			case 215066: //Technician Binukin.
-				//The door is open and you can now access the Drana Generator Chamber.
+				// 门已打开，现在可进入德拉纳发生器室。 / The door is open and you can now access the Drana Generator Chamber.
 				sendMsgByRace(1400250, Race.PC_ALL, 2000);
 				spawn(730202, 657.111f, 509.11f, 872.948f, (byte) 0, 10); //Drana Generator Chamber Access Door.
 			break;
 			case 215079: //Golden Eye Mantutu.
-				////sendMsg("[SUCCES]: You have finished <Steel Rake>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Steel Rake>");
 				spawn(700554, 736.64728f, 493.73834f, 941.4781f, (byte) 45); //Pirate Ship Treasure Box.
 				spawn(700554, 720.41028f, 511.63718f, 939.7604f, (byte) 90); //Pirate Ship Treasure Box.
 		        spawn(700554, 739.51251f, 506.14313f, 941.4781f, (byte) 77); //Pirate Ship Treasure Box.
@@ -310,23 +315,33 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 				spawn(730766, 734.18994f, 484.61578f, 941.70868f, (byte) 0, 61); //Hidden Passage.
 			break;
 			case 215081: //Brass-Eye Grogget.
-				////sendMsg("[SUCCES]: You have finished <Steel Rake>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Steel Rake>");
 				spawn(700509, 403.25793f, 510.25354f, 1071.736f, (byte) 1); //Shining Box.
 				spawn(700555, 426.47424f, 509.34625f, 1075.3801f, (byte) 0); //Captain Treasure Box.
 				spawn(730766, 428.06598f, 486.64233f, 1075.4449f, (byte) 0, 87); //Escape Anchor.
 			break;
 			case 215411: //Zerkin The One-Eyed.
-				//The door is open and you can now access the Large Gun Deck.
+				// 门已打开，现在可进入大炮甲板。 / The door is open and you can now access the Large Gun Deck.
 				sendMsgByRace(1400251, Race.PC_ALL, 2000);
 				spawn(730203, 722.564f, 508.877f, 1012.93f, (byte) 0, 88); //Large Gun Deck Entrance.
 			break;
 		}
 	}
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -334,18 +349,42 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

@@ -1,27 +1,15 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 
 /**
+ * 请求重置大天使创造力（Archdaeva Creativity）的客户端包。
+ * Client packet requesting an Archdaeva creativity reset.
+ *
  * @author Ranastic (Encom)
  */
 @Slf4j
@@ -34,12 +22,12 @@ public class CM_ARCHDAEVA_CREATIVITY_RESET extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		// empty byte
+		// 空字节 / empty byte
 	}
 
 	@Override
 	protected void runImpl() {
 		Player player = this.getConnection().getActivePlayer();
-		log.info("0x0124 CM_ARCHDAEVA_CREATIVITY called");
+		log.info(I18n.get("log.7b80e9ea0a2e"));
 	}
 }

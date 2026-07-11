@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -38,52 +22,40 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-
-Asteria Chamber or Carpus Isle Storeroom is a fortress group instance for players of level 40 and above.
-Players can access this instance from Carpus Isle in Sullenscale Rive on Tuesdays, Thursdays, Saturdays and Sundays.
-Like other Fortress Instances, monsters inside it will aggro regardless of level.
-As of 4.9, the entrance was moved from Asteria Fortress to Lower Reshanta, due to the fortress being made inactive.
-
-Backstory:
-As the Balaur dominated the fortress, they found a portal in the inner chambers, leading to a small canyon somewhere in Lake Asteria.
-This beautiful scene was soon adapted to hold the Balaur's previous treasures.
-To ease up access, the portal was reshaped as a painting, reflecting the beauty of that sanctum and all the spoils it contains.
-However, as other factions gained control of the stronghold, they soon found out this hidden area, as well as its guards, hoarding several riches.
-As Ereshkigal's relics found in Drakenspire Depths released strong energy waves, Reshanta was suffered a shift in its temperature.
-Allowing the rising of the Dragon Lord's armies, it caused the outer fortresses to be neutralised, sealing the original entrance.
-With the sudden appearance of the central archipelago of Lower Reshanta, strange portals leading to this chambers were discovered,
-re-enabling access to the affected treasure rooms.
-
-Walkthough:
-The small area is composed of a central circular platform, connected through three bridges to three narrow treasure room.
-As soon as players cross the Protective Ward, a 15 minute countdown will begin, indicating when the treasure chests will disappear.
-Each room holds only one Treasure Box, which can only be opened if a player is in possession of the appropriate key, held by the room's unique mob.
-Each room is heavily guarded. Nonetheless, players should avoid attacking the room's boss, as it will instantly cause
-all mobs in the room to aggro on the attacker, making it imperative to clear it out before engaging the boss.
-Each boss has a different difficulty, turning harder from left to right to the middle.
-The room on the left is led by a <Dakaer Chanter>, holding the <Golden Abyss Key>, used to open the chest behind him.
-While this priest Balaur guard does not possess unique skills, its defences and HP pool is larger than the regular one.
-The room on the right is guarded by <Dakaer Tactician>, holding the <Jeweled Abyss Key>.
-Also not possessing any unique skills.
-The main treasure room, on the back, will be guarded by <Ebonlord Kiriel>.
-His skillset include pulling targets to him, several magical attacks, but most notably, a shield which reduces physical damaged
-inflicted on him which he will keep throughout the fight, making a magic damage dealer more ideal for this encounter.
-/****/
+/**
+ * 卡普斯岛储藏室副本事件处理器。
+ * Instance event handler for Carpus Isle Storeroom.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300050000)
 public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 {
-	private Future<?> carpusIsleStoreroomTask;
-	private boolean isStartTimer = false;
-	private List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+	/** carpus 岛储藏室任务 / carpus isle storeroom task */
+		private Future<?> carpusIsleStoreroomTask;
+	/** 是否启动计时器 / is start timer */
+		private boolean isStartTimer = false;
+	/** carpus isle storeroom treasure box suscess / carpus isle storeroom treasure box suscess */
+		private List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
         spawnCarpusIsleStoreroomRings();
     }
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -122,6 +94,14 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
         f1.spawn();
     }
 	
+	/**
+	 * 玩家通过飞行环时处理。
+	 * Handle a player passing a flying ring.
+	 *
+	 * 玩家 / player
+	 * @param flyingRing 飞行环标识 / flying-ring id
+	 * result
+	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("CARPUS_ISLE_STOREROOM")) {
@@ -129,12 +109,18 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			    isStartTimer = true;
 			    System.currentTimeMillis();
 			    instance.doOnAllPlayers(new Visitor<Player>() {
+			        /**
+			         * 处理 visit。
+			         * Handle visit.
+			         *
+			         * @param player 玩家 / player
+			         */
 			        @Override
 			        public void visit(Player player) {
 						if (player.isOnline()) {
 							startCarpusIsleStoreroomChamberTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
-							//The Balaur protective magic ward has been activated.
+							// 龙族防护魔法结界已激活。 / The Balaur protective magic ward has been activated.
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
 						}
 					}
@@ -144,6 +130,12 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 		return false;
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		super.onInstanceCreate(instance);
@@ -154,9 +146,13 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	
 	private void startCarpusIsleStoreroomChamberTimer() {
 		carpusIsleStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//All Balaur treasure chests have disappeared.
+				// 所有龙族宝箱已消失。 / All Balaur treasure chests have disappeared.
 				sendMsg(1400244);
 				CarpusIsleStoreroomTreasureBoxSuscess.get(0).getController().onDelete();
 				CarpusIsleStoreroomTreasureBoxSuscess.get(1).getController().onDelete();
@@ -167,6 +163,12 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -174,11 +176,23 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 		});
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);

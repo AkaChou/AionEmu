@@ -1,47 +1,31 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion;
 
+import com.aionemu.commons.network.packet.BaseServerPacket;
 import java.nio.ByteBuffer;
 
-import com.aionemu.commons.network.packet.BaseServerPacket;
-
 /**
- * Base class for every LS -> Aion Server Packet.
+ * 所有登录服 → Aion 客户端服务端包的基类。
+ * Base class for every login-server → Aion client server packet.
  *
  * @author -Nemesiss-
  */
 public abstract class AionServerPacket extends BaseServerPacket {
 
     /**
-     * Constructs a new server packet with specified id.
+     * 以指定 opcode 构造服务端包。
+     * Construct server packet with the given opcode.
      *
-     * @param opcode packet opcode.
+     * Packet opcode
      */
     protected AionServerPacket(int opcode) {
         super(opcode);
     }
 
     /**
-     * Write and encrypt this packet data for given connection, to given buffer.
+     * 将本包写入并加密到连接缓冲。
+     * Write and encrypt this packet into the connection buffer.
      *
-     * @param con
+     * @param con 目标登录连接 / Target login connection
      */
     public final void write(LoginConnection con) {
         buf.putShort((short) 0);
@@ -57,10 +41,10 @@ public abstract class AionServerPacket extends BaseServerPacket {
     }
 
     /**
-     * Write data that this packet represents to given byte buffer.
+     * 将包体数据写入缓冲（子类实现）。
+     * Write packet payload to the buffer (implemented by subclasses).
      *
-     * @param con
-     * @param buf
+     * @param con 目标登录连接 / Target login connection
      */
     protected abstract void writeImpl(LoginConnection con);
 }

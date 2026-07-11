@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.alliance;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
@@ -61,12 +47,18 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+
+/**
+ * 玩家联盟服务，用于团队2相关逻辑。
+ * Player Alliance Service for team 2 logic.
+ */
 @Slf4j
 
 public class PlayerAllianceService {
 	private static final Map<Integer, PlayerAlliance> alliances = new ConcurrentHashMap<Integer, PlayerAlliance>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
 
+	/** Invite 联盟 / Invite To Alliance */
 	public static final void inviteToAlliance(final Player inviter, final Player invited) {
 		if (canInvite(inviter, invited)) {
 			PlayerAllianceInvite invite = new PlayerAllianceInvite(inviter, invited);
@@ -83,19 +75,20 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 是否邀请 / Whether invite*/
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
-				// You cannot use invite, leave or kick commands related to your group or
-				// alliance in this region.
+				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
+				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
 		}
 		if (invited.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
-				// You cannot use invite, leave or kick commands related to your group or
-				// alliance in this region.
+				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
+				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
@@ -105,8 +98,8 @@ public class PlayerAllianceService {
 			if (invited.isInTeam()) {
 				for (Player tm : invited.getCurrentTeam().getMembers()) {
 					if (tm.isInInstance()) {
-						// You cannot invite the player to the force as the group leader of the player
-						// is in an Instanced Zone.
+						// 因对方为小队长，无法邀请该玩家加入战团。 / You cannot invite the player to the force as the group leader of the player
+						// 处于副本中。 / is in an Instanced Zone.
 						PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1400128));
 						return false;
 					} else if (!GameLocationBootstrapServices.vortexService().isInsideVortexZone(tm)) {
@@ -116,7 +109,7 @@ public class PlayerAllianceService {
 					}
 				}
 			} else if (!GameLocationBootstrapServices.vortexService().isInsideVortexZone(invited)) {
-				// You cannot invite someone in a different area.
+				// 无法邀请不同区域的人。 / You cannot invite someone in a different area.
 				PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1401527));
 				return false;
 			}
@@ -125,6 +118,7 @@ public class PlayerAllianceService {
 	}
 
 	@GlobalCallback(PlayerAllianceCreateCallback.class)
+	/** 创建联盟。 / Create alliance. */
 	public static final PlayerAlliance createAlliance(Player leader, Player invited, TeamType type) {
 		PlayerAlliance newAlliance = new PlayerAlliance(new PlayerAllianceMember(leader), type);
 		alliances.put(newAlliance.getTeamId(), newAlliance);
@@ -141,14 +135,17 @@ public class PlayerAllianceService {
 	}
 
 	@GlobalCallback(AddPlayerToAllianceCallback.class)
+	/** 添加玩家到联盟 / Adds player to alliance*/
 	public static final void addPlayerToAlliance(PlayerAlliance alliance, Player invited) {
 		alliance.addMember(new PlayerAllianceMember(invited));
 	}
 
+	/** Change 小队 Rules / Change Group Rules */
 	public static final void changeGroupRules(PlayerAlliance alliance, LootGroupRules lootRules) {
 		alliance.onEvent(new ChangeAllianceLootRulesEvent(alliance, lootRules));
 	}
 
+	/** 玩家登录 / On Player Login */
 	public static final void onPlayerLogin(Player player) {
 		for (PlayerAlliance alliance : alliances.values()) {
 			PlayerAllianceMember member = alliance.getMember(player.getObjectId());
@@ -158,6 +155,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 玩家登出时 / On Player Logout */
 	public static final void onPlayerLogout(Player player) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -167,6 +165,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 更新联盟。 / Update alliance. */
 	public static final void updateAlliance(Player player, PlayerAllianceEvent allianceEvent) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -174,11 +173,13 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 添加玩家。 / Adds player. */
 	public static final void addPlayer(PlayerAlliance alliance, Player player) {
 		Preconditions.checkNotNull(alliance, "Alliance should not be null");
 		alliance.onEvent(new PlayerEnteredEvent(alliance, player));
 	}
 
+	/** 移除玩家。 / Removes player. */
 	public static final void removePlayer(Player player) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -189,6 +190,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 封禁玩家。 / Ban Player. */
 	public static final void banPlayer(Player bannedPlayer, Player banGiver) {
 		Preconditions.checkNotNull(bannedPlayer, "Banned player should not be null");
 		Preconditions.checkNotNull(banGiver, "Bangiver player should not be null");
@@ -202,12 +204,13 @@ public class PlayerAllianceService {
 				alliance.onEvent(new PlayerAllianceLeavedEvent(alliance, bannedMember.getObject(), LeaveReson.BAN,
 						banGiver.getName()));
 			} else {
-				log.warn("TEAM2: banning player not in alliance {}", alliance.onlineMembers());
+				log.warn(I18n.get("log.937a517c5094", alliance.onlineMembers()));
 			}
 		}
 	}
 
 	@GlobalCallback(PlayerAllianceDisbandCallback.class)
+	/** 解散 / disband. */
 	public static void disband(PlayerAlliance alliance) {
 		Preconditions.checkState(alliance.onlineMembers() <= 1,
 				"Can't disband alliance with more than one online member");
@@ -215,6 +218,7 @@ public class PlayerAllianceService {
 		alliance.onEvent(new AllianceDisbandEvent(alliance));
 	}
 
+	/** 更换队长 / change Leader. */
 	public static void changeLeader(Player player) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -222,6 +226,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 更换副队长 / change Vice Captain. */
 	public static void changeViceCaptain(Player player, AssignType assignType) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -229,6 +234,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 搜索联盟。 / Search alliance. */
 	public static final PlayerAlliance searchAlliance(Integer playerObjId) {
 		for (PlayerAlliance alliance : alliances.values()) {
 			if (alliance.hasMember(playerObjId)) {
@@ -238,6 +244,7 @@ public class PlayerAllianceService {
 		return null;
 	}
 
+	/** Change 成员小队 / Change Member Group */
 	public static void changeMemberGroup(Player player, int firstPlayer, int secondPlayer, int allianceGroupId) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		Preconditions.checkNotNull(alliance, "Alliance should not be null for group change");
@@ -248,6 +255,9 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/**
+	 * 检查 ready/ 检查 ready。 / Check ready / Check ready
+	 */
 	public static void checkReady(Player player, TeamCommand eventCode) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -255,6 +265,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 分配基纳 / Distribute Kinah */
 	public static void distributeKinah(Player player, long amount) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -262,6 +273,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** DistributeKinahIn 小队 / Distribute Kinah In Group */
 	public static void distributeKinahInGroup(Player player, long amount) {
 		PlayerAllianceGroup allianceGroup = player.getPlayerAllianceGroup2();
 		if (allianceGroup != null) {
@@ -269,6 +281,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 显示烙印标记 / show Brand. */
 	public static void showBrand(Player player, int targetObjId, int brandId) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -276,6 +289,7 @@ public class PlayerAllianceService {
 		}
 	}
 
+	/** 获取服务状态。 / Returns the service status. */
 	public static final String getServiceStatus() {
 		return "Number of alliances: " + alliances.size();
 	}
@@ -283,6 +297,7 @@ public class PlayerAllianceService {
 	public static class OfflinePlayerAllianceChecker implements Runnable, Predicate<PlayerAllianceMember> {
 		private PlayerAlliance currentAlliance;
 
+		/** 运行 / run. */
 		@Override
 		public void run() {
 			for (PlayerAlliance alliance : alliances.values()) {
@@ -292,6 +307,7 @@ public class PlayerAllianceService {
 			currentAlliance = null;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(PlayerAllianceMember member) {
 			int kickDelay = currentAlliance.getTeamType().isAutoTeam() ? 60 : GroupConfig.ALLIANCE_REMOVE_TIME;

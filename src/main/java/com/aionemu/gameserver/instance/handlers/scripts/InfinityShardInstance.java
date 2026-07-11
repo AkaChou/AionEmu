@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -38,17 +22,29 @@ import java.util.Map;
 
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 无限碎片副本事件处理器。
+ * Instance event handler for Infinity Shard.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300800000)
 public class InfinityShardInstance extends GeneralInstanceHandler
 {
-	private int ideForcefieldGenerator;
+	/** ide forcefield generator / ide forcefield generator */
+		private int ideForcefieldGenerator;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
-	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+	/** 对象 / objects */
+		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -58,8 +54,8 @@ public class InfinityShardInstance extends GeneralInstanceHandler
             case 231073: //Hyperion.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
                     } switch (Rnd.get(1, 4)) {
 				        case 1:
 				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052387, 1)); //Hyperion's Equipment Box.
@@ -85,6 +81,12 @@ public class InfinityShardInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -93,6 +95,12 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 		objects.put(284437, SpawnEngine.spawnObject(protectiveShield, instanceId)); //Protective Shield.
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -114,16 +122,16 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 				} else if (ideForcefieldGenerator == 2) {
 				} else if (ideForcefieldGenerator == 3) {
 				} else if (ideForcefieldGenerator == 4) {
-				    //The Hyperion's shields are down.
+				    // 许珀里翁的护盾已落下。 / The Hyperion's shields are down.
 					sendMsgByRace(1401796, Race.PC_ALL, 10000);
 					deleteNpc(284437); //Protective Shield.
 				}
 				despawnNpc(npc);
-				//The Hyperion's shields are faltering.
+				// 许珀里翁的护盾正在减弱。 / The Hyperion's shields are faltering.
 				sendMsgByRace(1401795, Race.PC_ALL, 0);
             break;
 			case 231073: //Hyperion.
-			    //sendMsg("[SUCCES]: You have finished <Infinity Shard>");
+			    // 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Infinity Shard>");
 				spawn(730842, 124.669853f, 137.840668f, 113.942917f, (byte) 0); //Infinity Shard Exit.
 				spawn(802184, 127.32316f, 131.72421f, 112.17429f, (byte) 25); //Infinity Shard Opportunity Bundle.
 			break;
@@ -142,6 +150,10 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
@@ -149,18 +161,42 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -21,13 +5,19 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 
 /**
+ * 玩家任务列表数据访问抽象层。
+ * DAO for player quest state list persistence.
+ *
  * @author MrPoke
  * @modified vlog
  */
 public abstract class PlayerQuestListDAO implements DAO {
 
 	/**
-	 * {@inheritDoc}
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
 	 */
 	@Override
 	public String getClassName() {
@@ -35,14 +25,19 @@ public abstract class PlayerQuestListDAO implements DAO {
 	}
 
 	/**
-	 * @param playerId
-	 * @return QuestStateList
+	 * 加载玩家的任务状态列表。
+	 * Loads the quest state list for the player.
+	 *
+	 * 玩家 / player
+	 * @return 任务状态列表 / quest state list
 	 */
 	public abstract QuestStateList load(final Player player);
 
 	/**
-	 * @param Player
-	 * @param QuestStateList
+	 * 保存玩家的任务状态列表。
+	 * Stores the quest state list for the player.
+	 *
+	 * 玩家 / player
 	 */
 	public abstract void store(final Player player);
 }

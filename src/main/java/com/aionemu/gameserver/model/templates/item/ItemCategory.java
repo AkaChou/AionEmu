@@ -1,36 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 物品分类枚举。
+ * Item Category enumeration.
+ */
+
 @XmlType(name = "item_category")
 @XmlEnum
 public enum ItemCategory {
+	/** 魔石 / Manastone. */
 	MANASTONE, SPECIAL_MANASTONE, PRIMARY_MANASTONE, GODSTONE, ENCHANTMENT, ENCHANTMENT_STIGMA,
+	/** Enchantment Amplification / Enchantment Amplification */
 	ENCHANTMENT_AMPLIFICATION, FLUX, BALIC_EMOTION, BALIC_MATERIAL, RAWHIDE, SOULSTONE, RECIPE, GATHERABLE,
+	/** 可采集物加成。 / Gatherable Bonus. */
 	GATHERABLE_BONUS, SWORD, DAGGER, MACE, ORB, SPELLBOOK, GREATSWORD, POLEARM, STAFF, BOW, SHIELD, JACKET, PANTS,
+	/** 碎片 / Shard. */
 	SHARD, SHOES, GLOVES, SHOULDERS, NECKLACE, EARRINGS, RINGS, HELMET, BELT, SKILLBOOK, STIGMA, COINS, MEDALS, QUEST,
+	/** 钥匙 / Key. */
 	KEY, TEMPERING, CRAFT_BOOST, COMBINATION,
 
 	// 4.0
+	/** 枪 / Gun. */
 	GUN, CANNON, HARP, KEYBLADE, KEYHAMMER, PLUME, NONE,
 
 	// 5.1
+	/** 艾斯提玛 / Estima. */
 	ESTIMA, BRACELET
 }

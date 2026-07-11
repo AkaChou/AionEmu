@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -37,10 +21,20 @@ import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.services.NpcShoutsService;
 
 /**
+ * NPC 喊话事件处理器，按各类战斗 / 行走 / 死亡事件触发模板喊话。
+ * Handles NPC shout events: fires template shouts for combat, walking, death, and related events.
+ *
  * @author Rolandas
  */
 public final class ShoutEventHandler {
 
+	/**
+	 * 看见生物时触发 SEE 喊话。
+	 * Fires SEE shouts when a creature is seen.
+	 *
+	 * NPC AI instance
+	 * @param target 看见的目标 / seen target
+	 */
 	public static void onSee(NpcAI2 npcAI, Creature target) {
 		Npc npc = npcAI.getOwner();
 		if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(), ShoutEventType.SEE)) {
@@ -51,6 +45,12 @@ public final class ShoutEventHandler {
 		}
 	}
 
+	/**
+	 * 消失前触发 BEFORE_DESPAWN 喊话。
+	 * Fires BEFORE_DESPAWN shouts before despawn.
+	 *
+	 * NPC AI instance
+	 */
 	public static void onBeforeDespawn(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
 		if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(),
@@ -62,6 +62,12 @@ public final class ShoutEventHandler {
 		}
 	}
 
+	/**
+	 * 到达行走路点时，按概率触发转向或路点喊话。
+	 * On reaching a walk point, randomly fires direction-change or waypoint shouts.
+	 *
+	 * NPC AI instance
+	 */
 	public static void onReachedWalkPoint(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
 		WalkerTemplate tp = DataManager.WALKER_DATA.getWalkerTemplate(npc.getSpawn().getWalkerId());
@@ -82,6 +88,13 @@ public final class ShoutEventHandler {
 		}
 	}
 
+	/**
+	 * 切换目标时触发 SWITCH_TARGET 喊话。
+	 * Fires SWITCH_TARGET shouts when the target is switched.
+	 *
+	 * NPC AI instance
+	 * new target
+	 */
 	public static void onSwitchedTarget(NpcAI2 npcAI, Creature creature) {
 		Npc npc = npcAI.getOwner();
 		if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(),
@@ -93,6 +106,12 @@ public final class ShoutEventHandler {
 		}
 	}
 
+	/**
+	 * 死亡时触发 DIED 喊话。
+	 * Fires DIED shouts on death.
+	 *
+	 * NPC AI instance
+	 */
 	public static void onDied(NpcAI2 npcAI) {
 		Npc owner = npcAI.getOwner();
 		if (DataManager.NPC_SHOUT_DATA.hasAnyShout(owner.getPosition().getMapId(), owner.getNpcId(),
@@ -106,11 +125,12 @@ public final class ShoutEventHandler {
 		}
 	}
 
-	// TODO: Figure out what the difference between ATTACK_BEGIN and HELP; HELPCALL
-	// should make NPC run
-
 	/**
-	 * Called on Aggro when NPC is ready to attack
+	 * 准备攻击时触发 ATTACK_BEGIN 喊话。
+	 * Fires ATTACK_BEGIN shouts when the NPC is ready to attack.
+	 *
+	 * NPC AI instance
+	 * attack target
 	 */
 	public static void onAttackBegin(NpcAI2 npcAI, Creature creature) {
 		Npc npc = npcAI.getOwner();
@@ -125,10 +145,13 @@ public final class ShoutEventHandler {
 	}
 
 	/**
-	 * Handle NPC attacked event (when damage was received or not)
+	 * 处理被攻击 / 求助喊话（首次受击时 ATTACKED 或 HELPCALL）。
+	 * help shouts (ATTACKED or HELPCALL on first hit). / help shouts (ATTACKED or HELPCALL on first hit).
+	 *
+	 * NPC AI instance
+	 * attacker
 	 */
 	public static void onHelp(NpcAI2 npcAI, Creature creature) {
-		// TODO: [RR] change AI or randomise behaviour for "cowards" and "fanatics" ???
 		Npc npc = npcAI.getOwner();
 		if (npc.getAttackedCount() == 0) {
 			if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(),
@@ -139,10 +162,10 @@ public final class ShoutEventHandler {
 				shouts.clear();
 				return;
 			}
-			if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(),
-					ShoutEventType.HELPCALL)) {
+			ShoutEventType eventType = supportEventType(false);
+			if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(), eventType)) {
 				List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
-						npc.getNpcId(), ShoutEventType.HELPCALL, null, 0);
+						npc.getNpcId(), eventType, null, 0);
 				GameFeatureServices.npcShoutsService().shout(npc, creature, shouts, 0, false);
 				shouts.clear();
 			}
@@ -150,9 +173,34 @@ public final class ShoutEventHandler {
 	}
 
 	/**
-	 * Handles attacks from NPC to NPC. <br>
-	 * <b><font color='red'>IMPORTANT!!! </font>All such shouts must be of type
-	 * SAY.</b>
+	 * 友军响应求助时触发 HELP 喊话。
+	 * Fires HELP shouts when an ally responds to a support request.
+	 */
+	public static void onSupport(NpcAI2 npcAI, Creature target) {
+		Npc npc = npcAI.getOwner();
+		ShoutEventType eventType = supportEventType(true);
+		if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(), eventType)) {
+			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(), npc.getNpcId(),
+					eventType, null, 0);
+			GameFeatureServices.npcShoutsService().shout(npc, target, shouts, 0, false);
+			shouts.clear();
+		}
+	}
+
+	static ShoutEventType supportEventType(boolean responder) {
+		return responder ? ShoutEventType.HELP : ShoutEventType.HELPCALL;
+	}
+
+	/**
+	 * 处理 NPC 对 NPC 攻击时的 SAY 类型 ATTACKED 喊话。
+	 * Handles SAY-type ATTACKED shouts for NPC-vs-NPC attacks.
+	 * <p>
+	 * 所有此类喊话必须为 SAY 类型。
+	 * All such shouts must be of type SAY.
+	 * </p>
+	 *
+	 * NPC AI instance
+	 * @param target 被攻击目标 / attack target
 	 */
 	public static void onEnemyAttack(NpcAI2 npcAI, Creature target) {
 		final Npc npc = npcAI.getOwner();
@@ -197,17 +245,36 @@ public final class ShoutEventHandler {
 		}, 0);
 	}
 
+	/**
+	 * 施法时触发 CAST_K 数值型喊话。
+	 * Fires CAST_K numeric shouts when casting.
+	 *
+	 * NPC AI instance
+	 * target creature
+	 */
 	public static void onCast(NpcAI2 npcAI, Creature creature) {
 		handleNumericEvent(npcAI, creature, ShoutEventType.CAST_K);
 	}
 
 	/**
-	 * Handle target attacked events
+	 * 攻击目标时触发 ATTACK_K 数值型喊话。
+	 * Fires ATTACK_K numeric shouts when attacking a target.
+	 *
+	 * NPC AI instance
+	 * attack target
 	 */
 	public static void onAttack(NpcAI2 npcAI, Creature creature) {
 		handleNumericEvent(npcAI, creature, ShoutEventType.ATTACK_K);
 	}
 
+	/**
+	 * 处理按技能编号匹配的数值型喊话事件。
+	 * Handles numeric shout events matched by skill number.
+	 *
+	 * NPC AI instance
+	 * target creature
+	 * @param eventType 喊话事件类型 / shout event type
+	 */
 	private static void handleNumericEvent(NpcAI2 npcAI, Creature creature, ShoutEventType eventType) {
 		Npc owner = npcAI.getOwner();
 		List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(owner.getPosition().getMapId(),
@@ -240,6 +307,12 @@ public final class ShoutEventHandler {
 		shouts.clear();
 	}
 
+	/**
+	 * 攻击结束时触发 ATTACK_END 喊话。
+	 * Fires ATTACK_END shouts when the attack sequence ends.
+	 *
+	 * NPC AI instance
+	 */
 	public static void onAttackEnd(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
 		if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(),

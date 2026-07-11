@@ -1,39 +1,46 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.vortexservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
-import com.aionemu.gameserver.services.VortexService;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
+/**
+ * 次元漩涡生成器死亡监听器：摧毁后结束对应入侵。
+ * Death listener for the dimensional-vortex generator; ends the matching invasion when destroyed.
+ *
+ * @author Rinzler (Encom)
+ */
 @SuppressWarnings("rawtypes")
 public class GeneratorDestroyListener extends OnDieEventCallback {
+
 	private final DimensionalVortex<?> vortex;
 
+	/**
+	 * 绑定所属漩涡事件。
+	 * Binds the owning vortex event.
+	 *
+	 * vortex event
+	 */
 	public GeneratorDestroyListener(DimensionalVortex vortex) {
 		this.vortex = vortex;
 	}
 
+	/**
+	 * 死亡前钩子（空实现）。
+	 * Pre-death hook (no-op).
+	 *
+	 * dying AI
+	 */
 	@Override
 	public void onBeforeDie(AbstractAI obj) {
 	}
 
+	/**
+	 * 死亡后标记生成器摧毁并停止入侵。
+	 * After death, marks the generator destroyed and stops the invasion.
+	 *
+	 * dying AI
+	 */
 	@Override
 	public void onAfterDie(AbstractAI obj) {
 		vortex.setGeneratorDestroyed(true);

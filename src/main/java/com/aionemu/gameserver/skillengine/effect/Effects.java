@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import java.util.ArrayList;
@@ -27,6 +11,10 @@ import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 技能效果集合：JAXB 绑定所有效果子类型，并缓存效果类型列表。
+ * Skill effects container: JAXB binding for all effect subtypes; caches effect type list.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Effects")
 public class Effects {
@@ -206,6 +194,12 @@ public class Effects {
 	@XmlTransient
 	protected List<EffectType> effectTypes;
 
+	/**
+	 * 获取效果模板列表（懒初始化）。
+	 * Returns the effect template list (lazy-initialized).
+	 *
+	 * effects list
+	 */
 	public List<EffectTemplate> getEffects() {
 		if (effects == null) {
 			effects = new ArrayList<EffectTemplate>();
@@ -213,10 +207,22 @@ public class Effects {
 		return this.effects;
 	}
 
+	/**
+	 * 获取已缓存的效果类型列表。
+	 * Returns the cached effect type list.
+	 *
+	 * @return 效果类型列表，可能为 null / effect types, may be null
+	 */
 	public List<EffectType> getEffectTypes() {
 		return effectTypes;
 	}
 
+	/**
+	 * 添加效果类型到缓存列表。
+	 * Adds an effect type to the cached list.
+	 *
+	 * effect type
+	 */
 	public void addEffectType(EffectType effectType) {
 		if (effectTypes == null) {
 			effectTypes = new ArrayList<EffectType>();
@@ -224,6 +230,14 @@ public class Effects {
 		effectTypes.add(effectType);
 	}
 
+	/**
+	 * 判断是否包含指定效果类型。
+	 * Checks whether the given effect type is present.
+	 *
+	 * effect type
+	 *
+	 * @param effectType 存在则为 true / true if present
+	 */
 	public boolean isEffectTypePresent(EffectType effectType) {
 		if (effectTypes == null) {
 			return false;
@@ -231,14 +245,33 @@ public class Effects {
 		return effectTypes.contains(effectType);
 	}
 
+	/**
+	 * 是否包含复活类效果。
+	 * Whether this set contains a resurrect effect.
+	 *
+	 * @return true 表示含复活 / true if resurrect is present
+	 */
 	public boolean isResurrect() {
 		return isEffectTypePresent(EffectType.RESURRECT) || isEffectTypePresent(EffectType.RESURRECTPOSITIONAL);
 	}
 
+	/**
+	 * 是否包含瞬时 MP 回复效果。
+	 * Whether this set contains an instant MP heal effect.
+	 *
+	 * @return true 表示含瞬时 MP 回复 / true if instant MP heal is present
+	 */
 	public boolean isMpHealInstant() {
 		return isEffectTypePresent(EffectType.MPHEALINSTANT);
 	}
 
+	/**
+	 * 反序列化后缓存各效果的 {@link EffectType}。
+	 * After unmarshalling, caches each effect's {@link EffectType}.
+	 *
+	 * @param u JAXB 反序列化器 / unmarshaller
+	 * parent object
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (EffectTemplate et : getEffects()) {
 			addEffectType(et.getEffectType());

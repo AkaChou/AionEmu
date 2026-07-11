@@ -1,25 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.playerreward;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * Crucible 玩家奖励，用于副本相关逻辑。
+ * Crucible Player Reward for instance logic.
+ */
 
 public class CruciblePlayerReward extends InstancePlayerReward {
 	private int insignia;
@@ -32,42 +16,54 @@ public class CruciblePlayerReward extends InstancePlayerReward {
 		super(object);
 	}
 
+	/**
+	 * @return Whether rewarded / Whether rewarded
+	 */
 	public boolean isRewarded() {
 		return isRewarded;
 	}
 
+	/** 设置 rewarded / Sets the rewarded */
 	public void setRewarded() {
 		isRewarded = true;
 	}
 
+	/** 设置 insignia / Sets the insignia */
 	public void setInsignia(int insignia) {
 		this.insignia = insignia;
 	}
 
+	/** 返回 insignia / Returns the insignia */
 	public int getInsignia() {
 		return insignia;
 	}
 
+	/** 设置刷新点坐标。 / Sets the spawn position. */
 	public void setSpawnPosition(int spawnPosition) {
 		this.spawnPosition = spawnPosition;
 	}
 
+	/** 获取刷新点坐标。 / Returns the spawn position. */
 	public int getSpawnPosition() {
 		return spawnPosition;
 	}
 
+	/** 是否玩家离开 / Whether player leave*/
 	public boolean isPlayerLeave() {
 		return isPlayerLeave;
 	}
 
+	/** 设置玩家离开 / Sets the player leave*/
 	public void setPlayerLeave() {
 		isPlayerLeave = true;
 	}
 
+	/** 设置 player defeated / Sets the player defeated */
 	public void setPlayerDefeated(boolean value) {
 		isPlayerDefeated = value;
 	}
 
+	/** 是否 player defeated / Whether player defeated */
 	public boolean isPlayerDefeated() {
 		return isPlayerDefeated;
 	}

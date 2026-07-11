@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
@@ -48,6 +32,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.XPLossEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
+
+/**
+ * 玩家公共数据。
+ * Player Common Data game object.
+ */
 
 @Slf4j
 public class PlayerCommonData extends VisibleObjectTemplate {
@@ -97,23 +86,23 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private int consumeCount = 0;
 	private int wardrobeSlot;
 	private PlayerUpgradeArcade upgradeArcade;
-	// Aura Of Growth 5.0
+	// 成长光环 5.0 / Aura Of Growth 5.0
 	private long auraOfGrowth;
 	private long auraOfGrowthMax;
-	// Berdin's Star 5.1
+	// 伯丁之星 5.1 / Berdin's Star 5.1
 	private long berdinStar;
 	private long berdinStarMax = 1125000000; // 5.6
 	private boolean BerdinStarBoost = false;
-	// Abyss Favor 5.3
+	// 欧比斯眷顾 5.3 / Abyss Favor 5.3
 	private long abyssFavor;
 	private long abyssFavorMax = 1000000;
 	private boolean AbyssFavorBoost = false;
-	// Tower Of Challenge 5.6
+	// 挑战之塔 5.6 / Tower Of Challenge 5.6
 	private int floor;
-	// Shugo Sweep 5.1
+	// 术古扫荡 5.1 / Shugo Sweep 5.1
 	private int goldenDice;
 	private int resetBoard;
-	// Atreian Passport Creation Date
+	// 阿特雷亚护照创建日期 / Atreian Passport Creation Date
 	private Timestamp creationDate;
 	private int minionSkillPoints;
 	// ponytail: session setting; persist it only if auto-charge must survive relogging.
@@ -175,9 +164,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * calculate the lost experience must be called before setexp
-	 *
-	 * @author Jangan
+	 * 计算损失经验，须在 setExp 之前调用。 / calculate the lost experience must be called before setexp.
 	 */
 	public void calculateExpLoss() {
 		long expLost = XPLossEnum.getExpLoss(this.level, this.getExpNeed());
@@ -414,9 +401,9 @@ public double getExpMultiplier() {
 		if (getPlayerClass() != null && getPlayerClass().isStartingClass()) {
 			maxLevel = 10;
 			if (this.getLevel() == 9 && this.getExp() >= 126069) {
-				// You can become a Daeva through the class change mission.
-				// Once you complete the mission, you will reach level 10, regardless of your
-				// EXP.
+				// 可通过转职任务成为守护者。 / You can become a Daeva through the class change mission.
+				// 完成任务后将达到 10 级，与当前经验无关。 / Once you complete the mission, you will reach level 10, regardless of your
+				// 经验。 / EXP.
 				PacketSendUtility.sendPacket(this.getPlayer(), SM_SYSTEM_MESSAGE.STR_MSG_CAN_QUEST_DEVA);
 			}
 		} else if (this.getLevel() == 65 && !this.isArchDaeva()) {
@@ -429,9 +416,9 @@ public double getExpMultiplier() {
 			if (!isCompleteQuest) {
 				maxExp = 2066885620;
 				if (this.getExp() >= 2066885620) {
-					// You can become an Archdaeva through the class change mission.
-					// Once you complete the mission, you will reach level 66, regardless of your
-					// EXP.
+					// 可通过转职任务成为高阶守护者。 / You can become an Archdaeva through the class change mission.
+					// 完成任务后将达到 66 级，与当前经验无关。 / Once you complete the mission, you will reach level 66, regardless of your
+					// 经验。 / EXP.
 					PacketSendUtility.sendPacket(this.getPlayer(), SM_SYSTEM_MESSAGE.STR_MSG_CAN_QUEST_HIGHDEVA);
 				}
 			}
@@ -580,7 +567,7 @@ public double getExpMultiplier() {
 		}
 	}
 
-	// ArchDaeva Update
+	// 高阶守护者更新 / ArchDaeva Update
 	public void setArchDaeva() {
 		this.setArchDaeva(true);
 		if (this.getLevel() < 66) {
@@ -610,14 +597,13 @@ public double getExpMultiplier() {
 		return bonusTitleId;
 	}
 
+	/** 设置 bonus title id / Sets the bonus title id */
 	public void setBonusTitleId(int bonusTitleId) {
 		this.bonusTitleId = bonusTitleId;
 	}
 
 	/**
-	 * This method should be called exactly once after creating object of this class
-	 *
-	 * @param position
+	 * @param position 创建本类对象后应恰好调用一次。 / This method should be called exactly once after creating object of this class @param position
 	 */
 	public void setPosition(WorldPosition position) {
 		if (this.position != null) {
@@ -627,8 +613,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * Gets the cooresponding Player for this common data. Returns null if the
-	 * player is not online
+	 * 获取 cooresponding 玩家用于此 commondata. 返回空若玩家为 not 在线。 / Gets the cooresponding Player for this common data. Returns null if the player is not online
 	 *
 	 * @return Player or null
 	 */
@@ -639,40 +624,39 @@ public double getExpMultiplier() {
 		return null;
 	}
 
+	/** 添加神圣能量。 / Adds dp. */
 	public void addDp(int dp) {
 		setDp(this.dp + dp);
 	}
 
-	/**
-	 * //TODO move to lifestats -> db save?
-	 *
-	 * @param dp
-	 */
+	/** 设置神圣能量。 / Sets dp. */
 	public void setDp(int dp) {
-		if (getPlayer() != null) {
-			if (playerClass.isStartingClass()) {
-				return;
-			}
-			int maxDp = getPlayer().getGameStats().getMaxDp().getCurrent();
-			this.dp = dp > maxDp ? maxDp : dp;
+		if (playerClass.isStartingClass()) {
+			return;
+		}
+		Player player = getPlayer();
+		int maxDp = player == null ? -1 : player.getGameStats().getMaxDp().getCurrent();
+		this.dp = maxDp >= 0 && dp > maxDp ? maxDp : dp;
 
-			PacketSendUtility.broadcastPacket(getPlayer(), new SM_DP_INFO(playerObjId, this.dp), true);
-			getPlayer().getGameStats().updateStatsAndSpeedVisually();
-			PacketSendUtility.sendPacket(getPlayer(), new SM_STATUPDATE_DP(this.dp));
-		} else {
-			log.debug("CHECKPOINT : getPlayer in PCD return null for setDP " + isOnline() + " " + getPosition());
+		if (player != null) {
+			PacketSendUtility.broadcastPacket(player, new SM_DP_INFO(playerObjId, this.dp), true);
+			player.getGameStats().updateStatsAndSpeedVisually();
+			PacketSendUtility.sendPacket(player, new SM_STATUPDATE_DP(this.dp));
 		}
 	}
 
+	/** 获取神圣能量。 / Returns the dp. */
 	public int getDp() {
 		return this.dp;
 	}
 
+	/** 返回模板 ID / Returns the template id */
 	@Override
 	public int getTemplateId() {
 		return 100000 + race.getRaceId() * 2 + gender.getGenderId();
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	@Override
 	public int getNameId() {
 		return 0;
@@ -692,10 +676,12 @@ public double getExpMultiplier() {
 		return warehouseSize;
 	}
 
+	/** 设置 mailbox letters / Sets the mailbox letters */
 	public void setMailboxLetters(int count) {
 		this.mailboxLetters = count;
 	}
 
+	/** 返回 mailbox letters / Returns the mailbox letters */
 	public int getMailboxLetters() {
 		return mailboxLetters;
 	}
@@ -707,23 +693,24 @@ public double getExpMultiplier() {
 		this.boundRadius = boundRadius;
 	}
 
+	/** 获取边界半径。 / Returns the bound radius. */
 	@Override
 	public BoundRadius getBoundRadius() {
 		return boundRadius;
 	}
 
+	/** 设置 death count / Sets the death count */
 	public void setDeathCount(int count) {
 		this.soulSickness = count;
 	}
 
+	/** 返回 death count / Returns the death count */
 	public int getDeathCount() {
 		return this.soulSickness;
 	}
 
 	/**
-	 * Value returned here means % of exp bonus.
-	 * 
-	 * @return
+	 * @return 返回值为经验加成百分比。 / Value returned here means % of exp bonus. @return
 	 */
 	public byte getCurrentSalvationPercent() {
 		if (salvationPoint <= 0) {
@@ -736,150 +723,189 @@ public double getExpMultiplier() {
 		return (byte) per;
 	}
 
+	/** 添加 salvation points / Adds salvation points */
 	public void addSalvationPoints(long points) {
 		salvationPoint += points;
 	}
 
+	/** Reset salvation points / Reset salvation points */
 	public void resetSalvationPoints() {
 		salvationPoint = 0;
 	}
 
+	/** 设置 last transfer time / Sets the last transfer time */
 	public void setLastTransferTime(long value) {
 		this.lastTransferTime = value;
 	}
 
+	/** 返回 last transfer time / Returns the last transfer time */
 	public long getLastTransferTime() {
 		return this.lastTransferTime;
 	}
 
+	/** 返回世界所有者 ID / Returns the world owner id */
 	public int getWorldOwnerId() {
 		return worldOwnerId;
 	}
 
+	/** 设置 world owner id / Sets the world owner id */
 	public void setWorldOwnerId(int worldOwnerId) {
 		this.worldOwnerId = worldOwnerId;
 	}
 
+	/** 返回上次盖章 / Returns the last stamp*/
 	public Timestamp getLastStamp() {
 		return lastStamp;
 	}
 
+	/** 设置 last stamp / Sets the last stamp */
 	public void setLastStamp(Timestamp setTime) {
 		lastStamp = setTime;
 	}
 
+	/** 返回通行证盖章 / Returns the passport stamps*/
 	public int getPassportStamps() {
 		return stamps;
 	}
 
+	/** 设置 passport stamps / Sets the passport stamps */
 	public void setPassportStamps(int stamps) {
 		this.stamps = stamps;
 	}
 
+	/** 返回玩家通行证 / Returns the player passports*/
 	public Map<Integer, AtreianPassport> getPlayerPassports() {
 		return playerPassports;
 	}
 
+	/** 返回 completed passports / Returns the completed passports */
 	public PlayerPassports getCompletedPassports() {
 		return completedPassports;
 	}
 
+	/** 添加 to completed passports / Adds to completed passports */
 	public void addToCompletedPassports(AtreianPassport atreianPassport) {
 		completedPassports.addPassport(atreianPassport.getId(), atreianPassport);
 	}
 
+	/** 设置 completed passports / Sets the completed passports */
 	public void setCompletedPassports(PlayerPassports playerPassports) {
 		completedPassports = playerPassports;
 	}
 
+	/** 返回通行证奖励 / Returns the passport reward*/
 	public int getPassportReward() {
 		return passportReward;
 	}
 
+	/** 设置 passport reward / Sets the passport reward */
 	public void setPassportReward(int passportReward) {
 		this.passportReward = passportReward;
 	}
 
+	/** 设置 arch daeva / Sets the arch daeva */
 	public void setArchDaeva(boolean isArchDaeva) {
 		this.isArchDaeva = isArchDaeva;
 	}
 
+	/**
+	 * @return Whether arch daeva / Whether arch daeva
+	 */
 	public boolean isArchDaeva() {
 		return isArchDaeva;
 	}
 
+	/** 返回 creativity point / Returns the creativity point */
 	public int getCreativityPoint() {
 		return creativityPoint;
 	}
 
+	/** 设置 creativity point / Sets the creativity point */
 	public void setCreativityPoint(int point) {
 		this.creativityPoint = point;
 	}
 
+	/** 返回 cp step / Returns the cp step */
 	public int getCPStep() {
 		return cp_step;
 	}
 
+	/** 设置 cp step / Sets the cp step */
 	public void setCPStep(int step) {
 		this.cp_step = step;
 	}
 
+	/** 返回 stone creativity point / Returns the stone creativity point */
 	public int getStoneCreativityPoint() {
 		return stoneCreativityPoint;
 	}
 
+	/** 设置 stone creativity point / Sets the stone creativity point */
 	public void setStoneCreativityPoint(int point) {
 		this.stoneCreativityPoint = point;
 	}
 
+	/** 返回 join request legion id / Returns the join request legion id */
 	public int getJoinRequestLegionId() {
 		return joinRequestLegionId;
 	}
 
+	/** 设置 join request legion id / Sets the join request legion id */
 	public void setJoinRequestLegionId(int joinRequestLegionId) {
 		this.joinRequestLegionId = joinRequestLegionId;
 	}
 
+	/** 返回 join request state / Returns the join request state */
 	public LegionJoinRequestState getJoinRequestState() {
 		return joinRequestState;
 	}
 
+	/** 设置 join request state / Sets the join request state */
 	public void setJoinRequestState(LegionJoinRequestState joinRequestState) {
 		this.joinRequestState = joinRequestState;
 	}
 
+	/** 设置 luna consume point / Sets the luna consume point */
 	public void setLunaConsumePoint(int point) {
 		this.lunaConsumePoint = point;
 	}
 
+	/** 返回 luna consume point / Returns the luna consume point */
 	public int getLunaConsumePoint() {
 		return lunaConsumePoint;
 	}
 
+	/** 设置 muni keys / Sets the muni keys */
 	public void setMuniKeys(int keys) {
 		this.muni_keys = keys;
 	}
 
+	/** 返回 muni keys / Returns the muni keys */
 	public int getMuniKeys() {
 		return muni_keys;
 	}
 
+	/** 设置 luna consume count / Sets the luna consume count */
 	public void setLunaConsumeCount(int count) {
 		this.consumeCount = count;
 	}
 
+	/** 返回 luna consume count / Returns the luna consume count */
 	public int getLunaConsumeCount() {
 		return consumeCount;
 	}
 
+	/** 设置衣橱槽位。 / Sets the wardrobe slot. */
 	public void setWardrobeSlot(int slot) {
 		this.wardrobeSlot = slot;
 	}
 
+	/** 获取衣橱槽位。 / Returns the wardrobe slot. */
 	public int getWardrobeSlot() {
 		return wardrobeSlot;
 	}
 
+	/** 获取升级街机。 / Returns the upgrade arcade. */
 	public PlayerUpgradeArcade getUpgradeArcade() {
 		if (upgradeArcade == null) {
 			this.upgradeArcade = new PlayerUpgradeArcade();
@@ -887,14 +913,19 @@ public double getExpMultiplier() {
 		return upgradeArcade;
 	}
 
+	/** 设置升级街机。 / Sets the upgrade arcade. */
 	public void setUpgradeArcade(PlayerUpgradeArcade upgradeArcade) {
 		this.upgradeArcade = upgradeArcade;
 	}
 
+	/**
+	 * @return 是否 ready 用于 aura 的 growth / 是否 ready 用于 aura 的 growth。 / Whether ready for aura of growth / Whether ready for aura of growth
+	 */
 	public boolean isReadyForAuraOfGrowth() {
 		return (level >= 66) && (level < GSConfig.PLAYER_MAX_LEVEL + 1);
 	}
 
+	/** 添加 aura of growth / Adds aura of growth */
 	public void addAuraOfGrowth(long add) {
 		if (!isReadyForAuraOfGrowth()) {
 			return;
@@ -907,6 +938,7 @@ public double getExpMultiplier() {
 		}
 	}
 
+	/** 更新 max aura of growth / Update max aura of growth */
 	public void updateMaxAuraOfGrowth() {
 		if (!isReadyForAuraOfGrowth()) {
 			auraOfGrowth = 0;
@@ -924,18 +956,22 @@ public double getExpMultiplier() {
 		}
 	}
 
+	/** 设置 aura of growth / Sets the aura of growth */
 	public void setAuraOfGrowth(long value) {
 		auraOfGrowth = value;
 	}
 
+	/** 返回 aura of growth / Returns the aura of growth */
 	public long getAuraOfGrowth() {
 		return isReadyForAuraOfGrowth() ? auraOfGrowth : 0;
 	}
 
+	/** 返回 max aura of growth / Returns the max aura of growth */
 	public long getMaxAuraOfGrowth() {
 		return isReadyForAuraOfGrowth() ? auraOfGrowthMax : 0;
 	}
 
+	/** 返回 aura of growth points / Returns the aura of growth points */
 	public long getAuraOfGrowthPoints() {
 		long percent = 0;
 		switch (level) {
@@ -983,6 +1019,7 @@ public double getExpMultiplier() {
 		return this.level >= 10;
 	}
 
+	/** 添加 berdin star / Adds berdin star */
 	public void addBerdinStar(long add) {
 		if (!isReadyForBerdinStar()) {
 			return;
@@ -996,19 +1033,25 @@ public double getExpMultiplier() {
 		checkBerdinStarPercent();
 	}
 
+	/** 设置 berdin star / Sets the berdin star */
 	public void setBerdinStar(long value) {
 		berdinStar = value;
 		checkBerdinStarPercent();
 	}
 
+	/** 返回 berdin star / Returns the berdin star */
 	public long getBerdinStar() {
 		return isReadyForBerdinStar() ? berdinStar : 0;
 	}
 
+	/** 返回 max berdin star / Returns the max berdin star */
 	public long getMaxBerdinStar() {
 		return isReadyForBerdinStar() ? berdinStarMax : 0;
 	}
 
+	/**
+	 * Check berdin star percent / Check berdin star percent
+	 */
 	public void checkBerdinStarPercent() {
 		if ((this.getPlayer() != null) && (isReadyForBerdinStar())) {
 			int percent = (int) ((float) berdinStar * 100.0 / (float) getMaxBerdinStar());
@@ -1033,6 +1076,7 @@ public double getExpMultiplier() {
 		return this.level >= 45;
 	}
 
+	/** 添加 abyss favor / Adds abyss favor */
 	public void addAbyssFavor(long add) {
 		if (!isReadyForAbyssFavor()) {
 			return;
@@ -1046,19 +1090,25 @@ public double getExpMultiplier() {
 		checkAbyssFavorPercent();
 	}
 
+	/** 设置 abyss favor / Sets the abyss favor */
 	public void setAbyssFavor(long value) {
 		abyssFavor = value;
 		checkAbyssFavorPercent();
 	}
 
+	/** 返回 abyss favor / Returns the abyss favor */
 	public long getAbyssFavor() {
 		return isReadyForAbyssFavor() ? abyssFavor : 0;
 	}
 
+	/** 返回 max abyss favor / Returns the max abyss favor */
 	public long getMaxAbyssFavor() {
 		return isReadyForAbyssFavor() ? abyssFavorMax : 0;
 	}
 
+	/**
+	 * Check abyss favor percent / Check abyss favor percent
+	 */
 	public void checkAbyssFavorPercent() {
 		if ((this.getPlayer() != null) && (isReadyForAbyssFavor())) {
 			int percent = (int) ((float) abyssFavor * 100.0 / (float) getMaxAbyssFavor());
@@ -1079,44 +1129,54 @@ public double getExpMultiplier() {
 		}
 	}
 
+	/** 设置 floor / Sets the floor */
 	public void setFloor(int floor) {
 		this.floor = floor;
 	}
 
+	/** 返回 floor / Returns the floor */
 	public int getFloor() {
 		return floor;
 	}
 
 	private int time;
 
+	/** 返回通行证时间 / Returns the passport time*/
 	public int getPassportTime() {
 		return time;
 	}
 
+	/** 设置 passport time / Sets the passport time */
 	public void setPassportTime(int time) {
 		this.time = time;
 	}
 
+	/** 返回 golden dice / Returns the golden dice */
 	public int getGoldenDice() {
 		return goldenDice;
 	}
 
+	/** 设置 golden dice / Sets the golden dice */
 	public void setGoldenDice(int dice) {
 		this.goldenDice = dice;
 	}
 
+	/** 返回 reset board / Returns the reset board */
 	public int getResetBoard() {
 		return resetBoard;
 	}
 
+	/** 设置 reset board / Sets the reset board */
 	public void setResetBoard(int reset) {
 		this.resetBoard = reset;
 	}
 
+	/** 设置 creation date / Sets the creation date */
 	public void setCreationDate(Timestamp date) {
 		creationDate = date;
 	}
 
+	/** 返回 creation date / Returns the creation date */
 	public Timestamp getCreationDate() {
 		return creationDate;
 	}
@@ -1128,22 +1188,27 @@ public double getExpMultiplier() {
 		return minionSkillPoints;
 	}
 
+	/** 设置守护灵技能点。 / Sets the minion skill points. */
 	public void setMinionSkillPoints(int minionSkillPoints) {
 		this.minionSkillPoints = minionSkillPoints;
 	}
 
+	/** 是否 minion skill points auto charge / Whether minion skill points auto charge */
 	public boolean isMinionSkillPointsAutoCharge() {
 		return minionSkillPointsAutoCharge;
 	}
 
+	/** 设置 minion skill points auto charge / Sets the minion skill points auto charge */
 	public void setMinionSkillPointsAutoCharge(boolean minionSkillPointsAutoCharge) {
 		this.minionSkillPointsAutoCharge = minionSkillPointsAutoCharge;
 	}
 
+	/** 返回 minion function time / Returns the minion function time */
 	public Timestamp getMinionFunctionTime() {
 		return minionFunctionTime;
 	}
 
+	/** 设置 minion function time / Sets the minion function time */
 	public void setMinionFunctionTime(Timestamp minionFunctionTime) {
 		this.minionFunctionTime = minionFunctionTime;
 	}

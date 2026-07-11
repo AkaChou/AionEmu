@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 
 /**
+ * 召唤功能 NPC 效果：生成功能性 NPC（如商人等），超时后删除。
+ * Summon functional NPC effect: spawns a utility NPC and deletes it after a timeout.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,6 +24,10 @@ public class SummonFunctionalNpcEffect extends SummonEffect {
 	@XmlAttribute(name = "owner")
 	private SummonOwner owner;
 
+	/**
+	 * 生成功能 NPC，并在 300 秒后删除。
+	 * Spawns the functional NPC and schedules deletion after 300 seconds.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Player effected = (Player) effect.getEffected();

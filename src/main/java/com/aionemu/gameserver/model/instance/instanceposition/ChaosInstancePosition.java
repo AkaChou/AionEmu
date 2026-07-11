@@ -2,7 +2,13 @@ package com.aionemu.gameserver.model.instance.instanceposition;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
+/**
+ * Chaos 副本坐标，用于副本相关逻辑。
+ * Chaos Instance Position for instance logic.
+ */
+
 public class ChaosInstancePosition extends GenerealInstancePosition {
+	/** 端口 / port. */
 	@Override
 	public void port(Player player, int zone, int position) {
 		switch (position) {

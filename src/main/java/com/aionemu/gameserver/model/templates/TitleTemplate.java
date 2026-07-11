@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates;
 
 import java.util.List;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
+ * 称号模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author xavier
  */
 @XmlAccessorType(XmlAccessType.NONE)
@@ -56,22 +43,27 @@ public class TitleTemplate implements StatOwner {
 	@XmlAttribute(name = "desc")
 	private String description;
 
+	/** 返回标题 ID / Returns the title id */
 	public int getTitleId() {
 		return titleId;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return nameId;
 	}
 
+	/** 返回 desc / Returns the desc */
 	public String getDesc() {
 		return description;
 	}
 
+	/** 获取修正器。 / Returns the modifiers. */
 	public List<StatFunction> getModifiers() {
 		if (modifiers != null) {
 			return modifiers.getModifiers();

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -28,8 +14,12 @@ import com.aionemu.gameserver.world.World;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 玩家通用周期更新任务，批量持久化玩家常规数据。
+ * Player general periodic update task batch-persisting regular player data.
+ *
  * @author Source
  */
+
 @Slf4j
 class GeneralUpdateTask implements Runnable {
 
@@ -39,6 +29,10 @@ class GeneralUpdateTask implements Runnable {
 		this.playerId = playerId;
 	}
 
+	/**
+	 * 执行任务。
+	 * Runs the task.
+	 */
 	public void run() {
 		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null)
@@ -51,7 +45,7 @@ class GeneralUpdateTask implements Runnable {
 				for (House house : player.getHouses())
 					house.save();
 			} catch (Exception ex) {
-				log.error("Exception during periodic saving of player " + player.getName(), ex);
+				log.error(I18n.get("log.fe1aeacc963e", player.getName(), ex));
 			}
 	}
 }

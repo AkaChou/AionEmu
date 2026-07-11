@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Summon;
@@ -24,10 +8,19 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.summons.SummonsService;
 
+/**
+ * 客户端召唤物模式指令请求包（跟随、攻击、解散等）。
+ * Client packet for summon mode commands (follow, attack, dismiss, etc.).
+ */
 public class CM_SUMMON_COMMAND extends AionClientPacket {
 	private int mode;
 	private int targetObjId;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_SUMMON_COMMAND(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

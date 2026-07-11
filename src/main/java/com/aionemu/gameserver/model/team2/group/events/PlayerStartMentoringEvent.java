@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.group.events;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.google.common.base.Predicate;
 
 /**
+ * 玩家 StartMentoring 活动，用于团队2相关逻辑。
+ * Player Start Mentoring Event for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerStartMentoringEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
@@ -41,6 +28,7 @@ public class PlayerStartMentoringEvent extends AlwaysTrueTeamEvent implements Pr
 		this.player = player;
 	}
 
+	/** 处理活动。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		if (group.filterMembers(new MentorSuiteFilter(player)).size() == 0) {
@@ -53,6 +41,7 @@ public class PlayerStartMentoringEvent extends AlwaysTrueTeamEvent implements Pr
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ABYSS_RANK_UPDATE(2, player));
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public boolean apply(Player member) {
 		if (!player.equals(member)) {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene;
 
 import java.util.BitSet;
@@ -27,25 +11,56 @@ import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.services.SiegeService;
 
+/**
+ * 可按实例/事件/攻城护盾等条件动态禁用碰撞的场景节点。
+ * Scene node whose collisions can be dynamically disabled based on instance, event, siege shield, etc.
+ */
 public class DespawnableNode extends Node {
 
+	/** 可消失类型。 / Despawnable type. */
 	public DespawnableType type = DespawnableType.NONE;
+	/** 关联业务 ID（事件主题、静态物件、攻城据点等）。 / Related business id (event theme, static object, siege location, etc.). */
 	public int id;
+	/** 等级位掩码。 / Level bit mask. */
 	public byte levelBitMask;
+	/** 各实例是否激活的位集。 / Bit set of which instances are active. */
 	private final BitSet instances = new BitSet();
 
+	/**
+	 * 设置指定实例是否激活。
+	 * Sets whether the given instance is active.
+	 *
+	 * instance id
+	 * whether active
+	 */
 	public void setActive(int instanceId, boolean active) {
 		synchronized (instances) {
 			instances.set(instanceId, active);
 		}
 	}
 
+	/**
+	 * 查询指定实例是否激活。
+	 * Queries whether the given instance is active.
+	 *
+	 * instance id
+	 *
+	 * @param instanceId 若 active 则为 true / true if active
+	 */
 	public boolean isActive(int instanceId) {
 		synchronized (instances) {
 			return instances.get(instanceId);
 		}
 	}
 
+	/**
+	 * 从普通 {@link Node} 复制名称、碰撞标志与子节点结构。
+	 * Copies name, collision flags and child structure from a plain {@link Node}.
+	 *
+	 * source node
+	 *
+	 * @param node @throws CloneNotSupportedException 遇到不支持的子类型时 / when an unsupported child type is encountered
+	 */
 	public void copyFrom(Node node) throws CloneNotSupportedException {
 		name = node.name;
 		collisionFlags = node.collisionFlags;
@@ -60,6 +75,14 @@ public class DespawnableNode extends Node {
 		}
 	}
 
+	/**
+	 * 按类型/实例/护盾/忽略属性过滤后委托父类碰撞检测。
+	 * Filters by type/instance/shield/ignore properties, then delegates to the parent collision check.
+	 *
+	 * @param other 目标可碰撞对象 / target collidable
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * number of collisions
+	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
 		if (type == DespawnableType.EVENT) {
@@ -96,6 +119,7 @@ public class DespawnableNode extends Node {
 		return super.collideWith(other, results);
 	}
 
+	/** 当前活动事件主题 ID；无数据时返回 0。 / Active event theme id; 0 when no data. */
 	private int activeEventThemeId() {
 		if (DataManager.EVENT_DATA == null) {
 			return 0;
@@ -103,6 +127,7 @@ public class DespawnableNode extends Node {
 		return GameEventServices.eventService().getEventType().getId();
 	}
 
+	/** 按 ID 查找攻城地点；失败返回 null / Looks up siege location by id; null on failure */
 	private SiegeLocation getSiegeLocation() {
 		try {
 			return SiegeService.getInstance().getSiegeLocation(id);
@@ -111,6 +136,12 @@ public class DespawnableNode extends Node {
 		}
 	}
 
+	/**
+	 * 深拷贝本节点及其类型/激活状态。
+	 * Deep-clones this node including type and active-instance state.
+	 *
+	 * cloned node
+	 */
 	@Override
 	public Node clone() throws CloneNotSupportedException {
 		DespawnableNode node = new DespawnableNode();
@@ -122,14 +153,30 @@ public class DespawnableNode extends Node {
 		return node;
 	}
 
+	/**
+	 * 设置可消失类型。
+	 * Sets the despawnable type.
+	 *
+	 * type
+	 */
 	public void setType(DespawnableType type) {
 		this.type = type;
 	}
 
+	/**
+	 * 设置关联业务 ID。
+	 * Sets the related business id.
+	 *
+	 * @param id 业务 ID / business id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * 可消失节点类型枚举。
+	 * Despawnable node type enumeration.
+	 */
 	public enum DespawnableType {
 		NONE(0),
 		EVENT(1),
@@ -141,12 +188,21 @@ public class DespawnableNode extends Node {
 		DOOR_STATE2(7),
 		SHIELD(8);
 
+		/** 类型字节 ID / Type byte id */
 		private final byte id;
 
 		DespawnableType(int id) {
 			this.id = (byte) id;
 		}
 
+		/**
+		 * 按字节 ID 查找类型。
+		 * Looks up a type by its byte id.
+		 *
+		 * @param id 类型 ID / type id
+		 * matching type
+		 * when id is invalid
+		 */
 		public static DespawnableType getById(byte id) {
 			for (DespawnableType type : values()) {
 				if (type.id == id) {
@@ -156,6 +212,12 @@ public class DespawnableNode extends Node {
 			throw new IllegalArgumentException("Invalid despawnable type " + id);
 		}
 
+		/**
+		 * 返回类型字节 ID。
+		 * Returns the type byte id.
+		 *
+		 * type id
+		 */
 		public byte getId() {
 			return id;
 		}

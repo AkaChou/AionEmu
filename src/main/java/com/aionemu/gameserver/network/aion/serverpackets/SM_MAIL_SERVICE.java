@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -27,6 +11,10 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.MailServicePacket;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
 
+/**
+ * 邮件服务相关操作的服务端包（邮箱状态、列表、阅读、附件、删除等）。
+ * Server packet for mail-service operations (mailbox state, list, read, attachment, delete, etc.).
+ */
 public class SM_MAIL_SERVICE extends MailServicePacket {
 	private int serviceId;
 	private Collection<Letter> letters;
@@ -42,23 +30,50 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	private int attachmentType;
 	private boolean isExpress;
 
+	/**
+	 * 同步邮箱总体状态（serviceId = 0）。
+	 * Syncs overall mailbox state (serviceId = 0).
+	 *
+	 * @param mailbox 邮箱（触发状态刷新） / mailbox (triggers state refresh)
+	 */
 	public SM_MAIL_SERVICE(Mailbox mailbox) {
 		super(null);
 		this.serviceId = 0;
 	}
 
+	/**
+	 * 返回发信/邮件操作消息（serviceId = 1）。
+	 * Returns send-mail/operation message (serviceId = 1).
+	 *
+	 * @param mailMessage 邮件消息结果 / mail message result
+	 */
 	public SM_MAIL_SERVICE(MailMessage mailMessage) {
 		super(null);
 		this.serviceId = 1;
 		this.mailMessage = mailMessage.getId();
 	}
 
+	/**
+	 * 下发邮件列表（serviceId = 2）。
+	 * Delivers the letter list (serviceId = 2).
+	 *
+	 * target player
+	 * letter collection
+	 */
 	public SM_MAIL_SERVICE(Player player, Collection<Letter> letters) {
 		super(player);
 		this.serviceId = 2;
 		this.letters = letters;
 	}
 
+	/**
+	 * 下发邮件列表，可标记是否快递（serviceId = 2）。
+	 * Delivers the letter list, optionally marked as express (serviceId = 2).
+	 *
+	 * target player
+	 * letter collection
+	 * @param isExpress 是否快递邮件模式 / whether express-mail mode
+	 */
 	public SM_MAIL_SERVICE(Player player, Collection<Letter> letters, boolean isExpress) {
 		super(player);
 		this.serviceId = 2;
@@ -66,6 +81,14 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 		this.isExpress = isExpress;
 	}
 
+	/**
+	 * 打开/阅读单封信件（serviceId = 3）。
+	 * Opens/reads a single letter (serviceId = 3).
+	 *
+	 * target player
+	 * letter
+	 * timestamp
+	 */
 	public SM_MAIL_SERVICE(Player player, Letter letter, long time) {
 		super(player);
 		this.serviceId = 3;
@@ -73,6 +96,13 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 		this.time = time;
 	}
 
+	/**
+	 * 更新信件附件状态（serviceId = 5）。
+	 * Updates letter attachment state (serviceId = 5).
+	 *
+	 * letter id
+	 * attachment type
+	 */
 	public SM_MAIL_SERVICE(int letterId, int attachmentType) {
 		super(null);
 		this.serviceId = 5;
@@ -80,6 +110,12 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 		this.attachmentType = attachmentType;
 	}
 
+	/**
+	 * 删除信件结果（serviceId = 6）。
+	 * Letter delete result (serviceId = 6).
+	 *
+	 * @param letterIds 被删除信件 ID 数组 / deleted letter ids
+	 */
 	public SM_MAIL_SERVICE(int[] letterIds) {
 		super(null);
 		this.serviceId = 6;

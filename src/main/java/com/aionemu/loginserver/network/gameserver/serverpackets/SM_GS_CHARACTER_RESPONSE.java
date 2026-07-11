@@ -1,40 +1,35 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
 
 /**
+ * LS→GS：角色相关应答（携带目标账号 ID）。
+ * LS→GS: character-related response (carries target account id).
+ *
  * @author cura
  */
 public class SM_GS_CHARACTER_RESPONSE extends GsServerPacket {
 
+    /**
+     * 目标账号 ID。
+     * Target account id.
+     */
     private final int accountId;
 
     /**
-     * @param accountId
+     * 构造角色应答包。
+     * Constructs a character response packet.
+     *
+     * 账号 ID / account id
      */
     public SM_GS_CHARACTER_RESPONSE(int accountId) {
         this.accountId = accountId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void writeImpl(GsConnection con) {
         writeC(8);

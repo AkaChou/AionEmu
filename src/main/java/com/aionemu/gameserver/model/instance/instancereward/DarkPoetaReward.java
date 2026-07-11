@@ -1,25 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.instancereward;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * DarkPoeta 奖励，用于副本相关逻辑。
+ * Dark Poeta Reward for instance logic.
+ */
 
 @SuppressWarnings("rawtypes")
 public class DarkPoetaReward extends InstanceReward {
@@ -32,34 +16,42 @@ public class DarkPoetaReward extends InstanceReward {
 		super(mapId, instanceId);
 	}
 
+	/** 添加点。 / Adds points. */
 	public void addPoints(int points) {
 		this.points += points;
 	}
 
+	/** 获取点。 / Returns the points. */
 	public int getPoints() {
 		return points;
 	}
 
+	/** 添加 npc kill / Adds npc kill */
 	public void addNpcKill() {
 		npcKills++;
 	}
 
+	/** 返回 npc kills / Returns the npc kills */
 	public int getNpcKills() {
 		return npcKills;
 	}
 
+	/** 设置军阶。 / Sets the rank. */
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
 
+	/** 获取军阶。 / Returns the rank. */
 	public int getRank() {
 		return rank;
 	}
 
+	/** 添加 gather collection / Adds gather collection */
 	public void addGatherCollection() {
 		gatherCollections++;
 	}
 
+	/** 返回 gather collections / Returns the gather collections */
 	public int getGatherCollections() {
 		return gatherCollections;
 	}

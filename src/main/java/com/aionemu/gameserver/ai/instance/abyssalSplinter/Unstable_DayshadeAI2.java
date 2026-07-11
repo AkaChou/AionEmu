@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.abyssalSplinter;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Abyssal Splinter 副本 NPC AI：Unstable Dayshade（@AIName "Unstable_Dayshade"），继承 NpcAI2。
+ * Abyssal Splinter instance NPC AI: Unstable Dayshade (@AIName "Unstable_Dayshade"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Unstable_Dayshade")
 public class Unstable_DayshadeAI2 extends NpcAI2
 {
@@ -63,9 +49,9 @@ public class Unstable_DayshadeAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//A treasure chest will appear if you defeat Ebonsoul within one minute.
+					// 1 分钟内击败埃本索尔将出现宝箱。 / A treasure chest will appear if you defeat Ebonsoul within one minute.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_Light_Die, 0);
-					//A treasure chest will appear if you defeat Rukril within one minute.
+					// 1 分钟内击败鲁克里尔将出现宝箱。 / A treasure chest will appear if you defeat Rukril within one minute.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_Dark_Die, 5000);
 				}
 			}

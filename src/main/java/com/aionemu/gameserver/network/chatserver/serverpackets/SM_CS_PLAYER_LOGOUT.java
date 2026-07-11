@@ -1,32 +1,36 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.chatserver.serverpackets;
 
 import com.aionemu.gameserver.network.chatserver.ChatServerConnection;
 import com.aionemu.gameserver.network.chatserver.CsServerPacket;
 
+/**
+ * 游戏服通知聊天服玩家下线的服务端包。
+ * Server packet notifying the chat server of a player logout.
+ */
 public class SM_CS_PLAYER_LOGOUT extends CsServerPacket {
+	/**
+	 * 玩家对象 ID。
+	 * Player object id.
+	 */
 	private int playerId;
 
+	/**
+	 * 构造玩家下线通知包。
+	 * Constructs a player logout notification packet.
+	 *
+	 * player object id
+	 */
 	public SM_CS_PLAYER_LOGOUT(int playerId) {
 		super(0x02);
 		this.playerId = playerId;
 	}
 
+	/**
+	 * 写出玩家对象 ID。
+	 * Writes the player object id.
+	 *
+	 * @param con 目标连接 / target connection
+	 */
 	@Override
 	protected void writeImpl(ChatServerConnection con) {
 		writeD(playerId);

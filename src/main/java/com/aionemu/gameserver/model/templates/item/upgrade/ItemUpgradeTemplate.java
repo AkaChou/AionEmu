@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.upgrade;
 
 import java.util.List;
@@ -27,6 +11,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 
 /**
+ * 物品升级模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Ranastic (Encom)
  */
 
@@ -41,10 +28,12 @@ public class ItemUpgradeTemplate implements StatOwner {
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 	}
 
+	/** 获取升级结果物品。 / Returns the upgrade result item. */
 	public List<UpgradeResultItem> getUpgrade_result_item() {
 		return upgrade_result_item;
 	}
 
+	/** 返回 upgrade base item id / Returns the upgrade base item id */
 	public int getUpgrade_base_item_id() {
 		return upgrade_base_item_id;
 	}

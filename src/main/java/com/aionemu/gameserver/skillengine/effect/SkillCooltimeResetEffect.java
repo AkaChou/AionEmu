@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import java.util.HashMap;
@@ -30,9 +14,11 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 技能冷却重置/缩减效果：缩短指定技能 ID 区间内的冷却时间。
+ * Skill cooltime reset effect: reduces cooldown for skills in a configured id range.
+ *
  * @author Dr.Nism
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SkillCooltimeResetEffect")
 public class SkillCooltimeResetEffect extends EffectTemplate {
@@ -42,6 +28,10 @@ public class SkillCooltimeResetEffect extends EffectTemplate {
 	@XmlAttribute(name = "second_cd", required = true)
 	protected int secondCd;
 
+	/**
+	 * 遍历 firstCd–secondCd，按 value/delta 缩减剩余冷却并同步客户端。
+	 * Walks firstCd–secondCd, reduces remaining cooldown by value/delta, and syncs the client.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Creature effected = effect.getEffected();

@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
 /**
+ * Reverse 属性，用于属性相关逻辑。
+ * Reverse Stat for stats logic.
+ *
  * @author ATracer
  */
 public class ReverseStat extends Stat2 {
@@ -40,6 +27,7 @@ public class ReverseStat extends Stat2 {
 		super(stat, base, owner, bonusRate);
 	}
 
+	/** 添加 to base / Adds to base */
 	@Override
 	public void addToBase(float base) {
 		this.base -= base;
@@ -48,15 +36,15 @@ public class ReverseStat extends Stat2 {
 		}
 	}
 
+	/** Adds 到加成 / Adds to bonus */
 	@Override
 	public void addToBonus(float bonus) {
 		this.bonus -= bonusRate * bonus;
 	}
 
+	/** 计算百分比 / Calculate percent */
 	@Override
 	public float calculatePercent(int delta) {
-		float percent = (100 - delta) / 100f;
-		// TODO need double check here for negatives
-		return percent < 0 ? 0 : percent;
+		return Math.max(0, (100 - delta) / 100f);
 	}
 }

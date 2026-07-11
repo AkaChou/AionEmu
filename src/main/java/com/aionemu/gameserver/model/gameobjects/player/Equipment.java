@@ -1,19 +1,7 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
@@ -68,6 +56,11 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.skillengine.effect.WeaponDualEffect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+
+/**
+ * 装备游戏对象。
+ * Equipment game object.
+ */
 @Slf4j
 
 public class Equipment {
@@ -83,6 +76,7 @@ public class Equipment {
 		this.owner = player;
 	}
 
+	/** 装备物品。 / Equip item. */
 	public Item equipItem(int itemUniqueId, long slot) {
 		Item item = owner.getInventory().getItemByObjId(itemUniqueId);
 		if (item == null) {
@@ -97,29 +91,29 @@ public class Equipment {
 			slot = ItemSlot.MAIN_HAND.getSlotIdMask();
 		}
 		if (item.getItemTemplate().isClassSpecific(owner.getCommonData().getPlayerClass()) == false) {
-			// Your Class cannot use the selected item.
+			// 你的职业无法使用所选物品。 / Your Class cannot use the selected item.
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_CLASS);
 			return null;
 		}
 		int requiredLevel = item.getItemTemplate().getRequiredLevel(owner.getCommonData().getPlayerClass()) - item.getReductionLevel();
 		if (requiredLevel == -1 || requiredLevel > owner.getLevel()) {
-			// You cannot use %1 until you reach level %0.
+			// 达到等级 %0 前无法使用 %1。 / You cannot use %1 until you reach level %0.
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_TOO_LOW_LEVEL_MUST_BE_THIS_LEVEL(item.getNameId(), itemTemplate.getLevel()));
 			return null;
 		}
 		if (itemTemplate.getRace() != Race.PC_ALL && itemTemplate.getRace() != owner.getRace()) {
-			// Your race cannot use this item.
+			// 你的种族无法使用此物品。 / Your race cannot use this item.
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_RACE);
 			return null;
 		}
 		ItemUseLimits limits = itemTemplate.getUseLimits();
 		if (limits.getGenderPermitted() != null && limits.getGenderPermitted() != owner.getGender()) {
-			// This item cannot be used by your gender.
+			// 该物品不适用于你的性别。 / This item cannot be used by your gender.
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_GENDER);
 			return null;
 		}
 		if (!verifyRankLimits(item)) {
-			// You cannot use the selected item until you reach the %0 rank.
+			// 达到 %0 军阶前无法使用所选物品。 / You cannot use the selected item until you reach the %0 rank.
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_RANK(AbyssRankEnum.getRankById(limits.getMinRank()).getDescriptionId()));
 			return null;
 		}
@@ -220,7 +214,7 @@ public class Equipment {
 	 */
 	private Item equip(long itemSlotToEquip, Item item) {
 		if (item.getOptionalSocket() == -1) {
-			log.warn("item can't be equiped because hasTune" + item.getObjectId());
+			log.warn(I18n.get("log.df0f40528edd", item.getObjectId()));
 			return null;
 		}
 		synchronized (equipment) {
@@ -229,10 +223,10 @@ public class Equipment {
 				throw new IllegalArgumentException("itemSlotToEquip can not be composite!");
 			}
 
-			// remove item first from inventory to have at least one slot free
+			// 先从背包移除物品以腾出至少一个空位 / remove item first from inventory to have at least one slot free
 			owner.getInventory().remove(item);
 
-			// do unequip of necessary items
+			// 卸下必要物品 / do unequip of necessary items
 			Item equippedItem = equipment.get(allSlots[0].getSlotIdMask());
 			if (equippedItem != null) {
 				if (equippedItem.getItemTemplate().isTwoHandWeapon())
@@ -256,11 +250,11 @@ public class Equipment {
 			}
 
 			if (equipment.get(allSlots[0].getSlotIdMask()) != null) {
-				log.error("CHECKPOINT : putting item to already equiped slot. Info slot: " + itemSlotToEquip + " new item: " + item.getItemTemplate().getTemplateId() + " old item: " + equipment.get(allSlots[0].getSlotIdMask()).getItemTemplate().getTemplateId());
+				log.error(I18n.get("log.bbddb5354cdc", itemSlotToEquip, item.getItemTemplate().getTemplateId(), equipment.get(allSlots[0].getSlotIdMask()).getItemTemplate().getTemplateId()));
 				return null;
 			}
 
-			// equip target item
+			// 装备目标物品 / equip target item
 			for (ItemSlot slot : allSlots) {
 				equipment.put(slot.getSlotIdMask(), item);
 			}
@@ -268,7 +262,7 @@ public class Equipment {
 			item.setEquipmentSlot(itemSlotToEquip);
 			ItemPacketService.updateItemAfterEquip(owner, item);
 
-			// update stats
+			// 更新属性 / update stats
 			notifyItemEquipped(item);
 			owner.getLifeStats().updateCurrentStats();
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -300,14 +294,10 @@ public class Equipment {
 	}
 
 	/**
-	 * Called when CM_EQUIP_ITEM packet arrives with action 1
-	 * 
-	 * @param itemUniqueId
-	 * @param slot
-	 * @return item or null in case of failure
+	 * 收到 CM_EQUIP_ITEM（action=1）时调用。 / Called when CM_EQUIP_ITEM packet arrives with action 1.
 	 */
 	public Item unEquipItem(int itemUniqueId, long slot) {
-		// if inventory is full unequip action is disabled
+		// 背包满时禁用卸装操作 / if inventory is full unequip action is disabled
 		if (owner.getInventory().isFull()) {
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_UI_INVENTORY_FULL);
 			return null;
@@ -327,7 +317,7 @@ public class Equipment {
 				return null;
 			}
 
-			// Looks very odd - but its retail like
+			// 看起来很奇怪——但符合正式服 / Looks very odd - but its retail like
 			if (itemToUnequip.getEquipmentSlot() == ItemSlot.MAIN_HAND.getSlotIdMask()) {
 				Item ohWeapon = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
 				if (ohWeapon != null && ohWeapon.getItemTemplate().isWeapon()) {
@@ -338,7 +328,7 @@ public class Equipment {
 				}
 			}
 
-			// if unequip power shard
+			// 若卸下力量碎片 / if unequip power shard
 			if (itemToUnequip.getItemTemplate().isArmor() && itemToUnequip.getItemTemplate().getArmorType() != ArmorType.SHARD) {
 				owner.unsetState(CreatureState.POWERSHARD);
 				PacketSendUtility.sendPacket(owner, new SM_EMOTION(owner, EmotionType.POWERSHARD_OFF, 0, 0));
@@ -383,23 +373,11 @@ public class Equipment {
 	}
 
 	/**
-	 * TODO: Move to SkillEngine Use skill stack SKILL_P_EQUIP_DUAL to check that instead
-	 * 
-	 * @return true if player can equip two one-handed weapons
-	 */
-	private boolean hasDualWieldingSkills() {
-		return WeaponDualEffect.hasDualWieldEffect(owner);
-	}
-
-	/**
-	 * Used during equip process and analyzes equipped slots
-	 * 
-	 * @param item
-	 * @param validateOnly
-	 * @return
+	 * 装备过程中使用，分析已装备槽位。
+	 * Used during equip process and analyzes equipped slots.
 	 */
 	private boolean validateEquippedWeapon(Item item, boolean validateOnly) {
-		// check present skill
+		// 检查当前技能 / check present skill
 		int[] requiredSkills = item.getItemTemplate().getWeaponType().getRequiredSkills();
 
 		if (!checkAvailableEquipSkills(requiredSkills)) {
@@ -421,7 +399,7 @@ public class Equipment {
 		} else {
 			return false;
 		}
-		// for dual weapons, they occupy two slots, so check if the same item
+		// 双手武器占两槽，检查是否同一物品 / for dual weapons, they occupy two slots, so check if the same item
 		if (itemInRightHand == itemInLeftHand) {
 			itemInLeftHand = null;
 		}
@@ -458,7 +436,7 @@ public class Equipment {
 		} else { // adding one-handed weapon
 			if (itemInRightHand != null) { // main hand is already occupied
 				boolean addingLeftHand = (item.getEquipmentSlot() & ItemSlot.LEFT_HAND.getSlotIdMask()) != 0;
-				// if occupied by 2H weapon, we have to unequip both slots, skills are not required
+				// 若装备双手武器，须卸下双槽，无需技能。 / if occupied by 2H weapon, we have to unequip both slots, skills are not required
 				if (mainIsTwoHand) {
 					if (validateOnly) {
 						requiredInventorySlots++;
@@ -468,8 +446,8 @@ public class Equipment {
 						unEquip(rightSlot | leftSlot);
 					}
 				} // main hand is already occupied and adding unknown hand, needs skills to be checked
-				else if (hasDualWieldingSkills()) {
-					// if adding to empty left hand that is ok
+				else if (WeaponDualEffect.hasDualWieldEffect(owner)) {
+					// 若添加到空的左手则可以 / if adding to empty left hand that is ok
 					if (itemInLeftHand == null && addingLeftHand) {
 						return true;
 					}
@@ -484,14 +462,14 @@ public class Equipment {
 				} else {
 					// requiredInventorySlots are 0
 					if (addingLeftHand && itemInLeftHand != null) {
-						// this is not good, if inventory is full, should switch slots
+						// 不好：若背包满，应切换槽位 / this is not good, if inventory is full, should switch slots
 						if (validateOnly) {
 							markedFreeSlots.add(leftSlot);
 						} else {
 							unEquip(leftSlot);
 						}
 					} else {
-						// replace main hand, doesn't matter which slot is equiped client sends slot 2 even for double-click
+						// 替换主手；客户端双击时也发送槽位 2。 / replace main hand, doesn't matter which slot is equiped client sends slot 2 even for double-click
 						if (validateOnly) {
 							markedFreeSlots.add(rightSlot);
 						} else {
@@ -503,7 +481,7 @@ public class Equipment {
 				}
 			}
 		}
-		// check again = required slots
+		// 再次检查 = 所需槽位 / check again = required slots
 		return requiredInventorySlots == 0 || owner.getInventory().getFreeSlots() >= requiredInventorySlots;
 	}
 
@@ -514,7 +492,7 @@ public class Equipment {
 	private boolean checkAvailableEquipSkills(int[] requiredSkills) {
 		boolean isSkillPresent = false;
 
-		// if no skills required - validate as true
+		// 若无需技能——校验为 true / if no skills required - validate as true
 		if (requiredSkills.length == 0) {
 			return true;
 		}
@@ -529,19 +507,16 @@ public class Equipment {
 	}
 
 	/**
-	 * Used during equip process and analyzes equipped slots
-	 * 
-	 * @param item
-	 * @param validateOnly
-	 * @return
+	 * 装备过程中使用，分析已装备槽位。
+	 * Used during equip process and analyzes equipped slots.
 	 */
 	private boolean validateEquippedArmor(Item item, boolean validateOnly) {
-		// allow wearing of jewelry etc stuff
+		// 允许佩戴珠宝等物品 / allow wearing of jewelry etc stuff
 		ArmorType armorType = item.getItemTemplate().getArmorType();
 		if (armorType == null) {
 			return true;
 		}
-		// check present skill
+		// 检查当前技能 / check present skill
 		int[] requiredSkills = armorType.getRequiredSkills();
 		if (!checkAvailableEquipSkills(requiredSkills)) {
 			return false;
@@ -563,7 +538,7 @@ public class Equipment {
 				markedFreeSlots.add(slotToCheck1.getSlotIdMask());
 				markedFreeSlots.add(slotToCheck2.getSlotIdMask());
 			} else {
-				// remove 2H weapon
+				// 卸下双手武器 / remove 2H weapon
 				unEquip(slotToCheck1.getSlotIdMask() | slotToCheck2.getSlotIdMask());
 			}
 		}
@@ -571,10 +546,7 @@ public class Equipment {
 	}
 
 	/**
-	 * Will look item in equipment item set
-	 * 
-	 * @param value
-	 * @return Item
+	 * @param value 在装备集合中查找物品。@param value @return Item / Will look item in equipment item set @param value @return Item
 	 */
 	public Item getEquippedItemByObjId(int value) {
 		synchronized (equipment) {
@@ -645,6 +617,10 @@ public class Equipment {
 		return equippedItems;
 	}
 
+	/**
+	 * 获取 Equipped 物品 WithoutStigmaOld。
+	 * Returns the equipped items without stigma old.
+	 */
 	public List<Item> getEquippedItemsWithoutStigmaOld() {
 		List<Item> equippedItems = new ArrayList<Item>();
 		Item twoHanded = null;
@@ -705,6 +681,7 @@ public class Equipment {
 		return equippedItems;
 	}
 
+	/** 返回 equipped items all stigma ids / Returns the equipped items all stigma ids */
 	public List<Integer> getEquippedItemsAllStigmaIds() {
 		List<Integer> equippedItemIds = new ArrayList<Integer>();
 		for (Item item : equipment.values()) {
@@ -728,6 +705,7 @@ public class Equipment {
 		return equippedItems;
 	}
 
+	/** 返回 equipped items estima / Returns the equipped items estima */
 	public List<Item> getEquippedItemsEstima() {
 		List<Item> equippedItems = new ArrayList<Item>();
 		for (Item item : equipment.values()) {
@@ -764,13 +742,11 @@ public class Equipment {
 	}
 
 	/**
-	 * Should be called only when loading from DB for items isEquipped=1
-	 * 
-	 * @param item
+	 * @param item 仅在从 DB 加载 isEquipped=1 物品时调用。@param item / Should be called only when loading from DB for items isEquipped=1 @param item
 	 */
 	public void onLoadHandler(Item item) {
 		ItemTemplate template = item.getItemTemplate();
-		// unequip arrows during upgrade to 4.0, and put back to inventory do some check for item level as well
+		// 升级到 4.0 时卸下箭矢并放回背包，同时检查物品等级。 / unequip arrows during upgrade to 4.0, and put back to inventory do some check for item level as well
 		if (template.getArmorType() != null) {
 			if (!validateEquippedArmor(item, true)) {
 				putItemBackToInventory(item);
@@ -786,7 +762,7 @@ public class Equipment {
 		if (template.isTwoHandWeapon()) {
 			ItemSlot[] oldSlots = ItemSlot.getSlotsFor(item.getEquipmentSlot());
 			if (oldSlots.length != 2) {
-				// update slot during upgrade to 4.0
+				// 升级到 4.0 时更新槽位 / update slot during upgrade to 4.0
 				long currentSlot = item.getEquipmentSlot();
 				if ((item.getEquipmentSlot() & ItemSlot.MAIN_OR_SUB.getSlotIdMask()) != 0) {
 					item.setEquipmentSlot(ItemSlot.MAIN_OR_SUB.getSlotIdMask());
@@ -799,7 +775,7 @@ public class Equipment {
 			}
 			for (ItemSlot sl : oldSlots) {
 				if (equipment.containsKey(sl.getSlotIdMask())) {
-					log.warn("Duplicate equipped item in slot : " + sl.getSlotIdMask() + " item_id: " + item.getItemTemplate().getId() + " owner: " + owner.getObjectId());
+					log.warn(I18n.get("log.4c29ab17c207", sl.getSlotIdMask(), item.getItemTemplate().getId(), owner.getObjectId()));
 					putItemBackToInventory(item);
 					break;
 				}
@@ -809,7 +785,7 @@ public class Equipment {
 		}
 
 		if (equipment.containsKey(item.getEquipmentSlot())) {
-			log.warn("Duplicate equipped item in slot: " + item.getEquipmentSlot() + " item_id: " + item.getItemTemplate().getId() + " owner: " + owner.getObjectId());
+			log.warn(I18n.get("log.3cdad5a6a6cc", item.getEquipmentSlot(), item.getItemTemplate().getId(), owner.getObjectId()));
 			putItemBackToInventory(item);
 			return;
 		}
@@ -824,7 +800,7 @@ public class Equipment {
 	}
 
 	/**
-	 * Should be called only when equipment object totally constructed on player loading. Applies every equipped item stats modificators
+	 * 仅在玩家加载且装备对象完全构建后调用。应用所有已装备物品的属性修正。 / Should be called only when equipment object totally constructed on player loading. Applies every equipped item stats modificators
 	 */
 	public void onLoadApplyEquipmentStats() {
 		Item twoHanded = null;
@@ -837,7 +813,7 @@ public class Equipment {
 					twoHanded = item;
 				}
 				if (item.getOptionalSocket() == -1) {
-					log.warn("on load all eqipment, item can't be equiped because hasTune" + item.getObjectId());
+					log.warn(I18n.get("log.23cc7e5d8482", item.getObjectId()));
 					continue;
 				}
 				ItemEquipmentListener.onItemEquipment(item, owner);
@@ -854,11 +830,13 @@ public class Equipment {
 		return subHandItem != null && subHandItem.getItemTemplate().getArmorType() == ArmorType.SHIELD;
 	}
 
+	/** 返回 equipped shield / Returns the equipped shield */
 	public Item getEquippedShield() {
 		Item subHandItem = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
 		return (subHandItem != null && subHandItem.getItemTemplate().getArmorType() == ArmorType.SHIELD) ? subHandItem : null;
 	}
 
+	/** 返回 equiped plume / Returns the equiped plume */
 	public Item getEquipedPlume() {
 		Item plume = equipment.get(ItemSlot.PLUME.getSlotIdMask());
 		return (plume != null && plume.getItemTemplate().getCategory() == ItemCategory.PLUME) ? plume : null;
@@ -872,7 +850,6 @@ public class Equipment {
 			if (item == null || item.getItemTemplate().getWeaponType() != null) {
 				continue;
 			}
-			// TODO: Check it! Not sure for dual hand
 			if (item.getItemTemplate().getArmorType() == type && item.isEquipped() && item.getEquipmentSlot() != ItemSlot.SUB_OFF_HAND.getSlotIdMask()) {
 				return true;
 			}
@@ -881,7 +858,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return <tt>WeaponType</tt> of current weapon in main hand or null
+	 * @return <tt>WeaponType< / tt> of current weapon in main hand or null
 	 */
 	public WeaponType getMainHandWeaponType() {
 		Item mainHandItem = equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask());
@@ -892,7 +869,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return <tt>WeaponType</tt> of current weapon in off hand or null
+	 * @return <tt>WeaponType< / tt> of current weapon in off hand or null
 	 */
 	public WeaponType getOffHandWeaponType() {
 		Item offHandItem = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
@@ -906,6 +883,9 @@ public class Equipment {
 		return null;
 	}
 
+	/**
+	 * @return Whether power shard equipped / Whether power shard equipped
+	 */
 	public boolean isPowerShardEquipped() {
 		Item leftPowershard = equipment.get(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
 		if (leftPowershard != null) {
@@ -919,6 +899,7 @@ public class Equipment {
 		return false;
 	}
 
+	/** 返回 main hand power shard / Returns the main hand power shard */
 	public Item getMainHandPowerShard() {
 		Item mainHandPowerShard = equipment.get(ItemSlot.POWER_SHARD_RIGHT.getSlotIdMask());
 		if (mainHandPowerShard != null) {
@@ -927,6 +908,7 @@ public class Equipment {
 		return null;
 	}
 
+	/** 返回 off hand power shard / Returns the off hand power shard */
 	public Item getOffHandPowerShard() {
 		Item offHandPowerShard = equipment.get(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
 		if (offHandPowerShard != null) {
@@ -954,10 +936,10 @@ public class Equipment {
 	}
 
 	/**
-	 * increase item count and return left count
+	 * @return 增加物品数量并返回剩余数量 / increase item count and return left count
 	 */
 	public long increaseEquippedItemCount(Item item, long count) {
-		// Only Shards can be increased
+		// 仅碎片可增加 / Only Shards can be increased
 		if (item.getItemTemplate().getArmorType() != ArmorType.SHARD) {
 			return count;
 		}
@@ -970,7 +952,7 @@ public class Equipment {
 	private void decreaseEquippedItemCount(int itemObjId, int count) {
 		Item equippedItem = getEquippedItemByObjId(itemObjId);
 
-		// Only Shards can be decreased
+		// 仅碎片可减少 / Only Shards can be decreased
 		if (equippedItem.getItemTemplate().getArmorType() != ArmorType.SHARD) {
 			return;
 		}
@@ -1064,7 +1046,7 @@ public class Equipment {
 		owner.getLifeStats().updateCurrentStats();
 		owner.getGameStats().updateStatsAndSpeedVisually();
 
-		// remove stance effect when switchhand
+		// 切换手时移除姿态效果 / remove stance effect when switchhand
 		if (owner.getController().isUnderStance()) {
 			owner.getController().stopStance();
 		}
@@ -1085,8 +1067,8 @@ public class Equipment {
 	}
 
 	/**
-	 * Checks if dual one-handed weapon is equiped in any slot combination
-	 * 
+	 * 检查是否 dual 一个- handedweapon 为 equiped 在 any 槽位 combination。 / Checks if dual one-handed weapon is equiped in any slot combination
+	 *
 	 * @param slot masks
 	 * @return
 	 */
@@ -1123,23 +1105,23 @@ public class Equipment {
 	}
 
 	/**
-	 * Only used for new Player creation. Although invalid, but fits its purpose
-	 * 
-	 * @param slot
-	 * @return
+	 * @param slot 仅用于新建玩家（虽不严谨但够用）。 / Only used for new Player creation. Although invalid, but fits its purpose @param slot @return
 	 */
 	public boolean isSlotEquipped(long slot) {
 		return !(equipment.get(slot) == null);
 	}
 
+	/** 返回 special stigma item slot / Returns the special stigma item slot */
 	public Item getSpecialStigmaItemSlot() {
 		return equipment.get(ItemSlot.STIGMA_SPECIAL.getSlotIdMask());
 	}
 
+	/** 返回 main hand weapon / Returns the main hand weapon */
 	public Item getMainHandWeapon() {
 		return equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask());
 	}
 
+	/** 返回 off hand weapon / Returns the off hand weapon */
 	public Item getOffHandWeapon() {
 		Item result = equipment.get(ItemSlot.SUB_HAND.getSlotIdMask());
 		if (getMainHandWeapon() == result) {
@@ -1199,12 +1181,14 @@ public class Equipment {
 		}
 		RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
 
+			/** 接受请求 / Accept Request */
 			@Override
 			public void acceptRequest(Creature requester, Player responder) {
 				player.getController().cancelUseItem();
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), item.getObjectId(), item.getItemId(), 5000, 4), true);
 				player.getController().cancelTask(TaskId.ITEM_USE);
 				final ActionObserver moveObserver = new ActionObserver(ObserverType.MOVE) {
+					/** 已移动 / moved. */
 					@Override
 					public void moved() {
 						player.getController().cancelTask(TaskId.ITEM_USE);
@@ -1215,6 +1199,7 @@ public class Equipment {
 				player.getObserveController().attach(moveObserver);
 				player.getController().addTask(TaskId.ITEM_USE,
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							/** 运行 / run. */
 							@Override
 							public void run() {
 								player.getObserveController().removeObserver(moveObserver);
@@ -1228,6 +1213,7 @@ public class Equipment {
 						}, 5000));
 			}
 
+			/** 拒绝请求 / Deny Request */
 			@Override
 			public void denyRequest(Creature requester, Player responder) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SOUL_BOUND_ITEM_CANCELED(item.getNameId()));
@@ -1254,12 +1240,13 @@ public class Equipment {
 		return true;
 	}
 
+	/** 检查军阶限制物品。 / Check rank limit items. */
 	public void checkRankLimitItems() {
 		for (Item item : getEquippedItems()) {
 			if (!verifyRankLimits(item)) {
-				unEquipItem(item.getObjectId(), item.getEquipmentSlot());
-				PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_UNEQUIP_RANKITEM(item.getNameId()));
-				// TODO: Check retail what happens with full inv and the task msgs.
+				if (unEquipItem(item.getObjectId(), item.getEquipmentSlot()) != null) {
+					PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_UNEQUIP_RANKITEM(item.getNameId()));
+				}
 			}
 		}
 	}

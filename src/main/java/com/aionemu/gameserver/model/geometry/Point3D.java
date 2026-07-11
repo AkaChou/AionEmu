@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.geometry;
 
 import java.io.Serializable;
@@ -21,38 +5,42 @@ import java.io.Serializable;
 import com.aionemu.gameserver.model.templates.zone.Point2D;
 
 /**
- * This class represents 3D point.<br>
- * It's valid for serializing and cloning.
- * 
+ * 点3D，用于几何相关逻辑。
+ * Point 3 D for geometry logic.
+ *
  * @author SoulKeeper
  */
 @SuppressWarnings("serial")
 public class Point3D implements Cloneable, Serializable {
 
-	/**
-	 * X coord of the point
-	 */
+	 /**
+	  * 点的 X 坐标。
+	  * X coord of the point
+	  */
 	private float x;
 
-	/**
-	 * Y coord of the point
-	 */
+	 /**
+	  * 点的 Y 坐标。
+	  * Y coord of the point
+	  */
 	private float y;
 
-	/**
-	 * Z coord of the point
-	 */
+	 /**
+	  * 点的 Z 坐标。
+	  * Z coord of the point
+	  */
 	private float z;
 
-	/**
-	 * Creates new point with coords 0, 0, 0
-	 */
+	 /**
+	  * 创建坐标为 0,0,0 的新点。
+	  * Creates new point with coords 0, 0, 0
+	  */
 	public Point3D() {
 	}
 
 	/**
-	 * Creates new 3D point from 2D point and z coord
-	 * 
+	 * 创建新 3Dpoint 从 2Dpoint 并 zcoord。 / Creates new 3D point from 2D point and z coord
+	 *
 	 * @param point 2D point
 	 * @param z     z coord
 	 */
@@ -61,17 +49,15 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Clones another 3D point
-	 * 
-	 * @param point 3d point to clone
+	 * 克隆另一个 3D 点。 / Clones another 3D point.
 	 */
 	public Point3D(Point3D point) {
 		this(point.getX(), point.getY(), point.getZ());
 	}
 
 	/**
-	 * Creates new 3d point with given coords
-	 * 
+	 * 创建新 3dpoint 给定 coords。 / Creates new 3d point with given coords
+	 *
 	 * @param x x coord
 	 * @param y y coord
 	 * @param z z coord
@@ -82,54 +68,57 @@ public class Point3D implements Cloneable, Serializable {
 		this.z = z;
 	}
 
-	/**
-	 * Returns x coord
-	 * 
-	 * @return x coord
-	 */
+	 /**
+	  * 返回 X 坐标。
+	  * Returns x coord
+	  * @return x coord
+	  */
 	public float getX() {
 		return x;
 	}
 
 	/**
+	 * 设置 xcoordpoint。
 	 * Sets x coord of this point
-	 * 
+	 *
 	 * @param x x coord
 	 */
 	public void setX(float x) {
 		this.x = x;
 	}
 
-	/**
-	 * Returns y coord of this point
-	 * 
-	 * @return y coord
-	 */
+	 /**
+	  * 返回该点 Y 坐标。
+	  * Returns y coord of this point
+	  * @return y coord
+	  */
 	public float getY() {
 		return y;
 	}
 
 	/**
+	 * 设置 ycoordpoint。
 	 * Sets y coord of this point
-	 * 
+	 *
 	 * @param y y coord
 	 */
 	public void setY(float y) {
 		this.y = y;
 	}
 
-	/**
-	 * Returns z coord of this point
-	 * 
-	 * @return z coord
-	 */
+	 /**
+	  * 返回该点 Z 坐标。
+	  * Returns z coord of this point
+	  * @return z coord
+	  */
 	public float getZ() {
 		return z;
 	}
 
 	/**
+	 * 设置 zcoordpoint。
 	 * Sets z coord of this point
-	 * 
+	 *
 	 * @param z z coord
 	 */
 	public void setZ(float z) {
@@ -137,8 +126,8 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Checks if this point is equal to another point
-	 * 
+	 * 检查是否此 point 为 equal 到 anotherpoint。 / Checks if this point is equal to another point
+	 *
 	 * @param o point to compare with
 	 * @return true if equal
 	 */
@@ -155,15 +144,8 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns point's hashcode.<br>
-	 * 
-	 * <pre>
-	 * int result = x;
-	 * result = 31 * result + y;
-	 * result = 31 * result + z;
-	 * return result;
-	 * </pre>
-	 * 
+	 * Returns point's hashcode.<br> <pre> int result = x; result = 31 * result + y; result = 31 * result + z; return result; </pre>。 / Returns point's hashcode.<br> <pre> int result = x; result = 31 * result + y; result = 31 * result + z; return result; </pre>
+	 *
 	 * @return hashcode
 	 */
 	@Override
@@ -175,10 +157,7 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Clones this point
-	 * 
-	 * @return copy of this point
-	 * @throws CloneNotSupportedException never thrown
+	 * @return 克隆本点。 / Clones this point @return copy of this point @throws CloneNotSupportedException never thrown
 	 */
 	@Override
 	public Point3D clone() throws CloneNotSupportedException {
@@ -186,9 +165,7 @@ public class Point3D implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Formatted string representation of this point
-	 * 
-	 * @return returns formatted string that represents this point
+	 * 本点的格式化字符串表示。 / Formatted string representation of this point.
 	 */
 	@Override
 	public String toString() {

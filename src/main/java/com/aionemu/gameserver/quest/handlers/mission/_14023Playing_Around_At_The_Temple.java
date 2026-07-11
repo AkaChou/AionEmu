@@ -7,6 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 主线任务脚本：Playing Around At The Temple（任务 ID 14023）。
+ * Campaign mission quest script: Playing Around At The Temple (quest ID 14023).
+ */
 public class _14023Playing_Around_At_The_Temple extends QuestHandler {
 
     private final static int questId = 14023;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -22,10 +6,21 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 向客户端同步自身异常状态与效果列表的服务端包。
+ * Server packet synchronizing the local player's abnormal state and effect list to the client.
+ */
 public class SM_ABNORMAL_STATE extends AionServerPacket {
 	private Collection<Effect> effects;
 	private int abnormals;
 
+	/**
+	 * 使用异常位掩码与效果集合构造同步包。
+	 * Creates a sync packet from an abnormal bit mask and effect collection.
+	 *
+	 * @param effects 需要同步的效果集合 / effects to synchronize
+	 * @param abnormals 异常状态位掩码 / abnormal state bit mask
+	 */
 	public SM_ABNORMAL_STATE(Collection<Effect> effects, int abnormals) {
 		this.effects = effects;
 		this.abnormals = abnormals;

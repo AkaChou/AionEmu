@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.recipe;
 
 import java.util.ArrayList;
@@ -25,10 +9,10 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 月华 Component 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LunaComponent")
@@ -36,6 +20,7 @@ public class LunaComponent {
 	@XmlElement(name = "luna_component")
 	protected ArrayList<LunaComponentElement> luna_component;
 
+	/** 返回 components / Returns the components */
 	public Collection<LunaComponentElement> getComponents() {
 		return luna_component != null ? luna_component : Collections.<LunaComponentElement>emptyList();
 	}

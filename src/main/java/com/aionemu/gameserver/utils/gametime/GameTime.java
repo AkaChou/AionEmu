@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.gametime;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -24,39 +8,78 @@ import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 
 /**
- * Represents the internal clock for the time in aion world
+ * Aion 世界内部游戏时钟（年/月/日/时/分，独立于真实时间）。
+ * In-game clock for the Aion world (year/month/day/hour/minute, independent of real time).
  *
- * @author Ben, reworked by vlog
+ * @author Ben
+ * @author vlog
  */
 public class GameTime implements Cloneable {
 
+	/**
+	 * 一小时的分钟数。
+	 * Minutes in an hour.
+	 */
 	private static final int MINUTES_IN_HOUR = 60;
+	/**
+	 * 一天的分钟数。
+	 * Minutes in a day.
+	 */
 	private static final int MINUTES_IN_DAY = MINUTES_IN_HOUR * 24;
+	/**
+	 * 一年的分钟数（固定月份天数）。
+	 * Minutes in a year (fixed month lengths).
+	 */
 	private static final int MINUTES_IN_YEAR = (31 * 7 + 30 * 4 + 28 * 1) * MINUTES_IN_DAY;
+	/**
+	 * 自 01.01.0000 00:00 起的游戏分钟数。
+	 * Game minutes since 01.01.0000 00:00.
+	 */
 	private int gameTime = 0;
+	/**
+	 * 当前时段。
+	 * Current day-time period.
+	 */
 	private DayTime dayTime;
 
+	/**
+	 * 游戏月份及其天数。
+	 * Game months and their day counts.
+	 */
 	private enum Monthes {
 
 		JANUARY(31), FEBRUARY(28), MARCH(31), APRIL(30), MAY(31), JUNE(30), JULY(31), AUGUST(31), SEPTEMBER(30),
 		OCTOBER(31), NOVEMBER(30), DECEMBER(31);
 
+		/**
+		 * 该月天数。
+		 * Days in this month.
+		 */
 		private int _days;
 
+		/**
+		 * Day count
+		 */
 		Monthes(int days) {
 			_days = days;
 		}
 
+		/**
+		 * 获取该月天数。
+		 * Get days in this month.
+		 *
+		 * Days
+		 */
 		public int getDays() {
 			return _days;
 		}
 	};
 
 	/**
-	 * Constructs a GameTime with the given time in minutes since midnight
-	 * 01.01.0000
+	 * 以自 01.01.0000 起的分钟数构造游戏时间。
+	 * Construct game time from minutes since 01.01.0000.
 	 *
-	 * @param time Minutes since midnight 01.01.0000
+	 * @param time 自 01.01.0000 午夜起的分钟数 / Minutes since midnight 01.01.0000
 	 */
 	public GameTime(int time) {
 		if (time < 0) {
@@ -67,26 +90,29 @@ public class GameTime implements Cloneable {
 	}
 
 	/**
-	 * Get the proper amount of minutes in this month
+	 * 获取该月对应的游戏分钟数。
+	 * Minutes contained in the given month.
 	 *
-	 * @param m
-	 * @return time in minutes in this month
+	 * @param m 月份 / Month
+	 * Minutes in this month
 	 */
 	public int getProperMinutesInMonth(Monthes m) {
 		return m.getDays() * MINUTES_IN_DAY;
 	}
 
 	/**
-	 * Gets the ingame time in minutes
+	 * 获取游戏时间总分钟数。
+	 * Get total in-game minutes.
 	 *
-	 * @return The number of minutes since 01.01.0000 00:00:00
+	 * @return 自 01.01.0000 00:00:00 起的分钟数 / Minutes since 01.01.0000 00:00:00
 	 */
 	public int getTime() {
 		return gameTime;
 	}
 
 	/**
-	 * Increases game time by a minute
+	 * 将游戏时间增加一分钟；整点时检查时段变化。
+	 * Increase game time by one minute; check day-time change on the hour.
 	 */
 	public void increase() {
 		gameTime++;
@@ -96,7 +122,8 @@ public class GameTime implements Cloneable {
 	}
 
 	/**
-	 * Calculate new day time and send events on change
+	 * 重新计算时段，触发整点与时段变更事件。
+	 * Recalculate day-time and fire hour/day-time change events.
 	 */
 	public void checkDayTimeChange() {
 		DayTime oldDayTime = this.dayTime;
@@ -108,7 +135,8 @@ public class GameTime implements Cloneable {
 	}
 
 	/**
-	 * Calculate the day time
+	 * 根据当前小时计算时段。
+	 * Calculate day-time period from the current hour.
 	 */
 	public void calculateDayTime() {
 		int hour = getHour();
@@ -123,30 +151,37 @@ public class GameTime implements Cloneable {
 		}
 	}
 
+	/**
+	 * 整点回调：通知临时刷新引擎。
+	 * Hour-change callback: notify temporary spawn engine.
+	 */
 	private void onHourChange() {
 		TemporarySpawnEngine.onHourChange();
 	}
 
 	/**
-	 * Perform actions upon day time change
+	 * 时段变更回调：检查天气时间。
+	 * Day-time change callback: check weather time.
 	 */
 	private void onDayTimeChange() {
 		GameRuntimeServices.weatherService().checkWeathersTime();
 	}
 
 	/**
-	 * Gets the year in the game: 0 - <integer bound>
+	 * 获取游戏年份（0 起）。
+	 * Get game year (from 0).
 	 *
-	 * @return Year
+	 * Year
 	 */
 	public int getYear() {
 		return gameTime / MINUTES_IN_YEAR;
 	}
 
 	/**
-	 * Gets the month in the game, 1 - 12
+	 * 获取游戏月份（1–12）。
+	 * Get game month (1–12).
 	 *
-	 * @return Month 1-12
+	 * Month 1–12
 	 */
 	public int getMonth() {
 		int answer = 1;
@@ -166,9 +201,10 @@ public class GameTime implements Cloneable {
 	}
 
 	/**
-	 * Gets the day in the game, 1 - Monthes.getDays()
+	 * 获取游戏日（1–当月天数）。
+	 * Get game day (1–days in month).
 	 *
-	 * @return Day 1 - Monthes.getDays()
+	 * Day
 	 */
 	public int getDay() {
 		int answer = 1;
@@ -187,33 +223,40 @@ public class GameTime implements Cloneable {
 	}
 
 	/**
-	 * Gets the hour in the game, 0-23
+	 * 获取游戏小时（0–23）。
+	 * Get game hour (0–23).
 	 *
-	 * @return Hour 0-23
+	 * Hour 0–23
 	 */
 	public int getHour() {
 		return (gameTime % MINUTES_IN_DAY) / (MINUTES_IN_HOUR);
 	}
 
 	/**
-	 * Gets the minute in the game, 0-59
+	 * 获取游戏分钟（0–59）。
+	 * Get game minute (0–59).
 	 *
-	 * @return Minute 0-59
+	 * Minute 0–59
 	 */
 	public int getMinute() {
 		return (gameTime % MINUTES_IN_HOUR);
 	}
 
 	/**
-	 * @return the dayTime
+	 * 获取当前时段。
+	 * Get current day-time period.
+	 *
+	 * DayTime
 	 */
 	public DayTime getDayTime() {
 		return dayTime;
 	}
 
 	/**
-	 * Convert from game time into real time
+	 * 将游戏时间换算为近似真实时间（÷12）。
+	 * Convert game time to approximate real time (÷12).
 	 *
+	 * Converted value
 	 * @author vlog
 	 */
 	public int convertTime() {
@@ -221,64 +264,79 @@ public class GameTime implements Cloneable {
 	}
 
 	/**
-	 * Subtract the given game time from this game time
+	 * 减去给定游戏时间，返回新实例。
+	 * Subtract the given game time; returns a new instance.
 	 *
-	 * @param gt time to subtract
-	 * @return new game time
+	 * @param gt 要减去的时间 / Time to subtract
+	 * @return 新游戏时间 / New game time
 	 */
 	public GameTime minus(GameTime gt) {
 		return new GameTime(this.getTime() - gt.getTime());
 	}
 
 	/**
-	 * Add the given game time to this game time
+	 * 加上给定游戏时间，返回新实例。
+	 * Add the given game time; returns a new instance.
 	 *
-	 * @param gt time to add
-	 * @return new game time
+	 * @param gt 要加上的时间 / Time to add
+	 * @return 新游戏时间 / New game time
 	 */
 	public GameTime plus(GameTime gt) {
 		return new GameTime(this.getTime() + gt.getTime());
 	}
 
 	/**
-	 * Compares this time and the time given
+	 * 是否大于给定游戏时间。
+	 * Whether this time is greater than the given one.
 	 *
-	 * @param gt
-	 * @return true, if this time is greater
+	 * @param gt 比较对象 / Other game time
+	 * @return 若 greater 则为 true / True if greater
 	 */
 	public boolean isGreaterThan(GameTime gt) {
 		return this.getTime() > gt.getTime();
 	}
 
 	/**
-	 * Compares this time and the time given
+	 * 是否小于给定游戏时间。
+	 * Whether this time is less than the given one.
 	 *
-	 * @param gt
-	 * @return true, if this time is less
+	 * @param gt 比较对象 / Other game time
+	 * @return 若 less 则为 true / True if less
 	 */
 	public boolean isLessThan(GameTime gt) {
 		return this.getTime() < gt.getTime();
 	}
 
 	/**
-	 * Compare two game times
+	 * 按总分钟数比较相等。
+	 * Equality by total minutes.
 	 *
-	 * @param o object
-	 * @return true or false
+	 * @param o 对象 / Object
+	 * 若 equal 则为 true / True if equal
 	 * @author vlog
 	 */
 	@Override
 	public boolean equals(Object o) {
-		GameTime other = (GameTime) o;
-		return this.getTime() == other.getTime();
+		return o instanceof GameTime other && gameTime == other.gameTime;
 	}
 
+	/**
+	 * 按总分钟数生成哈希码。
+	 * Hash code by total minutes.
+	 *
+	 * Hash code
+	 */
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
+		return Integer.hashCode(gameTime);
 	}
 
+	/**
+	 * 克隆为相同分钟数的新实例。
+	 * Clone as a new instance with the same minutes.
+	 *
+	 * Clone
+	 */
 	@Override
 	public Object clone() {
 		return new GameTime(gameTime);

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.archives_of_eternity;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 永恒档案馆任务脚本：Hunting Reliquarians（任务 ID 16803）。
+ * Archives of Eternity quest script: Hunting Reliquarians (quest ID 16803).
+ *
+ * @author (Encom)
+ */
 public class _16803Hunting_Reliquarians extends QuestHandler {
 
     private final static int questId = 16803;
@@ -85,8 +71,8 @@ public class _16803Hunting_Reliquarians extends QuestHandler {
 					return sendQuestEndDialog(env);
 				}
 			}
-			else { // Bounty Quest made DragonicK?
-				// Selected item is not optional.
+			else { // 赏金任务（DragonicK？） / Bounty Quest made DragonicK?
+				// 所选物品不是可选的。 / Selected item is not optional.
 				env.setDialogId(8);
 				env.setExtendedRewardIndex(1);
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(806148, 0));

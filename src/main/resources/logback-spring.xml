@@ -18,6 +18,11 @@
 			<Pattern>${coloredConsolePattern}</Pattern>
 		</encoder>
 	</appender>
+	<appender name="out_banner" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%message%n</pattern>
+		</encoder>
+	</appender>
 	<appender name="app_admincmd" class="ch.qos.logback.core.FileAppender">
 		<file>${logFolder}/adminaudit.log</file>
 		<append>true</append>
@@ -268,6 +273,12 @@
 	<logger name="com.aionemu.loginserver.network.aion.clientpackets.CM_LOGIN" level="debug" additivity="false">
 		<appender-ref ref="app_login_audit"/>
 	</logger>
+
+	<logger name="aion.console" level="INFO" additivity="false">
+		<appender-ref ref="out_banner"/>
+	</logger>
+	<logger name="com.zaxxer.hikari" level="WARN"/>
+	<logger name="org.quartz" level="WARN"/>
 
 	<root level="info">
 		<appender-ref ref="app_console"/>

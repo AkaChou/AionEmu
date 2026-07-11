@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.quest;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,6 +5,11 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 任务掉落模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestDrop")
@@ -39,14 +28,17 @@ public class QuestDrop {
 	@XmlTransient
 	protected Integer questId;
 
+	/** 返回 NPC ID / Returns the npc id */
 	public Integer getNpcId() {
 		return npcId;
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public Integer getItemId() {
 		return itemId;
 	}
 
+	/** 返回概率 / Returns the chance*/
 	public int getChance() {
 		if (chance == null) {
 			return 100;
@@ -54,22 +46,27 @@ public class QuestDrop {
 		return chance;
 	}
 
+	/** Whether 掉落 each 成员小队 / Whether drop each member group */
 	public boolean isDropEachMemberGroup() {
 		return dropEachMember == 1;
 	}
 
+	/** Whether 掉落 each 成员联盟 / Whether drop each member alliance */
 	public boolean isDropEachMemberAlliance() {
 		return dropEachMember == 2;
 	}
 
+	/** 返回任务 ID / Returns the quest id */
 	public Integer getQuestId() {
 		return questId;
 	}
 
+	/** 返回 collecting step / Returns the collecting step */
 	public int getCollectingStep() {
 		return collecting_step;
 	}
 
+	/** 设置 quest id / Sets the quest id */
 	public void setQuestId(Integer questId) {
 		this.questId = questId;
 	}

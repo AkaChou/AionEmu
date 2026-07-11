@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -40,10 +24,19 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 客户端使用物品请求包；按 type 分支处理取消、目标物、副本重置、多回城与染色等。
+ * Client packet for using an item; branches by type for cancel, target item, instance reset, multi-return, dye, etc.
+ */
 public class CM_USE_ITEM extends AionClientPacket {
 	public int uniqueItemId;
 	public int type, targetItemId, syncId, returnId, customDyeColor;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_USE_ITEM(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -68,8 +61,8 @@ public class CM_USE_ITEM extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		/**
-		 * 5.0 ITEM_USE Cancel System
-		 */
+	 * 5.0 物品使用取消系统 / 5.0 ITEM_USE Cancel System
+	 */
 		if (type == 0) {
 			if (player.getController().hasTask(TaskId.ITEM_USE)) {
 				player.getController().cancelUseItem();
@@ -95,7 +88,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return;
 		}
-		// check use item multicast delay exploit cast (spam)
+		// 检查使用物品组播延迟利用施法（刷屏） / check use item multicast delay exploit cast (spam)
 		if (player.isCasting()) {
 			player.getController().cancelCurrentSkill();
 		}
@@ -126,7 +119,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			return;
 		}
 		for (AbstractItemAction itemAction : itemActions.getItemActions()) {
-			// check if the item can be used before placing it on the cooldown list.
+			// 放入冷却列表前检查物品是否可用。 / check if the item can be used before placing it on the cooldown list.
 			if (targetHouseObject != null && itemAction instanceof HouseDyeAction) {
 				HouseDyeAction action = (HouseDyeAction) itemAction;
 				if (action != null && action.canAct(player, item, targetHouseObject)) {
@@ -140,9 +133,9 @@ public class CM_USE_ITEM extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_IS_NOT_USABLE);
 			return;
 		}
-		// Store Item CD in server Player variable.
-		// Prevents potion spamming, and relogging to use kisks/aether jelly/long CD
-		// items.
+		// 将物品 CD 存于服务端 Player 变量。 / Store Item CD in server Player variable.
+		// 防止药水刷屏，以及重登使用 Kisk/以太果冻/长 CD。 / Prevents potion spamming, and relogging to use kisks/aether jelly/long CD
+		// 物品。 / items.
 		if (player.isItemUseDisabled(item.getItemTemplate().getUseLimits())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANT_USE_UNTIL_DELAY_TIME);
 			return;
@@ -152,7 +145,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			player.addItemCoolDown(item.getItemTemplate().getUseLimits().getDelayId(),
 					System.currentTimeMillis() + useDelay, useDelay / 1000);
 		}
-		// notify item use observer
+		// 通知物品使用观察者 / notify item use observer
 		player.getObserveController().notifyItemuseObservers(item);
 		for (AbstractItemAction itemAction : actions) {
 			if (targetHouseObject != null && itemAction instanceof HouseDyeAction) {

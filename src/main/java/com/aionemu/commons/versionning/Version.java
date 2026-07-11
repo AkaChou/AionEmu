@@ -1,5 +1,7 @@
 package com.aionemu.commons.versionning;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.util.jar.Manifest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 版本信息管理类，用于获取和管理JAR包的版本相关信息
+ * 版本信息管理类，用于获取和管理 JAR 包的版本相关信息
  * Version information management class for retrieving and managing JAR package version information
  */
 @Slf4j
@@ -40,10 +42,10 @@ public class Version {
     }
 
     /**
-     * 从指定类所在的JAR文件中加载版本信息
+ * 从指定类所在的 JAR 文件中加载版本信息
      * Load version information from the JAR file containing the specified class
      * 
-     * @param c 用于定位JAR文件的类 Class used to locate the JAR file
+ * @param c 用于定位 JAR 文件的类 Class used to locate the JAR file
      */
     public void loadInformation(Class<?> c) {
         File jarName = null;
@@ -52,7 +54,7 @@ public class Version {
             jarName = Locator.getClassSource(c);
             if (jarName == null) {
                 useUnknownInformation();
-                log.warn("Unable to get Soft information for {} from class source '{}'", c.getName(), jarName);
+                log.warn(I18n.get("log.84a166f22c9f", c.getName()));
                 return;
             }
             if (!jarName.isFile()) {
@@ -68,10 +70,14 @@ public class Version {
             }
         } catch (IOException | RuntimeException var5) {
             useUnknownInformation();
-            log.error("Unable to get Soft information\nFile name '" + (jarName == null ? "null" : jarName.getAbsolutePath()) + "' isn't a valid jar", var5);
+            log.error(I18n.get("log.6050849f5592", (jarName == null ? "null" : jarName.getAbsolutePath()), "' isn't a valid jar", var5));
         }
     }
 
+    /**
+     * 在无法读取 Manifest 时使用未知版本占位信息
+     * Use unknown version placeholders when Manifest information cannot be read
+     */
     private void useUnknownInformation() {
         this.revision = "Unknown Revision";
         this.date = "Unknown Date";
@@ -80,17 +86,17 @@ public class Version {
     }
 
     /**
-     * 将JAR文件的版本信息传输到指定文件
+ * 将 JAR 文件的版本信息传输到指定文件
      * Transfer version information from JAR file to specified file
      * 
-     * @param jarName JAR文件名 JAR filename
+ * @param jarName JAR 文件名 JAR filename
      * @param type 类型信息 Type information
      * @param fileToWrite 要写入的目标文件 Target file to write
      */
     public void transferInfo(String jarName, String type, File fileToWrite) {
         try {
             if (!fileToWrite.exists()) {
-                log.error("Unable to Find File :" + fileToWrite.getName() + " Please Update your " + type);
+                log.error(I18n.get("log.cdea98b09c16", fileToWrite.getName(), type));
                 return;
             }
 
@@ -100,7 +106,7 @@ public class Version {
             manifest.write(fos);
             fos.close();
         } catch (IOException var7) {
-            log.error("Error, " + var7);
+            log.error(I18n.get("log.27808c5979af", var7));
         }
     }
 

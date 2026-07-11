@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.limiteditems;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 限定物品，用于 limiteditems 相关逻辑。
+ * Limited Item for limiteditems logic.
+ *
  * @author xTz
  */
 public class LimitedItem {
@@ -44,7 +31,7 @@ public class LimitedItem {
 	}
 
 	/**
-	 * return itemId.
+	 * return itemId
 	 */
 	public int getItemId() {
 		return itemId;
@@ -59,7 +46,7 @@ public class LimitedItem {
 	}
 
 	/**
-	 * return playerListByObject.
+	 * return playerListByObject
 	 */
 	public Map<Integer, Integer> getBuyCount() {
 		return buyCounts;
@@ -73,19 +60,20 @@ public class LimitedItem {
 	}
 
 	/**
-	 * return sellLimit.
+	 * return sellLimit
 	 */
 	public int getSellLimit() {
 		return sellLimit;
 	}
 
 	/**
-	 * return buyLimit.
+	 * return buyLimit
 	 */
 	public int getBuyLimit() {
 		return buyLimit;
 	}
 
+	/** 设置默认 / Sets the to default*/
 	public void setToDefault() {
 		sellLimit = defaultSellLimit;
 		buyCounts.clear();
@@ -99,12 +87,13 @@ public class LimitedItem {
 	}
 
 	/**
-	 * return defaultSellLimit.
+	 * return defaultSellLimit
 	 */
 	public int getDefaultSellLimit() {
 		return defaultSellLimit;
 	}
 
+	/** 返回销量时间 / Returns the sales time*/
 	public String getSalesTime() {
 		return salesTime;
 	}

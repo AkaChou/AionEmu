@@ -5,7 +5,8 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * correct name is S_STORE_PURCHASE_INFO
+ * 向客户端打开商店购买/出售信息窗口（S_STORE_PURCHASE_INFO）。
+ * Server packet opening a shop purchase/sell info window (S_STORE_PURCHASE_INFO).
  *
  * @author BeckUp.Media
  */
@@ -19,10 +20,11 @@ public class SM_SELL_ITEM extends AionServerPacket
 	private byte unk2 = 0;
 
 	/**
+	 * 使用给定参数构造 SM_SELL_ITEM 包。
 	 * Normal sell
 	 *
-	 * @param targetObjectId
-	 * @param priceModifier
+	 * target object id
+	 * price modifier
 	 */
 	public SM_SELL_ITEM(int targetObjectId, int priceModifier)
 	{
@@ -34,11 +36,12 @@ public class SM_SELL_ITEM extends AionServerPacket
 	}
 
 	/**
+	 * 使用给定参数构造 SM_SELL_ITEM 包。
 	 * sell ap relics
 	 *
-	 * @param targetObjectId
-	 * @param priceModifier
-	 * @param buyList
+	 * target object id
+	 * price modifier
+	 * @param buyList 购买列表模板 / buy list template
 	 */
 	public SM_SELL_ITEM(int targetObjectId, int priceModifier, TradeListTemplate buyList)
 	{
@@ -56,8 +59,8 @@ public class SM_SELL_ITEM extends AionServerPacket
 		writeD(targetObjectId); // npc obj id
 		writeC(action); // action
 		writeD(priceModifier); // modifier
-		writeC(unk1);// unk
-		writeC(unk2);// unk
+		writeC(unk1);// 未知 / unk
+		writeC(unk2);// 未知 / unk
 		if (buylist != null) {
 			writeH(buylist.getCount());// buyList size
 			for (TradeListTemplate.TradeTab tTab : buylist.getTradeTablist()) {

@@ -1,27 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.xml;
 
 import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+/**
+ * UTF-16LE 文本的 Deflate 压缩/解压工具。
+ * Deflate compress/decompress helpers for UTF-16LE text.
+ */
 public final class CompressUtil {
 
+	/**
+	 * 解压字节数组为 UTF-16LE 字符串。
+	 * Decompress a byte array into a UTF-16LE string.
+	 *
+	 * @param bytes 压缩数据 / Compressed bytes
+	 * @return 解压后的文本 / Decompressed text
+	 * On decompress failure。 / On decompress failure.
+	 */
 	public static String Decompress(byte[] bytes) throws Exception {
 		Inflater decompressor = new Inflater();
 		decompressor.setInput(bytes);
@@ -49,6 +45,15 @@ public final class CompressUtil {
 		return bos.toString("UTF-16LE");
 	}
 
+	/**
+	 * 将文本以 UTF-16LE 编码后 Deflate 压缩。
+	 * Encode text as UTF-16LE and Deflate-compress it.
+	 *
+	 * Source text
+	 * Compressed bytes
+	 *
+	 * @param text @throws Exception 压缩失败时 / On compress failure
+	 */
 	public static byte[] Compress(String text) throws Exception {
 		Deflater compressor = new Deflater();
 		byte[] bytes = text.getBytes("UTF-16LE");

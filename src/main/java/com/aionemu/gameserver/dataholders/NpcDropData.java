@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.io.File;
@@ -46,8 +30,10 @@ import com.aionemu.gameserver.model.drop.DropGroup;
 import com.aionemu.gameserver.model.drop.NpcDrop;
 
 /**
- * @author MrPoke
+ * NPC 掉落数据容器，支持公共掉落组展开、分片合并与按 NPC ID 索引。
+ * NPC drop data holder supporting common drop-group expansion, multi-file merge and indexing by npc id.
  *
+ * @author MrPoke
  */
 @XmlRootElement(name = "npc_drops")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -70,6 +56,13 @@ public class NpcDropData {
 	public NpcDropData() {
 	}
 
+	/**
+	 * 从目录急切加载全部 NPC 掉落分片与公共掉落组。
+	 * Eagerly loads all NPC drop part files and common drop groups from the given directory.
+	 *
+	 * @param npcDropsDirectory NPC 掉落数据目录 / npc drops directory
+	 * @return 已加载的掉落数据 / loaded drop data
+	 */
 	public static NpcDropData loadEager(File npcDropsDirectory) {
 		if (npcDropsDirectory == null || !npcDropsDirectory.isDirectory()) {
 			throw new IllegalStateException("NPC drop directory not found: " + npcDropsDirectory);
@@ -86,20 +79,30 @@ public class NpcDropData {
 	}
 
 	/**
-	 * @return the npcDrop
+	 * 返回全部 NPC 掉落列表。
+	 * Returns the full NPC drop list.
+	 *
+	 * npc drop list
 	 */
 	public List<NpcDrop> getNpcDrop() {
 		return npcDrop == null ? Collections.emptyList() : npcDrop;
 	}
 
 	/**
-	 * @param npcDrop the npcDrop to set
+	 * 设置 NPC 掉落列表并重建索引。
+	 * Sets the NPC drop list and rebuilds the index.
+	 *
+	 * npc drop list
 	 */
 	public void setNpcDrop(List<NpcDrop> npcDrop) {
 		this.npcDrop = npcDrop;
 		rebuildDropIndex();
 	}
 
+	/**
+	 * JAXB 反序列化完成后，展开公共掉落组、合并重复 NPC 并重建索引。
+	 * After JAXB unmarshalling, expands common drop groups, merges duplicate NPCs and rebuilds the index.
+	 */
 	@SuppressWarnings("unused")
 	private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		commonDropGroups = commonDropGroups(commonDropGroupDefinitions);
@@ -112,10 +115,24 @@ public class NpcDropData {
 		rebuildDropIndex();
 	}
 
+	/**
+	 * 返回已加载的 NPC 掉落数量。
+	 * Returns the number of loaded NPC drops.
+	 *
+	 * @return 掉落条目数量 / drop entry count
+	 */
 	public int size() {
 		return getNpcDrop().size();
 	}
 
+	/**
+	 * 按 NPC ID 获取掉落配置。
+	 * Returns the drop configuration for the given npc id.
+	 *
+	 * npc id
+	 *
+	 * @param npcId @return 掉落配置或 null / drop config or null
+	 */
 	public synchronized NpcDrop getDrop(int npcId) {
 		if (dropsByNpcId == null || dropsByNpcId.isEmpty() && !getNpcDrop().isEmpty()) {
 			rebuildDropIndex();

@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.controllers.movement.MoveController;
@@ -9,6 +6,13 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 生物移动同步服务端包。
+ * Server packet that synchronizes a creature's movement state to nearby clients.
+ * <p>
+ * 可从 {@link Creature} 的移动控制器读取实时数据，也可使用原始坐标/标志构造。
+ * Can be built from a {@link Creature}'s move controller or from raw coordinates/flags.
+ */
 public class SM_MOVE extends AionServerPacket {
 	private final Creature creature;
 	private int _objectId;
@@ -21,10 +25,30 @@ public class SM_MOVE extends AionServerPacket {
 	private byte _heading;
 	private byte _moveTypeFlag;
 
+	/**
+	 * 从生物当前移动状态构造移动包。
+	 * Builds a move packet from the creature's current movement state.
+	 *
+	 * @param creature 移动中的生物 / moving creature
+	 */
 	public SM_MOVE(Creature creature) {
 		this.creature = creature;
 	}
 
+	/**
+	 * 由原始坐标与移动标志构造移动包（无生物引用）。
+	 * Builds a move packet from raw coordinates and flags (no creature reference).
+	 *
+	 * object id
+	 * @param sX 起点 X / start X
+	 * @param sY 起点 Y / start Y
+	 * @param sZ 起点 Z / start Z
+	 * @param tX 目标 X / target X
+	 * @param tY 目标 Y / target Y
+	 * @param tZ 目标 Z / target Z
+	 * 朝向 / heading
+	 * @param flag 移动类型掩码 / movement type mask
+	 */
 	public SM_MOVE(int objectId, float sX, float sY, float sZ, float tX, float tY, float tZ, byte heading, byte flag) {
 		this.creature = null;
 		this._objectId = objectId;

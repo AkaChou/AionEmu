@@ -1,27 +1,10 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.loginserver.model.Account;
 
 /**
+ * 账号数据访问抽象层。
  * DAO that manages accounts.
  *
  * @author SoulKeeper
@@ -29,101 +12,119 @@ import com.aionemu.loginserver.model.Account;
 public abstract class AccountDAO implements DAO {
 
     /**
-     * Returns account by name or null
+     * 按名称查询账号。
+     * Returns account by name, or null if not found.
      *
-     * @param name account name
-     * @return account object or null
+     * Account name
+     * @return 账号对象；不存在时为 null / Account object, or null
      */
     public abstract Account getAccount(String name);
 
+    /**
+     * 按 ID 查询账号。
+     * Returns account by id, or null if not found.
+     *
+     * @param id 账号 ID / Account id
+     * @return 账号对象；不存在时为 null / Account object, or null
+     */
     public abstract Account getAccount(int id);
 
     /**
-     * Retuns account id or -1 in case of error
+     * 按名称查询账号 ID。
+     * not found. / not found.
      *
-     * @param name name of account
-     * @return id or -1 in case of error
+     * Account name
+     * @return 账号 ID；失败时为 -1 / Id, or -1 on error
      */
     public abstract int getAccountId(String name);
 
     /**
-     * Reruns account count If error occured - returns -1
+     * 查询账号总数。
+     * Returns account count, or -1 on error.
      *
-     * @return account count
+     * Account count
      */
     public abstract int getAccountCount();
 
     /**
-     * Inserts new account to database. Sets account ID to id that was generated
-     * by DB.
+     * 插入新账号，并将数据库生成的 ID 回写到对象。
+     * Inserts a new account and sets the DB-generated id on the object.
      *
-     * @param account account to insert
-     * @return true if was inserted, false in other case
+     * @param account 待插入账号 / Account to insert
+     * @return 是否插入成功 / True if inserted
      */
     public abstract boolean insertAccount(Account account);
 
     /**
-     * Updates account in database
+     * 更新账号完整字段。
+     * Updates account in database.
      *
-     * @param account account to update
-     * @return true if was updated, false in other case
+     * @param account 待更新账号 / Account to update
+     * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateAccount(Account account);
 
     /**
-     * Updates lastServer field of account
+     * 更新账号最近登录的游戏服。
+     * Updates lastServer field of account.
      *
-     * @param accountId account id
-     * @param lastServer last accessed server
-     * @return was updated successful or not
+     * 账号 ID / Account id
+     * @param lastServer 最近访问的服务器 / Last accessed server
+     * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateLastServer(int accountId, byte lastServer);
 
     /**
-     * Updates last ip that was used to access an account
+     * 更新账号最近登录 IP。
+     * Updates last IP that was used to access an account.
      *
-     * @param accountId account id
-     * @param ip ip address
-     * @return was update successful or not
+     * 账号 ID / Account id
+     * @param ip IP 地址 / IP address
+     * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateLastIp(int accountId, String ip);
 
     /**
-     * Get last ip that was used to access an account
+     * 查询账号最近登录 IP。
+     * Get last IP that was used to access an account.
      *
-     * @param accountId account id
-     * @return ip address
+     * 账号 ID / Account id
+     * IP address
      */
     public abstract String getLastIp(int accountId);
 
     /**
-     * Updates last mac that was used to access an account
+     * 更新账号最近登录 MAC。
+     * Updates last MAC that was used to access an account.
      *
-     * @param accountId account id
-     * @param mac mac address
-     * @return was update successful or not
+     * 账号 ID / Account id
+     * MAC address
+     * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateLastMac(int accountId, String mac);
 
     /**
-     * Updates account membership
+     * 在会员过期后恢复旧会员等级。
+     * Updates account membership when membership has expired.
      *
-     * @param accountId account id
-     * @return was update successful or not
+     * 账号 ID / Account id
+     * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateMembership(int accountId);
 
     /**
-     * Deletion of all accounts, inactive for more than dayOfInactivity days
+     * 删除超过指定天数未活跃的账号。
+     * Deletes accounts inactive for more than the given days.
      *
-     * @param daysOfInactivity
+     * @param daysOfInactivity 不活跃天数 / Days of inactivity
      */
     public abstract void deleteInactiveAccounts(int daysOfInactivity);
 
     /**
-     * Returns uniquire class name for all implementations
+     * 返回实现唯一类名标识。
+     * Returns unique class name for all implementations.
      *
-     * @return uniquire class name for all implementations
+     * Fully qualified class name
      */
     @Override
     public final String getClassName() {

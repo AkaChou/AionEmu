@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.pet;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * 宠物函数模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author IlBuono
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -35,18 +22,22 @@ public class PetFunction {
 	@XmlAttribute(name = "slots")
 	private int slots;
 
+	/** 获取宠物函数类型。 / Returns the pet function type. */
 	public PetFunctionType getPetFunctionType() {
 		return type;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回槽位 / Returns the slots*/
 	public int getSlots() {
 		return slots;
 	}
 
+	/** 创建空对象 / Create Empty. */
 	public static PetFunction CreateEmpty() {
 		PetFunction result = new PetFunction();
 		result.type = PetFunctionType.NONE;

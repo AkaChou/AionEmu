@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.instance;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -39,8 +25,10 @@ import com.aionemu.gameserver.world.World;
 
 /****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 淹没的奥菲丹桥副本报名服务，管理开启窗口与冷却。
+ * Engulfed Ophidan Bridge registration service managing open windows and cooldowns.
+ */
+
 @Slf4j
 
 public class EngulfedOphidanBridgeService {
@@ -50,19 +38,31 @@ public class EngulfedOphidanBridgeService {
 	public static final byte minLevel = 61, capLevel = 66;
 	public static final int maskId = 108;
 
+	/**
+	 * initEngulfedOphidan 方法。
+	 * initEngulfedOphidan method.
+	 */
 	public void initEngulfedOphidan() {
 		if (AutoGroupConfig.OPHIDAN_ENABLED) {
-			log.info("Engulfed Ophidan Bridge 4.5");
-			// Engulfed Ophidan Bridge TUE-THU-SAT "12PM-1PM"
+			log.info(I18n.get("log.cc3f8b52924a"));
+			// 被吞没的奥菲丹桥 二/四/六 12:00–13:00 / Engulfed Ophidan Bridge TUE-THU-SAT "12PM-1PM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startOphidanRegistration();
 				}
 			}, AutoGroupConfig.OPHIDAN_SCHEDULE_MIDDAY);
-			// Engulfed Ophidan Bridge TUE-THU-SAT "11PM-0AM"
+			// 被吞没的奥菲丹桥 二/四/六 23:00–00:00 / Engulfed Ophidan Bridge TUE-THU-SAT "11PM-0AM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startOphidanRegistration();
 				}
@@ -73,6 +73,10 @@ public class EngulfedOphidanBridgeService {
 	private void startUregisterOphidanTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
@@ -103,17 +107,29 @@ public class EngulfedOphidanBridgeService {
 				if (instanceMaskId > 0) {
 					PacketSendUtility.sendPacket(player,
 							new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon));
-					// You can now participate in the Ophidan Bridge battle.
+					// 你现在可参与奥菲丹桥战斗。 / You can now participate in the Ophidan Bridge battle.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDLDF5_Under_01_War);
 				}
 			}
 		}
 	}
 
+	/**
+	 * isOphidanAvailable 方法。
+	 * isOphidanAvailable method.
+	 * result
+	 */
 	public boolean isOphidanAvailable() {
 		return this.registerAvailable;
 	}
 
+	/**
+	 * getInstanceMaskId 方法。
+	 * getInstanceMaskId method.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
 		if (level < minLevel || level >= capLevel) {
@@ -122,14 +138,34 @@ public class EngulfedOphidanBridgeService {
 		return maskId;
 	}
 
+	/**
+	 * 添加冷却。
+	 * Adds a cooldown.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void addCoolDown(Player player) {
 		this.playersWithCooldown.add(player.getObjectId());
 	}
 
+	/**
+	 * 是否处于冷却。
+	 * Whether cooldown is active.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
 	}
 
+	/**
+	 * 显示报名窗口。
+	 * Shows the registration window.
+	 *
+	 * 玩家 / player
+	 * instanceMaskId
+	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
 			return;
@@ -143,6 +179,11 @@ public class EngulfedOphidanBridgeService {
 		protected static final EngulfedOphidanBridgeService instance = new EngulfedOphidanBridgeService();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static EngulfedOphidanBridgeService getInstance() {
 		ObjectProvider<EngulfedOphidanBridgeService> provider = instanceProvider;
 		if (provider != null) {
@@ -151,6 +192,12 @@ public class EngulfedOphidanBridgeService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<EngulfedOphidanBridgeService> provider) {
 		instanceProvider = provider;
 	}

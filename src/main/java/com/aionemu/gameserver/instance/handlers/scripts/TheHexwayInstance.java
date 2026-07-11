@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -37,35 +21,67 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 六角通道副本事件处理器。
+ * Instance event handler for The Hexway.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300700000)
 public class TheHexwayInstance extends GeneralInstanceHandler
 {
-	private boolean isStartTimer1 = false;
-	private boolean isStartTimer2 = false;
-	private boolean isStartTimer3 = false;
-	private boolean isStartTimer4 = false;
-	private boolean isStartTimer5 = false;
-	private boolean isStartTimer6 = false;
-	private boolean isStartTimer7 = false;
-	private boolean isStartTimer8 = false;
-	private boolean isStartTimer9 = false;
-	private boolean isStartTimer10 = false;
-	private boolean isStartTimer11 = false;
-	private boolean isStartTimer12 = false;
-	private Future<?> chestTheHexwayTask;
+	/**
+	 * whether timer1 started / whether timer1 started
+	 */
+		private boolean isStartTimer1 = false;
+	/** 是否启动计时器2 / is start timer2 */
+		private boolean isStartTimer2 = false;
+	/** 是否启动计时器3 / is start timer3 */
+		private boolean isStartTimer3 = false;
+	/** 是否启动计时器4 / is start timer4 */
+		private boolean isStartTimer4 = false;
+	/** 是否启动计时器5 / is start timer5 */
+		private boolean isStartTimer5 = false;
+	/** 是否启动计时器6 / is start timer6 */
+		private boolean isStartTimer6 = false;
+	/** 是否启动计时器7 / is start timer7 */
+		private boolean isStartTimer7 = false;
+	/** 是否启动计时器8 / is start timer8 */
+		private boolean isStartTimer8 = false;
+	/** 是否启动计时器9 / is start timer9 */
+		private boolean isStartTimer9 = false;
+	/** 是否启动计时器10 / is start timer10 */
+		private boolean isStartTimer10 = false;
+	/** 是否启动计时器11 / is start timer11 */
+		private boolean isStartTimer11 = false;
+	/** 是否启动计时器12 / is start timer12 */
+		private boolean isStartTimer12 = false;
+	/** chesthexway 任务 / chest the hexway task */
+		private Future<?> chestTheHexwayTask;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	private List<Npc> theHexwayTreasureBox = new ArrayList<Npc>();
+	/** the hexway treasure box / the hexway treasure box */
+		private List<Npc> theHexwayTreasureBox = new ArrayList<Npc>();
 	
+    /**
+     * 副本创建时初始化逻辑。
+     * Initialize logic when the instance is created.
+     *
+     * @param instance 世界地图实例 / world-map instance
+     */
     @Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
         doors = instance.getDoors();
     }
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -97,6 +113,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
         }
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
@@ -105,11 +127,17 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			break;
 			case 219609: //Captain Jarka.
-				//sendMsg("[SUCCES]: You have finished <The Hexway>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <The Hexway>");
 				if (!isStartTimer1) {
 					isStartTimer1 = true;
 					System.currentTimeMillis();
 					instance.doOnAllPlayers(new Visitor<Player>() {
+						/**
+						 * 处理 visit。
+						 * Handle visit.
+						 *
+						 * @param player 玩家 / player
+						 */
 						@Override
 						public void visit(Player player) {
 							if (player.isOnline()) {
@@ -130,6 +158,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					theHexwayTreasureBox.add((Npc) spawn(701664, 223.41487f, 409.03143f, 365.01053f, (byte) 26));
 					theHexwayTreasureBox.add((Npc) spawn(701664, 213.39343f, 425.5012f, 366.57892f, (byte) 8));
 					chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							StartTimer2();
@@ -147,6 +179,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer2 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -155,6 +193,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer3();
@@ -170,6 +212,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer3 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -178,6 +226,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer4();
@@ -193,6 +245,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer4 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -201,6 +259,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer5();
@@ -216,6 +278,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer5 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -224,6 +292,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer6();
@@ -239,6 +311,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer6 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -247,6 +325,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer7();
@@ -262,6 +344,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer7 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -270,6 +358,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer8();
@@ -285,6 +377,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer8 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -293,6 +391,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer9();
@@ -308,6 +410,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer9 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -316,6 +424,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer10();
@@ -331,6 +443,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer10 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -339,6 +457,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer11();
@@ -354,6 +476,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer11 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -362,6 +490,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer12();
@@ -377,6 +509,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 			isStartTimer12 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -385,6 +523,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 				}
 			});
 			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					sendMsg(1400244);
@@ -397,6 +539,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -410,6 +558,10 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 		}
 	}
 	
+    /**
+     * 副本销毁时清理资源。
+     * Clean up resources when the instance is destroyed.
+     */
     @Override
     public void onInstanceDestroy() {
         doors.clear();

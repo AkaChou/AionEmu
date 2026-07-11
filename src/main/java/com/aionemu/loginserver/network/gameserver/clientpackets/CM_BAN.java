@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import java.sql.Timestamp;
@@ -33,35 +15,42 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_BAN_RESPONSE;
 
 /**
- * The universal packet for account/IP bans
+ * GS→LS：统一账号/IP 封禁（或解封）请求。
+ * GS→LS: universal account/IP ban (or unban) request.
  *
  * @author Watson
  */
 public class CM_BAN extends GsClientPacket {
 
     /**
-     * Ban type 1 = account 2 = IP 3 = Full ban (account and IP)
+     * 封禁类型：1=账号，2=IP，3=账号+IP。
+     * Ban type: 1 = account, 2 = IP, 3 = full ban (account and IP).
      */
     private byte type;
     /**
-     * Account to ban
+     * 待封禁账号 ID。
+     * Account to ban.
      */
     private int accountId;
     /**
-     * IP or mask to ban
+     * 待封禁 IP 或掩码。
+     * IP or mask to ban.
      */
     private String ip;
     /**
-     * Time in minutes. 0 = infinity; If time < 0 then it's unban command
+     * 时长（分钟）。0=永久；&lt;0 表示解封。
+     * Time in minutes. 0 = infinity; if time &lt; 0 then unban.
      */
     private int time;
     /**
-     * Object ID of Admin, who request the ban
+     * 发起封禁的管理员对象 ID。
+     * Object ID of the admin who requested the ban.
      */
     private int adminObjId;
 
     /**
-     * {@inheritDoc}
+     * 读取封禁类型、账号、IP、时长与管理员 ID。
+     * Reads ban type, account, IP, duration, and admin object id.
      */
     @Override
     protected void readImpl() {
@@ -73,17 +62,18 @@ public class CM_BAN extends GsClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 执行账号/IP 封禁或解封，踢下线并回复 GS。
+     * Performs account/IP ban or unban, kicks account, and replies to GS.
      */
     @Override
     protected void runImpl() {
         boolean result = false;
 
-        // Ban account
+        // 封禁账号 / Ban account
         if ((type == 1 || type == 3) && accountId != 0) {
             Account account = null;
 
-            // Find account on GameServers
+            // 在游戏服务器上查找账号 / Find account on GameServers
             for (GameServerInfo gsi : GameServerTable.getGameServers()) {
                 if (gsi.isAccountOnGameServer(accountId)) {
                     account = gsi.getAccountFromGameServer(accountId);
@@ -91,7 +81,7 @@ public class CM_BAN extends GsClientPacket {
                 }
             }
 
-            // 1000 is 'infinity' value
+            // 1000 表示“无限”值 / 1000 is 'infinity' value
             Timestamp newTime = null;
             if (time >= 0) {
                 newTime = new Timestamp(time == 0 ? 1000 : System.currentTimeMillis() + time * 60000);
@@ -109,7 +99,7 @@ public class CM_BAN extends GsClientPacket {
             }
         }
 
-        // Ban IP
+        // 封禁 IP / Ban IP
         if (type == 2 || type == 3) {
             if (accountId != 0) // If we got account ID, then ban last IP
             {
@@ -119,9 +109,9 @@ public class CM_BAN extends GsClientPacket {
                 }
             }
             if (!ip.isEmpty()) {
-                // Unban first. For banning it needs to update time
+                // 先解封。封禁需要更新时间 / Unban first. For banning it needs to update time
                 if (LoginProtectionServices.bannedIpService().isBanned(ip)) {
-                    // Result set for unban request
+                    // 解封请求的结果集 / Result set for unban request
                     result = LoginProtectionServices.bannedIpService().unbanIp(ip);
                 }
                 if (time >= 0) // Ban
@@ -132,12 +122,12 @@ public class CM_BAN extends GsClientPacket {
             }
         }
 
-        // Now kick account
+        // 现在踢出账号 / Now kick account
         if (accountId != 0) {
             AccountController.kickAccount(accountId);
         }
 
-        // Respond to GS
+        // 响应游戏服务器 / Respond to GS
         sendPacket(new SM_BAN_RESPONSE(type, accountId, ip, time, adminObjId, result));
     }
 }

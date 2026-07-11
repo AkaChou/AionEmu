@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.restrictions;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -21,28 +5,126 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
+/**
+ * 玩家行为限制契约：攻击、技能、聊天、组队、装备、仓库、交易与物品使用。
+ * Player action restriction contract: attack, skill, chat, party, equip, warehouse, trade and item use.
+ */
 public interface Restrictions {
+
+	/**
+	 * 是否处于指定限制状态。
+	 * Whether the player is under the given restriction kind.
+	 *
+	 * 玩家 / player
+	 * @param callingRestriction 调用限制类型 / calling restriction type
+	 * @return true 表示被限制 / true when restricted
+	 */
 	public boolean isRestricted(Player player, Class<? extends Restrictions> callingRestriction);
 
+	/**
+	 * 是否允许攻击目标。
+	 * Whether the player may attack the target.
+	 *
+	 * 玩家 / player
+	 * target
+	 * true when allowed
+	 */
 	public boolean canAttack(Player player, VisibleObject target);
 
+	/**
+	 * 是否允许技能影响目标。
+	 * Whether a skill may affect the target.
+	 *
+	 * 玩家 / player
+	 * target
+	 * skill
+	 * true when allowed
+	 */
 	public boolean canAffectBySkill(Player player, VisibleObject target, Skill skill);
 
+	/**
+	 * 是否允许使用技能。
+	 * Whether the player may use the skill.
+	 *
+	 * 玩家 / player
+	 * skill
+	 * true when allowed
+	 */
 	public boolean canUseSkill(Player player, Skill skill);
 
+	/**
+	 * 是否允许聊天。
+	 * Whether the player may chat.
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	public boolean canChat(Player player);
 
+	/**
+	 * 是否允许邀请进组。
+	 * Whether the player may invite to a group.
+	 *
+	 * 玩家 / player
+	 * target player
+	 * true when allowed
+	 */
 	public boolean canInviteToGroup(Player player, Player target);
 
+	/**
+	 * 是否允许邀请进联盟。
+	 * Whether the player may invite to an alliance.
+	 *
+	 * 玩家 / player
+	 * target player
+	 * true when allowed
+	 */
 	public boolean canInviteToAlliance(Player player, Player target);
 
+	/**
+	 * 是否允许邀请进军团联盟。
+	 * Whether the player may invite to a league.
+	 *
+	 * 玩家 / player
+	 * target player
+	 * true when allowed
+	 */
 	public boolean canInviteToLeague(Player player, Player target);
 
+	/**
+	 * 是否允许更换装备。
+	 * Whether the player may change equipment.
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	public boolean canChangeEquip(Player player);
 
+	/**
+	 * 是否允许使用仓库。
+	 * Whether the player may use warehouse.
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	public boolean canUseWarehouse(Player player);
 
+	/**
+	 * 是否允许交易。
+	 * Whether the player may trade.
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	public boolean canTrade(Player player);
 
+	/**
+	 * 是否允许使用物品。
+	 * Whether the player may use the item.
+	 *
+	 * 玩家 / player
+	 * item
+	 * true when allowed
+	 */
 	public boolean canUseItem(Player player, Item item);
 }

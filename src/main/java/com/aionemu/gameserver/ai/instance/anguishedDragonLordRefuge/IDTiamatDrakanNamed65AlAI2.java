@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.anguishedDragonLordRefuge;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Anguished Dragon Lord Refuge 副本 NPC AI：ID Tiamat Drakan Named65 Al（@AIName "tiamat_woman_form2"），继承 AggressiveNpcAI2。
+ * Anguished Dragon Lord Refuge instance NPC AI: ID Tiamat Drakan Named65 Al (@AIName "tiamat_woman_form2"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("tiamat_woman_form2")
 public class IDTiamatDrakanNamed65AlAI2 extends AggressiveNpcAI2
 {
@@ -47,15 +33,15 @@ public class IDTiamatDrakanNamed65AlAI2 extends AggressiveNpcAI2
 			@Override
 			public void run() {
 				startLifeTask();
-				//Are you... threatening me? Is this what passes for a joke among you people?.
+				// 你……在威胁我？你们就是这样开玩笑的吗？ / Are you... threatening me? Is this what passes for a joke among you people?.
 				sendMsg(1500613, getObjectId(), false, 3000);
-				//Don't worry. The tragedy will be all yours.
+				// 别担心。悲剧全是你们的。 / Don't worry. The tragedy will be all yours.
 				sendMsg(1500614, getObjectId(), false, 9000);
-				//You will feel despair such as you have never felt!
+				// 你将感受到前所未有的绝望！ / You will feel despair such as you have never felt!
 				sendMsg(1500615, getObjectId(), false, 15000);
-				//Before I let Calindi destroy you, I will show you a glimpse of your people's ruin.
+				// 在让卡林迪摧毁你之前，先让你瞥见族人的末日。 / Before I let Calindi destroy you, I will show you a glimpse of your people's ruin.
 				sendMsg(1500616, getObjectId(), false, 21000);
-				//I... yes. We are grateful. I don't know what we'd have done without your help...
+				// 我……是的。我们很感激。没有你的帮助不知该怎么办…… / I... yes. We are grateful. I don't know what we'd have done without your help...
 				sendMsg(1500617, getObjectId(), false, 27000);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
 			}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Transidium Annex 副本 NPC AI：Ahserion Flight Barrier（@AIName "ahserion_flight_barrier"），继承 NpcAI2。
+ * Transidium Annex instance NPC AI: Ahserion Flight Barrier (@AIName "ahserion_flight_barrier"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("ahserion_flight_barrier")
 public class Ahserion_Flight_BarrierAI2 extends NpcAI2
 {
@@ -43,9 +29,9 @@ public class Ahserion_Flight_BarrierAI2 extends NpcAI2
 	}
 	
    /**
-	* Indestructible barrier around "Ahserion" is removed
-	* Once the barriers are off you can start attacking "Ahserion".
-	* You can say that after 25min.
+	* 「Ahserion」周围不可破坏屏障已移除；屏障关闭后可开始攻击。
+	 * Indestructible barrier around "Ahserion" is removed. Once the barriers are off you can start attacking "Ahserion".
+	 * You can say that after 25min.
 	*/
 	private void startShieldVulnerable() {
 		final Npc GAb1SubCenterBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277230); //Ahserion Flight Barrier.
@@ -62,7 +48,7 @@ public class Ahserion_Flight_BarrierAI2 extends NpcAI2
 						player.updateKnownlist();
 					}
 				}
-				//The effect of the Transidium Annex has weakened the Ahserion's Flight Barrier.
+				// 特兰西迪姆附楼效果削弱了阿塞里昂飞行屏障。 / The effect of the Transidium Annex has weakened the Ahserion's Flight Barrier.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_11, 0);
 			}
 		}, 1500000); //...25 Minutes.

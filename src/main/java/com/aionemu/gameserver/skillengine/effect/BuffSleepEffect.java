@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,17 +8,32 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 增益睡眠效果：无抗性检定的睡眠，打断当前技能。
+ * Buff-sleep effect: sleep without resistance check; cancels current skill.
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BuffSleepEffect")
 public class BuffSleepEffect extends SleepEffect {
 
+	/**
+	 * 跳过抗性直接标记效果成功。
+	 * Marks the effect successful without a resistance check.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
 	}
 
+	/**
+	 * 打断当前技能并设置睡眠异常。
+	 * Cancels the current skill and sets the sleep abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		final Creature effected = effect.getEffected();

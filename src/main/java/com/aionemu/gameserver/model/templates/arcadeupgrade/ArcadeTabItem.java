@@ -1,26 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.arcadeupgrade;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Created by wanke on 17/02/2017.
+ * 街机 Tab 物品模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 @XmlType(name = "ArcadeTabItemList")
 public class ArcadeTabItem {
@@ -33,14 +18,17 @@ public class ArcadeTabItem {
 	@XmlAttribute(name = "frenzycount")
 	protected int frenzycount;
 
+	/** 返回物品 ID / Returns the item id */
 	public final int getItemId() {
 		return item_id;
 	}
 
+	/** 返回普通数量 / Returns the normal count*/
 	public final int getNormalCount() {
 		return normalcount;
 	}
 
+	/** 返回 frenzy count / Returns the frenzy count */
 	public final int getFrenzyCount() {
 		return frenzycount;
 	}

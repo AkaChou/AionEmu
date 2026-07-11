@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +7,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MACRO_RESULT;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
- * Request to create
+	 * 创建请求。 / Request to create.
+	 */
+
+/**
+ * 创建或更新宏的客户端包。
+ * Client packet for creating or updating a macro.
  *
  * @author SoulKeeper
  */
@@ -31,25 +20,27 @@ import com.aionemu.gameserver.services.player.PlayerService;
 public class CM_MACRO_CREATE extends AionClientPacket {
 
 	/**
-	 * Macro number. Fist is 1, second is 2. Starting from 1, not from 0
+	 * 宏编号 .Fist 为 1 , second 为 2.Starting 从 1 , not 从 0。 / Macro number. Fist is 1, second is 2. Starting from 1, not from 0
 	 */
 	private int macroPosition;
 	/**
-	 * XML that represents the macro
+	 * 表示宏的 XML / XML that represents the macro
 	 */
 	private String macroXML;
-
 	/**
-	 * Constructs new client packet instance.
+	 * 构造该客户端包。
+	 * Constructs this client packet.
 	 *
-	 * @param opcode
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_MACRO_CREATE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
 
 	/**
-	 * Read macro data
+	 * 读取宏数据 / Read macro data
 	 */
 	@Override
 	protected void readImpl() {
@@ -58,7 +49,7 @@ public class CM_MACRO_CREATE extends AionClientPacket {
 	}
 
 	/**
-	 * Logging
+	 * 记录日志 / Logging
 	 */
 	@Override
 	protected void runImpl() {

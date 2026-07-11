@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.vortex;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.world.WorldPosition;
+
+/**
+ * Start 点模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StartPoint")
@@ -41,10 +30,12 @@ public class StartPoint {
 	@XmlAttribute(name = "h")
 	protected byte h;
 
+	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return map;
 	}
 
+	/** 返回开始点 / Returns the start point*/
 	public WorldPosition getStartPoint() {
 		WorldPosition start = new WorldPosition(map);
 		start.setMapId(map);

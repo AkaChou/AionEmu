@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.controllers.PetController;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
+ * 宠物游戏对象。
+ * Pet game object.
+ *
  * @author ATracer
  */
 public class Pet extends VisibleObject {
@@ -47,27 +34,33 @@ public class Pet extends VisibleObject {
 		this.moveController = new PetMoveController();
 	}
 
+	/** 返回大师 / Returns the master*/
 	public Player getMaster() {
 		return master;
 	}
 
+	/** 返回 pet id / Returns the pet id */
 	public int getPetId() {
 		return objectTemplate.getTemplateId();
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return objectTemplate.getName();
 	}
 
+	/** 获取公共数据。 / Returns the common data. */
 	public final PetCommonData getCommonData() {
 		return (PetCommonData) objectTemplate;
 	}
 
+	/** 返回 move controller / Returns the move controller */
 	public final MoveController getMoveController() {
 		return moveController;
 	}
 
+	/** 获取宠物模板。 / Returns the pet template. */
 	public final PetTemplate getPetTemplate() {
 		return petTemplate;
 	}

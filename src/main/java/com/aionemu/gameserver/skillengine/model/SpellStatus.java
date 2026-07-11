@@ -1,30 +1,37 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 /**
+ * 法术状态：绊倒、击退、浮空、格挡、招架、闪避、抵抗等。
+ * Spell status: stumble, knockback, aerial, block, parry, dodge, resist, etc.
+ * <p>
+ * 协议位：1 stumble, 2 stagger, 4 open aerial, 8 close aerial, 16 spin,
+ * 32 block, 64 parry, 128 dodge, 256 resist.
+ * Protocol bits: 1 stumble, 2 stagger, 4 open aerial, 8 close aerial, 16 spin,
+ * 32 block, 64 parry, 128 dodge, 256 resist.
+ *
  * @author ATracer
  */
 public enum SpellStatus {
-	/**
-	 * Spell Status 1 : stumble 2 : knockback 4 : open aerial 8 : close aerial 16 :
-	 * spin 32 : block 64 : parry 128 : dodge 256 : resist
-	 */
-	NONE(0), STUMBLE(1), STAGGER(2), OPENAERIAL(4), CLOSEAERIAL(8), SPIN(16), BLOCK(32), PARRY(64), DODGE(128),
+
+	/** 无 / None */
+	NONE(0),
+	/** 绊倒 / Stumble */
+	STUMBLE(1),
+	/** 踉跄 / Stagger */
+	STAGGER(2),
+	/** 开启浮空 / Open aerial */
+	OPENAERIAL(4),
+	/** 关闭浮空 / Close aerial */
+	CLOSEAERIAL(8),
+	/** 旋转 / Spin */
+	SPIN(16),
+	/** 格挡 / Block */
+	BLOCK(32),
+	/** 招架 / Parry */
+	PARRY(64),
+	/** 闪避 / Dodge */
+	DODGE(128),
+	/** 抵抗 / Resist */
 	RESIST(256);
 
 	private int id;
@@ -34,7 +41,10 @@ public enum SpellStatus {
 	}
 
 	/**
-	 * @return the id
+	 * 获取协议 ID。
+	 * Gets protocol id.
+	 *
+	 * spell status id
 	 */
 	public int getId() {
 		return id;

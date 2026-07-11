@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import java.util.List;
@@ -25,17 +9,32 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 烙印连结技能服务，按职业与已装备烙印组合授予/移除连结技能。
+ * Stigma linked-skill service that grants or removes linked skills by class and equipped stigma combinations.
+ *
  * @author DrNism
  */
-
 @Slf4j
 public class StigmaLinkedService {
 
+	/**
+	 * 玩家登出时清除连结技能与套装加成。
+	 * Clears linked skills and set bonus on player logout.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void onLogOut(Player player) {
 		StigmaLinkedService.DeleteLinkedSkills(player);
 		player.setStigmaSet(0);
 	}
 
+	/**
+	 * 按职业检查已装备烙印组合，满足 6 件且无惰性烙印时授予对应连结技能。
+	 * Checks equipped stigma combinations per class and grants the matching linked skill when 6 non-inert stigmas are equipped.
+	 *
+	 * @param player 玩家 / player
+	 * @param list 已装备烙印模板 ID 列表 / equipped stigma template ids
+	 */
 	public static void checkEquipConditions(Player player, List<Integer> list) {
 		boolean check = false;
 		for (Integer Stigma : list) {
@@ -313,7 +312,10 @@ public class StigmaLinkedService {
 	}
 
 	/**
-	 * Remove "Linked Skill"
+	 * 移除玩家全部烙印连结技能并重置连结技能 ID。
+	 * Removes all stigma linked skills from the player and resets the linked skill id.
+	 *
+	 * @param player 玩家 / player
 	 */
 	public static void DeleteLinkedSkills(Player player) {
 		if (player == null) {

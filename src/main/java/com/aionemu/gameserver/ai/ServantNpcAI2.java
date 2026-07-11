@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,17 +14,27 @@ import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 随从/召唤物 AI：跟随主人并协助战斗。
+ * Servant/summon AI that follows its master and assists in combat.
+ *
+ * @author Encom
+ */
 @AIName("servant")
 public class ServantNpcAI2 extends GeneralNpcAI2
 {
+	/**
+	 * 执行 AI 思考循环（状态机 tick）。
+	 * Run one AI think cycle (state-machine tick).
+	 */
 	@Override
 	public void think() {
 	}
 	
+	/**
+	 * 处理生成完成事件。
+	 * Handle post-spawn.
+	 */
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();

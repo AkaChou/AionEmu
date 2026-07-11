@@ -1,32 +1,22 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Created by wanke
+ * 回应战场联盟报名/取消报名结果的服务端包。
+ * unregister results. / unregister results.
+ *
+ * @author wanke
  */
-
 public class SM_BATTLEFIELD_UNION_REGISTER extends AionServerPacket {
 	int requestId;
 	boolean isRegister;
 
+	/**
+	 * request id
+	 * true = register, false = unregister。 / true = register, false = unregister
+	 */
 	public SM_BATTLEFIELD_UNION_REGISTER(int requestId, boolean register) {
 		this.requestId = requestId;
 		this.isRegister = register;

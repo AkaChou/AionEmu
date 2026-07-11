@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.seizedDanuarSanctuary;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Seized Danuar Sanctuary 副本 NPC AI：Steel Rose Cannon（@AIName "steelrosecannon2"），继承 ActionItemNpcAI2。
+ * Seized Danuar Sanctuary instance NPC AI: Steel Rose Cannon (@AIName "steelrosecannon2"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("steelrosecannon2")
 public class SteelRoseCannonAI2 extends ActionItemNpcAI2
 {
@@ -50,9 +36,9 @@ public class SteelRoseCannonAI2 extends ActionItemNpcAI2
 		}
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
-			//Seized Danuar Sanctuary 4.8
+			// 被占领的达努阿尔圣所 4.8 / Seized Danuar Sanctuary 4.8
 			if (worldPosition.getMapId() == 301140000) {
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_Canon, 5000);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); //Destroy Seal.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -62,9 +48,9 @@ public class SteelRoseCannonAI2 extends ActionItemNpcAI2
 					}
 				}, 5000);
 			}
-			//Danuar Sanctuary 4.8
+			// 达努阿尔圣所 4.8 / Danuar Sanctuary 4.8
 			else if (worldPosition.getMapId() == 301380000) {
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_Canon, 5000);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); //Destroy Seal.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

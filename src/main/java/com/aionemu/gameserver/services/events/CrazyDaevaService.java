@@ -1,26 +1,15 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -38,37 +27,61 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 疯狂大埃服务，管理限时 PvP 活动状态与奖励。
+ * Crazy Daeva service managing timed PvP event state and rewards.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
 public class CrazyDaevaService {
 
+	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
-	int crazyCount = 0;
 
-	// calculate time
-	public void startTimer() {
+	/** 本轮已选出的疯狂大埃计数。 / Crazy Daeva count selected this round. */
+	int crazyCount = 0;
+	private final List<Runnable> schedules = new ArrayList<>();
+
+	/**
+	 * 按配置 cron 注册活动开始定时器。
+	 * Registers the event start timer from configured cron.
+	 */
+	public synchronized void startTimer() {
+		for (Runnable schedule : schedules) {
+			GameCronServices.cronService().cancel(schedule);
+		}
+		schedules.clear();
+		if (!EventsConfig.ENABLE_CRAZY) {
+			return;
+		}
 		String[] times = EventsConfig.CRAZY_TIMES.split("\\|");
 		for (String cron : times) {
-			GameCronServices.cronService().schedule(new Runnable() {
+			Runnable schedule = new Runnable() {
 				@Override
 				public void run() {
 					checkStart();
 				}
-			}, cron);
-			log.info("Scheduled Crazy Daeva: based on cron expression: " + cron + " Duration: "
-					+ EventsConfig.CRAZY_ENDTIME + " in minutes");
+			};
+			schedules.add(schedule);
+			GameCronServices.cronService().schedule(schedule, cron);
+			log.info(I18n.get("log.22a3e7a99e76", cron, EventsConfig.CRAZY_ENDTIME));
 		}
 	}
 
-	// check time start
+	/**
+	 * 检查并启动一轮疯狂大埃（选人 + 结束清理）。
+	 * Checks and starts one Crazy Daeva round (choose + end cleanup).
+	 */
 	public void checkStart() {
 		startChoose();
 		clearCrazy();
-		log.info("Crazy Daeva start choose random player and calculate end time.");
+		log.info(I18n.get("log.1b3e1cec5043"));
 	}
 
-	// start choose rnd
+	/**
+	 * 随机挑选一名在线玩家成为疯狂大埃。
+	 * Randomly selects one online player as the Crazy Daeva.
+	 */
 	public void startChoose() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -82,17 +95,22 @@ public class CrazyDaevaService {
 						TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(), player.getX(),
 								player.getY(), player.getZ(), player.getHeading(), TeleportAnimation.BEAM_ANIMATION);
 						PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName() + "");
-						log.info("System choose " + player.getName() + ".");
+						log.info(I18n.get("log.b2c3238d6b52", player.getName()));
 						player.setInCrazy(true);
 						GameCoreGameplayServices.pvpService().doReward(player);
 					}
 				}
-				log.info("Player " + player.getName() + " got random " + rnd + "");
+				log.info(I18n.get("log.17935c8ff33a", player.getName(), rnd));
 			}
 		});
 	}
 
-	// increase kill count
+	/**
+	 * 增加疯狂大埃连杀并更新连杀等级。
+	 * Increases Crazy Daeva kill count and updates spree level.
+	 *
+	 * winner
+	 */
 	public void increaseRawKillCount(Player winner) {
 		int currentCrazyKillCount = winner.getCrazyKillCount();
 		winner.setCrazyKillCount(currentCrazyKillCount + 1);
@@ -107,15 +125,28 @@ public class CrazyDaevaService {
 		if (newCrazyKillCount >= 20 && newCrazyKillCount <= 30) {
 			updateCrazyLevel(winner, 3);
 		}
-		log.info("Killed " + newCrazyKillCount + " player.");
+		log.info(I18n.get("log.6323ce0a3ae8", newCrazyKillCount));
 	}
 
-	// update kill level
+	/**
+	 * 更新疯狂大埃连杀等级。
+	 * Updates the Crazy Daeva spree level.
+	 *
+	 * winner
+	 * @param level 连杀等级 / spree level
+	 */
 	private void updateCrazyLevel(Player winner, int level) {
 		winner.setCrazyLevel(level);
 	}
 
-	// when die
+	/**
+	 * 处理疯狂大埃死亡并广播终结者。
+	 * Handles Crazy Daeva death and announces the spree ender.
+	 *
+	 * victim
+	 * killer
+	 * whether PvP death
+	 */
 	public void crazyOnDie(Player victim, Creature killer, boolean isPvPDeath) {
 		if (victim.isInCrazy()) {
 			victim.setCrazyLevel(0);
@@ -123,7 +154,14 @@ public class CrazyDaevaService {
 		}
 	}
 
-	// killer reward + announce
+	/**
+	 * 发放终结奖励并向全服广播连杀结束。
+	 * Grants ender reward and broadcasts the spree end to all players.
+	 *
+	 * victim
+	 * killer
+	 * whether PvP death
+	 */
 	private void sendEndSpreeMessage(final Player victim, Creature killer, boolean isPvPDeath) {
 		if (killer instanceof Player) {
 			if (killer.getRace().getRaceId() != victim.getRace().getRaceId()) {
@@ -136,12 +174,15 @@ public class CrazyDaevaService {
 								"Crazier " + victim.getName() + " has slain by " + spreeEnder + "!");
 					}
 				});
-				log.info("Crazier " + victim.getName() + " was killed by " + spreeEnder + "");
+				log.info(I18n.get("log.fe71cec0426c", victim.getName(), spreeEnder));
 			}
 		}
 	}
 
-	// end event clear all and reward
+	/**
+	 * 结束活动：清理状态并在配置时长后停止。
+	 * Ends the event: clears state and stops after configured duration.
+	 */
 	public void clearCrazy() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
@@ -156,18 +197,15 @@ public class CrazyDaevaService {
 									TeleportAnimation.BEAM_ANIMATION);
 							if (player.getCrazyLevel() == 1) {
 								AbyssPointsService.addAp(player, 5000);
-								log.info("Crazy Daeva " + player.getName() + " killed " + player.getCrazyKillCount()
-										+ " and get reward 5000 AP.");
+								log.info(I18n.get("log.a3154d047f49", player.getName(), player.getCrazyKillCount()));
 							}
 							if (player.getCrazyLevel() == 2) {
 								AbyssPointsService.addAp(player, 10000);
-								log.info("Crazy Daeva " + player.getName() + " killed " + player.getCrazyKillCount()
-										+ " and get reward 10000 AP.");
+								log.info(I18n.get("log.3384ff2aa68a", player.getName(), player.getCrazyKillCount()));
 							}
 							if (player.getCrazyLevel() == 3) {
 								AbyssPointsService.addAp(player, 15000);
-								log.info("Crazy Daeva " + player.getName() + " killed " + player.getCrazyKillCount()
-										+ " and get reward 15000 AP.");
+								log.info(I18n.get("log.5088c1ecb7b6", player.getName(), player.getCrazyKillCount()));
 							}
 							player.setCrazyKillCount(0);
 							player.setCrazyLevel(0);
@@ -181,11 +219,17 @@ public class CrazyDaevaService {
 						PacketSendUtility.sendYellowMessageOnCenter(player, "Crazy Daeva event has stopped!");
 					}
 				});
-				log.info("Crazy Daeva cleared.");
+				log.info(I18n.get("log.f2f29a601942"));
 			}
 		}, EventsConfig.CRAZY_ENDTIME * 60 * 1000); // time stop
 	}
 
+	/**
+	 * 返回单例，优先使用 Spring ObjectProvider。
+	 * Returns the singleton, preferring a Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final CrazyDaevaService getInstance() {
 		ObjectProvider<CrazyDaevaService> provider = instanceProvider;
 		if (provider != null) {
@@ -194,6 +238,12 @@ public class CrazyDaevaService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider that overrides the default singleton.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CrazyDaevaService> provider) {
 		instanceProvider = provider;
 	}

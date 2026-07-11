@@ -1,37 +1,53 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.RecipeList;
 
 /**
+ * 玩家配方列表数据访问抽象层。
+ * DAO for player craft recipe list persistence.
+ *
  * @author lord_rex
  */
 public abstract class PlayerRecipesDAO implements DAO {
 
+	/**
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
+	 */
 	@Override
 	public String getClassName() {
 		return PlayerRecipesDAO.class.getName();
 	}
 
+	/**
+	 * 加载玩家已学会的配方列表。
+	 * Loads the recipe list for the player.
+	 *
+	 * player object id
+	 * recipe list
+	 */
 	public abstract RecipeList load(final int playerId);
 
+	/**
+	 * 为玩家添加一条配方。
+	 * Adds a recipe for the player.
+	 *
+	 * player object id
+	 * recipe id
+	 * @return 是否添加成功 / true if added
+	 */
 	public abstract boolean addRecipe(final int playerId, final int recipeId);
 
+	/**
+	 * 删除玩家的一条配方。
+	 * Deletes a recipe from the player.
+	 *
+	 * player object id
+	 * recipe id
+	 * @return 是否删除成功 / true if deleted
+	 */
 	public abstract boolean delRecipe(final int playerId, final int recipeId);
 }

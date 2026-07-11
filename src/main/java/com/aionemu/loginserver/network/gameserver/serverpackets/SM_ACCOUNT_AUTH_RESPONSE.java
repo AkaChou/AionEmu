@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.model.AccountTime;
@@ -23,54 +5,66 @@ import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
 
 /**
- * In this packet LoginServer is answering on GameServer request about valid
- * authentication data and also sends account name of user that is
- * authenticating on GameServer.
+ * LS→GS：账号鉴权结果响应（含账号名、在线/休息时间、权限与货币信息）。
+ * LS→GS: account authentication result response (account name, online/rest time, access and currency).
  *
  * @author -Nemesiss-
  */
 public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
 
     /**
-     * Account id
+     * 账号 ID。
+     * Account id.
      */
     private final int accountId;
     /**
-     * True if account is authenticated.
+     * 是否鉴权通过。
+     * True if the account is authenticated.
      */
     private final boolean ok;
     /**
-     * account name
+     * 账号名。
+     * Account name.
      */
     private final String accountName;
     /**
-     * Access level
+     * 访问权限等级。
+     * Access level.
      */
     private final byte accessLevel;
     /**
-     * Membership
+     * 会员等级。
+     * Membership level.
      */
     private final byte membership;
     /**
-     * Toll
+     * 通行点数（Toll）。
+     * Toll points.
      */
     private final long toll;
     /**
-     * luna
+     * 露娜币（Luna）。
+     * Luna currency.
      */
     private final long luna;
-
+    /**
+     * 回流标记。
+     * Return-player flag.
+     */
     private final byte isReturn;
 
     /**
-     * Constructor.
+     * 构造账号鉴权响应包。
+     * Constructs an account authentication response packet.
      *
-     * @param accountId
-     * @param ok
-     * @param accountName
-     * @param accessLevel
-     * @param membership
-     * @param toll
+     * 账号 ID / account id
+     * @param ok 是否鉴权通过 / whether authentication succeeded
+     * account name
+     * @param accessLevel 访问权限等级 / access level
+     * membership level
+     * @param toll 通行点数 / toll points
+     * luna currency
+     * return-player flag
      */
     public SM_ACCOUNT_AUTH_RESPONSE(int accountId, boolean ok, String accountName, byte accessLevel, byte membership, long toll, long luna, byte isReturn) {
         this.accountId = accountId;

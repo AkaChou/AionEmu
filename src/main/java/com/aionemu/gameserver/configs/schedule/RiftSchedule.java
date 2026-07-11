@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.schedule;
 
 import java.nio.charset.StandardCharsets;
@@ -30,23 +14,41 @@ import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
 
 /**
+ * Rift 裂隙活动时间表配置。
+ * Rift event schedule configuration.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlRootElement(name = "rift_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RiftSchedule {
+	/**
+	 * Rift 列表。
+	 * List of rifts.
+	 */
 	@XmlElement(name = "rift", required = true)
 	private List<Rift> riftsList;
 
+	/**
+	 * 获取 Rift 列表。
+	 * Returns the rift list.
+	 */
 	public List<Rift> getRiftsList() {
 		return riftsList;
 	}
 
+	/**
+	 * 设置 Rift 列表。
+	 * Sets the rift list.
+	 */
 	public void setRiftsList(List<Rift> riftList) {
 		this.riftsList = riftList;
 	}
 
+	/**
+	 * 从 XML 加载时间表。
+	 * Loads the schedule from XML.
+	 */
 	public static RiftSchedule load() {
 		RiftSchedule rs;
 		try {
@@ -58,23 +60,47 @@ public class RiftSchedule {
 		return rs;
 	}
 
+	/**
+	 * 单个 Rift 的时间表条目。
+	 * Schedule entry for a single rift.
+	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "rift")
 	public static class Rift {
+		/**
+		 * 世界 ID。
+		 * World ID.
+		 */
 		@XmlAttribute(required = true)
 		private int id;
 
+		/**
+		 * 开启时间列表。
+		 * List of open times.
+		 */
 		@XmlElement(name = "openTime", required = true)
 		private List<String> openTimes;
 
+		/**
+		 * 获取世界 ID。
+		 * Returns the world ID.
+		 */
 		public int getWorldId() {
 			return id;
 		}
 
+		/**
+		 * 获取开启时间列表。
+		 * Returns the open times.
+		 */
 		public List<String> getOpenTime() {
 			return openTimes;
 		}
 
+		/**
+		 * 设置开启时间列表。
+		 * Sets the open times.
+		 */
 		public void setOpenTimes(List<String> openTimes) {
 			this.openTimes = openTimes;
 		}

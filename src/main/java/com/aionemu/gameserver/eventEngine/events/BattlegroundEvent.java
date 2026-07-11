@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.eventEngine.events;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -22,30 +6,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aionemu.gameserver.eventEngine.Event;
-import com.aionemu.gameserver.services.events.LadderService;
 
 /**
- * Created by wanke on 12/02/2017.
+ * 战场活动事件：创建普通战场并跟踪进行中的战场实例。
+ * Battleground event that creates normal BGs and tracks live instances.
+ *
+ * @author wanke
  */
-
 public class BattlegroundEvent extends Event {
+
+	/**
+	 * 进行中的战场 ID 列表。
+	 * Live battleground ids.
+	 */
 	private List<Integer> battlegrounds = new ArrayList<Integer>();
 
+	/**
+	 * 创建普通战场。
+	 * Creates normal battlegrounds.
+	 */
 	@Override
 	public void execute() {
 		GameFeatureServices.ladderService().createNormalBgs(this);
 	}
 
+	/**
+	 * 当前进行中战场数量。
+	 * Number of live battlegrounds.
+	 *
+	 * bg count
+	 */
 	public int getBgCount() {
 		return battlegrounds.size();
 	}
 
+	/**
+	 * 战场创建回调，记录战场 ID。
+	 * Callback when a BG is created; records the id.
+	 *
+	 * battleground id
+	 */
 	public void onCreate(Integer bgId) {
 		if (!battlegrounds.contains(bgId)) {
 			battlegrounds.add(bgId);
 		}
 	}
 
+	/**
+	 * 单个战场结束回调；全部结束后结束事件。
+	 * Callback when one BG ends; finishes the event when none remain.
+	 *
+	 * battleground id
+	 */
 	public void onEnd(Integer bgId) {
 		battlegrounds.remove(bgId);
 		if (battlegrounds.isEmpty()) {
@@ -53,15 +65,30 @@ public class BattlegroundEvent extends Event {
 		}
 	}
 
+	/**
+	 * 全部战场结束。
+	 * All battlegrounds ended.
+	 */
 	public void onEnd() {
 		super.finish();
 	}
 
+	/**
+	 * 清空进行中战场列表。
+	 * Clears live battleground list.
+	 */
 	@Override
 	protected void onReset() {
 		battlegrounds.clear();
 	}
 
+	/**
+	 * 不支持取消。
+	 * Cancel is not supported.
+	 *
+	 * ignored
+	 * always false
+	 */
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
 		return false;

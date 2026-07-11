@@ -1,31 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
+/**
+ * 大天使（Arch Daeva）相关配置。
+ * Arch Daeva related configuration.
+ */
 public class ArchDaevaConfig {
 
 	/**
-	 * Arch Daeva Configs
+	 * 创造点数（CP）上限。
+	 * Maximum creativity points (CP) limit.
 	 */
 	@Property(key = "gameserver.max.cp.limit", defaultValue = "1000")
 	public static int CP_LIMIT_MAX;
 
+	/**
+	 * 是否启用高等大天使禁用物品限制。
+	 * Whether item restriction for high Daeva is enabled.
+	 */
 	@Property(key = "gameserver.item.not.for.highdaeva.enable", defaultValue = "false")
 	public static boolean ITEM_NOT_FOR_HIGHDAEVA_ENABLE;
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.javaagent;
 
 import com.aionemu.commons.callbacks.Callback;
@@ -23,11 +7,21 @@ import com.aionemu.commons.callbacks.metadata.GlobalCallback;
 import com.aionemu.commons.callbacks.metadata.ObjectCallback;
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 
+/**
+ * 校验 Java Agent 回调字节码织入是否已正确配置。
+ * Utility to verify that Java-agent callback bytecode weaving is configured.
+ */
 public class JavaAgentUtils {
 	static {
 		GlobalCallbackHelper.addCallback(new CheckCallback());
 	}
 
+	/**
+	 * 检测全局/对象回调织入是否可用；失败则抛 Error。
+	 * Verify global/object callback weaving; throws Error if misconfigured.
+	 *
+	 * @return 配置正确则为 true / True if configured correctly
+	 */
 	public static boolean isConfigured() {
 		JavaAgentUtils jau = new JavaAgentUtils();
 		if (!(jau instanceof EnhancedObject)) {
@@ -45,29 +39,68 @@ public class JavaAgentUtils {
 		return true;
 	}
 
+	/**
+	 * 全局回调探针方法（织入后应被拦截）。
+	 * Global-callback probe method (should be intercepted when woven).
+	 *
+	 * @return 未拦截时返回 false / False when not intercepted
+	 */
 	@GlobalCallback(CheckCallback.class)
 	private static boolean checkGlobalCallback() {
 		return false;
 	}
 
+	/**
+	 * 对象回调探针方法（织入后应被拦截）。
+	 * Object-callback probe method (should be intercepted when woven).
+	 *
+	 * @return 未拦截时返回 false / False when not intercepted
+	 */
 	@ObjectCallback(CheckCallback.class)
 	private boolean checkObjectCallback() {
 		return false;
 	}
 
+	/**
+	 * 探测用回调：beforeCall 完全拦截并返回 true。
+	 * Probe callback that full-blocks beforeCall and returns true.
+	 */
 	@SuppressWarnings("rawtypes")
 	public static class CheckCallback implements Callback {
 
+		/**
+		 * 调用前完全拦截，返回 true。
+		 * Fully block before call and return true.
+		 *
+		 * @param obj 目标对象 / Target object
+		 * Arguments
+		 * Blocking result
+		 */
 		@Override
 		public CallbackResult<Boolean> beforeCall(Object obj, Object[] args) {
 			return CallbackResult.newFullBlocker(true);
 		}
 
+		/**
+		 * 调用后继续。
+		 * Continue after call.
+		 *
+		 * @param obj 目标对象 / Target object
+		 * Arguments
+		 * @param methodResult 方法返回值 / Method result
+		 * Continue result
+		 */
 		@Override
 		public CallbackResult<Boolean> afterCall(Object obj, Object[] args, Object methodResult) {
 			return CallbackResult.newContinue();
 		}
 
+		/**
+		 * 回调基类。
+		 * Callback base class.
+		 *
+		 * Base class
+		 */
 		@Override
 		public Class<? extends Callback> getBaseClass() {
 			return CheckCallback.class;

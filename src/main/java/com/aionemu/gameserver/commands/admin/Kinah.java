@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 管理员基纳发放命令：向自身、指定或目标玩家添加基纳（道具 182400001）。
+ * Admin kinah grant command: add kinah to self, a named player or target (item 182400001).
+ *
  * @author Sarynth Simple admin assistance command for adding kinah to self, named player or target player. Based on //add command. Kinah Item Id - 182400001 (Using ItemId.KINAH.value())
  */
 public class Kinah extends AdminCommand {
@@ -33,6 +20,13 @@ public class Kinah extends AdminCommand {
 		super("kinah");
 	}
 
+	/**
+	 * 向自身或指定玩家发放指定数量基纳。
+	 * Grant the given amount of kinah to self or a named player.
+	 *
+	 * @param admin 执行命令的管理员 / Admin executing the command
+	 * @param params [玩家名] 数量 / [player] quantity
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		long kinahCount;
@@ -81,6 +75,13 @@ public class Kinah extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //kinah [player] <quantity>");

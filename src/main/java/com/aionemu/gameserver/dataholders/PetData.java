@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,9 +13,9 @@ import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * This is a container holding and serving all {@link PetTemplate}
- * instances.<br>
- * 
+ * 宠物模板数据容器，持有并按 ID 提供全部 {@link PetTemplate}。
+ * Pet template data holder that stores and serves all {@link PetTemplate} instances by id.
+ *
  * @author IlBuono
  */
 @XmlRootElement(name = "pets")
@@ -41,9 +25,13 @@ public class PetData {
 	@XmlElement(name = "pet")
 	private List<PetTemplate> pets;
 
-	/** A map containing all pet templates */
+	/** 按宠物 ID 索引的模板映射 / map of pet templates by id */
 	private IntObjectHashMap<PetTemplate> petData = new IntObjectHashMap<PetTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，将宠物模板写入 ID 索引并释放列表。
+	 * After JAXB unmarshalling, indexes pet templates by id and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetTemplate pet : pets) {
 			petData.put(pet.getId(), pet);
@@ -52,15 +40,22 @@ public class PetData {
 		pets = null;
 	}
 
+	/**
+	 * 返回已加载的宠物模板数量。
+	 * Returns the number of loaded pet templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return petData.size();
 	}
 
 	/**
-	 * /** Returns an {@link PetTemplate} object with given id.
-	 * 
-	 * @param id id of Pet
-	 * @return PetTemplate object containing data about Pet with that id.
+	 * 按宠物 ID 获取宠物模板。
+	 * Returns the pet template for the given id.
+	 *
+	 * @param id 宠物 ID / pet id
+	 * @return 宠物模板，不存在则为 null / pet template or null
 	 */
 	public PetTemplate getPetTemplate(int id) {
 		return petData.get(id);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.verteron;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,10 +5,12 @@ import com.aionemu.gameserver.questEngine.handlers.*;
 import com.aionemu.gameserver.questEngine.model.*;
 import com.aionemu.gameserver.services.*;
 
-/****/
-/** Author Rinzler (Encom)
-/****/
-
+/**
+ * 沃特伦任务脚本：Headless Stone Statue（任务 ID 1170）。
+ * Verteron quest script: Headless Stone Statue (quest ID 1170).
+ *
+ * @author Rinzler (Encom)
+ */
 public class _1170Headless_Stone_Statue extends QuestHandler {
 
 	private final static int questId = 1170;

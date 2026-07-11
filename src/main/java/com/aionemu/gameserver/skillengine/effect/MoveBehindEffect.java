@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -35,14 +19,26 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 绕后位移伤害效果：将施法者移动到目标身后并结算伤害。
+ * Move-behind damage effect: relocates the caster behind the target and deals damage.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MoveBehindEffect")
 public class MoveBehindEffect extends DamageEffect {
+	/**
+	 * 应用绕后伤害结算。
+	 * Applies move-behind damage settlement.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
 	}
 
+	/**
+	 * 计算绕后位移坐标与伤害。
+	 * Calculates behind-target position and damage.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected() == null) {

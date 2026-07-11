@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -25,15 +9,34 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 
+/**
+ * 向客户端同步背包中单个物品状态变更的服务端包。
+ * Server packet that synchronizes a single inventory item update to the client.
+ */
 public class SM_INVENTORY_UPDATE_ITEM extends AionServerPacket {
 	private final Player player;
 	private final Item item;
 	private final ItemUpdateType updateType;
 
+	/**
+	 * 以默认使用消耗类型构造物品更新包。
+	 * Creates an item-update packet with the default item-use decrease type.
+	 *
+	 * target player
+	 * @param item 待更新物品 / item to update
+	 */
 	public SM_INVENTORY_UPDATE_ITEM(Player player, Item item) {
 		this(player, item, ItemUpdateType.DEC_ITEM_USE);
 	}
 
+	/**
+	 * 以指定更新类型构造物品更新包。
+	 * Creates an item-update packet with the given update type.
+	 *
+	 * target player
+	 * @param item 待更新物品 / item to update
+	 * @param updateType 物品更新类型 / item update type
+	 */
 	public SM_INVENTORY_UPDATE_ITEM(Player player, Item item, ItemUpdateType updateType) {
 		this.player = player;
 		this.item = item;

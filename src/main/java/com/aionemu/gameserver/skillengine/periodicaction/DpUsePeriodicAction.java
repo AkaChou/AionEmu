@@ -1,19 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.aionemu.gameserver.skillengine.periodicaction;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -22,13 +6,26 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
- * @Rework MATTY (ADev.Team)
+ * 周期 DP 消耗：效果持续期间按间隔扣除施法玩家 DP，不足则结束效果。
+ * Periodic DP cost: deducts caster DP each tick; ends the effect if insufficient.
+ *
+ * @author MATTY (ADev.Team)
  */
-
 public class DpUsePeriodicAction extends PeriodicAction {
+
+	/**
+	 * 每次扣除的 DP 值。
+	 * DP amount consumed per tick.
+	 */
 	@XmlAttribute(name = "value")
 	protected int value;
 
+	/**
+	 * 扣除施法玩家 DP；不足时结束效果。
+	 * Deducts caster DP; ends the effect if DP is insufficient.
+	 *
+	 * related effect
+	 */
 	@Override
 	public void act(final Effect effect) {
 		final Player effector = (Player) effect.getEffector();

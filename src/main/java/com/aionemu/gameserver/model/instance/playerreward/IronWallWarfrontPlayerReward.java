@@ -1,29 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.playerreward;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceBuff;
 
-/****/
 /**
- * Author Ranastic (Encom) /
- ****/
+ * IronWallWarfront 玩家奖励，用于副本相关逻辑。
+ * Iron Wall Warfront Player Reward for instance logic.
+ */
 
 public class IronWallWarfrontPlayerReward extends InstancePlayerReward {
 	private int timeBonus;
@@ -53,150 +37,188 @@ public class IronWallWarfrontPlayerReward extends InstancePlayerReward {
 		boostMorale = new InstanceBuff(buffId);
 	}
 
+	/** 返回 participation / Returns the participation */
 	public float getParticipation() {
 		return (float) getTimeBonus() / timeBonus;
 	}
 
+	/** 返回 score points / Returns the score points */
 	public int getScorePoints() {
 		return timeBonus + getPoints();
 	}
 
+	/** 返回时间加成 / Returns the time bonus*/
 	public int getTimeBonus() {
 		return timeBonus > 0 ? timeBonus : 0;
 	}
 
+	/** 更新 log out time / Update log out time */
 	public void updateLogOutTime() {
 		logoutTime = System.currentTimeMillis();
 	}
 
+	/** 更新加成时间 / Update bonus time*/
 	public void updateBonusTime() {
 		int offlineTime = (int) (System.currentTimeMillis() - logoutTime);
 		timeBonus -= offlineTime * timeBonusModifier;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回 medal bundle / Returns the medal bundle */
 	public int getMedalBundle() {
 		return medalBundle;
 	}
 
+	/** 返回 broken spinel / Returns the broken spinel */
 	public int getBrokenSpinel() {
 		return brokenSpinel;
 	}
 
+	/** 获取加成奖励。 / Returns the bonus reward. */
 	public int getBonusReward() {
 		return bonusReward;
 	}
 
+	/** 获取奖励计数。 / Returns the reward count. */
 	public int getRewardCount() {
 		return (int) rewardCount;
 	}
 
+	/** 设置 medal bundle / Sets the medal bundle */
 	public void setMedalBundle(int reward) {
 		this.medalBundle = reward;
 	}
 
+	/** 设置 broken spinel / Sets the broken spinel */
 	public void setBrokenSpinel(int reward) {
 		this.brokenSpinel = reward;
 	}
 
+	/** 设置加成奖励。 / Sets the bonus reward. */
 	public void setBonusReward(int reward) {
 		this.bonusReward = reward;
 	}
 
+	/** 设置奖励计数。 / Sets the reward count. */
 	public void setRewardCount(float rewardCount) {
 		this.rewardCount = rewardCount;
 	}
 
 	// Ap
+	/** 获取奖励欧比斯点数。 / Returns the reward ap. */
 	public int getRewardAp() {
 		return rewardAp;
 	}
 
+	/** 设置奖励欧比斯点数。 / Sets the reward ap. */
 	public void setRewardAp(int rewardAp) {
 		this.rewardAp = rewardAp;
 	}
 
+	/** 获取加成欧比斯点数。 / Returns the bonus ap. */
 	public int getBonusAp() {
 		return bonusAp;
 	}
 
+	/** 设置加成欧比斯点数。 / Sets the bonus ap. */
 	public void setBonusAp(int bonusAp) {
 		this.bonusAp = bonusAp;
 	}
 
 	// Gp
+	/** 返回 reward gp / Returns the reward gp */
 	public int getRewardGp() {
 		return rewardGp;
 	}
 
+	/** 设置 reward gp / Sets the reward gp */
 	public void setRewardGp(int rewardGp) {
 		this.rewardGp = rewardGp;
 	}
 
+	/** 返回加成荣耀点 / Returns the bonus gp */
 	public int getBonusGp() {
 		return bonusGp;
 	}
 
+	/** 设置加成荣耀点 / Sets the bonus gp*/
 	public void setBonusGp(int bonusGp) {
 		this.bonusGp = bonusGp;
 	}
 
-	// Exp
+	// 经验 / Exp
+	/** 获取奖励经验。 / Returns the reward exp. */
 	public int getRewardExp() {
 		return rewardExp;
 	}
 
+	/** 设置奖励经验。 / Sets the reward exp. */
 	public void setRewardExp(int rewardExp) {
 		this.rewardExp = rewardExp;
 	}
 
+	/** 获取加成经验。 / Returns the bonus exp. */
 	public int getBonusExp() {
 		return bonusExp;
 	}
 
+	/** 设置加成经验。 / Sets the bonus exp. */
 	public void setBonusExp(int bonusExp) {
 		this.bonusExp = bonusExp;
 	}
 
+	/** 返回加成奖励2 / Returns the bonus reward 2 */
 	public int getBonusReward2() {
 		return bonusReward2;
 	}
 
+	/** 设置 bonus reward 2 / Sets the bonus reward 2 */
 	public void setBonusReward2(int bonusReward2) {
 		this.bonusReward2 = bonusReward2;
 	}
 
+	/** 返回 additional reward / Returns the additional reward */
 	public int getAdditionalReward() {
 		return AdditionalReward;
 	}
 
+	/** 设置 additional reward / Sets the additional reward */
 	public void setAdditionalReward(int additionalReward) {
 		this.AdditionalReward = additionalReward;
 	}
 
+	/** 返回附加奖励数量 / Returns the additional reward count*/
 	public int getAdditionalRewardCount() {
 		return (int) AdditionalRewardCount;
 	}
 
+	/** 设置附加奖励数量 / Sets the additional reward count*/
 	public void setAdditionalRewardCount(float rewardCount) {
 		this.AdditionalRewardCount = rewardCount;
 	}
 
+	/**
+	 * @return Whether boost morale / Whether boost morale
+	 */
 	public boolean hasBoostMorale() {
 		return boostMorale.hasInstanceBuff();
 	}
 
+	/** 应用士气强化效果 / Apply boost morale effect */
 	public void applyBoostMoraleEffect(Player player) {
 		boostMorale.applyEffect(player, 20000);
 	}
 
+	/** 结束士气强化效果 / End Boost Morale Effect */
 	public void endBoostMoraleEffect(Player player) {
 		boostMorale.endEffect(player);
 	}
 
+	/** 返回 remaning time / Returns the remaning time */
 	public int getRemaningTime() {
 		int time = boostMorale.getRemaningTime();
 		if (time >= 0 && time < 20) {

@@ -1,29 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 变身类型：玩家、化身及多种形态。
+ * Transform type: PC, avatar and form variants.
+ */
 @XmlType(name = "TransformType")
 @XmlEnum
 public enum TransformType {
 
-	NONE(0), PC(1), AVATAR(2), FORM1(3), FORM2(4), FORM3(5), FORM4(6), FORM5(7);
+	/** 无 / None */
+	NONE(0),
+	/** 玩家形态 / Player character form */
+	PC(1),
+	/** 化身 / Avatar */
+	AVATAR(2),
+	/** 形态 1 / Form 1 */
+	FORM1(3),
+	/** 形态 2 / Form 2 */
+	FORM2(4),
+	/** 形态 3 / Form 3 */
+	FORM3(5),
+	/** 形态 4 / Form 4 */
+	FORM4(6),
+	/** 形态 5 / Form 5 */
+	FORM5(7);
 
 	private int id;
 
@@ -31,6 +34,12 @@ public enum TransformType {
 		this.id = id;
 	}
 
+	/**
+	 * 获取协议 ID。
+	 * Gets protocol id.
+	 *
+	 * transform type id
+	 */
 	public int getId() {
 		return id;
 	}

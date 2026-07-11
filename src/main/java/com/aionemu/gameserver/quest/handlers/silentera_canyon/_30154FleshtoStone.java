@@ -8,8 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
- * @author Ritsu
+ * 寂静峡谷任务脚本：Fleshto Stone（任务 ID 30154）。
+ * Silentera Canyon quest script: Fleshto Stone (quest ID 30154).
  *
+ * @author Ritsu
  */
 public class _30154FleshtoStone extends QuestHandler {
 

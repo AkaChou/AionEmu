@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,20 +9,36 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 
+/**
+ * 旋转效果：使目标进入旋转控制，打断技能并中止移动。
+ * Spin effect: puts the target into spin control, cancelling skill and movement.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpinEffect")
 public class SpinEffect extends EffectTemplate {
+	/**
+	 * 加入效果控制器并移除麻痹类效果。
+	 * Adds to the controller and removes paralyze effects.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 		effect.getEffected().getEffectController().removeParalyzeEffects();
 	}
 
+	/**
+	 * 按旋转抗性结算，状态为 SPIN。
+	 * Resolves against spin resistance with SpellStatus.SPIN.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.SPIN_RESISTANCE, SpellStatus.SPIN);
 	}
 
+	/**
+	 * 打断技能、中止移动并施加 SPIN 异常。
+	 * Cancels skill, aborts move, and applies SPIN abnormal.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		final Creature effected = effect.getEffected();
@@ -48,6 +48,10 @@ public class SpinEffect extends EffectTemplate {
 		effect.setAbnormal(AbnormalState.SPIN.getId());
 	}
 
+	/**
+	 * 清除 SPIN 异常。
+	 * Clears the SPIN abnormal.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.getEffected().getEffectController().unsetAbnormal(AbnormalState.SPIN.getId());

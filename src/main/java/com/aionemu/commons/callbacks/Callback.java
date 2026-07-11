@@ -32,7 +32,7 @@ public interface Callback<T> {
      * 获取回调的基类类型
      * Get the base class type of the callback
      *
-     * @return 回调接口的Class对象 / Class object of the callback interface
+ * @return 回调接口的 Class 对象 / Class object of the callback interface
      */
     Class<? extends Callback> getBaseClass();
 }

@@ -1,19 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.mission;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,8 +10,10 @@ import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
+ * 主线任务脚本：Cooking Up Disasters（任务 ID 14025）。
+ * Campaign mission quest script: Cooking Up Disasters (quest ID 14025).
+ *
  * @author pralinka
- * @rework FrozenKiller
  */
 public class _14025Cooking_Up_Disasters extends QuestHandler {
 

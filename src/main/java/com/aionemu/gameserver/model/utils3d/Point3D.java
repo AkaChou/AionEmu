@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.utils3d;
 
 /**
+ * 点3D，用于工具3d 相关逻辑。
+ * Point 3 D for utils 3 d logic.
+ *
  * @author M@xx modified by Wakizashi
  */
 public class Point3D {
@@ -43,6 +30,7 @@ public class Point3D {
 		this.z = (double) z;
 	}
 
+	/** 距离 / distance. */
 	public double distance(Point3D p) {
 		double dx = x - p.x;
 		double dy = y - p.y;
@@ -50,19 +38,23 @@ public class Point3D {
 		return Math.sqrt(dx * dx + dy * dy + dz * dz);
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		return "x=" + x + ", y=" + y + ", z=" + z;
 	}
 
+	/** 返回 x / Returns the x */
 	public double getX() {
 		return x;
 	}
 
+	/** 返回 y / Returns the y */
 	public double getY() {
 		return y;
 	}
 
+	/** 返回 z / Returns the z */
 	public double getZ() {
 		return z;
 	}

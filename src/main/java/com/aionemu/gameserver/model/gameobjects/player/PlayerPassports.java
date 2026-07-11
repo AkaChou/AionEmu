@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.Collection;
@@ -23,14 +7,16 @@ import java.util.TreeMap;
 import com.aionemu.gameserver.model.templates.event.AtreianPassport;
 
 /**
- * 
- * @author Ranastic
+ * 玩家 Passports 游戏对象。
+ * Player Passports game object.
  *
+ * @author Ranastic
  */
 public class PlayerPassports {
 
 	private final SortedMap<Integer, AtreianPassport> passports = new TreeMap<Integer, AtreianPassport>();
 
+	/** 添加 passport / Adds passport */
 	public synchronized boolean addPassport(int id, AtreianPassport ap) {
 		if (passports.containsKey(id)) {
 			return false;
@@ -39,6 +25,7 @@ public class PlayerPassports {
 		return true;
 	}
 
+	/** 移除 passport / Removes passport */
 	public synchronized boolean removePassport(int id) {
 		if (passports.containsKey(id)) {
 			passports.remove(id);
@@ -47,6 +34,7 @@ public class PlayerPassports {
 		return false;
 	}
 
+	/** 返回全部通行证 / Returns the all passports*/
 	public Collection<AtreianPassport> getAllPassports() {
 		return passports.values();
 	}

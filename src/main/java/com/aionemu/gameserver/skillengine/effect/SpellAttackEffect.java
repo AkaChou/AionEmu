@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,12 +11,20 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 法术攻击持续效果：周期性对目标造成魔法伤害。
+ * Over-time spell attack: deals periodic magical damage to the target.
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpellAttackEffect")
 public class SpellAttackEffect extends AbstractOverTimeEffect {
 
+	/**
+	 * 计算周期魔法伤害并触发受击与 DoT 观察者。
+	 *
+	 * @param effect Calculates periodic magical damage and notifies attack / DoT observers.
+	 */
 	@Override
 	public void onPeriodicAction(Effect effect) {
 		Creature effected = effect.getEffected();

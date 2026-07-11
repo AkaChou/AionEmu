@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -24,12 +8,24 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 向客户端同步目标生物异常状态/效果列表的服务端包。
+ * Server packet synchronizing a creature's abnormal effect list to the client.
+ */
 public class SM_ABNORMAL_EFFECT extends AionServerPacket {
 	private int effectedId;
 	private int effectType = 1;
 	private int abnormals;
 	private Collection<Effect> filtered;
 
+	/**
+	 * 构造异常效果同步包；若目标为玩家则使用玩家效果格式。
+	 * Builds an abnormal-effect sync packet; uses the player effect format when the target is a player.
+	 *
+	 * @param effected 受效果影响的生物 / creature under the effects
+	 * @param abnormals 异常状态位掩码 / abnormal state bit mask
+	 * @param effects 需要同步的效果集合 / effects to synchronize
+	 */
 	public SM_ABNORMAL_EFFECT(Creature effected, int abnormals, Collection<Effect> effects) {
 		this.abnormals = abnormals;
 		this.effectedId = effected.getObjectId();
@@ -42,10 +38,10 @@ public class SM_ABNORMAL_EFFECT extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeD(effectedId);
-		writeC(effectType); // unk
-		writeD(0); // unk
-		writeD(abnormals); // unk
-		writeD(0); // unk
+		writeC(effectType); // 未知 / unk
+		writeD(0); // 未知 / unk
+		writeD(abnormals); // 未知 / unk
+		writeD(0); // 未知 / unk
 		writeC(0x7F);// unk 5.3
 		writeH(filtered.size()); // effects size
 		for (Effect effect : filtered) {

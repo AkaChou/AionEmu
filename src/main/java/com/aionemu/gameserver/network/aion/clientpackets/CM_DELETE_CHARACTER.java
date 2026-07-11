@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -30,26 +14,26 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
- * In this packets aion client is requesting deletion of character.
- * 
+ * 请求删除角色的客户端包。
+ * Client packet requesting deletion of a character.
+ *
  * @author -Nemesiss-
  */
 public class CM_DELETE_CHARACTER extends AionClientPacket {
 
-	/**
-	 * PlayOk2 - we dont care...
-	 */
+	/** PlayOk2未使用 / PlayOk2 (unused) */
 	@SuppressWarnings("unused")
 	private int playOk2;
-	/**
-	 * ObjectId of character that should be deleted.
-	 */
+	/** 待删除角色的对象 ID / object id of character to delete */
 	private int chaOid;
 
 	/**
-	 * Constructs new instance of <tt>CM_DELETE_CHARACTER </tt> packet
-	 * 
-	 * @param opcode
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_DELETE_CHARACTER(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -72,7 +56,7 @@ public class CM_DELETE_CHARACTER extends AionClientPacket {
 		AionConnection client = getConnection();
 		PlayerAccountData playerAccData = client.getAccount().getPlayerAccountData(chaOid);
 		if (playerAccData != null && !playerAccData.isLegionMember()) {
-			// passkey check
+			// 通行密钥检查 / passkey check
 			if (SecurityConfig.PASSKEY_ENABLE && !client.getAccount().getCharacterPasskey().isPass()) {
 				client.getAccount().getCharacterPasskey().setConnectType(ConnectType.DELETE);
 				client.getAccount().getCharacterPasskey().setObjectId(chaOid);

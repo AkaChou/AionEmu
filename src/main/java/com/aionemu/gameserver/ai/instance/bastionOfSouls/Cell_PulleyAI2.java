@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.bastionOfSouls;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Bastion Of Souls 副本 NPC AI：Cell Pulley（@AIName "Prison_Lever"），继承 NpcAI2。
+ * Bastion Of Souls instance NPC AI: Cell Pulley (@AIName "Prison_Lever"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Prison_Lever")
 public class Cell_PulleyAI2 extends NpcAI2
 {
@@ -39,7 +25,7 @@ public class Cell_PulleyAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
-			//You need Black Oil to move the lever to the Room of Rehabilitation.
+			// 需要黑油才能扳动杠杆通往康复室。 / You need Black Oil to move the lever to the Room of Rehabilitation.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404204));
         }
     }

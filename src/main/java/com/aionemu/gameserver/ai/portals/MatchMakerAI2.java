@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -32,10 +16,12 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 传送门/传送点 AI：Match Maker（@AIName "match_maker"），继承 GeneralNpcAI2。
+ * Portal/teleporter AI: Match Maker (@AIName "match_maker"), extends GeneralNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("match_maker")
 public class MatchMakerAI2 extends GeneralNpcAI2
 {
@@ -44,9 +30,9 @@ public class MatchMakerAI2 extends GeneralNpcAI2
 		if (player.getLevel() >= 46) {
 		    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
 		} else {
-            //It's refreshing to have so many volunteers! I wish I could send you to the Dredgion right now.
-            //Oh, didn't you know ? It has to be close by for me to send you there.
-            //Wait until it comes back, [%username].
+            // 有这么多志愿者真令人振奋！真想立刻送你们上战舰。 / It's refreshing to have so many volunteers! I wish I could send you to the Dredgion right now.
+            // 哦，你不知道吗？必须在附近我才能送你过去。 / Oh, didn't you know ? It has to be close by for me to send you there.
+            // 等到它回来，[%username]。 / Wait until it comes back, [%username].
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         }
 	}

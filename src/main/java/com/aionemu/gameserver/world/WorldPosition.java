@@ -1,210 +1,213 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world;
 
-
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
 /**
+ * 世界中对象的位置：地图、区域、坐标与朝向。
+ * Position of an object in the world: map, region, coordinates and heading.
+ *
  * @author Rinzler (Encom)
- */
-/**
- * Position of object in the world.
- * 
  * @author -Nemesiss-
  */
 @Slf4j
 public class WorldPosition {
 
+	/**
+	 * 以指定地图 ID 构造位置。
+	 * Construct a position for the given map id.
+	 *
+	 * map id
+	 */
 	public WorldPosition(int mapId) {
 		this.mapId = mapId;
 	}
 
-
-	/**
-	 * Map id.
-	 */
+	/** 地图 ID / map id */
 	private int mapId;
-	/**
-	 * Map Region.
-	 */
+	/** 所在地图区域 / map region */
 	private MapRegion mapRegion;
-	/**
-	 * World position x
-	 */
+	/** 世界 X / world X */
 	private float x;
-	/**
-	 * World position y
-	 */
+	/** 世界 Y / world Y */
 	private float y;
-	/**
-	 * World position z
-	 */
+	/** 世界 Z / world Z */
 	private float z;
-
-	/**
-	 * Value from 0 to 120 (120==0 actually)
-	 */
+	/** 朝向，0–120（120 等价于 0） / heading, 0–120 (120 equals 0) */
 	private byte heading;
-	/**
-	 * indicating if object is spawned or not.
-	 */
+	/** 是否已生成（可见） / whether spawned (visible) */
 	private boolean isSpawned = false;
 
 	/**
-	 * Return World map id.
-	 * 
-	 * @return world map id
+	 * 返回世界地图 ID。
+	 * Return the world map id.
+	 *
+	 * map id
 	 */
 	public int getMapId() {
 		if (mapId == 0)
-			log.warn("WorldPosition has (mapId == 0) " + this.toString());
+			log.warn(I18n.get("log.c35fe2659e5e", this.toString()));
 		return mapId;
 	}
 
 	/**
-	 * @param mapId the mapId to set
+	 * 设置地图 ID。
+	 * Set the map id.
+	 *
+	 * map id
 	 */
 	public void setMapId(int mapId) {
 		this.mapId = mapId;
 	}
 
 	/**
-	 * Return World position x
-	 * 
-	 * @return x
+	 * 返回世界坐标 X。
+	 * Return world X.
+	 *
+	 * @return X
 	 */
 	public float getX() {
 		return x;
 	}
 
 	/**
-	 * Return World position y
-	 * 
-	 * @return y
+	 * 返回世界坐标 Y。
+	 * Return world Y.
+	 *
+	 * @return Y
 	 */
 	public float getY() {
 		return y;
 	}
 
 	/**
-	 * Return World position z
-	 * 
-	 * @return z
+	 * 返回世界坐标 Z。
+	 * Return world Z.
+	 *
+	 * @return Z
 	 */
 	public float getZ() {
 		return z;
 	}
 
 	/**
-	 * Return map region
-	 * 
-	 * @return Map region
+	 * 返回当前地图区域；未生成时返回 null。
+	 * Return the current map region; null when not spawned.
+	 *
+	 * @return 地图区域或 null / map region or null
 	 */
 	public MapRegion getMapRegion() {
 		return isSpawned ? mapRegion : null;
 	}
 
 	/**
-	 * @return
+	 * 返回实例 ID。
+	 * Return the instance id.
+	 *
+	 * instance id
 	 */
 	public int getInstanceId() {
 		return mapRegion.getParent().getInstanceId();
 	}
 
 	/**
-	 * @return
+	 * 返回父地图的实例数量。
+	 * Return the parent map's instance count.
+	 *
+	 * instance count
 	 */
 	public int getInstanceCount() {
 		return mapRegion.getParent().getParent().getInstanceCount();
 	}
 
 	/**
-	 * @return
+	 * 是否副本类型地图。
+	 * Whether this is an instance-type map.
+	 *
+	 * @return 副本地图为 true / true if instance map
 	 */
 	public boolean isInstanceMap() {
 		return mapRegion.getParent().getParent().isInstanceType();
 	}
 
 	/**
-	 * @return
+	 * 当前地图区域是否处于激活状态。
+	 * Whether the current map region is active.
+	 *
+	 * @return 若 active 则为 true / true if active
 	 */
 	public boolean isMapRegionActive() {
 		return mapRegion.isMapRegionActive();
 	}
 
 	/**
+	 * 返回朝向。
 	 * Return heading.
-	 * 
-	 * @return heading
+	 *
+	 * 朝向 / heading
 	 */
 	public byte getHeading() {
 		return heading;
 	}
 
 	/**
-	 * Returns the {@link World} instance in which this position is located. :D
-	 * 
-	 * @return World
+	 * 返回所属 {@link World}。
+	 * Return the owning {@link World}.
+	 *
+	 * world
 	 */
 	public World getWorld() {
 		return mapRegion.getWorld();
 	}
 
 	/**
-	 * @return worldMapInstance
+	 * 返回所属地图实例。
+	 * Return the owning world-map instance.
+	 *
+	 * world map instance
 	 */
 	public WorldMapInstance getWorldMapInstance() {
 		return mapRegion.getParent();
 	}
 
 	/**
-	 * Check if object is spawned.
-	 * 
-	 * @return true if object is spawned.
+	 * 对象是否已生成。
+	 * Whether the object is spawned.
+	 *
+	 * @return 已生成返回 true / true if spawned
 	 */
 	public boolean isSpawned() {
 		return isSpawned;
 	}
 
 	/**
-	 * Set isSpawned to given value.
-	 * 
-	 * @param val
+	 * 设置生成状态。
+	 * Set spawned flag.
+	 *
+	 * @param val 是否生成 / whether spawned
 	 */
 	void setIsSpawned(boolean val) {
 		isSpawned = val;
 	}
 
 	/**
-	 * Set map region
-	 * 
-	 * @param r - map region
+	 * 设置地图区域。
+	 * Set the map region.
+	 *
+	 * @param r 地图区域 / map region
 	 */
 	void setMapRegion(MapRegion r) {
 		mapRegion = r;
 	}
 
 	/**
-	 * Set world position.
-	 * 
-	 * @param newX
-	 * @param newY
-	 * @param newZ
-	 * @param newHeading Value from 0 to 120 (120==0 actually)
+	 * 设置世界坐标与朝向（null 参数表示保持原值）。
+	 * Set world coordinates and heading (null args keep previous values).
+	 *
+	 * new X, or null
+	 * new Y, or null
+	 * new Z, or null
+	 * @param newHeading 新朝向，可为 null；取值 0–120 / new heading, or null; 0–120
 	 */
 	public void setXYZH(Float newX, Float newY, Float newZ, Byte newHeading) {
 		if (newX != null) {
@@ -221,10 +224,22 @@ public class WorldPosition {
 		}
 	}
 
+	/**
+	 * 设置 Z 坐标。
+	 * Set Z coordinate.
+	 *
+	 * @param z 坐标 Z / Z coordinate
+	 */
 	public void setZ(float z) {
 		this.z = z;
 	}
 
+	/**
+	 * 设置朝向。
+	 * Set heading.
+	 *
+	 * @param h 朝向 / heading
+	 */
 	public void setH(byte h) {
 		this.heading = h;
 	}
@@ -235,6 +250,12 @@ public class WorldPosition {
 				+ x + ", y=" + y + ", z=" + z + "]";
 	}
 
+	/**
+	 * 浅克隆当前位置（共享 mapRegion 引用）。
+	 * Shallow-clone this position (shares the mapRegion reference).
+	 *
+	 * clone
+	 */
 	@Override
 	public WorldPosition clone() {
 		WorldPosition pos = new WorldPosition(this.mapId);

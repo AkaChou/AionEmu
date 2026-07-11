@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion.serverpackets;
 
 import com.aionemu.loginserver.network.aion.AionServerPacket;
@@ -23,23 +5,29 @@ import com.aionemu.loginserver.network.aion.LoginConnection;
 import com.aionemu.loginserver.network.aion.SessionKey;
 
 /**
+ * 登录服→客户端：登录成功，下发会话密钥片段（accountId / loginOk）。
+ * loginOk). / loginOk).
+ *
  * @author -Nemesiss-
  */
 public class SM_LOGIN_OK extends AionServerPacket {
 
     /**
-     * accountId is part of session key - its used for security purposes
+     * 会话密钥中的账号 ID，用于安全校验。
+     * Account id part of the session key, used for security checks.
      */
     private final int accountId;
     /**
-     * loginOk is part of session key - its used for security purposes
+     * 会话密钥中的 loginOk，用于安全校验。
+     * loginOk part of the session key, used for security checks.
      */
     private final int loginOk;
 
     /**
-     * Constructs new instance of <tt>SM_LOGIN_OK</tt> packet.
+     * 构造 SM_LOGIN_OK 包。
+     * Constructs a new SM_LOGIN_OK packet.
      *
-     * @param key session key
+     * @param key 会话密钥 / session key
      */
     public SM_LOGIN_OK(SessionKey key) {
         super(3);

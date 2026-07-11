@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -31,17 +15,33 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 //import com.aionemu.gameserver.services.ThreesUpgradeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 可交互道具型 NPC AI：处理使用进度条、观察者中断与使用完成回调。
+ * Use-item style NPC AI that handles the progress bar, abort observer, and use-finish callback.
+ */
 @AIName("useitem")
 public class ActionItemNpcAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
 	
+	/**
+	 * 玩家开始与本 NPC 对话/交互。
+	 * Player starts dialog/interaction with this NPC.
+	 *
+	 * 玩家 / player
+	 */
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
 	
+	/**
+	 * 开始使用交互物（进度条）。
+	 * Start using the action item (progress bar).
+	 *
+	 * @param player 玩家 / player
+	 */
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -71,12 +71,22 @@ public class ActionItemNpcAI2 extends NpcAI2
 		}
 	}
 	
+	/**
+	 * 使用交互物完成时的逻辑。
+	 * Logic when action-item use finishes.
+	 *
+	 * @param player 玩家 / player
+	 */
 	protected void handleUseItemFinish(Player player) {
 		if (getOwner().isInInstance()) {
 			AI2Actions.handleUseItemFinish(this, player);
 		}
 	}
 
+	/**
+	 * 返回交互进度条时长（毫秒）。
+	 * Return interaction progress-bar duration in milliseconds.
+	 */
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

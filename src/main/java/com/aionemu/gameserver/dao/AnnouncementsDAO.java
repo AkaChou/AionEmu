@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.util.Set;
@@ -22,22 +6,43 @@ import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.Announcement;
 
 /**
- * DAO that manages Announcements
- * 
+ * 公告数据访问对象，负责管理服务器公告。
+ * DAO that manages server announcements.
+ *
  * @author Divinity
  */
 public abstract class AnnouncementsDAO implements DAO {
 
+	/**
+	 * 获取全部公告。
+	 * Gets all announcements.
+	 *
+	 * announcement set
+	 */
 	public abstract Set<Announcement> getAnnouncements();
 
+	/**
+	 * 添加一条公告。
+	 * Adds an announcement.
+	 *
+	 * announcement
+	 */
 	public abstract void addAnnouncement(final Announcement announce);
 
+	/**
+	 * 删除指定 ID 的公告。
+	 * Deletes the announcement with the given ID.
+	 *
+	 * announcement ID
+	 * whether successful
+	 */
 	public abstract boolean delAnnouncement(final int idAnnounce);
 
 	/**
-	 * Returns class name that will be uses as unique identifier for all DAO classes
-	 * 
-	 * @return class name
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier for this DAO.
+	 *
+	 * class name
 	 */
 	@Override
 	public final String getClassName() {

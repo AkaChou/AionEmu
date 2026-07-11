@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
 
 /**
+ * 打开 NPC 普通商店交易列表的服务端包（含限购信息）。
+ * Server packet that opens an NPC's normal trade list (including limited-item info).
+ *
  * @author Dr.Nism
  */
 public class SM_TRADELIST extends AionServerPacket {
@@ -39,6 +26,12 @@ public class SM_TRADELIST extends AionServerPacket {
 	private TradeListTemplate tlist;
 	private int buyPriceModifier;
 
+	/**
+	 * 玩家 / player
+	 * trade NPC
+	 * @param tlist            交易列表模板 / trade list template
+	 * @param buyPriceModifier 买入价格修正 / buy price modifier
+	 */
 	public SM_TRADELIST(Player player, Npc npc, TradeListTemplate tlist, int buyPriceModifier) {
 		playerObj = player.getObjectId();
 		this.npcObj = npc.getObjectId();

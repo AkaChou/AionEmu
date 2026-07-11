@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.archivesOfEternity;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -25,10 +9,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Archives Of Eternity 副本 NPC AI：ID Eternity 01 Boss Summon（@AIName "IDEternity_01_Boss_Summon"），继承 ActionItemNpcAI2。
+ * Archives Of Eternity instance NPC AI: ID Eternity 01 Boss Summon (@AIName "IDEternity_01_Boss_Summon"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("IDEternity_01_Boss_Summon")
 public class IDEternity_01_Boss_SummonAI2 extends ActionItemNpcAI2
 {
@@ -237,9 +223,9 @@ public class IDEternity_01_Boss_SummonAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The First Column of Dominion  has been activated.
+					// 第一支配之柱已激活。 / The First Column of Dominion  has been activated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_01_On, 0);
-				    //The First Column of Dominion has been deactivated.
+				    // 第一支配之柱已停用。 / The First Column of Dominion has been deactivated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_01_Off, 2000);
 				}
 			}
@@ -250,9 +236,9 @@ public class IDEternity_01_Boss_SummonAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The Second Column of Dominion  has been activated.
+					// 第二支配之柱已激活。 / The Second Column of Dominion  has been activated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_02_On, 0);
-				    //The Second Column of Dominion has been deactivated.
+				    // 第二支配之柱已停用。 / The Second Column of Dominion has been deactivated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_02_Off, 2000);
 				}
 			}
@@ -263,9 +249,9 @@ public class IDEternity_01_Boss_SummonAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The Third Column of Dominion  has been activated.
+					// 第三支配之柱已激活。 / The Third Column of Dominion  has been activated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_03_On, 0);
-				    //The Third Column of Dominion has been deactivated.
+				    // 第三支配之柱已停用。 / The Third Column of Dominion has been deactivated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_03_Off, 2000);
 				}
 			}
@@ -276,9 +262,9 @@ public class IDEternity_01_Boss_SummonAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The Fourth Column of Dominion  has been activated.
+					// 第四支配之柱已激活。 / The Fourth Column of Dominion  has been activated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_04_On, 0);
-				    //The Fourth Column of Dominion has been deactivated.
+				    // 第四支配之柱已停用。 / The Fourth Column of Dominion has been deactivated.
 				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_04_Off, 2000);
 				}
 			}

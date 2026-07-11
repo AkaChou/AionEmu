@@ -1,20 +1,5 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
+
 
 import com.aionemu.gameserver.model.gameobjects.Pet;
 import com.aionemu.gameserver.model.gameobjects.PetEmote;
@@ -23,9 +8,11 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PET_EMOTE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
+ * 客户端宠物表情/动作请求包，按表情类型同步位置与广播。
+ * Client packet for pet emote actions; syncs position and broadcasts by emote type.
+ *
  * @author ATracer
  */
 public class CM_PET_EMOTE extends AionClientPacket {
@@ -46,6 +33,11 @@ public class CM_PET_EMOTE extends AionClientPacket {
 	private int emotionId;
 	private int unk2;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_PET_EMOTE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -85,14 +77,12 @@ public class CM_PET_EMOTE extends AionClientPacket {
 		if (pet == null) {
 			return;
 		}
-		// sometimes client is crazy enough to send -2.4457384E7 as z coordinate
-		// TODO (check retail) either its client bug or packet problem somewhere
-		// reproducible by flying randomly and falling from long height with fly resume
+		// 从长距离坠落恢复飞行后，客户端可能发送无效负坐标。 / The client can send invalid negative coordinates after resuming flight from a long fall.
 		if (x1 < 0 || y1 < 0 || z1 < 0) {
 			return;
 		}
-		// log.info("CM_PET_EMOTE emote {}, unk1 {}, unk2 {}", new Object[] { emoteId,
-		// unk1, unk2 });
+		// log.info(I18n.get("log.c5f538b73fa3", new Object[] { emoteId,
+		// unk1, unk2 }));
 		switch (emote) {
 		case UNKNOWN:
 			break;
@@ -106,7 +96,7 @@ public class CM_PET_EMOTE extends AionClientPacket {
 		case MOVETO:
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(pet, x1, y1, z1, h);
 			pet.getMoveController().setNewDirection(x2, y2, z2, h);
-			PacketSendUtility.broadcastPacket(player, new SM_PET_EMOTE(pet, emote, x1, y1, z2, x2, y2, z2, h), true);
+			PacketSendUtility.broadcastPacket(player, new SM_PET_EMOTE(pet, emote, x1, y1, z1, x2, y2, z2, h), true);
 			break;
 		case FLY:
 			PacketSendUtility.broadcastPacket(player, new SM_PET_EMOTE(pet, emote, emotionId, unk2), true);

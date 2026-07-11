@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
 import com.aionemu.commons.utils.Rnd;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Levinshor 区域 NPC AI：Vocolith（@AIName "vocolith"），继承 NpcAI2。
+ * Levinshor zone NPC AI: Vocolith (@AIName "vocolith"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("vocolith")
 public class VocolithAI2 extends NpcAI2
 {
@@ -48,7 +34,7 @@ public class VocolithAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000216, 1)) {
 		    switch (getNpcId()) {
-		        //Vocolith [North Warden]
+		        // 声晶【北看守】 / Vocolith [North Warden]
 				case 804573:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
@@ -69,7 +55,7 @@ public class VocolithAI2 extends NpcAI2
 						break;
 					}
 				break;
-				//Vocolith [Coast Warden]
+				// 声晶【海岸看守】 / Vocolith [Coast Warden]
 			    case 804574:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
@@ -90,7 +76,7 @@ public class VocolithAI2 extends NpcAI2
 						break;
 					}
 				break;
-				//Vocolith [South Warden]
+				// 声晶【南看守】 / Vocolith [South Warden]
 			    case 804575:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
@@ -111,7 +97,7 @@ public class VocolithAI2 extends NpcAI2
 						break;
 					}
 				break;
-				//Vocolith [East Woods Warden]
+				// 声晶【东林看守】 / Vocolith [East Woods Warden]
 			    case 804579:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
@@ -132,7 +118,7 @@ public class VocolithAI2 extends NpcAI2
 						break;
 					}
 				break;
-				//Vocolith [North Woods Warden]
+				// 声晶【北林看守】 / Vocolith [North Woods Warden]
 			    case 804580:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
@@ -153,7 +139,7 @@ public class VocolithAI2 extends NpcAI2
 						break;
 					}
 				break;
-				//Vocolith [Cut Warden]
+				// 声晶【砍伐看守】 / Vocolith [Cut Warden]
 			    case 804581:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
@@ -174,7 +160,7 @@ public class VocolithAI2 extends NpcAI2
 						break;
 					}
 				break;
-				//Vocolith [West Warden]
+				// 声晶【西看守】 / Vocolith [West Warden]
 			    case 804582:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:
@@ -195,7 +181,7 @@ public class VocolithAI2 extends NpcAI2
 						break;
 					}
 				break;
-				//Vocolith [East Warden]
+				// 声晶【东看守】 / Vocolith [East Warden]
 			    case 804583:
 				    switch (Rnd.get(1, 4)) {
 					    case 1:

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTabItem;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 街机升级数据容器，按页签 ID 索引奖品物品列表。
+ * Arcade upgrade data holder, indexing prize item lists by tab id.
+ *
  * Created by wanke on 17/02/2017.
  */
 @XmlRootElement(name = "arcadelist")
@@ -41,6 +28,10 @@ public class ArcadeUpgradeData {
 	@XmlTransient
 	private IntObjectHashMap<List<ArcadeTabItem>> arcadeItemList = new IntObjectHashMap<>();
 
+	/**
+	 * JAXB 反序列化完成后，按页签 ID 索引物品列表。
+	 * After JAXB unmarshalling, indexes item lists by tab id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		arcadeItemList.clear();
 		for (ArcadeTab template : arcadeTabTemplate) {
@@ -48,14 +39,33 @@ public class ArcadeUpgradeData {
 		}
 	}
 
+	/**
+	 * 返回已加载的页签数量。
+	 * Returns the number of loaded tabs.
+	 *
+	 * tab count
+	 */
 	public int size() {
 		return arcadeItemList.size();
 	}
 
+	/**
+	 * 按页签 ID 获取物品列表。
+	 * Returns the item list for the given tab id.
+	 *
+	 * @param id 页签 ID / tab id
+	 * @return 物品列表，不存在则为 null / item list or null
+	 */
 	public List<ArcadeTabItem> getArcadeTabById(int id) {
 		return arcadeItemList.get(id);
 	}
 
+	/**
+	 * 返回全部街机页签模板列表。
+	 * Returns all arcade tab templates.
+	 *
+	 * @return 页签模板列表 / tab template list
+	 */
 	public List<ArcadeTab> getArcadeTabs() {
 		return arcadeTabTemplate;
 	}

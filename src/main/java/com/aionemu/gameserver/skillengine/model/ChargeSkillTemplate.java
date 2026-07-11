@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import java.util.List;
@@ -25,9 +9,11 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 充能技能模板：一至三阶段技能、最小充能与加成类型。
+ * Charge skill template: stage skills, min charge and bonus type.
+ *
  * @author Dr.Nism
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "charge_skill")
 public class ChargeSkillTemplate {
@@ -56,42 +42,81 @@ public class ChargeSkillTemplate {
 	@XmlAttribute(name = "bonus_type", required = true)
 	protected BonusChargeType type = BonusChargeType.NONE;
 
+	/**
+	 * 获取充能技能 ID。
+	 * Gets charge skill id.
+	 *
+	 * id
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * 获取充能集合名称。
+	 * Gets charge set name.
+	 *
+	 * set name
+	 */
 	public String getChargeSetName() {
 		return charge_set_name;
 	}
 
+	/**
+	 * 获取第一阶段技能 ID。
+	 * Gets first-stage skill id.
+	 *
+	 * skill id
+	 */
 	public int getFirstId() {
 		return first;
 	}
 
+	/**
+	 * 获取第二阶段技能 ID。
+	 * Gets second-stage skill id.
+	 *
+	 * skill id
+	 */
 	public int getSecondId() {
 		return second;
 	}
 
+	/**
+	 * 获取第三阶段技能 ID。
+	 * Gets third-stage skill id.
+	 *
+	 * skill id
+	 */
 	public int getThirdId() {
 		return third;
 	}
 
 	/**
-	 * @return the MinCharge
+	 * 获取最小充能值。
+	 * Gets minimum charge value.
+	 *
+	 * min charge
 	 */
 	public int getMinCharge() {
 		return min_charge;
 	}
 
 	/**
-	 * @return the Charges
+	 * 获取充能阶段列表。
+	 * Gets charge stage list.
+	 *
+	 * charges
 	 */
 	public List<ChargeTemplate> getCharges() {
 		return charges;
 	}
 
 	/**
-	 * @return the BonusChargeType
+	 * 获取充能加成类型。
+	 * Gets bonus charge type.
+	 *
+	 * bonus type
 	 */
 	public BonusChargeType getBonusChargeType() {
 		return type;

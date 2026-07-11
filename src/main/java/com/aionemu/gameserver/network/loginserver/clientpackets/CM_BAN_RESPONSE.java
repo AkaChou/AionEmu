@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,10 +6,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 登录服对封禁请求的响应包，向发起封禁的管理员回传结果消息。
+ * LoginServer ban-request response that notifies the requesting admin of the outcome.
+ *
  * @author Watson
  */
 public class CM_BAN_RESPONSE extends LsClientPacket {
 
+	/**
+	 * 构造函数。
+	 * Constructor.
+	 *
+	 * @param opCode 操作码 opcode
+	 */
 	public CM_BAN_RESPONSE(int opCode) {
 		super(opCode);
 	}
@@ -37,6 +30,10 @@ public class CM_BAN_RESPONSE extends LsClientPacket {
 	private int adminObjId;
 	private boolean result;
 
+	/**
+	 * 读取封禁类型、目标、时长与结果。
+	 * Reads ban type, target, duration, and result.
+	 */
 	@Override
 	public void readImpl() {
 		this.type = (byte) readC();
@@ -47,6 +44,10 @@ public class CM_BAN_RESPONSE extends LsClientPacket {
 		this.result = readC() == 1;
 	}
 
+	/**
+	 * 按封禁类型向管理员发送成功/失败提示。
+	 * Sends success/failure messages to the admin by ban type.
+	 */
 	@Override
 	public void runImpl() {
 		Player admin = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(adminObjId);
@@ -55,7 +56,7 @@ public class CM_BAN_RESPONSE extends LsClientPacket {
 			return;
 		}
 
-		// Some messages stuff
+		// 一些消息相关 / Some messages stuff
 		String message;
 		if (type == 1 || type == 3) {
 			if (result) {

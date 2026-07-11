@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -27,14 +11,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 管理员添加套装命令：按套装模板 ID 发放整套装备。
+ * Admin add-set command: grants a full item set by set-template ID.
+ *
  * @author Antivirus
  */
 public class AddSet extends AdminCommand {
 
+	/**
+	 * 注册 {@code //addset} 命令。
+	 * Registers the {@code //addset} command.
+	 */
 	public AddSet() {
 		super("addset");
 	}
 
+	/**
+	 * 执行添加套装：解析玩家与套装 ID 后逐件发放。
+	 * Executes add-set: resolves player and set id, then grants each part.
+	 *
+	 * admin
+	 * @param params 参数：玩家名（可选）、套装 ID / optional player name, item-set id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0 || params.length > 2) {
@@ -96,6 +94,13 @@ public class AddSet extends AdminCommand {
 		PacketSendUtility.sendMessage(receiver, "admin gives you an item set");
 	}
 
+	/**
+	 * 参数错误时输出 {@code //addset} 用法。
+	 * Prints {@code //addset} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //addset <player> <itemset ID>");

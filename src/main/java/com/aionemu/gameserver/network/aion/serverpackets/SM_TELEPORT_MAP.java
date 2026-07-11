@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +16,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 打开传送 NPC 传送地图/目的地列表的服务端包。
+ * destination list. / destination list.
+ * <p>
+ * 可按配置禁用部分 NPC 的目的地展示。
+ * Destination listing for certain NPCs can be disabled via config.
+ *
  * @author alexa026 , orz
  */
 @Slf4j
@@ -42,6 +33,11 @@ public class SM_TELEPORT_MAP extends AionServerPacket {
 	public Npc npc;
 	private static final List<Integer> disableTeleportNpcs = new ArrayList<Integer>();
 
+	/**
+	 * @param player         请求传送的玩家 / player requesting teleport
+	 * teleporter NPC object id
+	 * teleporter template
+	 */
 	public SM_TELEPORT_MAP(Player player, int targetObjectId, TeleporterTemplate teleport) {
 		this.player = player;
 		this.targetObjectId = targetObjectId;
@@ -74,7 +70,7 @@ public class SM_TELEPORT_MAP extends AionServerPacket {
 			}
 		} else {
 			PacketSendUtility.sendMessage(player, "Missing info at npc_teleporter.xml with npcid: " + npc.getNpcId());
-			log.info(String.format("Missing teleport info with npcid: %d", npc.getNpcId()));
+			log.info(I18n.get("log.4903a85ac6d7", npc.getNpcId()));
 		}
 		disableTeleportNpcs.clear();
 	}

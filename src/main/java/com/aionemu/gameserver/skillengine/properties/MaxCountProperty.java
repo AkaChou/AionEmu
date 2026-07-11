@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.properties;
 
 import java.util.SortedMap;
@@ -24,10 +8,21 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
 
 /**
+ * 最大目标数属性：对区域目标按距离截断到上限数量。
+ * Max-count property: trims area targets to the configured maximum by distance.
+ *
  * @author MrPoke
  */
 public class MaxCountProperty {
 
+	/**
+	 * 按距离优先截断区域目标列表至最大数量。
+	 * Trims the area effected list to max count, preferring nearer targets.
+	 *
+	 * @param skill 技能上下文 / skill context
+	 * @param properties 目标筛选属性 / target filter properties
+	 * @return 始终 true（首要目标缺失时为 false） / true, or false if first target is missing for AREA
+	 */
 	public static final boolean set(final Skill skill, Properties properties) {
 		TargetRangeAttribute value = properties.getTargetType();
 		int maxcount = properties.getTargetMaxCount();

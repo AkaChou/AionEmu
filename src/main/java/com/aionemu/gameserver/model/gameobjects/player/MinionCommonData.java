@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -25,8 +11,9 @@ import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
-/*
- * Rework & Test : MATTY
+/**
+ * 守护灵公共数据。
+ * Minion Common Data game object.
  */
 
 public class MinionCommonData extends VisibleObjectTemplate implements IExpirable {
@@ -72,38 +59,47 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 		}
 	}
 
+	/** 设置 object id / Sets the object id */
 	public void setObjectId(int minionObjId) {
 		this.minionObjId = minionObjId;
 	}
 
+	/** 返回对象 ID / Returns the object id */
 	public int getObjectId() {
 		return minionObjId;
 	}
 
+	/** 返回 master object id / Returns the master object id */
 	public int getMasterObjectId() {
 		return masterObjectId;
 	}
 
+	/** 返回 minion id / Returns the minion id */
 	public int getMinionId() {
 		return minionId;
 	}
 
+	/** 设置 minion id / Sets the minion id */
 	public int setMinionId(int minionId) {
 		return this.minionId = minionId;
 	}
 
+	/** 返回 minion grade / Returns the minion grade */
 	public String getMinionGrade() {
 		return minionGrade;
 	}
 
+	/** 获取守护灵等级。 / Returns the minion level. */
 	public int getMinionLevel() {
 		return minionLevel;
 	}
 
+	/** 设置守护灵等级。 / Sets the minion level. */
 	public int setMinionLevel(int minionLevel) {
 		return this.minionLevel = minionLevel;
 	}
 
+	/** 返回 birthday / Returns the birthday */
 	public int getBirthday() {
 		if (birthday == null) {
 			return 0;
@@ -111,83 +107,106 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 		return (int) (birthday.getTime() / 1000);
 	}
 
+	/** 返回 birthday timestamp / Returns the birthday timestamp */
 	public Timestamp getBirthdayTimestamp() {
 		return birthday;
 	}
 
+	/** 设置 birthday / Sets the birthday */
 	public void setBirthday(Timestamp birthday) {
 		this.birthday = birthday;
 	}
 
+	/** 设置名称。 / Sets the name. */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/** 获取过期时间。 / Returns the expire time. */
 	@Override
 	public int getExpireTime() {
 		return 0;
 	}
 
+	/** 到期结束 / Expire End */
 	@Override
 	public void expireEnd(Player player) {
 	}
 
+	/** 是否立即过期 / Whether expire now */
 	@Override
 	public boolean canExpireNow() {
 		return false;
 	}
 
+	/** 过期消息。 / Expire Message. */
 	@Override
 	public void expireMessage(Player player, int n) {
 	}
 
+	/** 返回模板 ID / Returns the template id */
 	@Override
 	public int getTemplateId() {
 		return minionId;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	@Override
 	public int getNameId() {
 		return 0;
 	}
 
+	/** 返回 minion growth point / Returns the minion growth point */
 	public int getMinionGrowthPoint() {
 		return miniongrowthpoint;
 	}
 
+	/** 设置 minion growth point / Sets the minion growth point */
 	public void setMinionGrowthPoint(int miniongrowthpoint) {
 		this.miniongrowthpoint = miniongrowthpoint;
 	}
 
+	/**
+	 * @return 是否 lock / 是否 lock。 / Whether lock / Whether lock
+	 */
 	public boolean isLock() {
 		return lock;
 	}
 
+	/** 设置 lock / Sets the lock */
 	public void setLock(boolean lock) {
 		this.lock = lock;
 	}
 
+	/** 返回 doping bag / Returns the doping bag */
 	public MinionDopingBag getDopingBag() {
 		return this.dopingBag;
 	}
 
+	/** 是否增益中 / Is Buffing. */
 	public boolean IsBuffing() {
 		return IsBuffing;
 	}
 
+	/** 设置 is buffing / Sets the is buffing */
 	public void setIsBuffing(boolean isBuffing) {
 		IsBuffing = isBuffing;
 	}
 
+	/** 设置 is looting / Sets the is looting */
 	public void setIsLooting(boolean isLooting) {
 		this.isLooting = isLooting;
 	}
 
+	/**
+	 * @return Whether looting / Whether looting
+	 */
 	public boolean isLooting() {
 		return this.isLooting;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.ai2.AIState;
@@ -23,8 +7,18 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
+/**
+ * 冻结事件处理器，负责 AI 进入 / 解除冻结子状态时的行走与清理。
+ * Handles freeze events: walking and cleanup when AI enters or leaves the FREEZE sub-state.
+ */
 public class FreezeEventHandler {
 
+	/**
+	 * 解除冻结：清除 FREEZE 子状态，按需恢复行走并触发思考。
+	 * Unfreezes AI: clears FREEZE sub-state, restores walking if needed, and triggers think.
+	 *
+	 * @param ai AI 实例 / AI instance
+	 */
 	public static void onUnfreeze(AbstractAI ai) {
 		if (ai.isInSubState(AISubState.FREEZE)) {
 			ai.setSubStateIfNot(AISubState.NONE);
@@ -43,6 +37,12 @@ public class FreezeEventHandler {
 		}
 	}
 
+	/**
+	 * 进入冻结：停止行走，设为空闲 + FREEZE，并清理仇恨与效果。
+	 * Freezes AI: stops walking, sets IDLE + FREEZE, and clears aggro and effects.
+	 *
+	 * @param ai AI 实例 / AI instance
+	 */
 	public static void onFreeze(AbstractAI ai) {
 		if (ai.isInState(AIState.WALKING)) {
 			WalkManager.stopWalking((NpcAI2) ai);

@@ -1,23 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.housing.HousePart;
+
+/**
+ * 房屋 Decoration 游戏对象。
+ * House Decoration game object.
+ */
 
 public class HouseDecoration extends AionObject {
 	private int templateId;
@@ -36,27 +25,33 @@ public class HouseDecoration extends AionObject {
 		this.persistentState = PersistentState.NEW;
 	}
 
+	/** 获取模板。 / Returns the template. */
 	public HousePart getTemplate() {
 		return DataManager.HOUSE_PARTS_DATA.getPartById(templateId);
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		this.persistentState = persistentState;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return getTemplate().getName();
 	}
 
+	/** 返回 floor / Returns the floor */
 	public byte getFloor() {
 		return floor;
 	}
 
+	/** 设置 floor / Sets the floor */
 	public void setFloor(int value) {
 		if (value != floor) {
 			floor = (byte) value;
@@ -66,10 +61,12 @@ public class HouseDecoration extends AionObject {
 		}
 	}
 
+	/** 是否已用 / Whether used*/
 	public boolean isUsed() {
 		return isUsed;
 	}
 
+	/** 设置 used / Sets the used */
 	public void setUsed(boolean isUsed) {
 		if (this.isUsed != isUsed && persistentState != PersistentState.DELETED) {
 			this.isUsed = isUsed;
@@ -79,6 +76,7 @@ public class HouseDecoration extends AionObject {
 		}
 	}
 
+	/** 是否相等。 / Equality check. */
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof HouseDecoration)) {
@@ -88,6 +86,7 @@ public class HouseDecoration extends AionObject {
 		}
 	}
 
+	/** 返回哈希码。 / Returns hash code. */
 	@Override
 	public int hashCode() {
 		return this.getObjectId();

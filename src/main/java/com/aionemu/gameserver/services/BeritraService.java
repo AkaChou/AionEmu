@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -53,6 +39,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 贝里特拉/艾雷什基伽尔入侵（Beritra / Ereshkigal Invasion）世界活动服务。
+ * Service for Beritra and Ereshkigal world-invasion events (schedule, spawn, SP effects, messages).
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -60,14 +49,14 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class BeritraService {
 	private static volatile ObjectProvider<BeritraService> instanceProvider;
 	private BeritraSchedule beritraSchedule;
+	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, BeritraLocation> beritra;
-	private static final int duration = CustomConfig.BERITRA_DURATION;
-	// Beritra Invasion 4.7
+	// 贝里特拉入侵 4.7 / Beritra Invasion 4.7
 	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
 	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
 	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
-	// Ereshkigal Invasion 4.9
+	// 埃雷什基伽尔入侵 4.9 / Ereshkigal Invasion 4.9
 	private Map<Integer, VisibleObject> adventEreshPortal = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEreshEffect = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEreshControl = new HashMap<>();
@@ -75,30 +64,59 @@ public class BeritraService {
 
 	private final ConcurrentMap<Integer, BeritraInvasion<?>> activeInvasions = new ConcurrentHashMap<Integer, BeritraInvasion<?>>();
 
+	/**
+	 * 初始化入侵活动地点：按配置加载并在和平状态刷怪。
+	 * Initialize invasion locations: load data and spawn peace-state NPCs when enabled.
+	 */
 	public void initBeritraLocations() {
 		if (CustomConfig.BERITRA_ENABLED) {
 			beritra = DataManager.BERITRA_DATA.getBeritraLocations();
 			for (BeritraLocation loc : getBeritraLocations().values()) {
 				spawn(loc, BeritraStateType.PEACE);
 			}
-			log.info("[BeritraService] Loaded " + beritra.size() + " beritra locations.");
+			log.info(I18n.get("log.6162acf484de", beritra.size()));
 		} else {
 			beritra = Collections.emptyMap();
 		}
 	}
 
+	/**
+	 * 初始化贝里特拉入侵并装载 cron 调度。
+	 * Initialize the Beritra invasion and load its cron schedule.
+	 */
 	public void initBeritra() {
 		if (CustomConfig.BERITRA_ENABLED) {
-			log.info("[BeritraService] is initialized...");
-			beritraSchedule = BeritraSchedule.load();
+			log.info(I18n.get("log.8317eae99b1f"));
+		}
+		reloadSchedule();
+	}
+
+	/**
+	 * 重新加载入侵时间表：取消旧任务并按新 cron 注册。
+	 * Reload the invasion schedule: cancel old tasks and re-register from cron.
+	 */
+	public synchronized void reloadSchedule() {
+		BeritraSchedule newSchedule = CustomConfig.BERITRA_ENABLED ? BeritraSchedule.load() : null;
+		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.clear();
+		beritraSchedule = newSchedule;
+		if (beritraSchedule != null) {
 			for (Beritra beritra : beritraSchedule.getBeritrasList()) {
 				for (String invasionTime : beritra.getInvasionTimes()) {
-					GameCronServices.cronService().schedule(new BeritraStartRunnable(beritra.getId()), invasionTime);
+					Runnable task = new BeritraStartRunnable(beritra.getId());
+					scheduledTasks.add(task);
+					GameCronServices.cronService().schedule(task, invasionTime);
 				}
 			}
 		}
 	}
 
+	/**
+	 * 启动指定地点的入侵，并在持续时长结束后自动停止。
+	 * Start the invasion at the given location and auto-stop after the configured duration.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 */
 	public void startBeritraInvasion(final int id) {
 		BeritraInvasion<?> invade = new Invade(beritra.get(id));
 		if (activeInvasions.putIfAbsent(id, invade) != null) {
@@ -110,9 +128,15 @@ public class BeritraService {
 			public void run() {
 				stopBeritraInvasion(id);
 			}
-		}, duration * 3600 * 1000);
+		}, CustomConfig.BERITRA_DURATION * 3600 * 1000);
 	}
 
+	/**
+	 * 停止指定地点的入侵。
+	 * Stop the invasion at the given location.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 */
 	public void stopBeritraInvasion(int id) {
 		BeritraInvasion<?> invade = activeInvasions.remove(id);
 		if (invade == null || invade.isFinished()) {
@@ -123,6 +147,13 @@ public class BeritraService {
 		beritraLegionReturnMsg(id);
 	}
 
+	/**
+	 * 按状态刷出入侵相关 NPC。
+	 * Spawn invasion NPCs for the given location and state.
+	 *
+	 * @param loc 入侵地点 / beritra location
+	 * spawn state
+	 */
 	public void spawn(BeritraLocation loc, BeritraStateType bstate) {
 		if (bstate.equals(BeritraStateType.INVASION)) {
 		}
@@ -137,8 +168,12 @@ public class BeritraService {
 		}
 	}
 
-	/**
-	 * Beritra Invasion Msg.
+		/**
+	 * 广播贝里特拉入侵系统消息。
+	 * Broadcast Beritra invasion system messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean beritraInvasionMsg(int id) {
 		switch (id) {
@@ -155,13 +190,20 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 广播入侵走廊相关消息。
+	 * Broadcast invasion-corridor messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean invasionCorridorMsg(int id) {
 		switch (id) {
 		case 1:
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Beritra Legion's Invasion Corridor has appeared.
+					// 贝里特拉军团入侵走廊已出现。 / The Beritra Legion's Invasion Corridor has appeared.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_01);
 				}
 			});
@@ -171,13 +213,20 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 广播魔族部队通过消息。
+	 * Broadcast devil-unit through messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean devilUnitThroughMsg(int id) {
 		switch (id) {
 		case 1:
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Devil Unit has infiltrated through the Invasion Corridor.
+					// 恶魔部队已通过入侵走廊渗透。 / The Devil Unit has infiltrated through the Invasion Corridor.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_02);
 				}
 			});
@@ -187,13 +236,20 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 广播魔族部队撤退消息。
+	 * Broadcast devil-unit return messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean devilUnitReturnMsg(int id) {
 		switch (id) {
 		case 1:
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Devil Unit is preparing for its return.
+					// 恶魔部队正准备返回。 / The Devil Unit is preparing for its return.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_03);
 				}
 			});
@@ -203,8 +259,12 @@ public class BeritraService {
 		}
 	}
 
-	/**
-	 * Ereshkigal Invasion Msg.
+		/**
+	 * 广播艾雷什基伽尔入侵消息。
+	 * Broadcast Ereshkigal invasion messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean ereshkigalInvasionMsg(int id) {
 		switch (id) {
@@ -221,13 +281,20 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 广播艾雷什基伽尔走廊消息。
+	 * Broadcast Ereshkigal corridor messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean ereshkigalCorridorMsg(int id) {
 		switch (id) {
 		case 35:
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Ereshkigal Legion's Invasion Corridor has been created.
+					// 埃雷什基伽尔军团入侵走廊已创建。 / The Ereshkigal Legion's Invasion Corridor has been created.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_01);
 				}
 			});
@@ -237,14 +304,21 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 广播艾雷什基伽尔军团通过消息。
+	 * Broadcast Ereshkigal legion through messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean ereshkigalLegionThroughMsg(int id) {
 		switch (id) {
 		case 35:
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
-					// Corridor.
+					// 埃雷什基伽尔军团的魔法武器已通过入侵 / The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
+					// 走廊。 / Corridor.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_02);
 				}
 			});
@@ -254,13 +328,20 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 广播贝里特拉军团撤退消息。
+	 * Broadcast Beritra legion return messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean beritraLegionReturnMsg(int id) {
 		switch (id) {
 		case 35:
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Beritra Legion Devil Unit is preparing for its return.
+					// 贝里特拉军团恶魔部队正准备返回。 / The Beritra Legion Devil Unit is preparing for its return.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_03);
 				}
 			});
@@ -270,8 +351,12 @@ public class BeritraService {
 		}
 	}
 
-	/**
-	 * Dredgion Defense Msg.
+		/**
+	 * 广播无舰防御相关消息。
+	 * Broadcast dredgion-defense messages.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean dredgionDefenseMsg(int id) {
 		switch (id) {
@@ -288,8 +373,12 @@ public class BeritraService {
 		}
 	}
 
-	/**
-	 * Beritra Invasion Effect.
+		/**
+	 * 刷出贝里特拉降临控制特效 NPC。
+	 * Spawn Beritra advent-control SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean adventControlSP(int id) {
 		switch (id) {
@@ -429,6 +518,13 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 刷出贝里特拉降临效果特效 NPC。
+	 * Spawn Beritra advent-effect SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean adventEffectSP(int id) {
 		switch (id) {
 		case 1:
@@ -567,6 +663,13 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 刷出贝里特拉降临传送门特效 NPC。
+	 * Spawn Beritra advent-portal SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean adventPortalSP(int id) {
 		switch (id) {
 		case 1:
@@ -705,6 +808,13 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 刷出贝里特拉降临导向特效 NPC。
+	 * Spawn Beritra advent-directing SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean adventDirectingSP(int id) {
 		switch (id) {
 		case 1:
@@ -843,8 +953,12 @@ public class BeritraService {
 		}
 	}
 
-	/**
-	 * Ereshkigal Invasion Effect.
+		/**
+	 * 刷出艾雷什基伽尔降临控制特效 NPC。
+	 * Spawn Ereshkigal advent-control SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean adventControlEreshSP(int id) {
 		switch (id) {
@@ -870,6 +984,13 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 刷出艾雷什基伽尔降临效果特效 NPC。
+	 * Spawn Ereshkigal advent-effect SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean adventEffectEreshSP(int id) {
 		switch (id) {
 		case 35:
@@ -894,6 +1015,13 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 刷出艾雷什基伽尔降临传送门特效 NPC。
+	 * Spawn Ereshkigal advent-portal SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean adventPortalEreshSP(int id) {
 		switch (id) {
 		case 35:
@@ -918,6 +1046,13 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 刷出艾雷什基伽尔降临导向特效 NPC。
+	 * Spawn Ereshkigal advent-directing SP NPCs.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean adventDirectingEreshSP(int id) {
 		switch (id) {
 		case 35:
@@ -942,6 +1077,12 @@ public class BeritraService {
 		}
 	}
 
+	/**
+	 * 清除指定地点已刷出的入侵 NPC。
+	 * Despawn invasion NPCs at the given location.
+	 *
+	 * @param loc 入侵地点 / beritra location
+	 */
 	public void despawn(BeritraLocation loc) {
 		if (loc.getSpawned() == null) {
 			return;
@@ -957,26 +1098,64 @@ public class BeritraService {
 		loc.getSpawned().clear();
 	}
 
+	/**
+	 * 判断指定地点是否正在入侵。
+	 * Whether an invasion is in progress at the given location.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * @return 若 in progress 则为 true / true if in progress
+	 */
 	public boolean isInvasionInProgress(int id) {
 		return activeInvasions.containsKey(id);
 	}
 
+	/**
+	 * 返回当前活跃的入侵映射。
+	 * Return the map of currently active invasions.
+	 *
+	 * @return 地点 ID → 入侵实例 / location id to invasion instance
+	 */
 	public Map<Integer, BeritraInvasion<?>> getActiveInvasions() {
 		return activeInvasions;
 	}
 
+	/**
+	 * 返回入侵持续时长（小时，来自配置）。
+	 * Return invasion duration in hours (from config).
+	 *
+	 * @return 持续小时数 / duration hours
+	 */
 	public int getDuration() {
-		return duration;
+		return CustomConfig.BERITRA_DURATION;
 	}
 
+	/**
+	 * 按 ID 获取入侵地点。
+	 * Get a beritra location by id.
+	 *
+	 * @param id 入侵地点 ID / beritra location id
+	 * beritra location
+	 */
 	public BeritraLocation getBeritraLocation(int id) {
 		return beritra.get(id);
 	}
 
+	/**
+	 * 返回全部入侵地点。
+	 * Return all beritra locations.
+	 *
+	 * location map
+	 */
 	public Map<Integer, BeritraLocation> getBeritraLocations() {
 		return beritra;
 	}
 
+	/**
+	 * 获取 BeritraService 单例（Spring 提供者优先，否则 holder）。
+	 * Return the BeritraService singleton (Spring provider first, else holder).
+	 *
+	 * service instance
+	 */
 	public static BeritraService getInstance() {
 		ObjectProvider<BeritraService> provider = instanceProvider;
 		if (provider == null) {
@@ -985,6 +1164,12 @@ public class BeritraService {
 		return provider.getIfAvailable(() -> BeritraServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 getInstance 使用。
+	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BeritraService> instanceProvider) {
 		BeritraService.instanceProvider = instanceProvider;
 	}

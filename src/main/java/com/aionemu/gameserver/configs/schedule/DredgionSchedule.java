@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.schedule;
 
 import java.nio.charset.StandardCharsets;
@@ -30,23 +14,41 @@ import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
 
 /**
+ * Dredgion 欧比斯舰活动时间表配置。
+ * Dredgion event schedule configuration.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlRootElement(name = "dredgion_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DredgionSchedule {
+	/**
+	 * Dredgion 列表。
+	 * List of dredgions.
+	 */
 	@XmlElement(name = "dredgion", required = true)
 	private List<Dredgion> dredgionsList;
 
+	/**
+	 * 获取 Dredgion 列表。
+	 * Returns the dredgion list.
+	 */
 	public List<Dredgion> getDredgionsList() {
 		return dredgionsList;
 	}
 
+	/**
+	 * 设置 Dredgion 列表。
+	 * Sets the dredgion list.
+	 */
 	public void setZorshivsList(List<Dredgion> dredgionList) {
 		this.dredgionsList = dredgionList;
 	}
 
+	/**
+	 * 从 XML 加载时间表。
+	 * Loads the schedule from XML.
+	 */
 	public static DredgionSchedule load() {
 		DredgionSchedule ds;
 		try {
@@ -58,27 +60,54 @@ public class DredgionSchedule {
 		return ds;
 	}
 
+	/**
+	 * 单个 Dredgion 的时间表条目。
+	 * Schedule entry for a single dredgion.
+	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "dredgion")
 	public static class Dredgion {
+		/**
+	 * 无畏舰 ID / Dredgion ID。 Dredgion ID
+	 */
 		@XmlAttribute(required = true)
 		private int id;
 
+		/**
+		 * Zorshiv 时间列表。
+		 * List of zorshiv times.
+		 */
 		@XmlElement(name = "zorshivTime", required = true)
 		private List<String> zorshivTimes;
 
+		/**
+		 * 获取 Dredgion ID。
+		 * Returns the dredgion ID.
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * 设置 Dredgion ID。
+		 * Sets the dredgion ID.
+		 */
 		public void setId(int id) {
 			this.id = id;
 		}
 
+		/**
+		 * 获取 Zorshiv 时间列表。
+		 * Returns the zorshiv times.
+		 */
 		public List<String> getZorshivTimes() {
 			return zorshivTimes;
 		}
 
+		/**
+		 * 设置 Zorshiv 时间列表。
+		 * Sets the zorshiv times.
+		 */
 		public void setZorshivTimes(List<String> zorshivTimes) {
 			this.zorshivTimes = zorshivTimes;
 		}

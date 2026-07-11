@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -21,12 +5,18 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
+ * 同步玩家当前子区域（Zone）信息的服务端包。
+ * Server packet that synchronizes the player's current sub-zone information.
+ *
  * @author LightNing
  */
 public class SM_PLAYER_REGION extends AionServerPacket {
 
 	private final ZoneName subZone;
 
+	/**
+	 * @param subZone 当前子区域名 / current sub-zone name
+	 */
 	public SM_PLAYER_REGION(ZoneName subZone) {
 		this.subZone = subZone;
 	}

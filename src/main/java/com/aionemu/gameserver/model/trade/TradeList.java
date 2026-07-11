@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.trade;
 
 import java.util.ArrayList;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 交易列表。
+ * Trade List model.
+ *
  * @author ATracer modified by Wakizashi
  */
 public class TradeList {
@@ -94,7 +81,7 @@ public class TradeList {
 
 		for (TradeItem tradeItem : tradeItems) {
 			requiredKinah += PricesService.getKinahForBuy(tradeItem.getItemTemplate().getPrice(), player.getRace())
-					* tradeItem.getCount() * modifier / 100;
+					* 100;
 		}
 		return availableKinah >= requiredKinah;
 	}
@@ -132,7 +119,7 @@ public class TradeList {
 		}
 
 		if (ap < requiredAp) {
-			// You do not have enough Abyss Points.
+			// 你的欧比斯点数不足。 / You do not have enough Abyss Points.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300927));
 			return false;
 		}
@@ -186,6 +173,7 @@ public class TradeList {
 		return tradeItems;
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return tradeItems.size();
 	}

@@ -1,21 +1,6 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -48,6 +33,7 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.RegionZone;
@@ -57,63 +43,80 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * World map instance object.
- * 
+ * 世界地图实例：区域划分与对象管理。
+ * World map instance: region partitioning and object management.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
 public abstract class WorldMapInstance {
 
 	/**
-	 * Size of region
+	 * 区域边长。
+	 * Region edge length.
 	 */
 	public static final int regionSize = WorldConfig.WORLD_REGION_SIZE;
 	/**
-	 * WorldMap witch is parent of this instance.
+	 * 父级世界地图。
+	 * Parent world map.
 	 */
 	private final WorldMap parent;
 	/**
-	 * Map of active regions.
+	 * 活跃区域表。
+	 * Active region map.
 	 */
 	protected final IntObjectHashMap<MapRegion> regions = new IntObjectHashMap<MapRegion>();
 
 	/**
-	 * All objects spawned in this world map instance
+	 * 本实例内已生成的全部可见对象。
+	 * All visible objects spawned in this instance.
 	 */
 	private final Map<Integer, VisibleObject> worldMapObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	/**
-	 * All players spawned in this world map instance
+	 * 本实例内玩家。
+	 * Players spawned in this instance.
 	 */
 	private final Map<Integer, Player> worldMapPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 
+	/** 已注册对象 ID 集合 / registered object ids */
 	private final Set<Integer> registeredObjects = ConcurrentHashMap.newKeySet();
 
+	/** 注册的队伍 / registered player group */
 	private PlayerGroup registeredGroup = null;
 
+	/** 空实例销毁任务 / empty-instance destroy task */
 	private Future<?> emptyInstanceTask = null;
 
 	/**
-	 * Id of this instance (channel)
+	 * 实例 ID（频道）。
+	 * Instance id (channel).
 	 */
 	private int instanceId;
 
+	/** 本实例相关任务 ID / quest ids related to this instance */
 	private final List<Integer> questIds = new ArrayList<Integer>();
 
+	/** 副本处理器 / instance handler */
 	private InstanceHandler instanceHandler;
 
+	/** 区域名到区域实例 / zone name → zone instance */
 	private Map<ZoneName, ZoneInstance> zones = new HashMap<ZoneName, ZoneInstance>();
 
-	// TODO: Merge this with owner
+	/** 单人所有者对象 ID / solo owner objectId */
 	private Integer soloPlayer;
 
+	/** 注册的联盟 / registered alliance */
 	private PlayerAlliance registredAlliance;
+	/** 注册的军团联盟 / registered league */
 	private League registredLeague;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param parent
+	 * 构造地图实例并初始化区域。
+	 * Construct a map instance and initialize regions.
+	 *
+	 * @param parent 父级世界地图 / parent world map
+	 * instance id
 	 */
 	public WorldMapInstance(WorldMap parent, int instanceId) {
 		this.parent = parent;
@@ -123,73 +126,103 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * Return World map id.
-	 * 
-	 * @return world map id
+	 * 返回世界地图 ID。
+	 * Return the world map id.
+	 *
+	 * map id
 	 */
 	public Integer getMapId() {
 		return getParent().getMapId();
 	}
 
 	/**
-	 * Returns WorldMap witch is parent of this instance
-	 * 
-	 * @return parent
+	 * 返回父级世界地图。
+	 * Return the parent world map.
+	 *
+	 * parent map
 	 */
 	public WorldMap getParent() {
 		return parent;
 	}
 
+	/**
+	 * 返回地图模板。
+	 * Return the map template.
+	 *
+	 * template
+	 */
 	public WorldMapTemplate getTemplate() {
 		return parent.getTemplate();
 	}
 
 	/**
-	 * Returns MapRegion that contains coordinates of VisibleObject. If the region
-	 * doesn't exist, it's created.
-	 * 
-	 * @param object
-	 * @return a MapRegion
+	 * 返回包含对象坐标的区域；不存在时由子类创建。
+	 * Return the region covering the object; subclasses may create missing regions.
+	 *
+	 * visible object
+	 * map region
 	 */
 	MapRegion getRegion(VisibleObject object) {
 		return getRegion(object.getX(), object.getY(), object.getZ());
 	}
 
 	/**
-	 * Returns MapRegion that contains given x,y coordinates. If the region doesn't
-	 * exist, it's created.
-	 * 
-	 * @param x
-	 * @param y
-	 * @return a MapRegion
+	 * 返回包含给定坐标的区域。
+	 * Return the region covering the given coordinates.
+	 *
+	 * @param x 坐标 X / X coordinate
+	 * @param y 坐标 Y / Y coordinate
+	 * @param z 坐标 Z / Z coordinate
+	 * map region
 	 */
 	public abstract MapRegion getRegion(float x, float y, float z);
 
 	/**
-	 * Create new MapRegion and add link to neighbours.
-	 * 
-	 * @param regionId
-	 * @return newly created map region
+	 * 创建区域并建立邻接。
+	 * Create a region and wire neighbours.
+	 *
+	 * region id
+	 * newly created region
 	 */
 	protected abstract MapRegion createMapRegion(int regionId);
 
+	/**
+	 * 初始化全部地图区域。
+	 * Initialize all map regions.
+	 */
 	protected abstract void initMapRegions();
 
+	/**
+	 * 是否个人实例。
+	 * Whether this is a personal instance.
+	 *
+	 * @return 个人实例为 true / true if personal
+	 */
 	public abstract boolean isPersonal();
 
+	/**
+	 * 个人实例所有者 ID。
+	 * Personal-instance owner id.
+	 *
+	 * owner id
+	 */
 	public abstract int getOwnerId();
 
 	/**
-	 * Returs {@link World} instance to which belongs this WorldMapInstance
-	 * 
-	 * @return World
+	 * 返回所属世界。
+	 * Return the owning world.
+	 *
+	 * world
 	 */
 	public World getWorld() {
 		return getParent().getWorld();
 	}
 
 	/**
-	 * @param object
+	 * 将对象加入本实例（含任务 ID 与玩家表）。
+	 * Add an object into this instance (including quest ids and player table).
+	 *
+	 * visible object
 	 */
 	public void addObject(VisibleObject object) {
 		boolean objectStored = false;
@@ -216,8 +249,17 @@ public abstract class WorldMapInstance {
 			}
 			throw e;
 		}
+		if (playerStored) {
+			InstanceService.onPlayerAdded(this);
+		}
 	}
 
+	/**
+	 * 加入可见对象表；重复 objectId 抛异常。
+	 * Add to visible-object table; throws on duplicate objectId.
+	 *
+	 * visible object
+	 */
 	private void addVisibleObject(VisibleObject object) {
 		synchronized (worldMapObjects) {
 			if (worldMapObjects.containsKey(object.getObjectId())) {
@@ -229,6 +271,14 @@ public abstract class WorldMapInstance {
 		}
 	}
 
+	/**
+	 * 从 NPC 任务数据追加任务 ID。
+	 * Append quest ids from NPC quest data.
+	 *
+	 * visible object
+	 *
+	 * @param object @return 本次新增的任务 ID / newly added quest ids
+	 */
 	private List<Integer> addQuestIds(VisibleObject object) {
 		if (!(object instanceof Npc)) {
 			return Collections.emptyList();
@@ -249,6 +299,12 @@ public abstract class WorldMapInstance {
 		return addedQuestIds;
 	}
 
+	/**
+	 * 回滚刚加入的任务 ID。
+	 * Roll back newly added quest ids.
+	 *
+	 * ids to remove
+	 */
 	private void removeQuestIds(List<Integer> addedQuestIds) {
 		if (addedQuestIds.isEmpty()) {
 			return;
@@ -259,7 +315,10 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @param object
+	 * 从本实例移除对象。
+	 * Remove an object from this instance.
+	 *
+	 * aion object
 	 */
 	public void removeObject(AionObject object) {
 		worldMapObjects.remove(object.getObjectId());
@@ -268,13 +327,16 @@ public abstract class WorldMapInstance {
 				((Player) object).unsetInsideZoneType(ZoneType.FLY);
 			}
 			worldMapPlayers.remove(object.getObjectId());
+			InstanceService.onPlayerRemoved(this);
 		}
 	}
 
 	/**
-	 * @param npcId
-	 * 
-	 * @return npc
+	 * 按 NPC 模板 ID 查找首个 NPC。
+	 * Find the first NPC by template id.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * NPC or null
 	 */
 	public Npc getNpc(int npcId) {
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
@@ -289,6 +351,12 @@ public abstract class WorldMapInstance {
 		return null;
 	}
 
+	/**
+	 * 本实例内全部玩家列表。
+	 * List of all players inside this instance.
+	 *
+	 * player list
+	 */
 	public List<Player> getPlayersInside() {
 		List<Player> playersInside = new ArrayList<Player>();
 		Iterator<Player> players = playerIterator();
@@ -299,9 +367,11 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @param npcId
-	 * 
-	 * @return List<npc>
+	 * 按 NPC 模板 ID 查找全部 NPC。
+	 * Find all NPCs with the given template id.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * NPC list
 	 */
 	public List<Npc> getNpcs(int npcId) {
 		List<Npc> npcs = new ArrayList<Npc>();
@@ -318,7 +388,10 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @return List<npcs>
+	 * 本实例内全部 NPC。
+	 * All NPCs in this instance.
+	 *
+	 * NPC list
 	 */
 	public List<Npc> getNpcs() {
 		List<Npc> npcs = new ArrayList<Npc>();
@@ -332,7 +405,10 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @return List<doors>
+	 * 本实例内静态门（entityId → 门）。
+	 * Static doors in this instance (entityId → door).
+	 *
+	 * door map
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
@@ -347,7 +423,11 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @return List<트랩>
+	 * 指定创建者的陷阱列表。
+	 * Traps created by the given creature.
+	 *
+	 * @param p 创建者 / creator
+	 * trap list
 	 */
 	public List<Trap> getTraps(Creature p) {
 		List<Trap> traps = new ArrayList<Trap>();
@@ -364,12 +444,21 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @return the instanceIndex
+	 * 返回实例 ID。
+	 * Return the instance id.
+	 *
+	 * instance id
 	 */
 	public int getInstanceId() {
 		return instanceId;
 	}
 
+	/**
+	 * 是否新手分流实例（instanceId 超过 twinCount）。
+	 * Whether this is a beginner overflow instance (id above twinCount).
+	 *
+	 * @return 新手实例为 true / true if beginner instance
+	 */
 	public final boolean isBeginnerInstance() {
 		if (parent == null) {
 			return false;
@@ -385,109 +474,191 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * Check player is in instance
-	 * 
-	 * @param objId
-	 * @return
+	 * 玩家是否在本实例内。
+	 * Whether a player is inside this instance.
+	 *
+	 * player objectId
+	 *
+	 * @param objId 若 inside 则为 true / true if inside
 	 */
 	public boolean isInInstance(int objId) {
 		return worldMapPlayers.containsKey(objId);
 	}
 
 	/**
-	 * @return
+	 * 可见对象迭代器。
+	 * Iterator over visible objects.
+	 *
+	 * iterator
 	 */
 	public Iterator<VisibleObject> objectIterator() {
 		return worldMapObjectsSnapshot().iterator();
 	}
 
 	/**
-	 * @return
+	 * 玩家迭代器。
+	 * Iterator over players.
+	 *
+	 * iterator
 	 */
 	public Iterator<Player> playerIterator() {
 		return worldMapPlayersSnapshot().iterator();
 	}
 
+	/**
+	 * 注册玩家队伍。
+	 * Register a player group.
+	 *
+	 * group
+	 */
 	public void registerGroup(PlayerGroup group) {
 		registeredGroup = group;
 		register(group.getTeamId());
 	}
 
+	/**
+	 * 注册玩家联盟。
+	 * Register a player alliance.
+	 *
+	 * alliance
+	 */
 	public void registerGroup(PlayerAlliance group) {
 		registredAlliance = group;
 		register(group.getObjectId());
 	}
 
+	/**
+	 * 注册军团联盟。
+	 * Register a league.
+	 *
+	 * @param group 军团联盟 / league
+	 */
 	public void registerGroup(League group) {
 		registredLeague = group;
 		register(group.getObjectId());
 	}
 
+	/**
+	 * 返回注册的联盟。
+	 * Return the registered alliance.
+	 *
+	 * alliance
+	 */
 	public PlayerAlliance getRegistredAlliance() {
 		return registredAlliance;
 	}
 
+	/**
+	 * 返回注册的军团联盟。
+	 * Return the registered league.
+	 *
+	 * league
+	 */
 	public League getRegistredLeague() {
 		return registredLeague;
 	}
 
 	/**
-	 * @param objectId
+	 * 注册对象 ID。
+	 * Register an object id.
+	 *
+	 * object id
 	 */
 	public void register(int objectId) {
 		registeredObjects.add(objectId);
 	}
 
 	/**
-	 * @param objectId
-	 * @return
+	 * 对象 ID 是否已注册。
+	 * Whether the object id is registered.
+	 *
+	 * object id
+	 *
+	 * @param objectId @return 已注册返回 true / true if registered
 	 */
 	public boolean isRegistered(int objectId) {
 		return registeredObjects.contains(objectId);
 	}
 
 	/**
-	 * @return the emptyInstanceTask
+	 * 返回空实例任务。
+	 * Return the empty-instance task.
+	 *
+	 * future task
 	 */
 	public Future<?> getEmptyInstanceTask() {
 		return emptyInstanceTask;
 	}
 
 	/**
-	 * @param emptyInstanceTask the emptyInstanceTask to set
+	 * 设置空实例任务。
+	 * Set the empty-instance task.
+	 *
+	 * task
 	 */
 	public void setEmptyInstanceTask(Future<?> emptyInstanceTask) {
 		this.emptyInstanceTask = emptyInstanceTask;
 	}
 
 	/**
-	 * @return the registeredGroup
+	 * 返回注册的队伍。
+	 * Return the registered group.
+	 *
+	 * group
 	 */
 	public PlayerGroup getRegisteredGroup() {
 		return registeredGroup;
 	}
 
 	/**
-	 * @return
+	 * 本实例玩家数量。
+	 * Player count in this instance.
+	 *
+	 * count
 	 */
 	public int playersCount() {
 		return worldMapPlayers.size();
 	}
 
+	/**
+	 * 本实例相关任务 ID 只读列表。
+	 * Read-only list of quest ids related to this instance.
+	 *
+	 * quest id list
+	 */
 	public List<Integer> getQuestIds() {
 		synchronized (questIds) {
 			return Collections.unmodifiableList(new ArrayList<Integer>(questIds));
 		}
 	}
 
+	/**
+	 * 返回副本处理器。
+	 * Return the instance handler.
+	 *
+	 * handler
+	 */
 	public final InstanceHandler getInstanceHandler() {
 		return instanceHandler;
 	}
 
+	/**
+	 * 设置副本处理器。
+	 * Set the instance handler.
+	 *
+	 * handler
+	 */
 	public final void setInstanceHandler(InstanceHandler instanceHandler) {
 		this.instanceHandler = instanceHandler;
 	}
 
+	/**
+	 * 按 objectId 查找玩家。
+	 * Find a player by objectId.
+	 *
+	 * player objectId
+	 * player or null
+	 */
 	public Player getPlayer(Integer object) {
 		for (Player player : worldMapPlayersSnapshot()) {
 			if (object == player.getObjectId()) {
@@ -498,7 +669,10 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @param visitor
+	 * 对全部玩家执行访问者。
+	 * Visit all players.
+	 *
+	 * visitor
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
@@ -508,10 +682,22 @@ public abstract class WorldMapInstance {
 				}
 			}
 		} catch (Exception ex) {
-			log.error("Exception when running visitor on all players" + ex);
+			log.error(I18n.get("log.cc03391ccf0f", ex));
 		}
 	}
 
+	/**
+	 * 过滤与矩形区域相交的 Zone。
+	 * Filter zones intersecting the rectangular region.
+	 *
+	 * map id
+	 * region id
+	 * start X
+	 * start Y
+	 * min Z
+	 * max Z
+	 * zone array
+	 */
 	protected ZoneInstance[] filterZones(int mapId, int regionId, float startX, float startY, float minZ, float maxZ) {
 		List<ZoneInstance> regionZones = new ArrayList<ZoneInstance>();
 		RegionZone regionZone = new RegionZone(startX, startY, minZ, maxZ);
@@ -520,16 +706,20 @@ public abstract class WorldMapInstance {
 			if (zoneInstance.getAreaTemplate().intersectsRectangle(regionZone)) {
 				regionZones.add(zoneInstance);
 			} else if (zoneInstance.getZoneTemplate().getZoneType() == ZoneClassName.DUMMY) {
-				log.error("Region " + regionId + " should intersect with whole map zone!!! (map=" + mapId + ")");
+				log.error(I18n.get("log.2bb533f118b4", regionId, mapId));
 			}
 		}
 		return regionZones.toArray(new ZoneInstance[regionZones.size()]);
 	}
 
 	/**
-	 * @param object
-	 * @param zoneName
-	 * @return
+	 * 判断对象是否在指定 Zone 内。
+	 * Whether the object is inside the named zone.
+	 *
+	 * visible object
+	 * zone name
+	 *
+	 * @return 若 inside 则为 true / true if inside
 	 */
 	public boolean isInsideZone(VisibleObject object, ZoneName zoneName) {
 		ZoneInstance zoneTemplate = zones.get(zoneName);
@@ -540,29 +730,57 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @param pos
-	 * @param zoneName
-	 * @return
+	 * 判断位置是否在指定 Zone 内。
+	 * Whether the position is inside the named zone.
+	 *
+	 * @param pos 世界位置 / world position
+	 * zone name
+	 *
+	 * @return 若 inside 则为 true / true if inside
 	 */
 	public boolean isInsideZone(WorldPosition pos, ZoneName zoneName) {
 		MapRegion mapRegion = this.getRegion(pos.getX(), pos.getY(), pos.getZ());
 		return mapRegion.isInsideZone(zoneName, pos.getX(), pos.getY(), pos.getZ());
 	}
 
+	/**
+	 * 设置单人所有者 objectId。
+	 * Set solo-owner objectId.
+	 *
+	 * @param obj objectId
+	 */
 	public void setSoloPlayerObj(Integer obj) {
 		soloPlayer = obj;
 	}
 
+	/**
+	 * 返回单人所有者 objectId。
+	 * Return solo-owner objectId.
+	 *
+	 * objectId or null
+	 */
 	public Integer getSoloPlayerObj() {
 		return soloPlayer;
 	}
 
+	/**
+	 * 可见对象快照。
+	 * Snapshot of visible objects.
+	 *
+	 * object list
+	 */
 	private List<VisibleObject> worldMapObjectsSnapshot() {
 		synchronized (worldMapObjects) {
 			return new ArrayList<VisibleObject>(worldMapObjects.values());
 		}
 	}
 
+	/**
+	 * 玩家快照。
+	 * Snapshot of players.
+	 *
+	 * player list
+	 */
 	private List<Player> worldMapPlayersSnapshot() {
 		synchronized (worldMapPlayers) {
 			return new ArrayList<Player>(worldMapPlayers.values());

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.quest;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 任务物品模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author MrPoke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,18 +33,18 @@ public class QuestItems {
 		this.count = count;
 	}
 
-	/**
-	 * Gets the value of the itemId property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 itemId 属性值。
+	  * Gets the value of the itemId property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getItemId() {
 		return itemId;
 	}
 
 	/**
-	 * Gets the value of the count property.
-	 * 
+	 * 获取 value 的数量 property。 / Gets the value of the count property
+	 *
 	 * @return possible object is {@link Integer }
 	 */
 	public Integer getCount() {

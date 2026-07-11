@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.house;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -68,6 +54,11 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+
+/**
+ * 房屋模型。
+ * House model.
+ */
 @Slf4j
 
 public class House extends VisibleObject {
@@ -108,6 +99,7 @@ public class House extends VisibleObject {
 		getRegistry();
 	}
 
+	/** 返回 controller / Returns the controller */
 	@Override
 	public HouseController getController() {
 		return (HouseController) super.getController();
@@ -127,6 +119,7 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 返回着陆 / Returns the land */
 	public HousingLand getLand() {
 		if (land == null) {
 			for (HousingLand housingland : DataManager.HOUSE_DATA.getLands()) {
@@ -141,23 +134,28 @@ public class House extends VisibleObject {
 		return this.land;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/** 返回 address / Returns the address */
 	public HouseAddress getAddress() {
 		return address;
 	}
 
+	/** 返回建筑 / Returns the building*/
 	public Building getBuilding() {
 		return building;
 	}
 
+	/** 设置 building / Sets the building */
 	public void setBuilding(Building building) {
 		this.building = building;
 	}
 
+	/** 生成。 / Spawn. */
 	public synchronized void spawn(int instanceId) {
 		playerScripts = DAOManager.getDAO(HouseScriptsDAO.class).getPlayerScripts(getObjectId());
 		if (playerObjectId > 0 && status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) {
@@ -189,7 +187,7 @@ public class House extends VisibleObject {
 				msg = "address=" + this.getAddress().getId() + "; map=" + this.getAddress().getMapId();
 			}
 			msg += "; x=" + getAddress().getX() + ", y=" + getAddress().getY() + ", z=" + getAddress().getZ();
-			log.warn("Missing npcs for house: " + msg);
+			log.warn(I18n.get("log.eecb48ab5c9d", msg));
 			return;
 		}
 		int creatorId = getAddress().getId();
@@ -226,20 +224,24 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 返回 visibility distance / Returns the visibility distance */
 	@Override
 	public float getVisibilityDistance() {
 		return HousingConfig.VISIBILITY_DISTANCE;
 	}
 
+	/** 返回 max z visible distance / Returns the max z visible distance */
 	@Override
 	public float getMaxZVisibleDistance() {
 		return HousingConfig.VISIBILITY_DISTANCE;
 	}
 
+	/** 返回所有者 ID / Returns the owner id */
 	public int getOwnerId() {
 		return playerObjectId;
 	}
 
+	/** 设置 owner id / Sets the owner id */
 	public void setOwnerId(int playerObjectId) {
 		if (this.playerObjectId != playerObjectId) {
 			writeLock.lock();
@@ -261,14 +263,17 @@ public class House extends VisibleObject {
 		fixBuildingStates();
 	}
 
+	/** 返回 acquired time / Returns the acquired time */
 	public Timestamp getAcquiredTime() {
 		return acquiredTime;
 	}
 
+	/** 设置 acquired time / Sets the acquired time */
 	public void setAcquiredTime(Timestamp acquiredTime) {
 		this.acquiredTime = acquiredTime;
 	}
 
+	/** 返回 permissions / Returns the permissions */
 	public int getPermissions() {
 		if (playerObjectId == 0) {
 			setDoorState(
@@ -285,14 +290,17 @@ public class House extends VisibleObject {
 		return permissions;
 	}
 
+	/** 设置 permissions / Sets the permissions */
 	public void setPermissions(int permissions) {
 		this.permissions = permissions;
 	}
 
+	/** 返回门状态 / Returns the door state*/
 	public HousePermissions getDoorState() {
 		return HousePermissions.getDoorState(getPermissions());
 	}
 
+	/** 设置 door state / Sets the door state */
 	public void setDoorState(HousePermissions doorState) {
 		permissions = HousePermissions.setDoorState(permissions, doorState);
 		if (isSpawned()) {
@@ -301,18 +309,22 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 返回 notice state / Returns the notice state */
 	public HousePermissions getNoticeState() {
 		return HousePermissions.getNoticeState(getPermissions());
 	}
 
+	/** 设置 notice state / Sets the notice state */
 	public void setNoticeState(HousePermissions noticeState) {
 		permissions = HousePermissions.setNoticeState(permissions, noticeState);
 	}
 
+	/** 获取状态。 / Returns the status. */
 	public HouseStatus getStatus() {
 		return status;
 	}
 
+	/** 设置状态。 / Sets the status. */
 	public synchronized void setStatus(HouseStatus status) {
 		if (this.status != status) {
 			if (this.playerObjectId == 0 && status == HouseStatus.ACTIVE) {
@@ -337,40 +349,53 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/**
+	 * @return Whether fee paid / Whether fee paid
+	 */
 	public boolean isFeePaid() {
 		return feePaid;
 	}
 
+	/** 设置 fee paid / Sets the fee paid */
 	public void setFeePaid(boolean feePaid) {
 		this.feePaid = feePaid;
 	}
 
+	/** 返回 next pay / Returns the next pay */
 	public Timestamp getNextPay() {
 		return nextPay;
 	}
 
+	/** 设置 next pay / Sets the next pay */
 	public void setNextPay(Timestamp nextPay) {
 		this.nextPay = nextPay;
 	}
 
+	/** 返回 sell started / Returns the sell started */
 	public Timestamp getSellStarted() {
 		return sellStarted;
 	}
 
+	/** 设置 sell started / Sets the sell started */
 	public void setSellStarted(Timestamp sellStarted) {
 		this.sellStarted = sellStarted;
 	}
 
+	/**
+	 * @return 是否在 graceperiod / 是否在 graceperiod。 / Whether in grace period / Whether in grace period
+	 */
 	public boolean isInGracePeriod() {
 		return playerObjectId > 0 && GameHousingServices.housingService().searchPlayerHouses(playerObjectId).size() == 2
 				&& (status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) && sellStarted != null
 				&& sellStarted.getTime() <= GameHousingServices.housingBidService().getAuctionStartTime();
 	}
 
+	/** 返回 butler / Returns the butler */
 	public synchronized Npc getButler() {
 		return spawns.get(SpawnType.MANAGER);
 	}
 
+	/** 获取玩家种族。 / Returns the player race. */
 	public Race getPlayerRace() {
 		if (getButler() == null) {
 			return Race.NONE;
@@ -381,14 +406,17 @@ public class House extends VisibleObject {
 		return Race.ASMODIANS;
 	}
 
+	/** 获取传送。 / Returns the teleport. */
 	public synchronized Npc getTeleport() {
 		return spawns.get(SpawnType.TELEPORT);
 	}
 
+	/** 返回 current sign / Returns the current sign */
 	public synchronized Npc getCurrentSign() {
 		return spawns.get(SpawnType.SIGN);
 	}
 
+	/** 设置刷新点。 / Sets the spawn. */
 	public synchronized void setSpawn(SpawnType type, Npc npc) {
 		if (npc == null) {
 			npc = spawns.remove(type);
@@ -400,6 +428,7 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 返回 current sign npc id / Returns the current sign npc id */
 	public int getCurrentSignNpcId() {
 		int npcId = getLand().getWaitingSignNpcId();
 		if (status == HouseStatus.NOSALE) {
@@ -416,6 +445,7 @@ public class House extends VisibleObject {
 		return npcId;
 	}
 
+	/** 撤销所有者 / revoke Owner. */
 	public synchronized boolean revokeOwner() {
 		if (playerObjectId == 0) {
 			return false;
@@ -441,6 +471,7 @@ public class House extends VisibleObject {
 		return true;
 	}
 
+	/** 返回 registry / Returns the registry */
 	public HouseRegistry getRegistry() {
 		if (houseRegistry == null) {
 			houseRegistry = new HouseRegistry(this);
@@ -449,6 +480,7 @@ public class House extends VisibleObject {
 		return houseRegistry;
 	}
 
+	/** Reload 房屋 registry / Reload house registry */
 	public synchronized void reloadHouseRegistry() {
 		houseRegistry = null;
 		getRegistry();
@@ -457,22 +489,27 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 返回 render part / Returns the render part */
 	public HouseDecoration getRenderPart(PartType partType, int floor) {
 		return getRegistry().getRenderPart(partType, floor);
 	}
 
+	/** 返回 default part / Returns the default part */
 	public HouseDecoration getDefaultPart(PartType partType, int floor) {
 		return getRegistry().getDefaultPartByType(partType, floor);
 	}
 
+	/** 返回 player scripts / Returns the player scripts */
 	public PlayerScripts getPlayerScripts() {
 		return playerScripts;
 	}
 
+	/** 获取房屋类型。 / Returns the house type. */
 	public HouseType getHouseType() {
 		return HouseType.fromValue(getBuilding().getSize());
 	}
 
+	/** 保存。 / Save. */
 	public synchronized void save() {
 		DAOManager.getDAO(HousesDAO.class).storeHouse(this);
 		if (houseRegistry != null) {
@@ -480,22 +517,29 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		this.persistentState = persistentState;
 	}
 
+	/** 返回 house owner info flags / Returns the house owner info flags */
 	public byte getHouseOwnerInfoFlags() {
 		return houseOwnerInfoFlags;
 	}
 
+	/**
+	 * @param status 是否在 housingstatus / 是否在 housingstatus。 / Whether in housing status / Whether in housing status
+	 */
 	public boolean isInHousingStatus(PlayerHouseOwnerFlags status) {
 		return (houseOwnerInfoFlags & status.getId()) != 0;
 	}
 
+	/** 修复建筑状态 / fix Building States. */
 	public void fixBuildingStates() {
 		houseOwnerInfoFlags = PlayerHouseOwnerFlags.SINGLE_HOUSE.getId();
 		if (playerObjectId != 0) {
@@ -509,6 +553,7 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 返回 sign notice / Returns the sign notice */
 	public byte[] getSignNotice() {
 		byte[] notice;
 		readLock.lock();
@@ -521,6 +566,7 @@ public class House extends VisibleObject {
 		return notice;
 	}
 
+	/** 设置 sign notice / Sets the sign notice */
 	public void setSignNotice(byte[] noticeStream) {
 		writeLock.lock();
 		if (signNoticeStream == null) {
@@ -534,10 +580,12 @@ public class House extends VisibleObject {
 		}
 	}
 
+	/** 返回 level restrict / Returns the level restrict */
 	public int getLevelRestrict() {
 		return land != null ? land.getSaleOptions().getMinLevel() : 10;
 	}
 
+	/** 返回 default auction price / Returns the default auction price */
 	public final long getDefaultAuctionPrice() {
 		Sale saleOptions = getLand().getSaleOptions();
 		switch (getHouseType()) {
@@ -567,6 +615,7 @@ public class House extends VisibleObject {
 		return saleOptions.getGoldPrice();
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		return name;

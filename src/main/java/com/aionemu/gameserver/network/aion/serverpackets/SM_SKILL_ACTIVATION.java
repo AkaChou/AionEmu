@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步技能激活/切换状态。
+ * Server packet synchronizing skill activation/toggle state to the client.
+ *
  * @author Sweetkr
  */
 public class SM_SKILL_ACTIVATION extends AionServerPacket {
@@ -29,10 +16,11 @@ public class SM_SKILL_ACTIVATION extends AionServerPacket {
 	private int skillId;
 
 	/**
+	 * 使用给定参数构造 SM_SKILL_ACTIVATION 包。
 	 * For toggle skills
-	 * 
-	 * @param skillId
-	 * @param isActive
+	 *
+	 * skill id
+	 * active flag
 	 */
 	public SM_SKILL_ACTIVATION(int skillId, boolean isActive) {
 		this.skillId = skillId;
@@ -41,9 +29,10 @@ public class SM_SKILL_ACTIVATION extends AionServerPacket {
 	}
 
 	/**
+	 * 使用给定参数构造 SM_SKILL_ACTIVATION 包。
 	 * For stigma remove should work in 1.5.1.15
-	 * 
-	 * @param skillId
+	 *
+	 * skill id
 	 */
 	public SM_SKILL_ACTIVATION(int skillId) {
 		this.skillId = skillId;

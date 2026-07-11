@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
 import java.util.List;
@@ -21,11 +5,15 @@ import java.util.List;
 import com.aionemu.gameserver.dataholders.DataManager;
 
 /**
+ * 自动队伍类型枚举。
+ * Auto Group Type enumeration.
+ *
  * @author Rinzler (Encom)
  */
 
 public enum AutoGroupType {
-	// DREDGION.
+	// 战舰。 / DREDGION.
+	/** Baranath Dredgion / Baranath Dredgion */
 	BARANATH_DREDGION(1, 600000, 4) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -51,7 +39,7 @@ public enum AutoGroupType {
 		}
 	},
 
-	// ARENA PVP 46-60
+	// 竞技场 PVP 46–60 / ARENA PVP 46-60
 	ARENA_OF_CHAOS_46_60_1(21, 110000, 2, 1) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -185,7 +173,7 @@ public enum AutoGroupType {
 		}
 	},
 
-	// ARENA PVP 61-65
+	// 竞技场 PVP 61–65 / ARENA PVP 61-65
 	ARENA_OF_CHAOS_61_65_1(39, 110000, 2, 1) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -235,7 +223,7 @@ public enum AutoGroupType {
 		}
 	},
 
-	// ARENA PVP 66-83
+	// 竞技场 PVP 66–83 / ARENA PVP 66-83
 	ARENA_OF_CHAOS_66_83_1(113, 110000, 2, 1) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -285,7 +273,7 @@ public enum AutoGroupType {
 		}
 	},
 
-	// BATTLEFIELD.
+	// 战场。 / BATTLEFIELD.
 	KAMAR_BATTLEFIELD(107, 600000, 2) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -357,7 +345,7 @@ public enum AutoGroupType {
 		}
 	},
 
-	// INSTANCE.
+	// 副本。 / INSTANCE.
 	FIRE_TEMPLE(302, 300000, 6) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -659,7 +647,7 @@ public enum AutoGroupType {
 		}
 	},
 
-	// INSTANCE INTER PARTY MATCH
+	// 副本跨小队匹配 / INSTANCE INTER PARTY MATCH
 	STEEL_RAKE_INTER_PARTY_MATCH(401, 600000, 6) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -751,7 +739,7 @@ public enum AutoGroupType {
 		}
 	},
 
-	// PANESTERRA 4.7
+	// 帕内斯特拉 4.7 / PANESTERRA 4.7
 	BELUS(10001, 600000, 6) {
 		@Override
 		AutoInstance newAutoInstance() {
@@ -795,62 +783,79 @@ public enum AutoGroupType {
 		template = DataManager.AUTO_GROUP.getTemplateByInstaceMaskId(this.instanceMaskId);
 	}
 
+	/** 返回副本映射 ID / Returns the instance map id */
 	public int getInstanceMapId() {
 		return template.getInstanceId();
 	}
 
+	/** 返回玩家大小 / Returns the player size*/
 	public byte getPlayerSize() {
 		return playerSize;
 	}
 
+	/** 返回副本掩码 ID / Returns the instance mask id */
 	public int getInstanceMaskId() {
 		return instanceMaskId;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return template.getNameId();
 	}
 
+	/** 返回标题 ID / Returns the title id */
 	public int getTitleId() {
 		return template.getTitleId();
 	}
 
+	/** 返回时间 / Returns the time*/
 	public int getTime() {
 		return time;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return template.getMinLvl();
 	}
 
+	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
 		return template.getMaxLvl();
 	}
 
+	/** Whether 登记小队 / Whether register group */
 	public boolean hasRegisterGroup() {
 		return template.hasRegisterGroup();
 	}
 
+	/** Whether 登记 fast / Whether register fast */
 	public boolean hasRegisterFast() {
 		return template.hasRegisterFast();
 	}
 
+	/**
+	 * @return Whether special purpose / Whether special purpose
+	 */
 	public boolean hasSpecialPurpose() {
 		return template.hasSpecialPurpose();
 	}
 
+	/** Whether 登记 new / Whether register new */
 	public boolean hasRegisterNew() {
 		return template.hasRegisterNew();
 	}
 
+	/** 包含 NPC ID / contain Npc Id. */
 	public boolean containNpcId(int npcId) {
 		return template.getNpcIds().contains(npcId);
 	}
 
+	/** 返回 npc ids / Returns the npc ids */
 	public List<Integer> getNpcIds() {
 		return template.getNpcIds();
 	}
 
+	/** 是否为无畏舰。 / Whether dredgion. */
 	public boolean isDredgion() {
 		switch (this) {
 		case BARANATH_DREDGION:
@@ -863,6 +868,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether asyunatar / Whether asyunatar
+	 */
 	public boolean isAsyunatar() {
 		switch (this) {
 		case ASHUNATAL_DREDGION:
@@ -873,6 +881,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return 是否 kamar / 是否 kamar。 / Whether kamar / Whether kamar
+	 */
 	public boolean isKamar() {
 		switch (this) {
 		case KAMAR_BATTLEFIELD:
@@ -883,6 +894,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether ophidan / Whether ophidan
+	 */
 	public boolean isOphidan() {
 		switch (this) {
 		case ENGULFED_OPHIDAN_BRIDGE:
@@ -893,6 +907,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether suspicious ophidan / Whether suspicious ophidan
+	 */
 	public boolean isSuspiciousOphidan() {
 		switch (this) {
 		case OPHIDAN_WARPATH:
@@ -903,6 +920,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether bastion / Whether bastion
+	 */
 	public boolean isBastion() {
 		switch (this) {
 		case IRON_WALL_WARFRONT:
@@ -913,6 +933,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether idgel dome / Whether idgel dome
+	 */
 	public boolean isIdgelDome() {
 		switch (this) {
 		case IDGEL_DOME:
@@ -923,6 +946,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether idgel dome landmark / Whether idgel dome landmark
+	 */
 	public boolean isIdgelDomeLandmark() {
 		switch (this) {
 		case IDGEL_DOME_LANDMARK:
@@ -933,6 +959,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return 是否 hall 的 tenacity / 是否 hall 的 tenacity。 / Whether hall of tenacity / Whether hall of tenacity
+	 */
 	public boolean isHallOfTenacity() {
 		switch (this) {
 		case HALL_OF_TENACITY:
@@ -943,6 +972,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether grand arena training camp / Whether grand arena training camp
+	 */
 	public boolean isGrandArenaTrainingCamp() {
 		switch (this) {
 		case IDTM_LOBBY_P_01:
@@ -953,6 +985,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return 是否 idrun / 是否 idrun。 / Whether id run / Whether id run
+	 */
 	public boolean isIDRun() {
 		switch (this) {
 		case IDRUN:
@@ -963,6 +998,7 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/** 按 mask id 返回 agt / Returns the agt by mask id */
 	public static AutoGroupType getAGTByMaskId(int instanceMaskId) {
 		for (AutoGroupType autoGroupsType : values()) {
 			if (autoGroupsType.getInstanceMaskId() == instanceMaskId) {
@@ -972,6 +1008,7 @@ public enum AutoGroupType {
 		return null;
 	}
 
+	/** 获取自动队伍。 / Returns the auto group. */
 	public static AutoGroupType getAutoGroup(int level, int npcId) {
 		for (AutoGroupType agt : values()) {
 			if (agt.hasLevelPermit(level) && agt.containNpcId(npcId)) {
@@ -981,6 +1018,7 @@ public enum AutoGroupType {
 		return null;
 	}
 
+	/** 按 world 返回 auto group / Returns the auto group by world */
 	public static AutoGroupType getAutoGroupByWorld(int level, int worldId) {
 		for (AutoGroupType agt : values()) {
 			if (agt.getInstanceMapId() == worldId && agt.hasLevelPermit(level)) {
@@ -990,6 +1028,7 @@ public enum AutoGroupType {
 		return null;
 	}
 
+	/** 获取自动队伍。 / Returns the auto group. */
 	public static AutoGroupType getAutoGroup(int npcId) {
 		for (AutoGroupType agt : values()) {
 			if (agt.containNpcId(npcId)) {
@@ -999,6 +1038,7 @@ public enum AutoGroupType {
 		return null;
 	}
 
+	/** 是否 pv p solo arena / Whether pv p solo arena */
 	public boolean isPvPSoloArena() {
 		switch (this) {
 		case ARENA_OF_DISCIPLINE_46_60_1:
@@ -1013,6 +1053,7 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/** 是否 training pv p solo arena / Whether training pv p solo arena */
 	public boolean isTrainingPvPSoloArena() {
 		switch (this) {
 		case DISCIPLINE_TRAINING_GROUNDS_46_60_1:
@@ -1027,6 +1068,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether pv pffa arena / Whether pv pffa arena
+	 */
 	public boolean isPvPFFAArena() {
 		switch (this) {
 		case ARENA_OF_CHAOS_46_60_1:
@@ -1041,6 +1085,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether training pv pffa arena / Whether training pv pffa arena
+	 */
 	public boolean isTrainingPvPFFAArena() {
 		switch (this) {
 		case CHAOS_TRAINING_GROUNDS_46_60_1:
@@ -1055,6 +1102,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether training harmony arena / Whether training harmony arena
+	 */
 	public boolean isTrainingHarmonyArena() {
 		switch (this) {
 		case HARMONY_TRAINING_GROUNDS_46_60_1:
@@ -1074,6 +1124,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether harmony arena / Whether harmony arena
+	 */
 	public boolean isHarmonyArena() {
 		switch (this) {
 		case ARENA_OF_HARMONY_46_60_1:
@@ -1088,6 +1141,9 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether glory arena / Whether glory arena
+	 */
 	public boolean isGloryArena() {
 		switch (this) {
 		case ARENA_OF_GLORY_46_60_1:
@@ -1100,19 +1156,27 @@ public enum AutoGroupType {
 		return false;
 	}
 
+	/**
+	 * @return Whether pvp arena / Whether pvp arena
+	 */
 	public boolean isPvpArena() {
 		return isHarmonyArena() || isTrainingHarmonyArena() || isTrainingPvPFFAArena() || isPvPFFAArena()
 				|| isTrainingPvPSoloArena() || isPvPSoloArena();
 	}
 
+	/**
+	 * @param level Whether level permit / Whether level permit
+	 */
 	public boolean hasLevelPermit(int level) {
 		return level >= getMinLevel() && level <= getMaxLevel();
 	}
 
+	/** 返回 difficult id / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
 	}
 
+	/** 获取自动副本。 / Returns the auto instance. */
 	public AutoInstance getAutoInstance() {
 		return newAutoInstance();
 	}

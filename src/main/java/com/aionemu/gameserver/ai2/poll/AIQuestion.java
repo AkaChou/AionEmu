@@ -1,28 +1,35 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.poll;
 
 /**
+ * AI 决策时可向 AI 实现发起的问题类型枚举。
+ * Enumeration of question types that can be polled against an AI implementation.
+ *
  * @author ATracer
  */
 public enum AIQuestion {
 
-	DESTINATION_REACHED, CAN_SPAWN_ON_DAYTIME_CHANGE, SHOULD_DECAY, SHOULD_RESPAWN, SHOULD_REWARD, SHOULD_REWARD_AP,
-		SHOULD_REWARD_GP, CAN_RESIST_ABNORMAL, CAN_ATTACK_PLAYER, CAN_SHOUT,
-		CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKED,
-		CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKING;
+	/** 是否已到达目的地 / Whether the destination has been reached */
+	DESTINATION_REACHED,
+	/** 昼夜切换时是否允许刷出 / Whether spawning is allowed on daytime change */
+	CAN_SPAWN_ON_DAYTIME_CHANGE,
+	/** 是否应当腐朽消失 / Whether the corpse should decay */
+	SHOULD_DECAY,
+	/** 是否应当重生 / Whether the creature should respawn */
+	SHOULD_RESPAWN,
+	/** 是否应当发放击杀奖励 / Whether kill rewards should be granted */
+	SHOULD_REWARD,
+	/** 是否应当发放 AP 奖励 / Whether AP rewards should be granted */
+	SHOULD_REWARD_AP,
+	/** 是否应当发放 GP 奖励 / Whether GP rewards should be granted */
+	SHOULD_REWARD_GP,
+	/** 是否可抵抗异常状态 / Whether abnormal states can be resisted */
+	CAN_RESIST_ABNORMAL,
+	/** 是否可攻击玩家 / Whether the player may be attacked */
+	CAN_ATTACK_PLAYER,
+	/** 是否可喊话 / Whether shouting is allowed */
+	CAN_SHOUT,
+	/** 被攻击时可见性判定是否考虑碰撞边界 / Consider bounds in can-see check when attacked */
+	CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKED,
+	/** 攻击时可见性判定是否考虑碰撞边界 / Consider bounds in can-see check when attacking */
+	CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKING;
 }

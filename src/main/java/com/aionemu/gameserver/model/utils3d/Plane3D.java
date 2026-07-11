@@ -1,24 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.utils3d;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Plane3D，用于工具3d 相关逻辑。
+ * Plane 3 D for utils 3 d logic.
+ *
  * @author M@xx
  */
 @Slf4j
@@ -54,15 +41,18 @@ public class Plane3D {
 		normalization = Math.sqrt(a * a + b * b + c * c);
 	}
 
+	/** 返回居中 / Returns the center*/
 	public Point3D getCenter() {
 		return p0;
 	}
 
+	/** 返回 point distance / Returns the point distance */
 	public double getPointDistance(Point3D p) {
 		double n = a * p.x + b * p.y + c * p.z + d;
 		return n / normalization;
 	}
 
+	/** 相交 / intersect. */
 	public boolean intersect(Point3D l0, Point3D l1) {
 		double distanceL0 = getPointDistance(l0);
 		double distanceL1 = getPointDistance(l1);
@@ -73,6 +63,7 @@ public class Plane3D {
 		return false;
 	}
 
+	/** 交点 / intersection. */
 	public Point3D intersection(Point3D la, Point3D lb) {
 		double[] v1 = new double[] { la.x - p0.x, la.y - p0.y, la.z - p0.z };
 

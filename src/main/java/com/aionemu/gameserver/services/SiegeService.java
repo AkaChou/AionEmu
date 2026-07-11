@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -85,6 +71,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+/**
+ * 攻城战服务，管理要塞/神器攻城、刷怪、计划与状态广播。
+ * Siege war service managing fortress/artifact sieges, spawns, schedules, and status broadcasts.
+ */
 @Slf4j(topic = "SIEGE_LOG")
 
 public class SiegeService {
@@ -93,11 +83,18 @@ public class SiegeService {
 	private static volatile ObjectProvider<SiegeService> instanceProvider;
 	private static final SiegeService instance = new SiegeService();
 	private final ConcurrentMap<Integer, Siege<?>> activeSieges = new ConcurrentHashMap<Integer, Siege<?>>();
+	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private SiegeSchedule siegeSchedule;
 	private Map<Integer, ArtifactLocation> artifacts;
 	private Map<Integer, FortressLocation> fortresses;
 	private Map<Integer, SiegeLocation> locations;
 
+	/**
+	 * 获取服务单例（优先 Spring Provider）。
+	 * Returns the service singleton (prefers Spring provider).
+	 *
+	 * service instance
+	 */
 	public static SiegeService getInstance() {
 		ObjectProvider<SiegeService> provider = instanceProvider;
 		if (provider == null) {
@@ -106,35 +103,49 @@ public class SiegeService {
 		return provider.getIfAvailable(() -> instance);
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<SiegeService> instanceProvider) {
 		SiegeService.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 从数据与数据库加载要塞/神器地点。
+	 * Loads fortress/artifact locations from data and database.
+	 */
 	public void initSiegeLocations() {
 		if (SiegeConfig.SIEGE_ENABLED) {
 			if (siegeSchedule != null) {
-				log.error("[SiegeService] should not be initialized two times!");
+				log.error(I18n.get("log.e4c1be66641b"));
 				return;
 			}
 			artifacts = DataManager.SIEGE_LOCATION_DATA.getArtifacts();
 			fortresses = DataManager.SIEGE_LOCATION_DATA.getFortress();
 			locations = DataManager.SIEGE_LOCATION_DATA.getSiegeLocations();
 			DAOManager.getDAO(SiegeDAO.class).loadSiegeLocations(locations);
-			log.info("[SiegeService] Loaded " + locations.size() + " siege locations.");
+			log.info(I18n.get("log.536ce47b586f", locations.size()));
 		} else {
 			artifacts = Collections.emptyMap();
 			fortresses = Collections.emptyMap();
 			locations = Collections.emptyMap();
-			log.info("[SiegeService] Sieges are disabled in config.");
+			log.info(I18n.get("log.9929433ec536"));
 		}
 	}
 
 	@SuppressWarnings("deprecation")
+	/**
+	 * 初始化攻城：刷和平 NPC、注册计划并启动独立神器攻城。
+	 * Initializes sieges: peace NPCs, schedules, and standalone artifact sieges.
+	 */
 	public void initSieges() {
 		if (!SiegeConfig.SIEGE_ENABLED) {
 			return;
 		}
-		log.info("[SiegeService] is initialized...");
+		log.info(I18n.get("log.5fc5ca1430d6"));
 
 		for (Integer i : getSiegeLocations().keySet()) {
 			deSpawnNpcs(i);
@@ -145,12 +156,7 @@ public class SiegeService {
 		for (ArtifactLocation a : getStandaloneArtifacts().values()) {
 			spawnNpcs(a.getLocationId(), a.getRace(), SiegeModType.PEACE);
 		}
-		siegeSchedule = SiegeSchedule.load();
-		for (Fortress f : siegeSchedule.getFortressesList()) {
-			for (String siegeTime : f.getSiegeTimes()) {
-				GameCronServices.cronService().schedule(new SiegeStartRunnable(f.getId()), siegeTime);
-			}
-		}
+		reloadSchedule();
 		for (ArtifactLocation artifact : artifacts.values()) {
 			if (artifact.isStandAlone()) {
 				log.debug("Starting siege of artifact #" + artifact.getLocationId());
@@ -179,6 +185,32 @@ public class SiegeService {
 		}, SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE);
 	}
 
+	/**
+	 * 重载攻城 Cron 计划（先取消旧任务）。
+	 * Reloads the siege cron schedule (cancels previous tasks first).
+	 */
+	public synchronized void reloadSchedule() {
+		SiegeSchedule newSchedule = SiegeConfig.SIEGE_ENABLED ? SiegeSchedule.load() : null;
+		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.clear();
+		siegeSchedule = newSchedule;
+		if (siegeSchedule != null) {
+			for (Fortress fortress : siegeSchedule.getFortressesList()) {
+				for (String siegeTime : fortress.getSiegeTimes()) {
+					Runnable task = new SiegeStartRunnable(fortress.getId());
+					scheduledTasks.add(task);
+					GameCronServices.cronService().schedule(task, siegeTime);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 检查并启动指定地点攻城（含自动种族逻辑）。
+	 * Checks and starts siege for the location (including auto-race logic).
+	 *
+	 * location id
+	 */
 	public void checkSiegeStart(int locationId) {
 		if (SiegeConfig.SIEGE_AUTO_RACE && SiegeAutoRace.isAutoSiege(locationId)) {
 			SiegeAutoRace.AutoSiegeRace(locationId);
@@ -187,6 +219,12 @@ public class SiegeService {
 		}
 	}
 
+	/**
+	 * 启动指定地点的攻城战。
+	 * Starts the siege for the given location id.
+	 *
+	 * siege location id
+	 */
 	public void startSiege(final int siegeLocationId) {
 		Siege<?> siege = newSiege(siegeLocationId);
 		if (activeSieges.putIfAbsent(siegeLocationId, siege) != null) {
@@ -204,6 +242,12 @@ public class SiegeService {
 		}, siege.getSiegeLocation().getSiegeDuration() * 1000);
 	}
 
+	/**
+	 * 停止指定地点的攻城战。
+	 * Stops the siege for the given location id.
+	 *
+	 * siege location id
+	 */
 	public void stopSiege(int siegeLocationId) {
 		log.debug("Stopping siege of siege location: " + siegeLocationId);
 		Siege<?> siege = activeSieges.remove(siegeLocationId);
@@ -271,6 +315,12 @@ public class SiegeService {
 		}
 	}
 
+	/**
+	 * 获取距本小时结束的剩余秒数。
+	 * Returns seconds remaining until the end of the current hour.
+	 *
+	 * @return 剩余秒数 / remaining seconds
+	 */
 	public int getSecondsBeforeHourEnd() {
 		Calendar c = Calendar.getInstance();
 		int minutesAsSeconds = c.get(Calendar.MINUTE) * 60;
@@ -278,6 +328,14 @@ public class SiegeService {
 		return 3600 - (minutesAsSeconds + seconds);
 	}
 
+	/**
+	 * 获取指定攻城剩余时间（秒）。
+	 * Returns remaining siege time in seconds for the location.
+	 *
+	 * siege location id
+	 *
+	 * @param siegeLocationId 剩余秒数 / remaining seconds
+	 */
 	public int getRemainingSiegeTimeInSeconds(int siegeLocationId) {
 		Siege<?> siege = getSiege(siegeLocationId);
 		if (siege == null || siege.isFinished()) {
@@ -295,34 +353,88 @@ public class SiegeService {
 		return result > 0 ? result : 0;
 	}
 
+	/**
+	 * 按地点对象获取进行中的攻城实例。
+	 * Returns the active siege instance for the location object.
+	 *
+	 * @param loc 攻城地点 / siege location
+	 * siege instance
+	 */
 	public Siege<?> getSiege(SiegeLocation loc) {
 		return activeSieges.get(loc.getLocationId());
 	}
 
+	/**
+	 * 按 ID 获取进行中的攻城实例。
+	 * Returns the active siege instance by location id.
+	 *
+	 * siege location id
+	 * siege instance
+	 */
 	public Siege<?> getSiege(Integer siegeLocationId) {
 		return activeSieges.get(siegeLocationId);
 	}
 
+	/**
+	 * 判断指定要塞是否处于攻城中。
+	 * Checks whether a siege is in progress for the fortress id.
+	 *
+	 * fortress id
+	 *
+	 * @param fortressId @return 是否攻城中 / whether in progress
+	 */
 	public boolean isSiegeInProgress(int fortressId) {
 		return activeSieges.containsKey(fortressId);
 	}
 
+	/**
+	 * 获取全部要塞地点。
+	 * Returns all fortress locations.
+	 *
+	 * fortresses map
+	 */
 	public Map<Integer, FortressLocation> getFortresses() {
 		return fortresses;
 	}
 
+	/**
+	 * 按 ID 获取要塞地点。
+	 * Returns the fortress location by id.
+	 *
+	 * fortress id
+	 * fortress
+	 */
 	public FortressLocation getFortress(int fortressId) {
 		return fortresses.get(fortressId);
 	}
 
+	/**
+	 * 获取全部神器地点。
+	 * Returns all artifact locations.
+	 *
+	 * artifacts map
+	 */
 	public Map<Integer, ArtifactLocation> getArtifacts() {
 		return artifacts;
 	}
 
+	/**
+	 * 按 ID 获取神器地点。
+	 * Returns the artifact location by id.
+	 *
+	 * @param id 神器 ID / artifact id
+	 * artifact
+	 */
 	public ArtifactLocation getArtifact(int id) {
 		return getArtifacts().get(id);
 	}
 
+	/**
+	 * 获取独立（非隶属要塞）神器地点。
+	 * Returns standalone (non-fortress-bound) artifact locations.
+	 *
+	 * @return 独立神器映射 / standalone artifacts map
+	 */
 	public Map<Integer, ArtifactLocation> getStandaloneArtifacts() {
 		return Maps.filterValues(artifacts, new Predicate<ArtifactLocation>() {
 			@Override
@@ -332,6 +444,12 @@ public class SiegeService {
 		});
 	}
 
+	/**
+	 * 获取隶属要塞的神器地点。
+	 * Returns fortress-bound artifact locations.
+	 *
+	 * @return 要塞神器映射 / fortress artifacts map
+	 */
 	public Map<Integer, ArtifactLocation> getFortressArtifacts() {
 		return Maps.filterValues(artifacts, new Predicate<ArtifactLocation>() {
 			@Override
@@ -341,14 +459,34 @@ public class SiegeService {
 		});
 	}
 
+	/**
+	 * 获取全部攻城地点。
+	 * Returns all siege locations.
+	 *
+	 * locations map
+	 */
 	public Map<Integer, SiegeLocation> getSiegeLocations() {
 		return locations;
 	}
 
+	/**
+	 * 按 ID 获取攻城地点。
+	 * Returns the siege location by id.
+	 *
+	 * location id
+	 * location
+	 */
 	public SiegeLocation getSiegeLocation(int locationId) {
 		return locations.get(locationId);
 	}
 
+	/**
+	 * 获取指定世界内的攻城地点。
+	 * Returns siege locations within the given world.
+	 *
+	 * 世界 ID / world id
+	 * locations map
+	 */
 	public Map<Integer, SiegeLocation> getSiegeLocations(int worldId) {
 		Map<Integer, SiegeLocation> mapLocations = new HashMap<Integer, SiegeLocation>();
 		for (SiegeLocation location : getSiegeLocations().values()) {
@@ -369,6 +507,12 @@ public class SiegeService {
 		throw new SiegeException("Unknown siege handler for siege location: " + siegeLocationId);
 	}
 
+	/**
+	 * 清理指定军团在攻城地点上的占领关联。
+	 * Cleans legion ownership links from siege locations.
+	 *
+	 * legion id
+	 */
 	public void cleanLegionId(int legionId) {
 		for (SiegeLocation loc : this.getSiegeLocations().values()) {
 			if (loc.getLegionId() == legionId) {
@@ -378,6 +522,14 @@ public class SiegeService {
 		}
 	}
 
+	/**
+	 * 按种族与模式刷出攻城 NPC。
+	 * Spawns siege NPCs for race and siege mode type.
+	 *
+	 * location id
+	 * 阵营 / race
+	 * @param type 攻城模式 / siege mode type
+	 */
 	public void spawnNpcs(int siegeLocationId, SiegeRace race, SiegeModType type) {
 		List<SpawnGroup2> siegeSpawns = DataManager.SPAWNS_DATA2.getSiegeSpawnsByLocId(siegeLocationId);
 		for (SpawnGroup2 group : siegeSpawns) {
@@ -390,6 +542,12 @@ public class SiegeService {
 		}
 	}
 
+	/**
+	 * 删除指定地点的攻城 NPC。
+	 * Despawns siege NPCs for the location.
+	 *
+	 * location id
+	 */
 	public void deSpawnNpcs(int siegeLocationId) {
 		Collection<SiegeNpc> siegeNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalSiegeNpcs(siegeLocationId);
 		for (SiegeNpc npc : new ArrayList<SiegeNpc>(siegeNpcs)) {
@@ -397,6 +555,14 @@ public class SiegeService {
 		}
 	}
 
+	/**
+	 * 判断 NPC 是否属于进行中的攻城。
+	 * Checks whether the NPC belongs to an active siege.
+	 *
+	 * @param npc NPC
+	 *
+	 * @param npc @return 是否属于活动攻城 / whether in active siege
+	 */
 	public boolean isSiegeNpcInActiveSiege(Npc npc) {
 		if ((npc instanceof SiegeNpc)) {
 			FortressLocation fort = getFortress(((SiegeNpc) npc).getSiegeId());
@@ -412,15 +578,32 @@ public class SiegeService {
 		return false;
 	}
 
+	/**
+	 * 向全服广播攻城状态更新。
+	 * Broadcasts siege status update to all players.
+	 */
 	public void broadcastUpdate() {
 		broadcast(new SM_SIEGE_LOCATION_INFO(), null);
 	}
 
+	/**
+	 * 广播单个地点的攻城状态更新。
+	 * Broadcasts siege status update for a single location.
+	 *
+	 * location
+	 */
 	public void broadcastUpdate(SiegeLocation loc) {
 		GameRuntimeServices.influence().recalculateInfluence();
 		broadcast(new SM_SIEGE_LOCATION_INFO(loc), new SM_INFLUENCE_RATIO());
 	}
 
+	/**
+	 * 向全服发送两份攻城相关数据包。
+	 * Sends two siege-related packets to all players.
+	 *
+	 * packet 1
+	 * packet 2
+	 */
 	public void broadcast(final AionServerPacket pkt1, final AionServerPacket pkt2) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			public void visit(Player player) {
@@ -434,6 +617,13 @@ public class SiegeService {
 		});
 	}
 
+	/**
+	 * 广播带名称的攻城状态更新。
+	 * Broadcasts siege status update with a display name.
+	 *
+	 * location
+	 * name description id
+	 */
 	public void broadcastUpdate(SiegeLocation loc, DescriptionId nameId) {
 		SM_SIEGE_LOCATION_INFO pkt = new SM_SIEGE_LOCATION_INFO(loc);
 		SM_SYSTEM_MESSAGE info = loc.getLegionId() == 0
@@ -466,6 +656,12 @@ public class SiegeService {
 		});
 	}
 
+	/**
+	 * 玩家登录时下发攻城相关信息。
+	 * Sends siege-related info when a player logs in.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onPlayerLogin(Player player) {
 		if (SiegeConfig.SIEGE_ENABLED) {
 			PacketSendUtility.sendPacket(player, new SM_INFLUENCE_RATIO());
@@ -473,6 +669,12 @@ public class SiegeService {
 		}
 	}
 
+	/**
+	 * 玩家进入攻城世界时同步地点状态。
+	 * Syncs location status when a player enters a siege world.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onEnterSiegeWorld(Player player) {
 		Map<Integer, SiegeLocation> worldLocations = new HashMap<Integer, SiegeLocation>();
 		Map<Integer, ArtifactLocation> worldArtifacts = new HashMap<Integer, ArtifactLocation>();
@@ -490,9 +692,22 @@ public class SiegeService {
 		PacketSendUtility.sendPacket(player, new SM_ABYSS_ARTIFACT_INFO3(worldArtifacts.values()));
 	}
 
+	/**
+	 * 天气变化时的攻城侧处理钩子。
+	 * Hook for siege-side handling when weather changes.
+	 *
+	 * @param entry 天气条目 / weather entry
+	 */
 	public void onWeatherChanged(WeatherEntry entry) {
 	}
 
+	/**
+	 * 将地点 ID 映射为要塞 ID。
+	 * Maps a location id to its fortress id.
+	 *
+	 * location id
+	 * fortress id
+	 */
 	public int getFortressId(int locId) {
 		switch (locId) {
 		case 49:

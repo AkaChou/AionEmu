@@ -1,14 +1,14 @@
 package com.aionemu.commons.services.cron;
 
 /**
- * Cron服务异常类，用于处理定时任务执行过程中的异常情况
+ * Cron 服务异常类，用于处理定时任务执行过程中的异常情况
  * Exception class for Cron Service, used to handle exceptions during scheduled task execution
  *
  * @author SunAion
  */
 public class CronServiceException extends RuntimeException {
     /**
-     * 序列化版本ID
+ * 序列化版本 ID
      * Serialization version ID
      */
     private static final long serialVersionUID = -354186843536711803L;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.instancereward;
 
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -28,10 +12,10 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import java.util.ArrayList;
 import java.util.List;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 无畏舰奖励，用于副本相关逻辑。
+ * Dredgion Reward for instance logic.
+ */
 
 public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 	private int winnerPoints;
@@ -68,6 +52,7 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 		}
 	}
 
+	/** 传送至坐标 / Port To Position */
 	public void portToPosition(Player player) {
 		if (player.getRace() == Race.ASMODIANS) {
 			TeleportService2.teleportTo(player, mapId, instanceId, asmodiansStartPosition.getX(),
@@ -86,23 +71,28 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 			this.roomId = roomId;
 		}
 
+		/** 返回 room id / Returns the room id */
 		public int getRoomId() {
 			return roomId;
 		}
 
+		/** 占领房间 / capture Room. */
 		public void captureRoom(Race race) {
 			state = race.equals(Race.ASMODIANS) ? 0x01 : 0x00;
 		}
 
+		/** 获取状态。 / Returns the state. */
 		public int getState() {
 			return state;
 		}
 	}
 
+	/** 返回 dredgion rooms / Returns the dredgion rooms */
 	public List<DredgionRooms> getDredgionRooms() {
 		return dredgionRooms;
 	}
 
+	/** 按 ID 返回 dredgion room / Returns the dredgion room by id */
 	public DredgionRooms getDredgionRoomById(int roomId) {
 		for (DredgionRooms dredgionRoom : dredgionRooms) {
 			if (dredgionRoom.getRoomId() == roomId) {
@@ -112,6 +102,7 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 		return null;
 	}
 
+	/** 返回点种族 / Returns the points by race*/
 	public MutableInt getPointsByRace(Race race) {
 		switch (race) {
 		case ELYOS:
@@ -124,6 +115,7 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 		return null;
 	}
 
+	/** 添加 points by race / Adds points by race */
 	public void addPointsByRace(Race race, int points) {
 		MutableInt racePoints = getPointsByRace(race);
 		racePoints.add(points);
@@ -132,26 +124,32 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 		}
 	}
 
+	/** 返回 looser points / Returns the looser points */
 	public int getLooserPoints() {
 		return looserPoints;
 	}
 
+	/** 返回 winner points / Returns the winner points */
 	public int getWinnerPoints() {
 		return winnerPoints;
 	}
 
+	/** 设置 winning race / Sets the winning race */
 	public void setWinningRace(Race race) {
 		this.race = race;
 	}
 
+	/** 返回 winning race / Returns the winning race */
 	public Race getWinningRace() {
 		return race;
 	}
 
+	/** 按 score 返回 winning race / Returns the winning race by score */
 	public Race getWinningRaceByScore() {
 		return asmodiansPoints.compareTo(elyosPoins) > 0 ? Race.ASMODIANS : Race.ELYOS;
 	}
 
+	/** 清空。 / Clear. */
 	@Override
 	public void clear() {
 		super.clear();

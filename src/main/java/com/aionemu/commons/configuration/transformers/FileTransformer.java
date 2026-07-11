@@ -22,12 +22,12 @@ public class FileTransformer implements PropertyTransformer<File> {
     public static final FileTransformer SHARED_INSTANCE = new FileTransformer();
 
     /**
-     * 将字符串值转换为File对象
+ * 将字符串值转换为 File 对象
      * Transforms string value into File object
      *
      * @param value 要转换的字符串值（文件路径）String value to transform (file path)
      * @param field 字段对象 Field that will be transformed
-     * @return 转换后的File对象 Transformed File object
+ * @return 转换后的 File 对象 Transformed File object
      * @throws TransformationException 如果文件路径无效 if file path is invalid
      */
     public File transform(String value, Field field) throws TransformationException {

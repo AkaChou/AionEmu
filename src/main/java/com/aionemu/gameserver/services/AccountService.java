@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Iterator;
 import java.util.List;
@@ -48,9 +33,9 @@ import com.aionemu.gameserver.utils.collections.cachemap.CacheMapFactory;
 import com.aionemu.gameserver.world.World;
 
 /**
- * This class is a front-end for daos and it's responsibility is to retrieve the
- * Account objects
- * 
+ * 账号服务：作为 DAO 前端，负责加载与组装 Account 对象。
+ * Account service front-end for DAOs responsible for loading and assembling Account objects.
+ *
  * @author Luno
  * @modified cura
  */
@@ -58,17 +43,22 @@ import com.aionemu.gameserver.world.World;
 public class AccountService {
 
 
+	/** 账号软引用缓存。 / Soft-reference account cache. */
 	private static CacheMap<Integer, Account> accountsMap = CacheMapFactory.createSoftCacheMap("Account", "account");
 
 	/**
-	 * Returns {@link Account} object that has given id.
-	 * 
-	 * @param accountId
-	 * @param accountName
-	 * @param accountTime
-	 * @param accessLevel
-	 * @param membership
-	 * @return Account
+	 * 按 ID 获取账号，缓存未命中时从数据库加载，并刷新会话相关字段。
+	 * Returns the account for the given id, loading from DB on cache miss and refreshing session fields.
+	 *
+	 * 账号 ID / account id
+	 * account name
+	 * account time
+	 * access level
+	 * membership
+	 * toll
+	 * luna
+	 *
+	 * @return 账号 / account
 	 */
 	public static Account getAccount(int accountId, String accountName, AccountTime accountTime, byte accessLevel,
 			byte membership, long toll, long luna) {
@@ -95,10 +85,10 @@ public class AccountService {
 	}
 
 	/**
-	 * Removes from db characters that should be deleted (their deletion time has
-	 * passed).
-	 * 
-	 * @param account
+	 * 删除到期待删角色，并在启用阵营比例限制时更新比例。
+	 * Removes characters whose deletion time has passed and updates race ratio when limited.
+	 *
+	 * @param account 账号 / account
 	 */
 	private static void removeDeletedCharacters(Account account) {
 		/* Removes chars that should be removed */
@@ -121,15 +111,22 @@ public class AccountService {
 		}
 	}
 
+	/**
+	 * 删除空账号的账号仓库。
+	 * Deletes the account warehouse for an empty account.
+	 *
+	 * @param accountId 账号 ID / account id
+	 */
 	private static void removeAccountWH(int accountId) {
 		DAOManager.getDAO(InventoryDAO.class).deleteAccountWH(accountId);
 	}
 
 	/**
-	 * Loads account data and returns.
-	 * 
-	 * @param accountId
-	 * @return
+	 * 从数据库加载账号下角色、外观、装备、军团与仓库数据。
+	 * Loads account characters, appearance, equipment, legion and warehouse from the database.
+	 *
+	 * @param accountId 账号 ID / account id
+	 * @return 账号 / account
 	 */
 	public static Account loadAccount(int accountId) {
 		Account account = new Account(accountId);
@@ -145,8 +142,7 @@ public class AccountService {
 			if (playerCommonData.isOnline()) {
 				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId) == null) {
 					playerCommonData.setOnline(false);
-					log.warn(playerCommonData.getName()
-							+ " has online status, but I cant find it in World. Skip online status");
+					log.warn(I18n.get("log.530f2a71906a", playerCommonData.getName()));
 				}
 			}
 			PlayerAppearance appereance = appereanceDAO.load(playerId);
@@ -154,7 +150,8 @@ public class AccountService {
 			LegionMember legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMember(playerId);
 
 			/**
-			 * Load only equipment and its stones to display on character selection screen
+			 * 仅加载角色选择界面展示用的装备及其镶嵌石。
+			 * Load only equipment and its stones to display on character selection screen.
 			 */
 			List<Item> equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(playerId);
 
@@ -172,7 +169,7 @@ public class AccountService {
 			}
 		}
 
-		// For new accounts - create empty account warehouse
+		// 新账号：创建空账号仓库。 / For new accounts - create empty account warehouse
 		if (account.getAccountWarehouse() == null) {
 			account.setAccountWarehouse(new PlayerStorage(StorageType.ACCOUNT_WAREHOUSE));
 		}

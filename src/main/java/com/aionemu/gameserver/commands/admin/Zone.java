@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -27,14 +11,28 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.List;
 
 /**
+ * 查询/刷新区域信息的管理员命令。
+ * Admin command to inspect or refresh zone information.
+ *
  * @author ATracer
  */
 public class Zone extends AdminCommand {
 
+	/**
+	 * 构造 zone 命令。
+	 * Creates the zone command.
+	 */
 	public Zone() {
 		super("zone");
 	}
 
+	/**
+	 * 无参列出目标所在区域；refresh 重算；inside 判断是否在指定区域。
+	 * With no args lists zones for target; refresh revalidates; inside checks a zone name.
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params Optional refresh|inside &lt;name&gt;。 / Optional refresh|inside &lt;name&gt;
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		Creature target;
@@ -88,6 +86,13 @@ public class Zone extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax: //zone refresh | inside");

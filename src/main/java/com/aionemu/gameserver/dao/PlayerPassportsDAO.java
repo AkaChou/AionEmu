@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.sql.Timestamp;
@@ -22,21 +6,72 @@ import java.util.List;
 import com.aionemu.commons.database.dao.DAO;
 
 /**
+ * 玩家护照（Passports）数据访问对象。
+ * Player passports data access object.
+ *
  * @author Ghostfur (Aion-Unique)
  */
 public abstract class PlayerPassportsDAO implements DAO {
 
+	/**
+	 * 插入一条护照记录。
+	 * Inserts a passport record.
+	 *
+	 * 账号 ID / account id
+	 * passport id
+	 * stamps
+	 * @param last_stamp 最后时间戳 / last stamp
+	 */
 	public abstract void insertPassport(int accountId, int passportId, int stamps, Timestamp last_stamp);
 
+	/**
+	 * 更新护照进度。
+	 * Updates passport progress.
+	 *
+	 * 账号 ID / account id
+	 * passport id
+	 * stamps
+	 * @param rewarded 是否已领奖 / rewarded flag
+	 * @param last_stamp 最后时间戳 / last stamp
+	 */
 	public abstract void updatePassport(int accountId, int passportId, int stamps, boolean rewarded,
 			Timestamp last_stamp);
 
+	/**
+	 * 获取护照印章数。
+	 * Returns the stamp count for the passport.
+	 *
+	 * 账号 ID / account id
+	 * passport id
+	 * stamp count
+	 */
 	public abstract int getStamps(int accountId, int passportId);
 
+	/**
+	 * 获取护照最后时间戳。
+	 * Returns the last stamp timestamp for the passport.
+	 *
+	 * 账号 ID / account id
+	 * passport id
+	 * @return 最后时间戳 / last stamp
+	 */
 	public abstract Timestamp getLastStamp(int accountId, int passportId);
 
+	/**
+	 * 获取账号下全部护照 ID。
+	 * Returns all passport IDs for the account.
+	 *
+	 * 账号 ID / account id
+	 * list of passport ids
+	 */
 	public abstract List<Integer> getPassports(int accountId);
 
+	/**
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
+	 */
 	@Override
 	public final String getClassName() {
 		return PlayerPassportsDAO.class.getName();

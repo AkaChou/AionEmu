@@ -1,31 +1,39 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.attack;
 
+/**
+ * 反击技能状态枚举，对应客户端可触发的防御类反击类型。
+ * Counter-skill status enum for client-side defensive counter types.
+ */
 public enum CounterSkillStatus {
 
-	BLOCK(32), PARRY(64), DODGE(128), RESIST(256);
+	/** 格挡 / Block */
+	BLOCK(32),
+	/** 招架 / Parry */
+	PARRY(64),
+	/** 闪避 / Dodge */
+	DODGE(128),
+	/** 魔法抵抗 / Resist */
+	RESIST(256);
 
+	/** 状态类型 ID / Status type id */
 	private final int type;
 
+	/**
+	 * 构造反击技能状态。
+	 * Constructs a counter-skill status.
+	 *
+	 * type id
+	 */
 	private CounterSkillStatus(int type) {
 		this.type = type;
 	}
 
+	/**
+	 * 返回状态类型 ID。
+	 * Returns the status type id.
+	 *
+	 * type id
+	 */
 	public final int getId() {
 		return type;
 	}

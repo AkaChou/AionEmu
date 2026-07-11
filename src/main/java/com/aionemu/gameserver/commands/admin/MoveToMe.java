@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,16 +8,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
- * Admin movetome command.
- * 
+ * 将指定在线玩家传送到管理员身边的管理员命令。
+ * Admin command to teleport a named online player to the admin.
+ *
  * @author Cyrakuse
  */
 public class MoveToMe extends AdminCommand {
 
+	/**
+	 * 以别名 {@code movetome} 构造命令。
+	 * Construct the command with alias {@code movetome}.
+	 */
 	public MoveToMe() {
 		super("movetome");
 	}
 
+	/**
+	 * 将 {@code characterName} 传送到管理员当前位置。
+	 * Teleport {@code characterName} to the admin's current location.
+	 *
+	 * @param player 执行 GM / Admin player
+	 * @param params 目标角色名 / Target character name
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -58,6 +54,13 @@ public class MoveToMe extends AdminCommand {
 		PacketSendUtility.sendMessage(playerToMove, "You have been teleported by " + player.getName() + ".");
 	}
 
+	/**
+	 * 参数错误时显示语法。
+	 * Show syntax when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //movetome <characterName>");

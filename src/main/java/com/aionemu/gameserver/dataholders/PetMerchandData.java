@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -30,9 +14,11 @@ import com.aionemu.gameserver.model.templates.pet.PetMerchandEntry;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 宠物商人数据容器，按 ID 索引 PetMerchandEntry。
+ * Pet merchant data holder, indexing PetMerchandEntry by id.
+ *
  * @author Rinzler
  */
-
 @XmlRootElement(name = "merchands")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PetMerchandData {
@@ -42,6 +28,10 @@ public class PetMerchandData {
 	@XmlTransient
 	private IntObjectHashMap<PetMerchandEntry> merchandsById = new IntObjectHashMap<PetMerchandEntry>();
 
+	/**
+	 * JAXB 反序列化完成后，将商人条目写入 ID 索引并释放列表。
+	 * After JAXB unmarshalling, indexes merchant entries by id and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetMerchandEntry merch : list) {
 			merchandsById.put(merch.getId(), merch);
@@ -50,10 +40,23 @@ public class PetMerchandData {
 		list = null;
 	}
 
+	/**
+	 * 返回已加载的商人条目数量。
+	 * Returns the number of loaded merchant entries.
+	 *
+	 * entry count
+	 */
 	public int size() {
 		return merchandsById.size();
 	}
 
+	/**
+	 * 按 ID 获取宠物商人模板。
+	 * Returns the pet merchant template for the given id.
+	 *
+	 * @param id 商人 ID / merchant id
+	 * @return 商人条目，不存在则为 null / merchant entry or null
+	 */
 	public PetMerchandEntry getMerchandTemplate(int id) {
 		return merchandsById.get(id);
 	}

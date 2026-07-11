@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,6 +18,9 @@ import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 召唤效果基类：为玩家创建召唤物，并在时限到达后自动解散。
+ * Base summon effect: creates a player summon and auto-releases it after the configured time.
+ *
  * @author Simple
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,6 +32,10 @@ public class SummonEffect extends EffectTemplate {
 	@XmlAttribute(name = "time", required = true)
 	protected int time; // in seconds
 
+	/**
+	 * 创建召唤物；若配置了存活时间则调度自动解散任务。
+	 * Creates the summon and, when time > 0, schedules an auto-release task.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Player effected = (Player) effect.getEffected();
@@ -65,6 +56,10 @@ public class SummonEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 直接标记本效果成功。
+	 * Always marks this effect successful.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -31,9 +15,11 @@ import com.aionemu.gameserver.model.templates.revive_start_points.InstanceRevive
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 副本复活起始点数据容器，按世界 ID 索引。
+ * Instance revive start-point data holder, indexed by world id.
+ *
  * Created by Wnkrz on 27/08/2017.
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "InstanceStartPoints" })
 @XmlRootElement(name = "instance_revive_start_points")
@@ -44,10 +30,22 @@ public class ReviveInstanceStartPointsData {
 	@XmlTransient
 	private IntObjectHashMap<InstanceReviveStartPoints> custom = new IntObjectHashMap<InstanceReviveStartPoints>();
 
+	/**
+	 * 按世界 ID 获取副本复活起始点。
+	 * Returns the instance revive start point for the given world id.
+	 *
+	 * 世界 ID / world id
+	 *
+	 * @param worldId @return 复活起始点，不存在则为 null / revive start point or null
+	 */
 	public InstanceReviveStartPoints getReviveStartPoint(int worldId) {
 		return custom.get(worldId);
 	}
 
+	/**
+	 * JAXB 反序列化完成后，将起始点写入世界 ID 索引。
+	 * After JAXB unmarshalling, indexes start points by world id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (InstanceReviveStartPoints it : InstanceStartPoints) {
 			getCustomMap().put(it.getReviveWorld(), it);
@@ -58,6 +56,12 @@ public class ReviveInstanceStartPointsData {
 		return custom;
 	}
 
+	/**
+	 * 返回已加载的复活起始点数量。
+	 * Returns the number of loaded revive start points.
+	 *
+	 * @return 起始点数量 / start-point count
+	 */
 	public int size() {
 		return custom.size();
 	}

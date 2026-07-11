@@ -1,35 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.attack;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
+ * 玩家专用仇恨列表：只要目标不是自己即可感知，不受敌对阵营限制。
+ * Player-specific aggro list that is aware of any creature other than the owner.
+ *
  * @author ATracer
  */
 public class PlayerAggroList extends AggroList {
 
 	/**
-	 * @param owner
+	 * 为指定玩家创建仇恨列表。
+	 * Creates an aggro list for the given player-owned creature.
+	 *
+	 * @param owner 列表所属单位 / list owner
 	 */
 	public PlayerAggroList(Creature owner) {
 		super(owner);
 	}
 
+	/**
+	 * 判断是否感知该生物：非空且不是自身即可。
+	 * Returns whether this list is aware of the creature: non-null and not self.
+	 *
+	 * @param creature 待判断生物 / creature to check
+	 * whether aware
+	 */
 	@Override
 	protected boolean isAware(Creature creature) {
 		return creature != null && !creature.getObjectId().equals(owner.getObjectId());

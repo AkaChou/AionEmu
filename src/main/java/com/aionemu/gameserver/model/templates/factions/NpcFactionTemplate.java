@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.factions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+
+/**
+ * NPC 势力模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcFaction")
@@ -59,50 +48,62 @@ public class NpcFactionTemplate {
 	@XmlAttribute(name = "skill_points")
 	protected int skillPoints;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return nameId;
 	}
 
+	/** 获取分类。 / Returns the category. */
 	public FactionCategory getCategory() {
 		return category;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return minlevel;
 	}
 
+	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
 		return maxlevel;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 是否导师 / Whether mentor */
 	public boolean isMentor() {
 		return category == FactionCategory.MENTOR;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** 获取技能点。 / Returns the skill points. */
 	public int getSkillPoints() {
 		return skillPoints;
 	}
 
+	/** 返回自动加入 / Returns the auto join*/
 	public int getAutoJoin() {
 		return autoJoin;
 	}
 
+	/** 返回 auto quit / Returns the auto quit */
 	public int getAutoQuit() {
 		return autoQuit;
 	}

@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import java.util.ArrayList;
@@ -31,17 +15,34 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * GM 指令：为目标玩家添加属性加成（Stat bonus）。
+ * GM command handler that applies a temporary attribute/stat bonus to the target player.
+ *
+ * @author Encom
+ */
 public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
 
+	/**
+	 * 创建处理器并立即应用属性加成。
+	 * Creates the handler and immediately applies the attribute bonus.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 属性名与数值（如 {@code SPEED 50}） / attribute name and value (e.g. {@code SPEED 50})
+	 */
 	public CmdAttrBonus(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 用正则解析属性名与数值，并为目标玩家挂载临时 Stat 效果。
+	 * Parses attribute name and value via regex and attaches a temporary stat effect to the target.
+	 */
 	private void run() {
 		Player tgtPlayer = target != null ? target : admin;
 
-		// get values from params with regex
+		// 用正则从参数获取值 / get values from params with regex
 		Pattern pattern = Pattern.compile("((.*)\\s(-?\\d+))");
 		Matcher matcher = pattern.matcher(params);
 		if (!matcher.find()) {
@@ -57,14 +58,14 @@ public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
 
 		AttrBonusAction a = AttrBonusAction.valueOf(func);
 
-		// special value handling
+		// 特殊值处理 / special value handling
 		if (a.equals(AttrBonusAction.SPEED) && value >= 1000) {
 			return;
 		} else if (a.equals(AttrBonusAction.FLYSPEED) && value >= 1000) {
 			return;
 		}
 
-		// standard value handling
+		// 标准值处理 / standard value handling
 		if (value >= 99999999) {
 			return;
 		}

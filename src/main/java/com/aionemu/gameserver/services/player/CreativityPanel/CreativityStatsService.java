@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
@@ -30,9 +14,23 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
 import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 创造力面板属性服务，应用精华属性加成。
+ * Creativity panel stats service applying essence stat bonuses.
+ */
 public class CreativityStatsService {
 	private static volatile ObjectProvider<CreativityStatsService> instanceProvider;
 
+	/**
+	 * 应用精华属性。
+	 * Applies essence stats.
+	 *
+	 * 玩家 / player
+	 * type
+	 * size
+	 * @param id ID / id
+	 * point
+	 */
 	public void onEssenceApply(Player player, int type, int size, int id, int point) {
 		if (player.isArchDaeva()) {
 			player.getCP().addPoint(player, id, point);
@@ -66,6 +64,11 @@ public class CreativityStatsService {
 		}
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static CreativityStatsService getInstance() {
 		ObjectProvider<CreativityStatsService> provider = instanceProvider;
 		if (provider != null) {
@@ -74,6 +77,12 @@ public class CreativityStatsService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CreativityStatsService> provider) {
 		instanceProvider = provider;
 	}

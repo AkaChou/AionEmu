@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.idgelDome;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -60,21 +44,39 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 伊吉尔穹顶地标副本事件处理器。
+ * Instance event handler for Idgel Dome Landmark.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301680000)
 public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 {
-    private long instanceTime;
+    /** 副本时间戳 / instance timestamp */
+        private long instanceTime;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-    protected LandMarkReward landMarkReward;
-    private float loosingGroupMultiplier = 1;
+    /** 地标奖励 / landmark reward */
+        protected LandMarkReward landMarkReward;
+    /** 败方倍率 / losing-group multiplier */
+        private float loosingGroupMultiplier = 1;
+    /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed = false;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-    protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final List<Future<?>> landMarkTask = new ArrayList<Future<?>>();
+    /** 副本是否已开始 / whether the instance started */
+        protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+    /** 地标任务 / landmark task */
+        private final List<Future<?>> landMarkTask = new ArrayList<Future<?>>();
+    /**
+     * 返回玩家奖励记录。
+     * Return the player's reward record.
+     *
+     * 玩家 / player
+     * result
+     */
     
     protected LandMarkPlayerReward getPlayerReward(Player player) {
         landMarkReward.regPlayerReward(player);
@@ -85,6 +87,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         return landMarkReward.containPlayer(object);
     }
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -105,11 +113,19 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(164000413, storage.getItemCountByItemId(164000413)); //Support Bomb.
 		storage.decreaseByItemId(164000414, storage.getItemCountByItemId(164000414)); //Support Restraining Bomb.
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         landMarkReward.setInstanceStartTime();
 		landMarkTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!landMarkReward.isRewarded()) {
@@ -117,9 +133,9 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 					spawn(833898, 264.65891f, 259.27396f, 88.502739f, (byte) 0, 60); //Sealed Reian Relic.
 					spawn(806303, 249.47313f, 172.33987f, 79.688995f, (byte) 0, 198); //Central Square Teleport.
 					spawn(806304, 279.98080f, 346.39691f, 79.695137f, (byte) 0, 197); //Central Square Teleport.
-				    //The member recruitment window has passed. You cannot recruit any more members.
+				    // 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 				    sendMsgByRace(1401181, Race.PC_ALL, 5000);
-					//You need to activate the Aether Supply Device.
+					// 你需要激活以太供应装置。 / You need to activate the Aether Supply Device.
 					sendMsgByRace(1403564, Race.PC_ALL, 10000);
                     landMarkReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
                     startInstancePacket();
@@ -128,19 +144,27 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
             }
         }, 90000));
 		landMarkTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				sendPacket(false);
                 landMarkReward.sendPacket(4, null);
-                //A bomb support chest has appeared at the Blood War Room.
+                // 血战室出现了轰炸支援箱。 / A bomb support chest has appeared at the Blood War Room.
 				sendMsgByRace(1403625, Race.ELYOS, 0);
-				//A bomb support chest has appeared at the Blood War Room.
+				// 血战室出现了轰炸支援箱。 / A bomb support chest has appeared at the Blood War Room.
 				sendMsgByRace(1403626, Race.ASMODIANS, 0);
 				sp(834168, 252.9754f, 246.21234f, 92.94253f, (byte) 15, 0); //Bomb Support Box.
 				sp(834169, 276.4865f, 271.9778f, 92.94253f, (byte) 75, 0); //Bomb Restraint Support Box.
             }
         }, 300000));
 		landMarkTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
             	if (!landMarkReward.isRewarded()) {
@@ -150,6 +174,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
             }
         }, 1200000));
     }
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param race 阵营 / race
+	 */
 	
     protected void stopInstance(Race race) {
         stopInstanceTask();
@@ -159,6 +189,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         landMarkReward.sendPacket(5, null);
     }
 	
+    /**
+     * 玩家进入副本时处理。
+     * Handle a player entering the instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onEnterInstance(final Player player) {
         if (!containPlayer(player.getObjectId())) {
@@ -169,6 +205,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	
     private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * opponent
+             */
             @Override
             public void visit(Player opponent) {
                 if (player.getRace() != opponent.getRace()) {
@@ -190,6 +232,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	
     private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * @param player 玩家 / player
+             */
             @Override
             public void visit(Player player) {
             	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), landMarkReward, instance.getPlayersInside(), true));
@@ -203,6 +251,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
+                /**
+                 * 处理 visit。
+                 * Handle visit.
+                 *
+                 * @param player 玩家 / player
+                 */
                 @Override
                 public void visit(Player player) {
                 	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), landMarkReward, instance.getPlayersInside(), true));
@@ -210,6 +264,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
             });
     	} else {
     		instance.doOnAllPlayers(new Visitor<Player>() {
+                /**
+                 * 处理 visit。
+                 * Handle visit.
+                 *
+                 * @param player 玩家 / player
+                 */
                 @Override
                 public void visit(Player player) {
                 	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), landMarkReward, instance.getPlayersInside(), true));
@@ -218,6 +278,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     	}
     }
 	
+    /**
+     * 副本创建时初始化逻辑。
+     * Initialize logic when the instance is created.
+     *
+     * @param instance 世界地图实例 / world-map instance
+     */
     @Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -226,6 +292,10 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         doors = instance.getDoors();
         startInstanceTask();
     }
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 	
 	protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
@@ -276,6 +346,10 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -298,6 +372,13 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         return 0;
     }
 	
+    /**
+     * 处理玩家复活事件。
+     * Handle a player revive event.
+     *
+     * 玩家 / player
+     * result
+     */
     @Override
     public boolean onReviveEvent(Player player) {
         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
@@ -307,6 +388,14 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         return true;
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * 玩家 / player
+     * @param lastAttacker 最后攻击者 / last attacker
+     * result
+     */
     @Override
     public boolean onDie(Player player, Creature lastAttacker) {
 		LandMarkPlayerReward ownerReward = landMarkReward.getPlayerReward(player.getObjectId());
@@ -351,6 +440,15 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     private void addPvPKillToPlayer(Player player) {
         landMarkReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
+	/**
+	 * 处理 updateScore。
+	 * Handle updateScore.
+	 *
+	 * 玩家 / player
+	 * target
+	 * points
+	 * pvpKill
+	 */
 	
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
@@ -393,6 +491,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         landMarkReward.sendPacket(11, player.getObjectId());
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
 	public void onDie(Npc npc) {
         int point = 0;
@@ -409,6 +513,13 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         updateScore(mostPlayerDamage, npc, point, false);
     }
 	
+    /**
+     * 玩家对 NPC 使用物品完成时处理。
+     * Handle item-use finish on an NPC.
+     *
+     * 玩家 / player
+     * npc
+     */
     @Override
     public void handleUseItemFinish(Player player, Npc npc) {
 		int point = 0;
@@ -418,65 +529,65 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 			break;
 			/**
-			 * Unsealing Device [Elyos]
-			 */
-			case 806343: //Unsealing Device.
+	 * Unsealing Device [Elyos]
+	 */
+			case 806343: //解封装置。 / Unsealing Device.
 				point = 200;
 				despawnNpc(npc);
-				//The Elyos activated stage 1 of the device.
+				// 天族激活了装置第 1 阶段。 / The Elyos activated stage 1 of the device.
 				sendMsgByRace(1403428, Race.PC_ALL, 0);
 			break;
-			case 806344: //Unsealing Device.
+			case 806344: //解封装置。 / Unsealing Device.
 			    point = 1000;
 				despawnNpc(npc);
-				//The Elyos activated stage 2 of the device.
+				// 天族激活了装置第 2 阶段。 / The Elyos activated stage 2 of the device.
 				sendMsgByRace(1403429, Race.PC_ALL, 0);
 			break;
-			case 806345: //Unsealing Device.
+			case 806345: //解封装置。 / Unsealing Device.
 			    point = 500;
 				despawnNpc(npc);
-				//The Elyos activated stage 3 of the device.
+				// 天族激活了装置第 3 阶段。 / The Elyos activated stage 3 of the device.
 				sendMsgByRace(1403430, Race.PC_ALL, 0);
 			break;
-			case 806346: //Unsealing Device.
+			case 806346: //解封装置。 / Unsealing Device.
 			    point = 50000;
 				despawnNpc(npc);
-				//The Elyos are activating the last stage of the device.
+				// 天族正在激活装置的最后阶段。 / The Elyos are activating the last stage of the device.
 				sendMsgByRace(1403431, Race.PC_ALL, 0);
-				//The Elyos successfully occupied this area.
+				// 天族成功占领了此区域。 / The Elyos successfully occupied this area.
 				sendMsgByRace(1403434, Race.PC_ALL, 10000);
 			break;
 			/**
-			 * Unsealing Device [Asmodians]
-			 */
-			case 806375: //Unsealing Device.
+	 * Unsealing Device [Asmodians]
+	 */
+			case 806375: //解封装置。 / Unsealing Device.
 			    point = 200;
 				despawnNpc(npc);
-				//The Asmodians activated stage 1 of the device.
+				// 魔族激活了装置第 1 阶段。 / The Asmodians activated stage 1 of the device.
 				sendMsgByRace(1403435, Race.PC_ALL, 0);
 			break;
-			case 806376: //Unsealing Device.
+			case 806376: //解封装置。 / Unsealing Device.
 			    point = 1000;
 				despawnNpc(npc);
-				//The Asmodians activated stage 2 of the device.
+				// 魔族激活了装置第 2 阶段。 / The Asmodians activated stage 2 of the device.
 				sendMsgByRace(1403436, Race.PC_ALL, 0);
 			break;
-			case 806377: //Unsealing Device.
+			case 806377: //解封装置。 / Unsealing Device.
 			    point = 500;
 				despawnNpc(npc);
-				//The Asmodians activated stage 3 of the device.
+				// 魔族激活了装置第 3 阶段。 / The Asmodians activated stage 3 of the device.
 				sendMsgByRace(1403437, Race.PC_ALL, 0);
 			break;
-			case 806378: //Unsealing Device.
+			case 806378: //解封装置。 / Unsealing Device.
 			    point = 50000;
 				despawnNpc(npc);
-				//The Asmodians are activating the last stage of the device.
+				// 魔族正在激活装置的最后阶段。 / The Asmodians are activating the last stage of the device.
 				sendMsgByRace(1403438, Race.PC_ALL, 0);
-				//The Asmodians successfully occupied this area.
+				// 魔族成功占领了此区域。 / The Asmodians successfully occupied this area.
 				sendMsgByRace(1403441, Race.PC_ALL, 10000);
 			break;
 			case 802192: //Flame Vent [Elyos].
-			    //The Asmodian Flame Vent has been activated.\nThe Asmodians are trapped!
+			 // 魔族火焰喷口已激活。\n 魔族被困住了！ / The Asmodian Flame Vent has been activated.\nThe Asmodians are trapped!
 				sendMsgByRace(1402368, Race.PC_ALL, 0);
 				sp(702404, 234.43842f, 194.1041f, 79.23065f, (byte) 105, 0);
 				sp(702405, 234.13383f, 194.39594f, 79.23065f, (byte) 105, 0);
@@ -485,7 +596,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
                 sp(702405, 234.53394f, 194.27177f, 79.23065f, (byte) 75, 0);
 			break;
 			case 802193: //Flame Vent [Asmodians]
-			    //The Elyos Flame Vent has been activated.\nThe Elyos are trapped!
+			 // 天族火焰喷口已激活。\n 天族被困住了！ / The Elyos Flame Vent has been activated.\nThe Elyos are trapped!
 				sendMsgByRace(1402369, Race.PC_ALL, 0);
 				sp(702404, 294.57443f, 324.22205f, 79.23065f, (byte) 45, 0);
 				sp(702405, 294.53418f, 324.0909f, 79.23065f, (byte) 105, 0);
@@ -509,6 +620,10 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 		}
 	}
 	
+    /**
+     * 副本销毁时清理资源。
+     * Clean up resources when the instance is destroyed.
+     */
     @Override
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
@@ -516,11 +631,21 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         stopInstanceTask();
         doors.clear();
     }
+	/**
+	 * 处理 openFirstDoors。
+	 * Handle openFirstDoors.
+	 */
 	
     protected void openFirstDoors() {
         openDoor(180);
 		openDoor(181);
     }
+	/**
+	 * 打开指定门。
+	 * Open the given door.
+	 *
+	 * doorId
+	 */
 	
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
@@ -528,17 +653,59 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
             door.setOpen(true);
         }
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * entity id
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         landMarkTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -550,9 +717,25 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         landMarkTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -563,12 +746,30 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         landMarkTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -582,6 +783,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -597,25 +804,49 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         }
     }
 	
+    /**
+     * 返回本副本奖励对象。
+     * Return this instance's reward object.
+     *
+     * result
+     */
     @Override
     public InstanceReward<?> getInstanceReward() {
         return landMarkReward;
     }
 	
+    /**
+     * 玩家请求退出副本时处理。
+     * Handle a player exit request.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
 	
+    /**
+     * 玩家离开副本时处理。
+     * Handle a player leaving the instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onLeaveInstance(Player player) {
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 		LandMarkPlayerReward playerReward = landMarkReward.getPlayerReward(player.getObjectId());
 		playerReward.endBoostMoraleEffect(player);
 		removeItems(player);
     }
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -628,6 +859,12 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         }
     }
 	
+    /**
+     * 玩家登录到该副本时处理。
+     * Handle a player logging into this instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onPlayerLogin(Player player) {
         landMarkReward.sendPacket(10, player.getObjectId());

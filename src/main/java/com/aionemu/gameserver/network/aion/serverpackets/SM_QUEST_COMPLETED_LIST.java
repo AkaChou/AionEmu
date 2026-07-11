@@ -6,6 +6,10 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 
+/**
+ * 向客户端同步已完成任务列表（支持分包发送）。
+ * Server packet synchronizing the completed-quest list to the client (chunked when large).
+ */
 public class SM_QUEST_COMPLETED_LIST extends AionServerPacket {
 
     private static final int MAX_PACKET_SIZE = 8000;
@@ -16,6 +20,12 @@ public class SM_QUEST_COMPLETED_LIST extends AionServerPacket {
     private final int startIndex;
     private final int totalSize;
 
+    /**
+     * 使用给定参数构造 SM_QUEST_COMPLETED_LIST 包。
+     * Creates a SM_QUEST_COMPLETED_LIST packet with the given parameters.
+     *
+     * @param allQuests 任务状态列表 / quest state list
+     */
     public SM_QUEST_COMPLETED_LIST(List<QuestState> allQuests) {
         this(allQuests, 0, allQuests.size());
     }

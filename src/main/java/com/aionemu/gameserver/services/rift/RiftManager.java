@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.rift;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -40,18 +26,26 @@ import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.List;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 裂隙管理器，负责裂隙/漩涡 NPC 的生成模板登记与实例生成。
+ * Rift manager responsible for spawn-template registration and rift/vortex NPC spawning.
+ *
+ * @author Rinzler (Encom)
+ */
 @Slf4j
 
 public class RiftManager {
 
 	private static volatile ObjectProvider<RiftManager> instanceProvider;
-	private static List<Npc> rifts = new CopyOnWriteArrayList<Npc>(); 
+	private static List<Npc> rifts = new CopyOnWriteArrayList<Npc>();
 	private static Map<String, SpawnTemplate> riftGroups = new HashMap<String, SpawnTemplate>();
 
+	/**
+	 * 登记裂隙生成组模板（按锚点名索引）。
+	 * Registers rift spawn-group templates (indexed by anchor name).
+	 *
+	 * Spawn group
+	 */
 	public static void addRiftSpawnTemplate(SpawnGroup2 spawn) {
 		if (spawn.hasPool()) {
 			SpawnTemplate template = spawn.getSpawnTemplates().get(0);
@@ -64,11 +58,23 @@ public class RiftManager {
 		}
 	}
 
+	/**
+	 * 在裂隙位置生成主从端裂隙 NPC。
+	 * Spawns master/slave rift NPCs at a rift location.
+	 *
+	 * @param loc 裂隙位置 / Rift location
+	 */
 	public void spawnRift(RiftLocation loc) {
 		RiftEnum rift = RiftEnum.getRift(loc.getId());
 		spawnRift(rift, null, loc);
 	}
 
+	/**
+	 * 在漩涡位置生成次元漩涡主从端 NPC。
+	 * Spawns master/slave vortex NPCs at a vortex location.
+	 *
+	 * @param loc 漩涡位置 / Vortex location
+	 */
 	public void spawnVortex(VortexLocation loc) {
 		RiftEnum rift = RiftEnum.getVortex(loc.getDefendersRace());
 		spawnRift(rift, loc, null);
@@ -87,7 +93,7 @@ public class RiftManager {
 
 		if (slaveTemplate.hasPool()) {
 			slaveTemplate = slaveTemplate.changeTemplate(1);
-			
+
 		}
 
 		for (int i = 1; i <= instanceCount; i++) {
@@ -106,7 +112,7 @@ public class RiftManager {
            }
            spawned += 2;
        }
-       log.info("Rift opened: " + rift.name() + " successfully spawned " + spawned + " Npc.");
+       log.info(I18n.get("log.918c2ef9c33c", rift.name(), spawned));
 	}
 
 	private Npc spawnInstance(int instance, SpawnTemplate template, RVController controller) {
@@ -125,12 +131,24 @@ public class RiftManager {
 		return npc;
 	}
 
+	/**
+	 * 返回当前已生成裂隙 NPC 的快照副本。
+	 * Returns a snapshot copy of currently spawned rift NPCs.
+	 *
+	 * Rift NPC list
+	 */
 	public static List<Npc> getSpawned() {
-        synchronized (rifts) { 
-        return new ArrayList<>(rifts); 
+        synchronized (rifts) {
+        return new ArrayList<>(rifts);
     }
     }
 
+	/**
+	 * 获取 {@link RiftManager} 单例（优先 Spring 提供的实例）。
+	 * Returns the {@link RiftManager} singleton (prefers Spring-provided instance).
+	 *
+	 * @return 管理器实例 / Manager instance
+	 */
 	public static RiftManager getInstance() {
 		ObjectProvider<RiftManager> provider = instanceProvider;
 		if (provider != null) {
@@ -139,6 +157,12 @@ public class RiftManager {
 		return RiftManagerHolder.INSTANCE;
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<RiftManager> provider) {
 		instanceProvider = provider;
 	}

@@ -2,6 +2,11 @@ package com.aionemu.gameserver.model.gameobjects.player.equipmentsetting;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
+/**
+ * 装备 Setting 游戏对象。
+ * Equipment Setting game object.
+ */
+
 public class EquipmentSetting {
 
 	private PersistentState persistentState;
@@ -69,110 +74,137 @@ public class EquipmentSetting {
 		this.bracelet = bracelet;
 	}
 
+	/** 默认名称 / Default Name*/
 	public static String defaultName(int slot) {
 		return "Equipment Set " + (slot + 1);
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		this.persistentState = persistentState;
 	}
 
+	/** 获取槽位。 / Returns the slot. */
 	public int getSlot() {
 		return slot;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回 display / Returns the display */
 	public int getDisplay() {
 		return display;
 	}
 
+	/** 获取主手 / getm Hand. */
 	public int getmHand() {
 		return mHand;
 	}
 
+	/** 获取副手 / gets Hand. */
 	public int getsHand() {
 		return sHand;
 	}
 
+	/** 返回 helmet / Returns the helmet */
 	public int getHelmet() {
 		return helmet;
 	}
 
+	/** 返回 torso / Returns the torso */
 	public int getTorso() {
 		return torso;
 	}
 
+	/** 返回 glove / Returns the glove */
 	public int getGlove() {
 		return glove;
 	}
 
+	/** 返回 boots / Returns the boots */
 	public int getBoots() {
 		return boots;
 	}
 
+	/** 返回 earrings left / Returns the earrings left */
 	public int getEarringsLeft() {
 		return earringsLeft;
 	}
 
+	/** 返回 earrings right / Returns the earrings right */
 	public int getEarringsRight() {
 		return earringsRight;
 	}
 
+	/** 返回 ring left / Returns the ring left */
 	public int getRingLeft() {
 		return ringLeft;
 	}
 
+	/** 返回 ring right / Returns the ring right */
 	public int getRingRight() {
 		return ringRight;
 	}
 
+	/** 返回 necklace / Returns the necklace */
 	public int getNecklace() {
 		return necklace;
 	}
 
+	/** 返回 shoulder / Returns the shoulder */
 	public int getShoulder() {
 		return shoulder;
 	}
 
+	/** 返回 pants / Returns the pants */
 	public int getPants() {
 		return pants;
 	}
 
+	/** 返回 powershard left / Returns the powershard left */
 	public int getPowershardLeft() {
 		return powershardLeft;
 	}
 
+	/** 返回 powershard right / Returns the powershard right */
 	public int getPowershardRight() {
 		return powershardRight;
 	}
 
+	/** 返回 wings / Returns the wings */
 	public int getWings() {
 		return wings;
 	}
 
+	/** 返回 waist / Returns the waist */
 	public int getWaist() {
 		return waist;
 	}
 
+	/** 获取主手卸下 / getm Off Hand. */
 	public int getmOffHand() {
 		return mOffHand;
 	}
 
+	/** 获取副手卸下 / gets Off Hand. */
 	public int getsOffHand() {
 		return sOffHand;
 	}
 
+	/** 返回 plume / Returns the plume */
 	public int getPlume() {
 		return plume;
 	}
 
+	/** 返回 bracelet / Returns the bracelet */
 	public int getBracelet() {
 		return bracelet;
 	}

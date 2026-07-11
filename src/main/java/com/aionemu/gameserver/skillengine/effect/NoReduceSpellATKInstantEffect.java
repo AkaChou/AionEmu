@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.controllers.attack.AttackUtil;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 不可减免的瞬时法术攻击：按配置直接结算魔法伤害（可百分比）。
+ * Non-reducible instant spell attack: settles magic damage as configured (optional percent).
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,6 +21,10 @@ public class NoReduceSpellATKInstantEffect extends DamageEffect {
 	@XmlAttribute
 	protected boolean percent;
 
+	/**
+	 * 计算不可减免的瞬时法术伤害。
+	 * Calculates non-reducible instant spell damage.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, null, null)) {

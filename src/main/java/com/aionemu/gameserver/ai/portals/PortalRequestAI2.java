@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 传送门/传送点 AI：Portal Request（@AIName "portal_request"），继承 PortalAI2。
+ * Portal/teleporter AI: Portal Request (@AIName "portal_request"), extends PortalAI2.
+ *
+ * @author Encom
+ */
 @AIName("portal_request")
 public class PortalRequestAI2 extends PortalAI2
 {

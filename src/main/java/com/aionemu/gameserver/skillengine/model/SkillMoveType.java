@@ -1,26 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
+/**
+ * 技能位移类型：击退、拉拽、后移等控制表现编码。
+ * Skill move type: knockback, pull, move-behind and related control codes.
+ */
 public enum SkillMoveType {
 
-	RESIST(0), DEFAULT(16), PULL(50), // OLD 18 NEW 50 (5.6)
-	OPENAERIAL(20), KNOCKBACK(28), MOVEBEHIND(48), STAGGER(112), // 5.1
+	/** 抵抗 / Resist */
+	RESIST(0),
+	/** 默认 / Default */
+	DEFAULT(16),
+	/** 击飞 / Fly off */
+	FLYOFF(18),
+	/** 拉拽 / Pull */
+	PULL(50), // OLD 18 NEW 50 (5.6)
+	/** 浮空开启 / Open aerial */
+	OPENAERIAL(20),
+	/** 击退 / Knockback */
+	KNOCKBACK(28),
+	/** 移至身后 / Move behind */
+	MOVEBEHIND(48),
+	/** 踉跄 / Stagger */
+	STAGGER(112), // 5.1
+	/** 绊倒 / Stumble */
 	STUMBLE(16), // 5.1
+	/** 新拉拽 / New pull */
 	NEWPULL(54); // 5.1
 
 	private int id;
@@ -29,6 +33,12 @@ public enum SkillMoveType {
 		this.id = id;
 	}
 
+	/**
+	 * 获取协议 ID。
+	 * Gets protocol id.
+	 *
+	 * move type id
+	 */
 	public int getId() {
 		return id;
 	}

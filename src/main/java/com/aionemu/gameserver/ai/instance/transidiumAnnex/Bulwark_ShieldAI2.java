@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Transidium Annex 副本 NPC AI：Bulwark Shield（@AIName "bulwark_shield"），继承 NpcAI2。
+ * Transidium Annex instance NPC AI: Bulwark Shield (@AIName "bulwark_shield"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("bulwark_shield")
 public class Bulwark_ShieldAI2 extends NpcAI2
 {
@@ -43,9 +29,8 @@ public class Bulwark_ShieldAI2 extends NpcAI2
 	}
 	
    /**
-	* Walls around "Ahserion" become vulnerable
-	* You can start to destroy walls between you and "Ahserion".
-	* You can say that after 30min the real battle begins.
+	* 「Ahserion」周围墙壁变为可破坏，可开始摧毁与其之间的墙。
+	 * Walls around "Ahserion" become vulnerable. You can start to destroy walls between you and "Ahserion". You can say that after 30min the real battle begins.
 	*/
 	private void startShieldVulnerable() {
 		final Npc GAb1SubNamedBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277231); //Bulwark Shield.
@@ -62,7 +47,7 @@ public class Bulwark_ShieldAI2 extends NpcAI2
 						player.updateKnownlist();
 					}
 				}
-				//The effect of the Transidium Annex has weakened the Bulwark Shield.
+				// 特兰西迪姆附楼效果削弱了壁垒护盾。 / The effect of the Transidium Annex has weakened the Bulwark Shield.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_12, 0);
 			}
 		}, 1800000); //...30 Minutes.

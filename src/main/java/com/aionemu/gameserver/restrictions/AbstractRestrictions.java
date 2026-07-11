@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.restrictions;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -22,25 +6,46 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 限制实现基类：提供激活/停用，未覆盖方法默认禁用。
+ * Base restriction implementation with activate/deactivate; uncovered methods are disabled by default.
+ *
  * @author lord_rex
  */
 public abstract class AbstractRestrictions implements Restrictions {
 
+	/**
+	 * 激活本限制。
+	 * Activates this restriction.
+	 */
 	public void activate() {
 		RestrictionsManager.activate(this);
 	}
 
+	/**
+	 * 停用本限制。
+	 * Deactivates this restriction.
+	 */
 	public void deactivate() {
 		RestrictionsManager.deactivate(this);
 	}
 
+	/**
+	 * 按实现类哈希，避免同类重复激活。
+	 * Hashes by implementation class to avoid duplicate activation of the same type.
+	 *
+	 * class hash
+	 */
 	@Override
 	public int hashCode() {
 		return getClass().hashCode();
 	}
 
 	/**
-	 * To avoid accidentally multiple times activated restrictions.
+	 * 同类实例视为相等，避免多次激活同一限制类型。
+	 * Same implementation class is equal to avoid multi-activation.
+	 *
+	 * object
+	 * whether same class
 	 */
 	@Override
 	public boolean equals(Object obj) {

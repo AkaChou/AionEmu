@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,36 +12,43 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
 /**
- * Author Rinzler (Encom) /** Modified by Ranastic /
- ****/
-
+ * 经验加成道具动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
+ * @author Rinzler (Encom)
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BonusAddExpAction")
-public class BonusAddExpAction extends AbstractItemAction
-{
-    @XmlAttribute(name = "rate")
-    protected Integer rate;
+public class BonusAddExpAction extends AbstractItemAction {
 
-    @XmlAttribute()
-    protected boolean isPercent = true;
+	@XmlAttribute(name = "rate")
+	protected Integer rate;
 
-    public BonusAddExpAction() {
-    }
-	
-    public BonusAddExpAction(Integer rate) {
-        this.rate = rate;
-    }
-	
-    public Integer getRate() {
-        return rate;
-    }
-	
-    public void setRate(Integer rate) {
-        this.rate = rate;
-    }
-	
+	@XmlAttribute()
+	protected boolean isPercent = true;
+
+	public BonusAddExpAction() {
+	}
+
+	public BonusAddExpAction(Integer rate) {
+		this.rate = rate;
+	}
+
+	/** 获取比率。 / Returns the rate. */
+	public Integer getRate() {
+		return rate;
+	}
+
+	/** 设置比率。 / Sets the rate. */
+	public void setRate(Integer rate) {
+		this.rate = rate;
+	}
+
+	/**
+	 * 是否可以执行动作。
+	 * Whether the action can be performed.
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null) {
@@ -66,17 +57,24 @@ public class BonusAddExpAction extends AbstractItemAction
 		}
 		return true;
 	}
-	
-    @Override
+
+	/**
+	 * 执行动作：按比例增加经验并播放使用动画。
+	 * Performs the action: adds experience by rate and plays usage animation.
+	 */
+	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
-        long exp = player.getCommonData().getExpNeed();
-        long expPercent = Math.round((exp * rate) / 100f);
-        if (player.getInventory().decreaseByObjectId(parentItem.getObjectId().intValue(), 1)) {
-            player.getCommonData().addExp(expPercent, null);
-            player.getObserveController().notifyItemuseObservers(parentItem);
+		long exp = player.getCommonData().getExpNeed();
+		long expPercent = Math.round((exp * rate) / 100f);
+		if (player.getInventory().decreaseByObjectId(parentItem.getObjectId().intValue(), 1)) {
+			player.getCommonData().addExp(expPercent, null);
+			player.getObserveController().notifyItemuseObservers(parentItem);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GET_EXP2(expPercent));
-            ItemTemplate itemTemplate = parentItem.getItemTemplate();
-            PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), parentItem.getObjectId().intValue(), itemTemplate.getTemplateId()), true);
-        }
-    }
+			ItemTemplate itemTemplate = parentItem.getItemTemplate();
+			PacketSendUtility.broadcastPacket(player,
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), parentItem.getObjectId().intValue(),
+							itemTemplate.getTemplateId()),
+					true);
+		}
+	}
 }

@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -33,8 +20,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/*
- * @Rework: MATTY
+/**
+ * AnimationAdd 动作模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -56,6 +44,9 @@ public class AnimationAddAction extends AbstractItemAction {
 	@XmlAttribute
 	protected Integer minutes;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null) {
@@ -65,6 +56,7 @@ public class AnimationAddAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		player.getController().cancelUseItem();
@@ -93,68 +85,69 @@ public class AnimationAddAction extends AbstractItemAction {
 		}
 
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				// Флаг, чтобы определить, была ли добавлена хотя бы одна новая анимация
 				boolean anyMotionAdded = false;
 
-				// Проверяем, нужно ли добавить анимацию idle и не изучена ли она уже
+				// 检查是否需添加 idle 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию idle и не изучена ли она уже
 				if (idle != null) {
-					// log.warn("Проверяем, есть ли idle motion с id {}:", idle);
+					// log.warn(I18n.get("log.79bf49d72aa1", idle));
 					if (!player.getMotions().hasMotion(idle)) {
-						// log.warn("Idle motion с id {} отсутствует, добавляем", idle);
+						// log.warn(I18n.get("log.7ce028aeb040", idle));
 						addMotion(player, idle);
 						anyMotionAdded = true;
 					} else {
-						// log.warn("Idle motion с id {} уже есть, не добавляем", idle);
+						// log.warn(I18n.get("log.3b733eb97e8b", idle));
 					}
 				}
-				// Проверяем, нужно ли добавить анимацию run и не изучена ли она уже
+				// 检查是否需添加 run 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию run и не изучена ли она уже
 				if (run != null) {
-					// log.warn("Проверяем, есть ли run motion с id {}:", run);
+					// log.warn(I18n.get("log.168b6ac187b9", run));
 					if (!player.getMotions().hasMotion(run)) {
-						// log.warn("run motion с id {} отсутствует, добавляем", run);
+						// log.warn(I18n.get("log.54263cc6614b", run));
 						addMotion(player, run);
 						anyMotionAdded = true;
 					} else {
-						// log.warn("run motion с id {} уже есть, не добавляем", run);
+						// log.warn(I18n.get("log.d00cde9a83fd", run));
 					}
 				}
-				// Проверяем, нужно ли добавить анимацию jump и не изучена ли она уже
+				// 检查是否需添加 jump 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию jump и не изучена ли она уже
 				if (jump != null) {
-					// log.warn("Проверяем, есть ли jump motion с id {}:", jump);
+					// log.warn(I18n.get("log.4dced1c0e67e", jump));
 					if (!player.getMotions().hasMotion(jump)) {
-						// log.warn("jump motion с id {} отсутствует, добавляем", jump);
+						// log.warn(I18n.get("log.a965418c76e3", jump));
 						addMotion(player, jump);
 						anyMotionAdded = true;
 					} else {
-						// log.warn("jump motion с id {} уже есть, не добавляем", jump);
+						// log.warn(I18n.get("log.e24a81c09788", jump));
 					}
 				}
-				// Проверяем, нужно ли добавить анимацию rest и не изучена ли она уже
+				// 检查是否需添加 rest 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию rest и не изучена ли она уже
 				if (rest != null) {
-					// log.warn("Проверяем, есть ли rest motion с id {}:", rest);
+					// log.warn(I18n.get("log.d56e3b9a8d34", rest));
 					if (!player.getMotions().hasMotion(rest)) {
-						// log.warn("rest motion с id {} отсутствует, добавляем", rest);
+						// log.warn(I18n.get("log.9f35e237297f", rest));
 						addMotion(player, rest);
 						anyMotionAdded = true;
 					} else {
-						// log.warn("rest motion с id {} уже есть, не добавляем", rest);
+						// log.warn(I18n.get("log.a1bca3318f8c", rest));
 					}
 				}
-				// Проверяем, нужно ли добавить анимацию shop и не изучена ли она уже
+				// 检查是否需添加 shop 动画且尚未学习。 / Проверяем, нужно ли добавить анимацию shop и не изучена ли она уже
 				if (shop != null) {
-					// log.warn("Проверяем, есть ли shop motion с id {}:", shop);
+					// log.warn(I18n.get("log.5debe69c6ae9", shop));
 					if (!player.getMotions().hasMotion(shop)) {
-						// log.warn("shop motion с id {} отсутствует, добавляем", shop);
+						// log.warn(I18n.get("log.19438a928119", shop));
 						addMotion(player, shop);
 						anyMotionAdded = true;
 					} else {
-						// log.warn("shop motion с id {} уже есть, не добавляем", shop);
+						// log.warn(I18n.get("log.f254adffec13", shop));
 					}
 				}
 
-				// Отправляем пакет SM_ITEM_USAGE_ANIMATION, SM_MOTION и сообщение об изучении только в том случае, если была добавлена хотя бы одна новая анимация и уменьшаем кол-во предметов.
+				// 仅在新增至少一种动画时发送 SM_ITEM_USAGE_ANIMATION、SM_MOTION 与学习消息，并减少数量。 / Отправляем пакет SM_ITEM_USAGE_ANIMATION, SM_MOTION и сообщение об изучении только в том случае, если была добавлена хотя бы одна новая анимация и уменьшаем кол-во предметов.
 				if (anyMotionAdded) {
 					PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 					PacketSendUtility.broadcastPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()), false);

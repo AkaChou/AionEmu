@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员 HTML 缓存命令：重载缓存或向玩家展示指定 XHTML 页面。
+ * Admin HTML cache command: reload the cache or show a named XHTML page to the player.
+ *
  * @author lord_rex
  */
 public class Html extends AdminCommand {
@@ -33,6 +20,13 @@ public class Html extends AdminCommand {
 		super("html");
 	}
 
+	/**
+	 * 处理 reload（重载缓存）或 show（展示页面）子命令。
+	 * Handle reload (refresh cache) or show (display page) subcommands.
+	 *
+	 * @param player 执行命令的管理员 / Admin executing the command
+	 * @param params 子命令与可选文件名 / Subcommand and optional filename
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -51,6 +45,13 @@ public class Html extends AdminCommand {
 				PacketSendUtility.sendMessage(player, "Usage: //html show <filename>");
 	}
 
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Usage: //html <reload|show>");

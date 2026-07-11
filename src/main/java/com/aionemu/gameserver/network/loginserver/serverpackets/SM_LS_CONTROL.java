@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection;
 import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 
 /**
+ * 游戏服向登录服下发账号控制指令的服务端包。
+ * Server packet that sends account-control commands from the game server to the login server.
+ *
  * @author Aionchs-Wylovech
  */
 public class SM_LS_CONTROL extends LsServerPacket {
@@ -34,6 +21,16 @@ public class SM_LS_CONTROL extends LsServerPacket {
 
 	private final int type;
 
+	/**
+	 * 构造登录服账号控制包。
+	 * Constructs a login-server account control packet.
+	 *
+	 * account name
+	 * player name
+	 * admin name
+	 * @param param 控制参数 / control parameter
+	 * @param type 控制类型 / control type
+	 */
 	public SM_LS_CONTROL(String accountName, String playerName, String adminName, int param, int type) {
 		super(0x05);
 		this.accountName = accountName;
@@ -44,7 +41,8 @@ public class SM_LS_CONTROL extends LsServerPacket {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 写入控制类型、管理员、账号、角色与参数。
+	 * Writes control type, admin name, account name, player name and parameter.
 	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {

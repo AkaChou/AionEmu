@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items.storage;
 
 import java.util.ArrayList;
@@ -21,10 +5,13 @@ import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+/**
+ * 物品仓库模型。
+ * Item Storage model.
+ */
 
 public class ItemStorage {
 	public static final long FIRST_AVAILABLE_SLOT = 65535L;
@@ -38,16 +25,19 @@ public class ItemStorage {
 		this.items = new LinkedHashMap<>();
 	}
 
+	/** 获取物品。 / Returns the items. */
 	public List<Item> getItems() {
 		List<Item> temp = new ArrayList<>();
 		temp.addAll(items.values());
 		return temp;
 	}
 
+	/** 获取限制。 / Returns the limit. */
 	public int getLimit() {
 		return this.limit;
 	}
 
+	/** 设置限制。 / Sets the limit. */
 	public boolean setLimit(int limit) {
 		if (getCubeItems().size() > limit) {
 			return false;
@@ -57,6 +47,7 @@ public class ItemStorage {
 		return true;
 	}
 
+	/** 按 ID 返回 first item / Returns the first item by id */
 	public Item getFirstItemById(int itemId) {
 		for (Item item : items.values()) {
 			if (item.getItemTemplate().getTemplateId() == itemId) {
@@ -66,6 +57,7 @@ public class ItemStorage {
 		return null;
 	}
 
+	/** 返回按 ID 的物品 / Returns the items by id */
 	public List<Item> getItemsById(int itemId) {
 		List<Item> temp = new ArrayList<>();
 		for (Item item : items.values()) {
@@ -76,10 +68,12 @@ public class ItemStorage {
 		return temp;
 	}
 
+	/** 返回按对象 ID 的物品 / Returns the item by obj id */
 	public Item getItemByObjId(int itemObjId) {
 		return this.items.get(itemObjId);
 	}
 
+	/** 按物品 ID 返回 slot id / Returns the slot id by item id */
 	public long getSlotIdByItemId(int itemId) {
 		for (Item item : this.items.values()) {
 			if (item.getItemTemplate().getTemplateId() == itemId) {
@@ -89,6 +83,7 @@ public class ItemStorage {
 		return -1;
 	}
 
+	/** 按 slot id 返回 item / Returns the item by slot id */
 	public Item getItemBySlotId(short slotId) {
 		for (Item item : getCubeItems()) {
 			if (item.getEquipmentSlot() == slotId) {
@@ -98,6 +93,7 @@ public class ItemStorage {
 		return null;
 	}
 
+	/** 按 slot id 返回 special item / Returns the special item by slot id */
 	public Item getSpecialItemBySlotId(short slotId) {
 		for (Item item : getSpecialCubeItems()) {
 			if (item.getEquipmentSlot() == slotId) {
@@ -107,6 +103,7 @@ public class ItemStorage {
 		return null;
 	}
 
+	/** 按 obj id 返回 slot id / Returns the slot id by obj id */
 	public long getSlotIdByObjId(int objId) {
 		Item item = this.getItemByObjId(objId);
 		if (item != null) {
@@ -116,10 +113,12 @@ public class ItemStorage {
 		}
 	}
 
+	/** 返回 next available slot / Returns the next available slot */
 	public long getNextAvailableSlot() {
 		return FIRST_AVAILABLE_SLOT;
 	}
 
+	/** 放入物品。 / Put item. */
 	public boolean putItem(Item item) {
 		if (this.items.containsKey(item.getObjectId())) {
 			return false;
@@ -128,18 +127,24 @@ public class ItemStorage {
 		return true;
 	}
 
+	/** 移除物品。 / Removes item. */
 	public Item removeItem(int objId) {
 		return this.items.remove(objId);
 	}
 
+	/** 是否已满。 / Whether Full. */
 	public boolean isFull() {
 		return getCubeItems().size() >= limit;
 	}
 
+	/**
+	 * @return Whether full special cube / Whether full special cube
+	 */
 	public boolean isFullSpecialCube() {
 		return getSpecialCubeItems().size() >= specialLimit;
 	}
 
+	/** 返回 special cube items / Returns the special cube items */
 	public List<Item> getSpecialCubeItems() {
 		List<Item> result = new ArrayList<Item>();
 		for (Item item : items.values()) {
@@ -150,6 +155,7 @@ public class ItemStorage {
 		return result;
 	}
 
+	/** 获取魔立方物品。 / Returns the cube items. */
 	public List<Item> getCubeItems() {
 		List<Item> result = new ArrayList<Item>();
 		for (Item item : items.values()) {
@@ -160,14 +166,17 @@ public class ItemStorage {
 		return result;
 	}
 
+	/** 返回 free slots / Returns the free slots */
 	public int getFreeSlots() {
 		return limit - getCubeItems().size();
 	}
 
+	/** 返回 special cube free slots / Returns the special cube free slots */
 	public int getSpecialCubeFreeSlots() {
 		return specialLimit - getSpecialCubeItems().size();
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return this.items.size();
 	}

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -24,14 +10,27 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 
 /**
+ * 登录服角色转移流程响应包。
+ * Login server response for player transfer flow.
+ *
  * @author KID
  */
 @Slf4j
 public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
+	/**
+	 * 构造函数。
+	 * Constructor.
+	 *
+	 * @param opCode 操作码 opcode
+	 */
 	public CM_PTRANSFER_RESPONSE(int opCode) {
 		super(opCode);
 	}
 
+	/**
+	 * 按 actionId 读取并立即处理角色转移各阶段。
+	 * Reads and immediately handles each player-transfer stage by actionId.
+	 */
 	@Override
 	protected void readImpl() {
 		int actionId = this.readD();
@@ -63,8 +62,8 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 		case 23: {
 			byte serverId = readSC();
 			if (NetworkConfig.GAMESERVER_ID != serverId) {
-				log.error("Requesting player transfer for server id {} but this is {}", serverId,
-						NetworkConfig.GAMESERVER_ID);
+				log.error(I18n.get("log.d4034bbb0887", serverId,
+						NetworkConfig.GAMESERVER_ID));
 			} else {
 				byte targetServerId = readSC();
 				int account = readD();
@@ -79,6 +78,10 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 		}
 	}
 
+	/**
+	 * 无运行时逻辑（数据已在 readImpl 中处理）。
+	 * No runtime logic (data is handled in readImpl).
+	 */
 	@Override
 	protected void runImpl() {
 

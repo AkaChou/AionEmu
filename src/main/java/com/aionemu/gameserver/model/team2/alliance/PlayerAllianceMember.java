@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.alliance;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.PlayerTeamMember;
 
 /**
+ * 玩家联盟 Member，用于团队2相关逻辑。
+ * Player Alliance Member for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerAllianceMember extends PlayerTeamMember {
@@ -30,18 +17,22 @@ public class PlayerAllianceMember extends PlayerTeamMember {
 		super(player);
 	}
 
+	/** 返回 alliance id / Returns the alliance id */
 	public int getAllianceId() {
 		return allianceId;
 	}
 
+	/** 设置 alliance id / Sets the alliance id */
 	public void setAllianceId(int allianceId) {
 		this.allianceId = allianceId;
 	}
 
+	/** 获取玩家联盟队伍。 / Returns the player alliance group. */
 	public final PlayerAllianceGroup getPlayerAllianceGroup() {
 		return getObject().getPlayerAllianceGroup2();
 	}
 
+	/** 设置玩家联盟队伍。 / Sets the player alliance group. */
 	public final void setPlayerAllianceGroup(PlayerAllianceGroup playerAllianceGroup) {
 		getObject().setPlayerAllianceGroup2(playerAllianceGroup);
 	}

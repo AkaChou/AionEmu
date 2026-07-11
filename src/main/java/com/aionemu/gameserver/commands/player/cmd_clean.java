@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -26,14 +10,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 玩家命令：按物品 ID 或物品链接删除背包中的一件物品。
+ * Player command: deletes one inventory item by item id or item link.
+ *
  * @author Source
  */
 public class cmd_clean extends PlayerCommand {
 
+	/**
+	 * 注册命令别名 {@code clean}。
+	 * Registers the command alias {@code clean}.
+	 */
     public cmd_clean() {
         super("clean");
     }
 
+	/**
+	 * 解析物品 ID/链接并从背包减少一件该物品。
+	 * Parses item id/link and decreases one matching item from inventory.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param params 物品 ID 或链接 / item id or link
+	 */
     @Override
     public void execute(Player player, String... params) {
         String msg = "syntax .clean <item ID> or <item @link>";
@@ -47,7 +45,7 @@ public class cmd_clean extends PlayerCommand {
 
         try {
             String item = params[0];
-            // Some item links have space before Id
+            // 部分物品链接在 Id 前有空格 / Some item links have space before Id
             if (item.equals("[item:")) {
                 item = params[1];
                 Pattern id = Pattern.compile("(\\d{9})");
@@ -68,7 +66,7 @@ public class cmd_clean extends PlayerCommand {
         } catch (NumberFormatException e) {
             try {
                 String item = params[1];
-                // Some item links have space before Id
+                // 部分物品链接在 Id 前有空格 / Some item links have space before Id
                 if (item.equals("[item:")) {
                     item = params[2];
                     Pattern id = Pattern.compile("(\\d{9})");
@@ -105,6 +103,13 @@ public class cmd_clean extends PlayerCommand {
         }
     }
 
+	/**
+	 * 参数错误时回显失败消息。
+	 * Echoes the failure message when arguments are invalid.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * failure message
+	 */
     @Override
     public void onFail(Player player, String message) {
         PacketSendUtility.sendMessage(player, message);

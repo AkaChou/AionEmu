@@ -1,30 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 跳跃/位移数值来源：按伤害或技能等级计算 hop。
+ * Hop value source: derive hop amount from damage or skill level.
+ *
  * @author ATracer
  */
 @XmlType(name = "HopType")
 @XmlEnum
 public enum HopType {
 
-	DAMAGE, SKILLLV;
+	/** 按伤害 / From damage */
+	DAMAGE,
+	/** 按技能等级 / From skill level */
+	SKILLLV;
 }

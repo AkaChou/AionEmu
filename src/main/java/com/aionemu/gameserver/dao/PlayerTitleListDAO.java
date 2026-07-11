@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -22,18 +6,50 @@ import com.aionemu.gameserver.model.gameobjects.player.title.Title;
 import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
 
 /**
+ * 玩家称号列表数据访问抽象层。
+ * DAO for player title list persistence.
+ *
  * @author xavier
  */
 public abstract class PlayerTitleListDAO implements DAO {
 
+	/**
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
+	 */
 	@Override
 	public final String getClassName() {
 		return PlayerTitleListDAO.class.getName();
 	}
 
+	/**
+	 * 加载玩家称号列表。
+	 * Loads the title list for the player.
+	 *
+	 * player object id
+	 * title list
+	 */
 	public abstract TitleList loadTitleList(int playerId);
 
+	/**
+	 * 保存玩家一条称号记录。
+	 * Stores a title entry for the player.
+	 *
+	 * 玩家 / player
+	 * @param entry 称号条目 / title entry
+	 * @return 是否保存成功 / true if stored
+	 */
 	public abstract boolean storeTitles(Player player, Title entry);
 
+	/**
+	 * 移除玩家一条称号。
+	 * Removes a title from the player.
+	 *
+	 * player object id
+	 * title id
+	 * @return 是否移除成功 / true if removed
+	 */
 	public abstract boolean removeTitle(int playerId, int titleId);
 }

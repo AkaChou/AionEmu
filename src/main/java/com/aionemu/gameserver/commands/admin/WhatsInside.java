@@ -13,15 +13,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 列出分解/开箱物品掉落表的管理员命令。
+ * Admin command to list disassembly/box drop tables for an item.
+ *
  * @author BeckUp.Media
  */
 public class WhatsInside extends AdminCommand
 {
+	/**
+	 * 构造 whatsinside 命令。
+	 * Creates the whatsinside command.
+	 */
 	public WhatsInside()
 	{
 		super("whatsinside");
 	}
 
+	/**
+	 * 解析物品链接并输出分解组与掉落概率。
+	 * Parses an item link and prints disassembly groups and rates.
+	 *
+	 * 执行 GM / Admin player
+	 * Item link
+	 */
 	@Override
 	public void execute(Player player, String... params)
 	{

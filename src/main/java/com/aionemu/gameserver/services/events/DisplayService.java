@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
 import com.aionemu.gameserver.model.Race;
@@ -22,9 +6,21 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ArmorType;
 
 /**
+ * 外观展示服务，管理玩家展示用外观状态。
+ * Display service managing player cosmetic/display appearance state.
+ *
  * @author Rinzler (Encom)
  */
+
 public class DisplayService {
+	/**
+	 * getDisplayTemplate 方法。
+	 * getDisplayTemplate method.
+	 *
+	 * 玩家 / player
+	 * item
+	 * result
+	 */
 	public static int getDisplayTemplate(Player player, Item item) {
 		if (player.isBandit() || player.isFFA()) {
 			if (item.getItemTemplate().isWeapon()) {
@@ -78,6 +74,13 @@ public class DisplayService {
 		}
 	}
 
+	/**
+	 * getDisplayName 方法。
+	 * getDisplayName method.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public static String getDisplayName(Player player) {
 		if (player.isBandit()) {
 			return "[PK] Bandit";
@@ -90,6 +93,13 @@ public class DisplayService {
 		}
 	}
 
+	/**
+	 * getDisplayLegionName 方法。
+	 * getDisplayLegionName method.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public static String getDisplayLegionName(Player player) {
 		if (player.isBandit()) {
 			return "Wanted";

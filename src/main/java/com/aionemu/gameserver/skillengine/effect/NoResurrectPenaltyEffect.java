@@ -1,29 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 免除复活惩罚效果：标记效果实例，复活时不施加惩罚。
+ * No resurrect-penalty effect: marks the effect so resurrection applies no penalty.
+ */
 public class NoResurrectPenaltyEffect extends BuffEffect {
 
+	/**
+	 * 标记本效果计算成功。
+	 * Marks this effect calculation as successful.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
 	}
 
+	/**
+	 * 设置免除复活惩罚标记。
+	 * Sets the no-resurrect-penalty flag.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void startEffect(Effect effect) {
 		effect.setNoResurrectPenalty(true);
 	}

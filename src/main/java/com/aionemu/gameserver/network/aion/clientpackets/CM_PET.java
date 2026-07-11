@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +22,9 @@ import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 宠物收养、召唤、喂养等操作的客户端包。
+ * Client packet for pet adopt/summon/feed and related actions.
+ *
  * @author M@xx, xTz
  */
 @Slf4j
@@ -68,24 +55,34 @@ public class CM_PET extends AionClientPacket {
 	@SuppressWarnings("unused")
 	private int unk6;
 
-	// Buff
+	// 增益 / Buff
 	private int activateCheering;
 	@SuppressWarnings("unused")
 	private int unkCheer2;
 	@SuppressWarnings("unused")
 	private int unkCheer3;
 
-	// Merchand
+	// 商人 / Merchand
 	private int activateAutoSell;
 	@SuppressWarnings("unused")
 	private int unkMerchand2;
 	@SuppressWarnings("unused")
 	private int unkMerchand3;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_PET(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 按宠物动作类型读取操作参数。
+	 * Reads pet action parameters by action type.
+	 */
 	@Override
 	protected void readImpl() {
 		actionId = readH();
@@ -151,7 +148,10 @@ public class CM_PET extends AionClientPacket {
 			break;
 		}
 	}
-
+	/**
+	 * 执行宠物收养、召唤、喂养等动作。
+	 * Executes pet adopt, summon, feed, and related actions.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
@@ -183,14 +183,14 @@ public class CM_PET extends AionClientPacket {
 			break;
 		case FOOD:
 			if (actionType == 2) {
-				// Pet doping
+				// 宠物用药 / Pet doping
 				if (dopingAction == 2) {
 					GameFeatureServices.petService().relocateDoping(player, dopingSlot1, dopingSlot2);
 				} else {
 					GameFeatureServices.petService().useDoping(player, dopingAction, dopingItemId, dopingSlot1);
 				}
 			} else if (actionType == 3) {
-				// Pet looting
+				// 宠物拾取 / Pet looting
 				GameFeatureServices.petService().activateLoot(player, activateLoot != 0);
 			} else if (actionType == 4) {
 				if (activateAutoSell == 1) {

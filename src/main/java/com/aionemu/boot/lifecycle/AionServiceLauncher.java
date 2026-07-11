@@ -1,5 +1,6 @@
 package com.aionemu.boot.lifecycle;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.commons.services.ServiceContext;
@@ -29,6 +30,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
+/**
+ * 内嵌服务编排器：按相位启动、有序关闭，并处理嵌入式失败与关闭请求。
+ * Orchestrates embedded services: phased start, ordered stop, and embedded failure/shutdown handling.
+ */
 @Slf4j
 @Component
 public class AionServiceLauncher implements ApplicationRunner, DisposableBean, ApplicationContextAware,
@@ -46,6 +51,15 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     private final Consumer<AionEmbeddedShutdownMode> embeddedShutdownHandler = this::handleEmbeddedShutdown;
     private ConfigurableApplicationContext applicationContext;
 
+    /**
+     * Spring 注入入口：使用进程运行时桥接的 halt。
+     * Spring injection entry: uses process runtime bridge halt.
+     *
+     * @param services 服务开关配置 / service enablement properties
+     * transport boundary
+     * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
+     * @param runtimeBridge 进程运行时桥接 / process runtime bridge
+     */
     @Autowired
     public AionServiceLauncher(
         AionServicesProperties services,
@@ -56,6 +70,14 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         this(services, transportBoundary, serviceLifecycles, runtimeBridge::halt);
     }
 
+    /**
+     * 测试用构造：使用默认进程桥接 halt。
+     * Test constructor: uses a default process bridge halt.
+     *
+     * @param services 服务开关配置 / service enablement properties
+     * transport boundary
+     * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
+     */
     AionServiceLauncher(
         AionServicesProperties services,
         AionTransportBoundary transportBoundary,
@@ -64,6 +86,15 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         this(services, transportBoundary, serviceLifecycles, new AionProcessRuntimeBridge()::halt);
     }
 
+    /**
+     * 核心构造：按相位排序生命周期并绑定 halt 动作。
+     * Core constructor: sorts lifecycles by phase and binds the halt action.
+     *
+     * @param services 服务开关配置 / service enablement properties
+     * transport boundary
+     * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
+     * @param haltAction 进程中止动作 / process halt action
+     */
     AionServiceLauncher(
         AionServicesProperties services,
         AionTransportBoundary transportBoundary,
@@ -78,6 +109,13 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
             .toList();
     }
 
+    /**
+     * 应用启动后按配置启动各内嵌服务。
+     * Starts each embedded service after application bootstrap according to config.
+     *
+     * @param args 应用启动参数 / application arguments
+     * if any service fails to start。 / if any service fails to start.
+     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         AionRuntimeMode.enableBootEmbeddedMode();
@@ -88,30 +126,36 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         boolean chatEnabled = services.getChat().isEnabled();
         boolean gameEnabled = services.getGame().isEnabled();
 
-        log.info("Aion service startup: login={}, chat={}, game={}", loginEnabled, chatEnabled, gameEnabled);
+        log.info(I18n.get("boot.startup.summary", loginEnabled, chatEnabled, gameEnabled));
         try {
             transportBoundary.prepare();
             if (gameEnabled && !loginEnabled) {
-                log.warn("Game service is enabled while login service is disabled; game will still use its configured login-server connector.");
+                log.warn(I18n.get("boot.startup.game_without_login"));
             }
             if (!chatEnabled) {
-                log.info("Chat service is disabled by boot configuration; game chat connector will also be disabled.");
+                log.info(I18n.get("boot.startup.chat_disabled"));
             }
 
             for (AionServiceLifecycle serviceLifecycle : serviceLifecycles) {
                 if (serviceLifecycle.isEnabled()) {
                     startService(serviceLifecycle, args);
                 } else {
-                    log.info("{} service is disabled by boot configuration.", serviceLifecycle.getName());
+                    log.info(I18n.get("boot.startup.service_disabled", serviceLifecycle.getName()));
                 }
             }
         } catch (Exception | Error e) {
-            log.error("Aion service startup failed; stopping services.", e);
+            log.error(I18n.get("boot.startup.failed"), e);
             destroy();
             throw e;
         }
     }
 
+    /**
+     * 保存可配置的应用上下文，供嵌入式关闭时关闭容器。
+     * Stores the configurable application context for container close on embedded shutdown.
+     *
+     * @param applicationContext Spring 应用上下文 / Spring application context
+     */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         if (applicationContext instanceof ConfigurableApplicationContext configurableApplicationContext) {
@@ -119,33 +163,60 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         }
     }
 
+    /**
+     * 在服务上下文作用域内启动单个服务并记录日志。
+     * Starts one service under its ServiceContext scope and logs progress.
+     *
+     * @param serviceLifecycle 目标服务生命周期 / target service lifecycle
+     * @param args 应用启动参数 / application arguments
+     * if start fails。 / if start fails.
+     */
     private void startService(AionServiceLifecycle serviceLifecycle, ApplicationArguments args) throws Exception {
         String name = serviceLifecycle.getName();
-        log.info("Starting {} service...", name);
+        log.info(I18n.get("boot.startup.starting", name));
         startedServices.add(serviceLifecycle);
         try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
             serviceLifecycle.start(args);
         }
-        log.info("{} service startup returned.", name);
+        log.info(I18n.get("boot.startup.returned", name));
     }
 
+    /**
+     * 仅执行一次的优雅关闭请求。
+     * Runs a graceful shutdown request at most once.
+     *
+     * shutdown action
+     */
     void requestGracefulShutdown(Runnable shutdown) {
         if (gracefulShutdownRequested.compareAndSet(false, true)) {
             shutdown.run();
         }
     }
 
+    /**
+     * 上下文关闭时：若 game 已启动且未在停止中，则等待玩家离线并完成 game 关闭。
+     * On context close: if game started and not already stopping, wait for players and finish game shutdown.
+     *
+     * @param event 上下文关闭事件 / context closed event
+     */
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
         boolean gameStarted = startedServices.stream().anyMatch(service -> "game".equals(service.getName()));
         if (gameStarted && !stopping.get()) {
+            // 须在游戏上下文运行：DAOManager/DatabaseFactory 按 ServiceContext 键控。 / Must run under game context: DAOManager/DatabaseFactory are keyed by ServiceContext.
             requestGracefulShutdown(() -> {
-                GameShutdownRequest.waitForPlayersToLeave(ShutdownConfig.HOOK_DELAY, ShutdownConfig.ANNOUNCE_INTERVAL);
-                GameShutdownRequest.completeShutdown(ShutdownMode.SHUTDOWN, false);
+                try (ServiceContext.Scope ignored = ServiceContext.use("game")) {
+                    GameShutdownRequest.waitForPlayersToLeave(ShutdownConfig.HOOK_DELAY, ShutdownConfig.ANNOUNCE_INTERVAL);
+                    GameShutdownRequest.completeShutdown(ShutdownMode.SHUTDOWN, false);
+                }
             });
         }
     }
 
+    /**
+     * 逆序停止已启动服务并销毁传输边界；幂等。
+     * Stops started services in reverse order and destroys the transport boundary; idempotent.
+     */
     @Override
     public void destroy() {
         if (!destroyed.compareAndSet(false, true)) {
@@ -162,43 +233,69 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         stopTransportBoundary();
     }
 
+    /**
+     * 在服务上下文作用域内停止单个服务。
+     * Stops one service under its ServiceContext scope.
+     *
+     * @param serviceLifecycle 目标服务生命周期 / target service lifecycle
+     */
     private void stopService(AionServiceLifecycle serviceLifecycle) {
         String name = serviceLifecycle.getName();
-        log.info("Stopping {} service...", name);
+        log.info(I18n.get("boot.shutdown.stopping", name));
         try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
             serviceLifecycle.stop();
         } catch (Exception e) {
-            log.warn("Failed to stop {} service cleanly.", name, e);
+            log.warn(I18n.get("boot.shutdown.stop_failed", name), e);
         }
     }
 
+    /**
+     * 销毁传输边界并吞掉异常。
+     * Destroys the transport boundary and swallows exceptions.
+     */
     private void stopTransportBoundary() {
         try {
             transportBoundary.destroy();
         } catch (Exception e) {
-            log.warn("Failed to stop transport boundary cleanly.", e);
+            log.warn(I18n.get("boot.shutdown.transport_stop_failed"), e);
         }
     }
 
+    /**
+     * 处理嵌入式运行时失败：停止服务并关闭应用上下文。
+     * Handles embedded runtime failure: stop services and close the application context.
+     *
+     * @param failure 运行时失败 / runtime failure
+     */
     private void handleEmbeddedFailure(RuntimeException failure) {
         if (!stopping.compareAndSet(false, true)) {
             return;
         }
-        log.error("Aion embedded service failure detected; stopping services.", failure);
+        log.error(I18n.get("boot.embedded.failure"), failure);
         stopServicesAndCloseContext();
     }
 
+    /**
+     * 处理嵌入式关闭请求；若为 RESTART 则在关闭后 halt 进程。
+     * Handles embedded shutdown requests; on RESTART, halt the process after close.
+     *
+     * @param mode 关闭模式 / shutdown mode
+     */
     private void handleEmbeddedShutdown(AionEmbeddedShutdownMode mode) {
         if (!stopping.compareAndSet(false, true)) {
             return;
         }
-        log.info("Aion embedded {} requested; stopping services.", mode.name().toLowerCase());
+        log.info(I18n.get("boot.embedded.requested", mode.name().toLowerCase()));
         stopServicesAndCloseContext();
         if (mode == AionEmbeddedShutdownMode.RESTART) {
             haltAction.accept(mode.exitCode());
         }
     }
 
+    /**
+     * 销毁服务并关闭仍活跃的应用上下文。
+     * Destroys services and closes an active application context.
+     */
     private void stopServicesAndCloseContext() {
         destroy();
         if (applicationContext != null && applicationContext.isActive()) {

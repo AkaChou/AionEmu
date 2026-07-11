@@ -1,47 +1,53 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.beritraservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
 import com.aionemu.gameserver.model.beritra.BeritraStateType;
-import com.aionemu.gameserver.services.BeritraService;
 
 /**
+ * 贝尔特拉入侵活动抽象基类。
+ * Abstract base for Beritra invasion events.
+ *
+ * <p>封装启动/停止的幂等守卫，以及按状态类型刷怪/清怪的通用逻辑。
+ * Encapsulates idempotent start/stop guards and shared spawn/despawn by state type.</p>
+ *
  * @author Rinzler (Encom)
+ * @param <BL> 入侵位置类型 / invasion location type
  */
-
 public abstract class BeritraInvasion<BL extends BeritraLocation> {
+
 	private boolean started;
 	private final BL beritraLocation;
-
-	protected abstract void stopBeritraInvasion();
-
-	protected abstract void startBeritraInvasion();
-
 	private final AtomicBoolean finished = new AtomicBoolean();
 
+	/**
+	 * 停止入侵的具体实现（由子类提供）。
+	 * Concrete stop logic (implemented by subclasses).
+	 */
+	protected abstract void stopBeritraInvasion();
+
+	/**
+	 * 启动入侵的具体实现（由子类提供）。
+	 * Concrete start logic (implemented by subclasses).
+	 */
+	protected abstract void startBeritraInvasion();
+
+	/**
+	 * 绑定入侵地点。
+	 * Binds the invasion location.
+	 *
+	 * invasion location
+	 */
 	public BeritraInvasion(BL beritraLocation) {
 		this.beritraLocation = beritraLocation;
 	}
 
+	/**
+	 * 启动入侵（幂等，重复调用会被忽略）。
+	 * Starts the invasion (idempotent; subsequent calls are ignored).
+	 */
 	public final void start() {
 		boolean doubleStart = false;
 		synchronized (this) {
@@ -57,28 +63,60 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 		startBeritraInvasion();
 	}
 
+	/**
+	 * 停止入侵（仅首次生效）。
+	 * Stops the invasion (only the first call takes effect).
+	 */
 	public final void stop() {
 		if (finished.compareAndSet(false, true)) {
 			stopBeritraInvasion();
 		}
 	}
 
+	/**
+	 * 按状态类型刷新该地点刷怪。
+	 * Spawns entities for this location by state type.
+	 *
+	 * @param type 状态类型 / state type
+	 */
 	protected void spawn(BeritraStateType type) {
 		GameLocationBootstrapServices.beritraService().spawn(getBeritraLocation(), type);
 	}
 
+	/**
+	 * 清除该地点已刷出的对象。
+	 * Despawns entities for this location.
+	 */
 	protected void despawn() {
 		GameLocationBootstrapServices.beritraService().despawn(getBeritraLocation());
 	}
 
+	/**
+	 * 是否已结束。
+	 * Whether the event has finished.
+	 *
+	 * @return 已结束则为 true / true if finished
+	 */
 	public boolean isFinished() {
 		return finished.get();
 	}
 
+	/**
+	 * 获取绑定的入侵地点。
+	 * Returns the bound invasion location.
+	 *
+	 * location
+	 */
 	public BL getBeritraLocation() {
 		return beritraLocation;
 	}
 
+	/**
+	 * 获取地点 ID。
+	 * Returns the location id.
+	 *
+	 * location id
+	 */
 	public int getBeritraLocationId() {
 		return beritraLocation.getId();
 	}

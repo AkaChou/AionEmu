@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.HashSet;
@@ -37,13 +21,31 @@ import com.aionemu.commons.utils.collections.IntArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 击杀召唤怪任务模板：与刷怪物体交互召唤目标，击杀配置怪物后推进变量并领奖。
+ * Kill-spawned quest template: interact with spawner objects to summon targets, kill configured monsters, then claim reward.
+ */
 public class KillSpawned extends QuestHandler {
+	/** 任务 ID / quest id */
 	private final int questId;
+	/** 起始 NPC ID 集合 / start NPC id set */
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
+	/** 结束 NPC ID 集合 / end NPC id set */
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
+	/** 刷新配置：NPC ID 列表到 SpawnedMonster / spawn config: NPC id lists to SpawnedMonster */
 	private final Map<List<Integer>, SpawnedMonster> spawnedMonsters;
+	/** 刷怪物体 NPC ID 列表 / spawner object NPC ids */
 	private IntArrayList spawnerObjects;
 
+	/**
+	 * 构造击杀召唤怪任务处理器。
+	 * Constructs a kill-spawned quest handler.
+	 *
+	 * quest id
+	 * start NPC list
+	 * @param endNpcIds 结束 NPC 列表，null 则复用起始 NPC / end NPC list, null reuses start NPCs
+	 * @param spawnedMonsters 召唤怪配置映射 / spawned monster config map
+	 */
 	public KillSpawned(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds,
 			Map<List<Integer>, SpawnedMonster> spawnedMonsters) {
 		super(questId);
@@ -63,6 +65,10 @@ public class KillSpawned extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 注册接取/对话 NPC、击杀目标与刷怪物体事件。
+	 * Registers start/talk NPCs, kill targets and spawner object events.
+	 */
 	@Override
 	public void register() {
 		Iterator<Integer> iterator = startNpcs.iterator();
@@ -88,6 +94,13 @@ public class KillSpawned extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理接取、刷怪物体交互与交任务对话。
+	 * Handles accept, spawner-object interaction and turn-in dialogs.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		final Player player = env.getPlayer();
@@ -140,6 +153,13 @@ public class KillSpawned extends QuestHandler {
 		return false;
 	}
 
+	/**
+	 * 处理击杀召唤怪事件：推进对应任务变量，全部完成后进入奖励。
+	 * Handles spawned-monster kill events: advances matching quest vars and enters reward when all complete.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the kill event was handled
+	 */
 	@Override
 	public boolean onKillEvent(QuestEnv env) {
 		Player player = env.getPlayer();

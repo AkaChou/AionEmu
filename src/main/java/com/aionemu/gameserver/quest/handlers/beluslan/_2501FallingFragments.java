@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：Falling Fragments（任务 ID 2501）。
+ * Beluslan quest script: Falling Fragments (quest ID 2501).
  */
 public class _2501FallingFragments extends QuestHandler {
 

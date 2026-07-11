@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -21,18 +5,43 @@ import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
+ * 物品信息查询服务，提供物品详情相关辅助。
+ * Item info service providing helpers for item detail queries.
+ *
  * @author ATracer
  */
+
 public class ItemInfoService {
 
+	/**
+	 * getQuality 方法。
+	 * getQuality method.
+	 *
+	 * itemId
+	 * result
+	 */
 	public static final ItemQuality getQuality(int itemId) {
 		return getItemTemplate(itemId).getItemQuality();
 	}
 
+	/**
+	 * getNameId 方法。
+	 * getNameId method.
+	 *
+	 * itemId
+	 * result
+	 */
 	public static final int getNameId(int itemId) {
 		return getItemTemplate(itemId).getNameId();
 	}
 
+	/**
+	 * getItemTemplate 方法。
+	 * getItemTemplate method.
+	 *
+	 * itemId
+	 * result
+	 */
 	public static final ItemTemplate getItemTemplate(int itemId) {
 		return DataManager.ITEM_DATA.getItemTemplate(itemId);
 	}

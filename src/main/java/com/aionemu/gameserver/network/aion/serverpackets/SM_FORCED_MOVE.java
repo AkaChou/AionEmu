@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 强制位移包：将目标瞬移/拉扯到指定坐标。
+ * Forced-move packet: teleports/pulls a target to given coordinates.
+ *
  * @author Sweetkr
  */
 public class SM_FORCED_MOVE extends AionServerPacket {
@@ -31,10 +18,21 @@ public class SM_FORCED_MOVE extends AionServerPacket {
 	private float y;
 	private float z;
 
+	/**
+	 * 将目标生物强制移动到其当前位置（通常用于拉扯同步）。
+	 * Force-moves the target creature to its current position (typically for pull sync).
+	 */
 	public SM_FORCED_MOVE(Creature creature, Creature target) {
 		this(creature, target.getObjectId(), target.getX(), target.getY(), target.getZ());
 	}
 
+	/**
+	 * @param creature 发起强制位移的生物 / creature initiating the forced move
+	 * target object id
+	 * @param x        目标 X / dest X
+	 * @param y        目标 Y / dest Y
+	 * @param z        目标 Z / dest Z
+	 */
 	public SM_FORCED_MOVE(Creature creature, int objectId, float x, float y, float z) {
 		this.creature = creature;
 		this.objectId = objectId;
@@ -43,14 +41,11 @@ public class SM_FORCED_MOVE extends AionServerPacket {
 		this.z = z;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeD(creature.getObjectId());
 		writeD(objectId);// targets objectId
-		writeC(16); // unk
+		writeC(16); // 未知 / unk
 		writeF(x);
 		writeF(y);
 		writeF(z);

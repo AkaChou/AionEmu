@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -28,11 +13,13 @@ import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 提交验证码（Captcha）答案的客户端包。
+ * Client packet submitting a captcha answer.
+ *
  * @author Cura
  */
 @Slf4j
 public class CM_CAPTCHA extends AionClientPacket {
-
 
 	private int type;
 	private int count;
@@ -55,7 +42,7 @@ public class CM_CAPTCHA extends AionClientPacket {
 			word = readS();
 			break;
 		default:
-			log.warn("Unknown CAPTCHA packet type? 0x" + Integer.toHexString(type).toUpperCase());
+			log.warn(I18n.get("log.aa5ba2351828", Integer.toHexString(type).toUpperCase()));
 			break;
 		}
 	}
@@ -72,7 +59,7 @@ public class CM_CAPTCHA extends AionClientPacket {
 
 				PunishmentService.setIsNotGatherable(player, 0, false, 0);
 
-				// fp bonus (like retail)
+				// 飞行时间加成（如正式服） / fp bonus (like retail)
 				player.getLifeStats().increaseFp(TYPE.FP, SecurityConfig.CAPTCHA_BONUS_FP_TIME);
 			} else {
 				int banTime = SecurityConfig.CAPTCHA_EXTRACTION_BAN_TIME

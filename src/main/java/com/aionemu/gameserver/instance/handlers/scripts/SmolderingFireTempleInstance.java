@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -49,31 +33,58 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 闷燃火焰神殿副本事件处理器。
+ * Instance event handler for Smoldering Fire Temple.
+ *
+ * @author Encom
+ */
 
 @InstanceID(302000000)
 public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 {
-	private int rank;
+	/** 军阶 / rank */
+		private int rank;
+	/** 开始时间 / start time */
 	private long startTime;
-	private int vengefulObscura;
-	private Future<?> timerPrepare;
-	private Future<?> timerInstance;
+	/** vengeful obscura / vengeful obscura */
+		private int vengefulObscura;
+	/** 准备计时器 / timer prepare */
+		private Future<?> timerPrepare;
+	/** 副本计时器 / timer instance */
+		private Future<?> timerInstance;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 副本奖励对象 / instance reward object */
 	private SmolderingReward instanceReward;
-	//Preparation Time.
-	private int prepareTimerSeconds = 60000; //...1Min
-	//Duration Instance Time.
-	private int instanceTimerSeconds = 600000; //...10Min
-	private final List<Future<?>> smolderingTask = new ArrayList<Future<?>>();
+	// 准备时间。 / Preparation Time.
+	/** 准备计时秒数 / prepare timer seconds */
+		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+	// 副本持续计时。 / Duration Instance Time.
+	/** 副本计时秒数 / instance timer seconds */
+		private int instanceTimerSeconds = 600000; //...10Min
+	/** smoldering 任务 / smoldering task */
+		private final List<Future<?>> smolderingTask = new ArrayList<Future<?>>();
+	/**
+	 * 返回玩家奖励记录。
+	 * Return the player's reward record.
+	 *
+	 * visible object
+	 * result
+	 */
 	
 	protected SmolderingPlayerReward getPlayerReward(Integer object) {
 		return (SmolderingPlayerReward) instanceReward.getPlayerReward(object);
 	}
 	
+	/**
+	 * 处理 addPlayerReward。
+	 * Handle addPlayerReward.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@SuppressWarnings("unchecked")
 	protected void addPlayerReward(Player player) {
 		instanceReward.addPlayerReward(new SmolderingPlayerReward(player.getObjectId()));
@@ -83,10 +94,22 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		return instanceReward.containPlayer(object);
 	}
 	
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * result
+	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -138,6 +161,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(162002036, storage.getItemCountByItemId(162002090)); //Hero GM’s Quality Secret Remedy Of Recovery.
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		int points = 0;
@@ -207,9 +236,19 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 				spawn(834068, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Old Fire Temple Fortune Server.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
+						    /**
+						     * 处理 visit。
+						     * Handle visit.
+						     *
+						     * @param player 玩家 / player
+						     */
 						    @Override
 						    public void visit(Player player) {
 							    stopInstance(player);
@@ -225,6 +264,13 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		PlayerEffectController effectController = player.getEffectController();
@@ -275,14 +321,26 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		effectController.removeEffect(21380);
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -296,6 +354,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (nameId != 0) {
@@ -322,12 +386,26 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		}
 		return rank;
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
 	protected void startInstanceTask() {
 		smolderingTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 					    stopInstance(player);
@@ -337,21 +415,34 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
         }, 600000));
     }
 	
+	/**
+	 * 玩家打开门时处理。
+	 * Handle a player opening a door.
+	 *
+	 * 玩家 / player
+	 * doorId
+	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {
 		if (doorId == 2) {
 			startInstanceTask();
 			doors.get(2).setOpen(true);
-			//The member recruitment window has passed. You cannot recruit any more members.
+			// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 			sendMsgByRace(1401181, Race.PC_ALL, 0);
-			//The player has 1 min to prepare !!! [Timer Red]
+			// 玩家有 1 分钟准备！！！【红色计时】 / The player has 1 min to prepare !!! [Timer Red]
 			if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
-				//Start the instance time !!! [Timer White]
+				// 开始副本计时！！！【白色计时】 / Start the instance time !!! [Timer White]
 				startMainInstanceTimer();
 			}
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		if (!instanceReward.containPlayer(player.getObjectId())) {
@@ -367,6 +458,10 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -374,6 +469,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 			}, prepareTimerSeconds);
 		}
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(prepareTimerSeconds, instanceReward, null));
@@ -389,6 +490,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendPacket(0, 0);
 	}
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	protected void stopInstance(Player player) {
         stopInstanceTask();
@@ -396,7 +503,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		doReward(player);
-		//sendMsg("[SUCCES]: You have finished <Smoldering Fire Temple>");
+		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Smoldering Fire Temple>");
 		sendPacket(0, 0);
 	}
 	
@@ -406,6 +513,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 结算并发放奖励。
+	 * Settle and grant rewards.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void doReward(Player player) {
 		SmolderingPlayerReward playerReward = getPlayerReward(player.getObjectId());
@@ -415,28 +528,34 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 			switch (smolderingRank) {
 				case 1: //Rank S
 					playerReward.setSmolderingKey(6);
-					//Smoldering Fire Temple Treasure Key.
+					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 6);
 				break;
 				case 2: //Rank A
 					playerReward.setSmolderingKey(4);
-					//Smoldering Fire Temple Treasure Key.
+					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 4);
 				break;
 				case 3: //Rank B
 					playerReward.setSmolderingKey(3);
-					//Smoldering Fire Temple Treasure Key.
+					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 3);
 				break;
 				case 4: //Rank C
 					playerReward.setSmolderingKey(2);
-					//Smoldering Fire Temple Treasure Key.
+					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 2);
 				break;
 			}
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -453,6 +572,10 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		if (timerInstance != null) {
@@ -465,6 +588,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		instanceReward.clear();
 		doors.clear();
 	}
+	/**
+	 * 移除指定 NPC。
+	 * Despawn the given NPC.
+	 *
+	 * npc
+	 */
 	
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
@@ -474,18 +603,42 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

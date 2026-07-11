@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -41,19 +25,31 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.*;
 import java.util.concurrent.*;
 
-/****/
-/** Author (Encom)
-/** Source: https://www.youtube.com/watch?v=rAgRxmXbr1k
-/****/
+/**
+ * 堕落波埃塔副本事件处理器。
+ * Instance event handler for Fallen Poeta.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301660000)
 public class FallenPoetaInstance extends GeneralInstanceHandler
 {
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	private Future<?> anuhartTaskA1;
+	/** anuhart 任务 A1 / anuhart task a1 */
+		private Future<?> anuhartTaskA1;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	private final List<Future<?>> fallenTask = new ArrayList<Future<?>>();
+	/** fallen 任务 / fallen task */
+		private final List<Future<?>> fallenTask = new ArrayList<Future<?>>();
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
@@ -63,28 +59,40 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
 		startInstanceTask();
-		//Hurry and destroy the iron fence to get to the Timolia Abandoned Mine before Lieutenant Anuhart returns.
+		// 赶快摧毁铁栅，在阿努哈特中尉返回前进入蒂莫利亚废弃矿井。 / Hurry and destroy the iron fence to get to the Timolia Abandoned Mine before Lieutenant Anuhart returns.
 		sendMsgByRace(1403442, Race.PC_ALL, 5000);
-		//We must destroy that iron fence before Lieutenant Anuhart appears!
+		// 必须在阿努哈特中尉出现前摧毁那铁栅！ / We must destroy that iron fence before Lieutenant Anuhart appears!
 		sendMsgByRace(1403415, Race.PC_ALL, 10000);
-		//Lieutenant Anuhart will appear shortly.
+		// 阿努哈特中尉即将出现。 / Lieutenant Anuhart will appear shortly.
 		sendMsgByRace(1403417, Race.PC_ALL, 20000);
-		//Use the Thorn Tentacle Traps and skills to reduce Lieutenant Anuharts movement speed.
+		// 使用荆棘触须陷阱与技能降低阿努哈特中尉的移动速度。 / Use the Thorn Tentacle Traps and skills to reduce Lieutenant Anuharts movement speed.
 		sendMsgByRace(1403416, Race.PC_ALL, 30000);
-		//Lieutenant Anuhart is guarding the iron fence, burning any enemies who approach.
+		// 阿努哈特中尉守卫铁栅，靠近的敌人会被灼烧。 / Lieutenant Anuhart is guarding the iron fence, burning any enemies who approach.
 		sendMsgByRace(1403414, Race.PC_ALL, 50000);
-		//Anuhart sends the command! The Device Maintenance Soldiers are activating the Balaur Explosives Stockpile!
+		// 阿努哈特下达命令！装置维修士兵正在激活龙族炸药库！ / Anuhart sends the command! The Device Maintenance Soldiers are activating the Balaur Explosives Stockpile!
 		sendMsgByRace(1403420, Race.PC_ALL, 70000);
-		//The Spore Road Post Monitoring Device can deal massive ammounts of damage with its magic cannons.
+		// 孢子路哨监控装置可用魔法加农造成大量伤害。 / The Spore Road Post Monitoring Device can deal massive ammounts of damage with its magic cannons.
 		sendMsgByRace(1403426, Race.PC_ALL, 90000);
-		//Lieutenant Anuhart approaches.
+		// 阿努哈特中尉正在接近。 / Lieutenant Anuhart approaches.
 		sendMsgByRace(1403418, Race.PC_ALL, 120000);
     }
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -132,13 +140,21 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(164002346, storage.getItemCountByItemId(164002346)); //Thorn Tentacle Trap.
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
 	protected void startInstanceTask() {
 		fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startAnuhartPath();
-				//You can now steal and board the Spore Road Balaur Aether Cannon.
+				// 你现在可夺取并登上孢子路龙族以太加农。 / You can now steal and board the Spore Road Balaur Aether Cannon.
 				sendMsgByRace(1403427, Race.PC_ALL, 0);
 				spawn(703345, 285.35428f, 998.8121f, 112.34111f, (byte) 85); //Lieutenant Anuhart [Flag].
             }
@@ -147,6 +163,10 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	
 	private void startAnuhartPath() {
 		anuhartTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(243682, 285.35428f, 998.8121f, 112.34111f, (byte) 85, 0, "3016600001"); //Lieutenant Anuhart.
@@ -154,6 +174,12 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -162,13 +188,17 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			    deleteNpc(833843); //Animar.
 				deleteNpc(833844); //Kantil.
-				//A teleport device for Krobans Burning Base was created.
+				// 克罗班燃烧基地传送装置已创建。 / A teleport device for Krobans Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
-				//The Dark Spore Road has turned into a sea of flames.
+				// 暗孢之路已化为火海。 / The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar1 = spawnRace == Race.ASMODIANS ? 833858 : 833854;
                 spawn(Kantil_Animar1, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						seaOfFlames1();
@@ -179,13 +209,17 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			    deleteNpc(833854); //Animar.
 				deleteNpc(833858); //Kantil.
-				//A teleport device for Krobans Burning Base was created.
+				// 克罗班燃烧基地传送装置已创建。 / A teleport device for Krobans Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
-				//The Dark Spore Road has turned into a sea of flames.
+				// 暗孢之路已化为火海。 / The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar2 = spawnRace == Race.ASMODIANS ? 833859 : 833855;
                 spawn(Kantil_Animar2, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						seaOfFlames2();
@@ -196,13 +230,17 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			    deleteNpc(833855); //Animar.
 				deleteNpc(833859); //Kantil.
-				//A teleport device for Krobans Burning Base was created.
+				// 克罗班燃烧基地传送装置已创建。 / A teleport device for Krobans Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
-				//The Dark Spore Road has turned into a sea of flames.
+				// 暗孢之路已化为火海。 / The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar3 = spawnRace == Race.ASMODIANS ? 833860 : 833856;
                 spawn(Kantil_Animar3, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						seaOfFlames3();
@@ -214,13 +252,17 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    deleteNpc(833856); //Animar.
 				deleteNpc(833860); //Kantil.
 				stopInstance(player);
-				//A teleport device for Krobans Burning Base was created.
+				// 克罗班燃烧基地传送装置已创建。 / A teleport device for Krobans Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
-				//The Dark Spore Road has turned into a sea of flames.
+				// 暗孢之路已化为火海。 / The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar4 = spawnRace == Race.ASMODIANS ? 833861 : 833857;
                 spawn(Kantil_Animar4, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						seaOfFlames4();
@@ -234,22 +276,35 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			break;
 			case 243684: //Artifact Overlord Kroban.
 				despawnNpc(npc);
-				//sendMsg("[SUCCES]: You have finished <Fallen Poeta>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Fallen Poeta>");
 				spawn(703373, npc.getX(), npc.getY(), npc.getZ(), (byte) 0); //Kroban's Treasure Chest.
 				spawn(833852, 1179.0000f, 1223.0000f, 146.00000f, (byte) 0, 223); //Burning Base Exit.
 			break;
 		}
 	}
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
 		anuhartTaskA1.cancel(true);
-		//Lieutenant Anuhart has given up the pursuit and has disappeared.
+		// 阿努哈特中尉放弃追击并消失。 / Lieutenant Anuhart has given up the pursuit and has disappeared.
 		sendMsgByRace(1403444, Race.PC_ALL, 0);
 		killNpc(getNpcs(243682)); //Lieutenant Anuhart.
-		//sendMsg("[SUCCES]: You managed to escape from <Lieutenant Anuhart> :) ");
+		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You managed to escape from <Lieutenant Anuhart> :) ");
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -583,18 +638,42 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -613,9 +692,25 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			}
         }
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -628,6 +723,10 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
     }
 	
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -644,12 +743,25 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 	}
+	/**
+	 * 处理 killNpc。
+	 * Handle killNpc.
+	 *
+	 * npcs
+	 */
 	
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
         }
     }
+	/**
+	 * 返回 npcs。
+	 * Return the npcs.
+	 *
+	 * NPC
+	 * result
+	 */
 	
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
@@ -664,12 +776,24 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		effectController.removeEffect(21806);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);

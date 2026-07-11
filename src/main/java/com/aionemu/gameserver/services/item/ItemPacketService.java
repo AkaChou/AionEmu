@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
 import java.util.Collections;
@@ -33,17 +17,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * TODO: <br>
- * 0x01 0000 0001 increase count by merge<br>
- * 0x06 0000 0110 decrease count after split, equip<br>
- * 0x16 0001 0110 decrease count by use item<br>
- * 0x19 0001 1001 increase count by looting<br>
- * 0x1A 0001 1010 increase kinah by loot<br>
- * 0x1D 0001 1101 decrease kinah<br>
- * 0x32 0011 0010 increase kinah by quest<br>
+ * 物品数据包服务，同步物品增删改与装备状态。
+ * Item packet service syncing item add/delete/update and equip state.
  *
  * @author ATracer
  */
+
 public class ItemPacketService {
 
 	public static enum ItemUpdateType {
@@ -54,8 +33,8 @@ public class ItemPacketService {
 		DEC_ITEM_SPLIT_MOVE(0x0A, true), // move to other storage with split
 		DEC_ITEM_USE(0x16, true), INC_ITEM_COLLECT(0x19, true), INC_KINAH_COLLECT(0x1A, true),
 		DEC_KINAH_BUY(0x1D, true), INC_KINAH_SELL(0x20, true), INC_KINAH_QUEST(0x32, true), DEC_KINAH_LEARN(0x49, true), // craft
-																															// skill
-																															// learn
+																															// 技能 / skill
+																															// 学习 / learn
 		DEC_KINAH_FLY(0x4B, true), // teleport or fly
 		LUNA_UPDATE(0x49, true), // new 5.1
 		INC_CASH_ITEM(0x50, true), // event items, for exchange
@@ -70,14 +49,32 @@ public class ItemPacketService {
 			this.sendable = sendable;
 		}
 
+		/**
+		 * getMask 方法。
+		 * getMask method.
+		 * result
+		 */
 		public int getMask() {
 			return mask;
 		}
 
+		/**
+		 * isSendable 方法。
+		 * isSendable method.
+		 * result
+		 */
 		public boolean isSendable() {
 			return sendable;
 		}
 
+		/**
+		 * getKinahUpdateTypeFromAddType 方法。
+		 * getKinahUpdateTypeFromAddType method.
+		 *
+		 * @param itemAddType 物品添加类型 / itemAddType
+		 * isIncrease
+		 * result
+		 */
 		public static ItemUpdateType getKinahUpdateTypeFromAddType(ItemAddType itemAddType, boolean isIncrease) {
 			if (!isIncrease) {
 				return ItemUpdateType.DEC_KINAH_BUY;
@@ -108,6 +105,11 @@ public class ItemPacketService {
 			this.mask = mask;
 		}
 
+		/**
+		 * getMask 方法。
+		 * getMask method.
+		 * result
+		 */
 		public int getMask() {
 			return mask;
 		}
@@ -123,10 +125,22 @@ public class ItemPacketService {
 			this.mask = mask;
 		}
 
+		/**
+		 * getMask 方法。
+		 * getMask method.
+		 * result
+		 */
 		public int getMask() {
 			return mask;
 		}
 
+		/**
+		 * 由更新类型转换。
+		 * Converts from update type.
+		 *
+		 * updateType
+		 * result
+		 */
 		public static final ItemDeleteType fromUpdateType(ItemUpdateType updateType) {
 			switch (updateType) {
 			case DEC_ITEM_SPLIT:
@@ -140,6 +154,13 @@ public class ItemPacketService {
 			}
 		}
 
+		/**
+		 * 由任务状态转换。
+		 * Converts from quest status.
+		 *
+		 * questStatus
+		 * result
+		 */
 		public static ItemDeleteType fromQuestStatus(QuestStatus questStatus) {
 			switch (questStatus) {
 			case START:
@@ -154,18 +175,49 @@ public class ItemPacketService {
 		}
 	}
 
+	/**
+	 * 信息变更后更新物品包。
+	 * Updates item packets after info change.
+	 *
+	 * 玩家 / player
+	 * item
+	 */
 	public static final void updateItemAfterInfoChange(Player player, Item item) {
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
 	}
 
+	/**
+	 * 信息变更后更新物品包。
+	 * Updates item packets after info change.
+	 *
+	 * 玩家 / player
+	 * item
+	 * updateType
+	 */
 	public static final void updateItemAfterInfoChange(Player player, Item item, ItemUpdateType updateType) {
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, updateType));
 	}
 
+	/**
+	 * 装备后更新物品包。
+	 * Updates item packets after equip.
+	 *
+	 * 玩家 / player
+	 * item
+	 */
 	public static final void updateItemAfterEquip(Player player, Item item) {
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, ItemUpdateType.EQUIP_UNEQUIP));
 	}
 
+	/**
+	 * 发送物品包。
+	 * Sends an item packet.
+	 *
+	 * 玩家 / player
+	 * storageType
+	 * item
+	 * updateType
+	 */
 	public static final void sendItemPacket(Player player, StorageType storageType, Item item,
 			ItemUpdateType updateType) {
 		if (item.getItemCount() <= 0 && !item.getItemTemplate().isKinah()) {
@@ -192,7 +244,7 @@ public class ItemPacketService {
 	}
 
 	/**
-	 * Item will be updated in UI slot (stacked items)
+	 * UI 槽位中更新物品（堆叠物品）。 / Item will be updated in UI slot (stacked items)
 	 */
 	public static final void sendItemUpdatePacket(Player player, StorageType storageType, Item item,
 			ItemUpdateType updateType) {
@@ -211,6 +263,14 @@ public class ItemPacketService {
 		}
 	}
 
+	/**
+	 * 发送仓库更新包。
+	 * Sends a storage update packet.
+	 *
+	 * 玩家 / player
+	 * storageType
+	 * item
+	 */
 	public static final void sendStorageUpdatePacket(Player player, StorageType storageType, Item item) {
 		sendStorageUpdatePacket(player, storageType, item, ItemAddType.ITEM_COLLECT);
 	}

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +23,9 @@ import com.aionemu.gameserver.skillengine.condition.Conditions;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * Buff 效果基类：将 change 列表转为属性修正并挂到受影响者。
+ * Buff effect base: converts the change list into stat modifiers on the effected.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -48,13 +37,22 @@ public abstract class BuffEffect extends EffectTemplate {
 	protected boolean maxstat;
 
 
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
 	/**
-	 * Will be called from effect controller when effect ends
+	 * 效果结束时移除属性修正。
+	 * Removes stat modifiers when the effect ends.
+	 *
+	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
 	public void endEffect(Effect effect) {
@@ -63,7 +61,10 @@ public abstract class BuffEffect extends EffectTemplate {
 	}
 
 	/**
-	 * Will be called from effect controller when effect starts
+	 * 效果开始时应用属性修正；maxstat 时回满 HP/MP。
+	 * Applies stat modifiers on start; fills HP/MP when maxstat is set.
+	 *
+	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
 	public void startEffect(Effect effect) {
@@ -86,8 +87,11 @@ public abstract class BuffEffect extends EffectTemplate {
 	}
 
 	/**
-	 * @param effect
-	 * @return
+	 * 根据 change 配置构建属性修正函数列表。
+	 * Builds the list of stat modifier functions from the change config.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 * @return 属性修正列表 / list of stat modifiers
 	 */
 	protected List<IStatFunction> getModifiers(Effect effect) {
 		int skillId = effect.getSkillId();
@@ -97,7 +101,7 @@ public abstract class BuffEffect extends EffectTemplate {
 
 		for (Change changeItem : change) {
 			if (changeItem.getStat() == null) {
-				log.warn("Skill stat has wrong name for skillId {}", skillId);
+				log.warn(I18n.get("log.82bc249ba5a2", skillId));
 				continue;
 			}
 
@@ -122,8 +126,13 @@ public abstract class BuffEffect extends EffectTemplate {
 		return modifiers;
 	}
 
+	/**
+	 * 周期动作占位（Buff 默认无周期逻辑）。
+	 * Periodic action stub (buffs have no default tick logic).
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void onPeriodicAction(Effect effect) {
-		// TODO Auto-generated method stub
 	}
 }

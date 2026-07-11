@@ -1,29 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.geometry;
 
 import com.aionemu.gameserver.model.templates.zone.Point2D;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * Class with basic method implementation for ares.<br>
- * If possible it should be subclassed. <br>
- * In other case {@link com.aionemu.gameserver.model.geometry.Area} should be
- * implemented directly
+ * 抽象区域，用于几何相关逻辑。
+ * Abstract Area for geometry logic.
  */
 public abstract class AbstractArea implements Area {
 
@@ -42,8 +24,8 @@ public abstract class AbstractArea implements Area {
 	private int worldId;
 
 	/**
-	 * Creates new AbstractArea with min and max z
-	 * 
+	 * 创建新 AbstractArea 带 min 并 maxz。 / Creates new AbstractArea with min and max z
+	 *
 	 * @param zoneName min z
 	 * @param worldId max z
 	 */
@@ -162,6 +144,7 @@ public abstract class AbstractArea implements Area {
 		return maxZ;
 	}
 
+	/** 返回世界 ID / Returns the world id */
 	@Override
 	public int getWorldId() {
 		return worldId;

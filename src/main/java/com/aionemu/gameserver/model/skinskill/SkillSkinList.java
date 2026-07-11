@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skinskill;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
@@ -34,8 +18,10 @@ import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 技能外观列表。
+ * Skill Skin List model.
+ *
  * @author Rinzler (Encom)
- * @rework FrozenKiller
  */
 public class SkillSkinList {
 
@@ -47,18 +33,22 @@ public class SkillSkinList {
 		owner = null;
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	public Player getOwner() {
 		return owner;
 	}
 
+	/** 设置所有者 / Sets the owner*/
 	public void setOwner(Player owner) {
 		this.owner = owner;
 	}
 
+	/** 是否包含。 / Contains. */
 	public boolean contains(int skinId) {
 		return skillskins.containsKey(skinId);
 	}
 
+	/** 添加条目。 / Adds entry. */
 	public void addEntry(int skinId, int remaining, int active) {
 		SkillSkinTemplate sst = DataManager.SKILL_SKIN_DATA.getSkillSkinTemplate(skinId);
 		if (sst == null) {
@@ -67,6 +57,7 @@ public class SkillSkinList {
 		skillskins.put(skinId, new SkillSkin(sst, skinId, remaining, active));
 	}
 
+	/** 添加技能外观。 / Adds skill skin. */
 	public boolean addSkillSkin(int skinId, int time, int expireTime) {
 		SkillSkinTemplate sst = DataManager.SKILL_SKIN_DATA.getSkillSkinTemplate(skinId);
 		if (sst == null) {
@@ -74,7 +65,7 @@ public class SkillSkinList {
 		}
 		if (owner != null) {
 			SkillSkin skillSkin = new SkillSkin(sst, skinId, expireTime, 1); // expireTime = System.currentTimeMillis()
-																				// / 1000 + minutes * 60 (Calculated in
+																				//1000 + minutes * 60 (Calculated in
 																				// SkillAnimationAction)
 			if (!skillskins.containsKey(skinId)) {
 				skillskins.put(skinId, skillSkin);
@@ -88,13 +79,14 @@ public class SkillSkinList {
 			}
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_GET_ITEM(sst.getName()));
 			PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(skinId, time)); // time = templateTime * 60
-																						// (Calculated in
+																						// （计算于 / (Calculated in
 																						// SkillAnimationAction)
 			return true;
 		}
 		return false;
 	}
 
+	/** 移除技能外观。 / Removes skill skin. */
 	public void removeSkillSkin(int skinId) {
 		if (!skillskins.containsKey(skinId)) {
 			return;
@@ -104,12 +96,14 @@ public class SkillSkinList {
 		DAOManager.getDAO(PlayerSkillSkinListDAO.class).removeSkillSkin(owner.getObjectId(), skinId);
 	}
 
+	/** 设置 active / Sets the active */
 	public void setActive(int skinId) {
 		DAOManager.getDAO(PlayerSkillSkinListDAO.class).setActive(owner.getObjectId(), skinId);
 		owner.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(owner.getObjectId()));
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 
+	/** 设置 deactive / Sets the deactive */
 	public void setDeactive(int skillId) {
 		int skinIdToremove = 0;
 		SkillTemplate skillGroup = DataManager.SKILL_DATA.getSkillTemplate(skillId);
@@ -129,6 +123,7 @@ public class SkillSkinList {
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 
+	/** 返回皮肤 ID / Returns the skin id */
 	public int getSkinId(int skillId) {
 		int skinId = 0;
 		if (skillId == 0 || getOwner().getSkillSkinList() == null || getOwner() == null) {
@@ -146,10 +141,12 @@ public class SkillSkinList {
 		return skinId;
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return skillskins.size();
 	}
 
+	/** 返回 skill skins / Returns the skill skins */
 	public Collection<SkillSkin> getSkillSkins() {
 		return skillskins.values();
 	}

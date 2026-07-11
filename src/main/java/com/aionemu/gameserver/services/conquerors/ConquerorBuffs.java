@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.conquerors;
 
 import java.util.ArrayList;
@@ -29,10 +13,21 @@ import com.aionemu.gameserver.model.templates.serial_killer.RankPenaltyAttr;
 import com.aionemu.gameserver.model.templates.serial_killer.RankRestriction;
 import com.aionemu.gameserver.skillengine.change.Func;
 
+/**
+ * 征服者等级属性惩罚与增益应用器。
+ * Applies conqueror rank penalty and buff attributes.
+ */
 public class ConquerorBuffs implements StatOwner {
 	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
 	private RankRestriction rankRestriction;
 
+	/**
+	 * 按击杀等级对玩家施加属性效果。
+	 * Applies rank-based attribute effects to the player.
+	 *
+	 * target player
+	 * @param rank 击杀等级 / killer rank
+	 */
 	public void applyEffect(Player player, int rank) {
 		if (rank == 0) {
 			return;
@@ -51,10 +46,22 @@ public class ConquerorBuffs implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
+	/**
+	 * 是否已有生效中的属性效果。
+	 * Whether an active attribute effect is currently applied.
+	 *
+	 * @return 有效果时为 true / true if effect functions exist
+	 */
 	public boolean hasDebuff() {
 		return !functions.isEmpty();
 	}
 
+	/**
+	 * 结束并移除玩家身上的征服者属性效果。
+	 * Ends and removes conqueror attribute effects from the player.
+	 *
+	 * target player
+	 */
 	public void endEffect(Player player) {
 		functions.clear();
 		player.getGameStats().endEffect(this);

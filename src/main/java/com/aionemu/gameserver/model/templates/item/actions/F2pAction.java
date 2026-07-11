@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -32,10 +16,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
 /**
- * Author Rinzler & Ranastic (Encom) /
- ****/
+ * F2p 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "F2pAction")
@@ -46,6 +30,9 @@ public class F2pAction extends AbstractItemAction {
 	@XmlAttribute
 	protected Integer minutes;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
@@ -59,11 +46,13 @@ public class F2pAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		player.getController().cancelUseItem();
 		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
 				parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 1000, 0, 0));
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				boolean succ = player.getInventory().decreaseByObjectId(parentItem.getObjectId().intValue(), 1);

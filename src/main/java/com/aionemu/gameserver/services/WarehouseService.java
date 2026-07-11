@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.List;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -32,18 +18,28 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 仓库服务，处理个人仓库扩展与仓库信息下发。
+ * Warehouse service handling personal warehouse expansion and warehouse info delivery.
+ */
 @Slf4j
 public class WarehouseService {
 
 	private static final int MIN_EXPAND = 0;
 	private static final int MAX_EXPAND = 11;
 
+	/**
+	 * 通过 NPC 发起仓库扩容请求（弹窗确认并扣费）。
+	 * Initiates warehouse expansion via NPC (confirmation dialog and fee deduction).
+	 *
+	 * 玩家 / player
+	 * expansion NPC
+	 */
 	public static void expandWarehouse(final Player player, Npc npc) {
 		final WarehouseExpandTemplate expandTemplate = DataManager.WAREHOUSEEXPANDER_DATA
 				.getWarehouseExpandListTemplate(npc.getNpcId());
 		if (expandTemplate == null) {
-			log.error("Warehouse Expand Template could not be found for Npc ID: "
-					+ npc.getObjectTemplate().getTemplateId());
+			log.error(I18n.get("log.ccd0b4fe4d46", npc.getObjectTemplate().getTemplateId()));
 			return;
 		}
 		if (npcCanExpandLevel(expandTemplate, player.getWarehouseSize() + 1)
@@ -75,6 +71,12 @@ public class WarehouseService {
 		}
 	}
 
+	/**
+	 * 实际扩展玩家仓库容量一级。
+	 * Actually expands the player's warehouse capacity by one level.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void expand(Player player) {
 		if (!canExpand(player)) {
 			return;
@@ -84,6 +86,13 @@ public class WarehouseService {
 		sendWarehouseInfo(player, false);
 	}
 
+	/**
+	 * 校验目标扩容等级是否在合法区间内。
+	 * Validates whether the target expand level is within the allowed range.
+	 *
+	 * @param level 目标等级 / target level
+	 * whether valid
+	 */
 	private static boolean validateNewSize(int level) {
 		if (level < MIN_EXPAND || level > MAX_EXPAND) {
 			return false;
@@ -91,10 +100,25 @@ public class WarehouseService {
 		return true;
 	}
 
+	/**
+	 * 判断玩家是否还能继续扩容。
+	 * Checks whether the player can still expand the warehouse.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否可扩容 / whether expansion is allowed
+	 */
 	public static boolean canExpand(Player player) {
 		return validateNewSize(player.getWarehouseSize() + 1);
 	}
 
+	/**
+	 * 判断该 NPC 模板是否支持指定扩容等级。
+	 * Checks whether the NPC expand template supports the given level.
+	 *
+	 * @param clist 扩容模板 / expand template
+	 * @param level 目标等级 / target level
+	 * whether supported
+	 */
 	private static boolean npcCanExpandLevel(WarehouseExpandTemplate clist, int level) {
 		if (!clist.contains(level)) {
 			return false;
@@ -102,10 +126,25 @@ public class WarehouseService {
 		return true;
 	}
 
+	/**
+	 * 按扩容等级获取价格。
+	 * Returns the price for the given expand level.
+	 *
+	 * @param clist 扩容模板 / expand template
+	 * @param level 目标等级 / target level
+	 * price
+	 */
 	private static int getPriceByLevel(WarehouseExpandTemplate clist, int level) {
 		return clist.get(level).getPrice();
 	}
 
+	/**
+	 * 向客户端发送仓库（及可选账号仓库）物品信息。
+	 * Sends warehouse (and optionally account warehouse) item info to the client.
+	 *
+	 * @param player 玩家 / player
+	 * @param sendAccountWh 是否发送账号仓库 / whether to send account warehouse
+	 */
 	public static void sendWarehouseInfo(Player player, boolean sendAccountWh) {
 		List<Item> items = player.getStorage(StorageType.REGULAR_WAREHOUSE.getId()).getItems();
 		int whSize = player.getWarehouseSize();

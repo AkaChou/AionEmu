@@ -1,33 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.state;
 
 /**
+ * 生物 Visual 状态枚举。
+ * Creature Visual State enumeration.
+ *
  * @author Sweetkr
  */
 public enum CreatureVisualState {
+	/** 可见。 / Visible. */
 	VISIBLE(0), // Normal
+	/** Hide1 / Hide1 */
 	HIDE1(1), // Hide I
+	/** Hide2 / Hide2 */
 	HIDE2(2), // Hide II
+	/** Hide3 / Hide3 */
 	HIDE3(3), // Hide by Artifact?
+	/** Hide5 / Hide5 */
 	HIDE5(5), // No idea :D
+	/** Hide10 / Hide10 */
 	HIDE10(10), // Hide from Npc?
+	/** Hide13 / Hide13 */
 	HIDE13(13), // Hide from Npc?
+	/** Hide20 / Hide20 */
 	HIDE20(20), // Hide from Npc?
+	/** 闪烁 / Blinking. */
 	BLINKING(64); // Blinking when entering to zone
 
 	private int id;

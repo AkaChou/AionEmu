@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,9 +19,17 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.MathUtil;
 
+/**
+ * 召唤陷阱效果：在落点生成陷阱，并限制同一主人的陷阱数量。
+ * Summon trap effect: spawns a trap at the landing point and enforces a per-owner trap cap.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonTrapEffect")
 public class SummonTrapEffect extends SummonEffect {
+	/**
+	 * 计算落点（部分 NPC 用施法者坐标），限制数量后生成陷阱并调度删除。
+	 * Computes spawn point, enforces max traps, spawns the trap, and schedules despawn.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Creature effector = effect.getEffector();
@@ -76,6 +68,10 @@ public class SummonTrapEffect extends SummonEffect {
 		trap.getController().addTask(TaskId.DESPAWN, task);
 	}
 
+	/**
+	 * 同一主人陷阱达到 2 个时删除最早的一个。
+	 * Deletes the oldest trap when the owner already has two.
+	 */
 	private void maxTraps(Creature effector) {
 		List<Trap> traps = effector.getPosition().getWorldMapInstance().getTraps(effector);
 		if (traps.size() >= 2) {

@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.factories;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -22,11 +6,21 @@ import com.aionemu.gameserver.network.aion.AionPacketHandler;
 import com.aionemu.gameserver.network.aion.clientpackets.*;
 import org.springframework.beans.factory.ObjectProvider;
 
+/**
+ * Aion 客户端包处理器工厂：注册全部 CM 包原型并提供处理器单例。
+ * Aion client packet handler factory: registers all CM packet prototypes and exposes the handler singleton.
+ */
 public class AionPacketHandlerFactory {
 
 	private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
 	private AionPacketHandler handler;
 
+	/**
+	 * 获取工厂单例（优先 Spring Provider）。
+	 * Returns the factory singleton (prefers Spring provider).
+	 *
+	 * factory instance
+	 */
 	public static AionPacketHandlerFactory getInstance() {
 		ObjectProvider<AionPacketHandlerFactory> provider = instanceProvider;
 		if (provider == null) {
@@ -35,10 +29,20 @@ public class AionPacketHandlerFactory {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
+	 * Injects Spring ObjectProvider to override the static singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AionPacketHandlerFactory> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 注册全部客户端包原型（5.8 opcode）。
+	 * Registers all client packet prototypes (5.8 opcodes).
+	 */
 	public AionPacketHandlerFactory() {// 5.5 opcodes (-1 || +3)
 		handler = new AionPacketHandler();
 		addPacket(new CM_VERSION_CHECK(0x00db, State.CONNECTED)); // 5.8
@@ -131,11 +135,11 @@ public class AionPacketHandlerFactory {
 		addPacket(new CM_ENCHANTMENT_EXTRACTION(0x01cc, State.IN_GAME)); // 5.8
 		addPacket(new CM_REMOVE_ALTERED_STATE(0x00ee, State.IN_GAME)); // 5.8
 		addPacket(new CM_REPLACE_ITEM(0x17e, State.IN_GAME)); // 5.8
-		addPacket(new CM_SELL_TERMINATED_ITEMS(0x1C0, State.IN_GAME)); // 5.6 TODO
+		addPacket(new CM_SELL_TERMINATED_ITEMS(0x1C0, State.IN_GAME)); // 5.8
 		addPacket(new CM_BUY_TRADE_IN_TRADE(0x113, State.IN_GAME)); // 5.8
 		addPacket(new CM_PET(0xDD, State.IN_GAME)); // 5.8
 
-		// // /////////////////// GM PACKET ////////////////////
+		// // /////////////////// GM 数据包 //////////////////// / // /////////////////// GM PACKET ////////////////////
 		addPacket(new CM_GM_COMMAND_SEND(0x0E1, State.IN_GAME)); // 5.8
 		addPacket(new CM_GM_BOOKMARK(0x0E0, State.IN_GAME)); // 5.8
 
@@ -163,10 +167,8 @@ public class AionPacketHandlerFactory {
 		addPacket(new CM_MARK_FRIENDLIST(0x14a, State.IN_GAME)); // 5.8
 		addPacket(new CM_BLOCK_SET_REASON(0x017f, State.IN_GAME)); // 5.8
 		addPacket(new CM_BLOCK_DEL(0x0163, State.IN_GAME)); // 5.8
-		addPacket(new CM_GG(0x0120, State.IN_GAME)); // 5.8
 		addPacket(new CM_SHOW_MAP(0x00e3, State.IN_GAME)); // 5.8
 		addPacket(new CM_ATREIAN_BESTIARY_LVLUP(0x01dc, State.IN_GAME)); // 5.8
-		addPacket(new CM_COMPETITION_RANKING(0x01e8, State.IN_GAME)); // 5.8
 		addPacket(new CM_HOT_SPECTATE(0x0172, State.IN_GAME)); // 5.8
 		addPacket(new CM_DELETE_CHARACTER(0x0150, State.AUTHED)); // 5.8
 		addPacket(new CM_PURIFICATION_ITEM(0x01B3, State.IN_GAME)); // 5.8
@@ -227,7 +229,6 @@ public class AionPacketHandlerFactory {
 		addPacket(new CM_DISTRIBUTION_SETTINGS(0x0171, State.IN_GAME)); // 5.8
 		addPacket(new CM_GROUP_DISTRIBUTION(0x0134, State.IN_GAME)); // 5.8
 		addPacket(new CM_FIND_GROUP(0x0114, State.IN_GAME)); // 5.8
-		addPacket(new CM_GROUP_PLAYER_STATUS_INFO(0x0138, State.IN_GAME)); // 5.8
 		addPacket(new CM_CLIENT_COMMAND_ROLL(0x0137, State.IN_GAME)); // 5.8
 		addPacket(new CM_CHAT_GROUP_INFO(0x104, State.IN_GAME)); // 5.8
 		addPacket(new CM_GROUP_LOOT(0x0170, State.IN_GAME)); // 5.8
@@ -252,14 +253,26 @@ public class AionPacketHandlerFactory {
 		addPacket(new CM_TELEPORT_BACK(0x13B, State.IN_GAME));
 		addPacket(new CM_PLAYER_STATUS_INFO(0x138, State.IN_GAME));
 
-		// draft
+		// 草稿 / draft
 		addPacket(new CM_UNK_127(0x127, State.AUTHED)); // 5.8
 	}
 
+	/**
+	 * 获取已注册的包处理器。
+	 * Returns the registered packet handler.
+	 *
+	 * packet handler
+	 */
 	public AionPacketHandler getPacketHandler() {
 		return handler;
 	}
 
+	/**
+	 * 向处理器注册一个客户端包原型。
+	 * Registers one client packet prototype with the handler.
+	 *
+	 * packet prototype
+	 */
 	private void addPacket(AionClientPacket prototype) {
 		handler.addPacketPrototype(prototype);
 	}

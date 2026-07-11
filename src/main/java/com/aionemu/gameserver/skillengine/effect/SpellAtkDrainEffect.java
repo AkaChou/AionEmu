@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,8 +11,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 法术攻击吸血/吸魔持续效果：周期性魔法伤害并按比例回复施法者。
+ * Over-time spell attack with drain: periodic magical damage that heals the effector by percent.
+ *
  * @author Sippolo
- * @author kecimis
+@author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpellAtkDrainEffect")
@@ -39,6 +26,10 @@ public class SpellAtkDrainEffect extends AbstractOverTimeEffect {
 	@XmlAttribute(name = "mp_percent")
 	protected int mp_percent;
 
+	/**
+	 * 计算周期魔法伤害，造成攻击，并按百分比回复 HP/MP。
+	 * Calculates periodic magical damage, applies the hit, and restores HP/MP by percent.
+	 */
 	@Override
 	public void onPeriodicAction(Effect effect) {
 		int valueWithDelta = value + delta * effect.getSkillLevel();
@@ -49,7 +40,7 @@ public class SpellAtkDrainEffect extends AbstractOverTimeEffect {
 				true, LOG.SPELLATKDRAIN);
 		effect.getEffector().getObserveController().notifyAttackObservers(effect.getEffected());
 
-		// Drain (heal) portion of damage inflicted
+		// 吸取（治疗）造成伤害的一部分 / Drain (heal) portion of damage inflicted
 		if (hp_percent != 0) {
 			effect.getEffector().getLifeStats().increaseHp(TYPE.HP, damage * hp_percent / 100, effect.getSkillId(),
 					LOG.SPELLATKDRAIN);

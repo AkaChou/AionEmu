@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.town;
 
 import java.sql.Timestamp;
@@ -37,6 +21,11 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+
+/**
+ * 城镇模型。
+ * Town model.
+ */
 
 public class Town {
 	private int id;
@@ -65,22 +54,27 @@ public class Town {
 		this.persistentState = PersistentState.NEW;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return nameId;
 	}
 
+	/** 获取等级。 / Returns the level. */
 	public int getLevel() {
 		return level;
 	}
 
+	/** 获取点。 / Returns the points. */
 	public int getPoints() {
 		return points;
 	}
 
+	/** 增加点。 / Increase points. */
 	public synchronized void increasePoints(int amount) {
 		switch (this.level) {
 		case 1:
@@ -122,6 +116,7 @@ public class Town {
 		data.put(this.id, this);
 		final SM_TOWNS_LIST packet = new SM_TOWNS_LIST(data);
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+			/** 访问 / visit. */
 			@Override
 			public void visit(Player player) {
 				if (player.getRace() == race) {
@@ -155,18 +150,22 @@ public class Town {
 		spawnedNpcs.clear();
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return this.race;
 	}
 
+	/** 返回等级日期 / Returns the level up date */
 	public Timestamp getLevelUpDate() {
 		return levelUpDate;
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState state) {
 		if (this.persistentState == PersistentState.NEW && state == PersistentState.UPDATE_REQUIRED) {
 			return;

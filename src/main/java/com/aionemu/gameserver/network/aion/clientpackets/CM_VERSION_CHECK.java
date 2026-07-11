@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -26,9 +10,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_UNK_168;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_VERSION_CHECK;
 
 /**
+ * 客户端版本校验握手请求包，回复版本与若干初始化服务端包。
+ * Client packet for version-check handshake; replies with version and init server packets.
+ *
  * @author -Nemesiss-
  */
-
 public class CM_VERSION_CHECK extends AionClientPacket {
 	private int version;
 	@SuppressWarnings("unused")
@@ -41,6 +27,11 @@ public class CM_VERSION_CHECK extends AionClientPacket {
 	private int windowsSubVersion;
 	private int unk;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_VERSION_CHECK(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

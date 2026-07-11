@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone.scripts;
 
 import com.aionemu.gameserver.model.Race;
@@ -24,9 +8,20 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 
+/**
+ * 欧比斯基地护盾区：敌对种族进入时立即死亡（GM 除外）。
+ * Abyss base shield zone: hostile race dies on enter (GMs exempt).
+ */
 @ZoneNameAnnotation("PRIMUM_FORTRESS TERMINON_LANDING")
-public class AbyssBaseShield implements ZoneHandler
-{
+public class AbyssBaseShield implements ZoneHandler {
+
+	/**
+	 * 进入护盾区：非 GM 敌对种族立即死亡。
+	 * Enter shield zone: non-GM hostile race dies immediately.
+	 *
+	 * creature
+	 * @param zone     区域实例 / zone instance
+	 */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		Creature actingCreature = creature.getActingCreature();
@@ -43,7 +38,14 @@ public class AbyssBaseShield implements ZoneHandler
 			}
 		}
 	}
-	
+
+	/**
+	 * 离开护盾区：无额外逻辑。
+	 * Leave shield zone: no additional logic.
+	 *
+	 * creature
+	 * @param zone   区域实例 / zone instance
+	 */
 	@Override
 	public void onLeaveZone(Creature player, ZoneInstance zone) {
 	}

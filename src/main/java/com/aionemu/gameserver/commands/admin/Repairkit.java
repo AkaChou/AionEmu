@@ -1,21 +1,6 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
@@ -29,7 +14,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 /**
- * Created by Kill3r
+ * 离线角色修复工具；支持送回主城、按物品 ID 删除、全服清物与背包擦除等高危数据库操作。
+ * Offline character repair toolkit for city return, item purge, global item delete and inventory wipe (high-risk DB ops).
+ *
+ * @author Kill3r
  */
 @Slf4j(topic = "GM_MONITOR_LOG")
 public class Repairkit extends AdminCommand {
@@ -39,6 +27,13 @@ public class Repairkit extends AdminCommand {
     }
 
 
+    /**
+     * 执行该管理指令。
+     * Executes this admin command.
+     *
+     * @param admin 执行指令的管理员 / admin executing the command
+     * command arguments
+     */
     public void execute(Player admin, String...params){
         if(params.length == 0){
             PacketSendUtility.sendMessage(admin, "Syntax\n" +
@@ -96,7 +91,7 @@ public class Repairkit extends AdminCommand {
             stmt.execute();
             stmt.close();
         } catch (Exception e) {
-            log.error("ERROR while deleting ALL item through Repairkit Command!!");
+            log.error(I18n.get("log.f66c8c8d1e6d"));
         } finally {
             DatabaseFactory.close(con);
         }
@@ -120,7 +115,7 @@ public class Repairkit extends AdminCommand {
         try {
             playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToWipe);
         } catch (Exception e) {
-            log.info("[repairkit-wipe] GM : [" + admin.getName() + "] couldn't Find Name in Database ( RepairKIT )");
+            log.info(I18n.get("log.30d38a7399c3", admin.getName()));
         }
 
         if (playerID == 0){
@@ -135,12 +130,12 @@ public class Repairkit extends AdminCommand {
             stmt.execute();
             stmt.close();
         } catch (Exception e) {
-            log.error("[repairkit-wipe] GM : [" + admin.getName() + "] Error While wiping item inventory through RepairKit Command!");
+            log.error(I18n.get("log.9757aec268c2", admin.getName()));
         } finally {
             DatabaseFactory.close(con);
         }
         PacketSendUtility.sendMessage(admin, "All items from the player has been removed except the Equiped ones!");
-        log.error("[repairkit-wipe] GM : [" + admin.getName() + "] succesfully wiped the player's Inventory of [" + playerToWipe + "]");
+        log.error(I18n.get("log.b48fef936307", admin.getName(), playerToWipe));
     }
 
     private void removeItemByID(final Player admin, final String playerToRemoveFrom, final int itemID){
@@ -160,7 +155,7 @@ public class Repairkit extends AdminCommand {
         try {
             playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToRemoveFrom);
         } catch (Exception e) {
-            log.info("[repairkit-removeItem] GM : [" + admin.getName() + "] Couldn't Find Name in Database ( RepairKIT )");
+            log.info(I18n.get("log.51323fb6b7d1", admin.getName()));
         }
 
         if (playerID == 0){
@@ -177,12 +172,12 @@ public class Repairkit extends AdminCommand {
             stmt.close();
 
         } catch (Exception e){
-            log.error("[repairkit-removeItem] GM : [" + admin.getName() + "] ERROR while deleting item through Repairkit Command!!");
+            log.error(I18n.get("log.ab777d089876", admin.getName()));
         } finally {
             DatabaseFactory.close(con);
         }
         PacketSendUtility.sendMessage(admin, "[item:"+itemID+"] ("+itemID+") successfully removed from '" + playerToRemoveFrom + "'");
-        log.error("[repairkit-wipe] GM : [" + admin.getName() + "] succesfully removed an Item [" + itemID + "] from player [" + playerToRemoveFrom + "]");
+        log.error(I18n.get("log.3a3cf03b9db4", admin.getName(), itemID, playerToRemoveFrom));
     }
 
     private void returnPlayer(final Player admin, final String playerToReturn, final String race){
@@ -232,7 +227,7 @@ public class Repairkit extends AdminCommand {
         try {
             playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToReturn);
         } catch (Exception e) {
-            log.info("[repairkit-return] GM : [" + admin.getName() + "] Couldn't Find Name in Database ( RepairKIT )");
+            log.info(I18n.get("log.d256e26b97d9", admin.getName()));
         }
 
         if (playerID == 0){
@@ -254,15 +249,12 @@ public class Repairkit extends AdminCommand {
             stmt.close();
 
         } catch (Exception e) {
-            log.error("[repairkit-return] GM : [" + admin.getName() + "] Error Returning Player through Command!");
+            log.error(I18n.get("log.1471af37e6dd", admin.getName()));
         } finally {
             DatabaseFactory.close(con);
         }
         PacketSendUtility.sendMessage(admin, playerToReturn+" has been successfully moved to main city of '"+race+"'.");
-        log.error("[repairkit-return] GM : [" + admin.getName() + "] returned the player [" + playerToReturn + "] to main city of [" + race + "]");
+        log.error(I18n.get("log.e5aa7080240f", admin.getName(), playerToReturn, race));
     }
 
-    public void onFail(Player player, String msg){
-        // TODO Auto-Generated Message
-    }
 }

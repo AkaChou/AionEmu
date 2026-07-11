@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -36,10 +20,24 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 
 /**
+ * 物品移动服务，处理仓库间移动与交换。
+ * Item move service handling inter-storage moves and swaps.
+ *
  * @author ATracer
  */
+
 public class ItemMoveService {
 
+	/**
+	 * 移动物品。
+	 * Moves an item.
+	 *
+	 * 玩家 / player
+	 * itemObjId
+	 * @param sourceStorageType 源仓库类型 / sourceStorageType
+	 * @param destinationStorageType 目标仓库类型 / destinationStorageType
+	 * slot
+	 */
 	public static void moveItem(Player player, int itemObjId, byte sourceStorageType, byte destinationStorageType,
 			short slot) {
 		if (GameRuntimeServices.exchangeService().isPlayerInExchange(player)) {
@@ -76,7 +74,7 @@ public class ItemMoveService {
 					if (itemCount == 0) {
 						break;
 					}
-					// we can merge same stackable items
+					// 可合并相同可堆叠物品 / we can merge same stackable items
 					ItemSplitService.mergeStacks(sourceStorage, targetStorage, item, sameItem, itemCount);
 				}
 			}
@@ -101,6 +99,16 @@ public class ItemMoveService {
 		item.setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/**
+	 * 交换仓库物品。
+	 * Switches items between storages.
+	 *
+	 * @param player 玩家 / player
+	 * @param sourceStorageType 源仓库类型 / sourceStorageType
+	 * @param sourceItemObjId 源物品对象 ID / sourceItemObjId
+	 * @param replaceStorageType 替换仓库类型 / replaceStorageType
+	 * @param replaceItemObjId 替换物品对象 ID / replaceItemObjId
+	 */
 	public static void switchItemsInStorages(Player player, byte sourceStorageType, int sourceItemObjId,
 			byte replaceStorageType, int replaceItemObjId) {
 		IStorage sourceStorage = player.getStorage(sourceStorageType);
@@ -114,7 +122,7 @@ public class ItemMoveService {
 		if (replaceItem == null) {
 			return;
 		}
-		// restrictions checks
+		// 限制检查 / restrictions checks
 		if (ItemRestrictionService.isItemRestrictedFrom(player, sourceItem, sourceStorageType)
 				|| ItemRestrictionService.isItemRestrictedFrom(player, replaceItem, replaceStorageType)
 				|| ItemRestrictionService.isItemRestrictedTo(player, sourceItem, replaceStorageType)
@@ -130,7 +138,7 @@ public class ItemMoveService {
 		sourceStorage.remove(sourceItem);
 		replaceStorage.remove(replaceItem);
 
-		// correct UI update order is 1)delete items 2) add items
+		// 正确 UI 更新顺序：1）删除物品 2）添加物品 / correct UI update order is 1)delete items 2) add items
 		sendItemDeletePacket(player, StorageType.getStorageTypeById(sourceStorageType), sourceItem,
 				ItemDeleteType.MOVE);
 		sendItemDeletePacket(player, StorageType.getStorageTypeById(replaceStorageType), replaceItem,

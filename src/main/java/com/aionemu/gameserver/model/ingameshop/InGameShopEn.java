@@ -1,19 +1,7 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.ingameshop;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -49,23 +37,24 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
+ * 游戏内商城引擎：加载商品、处理购买请求并与登录服点数同步。
+ * In-game shop engine: loads items, handles purchase requests and syncs toll with the login server.
+ *
  * @author KID
  */
 @Slf4j(topic = "INGAMESHOP_LOG")
 public class InGameShopEn {
 
 	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
-	private Map<Byte, List<IGItem>> items;
+	private volatile Map<Byte, List<IGItem>> items = Collections.emptyMap();
 	private InGameShopDAO dao;
-	private InGameShopProperty iGProperty;
+	private volatile InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
-	private List<IGRequest> activeRequests;
+	private final List<IGRequest> activeRequests = new ArrayList<>();
 	private static Map<Integer, Long> lastUsage = new HashMap<>();
 
+	/** 获取副本。 / Returns the instance. */
 	public static InGameShopEn getInstance() {
 		ObjectProvider<InGameShopEn> provider = instanceProvider;
 		if (provider != null) {
@@ -74,38 +63,36 @@ public class InGameShopEn {
 		return SingletonHolder.instance;
 	}
 
+	/** 设置实例提供者。 / Sets the instance provider. */
 	public static void setInstanceProvider(ObjectProvider<InGameShopEn> provider) {
 		instanceProvider = provider;
 	}
 
 	public InGameShopEn() {
-		if (!InGameShopConfig.ENABLE_IN_GAME_SHOP) {
-			log.info("InGameShop is disabled.");
-			return;
-		}
-		iGProperty = InGameShopProperty.load();
-		dao = DAOManager.getDAO(InGameShopDAO.class);
-		items = new LinkedHashMap<>();
-		activeRequests = new ArrayList<>();
-		items = dao.loadInGameShopItems();
-		log.info("Loaded with " + items.size() + " items.");
+		reload();
 	}
 
+	/** 获取商城属性配置。 / Returns the igs property. */
 	public InGameShopProperty getIGSProperty() {
 		return iGProperty;
 	}
 
-	public void reload() {
+	/** 重新加载。 / Reload. */
+	public synchronized void reload() {
 		if (!InGameShopConfig.ENABLE_IN_GAME_SHOP) {
-			log.info("InGameShop is disabled.");
+			log.info(I18n.get("log.835552c18c7b"));
 			return;
 		}
-		iGProperty.clear();
-		iGProperty = InGameShopProperty.load();
-		items = DAOManager.getDAO(InGameShopDAO.class).loadInGameShopItems();
-		log.info("Loaded with " + items.size() + " items.");
+		InGameShopProperty reloadedProperty = InGameShopProperty.load();
+		InGameShopDAO reloadedDao = DAOManager.getDAO(InGameShopDAO.class);
+		Map<Byte, List<IGItem>> reloadedItems = reloadedDao.loadInGameShopItems();
+		dao = reloadedDao;
+		iGProperty = reloadedProperty;
+		items = reloadedItems;
+		log.info(I18n.get("log.1e48e4bddea9", items.size()));
 	}
 
+	/** 获取商城物品。 / Returns the ig item. */
 	public IGItem getIGItem(int id) {
 		for (byte key : items.keySet()) {
 			for (IGItem item : items.get(key)) {
@@ -117,6 +104,7 @@ public class InGameShopEn {
 		return null;
 	}
 
+	/** 获取物品。 / Returns the items. */
 	public Collection<IGItem> getItems(byte category) {
 		if (!items.containsKey(category)) {
 			return Collections.emptyList();
@@ -124,6 +112,7 @@ public class InGameShopEn {
 		return items.get(category);
 	}
 
+	/** 返回 top sales / Returns the top sales */
 	public List<Integer> getTopSales(int subCategory, byte category) {
 		byte max = 6;
 		TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>(new DescFilter());
@@ -149,6 +138,7 @@ public class InGameShopEn {
 		return top;
 	}
 
+	/** 返回最大列表 / Returns the max list*/
 	public int getMaxList(byte subCategoryId, byte category) {
 		int id = 0;
 		if (!items.containsKey(category)) {
@@ -165,6 +155,7 @@ public class InGameShopEn {
 		return id;
 	}
 
+	/** 接受请求 / Accept Request */
 	public void acceptRequest(Player player, int itemObjId) {
 		if (player.getInventory().isFull()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DICE_INVEN_ERROR);
@@ -194,6 +185,7 @@ public class InGameShopEn {
 		}
 	}
 
+	/** 发送请求。 / Send request. */
 	public void sendRequest(Player player, String receiver, String message, int itemObjId) {
 		if (receiver.equalsIgnoreCase(player.getName())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_CANNOT_GIVE_TO_ME);
@@ -231,6 +223,7 @@ public class InGameShopEn {
 		}
 	}
 
+	/** 添加点数。 / Adds toll. */
 	public void addToll(Player player, long cnt) {
 		if (InGameShopConfig.ENABLE_IN_GAME_SHOP) {
 			lastRequestId++;
@@ -244,6 +237,7 @@ public class InGameShopEn {
 		}
 	}
 
+	/** Finish Request / Finish Request */
 	public void finishRequest(int requestId, int result, long toll, long luna) {
 		IGRequest foundRequest = null;
 		
@@ -301,6 +295,7 @@ public class InGameShopEn {
 	class DescFilter implements Comparator<Object> {
 		DescFilter() {
 		}
+		/** 比较 / compare. */
 		public int compare(Object o1, Object o2) {
 			Integer i1 = (Integer) o1;
 			Integer i2 = (Integer) o2;

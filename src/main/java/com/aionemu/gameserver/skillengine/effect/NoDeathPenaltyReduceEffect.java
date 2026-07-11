@@ -1,34 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
-
+ * 死亡惩罚减免效果：标记效果实例，降低死亡惩罚。
+ * Death-penalty reduce effect: marks the effect to lessen death penalties.
+ *
+ * @author Rinzler (Encom)
+ */
 public class NoDeathPenaltyReduceEffect extends BuffEffect {
 
+	/**
+	 * 标记本效果计算成功。
+	 * Marks this effect calculation as successful.
+	 */
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
 	}
 
+	/**
+	 * 设置死亡惩罚减免标记。
+	 * Sets the death-penalty-reduce flag.
+	 */
 	public void startEffect(Effect effect) {
 		effect.setNoDeathPenaltyReduce(true);
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,6 +5,9 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 
 /**
+ * LBox 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,34 +28,42 @@ public class LBox implements Cloneable {
 	@XmlElement(required = true)
 	protected int icon;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int position) {
 		id = 100 + position;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回 desc / Returns the desc */
 	public String getDesc() {
 		return desc;
 	}
 
+	/** 返回脚本 / Returns the script */
 	public String getScript() {
 		return script;
 	}
 
+	/** 返回 icon / Returns the icon */
 	public int getIcon() {
 		return icon;
 	}
 
+	/** 设置 icon / Sets the icon */
 	public void setIcon(int id) {
 		icon = id;
 	}
 
+	/** 克隆 / clone. */
 	@Override
 	public Object clone() {
 		LBox result = new LBox();

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,21 +7,36 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 绝对属性效果抽象基类：通过 statsetid 从数据表加载修饰器集合。
+ * Abstract absolute-stat effect base: loads a modifiers set by statsetid from data.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbstractAbsoluteStatEffect")
-public abstract class AbstractAbsoluteStatEffect extends EffectTemplate {
+public abstract class AbstractAbsoluteStatEffect extends BuffEffect {
 
 	@XmlAttribute(name = "statsetid")
 	private int statSetId;
 
 	/**
-	 * @return the statSetId
+	 * 按 statSetId 取得绝对属性修饰器模板。
+	 * Returns the absolute-stat modifiers template for the configured statSetId.
+	 *
+	 * @return 修饰器模板 / modifiers template
 	 */
 	public ModifiersTemplate getModifiersSet() {
 		return DataManager.ABSOLUTE_STATS_DATA.getTemplate(statSetId);
+	}
+
+	@Override
+	public void startEffect(Effect effect) {
+		ModifiersTemplate modifiers = getModifiersSet();
+		if (modifiers != null && modifiers.getModifiers() != null) {
+			effect.getEffected().getGameStats().addEffect(effect, modifiers.getModifiers());
+		}
 	}
 }

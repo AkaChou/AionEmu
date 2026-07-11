@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,18 +8,20 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * 击杀当前可见 NPC 的操作（由玩家作为击杀者）。
+ * Operation that kills the currently visible NPC with the player as killer.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "KillOperation")
 public class KillOperation extends QuestOperation {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seecom.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations.
-	 * QuestOperation#doOperate(com.aionemu. gameserver.services.QuestService,
-	 * com.aionemu.gameserver.questEngine.model.QuestEnv)
+	/**
+	 * 若可见对象为 NPC，则触发其死亡处理。
+	 * If the visible object is an NPC, triggers its death handling.
+	 *
+	 * @param env 任务环境 / Quest environment
 	 */
 	@Override
 	public void doOperate(QuestEnv env) {

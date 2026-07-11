@@ -1,32 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 
 /**
+ * 热点观战相关的客户端包（当前仅记录日志）。
+ * Client packet related to hot spectate (currently logs only).
+ *
  * @author Ranastic
  */
 @Slf4j
 public class CM_HOT_SPECTATE extends AionClientPacket {
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_HOT_SPECTATE(int opcode, AionConnection.State state, AionConnection.State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -48,6 +43,6 @@ public class CM_HOT_SPECTATE extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		log.info("c:" + unkC1 + " c:" + unkC2 + " d:" + unkD);
+		log.info(I18n.get("log.f42cd5b26a19", unkC1, unkC2, unkD));
 	}
 }

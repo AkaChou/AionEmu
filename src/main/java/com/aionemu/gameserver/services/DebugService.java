@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
@@ -28,6 +14,9 @@ import com.aionemu.gameserver.world.World;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 调试诊断服务，周期性检查在线玩家连接与心跳异常。
+ * Debug diagnostics service that periodically checks online players for connection and ping anomalies.
+ *
  * @author ATracer
  */
 @Slf4j
@@ -35,8 +24,15 @@ public class DebugService {
 
 	private static volatile ObjectProvider<DebugService> instanceProvider;
 
+	/** 玩家分析间隔（毫秒）。 / Player analysis interval in milliseconds. */
 	private static final int ANALYZE_PLAYERS_INTERVAL = 30 * 60 * 1000;
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final DebugService getInstance() {
 		ObjectProvider<DebugService> provider = instanceProvider;
 		if (provider == null) {
@@ -45,10 +41,20 @@ public class DebugService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<DebugService> instanceProvider) {
 		DebugService.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 启动周期性玩家健康检查任务。
+	 * Starts the periodic player-health check task.
+	 */
 	public DebugService() {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
@@ -58,37 +64,36 @@ public class DebugService {
 			}
 
 		}, ANALYZE_PLAYERS_INTERVAL, ANALYZE_PLAYERS_INTERVAL);
-		log.info("DebugService started. Analyze iterval: " + ANALYZE_PLAYERS_INTERVAL);
+		log.info(I18n.get("log.c0807adf5cd7", ANALYZE_PLAYERS_INTERVAL));
 	}
 
+	/**
+	 * 扫描在线玩家，记录无连接或心跳超时的异常。
+	 * Scans online players and logs missing connections or oversized ping intervals.
+	 */
 	private void analyzeWorldPlayers() {
-		log.info("Starting analysis of world players at " + System.currentTimeMillis());
+		log.info(I18n.get("log.25e39c719d4a", System.currentTimeMillis()));
 
 		Iterator<Player> playersIterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (playersIterator.hasNext()) {
 			Player player = playersIterator.next();
 
 			/**
-			 * Check connection
-			 */
+	 * 检查连接。 / Check connection
+	 */
 			AionConnection connection = player.getClientConnection();
 			if (connection == null) {
-				log.warn(String.format(
-						"[DEBUG SERVICE] Player without connection: " + "detected: ObjId %d, Name %s, Spawned %s",
-						player.getObjectId(), player.getName(), player.isSpawned()));
+				log.warn(I18n.get("log.882f2866065c", player.getObjectId(), player.getName(), player.isSpawned()));
 				continue;
 			}
 
 			/**
-			 * Check CM_PING packet
-			 */
+	 * 检查 CM_PING 数据包。 / Check CM_PING packet
+	 */
 			long lastPingTimeMS = connection.getLastPingTimeMS();
 			long pingInterval = System.currentTimeMillis() - lastPingTimeMS;
 			if (lastPingTimeMS > 0 && pingInterval > 300000) {
-				log.warn(String.format(
-						"[DEBUG SERVICE] Player with large ping interval: "
-								+ "ObjId %d, Name %s, Spawned %s, PingMS %d",
-						player.getObjectId(), player.getName(), player.isSpawned(), pingInterval));
+				log.warn(I18n.get("log.af56f8905635", player.getObjectId(), player.getName(), player.isSpawned(), pingInterval));
 			}
 		}
 	}

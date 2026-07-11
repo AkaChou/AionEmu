@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,15 +6,17 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 动作时间配置：名称、播放速度与是否瞬时技能。
+ * Motion timing config: name, playback speed and instant-skill flag.
+ *
  * @author kecimis
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Motion")
 public class Motion {
 
 	@XmlAttribute(required = true)
-	protected String name;// TODO enum
+	protected String name;
 
 	@XmlAttribute
 	protected int speed = 100;
@@ -38,14 +24,32 @@ public class Motion {
 	@XmlAttribute(name = "instant_skill")
 	protected boolean instantSkill = false;
 
+	/**
+	 * 获取动作名称。
+	 * Gets motion name.
+	 *
+	 * name
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * 获取播放速度（百分比）。
+	 * Gets playback speed (percent).
+	 *
+	 * speed
+	 */
 	public int getSpeed() {
 		return this.speed;
 	}
 
+	/**
+	 * 是否瞬时技能（无前摇）。
+	 * Whether this is an instant skill (no cast wind-up).
+	 *
+	 * whether instant
+	 */
 	public boolean getInstantSkill() {
 		return this.instantSkill;
 	}

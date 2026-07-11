@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 交易添加基纳包：同步己方/对方放入的基纳数量。
+ * Exchange add-kinah packet: kinah amount placed by self or other.
+ *
  * @author Avol
  */
 public class SM_EXCHANGE_ADD_KINAH extends AionServerPacket {
@@ -36,6 +23,6 @@ public class SM_EXCHANGE_ADD_KINAH extends AionServerPacket {
 	protected void writeImpl(AionConnection con) {
 		writeC(action); // 0 -self 1-other
 		writeD((int) itemCount); // itemId
-		writeD(0); // unk
+		writeD(0); // 未知 / unk
 	}
 }

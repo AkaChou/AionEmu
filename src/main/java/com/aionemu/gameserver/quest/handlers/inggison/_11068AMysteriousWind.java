@@ -9,6 +9,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 因吉森任务脚本：A Mysterious Wind（任务 ID 11068）。
+ * Inggison quest script: A Mysterious Wind (quest ID 11068).
+ *
  * @author Leunam
  */
 public class _11068AMysteriousWind extends QuestHandler {

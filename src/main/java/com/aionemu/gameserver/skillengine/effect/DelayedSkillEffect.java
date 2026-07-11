@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -30,14 +16,30 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 延迟技能效果：效果持续结束后触发关联技能（可范围多目标）。
+ * Delayed skill effect: fires a linked skill after the effect duration (may hit multiple targets).
+ */
 public class DelayedSkillEffect extends EffectTemplate {
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 在效果时长后施放关联技能。
+	 * Casts the linked skill after the effect duration.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		if (effect.getSkill() == null) {
@@ -70,6 +72,12 @@ public class DelayedSkillEffect extends EffectTemplate {
 		}, effect.getEffectsDuration());
 	}
 
+	/**
+	 * 结束延迟技能效果。
+	 * Ends the delayed skill effect.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 	}

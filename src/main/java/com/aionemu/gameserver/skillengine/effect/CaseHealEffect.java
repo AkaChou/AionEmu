@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -27,6 +11,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 
+/**
+ * 条件治疗效果：受击时若生命/魔法低于阈值则立即治疗并结束效果。
+ * Case-heal effect: on being attacked, heals once if HP/MP is below a threshold, then ends.
+ */
 public class CaseHealEffect extends AbstractHealEffect {
 
 	@XmlAttribute(name = "cond_value")
@@ -35,6 +23,13 @@ public class CaseHealEffect extends AbstractHealEffect {
 	@XmlAttribute
 	protected HealType type;
 
+	/**
+	 * 返回当前 HP/MP。
+	 * Returns current HP/MP.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 * @return 当前属性值 / current stat value
+	 */
 	protected int getCurrentStatValue(Effect effect) {
 		if (type == HealType.HP) {
 			return effect.getEffected().getLifeStats().getCurrentHp();
@@ -45,6 +40,13 @@ public class CaseHealEffect extends AbstractHealEffect {
 		return 0;
 	}
 
+	/**
+	 * 返回 HP/MP 上限。
+	 * Returns max HP/MP.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 * max stat value
+	 */
 	protected int getMaxStatValue(Effect effect) {
 		if (type == HealType.HP) {
 			return effect.getEffected().getGameStats().getMaxHp().getCurrent();
@@ -55,10 +57,22 @@ public class CaseHealEffect extends AbstractHealEffect {
 		return 0;
 	}
 
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 移除受击观察者。
+	 * Removes the attacked observer.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void endEffect(Effect effect) {
 		ActionObserver observer = effect.getActionObserver(position);
 		if (observer != null) {
@@ -66,6 +80,12 @@ public class CaseHealEffect extends AbstractHealEffect {
 		}
 	}
 
+	/**
+	 * 注册受击观察者：低于阈值时治疗并结束效果。
+	 * Registers an attacked observer: heals when below threshold and ends the effect.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void startEffect(final Effect effect) {
 		ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
 

@@ -1,30 +1,19 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.service.ptransfer;
 
 /**
+ * 玩家跨服转移流程步骤状态。
+ * Player cross-server transfer flow step statuses.
+ *
  * @author KID
  */
 public enum PlayerTransferStatus {
 
+    /** 第一步：源服侧准备 / step 1: source-server preparation */
     STEP1,
+    /** 第二步：目标服侧处理 / step 2: target-server processing */
     STEP2,
+    /** 第一步完成 / step 1 completed */
     STEP1_OK,
+    /** 第二步完成 / step 2 completed */
     STEP2_OK
 }

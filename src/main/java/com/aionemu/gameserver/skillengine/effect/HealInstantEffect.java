@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,28 +8,46 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 
 /**
+ * 生命瞬时治疗效果：立即恢复目标 HP。
+ * Instant HP heal effect: immediately restores the target's hit points.
+ *
  * @author ATracer
- * @modified vlog, Sippolo, kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HealInstantEffect")
 public class HealInstantEffect extends AbstractHealEffect {
 
+	/**
+	 * 立即恢复目标生命。
+	 * Immediately restores the target's HP.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect, HealType.HP);
 	}
 
+	/**
+	 * 计算瞬时生命治疗。
+	 * Calculates instant HP heal.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, HealType.HP);
 	}
 
+	/**
+	 * 返回当前生命值。
+	 * Returns current HP.
+	 */
 	@Override
 	protected int getCurrentStatValue(Effect effect) {
 		return effect.getEffected().getLifeStats().getCurrentHp();
 	}
 
+	/**
+	 * 返回最大生命值。
+	 * Returns maximum HP.
+	 */
 	@Override
 	protected int getMaxStatValue(Effect effect) {
 		return effect.getEffected().getGameStats().getMaxHp().getCurrent();

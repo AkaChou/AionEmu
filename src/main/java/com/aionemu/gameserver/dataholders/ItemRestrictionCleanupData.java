@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -26,6 +10,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.restriction.ItemCleanupTemplate;
 
 /**
+ * 物品限制清理规则数据容器，持有全部 {@link ItemCleanupTemplate}。
+ * Item restriction cleanup data holder containing all {@link ItemCleanupTemplate} entries.
+ *
  * @author KID
  */
 @XmlRootElement(name = "item_restriction_cleanups")
@@ -34,10 +21,22 @@ public class ItemRestrictionCleanupData {
 	@XmlElement(name = "cleanup")
 	private List<ItemCleanupTemplate> bplist;
 
+	/**
+	 * 返回清理规则数量。
+	 * Returns the number of cleanup rules.
+	 *
+	 * rule count
+	 */
 	public int size() {
 		return bplist.size();
 	}
 
+	/**
+	 * 返回全部清理规则列表。
+	 * Returns the full list of cleanup rules.
+	 *
+	 * @return 清理模板列表 / cleanup template list
+	 */
 	public List<ItemCleanupTemplate> getList() {
 		return this.bplist;
 	}

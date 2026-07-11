@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.HashSet;
@@ -33,15 +19,39 @@ import com.aionemu.gameserver.services.QuestService;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 多段汇报任务模板：按变量顺序与多个 NPC 对话推进，最终到结束 NPC 领奖；可选用物品接取。
+ * Multi-step report quest template: advances through ordered NPC talks by quest var, then rewards at end NPCs; optional item start.
+ */
 public class ReportToMany extends QuestHandler {
+	/** 起始物品 ID，0 表示用 NPC 接取 / start item id, 0 means NPC start */
 	private final int startItem;
+	/** 起始 NPC ID 集合 / start NPC id set */
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
+	/** 结束 NPC ID 集合 / end NPC id set */
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
+	/** 起始对话页 ID / start dialog page id */
 	private final int startDialog;
+	/** 结束对话页 ID / end dialog page id */
 	private final int endDialog;
+	/** 最大 questvarlastreportstep / max quest var (last report step) */
 	private final int maxVar;
+	/** NPC ID 到汇报信息的映射 / map of NPC id to report info */
 	private final Map<Integer, NpcInfos> npcInfos;
 
+	/**
+	 * 构造多段汇报任务处理器。
+	 * Constructs a multi-step report-to quest handler.
+	 *
+	 * quest id
+	 * start item id
+	 * @param startNpcIds 起始 NPC 列表，可为 null / start NPC list, may be null
+	 * @param endNpcIds 结束 NPC 列表，可为 null / end NPC list, may be null
+	 * @param npcInfos 中途汇报 NPC 信息 / mid-report NPC infos
+	 * @param startDialog 起始对话页 / start dialog page
+	 * @param endDialog 结束对话页 / end dialog page
+	 * max var
+	 */
 	public ReportToMany(int questId, int startItem, List<Integer> startNpcIds, List<Integer> endNpcIds, Map<Integer, NpcInfos> npcInfos, int startDialog, int endDialog, int maxVar) {
 		super(questId);
 		this.startItem = startItem;
@@ -59,6 +69,10 @@ public class ReportToMany extends QuestHandler {
 		this.maxVar = maxVar;
 	}
 
+	/**
+	 * 注册起始物品或起始 NPC、中途汇报 NPC 与结束 NPC 事件。
+	 * Registers start item or start NPCs, mid-report NPCs and end NPC events.
+	 */
 	@Override
 	public void register() {
 		if (startItem != 0) {
@@ -81,6 +95,13 @@ public class ReportToMany extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理接取、按 var 顺序的多段汇报与奖励对话。
+	 * Handles accept, ordered multi-step report dialogs by var, and reward dialogs.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		Player player = env.getPlayer();
@@ -163,6 +184,14 @@ public class ReportToMany extends QuestHandler {
 		return false;
 	}
 
+	/**
+	 * 处理起始物品使用：未接取时打开接取对话。
+	 * Handles start-item use: opens the accept dialog when the quest is not yet taken.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param item 被使用的物品 / used item
+	 * handler result
+	 */
 	@Override
 	public HandlerResult onItemUseEvent(final QuestEnv env, Item item) {
 		if (startItem != 0) {

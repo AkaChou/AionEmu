@@ -1,56 +1,53 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.zorshivdredgionservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
-import com.aionemu.gameserver.services.ZorshivDredgionService;
 
 /**
+ * 佐尔希夫挖掘舰活动启动定时任务。
+ * Start runnable for the Zorshiv dredgion world event.
+ *
+ * <p>按时间轴刷出入口、激光、黑天并最终启动着陆。
+ * Stages portal, laser, black-sky and finally starts the landing.</p>
+ *
  * @author Rinzler (Encom)
  */
-
 public class DredgionStartRunnable implements Runnable {
+
 	private final int id;
 
+	/**
+	 * 绑定目标地点 ID。
+	 * Binds the target location id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public DredgionStartRunnable(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * 执行分阶段启动流程。
+	 * Runs the staged start sequence.
+	 */
 	@Override
 	public void run() {
-		// Invasion Portal.
+		// 入侵传送门。 / Invasion Portal.
 		GameLocationBootstrapServices.zorshivDredgionService().adventPortalSP(id);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				// Invasion Lazer.
+				// 入侵激光。 / Invasion Lazer.
 				GameLocationBootstrapServices.zorshivDredgionService().adventDirectingSP(id);
 			}
 		}, 180000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				// Invasion Black Sky.
+				// 入侵黑空。 / Invasion Black Sky.
 				GameLocationBootstrapServices.zorshivDredgionService().adventControlSP(id);
 			}
 		}, 300000);
@@ -61,11 +58,11 @@ public class DredgionStartRunnable implements Runnable {
 						.getZorshivDredgionLocations();
 				for (ZorshivDredgionLocation loc : locations.values()) {
 					if (loc.getId() == id) {
-						// Invasion Light Blue.
+						// 入侵浅蓝。 / Invasion Light Blue.
 						GameLocationBootstrapServices.zorshivDredgionService().adventEffectSP(id);
-						// The Balaur Dredgion has appeared at levinshor.
+						// 龙族战舰已出现。 / The Balaur Dredgion has appeared at levinshor.
 						GameLocationBootstrapServices.zorshivDredgionService().levinshorMsg(id);
-						// The Balaur Dredgion has appeared at inggison.
+						// 龙族战舰已出现。 / The Balaur Dredgion has appeared at inggison.
 						GameLocationBootstrapServices.zorshivDredgionService().inggisonMsg(id);
 						GameLocationBootstrapServices.zorshivDredgionService().startZorshivDredgion(loc.getId());
 					}

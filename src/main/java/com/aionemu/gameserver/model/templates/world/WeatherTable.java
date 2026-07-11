@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.world;
 
 import java.util.ArrayList;
@@ -26,6 +10,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * WeatherTable 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -44,22 +31,27 @@ public class WeatherTable {
 	@XmlAttribute(name = "id", required = true)
 	protected int mapId;
 
+	/** 获取区域数据。 / Returns the zone data. */
 	public List<WeatherEntry> getZoneData() {
 		return zoneData;
 	}
 
+	/** 返回映射 ID / Returns the map id */
 	public int getMapId() {
 		return mapId;
 	}
 
+	/** 获取区域计数。 / Returns the zone count. */
 	public int getZoneCount() {
 		return zoneCount;
 	}
 
+	/** 返回 weather count / Returns the weather count */
 	public int getWeatherCount() {
 		return weatherCount;
 	}
 
+	/** 返回 weather after / Returns the weather after */
 	public WeatherEntry getWeatherAfter(WeatherEntry entry) {
 		if (entry.getWeatherName() == null || entry.isAfter()) {
 			return null;
@@ -79,6 +71,7 @@ public class WeatherTable {
 		return null;
 	}
 
+	/** 返回 weathers for zone / Returns the weathers for zone */
 	public List<WeatherEntry> getWeathersForZone(int zoneId) {
 		List<WeatherEntry> result = new ArrayList<WeatherEntry>();
 		for (WeatherEntry entry : getZoneData()) {

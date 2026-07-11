@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.toypet;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -52,6 +36,10 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 宠物服务，处理登录同步、喂食、增益、拾取与自动出售等功能。
+ * Pet service handling login sync, feeding, buffs, looting and auto-sell features.
+ */
 @Slf4j
 public class PetService {
 
@@ -61,6 +49,12 @@ public class PetService {
 	private boolean autoSeel = false;
 	private boolean autoBuff = false;
 
+	/**
+	 * 返回服务单例；优先通过 Spring 提供者获取。
+	 * Returns service singleton; prefers Spring provider when available.
+	 *
+	 * Service instance
+	 */
 	public static final PetService getInstance() {
 		ObjectProvider<PetService> provider = instanceProvider;
 		if (provider != null) {
@@ -72,10 +66,23 @@ public class PetService {
 	public PetService() {
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject Spring instance provider.
+	 *
+	 * Provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<PetService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 重命名当前召唤中的宠物。
+	 * Rename the currently summoned pet.
+	 *
+	 * 玩家 / Player
+	 * New name
+	 */
 	public void renamePet(Player player, String name) {
 		Pet pet = player.getPet();
 		if (pet != null) {
@@ -85,6 +92,12 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 玩家登录时同步宠物列表到客户端。
+	 * Sync pet list to client on player login.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void onPlayerLogin(Player player) {
 		Collection<PetCommonData> playerPets = player.getPetList().getPets();
 		if (playerPets != null && playerPets.size() > 0) {
@@ -92,6 +105,15 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 开始用物品喂养宠物。
+	 * Start feeding the pet with an inventory item.
+	 *
+	 * Item object id
+	 * @param count 喂养数量 / Feed count
+	 * Action type
+	 * 玩家 / Player
+	 */
 	public void removeObject(int objectId, int count, int action, Player player) {
 		Item item = player.getInventory().getItemByObjId(objectId);
 		if (item == null || player.getPet() == null || count > item.getItemCount()) {
@@ -105,6 +127,10 @@ public class PetService {
 		schedule(pet, player, item, count, action);
 	}
 
+	/**
+	 * 延迟调度下一次喂养判定。
+	 * Schedule the next feed check after a short delay.
+	 */
 	private void schedule(final Pet pet, final Player player, final Item item, final int count, final int action) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -116,6 +142,10 @@ public class PetService {
 		}, 2500);
 	}
 
+	/**
+	 * 执行单次喂养逻辑并处理奖励/继续喂养。
+	 * Perform one feeding step and handle reward or continue feeding.
+	 */
 	private void checkFeeding(Pet pet, Player player, Item item, int count, int action) {
 		PetCommonData commonData = pet.getCommonData();
 		PetFeedProgress progress = commonData.getFeedProgress();
@@ -165,6 +195,14 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 调整宠物增益背包中卷轴槽位。
+	 * Relocate doping bag scroll slots for the pet.
+	 *
+	 * 玩家 / Player
+	 * Source slot
+	 * Destination slot
+	 */
 	public void relocateDoping(Player player, int targetSlot, int destinationSlot) {
 		Pet pet = player.getPet();
 		if (pet == null || pet.getCommonData().getDopingBag() == null) {
@@ -185,6 +223,15 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 使用或配置宠物增益背包中的物品。
+	 * Use or configure items in the pet doping bag.
+	 *
+	 * 玩家 / Player
+	 * Action type
+	 * Item template id
+	 * Slot
+	 */
 	public void useDoping(final Player player, int action, int itemId, int slot) {
 		Pet pet = player.getPet();
 		if (pet == null || pet.getCommonData().getDopingBag() == null) {
@@ -247,6 +294,13 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 开启或关闭宠物自动拾取。
+	 * Enable or disable pet auto-loot.
+	 *
+	 * 玩家 / Player
+	 * Whether to activate
+	 */
 	public void activateLoot(final Player player, final boolean activate) {
 		if (player.getPet() == null) {
 			return;
@@ -265,6 +319,13 @@ public class PetService {
 		PacketSendUtility.sendPacket(player, new SM_PET(activate));
 	}
 
+	/**
+	 * 开启或关闭宠物欢呼增益（消耗以太樱桃）。
+	 * Enable or disable pet cheer buff (consumes Aether Cherry).
+	 *
+	 * 玩家 / Player
+	 * Whether to activate
+	 */
 	public void activateBuff(final Player player, final boolean activate) {
 		if (player.getPet() == null) {
 			return;
@@ -275,7 +336,7 @@ public class PetService {
 				.getPetBonusattr(petTemp.getPetFunction(PetFunctionType.CHEER).getId());
 
 		if (activate && player.getInventory().getItemCountByItemId(182007162) < petBuff.getFoodCount()) {// Aether
-																											// Cherry
+																											// 樱桃 / Cherry
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BUFF_PET_USE_STOP_MESSAGE_03);
 			return;
 		}
@@ -290,6 +351,13 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 开启或关闭宠物自动出售。
+	 * Enable or disable pet auto-sell.
+	 *
+	 * 玩家 / Player
+	 * Whether to activate
+	 */
 	public void activeAutoSell(final Player player, final boolean activate) {
 		if (player.getPet() == null) {
 			return;
@@ -299,6 +367,12 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 玩家登出时关闭自动增益与自动出售。
+	 * Disable auto buff and auto sell on player logout.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void onPlayerLogout(Player player) {
 		if (autoBuff) {
 			activateBuff(player, false);
@@ -308,6 +382,12 @@ public class PetService {
 		}
 	}
 
+	/**
+	 * 强制关闭当前宠物欢呼增益。
+	 * Force-switch off the current pet cheer buff.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void switchOffBuff(final Player player) {
 		Pet pet = player.getPet();
 		if (pet != null) {

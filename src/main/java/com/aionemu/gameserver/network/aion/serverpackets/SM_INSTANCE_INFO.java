@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -27,6 +11,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 向客户端同步玩家副本冷却与进入次数信息的服务端包。
+ * Server packet synchronizing a player's instance cooldown and entrance-count info to the client.
+ */
 public class SM_INSTANCE_INFO extends AionServerPacket {
 	private Player player;
 	private boolean isAnswer;
@@ -34,6 +22,14 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 	private int worldId;
 	private TemporaryPlayerTeam<?> playerTeam;
 
+	/**
+	 * 构造全量副本冷却同步包（可附带队伍应答上下文）。
+	 * Creates a full instance-cooldown sync packet (optionally with team-answer context).
+	 *
+	 * target player
+	 * @param isAnswer 是否为队伍应答场景 / whether this is a team-answer context
+	 * @param playerTeam 临时队伍（可为空） / temporary player team (may be null)
+	 */
 	public SM_INSTANCE_INFO(Player player, boolean isAnswer, TemporaryPlayerTeam<?> playerTeam) {
 		this.player = player;
 		this.isAnswer = isAnswer;
@@ -42,6 +38,13 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 		this.cooldownId = 0;
 	}
 
+	/**
+	 * 构造单个副本冷却同步包。
+	 * Creates a single-instance cooldown sync packet.
+	 *
+	 * target player
+	 * instance world id
+	 */
 	public SM_INSTANCE_INFO(Player player, int instanceId) {
 		this.player = player;
 		this.isAnswer = false;

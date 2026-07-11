@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -32,6 +16,10 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.ProvokeTarget;
 import com.aionemu.gameserver.utils.MathUtil;
 
+/**
+ * 挑衅/反制触发效果：在攻击或受击时按目标类型触发指定技能。
+ * Provoker effect: on attack or being attacked, triggers a configured skill by target type.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProvokerEffect")
 public class ProvokerEffect extends ShieldEffect {
@@ -41,11 +29,19 @@ public class ProvokerEffect extends ShieldEffect {
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 
+	/**
+	 * 将挑衅/反制效果加入控制器。
+	 * Attaches the provoker effect to the controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 按配置注册攻击/受击触发观察者。
+	 * Registers attack/attacked observers per configuration.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		ActionObserver observer = null;
@@ -129,10 +125,18 @@ public class ProvokerEffect extends ShieldEffect {
 		effect.getEffected().getObserveController().addObserver(observer);
 	}
 
+	/**
+	 * 创建被触发的技能效果实例。
+	 * Creates the provoked skill effect instance.
+	 */
 	private void createProvokedEffect(Creature effector, Creature target) {
 		GameEngineServices.skillEngine().applyEffectDirectly(skillId, effector, target, 0);
 	}
 
+	/**
+	 * 解析挑衅技能的目标选择。
+	 * Resolves the provoke skill target selection.
+	 */
 	private Creature getProvokeTarget(ProvokeTarget provokeTarget, Creature effector, Creature target) {
 		switch (provokeTarget) {
 		case ME:
@@ -143,6 +147,10 @@ public class ProvokerEffect extends ShieldEffect {
 		throw new IllegalArgumentException("Provoker target is invalid " + provokeTarget);
 	}
 
+	/**
+	 * 移除挑衅触发观察者。
+	 * Removes provoker trigger observers.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		ActionObserver observer = effect.getActionObserver(position);

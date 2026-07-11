@@ -1,34 +1,37 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
 /**
+ * 自动惩罚机制相关配置。
+ * Automatic punishment mechanism related configuration.
+ *
  * @author synchro2
  */
 public class PunishmentConfig {
 
+	/**
+	 * 是否启用自动惩罚。
+	 * Whether automatic punishment is enabled.
+	 */
 	@Property(key = "gameserver.punishment.enable", defaultValue = "false")
 	public static boolean PUNISHMENT_ENABLE;
+	/**
+	 * 惩罚类型。
+	 * Punishment type.
+	 */
 	@Property(key = "gameserver.punishment.type", defaultValue = "1")
 	public static int PUNISHMENT_TYPE;
+	/**
+	 * 惩罚时长（分钟）。
+	 * Punishment duration in minutes.
+	 */
 	@Property(key = "gameserver.punishment.time", defaultValue = "1440")
 	public static int PUNISHMENT_TIME;
+	/**
+	 * 惩罚时减少的欧比斯点数。
+	 * Abyss points reduced by punishment.
+	 */
 	@Property(key = "gameserver.punishment.reduceap", defaultValue = "0")
 	public static int PUNISHMENT_REDUCEAP;
 }

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -39,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Esoterrace 副本 NPC AI：Dalia Charlands（@AIName "daliacharlands"），继承 AggressiveNpcAI2。
+ * Esoterrace instance NPC AI: Dalia Charlands (@AIName "daliacharlands"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("daliacharlands")
 public class Dalia_CharlandsAI2 extends AggressiveNpcAI2
 {
@@ -161,7 +147,7 @@ public class Dalia_CharlandsAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		cancelPhaseTask();
 		if (getNpcId() == 217185) { //Dalia Charlands.
-			//Release me...from this curse.
+			// 把我……从这诅咒中释放。 / Release me...from this curse.
 			sendMsg(1500239, getObjectId(), false, 0);
 			spawn(282178, 1234.8602f, 654.7392f, 296.61374f, (byte) 0); //Esoterrace Alarm.
 			deleteHelpers();

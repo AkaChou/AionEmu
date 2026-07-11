@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect.modifier;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 异常状态伤害修正：目标处于指定异常状态时加成伤害。
+ * Abnormal-state damage modifier: bonus damage when the target has a given abnormal state.
+ *
  * @author kecimis
  */
 public class AbnormalDamageModifier extends ActionModifier {
@@ -29,25 +16,11 @@ public class AbnormalDamageModifier extends ActionModifier {
 	@XmlAttribute(required = true)
 	protected AbnormalState state;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier#analyze(com
-	 * .aionemu.gameserver.skillengine.model .Effect)
-	 */
 	@Override
 	public int analyze(Effect effect) {
 		return (value + effect.getSkillLevel() * delta);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier#check(com.
-	 * aionemu.gameserver.skillengine.model .Effect)
-	 */
 	@Override
 	public boolean check(Effect effect) {
 		return effect.getEffected().getEffectController().isAbnormalSet(state);

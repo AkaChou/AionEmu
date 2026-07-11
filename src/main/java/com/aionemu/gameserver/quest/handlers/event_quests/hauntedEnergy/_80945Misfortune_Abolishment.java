@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.event_quests.hauntedEnergy;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -24,10 +12,12 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 活动任务脚本：Misfortune Abolishment（任务 ID 80945）。
+ * Event quest script: Misfortune Abolishment (quest ID 80945).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _80945Misfortune_Abolishment extends QuestHandler
 {
     private final static int questId = 80945;
@@ -37,7 +27,7 @@ public class _80945Misfortune_Abolishment extends QuestHandler
     }
 	
     public void register() {
-        //Normal Misfortune Sealing Charm.
+        // 普通厄运封印护符。 / Normal Misfortune Sealing Charm.
 		qe.registerQuestItem(182007417, questId);
 		qe.registerQuestNpc(835303).addOnQuestStart(questId);
 		qe.registerQuestNpc(835303).addOnTalkEvent(questId);
@@ -69,9 +59,9 @@ public class _80945Misfortune_Abolishment extends QuestHandler
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
 						if (player.getInventory().getItemCountByItemId(182007417) >= 1) {
-							//Normal Misfortune Sealing Charm.
+							// 普通厄运封印护符。 / Normal Misfortune Sealing Charm.
 							removeQuestItem(env, 182007417, 1);
-							//Sealed Sachet.
+							// 封印袋。 / Sealed Sachet.
 						    ItemService.addItem(player, 182007419, 1);
 						    Npc npc = (Npc) env.getVisibleObject();
 						    npc.getController().scheduleRespawn();

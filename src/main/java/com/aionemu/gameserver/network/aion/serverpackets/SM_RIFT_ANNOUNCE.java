@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Map;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步裂隙（Rift）状态、归属或入口信息。
+ * Server packet synchronizing rift status, ownership, or portal info to the client.
+ *
  * @author Sweetkr
  */
 public class SM_RIFT_ANNOUNCE extends AionServerPacket {
@@ -34,15 +21,23 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	private int gelkmaros, inggison;
 
 	/**
+	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Rift announce packet
 	 *
-	 * @param rifts
+	 * @param rifts 裂隙映射 / rift map
 	 */
 	public SM_RIFT_ANNOUNCE(Map<Integer, Integer> rifts) {
 		this.actionId = 0;
 		this.rifts = rifts;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
+	 * Creates a SM_RIFT_ANNOUNCE packet with the given parameters.
+	 *
+	 * gelkmaros flag
+	 * inggison flag
+	 */
 	public SM_RIFT_ANNOUNCE(boolean gelkmaros, boolean inggison) {
 		this.gelkmaros = gelkmaros ? 1 : 0;
 		this.inggison = inggison ? 1 : 0;
@@ -50,9 +45,11 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	}
 
 	/**
+	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Rift announce packet
 	 *
-	 * @param rift
+	 * @param rift 裂隙控制器 / rift controller
+	 * is master
 	 */
 	public SM_RIFT_ANNOUNCE(RVController rift, boolean isMaster) {
 		this.rift = rift;
@@ -60,9 +57,10 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	}
 
 	/**
+	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Rift despawn
 	 *
-	 * @param objectId
+	 * object id
 	 */
 	public SM_RIFT_ANNOUNCE(int objectId) {
 		this.objectId = objectId;

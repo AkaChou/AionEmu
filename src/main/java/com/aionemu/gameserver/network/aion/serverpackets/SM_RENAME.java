@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端广播角色改名结果。
+ * Server packet broadcasting a character rename result to the client.
+ *
  * @author Rhys2002
  */
 public class SM_RENAME extends AionServerPacket {
@@ -28,6 +15,14 @@ public class SM_RENAME extends AionServerPacket {
 	private String oldName;
 	private String newName;
 
+	/**
+	 * 使用给定参数构造 SM_RENAME 包。
+	 * Creates a SM_RENAME packet with the given parameters.
+	 *
+	 * player object id
+	 * old name
+	 * new name
+	 */
 	public SM_RENAME(int playerObjectId, String oldName, String newName) {
 		this.playerObjectId = playerObjectId;
 		this.oldName = oldName;
@@ -39,7 +34,7 @@ public class SM_RENAME extends AionServerPacket {
 	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
-		writeD(0); // unk
+		writeD(0); // 未知 / unk
 		writeD(0); // unk - 0 or 3
 		writeD(playerObjectId);
 		writeS(oldName);

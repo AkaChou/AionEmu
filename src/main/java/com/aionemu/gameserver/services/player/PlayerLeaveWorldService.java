@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -75,24 +61,44 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+/**
+ * 玩家离线服务，处理延迟下线与资源清理。
+ * Player leave-world service handling delayed logout and resource cleanup.
+ */
 @Slf4j
 
 public class PlayerLeaveWorldService {
 
+	/**
+	 * 延迟离线。
+	 * Schedules delayed leave-world.
+	 *
+	 * @param player 玩家 / player
+	 * @param delay 延迟毫秒 / delay
+	 */
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				startLeaveWorld(player);
 			}
 		}, delay);
 	}
 
+	/**
+	 * 开始离线流程。
+	 * Starts leave-world flow.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void startLeaveWorld(Player player) {
-		log.info("Player Logged Out: " + player.getName() + " Account: "
-				+ (player.getClientConnection() != null ? player.getClientConnection().getAccount().getName()
-						: "Disconnected"));
+		log.info(I18n.get("log.6e504269f536", player.getName(), (player.getClientConnection() != null ? player.getClientConnection().getAccount().getName()
+						: "Disconnected")));
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
@@ -123,7 +129,7 @@ public class PlayerLeaveWorldService {
 		DAOManager.getDAO(HouseObjectCooldownsDAO.class).storeHouseObjectCooldowns(player);
 		DAOManager.getDAO(PlayerLifeStatsDAO.class).updatePlayerLifeStat(player);
 		DAOManager.getDAO(EventItemsDAO.class).storeItems(player);
-		// SHUGO SWEEP
+		// 术古扫荡 / SHUGO SWEEP
 		GameEventBootstrapServices.shugoSweepService().onLogout(player);
 		PlayerGroupService.onPlayerLogout(player);
 		PlayerAllianceService.onPlayerLogout(player);
@@ -163,7 +169,7 @@ public class PlayerLeaveWorldService {
 		}
 		GameEngineServices.questEngine().onLogOut(new QuestEnv(null, player, 0, 0));
 		player.getController().delete();
-		// Reset Floor "Crucible Spire 5.6"
+		// 重置楼层“试炼尖塔 5.6” / Reset Floor "Crucible Spire 5.6"
 		player.getCommonData().setFloor(0);
 		player.getCommonData().setOnline(false);
 		player.getCommonData().setLastOnline(new Timestamp(System.currentTimeMillis()));
@@ -189,6 +195,12 @@ public class PlayerLeaveWorldService {
 		GameEventBootstrapServices.eventWindowService().onLogout(player);
 	}
 
+	/**
+	 * 尝试离线。
+	 * Attempts to leave the world.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void tryLeaveWorld(Player player) {
 		player.getMoveController().abortMove();
 		if (player.getController().isInShutdownProgress()) {

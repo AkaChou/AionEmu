@@ -1,27 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.periodicaction;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 周期动作基类：效果持续期间按间隔执行的动作。
+ * Base periodic action: action executed on an interval while an effect lasts.
+ *
  * @author antness
  */
 public abstract class PeriodicAction {
 
+	/**
+	 * 在效果上执行一次周期动作。
+	 * Executes one periodic tick for the effect.
+	 *
+	 * related effect
+	 */
 	public abstract void act(Effect effect);
 }

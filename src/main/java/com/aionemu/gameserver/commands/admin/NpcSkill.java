@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -27,14 +11,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.List;
 
 /**
+ * 列出当前目标 NPC 技能模板的管理员命令。
+ * Admin command to list skill templates of the targeted NPC.
+ *
  * @author Wakizashi
  */
 public class NpcSkill extends AdminCommand {
 
+	/**
+	 * 以别名 {@code npcskill} 构造命令。
+	 * Construct the command with alias {@code npcskill}.
+	 */
 	public NpcSkill() {
 		super("npcskill");
 	}
 
+	/**
+	 * 读取目标 NPC 的技能列表并分批发送给管理员。
+	 * Read the targeted NPC's skill list and send it to the admin in batches.
+	 *
+	 * 执行 GM / Admin player
+	 * Unused
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		Npc target = null;
@@ -77,8 +75,4 @@ public class NpcSkill extends AdminCommand {
 		PacketSendUtility.sendMessage(admin, strbld.toString());
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

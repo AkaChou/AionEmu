@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -47,22 +31,52 @@ import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
+/**
+ * 碰撞材质行为者：与材质几何碰撞时按天气/昼夜周期施放技能。
+ * Collision material actor: applies skills on material-geometry collision, filtered by weather/day-night.
+ */
 public class CollisionMaterialActor extends AbstractCollisionObserver implements IActor {
+	/** 材质行为模板 / Material action template */
 	private MaterialTemplate actionTemplate;
+	/** 当前生效技能列表 / Currently active skills */
 	private AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
+	/** 不再接触时是否停止 / Whether to stop when no longer touching */
 	private final boolean stopWhenNotTouching;
+	/** 周期任务 / Periodic task */
 	private Future<?> task;
 
+	/**
+	 * 默认 PASS 检测类型构造。
+	 * Constructor with default PASS check type.
+	 *
+	 * creature
+	 * geometry
+	 * material template
+	 */
 	public CollisionMaterialActor(Creature creature, Spatial geometry, MaterialTemplate actionTemplate) {
 		this(creature, geometry, actionTemplate, CheckType.PASS);
 	}
 
+	/**
+	 * creature
+	 * geometry
+	 * material template
+	 * check type
+	 */
 	public CollisionMaterialActor(Creature creature, Spatial geometry, MaterialTemplate actionTemplate, CheckType checkType) {
 		super(creature, geometry, CollisionIntention.MATERIAL.getId(), checkType);
 		this.actionTemplate = actionTemplate;
 		this.stopWhenNotTouching = checkType == CheckType.TOUCH && !actsOnZoneEnter(geometry);
 	}
 
+	/**
+	 * 几何体是否在进入区域时即生效（火焰等特殊命名）。
+	 * Whether the geometry acts on zone enter (special fire-named meshes).
+	 *
+	 * geometry
+	 *
+	 * @param geometry @return 是否进入即生效 / whether acts on enter
+	 */
 	public static boolean actsOnZoneEnter(Spatial geometry) {
 		String name = geometry.getName();
 		return name.indexOf("FIRE_BOX") != -1 || name.indexOf("FIRE_SEMISPHERE") != -1 || name.indexOf("FIREPOT") != -1
@@ -70,6 +84,14 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 				|| name.startsWith("BU_H_CENTERHALL");
 	}
 
+	/**
+	 * 根据目标、天气与昼夜筛选应激活的材质技能。
+	 * Resolve material skills active for the target, weather and day-night.
+	 *
+	 * target creature
+	 *
+	 * @param creature @return 激活技能列表 / active skill list
+	 */
 	private List<MaterialSkill> getSkillsForTarget(Creature creature) {
 		if (creature instanceof Player) {
 			Player player = (Player) creature;
@@ -130,6 +152,10 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 		act();
 	}
 
+	/**
+	 * 启动或刷新材质技能周期任务。
+	 * Start or refresh the material skill periodic task.
+	 */
 	@Override
 	public synchronized void act() {
 		final List<MaterialSkill> actSkills = getSkillsForTarget(creature);
@@ -166,6 +192,10 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 		}
 	}
 
+	/**
+	 * 中止并清空当前材质技能任务。
+	 * Abort and clear the current material skill task.
+	 */
 	@Override
 	public synchronized void abort() {
 		synchronized (creature.getController()) {
@@ -174,6 +204,10 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 		currentSkills.set(Collections.emptyList());
 	}
 
+	/**
+	 * 取消本行为者持有的区域材质任务。
+	 * Cancel the zone-material task owned by this actor.
+	 */
 	private void cancelOwnedTask() {
 		if (task != null && creature.getController().getTask(TaskId.ZONE_MATERIAL_ACTION) == task) {
 			creature.getController().cancelTask(TaskId.ZONE_MATERIAL_ACTION);

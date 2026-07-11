@@ -1,50 +1,70 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene.mesh;
 
 import java.nio.Buffer;
 import java.nio.IntBuffer;
 
 /**
+ * 基于 {@link IntBuffer} 的整数索引缓冲实现。
+ * {@link IndexBuffer} implementation backed by an {@link IntBuffer}.
+ *
  * @author lex
  */
 public class IndexIntBuffer extends IndexBuffer {
 
+	/** 底层整型缓冲。 / Underlying int buffer. */
 	private IntBuffer buf;
 
+	/**
+	 * 使用给定整型缓冲构造索引缓冲。
+	 * Constructs an index buffer over the given int buffer.
+	 *
+	 * int buffer
+	 */
 	public IndexIntBuffer(IntBuffer buffer) {
 		this.buf = buffer;
 	}
 
+	/**
+	 * 读取整数索引。
+	 * Reads an integer index.
+	 *
+	 * @param i 索引位置 / index position
+	 * index value
+	 */
 	@Override
 	public int get(int i) {
 		return buf.get(i);
 	}
 
+	/**
+	 * 写入整数索引。
+	 * Writes an integer index.
+	 *
+	 * @param i 索引位置 / index position
+	 * index value
+	 */
 	@Override
 	public void put(int i, int value) {
 		buf.put(i, value);
 	}
 
+	/**
+	 * 返回缓冲 limit（元素个数）。
+	 * Returns the buffer limit (element count).
+	 *
+	 * element count
+	 */
 	@Override
 	public int size() {
 		return buf.limit();
 	}
 
+	/**
+	 * 返回底层整型缓冲。
+	 * Returns the underlying int buffer.
+	 *
+	 * int buffer
+	 */
 	@Override
 	public Buffer getBuffer() {
 		return buf;

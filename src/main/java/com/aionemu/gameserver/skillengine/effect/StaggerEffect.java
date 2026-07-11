@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -36,9 +20,17 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 踉跄失衡效果：将目标击退一段距离并施加 STAGGER 物理控制。
+ * Stagger effect: knocks the target back and applies STAGGER physical control.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StaggerEffect")
 public class StaggerEffect extends EffectTemplate {
+	/**
+	 * 非不可移动时加入控制器，结束滑翔，强制位移到计算落点。
+	 * If movable, adds effect, ends glide, and forced-moves to the calculated landing.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		if (!effect.getEffected().getEffectController().isAbnormalSet(AbnormalState.CANNOT_MOVE)) {
@@ -58,12 +50,20 @@ public class StaggerEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 施加 STAGGER 异常。
+	 * Applies the STAGGER abnormal.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		effect.getEffected().getEffectController().setAbnormal(AbnormalState.STAGGER.getId());
 		effect.setAbnormal(AbnormalState.STAGGER.getId());
 	}
 
+	/**
+	 * 已有物理状态时失败；否则按踉跄抗性结算并计算击退坐标。
+	 * Fails if a physical state exists; otherwise resolves stagger resistance and target location.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected().getEffectController().hasPhysicalStateEffect()) {
@@ -89,6 +89,10 @@ public class StaggerEffect extends EffectTemplate {
 		effect.setTargetLoc(x1, y1, z);
 	}
 
+	/**
+	 * 清除物理状态标记与 STAGGER 异常。
+	 * Clears physical-state flag and STAGGER abnormal.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.setIsPhysicalState(false);

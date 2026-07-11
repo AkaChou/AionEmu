@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 /**
+ * 玩家升级街机游戏对象。
+ * Player Upgrade Arcade game object.
+ *
  * @author Ranastic
  */
 public class PlayerUpgradeArcade {
@@ -28,62 +15,81 @@ public class PlayerUpgradeArcade {
 	private boolean reTry = false;
 	private boolean failed = false;
 
+	/** 返回 frenzy points / Returns the frenzy points */
 	public int getFrenzyPoints() {
 		return frenzyPoints;
 	}
 
+	/** 设置 frenzy points / Sets the frenzy points */
 	public void setFrenzyPoints(int frenzyPoints) {
 		this.frenzyPoints = frenzyPoints;
 	}
 
+	/** 返回 frenzy count / Returns the frenzy count */
 	public int getFrenzyCount() {
 		return frenzyCount;
 	}
 
+	/** 设置 frenzy count / Sets the frenzy count */
 	public void setFrenzyCount(int frenzyCount) {
 		this.frenzyCount = frenzyCount;
 	}
 
+	/** 返回 frenzy level / Returns the frenzy level */
 	public int getFrenzyLevel() {
 		return frenzyLevel;
 	}
 
+	/** 设置 frenzy level / Sets the frenzy level */
 	public void setFrenzyLevel(int frenzyLevel) {
 		this.frenzyLevel = frenzyLevel;
 	}
 
+	/** 返回失败等级 / Returns the failed level*/
 	public int getFailedLevel() {
 		return failedLevel;
 	}
 
+	/** 设置失败等级 / Sets the failed level*/
 	public void setFailedLevel(int failedLevel) {
 		this.failedLevel = failedLevel;
 	}
 
+	/**
+	 * @return Whether frenzy / Whether frenzy
+	 */
 	public boolean isFrenzy() {
 		return isFrenzy;
 	}
 
+	/** 设置 frenzy / Sets the frenzy */
 	public void setFrenzy(boolean isFrenzy) {
 		this.isFrenzy = isFrenzy;
 	}
 
+	/**
+	 * @return 是否 retry / 是否 retry。 / Whether re try / Whether re try
+	 */
 	public boolean isReTry() {
 		return reTry;
 	}
 
+	/** 设置 re try / Sets the re try */
 	public void setReTry(boolean reTry) {
 		this.reTry = reTry;
 	}
 
+	/** 是否失败 / Whether failed*/
 	public boolean isFailed() {
 		return failed;
 	}
 
+	/** 设置失败 / Sets the failed*/
 	public void setFailed(boolean failed) {
 		this.failed = failed;
 	}
 
+	/** 重置。 / Reset. */
 	public void reset() {
 		this.isFrenzy = false;
 		this.failed = false;

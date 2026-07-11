@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,14 +14,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 管理员突袭刷怪命令：在目标周围按半径/数量刷出 NPC，可定时删除。
+ * Admin assault-spawn command: spawns NPCs around a target by radius/count, with optional despawn.
+ *
  * @author ginho1
  */
 public class Assault extends AdminCommand {
 
+	/**
+	 * 注册 {@code //assault} 命令。
+	 * Registers the {@code //assault} command.
+	 */
 	public Assault() {
 		super("assault");
 	}
 
+	/**
+	 * 执行突袭刷怪：解析半径、数量、NPC 列表/预设与消失时间。
+	 * Executes assault spawn: parses radius, amount, NPC list/preset, and despawn time.
+	 *
+	 * admin
+	 * @param params 参数：半径、数量、NPC/预设、消失秒数 / radius, amount, npc/preset, despawn secs
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length > 4 || params.length < 3) {
@@ -185,6 +183,14 @@ public class Assault extends AdminCommand {
 		PacketSendUtility.sendMessage(admin, spawnCount + " npc have been spawned.");
 	}
 
+	/**
+	 * 在指定秒数后删除本轮刷出的 NPC。
+	 * Deletes the spawned NPCs after the given number of seconds.
+	 *
+	 * admin
+	 * @param despawnList 待删除可见对象列表 / list of visible objects to despawn
+	 * delay in seconds
+	 */
 	private void despawnThem(final Player admin, final List<VisibleObject> despawnList, final int despawnTime) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -201,6 +207,13 @@ public class Assault extends AdminCommand {
 		}, despawnTime * 1000);
 	}
 
+	/**
+	 * 参数错误时输出 {@code //assault} 用法。
+	 * Prints {@code //assault} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		String syntax = "Syntax: //assault <radius> <amount> <npc_id1, npc_id2,...| tier20 | tier30 |...> <despawn time in secs>";

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -44,29 +28,56 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 暮光战场储藏室副本事件处理器。
+ * Instance event handler for Twilight Battlefield Storeroom.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300130000)
 public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 {
-	private Future<?> twilightBattlefieldTask;
-	private boolean isStartTimer1 = false;
-	private boolean isStartTimer2 = false;
-	private boolean isStartTimer3 = false;
-	private boolean isStartTimer4 = false;
-	private boolean isStartTimer5 = false;
-	private boolean isStartTimer6 = false;
-	private boolean isStartTimer7 = false;
-	private boolean isStartTimer8 = false;
-	private boolean isStartTimer9 = false;
-	private boolean isStartTimer10 = false;
-	private boolean isStartTimer11 = false;
-	private boolean isStartTimer12 = false;
+	/** twilightbattlefield 任务 / twilight battlefield task */
+		private Future<?> twilightBattlefieldTask;
+	/**
+	 * whether timer1 started / whether timer1 started
+	 */
+		private boolean isStartTimer1 = false;
+	/** 是否启动计时器2 / is start timer2 */
+		private boolean isStartTimer2 = false;
+	/** 是否启动计时器3 / is start timer3 */
+		private boolean isStartTimer3 = false;
+	/** 是否启动计时器4 / is start timer4 */
+		private boolean isStartTimer4 = false;
+	/** 是否启动计时器5 / is start timer5 */
+		private boolean isStartTimer5 = false;
+	/** 是否启动计时器6 / is start timer6 */
+		private boolean isStartTimer6 = false;
+	/** 是否启动计时器7 / is start timer7 */
+		private boolean isStartTimer7 = false;
+	/** 是否启动计时器8 / is start timer8 */
+		private boolean isStartTimer8 = false;
+	/** 是否启动计时器9 / is start timer9 */
+		private boolean isStartTimer9 = false;
+	/** 是否启动计时器10 / is start timer10 */
+		private boolean isStartTimer10 = false;
+	/** 是否启动计时器11 / is start timer11 */
+		private boolean isStartTimer11 = false;
+	/** 是否启动计时器12 / is start timer12 */
+		private boolean isStartTimer12 = false;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	private List<Npc> twilightBattlefieldChest = new ArrayList<Npc>();
+	/** twilight battlefield chest / twilight battlefield chest */
+		private List<Npc> twilightBattlefieldChest = new ArrayList<Npc>();
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch(npc.getNpcId()) {
@@ -77,6 +88,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -106,6 +123,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -135,14 +158,24 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 		}
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215189: //Ranx Scout Captain.
-			    //A heavy door has opened somewhere.
+			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						deleteNpc(731580);
@@ -150,9 +183,13 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			    }, 5000);
 			break;
 			case 215200: //Ranx Deathbringer.
-			    //A heavy door has opened somewhere.
+			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						deleteNpc(700545);
@@ -160,9 +197,13 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			    }, 5000);
 			break;
 			case 215214: //Ranx Quaestor.
-			    //A heavy door has opened somewhere.
+			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						deleteNpc(700546);
@@ -170,9 +211,13 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			    }, 5000);
 			break;
 			case 215220: //Ebonlord Vershinak.
-			    //A heavy door has opened somewhere.
+			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						deleteNpc(700547);
@@ -193,8 +238,14 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				doors.get(79).setOpen(true);
 				doors.get(80).setOpen(true);
 				twilightBattlefieldTask.cancel(true);
-				//sendMsg("[SUCCES]: You have finished <Miren Chamber>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Miren Chamber>");
 				instance.doOnAllPlayers(new Visitor<Player>() {
+			        /**
+			         * 处理 visit。
+			         * Handle visit.
+			         *
+			         * @param player 玩家 / player
+			         */
 			        @Override
 			        public void visit(Player player) {
 				        if (player.isOnline()) {
@@ -206,6 +257,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		super.onInstanceCreate(instance);
@@ -213,6 +270,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer1 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -233,6 +296,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			twilightBattlefieldChest.add((Npc) spawn(254574, 585.83545f, 855.7736f, 199.76036f, (byte) 3));
 			twilightBattlefieldChest.add((Npc) spawn(254574, 586.7527f, 835.4556f, 199.76036f, (byte) 116));
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer2();
@@ -248,6 +315,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer2 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -256,6 +329,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer3();
@@ -271,6 +348,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer3 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -279,6 +362,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer4();
@@ -294,6 +381,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer4 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -302,6 +395,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer5();
@@ -317,6 +414,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer5 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -325,6 +428,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer6();
@@ -340,6 +447,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer6 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -348,6 +461,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer7();
@@ -363,6 +480,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer7 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -371,6 +494,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer8();
@@ -386,6 +513,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer8 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -394,6 +527,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer9();
@@ -409,6 +546,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer9 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -417,6 +560,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer10();
@@ -432,6 +579,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer10 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -440,6 +593,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer11();
@@ -455,6 +612,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer11 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -463,6 +626,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					StartTimer12();
@@ -478,6 +645,12 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			isStartTimer12 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -486,6 +659,10 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				}
 			});
 			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					sendMsg(1400244);
@@ -496,11 +673,23 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -517,18 +706,42 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -546,6 +759,13 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
         if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MIREN_ARTIFACT_CONTROL_ROOM_300130000")) {

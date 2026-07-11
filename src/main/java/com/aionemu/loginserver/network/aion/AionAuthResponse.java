@@ -1,147 +1,145 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion;
 
+import lombok.Getter;
+
 /**
- * This class contains possible response that LoginServer may send to client if
- * login fail etc.
+ * 登录服可能返回给客户端的鉴权/登录失败等响应码。
+ * Auth and login failure response codes the login server may send to the client.
  *
  * @author KID
  */
 public enum AionAuthResponse {
 
     /**
-     * that one is not being sent to client, it's only for internal use.
-     * Everything is OK
+     * 仅内部使用，不发给客户端：鉴权成功。
+     * Internal only, not sent to client: authentication succeeded.
      */
     AUTHED(0),
     /**
+     * 系统错误。
      * System error.
      */
     SYSTEM_ERROR(1),
     /**
+     * 账号或密码不匹配。
      * ID or password does not match.
      */
     INVALID_PASSWORD(2),
     /**
+     * 账号或密码不匹配。
      * ID or password does not match.
      */
     INVALID_PASSWORD2(3),
     /**
-     * Failed to load your account info.
+     * 加载账号信息失败。
+     * Failed to load account info.
      */
     FAILED_ACCOUNT_INFO(4),
     /**
-     * Failed to load your social security number.
+     * 加载社保号失败。
+     * Failed to load social security number.
      */
     FAILED_SOCIAL_NUMBER(5),
     /**
+     * 鉴权服未注册任何游戏服。
      * No game server is registered to the authorization server.
      */
     NO_GS_REGISTERED(6),
     /**
-     * You are already logged in.
+     * 已在线。
+     * Already logged in.
      */
     ALREADY_LOGGED_IN(7),
     /**
-     * The selected server is down and you cannot access it.
+     * 所选服务器已关闭。
+     * The selected server is down.
      */
     SERVER_DOWN(8),
     /**
-     * The login information does not match the information you provided.
+     * 登录信息与提供的信息不匹配。
+     * Login information does not match the provided data.
      */
     INVALID_PASSWORD3(9),
     /**
-     * No Login info available.
+     * 无可用登录信息 / 账号不存在。
+     * no such account. / no such account.
      */
     NO_SUCH_ACCOUNT(10),
     /**
-     * You have been disconnected from the server. Please try connecting again
-     * later.
+     * 已与服务器断开，请稍后重连。
+     * Disconnected from the server; try again later.
      */
     DISCONNECTED(11),
     /**
-     * You are not old enough to play the game.
+     * 年龄不足，无法进入游戏。
+     * Not old enough to play.
      */
     AGE_LIMIT(12),
     /**
-     * Double login attempts have been detected.
+     * 检测到重复登录。
+     * Double login attempts detected.
      */
     ALREADY_LOGGED_IN2(13),
     /**
-     * You are already logged in.
+     * 已在线。
+     * Already logged in.
      */
     ALREADY_LOGGED_IN3(14),
     /**
-     * You cannot connect to the server because there are too many users right
-     * now.
+     * 服务器人数已满。
+     * Server is full.
      */
     SERVER_FULL(15),
     /**
-     * The server is being normalized. Please try connecting again later.
+     * 服务器维护中 / 仅 GM 可进。
+     * GM only. / GM only.
      */
     GM_ONLY(16),
     /**
-     * Please login to the game after you have changed your password.
+     * 请修改密码后再登录。
+     * Please change password before logging in.
      */
     ERROR_17(17),
     /**
-     * You have used all your allowed playing time.
+     * 已用完允许的游戏时间。
+     * Allowed play time used up.
      */
     TIME_EXPIRED(18),
     /**
-     * You have used up your allocated time and there is no time left on this
-     * account.
+     * 账号分配时间已耗尽。
+     * Allocated account time exhausted.
      */
     TIME_EXPIRED2(19),
     /**
+     * 系统错误。
      * System error.
      */
     SYSTEM_ERROR2(20),
     /**
-     * The IP is already in use.
+     * IP 已被占用。
+     * IP already in use.
      */
     ALREADY_USED_IP(21),
     /**
-     * You cannot access the game through this IP.
+     * 该 IP 禁止进入游戏。
+     * Cannot access the game from this IP.
      */
     BAN_IP(22);
-    /**
-     * id of this enum that may be sent to client
-     */
-    private int messageId;
 
     /**
-     * Constructor.
-     *
-     * @param msgId id of the message
+     * 可发送给客户端的消息 ID。
+     * Message id that may be sent to the client.
      */
-    private AionAuthResponse(int msgId) {
+    @Getter
+    private final int messageId;
+
+    /**
+     * 构造响应枚举。
+     * Construct response enum.
+     *
+     * Message id
+     */
+    AionAuthResponse(int msgId) {
         messageId = msgId;
-    }
-
-    /**
-     * Message Id that may be sent to client.
-     *
-     * @return message id
-     */
-    public int getMessageId() {
-        return messageId;
     }
 }

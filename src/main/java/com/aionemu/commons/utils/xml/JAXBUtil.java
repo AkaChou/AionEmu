@@ -1,53 +1,33 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- * Aion-Lightning is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * Aion-Lightning is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. *
- *
- * You should have received a copy of the GNU General Public License along with Aion-Lightning. If not, see <http://www.gnu.org/licenses/>.
- *
- *
- * Credits goes to all Open Source Core Developer Groups listed below Please do not change here something, ragarding the developer credits, except the
- * "developed by XXXX". Even if you edit a lot of files in this source, you still have no rights to call it as "your Core". Everybody knows that this
- * Emulator Core was developed by Aion Lightning
- * 
- * @-Aion-Unique-
- * @-Aion-Lightning
- * @Aion-Engine
- * @Aion-Extreme
- * @Aion-NextGen
- * @Aion-Core Dev.
- */
 package com.aionemu.commons.utils.xml;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
-
+import lombok.experimental.UtilityClass;
 import org.w3c.dom.Document;
 
 /**
- * JAXB 工具类 (JAXB Utility Class)
- * 提供XML序列化/反序列化功能，支持通过Schema验证 (Provides XML serialization/deserialization with schema validation support)
+ * JAXB 序列化 / 反序列化与 Schema 生成工具。
+ * deserialize and schema generation helpers. / deserialize and schema generation helpers.
  */
+@UtilityClass
 public class JAXBUtil {
 
     /**
-     * 将对象序列化为XML字符串 (Serialize object to XML string)
-     * @param obj 要序列化的对象 (Object to be serialized)
-     * @return 格式化的XML字符串 (Formatted XML string)
-     * @throws RuntimeException 当序列化失败时抛出 (Thrown when serialization fails)
+     * 将对象序列化为格式化 XML 字符串。
+     * Serialize an object to a formatted XML string.
+     *
+     * @param obj 待序列化对象 / Object to serialize
+     * XML string
+     *
+     * @param obj @throws RuntimeException 序列化失败 / On marshal failure
      */
-    public static String serialize(Object obj) {
+    public String serialize(Object obj) {
         try {
             JAXBContext jc = JAXBContext.newInstance(obj.getClass());
             Marshaller m = jc.createMarshaller();
@@ -62,71 +42,88 @@ public class JAXBUtil {
     }
 
     /**
-     * 将对象序列化为XML文档对象 (Serialize object to XML Document)
-     * @param obj 要序列化的对象 (Object to be serialized)
-     * @return 包含XML数据的Document对象 (Document object containing XML data)
+     * 将对象序列化为 DOM Document。
+     * Serialize an object to a DOM Document.
+     *
+     * @param obj 待序列化对象 / Object to serialize
+     * Document
      */
-    public static Document serializeToDocument(Object obj) {
+    public Document serializeToDocument(Object obj) {
         String s = serialize(obj);
         return XmlUtils.getDocument(s);
     }
 
     /**
-     * 反序列化XML字符串 (Deserialize XML string)
-     * @param s XML字符串 (XML string)
-     * @param clazz 目标类类型 (Target class type)
-     * @return 反序列化的对象 (Deserialized object)
+     * 反序列化 XML 字符串（无 Schema）。
+     * Deserialize an XML string without schema.
+     *
+     * XML string
+     * @param clazz 目标类型 / Target type
+     * @param <T>   类型参数 / Type parameter
+     * Object
      */
-    public static <T> T deserialize(String s, Class<T> clazz) {
+    public <T> T deserialize(String s, Class<T> clazz) {
         return deserialize(s, clazz, (Schema) null);
     }
 
     /**
-     * 通过URL Schema验证反序列化 (Deserialize with schema validation from URL)
-     * @param s XML字符串 (XML string)
-     * @param clazz 目标类类型 (Target class type)
-     * @param schemaURL Schema文件URL (Schema file URL)
-     * @return 验证后的对象 (Validated object)
+     * 使用 URL Schema 校验并反序列化。
+     * Deserialize with schema validation from a URL.
+     *
+     * XML string
+     * @param clazz     目标类型 / Target type
+     * Schema URL
+     * @param <T>       类型参数 / Type parameter
+     * Object
      */
-    public static <T> T deserialize(String s, Class<T> clazz, URL schemaURL) {
+    public <T> T deserialize(String s, Class<T> clazz, URL schemaURL) {
         Schema schema = XmlUtils.getSchema(schemaURL);
         return deserialize(s, clazz, schema);
     }
 
     /**
-     * 通过字符串Schema验证反序列化 (Deserialize with schema validation from string)
-     * @param s XML字符串 (XML string)
-     * @param clazz 目标类类型 (Target class type)
-     * @param schemaString Schema定义字符串 (Schema definition string)
-     * @return 验证后的对象 (Validated object)
+     * 使用字符串 Schema 校验并反序列化。
+     * Deserialize with schema validation from a schema string.
+     *
+     * XML string
+     * @param clazz        目标类型 / Target type
+     * Schema definition
+     * @param <T>          类型参数 / Type parameter
+     * Object
      */
-    public static <T> T deserialize(String s, Class<T> clazz, String schemaString) {
+    public <T> T deserialize(String s, Class<T> clazz, String schemaString) {
         Schema schema = XmlUtils.getSchema(schemaString);
         return deserialize(s, clazz, schema);
     }
 
     /**
-     * 从XML文档反序列化 (Deserialize from XML Document)
-     * @param xml XML文档对象 (XML Document object)
-     * @param clazz 目标类类型 (Target class type)
-     * @param schemaString Schema定义字符串 (Schema definition string)
-     * @return 验证后的对象 (Validated object)
+     * 从 Document 反序列化（字符串 Schema）。
+     * Deserialize from a Document using a schema string.
+     *
+     * XML document
+     * @param clazz        目标类型 / Target type
+     * Schema definition
+     * @param <T>          类型参数 / Type parameter
+     * Object
      */
-    public static <T> T deserialize(Document xml, Class<T> clazz, String schemaString) {
+    public <T> T deserialize(Document xml, Class<T> clazz, String schemaString) {
         String xmlAsString = XmlUtils.getString(xml);
         return deserialize(xmlAsString, clazz, schemaString);
     }
 
     /**
-     * 核心反序列化方法 (Core deserialization method)
-     * @param s XML字符串 (XML string)
-     * @param clazz 目标类类型 (Target class type)
-     * @param schema 验证模式 (Validation schema)
-     * @return 反序列化的对象 (Deserialized object)
-     * @throws RuntimeException 当反序列化失败时抛出 (Thrown when deserialization fails)
+     * 核心反序列化方法。
+     * Core deserialization method.
+     *
+     * XML string
+     * @param clazz  目标类型 / Target type
+     * Validation schema, may be null
+     * @param <T>    类型参数 / Type parameter
+     * Object
+     * On unmarshal failure。 / On unmarshal failure.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T deserialize(String s, Class<T> clazz, Schema schema) {
+    public <T> T deserialize(String s, Class<T> clazz, Schema schema) {
         try {
             JAXBContext jc = JAXBContext.newInstance(clazz);
             Unmarshaller u = jc.createUnmarshaller();
@@ -138,19 +135,20 @@ public class JAXBUtil {
     }
 
     /**
-     * 生成XML Schema (Generate XML Schema)
-     * @param classes 要生成Schema的类 (Classes to generate schema for)
-     * @return Schema定义字符串 (Schema definition string)
-     * @throws RuntimeException 当生成失败时抛出 (Thrown when generation fails)
+     * 为给定类生成 XML Schema 字符串。
+     * Generate an XML Schema string for the given classes.
+     *
+     * Target classes
+     * Schema string
+     * On generation failure
      */
-    public static String generateSchema(Class<?>... classes) {
+    public String generateSchema(Class<?>... classes) {
         try {
             JAXBContext jc = JAXBContext.newInstance(classes);
             StringSchemaOutputResolver ssor = new StringSchemaOutputResolver();
             jc.generateSchema(ssor);
             return ssor.getSchema();
         } catch (Exception e) {
-            // 修正拼写错误：schemma -> schema
             throw new RuntimeException("Failed to generate schema", e);
         }
     }

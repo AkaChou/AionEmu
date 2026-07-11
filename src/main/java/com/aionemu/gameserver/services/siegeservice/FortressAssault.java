@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -41,16 +25,35 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 要塞龙族突击：按延迟调度并在首领附近刷出突击部队。
+ * Fortress Balaur assault that schedules and spawns attackers near the siege boss.
+ */
 public class FortressAssault extends Assault<FortressSiege> {
+
+	/** 是否位于巴劳雷亚地图。 / Whether the fortress is on a Balaurea map. */
 	private final boolean isBalaurea;
+
+	/** 突击部队是否已刷出。 / Whether attackers have already been spawned. */
 	private boolean spawned = false;
+
+	/** 可用刷怪坐标缓存。 / Cached spawn coordinate candidates. */
 	private List<float[]> spawnLocations;
 
+	/**
+	 * @param siege 关联要塞攻城 / related fortress siege
+	 */
 	public FortressAssault(FortressSiege siege) {
 		super(siege);
 		this.isBalaurea = worldId != 400010000;
 	}
 
+	/**
+	 * 按延迟调度德雷吉恩与突击部队刷新。
+	 * Schedules dredgion and attacker spawns after the given delay.
+	 *
+	 * delay in seconds
+	 */
 	@Override
 	protected void scheduleAssault(int delay) {
 		dredgionTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -67,6 +70,12 @@ public class FortressAssault extends Assault<FortressSiege> {
 		}, delay * 1000);
 	}
 
+	/**
+	 * 突击结束：清理坐标并按结果奖励或广播。
+	 * Finishes the assault: clears coords and rewards or broadcasts by result.
+	 *
+	 * @param captured 龙族是否成功占领 / whether Balaur captured the fortress
+	 */
 	@Override
 	protected void onAssaultFinish(boolean captured) {
 		spawnLocations.clear();
@@ -79,13 +88,17 @@ public class FortressAssault extends Assault<FortressSiege> {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Balaur have killed the Guardian General.
+					// 龙族击杀了守护者将军。 / The Balaur have killed the Guardian General.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_BOSS_KILLED);
 				}
 			});
 		}
 	}
 
+	/**
+	 * 在首领周围刷出龙族突击部队。
+	 * Spawns Balaur attackers around the siege boss.
+	 */
 	private void spawnAttackers() {
 		if (spawned) {
 			return;
@@ -138,15 +151,19 @@ public class FortressAssault extends Assault<FortressSiege> {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// The Dredgion has disgorged a horde of Balaur troopers.
+				// 战舰吐出一大群龙族士兵。 / The Dredgion has disgorged a horde of Balaur troopers.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_ABYSS_CARRIER_DROP_DRAGON, 0);
-				// The Balaur Teleport Raiders appeared.
+				// 龙族传送袭击者已出现。 / The Balaur Teleport Raiders appeared.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_ABYSS_WARP_DRAGON, 120000);
 			}
 		});
 		idList.clear();
 	}
 
+	/**
+	 * 按和平期龙族刷新点生成常规突击单位并缓存坐标。
+	 * Spawns regular Balaur units from peace spawn points and caches nearby coords.
+	 */
 	private void spawnRegularBalaurs() {
 		spawnLocations = new ArrayList<float[]>();
 		List<SpawnGroup2> siegeSpawns = DataManager.SPAWNS_DATA2.getSiegeSpawnsByLocId(locationId);
@@ -170,9 +187,15 @@ public class FortressAssault extends Assault<FortressSiege> {
 		}
 	}
 
+	/**
+	 * 按要塞 ID 解析德雷吉恩组装模板 ID。
+	 * Resolves the dredgion assembled-NPC template id by fortress location.
+	 *
+	 * assembled NPC template id
+	 */
 	private int getSpawnIdByFortressId() {
 		switch (locationId) {
-		// RESHANTA:
+		// 雷珊塔： / RESHANTA:
 		case 1011: // Divine Fortress.
 			return 10;
 		case 1131: // Siel's Western Fortress.
@@ -187,10 +210,10 @@ public class FortressAssault extends Assault<FortressSiege> {
 			return 10;
 		case 1241: // Miren Fortress.
 			return 10;
-		// KALDOR:
+		// 卡尔多： / KALDOR:
 		case 7011: // Wealhtheow's Keep.
 			return 10;
-		// PANESTERRA:
+		// 帕内斯特拉： / PANESTERRA:
 		case 10111: // Arcadian Fortress.
 			return 10;
 		case 10211: // Umbral Fortress.
@@ -204,6 +227,12 @@ public class FortressAssault extends Assault<FortressSiege> {
 		}
 	}
 
+	/**
+	 * 按要塞 ID 返回突击部队 NPC 模板列表。
+	 * Returns attacker NPC template ids for the fortress location.
+	 *
+	 * NPC template id list
+	 */
 	private List<Integer> getSpawnIds() {
 		List<Integer> Spawns = new ArrayList<Integer>();
 		switch (locationId) {
@@ -290,6 +319,10 @@ public class FortressAssault extends Assault<FortressSiege> {
 		}
 	}
 
+	/**
+	 * 奖励成功防守玩家（当前空实现）。
+	 * Rewards defending players (currently a no-op).
+	 */
 	private void rewardDefendingPlayers() {
 	}
 }

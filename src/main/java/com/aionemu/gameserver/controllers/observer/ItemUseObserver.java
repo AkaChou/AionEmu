@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -22,7 +6,16 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
+/**
+ * 物品使用观察者：攻击、移动、技能等打断动作时中止使用。
+ * Item-use observer: aborts use on interrupt actions such as attack, move, or skill.
+ */
 public abstract class ItemUseObserver extends ActionObserver {
+
+	/**
+	 * 创建监听全部事件的物品使用观察者。
+	 * Create an item-use observer listening to all events.
+	 */
 	public ItemUseObserver() {
 		super(ObserverType.ALL);
 	}
@@ -62,5 +55,9 @@ public abstract class ItemUseObserver extends ActionObserver {
 		abort();
 	}
 
+	/**
+	 * 中止物品使用。
+	 * Abort item use.
+	 */
 	public abstract void abort();
 }

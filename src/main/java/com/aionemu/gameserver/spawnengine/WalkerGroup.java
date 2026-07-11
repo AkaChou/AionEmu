@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
@@ -33,20 +18,57 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.zone.Point2D;
 
 /**
+ * 巡逻队：按队形排列成员、同步路径步骤并协同行走。
+ * Walker group: arranges members by formation, syncs route steps and walks together.
+ *
  * @author vlog
  * @modified Rolandas
  */
 @Slf4j
 public class WalkerGroup {
 
-
+	/**
+	 * 编队成员（按 walkerIndex 排序）。
+	 * Formation members (sorted by walkerIndex).
+	 */
 	private List<ClusteredNpc> members;
+
+	/**
+	 * 队形类型。
+	 * Formation type.
+	 */
 	private WalkerGroupType type;
+
+	/**
+	 * 基准点 X。
+	 * Anchor X of the group.
+	 */
 	private float walkerXpos;
+
+	/**
+	 * 基准点 Y。
+	 * Anchor Y of the group.
+	 */
 	private float walkerYpos;
+
+	/**
+	 * 各成员当前路径步骤。
+	 * Current route step per member.
+	 */
 	private int[] memberSteps;
+
+	/**
+	 * 编队整体当前步骤。
+	 * Current group-wide route step.
+	 */
 	private volatile int groupStep;
 
+	/**
+	 * 以成员列表构造巡逻队并初始化基准点与队形。
+	 * Builds a walker group from members and initializes anchor and type.
+	 *
+	 * @param members 集群成员列表 / clustered members
+	 */
 	public WalkerGroup(List<ClusteredNpc> members) {
 		this.members = members;
 		Collections.sort(this.members, new Comparator<ClusteredNpc>() {
@@ -61,16 +83,20 @@ public class WalkerGroup {
 		type = members.get(0).getWalkTemplate().getType();
 	}
 
+	/**
+	 * 按队形类型计算并写入各成员站位偏移。
+	 * Computes and applies per-member standing offsets for the formation type.
+	 */
 	public void form() {
 		if (getWalkType() == WalkerGroupType.SQUARE) {
 			int[] rows = members.get(0).getWalkTemplate().getRows();
 			if (sumRows(rows) != members.size()) {
-				log.warn("Invalid row sizes for walk cluster " + members.get(0).getWalkTemplate().getRouteId());
+				log.warn(I18n.get("log.d3b5ea5b2bb4", members.get(0).getWalkTemplate().getRouteId()));
 			}
 			if (rows.length == 1) {
-				// Line formation: distance 2 meters from each other (divide by 2 and multiple
+				// 一字队形：彼此间距 2 米。 / Line formation: distance 2 meters from each other (divide by 2 and multiple
 				// by 2)
-				// negative at left hand and positive at the right hand
+				// 左手为负、右手为正 / negative at left hand and positive at the right hand
 				float bounds = sumMemberBoundSides();
 				float distance = (1 - members.size()) / 2f * (WalkerGroupShift.DISTANCE + bounds);
 				Point2D origin = new Point2D(walkerXpos, walkerYpos);
@@ -117,10 +143,7 @@ public class WalkerGroup {
 					if (i < rows.length - 1)
 						coronalDist += rowDistances[i];
 				}
-				// TODO: reorder in rows and set the npc with highest HpGauge on the front
 			}
-		} else if (getWalkType() == WalkerGroupType.CIRCLE) {
-			// TODO: if needed
 		} else if (getWalkType() == WalkerGroupType.OFFSET) {
 			int[] offsetsX = members.get(0).getWalkTemplate().getoffsetsX();
 			int[] offsetsY = members.get(0).getWalkTemplate().getoffsetsY();
@@ -137,10 +160,17 @@ public class WalkerGroup {
 				member.setWalkerGroupShift(shift);
 			}
 		}else if (getWalkType() == WalkerGroupType.POINT) {
-			log.warn("No formation specified for walk cluster " + members.get(0).getWalkTemplate().getRouteId());
+			log.warn(I18n.get("log.225af1e9aeb7", members.get(0).getWalkTemplate().getRouteId()));
 		}
 	}
 
+	/**
+	 * 行数数组求和。
+	 * Sums row counts.
+	 *
+	 * @param rows 各行人数 / members per row
+	 * sum
+	 */
 	private int sumRows(int[] rows) {
 		int sum = 0;
 		for (int row : rows) {
@@ -149,6 +179,12 @@ public class WalkerGroup {
 		return sum;
 	}
 
+	/**
+	 * 成员碰撞体侧边长度之和。
+	 * Sum of member bound-radius side lengths.
+	 *
+	 * sum of sides
+	 */
 	private float sumMemberBoundSides() {
 		float sum = 0;
 		for (ClusteredNpc member : members) {
@@ -157,26 +193,31 @@ public class WalkerGroup {
 		return sum;
 	}
 
+	/**
+	 * 行间额外间距（预留，当前恒为 0）。
+	 * Extra inter-row spacing (stub; currently always 0).
+	 *
+	 * rows
+	 * start row index
+	 * end row index
+	 * extra distance
+	 */
 	@SuppressWarnings("unused")
 	private float getSidesExtra(int[] rows, int startIndex, int endIndex) {
 		return 0;
 	}
 
 	/**
-	 * Returns coordinates of NPC in 2D from the initial spawn location
-	 * 
-	 * @param origin      - initial spawn location
-	 * @param destination - point of next move
-	 * @param shift       - distance from origin located in lines perpendicular to
-	 *                    destination; for SagittalShift if negative then located to
-	 *                    the left from origin, otherwise, to the right for
-	 *                    CoronalShift if negative then located to back, otherwise
-	 *                    to the front
-	 * @category TODO: move to MathUtil when all kinds of WalkerGroupType are
-	 *           implemented.
+	 * 由初始点、下一路径点与偏移计算 2D 站位坐标。
+	 * Computes 2D standing coordinates from origin, next route point and shift.
+	 *
+	 * @param origin 初始刷怪点 / initial spawn location
+	 * @param destination 下一移动点 / next move point
+	 * @param shift 相对 origin 的垂直偏移：矢状负为左、正为右；冠状负为后、正为前
+	 * offset perpendicular to destination; sagittal negative=left, coronal negative=back。 / offset perpendicular to destination; sagittal negative=left, coronal negative=back
+	 * @return 计算后的点 / computed point
 	 */
 	public static Point2D getLinePoint(Point2D origin, Point2D destination, WalkerGroupShift shift) {
-		// TODO: implement angle shift
 		WalkerGroupShift dir = getShiftSigns(origin, destination);
 		Point2D result = null;
 		if (origin.getY() - destination.getY() == 0) {
@@ -204,8 +245,8 @@ public class WalkerGroup {
 						new WalkerGroupShift(Math.abs(shift.getCoronalShift()), 0));
 			}
 
-			// since it's rotated, and perpendicular, dx and dy are reciprocal when not
-			// rotated
+			// 因已旋转且垂直，未旋转时 dx/dy 互为倒数。 / since it's rotated, and perpendicular, dx and dy are reciprocal when not
+			// 已旋转 / rotated
 			float dx = Math.abs(origin.getX() - rotatedShift.getX());
 			float dy = Math.abs(origin.getY() - rotatedShift.getY());
 			if (shift.getCoronalShift() < 0) {
@@ -233,8 +274,13 @@ public class WalkerGroup {
 		return result;
 	}
 
-	/*
-	 * Return a normalized direction vector
+	/**
+	 * 返回归一化方向符号向量。
+	 * Returns a normalized direction sign vector.
+	 *
+	 * origin
+	 * destination
+	 * @return 方向偏移符号 / direction shift signs
 	 */
 	private static WalkerGroupShift getShiftSigns(Point2D origin, Point2D destination) {
 		float dx = Math.signum(destination.getX() - origin.getX());
@@ -242,6 +288,13 @@ public class WalkerGroup {
 		return new WalkerGroupShift(dx, dy);
 	}
 
+	/**
+	 * 更新成员路径步骤，并在必要时推进编队整体步骤。
+	 * Updates a member's route step and advances the group step when appropriate.
+	 *
+	 * member npc
+	 * new step
+	 */
 	public void setStep(Npc member, int step) {
 		int currentStep = 0;
 		for (int i = 0; i < members.size(); i++) {
@@ -258,6 +311,12 @@ public class WalkerGroup {
 		}
 	}
 
+	/**
+	 * 成员到达目标后的编队同步：等待全员到齐再统一推进。
+	 * Sync after a member reaches a target: wait for all, then advance together.
+	 *
+	 * arriving npc AI
+	 */
 	public void targetReached(NpcAI2 npcAI) {
 		synchronized (members) {
 			npcAI.setSubStateIfNot(AISubState.WALK_WAIT_GROUP);
@@ -283,6 +342,10 @@ public class WalkerGroup {
 		}
 	}
 
+	/**
+	 * 将所有成员刷入世界。
+	 * Spawns all members into the world.
+	 */
 	public void spawn() {
 		for (ClusteredNpc snpc : members) {
 			float height = getHeight(snpc.getX(), snpc.getY(), snpc.getNpc().getSpawn());
@@ -290,6 +353,12 @@ public class WalkerGroup {
 		}
 	}
 
+	/**
+	 * 将重生 NPC 绑定回编队对应槽位并重置步骤。
+	 * Rebinds a respawned NPC into its formation slot and resets its step.
+	 *
+	 * respawned npc
+	 */
 	public void respawn(Npc npc) {
 		for (int index = 0; index < members.size(); index++) {
 			ClusteredNpc snpc = members.get(index);
@@ -304,6 +373,14 @@ public class WalkerGroup {
 		}
 	}
 
+	/**
+	 * 按 NPC 查找对应的集群数据。
+	 * Finds clustered data for the given NPC.
+	 *
+	 * member npc
+	 *
+	 * @param npc @return 集群数据，未找到则为 null / clustered data or null
+	 */
 	public ClusteredNpc getClusterData(Npc npc) {
 		for (ClusteredNpc snpc : members) {
 			if (snpc.getNpc().equals(npc)) {
@@ -313,6 +390,15 @@ public class WalkerGroup {
 		return null;
 	}
 
+	/**
+	 * 解析刷怪高度（当前直接使用模板 Z）。
+	 * Resolves spawn height (currently uses template Z).
+	 *
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * spawn template
+	 * height Z
+	 */
 	private float getHeight(float x, float y, SpawnTemplate template) {
 		/*
 		 * if (GameWorldServices.geoService().isGeoOn()) { return
@@ -321,17 +407,31 @@ public class WalkerGroup {
 		return template.getZ();
 	}
 
+	/**
+	 * 编队人数（池大小）。
+	 * Formation size (pool).
+	 *
+	 * member count
+	 */
 	public int getPool() {
 		return members.size();
 	}
 
 	/**
-	 * @return the type
+	 * 编队类型 / formation type
 	 */
 	public WalkerGroupType getWalkType() {
 		return type;
 	}
 
+	/**
+	 * 判断 NPC 是否处于单行（线性）方阵站位。
+	 * Whether the NPC is in a single-row (linear) square formation.
+	 *
+	 * member npc
+	 *
+	 * @param npc @return 线性站位则为 true / true if linearly positioned
+	 */
 	public boolean isLinearlyPositioned(Npc npc) {
 		if (type != WalkerGroupType.SQUARE) {
 			return false;
@@ -345,7 +445,7 @@ public class WalkerGroup {
 	}
 
 	/**
-	 * @return the groupStep
+	 * @return 编队当前路径步骤 / current group route step
 	 */
 	public int getGroupStep() {
 		return groupStep;

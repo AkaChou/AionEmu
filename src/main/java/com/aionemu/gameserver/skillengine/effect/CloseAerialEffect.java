@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,15 +7,31 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 
+/**
+ * 解除浮空效果：在目标处于 OPENAERIAL 时移除对应浮空技能。
+ * Close-aerial effect: removes open-aerial skills when the target is airborne.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CloseAerialEffect")
 public class CloseAerialEffect extends EffectTemplate {
+	/**
+	 * 移除浮空相关效果。
+	 * Removes open-aerial related effects.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.getEffected().getEffectController().removeEffect(8224);
 		effect.getEffected().getEffectController().removeEffect(8678);
 	}
 
+	/**
+	 * 仅在目标处于 OPENAERIAL 时计算成功。
+	 * Succeeds only if the target has the OPENAERIAL abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!effect.getEffected().getEffectController().isAbnormalSet(AbnormalState.OPENAERIAL)) {

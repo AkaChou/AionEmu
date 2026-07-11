@@ -1,63 +1,44 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
+import lombok.Getter;
+
 /**
+ * 巡逻组成员相对基准点的偏移（矢状/冠状）。
+ * Relative offset of a walker group member (sagittal/coronal).
+ *
  * @author Rolandas
  */
+@Getter
 public class WalkerGroupShift {
 
-	private float sagittalShift; // left and right (sides)
-	private float coronalShift; // or dorsoventral (back and front)
-	private float angle; // if positioned in circle
+	/**
+	 * 左右（矢状）偏移。
+	 * Left/right (sagittal) shift.
+	 */
+	private float sagittalShift;
 
-	public static final float DISTANCE = 2; // 2 meters distance by default
+	/**
+	 * 前后（冠状）偏移。
+	 * dorsoventral) shift. / dorsoventral) shift.
+	 */
+	private float coronalShift;
 
+	/**
+	 * 默认成员间距（米）。
+	 * Default inter-member distance in meters.
+	 */
+	public static final float DISTANCE = 2;
+
+	/**
+	 * 以左右与前后偏移构造。
+	 * Builds a shift from left/right and back/front offsets.
+	 *
+	 * left-right offset
+	 * back-front offset
+	 */
 	public WalkerGroupShift(float leftRight, float backFront) {
 		sagittalShift = leftRight;
 		coronalShift = backFront;
 	}
 
-	public WalkerGroupShift(float angle) {
-		this.angle = angle;
-	}
-
-	/**
-	 * left and right (sides)
-	 * 
-	 * @return the sagittalShift
-	 */
-	public float getSagittalShift() {
-		return sagittalShift;
-	}
-
-	/**
-	 * dorsoventral (back and front)
-	 * 
-	 * @return the coronalShift
-	 */
-	public float getCoronalShift() {
-		return coronalShift;
-	}
-
-	/**
-	 * @return the angle
-	 */
-	public float getAngle() {
-		return angle;
-	}
 }

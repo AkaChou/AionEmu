@@ -1,27 +1,15 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.staticdoor;
 
 import java.util.EnumSet;
 
 /**
+ * 静态 Door 状态枚举。
+ * Static Door State enumeration.
+ *
  * @author Rolandas
  */
 public enum StaticDoorState {
+	/** 无 / None. */
 	NONE(0), OPENED(1 << 0), CLICKABLE(1 << 1), CLOSEABLE(1 << 2), ONEWAY(1 << 3);
 
 	private StaticDoorState(int flag) {
@@ -30,10 +18,12 @@ public enum StaticDoorState {
 
 	private int flag;
 
+	/** 返回标志 / Returns the flag*/
 	public int getFlag() {
 		return flag;
 	}
 
+	/** 设置 states / Sets the states */
 	public static void setStates(int flags, EnumSet<StaticDoorState> state) {
 		for (StaticDoorState states : StaticDoorState.values()) {
 			if (states == NONE) {
@@ -47,6 +37,7 @@ public enum StaticDoorState {
 		}
 	}
 
+	/** 返回 flags / Returns the flags */
 	public static int getFlags(EnumSet<StaticDoorState> doorStates) {
 		int result = 0;
 		for (StaticDoorState state : StaticDoorState.values()) {

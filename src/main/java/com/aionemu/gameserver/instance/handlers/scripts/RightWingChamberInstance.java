@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,37 +17,51 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 /**
-* Author (Encom)
-* Walkthrough:
-* After entering the instance, there is a blue Aether barrier.
-* Once the Aetheric barrier is broken, there are 15 minutes until the treasure chests vanish.
-* All mobs are elite (except the Drakies) in this instance, and give AP.
-* There are many small chests that may contain AP relics, medals, kinah or quest items.
-* Also there is a Golden chest that spawns at one of the four possible locations and may contain level 30 AP items, relics or kinah.
-* Pesky Drakies will prevent you from opening chests, so either kill them or use Anti-Shock scrolls and damage absorbing skills to ignore the drakies.
-* Pull mobs very carefully and watch out for patrols.
-* If there is a level 44+ player in your group, who isn't mentoring, chests won't drop anything except medals and quest items.
-* Note!!! that relics and abyss items aren't tradeable, not even temporary.
-**/
+ * 右翼密室副本事件处理器。
+ * Instance event handler for Right Wing Chamber.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300090000)
 public class RightWingChamberInstance extends GeneralInstanceHandler
 {
-	private Future<?> chestRWCTask;
-	private Future<?> rightWingTask;
-	private boolean isStartTimer = false;
+	/** chest rwctask / chest rwctask */
+		private Future<?> chestRWCTask;
+	/** rightwing 任务 / right wing task */
+		private Future<?> rightWingTask;
+	/** 是否启动计时器 / is start timer */
+		private boolean isStartTimer = false;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	private List<Npc> AncienTreasureBox = new ArrayList<Npc>();
+	/** ancien treasure box / ancien treasure box */
+		private List<Npc> AncienTreasureBox = new ArrayList<Npc>();
 	
 	private void startRightWingChamberTimer() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
 				    rightWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
+								/**
+								 * 处理 visit。
+								 * Handle visit.
+								 *
+								 * @param player 玩家 / player
+								 */
 								@Override
 								public void visit(Player player) {
 									onExitInstance(player);
@@ -77,6 +75,12 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 		});
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		super.onInstanceCreate(instance);
@@ -84,6 +88,12 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 			isStartTimer = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -92,7 +102,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			//Ancien Treasure Box.
+			// 古代宝箱。 / Ancien Treasure Box.
 			AncienTreasureBox.add((Npc) spawn(700471, 231.73753f, 227.93089f, 104.71777f, (byte) 0));
 	        AncienTreasureBox.add((Npc) spawn(700471, 236.99757f, 263.49643f, 104.71777f, (byte) 0));
 	        AncienTreasureBox.add((Npc) spawn(700471, 317.27744f, 175.38466f, 104.71777f, (byte) 0));
@@ -228,11 +238,15 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	        AncienTreasureBox.add((Npc) spawn(700471, 223.27577f, 258.16458f, 104.71452f, (byte) 0));
 	        AncienTreasureBox.add((Npc) spawn(700471, 212.30345f, 268.06534f, 104.71452f, (byte) 0));
 			chestRWCTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
-					//One of the Ancient Treasure Boxes is missing.
+					// 一个古代宝箱不见了。 / One of the Ancient Treasure Boxes is missing.
 					sendMsgByRace(1400245, Race.PC_ALL, 0);
-					//All the Ancient Treasure Boxes are missing.
+					// 所有古代宝箱都不见了。 / All the Ancient Treasure Boxes are missing.
 					sendMsgByRace(1400244, Race.PC_ALL, 4000);
 					AncienTreasureBox.get(0).getController().onDelete();
 					AncienTreasureBox.get(1).getController().onDelete();
@@ -373,20 +387,48 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
 	}
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

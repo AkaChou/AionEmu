@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.model.Race;
@@ -30,7 +14,10 @@ import com.aionemu.gameserver.world.WorldMapType;
 import java.util.Calendar;
 
 /**
- * Created by Ghostfur (Aion-Unique)
+ * 玩家命令：按日程传送到攻城（Siege）活动地图。
+ * Player command: teleports to scheduled Siege event maps.
+ *
+ * @author Ghostfur
  */
 public class cmd_siege extends PlayerCommand {
 
@@ -38,6 +25,13 @@ public class cmd_siege extends PlayerCommand {
         super("siege");
     }
 
+    /**
+     * 根据星期/活动状态选择并进入对应攻城地图。
+     * Chooses and enters the matching Siege map by weekday/event state.
+     *
+     * @param player 执行命令的玩家 / invoking player
+     * @param param 命令参数 / command parameters
+     */
     public void execute(Player player, String...param){
 
         if (player.isAttackMode()){

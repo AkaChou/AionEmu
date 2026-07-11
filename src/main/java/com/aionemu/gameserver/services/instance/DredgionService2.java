@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.instance;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -38,6 +24,10 @@ import com.aionemu.gameserver.world.World;
 @Slf4j
 
 
+/**
+ * 掘金号副本报名服务（第二代），管理开启窗口与冷却。
+ * Dredgion instance registration service (v2) managing open windows and cooldowns.
+ */
 public class DredgionService2 {
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
 
@@ -56,26 +46,42 @@ public class DredgionService2 {
 		}
 	}
 
+	/**
+	 * initDredgion 方法。
+	 * initDredgion method.
+	 */
 	public void initDredgion() {
 		if (AutoGroupConfig.DREDGION_ENABLED) {
-			log.info("[Baranath/Chantra/Terath] Dredgion");
-			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-1PM"
+			log.info(I18n.get("log.e829b9492ce7"));
+			// 战舰 周一至周日 12:00–13:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-1PM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startDredgionRegistration();
 				}
 			}, AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
-			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "8PM-9PM"
+			// 战舰 周一至周日 20:00–21:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "8PM-9PM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startDredgionRegistration();
 				}
 			}, AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
-			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "23PM-0AM"
+			// 战舰 周一至周日 23:00–00:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "23PM-0AM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startDredgionRegistration();
 				}
@@ -86,6 +92,10 @@ public class DredgionService2 {
 	private void startUregisterDredgionTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
@@ -118,15 +128,15 @@ public class DredgionService2 {
 					PacketSendUtility.sendPacket(player, this.autoGroupReg[instanceMaskId]);
 					switch (instanceMaskId) {
 					case maskLvlGradeC:
-						// An infiltration route into the Dredgion is open.
+						// 进入战舰的渗透路线已开放。 / An infiltration route into the Dredgion is open.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDAB1_DREADGION);
 						break;
 					case maskLvlGradeB:
-						// An infiltration passage into the Chantra Dredgion has opened.
+						// 进入钱特拉战舰的渗透通道已开启。 / An infiltration passage into the Chantra Dredgion has opened.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDDREADGION_02);
 						break;
 					case maskLvlGradeA:
-						// An infiltration passage into the Terath Dredgion has opened.
+						// 进入特拉斯战舰的渗透通道已开启。 / An infiltration passage into the Terath Dredgion has opened.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDDREADGION_03);
 						break;
 					}
@@ -135,10 +145,22 @@ public class DredgionService2 {
 		}
 	}
 
+	/**
+	 * isDredgionAvailable 方法。
+	 * isDredgionAvailable method.
+	 * result
+	 */
 	public boolean isDredgionAvailable() {
 		return this.registerAvailable;
 	}
 
+	/**
+	 * getInstanceMaskId 方法。
+	 * getInstanceMaskId method.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
 		if (level < minLevel || level >= capLevel) {
@@ -153,14 +175,34 @@ public class DredgionService2 {
 		}
 	}
 
+	/**
+	 * 添加冷却。
+	 * Adds a cooldown.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void addCoolDown(Player player) {
 		this.playersWithCooldown.add(player.getObjectId());
 	}
 
+	/**
+	 * 是否处于冷却。
+	 * Whether cooldown is active.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
 	}
 
+	/**
+	 * 显示报名窗口。
+	 * Shows the registration window.
+	 *
+	 * 玩家 / player
+	 * instanceMaskId
+	 */
 	public void showWindow(Player player, int instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
 			return;
@@ -174,6 +216,11 @@ public class DredgionService2 {
 		protected static final DredgionService2 instance = new DredgionService2();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static DredgionService2 getInstance() {
 		ObjectProvider<DredgionService2> provider = instanceProvider;
 		if (provider == null) {
@@ -182,6 +229,12 @@ public class DredgionService2 {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * @param instanceProvider 副本提供者 / instanceProvider
+	 */
 	public static void setInstanceProvider(ObjectProvider<DredgionService2> instanceProvider) {
 		DredgionService2.instanceProvider = instanceProvider;
 	}

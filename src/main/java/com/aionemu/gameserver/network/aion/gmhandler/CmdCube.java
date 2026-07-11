@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,15 +5,29 @@ import com.aionemu.gameserver.services.CubeExpandService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * GM 指令：扩展目标玩家背包（Cube）格子。
+ * GM command handler that expands the target player's cube inventory slots.
+ *
  * @author Waii
  */
 public final class CmdCube extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即扩展背包。
+	 * Creates the handler and immediately expands the cube.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 指令参数（当前未使用） / command parameters (currently unused)
+	 */
 	public CmdCube(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 为当前目标玩家扩展 9 格 Cube 背包。
+	 * Expands the current target player's cube by 9 slots.
+	 */
 	public void run() {
 		@SuppressWarnings("unused")
 		Player t = target != null ? target : admin;

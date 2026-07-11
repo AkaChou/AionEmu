@@ -1,23 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+
+/**
+ * Agility 修正器函数，用于属性相关逻辑。
+ * Agility Modifier Function for stats logic.
+ */
 
 class AgilityModifierFunction extends StatFunction {
 
@@ -28,12 +17,14 @@ class AgilityModifierFunction extends StatFunction {
 		this.modifier = modifier;
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat) {
 		float agility = stat.getOwner().getGameStats().getAgility().getCurrent();
 		stat.setBase(Math.round(stat.getBase() + stat.getBase() * (agility - 100) * modifier / 100f));
 	}
 
+	/** 返回 priority / Returns the priority */
 	@Override
 	public int getPriority() {
 		return 30;

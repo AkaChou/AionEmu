@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Annihilation Monument（@AIName "annihilation_monument"），继承 NpcAI2。
+ * Reshanta zone NPC AI: Annihilation Monument (@AIName "annihilation_monument"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("annihilation_monument")
 public class Annihilation_MonumentAI2 extends NpcAI2
 {

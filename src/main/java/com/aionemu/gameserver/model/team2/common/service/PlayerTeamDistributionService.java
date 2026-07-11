@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.common.service;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -46,7 +31,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.google.common.base.Predicate;
 
+/**
+ * 玩家团队 Distribution 服务，用于团队2相关逻辑。
+ * Player Team Distribution Service for team 2 logic.
+ */
+
 public class PlayerTeamDistributionService {
+	/** Do Reward / Do Reward */
 	public static void doReward(TemporaryPlayerTeam<?> team, float damagePercent, Npc owner, AionObject winner) {
 		if (team == null || owner == null) {
 			return;
@@ -63,7 +54,7 @@ public class PlayerTeamDistributionService {
 		} else {
 			expReward = (long) (StatFunctions.calculateGroupExperienceReward(filteredStats.highestLevel, owner));
 		}
-		// Party Bonus: 2 Members 10%
+		// 小队加成：2 人 10% / Party Bonus: 2 Members 10%
 		int size = filteredStats.players.size();
 		int bonus = 100;
 		if (size > 1) {
@@ -73,23 +64,23 @@ public class PlayerTeamDistributionService {
 			if (member.isMentor() || member.getLifeStats().isAlreadyDead()) {
 				continue;
 			}
-			// Berdin's Star.
+			// 伯丁之星。 / Berdin's Star.
 			if (owner.getLevel() >= 10) {
 				member.getCommonData().addBerdinStar(1575000); // 0.14%
 				PacketSendUtility.sendPacket(member, new SM_STATS_INFO(member));
 			}
-			// Aura Of Growth.
+			// 成长光环。 / Aura Of Growth.
 			if (owner.getLevel() >= 66) {
 				if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
 					GameFeatureServices.growthEnergy().addGrowthEnergy(member);
 					PacketSendUtility.sendPacket(member, new SM_STATS_INFO(member));
 				}
 			}
-			// Atreian Bestiary.
+			// 阿特雷亚图鉴。 / Atreian Bestiary.
 			if (owner.getLevel() >= 66) {
 				GameFeatureServices.atreianBestiaryService().onKill(member, owner.getNpcId());
 			}
-			// Auto Drop Kinah.
+			// 自动掉落基纳。 / Auto Drop Kinah.
 			if (CustomConfig.AUTO_KINAH_ENABLED) {
 				switch (member.getWorldId()) {
 				case 210010000: // Poeta.
@@ -198,7 +189,7 @@ public class PlayerTeamDistributionService {
 			long rewardXp = (long) (expReward * bonus * member.getLevel()) / (filteredStats.partyLvlSum * 100);
 			int rewardDp = StatFunctions.calculateGroupDPReward(member, owner);
 			float rewardAp = 1;
-			// Players 10 levels below highest member get 0 reward.
+			// 比最高成员低 10 级以上的玩家奖励为 0。 / Players 10 levels below highest member get 0 reward.
 			if (filteredStats.highestLevel - member.getLevel() >= 10) {
 				rewardXp = 0;
 				rewardDp = 0;
@@ -211,7 +202,7 @@ public class PlayerTeamDistributionService {
 			rewardXp *= damagePercent;
 			rewardDp *= damagePercent;
 			rewardAp *= damagePercent;
-			// Reward XP Group (New system, Exp Retail NA)
+			// 小队经验奖励（新系统，正式服北美经验） / Reward XP Group (New system, Exp Retail NA)
 			switch (member.getWorldId()) {
 			case 301540000: // Archives Of Eternity.
 			case 301550000: // Cradle Of Eternity.
@@ -310,6 +301,7 @@ public class PlayerTeamDistributionService {
 			this.owner = owner;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player member) {
 			if (member.isOnline()) {

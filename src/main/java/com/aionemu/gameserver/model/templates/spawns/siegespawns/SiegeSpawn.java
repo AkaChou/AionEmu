@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.siegespawns;
 
 import java.util.List;
@@ -29,6 +13,8 @@ import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
+ * 要塞刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
  *
  * @author xTz
  */
@@ -41,10 +27,12 @@ public class SiegeSpawn {
 	@XmlAttribute(name = "siege_id")
 	private int siegeId;
 
+	/** 返回攻城 ID / Returns the siege id */
 	public int getSiegeId() {
 		return siegeId;
 	}
 
+	/** 返回攻城种族模板 / Returns the siege race templates*/
 	public List<SiegeRaceTemplate> getSiegeRaceTemplates() {
 		return siegeRaceTemplates;
 	}
@@ -58,10 +46,12 @@ public class SiegeSpawn {
 		@XmlAttribute(name = "race")
 		private SiegeRace race;
 
+		/** 获取要塞种族。 / Returns the siege race. */
 		public SiegeRace getSiegeRace() {
 			return race;
 		}
 
+		/** 返回 siege mod templates / Returns the siege mod templates */
 		public List<SiegeModTemplate> getSiegeModTemplates() {
 			return SiegeModTemplates;
 		}
@@ -74,10 +64,12 @@ public class SiegeSpawn {
 			@XmlAttribute(name = "mod")
 			private SiegeModType siegeMod;
 
+			/** 获取刷新。 / Returns the spawns. */
 			public List<Spawn> getSpawns() {
 				return spawns;
 			}
 
+			/** 获取要塞模式类型。 / Returns the siege mod type. */
 			public SiegeModType getSiegeModType() {
 				return siegeMod;
 			}

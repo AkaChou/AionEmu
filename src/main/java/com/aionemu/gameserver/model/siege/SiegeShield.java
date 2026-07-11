@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.siege;
 
 import java.util.Map;
@@ -31,8 +15,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
 /**
- * Shields have material ID 11 in geo.
- * 
+ * 要塞护盾模型。
+ * Siege Shield model.
+ *
  * @author Rolandas
  */
 public class SiegeShield implements ZoneHandler {
@@ -49,10 +34,12 @@ public class SiegeShield implements ZoneHandler {
 		}
 	}
 
+	/** 获取几何。 / Returns the geometry. */
 	public Spatial getGeometry() {
 		return geometry;
 	}
 
+	/** 在 EnterZone / On Enter Zone */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (!(creature instanceof Player)) {
@@ -69,6 +56,7 @@ public class SiegeShield implements ZoneHandler {
 		}
 	}
 
+	/** 在 LeaveZone / On Leave Zone */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		ActionObserver actor = observed.get(creature.getObjectId());
@@ -78,18 +66,22 @@ public class SiegeShield implements ZoneHandler {
 		}
 	}
 
+	/** 设置 enabled / Sets the enabled */
 	public void setEnabled(boolean enable) {
 		isEnabled = enable;
 	}
 
+	/** 是否启用。 / Whether Enabled. */
 	public boolean isEnabled() {
 		return isEnabled;
 	}
 
+	/** 返回攻城地点 ID / Returns the siege location id */
 	public int getSiegeLocationId() {
 		return siegeLocationId;
 	}
 
+	/** 设置攻城地点 ID / Sets the siege location id */
 	public void setSiegeLocationId(int siegeLocationId) {
 		this.siegeLocationId = siegeLocationId;
 		if (geometry.getParent() instanceof DespawnableNode) {
@@ -97,6 +89,7 @@ public class SiegeShield implements ZoneHandler {
 		}
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		return "LocId=" + siegeLocationId + "; Name=" + geometry.getName() + "; Bounds=" + geometry.getWorldBound();

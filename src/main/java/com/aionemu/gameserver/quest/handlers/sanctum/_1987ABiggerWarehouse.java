@@ -7,6 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 圣所任务脚本：A Bigger Warehouse（任务 ID 1987）。
+ * Sanctum quest script: A Bigger Warehouse (quest ID 1987).
+ */
 public class _1987ABiggerWarehouse extends QuestHandler {
 
 	private static final int questId = 1987;

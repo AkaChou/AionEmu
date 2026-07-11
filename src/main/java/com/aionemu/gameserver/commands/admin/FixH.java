@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import java.io.IOException;
@@ -27,12 +11,27 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
+/**
+ * 修正目标 NPC 朝向并重新保存刷出的命令（{@code //fixh}）。
+ * Admin command that fixes target NPC heading and re-saves the spawn ({@code //fixh}).
+ */
 public class FixH extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code fixh}。
+	 * Registers the command name {@code fixh}.
+	 */
 	public FixH() {
 		super("fixh");
 	}
 
+	/**
+	 * 以管理员朝向翻转后的值重刷目标 NPC 并持久化。
+	 * Re-spawns the targeted NPC with heading flipped from the admin and persists it.
+	 *
+	 * admin
+	 * unused
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (admin.getAccessLevel() < 1) {
@@ -47,10 +46,10 @@ public class FixH extends AdminCommand {
 				int respawnTime = 295;
 				boolean permanent = true;
 
-				// delete spawn,npc
+				// 删除生成/NPC / delete spawn,npc
 				target.getController().delete();
 
-				// spawn npc
+				// 生成 NPC / spawn npc
 				int templateId = temp.getNpcId();
 				float x = temp.getX();
 				float y = temp.getY();
@@ -95,6 +94,22 @@ public class FixH extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 按参数生成并刷出 NPC。
+	 * Creates and spawns an NPC from the given parameters.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * map id
+	 * instance id
+	 * @param x X 坐标 / X coordinate
+	 * @param y Y 坐标 / Y coordinate
+	 * @param z Z 坐标 / Z coordinate
+	 * 朝向 / heading
+	 * walker id
+	 * walker index
+	 * respawn time
+	 * visible object
+	 */
 	protected VisibleObject spawn(int npcId, int mapId, int instanceId, float x, float y, float z, byte heading, String walkerId, int walkerIdx, int respawnTime) {
 		SpawnTemplate template = SpawnEngine.addNewSpawn(mapId, npcId, x, y, z, heading, respawnTime);
 		return SpawnEngine.spawnObject(template, instanceId);

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.beritraInvasion;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 贝里特拉入侵相关 NPC AI：Benoid（@AIName "benoid"），继承 AggressiveNpcAI2。
+ * Beritra-invasion related NPC AI: Benoid (@AIName "benoid"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("benoid")
 public class BenoidAI2 extends AggressiveNpcAI2
 {
@@ -68,7 +54,7 @@ public class BenoidAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Devil Unit's Benoid has been destroyed.
+				// 恶魔部队的贝诺伊德已被摧毁。 / The Devil Unit's Benoid has been destroyed.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_06);
 			}
 		});

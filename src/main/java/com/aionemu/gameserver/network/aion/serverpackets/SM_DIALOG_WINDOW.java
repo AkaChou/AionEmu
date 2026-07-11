@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.List;
@@ -29,16 +13,29 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
+/**
+ * 对话窗口包：打开 NPC/对象对话框，并按页类型写入邮箱状态或城镇挑战任务城镇 ID。
+ * Opens an NPC/object dialog window; for mail or town-challenge pages writes mailbox state or town id.
+ */
 public class SM_DIALOG_WINDOW extends AionServerPacket {
 	private int targetObjectId;
 	private int dialogID;
 	private int questId = 0;
 
+	/**
+	 * @param targetObjectId 对话目标对象 ID / dialog target object id
+	 * @param dlgID          对话框页 ID / dialog page id
+	 */
 	public SM_DIALOG_WINDOW(int targetObjectId, int dlgID) {
 		this.targetObjectId = targetObjectId;
 		this.dialogID = dlgID;
 	}
 
+	/**
+	 * @param targetObjectId 对话目标对象 ID / dialog target object id
+	 * @param dlgID          对话框页 ID / dialog page id
+	 * related quest id
+	 */
 	public SM_DIALOG_WINDOW(int targetObjectId, int dlgID, int questId) {
 		this.targetObjectId = targetObjectId;
 		this.dialogID = dlgID;

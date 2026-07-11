@@ -1,27 +1,17 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.mail;
 
 /**
+ * 邮件消息枚举。
+ * Mail Message enumeration.
+ *
  * @author kosyachok
  */
 public enum MailMessage {
+	/** Mail Send Seccess / Mail Send Seccess */
 	MAIL_SEND_SECCESS(0), NO_SUCH_CHARACTER_NAME(1), RECIPIENT_MAILBOX_FULL(2), MAIL_IS_ONE_RACE_ONLY(3),
+	/** YouAreInRecipientIgnore 列表 / You Are In Recipient Ignore List */
 	YOU_ARE_IN_RECIPIENT_IGNORE_LIST(4), RECIPIENT_IGNORING_MAIL_FROM_PLAYERS_LOWER_206_LVL(5), // WTF??
+	/** Mailspam Wait For Some Time / Mailspam Wait For Some Time */
 	MAILSPAM_WAIT_FOR_SOME_TIME(6);
 
 	private int id;
@@ -30,6 +20,7 @@ public enum MailMessage {
 		this.id = id;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}

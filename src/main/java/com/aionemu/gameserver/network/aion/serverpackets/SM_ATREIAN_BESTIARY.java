@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 同步单条阿特雷亚图鉴条目（击杀数、等级、可领奖状态）的服务端包。
+ * Server packet synchronizing a single Atreian Bestiary entry (kill count, level, reward claimability).
+ *
  * @author Ranastic
  */
 public class SM_ATREIAN_BESTIARY extends AionServerPacket {
@@ -29,6 +16,12 @@ public class SM_ATREIAN_BESTIARY extends AionServerPacket {
 	private int isRewardable;
 	private byte level;
 
+	/**
+	 * @param id 图鉴条目 ID / bestiary entry id
+	 * @param kill 当前击杀数 / current kill count
+	 * @param level 当前等级 / current level
+	 * @param isRewardable 是否可领奖 / whether a reward can be claimed
+	 */
 	public SM_ATREIAN_BESTIARY(int id, int kill, byte level, int isRewardable) {
 		this.id = id;
 		this.kill = kill;

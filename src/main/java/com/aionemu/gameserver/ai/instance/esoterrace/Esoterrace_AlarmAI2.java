@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -37,10 +21,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Esoterrace 副本 NPC AI：Esoterrace Alarm（@AIName "esoterracealarm"），继承 AggressiveNpcAI2。
+ * Esoterrace instance NPC AI: Esoterrace Alarm (@AIName "esoterracealarm"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("esoterracealarm")
 public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 {
@@ -59,11 +45,11 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 13) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
-					//INTRUDER ALERT. INTRUDER ALERT. SEAL OFF ALL VITAL SYSTEMS.
+					// 入侵警报。入侵警报。封锁所有关键系统。 / INTRUDER ALERT. INTRUDER ALERT. SEAL OFF ALL VITAL SYSTEMS.
 					sendMsg(1500379, getObjectId(), false, 0);
-					//INTRUDER ALERT. INTRUDER ALERT. SEAL OFF ALL VITAL SYSTEMS.
+					// 入侵警报。入侵警报。封锁所有关键系统。 / INTRUDER ALERT. INTRUDER ALERT. SEAL OFF ALL VITAL SYSTEMS.
 					sendMsg(1500379, getObjectId(), false, 5000);
-					//INTRUDER ALERT. INTRUDER ALERT. SEAL OFF ALL VITAL SYSTEMS.
+					// 入侵警报。入侵警报。封锁所有关键系统。 / INTRUDER ALERT. INTRUDER ALERT. SEAL OFF ALL VITAL SYSTEMS.
 					sendMsg(1500379, getObjectId(), false, 10000);
 					getSpawnTemplate().setWalkerId("3002500003");
 					WalkManager.startWalking(this);
@@ -90,7 +76,7 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The Bridge to the Drana Production Lab has been raised.
+					// 通往德拉纳生产实验室的桥已升起。 / The Bridge to the Drana Production Lab has been raised.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF4Re_Drana_01);
 				}
 			}

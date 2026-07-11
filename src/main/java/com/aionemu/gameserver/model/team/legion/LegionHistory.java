@@ -1,24 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team.legion;
 
 import java.sql.Timestamp;
 
 /**
+ * 军团 History，用于团队相关逻辑。
+ * Legion History for team logic.
+ *
  * @author Simple, xTz
  */
 public class LegionHistory {
@@ -38,22 +25,27 @@ public class LegionHistory {
 		this.description = description;
 	}
 
+	/** 返回 legion history type / Returns the legion history type */
 	public LegionHistoryType getLegionHistoryType() {
 		return legionHistoryType;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回时间 / Returns the time*/
 	public Timestamp getTime() {
 		return time;
 	}
 
+	/** 返回 tab id / Returns the tab id */
 	public int getTabId() {
 		return tabId;
 	}
 
+	/** 获取描述。 / Returns the description. */
 	public String getDescription() {
 		return description;
 	}

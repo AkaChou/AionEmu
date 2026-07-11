@@ -1,44 +1,27 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion;
 
-import lombok.extern.slf4j.Slf4j;
-import java.nio.ByteBuffer;
-
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.network.packet.BaseClientPacket;
 import com.aionemu.loginserver.model.Account;
+import java.nio.ByteBuffer;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Base class for every Aion -> LS Client Packet
+ * 所有 Aion 客户端 → 登录服数据包的基类。
+ * Base class for every Aion client → login-server packet.
  *
  * @author -Nemesiss-
  */
 @Slf4j
 public abstract class AionClientPacket extends BaseClientPacket<LoginConnection> {
 
-
     /**
-     * Constructs new client packet.
+     * 构造客户端包并绑定连接。
+     * Construct client packet and bind the connection.
      *
-     * @param buf packet data
-     * @param client client
-     * @param opcode packet id
+     * @param buf 包体数据 / Packet data
+     * Login connection
+     * Packet opcode
      */
     protected AionClientPacket(ByteBuffer buf, LoginConnection client, int opcode) {
         super(buf, opcode);
@@ -46,7 +29,8 @@ public abstract class AionClientPacket extends BaseClientPacket<LoginConnection>
     }
 
     /**
-     * run runImpl catching and logging Throwable.
+     * 执行 {@link #runImpl()}，捕获并记录异常。
+     * Run {@link #runImpl()}, catching and logging any throwable.
      */
     @Override
     public final void run() {
@@ -61,15 +45,15 @@ public abstract class AionClientPacket extends BaseClientPacket<LoginConnection>
                 name = getConnection().getIP();
             }
 
-            log.error("error handling client (" + name + ") message " + this, e);
+            log.error(I18n.get("log.de8b49a0a205", name, this, e));
         }
     }
 
     /**
-     * Send new AionServerPacket to connection that is owner of this packet.
-     * This method is equvalent to: getConnection().sendPacket(msg);
+     * 向本包所属连接发送服务端包（等价于 getConnection().sendPacket(msg)）。
+     * Send a server packet on this packet's connection (same as getConnection().sendPacket(msg)).
      *
-     * @param msg
+     * @param msg 待发送的服务端包 / Server packet to send
      */
     protected void sendPacket(AionServerPacket msg) {
         getConnection().sendPacket(msg);

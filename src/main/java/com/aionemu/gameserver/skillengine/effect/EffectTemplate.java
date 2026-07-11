@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +37,12 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 技能效果模板基类：计算、应用、开始/结束效果，并持有 XML 绑定字段。
+ * Base skill effect template: calculate/apply/start/end effects; holds XML-bound fields.
+ *
+ * @author ATracer
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Effect")
 @Slf4j
@@ -113,126 +105,191 @@ public abstract class EffectTemplate {
 	@XmlTransient
 
 	/**
-	 * @return the value
+	 * 获取效果基础数值。
+	 * Returns the base effect value.
+	 *
+	 * base value
 	 */
 	public int getValue() {
 		return value;
 	}
 
 	/**
-	 * @return the delta
+	 * 获取每技能等级的数值增量。
+	 * Returns the per-skill-level delta.
+	 *
+	 * level delta
 	 */
 	public int getDelta() {
 		return delta;
 	}
 
+	/**
+	 * 获取第二时长参数（主持续时长）。
+	 * Returns the primary duration parameter (duration2).
+	 *
+	 * duration
+	 */
 	public int getDuration2() {
 		return duration2;
 	}
 
 	/**
-	 * @return the duration
+	 * 获取第一时长参数。
+	 * Returns the secondary duration parameter (duration1).
+	 *
+	 * duration param
 	 */
 	public int getDuration1() {
 		return duration1;
 	}
 
 	/**
-	 * @return the randomtime
+	 * 获取随机时间偏移。
+	 * Returns the random time offset.
+	 *
+	 * random time
 	 */
 	public int getRandomTime() {
 		return randomTime;
 	}
 
 	/**
-	 * @return the modifiers
+	 * 获取行动修正器集合。
+	 * Returns the action modifiers container.
+	 *
+	 * @return 修正器集合 / modifiers
 	 */
 	public ActionModifiers getModifiers() {
 		return modifiers;
 	}
 
 	/**
-	 * @return the change
+	 * 获取属性变更列表。
+	 * Returns the stat change list.
+	 *
+	 * changes
 	 */
 	public List<Change> getChange() {
 		return change;
 	}
 
 	/**
-	 * @return the effectid
+	 * 获取效果 ID。
+	 * Returns the effect id.
+	 *
+	 * effect id
 	 */
 	public int getEffectid() {
 		return effectid;
 	}
 
 	/**
-	 * @return the position
+	 * 获取效果在技能中的位置序号。
+	 * Returns the effect position index within the skill.
+	 *
+	 * position
 	 */
 	public int getPosition() {
 		return position;
 	}
 
 	/**
-	 * @return the basicLvl
+	 * 获取基础等级要求。
+	 * Returns the basic level requirement.
+	 *
+	 * basic level
 	 */
 	public int getBasicLvl() {
 		return basicLvl;
 	}
 
 	/**
-	 * @return the element
+	 * 获取技能元素属性。
+	 * Returns the skill element.
+	 *
+	 * element
 	 */
 	public SkillElement getElement() {
 		return element;
 	}
 
 	/**
-	 * @return the preEffect
+	 * 获取前置效果位置串（下划线分隔）。
+	 * Returns the pre-effect position string (underscore-separated).
+	 *
+	 * @return 前置效果串 / pre-effect string
 	 */
 	public String getPreEffect() {
 		return preEffect;
 	}
 
 	/**
-	 * @return the preEffectProb
+	 * 获取前置效果触发概率（0–100）。
+	 * Returns the pre-effect trigger probability (0–100).
+	 *
+	 * probability
 	 */
 	public int getPreEffectProb() {
 		return preEffectProb;
 	}
 
+	/**
+	 * 获取暴击概率修正。
+	 * Returns the critical probability modifier.
+	 *
+	 * @return 暴击概率修正 / crit probability mod
+	 */
 	public int getCritProbMod2() {
 		return critProbMod2;
 	}
 
+	/**
+	 * 获取暴击附加伤害 1。
+	 * Returns critical bonus damage 1.
+	 *
+	 * bonus damage
+	 */
 	public int getCritAddDmg1() {
 		return critAddDmg1;
 	}
 
+	/**
+	 * 获取暴击附加伤害 2。
+	 * Returns critical bonus damage 2.
+	 *
+	 * bonus damage
+	 */
 	public int getCritAddDmg2() {
 		return critAddDmg2;
 	}
 
 	/**
-	 * Gets the effect conditions status
-	 * 
-	 * @return list of Conditions for effect template
+	 * 获取效果条件集合。
+	 * Returns the effect conditions.
+	 *
+	 * conditions
 	 */
 	public Conditions getEffectConditions() {
 		return effectConditions;
 	}
 
 	/**
-	 * Gets the sub effect conditions status
-	 * 
-	 * @return list of Conditions for sub effects within effect template
+	 * 获取子效果条件集合。
+	 * Returns the sub-effect conditions.
+	 *
+	 * @return 子效果条件 / sub-effect conditions
 	 */
 	public Conditions getEffectSubConditions() {
 		return effectSubConditions;
 	}
 
 	/**
-	 * @param effect
-	 * @return
+	 * 选取首个条件成立的行动修正器。
+	 * Selects the first action modifier whose condition matches.
+	 *
+	 * @param effect 运行中效果 / runtime effect
+	 * @return 匹配的修正器，无则 null / matching modifier, or null
 	 */
 	protected ActionModifier getActionModifiers(Effect effect) {
 		if (modifiers == null) {
@@ -248,38 +305,46 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * @return the effectType
+	 * 获取效果类型（反序列化后缓存）。
+	 * Returns the effect type (cached after unmarshalling).
+	 *
+	 * effect type
 	 */
 	public EffectType getEffectType() {
 		return effectType;
 	}
 
 	/**
-	 * @return the subEffect
+	 * 获取子效果配置。
+	 * Returns the sub-effect configuration.
+	 *
+	 * sub-effect
 	 */
 	public SubEffect getSubEffect() {
 		return subEffect;
 	}
 
 	/**
-	 * Calculate effect result
-	 * 
-	 * @param effect
+	 * 计算效果是否成功（无额外抗性参数）。
+	 * Calculates whether the effect succeeds (no extra resist params).
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void calculate(Effect effect) {
 		calculate(effect, null, null);
 	}
 
 	/**
-	 * 1) check conditions 2) check preeffect 3) check effectresistrate 4) check
-	 * noresist 5) decide if its magical or physical effect 6) physical - check
-	 * cannotmiss 7) check magic resist / dodge 8) addsuccess exceptions: buffbind
-	 * buffsilence buffsleep buffstun randommoveloc recallinstant returneffect
-	 * returnpoint shieldeffect signeteffect summoneffect xpboosteffect
-	 * 
-	 * @param effect
-	 * @param statEnum
-	 * @param spellStatus
+	 * 完整效果命中计算：条件、前置效果、抗性、闪避/魔抗，成功则登记。
+	 * Full hit calculation: conditions, pre-effects, resist, dodge/magic resist; registers on success.
+	 * <p>
+	 * 步骤 / Steps: 1) conditions 2) pre-effect 3) effect resist 4) noresist
+	 * 5) physical/magical 6) cannotmiss 7) dodge/magic resist 8) add success
+	 *
+	 * @param effect 运行中效果 / runtime effect
+	 * @param statEnum 相关抗性属性，可为 null / related resist stat, may be null
+	 * @param spellStatus 成功时设置的法术状态，可为 null / spell status on success, may be null
+	 * 若 successful 则为 true / true if successful
 	 */
 	public boolean calculate(Effect effect, StatEnum statEnum, SpellStatus spellStatus) {
 		if (effect.getSkillTemplate().isPassive()) {
@@ -378,6 +443,7 @@ public abstract class EffectTemplate {
 	}
 
 	/**
+	 * 检查效果模板的全部条件状态。
 	 * Check all condition statuses for effect template
 	 */
 	private boolean effectConditionsCheck(Effect effect) {
@@ -400,34 +466,39 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * Apply effect to effected
-	 * 
-	 * @param effect
+	 * 将效果应用到被影响者。
+	 * Applies the effect to the effected creature.
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public abstract void applyEffect(Effect effect);
 
 	/**
-	 * Start effect on effected
-	 * 
-	 * @param effect
+	 * 在被影响者上开始效果（默认空实现）。
+	 * Starts the effect on the effected (empty by default).
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void startEffect(Effect effect) {
 	};
 
 	/**
-	 * @param effect
+	 * 计算并初始化子效果。
+	 * Calculates and initializes the sub-effect.
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void calculateSubEffect(Effect effect) {
 		if (subEffect == null) {
 			return;
 		}
-		// Pre-Check for sub effect conditions
+		// 子效果条件的预检查 / Pre-Check for sub effect conditions
 		if (!effectSubConditionsCheck(effect)) {
 			effect.setSubEffectAborted(true);
 			return;
 		}
 
-		// chance to trigger subeffect
+		// 触发子效果的几率 / chance to trigger subeffect
 		if (Rnd.get(100) > subEffect.getChance()) {
 			return;
 		}
@@ -449,6 +520,7 @@ public abstract class EffectTemplate {
 	}
 
 	/**
+	 * 检查效果的全部子效果条件状态。
 	 * Check all sub effect condition statuses for effect
 	 */
 	private boolean effectSubConditionsCheck(Effect effect) {
@@ -456,10 +528,10 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * Hate will be added to result value only if particular effect template has
-	 * success result
-	 * 
-	 * @param effect
+	 * 按 hop 类型累计仇恨（仅在效果成功时有效）。
+	 * Accumulates hate by hop type (only when the effect succeeded).
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void calculateHate(Effect effect) {
 		if (hopType == null) {
@@ -490,13 +562,16 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * @param effect
+	 * 应用已计算的子效果。
+	 * Applies the already-calculated sub-effect.
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void startSubEffect(Effect effect) {
 		if (subEffect == null) {
 			return;
 		}
-		// Apply-Check for sub effect conditions
+		// 子效果条件的应用-检查 / Apply-Check for sub effect conditions
 		if (effect.isSubEffectAbortedBySubConditions()) {
 			return;
 		}
@@ -506,25 +581,30 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * Do periodic effect on effected
-	 * 
-	 * @param effect
+	 * 周期触发时的动作（默认空实现）。
+	 * Periodic tick action (empty by default).
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void onPeriodicAction(Effect effect) {
 	}
 
 	/**
-	 * End effect on effected
-	 * 
-	 * @param effect
+	 * 结束效果（默认空实现）。
+	 * Ends the effect (empty by default).
+	 *
+	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void endEffect(Effect effect) {
 	}
 
 	/**
-	 * @param effect
-	 * @param statEnum
-	 * @return true = no resist, false = resisted
+	 * 计算效果抗性检定：true 表示未抵抗，false 表示被抵抗。
+	 * Rolls effect resistance: true = not resisted, false = resisted.
+	 *
+	 * @param effect 运行中效果 / runtime effect
+	 * @param statEnum 抗性属性，null 视为通过 / resist stat; null means pass
+	 * @return 是否通过抗性 / true if not resisted
 	 */
 	public boolean calculateEffectResistRate(Effect effect, StatEnum statEnum) {
 
@@ -545,16 +625,16 @@ public abstract class EffectTemplate {
 					.getCurrent();
 		}
 
-		// effect resistance
+		// 效果抗性 / effect resistance
 		effectPower -= effect.getEffected().getGameStats().getStat(statEnum, 0).getCurrent();
 
-		// penetration
+		// 穿透 / penetration
 		StatEnum penetrationStat = this.getPenetrationStat(statEnum);
 		if (penetrationStat != null) {
 			effectPower += effector.getGameStats().getStat(penetrationStat, 0).getCurrent();
 		}
 
-		// resist mod pvp
+		// PVP 抗性修正 / resist mod pvp
 		if (effector.isPvpTarget(effect.getEffected())) {
 			int differ = (effected.getLevel() - effector.getLevel());
 			if (differ > 2 && differ < 8) {
@@ -564,7 +644,7 @@ public abstract class EffectTemplate {
 			}
 		}
 
-		// resist mod PvE
+		// PvE 抗性修正 / resist mod PvE
 		if (effect.getEffected() instanceof Npc) {
 			Npc effectrd = (Npc) effect.getEffected();
 			int hpGaugeMod = effectrd.getObjectTemplate().getRank().ordinal() - 1;
@@ -674,8 +754,8 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * certain effects are magical even when used in physical skills it includes
-	 * stuns from chanter/sin/ranger etc these effects(effecttemplates) are
+	 * 部分效果即使用于物理技能仍属魔法，含护法星/杀星/弓星等眩晕。
+	 * certain effects are magical even when used in physical skills; includes stuns from chanter/sin/ranger etc these effects(effecttemplates) are
 	 * dependent on magical accuracy and magical resist
 	 * 
 	 * @return
@@ -696,7 +776,7 @@ public abstract class EffectTemplate {
 					.valueOf(this.getClass().getName().replaceAll("com.aionemu.gameserver.skillengine.effect.", "")
 							.replaceAll("Effect", "").toUpperCase());
 		} catch (Exception e) {
-			log.info("Missing effect type for {}", this.getClass().getName());
+			log.info(I18n.get("log.67edc30354d5", this.getClass().getName()));
 		}
 		this.effectType = temp;
 	}

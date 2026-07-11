@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.instancereward;
 
 import java.util.ArrayList;
@@ -34,6 +18,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+
+/**
+ * PvPArena 奖励，用于副本相关逻辑。
+ * Pv P Arena Reward for instance logic.
+ */
 
 public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	private Map<Integer, Boolean> positions = new HashMap<Integer, Boolean>();
@@ -79,18 +68,24 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		setRndZone();
 	}
 
+	/** 是否单人竞技场 / Whether solo arena*/
 	public final boolean isSoloArena() {
 		return mapId == 300360000 || mapId == 300430000;
 	}
 
+	/**
+	 * @return 是否 glory / 是否 glory。 / Whether glory / Whether glory
+	 */
 	public final boolean isGlory() {
 		return mapId == 300550000;
 	}
 
+	/** 返回 cap points / Returns the cap points */
 	public int getCapPoints() {
 		return capPoints;
 	}
 
+	/** 设置 rnd zone / Sets the rnd zone */
 	public final void setRndZone() {
 		int index = Rnd.get(zones.size());
 		zone = zones.get(index);
@@ -107,6 +102,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		return p;
 	}
 
+	/** 设置 rnd position / Sets the rnd position */
 	public synchronized void setRndPosition(Integer object) {
 		PvPArenaPlayerReward reward = getPlayerReward(object);
 		int position = reward.getPosition();
@@ -118,34 +114,41 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		reward.setPosition(key);
 	}
 
+	/** 清空坐标。 / Clear position. */
 	public synchronized void clearPosition(int position, Boolean result) {
 		positions.put(position, result);
 	}
 
+	/** 返回 round / Returns the round */
 	public int getRound() {
 		return round;
 	}
 
+	/** 设置 round / Sets the round */
 	public void setRound(int round) {
 		this.round = round;
 	}
 
+	/** Reg 玩家 Reward / Reg Player Reward */
 	public void regPlayerReward(Integer object) {
 		if (!containPlayer(object)) {
 			addPlayerReward(new PvPArenaPlayerReward(object, bonusTime, buffId));
 		}
 	}
 
+	/** 添加玩家奖励。 / Adds player reward. */
 	@Override
 	public void addPlayerReward(PvPArenaPlayerReward reward) {
 		super.addPlayerReward(reward);
 	}
 
+	/** 获取玩家奖励。 / Returns the player reward. */
 	@Override
 	public PvPArenaPlayerReward getPlayerReward(Integer object) {
 		return (PvPArenaPlayerReward) super.getPlayerReward(object);
 	}
 
+	/** 传送至坐标 / Port To Position */
 	public void portToPosition(Player player) {
 		Integer object = player.getObjectId();
 		regPlayerReward(object);
@@ -155,10 +158,14 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		instancePosition.port(player, zone, playerReward.getPosition());
 	}
 
+	/** 排序点。 / Sort points. */
 	public List<PvPArenaPlayerReward> sortPoints() {
 		return RewardCollections.sortedByScoreDescending(getInstanceRewards(), PvPArenaPlayerReward::getScorePoints);
 	}
 
+	/**
+	 * @param rewardedPlayer Whether reward opportunity token / Whether reward opportunity token
+	 */
 	public boolean canRewardOpportunityToken(PvPArenaPlayerReward rewardedPlayer) {
 		if (rewardedPlayer != null) {
 			int rank = getRank(rewardedPlayer.getScorePoints());
@@ -167,6 +174,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		return false;
 	}
 
+	/** 获取军阶。 / Returns the rank. */
 	public int getRank(int points) {
 		int rank = -1;
 		for (PvPArenaPlayerReward reward : sortPoints()) {
@@ -177,6 +185,9 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		return rank;
 	}
 
+	/**
+	 * @return Whether cap points / Whether cap points
+	 */
 	public boolean hasCapPoints() {
 		if (isSoloArena()
 				&& (RewardCollections.maxPoints(getInstanceRewards()) - RewardCollections.minPoints(getInstanceRewards()) >= 1500))
@@ -184,15 +195,20 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		return RewardCollections.maxPoints(getInstanceRewards()) >= capPoints;
 	}
 
+	/** 返回 total points / Returns the total points */
 	public int getTotalPoints() {
 		return RewardCollections.sum(getInstanceRewards(), PvPArenaPlayerReward::getScorePoints);
 	}
 
+	/**
+	 * @return Whether rewarded / Whether rewarded
+	 */
 	public boolean canRewarded() {
 		return mapId == 300350000 || mapId == 300360000 || mapId == 300420000 || mapId == 300430000
 				|| mapId == 300450000 || mapId == 300550000 || mapId == 300570000 || mapId == 301100000;
 	}
 
+	/** 返回 npc bonus skill / Returns the npc bonus skill */
 	public int getNpcBonusSkill(int npcId) {
 		switch (npcId) {
 		case 701175:
@@ -223,6 +239,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		}
 	}
 
+	/** 返回时间 / Returns the time*/
 	public int getTime() {
 		long result = System.currentTimeMillis() - instanceTime;
 		if (isRewarded()) {
@@ -235,13 +252,16 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		}
 	}
 
+	/** 设置 instance start time / Sets the instance start time */
 	public void setInstanceStartTime() {
 		this.instanceTime = System.currentTimeMillis();
 	}
 
+	/** 发送数据包。 / Send packet. */
 	public void sendPacket() {
 		final List<Player> players = instance.getPlayersInside();
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/** 访问 / visit. */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), getInstanceReward(), players));
@@ -249,10 +269,12 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		});
 	}
 
+	/** 返回增益 ID / Returns the buff id */
 	public byte getBuffId() {
 		return buffId;
 	}
 
+	/** 清空。 / Clear. */
 	@Override
 	public void clear() {
 		super.clear();

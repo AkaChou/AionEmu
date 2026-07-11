@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.infinityShard;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -38,10 +22,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Infinity Shard 副本 NPC AI：Hyperion（@AIName "hyperion"），继承 AggressiveNpcAI2。
+ * Infinity Shard instance NPC AI: Hyperion (@AIName "hyperion"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("hyperion")
 public class HyperionAI2 extends AggressiveNpcAI2
 {
@@ -62,15 +48,15 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 	
 	private void spawnIdeResonator() {
-		//Ide Resonators are charging the Hyperion.
+		// 伊德谐振器正在为许珀里翁充能。 / Ide Resonators are charging the Hyperion.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charging, 0);
-		//Phase 1 of the Ide energy charging complete.
+		// 伊德能量充能第 1 阶段完成。 / Phase 1 of the Ide energy charging complete.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger1_Completed, 3000);
-		//Phase 2 of the Ide energy charging complete.
+		// 伊德能量充能第 2 阶段完成。 / Phase 2 of the Ide energy charging complete.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger2_Completed, 9000);
-		//Phase 3 of the Ide energy charging complete.
+		// 伊德能量充能第 3 阶段完成。 / Phase 3 of the Ide energy charging complete.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger3_Completed, 15000);
-		//All phases of Ide energy charging complete. Hyperion ultimate attack imminent.
+		// 伊德能量充能各阶段完成。许珀里翁终极攻击即将来临。 / All phases of Ide energy charging complete. Hyperion ultimate attack imminent.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger4_Completed, 21000);
 		switch (Rnd.get(1, 4)) {
 		    case 1:

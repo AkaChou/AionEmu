@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,41 +14,53 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 生命值恢复服务，调度 HP/MP/飞行值的恢复与消耗任务。
+ * Life stats restore service scheduling HP/MP/FP restore and reduce tasks.
+ *
  * @author ATracer
  */
 public class LifeStatsRestoreService {
 
 	private static volatile ObjectProvider<LifeStatsRestoreService> instanceProvider;
 
+	/** 默认生命/魔法恢复间隔（毫秒） / Default HP/MP restore interval in ms*/
 	private static final int DEFAULT_DELAY = 6000;
+	/** 飞行值消耗默认间隔（毫秒）。 / Default FP reduce interval in ms. */
 	private static final int DEFAULT_FPREDUCE_DELAY = 2000;
+	/** 飞行值恢复默认间隔（毫秒）。 / Default FP restore interval in ms. */
 	private static final int DEFAULT_FPRESTORE_DELAY = 2000;
 
 	private static LifeStatsRestoreService instance = new LifeStatsRestoreService();
 
 	/**
-	 * HP and MP restoring task
-	 * 
-	 * @param lifeStats
-	 * @return Future<?>
+	 * 调度 HP 与 MP 恢复任务。
+	 * Schedules an HP and MP restore task.
+	 *
+	 * life stats
+	 * scheduled future
 	 */
 	public Future<?> scheduleRestoreTask(CreatureLifeStats<? extends Creature> lifeStats) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new HpMpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
 	}
 
 	/**
-	 * HP restoring task
-	 * 
-	 * @param lifeStats
-	 * @return
+	 * 调度仅恢复 HP 的任务。
+	 * Schedules an HP-only restore task.
+	 *
+	 * life stats
+	 * scheduled future
 	 */
 	public Future<?> scheduleHpRestoreTask(CreatureLifeStats<? extends Creature> lifeStats) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new HpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
 	}
 
 	/**
-	 * @param lifeStats
-	 * @return
+	 * 调度飞行值消耗任务。
+	 * Schedules a flight points reduce task.
+	 *
+	 * @param lifeStats 玩家生命状态 / player life stats
+	 * @param costFp 每次消耗量，可为 null 使用默认 / cost per tick, null for default
+	 * scheduled future
 	 */
 	public Future<?> scheduleFpReduceTask(final PlayerLifeStats lifeStats, Integer costFp) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new FpReduceTask(lifeStats, costFp), 2000,
@@ -72,14 +68,23 @@ public class LifeStatsRestoreService {
 	}
 
 	/**
-	 * @param lifeStats
-	 * @return
+	 * 调度飞行值恢复任务。
+	 * Schedules a flight points restore task.
+	 *
+	 * @param lifeStats 玩家生命状态 / player life stats
+	 * scheduled future
 	 */
 	public Future<?> scheduleFpRestoreTask(PlayerLifeStats lifeStats) {
 		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new FpRestoreTask(lifeStats), 2000,
 				DEFAULT_FPRESTORE_DELAY);
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static LifeStatsRestoreService getInstance() {
 		ObjectProvider<LifeStatsRestoreService> provider = instanceProvider;
 		if (provider != null) {
@@ -88,10 +93,20 @@ public class LifeStatsRestoreService {
 		return instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<LifeStatsRestoreService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 仅恢复 HP 的定时任务；战斗中或已满则取消。
+	 * HP-only restore runnable; cancels when fighting, dead or fully restored.
+	 */
 	private static class HpRestoreTask implements Runnable {
 
 		private CreatureLifeStats<?> lifeStats;
@@ -113,6 +128,10 @@ public class LifeStatsRestoreService {
 		}
 	}
 
+	/**
+	 * 同时恢复 HP 与 MP 的定时任务。
+	 * Combined HP and MP restore runnable.
+	 */
 	private static class HpMpRestoreTask implements Runnable {
 
 		private CreatureLifeStats<?> lifeStats;
@@ -134,6 +153,10 @@ public class LifeStatsRestoreService {
 		}
 	}
 
+	/**
+	 * 飞行值消耗定时任务，耗尽时结束飞行或触发恢复。
+	 * FP reduce runnable; ends flight or triggers restore when empty.
+	 */
 	private static class FpReduceTask implements Runnable {
 
 		private PlayerLifeStats lifeStats;
@@ -172,6 +195,10 @@ public class LifeStatsRestoreService {
 		}
 	}
 
+	/**
+	 * 飞行值恢复定时任务，满值后取消。
+	 * FP restore runnable; cancels when dead or fully restored.
+	 */
 	private static class FpRestoreTask implements Runnable {
 
 		private PlayerLifeStats lifeStats;

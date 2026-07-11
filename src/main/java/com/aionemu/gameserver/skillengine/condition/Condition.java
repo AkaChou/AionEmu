@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 技能条件基类：定义技能施放、效果应用与属性计算时的条件校验契约。
+ * Skill condition base class: defines the validation contract for skill cast, effect apply, and stat calculation.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,18 +21,34 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 public abstract class Condition implements StatCondition {
 
 	/**
-	 * Validate condition specified in template
-	 * 
-	 * @param env
-	 * @return true or false
+	 * 校验技能环境是否满足模板中指定的条件。
+	 * Validates whether the skill environment satisfies the condition specified in the template.
+	 *
+	 * @param env 技能环境 / skill environment
+	 * whether valid
 	 */
 	public abstract boolean validate(Skill env);
 
+	/**
+	 * 校验属性计算环境是否满足本条件；默认恒为通过。
+	 * Validates whether the stat calculation environment satisfies this condition; default always passes.
+	 *
+	 * @param stat 属性对象 / stat object
+	 * stat function
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
 		return true;
 	}
 
+	/**
+	 * 校验效果环境是否满足本条件；默认恒为通过。
+	 * Validates whether the effect environment satisfies this condition; default always passes.
+	 *
+	 * effect environment
+	 * whether valid
+	 */
 	public boolean validate(Effect effect) {
 		return true;
 	}

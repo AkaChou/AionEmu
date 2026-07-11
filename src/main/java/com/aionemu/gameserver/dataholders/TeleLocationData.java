@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.model.templates.teleport.TelelocationTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 传送点位置数据容器，按位置 ID 索引传送坐标模板。
+ * Teleport-location data holder, indexing telelocation templates by location id.
+ *
  * @author orz
  */
 @XmlRootElement(name = "teleport_location")
@@ -38,19 +25,36 @@ public class TeleLocationData {
 	@XmlElement(name = "teleloc_template")
 	private List<TelelocationTemplate> tlist;
 
-	/** A map containing all teleport location templates */
+	/** 传送点位置模板映射。 / Map of all teleport location templates. */
 	private IntObjectHashMap<TelelocationTemplate> loctlistData = new IntObjectHashMap<TelelocationTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，按位置 ID 索引传送点模板。
+	 * After JAXB unmarshalling, indexes telelocation templates by location id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TelelocationTemplate loc : tlist) {
 			loctlistData.put(loc.getLocId(), loc);
 		}
 	}
 
+	/**
+	 * 返回已加载的传送点数量。
+	 * Returns the number of loaded teleport locations.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return loctlistData.size();
 	}
 
+	/**
+	 * 按位置 ID 获取传送点模板。
+	 * Returns the telelocation template for the given location id.
+	 *
+	 * @param id 位置 ID / location id
+	 * @return 传送点模板，不存在则为 null / telelocation template or null
+	 */
 	public TelelocationTemplate getTelelocationTemplate(int id) {
 		return loctlistData.get(id);
 	}

@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import java.util.List;
@@ -26,15 +10,29 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
- * Created by Kill3r
+ * GM 指令：按技能栈名删除玩家非印记技能。
+ * GM command handler that removes non-stigma skills matching a skill stack name.
+ *
+ * @author Kill3r
  */
 public class CmdDeleteSkill extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即执行删除技能。
+	 * Creates the handler and immediately runs the delete-skill logic.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 技能名称/栈名（可含 _G 等级后缀） / skill name/stack (may include _G rank suffix)
+	 */
 	public CmdDeleteSkill(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 规范化技能栈名后，移除管理员身上匹配的非印记技能。
+	 * Normalizes the skill stack name and removes matching non-stigma skills from the admin.
+	 */
 	public void run() {
 		String skillName = params;
 		PlayerSkillList playerSkillList = admin.getSkillList();
@@ -79,6 +77,13 @@ public class CmdDeleteSkill extends AbstractGMHandler {
 
 	}
 
+	/**
+	 * 从技能名后缀解析 G1–G7 等级序号。
+	 * Parses the G1–G7 rank suffix from a skill name.
+	 *
+	 * skill name
+	 * rank number, default 1
+	 */
 	private int checkLevel(String string) {
 		if (string.endsWith("G1")) {
 			return 1;

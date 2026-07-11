@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -30,6 +14,10 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.pet.PetFlavour;
 
+/**
+ * 宠物喂食口味数据容器，按口味 ID 索引 PetFlavour。
+ * Pet feed flavour data holder, indexing PetFlavour by flavour id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "flavours" })
 @XmlRootElement(name = "pet_feed")
@@ -41,6 +29,10 @@ public class PetFeedData {
 	@XmlTransient
 	private Map<Integer, PetFlavour> petFlavoursById = new HashMap<Integer, PetFlavour>();
 
+	/**
+	 * JAXB 反序列化完成后，将口味写入 ID 索引并释放列表。
+	 * After JAXB unmarshalling, indexes flavours by id and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (flavours == null) {
 			return;
@@ -52,14 +44,34 @@ public class PetFeedData {
 		flavours = null;
 	}
 
+	/**
+	 * 按口味 ID 获取宠物喂食口味。
+	 * Returns the pet feed flavour for the given flavour id.
+	 *
+	 * flavour id
+	 *
+	 * @param flavourId @return 口味模板，不存在则为 null / flavour template or null
+	 */
 	public PetFlavour getFlavourById(int flavourId) {
 		return petFlavoursById.get(flavourId);
 	}
 
+	/**
+	 * 返回已加载的口味数量。
+	 * Returns the number of loaded flavours.
+	 *
+	 * flavour count
+	 */
 	public int size() {
 		return petFlavoursById.size();
 	}
 
+	/**
+	 * 返回全部宠物口味数组。
+	 * Returns all pet flavours as an array.
+	 *
+	 * flavour array
+	 */
 	public PetFlavour[] getPetFlavours() {
 		return petFlavoursById.values().toArray(new PetFlavour[0]);
 	}

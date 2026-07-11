@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill;
 
 import java.sql.Timestamp;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
+ * 技能条目。
+ * Skill Entry model.
+ *
  * @author ATracer
  */
 public abstract class SkillEntry {
@@ -42,54 +29,69 @@ public abstract class SkillEntry {
 		this.isActivated = isActivated;
 	}
 
+	/** 返回技能 ID / Returns the skill id */
 	public final int getSkillId() {
 		return skillId;
 	}
 
+	/** 获取技能等级。 / Returns the skill level. */
 	public final int getSkillLevel() {
 		return skillLevel;
 	}
 
+	/** 返回皮肤 ID / Returns the skin id */
 	public final int getSkinId() {
 		return skinId;
 	}
 
+	/** 返回皮肤当前时间 / Returns the skin active time */
 	public final Timestamp getSkinActiveTime() {
 		return activeSkinTime;
 	}
 
+	/** 设置 skin active time / Sets the skin active time */
 	public void setSkinActiveTime(Timestamp activeSkinTime) {
 		this.activeSkinTime = activeSkinTime;
 	}
 
+	/** 返回皮肤过期时间 / Returns the skin expire time */
 	public final int getSkinExpireTime() {
 		return expireTime;
 	}
 
+	/** 获取技能名称。 / Returns the skill name. */
 	public final String getSkillName() {
 		return DataManager.SKILL_DATA.getSkillTemplate(getSkillId()).getName();
 	}
 
+	/** 设置技能等级 / Sets the skill lvl */
 	public void setSkillLvl(int skillLevel) {
 		this.skillLevel = skillLevel;
 	}
 
+	/** 获取技能模板。 / Returns the skill template. */
 	public final SkillTemplate getSkillTemplate() {
 		return DataManager.SKILL_DATA.getSkillTemplate(getSkillId());
 	}
 
+	/** 设置 skin id / Sets the skin id */
 	public void setSkinId(int skinId) {
 		this.skinId = skinId;
 	}
 
+	/** 设置 skin expire time / Sets the skin expire time */
 	public void setSkinExpireTime(int expireTime) {
 		this.expireTime = expireTime;
 	}
 
+	/**
+	 * @return Whether activated / Whether activated
+	 */
 	public boolean isActivated() {
 		return isActivated;
 	}
 
+	/** 设置 activated / Sets the activated */
 	public void setActivated(boolean activated) {
 		this.isActivated = activated;
 	}

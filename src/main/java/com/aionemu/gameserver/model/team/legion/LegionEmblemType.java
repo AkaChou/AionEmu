@@ -1,25 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team.legion;
 
 /**
+ * 军团徽章类型枚举。
+ * Legion Emblem Type enumeration.
+ *
  * @author cura
  */
 public enum LegionEmblemType {
+	/** 默认 / Default. */
 	DEFAULT(0x00), CUSTOM(0x80);
 
 	private byte value;
@@ -28,6 +16,7 @@ public enum LegionEmblemType {
 		this.value = (byte) value;
 	}
 
+	/** 获取值。 / Returns the value. */
 	public byte getValue() {
 		return value;
 	}

@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.wisplight_abbey;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -19,10 +7,12 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 微光修道院任务脚本：Attack On The Fissure Of Oblivion Instanced Dungeon（任务 ID 19691）。
+ * Wisplight Abbey quest script: Attack On The Fissure Of Oblivion Instanced Dungeon (quest ID 19691).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _19691Attack_On_The_Fissure_Of_Oblivion_Instanced_Dungeon extends QuestHandler {
 
     private final static int questId = 19691;
@@ -33,7 +23,7 @@ public class _19691Attack_On_The_Fissure_Of_Oblivion_Instanced_Dungeon extends Q
     public void register() {
         qe.registerQuestNpc(806698).addOnQuestStart(questId);
         qe.registerQuestNpc(806698).addOnTalkEvent(questId);
-		//Special Forces Commander Gegares
+		// 特种部队指挥官格加雷斯 / Special Forces Commander Gegares
 		qe.registerQuestNpc(246200).addOnKillEvent(questId);
 		qe.registerQuestNpc(246201).addOnKillEvent(questId);
 		qe.registerQuestNpc(246202).addOnKillEvent(questId);
@@ -110,7 +100,7 @@ public class _19691Attack_On_The_Fissure_Of_Oblivion_Instanced_Dungeon extends Q
 		final QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             switch (env.getTargetId()) {
-			//Special Forces Commander Gegares
+			// 特种部队指挥官格加雷斯 / Special Forces Commander Gegares
 				case 246200:
 				case 246201:
 				case 246202:

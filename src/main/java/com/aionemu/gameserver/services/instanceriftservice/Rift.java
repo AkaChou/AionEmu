@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.instanceriftservice;
 
 import com.aionemu.gameserver.model.instancerift.InstanceRiftLocation;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
 
 /**
+ * 副本裂隙默认实现：切入 OPEN / 回到 CLOSED。
+ * back to CLOSED. / back to CLOSED.
+ *
  * @author Rinzler (Encom)
  */
-
 public class Rift extends RiftInstance<InstanceRiftLocation> {
+
+	/**
+	 * 绑定裂隙地点。
+	 * Binds the rift location.
+	 *
+	 * location
+	 */
 	public Rift(InstanceRiftLocation instanceRift) {
 		super(instanceRift);
 	}
 
+	/**
+	 * 激活裂隙并刷新 OPEN 刷怪。
+	 * Activates the rift and spawns OPEN entities.
+	 */
 	@Override
 	public void startInstanceRift() {
 		getInstanceRiftLocation().setActiveInstanceRift(this);
@@ -35,6 +32,10 @@ public class Rift extends RiftInstance<InstanceRiftLocation> {
 		spawn(InstanceRiftStateType.OPEN);
 	}
 
+	/**
+	 * 关闭裂隙并恢复 CLOSED 刷怪。
+	 * Closes the rift and restores CLOSED spawns.
+	 */
 	@Override
 	public void stopInstanceRift() {
 		getInstanceRiftLocation().setActiveInstanceRift(null);

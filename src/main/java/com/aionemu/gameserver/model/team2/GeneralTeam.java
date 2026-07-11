@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Map;
@@ -31,6 +17,9 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
 /**
+ * 通用团队，用于团队2相关逻辑。
+ * General Team for team 2 logic.
+ *
  * @author ATracer
  */
 @Slf4j
@@ -45,6 +34,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		super(objId);
 	}
 
+	/** 事件 / On Event*/
 	@Override
 	public void onEvent(TeamEvent event) {
 		lock();
@@ -52,23 +42,26 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 			if (event.checkCondition()) {
 				event.handleEvent();
 			} else {
-				log.warn("[TEAM2] skipped event: {} group: {}", event, this);
+				log.warn(I18n.get("log.f1fc52eddeee", event, this));
 			}
 		} finally {
 			unlock();
 		}
 	}
 
+	/** 返回 member / Returns the member */
 	@Override
 	public TM getMember(Integer objectId) {
 		return members.get(objectId);
 	}
 
+	/** Whether 成员 / Whether member */
 	@Override
 	public boolean hasMember(Integer objectId) {
 		return members.get(objectId) != null;
 	}
 
+	/** 添加 member / Adds member */
 	@Override
 	public void addMember(TM member) {
 		Preconditions.checkNotNull(member, "Team member should be not null");
@@ -76,6 +69,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		members.put(member.getObjectId(), member);
 	}
 
+	/** 移除 member / Removes member */
 	@Override
 	public void removeMember(TM member) {
 		Preconditions.checkNotNull(member, "Team member should be not null");
@@ -83,14 +77,14 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		members.remove(member.getObjectId());
 	}
 
+	/** 移除 member / Removes member */
 	@Override
 	public final void removeMember(Integer objectId) {
 		removeMember(members.get(objectId));
 	}
 
 	/**
-	 * Apply some predicate on all group members<br>
-	 * Should be used only to change state of the group or its members
+	 * 对所有队员应用谓词（仅用于改变队伍或成员状态）。 / Apply some predicate on all group members<br> Should be used only to change state of the group or its members
 	 */
 	public void apply(Predicate<TM> predicate) {
 		lock();
@@ -106,8 +100,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 	}
 
 	/**
-	 * Apply some predicate on all group member's objects<br>
-	 * Should be used only to change state of the group or its members
+	 * 对所有队员对象应用谓词（仅用于改变队伍或成员状态）。 / Apply some predicate on all group member's objects<br> Should be used only to change state of the group or its members
 	 */
 	public void applyOnMembers(Predicate<M> predicate) {
 		lock();
@@ -122,48 +115,58 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 		}
 	}
 
+	/** 过滤。 / Filter. */
 	@Override
 	public Collection<TM> filter(Predicate<TM> predicate) {
 		return Collections2.filter(members.values(), predicate);
 	}
 
+	/** Filter members / Filter members */
 	@Override
 	public Collection<M> filterMembers(Predicate<M> predicate) {
 		return Collections2.filter(Collections2.transform(members.values(), TRANSFORM_FUNCTION), predicate);
 	}
 
+	/** 返回成员数 / Returns the members */
 	@Override
 	public Collection<M> getMembers() {
 		return filterMembers(Predicates.<M>alwaysTrue());
 	}
 
+	/** 大小 / size. */
 	@Override
 	public int size() {
 		return members.size();
 	}
 
+	/** 返回 team id / Returns the team id */
 	@Override
 	public final Integer getTeamId() {
 		return getObjectId();
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return GeneralTeam.class.getName();
 	}
 
+	/** 返回队长 / Returns the leader*/
 	public final TM getLeader() {
 		return leader;
 	}
 
+	/** 返回 leader object / Returns the leader object */
 	public final M getLeaderObject() {
 		return leader.getObject();
 	}
 
+	/** 是否队长。 / Whether Leader. */
 	public final boolean isLeader(M member) {
 		return leader.getObject().getObjectId().equals(member.getObjectId());
 	}
 
+	/** 更换队长 / change Leader. */
 	public final void changeLeader(TM member) {
 		Preconditions.checkNotNull(leader, "Leader should already be set");
 		Preconditions.checkNotNull(member, "New leader should not be null");
@@ -186,6 +189,7 @@ public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>
 
 	private static final class MemberTransformFunction<TM extends TeamMember<M>, M> implements Function<TM, M> {
 
+		/** 应用。 / Apply. */
 		@Override
 		public M apply(TM member) {
 			return member.getObject();

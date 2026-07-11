@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.portal;
 
 import java.util.List;
@@ -25,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 传送门对话模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,26 +27,32 @@ public class PortalDialog {
 	@XmlAttribute(name = "teleport_dialog_id")
 	protected int teleportDialogId = 1011;
 
+	/** 获取传送门路径。 / Returns the portal path. */
 	public List<PortalPath> getPortalPath() {
 		return portalPath;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** 设置 npc id / Sets the npc id */
 	public void setNpcId(int value) {
 		this.npcId = value;
 	}
 
+	/** 返回攻城 ID / Returns the siege id */
 	public int getSiegeId() {
 		return siegeId;
 	}
 
+	/** 设置 siege id / Sets the siege id */
 	public void setSiegeId(int value) {
 		this.siegeId = value;
 	}
 
+	/** 返回 teleport dialog id / Returns the teleport dialog id */
 	public int getTeleportDialogId() {
 		return teleportDialogId;
 	}

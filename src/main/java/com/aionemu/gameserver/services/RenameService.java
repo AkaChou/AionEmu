@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -33,7 +17,22 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 重命名服务，处理角色与军团的改名（含优惠券消耗与广播）。
+ * Rename service that handles character and legion renames (coupon consume and broadcast).
+ */
 public class RenameService {
+
+	/**
+	 * 使用改名券为玩家更名，并广播给所有在线玩家。
+	 * Renames a player with a rename coupon and broadcasts to all online players.
+	 *
+	 * 玩家 / player
+	 * old name
+	 * new name
+	 * @param item 改名券物品 objectId / rename coupon item object id
+	 * @return 改名成功返回 true / true if renamed
+	 */
 	public static boolean renamePlayer(Player player, String oldName, String newName, int item) {
 		if (!NameRestrictionService.isValidName(newName)) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400151));
@@ -76,6 +75,15 @@ public class RenameService {
 		return true;
 	}
 
+	/**
+	 * 使用军团改名券修改玩家所属军团名称。
+	 * Renames the player's legion with a legion rename coupon.
+	 *
+	 * @param player 玩家 / player
+	 * @param name 新军团名 / new legion name
+	 * @param item 改名券物品 objectId / rename coupon item object id
+	 * @return 改名成功返回 true / true if renamed
+	 */
 	public static boolean renameLegion(Player player, String name, int item) {
 		if (!player.isLegionMember()) {
 			return false;

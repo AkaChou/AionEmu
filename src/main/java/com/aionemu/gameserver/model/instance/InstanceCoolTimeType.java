@@ -1,32 +1,31 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance;
 
+/**
+ * 副本 CoolTime 类型枚举。
+ * Instance Cool Time Type enumeration.
+ */
+
 public enum InstanceCoolTimeType {
+	/** 相对 / Relative. */
 	RELATIVE, WEEKLY, DAILY;
 
+	/**
+	 * @return Whether relative / Whether relative
+	 */
 	public boolean isRelative() {
 		return this.equals(InstanceCoolTimeType.RELATIVE);
 	}
 
+	/**
+	 * @return Whether weekly / Whether weekly
+	 */
 	public boolean isWeekly() {
 		return this.equals(InstanceCoolTimeType.WEEKLY);
 	}
 
+	/**
+	 * @return 是否 daily / 是否 daily。 / Whether daily / Whether daily
+	 */
 	public boolean isDaily() {
 		return this.equals(InstanceCoolTimeType.DAILY);
 	}

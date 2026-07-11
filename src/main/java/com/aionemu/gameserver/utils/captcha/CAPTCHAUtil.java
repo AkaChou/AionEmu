@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.captcha;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.awt.Color;
 import java.awt.Font;
@@ -25,24 +11,52 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 /**
+ * CAPTCHA 生成工具：随机词、绘制图片并转为 DXT1 DDS 缓冲。
+ * CAPTCHA utility: random words, image drawing and DXT1 DDS conversion.
+ *
  * @author Cura
  */
 @Slf4j
 public class CAPTCHAUtil {
 
+	/**
+	 * 默认验证码字符长度。
+	 * Default CAPTCHA word length.
+	 */
 	private final static int DEFAULT_WORD_LENGTH = 6;
+	/**
+	 * 可用字符集。
+	 * Available character set.
+	 */
 	private final static String WORD = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 
+	/**
+	 * 图片宽度。
+	 * Image width.
+	 */
 	private final static int IMAGE_WIDTH = 160;
+	/**
+	 * 图片高度。
+	 * Image height.
+	 */
 	private final static int IMAGE_HEIGHT = 80;
+	/**
+	 * 文字字号。
+	 * Text font size.
+	 */
 	private final static int TEXT_SIZE = 25;
+	/**
+	 * 字体族名称。
+	 * Font family name.
+	 */
 	private final static String FONT_FAMILY_NAME = "Verdana";
 
 	/**
-	 * create CAPTCHA
-	 * 
-	 * @param word
-	 * @return byte[]
+	 * 根据文本生成 CAPTCHA 的 DXT1 字节缓冲。
+	 * Creates a DXT1 byte buffer CAPTCHA for the given word.
+	 *
+	 * @param word 验证码文本 / CAPTCHA word
+	 * DXT1 buffer
 	 */
 	public static ByteBuffer createCAPTCHA(String word) {
 		ByteBuffer byteBuffer = null;
@@ -54,30 +68,31 @@ public class CAPTCHAUtil {
 	}
 
 	/**
-	 * CAPTCHA image create
-	 * 
-	 * @param word text word
-	 * @return BufferedImage
+	 * 绘制 CAPTCHA 图片。
+	 * Draws the CAPTCHA image.
+	 *
+	 * @param word 验证码文本 / CAPTCHA word
+	 * @return 位图；失败时为 null / image, or null on failure
 	 */
 	private static BufferedImage createImage(String word) {
 		BufferedImage bImg = null;
 
 		try {
-			// image create
+			// 创建图像 / image create
 			bImg = new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB_PRE);
 			Graphics2D g2 = bImg.createGraphics();
 
-			// set backgroup color
+			// 设置背景颜色 / set backgroup color
 			g2.setColor(Color.BLACK);
 			g2.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-			// set font family, color, size, antialiasing
+			// 设置字体族、颜色、大小、抗锯齿 / set font family, color, size, antialiasing
 			Font font = new Font(FONT_FAMILY_NAME, Font.BOLD, TEXT_SIZE);
 			g2.setFont(font);
 			g2.setColor(Color.WHITE);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-			// word drawing
+			// 单词绘制 / word drawing
 			char[] chars = word.toCharArray();
 			int x = 10;
 			int y = IMAGE_HEIGHT / 2 + TEXT_SIZE / 2;
@@ -87,24 +102,31 @@ public class CAPTCHAUtil {
 				g2.drawString(String.valueOf(ch), x + font.getSize() * i, y + (int) Math.pow(-1, i) * (TEXT_SIZE / 6));
 			}
 
-			// resource dispose
+			// 资源释放 / resource dispose
 			g2.dispose();
 		} catch (Exception e) {
-			log.error("Failed to create CAPTCHA image", e);
+			log.error(I18n.get("log.1e24158b9157", e));
 			bImg = null;
 		}
 		return bImg;
 	}
 
 	/**
-	 * @return String random word
+	 * 生成默认长度的随机验证码词。
+	 * Returns a random CAPTCHA word of default length.
+	 *
+	 * random word
 	 */
 	public static String getRandomWord() {
 		return randomWord(DEFAULT_WORD_LENGTH);
 	}
 
 	/**
-	 * @return CAPTCHA word
+	 * 按指定长度生成随机验证码词。
+	 * Builds a random CAPTCHA word of the given length.
+	 *
+	 * word length
+	 * random word
 	 */
 	private static String randomWord(int wordLength) {
 		StringBuffer word = new StringBuffer();

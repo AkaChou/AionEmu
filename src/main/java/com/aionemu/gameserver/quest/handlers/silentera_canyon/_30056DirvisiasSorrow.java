@@ -12,8 +12,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
- * @author Ritsu
+ * 寂静峡谷任务脚本：Dirvisias Sorrow（任务 ID 30056）。
+ * Silentera Canyon quest script: Dirvisias Sorrow (quest ID 30056).
  *
+ * @author Ritsu
  */
 public class _30056DirvisiasSorrow extends QuestHandler  {
 

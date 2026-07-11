@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.DuelResult;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 决斗状态包：通知决斗开始（请求者）或决斗结果。
+ * Duel state packet: duel start (requester) or duel result.
+ *
  * @author xavier
  */
 public class SM_DUEL extends AionServerPacket {
@@ -34,6 +21,12 @@ public class SM_DUEL extends AionServerPacket {
 		this.type = type;
 	}
 
+	/**
+	 * 决斗开始通知。
+	 * Duel-start notification.
+	 *
+	 * @param requesterObjId 发起者对象 ID / requester object id
+	 */
 	public static SM_DUEL SM_DUEL_STARTED(int requesterObjId) {
 		SM_DUEL packet = new SM_DUEL(0x00);
 		packet.setRequesterObjId(requesterObjId);
@@ -44,6 +37,13 @@ public class SM_DUEL extends AionServerPacket {
 		this.requesterObjId = requesterObjId;
 	}
 
+	/**
+	 * 决斗结果通知。
+	 * Duel-result notification.
+	 *
+	 * duel result
+	 * @param playerName 相关玩家名 / related player name
+	 */
 	public static SM_DUEL SM_DUEL_RESULT(DuelResult result, String playerName) {
 		SM_DUEL packet = new SM_DUEL(0x01);
 		packet.setPlayerName(playerName);

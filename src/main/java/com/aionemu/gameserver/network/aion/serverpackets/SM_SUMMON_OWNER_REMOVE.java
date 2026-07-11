@@ -1,31 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 通知客户端移除召唤物所有者关联。
+ * Server packet notifying the client to remove summon-owner association.
+ *
  * @author ATracer
  */
 public class SM_SUMMON_OWNER_REMOVE extends AionServerPacket {
 
 	private int summonObjId;
 
+	/**
+	 * 使用给定参数构造 SM_SUMMON_OWNER_REMOVE 包。
+	 * Creates a SM_SUMMON_OWNER_REMOVE packet with the given parameters.
+	 *
+	 * @param summonObjId 召唤物对象 ID / summon object id
+	 */
 	public SM_SUMMON_OWNER_REMOVE(int summonObjId) {
 		this.summonObjId = summonObjId;
 	}

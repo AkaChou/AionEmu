@@ -1,6 +1,7 @@
-
 package com.aionemu.gameserver.services.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
@@ -49,7 +50,6 @@ import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
-import com.aionemu.gameserver.dao.WeddingDAO;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
@@ -160,15 +160,48 @@ import com.aionemu.gameserver.utils.rates.Rates;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-@Slf4j(topic = "GAMECONNECTION_LOG")
 
+/**
+ * 玩家进入世界服务：登录校验、进图初始化与周期任务调度。
+ * Player enter-world service: login validation, world init, and periodic task scheduling.
+ */
+@Slf4j(topic = "GAMECONNECTION_LOG")
 public final class PlayerEnterWorldService {
 
+	/**
+	 * 服务器信息缓冲（MOTD 等）。
+	 * Server info buffer (MOTD etc.).
+	 */
 	private static final String serverInfo;
+
+	/**
+	 * 修订/附加信息缓冲。
+	 * Revision/extra info buffer.
+	 */
 	private static final String alInfo;
+
+	/**
+	 * 正在进入世界的角色 ID 集合，防重入。
+	 * Object ids currently entering world (re-entry guard).
+	 */
 	private static final Set<Integer> pendingEnterWorld = ConcurrentHashMap.newKeySet();
+
+	/**
+	 * 服务加成缓冲。
+	 * Service buff holder.
+	 */
 	private static ServiceBuff serviceBuff;
+
+	/**
+	 * 玩家加成缓冲。
+	 * Players bonus holder.
+	 */
 	private static PlayersBonus playersBonus;
+
+	/**
+	 * 广告/公告调度句柄。
+	 * Advertisement/announce schedule handle.
+	 */
 	static ScheduledFuture<?> adv = null;
 
 	static {
@@ -186,6 +219,13 @@ public final class PlayerEnterWorldService {
 		alBuffer = null;
 	}
 
+	/**
+	 * 开始进入世界：冷却/封禁/二级密码校验后进图。
+	 * Starts enter-world: re-entry cooldown, ban, and passkey checks, then enters.
+	 *
+	 * character object id
+	 * connection
+	 */
 	public static final void startEnterWorld(final int objectId, final AionConnection client) {
 		PlayerAccountData playerAccData = client.getAccount().getPlayerAccountData(objectId);
 		Timestamp lastOnline = playerAccData.getPlayerCommonData().getLastOnline();
@@ -211,6 +251,13 @@ public final class PlayerEnterWorldService {
 		}
 	}
 
+	/**
+	 * 弹出二级密码设置/校验界面。
+	 * Shows the character passkey setup/verify UI.
+	 *
+	 * character object id
+	 * connection
+	 */
 	private static final void showPasskey(final int objectId, final AionConnection client) {
 		client.getAccount().getCharacterPasskey().setConnectType(ConnectType.ENTER);
 		client.getAccount().getCharacterPasskey().setObjectId(objectId);
@@ -222,15 +269,22 @@ public final class PlayerEnterWorldService {
 		}
 	}
 
+	/**
+	 * 校验连接状态后异步进入世界。
+	 * Validates connection state then asynchronously enters the world.
+	 *
+	 * character object id
+	 * connection
+	 */
 	private static final void validateAndEnterWorld(final int objectId, final AionConnection client) {
 		if (!pendingEnterWorld.add(objectId)) {
-			log.warn("Skipping enter world " + objectId);
+			log.warn(I18n.get("log.aa24e7c29056", objectId));
 			return;
 		}
 		int delay = 0;
 		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId) != null) {
 			delay = 15000;
-			log.warn("Postponed enter world " + objectId);
+			log.warn(I18n.get("log.7b9179898aab", objectId));
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -244,7 +298,7 @@ public final class PlayerEnterWorldService {
 					}
 					enterWorld(client, objectId);
 				} catch (Throwable ex) {
-					log.error("Error during enter world " + objectId, ex);
+					log.error(I18n.get("log.24d84e2b082e", objectId, ex));
 				} finally {
 					pendingEnterWorld.remove(objectId);
 				}
@@ -252,6 +306,13 @@ public final class PlayerEnterWorldService {
 		}, delay);
 	}
 
+	/**
+	 * 完整进图流程：加载角色、发包初始化并启动周期落库等。
+	 * Full enter-world flow: load character, send init packets, start periodic saves, etc.
+	 *
+	 * connection
+	 * character object id
+	 */
 	public static final void enterWorld(AionConnection client, int objectId) {
 		Account account = client.getAccount();
 		PlayerAccountData playerAccData = client.getAccount().getPlayerAccountData(objectId);
@@ -261,7 +322,7 @@ public final class PlayerEnterWorldService {
 		final Player player = PlayerService.getPlayer(objectId, account);
 		if (player != null && client.setActivePlayer(player)) {
 			player.setClientConnection(client);
-			log.info("[MAC_AUDIT] Player " + player.getName() + " (account " + account.getName() + ") has entered world with " + client.getMacAddress() + " MAC.");
+			log.info(I18n.get("log.4110bd1bb049", player.getName(), account.getName(), client.getMacAddress()));
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().storeObject(player);
 			StigmaService.onPlayerLogin(player);
 			if (playerAccData.getPlayerCommonData().getLastOnline() != null) {
@@ -269,20 +330,20 @@ public final class PlayerEnterWorldService {
 				PlayerCommonData pcd = player.getCommonData();
 				long secondsOffline = (System.currentTimeMillis() / 1000) - lastOnline / 1000;
 				if (pcd.isReadyForSalvationPoints()) {
-					// The level of Energy of Salvation will now be maintained up to 1 hour after disconnect.
+					// 救赎能量等级断线后最长维持 1 小时。 / The level of Energy of Salvation will now be maintained up to 1 hour after disconnect.
 					if (secondsOffline > 60 * 60) {
 						player.getCommonData().resetSalvationPoints();
 					}
 				}
 				if (pcd.isReadyForBerdinStar()) {
-					// The level of "Berdin's Star" will now be maintained up to 4 hour after disconnect.
+					// “伯丁之星”等级断线后最长维持 4 小时。 / The level of "Berdin's Star" will now be maintained up to 4 hour after disconnect.
 					if (secondsOffline > 240 * 60) {
 						pcd.checkBerdinStarPercent();
 						player.getCommonData().setBerdinStar(0);
 					}
 				}
 				if (pcd.isReadyForAbyssFavor()) {
-					// The level of "Abyss Favor" will now be maintained up to 1 hour after disconnect.
+					// “欧比斯眷顾”等级断线后最长维持 1 小时。 / The level of "Abyss Favor" will now be maintained up to 1 hour after disconnect.
 					if (secondsOffline > 60 * 60) {
 						pcd.checkAbyssFavorPercent();
 						player.getCommonData().setAbyssFavor(0);
@@ -343,7 +404,7 @@ public final class PlayerEnterWorldService {
 			if (player.getItemCoolDowns() != null) {
 				client.sendPacket(new SM_ITEM_COOLDOWN(player.getItemCoolDowns()));
 			}
-			// Upgrade Arcade 4.7
+			// 升级街机 4.7 / Upgrade Arcade 4.7
 			if (EventsConfig.ENABLE_EVENT_ARCADE) {
 				GameFeatureServices.arcadeUpgradeService().onEnterWorld(player);
 			}
@@ -409,15 +470,14 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(new SM_YOUTUBE_VIDEO());
 
 			/**
-			 * If a user logs out in any hostile territory, they will be transported back to the last registered Obelisk.
-			 */
+	 * 若在任意敌对领地登出，将被传送回上次登记的方尖碑。 / If a user logs out in any hostile territory, they will be transported back to the last registered Obelisk
+	 */
 			if (CustomConfig.ENABLE_RECONNECT_TO_BIND_POINT) {
 				TeleportService2.moveToBindLocation(player, true);
 			}
 			/**
-			 * http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_071316.pdf If
-			 * a user logs out in hostile territory in Iluma/Norsvold, they will be transported back to the last registered Obelisk.
-			 */
+	 * 若在伊卢玛/诺斯沃尔德敌对领地登出，将被传送。 / http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_071316.pdf If a user logs out in hostile territory in Iluma/Norsvold, they will be transported back to the last registered Obelisk
+	 */
 			TeleportService2.onLogOutOppositeMap(player);
 			// TeleportService2.sendSetBindPoint(player);
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
@@ -425,7 +485,7 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(new SM_PLAYER_SPAWN(player));
 			client.sendPacket(new SM_GAME_TIME());
 			GameFeatureServices.protectorConquerorService().onProtectorConquerorLogin(player);
-			// Legion Request 4.9.1
+			// 军团请求 4.9.1 / Legion Request 4.9.1
 			if (player.isLegionMember()) {
 				GameCoreGameplayServices.legionService().onLogin(player);
 				if (player.getLegionMember().isBrigadeGeneral() && !player.getLegion().getJoinRequestMap().isEmpty()) {
@@ -443,16 +503,15 @@ public final class PlayerEnterWorldService {
 			GameEventBootstrapServices.atreianPassportService().onLogin(player);
 
 			AbyssPointsService.AbyssRankCheck(player);
-			// TODO: Send Rift Announce Here
 			client.sendPacket(new SM_PRICES());
 
-			// DisputeLand
+			// 争议之地 / DisputeLand
 			GameFeatureServices.disputeLandService().onLogin(player);
 
-			// Event Window
+			// 活动窗口 / Event Window
 			GameEventBootstrapServices.eventWindowService().onLogin(player);
 
-			// Abyss Rank
+			// 欧比斯军阶 / Abyss Rank
 			client.sendPacket(new SM_ABYSS_RANK(player.getAbyssRank()));
 
 			player.setRates(Rates.getRatesFor(client.getAccount().getMembership()));
@@ -515,58 +574,58 @@ public final class PlayerEnterWorldService {
 
 			PacketSendUtility.sendPacket(player, new SM_EVERGALE_CANYON(2));
 
-			// Service Security Buff.
+			// 服务安全增益。 / Service Security Buff.
 			if (player.getMembership() >= 0) {
 				serviceBuff = new ServiceBuff(2);
 				serviceBuff.applyEffect(player, 2);
-				// Homerun Energy.
+				// 全垒打能量。 / Homerun Energy.
 				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
-                // [Event] Stigma Preservation.
+                // [活动] 烙印之石保存。 / [Event] Stigma Preservation.
 				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
-				// [Event] Accessory Ascension
+				// [活动] 饰品升阶 / [Event] Accessory Ascension
 				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
-			// Service Security Buff.
+			// 服务安全增益。 / Service Security Buff.
 			if (player.getMembership() >= 1) {
 				serviceBuff = new ServiceBuff(220599);
 				serviceBuff.applyEffect(player, 220599);
-				// Homerun Energy.
+				// 全垒打能量。 / Homerun Energy.
 				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
-                // [Event] Stigma Preservation.
+                // [活动] 烙印之石保存。 / [Event] Stigma Preservation.
 				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
-				// [Event] Accessory Ascension
+				// [活动] 饰品升阶 / [Event] Accessory Ascension
 				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
-			// Service Security Buff.
+			// 服务安全增益。 / Service Security Buff.
 			if (player.getMembership() >= 2) {
 				serviceBuff = new ServiceBuff(230599);
 				serviceBuff.applyEffect(player, 230599);
-				// Homerun Energy.
+				// 全垒打能量。 / Homerun Energy.
 				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
-                // [Event] Stigma Preservation.
+                // [活动] 烙印之石保存。 / [Event] Stigma Preservation.
 				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
-				// [Event] Accessory Ascension
+				// [活动] 饰品升阶 / [Event] Accessory Ascension
 				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
-			// PC Cafe Login Benefits.
+			// 网吧登录福利。 / PC Cafe Login Benefits.
 			if (player.getClientConnection().getAccount().getMembership() == 2 && player.getLevel() >= 66 && player.getLevel() <= 83) {
 				serviceBuff = new ServiceBuff(4);
 				serviceBuff.applyEffect(player, 4);
 				PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Your account vip ! You get extra service!");
 			}
-			// Ascension Boost.
+			// 飞升加成。 / Ascension Boost.
 			if (player.getLevel() >= 1 && player.getLevel() <= 34) {
 				playersBonus = new PlayersBonus(2);
 				playersBonus.applyEffect(player, 2);
 				player.setPlayersBonusId(2);
 			}
-			// Veteran Boost.
+			// 老兵加成。 / Veteran Boost.
 			else if (player.getLevel() >= 35 && player.getLevel() <= 65) {
 				playersBonus = new PlayersBonus(3);
 				playersBonus.applyEffect(player, 3);
 				player.setPlayersBonusId(3);
 			}
-			// Eminence Of The Beaver.
+			// 海狸之尊。 / Eminence Of The Beaver.
 			else if (player.getLevel() >= 66 && player.getLevel() <= 83) {
 				playersBonus = new PlayersBonus(10);
 				playersBonus.applyEffect(player, 10);
@@ -575,7 +634,7 @@ public final class PlayerEnterWorldService {
 				playersBonus = new PlayersBonus(1);
 				playersBonus.endEffect(player, 1);
 			}
-			// Abyss Logon 4.9
+			// 欧比斯登录 4.9 / Abyss Logon 4.9
 			if (player.getRace() == Race.ELYOS) {
 				abyssLightLogon(player);
 			} else if (player.getRace() == Race.ASMODIANS) {
@@ -588,18 +647,18 @@ public final class PlayerEnterWorldService {
 			}
 			// GloryPointLoseMsg(player);
 			GameFeatureServices.f2pService().onEnterWorld(player);
-			// Aura Of Growth.
-			// Players can gain additional XP from hunting, gathering or crafting by obtaining Growth Aura.
-			// Growth Aura can be obtained from hunting monsters, acquiring essence, and through login and quest rewards.
-			// For more information on Growth Aura, check the Character XP Status Bar Tool Tip.
+			// 成长光环。 / Aura Of Growth.
+			// 获得成长光环后，狩猎、采集或制作可获得额外经验。 / Players can gain additional XP from hunting, gathering or crafting by obtaining Growth Aura.
+			// 成长光环可通过狩猎、获取精华、登录与任务奖励获得。 / Growth Aura can be obtained from hunting monsters, acquiring essence, and through login and quest rewards.
+			// 成长光环详情见角色经验状态栏提示。 / For more information on Growth Aura, check the Character XP Status Bar Tool Tip.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_CHARGE_EXP_POINT, 60000);
-			// "Auto PowerShard ON"
+			// “自动力量碎片 开” / "Auto PowerShard ON"
 			if (player.getEquipment().isPowerShardEquipped() && CustomConfig.ENABLE_AUTO_POWERSHARD) {
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_WEAPON_BOOST_BOOST_MODE_STARTED, 7000);
 				player.setState(CreatureState.POWERSHARD);
 				PacketSendUtility.playerSendPacketTime(player, new SM_EMOTION(player, EmotionType.POWERSHARD_ON, 0, 0), 7000);
 			}
-			// Alliance Packet after SetBindPoint.
+			// SetBindPoint 后的联盟包。 / Alliance Packet after SetBindPoint.
 			PlayerAllianceService.onPlayerLogin(player);
 			if (player.isInPrison()) {
 				PunishmentService.updatePrisonStatus(player);
@@ -608,7 +667,7 @@ public final class PlayerEnterWorldService {
 				PunishmentService.updateGatherableStatus(player);
 			}
 			PlayerGroupService.onPlayerLogin(player);
-			// SM_PET
+			// SM_PET / SM_PET
 			GameFeatureServices.petService().onPlayerLogin(player);
 			// SM_Minions
 			GameEventBootstrapServices.minionService().onPlayerLogin(player);
@@ -624,7 +683,7 @@ public final class PlayerEnterWorldService {
 				GameCoreGameplayServices.autoGroupService().onPlayerLogin(player);
 			}
 			ClassChangeService.showClassChangeDialog(player);
-			// GameRuntimeServices.gmService().onPlayerLogin(player); TODO Make Config File!!
+			GameRuntimeServices.gmService().onPlayerLogin(player);
 			player.getLifeStats().updateCurrentStats();
 			player.getEquipment().checkRankLimitItems();
 			if (HTMLConfig.ENABLE_HTML_WELCOME) {
@@ -681,15 +740,13 @@ public final class PlayerEnterWorldService {
 					}
 				}
 			}
-			player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
-			player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
+			reschedulePeriodicSaveTasks(player);
 			GameRuntimeServices.surveyService().showAvailable(player);
 			if (EventsConfig.ENABLE_EVENT_SERVICE) {
 				GameEventServices.eventService().onPlayerLogin(player);
 			}
 			RelinquishCraftStatus.removeExcessCraftStatus(player, false);
 			GameRuntimeServices.playerTransferService().onEnterWorld(player);
-			player.setPartnerId(DAOManager.getDAO(WeddingDAO.class).loadPartnerId(player));
 			EnchantService.GloryShieldSkill(player);
 			GameEventBootstrapServices.shugoSweepService().onLogin(player);
 			GameEventBootstrapServices.lunaShopService().onLogin(player);
@@ -701,37 +758,64 @@ public final class PlayerEnterWorldService {
 			player.getController().updateNearbyQuests();
 			GameFeatureServices.atreianBestiaryService().onLogin(player);
 		} else {
-			log.info("[DEBUG] enter world" + objectId + ", Player: " + player);
+			log.info(I18n.get("log.f477c5171a48", objectId, player));
 		}
 	}
 
 	/**
-	 * [Abyss Logon] 4.9
+	 * 重新调度玩家通用与背包周期落库任务。
+	 * Reschedules player general and inventory periodic save tasks.
+	 *
+	 * @param player 玩家 / player
+	 */
+	public static void reschedulePeriodicSaveTasks(Player player) {
+		player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
+		player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
+	}
+
+	/**
+	 * 光系欧比斯登录广播（4.9）。
+	 * Light-side abyss login broadcast (4.9).
+	 *
+	 * @param player 玩家 / player
 	 */
 	public static final void abyssLightLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
-					// Elyos Governor "Player Name" has graced Atreia.
+					// 天族总督“玩家名”恩泽阿特雷亚。 / Elyos Governor "Player Name" has graced Atreia.
 					PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403134, player.getName()));
 				}
 			});
 		}
 	}
 
+	/**
+	 * 暗系欧比斯登录广播（4.9）。
+	 * Dark-side abyss login broadcast (4.9).
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void abyssDarkLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
-					// Asmodian Governor "Player Name" has graced Atreia.
+					// 魔族总督“玩家名”恩泽阿特雷亚。 / Asmodian Governor "Player Name" has graced Atreia.
 					PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403135, player.getName()));
 				}
 			});
 		}
 	}
 
+	/**
+	 * 下发背包与装备物品信息。
+	 * Sends inventory and equipment item info.
+	 *
+	 * connection
+	 * 玩家 / player
+	 */
 	private static void sendItemInfos(AionConnection client, Player player) {
 		int questExpands = player.getQuestExpands();
 		int npcExpands = player.getNpcExpands();
@@ -755,6 +839,13 @@ public final class PlayerEnterWorldService {
 		client.sendPacket(SM_CUBE_UPDATE.stigmaSlots(player.getCommonData().getAdvancedStigmaSlotSize()));
 	}
 
+	/**
+	 * 下发宏列表。
+	 * Sends the macro list.
+	 *
+	 * connection
+	 * 玩家 / player
+	 */
 	private static void sendMacroList(AionConnection client, Player player) {
 		client.sendPacket(new SM_MACRO_LIST(player, 1));
 		client.sendPacket(new SM_MACRO_LIST(player, 2));
@@ -762,14 +853,27 @@ public final class PlayerEnterWorldService {
 		client.sendPacket(new SM_MACRO_LIST(player, 4));
 	}
 
+	/**
+	 * 标记玩家已登录并记录日志。
+	 * Marks the player as logged in and logs the event.
+	 *
+	 * @param player 玩家 / player
+	 */
 	private static void playerLoggedIn(Player player) {
-		log.info("Player logged in: " + player.getName() + " Account: " + player.getClientConnection().getAccount().getName());
+		log.info(I18n.get("log.598f1a3456d5", player.getName(), player.getClientConnection().getAccount().getName()));
 		player.getCommonData().setOnline(true);
 		DAOManager.getDAO(PlayerDAO.class).onlinePlayer(player, true);
 		player.onLoggedIn();
 		player.setOnlineTime();
 	}
 
+	/**
+	 * 展示高级账号/会员信息。
+	 * membership info. / membership info.
+	 *
+	 * connection
+	 * 账号 / account
+	 */
 	private static void showPremiumAccountInfo(AionConnection client, Account account) {
 		byte membership = account.getMembership();
 		if (membership > 0) {
@@ -786,6 +890,12 @@ public final class PlayerEnterWorldService {
 		}
 	}
 
+	/**
+	 * 向玩家发送登录服务器/欢迎信息。
+	 * welcome info to the player. / welcome info to the player.
+	 *
+	 * 玩家 / player
+	 */
 	public static final void LoginServerInfo(Player player) {
 		float pvpAttackRatio = player.getGameStats().getStat(StatEnum.PVP_ATTACK_RATIO, 0).getCurrent();
 		float pvpDefenseRatio = player.getGameStats().getStat(StatEnum.PVP_DEFEND_RATIO, 0).getCurrent();

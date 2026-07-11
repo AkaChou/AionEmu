@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -41,6 +25,11 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * Toy 宠物刷新点动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ToyPetSpawnAction")
 public class ToyPetSpawnAction extends AbstractItemAction {
@@ -50,14 +39,19 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 	@XmlAttribute
 	protected int time;
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcid;
 	}
 
+	/** 返回时间 / Returns the time*/
 	public int getTime() {
 		return time;
 	}
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (player.getFlyState() != 0) {
@@ -73,7 +67,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			return false;
 		}
 		switch (player.getWorldId()) {
-		// Restriction Elyos Spawn Kisk.
+		// 限制天族生成 Kisk。 / Restriction Elyos Spawn Kisk.
 		case 110010000: // Sanctum.
 		case 110020000: // Cloister Of Kaisinel.
 		case 110070000: // Kaisinel Academy.
@@ -82,7 +76,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 		case 210080000: // Griffoen.
 		case 210110000: // Tower Of Eternity E.
 		case 700010000: // Oriel.
-			// Restriction Asmodians Spawn Kisk.
+			// 限制魔族生成 Kisk。 / Restriction Asmodians Spawn Kisk.
 		case 120010000: // Pandaemonium.
 		case 120020000: // Convent Of Marchutan.
 		case 120080000: // Marchutan Priory.
@@ -99,12 +93,14 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		player.getController().cancelUseItem();
 		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 				parentItem.getObjectId(), parentItem.getItemId(), 3000, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
@@ -117,6 +113,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 		};
 		player.getObserveController().attach(observer);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
@@ -136,6 +133,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 				final Kisk kisk = VisibleObjectSpawner.spawnKisk(spawn, instanceId, player);
 				Integer objOwnerId = player.getObjectId();
 				Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/** 运行 / run. */
 					@Override
 					public void run() {
 						kisk.getController().onDelete();

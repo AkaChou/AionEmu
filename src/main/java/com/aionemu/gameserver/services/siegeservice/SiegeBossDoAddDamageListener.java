@@ -1,24 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
 import com.aionemu.gameserver.controllers.attack.AggroList.AddDamageValueCallback;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
+/**
+ * 攻城 BOSS 伤害监听器，累计玩家/种族伤害。
+ * Siege boss damage listener accumulating player/race damage.
+ */
 public class SiegeBossDoAddDamageListener extends AddDamageValueCallback {
 
 	private final Siege siege;
@@ -28,6 +16,13 @@ public class SiegeBossDoAddDamageListener extends AddDamageValueCallback {
 	}
 
 	@Override
+	/**
+	 * 伤害累计回调。
+	 * Callback when damage is added.
+	 *
+	 * creature
+	 * hate
+	 */
 	public void onDamageAdded(Creature creature, int hate) {
 		siege.addBossDamage(creature, hate);
 	}

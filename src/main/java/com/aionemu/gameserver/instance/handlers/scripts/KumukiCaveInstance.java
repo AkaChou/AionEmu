@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -45,22 +29,36 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: http://aion.power.plaync.com/wiki/%EC%BF%A0%EB%AC%B4%ED%82%A4+%EC%86%8C%EA%B5%B4
-/** Video: https://www.youtube.com/watch?v=vKubsnN_vbA
-/****/
+/**
+ * 库穆基洞穴副本事件处理器。
+ * Instance event handler for Kumuki Cave.
+ *
+ * @author Encom
+ */
 
 @InstanceID(302330000)
 public class KumukiCaveInstance extends GeneralInstanceHandler
 {
-	private int poppySaved;
-	private long instanceTime;
+	/** poppy saved / poppy saved */
+		private int poppySaved;
+	/** 副本时间戳 / instance timestamp */
+		private long instanceTime;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	private List<Npc> Poppy = new ArrayList<Npc>();
+	/** poppy / poppy */
+		private List<Npc> Poppy = new ArrayList<Npc>();
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> kumukiCaveTask = new ArrayList<Future<?>>();
+	/** kumukicave 任务 / kumuki cave task */
+		private final List<Future<?>> kumukiCaveTask = new ArrayList<Future<?>>();
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -84,6 +82,12 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -92,6 +96,12 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		startInstanceTask();
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(Player player) {
 		if (movies.contains(951)) {
@@ -106,25 +116,39 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		Poppy.add((Npc) spawn(246281, 243.97449f, 307.46100f, 142.84671f, (byte) 61)); //Third Poppy.
 		Poppy.add((Npc) spawn(246282, 243.63004f, 332.50742f, 142.84671f, (byte) 61)); //Fourth Poppy.
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startKumukiCaveTimer();
 				sp(703425, 151.47499f, 39.568542f, 144.27765f, (byte) 90, 0, 0, null);
-				//You entered a strange Kumuki Cave.
+				// 你进入了奇怪的库穆基洞穴。 / You entered a strange Kumuki Cave.
 				sendMsgByRace(1403995, Race.PC_ALL, 0);
-				//Prepare to begin the operation to rescue Poppy.
+				// 准备开始营救波比的行动。 / Prepare to begin the operation to rescue Poppy.
 				sendMsgByRace(1403996, Race.PC_ALL, 10000);
-				//Find all 4 keys before the Kumukis' dinner time and rescue the Porguses.
+				// 在库穆基晚餐时间前找到全部 4 把钥匙并救出波古斯。 / Find all 4 keys before the Kumukis' dinner time and rescue the Porguses.
 				sendMsgByRace(1404020, Race.PC_ALL, 15000);
-				//The Kumuki Butcher is going after Poppy!
+				// 库穆基屠夫正在追波比！ / The Kumuki Butcher is going after Poppy!
 				sendMsgByRace(1403991, Race.PC_ALL, 220000);
-				//You've been discovered! The enemy is wreaking havoc.
+				// 你被发现了！敌人正在肆虐。 / You've been discovered! The enemy is wreaking havoc.
 				sendMsgByRace(1403990, Race.PC_ALL, 300000);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -135,46 +159,68 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
             }
         }, 10000));
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//The first Porgus made for a fine barbecue! There are 3 Porguses left.
+				// 第一只波古斯烤得很成功！还剩 3 只波古斯。 / The first Porgus made for a fine barbecue! There are 3 Porguses left.
 				sendMsgByRace(1404016, Race.PC_ALL, 0);
-				//The Kumukis are enjoying their barbecued Poppy!
+				// 库穆基们正在享用烤波比！ / The Kumukis are enjoying their barbecued Poppy!
 				sendMsgByRace(1403993, Race.PC_ALL, 3000);
 				Poppy.get(0).getController().onDelete();
             }
         }, 225000));
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//The second Porgus smells delicious! There are 2 Porguses left.
+				// 第二只波古斯闻起来很香！还剩 2 只波古斯。 / The second Porgus smells delicious! There are 2 Porguses left.
 				sendMsgByRace(1404017, Race.PC_ALL, 0);
-				//The Kumukis are enjoying their barbecued Poppy!
+				// 库穆基们正在享用烤波比！ / The Kumukis are enjoying their barbecued Poppy!
 				sendMsgByRace(1403993, Race.PC_ALL, 3000);
 				Poppy.get(1).getController().onDelete();
-				//Gretel has appeared. She can help you get to the Kumuki base faster.
+				// 格蕾特尔已出现。她能帮你更快到达库穆基基地。 / Gretel has appeared. She can help you get to the Kumuki base faster.
 				sendMsgByRace(1404023, Race.PC_ALL, 6000);
 				sp(835130, 142.37743f, 19.93851f, 144.2455f, (byte) 5, 0, 0, null);
             }
         }, 450000));
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//The third Porgus is slathered in barbecue sauce! There is 1 Porgus left.
+				// 第三只波古斯涂满烧烤酱！还剩 1 只波古斯。 / The third Porgus is slathered in barbecue sauce! There is 1 Porgus left.
 				sendMsgByRace(1404018, Race.PC_ALL, 0);
-				//The Kumukis are enjoying their barbecued Poppy!
+				// 库穆基们正在享用烤波比！ / The Kumukis are enjoying their barbecued Poppy!
 				sendMsgByRace(1403993, Race.PC_ALL, 3000);
 				Poppy.get(2).getController().onDelete();
             }
         }, 675000));
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 					    stopInstance1(player);
-						//The Kumukis barbecued all the Porguses.
+						// 库穆基烤完了所有波古斯。 / The Kumukis barbecued all the Porguses.
 						sendMsgByRace(1404019, Race.PC_ALL, 0);
 						Poppy.get(3).getController().onDelete();
 				    }
@@ -184,22 +230,28 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 	
 	private void startKumukiCaveTimer() {
-		//15 minutes until dinner time for the Kumukis.
+		// 距库穆基晚餐时间还有 15 分钟。 / 15 minutes until dinner time for the Kumukis.
 		sendMsgByRace(1404013, Race.PC_ALL, 20000);
-		//10 minutes until dinner time for the Kumukis.
+		// 距库穆基晚餐时间还有 10 分钟。 / 10 minutes until dinner time for the Kumukis.
 		this.sendMessage(1404007, 5 * 60 * 1000);
-		//The Kumukis' dinner time is approaching.
+		// 库穆基晚餐时间临近。 / The Kumukis' dinner time is approaching.
 		this.sendMessage(1403992, 8 * 60 * 1000);
-		//5 minutes until dinner time for the Kumukis.
+		// 距库穆基晚餐时间还有 5 分钟。 / 5 minutes until dinner time for the Kumukis.
 		this.sendMessage(1404008, 10 * 60 * 1000);
-		//3 minutes until dinner time for the Kumukis.
+		// 距库穆基晚餐时间还有 3 分钟。 / 3 minutes until dinner time for the Kumukis.
 		this.sendMessage(1404009, 12 * 60 * 1000);
-		//2 minutes until dinner time for the Kumukis.
+		// 距库穆基晚餐时间还有 2 分钟。 / 2 minutes until dinner time for the Kumukis.
 		this.sendMessage(1404010, 13 * 60 * 1000);
-		//1 minute until dinner time for the Kumukis.
+		// 距库穆基晚餐时间还有 1 分钟。 / 1 minute until dinner time for the Kumukis.
 		this.sendMessage(1404011, 14 * 60 * 1000);
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
@@ -214,9 +266,9 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
 			case 246298: //Gatekeeper Nukaki.
 				despawnNpc(npc);
-				//The Kumuki Seeker has appeared. Use the Fear Grenade to overpower him.
+				// 库穆基搜寻者已出现。使用恐惧榴弹压制他。 / The Kumuki Seeker has appeared. Use the Fear Grenade to overpower him.
 				sendMsgByRace(1404043, Race.PC_ALL, 0);
-				//The Kumuki Butchers have appeared. Use the Stink Bomb to overpower them.
+				// 库穆基屠夫已出现。使用臭气弹压制他们。 / The Kumuki Butchers have appeared. Use the Stink Bomb to overpower them.
 				sendMsgByRace(1404044, Race.PC_ALL, 10000);
 				spawn(246305, 223.39684f, 288.30096f, 143.59119f, (byte) 30); //Cook Bakaki.
 			break;
@@ -225,6 +277,12 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				stopInstance2(player);
 				spawn(835057, 223.93062f, 337.54870f, 142.43079f, (byte) 90); //Kumuki Cave Exit.
 				instance.doOnAllPlayers(new Visitor<Player>() {
+			        /**
+			         * 处理 visit。
+			         * Handle visit.
+			         *
+			         * @param player 玩家 / player
+			         */
 			        @Override
 			        public void visit(Player player) {
 				        if (player.isOnline()) {
@@ -236,6 +294,13 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -243,7 +308,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				if (player.getInventory().decreaseByItemId(185000295, 1)) { //Iron Fence Key.
 					despawnNpc(npc);
 				} else {
-					//Key required.
+					// 需要钥匙。 / Key required.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403686));
 				}
 			break;
@@ -289,6 +354,12 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
+	/**
+	 * 处理 stopInstance1。
+	 * Handle stopInstance1.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	protected void stopInstance1(Player player) {
 		stopInstanceTask();
@@ -296,11 +367,17 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		sendMsg("[EPIC FAIL]: You have not been able to save all <Poppy> :( ");
 		onExitInstance(player);
 	}
+	/**
+	 * 处理 stopInstance2。
+	 * Handle stopInstance2.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	protected void stopInstance2(Player player) {
 		stopInstanceTask();
 		onInstanceDestroy();
-		//sendMsg("[SUCCES]: You managed to save all <Poppy> :) ");
+		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You managed to save all <Poppy> :) ");
 	}
 	
 	private void deleteNpc(int npcId) {
@@ -322,17 +399,59 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			}
         }
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * entity id
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -344,9 +463,25 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -360,6 +495,12 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	
     private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -372,18 +513,40 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
             }, delay);
         }
     }
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -395,12 +558,24 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		}, time);
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -413,6 +588,12 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
 		}
 	}
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
@@ -444,6 +625,10 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		effectController.removeEffect(17623); //Ginseng Transformation.
 	}
 	
+    /**
+     * 副本销毁时清理资源。
+     * Clean up resources when the instance is destroyed.
+     */
     @Override
     public void onInstanceDestroy() {
 		isInstanceDestroyed = true;

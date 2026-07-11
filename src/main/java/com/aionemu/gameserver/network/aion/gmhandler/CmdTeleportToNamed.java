@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -23,15 +7,29 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * GM 指令：按 NPC ID 或名称描述传送到该 NPC 附近。
+ * GM command handler that teleports the admin to an NPC by id or name description.
+ *
  * @author Alcapwnd
  */
 public class CmdTeleportToNamed extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即按 NPC 传送。
+	 * Creates the handler and immediately teleports by NPC.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params NPC ID 或名称描述 / NPC id or name description
+	 */
 	public CmdTeleportToNamed(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 解析 NPC ID 或按名称描述查找并传送到该 NPC。
+	 * Parses an NPC id or looks up by name description and teleports to that NPC.
+	 */
 	public void run() {
 		int npcId = 0;
 		String message = "";

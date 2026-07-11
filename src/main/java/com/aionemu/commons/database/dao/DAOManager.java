@@ -1,5 +1,7 @@
 package com.aionemu.commons.database.dao;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMajorVersion;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMinorVersion;
@@ -13,11 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.commons.services.ServiceContext;
 
 /**
- * DAO管理器类
+ * DAO 管理器类
  * DAO Manager Class
  *
- * 这个类负责管理所有DAO实现类的注册和获取。它维护了一个DAO实现类的注册表，
- * 并提供了注册、注销和获取DAO实现的方法。
+ * 这个类负责管理所有 DAO 实现类的注册和获取。它维护了一个 DAO 实现类的注册表，
+ * 并提供了注册、注销和获取 DAO 实现的方法。
  * This class manages the registration and retrieval of all DAO implementations.
  * It maintains a registry of DAO implementations and provides methods for
  * registering, unregistering and retrieving DAO implementations.
@@ -30,13 +32,13 @@ public class DAOManager {
 
 
     /**
-     * 已注册的DAO集合
+ * 已注册的 DAO 集合
      * Collection of registered DAOs
      */
     private static final Map<String, DaoState> states = new ConcurrentHashMap<String, DaoState>();
 
     /**
-     * 初始化DAOManager
+ * 初始化 DAOManager
      * Initializes DAOManager
      */
     public static void init() {
@@ -56,11 +58,11 @@ public class DAOManager {
             throw new Error("A fatal error occurred during loading database handlers", e);
         }
 
-        log.info("Loaded " + state.daoMap.size() + " DAO implementations for " + context + " service context.");
+        log.info(I18n.get("log.2041e56fee03", state.daoMap.size(), context));
     }
 
     /**
-     * 关闭DAOManager
+ * 关闭 DAOManager
      * Shuts down DAOManager
      */
     public static void shutdown() {
@@ -70,25 +72,32 @@ public class DAOManager {
         }
     }
 
+    /**
+     * 判断当前服务上下文的 DAOManager 是否已初始化
+     * Check whether DAOManager is initialized for the current service context
+     *
+     * @return 已初始化返回 true / True if initialized
+     */
     public static boolean isInitialized() {
         return states.containsKey(ServiceContext.current());
     }
 
     /**
-     * 根据DAO类获取其实现
+ * 根据 DAO 类获取其实现
      * Returns DAO implementation by DAO class
      *
-     * @param clazz DAO类 / DAO class
-     * @param <T> DAO类型 / DAO type
-     * @return DAO实现 / DAO implementation
-     * @throws DAONotFoundException 如果未找到DAO实现 / If DAO implementation not found
+ * DAO class
+ * DAO type
+ * DAO implementation
+ *
+ * @param clazz @throws DAONotFoundException 如果未找到 DAO 实现 / If DAO implementation not found
      */
     @SuppressWarnings("unchecked")
     public static <T extends DAO> T getDAO(Class<T> clazz) throws DAONotFoundException {
         DAO result = state().daoMap.get(clazz.getName());
 
         if (result == null) {
-            String s = "DAO for class " + clazz.getSimpleName() + " not implemented";
+            String s = I18n.get("log.2f5e195e6e70", clazz.getSimpleName());
             log.error(s);
             throw new DAONotFoundException(s);
         }
@@ -97,13 +106,13 @@ public class DAOManager {
     }
 
     /**
-     * 注册DAO实现类
+ * 注册 DAO 实现类
      * Registers DAO implementation
      *
-     * @param daoClass DAO实现类 / DAO implementation class
-     * @throws DAOAlreadyRegisteredException 如果DAO已注册 / If DAO is already registered
-     * @throws IllegalAccessException 如果实例化DAO时出错 / If error during DAO instantiation
-     * @throws InstantiationException 如果实例化DAO时出错 / If error during DAO instantiation
+ * DAO implementation class
+ * If DAO is already registered。 / If DAO is already registered.
+ * If error during DAO instantiation。 / If error during DAO instantiation.
+ * If error during DAO instantiation。 / If error during DAO instantiation.
      */
     public static void registerDAO(Class<? extends DAO> daoClass) throws DAOAlreadyRegisteredException, ReflectiveOperationException {
         DAO dao = daoClass.getDeclaredConstructor().newInstance();
@@ -116,11 +125,7 @@ public class DAOManager {
         synchronized (DAOManager.class) {
             DAO oldDao = state.daoMap.get(dao.getClassName());
             if (oldDao != null) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("DAO with className ").append(dao.getClassName()).append(" is used by ");
-                sb.append(oldDao.getClass().getName()).append(". Can't override with ");
-                sb.append(daoClass.getName()).append(".");
-                String s = sb.toString();
+                String s = I18n.get("log.cf94f1177f80", dao.getClassName(), oldDao.getClass().getName(), daoClass.getName());
                 log.error(s);
                 throw new DAOAlreadyRegisteredException(s);
             }
@@ -133,10 +138,10 @@ public class DAOManager {
     }
 
     /**
-     * 注销DAO实现类
+ * 注销 DAO 实现类
      * Unregisters DAO implementation
      *
-     * @param daoClass 要注销的DAO实现类 / DAO implementation class to unregister
+ * @param daoClass 要注销的 DAO 实现类 / DAO implementation class to unregister
      */
     public static void unregisterDAO(Class<? extends DAO> daoClass) {
         DaoState state = state();
@@ -163,6 +168,12 @@ public class DAOManager {
         // 空构造函数 / Empty constructor
     }
 
+    /**
+     * 通过 ServiceLoader 加载当前上下文的编译期 DAO 类
+     * Load compiled DAO classes for the current context via ServiceLoader
+     *
+     * @param context 服务上下文名称 / Service context name
+     */
     private static void loadCompiledDaos(String context) {
         DAOLoader loader = new DAOLoader();
         boolean foundProvider = false;
@@ -178,6 +189,12 @@ public class DAOManager {
         }
     }
 
+    /**
+     * 获取当前服务上下文的 DAO 状态
+     * Get the DAO state for the current service context
+     *
+     * DAO state
+     */
     private static DaoState state() {
         DaoState state = states.get(ServiceContext.current());
         if (state == null) {
@@ -186,6 +203,10 @@ public class DAOManager {
         return state;
     }
 
+    /**
+     * 单个服务上下文下的 DAO 注册表
+     * DAO registry for a single service context
+     */
     private static final class DaoState {
         private final Map<String, DAO> daoMap = new HashMap<String, DAO>();
     }

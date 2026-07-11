@@ -1,25 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.services.SiegeService;
 
+/**
+ * 攻城启动任务，到点触发指定要塞攻城。
+ * Siege start runnable triggering a fortress siege when due.
+ */
 public class SiegeStartRunnable implements Runnable {
 
 	private final int locationId;
@@ -29,10 +17,19 @@ public class SiegeStartRunnable implements Runnable {
 	}
 
 	@Override
+	/**
+	 * 执行任务。
+	 * Runs the task.
+	 */
 	public void run() {
 		GameFeatureServices.siegeService().checkSiegeStart(getLocationId());
 	}
 
+	/**
+	 * getLocationId 方法。
+	 * getLocationId method.
+	 * result
+	 */
 	public int getLocationId() {
 		return locationId;
 	}

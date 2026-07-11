@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -30,6 +16,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 持续类效果基类：按 checktime 周期触发 onPeriodicAction（DoT/HoT 等）。
+ * Base for over-time effects: runs onPeriodicAction on checktime intervals (DoT/HoT, etc.).
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,20 +31,45 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 	@XmlAttribute
 	protected boolean percent;
 
+	/**
+	 * 返回效果数值。
+	 * Returns the effect value.
+	 *
+	 * value
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 启动持续效果（无异常状态）。
+	 * Starts the over-time effect without an abnormal state.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		this.startEffect(effect, null);
 	}
 
+	/**
+	 * 启动持续效果：可选设置异常状态，并按 checktime 调度周期任务。
+	 * Starts the over-time effect: optional abnormal state, schedules periodic task by checktime.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 * @param abnormal 异常状态，可为 null / abnormal state, may be null
+	 */
 	public void startEffect(final Effect effect, AbnormalState abnormal) {
 		final Creature effected = effect.getEffected();
 
@@ -77,10 +91,17 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 			}, checktime, checktime);
 			effect.setPeriodicTask(task, position);
 		} catch (Exception e) {
-			log.warn("Exception in skillId: {}", effect.getSkillId(), e);
+			log.warn(I18n.get("log.3cb547ba6faf", effect.getSkillId(), e));
 		}
 	}
 
+	/**
+	 * 结束持续效果并清除可选异常状态。
+	 * Ends the over-time effect and clears the optional abnormal state.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 * @param abnormal 异常状态，可为 null / abnormal state, may be null
+	 */
 	public void endEffect(Effect effect, AbnormalState abnormal) {
 		if (abnormal != null) {
 			effect.getEffected().getEffectController().unsetAbnormal(abnormal.getId());

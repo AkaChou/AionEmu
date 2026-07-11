@@ -1,25 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 /**
+ * AI 子状态枚举，用于在主状态之下表达更细粒度的行为。
+ * AI sub-state enumeration for finer-grained behavior under a main state.
+ *
  * @author ATracer
  */
 public enum AISubState {
 
-	NONE, TALK, CAST, WALK_PATH, WALK_RANDOM, WALK_WAIT_GROUP, FREEZE, TARGET_LOST
+	/** 无子状态 / No sub-state */
+	NONE,
+	/** 对话中 / Talking/dialog */
+	TALK,
+	/** 施法中 / Casting a skill */
+	CAST,
+	/** 按路径行走 / Walking along a path */
+	WALK_PATH,
+	/** 随机行走 / Walking randomly */
+	WALK_RANDOM,
+	/** 等待队伍/组行走 / Waiting for group walk */
+	WALK_WAIT_GROUP,
+	/** 冻结（行为暂停） / Frozen (behavior paused) */
+	FREEZE,
+	/** 目标丢失 / Target lost */
+	TARGET_LOST
 }

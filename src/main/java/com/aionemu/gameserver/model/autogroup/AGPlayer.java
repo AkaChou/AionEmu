@@ -1,24 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+
+/**
+ * AG 玩家，用于 autogroup 相关逻辑。
+ * AG Player for autogroup logic.
+ */
 
 public class AGPlayer {
 	private Integer objectId;
@@ -37,42 +26,54 @@ public class AGPlayer {
 		isOnline = true;
 	}
 
+	/** 返回对象 ID / Returns the object id */
 	public Integer getObjectId() {
 		return objectId;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 获取玩家职业。 / Returns the player class. */
 	public PlayerClass getPlayerClass() {
 		return playerClass;
 	}
 
+	/** 设置实例 / Sets the in instance*/
 	public void setInInstance(boolean result) {
 		isInInstance = result;
 	}
 
+	/** 是否实例 / Whether in instance*/
 	public boolean isInInstance() {
 		return isInInstance;
 	}
 
+	/** 是否在线。 / Whether Online. */
 	public boolean isOnline() {
 		return isOnline;
 	}
 
+	/** 设置 online / Sets the online */
 	public void setOnline(boolean result) {
 		isOnline = result;
 	}
 
+	/**
+	 * @return Whether pressed enter / Whether pressed enter
+	 */
 	public boolean isPressedEnter() {
 		return isPressEnter;
 	}
 
+	/** 设置 press enter / Sets the press enter */
 	public void setPressEnter(boolean result) {
 		isPressEnter = result;
 	}

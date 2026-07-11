@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.properties;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -25,7 +9,20 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 首要目标属性处理器：按 FirstTargetAttribute 设置技能的首要目标。
+ * First-target property handler: sets the skill's primary target from FirstTargetAttribute.
+ */
 public class FirstTargetProperty {
+
+	/**
+	 * 根据属性设置技能首要目标，并将其加入受影响列表。
+	 * Sets the skill first target from properties and adds it to the effected list.
+	 *
+	 * @param skill 技能上下文 / skill context
+	 * @param properties 目标筛选属性 / target filter properties
+	 * @return 设置是否成功 / true if first target was set successfully
+	 */
 	public static final boolean set(Skill skill, Properties properties) {
 		FirstTargetAttribute value = properties.getFirstTarget();
 		skill.setFirstTargetAttribute(value);

@@ -8,6 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 贝勒斯兰任务脚本：Consulting The Leaders（任务 ID 2611）。
+ * Beluslan quest script: Consulting The Leaders (quest ID 2611).
+ */
 public class _2611Consulting_The_Leaders extends QuestHandler {
 
 	private final static int questId = 2611;

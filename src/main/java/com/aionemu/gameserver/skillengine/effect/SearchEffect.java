@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 探查/识破效果：提升目标的可见状态，用于发现隐身单位。
+ * Search effect: raises the target see-state so hidden units can be revealed.
+ *
  * @author Sweetkr
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,11 +27,19 @@ public class SearchEffect extends EffectTemplate {
 	@XmlAttribute
 	protected CreatureSeeState state;
 
+	/**
+	 * 将效果加入目标的效果控制器。
+	 * Adds this effect to the target effect controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 取消可见状态并广播玩家状态。
+	 * Unsets see-state, revalidates invis if configured, and broadcasts player state.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		Creature effected = effect.getEffected();
@@ -57,6 +52,10 @@ public class SearchEffect extends EffectTemplate {
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_PLAYER_STATE(effected));
 	}
 
+	/**
+	 * 设置可见状态并广播玩家状态；必要时做隐身校验。
+	 * Sets see-state, validates invis if configured, and broadcasts player state.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		final Creature effected = effect.getEffected();

@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.zorshivdredgionservice;
 
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 
 /**
+ * 佐尔希夫挖掘舰默认实现：切入 LANDING / 回到 PEACE。
+ * back to PEACE. / back to PEACE.
+ *
  * @author Rinzler (Encom)
  */
-
 public class Zorshiv extends ZorshivDredgion<ZorshivDredgionLocation> {
+
+	/**
+	 * 绑定挖掘舰地点。
+	 * Binds the dredgion location.
+	 *
+	 * location
+	 */
 	public Zorshiv(ZorshivDredgionLocation zorshivDredgion) {
 		super(zorshivDredgion);
 	}
 
+	/**
+	 * 激活活动并刷新 LANDING 刷怪。
+	 * Activates the event and spawns LANDING entities.
+	 */
 	@Override
 	public void startZorshivDredgion() {
 		getZorshivDredgionLocation().setActiveZorshivDredgion(this);
@@ -35,6 +32,10 @@ public class Zorshiv extends ZorshivDredgion<ZorshivDredgionLocation> {
 		spawn(ZorshivDredgionStateType.LANDING);
 	}
 
+	/**
+	 * 结束活动并恢复 PEACE 刷怪。
+	 * Ends the event and restores PEACE spawns.
+	 */
 	@Override
 	public void stopZorshivDredgion() {
 		getZorshivDredgionLocation().setActiveZorshivDredgion(null);

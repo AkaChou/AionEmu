@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,7 +8,10 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
- * @author lord_rex Command: //sprison <player> <delay>(minutes) This command is sending player to prison.
+ * 入狱指令；将在线玩家送入监狱并记录时长与原因。
+ * Admin command that sends an online player to prison with a duration and reason.
+ *
+ * @author lord_rex
  */
 public class SPrison extends AdminCommand {
 
@@ -32,6 +19,13 @@ public class SPrison extends AdminCommand {
 		super("sprison");
 	}
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 2) {
@@ -59,6 +53,13 @@ public class SPrison extends AdminCommand {
 	
 	}
 
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		sendInfo(player);

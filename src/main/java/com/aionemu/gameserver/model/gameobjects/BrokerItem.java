@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import java.sql.Timestamp;
@@ -24,6 +8,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.configs.main.BrokerConfig;
 import com.aionemu.gameserver.model.broker.BrokerRace;
+
+/**
+ * 经纪行物品游戏对象。
+ * Broker Item game object.
+ */
 
 public class BrokerItem implements Comparable<BrokerItem> {
 	private Item item;
@@ -88,6 +77,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		this.state = PersistentState.NOACTION;
 	}
 
+	/** 返回 item creator / Returns the item creator */
 	public String getItemCreator() {
 		if (itemCreator == null) {
 			return StringUtils.EMPTY;
@@ -95,60 +85,80 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return itemCreator;
 	}
 
+	/** 设置物品制作者 / Sets the item creator */
 	public void setItemCreator(String itemCreator) {
 		this.itemCreator = itemCreator;
 	}
 
+	/** 获取物品。 / Returns the item. */
 	public Item getItem() {
 		return item;
 	}
 
+	/**
+	 * @return Whether canceled / Whether canceled
+	 */
 	public boolean isCanceled() {
 		return isCanceled;
 	}
 
+	/** 设置 is canceled / Sets the is canceled */
 	public void setIsCanceled(boolean isCanceled) {
 		this.isCanceled = isCanceled;
 	}
 
+	/** 移除物品。 / Removes item. */
 	public void removeItem() {
 		this.isSold = true;
 		this.isSettled = true;
 		this.settleTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return itemId;
 	}
 
+	/** 返回物品唯一 ID / Returns the item unique id */
 	public int getItemUniqueId() {
 		return itemUniqueId;
 	}
 
+	/** 获取价格。 / Returns the price. */
 	public long getPrice() {
 		return price;
 	}
 
+	/**
+	 * @return Whether split sell / Whether split sell
+	 */
 	public boolean isSplitSell() {
 		return this.isSplitSell;
 	}
 
+	/** 返回 seller / Returns the seller */
 	public String getSeller() {
 		return seller;
 	}
 
+	/** 返回 seller id / Returns the seller id */
 	public int getSellerId() {
 		return sellerId;
 	}
 
+	/** 获取物品经纪行种族。 / Returns the item broker race. */
 	public BrokerRace getItemBrokerRace() {
 		return itemBrokerRace;
 	}
 
+	/**
+	 * @return 是否 sold / 是否 sold。 / Whether sold / Whether sold
+	 */
 	public boolean isSold() {
 		return this.isSold;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {
 		case DELETED:
@@ -168,27 +178,35 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return state;
 	}
 
+	/**
+	 * @return Whether settled / Whether settled
+	 */
 	public boolean isSettled() {
 		return isSettled;
 	}
 
+	/** 设置 settled / Sets the settled */
 	public void setSettled() {
 		this.isSettled = true;
 		this.settleTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
 	}
 
+	/** 获取过期时间。 / Returns the expire time. */
 	public Timestamp getExpireTime() {
 		return expireTime;
 	}
 
+	/** 返回 settle time / Returns the settle time */
 	public Timestamp getSettleTime() {
 		return settleTime;
 	}
 
+	/** 获取物品计数。 / Returns the item count. */
 	public long getItemCount() {
 		return itemCount;
 	}
@@ -197,6 +215,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return item.getItemTemplate().getLevel();
 	}
 
+	/** 返回 piece price / Returns the piece price */
 	public long getPiecePrice() {
 		return getPrice() / getItemCount();
 	}
@@ -205,24 +224,29 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return item.getItemName();
 	}
 
+	/** 设置物品计数。 / Sets the item count. */
 	public void setItemCount(long count) {
 		this.itemCount = count;
 	}
 
+	/** 设置价格。 / Sets the price. */
 	public void setPrice(long ItemPrice) {
 		this.price = ItemPrice;
 	}
 
+	/** 设置物品唯一 ID / Sets the item unique id */
 	public void setItemUniqueId(int newObjId) {
 		itemUniqueId = newObjId;
 	}
 
+	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(BrokerItem o) {
 		return itemUniqueId > o.getItemUniqueId() ? 1 : -1;
 	}
 
 	static Comparator<BrokerItem> NAME_SORT_ASC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -233,6 +257,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	};
 
 	static Comparator<BrokerItem> NAME_SORT_DESC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -243,6 +268,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	};
 
 	static Comparator<BrokerItem> PRICE_SORT_ASC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -256,6 +282,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	};
 
 	static Comparator<BrokerItem> PRICE_SORT_DESC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -269,6 +296,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	};
 
 	static Comparator<BrokerItem> PIECE_PRICE_SORT_ASC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -282,6 +310,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	};
 
 	static Comparator<BrokerItem> PIECE_PRICE_SORT_DESC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -295,6 +324,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	};
 
 	static Comparator<BrokerItem> LEVEL_SORT_ASC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -308,6 +338,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	};
 
 	static Comparator<BrokerItem> LEVEL_SORT_DESC = new Comparator<BrokerItem>() {
+		/** 比较 / compare. */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -330,6 +361,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return result;
 	}
 
+	/** 按 type 返回 comparatory / Returns the comparatory by type */
 	public static Comparator<BrokerItem> getComparatoryByType(int sortType) {
 		switch (sortType) {
 		case 0:

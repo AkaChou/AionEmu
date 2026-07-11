@@ -1,11 +1,3 @@
-/**
- *
- *  ADev Emulation 5.8 - Based On Encom Source.
- *  Reworked by MATTY
- *  Site <www.aionasteria.ru> - Forum <forum.aionasteria.ru>
- *
- */
- 
 package com.aionemu.gameserver.quest.handlers;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -18,6 +10,10 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
+/**
+ * 任务处理器脚本模板：展示对话框、击杀与物品使用事件的编写范例。
+ * Quest handler script template demonstrating dialog, kill, and item-use event patterns.
+ */
 public class _9999QuestHandlerTemplate extends QuestHandler {
 
 	private static final int questId = 9999;
@@ -28,7 +24,7 @@ public class _9999QuestHandlerTemplate extends QuestHandler {
 
 	@Override
 	public void register() {
-		// register needed events here
+		// 在此注册所需事件 / register needed events here
 	}
 
 	@Override
@@ -37,7 +33,7 @@ public class _9999QuestHandlerTemplate extends QuestHandler {
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		QuestDialog dialog = env.getDialog();
 		int targetId = env.getTargetId();
-		// If this is a mission, the qs should be != null and you will not need this
+		// 若为任务，qs 应 != null，你将不需要这个。 / If this is a mission, the qs should be != null and you will not need this
 		if (qs == null || qs.canRepeat()) {
 			if (targetId == 000000) { // Viktor Logwin
 				if (dialog == QuestDialog.START_DIALOG) {

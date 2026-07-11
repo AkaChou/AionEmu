@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -26,15 +10,30 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 复活熔岩领主（Resurrected Moltenus）活动启停管理员命令。
+ * Admin command to start or stop Resurrected Moltenus events.
+ */
 public class Moltenus extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
-	
+
+	/**
+	 * 以别名 {@code moltenus} 构造命令。
+	 * Construct the command with alias {@code moltenus}.
+	 */
 	public Moltenus() {
 		super("moltenus");
 	}
-	
+
+	/**
+	 * 执行启停：无参数时显示帮助；{@code start|stop <Id>} 时切换对应熔岩领主活动。
+	 * Execute start/stop: show help with no args; toggle the Moltenus event for {@code start|stop <Id>}.
+	 *
+	 * 执行 GM / Admin player
+	 * Command parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
@@ -44,7 +43,14 @@ public class Moltenus extends AdminCommand
 			handleStartStopMoltenus(player, params);
 		}
 	}
-	
+
+	/**
+	 * 按地点 ID 启动或停止熔岩领主活动，并向全服广播开始消息。
+	 * Start or stop a Moltenus event by location id and broadcast the start notice.
+	 *
+	 * @param player 执行 GM / Admin player
+	 * @param params {@code start|stop} and location id。 / {@code start|stop} and location id
+	 */
 	protected void handleStartStopMoltenus(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
 			showHelp(player);
@@ -76,7 +82,16 @@ public class Moltenus extends AdminCommand
 			}
 		}
 	}
-	
+
+	/**
+	 * 校验熔岩领主地点 ID 是否已注册。
+	 * Validate whether the Moltenus location id is registered.
+	 *
+	 * 执行 GM / Admin player
+	 * Location id
+	 *
+	 * @return 若 valid 则为 true / True if valid
+	 */
 	protected boolean isValidMoltenusLocationId(Player player, int moltenusId) {
 		if (!GameLocationBootstrapServices.moltenusService().getMoltenusLocations().keySet().contains(moltenusId)) {
 			PacketSendUtility.sendMessage(player, "Id " + moltenusId + " is invalid");
@@ -84,7 +99,13 @@ public class Moltenus extends AdminCommand
 		}
 		return true;
 	}
-	
+
+	/**
+	 * 向管理员显示命令帮助。
+	 * Show command help to the admin.
+	 *
+	 * @param player 执行 GM / Admin player
+	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //moltenus start|stop <Id>");
 	}

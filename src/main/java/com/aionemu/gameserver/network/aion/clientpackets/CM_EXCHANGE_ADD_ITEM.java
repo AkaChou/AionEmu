@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.ExchangeService;
 
 /**
+ * 在交易窗口中添加物品的客户端包。
+ * Client packet that adds an item to the exchange window.
+ *
  * @author Avol
  */
 public class CM_EXCHANGE_ADD_ITEM extends AionClientPacket {
@@ -31,6 +18,14 @@ public class CM_EXCHANGE_ADD_ITEM extends AionClientPacket {
 	public int itemObjId;
 	public int itemCount;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_EXCHANGE_ADD_ITEM(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

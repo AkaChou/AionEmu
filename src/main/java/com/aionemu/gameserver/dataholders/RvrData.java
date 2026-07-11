@@ -1,22 +1,8 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,13 +14,12 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.rvr.RvrLocation;
 import com.aionemu.gameserver.model.templates.rvr.RvrTemplate;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
+ * RVR（阵营对抗）据点数据容器，按 ID 索引 RvrLocation。
+ * RVR (race vs race) location data holder, indexed by id.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "rvr")
 public class RvrData {
@@ -44,16 +29,32 @@ public class RvrData {
 	@XmlTransient
 	private Map<Integer, RvrLocation> rvr = new LinkedHashMap<Integer, RvrLocation>();
 
+	/**
+	 * JAXB 反序列化完成后，将模板包装为 RVR 据点并写入索引。
+	 * After JAXB unmarshalling, wraps templates into RVR locations and indexes them.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (RvrTemplate template : rvrTemplates) {
 			rvr.put(template.getId(), new RvrLocation(template));
 		}
 	}
 
+	/**
+	 * 返回已加载的 RVR 据点数量。
+	 * Returns the number of loaded RVR locations.
+	 *
+	 * location count
+	 */
 	public int size() {
 		return rvr.size();
 	}
 
+	/**
+	 * 返回全部 RVR 据点映射。
+	 * Returns the full RVR location map.
+	 *
+	 * @return ID 到据点的映射 / map of id to location
+	 */
 	public Map<Integer, RvrLocation> getRvrLocations() {
 		return rvr;
 	}

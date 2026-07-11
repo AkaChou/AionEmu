@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Aion Gates
+/**
+ * 布鲁斯特霍宁任务脚本：Checkonthe Settlers（任务 ID 4001）。
+ * Brusthonin quest script: Checkonthe Settlers (quest ID 4001).
  */
 public class _4001CheckontheSettlers extends QuestHandler {
 

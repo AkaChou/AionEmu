@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -32,19 +16,33 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 /**
+ * 通用副本处理器基类：提供空默认实现与常用刷怪/消息工具方法。
+ * General instance-handler base: no-op defaults plus common spawn/message helpers.
+ *
  * @author ATracer
  */
 public class GeneralInstanceHandler implements InstanceHandler {
 
+	/** 创建时间戳（毫秒） / creation timestamp (ms) */
 	protected final long creationTime;
+	/** 绑定的世界地图实例 / bound world-map instance */
 	protected WorldMapInstance instance;
+	/** 副本实例 ID / instance id */
 	protected int instanceId;
+	/** 地图 ID / map id */
 	protected Integer mapId;
 
+	/**
+	 * 构造处理器并记录创建时间。
+	 * Construct the handler and record creation time.
+	 */
 	public GeneralInstanceHandler() {
 		creationTime = System.currentTimeMillis();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		this.instance = instance;
@@ -52,122 +50,244 @@ public class GeneralInstanceHandler implements InstanceHandler {
 		this.mapId = instance.getMapId();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onInstanceDestroy() {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onPlayerLogin(Player player) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onOpenDoor(Player player, int door) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onEnterZone(Player player, ZoneInstance zone) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onLeaveZone(Player player, ZoneInstance zone) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onPlayMovieEnd(Player player, int movieId) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean onReviveEvent(Player player) {
 		return false;
 	}
 
+	/**
+	 * 在当前副本刷出一次性 NPC。
+	 * Spawn a one-shot NPC in the current instance.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * @param x X 坐标 / X coordinate
+	 * @param y Y 坐标 / Y coordinate
+	 * @param z Z 坐标 / Z coordinate
+	 * 朝向 / heading
+	 * @return 生成的可见对象 / spawned visible object
+	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading) {
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(mapId, npcId, x, y, z, heading);
 		return SpawnEngine.spawnObject(template, instanceId);
 	}
 
+	/**
+	 * 在当前副本刷出绑定实体 ID 的一次性 NPC。
+	 * Spawn a one-shot NPC bound to an entity id in the current instance.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * @param x X 坐标 / X coordinate
+	 * @param y Y 坐标 / Y coordinate
+	 * @param z Z 坐标 / Z coordinate
+	 * 朝向 / heading
+	 * entity id
+	 * @return 生成的可见对象 / spawned visible object
+	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading, int entityId) {
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(mapId, npcId, x, y, z, heading);
 		template.setEntityId(entityId);
 		return SpawnEngine.spawnObject(template, instanceId);
 	}
 
+	/**
+	 * 按 NPC 模板 ID 从当前实例查找 NPC。
+	 * Look up an NPC by template id in the current instance.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 *
+	 * @param npcId @return NPC；不存在则为 {@code null} / NPC, or {@code null}
+	 */
 	protected Npc getNpc(final int npcId) {
 		return instance.getNpc(npcId);
 	}
 
+	/**
+	 * 向副本内发送喊话/系统消息（立即）。
+	 * Send a shout/system message inside the instance (immediately).
+	 *
+	 * message id
+	 * @param Obj 关联对象 ID / related object id
+	 * whether shout
+	 * color
+	 */
 	protected void sendMsg(int msg, int Obj, boolean isShout, int color) {
 		sendMsg(msg, Obj, isShout, color, 0);
 	}
 
+	/**
+	 * 向副本内发送喊话/系统消息（可延迟）。
+	 * Send a shout/system message inside the instance (optionally delayed).
+	 *
+	 * message id
+	 * @param Obj 关联对象 ID / related object id
+	 * whether shout
+	 * color
+	 * @param time 延迟毫秒 / delay in ms
+	 */
 	protected void sendMsg(int msg, int Obj, boolean isShout, int color, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(instance, msg, Obj, isShout, color, time);
 	}
 
+	/**
+	 * 向副本内发送默认样式系统消息。
+	 * Send a default-style system message inside the instance.
+	 *
+	 * message id
+	 */
 	protected void sendMsg(int msg) {
 		sendMsg(msg, 0, false, 25);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onExitInstance(Player player) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void doReward(Player player) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean onDie(Player player, Creature lastAttacker) {
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onStopTraining(Player player) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onDie(Npc npc) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onChangeStage(StageType type) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public StageType getStage() {
 		return StageType.DEFAULT;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onDropRegistered(Npc npc) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onGather(Player player, Gatherable gatherable) {
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean onPassFlyingRing(Player player, String flyingRing) {
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 	}

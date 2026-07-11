@@ -1,23 +1,6 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.ncrypt;
 
+import com.aionemu.boot.i18n.I18n;
 import java.security.GeneralSecurityException;
 import java.security.KeyPairGenerator;
 import java.security.spec.RSAKeyGenParameterSpec;
@@ -31,29 +14,27 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.Rnd;
 
 /**
- * Key generator. It generates keys or keyPairs for Blowfish and RSA
+ * 密钥生成器：生成 Blowfish 密钥与 RSA 密钥对。
+ * Key generator that produces Blowfish keys and RSA key pairs.
  *
  * @author -Nemesiss-
  */
 @Slf4j
 public class KeyGen {
 
-    /**
-     * Key generator for blowfish
-     */
+    /** Blowfish 密钥生成器 / Blowfish key generator */
     private static KeyGenerator blowfishKeyGen;
-    /**
-     * Public/Static RSA KeyPairs with encrypted modulus N
-     */
+    /** RSA key pairs with encrypted modulus N / RSA key pairs with encrypted modulus N */
     private static EncryptedRSAKeyPair[] encryptedRSAKeyPairs;
 
     /**
-     * Initialize Key Generator (Blowfish keygen and RSA keygen)
+     * RSA 密钥生成器并预热 RSA 解密。 / RSA 密钥生成器并预热 RSA 解密。
+     * Initialize Blowfish and RSA key generators and warm up RSA decrypt.
      *
-     * @throws GeneralSecurityException
+     * key algo init failed。 / key algo init failed.
      */
     public static void init() throws GeneralSecurityException {
-        log.info("Initializing Key Generator...");
+        log.info(I18n.get("log.e944cdc0c5ce"));
 
         blowfishKeyGen = KeyGenerator.getInstance("Blowfish");
 
@@ -68,24 +49,26 @@ public class KeyGen {
                     rsaKeyPairGenerator.generateKeyPair());
         }
 
-        // Pre-init RSA cipher.. saving about 300ms
+        // 预初始化 RSA 密码器……约节省 300ms / Pre-init RSA cipher.. saving about 300ms
         Cipher rsaCipher = Cipher.getInstance("RSA/ECB/nopadding");
         rsaCipher.init(Cipher.DECRYPT_MODE, encryptedRSAKeyPairs[0].getRSAKeyPair().getPrivate());
     }
 
     /**
-     * Generate and return blowfish key
+     * 生成随机 Blowfish 密钥。
+     * Generate a random Blowfish key.
      *
-     * @return Random generated blowfish key
+     * random Blowfish key
      */
     public static SecretKey generateBlowfishKey() {
         return blowfishKeyGen.generateKey();
     }
 
     /**
-     * Get common RSA Public/Static Key Pair with encrypted modulus N
+     * 从池中随机取一对加密模数的 RSA 密钥对。
+     * Pick a random encrypted-modulus RSA key pair from the pool.
      *
-     * @return encryptedRSAkeypairs
+     * @return 加密 RSA 密钥对 / encrypted RSA key pair
      */
     public static EncryptedRSAKeyPair getEncryptedRSAKeyPair() {
         return encryptedRSAKeyPairs[Rnd.nextInt(10)];

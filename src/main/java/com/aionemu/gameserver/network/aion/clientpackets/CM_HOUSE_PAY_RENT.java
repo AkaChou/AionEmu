@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -31,10 +16,21 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_PAY_RENT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 支付房屋维护/租金的客户端包。
+ * Client packet for paying house maintenance rent.
+ */
 public class CM_HOUSE_PAY_RENT extends AionClientPacket {
 
 	int weekCount;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_HOUSE_PAY_RENT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -65,17 +61,17 @@ public class CM_HOUSE_PAY_RENT extends AionClientPacket {
 		while ((--counter) >= 0) {
 			payTime += GameHousingServices.maintenanceTask().getPeriod() * 1000L; // Convert seconds to milliseconds
 		}
-		
-		// Check if trying to pay more than 4 weeks in advance
+
+		// 检查是否试图预付超过 4 周 / Check if trying to pay more than 4 weeks in advance
 		long runTimeMillis = (long) GameHousingServices.maintenanceTask().getRunTime() * 1000;
 		ZonedDateTime nextRun = ZonedDateTime.ofInstant(Instant.ofEpochMilli(runTimeMillis), java.time.ZoneId.systemDefault());
 		ZonedDateTime payLimit = nextRun.plusWeeks(4);
 		ZonedDateTime payDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(payTime), java.time.ZoneId.systemDefault());
-		
+
 		if (payLimit.isBefore(payDateTime)) {
 			return;
 		}
-		
+
 		player.getInventory().decreaseKinah(toPay);
 		house.setNextPay(new Timestamp(payTime));
 		house.setFeePaid(true);

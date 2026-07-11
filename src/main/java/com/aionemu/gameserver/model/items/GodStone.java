@@ -1,19 +1,7 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -40,6 +28,11 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+
+/**
+ * GodStone，用于物品相关逻辑。
+ * God Stone for items logic.
+ */
 @Slf4j
 
 public class GodStone extends ItemStone {
@@ -71,7 +64,7 @@ public class GodStone extends ItemStone {
         } else {
             this.probability = 0;
             this.probabilityLeft = 0;
-            log.warn("Godstone info missing for item: {}", itemId);
+            log.warn(I18n.get("log.a69bb45a0c71", itemId));
         }
     }
 
@@ -97,6 +90,7 @@ public class GodStone extends ItemStone {
         }
     }
 
+    /** 装备时 / on Equip. */
     public void onEquip(final Player player) {
         clearPreviousListener(player);
         
@@ -134,6 +128,7 @@ public class GodStone extends ItemStone {
 
     private void setupAttackListener(Player player, Item equippedItem, int handProbability, float breakChance) {
         actionListener = new ActionObserver(ObserverType.ATTACK) {
+            /** 攻击。 / Attack. */
             @Override
             public void attack(Creature creature) {
                 handleAttack(player, creature, equippedItem, handProbability, breakChance);
@@ -239,6 +234,7 @@ public class GodStone extends ItemStone {
         }, 600000); // 10分钟后执行
     }
 
+    /** 卸下时 / on Un Equip. */
     public void onUnEquip(Player player) {
         clearPreviousListener(player);
     }

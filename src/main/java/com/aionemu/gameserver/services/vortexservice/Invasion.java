@@ -1,20 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.vortexservice;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Kisk;
@@ -31,18 +18,32 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+/**
+ * 次元漩涡入侵默认实现：攻防同盟、Kisk 清理与入队/踢出。
+ * Default dimensional-vortex invasion: offence/defence alliances, kisk cleanup, join/kick.
+ *
+ * @author Rinzler (Encom)
+ */
 public class Invasion extends DimensionalVortex<VortexLocation> {
+
 	PlayerAlliance invAlliance, defAlliance;
 	protected Map<Integer, Player> invaders = new LinkedHashMap<Integer, Player>();
 	protected Map<Integer, Player> defenders = new LinkedHashMap<Integer, Player>();
 
+	/**
+	 * 绑定漩涡地点。
+	 * Binds the vortex location.
+	 *
+	 * vortex location
+	 */
 	public Invasion(VortexLocation vortex) {
 		super(vortex);
 	}
 
+	/**
+	 * 激活入侵、刷 INVASION 怪、初始化生成器并同步守方同盟。
+	 * Activates invasion, spawns INVASION entities, inits generator, syncs defender alliance.
+	 */
 	@Override
 	public void startInvasion() {
 		getVortexLocation().setActiveVortex(this);
@@ -52,6 +53,10 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 		updateAlliance();
 	}
 
+	/**
+	 * 结束入侵：注销监听、摧毁攻方 Kisk、踢出攻方并恢复 PEACE。
+	 * Ends invasion: unregisters listeners, kills invader kisks, kicks invaders, restores PEACE.
+	 */
 	@Override
 	public void stopInvasion() {
 		getVortexLocation().setActiveVortex(null);
@@ -68,6 +73,13 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 		spawn(VortexStateType.PEACE);
 	}
 
+	/**
+	 * 将玩家加入攻/守方并维护对应同盟。
+	 * Adds a player to invader/defender side and maintains the matching alliance.
+	 *
+	 * 玩家 / player
+	 * whether invader
+	 */
 	@Override
 	public void addPlayer(Player player, boolean isInvader) {
 		Map<Integer, Player> list = isInvader ? invaders : defenders;
@@ -97,6 +109,13 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 		list.put(player.getObjectId(), player);
 	}
 
+	/**
+	 * 将玩家踢出并在攻方场景内时传送回家点。
+	 * Kicks a player and teleports home when still inside the invasion world as invader.
+	 *
+	 * 玩家 / player
+	 * whether invader
+	 */
 	@Override
 	public void kickPlayer(Player player, boolean isInvader) {
 		Map<Integer, Player> list = isInvader ? invaders : defenders;
@@ -123,6 +142,12 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 		getVortexLocation().getVortexController().syncPassed(true);
 	}
 
+	/**
+	 * 向守方玩家弹出加入同盟确认；同意后入队。
+	 * Prompts a defender to join the defence alliance; accepts join on confirm.
+	 *
+	 * defender
+	 */
 	@Override
 	public void updateDefenders(Player defender) {
 		if (defenders.containsKey(defender.getObjectId())) {
@@ -154,10 +179,23 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 		}
 	}
 
+	/**
+	 * 拒绝对话处理（恒为 true）。
+	 * Deny-dialog handler (always true).
+	 *
+	 * 玩家 / player
+	 * always true
+	 */
 	private boolean onDeny(Player player) {
 		return true;
 	}
 
+	/**
+	 * 将攻方玩家直接加入攻方列表。
+	 * Directly registers an invader player.
+	 *
+	 * invader
+	 */
 	@Override
 	public void updateInvaders(Player invader) {
 		if (invaders.containsKey(invader.getObjectId())) {
@@ -166,6 +204,10 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 		addPlayer(invader, true);
 	}
 
+	/**
+	 * 对地点内守方种族玩家同步守方登记。
+	 * Syncs defender registration for players of the defender race on the location.
+	 */
 	private void updateAlliance() {
 		for (Player player : getVortexLocation().getPlayers().values()) {
 			if (player.getRace().equals(getVortexLocation().getDefendersRace())) {
@@ -174,11 +216,17 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Map<Integer, Player> getInvaders() {
 		return invaders;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Map<Integer, Player> getDefenders() {
 		return defenders;

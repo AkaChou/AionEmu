@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.iteminfo;
 
 import java.nio.ByteBuffer;
@@ -25,38 +9,73 @@ import com.aionemu.gameserver.network.PacketWriteHelper;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 
 /**
- * ItemInfo blob entry (contains detailed item info). Client does have blob tree
- * as implemented, it contains sequence of blobs. Just blame Nemesiss for deep
- * recursion to get the right size [RR] :P
- * 
+ * 物品信息 Blob 条目基类，封装详细物品属性的序列化。
+ * 客户端以 Blob 序列形式接收数据，每个条目先写类型 ID，再写具体负载。
+ * Base class for item-info blob entries that serialize detailed item attributes.
+ * The client receives a sequence of blobs; each entry writes its type id first, then the payload.
+ *
  * @author -Nemesiss-
  * @modified Rolandas
  */
 public abstract class ItemBlobEntry extends PacketWriteHelper {
 
+	/** Blob 类型。Blob type. */
 	private final ItemBlobType type;
+	/** 所属玩家。 / Owning player. */
 	Player owner;
+	/** 所属物品。 / Owning item. */
 	Item ownerItem;
+	/** Associated stat modifier (for bonus blobs) / Associated stat modifier (for bonus blobs) */
 	IStatFunction modifier;
 
+	/**
+	 * 以指定 Blob 类型构造条目。
+	 * Constructs an entry with the given blob type.
+	 *
+	 * blob type
+	 */
 	ItemBlobEntry(ItemBlobType type) {
 		this.type = type;
 	}
 
+	/**
+	 * 绑定所属玩家、物品及可选属性修正。
+	 * Binds the owning player, item, and optional stat modifier.
+	 *
+	 * @param owner 所属玩家 / owning player
+	 * @param item 所属物品 / owning item
+	 * @param modifier 属性修正，可为 null / stat modifier, may be null
+	 */
 	void setOwner(Player owner, Item item, IStatFunction modifier) {
 		this.owner = owner;
 		this.ownerItem = item;
 		this.modifier = modifier;
 	}
 
+	/**
+	 * 写入类型 ID 后委托 {@link #writeThisBlob(ByteBuffer)} 写具体负载。
+	 * Writes the type id, then delegates payload writing to {@link #writeThisBlob(ByteBuffer)}.
+	 */
 	@Override
 	protected void writeMe(ByteBuffer buf) {
 		writeC(buf, type.getEntryId());
 		writeThisBlob(buf);
 	}
 
+	/**
+	 * 将本 Blob 的具体内容写入缓冲区。
+	 * Writes this blob's concrete payload into the buffer.
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 */
 	public abstract void writeThisBlob(ByteBuffer buf);
 
+	/**
+	 * 返回本 Blob 负载的字节长度（不含类型 ID）。
+	 * Returns the payload size of this blob in bytes (excluding the type id).
+	 *
+	 * @return 负载字节数 / payload size in bytes
+	 */
 	public abstract int getSize();
 
 }

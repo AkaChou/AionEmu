@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cradle Of Eternity 副本 NPC AI：Altar Of Earth（@AIName "Altar_Of_Earth"），继承 ActionItemNpcAI2。
+ * Cradle Of Eternity instance NPC AI: Altar Of Earth (@AIName "Altar_Of_Earth"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Altar_Of_Earth")
 public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 {
@@ -43,12 +29,12 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		if (!player.getInventory().decreaseByItemId(185000266, 1)) { //Earthen Malachite.
-			//You don’t have a Malachite of Earth to place on the altar.
+			// 你没有可放在祭坛上的大地孔雀石。 / You don’t have a Malachite of Earth to place on the altar.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403447));
 			return;
 		} switch (getNpcId()) {
 			case 834006: //Altar Of Earth.
-				//The Malachite of Earth emits a light and starts to float.
+				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
@@ -60,7 +46,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			    }, 5000);
 			break;
 			case 834019: //Altar Of Earth.
-				//The Malachite of Earth emits a light and starts to float.
+				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
@@ -72,7 +58,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			    }, 5000);
 			break;
 			case 834020: //Altar Of Earth.
-				//The Malachite of Earth emits a light and starts to float.
+				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
@@ -84,7 +70,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			    }, 5000);
 			break;
 			case 834021: //Altar Of Earth.
-				//The Malachite of Earth emits a light and starts to float.
+				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
@@ -96,7 +82,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			    }, 5000);
 			break;
 			case 834022: //Altar Of Earth.
-				//The Malachite of Earth emits a light and starts to float.
+				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override

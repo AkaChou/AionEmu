@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.towerofeternityspawns;
 
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
@@ -22,7 +6,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 
 /**
- * Created by Wnkrz on 23/08/2017.
+ * 高塔 Of 永恒刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 public class TowerOfEternitySpawnTemplate extends SpawnTemplate {
@@ -38,26 +23,36 @@ public class TowerOfEternitySpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 t state type / Returns the t state type */
 	public TowerOfEternityStateType getTStateType() {
 		return towerOfEternityType;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/** 设置 t state type / Sets the t state type */
 	public void setTStateType(TowerOfEternityStateType towerOfEternityType) {
 		this.towerOfEternityType = towerOfEternityType;
 	}
 
+	/**
+	 * @return 是否 tower 的 eternityopen / 是否 tower 的 eternityopen。 / Whether tower of eternity open / Whether tower of eternity open
+	 */
 	public final boolean isTowerOfEternityOpen() {
 		return towerOfEternityType.equals(TowerOfEternityStateType.OPEN);
 	}
 
+	/**
+	 * @return 是否 tower 的 eternityclosed / 是否 tower 的 eternityclosed。 / Whether tower of eternity closed / Whether tower of eternity closed
+	 */
 	public final boolean isTowerOfEternityClosed() {
 		return towerOfEternityType.equals(TowerOfEternityStateType.CLOSED);
 	}

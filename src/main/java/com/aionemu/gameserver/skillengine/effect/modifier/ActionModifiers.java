@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect.modifier;
 
 import java.util.ArrayList;
@@ -26,6 +10,9 @@ import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 行动修正器集合：XML 绑定多种伤害/目标修正子类型。
+ * Action modifiers container: JAXB binding for various damage/target modifier subtypes.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,12 +27,10 @@ public class ActionModifiers {
 	protected List<ActionModifier> actionModifiers;
 
 	/**
-	 * Gets the value of the actionModifiers property.
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
-	 * {@link StumbleDamageModifier } {@link FrontDamageModifier }
-	 * {@link BackDamageModifier } {@link StunDamageModifier }
-	 * {@link PoisonDamageModifier } {@link TargetRaceDamageModifier }
+	 * 获取行动修正器列表（懒初始化）。
+	 * Returns the action modifiers list (lazy-initialized).
+	 *
+	 * @return 修正器列表 / modifiers list
 	 */
 	public List<ActionModifier> getActionModifiers() {
 		if (actionModifiers == null) {

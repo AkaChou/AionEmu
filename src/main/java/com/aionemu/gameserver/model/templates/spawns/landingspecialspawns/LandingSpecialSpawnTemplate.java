@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.landingspecialspawns;
 
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+
+/**
+ * 登陆 Special 刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 public class LandingSpecialSpawnTemplate extends SpawnTemplate {
 	private int id;
@@ -34,26 +23,36 @@ public class LandingSpecialSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 f state type / Returns the f state type */
 	public LandingSpecialStateType getFStateType() {
 		return landingSpecialType;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/** 设置 f state type / Sets the f state type */
 	public void setFStateType(LandingSpecialStateType landingSpecialType) {
 		this.landingSpecialType = landingSpecialType;
 	}
 
+	/**
+	 * @return Whether special landing active / Whether special landing active
+	 */
 	public final boolean isSpecialLandingActive() {
 		return landingSpecialType.equals(LandingSpecialStateType.ACTIVE);
 	}
 
+	/**
+	 * @return Whether special landing no active / Whether special landing no active
+	 */
 	public final boolean isSpecialLandingNoActive() {
 		return landingSpecialType.equals(LandingSpecialStateType.NO_ACTIVE);
 	}

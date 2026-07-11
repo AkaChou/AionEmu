@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -31,6 +17,10 @@ import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 请求强化石、镶嵌/拆除魔力石、神石或增幅的客户端包。
+ * Client packet for enchanting, socketing/removing manastones, godstones, or amplification.
+ */
 @Slf4j
 public class CM_ENCHANMENT_STONES extends AionClientPacket {
 
@@ -47,6 +37,14 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 	private int unk;
 	private int toppedItemObjId;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_ENCHANMENT_STONES(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -77,7 +75,7 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 			stoneUniqueId = readD();
 			break;
 		default:
-			log.error("Unknown enchantment type? 0x" + Integer.toHexString(actionType/* !!!!! */).toUpperCase());
+			log.error(I18n.get("log.adb3551cc786", Integer.toHexString(actionType/* !!!!! */).toUpperCase()));
 			break;
 		}
 	}
@@ -98,11 +96,11 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 			if (targetItem == null) {
 				targetItem = player.getInventory().getItemByObjId(targetItemUniqueId);
 			}
-			// Enchant Stigma.
+			// 强化烙印之石。 / Enchant Stigma.
 			if (stigmaStone.getItemTemplate().isStigma() || stigmaStone.getItemTemplate().isEnchantmentStigmaStone()) {
 				action2.act(player, stigmaStone, targetItem);
 			} else {
-				// Enchant Stone.
+				// 强化石。 / Enchant Stone.
 				if (action.canAct(player, manastone, targetItem)) {
 					Item supplement = player.getInventory().getFirstItemByItemId(supplementUniqueId);
 					if (supplement != null) {

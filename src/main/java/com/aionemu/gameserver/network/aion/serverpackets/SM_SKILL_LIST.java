@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -21,6 +6,10 @@ import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端同步技能列表（基础/连锁/印记或新增技能）。
+ * Server packet synchronizing the skill list (basic/linked/stigma or new skill) to the client.
+ */
 public class SM_SKILL_LIST extends AionServerPacket {
 	private PlayerSkillEntry[] skillList;
 	private int messageId;
@@ -31,12 +20,27 @@ public class SM_SKILL_LIST extends AionServerPacket {
 	private Player player;
 	private int state;
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_LIST 包。
+	 * Creates a SM_SKILL_LIST packet with the given parameters.
+	 *
+	 * 玩家 / player
+	 * @param basicSkills 基础技能数组 / basic skills
+	 */
 	public SM_SKILL_LIST(Player player, PlayerSkillEntry[] basicSkills) {
 		this.player = player;
 		this.skillList = player.getSkillList().getBasicSkills();
 		this.messageId = 0;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_LIST 包。
+	 * Creates a SM_SKILL_LIST packet with the given parameters.
+	 *
+	 * 玩家 / player
+	 * @param linkedSkills 连锁技能数组 / linked skills
+	 * state
+	 */
 	public SM_SKILL_LIST(Player player, PlayerSkillEntry[] linkedSkills, int state) {
 		this.player = player;
 		this.skillList = player.getSkillList().getLinkedSkills();
@@ -45,11 +49,26 @@ public class SM_SKILL_LIST extends AionServerPacket {
 		this.isNew = true;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_LIST 包。
+	 * Creates a SM_SKILL_LIST packet with the given parameters.
+	 *
+	 * 玩家 / player
+	 * stigma skill
+	 */
 	public SM_SKILL_LIST(Player player, PlayerSkillEntry stigmaSkill) {
 		this.skillList = new PlayerSkillEntry[] { stigmaSkill };
 		this.messageId = 0;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_LIST 包。
+	 * Creates a SM_SKILL_LIST packet with the given parameters.
+	 *
+	 * @param skillListEntry 技能列表项 / skill list entry
+	 * message id
+	 * @param isNew 是否新技能 / is new
+	 */
 	public SM_SKILL_LIST(PlayerSkillEntry skillListEntry, int messageId, boolean isNew) {
 		this.skillList = new PlayerSkillEntry[] { skillListEntry };
 		this.messageId = messageId;

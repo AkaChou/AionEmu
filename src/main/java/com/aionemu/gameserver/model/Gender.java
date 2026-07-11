@@ -1,61 +1,44 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 
 /**
- * Creature gender. Typically there are males and females. But who knows, maybe
- * NC can invent something new ;)
- * 
+ * 性别枚举。
+ * Gender enumeration.
+ *
  * @author SoulKeeper
  */
 @XmlEnum
 public enum Gender {
 	/**
-	 * Males
+	 * 男性 / Males
 	 */
 	MALE(0),
 
 	/**
-	 * Females
+	 * 女性 / Females
 	 */
 	FEMALE(1),
 
 	/**
-	 * Dummy for create
+	 * 创建用占位 / Dummy for create
 	 */
 	DUMMY(8);
 
 	/**
-	 * id of gender
+	 * 性别 ID / id of gender
 	 */
 	private int genderId;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param genderId id of the gender
+	 * 构造方法。 / Constructor.
 	 */
 	private Gender(int genderId) {
 		this.genderId = genderId;
 	}
 
 	/**
+	 * 返回该性别 ID。
 	 * Get id of this gender.
 	 * 
 	 * @return gender id

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.kamarBattlefield;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Kamar Battlefield 副本 NPC AI：Fuel Barrel（@AIName "fuel_barrel"），继承 ActionItemNpcAI2。
+ * Kamar Battlefield instance NPC AI: Fuel Barrel (@AIName "fuel_barrel"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("fuel_barrel")
 public class Fuel_BarrelAI2 extends ActionItemNpcAI2
 {

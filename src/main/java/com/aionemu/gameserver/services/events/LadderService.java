@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -57,24 +43,44 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 天梯 / 战场匹配服务，管理普通与活动队列、战场创建、排名与名称伪装。
+ * battleground matchmaking service managing normal and event queues, BG creation, ranks, and name masking. / battleground matchmaking service managing normal and event queues, BG creation, ranks, and name masking.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
 public class LadderService {
+	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<LadderService> instanceProvider;
+	/** 活动战场排队列表。 / Event battleground queue list. */
 	private List<AionObject> eventQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
+	/** 普通战场排队列表。 / Normal battleground queue list. */
 	private List<AionObject> normalQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
+	/** 当前 battleground 映射 bgIdbattleground / Active battleground map (bgId → battleground) */
 	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
+	/** 普通战场与事件引擎关联映射。 / Map linking normal BGs to event engine instances. */
 	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Event>());
+	/** 当前活动战场模板。 / Current event battleground template. */
 	private Battleground eventBg = null;
+	/** 活动报名截止任务。 / Event registration deadline task. */
 	private ScheduledFuture<?> eventTask = null;
+	/** 普通报名截止任务。 / Normal registration deadline task. */
 	private ScheduledFuture<?> normalTask = null;
+	/** 普通战场是否开放报名。 / Whether normal BG registration is open. */
 	boolean normalReady = false;
+	/** 活动战场是否开放报名。 / Whether event BG registration is open. */
 	boolean eventReady = false;
+	/** 普通队列是否按队伍匹配。 / Whether normal queue uses team-based matchmaking. */
 	boolean normalTeamBased = false;
+	/** 活动队列是否按队伍匹配。 / Whether event queue uses team-based matchmaking. */
 	boolean eventTeamBased = false;
+	/** 排名刷新间隔（分钟）。 / Rank refresh interval in minutes. */
 	private int rankUpdateInterval = 2;
 
+	/**
+	 * 构造服务并启动周期排名刷新。
+	 * Constructs the service and starts periodic rank updates.
+	 */
 	public LadderService() {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -82,13 +88,24 @@ public class LadderService {
 				UpdateRanks();
 			}
 		}, rankUpdateInterval * 60 * 1000, rankUpdateInterval * 60 * 1000);
-		log.info("[LadderService] is initialized...");
+		log.info(I18n.get("log.feb60173643c"));
 	}
 
+	/**
+	 * 通过 DAO 刷新天梯排名。
+	 * Refreshes ladder ranks via the DAO.
+	 */
 	public void UpdateRanks() {
 		getLadderDAO().updateRanks();
 	}
 
+	/**
+	 * 将玩家注册到普通战场队列。
+	 * Registers a player into the normal battleground queue.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否注册成功 / whether registration succeeded
+	 */
 	public boolean registerForNormal(Player player) {
 		if (!isNormalReady() || player.getBattleground() != null) {
 			return false;
@@ -104,6 +121,13 @@ public class LadderService {
 		return normalQueueList.add(player);
 	}
 
+	/**
+	 * 将玩家注册到活动战场队列。
+	 * Registers a player into the event battleground queue.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否注册成功 / whether registration succeeded
+	 */
 	public boolean registerForEvent(Player player) {
 		if (!isEventReady() || player.getBattleground() != null) {
 			return false;
@@ -119,14 +143,33 @@ public class LadderService {
 		return eventQueueList.add(player);
 	}
 
+	/**
+	 * 将玩家从普通战场队列移除。
+	 * Removes a player from the normal battleground queue.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void unregisterForNormal(Player player) {
 		normalQueueList.remove(player);
 	}
 
+	/**
+	 * 将玩家从活动战场队列移除。
+	 * Removes a player from the event battleground queue.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void unregisterForEvent(Player player) {
 		eventQueueList.remove(player);
 	}
 
+	/**
+	 * 判断玩家是否已在任一队列中。
+	 * Returns whether the player is already in any queue.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否在队列中 / whether queued
+	 */
 	public boolean isInQueue(Player player) {
 		if (normalQueueList.contains(player) || eventQueueList.contains(player)) {
 			return true;
@@ -134,6 +177,12 @@ public class LadderService {
 		return false;
 	}
 
+	/**
+	 * 取消玩家在普通 / 活动队列中的全部报名并同步 UI。
+	 * Cancels all of a player's normal/event queue registrations and syncs the UI.
+	 *
+	 * 玩家 / player
+	 */
 	public void unregisterFromQueue(Player player) {
 		if (normalQueueList.contains(player)) {
 			unregisterForNormal(player);
@@ -147,6 +196,14 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 将队伍注册到普通战场队列。
+	 * Registers a party into the normal battleground queue.
+	 *
+	 * party
+	 *
+	 * @param group @return 是否注册成功 / whether registration succeeded
+	 */
 	public boolean registerForNormal(PlayerGroup group) {
 		if (!isNormalReady()) {
 			return false;
@@ -168,6 +225,14 @@ public class LadderService {
 		return normalQueueList.add(group);
 	}
 
+	/**
+	 * 将队伍注册到活动战场队列。
+	 * Registers a party into the event battleground queue.
+	 *
+	 * party
+	 *
+	 * @param group @return 是否注册成功 / whether registration succeeded
+	 */
 	public boolean registerForEvent(PlayerGroup group) {
 		if (!isEventReady()) {
 			return false;
@@ -187,14 +252,34 @@ public class LadderService {
 		return eventQueueList.add(group);
 	}
 
+	/**
+	 * 将队伍从普通战场队列移除。
+	 * Removes a party from the normal battleground queue.
+	 *
+	 * party
+	 */
 	public void unregisterForNormal(PlayerGroup group) {
 		normalQueueList.remove(group);
 	}
 
+	/**
+	 * 将队伍从活动战场队列移除。
+	 * Removes a party from the event battleground queue.
+	 *
+	 * party
+	 */
 	public void unregisterForEvent(PlayerGroup group) {
 		eventQueueList.remove(group);
 	}
 
+	/**
+	 * 判断队伍是否已在任一队列中。
+	 * Returns whether the party is already in any queue.
+	 *
+	 * party
+	 *
+	 * @param group @return 是否在队列中 / whether queued
+	 */
 	public boolean isInQueue(PlayerGroup group) {
 		if (normalQueueList.contains(group) || eventQueueList.contains(group)) {
 			return true;
@@ -202,6 +287,12 @@ public class LadderService {
 		return false;
 	}
 
+	/**
+	 * 取消队伍在普通 / 活动队列中的全部报名并同步 UI。
+	 * Cancels all of a party's normal/event queue registrations and syncs the UI.
+	 *
+	 * party
+	 */
 	public void unregisterFromQueue(PlayerGroup group) {
 		if (normalQueueList.contains(group)) {
 			unregisterForNormal(group);
@@ -219,10 +310,22 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 返回活动队列条目数（玩家或队伍条目）。
+	 * Returns the number of entries in the event queue (players or parties).
+	 *
+	 * @return 队列条目数 / queue entry count
+	 */
 	public int getEventQueueSize() {
 		return eventQueueList.size();
 	}
 
+	/**
+	 * 统计活动队列中的实际玩家人数。
+	 * Counts the actual number of players in the event queue.
+	 *
+	 * player count
+	 */
 	public int getEventQueuePlayers() {
 		int players = 0;
 		for (AionObject ao : queueSnapshot(eventQueueList)) {
@@ -235,6 +338,13 @@ public class LadderService {
 		return players;
 	}
 
+	/**
+	 * 按是否仅队伍模式随机实例化一个战场类型。
+	 * Instantiates a random battleground type based on team-only mode.
+	 *
+	 * @param teamOnly 是否仅队伍模式 / whether team-only
+	 * battleground instance
+	 */
 	private Battleground getRandomBg(boolean teamOnly) {
 		Battleground bg = null;
 		Class<?>[] bgs = new Class<?>[] { TwoTeamBg.class, TwoTeamSmallBg.class };
@@ -245,11 +355,18 @@ public class LadderService {
 		try {
 			bg = (Battleground) bgs[Rnd.get(bgs.length)].getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
-			// log.error("getRandomBg() failed!", e);
+			// log.error(I18n.get("log.8015e21ea7c3", e));
 		}
 		return bg;
 	}
 
+	/**
+	 * 开启一轮普通战场报名，并在截止后处理匹配。
+	 * Opens one normal battleground registration window and processes matchmaking after the deadline.
+	 *
+	 * @param event 战场事件 / battleground event
+	 * @return 是否成功开启 / whether opened successfully
+	 */
 	public boolean createNormalBgs(final BattlegroundEvent event) {
 		if (normalTask != null) {
 			normalTask.cancel(false);
@@ -284,6 +401,14 @@ public class LadderService {
 		return true;
 	}
 
+	/**
+	 * 开启一轮指定类型的活动战场报名。
+	 * Opens one event battleground registration window of the given type.
+	 *
+	 * @param bg 活动战场模板 / event battleground template
+	 * @param teamBased 是否按队伍匹配 / whether team-based
+	 * @return 是否成功开启 / whether opened successfully
+	 */
 	public boolean createEventBg(Battleground bg, boolean teamBased) {
 		if (eventBg != null) {
 			return false;
@@ -327,6 +452,12 @@ public class LadderService {
 		return true;
 	}
 
+	/**
+	 * 处理普通队列匹配并创建战场。
+	 * Processes normal-queue matchmaking and creates battlegrounds.
+	 *
+	 * @param event 战场事件 / battleground event
+	 */
 	private void HandleNormalQueue(BattlegroundEvent event) {
 		List<List<Player>> validGroups = new ArrayList<List<Player>>();
 		List<Integer> validParticipants = new ArrayList<Integer>();
@@ -462,6 +593,10 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 处理活动队列匹配并创建战场。
+	 * Processes event-queue matchmaking and creates battlegrounds.
+	 */
 	private void HandleEventQueue() {
 		List<List<Player>> validGroups = new ArrayList<List<Player>>();
 		List<Integer> validParticipants = new ArrayList<Integer>();
@@ -599,14 +734,30 @@ public class LadderService {
 		eventTeamBased = false;
 	}
 
+	/**
+	 * 返回普通战场是否处于报名中。
+	 * Returns whether normal battleground registration is open.
+	 *
+	 * @return 是否报名中 / whether ready
+	 */
 	public boolean isNormalReady() {
 		return normalReady;
 	}
 
+	/**
+	 * 返回活动战场是否处于报名中。
+	 * Returns whether event battleground registration is open.
+	 *
+	 * @return 是否报名中 / whether ready
+	 */
 	public boolean isEventReady() {
 		return eventReady;
 	}
 
+	/**
+	 * 取消进行中的活动报名并通知全服。
+	 * Cancels an in-progress event registration and notifies the world.
+	 */
 	public void cancelEvent() {
 		if (eventTask != null) {
 			eventTask.cancel(false);
@@ -624,6 +775,12 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 向未在战场 / FFA 中的玩家广播系统消息。
+	 * Broadcasts a system message to players not currently in a BG/FFA.
+	 *
+	 * message
+	 */
 	private void announceAll(final String msg) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -635,6 +792,12 @@ public class LadderService {
 		});
 	}
 
+	/**
+	 * 分配下一个可用战场 ID。
+	 * Allocates the next available battleground id.
+	 *
+	 * @return 战场 ID，失败返回 -1 / bg id, or -1 on failure
+	 */
 	private Integer getNextAvailableBgId() {
 		for (Integer i = 1; i < 10000; i++) {
 			if (!bgMap.containsKey(i)) {
@@ -644,6 +807,12 @@ public class LadderService {
 		return -1;
 	}
 
+	/**
+	 * 战场结束时清理映射并回调事件引擎。
+	 * Cleans mappings when a battleground ends and notifies the event engine.
+	 *
+	 * @param bg 结束的战场 / finished battleground
+	 */
 	public void onBgEnd(Battleground bg) {
 		bgMap.remove(bg.getBgId());
 		if (normalBgMap.containsKey(bg.getBgId())) {
@@ -654,6 +823,13 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 注册并启动一个战场实例。
+	 * Registers and starts a battleground instance.
+	 *
+	 * @param bg 战场 / battleground
+	 * @return 分配的战场 ID / allocated bg id
+	 */
 	public Integer registerBg(Battleground bg) {
 		Integer bgId = getNextAvailableBgId();
 		bg.setBgId(bgId);
@@ -661,24 +837,50 @@ public class LadderService {
 		return bgId;
 	}
 
+	/**
+	 * 返回活跃战场的不可变快照。
+	 * Returns an immutable snapshot of active battlegrounds.
+	 *
+	 * @return 战场映射快照 / battleground map snapshot
+	 */
 	public Map<Integer, Battleground> getBattlegrounds() {
 		synchronized (bgMap) {
 			return Collections.unmodifiableMap(new LinkedHashMap<Integer, Battleground>(bgMap));
 		}
 	}
 
+	/**
+	 * 复制当前活跃战场列表快照。
+	 * Copies a snapshot of the active battleground list.
+	 *
+	 * battleground list
+	 */
 	private List<Battleground> battlegroundsSnapshot() {
 		synchronized (bgMap) {
 			return new ArrayList<Battleground>(bgMap.values());
 		}
 	}
 
+	/**
+	 * 复制队列快照以便安全遍历。
+	 * Copies a queue snapshot for safe iteration.
+	 *
+	 * source queue
+	 * snapshot list
+	 */
 	private List<AionObject> queueSnapshot(List<AionObject> queue) {
 		synchronized (queue) {
 			return new ArrayList<AionObject>(queue);
 		}
 	}
 
+	/**
+	 * 查找玩家可重连的未结束战场。
+	 * Finds an unfinished battleground the player can rejoin.
+	 *
+	 * @param player 玩家 / player
+	 * @return 可重连战场，或 null / rejoinable battleground, or null
+	 */
 	public Battleground getActiveBattleground(Player player) {
 		for (Battleground bg : battlegroundsSnapshot()) {
 			if (bg.getSecondsLeft() > 1) {
@@ -690,6 +892,14 @@ public class LadderService {
 		return null;
 	}
 
+	/**
+	 * 按战场索引与种族返回伪装斗篷模板 ID。
+	 * Returns the disguise cloak template id by BG index and race.
+	 *
+	 * 玩家 / player
+	 * @param bgIndex 战场队伍索引 / battleground team index
+	 * cloak template id
+	 */
 	public int getBgCloak(Player player, int bgIndex) {
 		int template;
 		switch (bgIndex + 1) {
@@ -819,6 +1029,14 @@ public class LadderService {
 		return template;
 	}
 
+	/**
+	 * 返回战场内目标显示名（可能脱敏为 Contestant）。
+	 * Returns the in-BG display name for a target (may be masked as Contestant).
+	 *
+	 * viewer
+	 * target
+	 * display name
+	 */
 	public String getName(Player player, Player target) {
 		if (player.isSpectating() || (player.getBattleground() != null && player.getBattleground().isTournament())) {
 			return target.getName();
@@ -836,6 +1054,13 @@ public class LadderService {
 		return playerName;
 	}
 
+	/**
+	 * 按战场队伍索引返回队伍名称。
+	 * Returns the team name for a battleground team index.
+	 *
+	 * team index
+	 * team name
+	 */
 	public String getNameByIndex(int bgIndex) {
 		String name;
 		switch (bgIndex + 1) {
@@ -898,6 +1123,13 @@ public class LadderService {
 		return name;
 	}
 
+	/**
+	 * 按战场队伍索引返回披风军团徽章样式。
+	 * Returns the cape legion-emblem style for a battleground team index.
+	 *
+	 * team index
+	 * emblem
+	 */
 	public LegionEmblem getCapeEmblemByIndex(int bgIndex) {
 		LegionEmblem emblem = new LegionEmblem();
 		byte[] uploadData = { 0, 0 };
@@ -945,6 +1177,14 @@ public class LadderService {
 		return emblem;
 	}
 
+	/**
+	 * 处理自动组队 / 战场报名窗口交互。
+	 * battleground registration window interactions. / battleground registration window interactions.
+	 *
+	 * 玩家 / player
+	 * window id
+	 * dialog id
+	 */
 	public void handleWindow(Player player, int windowId, int dialogId) {
 		if (isEventReady()) {
 			switch (windowId) {
@@ -1048,12 +1288,24 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 玩家登录时同步普通战场报名 UI 状态。
+	 * Syncs normal battleground registration UI state on player login.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onPlayerLogin(Player player) {
 		if (isNormalReady() && player.getBattleground() != null && !isInQueue(player)) {
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(301550000, true));
 		}
 	}
 
+	/**
+	 * 按起始职业交叉排序参与者，尽量均衡职业分布。
+	 * Interleaves participants by starting class to balance class distribution.
+	 *
+	 * @param participants 参与者 objectId 列表 / participant objectId list
+	 */
 	private void SortParticipantList(List<Integer> participants) {
 		List<Integer> warrior = new ArrayList<Integer>();
 		List<Integer> scout = new ArrayList<Integer>();
@@ -1136,16 +1388,40 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 浅拷贝玩家列表。
+	 * Shallow-copies a player list.
+	 *
+	 * source list
+	 * clone
+	 */
 	private List<Player> cloneGroup(List<Player> group) {
 		List<Player> clone = new ArrayList<Player>();
 		clone.addAll(group);
 		return clone;
 	}
 
+	/**
+	 * 向玩家发送（可延迟）系统公告，使用默认发送者图标。
+	 * Sends a (optionally delayed) system announcement to a player with the default sender icon.
+	 *
+	 * 玩家 / player
+	 * message
+	 * @param delay 延迟毫秒 / delay in ms
+	 */
 	private void scheduleAnnouncement(final Player player, final String msg, int delay) {
 		this.scheduleAnnouncement(player, "\uE05C", msg, delay);
 	}
 
+	/**
+	 * 向玩家发送（可延迟）系统公告。
+	 * Sends a (optionally delayed) system announcement to a player.
+	 *
+	 * 玩家 / player
+	 * @param sender 发送者图标 / sender icon
+	 * message
+	 * @param delay 延迟毫秒 / delay in ms
+	 */
 	private void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1159,15 +1435,31 @@ public class LadderService {
 		}
 	}
 
+	/**
+	 * 获取天梯 DAO。
+	 * Returns the ladder DAO.
+	 *
+	 * DAO instance
+	 */
 	private LadderDAO getLadderDAO() {
 		return DAOManager.getDAO(LadderDAO.class);
 	}
 
+	/**
+	 * 懒加载单例持有者。
+	 * Lazy singleton holder.
+	 */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 		protected static final LadderService instance = new LadderService();
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring Provider）。
+	 * Returns the service singleton (prefers the Spring provider).
+	 *
+	 * service instance
+	 */
 	public static final LadderService getInstance() {
 		ObjectProvider<LadderService> provider = instanceProvider;
 		if (provider == null) {
@@ -1176,6 +1468,12 @@ public class LadderService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Injects the Spring instance provider.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<LadderService> instanceProvider) {
 		LadderService.instanceProvider = instanceProvider;
 	}

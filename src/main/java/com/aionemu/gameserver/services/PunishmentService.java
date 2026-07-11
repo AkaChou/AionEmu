@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,31 +20,36 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
 /**
+ * 惩罚服务，处理角色封禁、监狱与采集限制（验证码）相关逻辑。
+ * Punishment service handling character bans, prison, and gather restrictions (captcha).
+ *
  * @author lord_rex, Cura, nrg
  */
 public class PunishmentService {
 
 	/**
-	 * This method will handle unbanning a character
-	 * 
-	 * @param playerId
+	 * 解除角色封禁。
+	 * Unbans a character.
+	 *
+	 * character id
 	 */
 	public static void unbanChar(int playerId) {
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(playerId, PunishmentType.CHARBAN);
 	}
 
 	/**
-	 * This method will handle banning a character
-	 * 
-	 * @param playerId
-	 * @param dayCount
-	 * @param reason
+	 * 封禁角色；若在线则立即踢下线。
+	 * Bans a character and kicks them if currently online.
+	 *
+	 * character id
+	 * @param dayCount 封禁天数，0 表示永久 / ban days; 0 means permanent
+	 * ban reason
 	 */
 	public static void banChar(int playerId, int dayCount, String reason) {
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(playerId, PunishmentType.CHARBAN,
 				calculateDuration(dayCount), reason);
 
-		// if player is online - kick him
+		// 若玩家在线——踢出 / if player is online - kick him
 		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null) {
 			player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
@@ -68,10 +57,11 @@ public class PunishmentService {
 	}
 
 	/**
-	 * Calculates the timestamp when a given number of days is over
-	 * 
-	 * @param dayCount
-	 * @return timeStamp
+	 * 将天数换算为剩余秒数时间戳；0 天返回 {@link Integer#MAX_VALUE}。
+	 * Converts day count to remaining seconds; 0 days returns {@link Integer#MAX_VALUE}.
+	 *
+	 * day count
+	 * duration in seconds
 	 */
 	public static long calculateDuration(int dayCount) {
 		if (dayCount == 0) {
@@ -84,11 +74,13 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will handle moving or removing a player from prison
-	 * 
-	 * @param player
-	 * @param state
-	 * @param delayInMinutes
+	 * 将玩家送入或放出监狱。
+	 * Sends a player into prison or releases them.
+	 *
+	 * target player
+	 * false 出狱 / true imprison / false release。 / false 出狱 / true imprison / false release
+	 * @param delayInMinutes 监禁分钟数 / prison minutes
+	 * reason
 	 */
 	public static void setIsInPrison(Player player, boolean state, long delayInMinutes, String reason) {
 		stopPrisonTask(player, false);
@@ -123,9 +115,11 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will stop the prison task
-	 * 
-	 * @param player
+	 * 停止监狱倒计时任务，可选保存剩余时间。
+	 * Stops the prison countdown task, optionally saving remaining time.
+	 *
+	 * target player
+	 * @param save 是否保存剩余计时 / whether to persist remaining timer
 	 */
 	public static void stopPrisonTask(Player player, boolean save) {
 		Future<?> prisonTask = player.getController().getTask(TaskId.PRISON);
@@ -142,9 +136,10 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will update the prison status
-	 * 
-	 * @param player
+	 * 登录/状态刷新时恢复监狱计时，并确保玩家在监狱地图。
+	 * On login/status refresh, restores prison timer and ensures the player is on a prison map.
+	 *
+	 * target player
 	 */
 	public static void updatePrisonStatus(final Player player) {
 		if (player.isInPrison()) {
@@ -177,10 +172,11 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will schedule a prison task
-	 * 
-	 * @param player
-	 * @param prisonTimer
+	 * 调度监狱释放任务。
+	 * Schedules the prison release task.
+	 *
+	 * target player
+	 * remaining milliseconds
 	 */
 	private static void schedulePrisonTask(final Player player, long prisonTimer) {
 		player.setPrisonTimer(prisonTimer);
@@ -194,12 +190,13 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will handle can or cant gathering
-	 * 
-	 * @param player
-	 * @param captchaCount
-	 * @param state
-	 * @param delay
+	 * 设置或解除采集限制（含验证码流程）。
+	 * Enables or clears gather restriction (including captcha flow).
+	 *
+	 * target player
+	 * @param captchaCount 验证码次数 / captcha attempt count
+	 * @param state true 禁止采集 / false 解除 / true restrict / false clear
+	 * @param delay 限制毫秒 / restriction delay in ms
 	 * @author Cura
 	 */
 	public static void setIsNotGatherable(Player player, int captchaCount, boolean state, long delay) {
@@ -229,10 +226,11 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will stop the gathering task
-	 * 
-	 * @param player
-	 * @param save
+	 * 停止采集限制任务，可选保存剩余时间。
+	 * Stops the gather-restriction task, optionally saving remaining time.
+	 *
+	 * target player
+	 * @param save 是否保存剩余计时 / whether to persist remaining timer
 	 * @author Cura
 	 */
 	public static void stopGatherableTask(Player player, boolean save) {
@@ -251,9 +249,10 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will update the gathering status
-	 * 
-	 * @param player
+	 * 登录/状态刷新时恢复采集限制计时。
+	 * On login/status refresh, restores gather-restriction timer.
+	 *
+	 * target player
 	 * @author Cura
 	 */
 	public static void updateGatherableStatus(Player player) {
@@ -268,10 +267,11 @@ public class PunishmentService {
 	}
 
 	/**
-	 * This method will schedule a gathering task
-	 * 
-	 * @param player
-	 * @param gatherableTimer
+	 * 调度采集限制解除任务。
+	 * Schedules the gather-restriction release task.
+	 *
+	 * target player
+	 * remaining milliseconds
 	 * @author Cura
 	 */
 	private static void scheduleGatherableTask(final Player player, long gatherableTimer) {
@@ -286,11 +286,17 @@ public class PunishmentService {
 	}
 
 	/**
-	 * PunishmentType
-	 * 
+	 * 惩罚类型枚举。
+	 * Punishment type enum.
+	 *
 	 * @author Cura
 	 */
 	public enum PunishmentType {
-		PRISON, GATHER, CHARBAN
+		/** 监狱 / Prison */
+		PRISON,
+		/** 采集限制 / Gather restriction */
+		GATHER,
+		/** 角色封禁 / Character ban */
+		CHARBAN
 	}
 }

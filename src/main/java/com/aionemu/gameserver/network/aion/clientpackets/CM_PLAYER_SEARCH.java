@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import java.util.ArrayList;
@@ -31,6 +15,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 客户端玩家搜索请求包，按名称/区域/职业/等级/LFG 等条件筛选在线玩家。
+ * Client packet to search online players by name, region, class, level, LFG, etc.
+ */
 public class CM_PLAYER_SEARCH extends AionClientPacket {
 	public static final int MAX_RESULTS = 104;
 	private String name;
@@ -40,6 +28,11 @@ public class CM_PLAYER_SEARCH extends AionClientPacket {
 	private int maxLevel;
 	private int lfgOnly;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_PLAYER_SEARCH(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -64,7 +57,7 @@ public class CM_PLAYER_SEARCH extends AionClientPacket {
 		Iterator<Player> it = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		List<Player> matches = new ArrayList<Player>(MAX_RESULTS);
 		if (activePlayer.getLevel() < 10) {
-			// Characters under level 10 cannot use the search function.
+			// 10 级以下角色无法使用搜索功能。 / Characters under level 10 cannot use the search function.
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_CANT_WHO_LEVEL("10"));
 			return;
 		}

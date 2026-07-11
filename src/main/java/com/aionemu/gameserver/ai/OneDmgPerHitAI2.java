@@ -1,27 +1,13 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.ai2.AIName;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 每次命中固定 1 点伤害的 NPC AI（通常用于练习/特殊目标）。
+ * NPC AI that always deals 1 damage per hit (practice/special targets).
+ *
+ * @author Encom
+ */
 @AIName("onedmgperhit")
 public class OneDmgPerHitAI2 extends NoActionAI2
 {

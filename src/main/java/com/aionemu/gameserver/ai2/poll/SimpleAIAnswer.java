@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.poll;
 
 /**
+ * 基于布尔值的简单 AI 投票回答实现。
+ * Simple boolean-based implementation of an AI poll answer.
+ *
  * @author ATracer
  */
 public class SimpleAIAnswer implements AIAnswer {
@@ -24,17 +11,26 @@ public class SimpleAIAnswer implements AIAnswer {
 	private final boolean answer;
 
 	/**
-	 * @param answer
+	 * 使用给定布尔结果构造回答。
+	 * Construct an answer with the given boolean result.
+	 *
+	 * Whether the answer is positive
 	 */
 	SimpleAIAnswer(boolean answer) {
 		this.answer = answer;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isPositive() {
 		return answer;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Object getResult() {
 		return answer;

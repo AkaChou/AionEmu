@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
@@ -27,8 +13,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/*
- * Rework & Test : MATTY
+/**
+ * 守护灵列表。
+ * Minion List game object.
  */
 
 public class MinionList {
@@ -41,6 +28,7 @@ public class MinionList {
 		loadMinions();
 	}
 
+	/** Load 守护灵 / Load minions */
 	public void loadMinions() {
 		for (MinionCommonData minionCommonData : DAOManager.getDAO(PlayerMinionsDAO.class).getPlayerMinions(player)) {
 			if (minionCommonData.getExpireTime() > 0) {
@@ -50,10 +38,12 @@ public class MinionList {
 		}
 	}
 
+	/** 返回 minions / Returns the minions */
 	public Collection<MinionCommonData> getMinions() {
 		return (Collection<MinionCommonData>) minions.values();
 	}
 
+	/** 更新守护灵列表 / Update minions list */
 	public void updateMinionsList() {
 		minions.clear();
 		for (MinionCommonData minionCommonData : DAOManager.getDAO(PlayerMinionsDAO.class).getPlayerMinions(player)) {
@@ -65,11 +55,13 @@ public class MinionList {
 		return;
 	}
 
+	/** 获取守护灵。 / Returns the minion. */
 	public MinionCommonData getMinion(int minionObjId) {
 		return minions.get(minionObjId);
 	}
 
-	// Add growthPoint
+	// 添加成长点 / Add growthPoint
+	/** 添加 new minion / Adds new minion */
 	public MinionCommonData addNewMinion(Player player, int minionId, String name, String grade, int level, int growthPoint) {
 		MinionCommonData minionCommonData = new MinionCommonData(minionId, player.getObjectId(), name, grade, level, growthPoint);
 		DAOManager.getDAO(PlayerMinionsDAO.class).insertPlayerMinion(minionCommonData);
@@ -78,10 +70,12 @@ public class MinionList {
 		return minionCommonData;
 	}
 
+	/** 是否拥有守护灵。 / Whether minion. */
 	public boolean hasMinion(int n) {
 		return minions.containsKey(n);
 	}
 
+	/** 删除守护灵。 / Deletes minion. */
 	public void deleteMinion(int minionObjId) {
 		if (hasMinion(minionObjId)) {
 			DAOManager.getDAO(PlayerMinionsDAO.class).removePlayerMinion(player, minionObjId);
@@ -89,10 +83,12 @@ public class MinionList {
 		}
 	}
 
+	/** 设置 last used / Sets the last used */
 	public void setLastUsed(int lastUsedObjId) {
 		this.lastUsedObjId = lastUsedObjId;
 	}
 
+	/** 返回上次已用 / Returns the last used*/
 	public int getLastUsed() {
 		return lastUsedObjId;
 	}

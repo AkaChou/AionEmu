@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -32,13 +16,32 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 物品指令/信件任务模板：使用起始物品接取，可选途经 NPC 对话推进，最终到结束 NPC 交任务。
+ * letter quest template: start via item use, optional mid-NPC talk steps, turn in at the end NPC. / letter quest template: start via item use, optional mid-NPC talk steps, turn in at the end NPC.
+ */
 public class ItemOrders extends QuestHandler {
+	/** 任务 ID / quest id */
 	private final int questId;
+	/** 起始物品模板 ID / start item template id */
 	private final int startItemId;
+	/** 途经对话 NPC 1，0 表示无 / first talk NPC, 0 if none */
 	private final int talkNpc1;
+	/** 途经对话 NPC 2，0 表示无 / second talk NPC, 0 if none */
 	private final int talkNpc2;
+	/** 结束 NPC ID / end NPC id */
 	private final int endNpcId;
 
+	/**
+	 * 构造物品指令任务处理器。
+	 * Constructs an item-orders quest handler.
+	 *
+	 * quest id
+	 * start item id
+	 * first talk NPC
+	 * second talk NPC
+	 * end NPC
+	 */
 	public ItemOrders(int questId, int startItemId, int talkNpc1, int talkNpc2, int endNpcId) {
 		super(questId);
 		this.startItemId = startItemId;
@@ -48,6 +51,10 @@ public class ItemOrders extends QuestHandler {
 		this.endNpcId = endNpcId;
 	}
 
+	/**
+	 * 注册结束 NPC、起始物品与可选途经 NPC 事件。
+	 * Registers end NPC, start item and optional talk NPC events.
+	 */
 	@Override
 	public void register() {
 		qe.registerQuestNpc(endNpcId).addOnTalkEvent(questId);
@@ -60,6 +67,13 @@ public class ItemOrders extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理物品确认接取、途经 NPC 推进与结束 NPC 交任务对话。
+	 * Handles item-confirm accept, mid-NPC progress and end-NPC turn-in dialogs.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理该对话事件 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		final Player player = env.getPlayer();
@@ -107,6 +121,14 @@ public class ItemOrders extends QuestHandler {
 		return false;
 	}
 
+	/**
+	 * 处理起始物品使用：播放 3 秒使用动画后打开接取对话。
+	 * Handles start-item use: plays a 3s use animation then opens the accept dialog.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param item 被使用的物品 / used item
+	 * handler result
+	 */
 	@Override
 	public HandlerResult onItemUseEvent(final QuestEnv env, Item item) {
 		final Player player = env.getPlayer();

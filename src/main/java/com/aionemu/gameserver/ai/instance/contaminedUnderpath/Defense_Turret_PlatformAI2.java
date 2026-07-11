@@ -7,35 +7,37 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Contamined Underpath 副本 NPC AI：Defense Turret Platform（@AIName "defense_turret_platform"），继承 NpcAI2。
+ * Contamined Underpath instance NPC AI: Defense Turret Platform (@AIName "defense_turret_platform"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("defense_turret_platform")
 public class Defense_Turret_PlatformAI2 extends NpcAI2
 {
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.getLevel() >= 10) {
-		    //This is a magical transformation cube created by the Empyrean Lord.
+		    // 这是主神创造的魔法变身背包。 / This is a magical transformation cube created by the Empyrean Lord.
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
 		} else {
-            //You can use [Bright Aether] to set up any turret you like.
+            // 你可使用【明亮以太】设置任意炮塔。 / You can use [Bright Aether] to set up any turret you like.
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         }
 	}
 	
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
-		//Rapid Fire Multiple Fire Cannon Installation (1 Bright Aether).
+		// 速射多管火炮安装（1 明亮以太）。 / Rapid Fire Multiple Fire Cannon Installation (1 Bright Aether).
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(182007405, 1)) { //Bright Aether.
 			spawn(833808, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Single Fire Cannon.
 		}
-		//Ranged Cannon Installation (2 Bright Aether)
+		// 远程加农安装（2 明亮以太） / Ranged Cannon Installation (2 Bright Aether)
 		else if (dialogId == 10001 && player.getInventory().decreaseByItemId(182007405, 2)) { //Bright Aether.
 			spawn(833809, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Area Antiaircraft Gun.
 		}
-		//Powerful Magic Cannon Installation (2 Bright Aether).
+		// 强力魔法加农安装（2 明亮以太）。 / Powerful Magic Cannon Installation (2 Bright Aether).
 		else if (dialogId == 10002 && player.getInventory().decreaseByItemId(182007405, 2)) { //Bright Aether.
 			spawn(833810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Wide Area Capture Device.
 		}

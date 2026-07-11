@@ -1,21 +1,6 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET;
@@ -28,9 +13,11 @@ import java.util.List;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+
 /**
- * Send packet in raw format.
- * 
+ * 原始数据包发送指令；从 {@code data/packets/} 下的文本文件读取十六进制并下发自定义包。
+ * Admin command that sends raw custom packets loaded as hex from {@code data/packets/} text files.
+ *
  * @author Luno
  * @author Aquanox
  */
@@ -44,6 +31,13 @@ public class Raw extends AdminCommand {
 		super("raw");
 	}
 
+	/**
+	 * 读取指定名称的数据包文本文件并发送给管理员客户端。
+	 * Loads the named packet text file and sends it to the admin client.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * @param params 单一参数：不含扩展名的文件名 / single arg: file name without extension
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length != 1) {
@@ -59,7 +53,7 @@ public class Raw extends AdminCommand {
 		}
 	
 		try {
-			// 使用JDK 8的Files类读取文件 | Using JDK 8's Files class to read the file
+			// 使用 JDK 8的 Files 类读取文件 | Using JDK 8's Files class to read the file
 			List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
 	
 			SM_CUSTOM_PACKET packet = null;
@@ -89,10 +83,17 @@ public class Raw extends AdminCommand {
 		}
 		catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "An error has occurred.");
-			log.warn("IO Error.", e);
+			log.warn(I18n.get("log.c97d2cc30727", e));
 		}
 	}
 
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Usage: //raw [name]");

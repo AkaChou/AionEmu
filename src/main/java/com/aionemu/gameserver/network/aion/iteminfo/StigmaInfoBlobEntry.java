@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.iteminfo;
 
 import java.nio.ByteBuffer;
@@ -23,17 +7,28 @@ import com.aionemu.gameserver.model.templates.item.Stigma;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 
 /**
- * This blob contains stigma info.
- * 
+ * 尘晶（Stigma）技能信息 Blob。
+ * 写入尘晶关联技能 ID 与所需碎片数量。
+ * Blob containing stigma skill info.
+ * Writes linked skill ids and required shard count.
+ *
  * @author -Nemesiss-
  * @modified Rolandas
  */
 public class StigmaInfoBlobEntry extends ItemBlobEntry {
 
+	/**
+	 * 构造尘晶信息 Blob 条目。
+	 * Constructs a stigma-info blob entry.
+	 */
 	StigmaInfoBlobEntry() {
 		super(ItemBlobType.STIGMA_INFO);
 	}
 
+	/**
+	 * 将本 Blob 的具体内容写入缓冲区。
+	 * Writes this blob's concrete payload into the buffer.
+	 */
 	@Override
 	public void writeThisBlob(ByteBuffer buf) {
 		Item item = ownerItem;
@@ -48,12 +43,16 @@ public class StigmaInfoBlobEntry extends ItemBlobEntry {
 		writeD(buf, stigma.getShard());
 
 		skip(buf, 192);
-		writeH(buf, 0x1); // unk
+		writeH(buf, 0x1); // 未知 / unk
 		writeH(buf, 0);
 		skip(buf, 96);
-		writeH(buf, 0); // unk
+		writeH(buf, 0); // 未知 / unk
 	}
 
+	/**
+	 * 返回本 Blob 负载的字节长度。
+	 * Returns the payload size of this blob in bytes.
+	 */
 	@Override
 	public int getSize() {
 		return 8 + 4 + 192 + 4 + 96 + 2;

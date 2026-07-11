@@ -1,47 +1,53 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.zorshivdredgionservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
-import com.aionemu.gameserver.services.ZorshivDredgionService;
 
 /**
+ * 佐尔希夫挖掘舰活动抽象基类。
+ * Abstract base for Zorshiv dredgion world events.
+ *
+ * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
+ * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
+ *
  * @author Rinzler (Encom)
+ * @param <ZL> 挖掘舰地点类型 / dredgion location type
  */
-
 public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
+
 	private boolean started;
 	private final ZL zorshivDredgionLocation;
-
-	protected abstract void stopZorshivDredgion();
-
-	protected abstract void startZorshivDredgion();
-
 	private final AtomicBoolean peace = new AtomicBoolean();
 
+	/**
+	 * 停止活动的具体实现。
+	 * Concrete stop logic.
+	 */
+	protected abstract void stopZorshivDredgion();
+
+	/**
+	 * 启动活动的具体实现。
+	 * Concrete start logic.
+	 */
+	protected abstract void startZorshivDredgion();
+
+	/**
+	 * 绑定挖掘舰地点。
+	 * Binds the dredgion location.
+	 *
+	 * location
+	 */
 	public ZorshivDredgion(ZL zorshivDredgionLocation) {
 		this.zorshivDredgionLocation = zorshivDredgionLocation;
 	}
 
+	/**
+	 * 启动活动（幂等）。
+	 * Starts the event (idempotent).
+	 */
 	public final void start() {
 		boolean doubleStart = false;
 		synchronized (this) {
@@ -57,28 +63,60 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 		startZorshivDredgion();
 	}
 
+	/**
+	 * 停止活动（仅首次生效）。
+	 * Stops the event (first call only).
+	 */
 	public final void stop() {
 		if (peace.compareAndSet(false, true)) {
 			stopZorshivDredgion();
 		}
 	}
 
+	/**
+	 * 按状态类型刷新刷怪。
+	 * Spawns entities by state type.
+	 *
+	 * @param type 状态类型 / state type
+	 */
 	protected void spawn(ZorshivDredgionStateType type) {
 		GameLocationBootstrapServices.zorshivDredgionService().spawn(getZorshivDredgionLocation(), type);
 	}
 
+	/**
+	 * 清除该地点刷怪。
+	 * Despawns entities for this location.
+	 */
 	protected void despawn() {
 		GameLocationBootstrapServices.zorshivDredgionService().despawn(getZorshivDredgionLocation());
 	}
 
+	/**
+	 * 是否已回到和平态。
+	 * Whether the event is back to peace.
+	 *
+	 * @return 和平态则为 true / true if peace
+	 */
 	public boolean isPeace() {
 		return peace.get();
 	}
 
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * location
+	 */
 	public ZL getZorshivDredgionLocation() {
 		return zorshivDredgionLocation;
 	}
 
+	/**
+	 * 获取地点 ID。
+	 * Returns the location id.
+	 *
+	 * location id
+	 */
 	public int getZorshivDredgionLocationId() {
 		return zorshivDredgionLocation.getId();
 	}

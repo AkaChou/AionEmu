@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -31,13 +15,25 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * 玩家限制服务，管理出售限额等周期限制。
+ * Player limit service managing periodic limits such as sell caps.
+ *
  * @author Source
  */
+
 public class PlayerLimitService {
 
 	private static ConcurrentMap<Integer, Long> sellLimit = new ConcurrentHashMap<Integer, Long>();
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
+	/**
+	 * 更新出售限额。
+	 * Updates sell limit.
+	 *
+	 * 玩家 / player
+	 * reward
+	 * result
+	 */
 	public static boolean updateSellLimit(Player player, long reward) {
 		if (!CustomConfig.LIMITS_ENABLED) {
 			return true;
@@ -65,10 +61,18 @@ public class PlayerLimitService {
 		return true;
 	}
 
+	/**
+	 * 调度限额更新。
+	 * Schedules limit update.
+	 */
 	public void scheduleUpdate() {
 		GameCronServices.cronService().schedule(new Runnable() {
 
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				sellLimit.clear();
 			}
@@ -76,6 +80,11 @@ public class PlayerLimitService {
 		}, CustomConfig.LIMITS_UPDATE, true);
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static PlayerLimitService getInstance() {
 		ObjectProvider<PlayerLimitService> provider = instanceProvider;
 		if (provider == null) {
@@ -84,6 +93,12 @@ public class PlayerLimitService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * @param instanceProvider 副本提供者 / instanceProvider
+	 */
 	public static void setInstanceProvider(ObjectProvider<PlayerLimitService> instanceProvider) {
 		PlayerLimitService.instanceProvider = instanceProvider;
 	}

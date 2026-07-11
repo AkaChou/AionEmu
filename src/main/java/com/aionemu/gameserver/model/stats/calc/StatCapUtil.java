@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc;
 
+import com.aionemu.boot.i18n.I18n;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.stats.container.CombatMode;
 import com.aionemu.gameserver.model.stats.container.RatioType;
+
+/**
+ * 属性 Cap 工具模型。
+ * Stat Cap Util model.
+ */
 
 @Slf4j
 public class StatCapUtil {
@@ -57,6 +47,7 @@ public class StatCapUtil {
 		}
 	}
 
+	/** 计算基础值。 / Calculate base value. */
 	public static void calculateBaseValue(Stat2 stat, byte isPlayer) {
 		int lowerCap = getLowerCap(stat.getStat());
 		int upperCap = getUpperCap(stat.getStat());
@@ -85,14 +76,17 @@ public class StatCapUtil {
 		}
 	}
 
+	/** 返回最小值 / Returns the min value*/
 	public static int getMinValue(StatEnum stat) {
 		return minValues.get(stat);
 	}
 
+	/** 返回最大值 / Returns the max value*/
 	public static int getMaxValue(StatEnum stat) {
 		return maxValues.get(stat);
 	}
 
+	/** 返回 lower cap / Returns the lower cap */
 	public static int getLowerCap(StatEnum stat) {
 		if (limits.containsKey(stat)) {
 			return limits.get(stat).lowerCap;
@@ -125,6 +119,7 @@ public class StatCapUtil {
 		return value;
 	}
 
+	/** 返回 upper cap / Returns the upper cap */
 	public static int getUpperCap(StatEnum stat) {
 		if (limits.containsKey(stat)) {
 			return limits.get(stat).upperCap;
@@ -169,6 +164,7 @@ public class StatCapUtil {
 		return value;
 	}
 
+	/** Limit Value For Pvp Or Pve Stat / Limit Value For Pvp Or Pve Stat */
 	public static int limitValueForPvpOrPveStat(CombatMode mode, RatioType type, int value) {
 		int min;
 		int max;
@@ -190,6 +186,7 @@ public class StatCapUtil {
 		}
 	}
 	
+		/** Dump Wrong Stats / Dump Wrong Stats */
 		public static void dumpWrongStats(String ownerInfo, Stat2... stats) {
 		List<Stat2> wrongStats = null;
 		for (Stat2 stat : stats) {
@@ -214,13 +211,8 @@ public class StatCapUtil {
 		msg.append(ownerInfo);
 		msg.append('\n');
 		for (Stat2 stat : wrongStats) {
-			msg.append(stat.getStat());
-			msg.append(": [");
-			msg.append(" Min: " + Integer.toString(getMinValue(stat.getStat())));
-			msg.append(" Max: " + Integer.toString(getMaxValue(stat.getStat())));
-			msg.append(" Base: " + Integer.toString(stat.getBase()));
-			msg.append(" Bonus: " + Integer.toString(stat.getBonus()));
-			msg.append("]\n");
+			msg.append(I18n.get("log.78602a34d7c7", stat.getStat(), getMinValue(stat.getStat()),
+					getMaxValue(stat.getStat()), stat.getBase(), stat.getBonus()));
 		}
 		log.error(msg.toString());
 	}

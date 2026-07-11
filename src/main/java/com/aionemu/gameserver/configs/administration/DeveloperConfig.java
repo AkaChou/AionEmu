@@ -1,72 +1,72 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.administration;
 
 import com.aionemu.commons.configuration.Property;
 
+/**
+ * 开发调试相关配置（刷怪、道具属性、封包显示等）。
+ * Developer debugging configuration (spawns, item stats, packet display, etc.).
+ */
 public class DeveloperConfig {
+
 	/**
-	 * if false - not spawns will be loaded
+	 * 是否加载刷怪数据；为 false 时不加载任何刷怪。
+	 * Whether spawn data is loaded; if false, no spawns are loaded.
 	 */
 	@Property(key = "gameserver.developer.spawn.enable", defaultValue = "true")
 	public static boolean SPAWN_ENABLE;
+
 	/**
-	 * if true - checks spawns being outside any known zones
+	 * 是否检查刷怪是否落在已知区域之外。
+	 * Whether to check spawns that lie outside any known zones.
 	 */
 	@Property(key = "gameserver.developer.spawn.check", defaultValue = "false")
 	public static boolean SPAWN_CHECK;
+
 	/**
-	 * if set, adds specified stat bonus for items with random bonusess
+	 * 为带随机词缀的物品附加指定属性加成 ID（0 表示不附加）。
+	 * Stat bonus ID applied to items with random bonuses (0 = none).
 	 */
 	@Property(key = "gameserver.developer.itemstat.id", defaultValue = "0")
 	public static int ITEM_STAT_ID;
+
 	/**
-	 * Show sended cm/sm packets in game server log
+	 * 是否在游戏服日志中打印收发的 CM/SM 封包。
+	 * Whether to log sent/received CM/SM packets in the game server log.
 	 */
 	@Property(key = "gameserver.developer.showpackets.enable", defaultValue = "false")
 	public static boolean SHOW_PACKETS;
+
 	/**
-	 * Display Packets Name in Chat Window
+	 * 是否在聊天窗口显示封包名称。
+	 * Whether to display packet names in the chat window.
 	 */
 	@Property(key = "gameserver.developer.show.packetnames.inchat.enable", defaultValue = "false")
 	public static boolean SHOW_PACKET_NAMES_INCHAT;
+
 	/**
-	 * Display Packets Hex-Bytes in Chat Window
+	 * 是否在聊天窗口显示封包十六进制字节。
+	 * Whether to display packet hex bytes in the chat window.
 	 */
 	@Property(key = "gameserver.developer.show.packetbytes.inchat.enable", defaultValue = "false")
 	public static boolean SHOW_PACKET_BYTES_INCHAT;
+
 	/**
-	 * How many Packet Bytes should be shown in Chat Window? Default: 200-Hexed
-	 * bytes
+	 * 聊天窗口中显示的封包字节数上限（默认 200 个十六进制字节）。
+	 * Max packet bytes shown in chat (default: 200 hex bytes).
 	 */
 	@Property(key = "gameserver.developer.show.packetbytes.inchat.total", defaultValue = "200")
 	public static int TOTAL_PACKET_BYTES_INCHAT;
+
 	/**
-	 * Filters which Packets should be shown in Chat Windows? Default: * e.g.
-	 * SM_MOVE, CM_CASTSPELL, CM_ATTACK
+	 * 聊天窗口中显示的封包名称过滤器（* 表示全部；如 SM_MOVE, CM_CASTSPELL）。
+	 * Packet name filter for chat display (* = all; e.g. SM_MOVE, CM_CASTSPELL).
 	 */
 	@Property(key = "gameserver.developer.filter.packets.inchat", defaultValue = "*")
 	public static String FILTERED_PACKETS_INCHAT;
+
 	/**
-	 * if Player Access Level is meet, display Packets-Name or Hex-Bytes in Chat
-	 * Window Tip: Player Access-Level higher than or equal to 3 is recommended 10 -
-	 * Server-Owner 9 - Server-CoOwner 8 - Server-Admin 7 - Server-CoAdmin 6 -
-	 * Developer 5 - Admin 4 - Head-GM 3 - Senior-GM 2 - Junior-GM 1 - Supporter 0 -
-	 * Players
+	 * 可在聊天窗口查看封包名称/字节的最低权限等级（建议 ≥ 3；默认 6）。
+	 * Minimum access level to see packet names/bytes in chat (recommended ≥ 3; default 6).
 	 */
 	@Property(key = "gameserver.developer.show.packets.inchat.accesslevel", defaultValue = "6")
 	public static int SHOW_PACKETS_INCHAT_ACCESSLEVEL;

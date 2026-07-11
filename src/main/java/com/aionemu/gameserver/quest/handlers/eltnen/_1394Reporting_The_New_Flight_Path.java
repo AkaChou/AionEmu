@@ -7,6 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 艾特南任务脚本：Reporting The New Flight Path（任务 ID 1394）。
+ * Eltnen quest script: Reporting The New Flight Path (quest ID 1394).
+ */
 public class _1394Reporting_The_New_Flight_Path extends QuestHandler {
 
 	private final static int questId = 1394;

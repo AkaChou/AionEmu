@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
@@ -48,18 +33,16 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
 /**
- * This class is responsible for loading xml files. It uses JAXB to do the
- * job.<br>
- * In addition, it uses @{link {@link XmlMerger} to create input file from all
- * xml files.
- * 
+ * 负责通过 JAXB 加载静态数据 XML；配合 {@link XmlMerger} 将多文件合并为缓存后反序列化。
+ * Loads static-data XML via JAXB; uses {@link XmlMerger} to merge source files into a cache before unmarshalling.
+ *
  * @author Luno
  */
 @Slf4j
 public class XmlDataLoader {
 
 	private static volatile ObjectProvider<XmlDataLoader> instanceProvider;
-	/** File containing xml schema declaration */
+	/** XML Schema 声明文件路径 / path to the XML schema declaration file */
 	private final static String XML_SCHEMA_FILE = "./data/static_data/static_data.xsd";
 	private static final String CACHE_XML_FILE = "./cache/static_data.xml";
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
@@ -67,6 +50,12 @@ public class XmlDataLoader {
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
 	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
+	/**
+	 * 获取 XmlDataLoader 单例（优先 Spring 提供的实例）。
+	 * Returns the XmlDataLoader singleton (Spring-provided if available).
+	 *
+	 * XmlDataLoader instance
+	 */
 	public static final XmlDataLoader getInstance() {
 		ObjectProvider<XmlDataLoader> provider = instanceProvider;
 		if (provider == null) {
@@ -75,6 +64,12 @@ public class XmlDataLoader {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 侧实例提供者，供容器接管单例解析。
+	 * Sets the Spring ObjectProvider used to resolve the singleton.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<XmlDataLoader> provider) {
 		instanceProvider = provider;
 	}
@@ -82,8 +77,10 @@ public class XmlDataLoader {
 	private static volatile Future<JAXBContext> preloadedContext;
 
 	/**
-	 * Starts asynchronous preloading of the StaticData JAXBContext so it is ready when unmarshalling begins.
-	 * Modeled after aion-server JAXBUtil.preLoadContextAsync. Call as early as possible during startup.
+	 * 异步预加载 StaticData 的 JAXBContext，以便反序列化开始时上下文已就绪。
+	 * Asynchronously preloads the StaticData JAXBContext so it is ready when unmarshalling begins.
+	 * <p>参考 aion-server {@code JAXBUtil.preLoadContextAsync}，应在启动早期调用。
+	 * Modeled after aion-server JAXBUtil.preLoadContextAsync; call as early as possible during startup.
 	 */
 	public static void preloadContextAsync() {
 		if (preloadedContext == null) {
@@ -91,28 +88,36 @@ public class XmlDataLoader {
 		}
 	}
 
+	/** 默认构造函数 / default constructor */
 	public XmlDataLoader() {
 
 	}
 
 	/**
-	 * Creates {@link StaticData} object based on xml files, starting from
-	 * static_data.xml
-	 * 
-	 * @return StaticData object, containing all game data defined in xml files
+	 * 从 static_data.xml 出发加载并合并 XML，返回 {@link StaticData}。
+	 * Loads and merges XML starting from static_data.xml and returns {@link StaticData}.
+	 *
+	 * @return 包含全部游戏静态数据的对象 / object containing all game static data from XML
 	 */
 	public StaticData loadStaticData() {
 		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole());
 	}
 
+	/**
+	 * 带进度回调的静态数据加载：合并缓存、可选校验、JAXB 反序列化。
+	 * Loads static data with a progress reporter: merge cache, optional validation, JAXB unmarshalling.
+	 *
+	 * @param progressReporter 进度报告器 / progress reporter
+	 * @return 静态数据，失败则为 null / static data, or null on failure
+	 */
 	StaticData loadStaticData(StaticDataProgressReporter progressReporter) {
 		File cachedXml = Config.cacheFile(CACHE_XML_FILE);
 		makeCacheDirectory(cachedXml.getParentFile());
 		File cleanMainXml = Config.dataFile(MAIN_XML_FILE);
 		long cacheStart = System.currentTimeMillis();
-		log.info("Preparing static data cache: {}", cachedXml.getPath());
+		log.info(I18n.get("log.51b6cf8ee647", cachedXml.getPath()));
 		boolean cacheRebuilt = mergeXmlFiles(cachedXml, cleanMainXml);
-		log.info("Prepared static data cache in {} ms", System.currentTimeMillis() - cacheStart);
+		log.info(I18n.get("log.402b7307998c", System.currentTimeMillis() - cacheStart));
 		if (cacheRebuilt) {
 			validateCacheAsync(cachedXml);
 		}
@@ -122,7 +127,7 @@ public class XmlDataLoader {
 			Map<String, Integer> sectionEntryCounts = loadSectionEntryCounts(cachedXml);
 			int totalSections = sectionEntryCounts.size();
 			progressReporter.start(totalSections);
-			log.info("Unmarshalling static data from {}", cachedXml.getPath());
+			log.info(I18n.get("log.113840e671fd", cachedXml.getPath()));
 			StaticDataProgressListener progressListener = new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts);
 			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
@@ -130,50 +135,64 @@ public class XmlDataLoader {
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
 				logSlowSectionTimings(progressListener.sectionElapsedTimes());
-				log.info("Unmarshalled static data in {} ms", elapsed);
+				log.info(I18n.get("log.20818547282f", elapsed));
 				return data;
 			}
 		}
 		/*
 		 * catch (IllegalAnnotationsException e) {
-		 * log.error("Error while loading static data", e); throw new
+		 * log.error(I18n.get("log.a30b9e9db6fa", e)); throw new
 		 * Error("Error while loading static data", e); } catch (FileNotFoundException
-		 * e) { log.error("Error while loading static data", e); throw new
+		 * e) { log.error(I18n.get("log.a30b9e9db6fa", e)); throw new
 		 * Error("Error while loading static data", e); } catch (JAXBException e) {
-		 * log.error("Error while loading static data", e); throw new
+		 * log.error(I18n.get("log.a30b9e9db6fa", e)); throw new
 		 * Error("Error while loading static data", e); }
 		 */
 		catch (Exception e) {
 			progressReporter.failed();
-			log.error("Error while loading static data", e);
+			log.error(I18n.get("log.a30b9e9db6fa", e));
 		}
 		return null;
 	}
 
+	/**
+	 * 单独加载物品模板数据（与主静态数据并行路径）。
+	 * Loads item template data on a path parallel to main static data.
+	 *
+	 * item data
+	 */
 	public ItemData loadItemData() {
 		return loadItemData(Config.cacheFile(ITEM_CACHE_XML_FILE), Config.dataFile(ITEM_DATA_DIR));
 	}
 
+	/**
+	 * 指定缓存与源目录加载物品数据。
+	 * Loads item data using the given cache file and source directory.
+	 *
+	 * cache file
+	 * item XML directory
+	 * item data
+	 */
 	ItemData loadItemData(File cachedXml, File itemDataDir) {
 		makeCacheDirectory(cachedXml.getParentFile());
 		File sourceXml = itemDataSourceXml(cachedXml.getParentFile());
 		prepareItemDataSource(sourceXml);
 		long cacheStart = System.currentTimeMillis();
-		log.info("Preparing item data cache: {}", cachedXml.getPath());
+		log.info(I18n.get("log.b4b0d6d5a04a", cachedXml.getPath()));
 		mergeXmlFiles(cachedXml, sourceXml, itemDataDir);
-		log.info("Prepared item data cache in {} ms", System.currentTimeMillis() - cacheStart);
+		log.info(I18n.get("log.df03fc6e2d49", System.currentTimeMillis() - cacheStart));
 
 		long unmarshalStart = System.currentTimeMillis();
-		log.info("Unmarshalling item data from {}", cachedXml.getPath());
+		log.info(I18n.get("log.578d31223fd3", cachedXml.getPath()));
 		try (FileReader reader = new FileReader(cachedXml)) {
 			JAXBContext jc = createJaxbContext(ItemData.class);
 			Unmarshaller un = jc.createUnmarshaller();
 			un.setEventHandler(new XmlValidationHandler());
 			ItemData data = (ItemData) un.unmarshal(reader);
-			log.info("Unmarshalled item data in {} ms", System.currentTimeMillis() - unmarshalStart);
+			log.info(I18n.get("log.9ca73c5c206f", System.currentTimeMillis() - unmarshalStart));
 			return data;
 		} catch (Exception e) {
-			log.error("Error while loading item data", e);
+			log.error(I18n.get("log.ffb975771b9c", e));
 			throw new Error("Error while loading item data", e);
 		}
 	}
@@ -194,6 +213,15 @@ public class XmlDataLoader {
 		sourceXml.setLastModified(0L);
 	}
 
+	/**
+	 * 创建绑定进度监听的 StaticData Unmarshaller。
+	 * Creates a StaticData Unmarshaller wired with progress reporting.
+	 *
+	 * @param progressReporter 进度报告器 / progress reporter
+	 * total section count
+	 * @param sectionEntryCounts 各分区条目数 / per-section entry counts
+	 * configured unmarshaller
+	 */
 	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
 			throws Exception {
 		return createStaticDataUnmarshaller(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
@@ -204,7 +232,7 @@ public class XmlDataLoader {
 		JAXBContext jc = task != null ? task.get() : createJaxbContext(StaticData.class);
 		Unmarshaller un = jc.createUnmarshaller();
 		un.setEventHandler(new XmlValidationHandler());
-		// Schema validation is intentionally not wired into JAXB unmarshalling; it is slow and is run only for rebuilt caches.
+		// 有意不在 JAXB 反序列化中接入 Schema 校验；过慢，仅在重建缓存时运行。 / Schema validation is intentionally not wired into JAXB unmarshalling; it is slow and is run only for rebuilt caches.
 		un.setListener(progressListener);
 		return un;
 	}
@@ -223,23 +251,37 @@ public class XmlDataLoader {
 		}
 	}
 
+	/**
+	 * 异步校验已重建的静态数据缓存（XSD）。
+	 * Asynchronously validates a rebuilt static-data cache against the XSD.
+	 *
+	 * cache file
+	 * validation future
+	 */
 	Future<?> validateCacheAsync(File cachedXml) {
 		return submitValidationTask(() -> validateCache(cachedXml));
 	}
 
+	/**
+	 * 将校验任务提交到长时线程池。
+	 * Submits a validation task to the long-running thread pool.
+	 *
+	 * @param task 校验任务 / validation runnable
+	 * task future
+	 */
 	Future<?> submitValidationTask(Runnable task) {
 		return GameThreadPoolServices.threadPoolManager().submitLongRunning(task);
 	}
 
 	private void validateCache(File cachedXml) {
 		long validationStart = System.currentTimeMillis();
-		log.info("Validating static data cache in background: {}", cachedXml.getPath());
+		log.info(I18n.get("log.5788d19f80e5", cachedXml.getPath()));
 		try (Reader reader = new FileReader(cachedXml)) {
 			getSchema().newValidator().validate(new SAXSource(new InputSource(reader)));
-			log.info("Validated static data cache in {} ms", System.currentTimeMillis() - validationStart);
+			log.info(I18n.get("log.1ae1bb91733a", System.currentTimeMillis() - validationStart));
 		} catch (Throwable t) {
 			cachedXml.setLastModified(0);
-			log.error("Error validating static data cache: {}", cachedXml.getPath(), t);
+			log.error(I18n.get("log.9f39c9471c04", cachedXml.getPath(), t));
 			throw new Error("Error validating static data cache", t);
 		}
 	}
@@ -298,8 +340,13 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * Returns section entry counts, cached in a sidecar file to avoid re-scanning the 239MB XML on every warm start.
+	 * 返回各分区条目数；旁路缓存文件避免每次热启动扫描超大 XML。
+	 * Returns section entry counts, cached in a sidecar file to avoid re-scanning the large XML on every warm start.
+	 * <p>仅当 XML 缓存新于 counts 文件时重建。
 	 * Cache is rebuilt only when the XML cache file is newer than the counts file.
+	 *
+	 * @param cachedXml 合并后的静态数据缓存 / merged static-data cache
+	 * @return 分区名到条目数映射 / map of section name to entry count
 	 */
 	Map<String, Integer> loadSectionEntryCounts(File cachedXml) throws Exception {
 		if (!GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE) {
@@ -332,7 +379,7 @@ public class XmlDataLoader {
 		try (FileWriter writer = new FileWriter(countsFile)) {
 			props.store(writer, "static_data section entry counts (avoids re-scanning XML on warm start)");
 		} catch (IOException e) {
-			log.warn("Could not save section counts cache: {}", countsFile.getPath(), e);
+			log.warn(I18n.get("log.62f6cc254c59", countsFile.getPath(), e));
 		}
 	}
 
@@ -367,9 +414,9 @@ public class XmlDataLoader {
 		if (slowest.isEmpty()) {
 			return;
 		}
-		log.info("Static data section timings (ms, slowest first):");
+		log.info(I18n.get("log.6a77df723c2e"));
 		for (Map.Entry<String, Long> timing : slowest) {
-			log.info("  {} {}", String.format("%-32s", timing.getKey()), timing.getValue());
+			log.info(I18n.get("log.b6609c40aca7", String.format("%-32s", timing.getKey()), timing.getValue()));
 		}
 	}
 
@@ -436,10 +483,10 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * Creates and returns {@link Schema} object representing xml schema of xml
-	 * files
-	 * 
-	 * @return a Schema object.
+	 * 创建并返回描述静态数据 XML 的 {@link Schema}。
+	 * Creates and returns the {@link Schema} for static-data XML files.
+	 *
+	 * schema object
 	 */
 	private Schema getSchema() {
 		Schema schema = null;
@@ -448,13 +495,13 @@ public class XmlDataLoader {
 		try {
 			schema = sf.newSchema(Config.dataFile(XML_SCHEMA_FILE));
 		} catch (SAXException saxe) {
-			log.error("Error while getting schema", saxe);
+			log.error(I18n.get("log.b9e774d9c3cf", saxe));
 			throw new Error("Error while getting schema", saxe);
 		}
 		return schema;
 	}
 
-	/** Creates directory for cache files if it doesn't already exist */
+	/** 若缓存目录不存在则创建 / creates the cache directory if missing */
 	private void makeCacheDirectory(File cacheDir) {
 		if (cacheDir != null && !cacheDir.exists()) {
 			cacheDir.mkdirs();
@@ -462,12 +509,14 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * Merges xml files(if are newer than cache file) and puts output to cache file.
-	 * 
+	 * 若源文件新于缓存则合并 XML 并写入缓存。
+	 * Merges XML sources into the cache file when sources are newer than the cache.
+	 *
 	 * @see XmlMerger
-	 * @param cachedXml
-	 * @param cleanMainXml
-	 * @throws Error is thrown if some problem occured.
+	 * @param cachedXml 缓存输出文件 / cache output file
+	 * main entry XML
+	 * @return 是否实际重建了缓存 / whether the cache was rebuilt
+	 * if merge fails
 	 */
 	private boolean mergeXmlFiles(File cachedXml, File cleanMainXml) throws Error {
 		return mergeXmlFiles(cachedXml, cleanMainXml, cleanMainXml.getParentFile());
@@ -478,11 +527,12 @@ public class XmlDataLoader {
 		try {
 			return merger.process();
 		} catch (Exception e) {
-			log.error("Error while merging xml files", e);
+			log.error(I18n.get("log.f0ac59daadde", e));
 			throw new Error("Error while merging xml files", e);
 		}
 	}
 
+	/** 内部懒加载单例持有者 / lazy-init holder for the internal singleton */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 

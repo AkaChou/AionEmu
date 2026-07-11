@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +16,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 任务状态列表。
+ * Quest State List game object.
+ *
  * @author MrPoke
  */
 @Slf4j
@@ -40,21 +29,23 @@ public class QuestStateList {
 	private QuestsData _questData = DataManager.QUEST_DATA;
 
 	/**
-	 * Creates an empty quests list
+	 * 创建空 quests 列表。 / Creates an empty quests list
 	 */
 	public QuestStateList() {
 		_quests = new TreeMap<Integer, QuestState>();
 	}
 
+	/** 添加任务。 / Adds quest. */
 	public synchronized boolean addQuest(int questId, QuestState questState) {
 		if (_quests.containsKey(questId)) {
-			log.warn("Duplicate quest. ");
+			log.warn(I18n.get("log.51dd791f0695"));
 			return false;
 		}
 		_quests.put(questId, questState);
 		return true;
 	}
 
+	/** 移除任务。 / Removes quest. */
 	public synchronized boolean removeQuest(int questId) {
 		if (_quests.containsKey(questId)) {
 			_quests.remove(questId);
@@ -63,14 +54,17 @@ public class QuestStateList {
 		return false;
 	}
 
+	/** 获取任务状态。 / Returns the quest state. */
 	public QuestState getQuestState(int questId) {
 		return _quests.get(questId);
 	}
 
+	/** 返回全部任务状态 / Returns the all quest state*/
 	public Collection<QuestState> getAllQuestState() {
 		return _quests.values();
 	}
 
+	/** 返回 all finished quests / Returns the all finished quests */
 	public List<QuestState> getAllFinishedQuests() {
 		List<QuestState> completeQuestList = new ArrayList<QuestState>();
 		for (QuestState qs : _quests.values()) {
@@ -131,10 +125,12 @@ public class QuestStateList {
 		_quests.get(key).setStatus(newStatus);
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return this._quests.size();
 	}
 
+	/** 返回 quests / Returns the quests */
 	public SortedMap<Integer, QuestState> getQuests() {
 		return this._quests;
 	}

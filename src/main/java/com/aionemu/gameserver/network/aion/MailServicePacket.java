@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,18 +10,32 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 
 /**
- * 
- * @rework Ranastic
+ * 邮件相关服务端包的写入辅助基类。
+ * Base helper for writing mail-related server packets.
  *
+ * @rework Ranastic
  */
 @Slf4j
 public abstract class MailServicePacket extends AionServerPacket {
+	/** 所属玩家 / owning player */
 	protected Player player;
 
+	/**
+	 * 所属玩家 / owning player
+	 */
 	public MailServicePacket(Player player) {
 		this.player = player;
 	}
 
+	/**
+	 * 写入邮件列表。
+	 * Writes a letter list.
+	 *
+	 * letter collection
+	 * 玩家 / player
+	 * @param isPostman 是否邮差快递视图 / whether postman/express view
+	 * @param showCount 邮差视图展示数量 / postman view show count
+	 */
 	protected void writeLettersList(Collection<Letter> letters, Player player, boolean isPostman, int showCount) {
 		writeD(player.getObjectId());
 		writeC(0);
@@ -67,10 +65,25 @@ public abstract class MailServicePacket extends AionServerPacket {
 		}
 	}
 
+	/**
+	 * 写入邮件操作结果消息 ID。
+	 * Writes a mail operation message id.
+	 *
+	 * message id
+	 */
 	protected void writeMailMessage(int messageId) {
 		writeC(messageId);
 	}
 
+	/**
+	 * 写入邮箱状态计数。
+	 * Writes mailbox state counters.
+	 *
+	 * total count
+	 * unread count
+	 * express count
+	 * black cloud count
+	 */
 	protected void writeMailboxState(int totalCount, int unreadCount, int expressCount, int blackCloudCount) {
 		writeH(totalCount);
 		writeH(unreadCount);
@@ -78,6 +91,17 @@ public abstract class MailServicePacket extends AionServerPacket {
 		writeH(blackCloudCount);
 	}
 
+	/**
+	 * 写入单封已读信件详情。
+	 * Writes a single letter read detail.
+	 *
+	 * letter
+	 * @param time 时间戳（毫秒） / timestamp in ms
+	 * total count
+	 * unread count
+	 * express count
+	 * black cloud count
+	 */
 	protected void writeLetterRead(Letter letter, long time, int totalCount, int unreadCount, int expressCount,
 			int blackCloudCount) {
 		writeD(letter.getRecipientId());
@@ -110,12 +134,29 @@ public abstract class MailServicePacket extends AionServerPacket {
 		writeC(letter.getLetterType().getId());
 	}
 
+	/**
+	 * 写入信件状态（附件类型等）。
+	 * Writes letter state (attachment type, etc.).
+	 *
+	 * letter id
+	 * attachment type
+	 */
 	protected void writeLetterState(int letterId, int attachmentType) {
 		writeD(letterId);
 		writeC(attachmentType);
 		writeC(1);
 	}
 
+	/**
+	 * 写入删除信件结果。
+	 * Writes letter delete result.
+	 *
+	 * total count
+	 * unread count
+	 * express count
+	 * black cloud count
+	 * deleted letter ids
+	 */
 	protected void writeLetterDelete(int totalCount, int unreadCount, int expressCount, int blackCloudCount,
 			int... letterIds) {
 		writeD(totalCount + unreadCount * 0x10000);

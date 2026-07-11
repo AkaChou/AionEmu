@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -55,22 +39,39 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 阿图拉姆天空要塞副本事件处理器。
+ * Instance event handler for Aturam Sky Fortress.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300240000)
 public class AturamSkyFortressInstance extends GeneralInstanceHandler
 {
-	private int energyGenerators;
-	private int balaurSpyCrystal;
-	private int drakanChiefOfStaff;
-	private int drakanPettyOfficer;
+	/** energy generators / energy generators */
+		private int energyGenerators;
+	/** balaur spy crystal / balaur spy crystal */
+		private int balaurSpyCrystal;
+	/** drakan chief of staff / drakan chief of staff */
+		private int drakanChiefOfStaff;
+	/** drakan petty officer / drakan petty officer */
+		private int drakanPettyOfficer;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> aturamSkyFortressTask = new ArrayList<Future<?>>();
+	/** aturamskyfortress 任务 / aturam sky fortress task */
+		private final List<Future<?>> aturamSkyFortressTask = new ArrayList<Future<?>>();
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -87,6 +88,12 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
@@ -96,6 +103,12 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
         }
 		sendMovie(player, 467);
     }
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -117,16 +130,16 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 					break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
 					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
@@ -146,16 +159,16 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 					break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
 					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
@@ -163,7 +176,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				}
 			break;
 			case 217376: //Ashunatal Shadowslip.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 				switch (Rnd.get(1, 3)) {
 				    case 1:
 				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051565, 1)); //Ashunatal's Jacket Box.
@@ -176,16 +189,16 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 					break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
 					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
@@ -205,33 +218,39 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 702654: //Dredgion Generator I.
-				//Power Generator No.1 has been destroyed. A Power Generator Protector appears.
+				// 1 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.1 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402734, Race.PC_ALL, 3000);
 				sp(282277, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Sutchin.
 			break;
 			case 702653: //Dredgion Generator II.
-				//Power Generator No.2 has been destroyed. A Power Generator Protector appears.
+				// 2 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.2 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402735, Race.PC_ALL, 3000);
 				sp(282280, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Wichichi.
 			break;
 			case 702650: //Dredgion Generator III.
-				//Power Generator No.3 has been destroyed. A Power Generator Protector appears.
+				// 3 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.3 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402736, Race.PC_ALL, 3000);
 				sp(282281, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Prichichi.
 			break;
 			case 702651: //Dredgion Generator IV.
-				//Power Generator No.4 has been destroyed. A Power Generator Protector appears.
+				// 4 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No.4 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402737, Race.PC_ALL, 3000);
 				sp(282279, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Pituchin.
 			break;
 			case 702652: //Dredgion Generator V.
 				doors.get(126).setOpen(true);
-				//Power Generator No. 5 has been destroyed. A Power Generator Protector appears.
+				// 5 号能量发生器被摧毁。出现发生器守护者。 / Power Generator No. 5 has been destroyed. A Power Generator Protector appears.
 				sendMsgByRace(1402738, Race.PC_ALL, 3000);
 				sp(282278, player.getX(), player.getY(), player.getZ(), (byte) 0, 3000, 0, null); //Craftsman Duduchin.
 			break;
@@ -241,15 +260,15 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 			case 217343: //Talon Guardian.
 				doors.get(68).setOpen(true);
-				//All Spy Crystals have been destroyed and the door to the Talon Laboratory has opened.
+				// 全部间谍水晶已摧毁，通往利爪实验室的门已打开。 / All Spy Crystals have been destroyed and the door to the Talon Laboratory has opened.
 				sendMsgByRace(1402740, Race.PC_ALL, 0);
 			break;
 			case 701043: //Energy Generator.
 				despawnNpc(npc);
 				deleteNpc(701110); //Enhanced Barrier.
-				//The Energy Generator has been destroyed and the Protective Shield has disappeared.
+				// 能量发生器被摧毁，防护盾已消失。 / The Energy Generator has been destroyed and the Protective Shield has disappeared.
 				sendMsgByRace(1400913, Race.PC_ALL, 0);
-				//The Outer Protective Wall is gone, and Weapon H is waking from its dormant state.
+				// 外层防护墙已消失，武器 H 正从休眠中苏醒。 / The Outer Protective Wall is gone, and Weapon H is waking from its dormant state.
 				sendMsgByRace(1400909, Race.PC_ALL, 5000);
 			break;
 			case 217371: //Weapon Hugen.
@@ -283,14 +302,13 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				doors.get(230).setOpen(true);
 				AbyssPointsService.addGp(player, 100);
 				AbyssPointsService.addAp(player, 2000);
-				//The door to Ashunatal's Ready Room is now open. You can see Ashunatal behind the door.
+				// 通往阿舒纳塔尔准备室的门已打开。 / The door to Ashunatal's Ready Room is now open. You can see Ashunatal behind the door.
 				sendMsgByRace(1401048, Race.PC_ALL, 2000);
 			break;
 			case 218577: //Marabata Watchman.
 				/**
-				 * ■ At home in the Aturam Sky Fortress Command Center
-				 * The Commander appears when many "Command Area Drakan" are killed.
-				 */
+	 * 阿图拉姆空中要塞指挥中心：击杀大量“指挥区龙人”后出现指挥官 / ■ At home in the Aturam Sky Fortress Command Center The Commander appears when many "Command Area Drakan" are killed
+	 */
 				despawnNpc(npc);
 				spawn(217382, 258.3894f, 796.7554f, 901.6453f, (byte) 80); //Commander Barus.
 			break;
@@ -299,13 +317,13 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				energyGenerators++;
 				if (weaponHugen != null) {
 					if (energyGenerators == 1) {
-						//The Energy Generator is becoming unstable.
+						// 能量发生器变得不稳定。 / The Energy Generator is becoming unstable.
 						sendMsgByRace(1400910, Race.PC_ALL, 0);
 					} else if (energyGenerators == 2) {
-						//The Energy Generator has been destroyed and the power of the Protective Shield has been reduced.
+						// 能量发生器被摧毁，防护盾力量减弱。 / The Energy Generator has been destroyed and the power of the Protective Shield has been reduced.
 						sendMsgByRace(1400911, Race.PC_ALL, 0);
 					} else if (energyGenerators == 3) {
-						//The Energy Generator has been destroyed and the power of the Protective Shield has been greatly reduced.
+						// 能量发生器被摧毁，防护盾力量大幅减弱。 / The Energy Generator has been destroyed and the power of the Protective Shield has been greatly reduced.
 						sendMsgByRace(1400912, Race.PC_ALL, 0);
 					} else if (energyGenerators == 4) {
 						weaponHugen.getEffectController().removeEffect(21571);
@@ -317,10 +335,10 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			case 217376: //Ashunatal Shadowslip.
 				AbyssPointsService.addAp(player, 2000);
 				AbyssPointsService.addGp(player, 200);
-				//There is a huge Surkana device here.
-				//Since Ashunatal risked her life to protect it, you should destroy it and interfere with the Balaur's plans.
+				// 这里有巨大的苏卡纳装置。 / There is a huge Surkana device here.
+				// 既然阿舒纳塔尔拼死保护它，就该摧毁它并干扰龙族计划。 / Since Ashunatal risked her life to protect it, you should destroy it and interfere with the Balaur's plans.
 				sendMsgByRace(1401401, Race.PC_ALL, 2000);
-				//sendMsg("[SUCCES]: You have finished <Aturam Sky Fortress>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Aturam Sky Fortress>");
             break;
 			case 217369: //Drakan Crewhand.
 			case 217368: //Drakan Combatant.
@@ -352,10 +370,24 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
         f3.spawn();
     }
 	
+	/**
+	 * 玩家通过飞行环时处理。
+	 * Handle a player passing a flying ring.
+	 *
+	 * 玩家 / player
+	 * @param flyingRing 飞行环标识 / flying-ring id
+	 * result
+	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("ATURAM_SKY_FORTRESS_1")) {
 			instance.doOnAllPlayers(new Visitor<Player>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
 				@Override
 				public void visit(Player player) {
 					if (player.isOnline()) {
@@ -365,6 +397,12 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			});
 		} else if (flyingRing.equals("ATURAM_SKY_FORTRESS_2")) {
 			instance.doOnAllPlayers(new Visitor<Player>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
 				@Override
 				public void visit(Player player) {
 					if (player.isOnline()) {
@@ -374,6 +412,12 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			});
 		} else if (flyingRing.equals("ATURAM_SKY_FORTRESS_3")) {
 			instance.doOnAllPlayers(new Visitor<Player>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
 				@Override
 				public void visit(Player player) {
 					if (player.isOnline()) {
@@ -387,6 +431,10 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	
 	private void rushWalk(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -403,7 +451,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	}
 	
 	private void startMarbataWalkerEvent() {
-		//Alarms rang in the Waiting Room. High-powered Drakan are heading your way!
+		// 等候室警报响起。高战力龙族正朝你而来！ / Alarms rang in the Waiting Room. High-powered Drakan are heading your way!
 		sendMsgByRace(1401050, Race.PC_ALL, 0);
 		rushWalk((Npc)spawn(218577, 193.45583f, 802.1455f, 900.7575f, (byte) 103)); //Marabata Watchman.
 		rushWalk((Npc)spawn(217655, 198.34431f, 801.4107f, 900.66125f, (byte) 110)); //Veteran Escort Officer.
@@ -411,7 +459,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	}
 	
 	private void startOfficerWalkerEvent() {
-		//The door of the Aircrew Room is now open. Kill the Drakan!
+		// 机组室门已打开。击杀龙族！ / The door of the Aircrew Room is now open. Kill the Drakan!
 		sendMsgByRace(1401049, Race.PC_ALL, 0);
 		rushWalk((Npc)spawn(217655, 146.53816f, 713.5974f, 901.0108f, (byte) 111)); //Veteran Escort Officer.
 		rushWalk((Npc)spawn(217655, 144.84991f, 720.9318f, 901.0604f, (byte) 96)); //Veteran Escort Officer.
@@ -436,18 +484,34 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		effectController.removeEffect(21808); //Board Swift Runner.
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -455,6 +519,13 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		doors.clear();
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -477,13 +548,13 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 			case 730397: //Recharger.
 			    despawnNpc(npc);
-				//You feel more physically fit as the energy covers you.
+				// 能量覆盖你，你感到体格更强健。 / You feel more physically fit as the energy covers you.
 				sendMsgByRace(1400926, Race.PC_ALL, 0);
 				GameEngineServices.skillEngine().getSkill(npc, 19520, 51, player).useNoAnimationSkill(); //Overclock.
 			break;
 			case 730398: //Flagon.
 				despawnNpc(npc);
-				//You have recovered HP from the Shulack Drink.
+				// 你从舒拉克饮料恢复了生命值。 / You have recovered HP from the Shulack Drink.
 				sendMsgByRace(1400927, Race.PC_ALL, 0);
 				if (player.getEffectController().hasAbnormalEffect(21807) ||
 				    player.getEffectController().hasAbnormalEffect(21808)) {
@@ -496,9 +567,9 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 			case 730410: //Warehouse Latch.
 				doors.get(90).setOpen(true);
-				//You see an unlabeled handle on the wall. Switch it if you dare.
+				// 墙上有个未标记的把手。敢的话就扳它。 / You see an unlabeled handle on the wall. Switch it if you dare.
 				sendMsgByRace(1401027, Race.PC_ALL, 0);
-				//You have been detected by the Monitoring Lamp! Enemies are coming!
+				// 你被监控灯发现！敌人来了！ / You have been detected by the Monitoring Lamp! Enemies are coming!
 				sendMsgByRace(1401028, Race.PC_ALL, 10000);
 			break;
 		}
@@ -516,17 +587,59 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			}
         }
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * entity id
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -538,9 +651,25 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -554,18 +683,42 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

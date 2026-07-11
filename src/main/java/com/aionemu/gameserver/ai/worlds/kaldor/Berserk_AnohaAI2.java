@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.kaldor;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -50,10 +34,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Kaldor 区域 NPC AI：Berserk Anoha（@AIName "anoha"），继承 AggressiveNpcAI2。
+ * Kaldor zone NPC AI: Berserk Anoha (@AIName "anoha"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("anoha")
 public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 {
@@ -86,7 +72,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Berserk_AnohaAI2.this);
-						//Berserk Anoha has disappeared.
+						// 狂暴阿诺哈已消失。 / Berserk Anoha has disappeared.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_DeSpawn);
 			        }
 				});
@@ -99,7 +85,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			startSpecialSkillTask();
-			//Who dares awaken me ?
+			// 谁敢唤醒我？ / Who dares awaken me ?
 			sendMsg(1501392, getObjectId(), false, 0);
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
@@ -117,9 +103,9 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 						think = false;
 						EmoteManager.emoteStopAttacking(getOwner());
 						GameEngineServices.skillEngine().getSkill(getOwner(), 21765, 60, getOwner()).useNoAnimationSkill();
-						//I fight for Ereshkigal. You shall not distrub her.
+						// 我为埃雷什基伽尔而战。你不得打扰她。 / I fight for Ereshkigal. You shall not distrub her.
 						sendMsg(1501393, getObjectId(), false, 0);
-						//Leave Ereshkigal's fortress!
+						// 离开埃雷什基伽尔的要塞！ / Leave Ereshkigal's fortress!
 						sendMsg(1501394, getObjectId(), false, 5000);
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
@@ -191,9 +177,9 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	
 	private void startPhaseTask() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
-		//You must want to perish. So be it!
+		// 你一定是想找死。那就如你所愿！ / You must want to perish. So be it!
 		sendMsg(1501395, getObjectId(), false, 0);
-		//Freeze and face oblivion!
+		// 冻结并面对遗忘！ / Freeze and face oblivion!
 		sendMsg(1501397, getObjectId(), false, 5000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -234,7 +220,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 													public void run() {
 														if (!isAlreadyDead()) {
 															GameEngineServices.skillEngine().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
-															//Muhahaha! Experience true power!
+															// 哈哈哈！见识真正的力量！ / Muhahaha! Experience true power!
 															sendMsg(1501157, getObjectId(), false, 0);
 															GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 																@Override
@@ -332,7 +318,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	
 	@Override
 	protected void handleDied() {
-		//Urgh… I... shall return...
+		// 呃……我……还会回来…… / Urgh… I... shall return...
 		sendMsg(1501396, getObjectId(), false, 0);
 		cancelThinkTask();
 		cancelPhaseTask();
@@ -348,7 +334,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Berserk Anoha has been defeated.
+				// 狂暴阿诺哈已被击败。 / Berserk Anoha has been defeated.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_Die);
 			}
 		});

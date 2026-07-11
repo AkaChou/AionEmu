@@ -38,4 +38,38 @@ class PacketFloodFilterTest {
 			}
 		}
 	}
+
+	@Test
+	void reloadsRulesAndKeepsPacketsAvailableWhenDisabled() throws IOException {
+		String oldConfigDir = System.getProperty("aion.game.config.dir");
+		boolean oldPffEnable = SecurityConfig.PFF_ENABLE;
+		try {
+			Path administrationDir = configDir.resolve("administration");
+			Files.createDirectories(administrationDir);
+			Path rules = administrationDir.resolve("pff.properties");
+			Files.writeString(rules, "0x01 = 7\n");
+			System.setProperty("aion.game.config.dir", configDir.toString());
+			SecurityConfig.PFF_ENABLE = true;
+
+			PacketFloodFilter packetFloodFilter = new PacketFloodFilter();
+			Files.writeString(rules, "0x01 = 11\n");
+			packetFloodFilter.reload();
+			assertEquals(11, packetFloodFilter.getPackets()[1]);
+
+			Files.delete(rules);
+			packetFloodFilter.reload();
+			assertEquals(11, packetFloodFilter.getPackets()[1]);
+
+			SecurityConfig.PFF_ENABLE = false;
+			packetFloodFilter.reload();
+			assertEquals(0, packetFloodFilter.getPackets()[1]);
+		} finally {
+			SecurityConfig.PFF_ENABLE = oldPffEnable;
+			if (oldConfigDir == null) {
+				System.clearProperty("aion.game.config.dir");
+			} else {
+				System.setProperty("aion.game.config.dir", oldConfigDir);
+			}
+		}
+	}
 }

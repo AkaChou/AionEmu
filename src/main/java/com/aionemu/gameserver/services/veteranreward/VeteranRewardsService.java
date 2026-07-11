@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.veteranreward;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -55,15 +41,30 @@ import com.aionemu.gameserver.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
-@Slf4j(topic = "VETERANREWARD_LOG")
 
+/**
+ * 老兵奖励服务，按定时任务从数据库加载奖励并通过邮件发放。
+ * Veteran reward service loading pending rewards from the database on a cron schedule and mailing them.
+ */
+@Slf4j(topic = "VETERANREWARD_LOG")
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
 
+	/**
+	 * 奖励接收方类型，按种族或指定玩家过滤。
+	 * Recipient filter type selecting by race or a specific player.
+	 */
 	public enum RecipientType {
 
 		ELYOS, ASMO, ALL, PLAYER;
 
+		/**
+		 * 判断该种族是否允许接收本类型奖励。
+		 * Whether the given race is allowed for this recipient type.
+		 *
+		 * 阵营 / Race
+		 * Whether allowed
+		 */
 		private boolean isAllowed(Race race) {
 			switch (this) {
 			case ELYOS:
@@ -83,12 +84,20 @@ public class VeteranRewardsService {
 
 	private static final String VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE = "0 * * ? * *";
 
+	/**
+	 * 构造服务并启动定时扫描循环。
+	 * Construct the service and start the periodic scan loop.
+	 */
 	public VeteranRewardsService() {
 		Init_VeteranRewardStatusLoop();
 	}
 
+	/**
+	 * 注册老兵奖励扫描定时任务（每分钟）。
+	 * Register the veteran-reward scan cron job (every minute).
+	 */
 	private void Init_VeteranRewardStatusLoop() {
-		log.info("Veteran Reward System activated");
+		log.info(I18n.get("log.9d55ff406e5f"));
 
 		GameCronServices.cronService().schedule(new Runnable() {
 			@Override
@@ -96,10 +105,13 @@ public class VeteranRewardsService {
 				Init_VeteranRewards();
 			}
 		}, VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE);
-		log.info("Broadcasting Veteran Rewards status based on expression: "
-				+ VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE);
+		log.info(I18n.get("log.364637c5d487", VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE));
 	}
 
+	/**
+	 * 从数据库重新加载待发老兵奖励并触发发放。
+	 * Reload pending veteran rewards from the database and trigger delivery.
+	 */
 	private void Init_VeteranRewards() {
 		if (veteran_rewards != null) {
 			veteran_rewards.clear();
@@ -109,15 +121,19 @@ public class VeteranRewardsService {
 
 		if (veteran_rewards.size() > 0) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
-				log.info("Loaded " + veteran_rewards.size() + " Veteran Rewards.");
+				log.info(I18n.get("log.a6f073be0773", veteran_rewards.size()));
 			}
 			StartVeteranReward();
 		}
 	}
 
+	/**
+	 * 遍历缓存奖励列表并逐条校验发放。
+	 * Iterate the cached reward list and verify/deliver each entry.
+	 */
 	private void StartVeteranReward() {
 		if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
-			log.info("Start Veteran Rewards.");
+			log.info(I18n.get("log.0ebd84848543"));
 		}
 
 		for (final VeteranRewards veteran_reward : veteran_rewards) {
@@ -127,6 +143,20 @@ public class VeteranRewardsService {
 		}
 	}
 
+	/**
+	 * 校验单条数据库奖励并发送邮件，成功后回收记录。
+	 * Verify a single DB reward, mail it, then recycle the record on success.
+	 *
+	 * @param id      奖励记录 ID / Reward record ID
+	 * @param Player  接收玩家名 / Recipient player name
+	 * Mail type
+	 * Item ID
+	 * Item count
+	 * Kinah amount
+	 * Sender
+	 * @param title   邮件标题 / Mail title
+	 * Mail body
+	 */
 	private void VerifyVeteranReward(int id, String Player, int typeID, int itemID, int countID, int kinahID,
 			String sender, String title, String message) {
 		String recipient = null;
@@ -161,6 +191,21 @@ public class VeteranRewardsService {
 		}
 	}
 
+	/**
+	 * 按接收方类型发放老兵奖励（指定玩家或按种族广播）。
+	 * Deliver a veteran reward filtered by recipient type (specific player or race broadcast).
+	 *
+	 * @param id            奖励记录 ID / Reward record ID
+	 * @param Player        接收玩家名 / Recipient player name
+	 * Mail type
+	 * Item ID
+	 * Item count
+	 * Kinah amount
+	 * Sender
+	 * @param title         邮件标题 / Mail title
+	 * Mail body
+	 * @param recipientType 接收方类型 / Recipient type
+	 */
 	public void VerifyVeteranReward(int id, String Player, int typeID, int itemID, int countID, int kinahID,
 			String sender, String title, String message, RecipientType recipientType) {
 		String recipient = null;
@@ -196,20 +241,37 @@ public class VeteranRewardsService {
 		}
 	}
 
+	/**
+	 * 删除已处理的老兵奖励记录。
+	 * Delete a processed veteran reward record.
+	 *
+	 * Reward ID
+	 */
 	private void RecycleVeteranReward(final int rewardId) {
 		getDAO().delVeteranReward(rewardId);
 	}
 
+	/**
+	 * 向指定玩家发送老兵奖励邮件（在线推送，离线写库）。
+	 * Send a veteran reward mail to the given player (push if online, store if offline).
+	 *
+	 * Sender
+	 * Recipient name
+	 * Title
+	 * Message body
+	 * @param attachedItemObjId  附件物品模板 ID / Attached item template ID
+	 * Attached item count
+	 * Attached kinah
+	 * @param mailtype           邮件类型编码 / Mail type code
+	 */
 	private void SendVeteranRewardMail(String sender, String recipientName, String title, String message,
 			int attachedItemObjId, int attachedItemCount, int attachedKinahCount, int mailtype) {
 		if (attachedItemObjId != 0) {
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(attachedItemObjId);
 			if (itemTemplate == null) {
 				if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-					// log.error("[SenderName: " + sender + "] [RecipientName: " + recipientName +
-					// "] RETURN ITEM ID:" + itemTemplate + " ITEM COUNT "
-					// + attachedItemCount + " KINAH COUNT " + attachedKinahCount + " ITEM TEMPLATE
-					// IS MISSING ");
+					// log.error(I18n.get("log.9f83472dcd76", sender, recipientName, // "] RETURN ITEM ID:", itemTemplate, " ITEM COUNT "
+					//, attachedItemCount, attachedKinahCount));
 				}
 				return;
 			}
@@ -221,20 +283,16 @@ public class VeteranRewardsService {
 
 		if (recipientName.length() > 16) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-				// log.error("[SenderName: " + sender + "] [RecipientName: " + recipientName +
-				// "] ITEM RETURN" + attachedItemObjId + " ITEM COUNT "
-				// + attachedItemCount + " KINAH COUNT " + attachedKinahCount + " RECIPIENT NAME
-				// LENGTH > 16 ");
+				// log.error(I18n.get("log.d82411483d33", sender, recipientName, // "] ITEM RETURN", attachedItemObjId, " ITEM COUNT "
+				//, attachedItemCount, attachedKinahCount));
 			}
 			return;
 		}
 
 		if (sender.length() > 16) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-				// log.error("[SenderName: " + sender + "] [RecipientName: " + recipientName +
-				// "] ITEM RETURN" + attachedItemObjId + " ITEM COUNT "
-				// + attachedItemCount + " KINAH COUNT " + attachedKinahCount + " SENDER NAME
-				// LENGTH > 16 ");
+				// log.error(I18n.get("log.50e74bfd8bb0", sender, recipientName, // "] ITEM RETURN", attachedItemObjId, " ITEM COUNT "
+				//, attachedItemCount, attachedKinahCount));
 			}
 			return;
 		}
@@ -252,7 +310,7 @@ public class VeteranRewardsService {
 
 		if (recipientCommonData == null) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-				log.error("[RecipientName: " + recipientName + "] NO SUCH CHARACTER NAME.");
+				log.error(I18n.get("log.c085309347c4", recipientName));
 			}
 			return;
 		}
@@ -262,20 +320,16 @@ public class VeteranRewardsService {
 		if (recipientCommonData.isOnline()) {
 			if (!onlineRecipient.getMailbox().haveFreeSlots()) {
 				if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-					// log.error("[SenderName: " + sender + "] [RecipientName: " +
-					// onlineRecipient.getName() + "] ITEM RETURN" + attachedItemObjId
-					// + " ITEM COUNT " + attachedItemCount + " KINAH COUNT " + attachedKinahCount +
-					// " MAILBOX FULL ");
+					// log.error(I18n.get("log.9152b5a91e37", sender, // onlineRecipient.getName(), attachedItemObjId
+					//, attachedItemCount, attachedKinahCount, // " MAILBOX FULL "));
 				}
 				return;
 			}
 		} else {
 			if (recipientCommonData.getMailboxLetters() >= 100) {
 				if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-					// log.error("[SenderName: " + sender + "] [RecipientName: " + recipientName +
-					// "] ITEM RETURN " + attachedItemObjId + " ITEM COUNT "
-					// + attachedItemCount + " KINAH COUNT " + attachedKinahCount + " MAILBOX FULL
-					// ");
+					// log.error(I18n.get("log.4f69a14c14ed", sender, recipientName, // "] ITEM RETURN ", attachedItemObjId, " ITEM COUNT "
+					//, attachedItemCount, attachedKinahCount));
 				}
 				return;
 			}
@@ -350,9 +404,9 @@ public class VeteranRewardsService {
 		}
 
 		if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
-			// log.info(String.format("Player: " + recipientName + " / " + "Item: " +
-			// attachedItemObjId + " / " + "Item Count: " + attachedItemCount + " / "
-			// + "Kinah: " + attachedKinahCount + " / " + "Status: successfully."));
+			// " + "Item: " +
+			// " + "Item Count: " + attachedItemCount + " / "
+			// " + "Status: successfully."));
 		}
 	}
 
@@ -360,6 +414,12 @@ public class VeteranRewardsService {
 		return DAOManager.getDAO(VeteranRewardsDAO.class);
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地单例）。
+	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local holder).
+	 *
+	 * Service instance
+	 */
 	public static final VeteranRewardsService getInstance() {
 		ObjectProvider<VeteranRewardsService> provider = instanceProvider;
 		if (provider == null) {
@@ -368,6 +428,12 @@ public class VeteranRewardsService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<VeteranRewardsService> instanceProvider) {
 		VeteranRewardsService.instanceProvider = instanceProvider;
 	}

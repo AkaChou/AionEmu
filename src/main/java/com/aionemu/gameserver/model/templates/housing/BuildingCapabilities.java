@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,6 +7,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * BuildingCapabilities 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -48,26 +35,40 @@ public class BuildingCapabilities {
 	@XmlAttribute(required = true)
 	protected int exterior;
 
+	/** Whether 有 addon / Whether have addon */
 	public boolean canHaveAddon() {
 		return addon;
 	}
 
+	/** 返回 emblem id / Returns the emblem id */
 	public int getEmblemId() {
 		return emblemId;
 	}
 
+	/**
+	 * @return Whether change floor / Whether change floor
+	 */
 	public boolean canChangeFloor() {
 		return floor;
 	}
 
+	/**
+	 * @return Whether change room / Whether change room
+	 */
 	public boolean canChangeRoom() {
 		return room;
 	}
 
+	/**
+	 * @return Whether change interior / Whether change interior
+	 */
 	public int canChangeInterior() {
 		return interior;
 	}
 
+	/**
+	 * @return Whether change exterior / Whether change exterior
+	 */
 	public int canChangeExterior() {
 		return exterior;
 	}

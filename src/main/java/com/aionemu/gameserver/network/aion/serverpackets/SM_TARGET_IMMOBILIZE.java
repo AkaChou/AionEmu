@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
@@ -26,18 +10,27 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 目标定身/定帧时同步其坐标与朝向的服务端包。
+ * Server packet that syncs a target creature's position and heading when immobilized.
+ * <p>
+ * 对非玩家实体在启用地理数据时会校正 Z 轴，减少怪物悬空。
+ * For non-player entities, corrects Z via geo data when enabled to reduce floating mobs.
+ *
  * @author Sweetkr
  */
 public class SM_TARGET_IMMOBILIZE extends AionServerPacket {
 
 	private Creature creature;
 
+	/**
+	 * @param creature 被定身的生物 / immobilized creature
+	 */
 	public SM_TARGET_IMMOBILIZE(Creature creature) {
 		this.creature = creature;
 	}
 
-    //modified (Aion Reconstruction Project - Yoress) - Added geoZ check for non player entities to avoid floating mobs.
-    //and update check to mob altitude when they are stunned (mobs should appear to float in the air less often).
+	// 修改（Aion Reconstruction Project - Yoress）：为非玩家实体增加 geoZ 检测，避免浮空怪。 / modified (Aion Reconstruction Project - Yoress) - Added geoZ check for non player entities to avoid floating mobs.
+	// 眩晕时更新怪物高度检测（减少怪物看起来浮空的情况）。 / and update check to mob altitude when they are stunned (mobs should appear to float in the air less often).
 	@Override
 	protected void writeImpl(AionConnection con) {
 		if (!(creature instanceof Player)) {

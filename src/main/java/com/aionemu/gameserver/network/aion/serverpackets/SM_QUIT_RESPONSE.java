@@ -1,36 +1,31 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * This packet is response for CM_QUIT
- * 
+ * 对 CM_QUIT 的应答，通知客户端退出或进入编辑模式结果。
+ * Response to CM_QUIT notifying the client of quit or edit-mode outcome.
+ *
  * @author -Nemesiss-
  */
 public class SM_QUIT_RESPONSE extends AionServerPacket {
 
 	private boolean edit_mode = false;
 
+	/**
+	 * 构造默认的 SM_QUIT_RESPONSE 包。
+	 * Creates a default SM_QUIT_RESPONSE packet.
+	 */
 	public SM_QUIT_RESPONSE() {
 	}
 
+	/**
+	 * 使用给定参数构造 SM_QUIT_RESPONSE 包。
+	 * Creates a SM_QUIT_RESPONSE packet with the given parameters.
+	 *
+	 * @param edit_mode 是否编辑模式 / edit mode flag
+	 */
 	public SM_QUIT_RESPONSE(boolean edit_mode) {
 		this.edit_mode = edit_mode;
 	}
@@ -41,7 +36,7 @@ public class SM_QUIT_RESPONSE extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeD(edit_mode ? 2 : 1);// 1 normal, 2 plastic surgery/gender switch
-		writeC(0x00);// unk
+		writeC(0x00);// 未知 / unk
 		writeC(0xFF);// why sometime 0x2e?
 		writeC(0xFF);
 		writeC(0xFF);

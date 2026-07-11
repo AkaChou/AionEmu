@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.serial_guard;
 
 import java.util.ArrayList;
@@ -25,6 +9,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 守卫军阶 Restriction 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GuardRankRestriction", propOrder = { "guardpenaltyAttr" })
 public class GuardRankRestriction {
@@ -34,6 +23,7 @@ public class GuardRankRestriction {
 	@XmlAttribute(name = "rank_num", required = true)
 	protected int rankNum;
 
+	/** 返回 guard penalty attr / Returns the guard penalty attr */
 	public List<GuardRankPenaltyAttr> getGuardPenaltyAttr() {
 		if (guardpenaltyAttr == null) {
 			guardpenaltyAttr = new ArrayList<GuardRankPenaltyAttr>();
@@ -41,10 +31,12 @@ public class GuardRankRestriction {
 		return this.guardpenaltyAttr;
 	}
 
+	/** 返回 rank num / Returns the rank num */
 	public int getRankNum() {
 		return rankNum;
 	}
 
+	/** 设置 rank num / Sets the rank num */
 	public void setRankNum(int value) {
 		this.rankNum = value;
 	}

@@ -1,5 +1,7 @@
 package com.aionemu.commons.scripting.classlistener;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.scripting.metadata.OnClassLoad;
 import com.aionemu.commons.scripting.metadata.OnClassUnload;
@@ -13,8 +15,8 @@ import java.lang.reflect.Modifier;
  *
  * 该类负责处理类的加载和卸载事件，通过反射机制调用带有特定注解的静态方法：
  * This class handles class loading and unloading events by invoking annotated static methods through reflection:
- * - 处理@OnClassLoad注解的方法 (Process methods with @OnClassLoad annotation)
- * - 处理@OnClassUnload注解的方法 (Process methods with @OnClassUnload annotation)
+ * - 处理@OnClassLoad 注解的方法 (Process methods with @OnClassLoad annotation)
+ * - 处理@OnClassUnload 注解的方法 (Process methods with @OnClassUnload annotation)
  * - 自动管理方法的访问权限 (Automatically manage method accessibility)
  *
  * @author ATracer
@@ -66,9 +68,9 @@ public class OnClassLoadUnloadListener implements ClassListener {
                     try {
                         m.invoke(null);
                     } catch (IllegalAccessException e) {
-                        log.error("Can't access method " + m.getName() + " of class " + m.getDeclaringClass().getName(), e);
+                        log.error(I18n.get("log.9638f49038db", m.getName(), m.getDeclaringClass().getName(), e));
                     } catch (InvocationTargetException e) {
-                        log.error("Can't invoke method " + m.getName() + " of class " + m.getDeclaringClass().getName(), e);
+                        log.error(I18n.get("log.fa61d95a8c72", m.getName(), m.getDeclaringClass().getName(), e));
                     }
                 }
                 

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -24,15 +8,30 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 征服活动启停管理命令（{@code //conquest}）。
+ * Admin command to start or stop Conquest events ({@code //conquest}).
+ */
 public class Conquest extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
-	
+
+	/**
+	 * 注册命令名为 {@code conquest}。
+	 * Registers the command name {@code conquest}.
+	 */
 	public Conquest() {
 		super("conquest");
 	}
-	
+
+	/**
+	 * 执行征服活动启停。
+	 * Executes Conquest start/stop.
+	 *
+	 * admin
+	 * @param params 参数：start|stop 与地点 ID / start|stop and location id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
@@ -42,7 +41,14 @@ public class Conquest extends AdminCommand
 			handleStartStop(player, params);
 		}
 	}
-	
+
+	/**
+	 * 处理指定地点的征服活动开始或停止。
+	 * Handles starting or stopping Conquest at a location.
+	 *
+	 * admin
+	 * parameters
+	 */
 	protected void handleStartStop(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
 			showHelp(player);
@@ -68,7 +74,16 @@ public class Conquest extends AdminCommand
 			}
 		}
 	}
-	
+
+	/**
+	 * 校验征服地点 ID 是否有效。
+	 * Validates whether the Conquest location id is valid.
+	 *
+	 * admin
+	 * location id
+	 *
+	 * @return 若 valid 则为 true / true if valid
+	 */
 	protected boolean isValidConquestLocationId(Player player, int conquestId) {
 		if (!GameLocationBootstrapServices.conquestService().getConquestLocations().keySet().contains(conquestId)) {
 			PacketSendUtility.sendMessage(player, "Id " + conquestId + " is invalid");
@@ -76,7 +91,13 @@ public class Conquest extends AdminCommand
 		}
 		return true;
 	}
-	
+
+	/**
+	 * 显示命令用法帮助。
+	 * Shows command usage help.
+	 *
+	 * admin
+	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //conquest start|stop <Id>");
 	}

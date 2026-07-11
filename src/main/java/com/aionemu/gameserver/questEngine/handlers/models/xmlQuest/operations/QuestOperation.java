@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,13 +8,22 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * XML 驱动任务操作的抽象基类，定义在任务环境下执行副作用的入口。
+ * Abstract base for XML-driven quest operations; defines the entry that applies side effects under a quest env.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestOperation")
-@XmlSeeAlso({ TakeItemOperation.class, StartQuestOperation.class, SetQuestVarOperation.class, NpcDialogOperation.class,
+@XmlSeeAlso({ TakeItemOperation.class, SetQuestVarOperation.class, NpcDialogOperation.class,
 		GiveItemOperation.class, SetQuestStatusOperation.class })
 public abstract class QuestOperation {
 
+	/**
+	 * 在给定任务环境下执行本操作。
+	 * Applies this operation under the given quest environment.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public abstract void doOperate(QuestEnv env);
 }

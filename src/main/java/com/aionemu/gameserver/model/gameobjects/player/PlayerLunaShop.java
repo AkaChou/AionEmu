@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +7,8 @@ import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 /**
- * Created by wanke on 13/02/2017.
+ * 玩家月华 Shop 游戏对象。
+ * Player Luna Shop game object.
  */
 
 @Slf4j
@@ -44,39 +29,54 @@ public class PlayerLunaShop {
 	public PlayerLunaShop() {
 	}
 
+	/**
+	 * @return Whether free underpath / Whether free underpath
+	 */
 	public boolean isFreeUnderpath() {
 		return FreeUnderpath;
 	}
 
+	/** 设置 free underpath / Sets the free underpath */
 	public void setFreeUnderpath(boolean free) {
 		this.FreeUnderpath = free;
 	}
 
+	/**
+	 * @return Whether free factory / Whether free factory
+	 */
 	public boolean isFreeFactory() {
 		return FreeFactory;
 	}
 
+	/** 设置 free factory / Sets the free factory */
 	public void setFreeFactory(boolean free) {
 		this.FreeFactory = free;
 	}
 
+	/**
+	 * @return Whether free chest / Whether free chest
+	 */
 	public boolean isFreeChest() {
 		return FreeChest;
 	}
 
+	/** 设置 free chest / Sets the free chest */
 	public void setFreeChest(boolean free) {
 		this.FreeChest = free;
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置 luna shop by obj id / Sets the luna shop by obj id */
 	public void setLunaShopByObjId(int playerId) {
 		DAOManager.getDAO(PlayerLunaShopDAO.class).setLunaShopByObjId(playerId, isFreeUnderpath(), isFreeFactory(),
 				isFreeChest());
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {
 		case UPDATE_REQUIRED:

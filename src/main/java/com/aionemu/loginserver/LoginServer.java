@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver;
 
 import java.io.File;
@@ -34,19 +16,30 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.joran.spi.JoranException;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.lifecycle.LoginStartupGateway;
 import com.aionemu.loginserver.lifecycle.LoginStartupSequenceLifecycle;
+
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 登录服入口：日志初始化与启动序列。
+ * LoginServer entry: logger init and startup sequence.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
+@UtilityClass
 public class LoginServer {
 
-    private static void initalizeLoggger() {
+    /**
+     * 备份旧日志并配置 Logback（嵌入式启动时跳过）。
+     * Archive old logs and configure Logback (skipped when boot-embedded).
+     */
+    private void initalizeLoggger() {
         if (AionRuntimeMode.isBootEmbedded()) {
             return;
         }
@@ -89,21 +82,33 @@ public class LoginServer {
         }
     }
 
-    public static void initializeLogger() {
+    /**
+     * 初始化日志系统。
+     * Initialize the logging system.
+     */
+    public void initializeLogger() {
         initalizeLoggger();
     }
 
     /**
-     * Starts LoginServer from the boot-managed service lifecycle.
+     * 由 boot 托管生命周期启动登录服。
+     * Start LoginServer via the boot-managed service lifecycle.
      *
-     * @param args startup arguments
+     * @param args 启动参数 / Startup arguments
      */
-    public static void start(final String[] args) {
+    public void start(final String[] args) {
         start(args, new LoginStartupSequenceLifecycle(new LoginStartupGateway()));
     }
 
-    public static void start(final String[] args, LoginStartupSequenceLifecycle startupSequenceLifecycle) {
+    /**
+     * 使用指定启动序列生命周期启动登录服。
+     * Start LoginServer with the given startup sequence lifecycle.
+     *
+     * @param args 启动参数 / Startup arguments
+     * Startup sequence lifecycle
+     */
+    public void start(final String[] args, LoginStartupSequenceLifecycle startupSequenceLifecycle) {
         startupSequenceLifecycle.start();
-        log.info("AL Login Server started in " + startupSequenceLifecycle.getLoadTimeMillis() / 1000 + " seconds.");
+        log.info(I18n.get("log.23ddf7057872", startupSequenceLifecycle.getLoadTimeMillis() / 1000));
     }
 }

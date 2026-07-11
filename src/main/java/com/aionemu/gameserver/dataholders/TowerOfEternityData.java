@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -32,9 +16,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by Wnkrz on 22/08/2017.
+ * 永恒之塔静态数据容器，按位置 ID 索引塔点位。
+ * Tower of Eternity static-data holder, indexing tower locations by id.
+ *
+ * @author Wnkrz
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "tower_of_eternity")
 public class TowerOfEternityData {
@@ -44,16 +30,32 @@ public class TowerOfEternityData {
 	@XmlTransient
 	private Map<Integer, TowerOfEternityLocation> towerOfEternity = new LinkedHashMap<Integer, TowerOfEternityLocation>();
 
+	/**
+	 * JAXB 反序列化完成后，将模板索引为塔点位映射。
+	 * After JAXB unmarshalling, indexes templates as tower locations.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TowerOfEternityTemplate template : towerOfEternityTemplates) {
 			towerOfEternity.put(template.getId(), new TowerOfEternityLocation(template));
 		}
 	}
 
+	/**
+	 * 返回已加载的塔点位数量。
+	 * Returns the number of loaded tower locations.
+	 *
+	 * location count
+	 */
 	public int size() {
 		return towerOfEternity.size();
 	}
 
+	/**
+	 * 返回全部永恒之塔点位映射。
+	 * Returns the full map of Tower of Eternity locations.
+	 *
+	 * location map
+	 */
 	public Map<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
 		return towerOfEternity;
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.evergaleCanyon;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Evergale Canyon 副本 NPC AI：ID Eternity W Tele E To OP L Up（@AIName "IDEternity_W_Tele_E_To_OP_L_Up"），继承 ActionItemNpcAI2。
+ * Evergale Canyon instance NPC AI: ID Eternity W Tele E To OP L Up (@AIName "IDEternity_W_Tele_E_To_OP_L_Up"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("IDEternity_W_Tele_E_To_OP_L_Up")
 public class IDEternity_W_Tele_E_To_OP_L_UpAI2 extends ActionItemNpcAI2
 {

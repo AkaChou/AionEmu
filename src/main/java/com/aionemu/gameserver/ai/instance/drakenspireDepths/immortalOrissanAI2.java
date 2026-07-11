@@ -1,19 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -31,6 +15,13 @@ import com.aionemu.gameserver.ai.AggressiveNpcAI2;
  */
 @AIName("immortal_orissan_quest")
 // 237230
+
+/**
+ * Drakenspire Depths 副本 NPC AI：immortal Orissan（@AIName "immortal_orissan_quest"），继承 AggressiveNpcAI2。
+ * Drakenspire Depths instance NPC AI: immortal Orissan (@AIName "immortal_orissan_quest"), extends AggressiveNpcAI2.
+ *
+ * @author Falke_34
+ */
 public class immortalOrissanAI2 extends AggressiveNpcAI2 {
 
 	private AtomicBoolean isStartEvent = new AtomicBoolean(false);

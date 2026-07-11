@@ -1,181 +1,318 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.attack;
 
 import com.aionemu.gameserver.skillengine.model.HitType;
 
 /**
- * @author ATracer modified by Sippolo, kecimis
+ * 单次攻击结果，封装伤害、命中状态、命中类型以及护盾/反射/保护等附加效果数据。
+ * Single attack result holding damage, hit status, hit type and shield/reflect/protect side-effect data.
+ *
+ * @author ATracer, Sippolo, kecimis
  */
 public class AttackResult {
 
+	/** 伤害值（可保留小数） / Damage value (may keep fractions) */
 	private float damage;
 
+	/** 攻击状态 / Attack status */
 	private AttackStatus attackStatus;
 
+	/** 命中类型 / Hit type */
 	private HitType hitType = HitType.EVERYHIT;
 
-	/**
-	 * shield effects related
-	 */
+	/** 护盾类型位掩码 / Shield type bitmask */
 	private int shieldType;
+	/** 反射伤害 / Reflected damage */
 	private int reflectedDamage = 0;
+	/** 反射技能 ID / Reflected skill id */
 	private int reflectedSkillId = 0;
+	/** 保护技能 ID / Protected skill id */
 	private int protectedSkillId = 0;
+	/** 被保护减免的伤害 / Damage absorbed by protector */
 	private int protectedDamage = 0;
+	/** 保护者对象 ID / Protector object id */
 	private int protectorId = 0;
+	/** 护盾消耗的 MP / MP consumed by shield */
 	private int shieldMp = 0;
 
+	/** 是否触发子效果 / Whether to launch a sub-effect */
 	private boolean launchSubEffect = true;
 
+	/**
+	 * 以整数伤害与攻击状态构造结果。
+	 * Creates a result with integer damage and attack status.
+	 *
+	 * damage
+	 * attack status
+	 */
 	public AttackResult(int damage, AttackStatus attackStatus) {
 		this.damage = damage;
 		this.attackStatus = attackStatus;
 	}
 
+	/**
+	 * 以浮点伤害与攻击状态构造结果。
+	 * Creates a result with float damage and attack status.
+	 *
+	 * damage
+	 * attack status
+	 */
 	public AttackResult(float damage, AttackStatus attackStatus) {
 		this.damage = damage;
 		this.attackStatus = attackStatus;
 	}
 
+	/**
+	 * 以整数伤害、攻击状态与命中类型构造结果。
+	 * Creates a result with integer damage, attack status and hit type.
+	 *
+	 * damage
+	 * attack status
+	 * @param type 命中类型 / hit type
+	 */
 	public AttackResult(int damage, AttackStatus attackStatus, HitType type) {
 		this(damage, attackStatus);
 		this.hitType = type;
 	}
 
+	/**
+	 * 以浮点伤害、攻击状态与命中类型构造结果。
+	 * Creates a result with float damage, attack status and hit type.
+	 *
+	 * damage
+	 * attack status
+	 * @param type 命中类型 / hit type
+	 */
 	public AttackResult(float damage, AttackStatus attackStatus, HitType type) {
 		this(damage, attackStatus);
 		this.hitType = type;
 	}
 
 	/**
-	 * @return the damage
+	 * 返回取整后的伤害。
+	 * Returns damage as an int.
+	 *
+	 * integer damage
 	 */
 	public int getDamage() {
 		return (int) damage;
 	}
 
+	/**
+	 * 返回精确（浮点）伤害。
+	 * Returns the exact float damage.
+	 *
+	 * exact damage
+	 */
 	public float getExactDamage() {
 		return damage;
 	}
 
 	/**
-	 * @param damage the damage to set
+	 * 设置整数伤害。
+	 * Sets damage from an int.
+	 *
+	 * damage
 	 */
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
 
+	/**
+	 * 设置浮点伤害。
+	 * Sets damage from a float.
+	 *
+	 * damage
+	 */
 	public void setDamage(float damage) {
 		this.damage = damage;
 	}
 
 	/**
-	 * @return the attackStatus
+	 * 返回攻击状态。
+	 * Returns the attack status.
+	 *
+	 * attack status
 	 */
 	public AttackStatus getAttackStatus() {
 		return attackStatus;
 	}
 
 	/**
-	 * @return the Damage Type
+	 * 返回命中类型。
+	 * Returns the hit type.
+	 *
+	 * hit type
 	 */
 	public HitType getDamageType() {
 		return hitType;
 	}
 
 	/**
-	 * @param type the Damage Type to set
+	 * 设置命中类型。
+	 * Sets the hit type.
+	 *
+	 * @param type 命中类型 / hit type
 	 */
 	public void setDamageType(HitType type) {
 		this.hitType = type;
 	}
 
 	/**
-	 * shield effects related
-	 * 
-	 */
-
-	/**
-	 * @return the shieldType
+	 * 返回护盾类型位掩码。
+	 * Returns the shield type bitmask.
+	 *
+	 * shield type
 	 */
 	public int getShieldType() {
 		return shieldType;
 	}
 
 	/**
-	 * @param shieldType the shieldType to set
+	 * 按位或合并护盾类型标志。
+	 * OR-merges a shield type flag into the bitmask.
+	 *
+	 * @param shieldType 待合并的护盾类型标志 / shield type flag to merge
 	 */
 	public void setShieldType(int shieldType) {
 		this.shieldType |= shieldType;
 	}
 
+	/**
+	 * 返回反射伤害。
+	 * Returns reflected damage.
+	 *
+	 * reflected damage
+	 */
 	public int getReflectedDamage() {
 		return this.reflectedDamage;
 	}
 
+	/**
+	 * 设置反射伤害。
+	 * Sets reflected damage.
+	 *
+	 * reflected damage
+	 */
 	public void setReflectedDamage(int reflectedDamage) {
 		this.reflectedDamage = reflectedDamage;
 	}
 
+	/**
+	 * 返回反射技能 ID。
+	 * Returns the reflected skill id.
+	 *
+	 * reflected skill id
+	 */
 	public int getReflectedSkillId() {
 		return this.reflectedSkillId;
 	}
 
+	/**
+	 * 设置反射技能 ID。
+	 * Sets the reflected skill id.
+	 *
+	 * skill id
+	 */
 	public void setReflectedSkillId(int skillId) {
 		this.reflectedSkillId = skillId;
 	}
 
+	/**
+	 * 返回保护技能 ID。
+	 * Returns the protected skill id.
+	 *
+	 * protected skill id
+	 */
 	public int getProtectedSkillId() {
 		return this.protectedSkillId;
 	}
 
+	/**
+	 * 设置保护技能 ID。
+	 * Sets the protected skill id.
+	 *
+	 * skill id
+	 */
 	public void setProtectedSkillId(int skillId) {
 		this.protectedSkillId = skillId;
 	}
 
+	/**
+	 * 返回被保护减免的伤害。
+	 * Returns damage absorbed by a protector.
+	 *
+	 * @return 被保护伤害 / protected damage
+	 */
 	public int getProtectedDamage() {
 		return this.protectedDamage;
 	}
 
+	/**
+	 * 设置被保护减免的伤害。
+	 * Sets damage absorbed by a protector.
+	 *
+	 * @param protectedDamage 被保护伤害 / protected damage
+	 */
 	public void setProtectedDamage(int protectedDamage) {
 		this.protectedDamage = protectedDamage;
 	}
 
+	/**
+	 * 返回保护者对象 ID。
+	 * Returns the protector object id.
+	 *
+	 * protector id
+	 */
 	public int getProtectorId() {
 		return this.protectorId;
 	}
 
+	/**
+	 * 设置保护者对象 ID。
+	 * Sets the protector object id.
+	 *
+	 * protector id
+	 */
 	public void setProtectorId(int protectorId) {
 		this.protectorId = protectorId;
 	}
 
+	/**
+	 * 是否触发子效果。
+	 * Returns whether a sub-effect should be launched.
+	 *
+	 * @return 是否触发子效果 / whether to launch sub-effect
+	 */
 	public boolean isLaunchSubEffect() {
 		return launchSubEffect;
 	}
 
+	/**
+	 * 设置是否触发子效果。
+	 * Sets whether a sub-effect should be launched.
+	 *
+	 * whether to launch
+	 */
 	public void setLaunchSubEffect(boolean launchSubEffect) {
 		this.launchSubEffect = launchSubEffect;
 	}
 
+	/**
+	 * 返回护盾消耗的 MP。
+	 * Returns MP consumed by the shield.
+	 *
+	 * shield MP
+	 */
 	public int getShieldMp() {
 		return this.shieldMp;
 	}
 
+	/**
+	 * 设置护盾消耗的 MP。
+	 * Sets MP consumed by the shield.
+	 *
+	 * shield MP
+	 */
 	public void setShieldMp(int shieldMp) {
 		this.shieldMp = shieldMp;
 	}

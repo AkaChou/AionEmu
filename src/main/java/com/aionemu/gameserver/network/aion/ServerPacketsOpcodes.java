@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion;
 
 import java.util.HashMap;
@@ -23,6 +7,10 @@ import java.util.Set;
 
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 
+/**
+ * 服务端包操作码注册表：类 → opcode 映射，启动时校验重复。
+ * Server packet opcode registry: Class → opcode map with duplicate checks at startup.
+ */
 public class ServerPacketsOpcodes {
 	private static Map<Class<? extends AionServerPacket>, Integer> opcodes = new HashMap<Class<? extends AionServerPacket>, Integer>();
 
@@ -276,32 +264,32 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_PLAYER_PROTECTION.class, 0x100, idSet); // 5.8
 		addPacketOpcode(SM_SEASON_RANKING.class, 0x159, idSet); // 5.8
 		addPacketOpcode(SM_MY_HISTORY.class, 0x15A, idSet); // 5.8
-		addPacketOpcode(SM_TUNE_RESULT.class, 0x121, idSet); // 5.8
+		addPacketOpcode(SM_TUNE_RESULT.class, 0x122, idSet); // 5.8
 		addPacketOpcode(SM_BLACKCLOUD_TRADE.class, 0x15E, idSet); // 5.8
 		addPacketOpcode(SM_SHUGO_SWEEP.class, 0x14B, idSet); // 5.8
 		addPacketOpcode(SM_ABYSS_FAVOR.class, 0x162, idSet); // 5.8
 		addPacketOpcode(SM_YOUTUBE_VIDEO.class, 0x146, idSet); // 5.8
 		// addPacketOpcode(SM_PETITION.class, 0xEF, idSet); //5.8 To Do
-		// -----------------BATTLEFIELD UNION--------------------//
+		// -----------------战场联合-------------------- / -----------------BATTLEFIELD UNION--------------------//
 		addPacketOpcode(SM_BATTLEFIELD_UNION.class, 0x155, idSet); // 5.8
 		addPacketOpcode(SM_BATTLEFIELD_UNION_REGISTER.class, 0x157, idSet); // 5.8
-		// -----------------LUNA SHOP PACKETS 5.8--------------------//
+		// -----------------露娜商店数据包 5.8-------------------- / -----------------LUNA SHOP PACKETS 5.8--------------------//
 		addPacketOpcode(SM_LUNA_SHOP_LIST.class, 0x149, idSet); // 5.8
 		addPacketOpcode(SM_LUNA_SHOP.class, 0x14A, idSet); // 5.8
-		// -------------CREATIVITY_POINTS PACKETS 5.0----------------//
+		// -------------创造力点数数据包 5.0---------------- / -------------CREATIVITY_POINTS PACKETS 5.0----------------//
 		addPacketOpcode(SM_CREATIVITY_POINTS.class, 0x5D, idSet); // 5.8
 		addPacketOpcode(SM_CREATIVITY_POINTS_APPLY.class, 0x5E, idSet); // 5.8
-		// -----------------ATREIAN PASSPORT--------------------//
+		// -----------------阿特雷亚护照-------------------- / -----------------ATREIAN PASSPORT--------------------//
 		addPacketOpcode(SM_ATREIAN_PASSPORT.class, 0x12d, idSet); // 5.8
-		// -----------------MONSTERBOOK--------------------//
+		// -----------------怪物图鉴-------------------- / -----------------MONSTERBOOK--------------------//
 		addPacketOpcode(SM_ATREIAN_BESTIARY_LIST.class, 0x15B, idSet); // 5.8
 		addPacketOpcode(SM_ATREIAN_BESTIARY.class, 0x15C, idSet); // 5.8
-		// -----------------EVENT WINDOW--------------------//
+		// -----------------活动窗口-------------------- / -----------------EVENT WINDOW--------------------//
 		addPacketOpcode(SM_EVENT_WINDOW.class, 0x13E, idSet); // 5.8
 		addPacketOpcode(SM_EVENT_WINDOW_ITEMS.class, 0x154, idSet); // 5.8
-		// -------------------GAMEGUARD------------------------//
+		// -------------------游戏卫士------------------------ / -------------------GAMEGUARD------------------------//
 		addPacketOpcode(SM_GAMEGUARD.class, 0x128, idSet); // 5.8
-		// -----------------UNKNOWN PACKETS--------------------//
+		// -----------------未知数据包-------------------- / -----------------UNKNOWN PACKETS--------------------//
 		addPacketOpcode(SM_0x14F.class, 0x14F, idSet); // 5.8
 		addPacketOpcode(SM_0x125.class, 0x125, idSet); // 5.8
 		addPacketOpcode(SM_0x126.class, 0x126, idSet); // 5.8
@@ -311,6 +299,14 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_TELEPORT_BACK.class, 0xDE, idSet);
 	}
 
+	/**
+	 * 获取指定服务端包类的操作码。
+	 * Returns the opcode for the given server packet class.
+	 *
+	 * @param packetClass 服务端包类 / server packet class
+	 * opcode
+	 * if not registered
+	 */
 	static int getOpcode(Class<? extends AionServerPacket> packetClass) {
 		Integer opcode = opcodes.get(packetClass);
 		if (opcode == null) {
@@ -319,6 +315,14 @@ public class ServerPacketsOpcodes {
 		return opcode;
 	}
 
+	/**
+	 * 注册服务端包操作码；opcode &lt; 0 时跳过，重复则抛异常。
+	 * Registers a server packet opcode; skips if opcode &lt; 0, throws on duplicate.
+	 *
+	 * @param packetClass 服务端包类 / server packet class
+	 * opcode
+	 * used opcode set
+	 */
 	private static void addPacketOpcode(Class<? extends AionServerPacket> packetClass, int opcode, Set<Integer> idSet) {
 		if (opcode < 0) {
 			return;

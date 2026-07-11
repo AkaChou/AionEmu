@@ -1,22 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
+
+/**
+ * 部落类型枚举。
+ * Tribe Class enumeration.
+ */
 
 @XmlEnum
 public enum TribeClass {
@@ -1023,65 +1012,125 @@ public enum TribeClass {
     TEST_LIGHT_AETC,
     TEST_SUPPORTNPC,
     TIAMAT,
+    /** 提亚马特残党·龙族 / Tiamatremnant Drakan */
     TIAMATREMNANT_DRAKAN,
+    /** Tiamatremnant Lizard / Tiamatremnant Lizard */
     TIAMATREMNANT_LIZARD,
+    /** Tiamatremnant Lizard Injury / Tiamatremnant Lizard Injury */
     TIAMATREMNANT_LIZARD_INJURY,
+    /** 虎人 / Tigran. */
     TIGRAN,
+    /** 托格 / Tog. */
     TOG,
+    /** Tog Akalnif / Tog Akalnif */
     TOG_AKALNIF,
+    /** Tog Azaif / Tog Azaif */
     TOG_AZAIF,
+    /** 塔卫 / Towerman. */
     TOWERMAN,
+    /** 特里科 / Trico. */
     TRICO,
+    /** 特里康 / Tricon. */
     TRICON,
+    /** Undeadgradiator Df1 / Undeadgradiator Df1 */
     UNDEADGRADIATOR_DF1,
+    /** 不死·暗 / Undead Dark*/
     UNDEAD_DARK(Race.ASMODIANS),
+    /** 不死·光 / Undead Light*/
     UNDEAD_LIGHT(Race.ELYOS),
+    /** Under 01 War Vritra / Under 01 War Vritra */
     UNDER_01_WAR_VRITRA,
+    /** Up3 Urf Enemy / Up3 Urf Enemy */
     UP3_URF_ENEMY,
+    /** Up3 Urf 对象 / Up3 Urf Obj */
     UP3_URF_OBJ,
+    /** 全部可用 / Useall. */
     USEALL(true),
+    /** 对怪物全可用 / Useallnonetomonster. */
     USEALLNONETOMONSTER,
+    /** Useall Hostilepc / Useall Hostilepc */
     USEALL_HOSTILEPC,
+    /** Useall Ldf5 Tower Da / Useall Ldf5 Tower Da */
     USEALL_LDF5_TOWER_DA,
+    /** Useall Ldf5 Tower Li / Useall Ldf5 Tower Li */
     USEALL_LDF5_TOWER_LI,
+    /** Useall Teleporter Da / Useall Teleporter Da */
     USEALL_TELEPORTER_DA,
+    /** Useall Teleporter Li / Useall Teleporter Li */
     USEALL_TELEPORTER_LI,
+    /** 弗里特拉 / Vritra. */
     VRITRA,
+    /** 弗里特拉支援 / Vritrasupport. */
     VRITRASUPPORT,
+    /** 弗里特拉坦克 / Vritratank. */
     VRITRATANK,
+    /** Wave Swarm1 / Wave Swarm1 */
     WAVE_SWARM1,
+    /** Wave Swarm2 / Wave Swarm2 */
     WAVE_SWARM2,
+    /** Wave Tree / Wave Tree */
     WAVE_TREE,
+    /** 武器好友 / Weapon Friend*/
     WEAPON_FRIEND,
+    /** 世界突袭事件 / Worldraid Event*/
     WORLDRAID_EVENT,
+    /** 世界突袭事件敌对 / Worldraid Event Aggressive*/
     WORLDRAID_EVENT_AGGRESSIVE,
+    /** 世界突袭怪物 / Worldraid Monster*/
     WORLDRAID_MONSTER,
+    /** 世界突袭怪物沙虫召唤 / Worldraid Monster Sandwormsum*/
     WORLDRAID_MONSTER_SANDWORMSUM,
+    /** Worldraid Npc / Worldraid Npc */
     WORLDRAID_NPC,
+    /** 龙人 / Xdrakan. */
     XDRAKAN,
+    /** Xdrakan Anu / Xdrakan Anu */
     XDRAKAN_ANU,
+    /** 龙人暗守卫 / Xdrakan Dguard*/
     XDRAKAN_DGUARD,
+    /** Xdrakan Elementalist / Xdrakan Elementalist */
     XDRAKAN_ELEMENTALIST,
+    /** 龙人光守卫 / Xdrakan Lguard*/
     XDRAKAN_LGUARD,
+    /** 龙人宠物 / Xdrakan Pet*/
     XDRAKAN_PET,
+    /** Xdrakan Priest / Xdrakan Priest */
     XDRAKAN_PRIEST,
+    /** 龙人仆从 / Xdrakan Servant*/
     XDRAKAN_SERVANT,
+    /** Xdrakan Unattack / Xdrakan Unattack */
     XDRAKAN_UNATTACK,
+    /** 西佩托 / Xipeto. */
     XIPETO,
+    /** 西佩托幼体 / Xipetobaby. */
     XIPETOBABY,
+    /** 虚拟目标 / Ydummy. */
     YDUMMY,
+    /** 虚拟目标2 / Ydummy2 */
     YDUMMY2,
+    /** 虚拟目标2 暗守卫 / Ydummy2 Dguard*/
     YDUMMY2_DGUARD,
+    /** 虚拟目标2守卫 / Ydummy2 Guard*/
     YDUMMY2_GUARD,
+    /** 虚拟目标2 光守卫 / Ydummy2 Lguard*/
     YDUMMY2_LGUARD,
+    /** 虚拟目标 暗守卫 / Ydummy Dguard*/
     YDUMMY_DGUARD,
+    /** 虚拟目标守卫 / Ydummy Guard*/
     YDUMMY_GUARD,
+    /** 虚拟目标 光守卫 / Ydummy Lguard*/
     YDUMMY_LGUARD,
+    /** 云守卫 / Yun Guard*/
     YUN_GUARD,
+    /** 扎伊夫 / Zaif. */
     ZAIF,
+    /** Zaif Abrowniefeller Lf1 / Zaif Abrowniefeller Lf1 */
     ZAIF_ABROWNIEFELLER_LF1,
+    /** Zaif Adaru / Zaif Adaru */
     ZAIF_ADARU,
+    /** Zaif Aminx / Zaif Aminx */
     ZAIF_AMINX,
+    /** Zaif Atog / Zaif Atog */
     ZAIF_ATOG;
 
 	private Race guardRace;
@@ -1103,22 +1152,27 @@ public enum TribeClass {
 		this.isBasic = isBasic;
 	}
 
+	/** 是否为守卫。 / Whether guard. */
 	public boolean isGuard() {
 		return guardRace != null;
 	}
 
+	/** 是否基础职业 / Whether basic class*/
 	public boolean isBasicClass() {
 		return isBasic;
 	}
 
+	/** 是否光之守卫 / Whether light guard*/
 	public boolean isLightGuard() {
 		return guardRace == Race.ELYOS;
 	}
 
+	/** 是否暗之守卫 / Whether dark guard*/
 	public boolean isDarkGuard() {
 		return guardRace == Race.ASMODIANS;
 	}
 
+	/** 是否龙族守卫 / Whether drakan guard*/
 	public boolean isDrakanGuard() {
 		return guardRace == Race.DRAGON;
 	}

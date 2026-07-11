@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr.asmodianWarshipInvasion;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Suminid Comander（@AIName "suminid_comander"），继承 AggressiveNpcAI2。
+ * RvR-related NPC AI: Suminid Comander (@AIName "suminid_comander"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("suminid_comander")
 public class Suminid_ComanderAI2 extends AggressiveNpcAI2
 {
@@ -45,13 +31,13 @@ public class Suminid_ComanderAI2 extends AggressiveNpcAI2
 			final Player player = (Player) creature;
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
-					//Wretches!! Your resistance shall be futile.
+					// 卑鄙的家伙！！你们的抵抗终将徒劳。 / Wretches!! Your resistance shall be futile.
 				    sendMsg(1501534, getObjectId(), false, 3000);
-					//Let's show these cowardly Elyos the might of the Asmodians!
+					// 让我们向这些懦弱的天族展示魔族的力量！ / Let's show these cowardly Elyos the might of the Asmodians!
 				    sendMsg(1501535, getObjectId(), false, 9000);
-					//Don't give up! The will of Empyrean Lord Azphel is with us.
+					// 不要放弃！主神阿兹菲尔的意志与我们同在。 / Don't give up! The will of Empyrean Lord Azphel is with us.
 				    sendMsg(1501536, getObjectId(), false, 15000);
-					//Empyrean Lord Azphel! Please give me strength.
+					// 主神阿兹菲尔！请赐予我力量。 / Empyrean Lord Azphel! Please give me strength.
 				    sendMsg(1501540, getObjectId(), false, 21000);
 				}
 			}

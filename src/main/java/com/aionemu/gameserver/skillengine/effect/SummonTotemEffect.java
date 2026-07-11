@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,9 +18,17 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.MathUtil;
 
+/**
+ * 召唤图腾效果：生成图腾或特殊技能区域型侍从。
+ * Summon totem effect: spawns a totem or special skill-area servant.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonTotemEffect")
 public class SummonTotemEffect extends SummonServantEffect {
+	/**
+	 * 特定技能在身前生成 SKILLAREA；其它在施法者位置生成 TOTEM。
+	 * For specific skills spawns SKILLAREA ahead; otherwise spawns TOTEM at the effector.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Creature effector = effect.getEffector();

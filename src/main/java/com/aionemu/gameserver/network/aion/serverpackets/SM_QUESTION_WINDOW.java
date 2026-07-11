@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.DescriptionId;
@@ -21,6 +5,10 @@ import com.aionemu.gameserver.model.siege.ArtifactLocation;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端弹出确认/询问对话框，携带消息码与参数。
+ * Server packet that opens a confirmation/question dialog with a message code and parameters.
+ */
 public class SM_QUESTION_WINDOW extends AionServerPacket {
 	public static final int STR_DUEL_DO_YOU_ACCEPT_REQUEST = 50028;
 	public static final int STR_DUEL_DO_YOU_WITHDRAW_REQUEST = 50030;
@@ -68,13 +56,13 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 	public static final int STR_INSTANCE_DUNGEON_DIFFICULTY_NORMAL = 902051;
 	public static final int STR_INSTANCE_DUNGEON_DIFFICULTY_HARD = 902052;
 
-	// DIVERS
+	// 杂项 / DIVERS
 	public static final int STR_MSGBOX_BUY_RANKITEM_WITH_RANKDOWN_CONFIRM = 904006;
 	public static final int STR_VIP_LOBBY_NOTICE_CASE12_POPUP_01 = 906080;
 	public static final int STR_MSGBOX_AKS_ENTER_PK_SERVER = 902812;
 	public static final int STR_MSGBOX_FORCE_INVITE_PARTY = 901256;
 
-	// INSTANCES
+	// 副本 / INSTANCES
 	public static final int STR_INSTANT_DUNGEON_RESURRECT = 901874;
 	public static final int STR_INSTANT_DUNGEON_IDLF1_RESURRECT = 901891;
 	public static final int STR_IDARENA_RESURRECT = 903241;
@@ -82,7 +70,7 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 	public static final int STR_INFINITY_INDUN_RESURRECT = 913809;
 	public static final int STR_INSTANT_DUNGEON_RESURRECT_RESURRECT_POINT = 904731;
 
-	// HOUSING 3.0
+	// 房屋 3.0 / HOUSING 3.0
 	public static final int STR_HOUSING_TELEPORT_HOME_CONFIRM = 903533;
 	public static final int STR_HOUSING_TELEPORT_BUDDY_CONFIRM = 903534;
 	public static final int STR_HOUSING_TELEPORT_RANDOM_CONFIRM = 903535;
@@ -90,31 +78,31 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 	public static final int STR_BUDDYLIST_ADD_BUDDY_REQUEST = 1300911;
 	public static final int STR_EXCHANGE_HE_REJECTED_EXCHANGE = 1300354;
 
-	// DIMENSIONAL RIFT 3.5
+	// 次元裂隙 3.5 / DIMENSIONAL RIFT 3.5
 	public static final int STR_ASK_PASS_BY_INVADE_DIRECT_PORTAL = 904304;
 	public static final int STR_ASK_INVADE_DIRECT_PORTAL_DEFENSE_FORCE = 904306;
 	public static final int STR_INVADE_DIRECT_POTAL_RESURRECT = 904404;
 
-	// EMERGENCY_ESCAPE 3.7
+	// 紧急逃离 3.7 / EMERGENCY_ESCAPE 3.7
 	public static final int STR_CMD_EMERGENCY_ESCAPE = 904653;
 	public static final int STR_POPUP_EMERGENCY_ESCAPE = 904643;
 
-	// LIVE PARTY CONCERT ALL 4.3
+	// 现场派对音乐会全部 4.3 / LIVE PARTY CONCERT ALL 4.3
 	public static final int STR_ASK_PASS_BY_EVENT_DIRECT_PORTAL = 904837;
 
-	// PANESTERRA 4.7
+	// 帕内斯特拉 4.7 / PANESTERRA 4.7
 	public static final int STR_ASK_PASS_BY_SVS_DIRECT_PORTAL = 905067;
 	public static final int STR_CONFIRM_SVS_DIRECT_PORTAL_OUT = 905068;
 	public static final int STR_MSG_SVS_DIRECT_PORTAL_OPEN_NOTICE = 1402418;
 
-	// UPGRADE ARCADE 4.7
+	// 升级街机 4.7 / UPGRADE ARCADE 4.7
 	public static final int STR_POPUP_GACHA_FEVER_TIME_CHECK = 905394;
 
-	// VOLATILE/CHAOS RIFT 4.8
+	// 易变/混沌裂隙 4.8 / VOLATILE/CHAOS RIFT 4.8
 	public static final int STR_ASK_PASS_BY_CHAOS_DIRECT_PORTAL = 905959;
 	public static final int STR_ASK_PASS_BY_LEGION_DIRECT_PORTAL = 905960;
 
-	// RIFT 5.6
+	// 裂隙 5.6 / RIFT 5.6
 	public static final int STR_ASK_PASS_BY_RVR_DIRECT_PORTAL = 906458;
 	public static final int STR_ASK_PASS_BY_DIRECT_PORTAL_USE_AP = 913742;
 
@@ -135,6 +123,15 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 	private Object[] params;
 	private ArtifactLocation artifact;
 
+	/**
+	 * 使用给定参数构造 SM_QUESTION_WINDOW 包。
+	 * Creates a SM_QUESTION_WINDOW packet with the given parameters.
+	 *
+	 * message code
+	 * sender id
+	 * range
+	 * message parameters
+	 */
 	public SM_QUESTION_WINDOW(int code, int senderId, int range, Object... params) {
 		this.code = code;
 		this.senderId = senderId;
@@ -145,7 +142,7 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeD(code);
-		// Beshmundir Temple (Easy-Hard Mode).
+		// 贝斯蒙迪尔神殿（简单-困难模式）。 / Beshmundir Temple (Easy-Hard Mode).
 		if (code == STR_INSTANCE_DUNGEON_WITH_DIFFICULTY_ENTER_CONFIRM) {
 			writeH(0x33);
 			writeH(0x30);
@@ -169,7 +166,7 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 				writeS(String.valueOf(param));
 			}
 		}
-		// Guardian Stone Activation Window
+		// 守护石激活窗口 / Guardian Stone Activation Window
 		if (code == STR_ASK_DOOR_REPAIR_POPUPDIALOG) {
 			writeD(0x00);
 			writeD(0x00);
@@ -179,7 +176,7 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 			writeD(senderId);
 			writeD(0x05);
 		}
-		// Artifact Location Activation Window
+		// 神器位置激活窗口 / Artifact Location Activation Window
 		else if (code == STR_ASK_ARTIFACT_POPUPDIALOG) {
 			writeD(0x00);
 			writeD(0x00);

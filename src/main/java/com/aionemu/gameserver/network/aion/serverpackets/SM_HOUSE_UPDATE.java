@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -29,9 +13,19 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 向客户端同步房屋状态变更（外观部件、门牌、军团徽记等）的服务端包。
+ * Server packet synchronizing house state updates (appearance parts, sign notice, legion emblem, etc.) to the client.
+ */
 public class SM_HOUSE_UPDATE extends AionServerPacket {
 	private House house;
 
+	/**
+	 * 使用指定房屋构造状态更新包。
+	 * Creates an update packet for the given house.
+	 *
+	 * @param house 待同步的房屋 / house to update
+	 */
 	public SM_HOUSE_UPDATE(House house) {
 		this.house = house;
 	}
@@ -63,7 +57,7 @@ public class SM_HOUSE_UPDATE extends AionServerPacket {
 		}
 		LegionMember member = GameCoreGameplayServices.legionService().getLegionMember(playerObjectId);
 		writeD(member == null ? 0 : member.getLegion().getLegionId());
-		// Show/Hide Owner Name
+		// 显示/隐藏所有者名称。 / Show/Hide Owner Name
 		writeC(house.getNoticeState().getPacketValue());
 		byte[] signNotice = house.getSignNotice();
 		for (int i = 0; i < signNotice.length; i++) {
@@ -89,7 +83,7 @@ public class SM_HOUSE_UPDATE extends AionServerPacket {
 		writeD(0);
 		writeC(0);
 
-		// Emblem & Color
+		// 徽章与颜色 / Emblem & Color
 		if (member == null || member.getLegion().getLegionEmblem() == null) {
 			writeC(0);
 			writeC(0);
@@ -105,6 +99,15 @@ public class SM_HOUSE_UPDATE extends AionServerPacket {
 		}
 	}
 
+	/**
+	 * 写入指定部位类型的装饰模板 ID；个人室内房在 skipPersonal 时写 0。
+	 * Writes the decoration template ID for the given part type; writes 0 for personal indoor houses when skipPersonal is set.
+	 *
+	 * house
+	 * part type
+	 * @param floor 楼层索引 / floor index
+	 * @param skipPersonal 是否跳过个人室内房部位 / whether to skip personal indoor parts
+	 */
 	private void writePartData(House house, PartType partType, int floor, boolean skipPersonal) {
 		boolean isPersonal = house.getBuilding().getType() == BuildingType.PERSONAL_INS;
 		HouseDecoration deco = house.getRenderPart(partType, floor);

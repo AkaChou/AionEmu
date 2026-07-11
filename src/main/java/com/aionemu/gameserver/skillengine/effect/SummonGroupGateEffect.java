@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -32,9 +16,17 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 
+/**
+ * 召唤团队之门效果：在施法者位置生成团队传送门。
+ * Summon group-gate effect: spawns a group gate at the effector position.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonGroupGateEffect")
 public class SummonGroupGateEffect extends SummonEffect {
+	/**
+	 * 在施法者坐标生成 GroupGate，并按 time 调度消失。
+	 * Spawns a GroupGate at the effector and schedules despawn after time seconds.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Creature effector = effect.getEffector();

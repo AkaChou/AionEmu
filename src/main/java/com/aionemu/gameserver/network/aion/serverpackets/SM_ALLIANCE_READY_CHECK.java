@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步联盟就绪检查（Ready Check）结果的服务端包。
+ * Server packet synchronizing alliance ready-check status to the client.
+ *
  * @author Sarynth (Thx Rhys2002 for Packets)
  */
 public class SM_ALLIANCE_READY_CHECK extends AionServerPacket {
@@ -27,6 +14,13 @@ public class SM_ALLIANCE_READY_CHECK extends AionServerPacket {
 	private int playerObjectId;
 	private int statusCode;
 
+	/**
+	 * 构造就绪检查状态包。
+	 * Creates a ready-check status packet.
+	 *
+	 * player object id
+	 * @param statusCode 就绪状态码 / ready status code
+	 */
 	public SM_ALLIANCE_READY_CHECK(int playerObjectId, int statusCode) {
 		this.playerObjectId = playerObjectId;
 		this.statusCode = statusCode;

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -36,11 +20,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * 宝箱 AI：校验钥匙后打开宝箱、注册掉落并展示掉落列表。
+ * Chest AI that validates keys, opens the chest, registers drops, and shows the drop list.
+ */
 @AIName("chest")
 public class ChestAI2 extends ActionItemNpcAI2
 {
 	private ChestTemplate chestTemplate;
 	
+	/**
+	 * 玩家开始与本 NPC 对话/交互。
+	 * Player starts dialog/interaction with this NPC.
+	 *
+	 * 玩家 / player
+	 */
 	@Override
 	protected void handleDialogStart(final Player player) {
 		chestTemplate = DataManager.CHEST_DATA.getChestTemplate(getNpcId());
@@ -50,6 +44,12 @@ public class ChestAI2 extends ActionItemNpcAI2
 		super.handleDialogStart(player);
 	}
 	
+	/**
+	 * 使用交互物完成时的逻辑。
+	 * Logic when action-item use finishes.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		if (analyzeOpening(player)) {
@@ -120,6 +120,12 @@ public class ChestAI2 extends ActionItemNpcAI2
 		return false;
 	}
 	
+	/**
+	 * 玩家结束与本 NPC 对话。
+	 * Player finishes dialog with this NPC.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	protected void handleDialogFinish(Player player) {
 	}

@@ -1,19 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 同步生物生命值相关状态变化（HP/MP/FP 增减、伤害、治疗、吸收等）的服务端包。
+ * Server packet synchronizing creature vital-stat changes (HP/MP/FP gain/loss, damage, heal, absorb, etc.).
+ *
  * @author alexa026
  * @author ATracer
  * @author kecimis
@@ -35,6 +22,10 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 	private int value;
 	private int logId;
 
+	/**
+	 * 状态变更类型（对应客户端显示通道）。
+	 * Status-change type (maps to the client display channel).
+	 */
 	public static enum TYPE {
 
 		NATURAL_HP(3),
@@ -45,6 +36,7 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		DAMAGE(7),
 		PROTECTDMG(8),
 		DELAYDAMAGE(10),
+		DROWNING(12),
 		FALL_DAMAGE(17),
 		HEAL_MP(19),
 		ABSORBED_MP(20),
@@ -55,7 +47,7 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		FP(25),
 		NATURAL_FP(26),
 		AUTO_HEAL_FP(27);
-		
+
 		private int value;
 
 		private TYPE(int value) {
@@ -67,6 +59,10 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		}
 	}
 
+	/**
+	 * 战斗日志显示类型（决定客户端飘字/日志文案）。
+	 * log wording on the client). / log wording on the client).
+	 */
 	public static enum LOG {
 
 		SPELLATK(1),
@@ -95,6 +91,14 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		}
 	}
 
+	/**
+	 * @param creature 状态变化的目标生物 / creature whose vitals changed
+	 * @param attacker 来源攻击者（可为 null 语义下的自身） / source attacker
+	 * @param type 状态类型 / status type
+	 * @param skillId 关联技能 ID，无则为 0 / related skill id, or 0
+	 * @param value 变化数值 / delta value
+	 * @param log 战斗日志类型 / combat-log type
+	 */
 	public SM_ATTACK_STATUS(Creature creature, Creature attacker, TYPE type, int skillId, int value, LOG log) {
 		this.creature = creature;
 		this.attacker = attacker;
@@ -104,10 +108,18 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 		this.logId = log.getValue();
 	}
 
+	/**
+	 * 使用 {@link LOG#REGULAR} 的便捷构造。
+	 * Convenience constructor using {@link LOG#REGULAR}.
+	 */
 	public SM_ATTACK_STATUS(Creature creature, Creature attacker, TYPE type, int skillId, int value) {
 		this(creature, attacker, type, skillId, value, LOG.REGULAR);
 	}
 
+	/**
+	 * 普通数值变化的便捷构造（TYPE.REGULAR / LOG.REGULAR）。
+	 * Convenience constructor for a plain regular delta.
+	 */
 	public SM_ATTACK_STATUS(Creature creature, Creature attacker, int value) {
 		this(creature, attacker, TYPE.REGULAR, 0, value, LOG.REGULAR);
 	}
@@ -126,10 +138,11 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 			writeD(0x00);
 		}
 		switch (type) {
-			case ATTACK:
-			case DAMAGE:
-			case DELAYDAMAGE:
-				writeD(-value);
+		case ATTACK:
+		case DAMAGE:
+		case DELAYDAMAGE:
+		case DROWNING:
+			writeD(-value);
 				break;
 			default:
 				writeD(value);
@@ -152,29 +165,4 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 			writeH(LOG.ATTACK.getValue());
 		}
 	}
-	// logId
-	// depends on effecttemplate
-	// effecttemplate (TYPE) LOG.getValue()
-	// spellattack(hp) 1
-	// poison(hp) 25
-	// delaydamage(hp) 95
-	// bleed(hp) 26
-	// mp regen(natural_mp) 171
-	// hp regen(natural_hp) 171
-	// fp regen(natural_fp) 171
-	// fp pot(fp) 171
-	// prochp(hp) 171
-	// procmp(mp) 171
-	// heal_instant (regular) 171
-	// SpellAtkDrainInstantEffect(absorbed_mp) 24(refactoring shard)
-	// mpheal(mp) 4
-	// heal(hp) 3
-	// fpheal(fp) 133
-	// spellatkdrain(hp) 130
-	// falldmg (17) 170
-	// mpheal (19) 171
-	// hp as cost parameter(4) logId 170
-	// procatkinstant - (7) 92
-	// protecteffect on protector - (8) 171
-	// TODO find rest of logIds
 }

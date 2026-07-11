@@ -1,59 +1,50 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.collections.cachemap;
 
 /**
- * This interface represents a Map structure for cache usage.
- * 
+ * 供缓存使用的 Map 结构接口。
+ * Map structure interface for cache usage.
+ *
+ * @param <K> 键类型 / Key type
+ * @param <V> 值类型 / Value type
  * @author Luno
  */
 public interface CacheMap<K, V> {
 
 	/**
-	 * Adds a pair <key,value> to cache map.<br>
-	 * <br>
-	 * <font color='red'><b>NOTICE:</b> </font> if there is already a value with
-	 * given id in the map, {@link IllegalArgumentException} will be thrown.
-	 * 
-	 * @param key
-	 * @param value
+	 * 向缓存映射添加一对键值。
+	 * Add a key-value pair to the cache map.
+	 * <p>
+	 * 若给定键已存在，将抛出 {@link IllegalArgumentException}。
+	 * Throws {@link IllegalArgumentException} if the key already exists.
+	 *
+	 * Key
+	 * Value
 	 */
 	public void put(K key, V value);
 
 	/**
-	 * Returns cached value correlated to given key.
-	 * 
-	 * @param key
-	 * @return V
+	 * 返回与给定键关联的缓存值。
+	 * Return the cached value correlated to the given key.
+	 *
+	 * Key
+	 * @return 缓存值，不存在则为 null / Cached value, or null if absent
 	 */
 	public V get(K key);
 
 	/**
-	 * Checks whether this map contains a value related to given key.
-	 * 
-	 * @param key
-	 * @return true or false
+	 * 是否包含与给定键相关的值。
+	 * Whether this map contains a value for the given key.
+	 *
+	 * Key
+	 * 存在则为 true / True if present
 	 */
 	public boolean contains(K key);
 
 	/**
-	 * Removes an entry from the map, that has given key.
-	 * 
-	 * @param key
+	 * 移除给定键对应的条目。
+	 * Remove the entry with the given key.
+	 *
+	 * Key
 	 */
 	public void remove(K key);
 }

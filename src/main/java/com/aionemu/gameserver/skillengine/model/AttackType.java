@@ -1,30 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 攻击类型：用于条件/效果匹配命中来源。
+ * Attack type: used by conditions/effects to match hit source.
+ *
  * @author Sippolo
  */
 @XmlType(name = "attackType")
 @XmlEnum
 public enum AttackType {
 
-	EVERYHIT, PHYSICAL_SKILL, MAGICAL_SKILL, ALL_SKILL;
+	/** 每次命中 / Every hit */
+	EVERYHIT,
+	/** 物理技能 / Physical skill */
+	PHYSICAL_SKILL,
+	/** 魔法技能 / Magical skill */
+	MAGICAL_SKILL,
+	/** 全部技能 / All skills */
+	ALL_SKILL;
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -37,6 +21,9 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 任务模板数据容器，按任务 ID 索引，并按 NPC 势力分组。
+ * Quest template data holder, indexed by quest id and grouped by NPC faction.
+ *
  * @author MrPoke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -50,6 +37,10 @@ public class QuestsData {
 	@XmlTransient
 	private IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<List<QuestTemplate>>();
 
+	/**
+	 * JAXB 反序列化完成后，重建任务 ID 索引与势力分组。
+	 * After JAXB unmarshalling, rebuilds the quest-id index and faction groups.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		questData.clear();
 		sortedByFactionId.clear();
@@ -69,10 +60,26 @@ public class QuestsData {
 		}
 	}
 
+	/**
+	 * 按任务 ID 获取任务模板。
+	 * Returns the quest template for the given quest id.
+	 *
+	 * @param id 任务 ID / quest id
+	 * @return 任务模板，不存在则为 null / quest template or null
+	 */
 	public QuestTemplate getQuestById(int id) {
 		return questData.get(id);
 	}
 
+	/**
+	 * 返回指定 NPC 势力下、玩家当前可接取的任务列表。
+	 * Returns faction quests the player can currently start.
+	 *
+	 * NPC faction id
+	 *
+	 * @param npcFactionId 玩家 / player
+	 * @param player @return 可接任务列表 / startable quest list
+	 */
 	public List<QuestTemplate> getQuestsByNpcFaction(int npcFactionId, Player player) {
 		List<QuestTemplate> factionQuests = sortedByFactionId.get(npcFactionId);
 		List<QuestTemplate> quests = new ArrayList<QuestTemplate>();
@@ -92,19 +99,31 @@ public class QuestsData {
 		return quests;
 	}
 
+	/**
+	 * 返回已加载的任务模板数量。
+	 * Returns the number of loaded quest templates.
+	 *
+	 * quest count
+	 */
 	public int size() {
 		return questData.size();
 	}
 
 	/**
-	 * @return the questsData
+	 * 返回原始任务模板列表。
+	 * Returns the raw quest template list.
+	 *
+	 * @return 任务模板列表 / quest template list
 	 */
 	public List<QuestTemplate> getQuestsData() {
 		return questsData;
 	}
 
 	/**
-	 * @param questsData the questsData to set
+	 * 设置任务模板列表并立即重建索引。
+	 * Sets the quest template list and rebuilds indexes immediately.
+	 *
+	 * @param questsData 任务模板列表 / quest template list
 	 */
 	public void setQuestsData(List<QuestTemplate> questsData) {
 		this.questsData = questsData;

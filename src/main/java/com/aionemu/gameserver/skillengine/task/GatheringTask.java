@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.task;
 
 import com.aionemu.commons.utils.Rnd;
@@ -30,10 +14,33 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 采集任务：对可采集物推进成功/失败进度并发放材料。
+ * Gathering task: advances success/failure against a gatherable and awards material.
+ */
 public class GatheringTask extends AbstractCraftTask {
+
+	/**
+	 * 可采集物模板。
+	 * Gatherable template.
+	 */
 	private GatherableTemplate template;
+
+	/**
+	 * 目标材料。
+	 * Target material.
+	 */
 	private Material material;
 
+	/**
+	 * 构造采集任务。
+	 * Creates a gathering task.
+	 *
+	 * gathering player
+	 * gatherable object
+	 * target material
+	 * @param skillLvlDiff 技能等级差 / skill level difference
+	 */
 	public GatheringTask(Player requestor, Gatherable gatherable, Material material, int skillLvlDiff) {
 		super(requestor, gatherable, skillLvlDiff);
 		this.template = gatherable.getObjectTemplate();
@@ -45,6 +52,10 @@ public class GatheringTask extends AbstractCraftTask {
 		maxFailureValue = (this.itemQuality.getQualityId() + 1) * 30;
 	}
 
+	/**
+	 * 中止采集：发送中止更新与状态。
+	 * Aborts gathering: sends abort update and status.
+	 */
 	@Override
 	protected void onInteractionAbort() {
 		PacketSendUtility.sendPacket(requestor, new SM_GATHER_UPDATE(template, material, 0, 0, 5));
@@ -52,11 +63,19 @@ public class GatheringTask extends AbstractCraftTask {
 				new SM_GATHER_STATUS(requestor.getObjectId(), responder.getObjectId(), 2));
 	}
 
+	/**
+	 * 交互结束：通知可采集物控制器完成。
+	 * Interaction finish: notifies the gatherable controller of completion.
+	 */
 	@Override
 	protected void onInteractionFinish() {
 		((Gatherable) responder).getController().completeInteraction();
 	}
 
+	/**
+	 * 交互开始：发送初始进度与状态。
+	 * Interaction start: sends initial progress and status.
+	 */
 	@Override
 	protected void onInteractionStart() {
 		PacketSendUtility.sendPacket(requestor,
@@ -69,7 +88,8 @@ public class GatheringTask extends AbstractCraftTask {
 	}
 
 	/**
-	 * Perform interaction calculation
+	 * 分析本 tick 暴击与进度增量。
+	 * Analyzes this tick's crit and progress increments.
 	 */
 	@Override
 	protected void analyzeInteraction() {
@@ -104,6 +124,10 @@ public class GatheringTask extends AbstractCraftTask {
 		}
 	}
 
+	/**
+	 * 向客户端发送采集进度更新。
+	 * Sends gathering progress update to the client.
+	 */
 	@Override
 	protected void sendInteractionUpdate() {
 		PacketSendUtility.sendPacket(requestor, new SM_GATHER_UPDATE(template, material, currentSuccessValue,
@@ -113,6 +137,12 @@ public class GatheringTask extends AbstractCraftTask {
 		}
 	}
 
+	/**
+	 * 执行一次采集交互 tick。
+	 * Performs one gathering interaction tick.
+	 *
+	 * @return true 表示任务应停止 / true if the task should stop
+	 */
 	@Override
 	protected boolean onInteraction() {
 		if (currentSuccessValue == maxSuccessValue) {
@@ -127,6 +157,10 @@ public class GatheringTask extends AbstractCraftTask {
 		return false;
 	}
 
+	/**
+	 * 失败完成：发送失败更新与状态。
+	 * Failure finish: sends failure update and status.
+	 */
 	@Override
 	protected void onFailureFinish() {
 		PacketSendUtility.sendPacket(requestor,
@@ -137,6 +171,12 @@ public class GatheringTask extends AbstractCraftTask {
 				new SM_GATHER_STATUS(requestor.getObjectId(), responder.getObjectId(), 3), true);
 	}
 
+	/**
+	 * 成功完成：发放材料、扣消耗物并奖励玩家。
+	 * Success finish: awards material, consumes required items, and rewards the player.
+	 *
+	 * @return 始终 true，表示任务结束 / always true to end the task
+	 */
 	@Override
 	protected boolean onSuccessFinish() {
 		PacketSendUtility.sendPacket(requestor,

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.controllers.movement.MovementMask;
@@ -27,6 +11,10 @@ import com.aionemu.gameserver.services.antihack.AntiHackService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 玩家普通移动同步的客户端包。
+ * Client packet for normal player movement synchronization.
+ */
 public class CM_MOVE extends AionClientPacket {
 	private byte type;
 	private byte heading;
@@ -45,11 +33,21 @@ public class CM_MOVE extends AionClientPacket {
 	private byte glideFlag;
 	private int unk1;
 	private int unk2;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_MOVE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取移动掩码、朝向与坐标向量。
+	 * Reads movement mask, heading, and coordinate vectors.
+	 */
 	@Override
 	protected void readImpl() {
 		Player player = getConnection().getActivePlayer();
@@ -86,7 +84,10 @@ public class CM_MOVE extends AionClientPacket {
 			vehicleZ = readF();
 		}
 	}
-
+	/**
+	 * 更新玩家移动控制器与世界坐标。
+	 * Updates the player move controller and world position.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();

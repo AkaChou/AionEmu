@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.challenge;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * Contribution 奖励模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ContributionReward")
@@ -36,18 +25,22 @@ public class ContributionReward {
 	@XmlAttribute(required = true)
 	protected int rank;
 
+	/** 获取物品计数。 / Returns the item count. */
 	public int getItemCount() {
 		return this.itemCount;
 	}
 
+	/** 返回 reward id / Returns the reward id */
 	public int getRewardId() {
 		return this.rewardId;
 	}
 
+	/** 返回 number / Returns the number */
 	public int getNumber() {
 		return this.number;
 	}
 
+	/** 获取军阶。 / Returns the rank. */
 	public int getRank() {
 		return this.rank;
 	}

@@ -8,8 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
- * @author Ritsu
+ * 寂静峡谷任务脚本：Petrificationand Pride（任务 ID 30054）。
+ * Silentera Canyon quest script: Petrificationand Pride (quest ID 30054).
  *
+ * @author Ritsu
  */
 public class _30054PetrificationandPride extends QuestHandler  {
 

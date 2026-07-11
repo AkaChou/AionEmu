@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.pets;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -39,6 +23,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 宠物 Buff，用于 pets 相关逻辑。
+ * Pet Buff for pets logic.
+ */
+
 public class PetBuff implements StatOwner {
 	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
 	private PetBonusAttr petBonusAttr;
@@ -49,6 +38,7 @@ public class PetBuff implements StatOwner {
 		petBonusAttr = DataManager.PET_BUFF_DATA.getPetBonusattr(buffId);
 	}
 
+	/** 应用效果。 / Apply effect. */
 	public void applyEffect(Player player, int time) {
 		if (hasPetBuff() || petBonusAttr == null) {
 			return;
@@ -77,6 +67,7 @@ public class PetBuff implements StatOwner {
 		PacketSendUtility.sendPacket(player, new SM_PET(true, 0, 0));// start cheering
 	}
 
+	/** 结束效果 / End Effect */
 	public void endEffect(Player player) {
 		functions.clear();
 		if (task != null) {
@@ -89,6 +80,7 @@ public class PetBuff implements StatOwner {
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 	}
 
+	/** 返回 buff remaning time / Returns the buff remaning time */
 	public int getBuffRemaningTime() {
 		return (int) ((System.currentTimeMillis() - startTime) / 1000);
 	}
@@ -100,6 +92,7 @@ public class PetBuff implements StatOwner {
 			this.player = player;
 		}
 
+		/** 运行 / run. */
 		@Override
 		public void run() {
 			Pet pet = player.getPet();
@@ -116,6 +109,7 @@ public class PetBuff implements StatOwner {
 		}
 	}
 
+	/** 是否宠物增益 / Whether pet buff*/
 	public boolean hasPetBuff() {
 		return task != null && !task.isDone();
 	}

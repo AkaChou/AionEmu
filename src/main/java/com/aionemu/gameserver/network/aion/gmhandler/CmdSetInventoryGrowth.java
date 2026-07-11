@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.network.aion.gmhandler;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -11,16 +13,26 @@ import com.aionemu.gameserver.world.World;
 import java.util.Collection;
 
 /**
+ * GM 指令：为指定玩家扩展背包（Cube）格子。
+ * GM command handler that expands cube inventory slots for a named or targeted player.
+ *
  * @author Waii
- * new adaptation made by Dezalmado
+ * @modified Dezalmado
  */
 @Slf4j
 public final class CmdSetInventoryGrowth extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器，校验权限后执行背包扩展。
+	 * Creates the handler, checks access, then runs cube expansion.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 可选玩家名 / optional player name
+	 */
     public CmdSetInventoryGrowth(Player admin, String params) {
         super(admin, params);
         if (this.admin == null) {
-            log.warn("Cannot execute CmdSetInventoryGrowth because admin player is null. params={}", params);
+            log.warn(I18n.get("log.1a480cf6cde7", params));
             return;
         }
 
@@ -32,6 +44,10 @@ public final class CmdSetInventoryGrowth extends AbstractGMHandler {
         run();
     }
 
+	/**
+	 * 按选中目标或玩家名定位玩家并尝试扩展 Cube。
+	 * Resolves the player by target or name and attempts a cube expansion.
+	 */
     public void run() {
         Player playerToExpand = null;
         String[] commandArgs = this.params.split(" ");

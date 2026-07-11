@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -30,12 +14,20 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * @author Bio, Sippolo
+ * 瞬时召回效果：向队友发起召回请求，接受后传送至施法者。
+ * Instant recall effect: invites a teammate to teleport to the caster on accept.
+ *
+ * @author Bio
+ * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RecallInstantEffect")
 public class RecallInstantEffect extends EffectTemplate {
 
+	/**
+	 * 发起召回确认请求。
+	 * Starts the recall confirmation request.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		final Creature effector = effect.getEffector();
@@ -48,10 +40,6 @@ public class RecallInstantEffect extends EffectTemplate {
 		final float locationZ = effect.getSkill().getZ();
 		final byte locationH = effect.getSkill().getH();
 
-		/**
-		 * TODO need to confirm if cannot be summoned while on abnormal effects stunned,
-		 * sleeping, feared, etc.
-		 */
 		RequestResponseHandler rrh = new RequestResponseHandler(effector) {
 
 			@Override
@@ -75,6 +63,10 @@ public class RecallInstantEffect extends EffectTemplate {
 						effector.getName(), "Summon Group Member", 30));
 	}
 
+	/**
+	 * 校验召回目标是否合法。
+	 * Validates whether the recall target is legal.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		final Creature effector = effect.getEffector();

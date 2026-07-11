@@ -1,24 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
 /**
- * This class represents an announcement
- * 
+ * 公告模型。
+ * Announcement model.
+ *
  * @author Divinity
  */
 public class Announcement {
@@ -30,17 +15,18 @@ public class Announcement {
 	private int delay;
 
 	/**
-	 * Constructor without the ID of announcement
-	 * 
-	 * @param announce
-	 * @param faction
-	 * @param chatType
-	 * @param delay
+	 * 无公告 ID 的构造。
+	 * Constructor without announcement id.
+	 *
+	 * announcement text
+	 * faction
+	 * chat type
+	 * @param delay 延迟秒数 / delay in seconds
 	 */
 	public Announcement(String announce, String faction, String chatType, int delay) {
 		this.announce = announce;
 
-		// Checking the right syntax
+		// 校验阵营语法 / Validate faction syntax
 		if (!faction.equalsIgnoreCase("ELYOS") && !faction.equalsIgnoreCase("ASMODIANS")) {
 			faction = "ALL";
 		}
@@ -50,19 +36,20 @@ public class Announcement {
 	}
 
 	/**
-	 * Constructor with the ID of announcement
-	 * 
-	 * @param id
-	 * @param announce
-	 * @param faction
-	 * @param chatType
-	 * @param delay
+	 * 带公告 ID 的构造。
+	 * Constructor with announcement id.
+	 *
+	 * @param id 公告 ID / announcement id
+	 * announcement text
+	 * faction
+	 * chat type
+	 * @param delay 延迟秒数 / delay in seconds
 	 */
 	public Announcement(int id, String announce, String faction, String chatType, int delay) {
 		this.id = id;
 		this.announce = announce;
 
-		// Checking the right syntax
+		// 校验阵营语法 / Validate faction syntax
 		if (!faction.equalsIgnoreCase("ELYOS") && !faction.equalsIgnoreCase("ASMODIANS")) {
 			faction = "ALL";
 		}
@@ -72,9 +59,10 @@ public class Announcement {
 	}
 
 	/**
-	 * Return the id of the announcement In case of the id doesn't exist, return -1
-	 * 
-	 * @return int - Announcement's id
+	 * 返回公告 ID；不存在时返回 -1。
+	 * Returns the announcement id, or -1 if missing.
+	 *
+	 * announcement id
 	 */
 	public int getId() {
 		if (id != 0) {
@@ -85,28 +73,30 @@ public class Announcement {
 	}
 
 	/**
-	 * Return the announcement's text
-	 * 
-	 * @return String - Announcement's text
+	 * 返回公告正文。
+	 * Returns the announcement text.
+	 *
+	 * announcement text
 	 */
 	public String getAnnounce() {
 		return announce;
 	}
 
 	/**
-	 * Return the announcement's faction in string mode : - ELYOS - ASMODIANS - ALL
-	 * 
-	 * @return String - Announcement's faction
+	 * 返回公告阵营字符串：ELYOS / ASMODIANS / ALL。
+	 * ASMODIANS / ALL. / ASMODIANS / ALL.
+	 *
+	 * @return 阵营字符串 / faction string
 	 */
 	public String getFaction() {
 		return faction;
 	}
 
 	/**
-	 * Return the announcement's faction in Race enum mode : - Race.ELYOS -
-	 * Race.ASMODIANS
-	 * 
-	 * @return Race - Announcement's faction
+	 * 返回公告阵营枚举：{@link Race#ELYOS} / {@link Race#ASMODIANS}；ALL 时为 null。
+	 * {@link Race#ASMODIANS}; null for ALL. / {@link Race#ASMODIANS}; null for ALL.
+	 *
+	 * faction race
 	 */
 	public Race getFactionEnum() {
 		if (faction.equalsIgnoreCase("ELYOS")) {
@@ -118,18 +108,20 @@ public class Announcement {
 	}
 
 	/**
-	 * Return the chatType in String mode (for the insert in database)
-	 * 
-	 * @return String - Announcement's chatType
+	 * 返回聊天类型字符串（用于入库）。
+	 * Returns the chat type string (for DB insert).
+	 *
+	 * @return 聊天类型字符串 / chat type string
 	 */
 	public String getType() {
 		return chatType;
 	}
 
 	/**
-	 * Return the chatType with the ChatType Enum
-	 * 
-	 * @return ChatType - Announcement's chatType
+	 * 返回聊天类型枚举。
+	 * Returns the chat type enum.
+	 *
+	 * chat type
 	 */
 	public ChatType getChatType() {
 		if (chatType.equalsIgnoreCase("System")) {
@@ -148,9 +140,10 @@ public class Announcement {
 	}
 
 	/**
-	 * Return the announcement's delay
-	 * 
-	 * @return int - Announcement's delay
+	 * 返回公告延迟（秒）。
+	 * Returns the announcement delay in seconds.
+	 *
+	 * delay in seconds
 	 */
 	public int getDelay() {
 		return delay;

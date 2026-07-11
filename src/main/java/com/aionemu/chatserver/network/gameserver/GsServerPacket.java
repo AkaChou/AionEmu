@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.gameserver;
 
 import java.nio.ByteBuffer;
@@ -23,24 +5,27 @@ import java.nio.ByteBuffer;
 import com.aionemu.commons.network.packet.BaseServerPacket;
 
 /**
- * Base class for every LS -> GameServer Server Packet.
+ * 聊天服 → 游戏服服务端数据包的抽象基类。
+ * Abstract base class for every chat server → game server server packet.
  *
  * @author -Nemesiss-
  */
 public abstract class GsServerPacket extends BaseServerPacket {
 
     /**
-     * Constructs a new server packet.
+     * 构造服务端数据包（默认 opcode 为 0）。
+     * Constructs a server packet (default opcode is 0).
      */
     protected GsServerPacket() {
         super(0);
     }
 
     /**
-     * Write this packet data for given connection, to given buffer.
+     * 将本包数据写入指定连接的缓冲。
+     * Writes this packet's data for the given connection into the buffer.
      *
-     * @param con
-     * @param buffer
+     * @param con 目标游戏服连接 / target game-server connection
+     * write buffer
      */
     public final synchronized void write(GsConnection con, ByteBuffer buffer) {
         setBuf(buffer);
@@ -52,10 +37,10 @@ public abstract class GsServerPacket extends BaseServerPacket {
     }
 
     /**
-     * Write data that this packet represents to given byte buffer.
+     * 由子类实现的具体包体写入逻辑。
+     * Subclass-implemented body that serializes packet-specific data.
      *
-     * @param con
-     * @param buf
+     * @param con 目标游戏服连接 / target game-server connection
      */
     protected abstract void writeImpl(GsConnection con);
 }

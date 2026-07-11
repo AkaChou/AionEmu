@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 
 /**
+ * 飞行环服务，启动时加载并生成全部飞行环。
+ * Fly-ring service that loads and spawns all fly rings at startup.
+ *
  * @author xavier
  */
 @Slf4j
@@ -36,6 +23,12 @@ public class FlyRingService {
 		protected static final FlyRingService instance = new FlyRingService();
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final FlyRingService getInstance() {
 		ObjectProvider<FlyRingService> provider = instanceProvider;
 		if (provider == null) {
@@ -44,10 +37,20 @@ public class FlyRingService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<FlyRingService> instanceProvider) {
 		FlyRingService.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 从静态数据加载飞行环模板并全部生成。
+	 * Loads fly-ring templates from static data and spawns them all.
+	 */
 	public FlyRingService() {
 		for (FlyRingTemplate t : DataManager.FLY_RING_DATA.getFlyRingTemplates()) {
 			FlyRing f = new FlyRing(t, 0);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,10 +9,18 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 仇恨切换效果：交换玩家与其召唤物在目标仇恨列表中的仇恨值。
+ * Switch-hostile effect: swaps hate between the player and their summon on the target aggro list.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SwitchHostileEffect")
 public class SwitchHostileEffect extends EffectTemplate {
 
+	/**
+	 * 读取玩家与召唤物仇恨并互换。
+	 * Reads player and summon hate, then swaps them on the aggro list.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 

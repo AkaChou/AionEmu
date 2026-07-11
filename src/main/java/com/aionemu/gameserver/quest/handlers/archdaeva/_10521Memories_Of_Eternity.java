@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,10 +19,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/** Source KOR: https://www.youtube.com/watch?v=8Qt-ZODwhoA
-/****/
+/**
+ * 大天使任务脚本：Memories Of Eternity（任务 ID 10521）。
+ * Archdaeva quest script: Memories Of Eternity (quest ID 10521). Source KOR: https://www.youtube.com/watch?v=8Qt-ZODwhoA
+ *
+ * @author Encom
+ */
 public class _10521Memories_Of_Eternity extends QuestHandler {
 
 	public static final int questId = 10521;
@@ -146,7 +132,7 @@ public class _10521Memories_Of_Eternity extends QuestHandler {
 							return sendQuestDialog(env, 2717);
 						}
 					}
-					//(Finish reading.)
+					// （读完。） / (Finish reading.)
 					case STEP_TO_6: {
                         changeQuestStep(env, 5, 6, false);
 						return closeDialogWindow(env);
@@ -164,7 +150,7 @@ public class _10521Memories_Of_Eternity extends QuestHandler {
 							return sendQuestDialog(env, 3058);
 						}
 					}
-					//(Finish reading.)
+					// （读完。） / (Finish reading.)
 					case STEP_TO_7: {
                         changeQuestStep(env, 6, 7, false);
 						return closeDialogWindow(env);

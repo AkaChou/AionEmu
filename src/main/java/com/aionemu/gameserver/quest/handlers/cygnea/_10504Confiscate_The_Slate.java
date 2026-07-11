@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.cygnea;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -21,10 +9,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.services.QuestService;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 希格尼娅任务脚本：Confiscate The Slate（任务 ID 10504）。
+ * Cygnea quest script: Confiscate The Slate (quest ID 10504).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _10504Confiscate_The_Slate extends QuestHandler
 {
     public static final int questId = 10504;

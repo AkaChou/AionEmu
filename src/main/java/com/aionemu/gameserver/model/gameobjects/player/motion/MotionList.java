@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player.motion;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
@@ -30,8 +17,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/*
- * @Rework: MATTY
+/**
+ * Motion 列表。
+ * Motion List game object.
  */
 @Slf4j
 
@@ -44,6 +32,7 @@ public class MotionList {
         this.owner = owner;
     }
 
+    /** 返回 active motions / Returns the active motions */
     public Map<Integer, Motion> getActiveMotions() {
         if (activeMotions == null) {
             return Collections.emptyMap();
@@ -51,6 +40,7 @@ public class MotionList {
         return activeMotions;
     }
 
+    /** 返回 motions / Returns the motions */
     public Map<Integer, Motion> getMotions() {
         if (motions == null) {
             return Collections.emptyMap();
@@ -58,6 +48,7 @@ public class MotionList {
         return motions;
     }
 
+    /** 添加。 / Add. */
     public void add(Motion motion, boolean persist) {
         if (motions == null) {
             motions = new HashMap<Integer, Motion>();
@@ -84,6 +75,7 @@ public class MotionList {
         }
     }
 
+    /** 移除。 / Remove. */
     public boolean remove(int motionId) {
         Motion motion = motions.remove(motionId);
         if (motion != null) {
@@ -97,6 +89,7 @@ public class MotionList {
         return false;
     }
 
+    /** 设置 active / Sets the active */
     public void setActive(int motionId, int motionType) {
         if (motionId != 0) {
             Motion motion = motions.get(motionId);
@@ -126,21 +119,22 @@ public class MotionList {
     }
 
     /**
-     *  Проверяет, есть ли у игрока анимация с заданным ID.
-     *  @param motionId ID анимации для проверки.
-     *  @return true, если анимация существует, false в противном случае.
-     */
+	 * 检查玩家是否拥有指定 ID 的动画。 / Checks if the player has a motion with the given ID.
+	 */
     public boolean hasMotion(Integer motionId) {
        if (motions == null) {
-           // log.warn("hasMotion: motions == null, возвращаем false");
+           // log.warn(I18n.get("log.23d63069dea6"));
            return false;
        }
-       // log.warn("hasMotion: Проверяем наличие motionId: {}", motionId);
+       // log.warn(I18n.get("log.c50d484d22d8", motionId));
        boolean containsKey = motions.containsKey(motionId);
-       // log.warn("hasMotion: motions.containsKey({}) вернул: {}", motionId, containsKey);
+       // log.warn(I18n.get("log.85dce534d5fa", motionId, containsKey));
        return containsKey;
     }
 
+    /**
+	 * 加载 motions 从数据库 / 加载 motions 从数据库。 / Load motions from database / Load motions from database
+	 */
     public void loadMotionsFromDatabase() {
         List<Motion> loadedMotions = DAOManager.getDAO(MotionDAO.class).loadMotions(owner.getObjectId());
         if (loadedMotions != null) {

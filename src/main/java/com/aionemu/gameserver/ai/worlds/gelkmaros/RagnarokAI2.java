@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.gelkmaros;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -39,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Gelkmaros 区域 NPC AI：Ragnarok（@AIName "ragnarok"），继承 AggressiveNpcAI2。
+ * Gelkmaros zone NPC AI: Ragnarok (@AIName "ragnarok"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("ragnarok")
 public class RagnarokAI2 extends AggressiveNpcAI2
 {
@@ -61,19 +47,19 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 90) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				//Attack of poison and paralysis begins.
+				// 毒素与麻痹攻击开始。 / Attack of poison and paralysis begins.
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400610, 0);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 50) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				//Attack that restricts physical and magical assaults begins.
+				// 限制物理与魔法攻击的攻势开始。 / Attack that restricts physical and magical assaults begins.
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400611, 0);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 10) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				//Powerful continuous attacks and reflections begin.
+				// 强力持续攻击与反射开始。 / Powerful continuous attacks and reflections begin.
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400613, 0);
 				startPhaseTask();
 			}
@@ -124,7 +110,7 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 								spawn(281950, x, y, z, (byte) 0); //Ragnarok's Parasite.
 							break;
 							case 2:
-							    //Ragnarok's acidic fluid appears.
+							    // 诸神黄昏的酸液出现。 / Ragnarok's acidic fluid appears.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400612, 2000);
 							    spawn(281951, x, y, z, (byte) 0); //Ragnarok Slime.
 							break;

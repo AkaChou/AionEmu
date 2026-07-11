@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.EmotionType;
@@ -23,6 +7,10 @@ import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 生物情绪/动作状态包：跳跃、飞行、攻击模式、表情等，按 EmotionType 写入附加字段。
+ * Creature emotion/action packet (jump, fly, attack mode, emote, …) with type-specific fields.
+ */
 public class SM_EMOTION extends AionServerPacket {
 	private int senderObjectId;
 	private EmotionType emotionType;
@@ -37,10 +25,18 @@ public class SM_EMOTION extends AionServerPacket {
 	private float z;
 	private byte heading;
 
+	/**
+	 * 仅情绪类型，无附加目标。
+	 * Emotion type only, no extra target.
+	 */
 	public SM_EMOTION(Creature creature, EmotionType emotionType) {
 		this(creature, emotionType, 0, 0);
 	}
 
+	/**
+	 * 标准生物情绪包，附带目标与当前攻速/移速。
+	 * Standard creature emotion with target and current attack/move speed.
+	 */
 	public SM_EMOTION(Creature creature, EmotionType emotionType, int emotion, int targetObjectId) {
 		this.senderObjectId = creature.getObjectId();
 		this.emotionType = emotionType;
@@ -53,12 +49,20 @@ public class SM_EMOTION extends AionServerPacket {
 		this.speed = creature.getGameStats().getMovementSpeedFloat();
 	}
 
+	/**
+	 * 按对象 ID 与状态写入的简化情绪包。
+	 * Simplified emotion by object id and state.
+	 */
 	public SM_EMOTION(int Objid, EmotionType emotionType, int state) {
 		this.senderObjectId = Objid;
 		this.emotionType = emotionType;
 		this.state = state;
 	}
 
+	/**
+	 * 玩家带坐标的情绪（如坐下椅子）。
+	 * Player emotion with coordinates (e.g. chair sit).
+	 */
 	public SM_EMOTION(Player player, EmotionType emotionType, int emotion, float x, float y, float z, byte heading,
 			int targetObjectId) {
 		this.senderObjectId = player.getObjectId();

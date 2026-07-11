@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.inggison;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,10 +19,12 @@ import java.util.Map;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Inggison 区域 NPC AI：Boss Windstream（@AIName "boss_windstream"），继承 AggressiveNpcAI2。
+ * Inggison zone NPC AI: Boss Windstream (@AIName "boss_windstream"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("boss_windstream")
 public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 {
@@ -48,8 +34,8 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		switch (getNpcId()) {
 		   /**
-			* WINDSTREAM INGGISON
-			*/
+	 * WINDSTREAM INGGISON
+	 */
 			case 215584: //Titan Starturtle.
 				announceWindBox();
 				SpawnTemplate CastShadowPLSM = SpawnEngine.addNewSingleTimeSpawn(210130000, 281817, 338.26440f, 573.72168f, 458.27939f, (byte) 0);
@@ -60,7 +46,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					public void run() {
 					    despawnNpc(281817);
 					}
-				}, 300000); //5 Minutes.
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 216849: //Watcher Garma.
 				announceWindBox();
@@ -72,7 +58,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					public void run() {
 					    despawnNpc(281817);
 					}
-				}, 300000); //5 Minutes.
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 216848: //Illanthe Hundredyears.
 				announceWindBox();
@@ -84,7 +70,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					public void run() {
 					    despawnNpc(281817);
 					}
-				}, 300000); //5 Minutes.
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 217071: //Esalki The Fourth.
 				announceWindBox();
@@ -96,7 +82,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					public void run() {
 					    despawnNpc(281817);
 					}
-				}, 300000); //5 Minutes.
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 217072: //Huge Waterfall Starturtle.
 				announceWindBox();
@@ -108,11 +94,11 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					public void run() {
 					    despawnNpc(281817);
 					}
-				}, 300000); //5 Minutes.
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 		   /**
-			* WINDSTREAM GELKMAROS
-			*/
+	 * WINDSTREAM GELKMAROS
+	 */
 			case 216846: //Agrima.
 				announceWindBox();
 				SpawnTemplate FileLadderCGF = SpawnEngine.addNewSingleTimeSpawn(220140000, 281817, 1719.2194f, 2301.7344f, 318.70938f, (byte) 0);
@@ -123,7 +109,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 					public void run() {
 					    despawnNpc(281817);
 					}
-				}, 300000); //5 Minutes.
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 		}
 		super.handleDied();

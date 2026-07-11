@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -32,6 +16,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.portal.InstanceExit;
 
+/**
+ * 副本出口数据容器，按世界 ID 与种族索引出口点。
+ * Instance exit data holder, indexing exit points by world id and race.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "instanceExit" })
 @XmlRootElement(name = "instance_exits")
@@ -45,6 +33,10 @@ public class InstanceExitData {
 	@XmlTransient
 	private Map<Integer, List<InstanceExit>> exitsByWorldId = new HashMap<Integer, List<InstanceExit>>();
 
+	/**
+	 * JAXB 反序列化完成后，建立世界 ID 索引并释放原始列表。
+	 * After JAXB unmarshalling, builds the world-id index and clears the raw list.
+	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (InstanceExit exit : instanceExit) {
 			instanceExits.add(exit);
@@ -54,6 +46,14 @@ public class InstanceExitData {
 		instanceExit = null;
 	}
 
+	/**
+	 * 按世界 ID 与种族获取匹配的副本出口。
+	 * Returns the matching instance exit for the given world id and race.
+	 *
+	 * @param worldId 副本 ID / world / instance id。 / 副本 ID / world / instance id
+	 * @param race 玩家种族 / player race
+	 * @return 匹配的出口，不存在则为 null / matching exit or null
+	 */
 	public InstanceExit getInstanceExit(int worldId, Race race) {
 		List<InstanceExit> exits = exitsByWorldId.get(worldId);
 		if (exits == null) {
@@ -67,6 +67,12 @@ public class InstanceExitData {
 		return null;
 	}
 
+	/**
+	 * 返回已加载的副本出口数量。
+	 * Returns the number of loaded instance exits.
+	 *
+	 * exit count
+	 */
 	public int size() {
 		return instanceExits.size();
 	}

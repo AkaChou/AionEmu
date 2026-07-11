@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -31,7 +15,19 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_UPDATE_PLAYER_APPEAR
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 物品幻化服务，处理装备外观改造与预览。
+ * Item remodel service handling equipment appearance remodel and preview.
+ */
 public class ItemRemodelService {
+	/**
+	 * 幻化物品。
+	 * Remodels an item appearance.
+	 *
+	 * @param player 玩家 / player
+	 * @param keepItemObjId 保留物品对象 ID / keepItemObjId
+	 * @param extractItemObjId 提取物品对象 ID / extractItemObjId
+	 */
 	public static void remodelItem(Player player, int keepItemObjId, int extractItemObjId) {
 		Storage inventory = player.getInventory();
 		Item keepItem = inventory.getItemByObjId(keepItemObjId);
@@ -95,6 +91,14 @@ public class ItemRemodelService {
 				new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(keepItem.getItemTemplate().getNameId())));
 	}
 
+	/**
+	 * 系统幻化物品。
+	 * System-remodels an item.
+	 *
+	 * 玩家 / player
+	 * keepItem
+	 * template
+	 */
 	public static void systemRemodelItem(Player player, Item keepItem, ItemTemplate template) {
 		if (keepItem.getItemSkinSkill() > 0) {
 			SkillLearnService.removeSkill(player, keepItem.getItemSkinSkill());
@@ -111,6 +115,15 @@ public class ItemRemodelService {
 		}
 	}
 
+	/**
+	 * 命令预览幻化。
+	 * Command preview remodel.
+	 *
+	 * 玩家 / player
+	 * itemId
+	 * duration
+	 * result
+	 */
 	public static boolean commandViewRemodelItem(Player player, int itemId, int duration) {
 		ItemTemplate template = DataManager.ITEM_DATA.getItemTemplate(itemId);
 		if (template == null) {
@@ -142,6 +155,15 @@ public class ItemRemodelService {
 		return false;
 	}
 
+	/**
+	 * 预览幻化。
+	 * Views remodel preview.
+	 *
+	 * 玩家 / player
+	 * item
+	 * template
+	 * duration
+	 */
 	public static void viewRemodelItem(final Player player, final Item item, ItemTemplate template, int duration) {
 		final ItemTemplate oldTemplate = item.getItemSkinTemplate();
 		item.setItemSkinTemplate(template);
@@ -153,12 +175,20 @@ public class ItemRemodelService {
 				player.getEquipment().getEquippedItemsWithoutStigma()), true);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				item.setItemSkinTemplate(oldTemplate);
 			}
 		}, 50);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				PacketSendUtility.sendPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
 						player.getEquipment().getEquippedForApparence()));

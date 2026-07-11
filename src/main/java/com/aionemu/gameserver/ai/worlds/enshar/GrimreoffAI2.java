@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.enshar;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,16 +14,18 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Enshar 区域 NPC AI：Grimreoff（@AIName "grimreoff"），继承 NpcAI2。
+ * Enshar zone NPC AI: Grimreoff (@AIName "grimreoff"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("grimreoff")
 public class GrimreoffAI2 extends NpcAI2
 {
 	@Override
     protected void handleDialogStart(Player player) {
-        //Arden Territory Village Infiltration Rift Corridor Key.
+        // 阿登领地村庄渗透裂隙走廊钥匙。 / Arden Territory Village Infiltration Rift Corridor Key.
 		if (player.getInventory().getFirstItemByItemId(185000233) != null) {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
         } else {
@@ -49,7 +35,7 @@ public class GrimreoffAI2 extends NpcAI2
 	
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
-		//Arden Territory Village Infiltration Rift Corridor Key.
+		// 阿登领地村庄渗透裂隙走廊钥匙。 / Arden Territory Village Infiltration Rift Corridor Key.
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000233, 1)) {
 		    switch (getNpcId()) {
 		        case 804839: //Grimreoff
@@ -60,7 +46,7 @@ public class GrimreoffAI2 extends NpcAI2
 					    public void run() {
 						    despawnNpc(702721);
 				        }
-			        }, 300000); //5 Minutes.
+			        }, 300000); //5 分钟。 / 5 Minutes.
 				break;
 			}
 		}

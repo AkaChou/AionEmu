@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -29,15 +13,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 暗影法庭副本事件处理器。
+ * Instance event handler for Shadow Court.
+ *
+ * @author Encom
+ */
 
 @InstanceID(320120000)
 public class ShadowCourtInstance extends GeneralInstanceHandler
 {
+    /** 已播放动画集合 / played-movie set */
     private List<Integer> movies = new ArrayList<Integer>();
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
@@ -46,6 +40,12 @@ public class ShadowCourtInstance extends GeneralInstanceHandler
         }
 		sendMovie(player, 423);
     }
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -83,6 +83,10 @@ public class ShadowCourtInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
         movies.clear();

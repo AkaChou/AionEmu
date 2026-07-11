@@ -1,21 +1,9 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.SpawnsData2;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
@@ -24,16 +12,28 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 刷怪点热重载指令；按地图名或全部重载静态刷新数据并重生世界 NPC。
+ * Admin command that hot-reloads spawn data for a map or all maps and re-spawns world NPCs.
+ */
+@Slf4j
 public class ReloadSpawn extends AdminCommand
 {
 	public ReloadSpawn() {
 		super("reload_spawn");
 	}
 	
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param player 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		int worldId;
@@ -42,6 +42,7 @@ public class ReloadSpawn extends AdminCommand
 		destination = "null";
 		if (params == null || params.length < 1) {
 			PacketSendUtility.sendMessage(player, "syntax //reload_spawn <location name | all>");
+			return;
 		}
 		else {
 			StringBuilder sbDestination = new StringBuilder();
@@ -49,7 +50,7 @@ public class ReloadSpawn extends AdminCommand
 				sbDestination.append(p + " ");
 		
 			destination = sbDestination.toString().trim();
-		//ELYOS.
+		// 天族。 / ELYOS.
 		if (destination.equalsIgnoreCase("Sanctum"))
 			worldId = WorldMapType.SANCTUM.getId();
 		else if (destination.equalsIgnoreCase("Kaisinel"))
@@ -78,7 +79,7 @@ public class ReloadSpawn extends AdminCommand
 			worldId = WorldMapType.ILUMA.getId();
 		else if (destination.equalsIgnoreCase("Tower_Of_Eternity_E"))
 			worldId = WorldMapType.TOWER_OF_ETERNITY_E.getId();
-		//ASMODIANS.
+		// 魔族。 / ASMODIANS.
 		else if  (destination.equalsIgnoreCase("Pandaemonium"))
 			worldId = WorldMapType.PANDAEMONIUM.getId();
 		else if (destination.equalsIgnoreCase("Marchutan"))
@@ -107,17 +108,17 @@ public class ReloadSpawn extends AdminCommand
 			worldId = WorldMapType.NORSVOLD.getId();
 		else if (destination.equalsIgnoreCase("Tower_Of_Eternity_A"))
 			worldId = WorldMapType.TOWER_OF_ETERNITY_A.getId();
-		//Other Zone
+		// 其他区域 / Other Zone
 		else if (destination.equalsIgnoreCase("Silentera"))
 			worldId = WorldMapType.SILENTERA_CANYON_MASTER.getId();
 		else if (destination.equalsIgnoreCase("Kaldor"))
 			worldId = WorldMapType.KALDOR.getId();
 		else if (destination.equalsIgnoreCase("Levinshor"))
 			worldId = WorldMapType.LEVINSHOR.getId();
-		//Reshanta
+		// 雷珊塔 / Reshanta
 		else if (destination.equalsIgnoreCase("Reshanta"))
 			worldId = WorldMapType.RESHANTA.getId();
-		//Panesterra
+		// 帕内斯特拉 / Panesterra
 		else if (destination.equalsIgnoreCase("Belus"))
 			worldId = WorldMapType.BELUS.getId();
 		else if (destination.equalsIgnoreCase("Aspida"))
@@ -126,19 +127,28 @@ public class ReloadSpawn extends AdminCommand
 			worldId = WorldMapType.ATANATOS.getId();
 		else if (destination.equalsIgnoreCase("Disillon"))
 			worldId = WorldMapType.DISILLON.getId();
-		//Housing
+		// 房屋 / Housing
 		else if (destination.equalsIgnoreCase("Oriel"))
 			worldId = WorldMapType.ORIEL.getId();
 		else if (destination.equalsIgnoreCase("Pernon"))
 			worldId = WorldMapType.PERNON.getId();
 		else if (destination.equalsIgnoreCase("All"))
 			worldId = 0;
-		else
-			PacketSendUtility.sendMessage(player, "Could not find the specified map !");
+		else {
+				PacketSendUtility.sendMessage(player, "Could not find the specified map !");
+				return;
+			}
+		}
+		try {
+			DataManager.SPAWNS_DATA2 = SpawnsData2.load(Config.dataFile("./data/static_data/spawns"));
+		} catch (Exception e) {
+			PacketSendUtility.sendMessage(player, "Spawn reload failed; existing spawns were kept.");
+			log.error(I18n.get("log.61ab9dbbf5c5"), e);
+			return;
 		}
 		final String destinationMap = destination;
 		if (destination.equalsIgnoreCase("All")) {
-			//ELYOS.
+			// 天族。 / ELYOS.
 			reloadMap(WorldMapType.SANCTUM.getId(), player, "Sanctum");
 			reloadMap(WorldMapType.KAISINEL.getId(), player, "Kaisinel");
 			reloadMap(WorldMapType.KAISINEL_ACADEMY.getId(), player, "Academy");
@@ -153,7 +163,7 @@ public class ReloadSpawn extends AdminCommand
 			reloadMap(WorldMapType.IDIAN_DEPTHS_L.getId(), player, "Idian_L");
 			reloadMap(WorldMapType.ILUMA.getId(), player, "Iluma");
 			reloadMap(WorldMapType.TOWER_OF_ETERNITY_E.getId(), player, "Tower_Of_Eternity_E");
-			//ASMODIANS.
+			// 魔族。 / ASMODIANS.
 			reloadMap(WorldMapType.PANDAEMONIUM.getId(), player, "Pandaemonium");
 			reloadMap(WorldMapType.MARCHUTAN.getId(), player, "Marchutan");
 			reloadMap(WorldMapType.MARCHUTAN_PRIORY.getId(), player, "Priory");
@@ -168,18 +178,18 @@ public class ReloadSpawn extends AdminCommand
 			reloadMap(WorldMapType.IDIAN_DEPTHS_D.getId(), player, "Idian_D");
 			reloadMap(WorldMapType.NORSVOLD.getId(), player, "Norsvold");
 			reloadMap(WorldMapType.TOWER_OF_ETERNITY_A.getId(), player, "Tower_Of_Eternity_A");
-			//Reshanta
+			// 雷珊塔 / Reshanta
 			reloadMap(WorldMapType.RESHANTA.getId(), player, "Reshanta");
-			//Panesterra
+			// 帕内斯特拉 / Panesterra
 			reloadMap(WorldMapType.BELUS.getId(), player, "Belus");
 			reloadMap(WorldMapType.ASPIDA.getId(), player, "Aspida");
 			reloadMap(WorldMapType.ATANATOS.getId(), player, "Atanatos");
 			reloadMap(WorldMapType.DISILLON.getId(), player, "Disillon");
-			//Other Zone
+			// 其他区域 / Other Zone
 			reloadMap(WorldMapType.SILENTERA_CANYON_MASTER.getId(), player, "Silentera");
 			reloadMap(WorldMapType.KALDOR.getId(), player, "Kaldor");
 			reloadMap(WorldMapType.LEVINSHOR.getId(), player, "Levinshor");
-			//Housing
+			// 房屋 / Housing
 			reloadMap(WorldMapType.ORIEL.getId(), player, "Oriel");
 			reloadMap(WorldMapType.PERNON.getId(), player, "Pernon");
 		} else {	
@@ -207,6 +217,13 @@ public class ReloadSpawn extends AdminCommand
 		}
 	}
 	
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //reload_spawn <location name | all>");

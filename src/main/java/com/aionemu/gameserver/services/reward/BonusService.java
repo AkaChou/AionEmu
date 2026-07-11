@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.reward;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +28,9 @@ import com.aionemu.gameserver.model.templates.rewards.CraftItem;
 import com.aionemu.gameserver.model.templates.rewards.MedalItem;
 
 /**
+ * 任务/活动加成奖励服务，按加成类型从物品组中随机抽取奖励。
+ * Quest/event bonus reward service randomly selecting rewards from item groups by bonus type.
+ *
  * @author Rolandas
  */
 @Slf4j
@@ -51,10 +40,20 @@ public class BonusService {
 	private static volatile ObjectProvider<BonusService> instanceProvider;
 	private ItemGroupsData itemGroups = DataManager.ITEM_GROUPS_DATA;
 
+	/**
+	 * 默认构造。
+	 * Default constructor.
+	 */
 	public BonusService() {
 
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地实例）。
+	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local instance).
+	 *
+	 * Service instance
+	 */
 	public static BonusService getInstance() {
 		ObjectProvider<BonusService> provider = instanceProvider;
 		if (provider != null) {
@@ -63,16 +62,36 @@ public class BonusService {
 		return instance;
 	}
 
+	/**
+	 * 使用指定物品组数据获取（或覆盖）服务实例。
+	 * Obtain (or override) the service instance with the given item-group data.
+	 *
+	 * @param itemGroups 物品组数据 / Item groups data
+	 * Service instance
+	 */
 	public static BonusService getInstance(ItemGroupsData itemGroups) {
 		BonusService service = getInstance();
 		service.itemGroups = itemGroups;
 		return service;
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BonusService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 按加成类型返回对应物品组数组。
+	 * Return the bonus item groups for the given bonus type.
+	 *
+	 * @param type 加成类型 / Bonus type
+	 * @return 物品组数组，可能为 null / Item group array, may be null
+	 */
 	public BonusItemGroup[] getGroupsByType(BonusType type) {
 		switch (type) {
 		case BOSS:
@@ -99,11 +118,18 @@ public class BonusService {
 		case WINTER:
 			return null;
 		default:
-			log.warn("Bonus of type " + type + " is not implemented");
+			log.warn(I18n.get("log.42c321e1773d", type));
 			return null;
 		}
 	}
 
+	/**
+	 * 按权重从物品组数组中随机选取一组。
+	 * Randomly pick one group from the array weighted by chance.
+	 *
+	 * @param groups 物品组数组 / Item group array
+	 * @return 选中的组，可能为 null / Chosen group, may be null
+	 */
 	public BonusItemGroup getRandomGroup(BonusItemGroup[] groups) {
 		float total = 0;
 		if (groups == null) {
@@ -132,20 +158,43 @@ public class BonusService {
 		return chosenGroup;
 	}
 
+	/**
+	 * 将原始概率归一化为百分比。
+	 * Normalize a raw chance value into a percentage of the total.
+	 *
+	 * Raw chance
+	 * Total weight
+	 * @return 归一化概率 / Normalized chance
+	 */
 	float getNormalizedChance(float chance, float total) {
 		return chance * 100f / total;
 	}
 
+	/**
+	 * 按加成类型随机选取一组。
+	 * Randomly pick a group for the given bonus type.
+	 *
+	 * @param type 加成类型 / Bonus type
+	 * Chosen group
+	 */
 	public BonusItemGroup getRandomGroup(BonusType type) {
 		return getRandomGroup(getGroupsByType(type));
 	}
 
+	/**
+	 * 根据任务模板计算玩家应得的任务加成物品。
+	 * Resolve the quest-bonus item a player should receive for the given quest template.
+	 *
+	 * 玩家 / Player
+	 * Quest template
+	 * @return 任务物品，无加成时返回 null / Quest item, or null if no bonus
+	 */
 	public QuestItems getQuestBonus(Player player, QuestTemplate questTemplate) {
 		List<QuestBonuses> bonuses = questTemplate.getBonus();
 		if (bonuses.isEmpty()) {
 			return null;
 		}
-		// Only one
+		// 仅一 / Only one
 		QuestBonuses bonus = bonuses.get(0);
 		if (bonus.getType() == BonusType.NONE) {
 			return null;
@@ -168,11 +217,19 @@ public class BonusService {
 		case WINTER:
 			return null;
 		default:
-			log.warn("Bonus of type " + bonus.getType() + " is not implemented");
+			log.warn(I18n.get("log.42c321e1773d", bonus.getType()));
 			return null;
 		}
 	}
 
+	/**
+	 * 解析制作类任务加成奖励。
+	 * Resolve craft-task quest bonus rewards.
+	 *
+	 * 玩家 / Player
+	 * Quest template
+	 * Quest item
+	 */
 	QuestItems getCraftBonus(Player player, QuestTemplate questTemplate) {
 		BonusItemGroup[] groups = itemGroups.getCraftGroups();
 		CraftGroup group = null;
@@ -219,6 +276,14 @@ public class BonusService {
 		return new QuestItems(reward.getId(), itemCount);
 	}
 
+	/**
+	 * 解析勋章类任务加成奖励。
+	 * Resolve medal quest bonus rewards.
+	 *
+	 * 玩家 / Player
+	 * Quest template
+	 * Quest item
+	 */
 	QuestItems getMedalBonus(Player player, QuestTemplate template) {
 		BonusItemGroup[] groups = itemGroups.getMedalGroups();
 		MedalGroup group = (MedalGroup) getRandomGroup(groups);
@@ -249,6 +314,14 @@ public class BonusService {
 		return finalReward != null ? new QuestItems(finalReward.getId(), finalReward.getCount()) : null;
 	}
 
+	/**
+	 * 解析魔石类任务加成奖励。
+	 * Resolve manastone quest bonus rewards.
+	 *
+	 * 玩家 / Player
+	 * @param bonus  任务加成配置 / Quest bonus config
+	 * Quest item
+	 */
 	QuestItems getManastoneBonus(Player player, QuestBonuses bonus) {
 		ManastoneGroup group = (ManastoneGroup) getRandomGroup(BonusType.MANASTONE);
 		ItemRaceEntry[] allRewards = group.getRewards();

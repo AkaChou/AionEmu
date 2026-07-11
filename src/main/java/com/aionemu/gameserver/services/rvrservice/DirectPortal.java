@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.rvrservice;
 
 import com.aionemu.gameserver.model.rvr.RvrLocation;
 import com.aionemu.gameserver.model.rvr.RvrStateType;
 
 /**
+ * 种族对抗（RVR）直通门默认实现：切入 RVR / 回到 PEACE。
+ * back to PEACE. / back to PEACE.
+ *
  * @author Rinzler (Encom)
  */
-
 public class DirectPortal extends Rvrlf3df3<RvrLocation> {
+
+	/**
+	 * 绑定 RVR 地点。
+	 * Binds the RVR location.
+	 *
+	 * location
+	 */
 	public DirectPortal(RvrLocation rvr) {
 		super(rvr);
 	}
 
+	/**
+	 * 激活活动并刷新 RVR 刷怪。
+	 * Activates the event and spawns RVR entities.
+	 */
 	@Override
 	public void startRvr() {
 		getRvrLocation().setActiveRvr(this);
@@ -35,6 +32,10 @@ public class DirectPortal extends Rvrlf3df3<RvrLocation> {
 		spawn(RvrStateType.RVR);
 	}
 
+	/**
+	 * 结束活动并恢复 PEACE 刷怪。
+	 * Ends the event and restores PEACE spawns.
+	 */
 	@Override
 	public void stopRvr() {
 		getRvrLocation().setActiveRvr(null);

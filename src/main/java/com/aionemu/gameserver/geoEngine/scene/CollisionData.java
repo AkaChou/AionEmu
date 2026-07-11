@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene;
 
 import com.aionemu.gameserver.geoEngine.bounding.BoundingVolume;
@@ -22,12 +6,22 @@ import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.math.Matrix4f;
 
 /**
- * <code>CollisionData</code> is an interface that can be used to do
- * triangle-accurate collision between bounding volumes and rays.
+ * 用于包围体与射线之间三角形级精确碰撞检测的接口。
+ * Interface for triangle-accurate collision between bounding volumes and rays.
  *
  * @author Kirill Vainer
  */
 public interface CollisionData {
 
+	/**
+	 * 与可碰撞对象进行碰撞检测并写入结果集。
+	 * Collides with another collidable and writes hits into the results set.
+	 *
+	 * @param other 目标可碰撞对象 / target collidable
+	 * @param worldMatrix 世界变换矩阵 / world transform matrix
+	 * @param worldBound 世界空间包围体 / world-space bounding volume
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * number of collisions found
+	 */
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound, CollisionResults results);
 }

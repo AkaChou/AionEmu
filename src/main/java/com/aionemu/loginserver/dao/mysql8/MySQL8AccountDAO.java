@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,8 +16,9 @@ import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.model.Account;
 
 /**
- * MySQL8 Account DAO implementation
- * 
+ * 账号 DAO 的 MySQL 8 实现。
+ * MySQL 8 AccountDAO implementation.
+ *
  * @author Updated for MySQL 8
  */
 @Slf4j
@@ -26,12 +29,12 @@ public class MySQL8AccountDAO extends AccountDAO {
     public Account getAccount(String name) {
         String query = "SELECT * FROM account_data WHERE `name` = ?";
         Account account = null;
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setString(1, name);
-            
+
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
                     account = new Account();
@@ -50,22 +53,22 @@ public class MySQL8AccountDAO extends AccountDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error("Can't select account with name: " + name, e);
+            log.error(I18n.get("log.7be9f6648605", name, e));
         }
-        
+
         return account;
     }
-    
+
     @Override
     public Account getAccount(int id) {
         String query = "SELECT * FROM account_data WHERE `id` = ?";
         Account account = null;
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setInt(1, id);
-            
+
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
                     account = new Account();
@@ -84,9 +87,9 @@ public class MySQL8AccountDAO extends AccountDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error("Can't select account with id: " + id, e);
+            log.error(I18n.get("log.443dba3838a7", id, e));
         }
-        
+
         return account;
     }
 
@@ -94,21 +97,21 @@ public class MySQL8AccountDAO extends AccountDAO {
     public int getAccountId(String name) {
         String query = "SELECT `id` FROM account_data WHERE `name` = ?";
         int id = -1;
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setString(1, name);
-            
+
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
                     id = rs.getInt("id");
                 }
             }
         } catch (SQLException e) {
-            log.error("Can't select id for account: " + name, e);
+            log.error(I18n.get("log.f78188013087", name, e));
         }
-        
+
         return id;
     }
 
@@ -116,28 +119,28 @@ public class MySQL8AccountDAO extends AccountDAO {
     public int getAccountCount() {
         String query = "SELECT COUNT(*) AS c FROM account_data";
         int count = 0;
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query);
              ResultSet rs = st.executeQuery()) {
-            
+
             if (rs.next()) {
                 count = rs.getInt("c");
             }
         } catch (SQLException e) {
-            log.error("Can't get account count", e);
+            log.error(I18n.get("log.0738ecab6c77", e));
         }
-        
+
         return count;
     }
 
     @Override
     public boolean insertAccount(Account account) {
         String query = "INSERT INTO account_data(`name`, `password`, access_level, membership, activated, " + "last_server, last_ip, last_mac, ip_force, toll) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             st.setString(1, account.getName());
             st.setString(2, account.getPasswordHash());
             st.setByte(3, account.getAccessLevel());
@@ -148,9 +151,9 @@ public class MySQL8AccountDAO extends AccountDAO {
             st.setString(8, account.getLastMac());
             st.setString(9, account.getIpForce());
             st.setLong(10, 0);
-            
+
             int result = st.executeUpdate();
-            
+
             if (result > 0) {
                 try (ResultSet generatedKeys = st.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -160,19 +163,19 @@ public class MySQL8AccountDAO extends AccountDAO {
                 return true;
             }
         } catch (SQLException e) {
-            log.error("Can't insert account", e);
+            log.error(I18n.get("log.34a80423f0dc", e));
         }
-        
+
         return false;
     }
 
     @Override
     public boolean updateAccount(Account account) {
         String query = "UPDATE account_data SET `name` = ?, `password` = ?, access_level = ?, " + "membership = ?, last_server = ?, last_ip = ?, last_mac = ?, ip_force = ?, " + "return_account = ?, return_end = ? WHERE `id` = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setString(1, account.getName());
             st.setString(2, account.getPasswordHash());
             st.setByte(3, account.getAccessLevel());
@@ -184,118 +187,118 @@ public class MySQL8AccountDAO extends AccountDAO {
             st.setByte(9, account.getReturn());
             st.setTimestamp(10, account.getReturnEnd());
             st.setInt(11, account.getId());
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update account: " + account.getId(), e);
+            log.error(I18n.get("log.40f6bd6c99c5", account.getId(), e));
         }
-        
+
         return false;
     }
 
     @Override
     public boolean updateLastServer(final int accountId, final byte lastServer) {
         String query = "UPDATE account_data SET last_server = ? WHERE id = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setByte(1, lastServer);
             st.setInt(2, accountId);
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update last server for account: " + accountId, e);
+            log.error(I18n.get("log.7a357f84a3ac", accountId, e));
         }
-        
+
         return false;
     }
 
     @Override
     public boolean updateLastIp(final int accountId, final String ip) {
         String query = "UPDATE account_data SET last_ip = ? WHERE id = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setString(1, ip);
             st.setInt(2, accountId);
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update last IP for account: " + accountId, e);
+            log.error(I18n.get("log.a2c8c099cda2", accountId, e));
         }
-        
+
         return false;
     }
 
     @Override
     public String getLastIp(final int accountId) {
         String query = "SELECT `last_ip` FROM `account_data` WHERE `id` = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setInt(1, accountId);
-            
+
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
                     return rs.getString("last_ip");
                 }
             }
         } catch (SQLException e) {
-            log.error("Can't select last IP for account: " + accountId, e);
+            log.error(I18n.get("log.6acadf7febd4", accountId, e));
         }
-        
+
         return "";
     }
-    
+
     @Override
     public boolean updateLastMac(final int accountId, final String mac) {
         String query = "UPDATE `account_data` SET `last_mac` = ? WHERE `id` = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setString(1, mac);
             st.setInt(2, accountId);
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update last MAC for account: " + accountId, e);
+            log.error(I18n.get("log.8cb7e88bf3fb", accountId, e));
         }
-        
+
         return false;
     }
 
     @Override
     public boolean updateMembership(final int accountId) {
         String query = "UPDATE account_data SET membership = old_membership, expire = NULL " + "WHERE id = ? AND expire < CURRENT_TIMESTAMP";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setInt(1, accountId);
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update membership for account: " + accountId, e);
+            log.error(I18n.get("log.971689f314b7", accountId, e));
         }
-        
+
         return false;
     }
 
     @Override
     public void deleteInactiveAccounts(int daysOfInactivity) {
         String query = "DELETE FROM account_data WHERE id IN (" + "SELECT account_id FROM account_time " + "WHERE DATEDIFF(CURDATE(), last_active) > ?)";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setInt(1, daysOfInactivity);
             st.executeUpdate();
         } catch (SQLException e) {
-            log.error("Can't delete inactive accounts", e);
+            log.error(I18n.get("log.13feade4c9b9", e));
         }
     }
 

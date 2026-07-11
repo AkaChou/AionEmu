@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import java.util.HashMap;
@@ -27,6 +11,10 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.item.WeaponType;
 
+/**
+ * 武器相关动作时间表：按武器类型解析逗号分隔的时间序列。
+ * Weapon-related motion times: parses comma-separated times per weapon type.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Times")
 public class Times {
@@ -37,18 +25,44 @@ public class Times {
 	@XmlTransient
 	private HashMap<WeaponTypeWrapper, Integer> timeForWeaponType = new HashMap<WeaponTypeWrapper, Integer>();
 
+	/**
+	 * 获取原始时间字符串。
+	 * Gets raw times string.
+	 *
+	 * @return 逗号分隔时间 / comma-separated times
+	 */
 	public String getTimes() {
 		return times;
 	}
 
+	/**
+	 * 设置原始时间字符串。
+	 * Sets raw times string.
+	 *
+	 * @param times 逗号分隔时间 / comma-separated times
+	 */
 	public void setTimes(String times) {
 		this.times = times;
 	}
 
+	/**
+	 * 按武器包装获取动作时间。
+	 * Gets motion time for a weapon wrapper.
+	 *
+	 * weapon wrapper
+	 * time
+	 */
 	public int getTimeForWeapon(WeaponTypeWrapper weapon) {
 		return timeForWeaponType.get(weapon);
 	}
 
+	/**
+	 * 反序列化后解析各武器类型时间。
+	 * Parses per-weapon times after unmarshalling.
+	 *
+	 * unmarshaller
+	 * parent
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		String[] tokens = times.split(",");
 		timeForWeaponType.put(new WeaponTypeWrapper(WeaponType.BOOK_2H, null), Integer.parseInt(tokens[0]));

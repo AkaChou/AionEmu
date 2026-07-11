@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -29,8 +13,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * @author MrPoke
+ * 静态 Door 游戏对象。
+ * Static Door game object.
  *
+ * @author MrPoke
  */
 public class StaticDoor extends StaticObject {
 
@@ -55,6 +41,7 @@ public class StaticDoor extends StaticObject {
 		return states.contains(StaticDoorState.OPENED);
 	}
 
+	/** 返回 states / Returns the states */
 	public EnumSet<StaticDoorState> getStates() {
 		return states;
 	}
@@ -83,6 +70,7 @@ public class StaticDoor extends StaticObject {
 		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, packetState));
 	}
 
+	/** 更换状态 / Change State*/
 	public void changeState(boolean open, int state) {
 		state = state & 0xF;
 		StaticDoorState.setStates(state, states);
@@ -90,6 +78,7 @@ public class StaticDoor extends StaticObject {
 		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, state));
 	}
 
+	/** 获取对象模板。 / Returns the object template. */
 	@Override
 	public StaticDoorTemplate getObjectTemplate() {
 		return (StaticDoorTemplate) super.getObjectTemplate();

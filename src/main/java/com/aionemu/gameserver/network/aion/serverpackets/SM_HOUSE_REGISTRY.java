@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
@@ -23,9 +7,19 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端同步房屋仓库注册表的服务端包（未生成物品与装饰部件）。
+ * Server packet that synchronizes the house registry to the client (unspawned objects and decoration parts).
+ */
 public class SM_HOUSE_REGISTRY extends AionServerPacket {
 	int action;
 
+	/**
+	 * 构造房屋仓库注册表包。
+	 * Creates a house registry packet.
+	 *
+	 * @param action 动作类型（1=未生成物品，2=装饰部件） / action type (1=unspawned objects, 2=decoration parts)
+	 */
 	public SM_HOUSE_REGISTRY(int action) {
 		this.action = action;
 	}

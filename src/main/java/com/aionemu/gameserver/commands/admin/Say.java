@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.ChatType;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 代言指令；让选中的玩家或 NPC 以普通聊天广播指定文本。
+ * Admin command that makes the selected player or NPC broadcast text as normal chat.
+ *
  * @author Divinity
  */
 public class Say extends AdminCommand {
@@ -33,6 +20,13 @@ public class Say extends AdminCommand {
 		super("say");
 	}
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 1) {
@@ -59,12 +53,19 @@ public class Say extends AdminCommand {
 				new SM_MESSAGE(((Player) target), sMessage, ChatType.NORMAL), true);
 		}
 		else if (target instanceof Npc) {
-			// admin is not right, but works
+			// 管理员不正确，但能用 / admin is not right, but works
 			PacketSendUtility.broadcastPacket(admin, new SM_MESSAGE(((Npc) target).getObjectId(), ((Npc) target).getName(),
 				sMessage, ChatType.NORMAL), true);
 		}
 	}
 
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax: //say <Text>");

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.IDAb1_Heroes;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -40,10 +24,13 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author Rinzler, Ranastic (Encom)
-/****/
-
+/**
+ * ID Ab1 Heroes 副本 NPC AI：ID Ab1 Heroes Boss 73 Ah（@AIName "IDAb1_Heroes_Boss_73_Ah"），继承 AggressiveNpcAI2。
+ * ID Ab1 Heroes instance NPC AI: ID Ab1 Heroes Boss 73 Ah (@AIName "IDAb1_Heroes_Boss_73_Ah"), extends AggressiveNpcAI2.
+ *
+ * @author Rinzler
+ * @author Ranastic (Encom)
+ */
 @AIName("IDAb1_Heroes_Boss_73_Ah")
 public class IDAb1_Heroes_Boss_73_AhAI2 extends AggressiveNpcAI2
 {
@@ -125,19 +112,19 @@ public class IDAb1_Heroes_Boss_73_AhAI2 extends AggressiveNpcAI2
 					if (!isAlreadyDead()) {
 						switch (Rnd.get(1, 4)) {
 						    case 1:
-							    //IDAb1_Heroes_Boss_Summon_01_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_01_73_Ae. / IDAb1_Heroes_Boss_Summon_01_73_Ae.
 							    spawn(248026, x, y, z, (byte) 0);
 							break;
 							case 2:
-							    //IDAb1_Heroes_Boss_Summon_02_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_02_73_Ae. / IDAb1_Heroes_Boss_Summon_02_73_Ae.
 							    spawn(248027, x, y, z, (byte) 0);
 							break;
 							case 3:
-							    //IDAb1_Heroes_Boss_Summon_03_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_03_73_Ae. / IDAb1_Heroes_Boss_Summon_03_73_Ae.
 							    spawn(248028, x, y, z, (byte) 0);
 							break;
 							case 4:
-							    //IDAb1_Heroes_Boss_Summon_04_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_04_73_Ae. / IDAb1_Heroes_Boss_Summon_04_73_Ae.
 							    spawn(248029, x, y, z, (byte) 0);
 							break;
 						}

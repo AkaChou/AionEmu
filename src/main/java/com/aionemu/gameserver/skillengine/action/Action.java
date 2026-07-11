@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.action;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,18 +8,26 @@ import com.aionemu.gameserver.skillengine.effect.modifier.ActionModifiers;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 技能动作基类：施法时执行的消耗/行为模板。
+ * Base skill action: cost/behavior template executed when casting a skill.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Action")
 public abstract class Action {
 
+	/**
+	 * 动作修正器集合。
+	 * Action modifier collection.
+	 */
 	protected ActionModifiers modifiers;
 
 	/**
-	 * Perform action specified in template
-	 * 
-	 * @param env
+	 * 按模板执行该动作。
+	 * Performs the action defined by the template.
+	 *
+	 * @param skill 当前技能上下文 / current skill context
 	 */
 	public abstract void act(Skill skill);
 }

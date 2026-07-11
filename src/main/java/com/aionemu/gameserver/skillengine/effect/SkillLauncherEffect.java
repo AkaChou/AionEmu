@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,11 +5,13 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.skillengine.model.Effect;
-import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
+ * 技能发射效果：立即以配置的 skill_id 对目标再施放一个技能。
+ * Skill launcher effect: immediately applies another skill identified by skill_id.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -35,15 +21,19 @@ public class SkillLauncherEffect extends EffectTemplate {
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 
+	/**
+	 * 通过技能引擎应用配置的技能效果。
+	 * Applies the configured skill effect through the skill engine.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
-		// TODO figure out what value does
-		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
-		Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, template.getLvl(), 0);
-		e.initialize();
-		e.applyEffect();
+		GameEngineServices.skillEngine().applyEffect(skillId, effect.getEffector(), effect.getEffected());
 	}
 
+	/**
+	 * 返回要发射的技能 ID。
+	 * Returns the skill id to launch.
+	 */
 	public int getLaunchSkillId() {
 		return skillId;
 	}

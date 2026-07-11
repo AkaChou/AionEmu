@@ -28,4 +28,12 @@ class NavHelperConcurrencyTest {
 		assertFalse(source.contains("for (NavGeometry key : list.keySet())"));
 		assertFalse(source.contains("list.get(key).parent = null"));
 	}
+
+	@Test
+	void parentUpdatesRejectEveryAncestorCycle() throws IOException {
+		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/nav/NavHelper.java"));
+
+		assertTrue(source.contains("for (NavHeapNode ancestor = newParent; ancestor != null; ancestor = ancestor.parent)"));
+		assertTrue(source.contains("if (ancestor == this) return;"));
+	}
 }

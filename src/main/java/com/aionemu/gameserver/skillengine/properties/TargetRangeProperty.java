@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.properties;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.Trap;
@@ -30,6 +16,9 @@ import org.apache.commons.lang3.Range;
 import java.util.List;
 
 /**
+ * 目标范围属性处理器：按范围类型填充技能受影响列表（AOE/队伍/坐标点等）。
+ * Target range property handler: fills the skill effected list for AOE/party/point ranges.
+ *
  * @author ATracer
  */
 @Slf4j
@@ -37,9 +26,12 @@ public class TargetRangeProperty {
 
 
 	/**
-	 * @param skill
-	 * @param properties
-	 * @return
+	 * 按目标范围类型收集受影响单位。
+	 * Collects effected creatures according to the target range type.
+	 *
+	 * @param skill 技能上下文 / skill context
+	 * @param properties 目标筛选属性 / target filter properties
+	 * @return 收集是否成功 / true if targets were collected successfully
 	 */
 	public static final boolean set(final Skill skill, Properties properties) {
 
@@ -56,12 +48,12 @@ public class TargetRangeProperty {
 			final Creature firstTarget = skill.getFirstTarget();
 
 			if (firstTarget == null) {
-				log.warn("CHECKPOINT: first target is null for skillid " + skill.getSkillTemplate().getSkillId());
+				log.warn(I18n.get("log.586970ae9238", skill.getSkillTemplate().getSkillId()));
 				return false;
 			}
 
-			// 【重要修复】使用施法者的已知对象列表，确保AOE技能能正确检测到附近的NPC
-			// 修复前：使用 firstTarget.getKnownList()，当 firstTarget != effector 时，可能导致NPC太贴近玩家反而不会被AOE打中
+			// 【重要修复】使用施法者的已知对象列表，确保 AOE 技能能正确检测到附近的 NPC
+			// 修复前：使用 firstTarget.getKnownList()，当 firstTarget != effector 时，可能导致 NPC 太贴近玩家反而不会被 AOE 打中
 			// 修复后：使用 skill.getEffector().getKnownList()，确保始终使用施法者的已知对象列表
 			List<VisibleObject> areaKnownObjects = skill.getEffector().getKnownList().getKnownObjectsSnapshot();
 			for (VisibleObject nextCreature : areaKnownObjects) {
@@ -83,9 +75,9 @@ public class TargetRangeProperty {
 					} else if (properties.getEffectiveWidth() > 0) {
 						float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
 						float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
-						if (MathUtil.isInsideAttackCylinder(firstTarget, nextCreature, 
+						if (MathUtil.isInsideAttackCylinder(firstTarget, nextCreature,
 								(int) (distance + targetCollision + creatureCollision),
-								(int) (properties.getEffectiveWidth() + targetCollision + creatureCollision), 
+								(int) (properties.getEffectiveWidth() + targetCollision + creatureCollision),
 								!properties.isBackDirection())) {
 							if (skill.shouldAffectTarget(nextCreature)) {
 								skill.getEffectedList().add((Creature) nextCreature);
@@ -121,13 +113,12 @@ public class TargetRangeProperty {
 			}
 			break;
 		case PARTY:
-			// fix for Bodyguard(417)
+			// 保镖(417) 的修复 / fix for Bodyguard(417)
 			if (maxcount == 1)
 				break;
 			int partyCount = 0;
 			if (skill.getEffector() instanceof Player) {
 				Player effector = (Player) skill.getEffector();
-				// TODO merge groups ?
 				if (effector.isInAlliance2()) {
 					effectedList.clear();
 					for (Player player : effector.getPlayerAllianceGroup2().getMembers()) {
@@ -148,7 +139,6 @@ public class TargetRangeProperty {
 						if (partyCount >= maxcount) {
 							break;
 						}
-						// TODO: here value +4 till better move controller developed
 						if (member != null && MathUtil.isIn3dRange(effector, member, distance + 1)) {
 							effectedList.add(member);
 							partyCount++;
@@ -162,7 +152,6 @@ public class TargetRangeProperty {
 				final Player effector = (Player) skill.getEffector();
 				if (effector.isInAlliance2()) {
 					effectedList.clear();
-					// TODO may be alliance group ?
 					for (Player player : effector.getPlayerAllianceGroup2().getMembers()) {
 						if (!player.isOnline()) {
 							continue;
@@ -207,7 +196,7 @@ public class TargetRangeProperty {
 				if (((Creature) nextCreature).getLifeStats().isAlreadyDead()) {
 					continue;
 				}
-				// Players in blinking state must not be counted
+				// 闪烁状态的玩家不计入 / Players in blinking state must not be counted
 				if ((nextCreature instanceof Player) && (((Player) nextCreature).isProtectionActive())) {
 					continue;
 				}

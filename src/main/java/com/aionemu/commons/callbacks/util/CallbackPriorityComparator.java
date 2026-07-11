@@ -7,7 +7,7 @@ import java.util.Comparator;
  * 回调优先级比较器，用于对回调对象进行优先级排序
  * Callback priority comparator for sorting callback objects based on their priority
  *
- * 实现了Comparator接口，通过比较两个回调对象的优先级值来确定它们的顺序
+ * 实现了 Comparator 接口，通过比较两个回调对象的优先级值来确定它们的顺序
  * Implements Comparator interface to determine the order of two callbacks by comparing their priority values
  */
 public class CallbackPriorityComparator implements Comparator<Callback<?>> {
@@ -18,7 +18,7 @@ public class CallbackPriorityComparator implements Comparator<Callback<?>> {
      *
      * @param o1 第一个回调对象 / First callback object
      * @param o2 第二个回调对象 / Second callback object
-     * @return 负数表示o1优先级高于o2，0表示优先级相等，正数表示o1优先级低于o2
+ * @return 负数表示 o1 优先级高于 o2，0表示优先级相等，正数表示 o1 优先级低于 o2
      *         Negative if o1 has higher priority, 0 if equal, positive if o1 has lower priority
      */
     public int compare(Callback<?> o1, Callback<?> o2) {

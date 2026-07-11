@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -31,12 +15,9 @@ import com.aionemu.gameserver.model.templates.teleport.TeleporterTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * This is a container holding and serving all {@link NpcTemplate}
- * instances.<br>
- * Briefly: Every {@link Npc} instance represents some class of NPCs among which
- * each have the same id, name, items, statistics. Data for such NPC class is
- * defined in {@link NpcTemplate} and is uniquely identified by npc id.
- * 
+ * 传送 NPC 数据容器，按传送 ID 索引传送员模板，并支持按 NPC ID 查找。
+ * Teleporter data holder, indexing teleporter templates by teleport id and lookup by npc id.
+ *
  * @author orz
  */
 @XmlRootElement(name = "npc_teleporter")
@@ -46,19 +27,37 @@ public class TeleporterData {
 	@XmlElement(name = "teleporter_template")
 	private List<TeleporterTemplate> tlist;
 
-	/** A map containing all trade list templates */
+	/** 商店交易列表映射。 / Map of all trade list templates. */
 	private IntObjectHashMap<TeleporterTemplate> npctlistData = new IntObjectHashMap<TeleporterTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，按传送 ID 索引传送员模板。
+	 * After JAXB unmarshalling, indexes teleporter templates by teleport id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TeleporterTemplate template : tlist) {
 			npctlistData.put(template.getTeleportId(), template);
 		}
 	}
 
+	/**
+	 * 返回已加载的传送员模板数量。
+	 * Returns the number of loaded teleporter templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return npctlistData.size();
 	}
 
+	/**
+	 * 按 NPC ID 查找包含该 NPC 的传送员模板。
+	 * Finds the teleporter template that contains the given npc id.
+	 *
+	 * npc id
+	 *
+	 * @param npcId @return 传送员模板，未找到则为 null / teleporter template or null
+	 */
 	public TeleporterTemplate getTeleporterTemplateByNpcId(int npcId) {
 		for (TeleporterTemplate template : npctlistData.values()) {
 			if (template.containNpc(npcId)) {
@@ -69,10 +68,12 @@ public class TeleporterData {
 	}
 
 	/**
-	 * Returns an {@link NpcTemplate} object with given id.
-	 * 
-	 * @param teleportId id of NPC
-	 * @return NpcTemplate object containing data about NPC with that id.
+	 * 按传送 ID 获取传送员模板。
+	 * Returns the teleporter template for the given teleport id.
+	 *
+	 * teleport id
+	 *
+	 * @param teleportId @return 传送员模板，不存在则为 null / teleporter template or null
 	 */
 	public TeleporterTemplate getTeleporterTemplateByTeleportId(int teleportId) {
 		return npctlistData.get(teleportId);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.portal;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Race;
 
 /**
+ * 传送门路径模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -48,50 +35,62 @@ public class PortalPath {
 	@XmlAttribute(name = "err_group")
 	protected int errGroup;
 
+	/** 返回 portal req / Returns the portal req */
 	public PortalReq getPortalReq() {
 		return portalReq;
 	}
 
+	/** 获取对话。 / Returns the dialog. */
 	public int getDialog() {
 		return dialog;
 	}
 
+	/** 设置对话。 / Sets the dialog. */
 	public void setDialog(int value) {
 		this.dialog = value;
 	}
 
+	/** 返回 loc id / Returns the loc id */
 	public int getLocId() {
 		return locId;
 	}
 
+	/** 设置 loc id / Sets the loc id */
 	public void setLocId(int value) {
 		this.locId = value;
 	}
 
+	/** 获取玩家计数。 / Returns the player count. */
 	public int getPlayerCount() {
 		return playerCount;
 	}
 
+	/** 设置玩家计数。 / Sets the player count. */
 	public void setPlayerCount(int value) {
 		this.playerCount = value;
 	}
 
+	/** 是否副本。 / Whether Instance. */
 	public boolean isInstance() {
 		return instance;
 	}
 
+	/** 设置副本。 / Sets the instance. */
 	public void setInstance(boolean value) {
 		this.instance = value;
 	}
 
+	/** 返回攻城 ID / Returns the siege id */
 	public int getSiegeId() {
 		return siegeId;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回 err group / Returns the err group */
 	public int getErrGroup() {
 		return errGroup;
 	}

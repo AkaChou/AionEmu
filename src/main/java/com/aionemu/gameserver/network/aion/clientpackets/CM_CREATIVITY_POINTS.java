@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
@@ -35,6 +21,9 @@ import com.aionemu.gameserver.services.player.CreativityPanel.CreativityStatsSer
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 请求分配或重置创造力点数的客户端包。
+ * Client packet requesting allocation or reset of creativity points.
+ *
  * @author Falke_34
  */
 @Slf4j
@@ -47,6 +36,14 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 	private int id;
 	private int point;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_CREATIVITY_POINTS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -73,7 +70,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 					GameCreativityServices.creativitySkillService().learnSkill(activePlayer, id, point);
 				} else if (pcp.getPanelCpType() == PanelCpType.ENCHANT_SKILL) {
 					if (point > pcp.getCountMax()) {
-						log.warn("Allocated essence bug on enchant skill, allowed max point: " + pcp.getCountMax() + " Player Point: " + point + "Essence ID: " + id + " Player Name: " + activePlayer.getName());
+						log.warn(I18n.get("log.4b4619583261", pcp.getCountMax(), point, id, activePlayer.getName()));
 						return;
 					}
 					GameCreativityServices.creativitySkillService().enchantSkill(activePlayer, id, point);
@@ -81,7 +78,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 			}
 			PacketSendUtility.sendPacket(activePlayer, new SM_STATS_INFO(activePlayer));
 			break;
-		case 1: // Reset
+		case 1: // 重置 / Reset
 			plusSize = readH();
 			break;
 		default:
@@ -101,7 +98,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 			GameCreativityServices.creativityEssenceService().onResetEssence(activePlayer, plusSize);
 		}
 		
-		// Check quests after applying creativity points
+		// 应用创造力点数后检查任务 / Check quests after applying creativity points
 		if (type == 0) {
 			checkQuestCompletion(activePlayer);
 		}

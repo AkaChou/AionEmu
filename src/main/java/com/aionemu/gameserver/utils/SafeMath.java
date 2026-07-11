@@ -1,26 +1,22 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils;
 
 /**
+ * 带溢出检测的安全加减乘运算。
+ * Safe add/multiply operations with overflow detection.
+ *
  * @author MrPoke
  */
 public class SafeMath {
 
+	/**
+	 * 安全的 int 加法，溢出时抛出 {@link OverfowException}。
+	 * Safe int addition; throws {@link OverfowException} on overflow.
+	 *
+	 * Left operand
+	 * Right operand
+	 * Sum
+	 * On overflow
+	 */
 	public static int addSafe(int source, int value) throws OverfowException {
 		long s = (long) source + (long) value;
 		if (s < Integer.MIN_VALUE || s > Integer.MAX_VALUE) {
@@ -29,6 +25,15 @@ public class SafeMath {
 		return (int) s;
 	}
 
+	/**
+	 * 安全的 long 加法，溢出时抛出 {@link OverfowException}。
+	 * Safe long addition; throws {@link OverfowException} on overflow.
+	 *
+	 * Left operand
+	 * Right operand
+	 * Sum
+	 * On overflow
+	 */
 	public static long addSafe(long source, long value) throws OverfowException {
 		if ((source > 0 && value > Long.MAX_VALUE - source) || (source < 0 && value < Long.MIN_VALUE - source)) {
 			throw new OverfowException(source + " + " + value + " = " + ((long) source + (long) value));
@@ -36,6 +41,15 @@ public class SafeMath {
 		return source + value;
 	}
 
+	/**
+	 * 安全的 int 乘法，溢出时抛出 {@link OverfowException}。
+	 * Safe int multiplication; throws {@link OverfowException} on overflow.
+	 *
+	 * Left operand
+	 * Right operand
+	 * Product
+	 * On overflow
+	 */
 	public static int multSafe(int source, int value) throws OverfowException {
 		long m = ((long) source) * ((long) value);
 		if (m < Integer.MIN_VALUE || m > Integer.MAX_VALUE) {
@@ -44,24 +58,33 @@ public class SafeMath {
 		return (int) m;
 	}
 
+	/**
+	 * 安全的 long 乘法，溢出时抛出 {@link OverfowException}。
+	 * Safe long multiplication; throws {@link OverfowException} on overflow.
+	 *
+	 * @param a 被乘数 / Left operand
+	 * @param b 乘数 / Right operand
+	 * Product
+	 * On overflow
+	 */
 	public static long multSafe(long a, long b) throws OverfowException {
 
 		long ret;
 		String msg = "overflow: multiply";
 		if (a > b) {
-			// use symmetry to reduce boundry cases
+			// 利用对称减少边界情况 / use symmetry to reduce boundry cases
 			ret = multSafe(b, a);
 		} else {
 			if (a < 0) {
 				if (b < 0) {
-					// check for positive overflow with negative a, negative b
+					// 检查 a 负 b 负时的正溢出 / check for positive overflow with negative a, negative b
 					if (a >= Long.MAX_VALUE / b) {
 						ret = a * b;
 					} else {
 						throw new OverfowException(msg);
 					}
 				} else if (b > 0) {
-					// check for negative overflow with negative a, positive b
+					// 检查 a 负 b 正时的负溢出 / check for negative overflow with negative a, positive b
 					if (Long.MIN_VALUE / b <= a) {
 						ret = a * b;
 					} else {
@@ -72,7 +95,7 @@ public class SafeMath {
 					ret = 0;
 				}
 			} else if (a > 0) {
-				// check for positive overflow with positive a, positive b
+				// 检查 a 正 b 正时的正溢出 / check for positive overflow with positive a, positive b
 				if (a <= Long.MAX_VALUE / b) {
 					ret = a * b;
 				} else {

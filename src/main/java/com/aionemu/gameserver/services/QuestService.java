@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
@@ -100,17 +86,45 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+/**
+ * 任务服务，处理任务开始/完成、掉落、计时器与放弃等核心流程。
+ * Quest service handling start/finish, drops, timers, abandon, and related core flows.
+ */
 @Slf4j
-
 public final class QuestService {
 
+	/** 任务静态数据。 / Quest static data. */
 	static QuestsData questsData = DataManager.QUEST_DATA;
+	/** NPC ID 到任务掉落条目的 Multimap / Multimap of NPC id to quest drop entries */
 	private static Multimap<Integer, QuestDrop> questDrop = ArrayListMultimap.create();
 
+	/**
+	 * 清空全部任务掉落缓存。
+	 * Clears all quest-drop cache entries.
+	 */
+	public static void clearQuestDrops() {
+		questDrop.clear();
+	}
+
+	/**
+	 * 以默认奖励索引完成任务。
+	 * Finishes the quest with the default reward index.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * whether successful
+	 */
 	public static boolean finishQuest(QuestEnv env) {
 		return finishQuest(env, 0);
 	}
 
+	/**
+	 * 完成任务并发放指定奖励。
+	 * Finishes the quest and grants the specified reward.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * reward index
+	 * whether successful
+	 */
 	public static boolean finishQuest(QuestEnv env, int reward) {
 		Player player = env.getPlayer();
 		int id = env.getQuestId();
@@ -302,7 +316,7 @@ public final class QuestService {
 		}
 		if (!template.getBonus().isEmpty()) {
 			QuestBonuses bonus = template.getBonus().get(0);
-			// Handler can add additional bonuses on repeat (for event quests no data)
+			// 处理器可在重复时添加额外奖励（活动任务无数据）。 / Handler can add additional bonuses on repeat (for event quests no data)
 			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType(), questItems);
 			if (result != HandlerResult.FAILED) {
 				QuestItems additional = GameFeatureServices.bonusService().getQuestBonus(player, template);
@@ -323,15 +337,15 @@ public final class QuestService {
 			NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(env.getTargetId());
 			player.getCommonData().addExp(rewards.getExp(), RewardType.QUEST);
 		}
-		// Aura Of Growth
+		// 成长光环 / Aura Of Growth
 		if (rewards.getExpBoost() != null) {
 			player.getCommonData().addAuraOfGrowth(1060000 * rewards.getExpBoost());
 		}
-		// CP Reward 5.3
+		// CP 奖励 5.3 / CP Reward 5.3
 		if (rewards.getCP() != null) {
 			// To Do...
 		}
-		// Abyss Landing 4.9.1
+		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
 		if (rewards.getAbyssOp() != null) {
 			GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
 			if (player.getRace() == Race.ASMODIANS) {
@@ -341,7 +355,7 @@ public final class QuestService {
 				GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
 			}
 		}
-		// Now player can win "Dp" if finish quest.
+		// 玩家完成任务现可获得“DP”。 / Now player can win "Dp" if finish quest.
 		if (rewards.getDp() != null) {
 			player.getCommonData().addDp(rewards.getDp());
 		}
@@ -361,7 +375,7 @@ public final class QuestService {
 				WarehouseService.expand(player);
 			}
 		}
-		// Send for: "Aura Of Growth & Berdin's Favor & Abyss Favor"
+		// 发送：成长光环、伯丁眷顾与欧比斯眷顾 / Send for: "Aura Of Growth & Berdin's Favor & Abyss Favor"
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 	}
 
@@ -421,7 +435,7 @@ public final class QuestService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400855, "9"));
 		} else if (template.getQuestCoolTime() > 0) {
 			repeatDate = repeatDate.plusSeconds(template.getQuestCoolTime());
-			// This quest can be re-attempted in %DURATIONDAY0s.
+			// 此任务可在 %DURATIONDAY0s 后重新尝试。 / This quest can be re-attempted in %DURATIONDAY0s.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402676, questCooltime));
 		} else {
 			int daysToAdd = 7;
@@ -447,6 +461,14 @@ public final class QuestService {
 		return new Timestamp(repeatDate.toInstant().toEpochMilli());
 	}
 
+	/**
+	 * 检查任务开始条件。
+	 * Checks quest start conditions.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param warn 是否向玩家提示 / whether to warn the player
+	 * whether conditions are met
+	 */
 	public static boolean checkStartConditions(QuestEnv env, boolean warn) {
 		return checkStartConditionsImpl(env, warn);
 	}
@@ -502,7 +524,7 @@ public final class QuestService {
 		if (template.getTitleId() != 0) {
 			if (!player.getTitleList().contains(template.getTitleId())) {
 				if (warn) {
-					// You can only receive this quest when you have the %0 title.
+					// 仅在拥有 %0 头衔时才能接取此任务。 / You can only receive this quest when you have the %0 title.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300588, template.getTitleId()));
 				}
 				return false;
@@ -562,17 +584,34 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 以指定状态启动任务，是否警告取决于对话 ID。
+	 * Starts a quest with the given status; warn flag depends on dialog id.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * initial status
+	 * whether successful
+	 */
 	public static boolean startQuest(QuestEnv env, QuestStatus status) {
 		return startQuest(env, status, env.getDialogId() != 0);
 	}
 
+	/**
+	 * 以指定状态启动任务。
+	 * Starts a quest with the given status.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * initial status
+	 * @param warn 是否向玩家提示失败原因 / whether to warn the player on failure
+	 * whether successful
+	 */
 	public static boolean startQuest(QuestEnv env, QuestStatus status, boolean warn) {
 		Player player = env.getPlayer();
 		int id = env.getQuestId();
 		QuestStateList qsl = player.getQuestStateList();
 		QuestState qs = qsl.getQuestState(id);
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
-		// TO DO LATER
+		// 稍后待办 / TO DO LATER
 		/*
 		 * if (template.getTargetType() == QuestTargetType.FORCE ||
 		 * template.getTargetType() == QuestTargetType.UNION) {
@@ -615,10 +654,24 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 以 START 状态启动任务。
+	 * Starts a quest with START status.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * whether successful
+	 */
 	public static boolean startQuest(QuestEnv env) {
 		return startQuest(env, QuestStatus.START, env.getDialogId() != 0);
 	}
 
+	/**
+	 * 启动主线/剧情任务（Mission）。
+	 * Starts a mission quest.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * initial status
+	 */
 	public static void startMission(QuestEnv env, QuestStatus status) {
 		Player player = env.getPlayer();
 		int questId = env.getQuestId();
@@ -630,6 +683,13 @@ public final class QuestService {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, status.value(), 0));
 	}
 
+	/**
+	 * 检查主线任务属性/职业等前置条件。
+	 * Checks mission stat/class and related prerequisites.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * whether conditions are met
+	 */
 	public static boolean checkMissionStatConditions(QuestEnv env) {
 		Player player = env.getPlayer();
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
@@ -675,6 +735,14 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 启动活动类任务。
+	 * Starts an event-category quest.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * initial status
+	 * whether successful
+	 */
 	public static boolean startEventQuest(QuestEnv env, QuestStatus questStatus) {
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
 		if (template.getCategory() != QuestCategory.EVENT) {
@@ -723,6 +791,13 @@ public final class QuestService {
 		return (qsl.getNormalQuestListSize() + 1) <= CustomConfig.BASIC_QUEST_SIZE_LIMIT;
 	}
 
+	/**
+	 * 将任务标记为完成状态（不走完整奖励流程时使用）。
+	 * Marks the quest as complete (used when not running the full reward flow).
+	 *
+	 * @param env 任务环境 / quest environment
+	 * whether successful
+	 */
 	public boolean completeQuest(QuestEnv env) {
 		Player player = env.getPlayer();
 		int id = env.getQuestId();
@@ -738,6 +813,14 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 检查（并可选移除）任务收集道具是否齐全。
+	 * Checks (and optionally removes) whether quest collect items are complete.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param removeItem 是否扣除道具 / whether to remove items
+	 * whether items are sufficient
+	 */
 	public static boolean collectItemCheck(QuestEnv env, boolean removeItem) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(env.getQuestId());
@@ -783,6 +866,14 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 检查背包是否持有任务要求的道具。
+	 * Checks whether the inventory holds required quest items.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param showWarning 是否提示玩家 / whether to show a warning
+	 * whether items are present
+	 */
 	public static boolean inventoryItemCheck(QuestEnv env, boolean showWarning) {
 		Player player = env.getPlayer();
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
@@ -804,14 +895,53 @@ public final class QuestService {
 		return requiredItemNameId == 0;
 	}
 
+	/**
+	 * 在指定实例生成一次性任务 NPC。
+	 * Spawns a one-time quest NPC in the given instance.
+	 *
+	 * 世界 ID / world id
+	 * instance id
+	 * NPC 模板 ID / NPC template id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * spawned object
+	 */
 	public static VisibleObject spawnQuestNpc(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading) {
 		return SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId);
 	}
 
+	/**
+	 * 生成一次性任务相关生物（别名接口）。
+	 * Spawns a one-time quest-related creature (alias API).
+	 *
+	 * 世界 ID / world id
+	 * instance id
+	 * template id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * spawned object
+	 */
 	public static VisibleObject addNewSpawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading) {
 		return SpawnEngine.spawnObject(SpawnEngine.addNewSingleTimeSpawn(worldId, templateId, x, y, z, heading), instanceId);
 	}
 
+	/**
+	 * 生成限时任务 NPC，到时后自动 despawn。
+	 * Spawns a timed quest NPC that despawns after the given minutes.
+	 *
+	 * 世界 ID / world id
+	 * instance id
+	 * template id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * @param timeInMin 存活分钟数 / lifetime in minutes
+	 */
 	public static void addNewSpawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading, int timeInMin) {
 		final Npc npc = (Npc) spawnQuestNpc(worldId, instanceId, templateId, x, y, z, (byte) 0);
 		if (!npc.getPosition().isInstanceMap()) {
@@ -830,6 +960,17 @@ public final class QuestService {
 		}, 60000 * timeInMin);
 	}
 
+	/**
+	 * 计算 NPC 对玩家/队伍的任务掉落并写入 dropItems。
+	 * Computes quest drops from an NPC for player/group and appends them to dropItems.
+	 *
+	 * drop item set
+	 * @param index 起始索引 / start index
+	 * killed NPC
+	 * @param players 参与玩家集合 / participating players
+	 * @param player 主要拾取者 / primary looter
+	 * next index
+	 */
 	public static int getQuestDrop(Set<DropItem> dropItems, int index, Npc npc, Collection<Player> players, Player player) {
 		Collection<QuestDrop> drops = getQuestDrop(npc.getNpcId());
 		if (drops.isEmpty()) {
@@ -918,12 +1059,13 @@ public final class QuestService {
 	/**
 	 * 检查任务物品是否应该掉落
 	 * Check if quest item should drop
-	 * @param player 玩家对象 / Player object
+	 * Player object
+	 *
 	 * @param drop 掉落物品信息 / Drop item information
-	 * @return 是否允许掉落 / Whether dropping is allowed
+	 * @param drop @return 是否允许掉落 / Whether dropping is allowed
 	 */
 	private static boolean isQuestDrop(Player player, QuestDrop drop) {
-		// 获取任务ID / Get quest ID
+		// 获取任务 ID / Get quest ID
 		int questId = drop.getQuestId();
 		// 获取玩家的任务状态 / Get player's quest state
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
@@ -973,7 +1115,7 @@ public final class QuestService {
 			return ((HandlerSideDrop) drop).getNeededAmount() > player.getInventory().getItemCountByItemId(drop.getItemId());
 		}
 		
-		// 获取当前掉落物品的ID / Get current drop item ID
+		// 获取当前掉落物品的 ID / Get current drop item ID
 		int dropItemId = drop.getItemId();
 		
 		// 检查是否是任务工作物品 / Check if it's a quest work item
@@ -1016,10 +1158,26 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 检查玩家等级是否满足任务最低要求。
+	 * Checks whether the player level meets the quest minimum.
+	 *
+	 * quest id
+	 * player level
+	 * whether met
+	 */
 	public static boolean checkLevelRequirement(int questId, int playerLevel) {
 		return playerLevel >= questsData.getQuestById(questId).getMinlevelPermitted();
 	}
 
+	/**
+	 * 返回玩家相对任务最低等级的差值（不足时为正）。
+	 * Returns the level gap relative to the quest minimum (positive when under-leveled).
+	 *
+	 * quest id
+	 * player level
+	 * level difference
+	 */
 	public static int getLevelRequirement(int questId, int playerLevel) {
 		QuestTemplate template = questsData.getQuestById(questId);
 		if (template == null) {
@@ -1043,6 +1201,15 @@ public final class QuestService {
 	 * player.getController().updateNearbyQuests(); return true; }
 	 */
 
+	/**
+	 * 启动可见的任务计时器。
+	 * Starts a visible quest timer.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * seconds
+	 *
+	 * @return 是否已启动 / whether started
+	 */
 	public static boolean questTimerStart(QuestEnv env, int timeInSeconds) {
 		final Player player = env.getPlayer();
 		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1056,6 +1223,15 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 启动不可见任务计时器（超时回调引擎）。
+	 * Starts an invisible quest timer (engine callback on timeout).
+	 *
+	 * @param env 任务环境 / quest environment
+	 * seconds
+	 *
+	 * @return 是否已启动 / whether started
+	 */
 	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds) {
 		final Player player = env.getPlayer();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1067,6 +1243,13 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 结束并取消任务计时器。
+	 * Ends and cancels the quest timer.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * whether successful
+	 */
 	public static boolean questTimerEnd(QuestEnv env) {
 		final Player player = env.getPlayer();
 		player.getController().cancelTask(TaskId.QUEST_TIMER);
@@ -1074,6 +1257,14 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 放弃任务并清理相关状态。
+	 * Abandons a quest and cleans related state.
+	 *
+	 * 玩家 / player
+	 * quest id
+	 * whether successful
+	 */
 	public static boolean abandonQuest(Player player, int questId) {
 		QuestTemplate template = questsData.getQuestById(questId);
 		if (template == null) {
@@ -1128,6 +1319,13 @@ public final class QuestService {
 		return true;
 	}
 
+	/**
+	 * 获取 NPC 关联的任务掉落配置。
+	 * Returns quest drop entries associated with an NPC.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * drop collection
+	 */
 	public static Collection<QuestDrop> getQuestDrop(int npcId) {
 		if (questDrop.containsKey(npcId)) {
 			return questDrop.get(npcId);
@@ -1135,6 +1333,13 @@ public final class QuestService {
 		return Collections.<QuestDrop>emptyList();
 	}
 
+	/**
+	 * 注册 NPC 的任务掉落条目。
+	 * Registers a quest drop entry for an NPC.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * @param drop 掉落配置 / drop entry
+	 */
 	public static void addQuestDrop(int npcId, QuestDrop drop) {
 		if (!questDrop.containsKey(npcId)) {
 			questDrop.put(npcId, drop);
@@ -1143,6 +1348,15 @@ public final class QuestService {
 		}
 	}
 
+	/**
+	 * 返回小队中各自需要该任务掉落的成员列表。
+	 * Returns group members who each need the quest drop.
+	 *
+	 * player group
+	 * NPC 模板 ID / NPC template id
+	 * quest id
+	 * member list
+	 */
 	public static List<Player> getEachDropMembersGroup(PlayerGroup group, int npcId, int questId) {
 		List<Player> players = new ArrayList<Player>();
 		for (QuestDrop qd : getQuestDrop(npcId)) {
@@ -1159,6 +1373,15 @@ public final class QuestService {
 		return players;
 	}
 
+	/**
+	 * 返回联盟中各自需要该任务掉落的成员列表。
+	 * Returns alliance members who each need the quest drop.
+	 *
+	 * player alliance
+	 * NPC 模板 ID / NPC template id
+	 * quest id
+	 * member list
+	 */
 	public static List<Player> getEachDropMembersAlliance(PlayerAlliance alliance, int npcId, int questId) {
 		List<Player> players = new ArrayList<Player>();
 		for (QuestDrop qd : getQuestDrop(npcId)) {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,12 +9,19 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 仇恨提升效果：立即增加目标对施法者的仇恨值。
+ * Hostile-up effect: immediately increases the target's hate toward the caster.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HostileUpEffect")
 public class HostileUpEffect extends EffectTemplate {
 
+	/**
+	 * 提升目标对施法者的仇恨。
+	 * Increases the target's hate toward the caster.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Creature effected = effect.getEffected();
@@ -39,6 +30,10 @@ public class HostileUpEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 计算本效果是否成功命中/生效，并写入效果上下文。
+	 * Calculates whether this effect succeeds and writes into the effect context.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, null, null)) {

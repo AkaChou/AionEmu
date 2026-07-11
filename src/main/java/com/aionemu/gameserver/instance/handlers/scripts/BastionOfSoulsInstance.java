@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -55,45 +39,78 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: http://aionpowerbook.com/powerbook/Narakali
-/** Video: 1 https://www.youtube.com/watch?v=xO20tT7-iSM
-/** Video: 2 https://www.youtube.com/watch?v=o6x3MxpiG9Q#t=229.183915
-/****/
+/**
+ * 灵魂堡垒副本事件处理器。
+ * Instance event handler for Bastion Of Souls.
+ *
+ * @author Encom
+ */
 
 @InstanceID(302340000)
 public class BastionOfSoulsInstance extends GeneralInstanceHandler
 {
-	private int prisonIce;
-	private int bossWitch;
-	private int prisonCore;
+	/** prison ice / prison ice */
+		private int prisonIce;
+	/** boss witch / boss witch */
+		private int bossWitch;
+	/** prison core / prison core */
+		private int prisonCore;
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	private Race videoRace;
+	/** 视频种族 / video race */
+		private Race videoRace;
+	/** 开始时间 / start time */
 	private long startTime;
-	private int IDAb1EreWave;
+	/** idab1ere wave / idab1ere wave */
+		private int IDAb1EreWave;
+	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
-	private int startDrakanHigh;
-	private int bridgeDrakanHigh;
-	private Future<?> instanceTimer;
-	//Boss Wave.
-	private Future<?> bastionTaskA1;
-	private Future<?> bastionTaskA2;
-	private Future<?> bastionTaskA3;
-	private Future<?> bastionTaskA4;
-	private Future<?> bastionTaskA5;
-	private Future<?> bastionTaskA6;
-	private Future<?> bastionTaskA7;
-	private Future<?> bastionTaskA8;
-	private Future<?> bastionTaskA9;
-	private Future<?> bastionTaskA10;
-	private Future<?> bastionTaskA11;
-	private Future<?> bastionTaskA12;
+	/** start drakan high / start drakan high */
+		private int startDrakanHigh;
+	/** bridge drakan high / bridge drakan high */
+		private int bridgeDrakanHigh;
+	/** 副本计时器 / instance timer */
+		private Future<?> instanceTimer;
+	// Boss 波次。 / Boss Wave.
+	/** 灵魂堡垒任务 A1 / bastion task a1 */
+		private Future<?> bastionTaskA1;
+	/** 灵魂堡垒任务 A2 / bastion task a2 */
+		private Future<?> bastionTaskA2;
+	/** 灵魂堡垒任务 A3 / bastion task a3 */
+		private Future<?> bastionTaskA3;
+	/** 灵魂堡垒任务 A4 / bastion task a4 */
+		private Future<?> bastionTaskA4;
+	/** 灵魂堡垒任务 A5 / bastion task a5 */
+		private Future<?> bastionTaskA5;
+	/** 灵魂堡垒任务 A6 / bastion task a6 */
+		private Future<?> bastionTaskA6;
+	/** 灵魂堡垒任务 A7 / bastion task a7 */
+		private Future<?> bastionTaskA7;
+	/** 灵魂堡垒任务 A8 / bastion task a8 */
+		private Future<?> bastionTaskA8;
+	/** 灵魂堡垒任务 A9 / bastion task a9 */
+		private Future<?> bastionTaskA9;
+	/** 灵魂堡垒任务 A10 / bastion task a10 */
+		private Future<?> bastionTaskA10;
+	/** 灵魂堡垒任务 a11 / bastion task a11 */
+		private Future<?> bastionTaskA11;
+	/** 灵魂堡垒任务 a12 / bastion task a12 */
+		private Future<?> bastionTaskA12;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
+	/** 灵魂堡垒任务 / bastion task */
+		private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -128,16 +145,16 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057819, 1)); //Legendary Illusion Godstone Bundle.
 							break;
 							case 3:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080005, 5)); //Lesser Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080005, 5)); //低级随从契约。 / Lesser Minion Contract.
 							break;
 							case 4:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080006, 5)); //Greater Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080006, 5)); //高级随从契约。 / Greater Minion Contract.
 							break;
 							case 5:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080007, 5)); //Major Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080007, 5)); //大型随从契约。 / Major Minion Contract.
 							break;
 							case 6:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080008, 5)); //Cute Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080008, 5)); //可爱随从契约。 / Cute Minion Contract.
 							break;
 							case 7:
 							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190200000, 150)); //Minium.
@@ -174,14 +191,20 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
-		//Daeva Rescue.
+		// 守护者救援。 / Daeva Rescue.
 		sendPacket(player, "UI_Gauge_01", 0 + 1);
-		//Destroy The Generator.
+		// 摧毁发生器。 / Destroy The Generator.
 		sendPacket(player, "UI_Gauge_02", 0 + 1);
-		//Additional Aid.
+		// 额外援助。 / Additional Aid.
 		sendPacket(player, "UI_Gauge_03", 0 + 1);
 		if (spawnRace == null) {
 			spawnRace = player.getRace();
@@ -190,29 +213,35 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startRescueDaevaTimer() {
-		//The additional missions that you carry out in the 15 minutes of the Daeva rescue mission can change the difficulty and the rewards for the Bastion of Souls.
-		//If the rescue mission ends after 15 minutes or the Warden Mahorosh appears, the difficulty and the rewards stay the same.
+		// 守护者救援任务 15 分钟内完成的额外任务会影响灵魂堡垒的难度与奖励。 / The additional missions that you carry out in the 15 minutes of the Daeva rescue mission can change the difficulty and the rewards for the Bastion of Souls.
+		// 若救援任务 15 分钟后结束或典狱长马霍罗什出现，难度与奖励不变。 / If the rescue mission ends after 15 minutes or the Warden Mahorosh appears, the difficulty and the rewards stay the same.
 		sendMsgByRace(1404231, Race.PC_ALL, 30000);
-		//The additional mission "Finding a Friend" has failed.
+		// 额外任务“寻找朋友”已失败。 / The additional mission "Finding a Friend" has failed.
 		sendMsgByRace(1404298, Race.PC_ALL, 905000);
-		//10 minutes are left for the Daeva rescue mission.
+		// 守护者救援任务还剩 10 分钟。 / 10 minutes are left for the Daeva rescue mission.
 		this.sendMessage(1404232, 5 * 60 * 1000);
-		//5 minutes are left for the Daeva rescue mission.
+		// 守护者救援任务还剩 5 分钟。 / 5 minutes are left for the Daeva rescue mission.
 		this.sendMessage(1404233, 10 * 60 * 1000);
-		//1 minute is left for the Daeva rescue mission.
+		// 守护者救援任务还剩 1 分钟。 / 1 minute is left for the Daeva rescue mission.
 		this.sendMessage(1404234, 14 * 60 * 1000);
-		//The Daeva rescue mission is over.
-		//Any additional missions carried out now will have no influence on the Bastion of Souls difficulty or rewards.
+		// 守护者救援任务已结束。 / The Daeva rescue mission is over.
+		// 现在完成的额外任务不再影响灵魂堡垒难度或奖励。 / Any additional missions carried out now will have no influence on the Bastion of Souls difficulty or rewards.
 		this.sendMessage(1404235, 15 * 60 * 1000);
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		spawnBastionRings();
 		startBatiskanBastiel();
 		doors = instance.getDoors();
-		//Harvesters Drakan Butcher Captain.
+		// 收割者龙族屠夫队长。 / Harvesters Drakan Butcher Captain.
 		switch (Rnd.get(1, 9)) {
 			case 1:
 				spawn(246881, 1269.2292f, 758.1833f, 410.23138f, (byte) 102);
@@ -242,7 +271,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				spawn(246881, 1172.8901f, 660.59076f, 427.28555f, (byte) 104);
 			break;
 		}
-		//Harvesters Drakan Slaughterer.
+		// 收割者龙族屠杀者。 / Harvesters Drakan Slaughterer.
 		switch (Rnd.get(1, 6)) {
 			case 1:
 				spawn(246885, 1151.6058f, 633.95593f, 424.51465f, (byte) 0);
@@ -263,7 +292,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				spawn(246885, 1159.9093f, 659.30707f, 424.51465f, (byte) 90);
 			break;
 		}
-		//Harvesters Drakan Slaughterer.
+		// 收割者龙族屠杀者。 / Harvesters Drakan Slaughterer.
 		switch (Rnd.get(1, 3)) {
 			case 1:
 				spawn(246895, 1270.3204f, 736.34894f, 410.23138f, (byte) 30);
@@ -275,7 +304,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				spawn(246895, 1357.6373f, 729.20496f, 416.01593f, (byte) 62);
 			break;
 		}
-		//Harvesters Drakan Slaughterer.
+		// 收割者龙族屠杀者。 / Harvesters Drakan Slaughterer.
 		switch (Rnd.get(1, 6)) {
 			case 1:
 				spawn(246905, 1159.7638f, 813.6465f, 405.2975f, (byte) 78);
@@ -298,10 +327,24 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家通过飞行环时处理。
+	 * Handle a player passing a flying ring.
+	 *
+	 * 玩家 / player
+	 * @param flyingRing 飞行环标识 / flying-ring id
+	 * result
+	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("BASTION_OF_SOULS")) {
 			instance.doOnAllPlayers(new Visitor<Player>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
 				@Override
 				public void visit(Player player) {
 					if (player.isOnline()) {
@@ -323,9 +366,19 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void bastionToStartRoom(Player player) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -336,6 +389,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 3000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				startRescueDaevaTimer();
@@ -344,15 +401,21 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		teleport(player, 1183.3602f, 734.0874f, 433.22742f, (byte) 90);
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 246728: //Shuratna.
-			    //The additional mission "Killing Supervisor Shuratna" is complete.
+			    // 额外任务“击杀监督者舒拉特纳”已完成。 / The additional mission "Killing Supervisor Shuratna" is complete.
 				sendMsgByRace(1404211, Race.PC_ALL, 2000);
-				//Due to the additional mission you undertook while you were on the Daeva rescue mission,
-				//the difficulty of the Bastion of Souls and its rewards have increased to a higher level.
+				// 由于你在守护者救援任务中接取的额外任务， / Due to the additional mission you undertook while you were on the Daeva rescue mission,
+				// 灵魂堡垒难度与奖励已提升到更高层级。 / the difficulty of the Bastion of Souls and its rewards have increased to a higher level.
 				sendMsgByRace(1404214, Race.PC_ALL, 120000);
 			    sp(207188, 1212.1577f, 855.89954f, 406.49112f, (byte) 0, 3000, 0, null); //Lever Of The Sorting Room.
 			break;
@@ -376,16 +439,16 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			break;
 			case 731796: //Purification Jail.
 			    prisonIce++;
-				//Daeva Rescue.
+				// 守护者救援。 / Daeva Rescue.
 				if (prisonIce == 10) {
-					//The additional mission "Finding a Friend" is complete.
+					// 额外任务“寻找朋友”已完成。 / The additional mission "Finding a Friend" is complete.
 					sendMsgByRace(1404226, Race.PC_ALL, 2000);
 				}
 				sendPacket(player, "UI_Gauge_01", 1 + prisonIce);
 			break;
 			case 247026: //Prison Camp Generator.
 			    prisonCore++;
-				//Destroy The Generator.
+				// 摧毁发生器。 / Destroy The Generator.
 				if (prisonCore == 1) {
 					sendPacket(player, "UI_Gauge_02", 1 + 1);
 				} else if (prisonCore == 2) {
@@ -393,24 +456,24 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				} else if (prisonCore == 3) {
 					sendPacket(player, "UI_Gauge_02", 3 + 1);
 				} else if (prisonCore == 4) {
-					//All Prison Camp generators were removed and Warden Mahorosh has appeared.
-					//The additional missions at the Incarna Prison Camp will not influence the difficulty and rewards anymore.
+					// 战俘营全部发生器已移除，典狱长马霍罗什已出现。 / All Prison Camp generators were removed and Warden Mahorosh has appeared.
+					// 因卡纳战俘营的额外任务不再影响难度与奖励。 / The additional missions at the Incarna Prison Camp will not influence the difficulty and rewards anymore.
 					sendMsgByRace(1404217, Race.PC_ALL, 2000);
 					doors.get(115).setOpen(true);
 					sendPacket(player, "UI_Gauge_02", 4 + 1);
 					switch (Rnd.get(1, 3)) {
 						case 1:
-						    //Warden Mahorosh is activating the Ice Cannons in the Guidance Chamber.
+						    // 典狱长马霍罗什正在引导室激活冰炮。 / Warden Mahorosh is activating the Ice Cannons in the Guidance Chamber.
 						    sendMsgByRace(1404236, Race.PC_ALL, 2000);
 						    spawn(246544, 1016.8816f, 725.72644f, 387.3341f, (byte) 0); //Unconscious Mahorosh.
 						break;
 						case 2:
-						    //Warden Mahorosh is activating the Ice Cannons in the Guidance Chamber.
+						    // 典狱长马霍罗什正在引导室激活冰炮。 / Warden Mahorosh is activating the Ice Cannons in the Guidance Chamber.
 						    sendMsgByRace(1404236, Race.PC_ALL, 2000);
 						    spawn(246545, 1016.8816f, 725.72644f, 387.3341f, (byte) 0); //Enraged Mahorosh.
 						break;
 						case 3:
-						    //Warden Mahorosh is activating the Ice Cannons in the Guidance Chamber.
+						    // 典狱长马霍罗什正在引导室激活冰炮。 / Warden Mahorosh is activating the Ice Cannons in the Guidance Chamber.
 						    sendMsgByRace(1404236, Race.PC_ALL, 2000);
 						    spawn(246546, 1016.8816f, 725.72644f, 387.3341f, (byte) 0); //Cold Mahorosh.
 						break;
@@ -428,7 +491,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			case 246522: //Harvesters Klaw Patrol.
 			case 246523: //Harvesters Klaw Veteran Assaulter.
 			    IDAb1EreWave++;
-				//Additional Aid.
+				// 额外援助。 / Additional Aid.
 				if (IDAb1EreWave == 4) {
 					startInstanceTask();
 					sendPacket(player, "UI_Gauge_03", 1 + 1);
@@ -436,13 +499,17 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			break;
 			case 246566: //Harvesters Drakan Protector.
 			    doors.get(1096).setOpen(true);
-				//Your path is blocked by Incarna roots. Talk to the Captain to remove the roots, and then help him completely restore his HP.
+				// 道路被因卡纳根阻挡。与队长对话清除根须，并帮他完全恢复生命值。 / Your path is blocked by Incarna roots. Talk to the Captain to remove the roots, and then help him completely restore his HP.
 				sendMsgByRace(1404314, Race.PC_ALL, 3000);
-			    //The Harvesters are attacking Captain Bastiel. Restore Bastiel's HP to get rid of the Incarna roots.
+			    // 收割者正在攻击巴斯蒂尔队长。恢复其生命以清除因卡纳根。 / The Harvesters are attacking Captain Bastiel. Restore Bastiel's HP to get rid of the Incarna roots.
 				sendMsgByRace(1404218, Race.ELYOS, 30000);
-				//The Harvesters are attacking Captain Batiskan. Restore Batiskan's HP to get rid of the Incarna roots.
+				// 收割者正在攻击巴蒂斯坎队长。恢复其生命以清除因卡纳根。 / The Harvesters are attacking Captain Batiskan. Restore Batiskan's HP to get rid of the Incarna roots.
 				sendMsgByRace(1404219, Race.ASMODIANS, 30000);
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
@@ -478,64 +545,64 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					}
 				}
 			break;
-			//Boss Hard Elyos.
+			// Boss 困难 天族。 / Boss Hard Elyos.
 			case 246493: //Suffering Opel.
 			    spawnBastionHardChest();
-				//sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
+				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
 				final int IDAb1EreVideo1 = videoRace == Race.ASMODIANS ? 961 : 959;
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo1));
-				//Bastion Exit.
+				// 堡垒出口。 / Bastion Exit.
 				final int bastionExit1 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
 				spawn(bastionExit1, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
 			break;
-			//Boss Normal Elyos.
+			// Boss 普通 天族。 / Boss Normal Elyos.
 			case 246494: //Cursed Opel.
 			    spawnBastionNormalChest();
-			    //sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
+			    // sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
 				final int IDAb1EreVideo2 = videoRace == Race.ASMODIANS ? 961 : 959;
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo2));
-				//Bastion Exit.
+				// 堡垒出口。 / Bastion Exit.
 				final int bastionExit2 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
 				spawn(bastionExit2, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
 			break;
-			//Boss Easy Elyos.
+			// Boss 简单 天族。 / Boss Easy Elyos.
 			case 246495: //Twisted Opel.
 			    spawnBastionEasyChest();
-				//sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
+				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
 				final int IDAb1EreVideo3 = videoRace == Race.ASMODIANS ? 961 : 959;
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo3));
-				//Bastion Exit.
+				// 堡垒出口。 / Bastion Exit.
 				final int bastionExit3 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
 				spawn(bastionExit3, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
 			break;
 			///////////////////////////////////////////////////////////////////////////////
-			//Boss Hard Asmodians.
+			// Boss 困难 魔族。 / Boss Hard Asmodians.
 			case 246496: //Suffering Opel.
 			    spawnBastionHardChest();
-				//sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
+				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
 				final int IDAb1EreVideo4 = videoRace == Race.ASMODIANS ? 961 : 959;
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo4));
-				//Bastion Exit.
+				// 堡垒出口。 / Bastion Exit.
 				final int bastionExit4 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
 				spawn(bastionExit4, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
 			break;
-			//Boss Normal Asmodians.
+			// Boss 普通 魔族。 / Boss Normal Asmodians.
 			case 246497: //Cursed Opel.
 			    spawnBastionNormalChest();
-			    //sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
+			    // sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
 				final int IDAb1EreVideo5 = videoRace == Race.ASMODIANS ? 961 : 959;
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo5));
-				//Bastion Exit.
+				// 堡垒出口。 / Bastion Exit.
 				final int bastionExit5 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
 				spawn(bastionExit5, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
 			break;
-			//Boss Easy Asmodians.
+			// Boss 简单 魔族。 / Boss Easy Asmodians.
 			case 246498: //Twisted Opel.
 			    spawnBastionEasyChest();
-				//sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
+				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
 				final int IDAb1EreVideo6 = videoRace == Race.ASMODIANS ? 961 : 959;
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, IDAb1EreVideo6));
-				//Bastion Exit.
+				// 堡垒出口。 / Bastion Exit.
 				final int bastionExit6 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
 				spawn(bastionExit6, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
 			break;
@@ -563,6 +630,12 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void sendPacket(Player player, final String variable, final int value) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+		    /**
+		     * 处理 visit。
+		     * Handle visit.
+		     *
+		     * @param player 玩家 / player
+		     */
 		    @Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
@@ -572,6 +645,13 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		});
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -608,71 +688,71 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void SpawnBastionRace() {
-		//Daeva.
+		// 守护者。 / Daeva.
 		final int DeadDeva = spawnRace == Race.ASMODIANS ? 731788 : 731785;
 		final int DyingDeva = spawnRace == Race.ASMODIANS ? 731789 : 731786;
 		final int PainDeva = spawnRace == Race.ASMODIANS ? 731790 : 731787;
-		//Fiance.
+		// 未婚夫/妻。 / Fiance.
 		final int Fiance = spawnRace == Race.ASMODIANS ? 806599 : 806590;
-		//Sky Prison.
+		// 天空监狱。 / Sky Prison.
 		final int SkyPrison1 = spawnRace == Race.ASMODIANS ? 207189 : 207178;
 		final int SkyPrison2 = spawnRace == Race.ASMODIANS ? 207190 : 207179;
 		final int SkyPrison3 = spawnRace == Race.ASMODIANS ? 207191 : 207180;
 		final int SkyPrison4 = spawnRace == Race.ASMODIANS ? 207192 : 207181;
 		final int SkyPrison5 = spawnRace == Race.ASMODIANS ? 207193 : 207182;
-		//Boss Final.
+		// 最终 Boss。 / Boss Final.
 		final int BossFinalHeroSon = spawnRace == Race.ASMODIANS ? 246512 : 246511;
-		//Prison.
+		// 监狱。 / Prison.
 		final int RoundPrisonM = spawnRace == Race.ASMODIANS ? 247139 : 247137;
 		final int RoundPrisonF = spawnRace == Race.ASMODIANS ? 247140 : 247138;
-		//Round Gossip.
+		// 回合闲谈。 / Round Gossip.
 		final int RoundGossip1 = spawnRace == Race.ASMODIANS ? 247186 : 247185;
 		final int RoundGossip10 = spawnRace == Race.ASMODIANS ? 247220 : 247219;
-		//Work Deva.
+		// 工作守护者。 / Work Deva.
 		final int WorkDevaM = spawnRace == Race.ASMODIANS ? 247018 : 247016;
 		final int WorkDevaF = spawnRace == Race.ASMODIANS ? 247019 : 247017;
-		//Mad Deva.
+		// 疯狂守护者。 / Mad Deva.
 		final int MadDevaM = spawnRace == Race.ASMODIANS ? 247097 : 247095;
 		final int MadDevaF = spawnRace == Race.ASMODIANS ? 247098 : 247096;
-		//Sit Deva.
+		// 坐下守护者。 / Sit Deva.
 		final int SitDevaM = spawnRace == Race.ASMODIANS ? 247101 : 247099;
 		final int SitDevaF = spawnRace == Race.ASMODIANS ? 247102 : 247100;
-		//Sleep Deva.
+		// 沉睡守护者。 / Sleep Deva.
 		final int SleepDevaM = spawnRace == Race.ASMODIANS ? 247105 : 247103;
-		//Prison Deva.
+		// 监狱守护者。 / Prison Deva.
 		final int PrisonDeva = spawnRace == Race.ASMODIANS ? 806618 : 806603;
-		//Bastiel-Batiskan 01.
+		// 巴斯蒂尔-巴蒂斯坎 01。 / Bastiel-Batiskan 01.
 		final int Bastiel_Batiskan01 = spawnRace == Race.ASMODIANS ? 247204 : 247203;
-		//Bastiel-Batiskan 02.
+		// 巴斯蒂尔-巴蒂斯坎 02。 / Bastiel-Batiskan 02.
 		final int Bastiel_Batiskan02 = spawnRace == Race.ASMODIANS ? 247206 : 247205;
-		//Bastiel-Batiskan 03.
+		// 巴斯蒂尔-巴蒂斯坎 03。 / Bastiel-Batiskan 03.
 		final int Bastiel_Batiskan03 = spawnRace == Race.ASMODIANS ? 806593 : 806584;
-		//Bastiel-Batiskan 04.
+		// 巴斯蒂尔-巴蒂斯坎 04。 / Bastiel-Batiskan 04.
 		final int Bastiel_Batiskan04 = spawnRace == Race.ASMODIANS ? 806594 : 806585;
-		//Bastiel-Batiskan 05.
+		// 巴斯蒂尔-巴蒂斯坎 05。 / Bastiel-Batiskan 05.
 		final int Bastiel_Batiskan05 = spawnRace == Race.ASMODIANS ? 806598 : 806589;
-		//Daeva.
+		// 守护者。 / Daeva.
 		spawn(DeadDeva, 302.37018f, 801.74664f, 428.22058f, (byte) 0, 116);
 		spawn(DyingDeva, 341.62643f, 741.94934f, 428.54651f, (byte) 0, 433);
 		spawn(PainDeva, 302.62418f, 695.31512f, 426.87469f, (byte) 0, 436);
-		//Fiance.
+		// 未婚夫/妻。 / Fiance.
 		spawn(Fiance, 248.73918f, 795.69189f, 427.61301f, (byte) 0, 165);
-		//Sky Prison.
+		// 天空监狱。 / Sky Prison.
 		spawn(SkyPrison1, 1213.5228f, 557.40729f, 431.50104f, (byte) 0, 1053);
 		spawn(SkyPrison2, 1156.2153f, 634.08002f, 425.58981f, (byte) 0, 4);
 		spawn(SkyPrison3, 1163.5190f, 616.74103f, 427.34256f, (byte) 0, 1054);
 		spawn(SkyPrison4, 1191.3264f, 642.02643f, 427.39340f, (byte) 0, 1055);
 		spawn(SkyPrison5, 1184.5991f, 599.38751f, 428.29214f, (byte) 0, 1052);
-		//Boss Final.
+		// 最终 Boss。 / Boss Final.
 		spawn(BossFinalHeroSon, 125.561966f, 648.5562f, 443.92804f, (byte) 29);
-		//Prison.
+		// 监狱。 / Prison.
 		spawn(RoundPrisonM, 1218.2537f, 895.02203f, 400.92175f, (byte) 61);
 		spawn(RoundPrisonF, 1202.7615f, 891.0025f, 401.07822f, (byte) 104);
 		spawn(RoundPrisonF, 1164.0812f, 886.5736f, 400.6619f, (byte) 66);
-		//Round Gossip.
+		// 回合闲谈。 / Round Gossip.
 		spawn(RoundGossip1, 1212.2343f, 853.5162f, 405.29352f, (byte) 30);
 		spawn(RoundGossip10, 1184.5503f, 655.08954f, 427.28555f, (byte) 94);
-		//Work Deva.
+		// 工作守护者。 / Work Deva.
 		spawn(WorkDevaM, 1337.1613f, 932.3105f, 404.81616f, (byte) 63);
         spawn(WorkDevaM, 1351.9149f, 912.46375f, 404.6229f, (byte) 91);
         spawn(WorkDevaM, 1336.3319f, 887.6009f, 405.9579f, (byte) 97);
@@ -683,7 +763,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         spawn(WorkDevaF, 1328.1765f, 893.304f, 405.9579f, (byte) 44);
 		spawn(WorkDevaF, 1337.4083f, 919.7019f, 405.2923f, (byte) 57);
 		spawn(WorkDevaF, 1346.0502f, 901.90546f, 404.53137f, (byte) 14);
-		//Mad Deva.
+		// 疯狂守护者。 / Mad Deva.
 		spawn(MadDevaM, 1359.8538f, 703.15076f, 416.63916f, (byte) 48);
         spawn(MadDevaM, 1160.0083f, 601.2188f, 431.123f, (byte) 104);
         spawn(MadDevaM, 1190.2412f, 569.8828f, 429.6774f, (byte) 47);
@@ -695,7 +775,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         spawn(MadDevaM, 1357.1973f, 708.3318f, 416.62976f, (byte) 93);
         spawn(MadDevaM, 1344.6594f, 696.5749f, 416.6216f, (byte) 23);
         spawn(MadDevaM, 1319.7157f, 737.30707f, 413.9595f, (byte) 102);
-		//Mad Deva.
+		// 疯狂守护者。 / Mad Deva.
 		spawn(MadDevaF, 1180.1338f, 895.1975f, 400.74057f, (byte) 97);
         spawn(MadDevaF, 1189.1792f, 584.48425f, 429.6774f, (byte) 66);
         spawn(MadDevaF, 1198.1525f, 624.5861f, 426.32108f, (byte) 32);
@@ -718,7 +798,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         spawn(MadDevaF, 1197.3494f, 616.6646f, 426.32108f, (byte) 34);
         spawn(MadDevaF, 1178.3425f, 843.2838f, 400.47562f, (byte) 111);
         spawn(MadDevaF, 1182.5349f, 591.75287f, 429.6774f, (byte) 90);
-		//Sit Deva.
+		// 坐下守护者。 / Sit Deva.
 		spawn(SitDevaM, 1175.8107f, 569.9384f, 429.6774f, (byte) 5);
         spawn(SitDevaM, 1190.4326f, 824.4356f, 400.47562f, (byte) 45);
         spawn(SitDevaM, 1199.306f, 882.8208f, 399.82135f, (byte) 14);
@@ -773,9 +853,9 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         spawn(SitDevaF, 1327.4696f, 688.0927f, 416.6307f, (byte) 19);
         spawn(SitDevaF, 1177.2306f, 584.7701f, 429.6774f, (byte) 108);
         spawn(SitDevaF, 1168.6189f, 597.08026f, 431.123f, (byte) 37);
-		//Sleep Deva.
+		// 沉睡守护者。 / Sleep Deva.
 		spawn(SleepDevaM, 1162.9143f, 883.4652f, 399.82135f, (byte) 56);
-		//Prison Deva.
+		// 监狱守护者。 / Prison Deva.
 		spawn(PrisonDeva, 1191.3267f, 895.774f, 400.9108f, (byte) 60);
         spawn(PrisonDeva, 1176.1115f, 895.8272f, 400.9108f, (byte) 0);
         spawn(PrisonDeva, 1191.3956f, 882.6344f, 400.9108f, (byte) 59);
@@ -801,30 +881,40 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		spawn(PrisonDeva, 1163.9614f, 605.57825f, 431.92865f, (byte) 90);
 		spawn(PrisonDeva, 1189.8373f, 818.3949f, 401.14017f, (byte) 29);
 		spawn(PrisonDeva, 1176.2666f, 882.7186f, 400.9108f, (byte) 0);
-		//Bastiel-Batiskan 01.
+		// 巴斯蒂尔-巴蒂斯坎 01。 / Bastiel-Batiskan 01.
 		spawn(Bastiel_Batiskan01, 1314.1300f, 767.75836f, 416.41507f, (byte) 0);
-		//Bastiel-Batiskan 02.
+		// 巴斯蒂尔-巴蒂斯坎 02。 / Bastiel-Batiskan 02.
 		spawn(Bastiel_Batiskan02, 1137.8638f, 872.1641f, 399.85068f, (byte) 29);
-		//Bastiel-Batiskan 03.
+		// 巴斯蒂尔-巴蒂斯坎 03。 / Bastiel-Batiskan 03.
 		spawn(Bastiel_Batiskan03, 1073.3077f, 732.935f, 394.59494f, (byte) 70);
-		//Bastiel-Batiskan 04.
+		// 巴斯蒂尔-巴蒂斯坎 04。 / Bastiel-Batiskan 04.
 		spawn(Bastiel_Batiskan04, 995.53577f, 722.54333f, 393.16934f, (byte) 12);
-		//Bastiel-Batiskan 05.
+		// 巴斯蒂尔-巴蒂斯坎 05。 / Bastiel-Batiskan 05.
 		spawn(Bastiel_Batiskan05, 148.12717f, 648.1179f, 443.94836f, (byte) 60);
 	}
 	
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA2();
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -833,18 +923,28 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					}
 				});
             }
-        }, 60000)); //...1Min
+        }, 60000)); //…1 分钟 / ...1Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA3();
 				bastionTaskA2.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -855,16 +955,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 120000)); //...2Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA4();
 				bastionTaskA3.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -875,16 +985,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 180000)); //...3Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA5();
 				bastionTaskA4.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -895,16 +1015,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 240000)); //...4Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA6();
 				bastionTaskA5.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -915,16 +1045,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 300000)); //...5Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA7();
 				bastionTaskA6.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -935,16 +1075,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 360000)); //...6Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA8();
 				bastionTaskA7.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -955,16 +1105,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 420000)); //...7Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA9();
 				bastionTaskA8.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -975,16 +1135,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 480000)); //...8Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA10();
 				bastionTaskA9.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -995,16 +1165,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 540000)); //...9Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA11();
 				bastionTaskA10.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -1015,16 +1195,26 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 600000)); //...10Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startBastionA12();
 				bastionTaskA11.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -1035,13 +1225,23 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             }
         }, 660000)); //...11Min
 		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//The additional mission "Attack of the Harvesters" is complete.
+				// 额外任务“收割者的进攻”已完成。 / The additional mission "Attack of the Harvesters" is complete.
 				sendMsgByRace(1404222, Race.PC_ALL, 0);
 				final int Bastiel_Batiskan07 = spawnRace == Race.ASMODIANS ? 806597 : 806588;
 				spawn(Bastiel_Batiskan07, 229.58844f, 729.6629f, 422.73956f, (byte) 80);
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 						deleteNpc(806702);
@@ -1057,6 +1257,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void rushBastion(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -1074,6 +1278,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA2() {
 		bastionTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1083,6 +1291,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1095,6 +1307,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA3() {
 		bastionTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1104,6 +1320,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1116,6 +1336,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA4() {
 		bastionTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1125,6 +1349,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1137,6 +1365,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA5() {
 		bastionTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1146,6 +1378,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1158,6 +1394,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA6() {
 		bastionTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1167,6 +1407,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1179,6 +1423,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA7() {
 		bastionTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1188,6 +1436,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1200,6 +1452,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA8() {
 		bastionTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1209,6 +1465,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1221,6 +1481,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA9() {
 		bastionTaskA9 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1230,6 +1494,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA9 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1242,6 +1510,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA10() {
 		bastionTaskA10 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1251,6 +1523,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA10 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1263,6 +1539,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA11() {
 		bastionTaskA11 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1272,6 +1552,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA11 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1284,6 +1568,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void startBastionA12() {
 		bastionTaskA12 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1293,6 +1581,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		bastionTaskA12 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1305,7 +1597,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
-		//sendMsg("[SUCCES]: You survived !!! :) ");
+		// sendMsg("[成功]：你活下来了！！！"); / sendMsg("[SUCCES]: You survived !!! :) ");
 	}
 	
 	private int getTime() {
@@ -1336,6 +1628,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1350,6 +1646,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1363,6 +1663,12 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -1375,6 +1681,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -1384,9 +1694,19 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -1414,16 +1734,32 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(188100424, storage.getItemCountByItemId(188100424));
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onPlayerLogOut(Player player) {
         removeItems(player);
     }
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -29,8 +13,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
- * Created by wanke on 17/02/2017.
+ * 战场联盟服务，管理攻城期间联盟注册与进出。
+ * Battlefield union service managing union register and enter/leave during sieges.
  */
+
 
 public class BattlefieldUnionService {
 	private static final BattlefieldUnionService instance = new BattlefieldUnionService();
@@ -41,10 +27,21 @@ public class BattlefieldUnionService {
 	public int requestId = 0;
 	public int activeSiegeId;
 
+	/**
+	 * 玩家进入世界时处理。
+	 * Handles player entering the world.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onEnterWorld(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_BATTLEFIELD_UNION(getSiegeActive(), true, getSize(), getMaxSize()));
 	}
 
+	/**
+	 * getSiegeActive 方法。
+	 * getSiegeActive method.
+	 * result
+	 */
 	public int getSiegeActive() {
 		if (GameFeatureServices.siegeService().isSiegeInProgress(1011)) {
 			activeSiegeId = 1011;
@@ -66,8 +63,20 @@ public class BattlefieldUnionService {
 		return activeSiegeId;
 	}
 
+	/**
+	 * 攻城开始回调。
+	 * Callback when siege starts.
+	 *
+	 * fortressId
+	 */
 	public void onSiegeStart(final int fortressId) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * @param player 玩家 / player
+			 */
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
 						new SM_BATTLEFIELD_UNION(fortressId, true, getSize(), getMaxSize()));
@@ -75,8 +84,20 @@ public class BattlefieldUnionService {
 		});
 	}
 
+	/**
+	 * 攻城结束回调。
+	 * Callback when siege finishes.
+	 *
+	 * fortressId
+	 */
 	public void onSiegeFinish(final int fortressId) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * @param player 玩家 / player
+			 */
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
 						new SM_BATTLEFIELD_UNION(fortressId, false, getSize(), getMaxSize()));
@@ -84,6 +105,14 @@ public class BattlefieldUnionService {
 		});
 	}
 
+	/**
+	 * 注册处理。
+	 * Handles registration.
+	 *
+	 * 玩家 / player
+	 * requestId
+	 * activeSiegeId
+	 */
 	public void onRegister(Player player, int requestId, int activeSiegeId) {
 		boolean register = false;
 		PacketSendUtility.sendPacket(player,
@@ -93,18 +122,38 @@ public class BattlefieldUnionService {
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404005));
 	}
 
+	/**
+	 * getSize 方法。
+	 * getSize method.
+	 * result
+	 */
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * getMaxSize 方法。
+	 * getMaxSize method.
+	 * result
+	 */
 	public int getMaxSize() {
 		return maxSize;
 	}
 
+	/**
+	 * getrequestId 方法。
+	 * getrequestId method.
+	 * result
+	 */
 	public int getrequestId() {
 		return requestId;
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static BattlefieldUnionService getInstance() {
 		ObjectProvider<BattlefieldUnionService> provider = instanceProvider;
 		if (provider != null) {
@@ -113,6 +162,12 @@ public class BattlefieldUnionService {
 		return instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BattlefieldUnionService> provider) {
 		instanceProvider = provider;
 	}

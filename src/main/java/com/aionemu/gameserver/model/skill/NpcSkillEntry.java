@@ -1,20 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill;
+
+/**
+ * NPC 技能条目，用于技能相关逻辑。
+ * Npc Skill Entry for skill logic.
+ */
 
 public abstract class NpcSkillEntry extends SkillEntry {
 	protected long lastTimeUsed = 0;
@@ -23,22 +12,30 @@ public abstract class NpcSkillEntry extends SkillEntry {
 		super(skillId, skillLevel, 0, null, 0, false);
 	}
 
+	/** 是否就绪。 / Whether Ready. */
 	public abstract boolean isReady(int hpPercentage, long fightingTimeInMSec);
 
+	/** 概率就绪 / chance Ready. */
 	public abstract boolean chanceReady();
 
+	/** 生命就绪 / Hp Ready */
 	public abstract boolean hpReady(int hpPercentage);
 
+	/** 时间就绪 / time Ready. */
 	public abstract boolean timeReady(long fightingTimeInMSec);
 
+	/** 是否拥有冷却。 / Whether cooldown. */
 	public abstract boolean hasCooldown();
 
+	/** 刷新时使用 / Use In Spawned. */
 	public abstract boolean UseInSpawned();
 
+	/** 返回上次时间已用 / Returns the last time used*/
 	public long getLastTimeUsed() {
 		return lastTimeUsed;
 	}
 
+	/** 设置 last time used / Sets the last time used */
 	public void setLastTimeUsed() {
 		lastTimeUsed = System.currentTimeMillis();
 	}

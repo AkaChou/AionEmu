@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.itemgroups;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,27 +10,10 @@ import com.aionemu.gameserver.model.templates.rewards.BonusType;
 import com.aionemu.gameserver.model.templates.rewards.IdReward;
 
 /**
- * @author Rolandas
+ * 物品奖励组模板（静态数据/XML）。
+ * XML template. / XML template.
  *
- */
-
-/**
- * <p>
- * Java class for ItemGroup complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
- * <pre>
- * &lt;complexType name="ItemGroup">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="bonusType" use="required" type="{}BonusType" />
- *       &lt;attribute name="chance" type="{http://www.w3.org/2001/XMLSchema}float" default="0" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
+ * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ItemGroup")
@@ -60,20 +27,20 @@ public abstract class ItemGroup {
 	@XmlAttribute(name = "chance")
 	protected Float chance;
 
-	/**
-	 * Gets the value of the bonusType property.
-	 * 
-	 * @return possible object is {@link BonusType }
-	 */
+	 /**
+	  * 获取 bonusType 属性值。
+	  * Gets the value of the bonusType property
+	  * @return possible object is {@link BonusType }
+	  */
 	public BonusType getBonusType() {
 		return bonusType;
 	}
 
-	/**
-	 * Gets the value of the chance property.
-	 * 
-	 * @return possible object is {@link Float }
-	 */
+	 /**
+	  * 获取 chance 属性值。
+	  * Gets the value of the chance property
+	  * @return possible object is {@link Float }
+	  */
 	public float getChance() {
 		if (chance == null) {
 			return 0.0F;
@@ -82,5 +49,6 @@ public abstract class ItemGroup {
 		}
 	}
 
+	/** 获取奖励。 / Returns the rewards. */
 	public abstract IdReward[] getRewards();
 }

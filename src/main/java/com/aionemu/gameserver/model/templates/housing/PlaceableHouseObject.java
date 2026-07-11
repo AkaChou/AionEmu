@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,6 +7,9 @@ import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * Placeable 房屋对象模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -44,11 +31,11 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	@XmlAttribute
 	protected PlaceArea area;
 
-	/**
-	 * Gets the value of the useDays property.
-	 * 
-	 * @return null if not restricted
-	 */
+	 /**
+	  * 获取 useDays 属性值。
+	  * Gets the value of the useDays property
+	  * @return null if not restricted
+	  */
 	public int getUseDays() {
 		if (useDays == null) {
 			return 0;
@@ -57,11 +44,7 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	}
 
 	/**
-	 * Where the object is allowed to be placed on?
-	 * <p>
-	 * <tt>TODO: check if it is needed and not handled by the client</tt>
-	 * 
-	 * @return {@link LimitType.NONE} if no restriction
+	 * @return 对象允许放置在何处？ / Where the object is allowed to be placed on? @return {@link LimitType.NONE} if no restriction
 	 */
 	public LimitType getPlacementLimit() {
 		if (limit == null) {
@@ -71,26 +54,19 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	}
 
 	/**
-	 * How the object is allowed to be placed (stacks, ground, wall) ?
-	 * <p>
-	 * <tt>TODO: check if it is needed and not handled by the client</tt>
-	 * 
-	 * @return possible object is {@link PlaceLocation }
+	 * 对象允许如何放置（堆叠、地面、墙面）？。 / How the object is allowed to be placed (stacks, ground, wall) ?.
 	 */
 	public PlaceLocation getLocation() {
 		return location;
 	}
 
 	/**
-	 * Environment where the object is allowed to be placed (interior, exterior)
-	 * <p>
-	 * <tt>TODO: check if it is needed and not handled by the client</tt>
-	 * 
-	 * @return possible object is {@link PlaceArea }
+	 * 对象允许放置的环境（室内、室外）。 / Environment where the object is allowed to be placed (interior, exterior).
 	 */
 	public PlaceArea getArea() {
 		return area;
 	}
 
+	/** 返回类型 ID / Returns the type id */
 	public abstract byte getTypeId();
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +9,21 @@ import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
 
 /**
+ * AI2 脚本类加载监听器，在脚本加载后自动注册 {@link AbstractAI} 子类。
+ * AI2 script class-load listener that auto-registers {@link AbstractAI} subclasses after load.
+ *
  * @author ATracer
  */
 @Slf4j
 public class AI2HandlerClassListener implements ClassListener {
 
 
+	/**
+	 * 类加载完成后扫描并注册有效的 AI 实现。
+	 * Scans and registers valid AI implementations after classes are loaded.
+	 *
+	 * @param classes 已加载类数组 / loaded classes
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void postLoad(Class<?>[] classes) {
@@ -50,6 +43,12 @@ public class AI2HandlerClassListener implements ClassListener {
 		}
 	}
 
+	/**
+	 * 类卸载前的调试日志输出。
+	 * Writes debug logs before classes are unloaded.
+	 *
+	 * @param classes 即将卸载的类 / classes about to unload
+	 */
 	@Override
 	public void preUnload(Class<?>[] classes) {
 		if (log.isDebugEnabled()) {
@@ -59,6 +58,13 @@ public class AI2HandlerClassListener implements ClassListener {
 		}
 	}
 
+	/**
+	 * 判断类是否可作为 AI 注册（非抽象、非接口、且为 public）。
+	 * Returns whether the class is valid for AI registration (concrete, non-interface, public).
+	 *
+	 * @param clazz 待检查类 / class to check
+	 * whether valid
+	 */
 	public boolean isValidClass(Class<?> clazz) {
 		final int modifiers = clazz.getModifiers();
 

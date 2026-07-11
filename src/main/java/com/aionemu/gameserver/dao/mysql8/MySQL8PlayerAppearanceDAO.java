@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
@@ -8,23 +10,36 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-@Slf4j
 
+/**
+ * 玩家外观（捏脸/体型）DAO 的 MySQL 8 实现。
+ * MySQL 8 implementation of PlayerAppearanceDAO.
+ */
+@Slf4j
 public class MySQL8PlayerAppearanceDAO extends PlayerAppearanceDAO {
 
-    
+    /** 按玩家 ID 查询外观 / Select appearance by player id */
     private static final String SELECT_QUERY = "SELECT * FROM player_appearance WHERE player_id = ?";
+    /** 替换写入玩家外观 / Replace-insert player appearance */
     private static final String REPLACE_QUERY = "REPLACE INTO player_appearance (" + "player_id, voice, skin_rgb, hair_rgb, eye_rgb, lip_rgb, face, hair, deco, tattoo, " + "face_contour, expression, pupil_shape, remove_mane, right_eye_rgb, eye_lash_shape, " + "jaw_line, forehead, eye_height, eye_space, eye_width, eye_size, eye_shape, eye_angle, " + "brow_height, brow_angle, brow_shape, nose, nose_bridge, nose_width, nose_tip, " + "cheek, lip_height, mouth_size, lip_size, smile, lip_shape, jaw_height, chin_jut, " + "ear_shape, head_size, neck, neck_length, shoulder_size, torso, chest, waist, hips, " + "arm_thickness, hand_size, leg_thickness, facial_rate, foot_size, arm_length, leg_length, " + "shoulders, face_shape, pupil_size, upper_torso, fore_arm_thickness, hand_span, " + "calf_thickness, height) VALUES (" + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " + "?, ?)";
-    
+
+    /**
+     * 加载指定玩家的外观数据。
+     * Loads the appearance data for the given player.
+     *
+     * player id
+     *
+     * @param playerId @return 玩家外观；加载失败返回 null / player appearance, or null on failure
+     */
     @Override
     public PlayerAppearance load(final int playerId) {
         PlayerAppearance pa = new PlayerAppearance();
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement statement = con.prepareStatement(SELECT_QUERY)) {
-            
+
             statement.setInt(1, playerId);
-            
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     pa.setVoice(resultSet.getInt("voice"));
@@ -92,19 +107,27 @@ public class MySQL8PlayerAppearanceDAO extends PlayerAppearanceDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error("Could not restore PlayerAppearance data for player {} from DB", playerId, e);
+            log.error(I18n.get("log.5f83ae225558", playerId, e));
             return null;
         }
         return pa;
     }
-    
+
+    /**
+     * 持久化玩家外观数据。
+     * Persists the player's appearance data.
+     *
+     * @param id 玩家 ID / player id
+     * @param pa 外观数据 / appearance data
+     * whether successful
+     */
     @Override
     public boolean store(final int id, final PlayerAppearance pa) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement ps = con.prepareStatement(REPLACE_QUERY)) {
-            
+
             log.debug("[DAO: MySQL8PlayerAppearanceDAO] storing appearance {}", id);
-            
+
             int paramIndex = 1;
             ps.setInt(paramIndex++, id);                    // 1  - player_id
             ps.setInt(paramIndex++, pa.getVoice());         // 2  - voice
@@ -169,16 +192,25 @@ public class MySQL8PlayerAppearanceDAO extends PlayerAppearanceDAO {
             ps.setInt(paramIndex++, pa.getHandSpan());      // 61 - hand_span
             ps.setInt(paramIndex++, pa.getCalfThickness()); // 62 - calf_thickness
             ps.setFloat(paramIndex, pa.getHeight());        // 63 - height
-            
+
             ps.executeUpdate();
             return true;
-            
+
         } catch (SQLException e) {
-            log.error("Could not store PlayerAppearance data for player {}", id, e);
+            log.error(I18n.get("log.915757e82ea4", id, e));
             return false;
         }
     }
-    
+
+    /**
+     * 判断当前数据库是否受本 DAO 支持。
+     * Checks whether the given database is supported by this DAO.
+     *
+     * @param databaseName 数据库名称 / database name
+     * major version
+     * minor version
+     * whether supported
+     */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {
         return MySQL8DAOUtils.supports(databaseName, majorVersion, minorVersion);

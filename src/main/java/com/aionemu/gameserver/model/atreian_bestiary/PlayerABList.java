@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.atreian_bestiary;
 
 import java.util.ArrayList;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 玩家 AB 列表，用于艾特里亚图鉴相关逻辑。
+ * Player AB List for atreian bestiary logic.
+ *
  * @author Ranastic
  */
 
@@ -44,16 +31,19 @@ public final class PlayerABList implements ABList<Player> {
 		}
 	}
 
+	/** 返回 all ab / Returns the all ab */
 	public PlayerABEntry[] getAllAB() {
 		List<PlayerABEntry> allCp = new ArrayList<PlayerABEntry>();
 		allCp.addAll(entry.values());
 		return allCp.toArray(new PlayerABEntry[allCp.size()]);
 	}
 
+	/** 返回 basic ab / Returns the basic ab */
 	public PlayerABEntry[] getBasicAB() {
 		return entry.values().toArray(new PlayerABEntry[entry.size()]);
 	}
 
+	/** 添加。 / Add. */
 	@Override
 	public boolean add(Player player, int id, int killCount, int level, int claimReward) {
 		return add(player, id, killCount, level, claimReward, PersistentState.NEW);
@@ -66,6 +56,7 @@ public final class PlayerABList implements ABList<Player> {
 		return true;
 	}
 
+	/** 移除。 / Remove. */
 	@Override
 	public synchronized boolean remove(Player player, int id) {
 		PlayerABEntry entries = entry.get(id);
@@ -77,6 +68,7 @@ public final class PlayerABList implements ABList<Player> {
 		return entry != null;
 	}
 
+	/** 大小 / size. */
 	@Override
 	public int size() {
 		return entry.size();

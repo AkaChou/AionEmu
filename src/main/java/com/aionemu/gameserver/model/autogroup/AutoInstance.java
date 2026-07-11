@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
 import java.util.ArrayList;
@@ -30,6 +14,11 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.world.WorldMapInstance;
+
+/**
+ * 自动副本，用于 autogroup 相关逻辑。
+ * Auto Instance for autogroup logic.
+ */
 
 public abstract class AutoInstance extends AbstractLockManager implements AutoInstanceHandler {
 	protected int instanceMaskId;
@@ -48,6 +37,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 			return false;
 		}
 		Collections.sort(items, new Comparator<Item>() {
+			/** 比较 / compare. */
 			@Override
 			public int compare(Item o1, Item o2) {
 				return Long.compare(o1.getExpireTime(), o2.getExpireTime());
@@ -94,38 +84,45 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 		return result;
 	}
 
+	/** 初始化 / initsialize. */
 	@Override
 	public void initsialize(int instanceMaskId) {
 		this.instanceMaskId = instanceMaskId;
 		agt = AutoGroupType.getAGTByMaskId(instanceMaskId);
 	}
 
+	/** 副本创建 / On Instance Create*/
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		this.instance = instance;
 		startInstanceTime = System.currentTimeMillis();
 	}
 
+	/** 添加玩家。 / Adds player. */
 	@Override
 	public AGQuestion addPlayer(Player player, SearchInstance searchInstance) {
 		return AGQuestion.FAILED;
 	}
 
+	/** 进入副本 / On Enter Instance*/
 	@Override
 	public void onEnterInstance(Player player) {
 		players.get(player.getObjectId()).setInInstance(true);
 		players.get(player.getObjectId()).setOnline(true);
 	}
 
+	/** 离开副本 / On Leave Instance*/
 	@Override
 	public void onLeaveInstance(Player player) {
 	}
 
+	/** 按下回车时 / on Press Enter. */
 	@Override
 	public void onPressEnter(Player player) {
 		players.get(player.getObjectId()).setPressEnter(true);
 	}
 
+	/** 注销。 / Unregister. */
 	@Override
 	public void unregister(Player player) {
 		Integer obj = player.getObjectId();
@@ -134,6 +131,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 		}
 	}
 
+	/** 清空。 / Clear. */
 	@Override
 	public void clear() {
 		players.clear();

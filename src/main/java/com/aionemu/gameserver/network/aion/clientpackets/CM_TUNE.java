@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,13 +20,20 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 客户端装备鉴定/调谐请求包；支持鉴定卷轴或直接随机开孔。
+ * Client packet for item identify/tune; supports retuning scrolls or direct random socketing.
+ *
  * @author Ranastic
  */
-
 public class CM_TUNE extends AionClientPacket {
 	private int tuningScrollId;
 	private static int itemObjectId;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_TUNE(int opcode, AionConnection.State state, AionConnection.State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -84,8 +75,8 @@ public class CM_TUNE extends AionClientPacket {
 		if (item.getOptionalSocket() != -1) {
 			return;
 		}
-		// 修复：使用固定的动画ID（166200022 神话装备鉴定卷轴）让客户端正确播放鉴定动画
-		// 直接使用物品本身的ID可能没有对应的动画定义
+		// 修复：使用固定的动画 ID（166200022 神话装备鉴定卷轴）让客户端正确播放鉴定动画
+		// 直接使用物品本身的 ID 可能没有对应的动画定义
 		final int itemId = 166200022;
 		final ItemTemplate template = item.getItemTemplate();
 		final int nameId = template.getNameId();

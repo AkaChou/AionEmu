@@ -9,6 +9,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 因吉森任务脚本：Mookie Travel Tips（任务 ID 11069）。
+ * Inggison quest script: Mookie Travel Tips (quest ID 11069).
+ *
  * @author Leunam
  */
 public class _11069MookieTravelTips extends QuestHandler {

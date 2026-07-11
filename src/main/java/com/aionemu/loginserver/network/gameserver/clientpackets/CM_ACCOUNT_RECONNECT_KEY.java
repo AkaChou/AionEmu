@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.loginserver.controller.AccountController;
@@ -27,8 +11,8 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_RECONNECT_KEY;
 
 /**
- * This packet is sended by GameServer when player is requesting fast reconnect
- * to login server. LoginServer in response will send reconectKey.
+ * GS→LS：玩家请求快速重连登录服，LS 回复 reconnectKey。
+ * GS→LS: player requests fast reconnect to LoginServer; LS replies with reconnectKey.
  *
  * @author -Nemesiss-
  */
@@ -36,12 +20,14 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_RECON
 public class CM_ACCOUNT_RECONNECT_KEY extends GsClientPacket {
 
     /**
-     * accoundId of account that will be reconnecting.
+     * 即将重连的账号 ID。
+     * Account id of the account that will reconnect.
      */
     private int accountId;
 
     /**
-     * {@inheritDoc}
+     * 读取待重连账号 ID。
+     * Reads the account id that will reconnect.
      */
     @Override
     protected void readImpl() {
@@ -49,14 +35,15 @@ public class CM_ACCOUNT_RECONNECT_KEY extends GsClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 生成 reconnectKey，登记重连账号并回复 GS。
+     * Generates reconnectKey, registers reconnecting account, and replies to GS.
      */
     @Override
     protected void runImpl() {
         int reconectKey = Rnd.nextInt();
         Account acc = this.getConnection().getGameServerInfo().removeAccountFromGameServer(accountId);
         if (acc == null) {
-            log.info("This shouldnt happend! [Error]");
+            log.info(I18n.get("log.35c23b6ec7d5"));
         } else {
             AccountController.addReconnectingAccount(new ReconnectingAccount(acc, reconectKey));
         }

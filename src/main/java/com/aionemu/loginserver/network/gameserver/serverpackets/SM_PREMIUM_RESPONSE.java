@@ -1,35 +1,46 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
 
 /**
+ * LS→GS：高级/付费相关操作结果响应（请求 ID、结果码、点数与露娜币）。
+ * LS→GS: premium operation result response (request id, result code, points and luna).
+ *
  * @author KID
  */
 public class SM_PREMIUM_RESPONSE extends GsServerPacket {
 
+    /**
+     * 请求 ID。
+     * Request id.
+     */
     private int requestId;
+    /**
+     * 结果码。
+     * Result code.
+     */
     private int result;
+    /**
+     * 点数余额。
+     * Point balance.
+     */
     private long points;
+    /**
+     * 露娜币余额。
+     * Luna balance.
+     */
     private long luna;
 
+    /**
+     * 构造高级操作结果响应包。
+     * Constructs a premium operation result response packet.
+     *
+     * request id
+     * result code
+     * points
+     * luna
+     */
     public SM_PREMIUM_RESPONSE(int requestId, int result, long points, long luna) {
         this.requestId = requestId;
         this.result = result;
@@ -37,6 +48,9 @@ public class SM_PREMIUM_RESPONSE extends GsServerPacket {
         this.luna = luna;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void writeImpl(GsConnection con) {
         writeC(10);

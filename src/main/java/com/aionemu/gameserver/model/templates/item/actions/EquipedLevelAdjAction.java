@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,34 +17,42 @@ import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * Equiped 等级 Adj 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EquipedLevelAdjAction")
 public class EquipedLevelAdjAction extends AbstractItemAction {
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null || targetItem == null) {
-			// No items for recommended level reduction could be found.
+			// 找不到可降低推荐等级的物品。 / No items for recommended level reduction could be found.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_NO_TARGET_ITEM);
 			return false;
 		}
 		if (!targetItem.isArchDaevaItem()) {
-			// You cannot reduce the recommended level of %0.
+			// 无法降低 %0 的推荐等级。 / You cannot reduce the recommended level of %0.
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_CANNOT(parentItem.getNameId()));
 			return false;
 		}
 		if (targetItem.isPacked()) {
-			// You cannot reduce the recommended level of packed items.
+			// 无法降低打包物品的推荐等级。 / You cannot reduce the recommended level of packed items.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_WRONG_PACK);
 			return false;
 		}
 		if (targetItem.hasRetuning()) {
-			// You need to use tuning if you want to use the recommended level reduction
-			// function.
+			// 若要用推荐等级降低，须使用调谐。 / You need to use tuning if you want to use the recommended level reduction
+			// 函数。 / function.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_NEED_IDENTIFY);
 			return false;
 		}
 		if (targetItem.getReductionLevel() > 5) {
-			// You cannot reduce the recommended level of %0 any further.
+			// 无法再降低 %0 的推荐等级。 / You cannot reduce the recommended level of %0 any further.
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_WRONG_MAX(targetItem.getNameId()));
 			return false;
@@ -68,10 +60,12 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 				parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
@@ -79,7 +73,7 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
 						parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
-				// The reduction of %0‘s recommended level was canceled.
+				// %0 推荐等级的降低已取消。 / The reduction of %0‘s recommended level was canceled.
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_CANCEL(targetItem.getNameId()));
 			}
@@ -88,6 +82,7 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 		final boolean isReductionSuccess = isReductionSuccess(player);
 		final int reductionCount = reductionCount(player);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				if (player.getInventory().decreaseByItemId(parentItem.getItemId(), 1)) {
@@ -97,9 +92,8 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 							isReductionSuccess, reductionCount);
 				}
 				/**
-				 * Masterwork Level Reduction Stone 5.8 When used on an item that can reduce the
-				 * recommended level, it will have a 100% chance to reduce the level by 1.
-				 */
+	 * 杰作等级降低石 5.8：对可降低推荐等级的物品使用时 100% 降低 1 级。 / Masterwork Level Reduction Stone 5.8 When used on an item that can reduce the recommended level, it will have a 100% chance to reduce the level by 1
+	 */
 				else if (parentItem.getItemId() == 165061001 && parentItem.getItemId() == 165061002) {
 					player.getController().cancelTask(TaskId.ITEM_USE);
 					player.getObserveController().removeObserver(observer);
@@ -111,6 +105,9 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 		}, 3000));
 	}
 
+	/**
+	 * @param player Whether reduction success / Whether reduction success
+	 */
 	public boolean isReductionSuccess(Player player) {
 		int reduction = Rnd.get(1, 1000);
 		if (reduction < 600) {
@@ -126,6 +123,7 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 		}
 	}
 
+	/** Reduction 次数 / Reduction Count */
 	public int reductionCount(Player player) {
 		return Rnd.get(1, 3);
 	}

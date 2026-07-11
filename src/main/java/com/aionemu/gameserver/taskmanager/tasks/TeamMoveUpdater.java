@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.taskmanager.tasks;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -26,16 +10,38 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.taskmanager.AbstractIterativePeriodicTaskManager;
 
 /**
- * @author Sarynth Supports PlayerGroup and PlayerAlliance movement updating.
+ * 队伍/联盟移动更新任务：同步队员位置后移除任务（再次移动时重新加入）。
+ * Team/alliance movement update task: syncs member positions then removes the task (re-added on next move).
+ *
+ * @author Sarynth
  */
 public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<Player> {
+
+	/**
+	 * Spring 可选实例提供者。
+	 * Optional Spring instance provider.
+	 */
 	private static volatile ObjectProvider<TeamMoveUpdater> instanceProvider;
 
+	/**
+	 * 静态单例持有者。
+	 * Static singleton holder.
+	 */
 	private static final class SingletonHolder {
 
+		/**
+		 * 默认单例实例。
+		 * Default singleton instance.
+		 */
 		private static final TeamMoveUpdater INSTANCE = new TeamMoveUpdater();
 	}
 
+	/**
+	 * 获取单例：优先 Spring 提供者，否则静态 holder。
+	 * Get the singleton: prefer Spring provider, otherwise the static holder.
+	 *
+	 * @return 更新器实例 / Updater instance
+	 */
 	public static TeamMoveUpdater getInstance() {
 		ObjectProvider<TeamMoveUpdater> provider = instanceProvider;
 		if (provider != null) {
@@ -44,14 +50,30 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 		return SingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * Provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<TeamMoveUpdater> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 以 2000ms 周期构造队伍移动更新器。
+	 * Construct the team-move updater with a 2000ms period.
+	 */
 	public TeamMoveUpdater() {
 		super(2000);
 	}
 
+	/**
+	 * 同步队伍/联盟移动事件，并停止该玩家任务。
+	 * Sync group/alliance movement events and stop this player's task.
+	 *
+	 * 玩家 / Player
+	 */
 	@Override
 	protected void callTask(Player player) {
 		if (player.isInGroup2()) {
@@ -61,10 +83,16 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 			PlayerAllianceService.updateAlliance(player, PlayerAllianceEvent.MOVEMENT);
 		}
 
-		// Remove task from list. It will be re-added if player moves again.
+		// 从列表移除任务；玩家再次移动时会重新加入。 / Remove task from list. It will be re-added if player moves again.
 		this.stopTask(player);
 	}
 
+	/**
+	 * 耗时统计方法名。
+	 * Method name for runtime stats.
+	 *
+	 * Method name
+	 */
 	@Override
 	protected String getCalledMethodName() {
 		return "teamMoveUpdate()";

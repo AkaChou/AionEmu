@@ -1,26 +1,17 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
+/**
+ * 奖励类型枚举。
+ * Reward Type enumeration.
+ */
+
 public enum RewardType {
+	/** 欧比斯点数玩家。 / Ap Player. */
 	AP_PLAYER {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.AP_BOOST, 100).getCurrent() / 100f;
@@ -41,6 +32,7 @@ public enum RewardType {
 		}
 	},
 	AP_NPC {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.AP_BOOST, 100).getCurrent() / 100f;
@@ -62,12 +54,14 @@ public enum RewardType {
 	},
 	GP_PLAYER {
 
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			return (long) (reward * player.getRates().getGpPlayerGainRate());
 		}
 	},
 	HUNTING {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.BOOST_HUNTING_XP_RATE, 100).getCurrent() / 100f;
@@ -84,6 +78,7 @@ public enum RewardType {
 		}
 	},
 	GROUP_HUNTING {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.BOOST_GROUP_HUNTING_XP_RATE, 100).getCurrent()
@@ -101,6 +96,7 @@ public enum RewardType {
 		}
 	},
 	MONSTER_BOOK {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.BOOST_BOOK_XP_RATE, 100).getCurrent() / 100f;
@@ -115,12 +111,14 @@ public enum RewardType {
 		}
 	},
 	PVP_KILL {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			return (reward);
 		}
 	},
 	QUEST {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.BOOST_QUEST_XP_RATE, 100).getCurrent() / 100f;
@@ -137,6 +135,7 @@ public enum RewardType {
 		}
 	},
 	CRAFTING {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.BOOST_CRAFTING_XP_RATE, 100).getCurrent() / 100f;
@@ -144,6 +143,7 @@ public enum RewardType {
 		}
 	},
 	GATHERING {
+		/** 计算奖励。 / Calc reward. */
 		@Override
 		public long calcReward(Player player, long reward) {
 			float statRate = player.getGameStats().getStat(StatEnum.BOOST_GATHERING_XP_RATE, 100).getCurrent() / 100f;
@@ -151,5 +151,6 @@ public enum RewardType {
 		}
 	};
 
+	/** 计算奖励。 / Calc reward. */
 	public abstract long calcReward(Player player, long reward);
 }

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -29,21 +15,36 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 入侵区域实例：额外维护区内玩家集合，支持访问者遍历。
+ * Invasion zone instance: additionally tracks players inside and supports visitor iteration.
+ *
  * @author Source
  */
 @Slf4j
 public class InvasionZoneInstance extends ZoneInstance {
 
+	/** 区内玩家集合 / players inside the zone */
 	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 
 	/**
-	 * @param mapId
-	 * @param template
+	 * 创建入侵区域实例。
+	 * Create an invasion zone instance.
+	 *
+	 * map id
+	 * @param template 区域模板信息 / zone template info
 	 */
 	public InvasionZoneInstance(int mapId, ZoneInfo template) {
 		super(mapId, template);
 	}
 
+	/**
+	 * 进入区域；若为玩家则加入玩家集合。
+	 * Enter the zone; if the creature is a player, add to the player map.
+	 *
+	 * creature
+	 *
+	 * @param creature @return 是否成功进入 / whether enter succeeded
+	 */
 	@Override
 	public boolean onEnter(Creature creature) {
 		if (super.onEnter(creature)) {
@@ -55,6 +56,14 @@ public class InvasionZoneInstance extends ZoneInstance {
 		return false;
 	}
 
+	/**
+	 * 离开区域；若为玩家则从玩家集合移除。
+	 * Leave the zone; if the creature is a player, remove from the player map.
+	 *
+	 * creature
+	 *
+	 * @param creature @return 是否成功离开 / whether leave succeeded
+	 */
 	@Override
 	public synchronized boolean onLeave(Creature creature) {
 		if (super.onLeave(creature)) {
@@ -66,6 +75,12 @@ public class InvasionZoneInstance extends ZoneInstance {
 		return false;
 	}
 
+	/**
+	 * 对区内所有玩家执行访问者回调。
+	 * Run the visitor callback for every player inside the zone.
+	 *
+	 * @param visitor 玩家访问者 / player visitor
+	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
 			for (Player player : playersSnapshot()) {
@@ -74,10 +89,16 @@ public class InvasionZoneInstance extends ZoneInstance {
 				}
 			}
 		} catch (Exception ex) {
-			log.error("Exception when running visitor on all players" + ex);
+			log.error(I18n.get("log.cc03391ccf0f", ex));
 		}
 	}
 
+	/**
+	 * 快照区内玩家列表（线程安全）。
+	 * Snapshot the list of players inside the zone (thread-safe).
+	 *
+	 * player snapshot
+	 */
 	private List<Player> playersSnapshot() {
 		synchronized (players) {
 			return new ArrayList<Player>(players.values());

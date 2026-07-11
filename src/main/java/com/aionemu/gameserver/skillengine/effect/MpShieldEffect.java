@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,6 +10,10 @@ import com.aionemu.gameserver.controllers.observer.AttackShieldObserver;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * MP 护盾效果：以 MP 吸收伤害的护盾观察者；可按种族条件限制生效。
+ * MP shield effect: registers an MP-based damage-absorb shield observer; optional race condition.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MpShieldEffect")
 public class MpShieldEffect extends EffectTemplate {
@@ -42,6 +30,12 @@ public class MpShieldEffect extends EffectTemplate {
 	@XmlAttribute
 	protected Race condrace = null;
 
+	/**
+	 * 种族条件满足时将效果加入控制器。
+	 * Adds the effect when the race condition (if any) is met.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		if (condrace != null && effect.getEffected().getRace() != condrace) {
@@ -50,11 +44,23 @@ public class MpShieldEffect extends EffectTemplate {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 标记本效果计算成功。
+	 * Marks this effect calculation as successful.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
 	}
 
+	/**
+	 * 注册 MP 护盾观察者并标记受护盾状态。
+	 * Registers the MP shield observer and marks under-shield state.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		int skillLvl = effect.getSkillLevel();
@@ -67,6 +73,12 @@ public class MpShieldEffect extends EffectTemplate {
 		effect.getEffected().getEffectController().setUnderShield(true);
 	}
 
+	/**
+	 * 移除护盾观察者并清除受护盾状态。
+	 * Removes the shield observer and clears under-shield state.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		AttackCalcObserver acObserver = effect.getAttackShieldObserver(position);
@@ -76,6 +88,10 @@ public class MpShieldEffect extends EffectTemplate {
 		effect.getEffected().getEffectController().setUnderShield(false);
 	}
 
+	/**
+	 * 返回护盾类型标识（2 = MP 护盾）。
+	 * Returns the shield type id (2 = MP shield).
+	 */
 	public int getType() {
 		return 2;
 	}

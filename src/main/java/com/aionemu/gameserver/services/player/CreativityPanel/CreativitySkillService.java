@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -25,9 +9,21 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_AP
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 创造力面板技能服务，处理技能附魔与学习。
+ * Creativity panel skill service handling skill enchant and learning.
+ */
 public class CreativitySkillService {
 	private static volatile ObjectProvider<CreativitySkillService> instanceProvider;
 
+	/**
+	 * 附魔技能。
+	 * Enchants a skill.
+	 *
+	 * 玩家 / player
+	 * @param id ID / id
+	 * point
+	 */
 	public void enchantSkill(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
 		if (point == 0) {
@@ -45,7 +41,15 @@ public class CreativitySkillService {
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(0, 1, id, point));
 	}
 
-	public void learnSkill(Player player, int id, int point) { // TODO
+	/**
+	 * 学习技能。
+	 * Learns a skill.
+	 *
+	 * 玩家 / player
+	 * @param id ID / id
+	 * point
+	 */
+	public void learnSkill(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
 		if (point >= 1) {
 			player.getSkillList().addSkill(player, pcp.getLearnSkill(), point + 1);
@@ -57,6 +61,14 @@ public class CreativitySkillService {
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(1, 1, id, point));
 	}
 
+	/**
+	 * 登录同步大天使技能。
+	 * Syncs daeva skills on login.
+	 *
+	 * 玩家 / player
+	 * @param id ID / id
+	 * point
+	 */
 	public void loginDaevaSkill(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
 		if (point >= 1) {
@@ -69,6 +81,11 @@ public class CreativitySkillService {
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(id, point));
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static CreativitySkillService getInstance() {
 		ObjectProvider<CreativitySkillService> provider = instanceProvider;
 		if (provider != null) {
@@ -77,6 +94,12 @@ public class CreativitySkillService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CreativitySkillService> provider) {
 		instanceProvider = provider;
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.model.ChatType;
@@ -23,8 +7,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
+ * 玩家命令：使用 RGB 颜色值进行染色。
+ * Player command: dyes using explicit RGB color values.
+ *
  * @author Phenom
- * @Rewroked yayaya
  */
 public class cmd_rgb extends PlayerCommand {
 
@@ -56,6 +42,13 @@ public class cmd_rgb extends PlayerCommand {
 		return null;
 	}
 
+	/**
+	 * 解析 RGB 参数并应用自定义颜色。
+	 * Parses RGB arguments and applies a custom color.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * command parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 
@@ -64,11 +57,11 @@ public class cmd_rgb extends PlayerCommand {
 			return;
 		}
 
-		// Only for VIP
-		// 3-9 - membership 3-9
-		// 2 - VIP (membership 2)
-		// 1 - Premium (membership 1)
-		// 0 - All players
+		// 仅 VIP / Only for VIP
+		// 3-9 - 会员 3-9 / 3-9 - membership 3-9
+		// 2 - VIP（会员 2） / 2 - VIP (membership 2)
+		// 1 - 高级（会员 1） / 1 - Premium (membership 1)
+		// 0 - 全部玩家 / 0 - All players
 		if (player.getClientConnection().getAccount().getMembership() < 2) {
 			PacketSendUtility.sendMessage(player, "This command is available only to VIP!");
 			return;
@@ -102,6 +95,13 @@ public class cmd_rgb extends PlayerCommand {
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MESSAGE(player, message, ChatType.YELLOW));
 	}
 
+	/**
+	 * 参数错误时提示用法。
+	 * Shows usage when arguments are invalid.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Usage: .rgb <color> <message>");

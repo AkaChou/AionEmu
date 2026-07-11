@@ -1,34 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * Armor 类型枚举。
+ * Armor Type enumeration.
+ *
  * @author Rinzler (Encom)
  */
 
 @XmlType(name = "armor_type")
 @XmlEnum
 public enum ArmorType {
-	// Armor Type 4.8
+	// 防具类型 4.8 / Armor Type 4.8
+	/** 无防具 / No Armor */
 	NO_ARMOR(new int[] {}), CHAIN(new int[] { 42, 49 }), CLOTHES(new int[] { 40 }), LEATHER(new int[] { 41, 48 }),
+	/** 板甲 / Plate. */
 	PLATE(new int[] { 54 }), ROBE(new int[] { 103, 106 }), SHARD(new int[] {}), SHIELD(new int[] { 43, 50 }),
+	/** 翅膀 / Wing. */
 	WING(new int[] {}), PLUME(new int[] {}), BRACELET(new int[] {});
 
 	private int[] requiredSkills;
@@ -37,10 +27,12 @@ public enum ArmorType {
 		this.requiredSkills = requiredSkills;
 	}
 
+	/** 返回 required skills / Returns the required skills */
 	public int[] getRequiredSkills() {
 		return requiredSkills;
 	}
 
+	/** 获取掩码。 / Returns the mask. */
 	public int getMask() {
 		return 1 << this.ordinal();
 	}

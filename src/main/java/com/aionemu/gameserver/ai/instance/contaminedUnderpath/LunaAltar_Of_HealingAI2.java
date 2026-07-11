@@ -9,12 +9,14 @@ import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.SkillEngine;
-
-/****/
-/** Author: Rinzler (Encom)
 /** Rework: MATTY (ADev Team)
-/****/
 
+/**
+ * Contamined Underpath 副本 NPC AI：Luna Altar Of Healing（@AIName "LunaAltar_Of_Healing"），继承 AggressiveNpcAI2。
+ * Contamined Underpath instance NPC AI: Luna Altar Of Healing (@AIName "LunaAltar_Of_Healing"), extends AggressiveNpcAI2.
+ *
+ * @author Rinzler (Encom)
+ */
 @AIName("LunaAltar_Of_Healing")
 public class LunaAltar_Of_HealingAI2 extends AggressiveNpcAI2
 {

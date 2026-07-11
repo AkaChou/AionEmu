@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.container;
 
 import jakarta.xml.bind.annotation.XmlEnum;
@@ -22,6 +6,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.items.ItemSlot;
 
 import lombok.Getter;
+
+/**
+ * 属性 Enum 枚举。
+ * Stat Enum enumeration.
+ */
 
 @XmlType(name = "StatEnum")
 @XmlEnum
@@ -37,7 +26,7 @@ public enum StatEnum {
 	ATTACK_RANGE(38, true), // Atk Range
 	ATTACK_SPEED(29, -1, true), // Atk Speed
 	PHYSICAL_ATTACK(25), // Attack
-	PHYSICAL_ACCURACY(30), // Accuracy
+	PHYSICAL_ACCURACY(30), // 命中 / Accuracy
 	PHYSICAL_CRITICAL(34), // Critical Strike
 	PHYSICAL_DEFENSE(26), // Physical Def
 
@@ -126,6 +115,7 @@ public enum StatEnum {
 		this.sign = sign;
 	}
 
+	/** Find 按物品 stonemask / Find by item stone mask */
 	public static StatEnum findByItemStoneMask(int mask) {
 		for (StatEnum sEnum : values()) {
 			if (sEnum.getItemStoneMask() == mask) {
@@ -135,6 +125,7 @@ public enum StatEnum {
 		throw new IllegalArgumentException("Cannot find StatEnum for stone mask: " + mask);
 	}
 
+	/** 返回 hand stat / Returns the hand stat */
 	public StatEnum getHandStat(long itemSlot) {
 		switch (this) {
 		case MAGICAL_ATTACK:
@@ -153,6 +144,9 @@ public enum StatEnum {
 		}
 	}
 
+	/**
+	 * @return 是否 main 或 subhandstat / 是否 main 或 subhandstat。 / Whether main or sub hand stat / Whether main or sub hand stat
+	 */
 	public boolean isMainOrSubHandStat() {
 		switch (this) {
 		case MAGICAL_ATTACK:
@@ -167,6 +161,7 @@ public enum StatEnum {
 		}
 	}
 
+	/** 获取修正器。 / Returns the modifier. */
 	public static StatEnum getModifier(int skillId) {
 		switch (skillId) {
 		case 30001:

@@ -1,37 +1,46 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 目标属性枚举：描述技能条件所要求的目标类型。
+ * Target attribute enum: describes the required target type for a skill condition.
+ *
  * @author ATracer
  */
 @XmlType(name = "TargetAttribute")
 @XmlEnum
 public enum TargetAttribute {
 
-	NPC, PC, ALL, SELF, NONE;
+	/** 仅 NPC / NPC only */
+	NPC,
+	/** 仅玩家角色 / Player character only */
+	PC,
+	/** 任意目标 / Any target */
+	ALL,
+	/** 自身 / Self */
+	SELF,
+	/** 无目标要求 / No target requirement */
+	NONE;
 
+	/**
+	 * 返回枚举常量名称。
+	 * Returns the enum constant name.
+	 *
+	 * @return 名称字符串 / name string
+	 */
 	public String value() {
 		return name();
 	}
 
+	/**
+	 * 由名称字符串解析目标属性。
+	 * Parses a target attribute from its name string.
+	 *
+	 * @param v 名称 / name
+	 * target attribute
+	 */
 	public static TargetAttribute fromValue(String v) {
 		return valueOf(v);
 	}

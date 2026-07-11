@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver;
 
 import java.nio.ByteBuffer;
@@ -23,24 +5,27 @@ import java.nio.ByteBuffer;
 import com.aionemu.commons.network.packet.BaseServerPacket;
 
 /**
- * Base class for every LS -> GameServer Server Packet.
+ * 所有 LoginServer → GameServer 服务端封包的基类。
+ * Base class for every LoginServer → GameServer server packet.
  *
  * @author -Nemesiss-
  */
 public abstract class GsServerPacket extends BaseServerPacket {
 
     /**
-     * Constructs a new server packet.
+     * 构造空 opcode 的 GS 服务端封包。
+     * Construct a GS server packet with empty opcode.
      */
     protected GsServerPacket() {
         super(0);
     }
 
     /**
-     * Write this packet data for given connection, to given buffer.
+     * 将本封包写入指定连接的缓冲区（含长度前缀）。
+     * Write this packet into the buffer for the given connection (including length prefix).
      *
-     * @param con
-     * @param buffer
+     * @param con 目标 GS 连接 / Target GS connection
+     * @param buffer 输出缓冲区 / Output buffer
      */
     public final synchronized void write(GsConnection con, ByteBuffer buffer) {
         setBuf(buffer);
@@ -52,10 +37,10 @@ public abstract class GsServerPacket extends BaseServerPacket {
     }
 
     /**
-     * Write data that this packet represents to given byte buffer.
+     * 将封包载荷写入缓冲区。
+     * Write packet payload into the buffer.
      *
-     * @param con
-     * @param buf
+     * @param con 目标 GS 连接 / Target GS connection
      */
     protected abstract void writeImpl(GsConnection con);
 }

@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
@@ -24,31 +9,37 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAC_INFO;
 
 /**
- * In this packet client is sending Mac Address - haha.
- * 
+	 * 此包中客户端发送 MAC 地址。 / In this packet client is sending Mac Address - haha.
+	 */
+
+/**
+ * 上报 MAC 地址与硬件标识的客户端包。
+ * Client packet reporting MAC address and hardware identifier.
+ *
  * @author -Nemesiss-, KID
  */
 @Slf4j
 public class CM_MAC_ADDRESS extends AionClientPacket {
 	/**
-	 * Mac Addres send by client in the same format as: ipconfig /all [ie:
-	 * xx-xx-xx-xx-xx-xx]
+	 * 客户端发送的 MAC，格式同 ipconfig /all。 / Mac Addres send by client in the same format as: ipconfig /all [ie: xx-xx-xx-xx-xx-xx]
 	 */
 	private String macAddress;
 	private String HardName;
 	private int localIP;
-
 	/**
-	 * Constructs new instance of <tt>CM_MAC_ADDRESS </tt> packet
-	 * 
-	 * @param opcode
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_MAC_ADDRESS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
 	/**
-	 * {@inheritDoc}
+	 * 读取 MAC 地址、硬件名与本地 IP。
+	 * Reads MAC address, hardware name, and local IP.
 	 */
 	@Override
 	protected void readImpl() {
@@ -60,17 +51,16 @@ public class CM_MAC_ADDRESS extends AionClientPacket {
 		HardName = readS();
 		localIP = readD();
 	}
-
 	/**
-	 * {@inheritDoc}
+	 * 校验 MAC 封禁后绑定地址并回包。
+	 * Checks MAC ban, binds the address, and replies.
 	 */
 	@Override
 	protected void runImpl() {
 		if (GameServerNetworkServices.bannedMacManager().isBanned(macAddress)) {
-			// TODO some information packets
 			this.getConnection().closeNow();
-			log.info("[MAC_AUDIT] " + macAddress + " (" + this.getConnection().getIP() + ") was kicked due to mac ban");
-			log.info("[Hard_AUDIT] " + HardName + " (" + HardName + ")");
+			log.info(I18n.get("log.b98aa791e284", macAddress, this.getConnection().getIP()));
+			log.info(I18n.get("log.78e831553084", HardName, HardName));
 		} else {
 			this.getConnection().setMacAddress(macAddress);
 			sendPacket(new SM_MAC_INFO(macAddress, HardName, localIP));

@@ -1,25 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.playerreward;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 术古 EmperorVault 玩家奖励，用于副本相关逻辑。
+ * Shugo Emperor Vault Player Reward for instance logic.
+ */
 
 public class ShugoEmperorVaultPlayerReward extends InstancePlayerReward {
 	private int scoreAP;
@@ -30,26 +14,34 @@ public class ShugoEmperorVaultPlayerReward extends InstancePlayerReward {
 		super(object);
 	}
 
+	/**
+	 * @return Whether rewarded / Whether rewarded
+	 */
 	public boolean isRewarded() {
 		return isRewarded;
 	}
 
+	/** 设置 rewarded / Sets the rewarded */
 	public void setRewarded() {
 		isRewarded = true;
 	}
 
+	/** 返回 score ap / Returns the score ap */
 	public int getScoreAP() {
 		return scoreAP;
 	}
 
+	/** 设置 score ap / Sets the score ap */
 	public void setScoreAP(int ap) {
 		this.scoreAP = ap;
 	}
 
+	/** 返回 rusted vault key / Returns the rusted vault key */
 	public int getRustedVaultKey() {
 		return rustedVaultKey;
 	}
 
+	/** 设置 rusted vault key / Sets the rusted vault key */
 	public void setRustedVaultKey(int rustedVaultKey) {
 		this.rustedVaultKey = rustedVaultKey;
 	}

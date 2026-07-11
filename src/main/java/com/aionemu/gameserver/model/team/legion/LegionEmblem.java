@@ -1,24 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team.legion;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 /**
+ * 军团徽章，用于团队相关逻辑。
+ * Legion Emblem for team logic.
+ *
  * @author Simple modified cura
  */
 public class LegionEmblem {
@@ -201,6 +188,7 @@ public class LegionEmblem {
 	}
 
 	/**
+	 * 将 clearout 全部 upload 数据。
 	 * This method will clear out all upload data
 	 */
 	public void resetUploadSettings() {

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -46,31 +30,58 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 术古皇帝金库副本事件处理器。
+ * Instance event handler for The Shugo Emperor Vault.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301400000)
 public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 {
-	private int rank;
+	/** 军阶 / rank */
+		private int rank;
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
+	/** 开始时间 / start time */
 	private long startTime;
-	private Future<?> timerPrepare;
-	private Future<?> timerInstance;
+	/** 准备计时器 / timer prepare */
+		private Future<?> timerPrepare;
+	/** 副本计时器 / timer instance */
+		private Future<?> timerInstance;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	//Preparation Time.
-	private int prepareTimerSeconds = 60000; //...1Min
-	//Duration Instance Time.
-	private int instanceTimerSeconds = 600000; //...10Min
+	// 准备时间。 / Preparation Time.
+	/** 准备计时秒数 / prepare timer seconds */
+		private int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+	// 副本持续计时。 / Duration Instance Time.
+	/** 副本计时秒数 / instance timer seconds */
+		private int instanceTimerSeconds = 600000; //...10Min
+	/** 副本奖励对象 / instance reward object */
 	private ShugoEmperorVaultReward instanceReward;
-	private final List<Future<?>> vaultTask = new ArrayList<Future<?>>();
+	/** 宝库任务 / vault task */
+		private final List<Future<?>> vaultTask = new ArrayList<Future<?>>();
+	/**
+	 * 返回玩家奖励记录。
+	 * Return the player's reward record.
+	 *
+	 * visible object
+	 * result
+	 */
 	
 	protected ShugoEmperorVaultPlayerReward getPlayerReward(Integer object) {
 		return (ShugoEmperorVaultPlayerReward) instanceReward.getPlayerReward(object);
 	}
 	
+	/**
+	 * 处理 addPlayerReward。
+	 * Handle addPlayerReward.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@SuppressWarnings("unchecked")
 	protected void addPlayerReward(Player player) {
 		instanceReward.addPlayerReward(new ShugoEmperorVaultPlayerReward(player.getObjectId()));
@@ -80,10 +91,22 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		return instanceReward.containPlayer(object);
 	}
 	
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * result
+	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -143,6 +166,12 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(162002036, storage.getItemCountByItemId(162002036)); //Shugo Warrior's Greater Salve.
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		int points = 0;
@@ -165,7 +194,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 			case 235634: //Watchman Hokuruki.
 				points = 2040;
 				despawnNpc(npc);
-				//Use the open entrance to move to the next area.
+				// 使用已开启入口前往下一区域。 / Use the open entrance to move to the next area.
 				sendMsgByRace(1402781, Race.PC_ALL, 0);
 				spawn(832924, 469.53888f, 657.56543f, 396.91852f, (byte) 0, 432);
 				spawn(235643, 486.0f, 638.0f, 395.875f, (byte) 108); //Indirunerk Jonakak's Supply Box.
@@ -182,9 +211,9 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 			case 235640: //Captain Mirez.
 				points = 12000;
 				despawnNpc(npc);
-				//Gradi's second officer has appeared! Prepare for Longknife Zodica!
+				// 格拉迪第二军官已出现！准备迎战长刀佐迪卡！ / Gradi's second officer has appeared! Prepare for Longknife Zodica!
 				sendMsgByRace(1402679, Race.PC_ALL, 0);
-				//The Second Henchman of Gradi appears!
+				// 格拉迪的第二随从出现！ / The Second Henchman of Gradi appears!
 				sendMsgByRace(1402885, Race.PC_ALL, 2000);
 				spawn(235685, 360.03033f, 757.95233f, 398.42203f, (byte) 104); //Longknife Zodica.
 			break;
@@ -195,13 +224,23 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 			case 235647: //Grand Commander Gradi.
 				points = 400000;
 				despawnNpc(npc);
-				//All the intruders have fled. You've cleared the Vault!
+				// 所有入侵者已逃离。你肃清了宝库！ / All the intruders have fled. You've cleared the Vault!
 				sendMsgByRace(1402681, Race.PC_ALL, 2000);
                 spawn(832932, 360.03033f, 757.95233f, 398.42203f, (byte) 104); //The Shugo Emperor's Butler.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
+						    /**
+						     * 处理 visit。
+						     * Handle visit.
+						     *
+						     * @param player 玩家 / player
+						     */
 						    @Override
 						    public void visit(Player player) {
 							    stopInstance(player);
@@ -226,9 +265,9 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 			case 235660: //Ruthless Jabaraki.
 				points = 1740;
 				despawnNpc(npc);
-				//Gradi's first officer has appeared! Prepare for Captain Mirez!
+				// 格拉迪第一军官已出现！准备迎战队长米雷兹！ / Gradi's first officer has appeared! Prepare for Captain Mirez!
 				sendMsgByRace(1402678, Race.PC_ALL, 0);
-				//The First Henchman of Gradi appears!
+				// 格拉迪的第一随从出现！ / The First Henchman of Gradi appears!
 				sendMsgByRace(1402884, Race.PC_ALL, 2000);
 				spawn(235640, 360.03033f, 757.95233f, 398.42203f, (byte) 104); //Captain Mirez.
 			break;
@@ -240,27 +279,27 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 			case 235683: //Elite Captain Rupasha.
 				points = 272000;
 				despawnNpc(npc);
-				//Greedy Gradi, the intruder commander, has appeared. Get ready for a fight!
+				// 贪婪的格拉迪（入侵指挥官）已出现。准备战斗！ / Greedy Gradi, the intruder commander, has appeared. Get ready for a fight!
 				sendMsgByRace(1402743, Race.PC_ALL, 0);
-				//The Fifth Henchman of Gradi appears!
+				// 格拉迪的第五随从出现！ / The Fifth Henchman of Gradi appears!
 				sendMsgByRace(1402888, Race.PC_ALL, 2000);
 				spawn(235647, 360.03033f, 757.95233f, 398.42203f, (byte) 104); //Grand Commander Gradi.
 			break;
 			case 235684: //Sorcerer Budyn.
 				points = 48000;
 				despawnNpc(npc);
-				//Gradi's final officer has appeared! Prepare for Elite Captain Rupasha!
+				// 格拉迪最终军官已出现！准备迎战精英队长鲁帕沙！ / Gradi's final officer has appeared! Prepare for Elite Captain Rupasha!
 				sendMsgByRace(1402742, Race.PC_ALL, 0);
-				//The Fourth Henchman of Gradi appears!
+				// 格拉迪的第四随从出现！ / The Fourth Henchman of Gradi appears!
 				sendMsgByRace(1402887, Race.PC_ALL, 2000);
 				spawn(235683, 360.03033f, 757.95233f, 398.42203f, (byte) 104); //Elite Captain Rupasha.
 			break;
 			case 235685: //Longknife Zodica.
 				points = 14400;
 				despawnNpc(npc);
-				//Gradi's third officer has appeared! Prepare for Sorcerer Budyn!
+				// 格拉迪第三军官已出现！准备迎战巫师布丁！ / Gradi's third officer has appeared! Prepare for Sorcerer Budyn!
 				sendMsgByRace(1402680, Race.PC_ALL, 0);
-				//The Third Henchman of Gradi appears!
+				// 格拉迪的第三随从出现！ / The Third Henchman of Gradi appears!
 				sendMsgByRace(1402886, Race.PC_ALL, 2000);
 				spawn(235684, 360.03033f, 757.95233f, 398.42203f, (byte) 104); //Sorcerer Budyn.
 			break;
@@ -281,14 +320,26 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		effectController.removeEffect(21834);
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -302,6 +353,12 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (nameId != 0) {
@@ -328,12 +385,26 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		}
 		return rank;
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
 	protected void startInstanceTask() {
 		vaultTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 					    stopInstance(player);
@@ -344,23 +415,36 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
         }, 600000));
     }
 	
+	/**
+	 * 玩家打开门时处理。
+	 * Handle a player opening a door.
+	 *
+	 * 玩家 / player
+	 * doorId
+	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {
 		if (doorId == 430) {
 			startInstanceTask();
 			doors.get(430).setOpen(true);
-			//The member recruitment window has passed. You cannot recruit any more members.
+			// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 			sendMsgByRace(1401181, Race.PC_ALL, 5000);
-			//Intruders detected in the Vault!
+			// 宝库检测到入侵者！ / Intruders detected in the Vault!
 			sendMsgByRace(1402677, Race.PC_ALL, 10000);
-			//The player has 1 min to prepare !!! [Timer Red]
+			// 玩家有 1 分钟准备！！！【红色计时】 / The player has 1 min to prepare !!! [Timer Red]
 			if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
-				//Start the instance time !!! [Timer White]
+				// 开始副本计时！！！【白色计时】 / Start the instance time !!! [Timer White]
 				startMainInstanceTimer();
 			}
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		if (!instanceReward.containPlayer(player.getObjectId())) {
@@ -394,6 +478,10 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -401,6 +489,12 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 			}, prepareTimerSeconds);
 		}
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(prepareTimerSeconds, instanceReward, null));
@@ -416,6 +510,12 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendPacket(0, 0);
 	}
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	protected void stopInstance(Player player) {
         stopInstanceTask();
@@ -423,7 +523,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		doReward(player);
-		//sendMsg("[SUCCES]: You have finished <The Shugo Emperor's Vault>");
+		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <The Shugo Emperor's Vault>");
 		sendPacket(0, 0);
 	}
 	
@@ -433,6 +533,12 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 结算并发放奖励。
+	 * Settle and grant rewards.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void doReward(Player player) {
 		ShugoEmperorVaultPlayerReward playerReward = getPlayerReward(player.getObjectId());
@@ -460,6 +566,12 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -476,6 +588,10 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		if (timerInstance != null) {
@@ -488,6 +604,12 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 		instanceReward.clear();
 		doors.clear();
 	}
+	/**
+	 * 移除指定 NPC。
+	 * Despawn the given NPC.
+	 *
+	 * npc
+	 */
 	
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
@@ -497,18 +619,42 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

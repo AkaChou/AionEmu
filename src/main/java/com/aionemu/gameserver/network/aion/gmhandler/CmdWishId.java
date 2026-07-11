@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -23,15 +7,29 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
+ * GM 指令：按物品 ID 与数量发放物品。
+ * GM command handler that grants items by template id and quantity.
+ *
  * @author Antraxx
  */
 public final class CmdWishId extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即按 ID 发放物品。
+	 * Creates the handler and immediately grants items by id.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * {@code quantity itemId}。 / {@code quantity itemId}
+	 */
 	public CmdWishId(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 解析数量与物品 ID，向目标玩家发放物品（可堆叠/赋能分支）。
+	 * Parses quantity and item id, then grants the item to the target (stackable/authorize branches).
+	 */
 	public void run() {
 		Player t = target != null ? target : admin;
 

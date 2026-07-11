@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,12 +5,27 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TRANSFORM;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
+/**
+ * 将自身或目标玩家变形为指定 NPC 外观的管理员命令。
+ * Admin command to morph self or a targeted player into an NPC appearance.
+ */
 public class Morph extends AdminCommand
 {
+	/**
+	 * 以别名 {@code morph} 构造命令。
+	 * Construct the command with alias {@code morph}.
+	 */
 	public Morph() {
 		super("morph");
 	}
-	
+
+	/**
+	 * 将目标（默认自身）变形为给定 NPC Id，或使用 {@code cancel} 取消变形。
+	 * Morph the target (self by default) into the given NPC id, or {@code cancel} the morph.
+	 *
+	 * 执行 GM / Admin player
+	 * NPC id or cancel
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params == null || params.length != 1) {
@@ -66,7 +65,14 @@ public class Morph extends AdminCommand
 			}
 		}
 	}
-	
+
+	/**
+	 * 参数错误时显示语法。
+	 * Show syntax when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //morph <NPC Id | cancel> ");

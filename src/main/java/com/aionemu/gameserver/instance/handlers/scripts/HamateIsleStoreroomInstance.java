@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -39,47 +23,29 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-
-Chamber of Roah or Hamate Isle Storeroom is a fortress group instance for players of level 40 and above.
-Its entrance is located in Hamate Isle in Sullenscale Rive on Mondays, Wednesdays, Fridays and Sundays.
-Like other fortress instances, monsters inside it will aggro regardless of the level of the party.
-As of 4.9, the entrance was moved from Roah Fortress in Upper Reshanta to Lower Reshanta due to the fortress becoming inactive.
-
-Backstory:
-When Balaur held the fortress, they built an inner cave in the deepest parts of the floating island. Within these chambers, they stored their treasures.
-Due to not being directly connected to the outside, they created a teleport statue, acting as a portal to the hoard.
-However, as Balaur lost the fortress to Daevas, this secret strongbox was discovered.
-Daevas accessed this area, but were surprised by the presence of the Balaur guards.
-They now must venture in, making their way through the remnants, to acquire those amazing riches.
-As Ereshkigal's relics found in Drakenspire Depths released strong energy waves, Reshanta was suffered a shift in its temperature.
-Allowing the rising of the Dragon Lord's armies, it caused the outer fortresses to be neutralised, sealing the original entrance.
-With the sudden appearance of the central archipelago of Lower Reshanta, strange portals leading to this chambers were discovered
-re-enabling access to the affected treasure rooms.
-
-Walkthrough:
-The instance is composed of the drop point, which is connected to the main hall, which branches into three bridges leading to their respective wings.
-When players step out of the drop point, a 15-minutes countdown will begin, which when ends will force treasure chests to despawn.
-Each chamber holds one treasure box, which can be opened with the key dropped from the chamber's head guard.
-A bigger chest may spawn sometimes spawn in the main hall, in front of the bridge leading to the northern chamber.
-If players attack the unique mob of the room, all guards which have not been cleared already will attack them,
-making it imperative to clear the whole room before engaging the fight.
-Each room has a different difficulty, varying from easy (western room), to medium (eastern room) to hard (northern room).
-The western room is guarded by a random Naga/Nagarant guard, holding the <Golden Ruins of Roah Key>,
-which can be used to open the treasure chest behind it,
-In the eastern room players will find a Drakan guard, holding the <Jeweled Ruins of Roah Key>, also used to open the chest behind the unique mob.
-Laslty, players may reach the northern chamber, guarded by <Protector Kael>, holding the <Magic Ruins of Roah Key>.
-This boss will constantly cast shield, reducing physical damage inflicted on him, as well as slowing his enemies' attack and movement speed.
-/****/
+/**
+ * 哈马特岛储藏室副本事件处理器。
+ * Instance event handler for Hamate Isle Storeroom.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300070000)
 public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 {
-	private Future<?> hamateIsleStoreroomTask;
-	private boolean isStartTimer = false;
-	private List<Npc> HamateIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+	/** 哈马特岛储藏室任务 / hamate isle storeroom task */
+		private Future<?> hamateIsleStoreroomTask;
+	/** 是否启动计时器 / is start timer */
+		private boolean isStartTimer = false;
+	/** hamate isle storeroom treasure box suscess / hamate isle storeroom treasure box suscess */
+		private List<Npc> HamateIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -107,6 +73,12 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			break;
 		}
     }
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -148,6 +120,14 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
         f1.spawn();
     }
 	
+	/**
+	 * 玩家通过飞行环时处理。
+	 * Handle a player passing a flying ring.
+	 *
+	 * 玩家 / player
+	 * @param flyingRing 飞行环标识 / flying-ring id
+	 * result
+	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("HAMATE_ISLE_STOREROOM")) {
@@ -155,12 +135,18 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			    isStartTimer = true;
 			    System.currentTimeMillis();
 			    instance.doOnAllPlayers(new Visitor<Player>() {
+			        /**
+			         * 处理 visit。
+			         * Handle visit.
+			         *
+			         * @param player 玩家 / player
+			         */
 			        @Override
 			        public void visit(Player player) {
 						if (player.isOnline()) {
 							startHamateIsleStoreroomTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
-							//The Balaur protective magic ward has been activated.
+							// 龙族防护魔法结界已激活。 / The Balaur protective magic ward has been activated.
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
 						}
 					}
@@ -170,6 +156,12 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		return false;
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		super.onInstanceCreate(instance);
@@ -180,9 +172,13 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	
 	private void startHamateIsleStoreroomTimer() {
 		hamateIsleStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//All Balaur treasure chests have disappeared.
+				// 所有龙族宝箱已消失。 / All Balaur treasure chests have disappeared.
 				sendMsg(1400244);
 				HamateIsleStoreroomTreasureBoxSuscess.get(0).getController().onDelete();
 				HamateIsleStoreroomTreasureBoxSuscess.get(1).getController().onDelete();
@@ -193,6 +189,12 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -200,11 +202,23 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		});
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);

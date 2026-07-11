@@ -13,18 +13,26 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 客户端个人商店开店/上架物品请求包。
+ * Client packet to open a private store and list items for sale.
+ *
  * @author Simple
  */
 public class CM_PRIVATE_STORE extends AionClientPacket {
 
 	/**
-	 * Private store information
+	 * 个人商店信息 / Private store information
 	 */
 	private Player activePlayer;
 	private TradePSItem[] tradePSItems;
 	private int itemCount;
 	private boolean cancelStore;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_PRIVATE_STORE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -32,8 +40,8 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		/**
-		 * Define who wants to create a private store
-		 */
+	 * 定义谁 wants 到创建 private 商店。 / Define who wants to create a private store
+	 */
 		activePlayer = getConnection().getActivePlayer();
 		int level = activePlayer.getLevel();
 		if (activePlayer == null) {
@@ -45,36 +53,36 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 			return;
 		}
 		if (level < 10) {
-			// Characters under level 10 who are using a free trial cannot open a private
-			// store
+			// 试用账号且等级低于 10 不能开设个人商店。 / Characters under level 10 who are using a free trial cannot open a private
+			// 存储 / store
 			PacketSendUtility.sendPacket(activePlayer,
 					SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_OPEN_PERSONAL_SHOP("10"));
 			return;
 		}
 		if (activePlayer.getController().isInCombat()) {
-			// You cannot open a private store while fighting
+			// 战斗中无法开设个人商店。 / You cannot open a private store while fighting
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PERSONAL_SHOP_DISABLED_IN_EXCHANGE);
-			// As you cannot open a private store while fighting, it will be closed
-			// automatically
+			// 战斗中无法开设个人商店，商店将关闭。 / As you cannot open a private store while fighting, it will be closed
+			// 自动 / automatically
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PERSONAL_SHOP_CLOSED_FOR_COMBAT_MODE);
 			PrivateStoreService.closePrivateStore(activePlayer);
 			return;
 		}
 		if ((activePlayer.isFlying()) || (activePlayer.isUsingFlyTeleport())
 				|| (activePlayer.isInPlayerMode(PlayerMode.WINDSTREAM))) {
-			// You cannot open a private store while flying
+			// 飞行中无法开设个人商店。 / You cannot open a private store while flying
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PERSONAL_SHOP_DISABLED_IN_FLY_MODE);
 			return;
 		}
 		if (activePlayer.isInPlayerMode(PlayerMode.RIDE)) {
-			// You cannot open a private store while mounted
+			// 骑乘中无法开设个人商店。 / You cannot open a private store while mounted
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_MSG_PERSONAL_SHOP_RESTRICTION_RIDE);
 			return;
 		}
 		if (activePlayer.getEffectController().isAbnormalSet(AbnormalState.HIDE)) {
-			// You cannot open a private store while hiding
+			// 隐身中无法开设个人商店。 / You cannot open a private store while hiding
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PERSONAL_SHOP_DISABLED_IN_HIDDEN_MODE);
-			// Your private store closed automatically because you are currently hiding
+			// 因处于隐身状态，个人商店已自动关闭。 / Your private store closed automatically because you are currently hiding
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PERSONAL_SHOP_CLOSED_FOR_HIDDEN_MODE);
 			PrivateStoreService.closePrivateStore(activePlayer);
 			return;
@@ -83,7 +91,7 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 		tradePSItems = new TradePSItem[itemCount];
 
 		if (activePlayer.getMoveController().isInMove()) {
-			// You cannot open the private store on a moving object
+			// 在移动物体上无法开设个人商店。 / You cannot open the private store on a moving object
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PERSONAL_SHOP_DISABLED_IN_MOVING_OBJECT);
 			cancelStore = true;
 			return;

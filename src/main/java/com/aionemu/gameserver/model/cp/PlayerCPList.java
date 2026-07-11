@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.cp;
 
 import java.util.ArrayList;
@@ -25,6 +9,11 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+
+/**
+ * 玩家创造点列表，用于创造点相关逻辑。
+ * Player CP List for cp logic.
+ */
 
 public final class PlayerCPList implements CPList<Player> {
 
@@ -41,16 +30,19 @@ public final class PlayerCPList implements CPList<Player> {
 		}
 	}
 
+	/** 返回全部创意点 / Returns the all cp*/
 	public PlayerCPEntry[] getAllCP() {
 		List<PlayerCPEntry> allCp = new ArrayList<PlayerCPEntry>();
 		allCp.addAll(entry.values());
 		return allCp.toArray(new PlayerCPEntry[allCp.size()]);
 	}
 
+	/** 返回基础创意点 / Returns the basic cp */
 	public PlayerCPEntry[] getBasicCP() {
 		return entry.values().toArray(new PlayerCPEntry[entry.size()]);
 	}
 
+	/** 添加点。 / Adds point. */
 	@Override
 	public boolean addPoint(Player player, int slot, int point) {
 		return addPoint(player, slot, point, PersistentState.NEW);
@@ -62,6 +54,7 @@ public final class PlayerCPList implements CPList<Player> {
 		return true;
 	}
 
+	/** 移除点。 / Removes point. */
 	@Override
 	public synchronized boolean removePoint(Player player, int slot) {
 		PlayerCPEntry entries = entry.get(slot);
@@ -73,6 +66,7 @@ public final class PlayerCPList implements CPList<Player> {
 		return entry != null;
 	}
 
+	/** 大小 / size. */
 	@Override
 	public int size() {
 		return entry.size();

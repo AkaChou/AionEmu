@@ -25,6 +25,14 @@ class MinionServiceTest {
 	}
 
 	@Test
+	void acceptsOnlyTheSixFamiliarDopingSlots() {
+		assertFalse(MinionService.isDopingSlot(-1));
+		assertTrue(MinionService.isDopingSlot(0));
+		assertTrue(MinionService.isDopingSlot(5));
+		assertFalse(MinionService.isDopingSlot(6));
+	}
+
+	@Test
 	void consumesConfiguredEnergyBeforeApplyingSkillActions() throws Exception {
 		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
 		assertTrue(service.contains("int energyCost = minionSkill.getEnergyCost()"));

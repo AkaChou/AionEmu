@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -28,6 +12,16 @@ import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 宠物动作/状态同步服务端包（多模式：列表、领养、召唤、解散、喂食、心情、功能操作等）。
+ * Multi-mode server packet that synchronizes pet actions and state
+ * (list, adopt, spawn, despawn, feed, mood, functional ops, etc.).
+ * <p>
+ * actionId 主要分支：0=宠物列表，1=领养/新增，2=删除，3=召唤，4=解散，
+ * 9=喂食进度，10=改名，12=心情，13=功能操作（药剂/拾取/欢呼等）。
+ * Primary actionId branches: 0=list, 1=adopt/add, 2=remove, 3=spawn, 4=despawn,
+ * 9=feed progress, 10=rename, 12=mood, 13=function ops (dope/loot/cheer, etc.).
+ */
 public class SM_PET extends AionServerPacket {
 	private int actionId;
 	private Pet pet;
@@ -42,6 +36,16 @@ public class SM_PET extends AionServerPacket {
 	private int dopeAction;
 	private int dopeSlot;
 
+	/**
+	 * 通用构造：指定子类型、动作、物品与数量。
+	 * General constructor with subtype, action, item and count.
+	 *
+	 * subtype
+	 * action id
+	 * item object id
+	 * count
+	 * @param pet 宠物实例 / pet instance
+	 */
 	public SM_PET(int subType, int actionId, int objectId, int count, Pet pet) {
 		this.subType = subType;
 		this.actionId = actionId;
@@ -51,25 +55,58 @@ public class SM_PET extends AionServerPacket {
 		this.commonData = pet.getCommonData();
 	}
 
+	/**
+	 * 仅动作 ID 的构造（无宠物载荷）。
+	 * Action-id-only constructor (no pet payload).
+	 *
+	 * action id
+	 */
 	public SM_PET(int actionId) {
 		this.actionId = actionId;
 	}
 
+	/**
+	 * 指定动作与宠物的构造。
+	 * Constructor for an action against a single pet.
+	 *
+	 * action id
+	 * @param pet 宠物实例 / pet instance
+	 */
 	public SM_PET(int actionId, Pet pet) {
 		this(0, actionId, 0, 0, pet);
 	}
 
+	/**
+	 * 拾取功能开关（actionId=13, subType=3）。
+	 * Loot-function toggle (actionId=13, subType=3).
+	 *
+	 * @param isLooting 是否正在拾取 / whether looting is active
+	 */
 	public SM_PET(boolean isLooting) {
 		this.actionId = 13;
 		this.isActing = isLooting;
 		this.subType = 3;
 	}
 
+	/**
+	 * 对指定 NPC 的拾取同步。
+	 * Loot sync for a specific NPC corpse.
+	 *
+	 * @param isLooting 是否正在拾取 / whether looting is active
+	 * target NPC id
+	 */
 	public SM_PET(boolean isLooting, int npcId) {
 		this(isLooting);
 		this.lootNpcId = npcId;
 	}
 
+	/**
+	 * 药剂/Buff 功能开关（actionId=13, subType=2）。
+	 * Dope/buff function toggle (actionId=13, subType=2).
+	 *
+	 * @param dopeAction 药剂子动作 / dope sub-action
+	 * @param isBuffing 是否处于 Buff 中 / whether buffing is active
+	 */
 	public SM_PET(int dopeAction, boolean isBuffing) {
 		this.actionId = 13;
 		this.dopeAction = dopeAction;
@@ -77,29 +114,67 @@ public class SM_PET extends AionServerPacket {
 		this.subType = 2;
 	}
 
+	/**
+	 * 欢呼功能开关（actionId=13, subType=5）。
+	 * Cheer function toggle (actionId=13, subType=5).
+	 *
+	 * @param isCheering 是否欢呼中 / whether cheering is active
+	 * @param what 保留参数 / reserved
+	 * reserved
+	 */
 	public SM_PET(boolean isCheering, int what, int wahtwaht) {
 		this.actionId = 13;
 		this.isActing = isCheering;
 		this.subType = 5;
 	}
 
+	/**
+	 * 药剂槽位操作（装入/使用等）。
+	 * Dope-slot operation (insert/use, etc.).
+	 *
+	 * @param dopeAction 药剂子动作 / dope sub-action
+	 * item id
+	 * slot index
+	 */
 	public SM_PET(int dopeAction, int itemId, int slot) {
 		this(dopeAction, true);
 		itemObjectId = itemId;
 		dopeSlot = slot;
 	}
 
+	/**
+	 * 心情/抚摸相关同步（PetAction.MOOD）。
+	 * Mood/cuddle sync (PetAction.MOOD).
+	 *
+	 * @param pet 宠物实例 / pet instance
+	 * @param subType 心情子类型 / mood subtype
+	 * @param shuggleEmotion 抚摸情绪值 / shuggle emotion value
+	 */
 	public SM_PET(Pet pet, int subType, int shuggleEmotion) {
 		this(0, PetAction.MOOD.getActionId(), 0, 0, pet);
 		this.shuggleEmotion = shuggleEmotion;
 		this.subType = subType;
 	}
 
+	/**
+	 * 使用宠物公共数据的构造。
+	 * Constructor backed by pet common data.
+	 *
+	 * action id
+	 * @param commonData 宠物公共数据 / pet common data
+	 */
 	public SM_PET(int actionId, PetCommonData commonData) {
 		this.actionId = actionId;
 		this.commonData = commonData;
 	}
 
+	/**
+	 * 宠物列表同步构造。
+	 * Constructor for a collection of pets (list sync).
+	 *
+	 * action id
+	 * @param pets 宠物公共数据集合 / collection of pet common data
+	 */
 	public SM_PET(int actionId, Collection<PetCommonData> pets) {
 		this.actionId = actionId;
 		this.pets = pets;

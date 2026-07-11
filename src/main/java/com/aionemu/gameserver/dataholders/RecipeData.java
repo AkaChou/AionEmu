@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 制作配方数据容器，按 ID 索引，并按阵营缓存自动学习配方。
+ * Recipe data holder, indexing recipes by id and caching auto-learn recipes by race.
+ *
  * @author ATracer, MrPoke, KID
  */
 @XmlRootElement(name = "recipe_templates")
@@ -41,6 +28,10 @@ public class RecipeData {
 	private IntObjectHashMap<RecipeTemplate> recipeData;
 	private List<RecipeTemplate> elyos, asmos, any;
 
+	/**
+	 * JAXB 反序列化完成后，构建 ID 索引与自动学习阵营列表。
+	 * After JAXB unmarshalling, builds the id index and auto-learn race lists.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		recipeData = new IntObjectHashMap<RecipeTemplate>();
 		elyos = new ArrayList<>();
@@ -66,6 +57,15 @@ public class RecipeData {
 		list = null;
 	}
 
+	/**
+	 * 返回指定阵营、技能与技能等级上限下可自动学习的配方。
+	 * Returns auto-learn recipes for the given race, skill and max skill level.
+	 *
+	 * 阵营 / race
+	 * skill id
+	 * @param maxLevel 技能等级上限 / max skill level
+	 * @return 可自动学习配方列表 / auto-learn recipe list
+	 */
 	public List<RecipeTemplate> getAutolearnRecipes(Race race, int skillId, int maxLevel) {
 		List<RecipeTemplate> list = new ArrayList<>();
 		switch (race) {
@@ -90,16 +90,32 @@ public class RecipeData {
 		return list;
 	}
 
+	/**
+	 * 按配方 ID 获取配方模板。
+	 * Returns the recipe template for the given id.
+	 *
+	 * @param id 配方 ID / recipe id
+	 * @return 配方模板，不存在则为 null / recipe template or null
+	 */
 	public RecipeTemplate getRecipeTemplateById(int id) {
 		return recipeData.get(id);
 	}
 
+	/**
+	 * 返回全部配方模板映射。
+	 * Returns the full recipe template map.
+	 *
+	 * @return ID 到配方的映射 / map of id to recipe
+	 */
 	public IntObjectHashMap<RecipeTemplate> getRecipeTemplates() {
 		return recipeData;
 	}
 
 	/**
-	 * @return recipeData.size()
+	 * 返回已加载的配方数量。
+	 * Returns the number of loaded recipes.
+	 *
+	 * recipe count
 	 */
 	public int size() {
 		return recipeData.size();

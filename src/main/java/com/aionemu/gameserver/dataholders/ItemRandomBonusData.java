@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -34,11 +18,12 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
-
+ * 物品随机加成数据容器，按加成类型与选项集 ID 索引 {@link RandomBonus}。
+ * Item random-bonus data holder, indexing {@link RandomBonus} by bonus type and option-set id.
+ *
+ * @author Rinzler (Encom)
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "randomBonuses" })
 @XmlRootElement(name = "random_bonuses")
@@ -52,6 +37,10 @@ public class ItemRandomBonusData {
 	@XmlTransient
 	private IntObjectHashMap<RandomBonus> polishRandomBonusData = new IntObjectHashMap<RandomBonus>();
 
+	/**
+	 * JAXB 反序列化完成后，按加成类型建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes bonuses by type and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (RandomBonus bonus : randomBonuses) {
 			getBonusMap(bonus.getBonusType()).put(bonus.getId(), bonus);
@@ -67,6 +56,15 @@ public class ItemRandomBonusData {
 		return polishRandomBonusData;
 	}
 
+	/**
+	 * 按权重随机抽取一组随机加成修正。
+	 * Randomly selects a modifiers set for the given bonus type and option set by weight.
+	 *
+	 * bonus type
+	 *
+	 * @param rndOptionSet 随机选项集 ID / random option-set id
+	 * @param rndOptionSet @return 随机加成结果，无匹配则为 null / random bonus result or null
+	 */
 	public RandomBonusResult getRandomModifiers(StatBonusType bonusType, int rndOptionSet) {
 		RandomBonus bonus = getBonusMap(bonusType).get(rndOptionSet);
 		if (bonus == null) {
@@ -89,6 +87,16 @@ public class ItemRandomBonusData {
 		return template == null ? null : new RandomBonusResult(template, number);
 	}
 
+	/**
+	 * 按加成类型、选项集与序号获取修正模板。
+	 * Returns the modifiers template for the given bonus type, option set and 1-based index.
+	 *
+	 * bonus type
+	 *
+	 * @param rndOptionSet 随机选项集 ID / random option-set id
+	 * @param number 1 起始的修正序号 / 1-based modifiers index
+	 * @param number @return 修正模板或 null / modifiers template or null
+	 */
 	public ModifiersTemplate getTemplate(StatBonusType bonusType, int rndOptionSet, int number) {
 		RandomBonus bonus = getBonusMap(bonusType).get(rndOptionSet);
 		if (bonus == null) {
@@ -97,6 +105,12 @@ public class ItemRandomBonusData {
 		return bonus.getModifiers().get(number - 1);
 	}
 
+	/**
+	 * 返回背包与抛光随机加成的总数量。
+	 * Returns the total number of inventory and polish random bonuses.
+	 *
+	 * total bonus count
+	 */
 	public int size() {
 		return inventoryRandomBonusData.size() + polishRandomBonusData.size();
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
@@ -36,6 +20,9 @@ import com.aionemu.gameserver.utils.PositionUtil;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员目标信息命令：输出选中玩家/NPC/采集物的坐标、属性、关系与仇恨等调试信息。
+ * Admin target-info command: dump selected player/NPC/gatherable position, stats, relations and aggro debug data.
+ *
  * @author Nemiroff Date: 28.12.2009
  */
 public class Info extends AdminCommand {
@@ -44,6 +31,13 @@ public class Info extends AdminCommand {
 		super("info");
 	}
 
+	/**
+	 * 根据当前选中目标输出玩家、NPC 或采集物的详细信息。
+	 * Dump detailed info for the currently selected player, NPC or gatherable.
+	 *
+	 * @param admin 执行命令的管理员 / Admin executing the command
+	 * Unused
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		VisibleObject target = admin.getTarget();
@@ -165,8 +159,4 @@ public class Info extends AdminCommand {
 		}
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

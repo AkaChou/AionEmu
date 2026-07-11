@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,14 +5,23 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * @author Nemiroff Date: 17.02.2010
+ * 向客户端广播玩家欧比斯军衔相关外观/状态更新的服务端包。
+ * Server packet broadcasting Abyss-rank related visual/status updates for a player to the client.
+ *
+ * @author Nemiroff
  */
-//TODO Rename
 public class SM_ABYSS_RANK_UPDATE extends AionServerPacket {
 
 	private Player player;
 	private int action;
 
+	/**
+	 * 按动作类型构造军衔外观/状态更新包。
+	 * Creates a rank visual/status update packet for the given action type.
+	 *
+	 * @param action 动作类型：0=军衔、1=固定值、2=导师状态 / action type: 0=rank, 1=fixed value, 2=mentor status
+	 * target player
+	 */
 	public SM_ABYSS_RANK_UPDATE(int action, Player player) {
 		this.action = action;
 		this.player = player;

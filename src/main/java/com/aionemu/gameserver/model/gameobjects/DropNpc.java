@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import java.lang.ref.WeakReference;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
 
 /**
+ * 掉落 NPC 游戏对象。
+ * Drop Npc game object.
+ *
  * @author Simple
  */
 public class DropNpc {
@@ -52,18 +39,22 @@ public class DropNpc {
 		this.objectId = objectId;
 	}
 
+	/** 设置 allowed looters / Sets the allowed looters */
 	public void setAllowedLooters(Set<Integer> allowedLooters) {
 		this.allowedLooters = allowedLooters;
 	}
 
+	/** 设置 allowed looter / Sets the allowed looter */
 	public void setAllowedLooter(Player player) {
 		allowedLooters.add(player.getObjectId());
 	}
 
+	/** 返回 allowed looters / Returns the allowed looters */
 	public Set<Integer> getAllowedLooters() {
 		return allowedLooters;
 	}
 
+	/** 是否 allowed to loot / Whether allowed to loot */
 	public boolean isAllowedToLoot(Player player) {
 		return isFreeForAll || allowedLooters.contains(player.getObjectId());
 	}
@@ -131,14 +122,17 @@ public class DropNpc {
 		return currentIndex;
 	}
 
+	/** 返回 looting team id / Returns the looting team id */
 	public int getLootingTeamId() {
 		return lootingTeamId;
 	}
 
+	/** 返回 max roll / Returns the max roll */
 	public int getMaxRoll() {
 		return maxRoll;
 	}
 
+	/** 返回 loot group rules / Returns the loot group rules */
 	public LootGroupRules getLootGroupRules() {
 		TemporaryPlayerTeam<? extends TeamMember<Player>> team = lootingTeam == null ? null : lootingTeam.get();
 		if (team != null) {
@@ -147,6 +141,7 @@ public class DropNpc {
 		return lastLootGroupRules;
 	}
 
+	/** 设置 looting team / Sets the looting team */
 	public void setLootingTeam(TemporaryPlayerTeam<? extends TeamMember<Player>> team) {
 		lootingTeam = new WeakReference<>(team);
 		lootingTeamId = team.getTeamId();
@@ -155,6 +150,7 @@ public class DropNpc {
 		lastLootGroupRules = team.getLootGroupRules();
 	}
 
+	/** 设置 in range players / Sets the in range players */
 	public void setInRangePlayers(Collection<Player> inRangePlayers) {
 		this.inRangePlayers = inRangePlayers;
 	}
@@ -201,20 +197,24 @@ public class DropNpc {
 		return isFreeForAll;
 	}
 
+	/** Start free for all / Start free for all */
 	public void startFreeForAll() {
 		isFreeForAll = true;
 		distributionId = 0;
 		allowedLooters.clear();
 	}
 
+	/** 返回对象 ID / Returns the object id */
 	public final int getObjectId() {
 		return objectId;
 	}
 
+	/** 返回 remaining decay time / Returns the remaining decay time */
 	public long getRemainingDecayTime() {
 		return remainingDecayTime;
 	}
 
+	/** 设置 remaining decay time / Sets the remaining decay time */
 	public void setRemainingDecayTime(long remainingDecayTime) {
 		this.remainingDecayTime = remainingDecayTime;
 	}

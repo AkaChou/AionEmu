@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.event;
 
 import java.sql.Timestamp;
@@ -28,6 +13,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
+ * Events 窗口模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Ghostfur (Aion-Unique)
  */
 @XmlRootElement(name = "atreian_passport")
@@ -65,46 +53,57 @@ public class EventsWindow {
 
 	private Timestamp lastStamp;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return item;
 	}
 
+	/** 获取计数。 / Returns the count. */
 	public long getCount() {
 		return count;
 	}
 
+	/** 返回 max count of day / Returns the max count of day */
 	public int getMaxCountOfDay() {
 		return dailyMaxCount;
 	}
 
+	/** 返回 period start / Returns the period start */
 	public ZonedDateTime getPeriodStart() {
 		return DateTimeUtil.fromCalendar(pStart.toGregorianCalendar());
 	}
 
+	/** 返回 period end / Returns the period end */
 	public ZonedDateTime getPeriodEnd() {
 		return DateTimeUtil.fromCalendar(pEnd.toGregorianCalendar());
 	}
 
+	/** 返回剩余时间 / Returns the remaining time */
 	public int getRemainingTime() {
 		return remaining_time;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return min_level;
 	}
 
+	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
 		return max_level;
 	}
 
+	/** 返回上次盖章 / Returns the last stamp*/
 	public Timestamp getLastStamp() {
 		return lastStamp;
 	}
 
+	/** 设置 last stamp / Sets the last stamp */
 	public void setLastStamp(Timestamp timestamp) {
 		lastStamp = timestamp;
 	}

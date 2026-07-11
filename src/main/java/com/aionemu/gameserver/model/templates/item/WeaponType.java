@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * Weapon 类型枚举。
+ * Weapon Type enumeration.
+ *
  * @author Rinzler (Encom)
  */
 @XmlType(name = "weapon_type")
@@ -27,12 +14,18 @@ import jakarta.xml.bind.annotation.XmlType;
 public enum WeaponType
 
 {
-	// Weapon Type 4.8
+	// 武器类型 4.8 / Weapon Type 4.8
+	/** Dagger 1H / Dagger 1H */
 	DAGGER_1H(new int[] { 66, 45 }, 1), MACE_1H(new int[] { 39, 46 }, 1), SWORD_1H(new int[] { 37, 44 }, 1),
+	/** Toolhoe 1H / Toolhoe 1H */
 	TOOLHOE_1H(new int[] {}, 1), BOOK_2H(new int[] { 100 }, 2), ORB_2H(new int[] { 111 }, 2),
+	/** Polearm 2H / Polearm 2H */
 	POLEARM_2H(new int[] { 52 }, 2), STAFF_2H(new int[] { 89 }, 2), SWORD_2H(new int[] { 51 }, 2),
+	/** Toolpick 2H / Toolpick 2H */
 	TOOLPICK_2H(new int[] {}, 2), TOOLROD_2H(new int[] {}, 2), BOW(new int[] { 53 }, 2),
+	/** Gun 1H / Gun 1H */
 	GUN_1H(new int[] { 117, 112 }, 1), CANNON_2H(new int[] { 113 }, 2), HARP_2H(new int[] { 124, 114 }, 2),
+	/** Keyblade 2H / Keyblade 2H */
 	KEYBLADE_2H(new int[] { 115 }, 2), KEYHAMMER_2H(new int[] {}, 2);
 
 	private int slots;
@@ -43,14 +36,17 @@ public enum WeaponType
 		this.slots = slots;
 	}
 
+	/** 返回 required skills / Returns the required skills */
 	public int[] getRequiredSkills() {
 		return requiredSkill;
 	}
 
+	/** 返回 required slots / Returns the required slots */
 	public int getRequiredSlots() {
 		return slots;
 	}
 
+	/** 获取掩码。 / Returns the mask. */
 	public int getMask() {
 		return 1 << this.ordinal();
 	}

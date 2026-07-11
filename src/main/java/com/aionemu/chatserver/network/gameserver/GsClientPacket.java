@@ -1,49 +1,52 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.gameserver;
 
-import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.network.packet.BaseClientPacket;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
+ * 游戏服 → 聊天服客户端数据包的抽象基类。
+ * Abstract base class for game server → chat server client packets.
  *
  * @author KID
- *
  */
 @Slf4j
 public abstract class GsClientPacket extends BaseClientPacket<GsConnection> {
 
+    /**
+     * 构造游戏服客户端数据包。
+     * Constructs a game-server client packet.
+     *
+     * @param buffer 原始字节缓冲 / raw byte buffer
+     * @param connection 所属游戏服连接 / owning game-server connection
+     * @param opCode 数据包操作码 / packet opcode
+     */
     public GsClientPacket(ByteBuffer buffer, GsConnection connection, int opCode) {
         super(opCode);
     }
 
+    /**
+     * 在线程池中执行包逻辑，并捕获异常。
+     * Executes packet logic on the worker thread and traps unexpected errors.
+     */
     @Override
     public final void run() {
         try {
             runImpl();
         } catch (Throwable e) {
-            log.warn("error handling gs (" + getConnection().getIP() + ") message " + this, e);
+            log.warn(I18n.get("log.8fd86409bd46", getConnection().getIP(), this, e));
         }
     }
 
+    /**
+     * 通过当前连接发送服务端包。
+     * Sends a server packet through the current connection.
+     *
+     * @param msg 待发送的服务端包 / server packet to send
+     */
     protected void sendPacket(GsServerPacket msg) {
         getConnection().sendPacket(msg);
     }

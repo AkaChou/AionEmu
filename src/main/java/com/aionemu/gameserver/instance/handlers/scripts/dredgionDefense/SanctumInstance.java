@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgionDefense;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -52,21 +36,36 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: https://aionpowerbook.com/powerbook/index.php?title=Pandaemonium_Battlefield&setlang=en#Features
-/****/
+/**
+ * 圣所防御副本事件处理器。
+ * Instance event handler for Sanctum.
+ *
+ * @author Encom
+ */
 
 @InstanceID(302200000)
 public class SanctumInstance extends GeneralInstanceHandler
 {
-	private int barrierPowerCore1;
-	private int barrierPowerCore2;
-	private int dredgionMainModule;
-	private int surkanaShockCannon;
+	/** barrier power core1 / barrier power core1 */
+		private int barrierPowerCore1;
+	/** barrier power core2 / barrier power core2 */
+		private int barrierPowerCore2;
+	/** dredgion main module / dredgion main module */
+		private int dredgionMainModule;
+	/** surkana shock cannon / surkana shock cannon */
+		private int surkanaShockCannon;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> sanctumTask = new ArrayList<Future<?>>();
+	/** sanctum 任务 / sanctum task */
+		private final List<Future<?>> sanctumTask = new ArrayList<Future<?>>();
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -77,13 +76,23 @@ public class SanctumInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		int npcId = npc.getNpcId();
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 220729: //Frigida Drakan Overseer.
+			case 220729: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						spawn(220730, 1865.2926f, 1611.8842f, 590.01190f, (byte) 106);
@@ -94,8 +103,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 					}
 				}, 180000);
 			break;
-			case 221015: //Frigida Drakan Overseer.
+			case 221015: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						spawn(220730, 1861.3127f, 1410.2605f, 590.0112f, (byte) 75);
@@ -106,8 +119,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 					}
 				}, 180000);
 			break;
-			case 221016: //Frigida Drakan Overseer.
+			case 221016: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						spawn(220730, 1568.4277f, 1480.0232f, 573.01764f, (byte) 45);
@@ -118,8 +135,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 					}
 				}, 180000);
 			break;
-			case 221017: //Frigida Drakan Overseer.
+			case 221017: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						spawn(220730, 1572.8469f, 1541.8624f, 573.02800f, (byte) 76);
@@ -130,8 +151,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 					}
 				}, 180000);
 			break;
-			case 221018: //Frigida Drakan Overseer.
+			case 221018: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						spawn(220730, 1441.1407f, 1511.2439f, 573.16920f, (byte) 0);
@@ -144,7 +169,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 					}
 				}, 180000);
 			break;
-			case 220716: //Frigida Drakan Commander.
+			case 220716: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 			    sp(220915, 1411.3159f, 1671.2926f, 572.88416f, (byte) 105, 0); //Jucleas.
 				sp(220916, 1418.0f, 1670.0f, 572.88416f, (byte) 105, 0); //Sibylla.
 				sp(220917, 1412.0f, 1664.0f, 572.88416f, (byte) 105, 0); //Aithra.
@@ -153,7 +178,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sp(220920, 1427.3644f, 1660.996f, 572.88416f, (byte) 27, 0); //Brynner.
 				sp(220921, 1411.9657f, 1652.8064f, 573.23083f, (byte) 3, 0); //Mayu.
 			break;
-			case 220717: //Frigida Drakan Commander.
+			case 220717: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				sp(220922, 1351.9054f, 1388.6754f, 572.99274f, (byte) 9, 0); //Fasimedes.
 				sp(220923, 1352.814f, 1394.9077f, 573.20856f, (byte) 9, 0); //Jupion.
 				sp(220924, 1357.7458f, 1385.9131f, 573.20856f, (byte) 9, 0); //Likesan.
@@ -162,7 +187,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sp(220927, 1359.7947f, 1395.4246f, 572.99274f, (byte) 8, 0); //Thrasymedes.
 				sp(220928, 1362.214f, 1390.118f, 573.0446f, (byte) 9, 0); //Oakley.
 			break;
-			case 220718: //Frigida Drakan Commander.
+			case 220718: //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				sp(220929, 1848.4662f, 1511.1677f, 590.06964f, (byte) 0, 0); //Lavirintos.
 				sp(220930, 1853.6035f, 1519.6f, 590.00854f, (byte) 0, 0); //Boreas.
 				sp(220931, 1852.1235f, 1516.9996f, 591.55231f, (byte) 0, 0); //Miragent Guardian.
@@ -171,24 +196,34 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sp(220933, 1854.9122f, 1513.9397f, 590.0696f, (byte) 117, 0); //Bellia.
 				sp(220934, 1854.8523f, 1508.0864f, 590.0696f, (byte) 5, 0); //Hygea.
 			break;
-			//Dredgion Main Module.
+			// 战舰主模块。 / Dredgion Main Module.
 			case 220768:
 				despawnNpc(npc);
 			break;
-			//Dredgion Ship Module.
+			// 战舰模块。 / Dredgion Ship Module.
 			case 220966:
 			case 220967:
 				despawnNpc(npc);
-				//Defense Turret has destroyed the Legion's Dredgion.
+				// 防御炮塔摧毁了军团战舰。 / Defense Turret has destroyed the Legion's Dredgion.
 				sendMsgByRace(1403776, Race.PC_ALL, 2000);
 			break;
-			//Commander Zedas.
+			// 指挥官泽达斯。 / Commander Zedas.
 			case 220705:
 				despawnNpc(npc);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
 							@Override
 							public void visit(Player player) {
 								if (player.isOnline()) {
@@ -199,12 +234,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 					}
 				}, 10000);
 			break;
-			//Captain Jidega.
+			// 吉德加船长。 / Captain Jidega.
 			case 220752:
 				killNpc(getNpcs(703398));
 				sp(834857, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 3000, 0, null); //Emergency Exit.
 			break;
-			//Surkana Shock Cannon.
+			// 苏卡纳冲击加农。 / Surkana Shock Cannon.
 			case 220766:
 			case 220767:
 			    despawnNpc(npc);
@@ -214,11 +249,11 @@ public class SanctumInstance extends GeneralInstanceHandler
 					killNpc(getNpcs(703400));
 					killNpc(getNpcs(220753));
 					killNpc(getNpcs(220754));
-					//The shock cannon at the Captains Cabin has been deactivated.
+					// 船长室冲击加农已停用。 / The shock cannon at the Captains Cabin has been deactivated.
 				    sendMsgByRace(1403955, Race.PC_ALL, 2000);
 				}
 			break;
-			//Dredgion Main Module.
+			// 战舰主模块。 / Dredgion Main Module.
 			case 220866:
 			case 220867:
 			case 220868:
@@ -226,12 +261,22 @@ public class SanctumInstance extends GeneralInstanceHandler
 				dredgionMainModule++;
 				if (dredgionMainModule == 3) {
 					sendMovie(player, 949);
-					//The Dredgion was destroyed.
+					// 战舰已被摧毁。 / The Dredgion was destroyed.
 					sendMsgByRace(1403958, Race.PC_ALL, 0);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
+								/**
+								 * 处理 visit。
+								 * Handle visit.
+								 *
+								 * @param player 玩家 / player
+								 */
 								@Override
 								public void visit(Player player) {
 									if (player.isOnline()) {
@@ -243,15 +288,15 @@ public class SanctumInstance extends GeneralInstanceHandler
 					}, 60000);
 				}
 			break;
-			// === DREDGION ROOF A ===
+			// === 战舰顶部 A === / === DREDGION ROOF A ===
 			case 220869: //Barrier Power Core 1.
 				despawnNpc(npc);
 				magicWardEnergy();
 				barrierPowerCore1++;
 				dredgionMainModule1();
-				//Activation Stone ready.
+				// 激活石已就绪。 / Activation Stone ready.
 				sendMsgByRace(1403956, Race.PC_ALL, 0);
-				//The magic ward was activated. Attack and movement speeds increased!
+				// 魔法结界已激活。攻击与移动速度提升！ / The magic ward was activated. Attack and movement speeds increased!
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(220978, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 1.
 			break;
@@ -260,9 +305,9 @@ public class SanctumInstance extends GeneralInstanceHandler
 				magicWardEnergy();
 				barrierPowerCore1++;
 				dredgionMainModule1();
-				//Activation Stone ready.
+				// 激活石已就绪。 / Activation Stone ready.
 				sendMsgByRace(1403956, Race.PC_ALL, 0);
-				//The magic ward was activated. Attack and movement speeds increased!
+				// 魔法结界已激活。攻击与移动速度提升！ / The magic ward was activated. Attack and movement speeds increased!
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(220979, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 2.
 			break;
@@ -271,21 +316,21 @@ public class SanctumInstance extends GeneralInstanceHandler
 				magicWardEnergy();
 				barrierPowerCore1++;
 				dredgionMainModule1();
-				//Activation Stone ready.
+				// 激活石已就绪。 / Activation Stone ready.
 				sendMsgByRace(1403956, Race.PC_ALL, 0);
-				//The magic ward was activated. Attack and movement speeds increased!
+				// 魔法结界已激活。攻击与移动速度提升！ / The magic ward was activated. Attack and movement speeds increased!
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(220980, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 3.
 			break;
-			// === DREDGION ROOF B ===
+			// === 战舰顶部 B === / === DREDGION ROOF B ===
 			case 220872: //Barrier Power Core 1.
 				despawnNpc(npc);
 				magicWardEnergy();
 				barrierPowerCore2++;
 				dredgionMainModule2();
-				//Activation Stone ready.
+				// 激活石已就绪。 / Activation Stone ready.
 				sendMsgByRace(1403956, Race.PC_ALL, 0);
-				//The magic ward was activated. Attack and movement speeds increased!
+				// 魔法结界已激活。攻击与移动速度提升！ / The magic ward was activated. Attack and movement speeds increased!
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(221005, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 1.
 			break;
@@ -294,9 +339,9 @@ public class SanctumInstance extends GeneralInstanceHandler
 				magicWardEnergy();
 				barrierPowerCore2++;
 				dredgionMainModule2();
-				//Activation Stone ready.
+				// 激活石已就绪。 / Activation Stone ready.
 				sendMsgByRace(1403956, Race.PC_ALL, 0);
-				//The magic ward was activated. Attack and movement speeds increased!
+				// 魔法结界已激活。攻击与移动速度提升！ / The magic ward was activated. Attack and movement speeds increased!
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(221006, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 2.
 			break;
@@ -305,9 +350,9 @@ public class SanctumInstance extends GeneralInstanceHandler
 				magicWardEnergy();
 				barrierPowerCore2++;
 				dredgionMainModule2();
-				//Activation Stone ready.
+				// 激活石已就绪。 / Activation Stone ready.
 				sendMsgByRace(1403956, Race.PC_ALL, 0);
-				//The magic ward was activated. Attack and movement speeds increased!
+				// 魔法结界已激活。攻击与移动速度提升！ / The magic ward was activated. Attack and movement speeds increased!
 				sendMsgByRace(1403957, Race.PC_ALL, 2000);
 				sp(221007, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 2000, 0, null); //Icy Core 3.
 			break;
@@ -319,10 +364,14 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220919); //Eumelos.
 				deleteNpc(220920); //Brynner.
 				deleteNpc(220921); //Mayu.
-				deleteNpc(220716); //Frigida Drakan Commander.
-				//The Lyceum in Sanctum has been destroyed by the Frigida Fregida Legion.
+				deleteNpc(220716); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
+				// 圣所学园被弗里吉达军团摧毁。 / The Lyceum in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403780, Race.PC_ALL, 0);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						spawn(220915, 1411.3159f, 1671.2926f, 572.88416f, (byte) 105); //Jucleas.
@@ -332,7 +381,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 						spawn(220919, 1414.8833f, 1661.1019f, 572.88416f, (byte) 105); //Eumelos.
 						spawn(220920, 1427.3644f, 1660.996f, 572.88416f, (byte) 27); //Brynner.
 						spawn(220921, 1411.9657f, 1652.8064f, 573.23083f, (byte) 3); //Mayu.
-						spawn(220716, 1432.0885f, 1649.6793f, 573.19714f, (byte) 104); //Frigida Drakan Commander.
+						spawn(220716, 1432.0885f, 1649.6793f, 573.19714f, (byte) 104); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
@@ -344,10 +393,14 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220926); //Charna.
 				deleteNpc(220927); //Thrasymedes.
 				deleteNpc(220928); //Oakley.
-				deleteNpc(220717); //Frigida Drakan Commander.
-				//The Hall of Prosperity in Sanctum has been destroyed by the Frigida Fregida Legion.
+				deleteNpc(220717); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
+				// 圣所繁荣大厅被弗里吉达军团摧毁。 / The Hall of Prosperity in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403781, Race.PC_ALL, 0);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						spawn(220922, 1351.9054f, 1388.6754f, 572.99274f, (byte) 9); //Fasimedes.
@@ -357,7 +410,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 						spawn(220926, 1362.8323f, 1382.5488f, 573.38635f, (byte) 7); //Charna.
 						spawn(220927, 1359.7947f, 1395.4246f, 572.99274f, (byte) 8); //Thrasymedes.
 						spawn(220928, 1362.214f, 1390.118f, 573.0446f, (byte) 9); //Oakley.
-						spawn(220717, 1387.8679f, 1405.131f, 573.30664f, (byte) 8); //Frigida Drakan Commander.
+						spawn(220717, 1387.8679f, 1405.131f, 573.30664f, (byte) 8); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
@@ -369,10 +422,14 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220932); //Dion.
 				deleteNpc(220933); //Bellia.
 				deleteNpc(220934); //Hygea.
-				deleteNpc(220718); //Frigida Drakan Commander.
-				//The Protector's Hall in Sanctum has been destroyed by the Frigida Fregida Legion.
+				deleteNpc(220718); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
+				// 圣所的守护者之厅被弗里吉达军团摧毁。 / The Protector's Hall in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403782, Race.PC_ALL, 0);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 						spawn(220929, 1848.4662f, 1511.1677f, 590.06964f, (byte) 0); //Lavirintos.
@@ -382,13 +439,20 @@ public class SanctumInstance extends GeneralInstanceHandler
 						spawn(220932, 1853.995f, 1502.2582f, 590.00854f, (byte) 0); //Dion.
 						spawn(220933, 1854.9122f, 1513.9397f, 590.0696f, (byte) 117); //Bellia.
 						spawn(220934, 1854.8523f, 1508.0864f, 590.0696f, (byte) 5); //Hygea.
-						spawn(220718, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106); //Frigida Drakan Commander.
+						spawn(220718, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				    }
 			    }, 15000);
 			break;
 		}
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -427,10 +491,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 			case 834317: //Dredgion Fissure.
 			    if (player.getInventory().decreaseByItemId(185000282, 1)) {
 				    invadeIDLC1Dredgion(player, 1496.732f, 1557.6948f, 2032.4938f, (byte) 30);
-					//The shock cannon at the Captains Cabin has been activated!
+					// 船长室冲击加农已激活！ / The shock cannon at the Captains Cabin has been activated!
 					sendMsgByRace(1403954, Race.PC_ALL, 10000);
 				} else {
-					//Wind Gap Pass required.
+					// 需要风隙通行证。 / Wind Gap Pass required.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403685));
 				}
 			break;
@@ -438,12 +502,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 			    if (player.getInventory().decreaseByItemId(185000280, 1)) {
 				    despawnNpc(npc);
 				} else {
-					//Prison Camp Key required.
+					// 需要战俘营钥匙。 / Prison Camp Key required.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403686));
 				}
 			break;
 			case 220822: //Sanctum Chariot.
-			    //Sanctum Defense Turret Energy Source.
+			    // 圣所防御炮塔能量源。 / Sanctum Defense Turret Energy Source.
 				if (player.getInventory().decreaseByItemId(185000286, 1)) {
 				    sp(834506, 1366.2909f, 1544.2992f, 569.03461f, (byte) 0, 459, 1000, 0, null);
 					sp(834507, 1366.2908f, 1478.9144f, 569.04498f, (byte) 0, 510, 1000, 0, null);
@@ -464,15 +528,15 @@ public class SanctumInstance extends GeneralInstanceHandler
 					sp(834506, 1377.2725f, 1511.7285f, 569.20038f, (byte) 0, 540, 17000, 0, null);
 				    sp(220816, 1377.0789f, 1511.7852f, 569.84143f, (byte) 60, 0, 19000, 0, null); //Sanctum Defense Turret 1.
 					sp(220966, 1343.6370f, 1511.7704f, 591.88947f, (byte) 29, 0, 20000, 0, null); //Dreadgion Weapon Main Module 1.
-					//Charging complete!
+					// 充能完成！ / Charging complete!
 					sendMsgByRace(1403977, Race.PC_ALL, 20000);
 				} else {
-					//There is no energy source.
+					// 没有能量源。 / There is no energy source.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403694));
 				}
 			break;
 			case 220823: //Sanctum Chariot.
-			    //Sanctum Defense Turret Energy Source.
+			    // 圣所防御炮塔能量源。 / Sanctum Defense Turret Energy Source.
 				if (player.getInventory().decreaseByItemId(185000286, 1)) {
 				    sp(834504, 1609.6289f, 1383.5377f, 563.48401f, (byte) 0, 444, 1000, 0, null);
 					sp(834505, 1544.2443f, 1383.5377f, 563.49438f, (byte) 0, 445, 1000, 0, null);
@@ -493,10 +557,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 					sp(834504, 1577.0582f, 1372.5562f, 564.69690f, (byte) 0, 307, 17000, 0, null);
 					sp(221137, 1576.9885f, 1372.4152f, 565.33795f, (byte) 90, 0, 19000, 0, null); //Sanctum Defense Turret 2.
 					sp(220967, 1578.1901f, 1354.3147f, 581.95760f, (byte) 58, 0, 20000, 0, null); //Dreadgion Weapon Main Module 2.
-					//Charging complete!
+					// 充能完成！ / Charging complete!
 					sendMsgByRace(1403977, Race.PC_ALL, 20000);
 				} else {
-					//There is no energy source.
+					// 没有能量源。 / There is no energy source.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403694));
 				}
 			break;
@@ -507,7 +571,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		Npc mainModule1 = instance.getNpc(220866); //Dredgion Main Module.
 		if (mainModule1 != null) {
 			if (barrierPowerCore1 == 3) {
-				//Dredgions Power Core Barrier.
+				// 战舰能量核心屏障。 / Dredgions Power Core Barrier.
 				mainModule1.getEffectController().removeEffect(18298);
 			}
 		}
@@ -517,7 +581,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		Npc mainModule2 = instance.getNpc(220867); //Dredgion Main Module.
 		if (mainModule2 != null) {
 			if (barrierPowerCore2 == 3) {
-				//Dredgions Power Core Barrier.
+				// 战舰能量核心屏障。 / Dredgions Power Core Barrier.
 				mainModule2.getEffectController().removeEffect(18298);
 			}
 		}
@@ -529,65 +593,67 @@ public class SanctumInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 			   /**
-				*  1. Drakan Instructor & Base Defence:
-				* Drakan Instructors appear in the "Lyceum, Hall Of Prosperity & Artisans Hall".
-				* After killing each Instructor, friendly NPCs will appear to protect that spot.
-				* At the 5th, 15th, and 20th minute, large scale battle begins at each base.
-				* If a leader of a base dies, Drakan Instructor will re-appear.
-				*/
-				//The Frigida Fregida Legion is attacking the Lyceum in Sanctum.
+	 * 1. 龙族教官与基地防御：教官出现在学园、繁荣大厅与工匠大厅。 / 1. Drakan Instructor & Base Defence: Drakan Instructors appear in the "Lyceum, Hall Of Prosperity & Artisans Hall". After killing each Instructor, friendly NPCs will appear to protect that spot. At the 5th, 15th, and 20th minute, large scale battle begins at each base. If a leader of a base dies, Drakan Instructor will re-appear
+	 */
+				// 弗里吉达军团正在攻击圣所学园。 / The Frigida Fregida Legion is attacking the Lyceum in Sanctum.
 				sendMsgByRace(1403777, Race.PC_ALL, 0);
-				sp(220716, 1432.0885f, 1649.6793f, 573.19714f, (byte) 104, 0); //Frigida Drakan Commander.
+				sp(220716, 1432.0885f, 1649.6793f, 573.19714f, (byte) 104, 0); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				sp(703406, 1432.0885f, 1649.6793f, 573.19714f, (byte) 104, 0); //Frigida Drakan Commander [Flag].
-				//The Frigida Fregida Legion is attacking the Hall of Prosperity in Sanctum.
+				// 弗里吉达军团正在攻击圣所繁荣大厅。 / The Frigida Fregida Legion is attacking the Hall of Prosperity in Sanctum.
 				sendMsgByRace(1403778, Race.PC_ALL, 10000);
-				sp(220717, 1387.8679f, 1405.131f, 573.30664f, (byte) 8, 10000); //Frigida Drakan Commander.
+				sp(220717, 1387.8679f, 1405.131f, 573.30664f, (byte) 8, 10000); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				sp(703406, 1387.8679f, 1405.131f, 573.30664f, (byte) 8, 10000); //Frigida Drakan Commander [Flag].
-				//The Frigida Fregida Legion is attacking the Protector's Hall in Sanctum.
+				// 弗里吉达军团正在攻击圣所守护者之厅。 / The Frigida Fregida Legion is attacking the Protector's Hall in Sanctum.
 				sendMsgByRace(1403779, Race.PC_ALL, 20000);
-				sp(220718, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106, 20000); //Frigida Drakan Commander.
+				sp(220718, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106, 20000); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				sp(703406, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106, 20000); //Frigida Drakan Commander [Flag].
             }
         }, 60000)); //1 Min.
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 			   /**
-				*  2. Drakan Battle Overseer:
-				* 3 min after the start, 3 Drakan Battle Overseers will appear in 3/5 random locations.
-				* They will re-appear 3 min after being killed in a random position.
-				*/
+	 * 2. 龙人战斗监督：开始 3 分钟后，3 名监督将在 3/5 随机位置出现并会再次出现。 / 2. Drakan Battle Overseer: 3 min after the start, 3 Drakan Battle Overseers will appear in 3/5 random locations. They will re-appear 3 min after being killed in a random position
+	 */
 				switch (Rnd.get(1, 5)) {
 				    case 1:
 						spawn(220730, 1865.2926f, 1611.8842f, 590.01190f, (byte) 106);
 						spawn(220732, 1860.5549f, 1616.6385f, 590.01460f, (byte) 105);
 						spawn(220733, 1860.5901f, 1611.9545f, 590.01215f, (byte) 105);
 						spawn(220734, 1865.2938f, 1616.5138f, 590.01440f, (byte) 105);
-						spawn(220729, 1855.7964f, 1611.9655f, 590.01227f, (byte) 116); //Frigida Drakan Overseer.
+						spawn(220729, 1855.7964f, 1611.9655f, 590.01227f, (byte) 116); //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 				    break;
 					case 2:
 						spawn(220730, 1861.3127f, 1410.2605f, 590.0112f, (byte) 75);
 						spawn(220732, 1866.4400f, 1415.5265f, 590.0084f, (byte) 75);
 						spawn(220733, 1861.2185f, 1415.2839f, 590.0084f, (byte) 75);
 						spawn(220734, 1866.4982f, 1410.2660f, 590.0094f, (byte) 75);
-						spawn(221015, 1866.4473f, 1420.8293f, 590.0084f, (byte) 90); //Frigida Drakan Overseer.
+						spawn(221015, 1866.4473f, 1420.8293f, 590.0084f, (byte) 90); //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 				    break;
 					case 3:
 						spawn(220730, 1568.4277f, 1480.0232f, 573.01764f, (byte) 45);
 						spawn(220732, 1572.3428f, 1476.2856f, 572.87195f, (byte) 45);
 						spawn(220733, 1572.5776f, 1480.6360f, 573.01373f, (byte) 45);
 						spawn(220734, 1567.8876f, 1475.9675f, 572.87195f, (byte) 44);
-						spawn(221016, 1575.2587f, 1473.4773f, 572.87195f, (byte) 44); //Frigida Drakan Overseer.
+						spawn(221016, 1575.2587f, 1473.4773f, 572.87195f, (byte) 44); //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 					break;
 					case 4:
 						spawn(220730, 1572.8469f, 1541.8624f, 573.02800f, (byte) 76);
 						spawn(220732, 1576.4583f, 1546.0983f, 572.87146f, (byte) 76);
 						spawn(220733, 1571.3431f, 1546.4694f, 572.87134f, (byte) 76);
 						spawn(220734, 1577.1816f, 1541.9384f, 572.87250f, (byte) 76);
-						spawn(221017, 1578.4465f, 1548.3069f, 572.87160f, (byte) 76); //Frigida Drakan Overseer.
+						spawn(221017, 1578.4465f, 1548.3069f, 572.87160f, (byte) 76); //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 					break;
 					case 5:
 					    spawn(220730, 1441.1407f, 1511.2439f, 573.16920f, (byte) 0);
@@ -596,51 +662,35 @@ public class SanctumInstance extends GeneralInstanceHandler
 						spawn(220732, 1434.5879f, 1511.1715f, 573.33260f, (byte) 0);
 						spawn(220733, 1436.9176f, 1507.0344f, 573.26605f, (byte) 0);
 						spawn(220734, 1436.8138f, 1515.1859f, 573.27026f, (byte) 0);
-						spawn(221018, 1429.9945f, 1511.1842f, 573.33000f, (byte) 1); //Frigida Drakan Overseer.
+						spawn(221018, 1429.9945f, 1511.1842f, 573.33000f, (byte) 1); //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
 					break;
 				}
             }
         }, 180000)); //3 Min.
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 			   /**
-				*  3. Unfair Battle:
-				* 5 min or 20 min after the start, unfair aerial battle with a Dredgion starts.
-				* Use the teleporter at the bottom of the map to join the fight.
-				*  Non-Combat Method:
-				* After arriving at the sight, mouth all the turrets.
-				* You can also fly up to attack the Dredgion directly.
-				* Destroy 4 Dredgion generators (2 on each side) to win the battle.
-				* You must protect the Turret Generator from the Balaur.
-				* If the generator is destroyed, nearby turrets will not be usable.
-				* During the unfair battle, missiles might fall on the ground.
-				* They will cause great damage if not dealt quickly.
-				*/
+	 * 3. 不公平之战：开始后 5 或 20 分钟，与战舰的不公平空战开始。使用地图底部传送点。 / 3. Unfair Battle: 5 min or 20 min after the start, unfair aerial battle with a Dredgion starts. Use the teleporter at the bottom of the map to join the fight. Non-Combat Method: After arriving at the sight, mouth all the turrets. You can also fly up to attack the Dredgion directly. Destroy 4 Dredgion generators (2 on each side) to win the battle. You must protect the Turret Generator from the Balaur. If the generator is destroyed, nearby turrets will not be usable. During the unfair battle, missiles might fall on the ground. They will cause great damage if not dealt quickly
+	 */
 				spawn(210038, 1680.2438f, 1615.4294f, 566.652f, (byte) 61); //Sald.
 				spawn(703403, 1680.2438f, 1615.4294f, 566.652f, (byte) 61); //Sald [Flag].
             }
         }, 300000)); //5 Min.
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 			   /**
-				*  4. Dredgion Infiltration:
-				* 5 min or 20 min after the start, a Dredgion will appear over the city.
-				* A Shugo that can take you to the ship will appear near the "Hall Of Prosperity".
-				* Buy a ticket before proceeding.
-				* - The Shugo is directly connected to the Dredgion.
-				* - Once on the Shugo Ship, you can purchase 2 items that will help you infiltrate the Dredgion.
-				*  Dredgion Infiltration:
-				* - Inside the Dredgion, your objective is to kill the captain.
-				* Neutralize the cannons next to the boss before attacking.
-				* - Destroying Surkanas will disable each cannon for a while, surkanas will reappear after a minute.
-				* - The Observer is to be feared.
-				* Use bombs or hiding shield to deal with it.
-				*  TIP1: Divide your force into 3 groups.
-				* (Ex: 2 groups for the Captain & 2 group for Surkanas)
-				*  TIP2: Destroying both Surkanas at the same time will make it easier to kill the captain.
-				*/
+	 * 4. 战舰渗透：开始后 5 或 20 分钟城市上空出现战舰，术古可送你登船。 / 4. Dredgion Infiltration: 5 min or 20 min after the start, a Dredgion will appear over the city. A Shugo that can take you to the ship will appear near the "Hall Of Prosperity". Buy a ticket before proceeding. - The Shugo is directly connected to the Dredgion. - Once on the Shugo Ship, you can purchase 2 items that will help you infiltrate the Dredgion. Dredgion Infiltration: - Inside the Dredgion, your objective is to kill the captain. Neutralize the cannons next to the boss before attacking. - Destroying Surkanas will disable each cannon for a while, surkanas will reappear after a minute. - The Observer is to be feared. Use bombs or hiding shield to deal with it. TIP1: Divide your force into 3 groups. (Ex: 2 groups for the Captain & 2 group for Surkanas) TIP2: Destroying both Surkanas at the same time will make it easier to kill the captain
+	 */
 				spawn(834317, 971.33301f, 756.68567f, 2210.9631f, (byte) 0, 17); //Dredgion Fissure.
 				spawn(834318, 1436.2812f, 1460.8816f, 572.87805f, (byte) 1); //Cayrunerk.
 				spawn(834319, 952.05225f, 753.11850f, 2207.4846f, (byte) 53); //Yamirunerk.
@@ -649,32 +699,16 @@ public class SanctumInstance extends GeneralInstanceHandler
             }
         }, 900000)); //15 Min.
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 			   /**
-				*  5. Turret Battle:
-				* 20 min after the start, Turret Battle will begin and 2 Transport Tanks will appear in the "Lyceum".
-				* Talk to a Shugo behind each Tank to make them start moving to each Turret.
-				*  How to Proceed:
-				* 1. Escorting Transport Tanks:
-				* - First of all, you need to take care of Balaurs that are currently attacking the Turrets.
-				* - Talk to a Shugo behind each tank to make them start moving to the area where the Defense Turrets are.
-				* - On their way, the tank will be attacked multiple times by the Balaur. Protect them at all cost.
-				* - Once the tank is destroyed it will re-appear in the Temple of Artisans.
-				*  2. Ammo:
-				* - Each time you click on the Tank, you will receive one Energy Source.
-				* - On each side of the Turret, there is a generator.
-				* It can be fueled with the Energy Source you have just obtained.
-				* - When both generators have been charged enough times, the Turret will perform a powerful attack on the Dredgion.
-				* - The Turret must be activated twice to destroy the Dredgion.
-				* - The Balaur will continue to attack the Turret and the Generators.
-				* - When a Generator is destroyed, it will re-appear after a while completely empty.
-				*  3. Turret Cooling:
-				* - Each turret can not be used for a while after firing a shot.
-				* - A Rfrigrant can be purchased from a Shugo that appears near the Defense Turret.
-				* - A Rfrigrant can be used to shorten the overheating time. 
-				*/
-				//Resources available at the defense turret. Escort the transport there to collect them.
+	 * 5. 炮塔战：开始 20 分钟后开始，工匠神殿出现运输坦克。 / 5. Turret Battle: 20 min after the start, Turret Battle will begin and 2 Transport Tanks will appear in the "Lyceum". Talk to a Shugo behind each Tank to make them start moving to each Turret. How to Proceed: 1. Escorting Transport Tanks: - First of all, you need to take care of Balaurs that are currently attacking the Turrets. - Talk to a Shugo behind each tank to make them start moving to the area where the Defense Turrets are. - On their way, the tank will be attacked multiple times by the Balaur. Protect them at all cost. - Once the tank is destroyed it will re-appear in the Temple of Artisans. 2. Ammo: - Each time you click on the Tank, you will receive one Energy Source. - On each side of the Turret, there is a generator. It can be fueled with the Energy Source you have just obtained. - When both generators have been charged enough times, the Turret will perform a powerful attack on the Dredgion. - The Turret must be activated twice to destroy the Dredgion. - The Balaur will continue to attack the Turret and the Generators. - When a Generator is destroyed, it will re-appear after a while completely empty. 3. Turret Cooling: - Each turret can not be used for a while after firing a shot. - A Rfrigrant can be purchased from a Shugo that appears near the Defense Turret. - A Rfrigrant can be used to shorten the overheating time
+	 */
+				// 防御炮塔处有资源。护送运输车前往收集。 / Resources available at the defense turret. Escort the transport there to collect them.
 				sendMsgByRace(1403708, Race.PC_ALL, 0);
 				spawn(834305, 1380.8705f, 1689.9844f, 573.12286f, (byte) 0); //Koirinerk.
 				spawn(834306, 1382.1947f, 1687.0924f, 573.12286f, (byte) 9); //Soirunerk.
@@ -686,79 +720,78 @@ public class SanctumInstance extends GeneralInstanceHandler
             }
         }, 1200000)); //20 Min.
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 			   /**
-				*  5. Commander Zedas:
-				* After 30min, Commander Zedas will appear in the "Elyos Square"
-				* The final rank is calculated when Commander Zedas is dead or 5 min have passed.
-				*/
+	 * 5. 指挥官泽达斯：30 分钟后出现在天族广场；其死亡或再过 5 分钟结算最终军阶。 / 5. Commander Zedas: After 30min, Commander Zedas will appear in the "Elyos Square" The final rank is calculated when Commander Zedas is dead or 5 min have passed
+	 */
 				deleteNpc(221522); //Gerion.
 				deleteNpc(221523); //Mysteris.
 				deleteNpc(221524); //Eremitia.
-				//The Assault Leader of the Frigida Legion has appeared.
+				// 弗里吉达军团突击队长已出现。 / The Assault Leader of the Frigida Legion has appeared.
 				sendMsgByRace(1403706, Race.PC_ALL, 0);
-				//Commander Zedas of the Frigida Legion has appeared.
+				// 弗里吉达军团指挥官泽达斯已出现。 / Commander Zedas of the Frigida Legion has appeared.
 				sendMsgByRace(1403707, Race.PC_ALL, 52000);
-				//Commander Zedas [Flag].
+				// 指挥官泽达斯【旗帜】。 / Commander Zedas [Flag].
 				spawn(703405, 1532.3103f, 1511.6292f, 565.8826f, (byte) 61);
-				//Balaur Group Middle
+				// 龙族组 中 / Balaur Group Middle
 				sp(220706, 1576.0831f, 1508.3297f, 572.50555f, (byte) 116, 0);
 				sp(220709, 1576.1649f, 1514.678f, 572.50555f, (byte) 3, 2000);
 				sp(220710, 1571.3501f, 1508.3702f, 572.50555f, (byte) 119, 4000);
 				sp(220708, 1571.3691f, 1514.5658f, 572.50555f, (byte) 3, 6000);
-				//Balaur Group Right 2
+				// 龙族组 右 2 / Balaur Group Right 2
 				sp(220706, 1542.7588f, 1536.1654f, 565.9535f, (byte) 34, 8000);
 				sp(220708, 1543.8932f, 1531.1261f, 565.93695f, (byte) 34, 10000);
 				sp(220710, 1541.026f, 1533.3767f, 565.93823f, (byte) 34, 12000);
 				sp(220709, 1546.6664f, 1534.1787f, 565.9389f, (byte) 34, 14000);
-				//Balaur Group Right 1
+				// 龙族组 右 1 / Balaur Group Right 1
 				sp(220706, 1518.434f, 1536.2955f, 565.87897f, (byte) 39, 16000);
 				sp(220708, 1520.7388f, 1532.4022f, 565.9386f, (byte) 39, 18000);
 				sp(220710, 1516.8375f, 1532.7157f, 565.8791f, (byte) 39, 20000);
 				sp(220709, 1522.0991f, 1535.7375f, 565.8786f, (byte) 39, 22000);
-				//Balaur Group Center
+				// 龙族组 ���心 / Balaur Group Center
 				sp(220706, 1506.4653f, 1511.5436f, 565.94354f, (byte) 60, 24000);
 				sp(220708, 1512.14f, 1511.6593f, 565.9349f, (byte) 60, 26000);
 				sp(220710, 1509.4026f, 1508.2102f, 565.93884f, (byte) 60, 28000);
 				sp(220709, 1509.2242f, 1515.0634f, 565.93915f, (byte) 60, 30000);
-				//Balaur Group Left 1
+				// 龙族组 左 1 / Balaur Group Left 1
 				sp(220706, 1518.2384f, 1486.9459f, 565.87897f, (byte) 79, 32000);
 				sp(220708, 1520.4506f, 1490.7148f, 565.8788f, (byte) 79, 34000);
 				sp(220710, 1522.1997f, 1487.0133f, 565.8786f, (byte) 79, 36000);
 				sp(220709, 1516.5223f, 1490.344f, 565.87915f, (byte) 79, 38000);
-				//Balaur Group Left 2
+				// 龙族组 左 2 / Balaur Group Left 2
 				sp(220706, 1542.468f, 1486.7886f, 565.94574f, (byte) 84, 40000);
 				sp(220708, 1543.9023f, 1491.8698f, 565.93726f, (byte) 87, 42000);
 				sp(220710, 1546.442f, 1488.4353f, 565.9389f, (byte) 84, 44000);
 				sp(220709, 1541.1467f, 1489.9169f, 565.938f, (byte) 84, 46000);
-				//Assassin Center.
+				// 刺客中心。 / Assassin Center.
 				sp(220707, 1523.4915f, 1498.7505f, 565.91974f, (byte) 60, 48000);
 				sp(220707, 1519.6729f, 1520.7358f, 565.9195f, (byte) 61, 50000);
 				sp(220705, 1532.3103f, 1511.6292f, 565.8826f, (byte) 61, 52000); //Commander Zedas.
             }
         }, 1800000)); //30 Min.
 		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 			   /**
-				*  6. Final Dredgion Battle:
-				* After 35min, a windstream will appear near the "Elyos Square"
-				* Use the windstream to participate in the final battle.
-				*  How to Progress:
-				* - During the final Dredgion battle, you can fly freely.
-				* - If you destroy all Power Generators within 10min, you will destroy the last remaining Dredgion.
-				* - Each Dredgion Power Generator is protected by a shield.
-				* - It can be deactivated by destroying nearby controllers.
-				*/
+	 * 6. 最终战舰战：35 分钟后附近出现气流。 / 6. Final Dredgion Battle: After 35min, a windstream will appear near the "Elyos Square" Use the windstream to participate in the final battle. How to Progress: - During the final Dredgion battle, you can fly freely. - If you destroy all Power Generators within 10min, you will destroy the last remaining Dredgion. - Each Dredgion Power Generator is protected by a shield. - It can be deactivated by destroying nearby controllers
+	 */
 				deleteNpc(220705); //Commander Zedas.
-				//Tsubesda has retreated. Use the wind road to get to the airship and destroy the Dredgion!
+				// 楚贝斯达已撤退。使用风道登上飞空艇摧毁战舰！ / Tsubesda has retreated. Use the wind road to get to the airship and destroy the Dredgion!
 				sendMsgByRace(1404024, Race.PC_ALL, 0);
-				//Dredgion sighted!
+				// 发现战舰！ / Dredgion sighted!
 				sendMsgByRace(1403711, Race.PC_ALL, 5000);
-				//Airship prepared to intercept the Dredgion.
+				// 飞空艇已准备拦截战舰。 / Airship prepared to intercept the Dredgion.
 				sendMsgByRace(1403712, Race.PC_ALL, 10000);
-				//Windpath To Dredgion Roof.
+				// 通往战舰顶部的风道。 / Windpath To Dredgion Roof.
 				spawn(220968, 1519.9136f, 1559.5645f, 573.25140f, (byte) 0);
 				spawn(220969, 1570.5824f, 1537.7861f, 573.25537f, (byte) 0);
 				spawn(220971, 1520.0000f, 1463.0000f, 573.25000f, (byte) 0);
@@ -771,86 +804,82 @@ public class SanctumInstance extends GeneralInstanceHandler
 	protected void stopInstance(Player player) {
         stopInstanceTask();
 		doReward(player);
-		//sendMsg("[SUCCES]: You have finished <Dredgion Defense: Sanctum>");
+		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Dredgion Defense: Sanctum>");
 	}
 	
    /**
-	* Rewards:
-    * 
-	* Premium Frigida Legion Loot Box (3 Generators destroyed)
-	* Major Frigida Legion Loot Box (2 Generators destroyed)
-	* 
-	* Major Frigida Legion Supply Box
-	* Greater Frigida Legion Loot Box
-	* 
-	* Greater Frigida Legion Supply Box
-	* Lesser Frigida Legion Loot Box
-	* 
-	* Lesser Frigida Legion Supply Box
-	* Minor Frigida Legion Loot Box
-	* 
-	* Minor Frigida Legion Supply Box
-	*/
+	 * 奖励：高级弗里吉达军团战利品箱等。 / Rewards: Premium Frigida Legion Loot Box (3 Generators destroyed) Major Frigida Legion Loot Box (2 Generators destroyed) Major Frigida Legion Supply Box Greater Frigida Legion Loot Box Greater Frigida Legion Supply Box Lesser Frigida Legion Loot Box Lesser Frigida Legion Supply Box Minor Frigida Legion Loot Box Minor Frigida Legion Supply Box
+	 */
 	@Override
 	public void doReward(Player player) {
 		Npc module = instance.getNpc(220866);
 		switch (Rnd.get(1, 5)) {
 			case 1:
-				//Premium Frigida Legion Supply Box.
+				// 高级弗里吉达军团补给箱。 / Premium Frigida Legion Supply Box.
 				ItemService.addItem(player, 188055689, 1);
-				//Additional Compensation for the final attack on the Dredgion.
+				// 对战舰最终一击的额外补偿。 / Additional Compensation for the final attack on the Dredgion.
 				if (isDead(module)) {
-					//Premium Frigida Legion Loot Box.
+					// 高级弗里吉达军团战利品箱。 / Premium Frigida Legion Loot Box.
 					ItemService.addItem(player, 188055699, 3);
-					//Major Frigida Legion Loot Box.
+					// 大型弗里吉达军团战利品箱。 / Major Frigida Legion Loot Box.
 					ItemService.addItem(player, 188055700, 2);
 				}
 			break;
 			case 2:
-				//Major Frigida Legion Supply Box.
+				// 大型弗里吉达军团补给箱。 / Major Frigida Legion Supply Box.
 				ItemService.addItem(player, 188055690, 1);
-				//Additional Compensation for the final attack on the Dredgion.
+				// 对战舰最终一击的额外补偿。 / Additional Compensation for the final attack on the Dredgion.
 				if (isDead(module)) {
-					//Greater Frigida Legion Loot Box.
+					// 高级弗里吉达军团战利品箱。 / Greater Frigida Legion Loot Box.
 					ItemService.addItem(player, 188055701, 1);
 				}
 			break;
 			case 3:
-				//Greater Frigida Legion Supply Box.
+				// 高级弗里吉达军团补给箱。 / Greater Frigida Legion Supply Box.
 				ItemService.addItem(player, 188055691, 1);
-				//Additional Compensation for the final attack on the Dredgion.
+				// 对战舰最终一击的额外补偿。 / Additional Compensation for the final attack on the Dredgion.
 				if (isDead(module)) {
-					//Lesser Frigida Legion Loot Box.
+					// 低级弗里吉达军团战利品箱。 / Lesser Frigida Legion Loot Box.
 					ItemService.addItem(player, 188055702, 1);
 				}
 			break;
 			case 4:
-				//Lesser Frigida Legion Supply Box.
+				// 低级弗里吉达军团补给箱。 / Lesser Frigida Legion Supply Box.
 				ItemService.addItem(player, 188055692, 1);
-				//Additional Compensation for the final attack on the Dredgion.
+				// 对战舰最终一击的额外补偿。 / Additional Compensation for the final attack on the Dredgion.
 				if (isDead(module)) {
-					//Minor Frigida Legion Loot Box.
+					// 小型弗里吉达军团战利品箱。 / Minor Frigida Legion Loot Box.
 					ItemService.addItem(player, 188055703, 1);
 				}
 			break;
 			case 5:
-				//Minor Frigida Legion Supply Box.
+				// 小型弗里吉达军团补给箱。 / Minor Frigida Legion Supply Box.
 				ItemService.addItem(player, 188055693, 1);
-				//Additional Compensation for the final attack on the Dredgion.
+				// 对战舰最终一击的额外补偿。 / Additional Compensation for the final attack on the Dredgion.
 				if (isDead(module)) {
-					//Minor Frigida Legion Loot Box.
+					// 小型弗里吉达军团战利品箱。 / Minor Frigida Legion Loot Box.
 					ItemService.addItem(player, 188055703, 1);
 				}
 			break;
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		startInstanceTask();
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		stopInstanceTask();
@@ -876,6 +905,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -890,6 +923,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -930,22 +967,40 @@ public class SanctumInstance extends GeneralInstanceHandler
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onExitInstance(Player player) {
 		removeEffects(player);
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
 	
@@ -964,6 +1019,12 @@ public class SanctumInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -973,9 +1034,19 @@ public class SanctumInstance extends GeneralInstanceHandler
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -996,6 +1067,14 @@ public class SanctumInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * 玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * result
+	 */
 	@Override
 	public boolean onDie(final Player player, Creature lastAttacker) {
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.DIE, 0, player.equals(lastAttacker) ? 0 : lastAttacker.getObjectId()), true);

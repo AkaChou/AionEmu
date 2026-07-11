@@ -9,6 +9,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 圣所任务脚本：Andreas Teachings（任务 ID 19048）。
+ * Sanctum quest script: Andreas Teachings (quest ID 19048).
+ */
 public class _19048Andreas_Teachings extends QuestHandler {
 
 	private final static int questId = 19048;

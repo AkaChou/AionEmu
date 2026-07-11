@@ -1,63 +1,45 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver;
 
+import lombok.Getter;
+
 /**
- * This class contains possible response that LoginServer may send to gameserver
- * if authentication fail etc.
+ * 登录服对游戏服认证请求的应答枚举（失败原因、成功等）。
+ * Possible LoginServer responses to GameServer authentication (failure reasons, success, etc.).
  *
  * @author -Nemesiss-
  */
 public enum GsAuthResponse {
 
     /**
-     * Everything is OK
+     * 认证成功。
+     * Authentication succeeded.
      */
     AUTHED(0),
     /**
-     * Password/IP etc does not match.
+     * 密码/IP 等不匹配。
+     * Password/IP or related credentials do not match.
      */
     NOT_AUTHED(1),
     /**
-     * Requested id is not free
+     * 请求的服务器 ID 已被占用。
+     * Requested server id is already registered.
      */
     ALREADY_REGISTERED(2);
-    /**
-     * id of this enum that may be sent to client
-     */
-    private byte responseId;
 
     /**
-     * Constructor.
-     *
-     * @param responseId id of the message
+     * 可下发给客户端的应答 ID。
+     * Response id that may be sent to the client.
      */
-    private GsAuthResponse(int responseId) {
+    @Getter
+    private final byte responseId;
+
+    /**
+     * 构造应答枚举项。
+     * Construct response enum constant.
+     *
+     * Response message id
+     */
+    GsAuthResponse(int responseId) {
         this.responseId = (byte) responseId;
-    }
-
-    /**
-     * Message Id that may be sent to client.
-     *
-     * @return message id
-     */
-    public byte getResponseId() {
-        return responseId;
     }
 }

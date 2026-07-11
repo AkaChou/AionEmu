@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -24,14 +8,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员外观修改命令：调整目标玩家体型、发型、脸型等外观，或重置。
+ * Admin appearance command: adjusts target player size/hair/face/etc., or resets appearance.
+ *
  * @author Divinity
  */
 public class Appearance extends AdminCommand {
 
+	/**
+	 * 注册 {@code //appearance} 命令。
+	 * Registers the {@code //appearance} command.
+	 */
 	public Appearance() {
 		super("appearance");
 	}
 
+	/**
+	 * 执行外观修改：按属性名写入外观数据并刷新客户端。
+	 * Executes appearance change: writes the attribute and refreshes the client.
+	 *
+	 * admin
+	 * @param params 参数：属性名与值，或 reset / attribute name and value, or reset
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params == null || params.length < 1) {
@@ -55,16 +53,16 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the current player's appearance with the saved player's appearance
+			// 用已保存的玩家外观编辑当前玩家外观。 / Edit the current player's appearance with the saved player's appearance
 			player.setPlayerAppearance(savedPlayerAppearance);
 
-			// See line 44
+			// 见第 44 行 / See line 44
 			player.setSavedPlayerAppearance(null);
 
-			// Warn the player
+			// 警告玩家 / Warn the player
 			PacketSendUtility.sendMessage(player, "An admin has resetted your appearance.");
 
-			// Send update packets
+			// 发送更新包 / Send update packets
 			TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(), player.getX(), player.getY(),
 				player.getZ(), player.getHeading());
 
@@ -76,10 +74,10 @@ public class Appearance extends AdminCommand {
 			return;
 		}
 
-		// Get the current player's appearance
+		// 获取当前玩家外观 / Get the current player's appearance
 		PlayerAppearance playerAppearance = player.getPlayerAppearance();
 
-		// Save a clean player's appearance
+		// 保存干净的玩家外观 / Save a clean player's appearance
 		if (player.getSavedPlayerAppearance() == null)
 			player.setSavedPlayerAppearance((PlayerAppearance) playerAppearance.clone());
 
@@ -101,7 +99,7 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the height
+			// 编辑身高 / Edit the height
 			playerAppearance.setHeight(height);
 		}
 		else if (params[0].equals("voice")) // Min: 0, Max: 3
@@ -122,7 +120,7 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the voice
+			// 编辑声音 / Edit the voice
 			playerAppearance.setVoice(voice);
 		}
 		else if (params[0].equals("hair")) // Min: 1, Max: 43
@@ -143,7 +141,7 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the hair
+			// 编辑头发 / Edit the hair
 			playerAppearance.setHair(hair);
 		}
 		else if (params[0].equals("face")) // Min: 1, Max: 24
@@ -164,7 +162,7 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the face
+			// 编辑面部 / Edit the face
 			playerAppearance.setFace(face);
 		}
 		else if (params[0].equals("deco")) // Min: 1, Max: 18
@@ -185,7 +183,7 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the deco
+			// 编辑装饰 / Edit the deco
 			playerAppearance.setDeco(deco);
 		}
 		else if (params[0].equals("head_size")) // Min: 0, Max: 100
@@ -206,7 +204,7 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the head
+			// 编辑头部 / Edit the head
 			playerAppearance.setHeadSize(head + 200);
 		}
 		else if (params[0].equals("tattoo")) // Min: 1, Max: 13
@@ -227,7 +225,7 @@ public class Appearance extends AdminCommand {
 				return;
 			}
 
-			// Edit the tattoo
+			// 编辑纹身 / Edit the tattoo
 			playerAppearance.setTattoo(tattoo);
 		}
 		else {
@@ -235,17 +233,24 @@ public class Appearance extends AdminCommand {
 			return;
 		}
 
-		// Edit the current player's appearance with our modifications
+		// 用我们的修改编辑当前玩家外观 / Edit the current player's appearance with our modifications
 		player.setPlayerAppearance(playerAppearance);
 
-		// Warn the player
+		// 警告玩家 / Warn the player
 		PacketSendUtility.sendMessage(player, "An admin has changed your appearance.");
 
-		// Send update packets
+		// 发送更新包 / Send update packets
 		TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(), player.getX(), player.getY(),
 			player.getZ(), player.getHeading());
 	}
 
+	/**
+	 * 参数错误时输出 {@code //appearance} 用法。
+	 * Prints {@code //appearance} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		String syntax = "Syntax: //appearance <size | voice | hair | face | deco | head_size | tattoo | reset (to reset the appearance)> <value>";

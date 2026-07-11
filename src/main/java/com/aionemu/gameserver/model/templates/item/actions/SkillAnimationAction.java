@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,6 +13,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 技能 Animation 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SkillAnimationAction")
 public class SkillAnimationAction extends AbstractItemAction {
@@ -39,6 +28,9 @@ public class SkillAnimationAction extends AbstractItemAction {
 	protected int minutes;
 	private int expireTime = 0;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (skinId == 0 || parentItem == null) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
@@ -51,6 +43,7 @@ public class SkillAnimationAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
 		ItemTemplate itemTemplate = parentItem.getItemTemplate();

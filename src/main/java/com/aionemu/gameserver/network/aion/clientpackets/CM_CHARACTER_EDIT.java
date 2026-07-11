@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -32,6 +16,10 @@ import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 角色外观编辑（性别/脸型等）后进入世界的客户端包。
+ * Client packet for character appearance edit then entering the world.
+ */
 public class CM_CHARACTER_EDIT extends AionClientPacket {
 	private int objectId;
 	private boolean gender_change;
@@ -92,7 +80,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 		playerAppearance.setVoice(readD());
 		playerAppearance.setSkinRGB(readD());
 		playerAppearance.setHairRGB(readD());
-		playerAppearance.setEyeRGB(readD()); // TODO LEFT EYE
+		playerAppearance.setEyeRGB(readD()); // left eye
 		playerAppearance.setLipRGB(readD());
 		playerAppearance.setFace(readC());
 		playerAppearance.setHair(readC());
@@ -174,13 +162,13 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 				if (player.getInventory().getItemCountByItemId(169650000) > 0) { // Plastic Surgery Ticket
 					player.getInventory().decreaseByItemId(169650000, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650001) > 0) { // [Event] Plastic Surgery
-																						// Ticket
+																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650001, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650002) > 0) { // [Special] Plastic Surgery
-																						// Ticket
+																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650002, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650003) > 0) { // [Special] Plastic Surgery
-																						// Ticket
+																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650003, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650004) > 0) { // Plastic Surgery Ticket (60
 																						// mins)
@@ -189,10 +177,10 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 																						// mins)
 					player.getInventory().decreaseByItemId(169650005, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650006) > 0) { // [Event] Plastic Surgery
-																						// Ticket
+																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650006, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650007) > 0) { // [Event] Plastic Surgery
-																						// Ticket
+																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650007, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650008) > 0) { // Plastic Surgery Ticket
 					player.getInventory().decreaseByItemId(169650008, 1);
@@ -202,7 +190,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 																						// mins)
 					player.getInventory().decreaseByItemId(169650010, 1);
 				} else if (player.getInventory().getItemCountByItemId(169650011) > 0) { // [Stamp] Plastic Surgery
-																						// Ticket
+																						// 门票 / Ticket
 					player.getInventory().decreaseByItemId(169650011, 1);
 				} else if (player.getInventory().getItemCountByItemId(169691000) > 0) { // Plastic Surgery Ticket
 					player.getInventory().decreaseByItemId(169691000, 1);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -23,13 +7,18 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 
 /**
+ * 客户端周期监听包，约每五分钟发送一次，用于触发奖励校验等后台逻辑。
+ * Client periodic listener packet sent about every five minutes; drives reward checks and similar background logic.
+ *
  * @author ginho1
  */
 public class CM_PLAYER_LISTENER extends AionClientPacket {
-	/*
-	 * This CM is send every five minutes by client.
-	 */
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_PLAYER_LISTENER(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

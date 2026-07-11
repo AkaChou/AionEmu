@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -25,16 +9,18 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 传送门/传送点 AI：Wisplight Abbey Portal（@AIName "wisplight"），继承 NpcAI2。
+ * Portal/teleporter AI: Wisplight Abbey Portal (@AIName "wisplight"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("wisplight")
 public class WisplightAbbeyPortalAI2 extends NpcAI2
 {
 	@Override
     protected void handleDialogStart(Player player) {
-        if (player.getInventory().getFirstItemByItemId(164000335) != null) { //Abbey Return Stone.
+        if (player.getInventory().getFirstItemByItemId(164000335) != null) { //修道院返回石。 / Abbey Return Stone.
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
@@ -46,7 +32,7 @@ public class WisplightAbbeyPortalAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 		    switch (getNpcId()) {
-				//Sanctum To Wisplight Abbey.
+				// 圣所至光辉修道院。 / Sanctum To Wisplight Abbey.
 				case 209676:
 				    TeleportService2.teleportTo(player, 130090000, 247.05283f, 223.70496f, 129.38268f, (byte) 31, TeleportAnimation.BEAM_ANIMATION);
 				break;

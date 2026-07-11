@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.challenge;
 
 import java.sql.Timestamp;
@@ -25,6 +9,11 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeTaskTemplate;
 
+/**
+ * 挑战任务模型。
+ * Challenge Task model.
+ */
+
 public class ChallengeTask {
 	private final int taskId;
 	private final int ownerId;
@@ -33,11 +22,7 @@ public class ChallengeTask {
 	private ChallengeTaskTemplate template;
 
 	/**
-	 * Used for loading tasks from DAO.
-	 * 
-	 * @param taskId
-	 * @param ownerId
-	 * @param quests
+	 * 用于从 DAO 加载任务。 / Used for loading tasks from DAO.
 	 */
 	public ChallengeTask(int taskId, int ownerId, Map<Integer, ChallengeQuest> quests, Timestamp completeTime) {
 		this.taskId = taskId;
@@ -48,10 +33,7 @@ public class ChallengeTask {
 	}
 
 	/**
-	 * Used for creating new tasks in runtime.
-	 * 
-	 * @param ownerId
-	 * @param template
+	 * 用于运行时创建新任务。 / Used for creating new tasks in runtime.
 	 */
 	public ChallengeTask(int ownerId, ChallengeTaskTemplate template) {
 		this.taskId = template.getId();
@@ -67,38 +49,49 @@ public class ChallengeTask {
 		this.template = template;
 	}
 
+	/** 返回任务 ID / Returns the task id */
 	public int getTaskId() {
 		return this.taskId;
 	}
 
+	/** 返回所有者 ID / Returns the owner id */
 	public int getOwnerId() {
 		return this.ownerId;
 	}
 
+	/** 返回 quests count / Returns the quests count */
 	public int getQuestsCount() {
 		return quests.size();
 	}
 
+	/** 返回 quests / Returns the quests */
 	public Map<Integer, ChallengeQuest> getQuests() {
 		return quests;
 	}
 
+	/** 获取任务。 / Returns the quest. */
 	public ChallengeQuest getQuest(int questId) {
 		return quests.get(questId);
 	}
 
+	/** 返回 complete time / Returns the complete time */
 	public Timestamp getCompleteTime() {
 		return completeTime;
 	}
 
+	/** 更新 complete time / Update complete time */
 	public synchronized void updateCompleteTime() {
 		completeTime.setTime(System.currentTimeMillis());
 	}
 
+	/** 获取模板。 / Returns the template. */
 	public ChallengeTaskTemplate getTemplate() {
 		return this.template;
 	}
 
+	/**
+	 * @return Whether completed / Whether completed
+	 */
 	public boolean isCompleted() {
 		boolean isCompleted = true;
 		for (ChallengeQuest quest : quests.values()) {

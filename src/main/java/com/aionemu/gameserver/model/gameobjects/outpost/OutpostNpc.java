@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.outpost;
 
 import com.aionemu.gameserver.controllers.NpcController;
@@ -23,7 +7,8 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.outpostspawns.OutpostSpawnTemplate;
 
 /**
- * Created by Wnkrz on 27/08/2017.
+ * 前哨 NPC 游戏对象。
+ * Outpost Npc game object.
  */
 
 public class OutpostNpc extends Npc {
@@ -35,15 +20,20 @@ public class OutpostNpc extends Npc {
 		this.outpostId = spawnTemplate.getId();
 	}
 
+	/** 返回 outpost id / Returns the outpost id */
 	public int getOutpostId() {
 		return outpostId;
 	}
 
+	/** 获取刷新点。 / Returns the spawn. */
 	@Override
 	public OutpostSpawnTemplate getSpawn() {
 		return (OutpostSpawnTemplate) super.getSpawn();
 	}
 
+	/**
+	 * @param creature 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Creature creature) {
 		if (creature instanceof OutpostNpc) {

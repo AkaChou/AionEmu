@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -48,7 +32,17 @@ import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.model.TeleportAnimation;
 
+/**
+ * 玩家复活服务，处理决斗/技能/绑点/基斯克等复活路径。
+ * Player revive service handling duel/skill/bind/kisk and other revive paths.
+ */
 public class PlayerReviveService {
+	/**
+	 * 决斗复活。
+	 * Duel revive.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void duelRevive(Player player) {
 		revive(player, 25, 25, false, 0);
 		player.getController().startProtectionActiveTask();
@@ -61,6 +55,12 @@ public class PlayerReviveService {
 		player.unsetResPosState();
 	}
 
+	/**
+	 * 技能复活。
+	 * Skill revive.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void skillRevive(Player player) {
 		revive(player, 25, 25, true, player.getResurrectionSkill());
 		player.getController().startProtectionActiveTask();
@@ -85,6 +85,12 @@ public class PlayerReviveService {
 		player.setIsFlyingBeforeDeath(false);
 	}
 
+	/**
+	 * 重生复活。
+	 * Rebirth revive.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void rebirthRevive(Player player) {
 		if (!player.canUseRebirthRevive()) {
 			return;
@@ -117,10 +123,23 @@ public class PlayerReviveService {
 		player.setIsFlyingBeforeDeath(false);
 	}
 
+	/**
+	 * 绑点复活。
+	 * Bind-point revive.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void bindRevive(Player player) {
 		bindRevive(player, 0);
 	}
 
+	/**
+	 * 绑点复活。
+	 * Bind-point revive.
+	 *
+	 * 玩家 / player
+	 * skillId
+	 */
 	public static final void bindRevive(Player player, int skillId) {
 		revive(player, 25, 25, true, skillId);
 		player.getController().startProtectionActiveTask();
@@ -151,10 +170,23 @@ public class PlayerReviveService {
 		player.unsetResPosState();
 	}
 
+	/**
+	 * 基斯克复活。
+	 * Kisk revive.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void kiskRevive(Player player) {
 		kiskRevive(player, 0);
 	}
 
+	/**
+	 * 基斯克复活。
+	 * Kisk revive.
+	 *
+	 * 玩家 / player
+	 * skillId
+	 */
 	public static final void kiskRevive(Player player, int skillId) {
 		Kisk kisk = player.getKisk();
 		if (kisk == null) {
@@ -179,10 +211,23 @@ public class PlayerReviveService {
 		}
 	}
 
+	/**
+	 * 副本复活。
+	 * Instance revive.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void instanceRevive(Player player) {
 		instanceRevive(player, 0);
 	}
 
+	/**
+	 * 副本复活。
+	 * Instance revive.
+	 *
+	 * 玩家 / player
+	 * skillId
+	 */
 	public static final void instanceRevive(Player player, int skillId) {
 		if (player.getPosition().getWorldMapInstance().getInstanceHandler().onReviveEvent(player)) {
 			return;
@@ -210,10 +255,26 @@ public class PlayerReviveService {
 		player.unsetResPosState();
 	}
 
+	/**
+	 * 执行复活。
+	 * Performs revive.
+	 *
+	 * 玩家 / player
+	 * @param hpPercent 生命百分比 / hpPercent
+	 * @param mpPercent 魔法百分比 / mpPercent
+	 * @param setSoulsickness 是否设置灵魂病 / setSoulsickness
+	 * resurrectionSkill
+	 */
 	public static final void revive(final Player player, int hpPercent, int mpPercent, boolean setSoulsickness,
 			int resurrectionSkill) {
 		player.getKnownList().doOnAllPlayers(new Visitor<Player>() {
 			@Override
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * visitor
+			 */
 			public void visit(Player visitor) {
 				VisibleObject target = visitor.getTarget();
 				if (target != null && target.getObjectId() == player.getObjectId()
@@ -250,6 +311,12 @@ public class PlayerReviveService {
 		}
 	}
 
+	/**
+	 * 道具自我复活。
+	 * Item self-revive.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void itemSelfRevive(Player player) {
 		Item item = player.getSelfRezStone();
 		if (item == null && player.getAccessLevel() == 0) {
@@ -285,6 +352,12 @@ public class PlayerReviveService {
 		player.setIsFlyingBeforeDeath(false);
 	}
 
+	/**
+	 * banditRevive 方法。
+	 * banditRevive method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void banditRevive(Player player) {
 		revive(player, 100, 100, false, 0);
 		player.getController().startProtectionActiveTask();
@@ -310,6 +383,12 @@ public class PlayerReviveService {
 		player.setIsFlyingBeforeDeath(false);
 	}
 
+	/**
+	 * ffaRevive 方法。
+	 * ffaRevive method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void ffaRevive(Player player) {
 		revive(player, 100, 100, false, 0);
 		player.getController().startProtectionActiveTask();
@@ -335,6 +414,12 @@ public class PlayerReviveService {
 		player.setIsFlyingBeforeDeath(false);
 	}
 
+	/**
+	 * bgRevive 方法。
+	 * bgRevive method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void bgRevive(Player player) {
 		revive(player, 100, 100, false, player.getResurrectionSkill());
 		player.getController().startProtectionActiveTask();
@@ -363,6 +448,12 @@ public class PlayerReviveService {
 		player.setIsFlyingBeforeDeath(false);
 	}
 
+	/**
+	 * eventRevive 方法。
+	 * eventRevive method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void eventRevive(Player player) {
 		revive(player, 25, 25, false, 0);
 		player.getController().startProtectionActiveTask();
@@ -391,10 +482,23 @@ public class PlayerReviveService {
 		player.setIsFlyingBeforeDeath(false);
 	}
 
+	/**
+	 * startPositionRevive 方法。
+	 * startPositionRevive method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static final void startPositionRevive(Player player) {
 		startPositionRevive(player, 0);
 	}
 
+	/**
+	 * startPositionRevive 方法。
+	 * startPositionRevive method.
+	 *
+	 * 玩家 / player
+	 * skillId
+	 */
 	public static final void startPositionRevive(Player player, int skillId) {
 		revive(player, 25, 25, true, skillId);
 		player.setPortAnimation(4);

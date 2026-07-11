@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
@@ -31,14 +15,22 @@ import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * F2P/会员礼包服务，处理进服加成、续期与客户端属性包通知。
+ * F2P/membership pack service handling enter-world bonuses, renewals, and client property packets.
+ *
  * Created by wanke on 11/02/2017.
  */
-
 public class F2pService {
 	private static volatile ObjectProvider<F2pService> instanceProvider;
 	private static F2pBonus f2p;
 	private static ServiceBuff boost;
 
+	/**
+	 * 玩家进服时同步 F2P 状态、注册过期任务并下发属性包。
+	 * Syncs F2P state on enter world, registers expire tasks, and sends property packets.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onEnterWorld(Player player) {
 		boolean isGM = player.getAccessLevel() >= AdminConfig.GM_PANEL;
 		if (player.getF2p().getF2pAccount() != null) {
@@ -54,21 +46,34 @@ public class F2pService {
 		}
 	}
 
+	/**
+	 * 为玩家施加 F2P/会员相关增益效果。
+	 * Applies F2P/membership boost effects to the player.
+	 *
+	 * 玩家 / player
+	 */
 	public void playerBoostPack(Player player) {
-		// MEMBERSHIP_BASE_TW_07
+		// 会员相关 / MEMBERSHIP_BASE_TW_07
 		boost = new ServiceBuff(2000007);
 		boost.applyEffect(player, 2000007);
-		// MEMBERSHIP_PK_A_TW_07
+		// 会员相关 / MEMBERSHIP_PK_A_TW_07
 		boost = new ServiceBuff(2000014);
 		boost.applyEffect(player, 2000014);
-		// MEMBERSHIP_PK_B_TW_04
+		// 会员相关 / MEMBERSHIP_PK_B_TW_04
 		boost = new ServiceBuff(2000018);
 		boost.applyEffect(player, 2000018);
-		// Gold Pack.
+		// 黄金包。 / Gold Pack.
 		f2p = new F2pBonus(1);
 		f2p.applyEffect(player, 1);
 	}
 
+	/**
+	 * 为玩家新增或续期 F2P 时长并立即生效。
+	 * Adds or renews F2P duration for the player and applies effects immediately.
+	 *
+	 * @param player 玩家 / player
+	 * @param minutes 续期分钟数，null 表示即时过期 / minutes to add; null means expire now
+	 */
 	public void onAddF2p(Player player, Integer minutes) {
 		boolean isGM = player.getAccessLevel() >= AdminConfig.GM_PANEL;
 		F2pAccount f2pAccount = new F2pAccount(
@@ -80,6 +85,12 @@ public class F2pService {
 		playerBoostPack(player);
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static F2pService getInstance() {
 		ObjectProvider<F2pService> provider = instanceProvider;
 		if (provider != null) {
@@ -88,6 +99,12 @@ public class F2pService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<F2pService> provider) {
 		instanceProvider = provider;
 	}

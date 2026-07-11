@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 客户端装备鉴定结果确认请求包（接受/拒绝重新鉴定结果）。
+ * Client packet confirming an item re-identify/tune result (accept or reject).
+ *
  * @author Ghostfur (Aion-Unique)
  */
 public class CM_TUNE_RESULT extends AionClientPacket {
@@ -31,6 +18,11 @@ public class CM_TUNE_RESULT extends AionClientPacket {
 	private int unk;
 	private int accept;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_TUNE_RESULT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -22,21 +7,67 @@ import com.aionemu.gameserver.model.gameobjects.player.motion.Motion;
 import java.util.List;
 
 /**
+ * 玩家动作/表情动作数据访问对象。
+ * Player motion data access object.
+ *
  * @author MrPoke
  * @rework: MATTY
  */
 public abstract class MotionDAO implements DAO {
 
-    public abstract List<Motion> loadMotions(Integer playerId);
+	/**
+	 * 按玩家 ID 加载动作列表。
+	 * Loads the motion list by player ID.
+	 *
+	 * player id
+	 * list of motions
+	 */
+	public abstract List<Motion> loadMotions(Integer playerId);
 
+	/**
+	 * 加载并填充玩家的动作列表。
+	 * Loads and fills the player's motion list.
+	 *
+	 * 玩家 / player
+	 */
 	public abstract void loadMotionList(Player player);
 
+	/**
+	 * 存储一条新动作。
+	 * Stores a new motion entry.
+	 *
+	 * player object id
+	 * motion
+	 * 若 successful 则为 true / true if successful
+	 */
 	public abstract boolean storeMotion(int objectId, Motion motion);
 
+	/**
+	 * 更新已有动作记录。
+	 * Updates an existing motion record.
+	 *
+	 * player object id
+	 * motion
+	 * 若 successful 则为 true / true if successful
+	 */
 	public abstract boolean updateMotion(int objectId, Motion motion);
 
+	/**
+	 * 删除指定动作。
+	 * Deletes the given motion.
+	 *
+	 * player object id
+	 * motion id
+	 * 若 successful 则为 true / true if successful
+	 */
 	public abstract boolean deleteMotion(int objectId, int motionId);
 
+	/**
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
+	 */
 	@Override
 	public String getClassName() {
 		return MotionDAO.class.getName();

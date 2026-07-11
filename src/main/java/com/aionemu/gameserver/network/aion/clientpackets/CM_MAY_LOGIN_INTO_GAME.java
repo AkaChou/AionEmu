@@ -1,38 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
-import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAY_LOGIN_INTO_GAME;
 
 /**
- * In this packets aion client is asking if may login into game [ie start
- * playing].
- * 
+ * 询问是否允许进入游戏世界的客户端包。
+ * Client packet asking whether login into the game world is allowed.
+ *
  * @author -Nemesiss-
  */
 public class CM_MAY_LOGIN_INTO_GAME extends AionClientPacket {
-
 	/**
-	 * Constructs new instance of <tt>CM_MAY_LOGIN_INTO_GAME </tt> packet
-	 * 
-	 * @param opcode
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_MAY_LOGIN_INTO_GAME(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -43,7 +28,7 @@ public class CM_MAY_LOGIN_INTO_GAME extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		// empty
+		// 空 / empty
 	}
 
 	/**
@@ -51,8 +36,6 @@ public class CM_MAY_LOGIN_INTO_GAME extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		AionConnection client = getConnection();
-		// TODO! check if may login into game [play time etc]
-		client.sendPacket(new SM_MAY_LOGIN_INTO_GAME());
+		getConnection().sendPacket(new SM_MAY_LOGIN_INTO_GAME());
 	}
 }

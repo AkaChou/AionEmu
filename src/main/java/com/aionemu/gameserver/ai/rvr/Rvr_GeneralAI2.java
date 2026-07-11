@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Rvr General（@AIName "rvr_general"），继承 AggressiveNpcAI2。
+ * RvR-related NPC AI: Rvr General (@AIName "rvr_general"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("rvr_general")
 public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 {
@@ -45,7 +31,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//Defender Elyos.
+			// 防御者 天族。 / Defender Elyos.
 			case 857737: //General Miltar.
 				sendRvrGuide();
 				announceGeneralMiltarDie();
@@ -58,7 +44,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 				sendRvrGuide();
 				announceGeneralLanstriDie();
 			break;
-			//Defender Asmodians.
+			// 防御者 魔族。 / Defender Asmodians.
 			case 857744: //General Magken.
 				sendRvrGuide();
 				announceGeneralMagkenDie();
@@ -87,13 +73,13 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 	}
 	
    /**
-	* Defender Elyos.
-	*/
+	 * 防守方天族 / Defender Elyos
+	 */
 	private void announceGeneralMiltarDie() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Raiders have successfully eliminated General Miltar.
+				// 魔族袭击者成功消灭了米尔塔将军。 / The Asmodian Raiders have successfully eliminated General Miltar.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_LF3_BOSS_KILL_NOTICE_01);
 			}
 		});
@@ -102,7 +88,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Raiders have successfully eliminated General Kupiaro.
+				// 魔族袭击者成功消灭了库皮亚罗将军。 / The Asmodian Raiders have successfully eliminated General Kupiaro.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_LF3_BOSS_KILL_NOTICE_02);
 			}
 		});
@@ -111,20 +97,20 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Raiders have successfully eliminated General Lanstri.
+				// 魔族袭击者成功消灭了兰斯崔将军。 / The Asmodian Raiders have successfully eliminated General Lanstri.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_LF3_BOSS_KILL_NOTICE_03);
 			}
 		});
 	}
 	
    /**
-	* Defender Asmodians.
-	*/
+	 * 防守方魔族 / Defender Asmodians
+	 */
 	private void announceGeneralMagkenDie() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos Raiders have successfully eliminated General Magken.
+				// 天族袭击者成功消灭了马格肯将军。 / The Elyos Raiders have successfully eliminated General Magken.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_DF3_BOSS_KILL_NOTICE_01);
 			}
 		});
@@ -133,7 +119,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos Raiders have successfully eliminated General Hark.
+				// 天族袭击者成功消灭了哈克将军。 / The Elyos Raiders have successfully eliminated General Hark.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_DF3_BOSS_KILL_NOTICE_02);
 			}
 		});
@@ -142,7 +128,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos Raiders have successfully eliminated General Tombolk.
+				// 天族袭击者成功消灭了通博尔克将军。 / The Elyos Raiders have successfully eliminated General Tombolk.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_DF3_BOSS_KILL_NOTICE_03);
 			}
 		});

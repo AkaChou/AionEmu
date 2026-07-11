@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.utils;
 
 import java.util.BitSet;
@@ -23,7 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Simplified version of idfactory
+ * 简化版 ID 工厂：基于 {@link BitSet} 分配递增可用 ID。
+ * Simplified ID factory allocating the next free ID via a {@link BitSet}.
  *
  * @author ATracer
  */
@@ -33,6 +16,12 @@ public class IdFactory {
     private final ReentrantLock lock = new ReentrantLock();
     private AtomicInteger nextMinId = new AtomicInteger(1);
 
+    /**
+     * 在锁保护下分配下一个未使用的 ID。
+     * Allocate the next unused ID under lock.
+     *
+     * Newly allocated ID
+     */
     public int nextId() {
         try {
             lock.lock();
@@ -45,11 +34,22 @@ public class IdFactory {
         }
     }
 
+    /**
+     * 遗留单例访问入口。
+     * Legacy singleton access point.
+     *
+     * Singleton {@link IdFactory}。 / Singleton {@link IdFactory}
+     * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
+     */
     @Deprecated(since = "boot-migration")
     public static IdFactory getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
+    /**
+     * 单例持有者。
+     * Singleton holder.
+     */
     private static final class SingletonHolder {
 
         private static final IdFactory INSTANCE = new IdFactory();

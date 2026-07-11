@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.tower;
 
 import com.aionemu.gameserver.controllers.NpcController;
@@ -23,7 +7,8 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.towerofeternityspawns.TowerOfEternitySpawnTemplate;
 
 /**
- * Created by Wnkrz on 27/08/2017.
+ * 高塔 NPC 游戏对象。
+ * Tower Npc game object.
  */
 
 public class TowerNpc extends Npc {
@@ -35,15 +20,20 @@ public class TowerNpc extends Npc {
 		this.towerId = spawnTemplate.getId();
 	}
 
+	/** 返回 eternity tower id / Returns the eternity tower id */
 	public int getEternityTowerId() {
 		return towerId;
 	}
 
+	/** 获取刷新点。 / Returns the spawn. */
 	@Override
 	public TowerOfEternitySpawnTemplate getSpawn() {
 		return (TowerOfEternitySpawnTemplate) super.getSpawn();
 	}
 
+	/**
+	 * @param creature 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Creature creature) {
 		if (creature instanceof TowerNpc) {

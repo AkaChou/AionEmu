@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.trade;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.RepurchaseService;
 
 /**
+ * Repurchase 列表，用于交易相关逻辑。
+ * Repurchase List for trade logic.
+ *
  * @author xTz
  */
 public class RepurchaseList {
@@ -56,10 +43,12 @@ public class RepurchaseList {
 		return repurchases;
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return repurchases.size();
 	}
 
+	/** 返回 seller obj id / Returns the seller obj id */
 	public final int getSellerObjId() {
 		return sellerObjId;
 	}

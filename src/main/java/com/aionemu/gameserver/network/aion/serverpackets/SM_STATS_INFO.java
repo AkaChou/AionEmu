@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +12,10 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 
+/**
+ * 向客户端同步玩家完整属性面板数据。
+ * Server packet synchronizing the player's full stats panel to the client.
+ */
 @Slf4j
 public class SM_STATS_INFO extends AionServerPacket {
 	private Player player;
@@ -35,6 +23,12 @@ public class SM_STATS_INFO extends AionServerPacket {
 	private PlayerLifeStats pls;
 	private PlayerCommonData pcd;
 
+	/**
+	 * 使用给定参数构造 SM_STATS_INFO 包。
+	 * Creates a SM_STATS_INFO packet with the given parameters.
+	 *
+	 * 玩家 / player
+	 */
 	public SM_STATS_INFO(Player player) {
 		this.player = player;
 		this.pcd = player.getCommonData();
@@ -147,7 +141,7 @@ public class SM_STATS_INFO extends AionServerPacket {
         writeH(pgs.getStat(StatEnum.HAGI, 0).getCurrent());
         writeH(pgs.getStat(StatEnum.HKNO, 0).getCurrent());
         writeH(pgs.getStat(StatEnum.HWIL, 0).getCurrent());
-		writeH(1000);// unk
+		writeH(1000);// 未知 / unk
 		writeH(0);
 		writeH(pgs.getPower().getBase());
 		writeH(pgs.getHealth().getBase());

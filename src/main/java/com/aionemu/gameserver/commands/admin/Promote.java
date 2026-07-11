@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,17 +8,29 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
- * Admin promote command.
- * 
+ * 提升在线玩家访问等级或会员等级的管理员命令。
+ * Admin command to promote an online player's access level or membership.
+ *
  * @author Cyrakuse
  * @modified By Aionchs-Wylovech
  */
 public class Promote extends AdminCommand {
 
+	/**
+	 * 以别名 {@code promote} 构造命令。
+	 * Construct the command with alias {@code promote}.
+	 */
 	public Promote() {
 		super("promote");
 	}
 
+	/**
+	 * 向登录服发送 LS 控制包以设置 accesslevel（0–5）或 membership（0–10）。
+	 * Send an LS control packet to set accesslevel (0–5) or membership (0–10).
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params 角色名、类型与等级掩码 / Character name, type and level mask
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length != 3) {
@@ -80,6 +76,13 @@ public class Promote extends AdminCommand {
 
 	}
 
+	/**
+	 * 参数错误时显示语法。
+	 * Show syntax when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //promote <characterName> <accesslevel | membership> <mask> ");

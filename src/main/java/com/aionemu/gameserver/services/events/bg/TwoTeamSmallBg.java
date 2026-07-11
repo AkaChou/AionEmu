@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events.bg;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -37,14 +21,26 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 小型双队对抗：多回合小队对战，胜回合最多的队伍获胜。
+ * Small two-team battleground: multi-round group fights; most round wins win.
+ *
  * @Author Rinzler (Encom)
  */
 public class TwoTeamSmallBg extends Battleground {
+	/** 额外回合/超时任务。 / Extra round/timeout task. */
 	private ScheduledFuture<?> extraTask = null;
+	/** 队伍索引 → 回合胜场。 / Team index → round wins. */
 	private Map<Integer, Integer> roundResults = new HashMap<Integer, Integer>();
+	/** 最大回合数。 / Maximum rounds. */
 	private int maxRounds = 3;
+	/** 已完成回合数。 / Rounds completed. */
 	private int roundsDone = 0;
+	/** 是否已触发结束。 / Whether end already called. */
 	private boolean endCalled = false;
+	/**
+	 * 初始化小型双队战场名称、规模、地图与出生点。
+	 * Initializes small two-team name, sizes, map and spawn points.
+	 */
 	public TwoTeamSmallBg() {
 		super.name = "[Team VS Team]";
 		super.description = "Your must defeat the opposing team. There is " + maxRounds
@@ -55,7 +51,7 @@ public class TwoTeamSmallBg extends Battleground {
 		super.mapId = 900140000; // don't touch!!!
 		super.matchLength = 190;
 
-		// Nochsana Training Camp.
+		// 诺克萨纳训练营。 / Nochsana Training Camp.
 		BattlegroundMap map1 = new BattlegroundMap(300030000);
 		map1.addSpawn(new SpawnPosition(331f, 272f, 384f));
 		map1.addSpawn(new SpawnPosition(314f, 325f, 380f));
@@ -65,7 +61,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map1.addSpawn(new SpawnPosition(343f, 339f, 379f));
 		map1.setKillZ(350f);
 		super.maps.add(map1);
-		// Dark Poeta.
+		// 暗波埃塔。 / Dark Poeta.
 		BattlegroundMap map2 = new BattlegroundMap(300040000);
 		map2.addSpawn(new SpawnPosition(1193f, 1255f, 139f));
 		map2.addSpawn(new SpawnPosition(1166f, 1215f, 144f));
@@ -75,7 +71,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map2.addSpawn(new SpawnPosition(1177f, 1261f, 139f));
 		map2.setKillZ(110f);
 		super.maps.add(map2);
-		// Carpus Isle Storeroom.
+		// 卡普斯岛仓库。 / Carpus Isle Storeroom.
 		BattlegroundMap map3 = new BattlegroundMap(300050000);
 		map3.addSpawn(new SpawnPosition(484f, 566f, 201f));
 		map3.addSpawn(new SpawnPosition(524f, 591f, 199f));
@@ -85,7 +81,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map3.addSpawn(new SpawnPosition(530f, 563f, 197f));
 		map3.setKillZ(170f);
 		super.maps.add(map3);
-		// Sulfur Tree Nest.
+		// 硫磺树巢。 / Sulfur Tree Nest.
 		BattlegroundMap map4 = new BattlegroundMap(300060000);
 		map4.addSpawn(new SpawnPosition(476f, 418f, 163f));
 		map4.addSpawn(new SpawnPosition(435f, 440f, 162f));
@@ -95,7 +91,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map4.addSpawn(new SpawnPosition(453f, 472f, 163f));
 		map4.setKillZ(140f);
 		super.maps.add(map4);
-		// Hamate Isle Storeroom.
+		// 哈马特岛仓库。 / Hamate Isle Storeroom.
 		BattlegroundMap map5 = new BattlegroundMap(300070000);
 		map5.addSpawn(new SpawnPosition(504f, 423f, 91f));
 		map5.addSpawn(new SpawnPosition(503f, 460f, 86f));
@@ -105,7 +101,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map5.addSpawn(new SpawnPosition(503f, 479f, 87f));
 		map5.setKillZ(70f);
 		super.maps.add(map5);
-		// Left Wing Chamber.
+		// 左翼室。 / Left Wing Chamber.
 		BattlegroundMap map6 = new BattlegroundMap(300080000);
 		map6.addSpawn(new SpawnPosition(488f, 512f, 352f));
 		map6.addSpawn(new SpawnPosition(495f, 548f, 354f));
@@ -115,7 +111,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map6.addSpawn(new SpawnPosition(451f, 618f, 352f));
 		map6.setKillZ(320f);
 		super.maps.add(map6);
-		// Right Wing Chamber.
+		// 右翼室。 / Right Wing Chamber.
 		BattlegroundMap map7 = new BattlegroundMap(300090000);
 		map7.addSpawn(new SpawnPosition(293f, 248f, 102f));
 		map7.addSpawn(new SpawnPosition(295f, 189f, 102f));
@@ -125,7 +121,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map7.addSpawn(new SpawnPosition(270f, 201f, 102f));
 		map7.setKillZ(80f);
 		super.maps.add(map7);
-		// Steel Rake.
+		// 钢耙号。 / Steel Rake.
 		BattlegroundMap map8 = new BattlegroundMap(300100000);
 		map8.addSpawn(new SpawnPosition(568f, 489f, 1023f));
 		map8.addSpawn(new SpawnPosition(568f, 528f, 1023f));
@@ -135,7 +131,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map8.addSpawn(new SpawnPosition(592f, 528f, 1023f));
 		map8.setKillZ(990f);
 		super.maps.add(map8);
-		// Baranath Dredgion.
+		// 巴拉纳斯战舰。 / Baranath Dredgion.
 		BattlegroundMap map9 = new BattlegroundMap(300110000);
 		map9.addSpawn(new SpawnPosition(485f, 857f, 417f));
 		map9.addSpawn(new SpawnPosition(485f, 877f, 405f));
@@ -145,7 +141,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map9.addSpawn(new SpawnPosition(485f, 814f, 416f));
 		map9.setKillZ(380f);
 		super.maps.add(map9);
-		// Grave Of Steel Storeroom.
+		// 钢铁之墓仓库。 / Grave Of Steel Storeroom.
 		BattlegroundMap map10 = new BattlegroundMap(300120000);
 		map10.addSpawn(new SpawnPosition(496f, 826f, 199f));
 		map10.addSpawn(new SpawnPosition(492f, 851f, 199f));
@@ -155,7 +151,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map10.addSpawn(new SpawnPosition(564f, 851f, 199f));
 		map10.setKillZ(170f);
 		super.maps.add(map10);
-		// Twilight Battlefield Storeroom.
+		// 暮光战场仓库。 / Twilight Battlefield Storeroom.
 		BattlegroundMap map11 = new BattlegroundMap(300130000);
 		map11.addSpawn(new SpawnPosition(496f, 826f, 199f));
 		map11.addSpawn(new SpawnPosition(492f, 851f, 199f));
@@ -165,7 +161,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map11.addSpawn(new SpawnPosition(564f, 851f, 199f));
 		map11.setKillZ(170f);
 		super.maps.add(map11);
-		// Isle Of Roots Storeroom.
+		// 根之岛仓库。 / Isle Of Roots Storeroom.
 		BattlegroundMap map12 = new BattlegroundMap(300140000);
 		map12.addSpawn(new SpawnPosition(496f, 826f, 199f));
 		map12.addSpawn(new SpawnPosition(492f, 851f, 199f));
@@ -175,7 +171,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map12.addSpawn(new SpawnPosition(564f, 851f, 199f));
 		map12.setKillZ(170f);
 		super.maps.add(map12);
-		// Udas Temple.
+		// 乌达斯神殿。 / Udas Temple.
 		BattlegroundMap map13 = new BattlegroundMap(300150000);
 		map13.addSpawn(new SpawnPosition(655f, 506f, 136f));
 		map13.addSpawn(new SpawnPosition(617f, 501f, 136f));
@@ -185,7 +181,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map13.addSpawn(new SpawnPosition(636f, 518f, 131f));
 		map13.setKillZ(110f);
 		super.maps.add(map13);
-		// Lower Udas Temple.
+		// 下乌达斯神殿。 / Lower Udas Temple.
 		BattlegroundMap map14 = new BattlegroundMap(300160000);
 		map14.addSpawn(new SpawnPosition(571f, 1297f, 187f));
 		map14.addSpawn(new SpawnPosition(566f, 1242f, 188f));
@@ -195,7 +191,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map14.addSpawn(new SpawnPosition(640f, 1215f, 186f));
 		map14.setKillZ(150f);
 		super.maps.add(map14);
-		// Beshmundir Temple.
+		// 贝斯蒙迪尔神殿。 / Beshmundir Temple.
 		BattlegroundMap map15 = new BattlegroundMap(300170000);
 		map15.addSpawn(new SpawnPosition(1505f, 1463f, 304f));
 		map15.addSpawn(new SpawnPosition(1441f, 1378f, 305f));
@@ -205,7 +201,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map15.addSpawn(new SpawnPosition(1468f, 1483f, 300f));
 		map15.setKillZ(280f);
 		super.maps.add(map15);
-		// Taloc's Hollow.
+		// 塔洛克空洞。 / Taloc's Hollow.
 		BattlegroundMap map16 = new BattlegroundMap(300190000);
 		map16.addSpawn(new SpawnPosition(392f, 897f, 1266f));
 		map16.addSpawn(new SpawnPosition(442f, 919f, 1274f));
@@ -215,7 +211,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map16.addSpawn(new SpawnPosition(382f, 842f, 1271f));
 		map16.setKillZ(1190f);
 		super.maps.add(map16);
-		// Haramel.
+		// 哈拉梅尔。 / Haramel.
 		BattlegroundMap map17 = new BattlegroundMap(300200000);
 		map17.addSpawn(new SpawnPosition(387f, 315f, 88f));
 		map17.addSpawn(new SpawnPosition(376f, 285f, 89f));
@@ -225,7 +221,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map17.addSpawn(new SpawnPosition(327f, 380f, 89f));
 		map17.setKillZ(50f);
 		super.maps.add(map17);
-		// Chantra Dredgion.
+		// 钱特拉战舰。 / Chantra Dredgion.
 		BattlegroundMap map18 = new BattlegroundMap(300210000);
 		map18.addSpawn(new SpawnPosition(458f, 493f, 397f));
 		map18.addSpawn(new SpawnPosition(514f, 493f, 397f));
@@ -235,7 +231,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map18.addSpawn(new SpawnPosition(484f, 420f, 398f));
 		map18.setKillZ(370f);
 		super.maps.add(map18);
-		// Kromede Trial.
+		// 克罗梅德试炼。 / Kromede Trial.
 		BattlegroundMap map19 = new BattlegroundMap(300230000);
 		map19.addSpawn(new SpawnPosition(528f, 640f, 201f));
 		map19.addSpawn(new SpawnPosition(493f, 640f, 201f));
@@ -245,7 +241,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map19.addSpawn(new SpawnPosition(531f, 612f, 201f));
 		map19.setKillZ(180f);
 		super.maps.add(map19);
-		// Aturam Sky Fortress.
+		// 阿图拉姆天空要塞。 / Aturam Sky Fortress.
 		BattlegroundMap map20 = new BattlegroundMap(300240000);
 		map20.addSpawn(new SpawnPosition(523f, 485f, 649f));
 		map20.addSpawn(new SpawnPosition(576f, 463f, 647f));
@@ -255,7 +251,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map20.addSpawn(new SpawnPosition(466f, 466f, 647f));
 		map20.setKillZ(620f);
 		super.maps.add(map20);
-		// Esoterrace.
+		// 伊索特拉斯。 / Esoterrace.
 		BattlegroundMap map21 = new BattlegroundMap(300250000);
 		map21.addSpawn(new SpawnPosition(1254f, 624f, 296f));
 		map21.addSpawn(new SpawnPosition(1217f, 620f, 295f));
@@ -265,7 +261,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map21.addSpawn(new SpawnPosition(1294f, 623f, 297f));
 		map21.setKillZ(270f);
 		super.maps.add(map21);
-		// Rentus Base.
+		// 伦图斯基地。 / Rentus Base.
 		BattlegroundMap map22 = new BattlegroundMap(300280000);
 		map22.addSpawn(new SpawnPosition(148f, 363f, 257f));
 		map22.addSpawn(new SpawnPosition(194f, 349f, 257f));
@@ -275,7 +271,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map22.addSpawn(new SpawnPosition(170f, 348f, 252f));
 		map22.setKillZ(220f);
 		super.maps.add(map22);
-		// Terath Dredgion.
+		// 特拉斯战舰。 / Terath Dredgion.
 		BattlegroundMap map23 = new BattlegroundMap(300440000);
 		map23.addSpawn(new SpawnPosition(443f, 321f, 403f));
 		map23.addSpawn(new SpawnPosition(484f, 342f, 403f));
@@ -285,7 +281,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map23.addSpawn(new SpawnPosition(424f, 300f, 409f));
 		map23.setKillZ(380f);
 		super.maps.add(map23);
-		// Tiamat Stronghold.
+		// 提亚马特要塞。 / Tiamat Stronghold.
 		BattlegroundMap map24 = new BattlegroundMap(300510000);
 		map24.addSpawn(new SpawnPosition(1112f, 1095f, 790f));
 		map24.addSpawn(new SpawnPosition(1109f, 1039f, 790f));
@@ -295,7 +291,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map24.addSpawn(new SpawnPosition(1088f, 1068f, 786f));
 		map24.setKillZ(760f);
 		super.maps.add(map24);
-		// Dragon Lord's Refuge.
+		// 龙主避难所。 / Dragon Lord's Refuge.
 		BattlegroundMap map25 = new BattlegroundMap(300520000);
 		map25.addSpawn(new SpawnPosition(460f, 514f, 417f));
 		map25.addSpawn(new SpawnPosition(477f, 478f, 417f));
@@ -305,7 +301,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map25.addSpawn(new SpawnPosition(476f, 549f, 417f));
 		map25.setKillZ(390f);
 		super.maps.add(map25);
-		// Eternal Bastion.
+		// 永恒堡垒。 / Eternal Bastion.
 		BattlegroundMap map26 = new BattlegroundMap(300540000);
 		map26.addSpawn(new SpawnPosition(740f, 255f, 253f));
 		map26.addSpawn(new SpawnPosition(778f, 288f, 253f));
@@ -315,7 +311,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map26.addSpawn(new SpawnPosition(766f, 266f, 233f));
 		map26.setKillZ(220f);
 		super.maps.add(map26);
-		// Ophidan Bridge.
+		// 奥菲丹桥。 / Ophidan Bridge.
 		BattlegroundMap map27 = new BattlegroundMap(300590000);
 		map27.addSpawn(new SpawnPosition(368f, 491f, 605f));
 		map27.addSpawn(new SpawnPosition(301f, 486f, 608f));
@@ -325,7 +321,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map27.addSpawn(new SpawnPosition(329f, 489f, 607f));
 		map27.setKillZ(580f);
 		super.maps.add(map27);
-		// Raksang Ruins.
+		// 拉克桑遗迹。 / Raksang Ruins.
 		BattlegroundMap map28 = new BattlegroundMap(300610000);
 		map28.addSpawn(new SpawnPosition(617f, 646f, 523f));
 		map28.addSpawn(new SpawnPosition(590f, 659f, 522f));
@@ -335,7 +331,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map28.addSpawn(new SpawnPosition(632f, 735f, 522f));
 		map28.setKillZ(470f);
 		super.maps.add(map28);
-		// Occupied Rentus Base.
+		// 被占领的伦图斯基地。 / Occupied Rentus Base.
 		BattlegroundMap map29 = new BattlegroundMap(300620000);
 		map29.addSpawn(new SpawnPosition(148f, 363f, 257f));
 		map29.addSpawn(new SpawnPosition(194f, 349f, 257f));
@@ -345,7 +341,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map29.addSpawn(new SpawnPosition(170f, 348f, 252f));
 		map29.setKillZ(220f);
 		super.maps.add(map29);
-		// Anguished Dragon Lord's Refuge.
+		// 痛苦龙主避难所。 / Anguished Dragon Lord's Refuge.
 		BattlegroundMap map30 = new BattlegroundMap(300630000);
 		map30.addSpawn(new SpawnPosition(223f, 186f, 246f));
 		map30.addSpawn(new SpawnPosition(212f, 156f, 246f));
@@ -355,7 +351,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map30.addSpawn(new SpawnPosition(196f, 175f, 246f));
 		map30.setKillZ(220f);
 		super.maps.add(map30);
-		// The Hexway.
+		// 六角道。 / The Hexway.
 		BattlegroundMap map31 = new BattlegroundMap(300700000);
 		map31.addSpawn(new SpawnPosition(488f, 512f, 352f));
 		map31.addSpawn(new SpawnPosition(495f, 548f, 354f));
@@ -365,7 +361,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map31.addSpawn(new SpawnPosition(451f, 618f, 352f));
 		map31.setKillZ(320f);
 		super.maps.add(map31);
-		// Infinity Shard.
+		// 无限碎片。 / Infinity Shard.
 		BattlegroundMap map32 = new BattlegroundMap(300800000);
 		map32.addSpawn(new SpawnPosition(118f, 116f, 131f));
 		map32.addSpawn(new SpawnPosition(107f, 143f, 125f));
@@ -375,7 +371,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map32.addSpawn(new SpawnPosition(108f, 140f, 112f));
 		map32.setKillZ(90f);
 		super.maps.add(map32);
-		// Danuar Reliquary.
+		// 达努阿尔圣物匣。 / Danuar Reliquary.
 		BattlegroundMap map33 = new BattlegroundMap(301110000);
 		map33.addSpawn(new SpawnPosition(269f, 232f, 241f));
 		map33.addSpawn(new SpawnPosition(235f, 263f, 241f));
@@ -385,7 +381,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map33.addSpawn(new SpawnPosition(256f, 257f, 241f));
 		map33.setKillZ(220f);
 		super.maps.add(map33);
-		// Kamar Battlefield.
+		// 卡玛尔战场。 / Kamar Battlefield.
 		BattlegroundMap map34 = new BattlegroundMap(301120000);
 		map34.addSpawn(new SpawnPosition(1344f, 1528f, 595f));
 		map34.addSpawn(new SpawnPosition(1313f, 1510f, 597f));
@@ -395,7 +391,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map34.addSpawn(new SpawnPosition(1396f, 1423f, 600f));
 		map34.setKillZ(570f);
 		super.maps.add(map34);
-		// Sauro Supply Base.
+		// 索罗补给基地。 / Sauro Supply Base.
 		BattlegroundMap map35 = new BattlegroundMap(301130000);
 		map35.addSpawn(new SpawnPosition(578f, 503f, 202f));
 		map35.addSpawn(new SpawnPosition(611f, 496f, 202f));
@@ -405,7 +401,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map35.addSpawn(new SpawnPosition(591f, 503f, 191f));
 		map35.setKillZ(160f);
 		super.maps.add(map35);
-		// Seized Danuar Sanctuary.
+		// 被占领的达努阿尔圣所。 / Seized Danuar Sanctuary.
 		BattlegroundMap map36 = new BattlegroundMap(301140000);
 		map36.addSpawn(new SpawnPosition(1056f, 645f, 280f));
 		map36.addSpawn(new SpawnPosition(1037f, 681f, 282f));
@@ -415,7 +411,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map36.addSpawn(new SpawnPosition(1056f, 670f, 282f));
 		map36.setKillZ(260f);
 		super.maps.add(map36);
-		// Nightmare Circus.
+		// 梦魇马戏团。 / Nightmare Circus.
 		// BattlegroundMap map37 = new BattlegroundMap(301160000);
 		// map37.addSpawn(new SpawnPosition(479f, 566f, 202f));
 		// map37.addSpawn(new SpawnPosition(524f, 592f, 200f));
@@ -425,7 +421,7 @@ public class TwoTeamSmallBg extends Battleground {
 		// map37.addSpawn(new SpawnPosition(515f, 565f, 198f));
 		// map37.setKillZ(170f);
 		// super.maps.add(map37);
-		// Engulfed Ophidan Bridge.
+		// 被吞没的奥菲丹桥。 / Engulfed Ophidan Bridge.
 		BattlegroundMap map38 = new BattlegroundMap(301210000);
 		map38.addSpawn(new SpawnPosition(499f, 523f, 597f));
 		map38.addSpawn(new SpawnPosition(527f, 541f, 604f));
@@ -435,7 +431,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map38.addSpawn(new SpawnPosition(448f, 537f, 599f));
 		map38.setKillZ(560f);
 		super.maps.add(map38);
-		// Iron Wall Warfront.
+		// 铁壁战线。 / Iron Wall Warfront.
 		BattlegroundMap map39 = new BattlegroundMap(301220000);
 		map39.addSpawn(new SpawnPosition(491f, 765f, 200f));
 		map39.addSpawn(new SpawnPosition(552f, 744f, 197f));
@@ -445,7 +441,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map39.addSpawn(new SpawnPosition(612f, 776f, 185f));
 		map39.setKillZ(160f);
 		super.maps.add(map39);
-		// Illuminary Obelisk.
+		// 光明方尖碑。 / Illuminary Obelisk.
 		BattlegroundMap map40 = new BattlegroundMap(301230000);
 		map40.addSpawn(new SpawnPosition(255f, 317f, 325f));
 		map40.addSpawn(new SpawnPosition(255f, 192f, 325f));
@@ -455,7 +451,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map40.addSpawn(new SpawnPosition(247f, 263f, 318f));
 		map40.setKillZ(290f);
 		super.maps.add(map40);
-		// Linkgate Foundry.
+		// 链门铸造厂。 / Linkgate Foundry.
 		BattlegroundMap map41 = new BattlegroundMap(301270000);
 		map41.addSpawn(new SpawnPosition(228f, 258f, 312f));
 		map41.addSpawn(new SpawnPosition(261f, 260f, 312f));
@@ -465,7 +461,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map41.addSpawn(new SpawnPosition(232f, 245f, 312f));
 		map41.setKillZ(290f);
 		super.maps.add(map41);
-		// Idgel Dome.
+		// 伊杰尔穹顶。 / Idgel Dome.
 		BattlegroundMap map42 = new BattlegroundMap(301310000);
 		map42.addSpawn(new SpawnPosition(252f, 246f, 92f));
 		map42.addSpawn(new SpawnPosition(276f, 272f, 92f));
@@ -475,7 +471,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map42.addSpawn(new SpawnPosition(277f, 225f, 89f));
 		map42.setKillZ(70f);
 		super.maps.add(map42);
-		// Danuar Sanctuary.
+		// 达努阿尔圣所。 / Danuar Sanctuary.
 		BattlegroundMap map43 = new BattlegroundMap(301380000);
 		map43.addSpawn(new SpawnPosition(921f, 870f, 278f));
 		map43.addSpawn(new SpawnPosition(887f, 857f, 279f));
@@ -485,7 +481,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map43.addSpawn(new SpawnPosition(923f, 850f, 292f));
 		map43.setKillZ(250f);
 		super.maps.add(map43);
-		// Drakenspire Depths.
+		// 龙脊深渊。 / Drakenspire Depths.
 		BattlegroundMap map44 = new BattlegroundMap(301390000);
 		map44.addSpawn(new SpawnPosition(208f, 542f, 1754f));
 		map44.addSpawn(new SpawnPosition(176f, 579f, 1760f));
@@ -495,7 +491,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map44.addSpawn(new SpawnPosition(208f, 496f, 1754f));
 		map44.setKillZ(1730f);
 		super.maps.add(map44);
-		// The Shugo Emperor's Vault.
+		// 术古皇帝宝库。 / The Shugo Emperor's Vault.
 		// BattlegroundMap map45 = new BattlegroundMap(301400000);
 		// map45.addSpawn(new SpawnPosition(343f, 727f, 398f));
 		// map45.addSpawn(new SpawnPosition(393f, 781f, 398f));
@@ -505,7 +501,7 @@ public class TwoTeamSmallBg extends Battleground {
 		// map45.addSpawn(new SpawnPosition(423f, 697f, 398f));
 		// map45.setKillZ(370f);
 		// super.maps.add(map45);
-		// Stonespear Reach.
+		// 石矛高地。 / Stonespear Reach.
 		BattlegroundMap map46 = new BattlegroundMap(301500000);
 		map46.addSpawn(new SpawnPosition(211f, 263f, 96f));
 		map46.addSpawn(new SpawnPosition(251f, 264f, 96f));
@@ -515,7 +511,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map46.addSpawn(new SpawnPosition(216f, 247f, 96f));
 		map46.setKillZ(70f);
 		super.maps.add(map46);
-		// Sealed Argent Manor.
+		// 封印的银白庄园。 / Sealed Argent Manor.
 		BattlegroundMap map47 = new BattlegroundMap(301510000);
 		map47.addSpawn(new SpawnPosition(1005f, 1088f, 69f));
 		map47.addSpawn(new SpawnPosition(988f, 1064f, 69f));
@@ -525,7 +521,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map47.addSpawn(new SpawnPosition(979f, 1089f, 70f));
 		map47.setKillZ(50f);
 		super.maps.add(map47);
-		// Archives Of Eternity.
+		// 永恒档案。 / Archives Of Eternity.
 		BattlegroundMap map48 = new BattlegroundMap(301540000);
 		map48.addSpawn(new SpawnPosition(234f, 512f, 468f));
 		map48.addSpawn(new SpawnPosition(280f, 512f, 468f));
@@ -535,7 +531,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map48.addSpawn(new SpawnPosition(236f, 493f, 468f));
 		map48.setKillZ(440f);
 		super.maps.add(map48);
-		// Cradle Of Eternity.
+		// 永恒摇篮。 / Cradle Of Eternity.
 		BattlegroundMap map49 = new BattlegroundMap(301550000);
 		map49.addSpawn(new SpawnPosition(464f, 1398f, 827f));
 		map49.addSpawn(new SpawnPosition(474f, 1418f, 827f));
@@ -545,7 +541,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map49.addSpawn(new SpawnPosition(491f, 1445f, 823f));
 		map49.setKillZ(795f);
 		super.maps.add(map49);
-		// Cradle Of Eternity [Memorial Path]
+		// 永恒摇篮【纪念之路】 / Cradle Of Eternity [Memorial Path]
 		BattlegroundMap map50 = new BattlegroundMap(301550000);
 		map50.addSpawn(new SpawnPosition(602f, 806f, 565f));
 		map50.addSpawn(new SpawnPosition(626f, 768f, 561f));
@@ -555,7 +551,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map50.addSpawn(new SpawnPosition(709f, 772f, 547f));
 		map50.setKillZ(530f);
 		super.maps.add(map50);
-		// Theobomos Test Chamber.
+		// 西奥波莫斯试验室。 / Theobomos Test Chamber.
 		BattlegroundMap map51 = new BattlegroundMap(301610000);
 		map51.addSpawn(new SpawnPosition(228f, 256f, 203f));
 		map51.addSpawn(new SpawnPosition(240f, 226f, 203f));
@@ -565,7 +561,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map51.addSpawn(new SpawnPosition(211f, 274f, 202f));
 		map51.setKillZ(190f);
 		super.maps.add(map51);
-		// Theobomos Test Chamber [Elemental Athanor]
+		// 西奥波莫斯试验室【元素炼金炉】 / Theobomos Test Chamber [Elemental Athanor]
 		BattlegroundMap map52 = new BattlegroundMap(301610000);
 		map52.addSpawn(new SpawnPosition(258f, 119f, 196f));
 		map52.addSpawn(new SpawnPosition(310f, 120f, 195f));
@@ -575,7 +571,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map52.addSpawn(new SpawnPosition(261f, 136f, 196f));
 		map52.setKillZ(170f);
 		super.maps.add(map52);
-		// Drakenseer's Lair.
+		// 龙视者之巢。 / Drakenseer's Lair.
 		BattlegroundMap map53 = new BattlegroundMap(301620000);
 		map53.addSpawn(new SpawnPosition(276f, 342f, 336f));
 		map53.addSpawn(new SpawnPosition(328f, 309f, 318f));
@@ -585,7 +581,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map53.addSpawn(new SpawnPosition(237f, 292f, 318f));
 		map53.setKillZ(295f);
 		super.maps.add(map53);
-		// Contaminated Underpath.
+		// 污染地下通道。 / Contaminated Underpath.
 		// BattlegroundMap map54 = new BattlegroundMap(301630000);
 		// map54.addSpawn(new SpawnPosition(229f, 184f, 164f));
 		// map54.addSpawn(new SpawnPosition(229f, 208f, 160f));
@@ -595,7 +591,7 @@ public class TwoTeamSmallBg extends Battleground {
 		// map54.addSpawn(new SpawnPosition(227f, 300f, 160f));
 		// map54.setKillZ(140f);
 		// super.maps.add(map54);
-		// Secret Munitions Factory.
+		// 秘密军需工厂。 / Secret Munitions Factory.
 		// BattlegroundMap map55 = new BattlegroundMap(301640000);
 		// map55.addSpawn(new SpawnPosition(323f, 259f, 192f));
 		// map55.addSpawn(new SpawnPosition(208f, 258f, 191f));
@@ -605,7 +601,7 @@ public class TwoTeamSmallBg extends Battleground {
 		// map55.addSpawn(new SpawnPosition(244f, 258f, 191f));
 		// map55.setKillZ(170f);
 		// super.maps.add(map55);
-		// Fallen Poeta.
+		// 陨落波埃塔。 / Fallen Poeta.
 		BattlegroundMap map56 = new BattlegroundMap(301660000);
 		map56.addSpawn(new SpawnPosition(216f, 348f, 130f));
 		map56.addSpawn(new SpawnPosition(235f, 382f, 124f));
@@ -615,7 +611,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map56.addSpawn(new SpawnPosition(193f, 393f, 119f));
 		map56.setKillZ(100f);
 		super.maps.add(map56);
-		// Ophidan Warpath.
+		// 奥菲丹战道。 / Ophidan Warpath.
 		BattlegroundMap map57 = new BattlegroundMap(301670000);
 		map57.addSpawn(new SpawnPosition(697f, 466f, 599f));
 		map57.addSpawn(new SpawnPosition(676f, 495f, 599f));
@@ -625,7 +621,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map57.addSpawn(new SpawnPosition(620f, 423f, 607f));
 		map57.setKillZ(580f);
 		super.maps.add(map57);
-		// Aether Mine.
+		// 以太矿。 / Aether Mine.
 		BattlegroundMap map58 = new BattlegroundMap(301690000);
 		map58.addSpawn(new SpawnPosition(174f, 155f, 230f));
 		map58.addSpawn(new SpawnPosition(214f, 174f, 230f));
@@ -635,7 +631,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map58.addSpawn(new SpawnPosition(326f, 263f, 258f));
 		map58.setKillZ(200f);
 		super.maps.add(map58);
-		// Old Fire Temple.
+		// 旧火神殿。 / Old Fire Temple.
 		// BattlegroundMap map59 = new BattlegroundMap(302000000);
 		// map59.addSpawn(new SpawnPosition(370f, 250f, 117f));
 		// map59.addSpawn(new SpawnPosition(355f, 280f, 110f));
@@ -645,7 +641,7 @@ public class TwoTeamSmallBg extends Battleground {
 		// map59.addSpawn(new SpawnPosition(384f, 239f, 110f));
 		// map59.setKillZ(80f);
 		// super.maps.add(map59);
-		// Fissure Of Oblivion.
+		// 遗忘裂隙。 / Fissure Of Oblivion.
 		BattlegroundMap map60 = new BattlegroundMap(302100000);
 		map60.addSpawn(new SpawnPosition(326f, 512f, 352f));
 		map60.addSpawn(new SpawnPosition(278f, 513f, 351f));
@@ -655,7 +651,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map60.addSpawn(new SpawnPosition(312f, 499f, 350f));
 		map60.setKillZ(330f);
 		super.maps.add(map60);
-		// Karamatis A.
+		// 卡拉马蒂斯 A。 / Karamatis A.
 		BattlegroundMap map61 = new BattlegroundMap(310010000);
 		map61.addSpawn(new SpawnPosition(220f, 250f, 206f));
 		map61.addSpawn(new SpawnPosition(229f, 288f, 206f));
@@ -665,7 +661,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map61.addSpawn(new SpawnPosition(277f, 301f, 206f));
 		map61.setKillZ(190f);
 		super.maps.add(map61);
-		// Aerdina.
+		// 艾尔迪纳。 / Aerdina.
 		BattlegroundMap map62 = new BattlegroundMap(310030000);
 		map62.addSpawn(new SpawnPosition(273f, 173f, 204f));
 		map62.addSpawn(new SpawnPosition(252f, 261f, 228f));
@@ -675,7 +671,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map62.addSpawn(new SpawnPosition(229f, 245f, 224f));
 		map62.setKillZ(190f);
 		super.maps.add(map62);
-		// Aetherogenetics Lab.
+		// 以太遗传实验室。 / Aetherogenetics Lab.
 		BattlegroundMap map63 = new BattlegroundMap(310050000);
 		map63.addSpawn(new SpawnPosition(215f, 343f, 126f));
 		map63.addSpawn(new SpawnPosition(225f, 343f, 126f));
@@ -685,7 +681,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map63.addSpawn(new SpawnPosition(215f, 303f, 126f));
 		map63.setKillZ(100f);
 		super.maps.add(map63);
-		// Sanctum Underground Arena.
+		// 圣所地下竞技场。 / Sanctum Underground Arena.
 		BattlegroundMap map64 = new BattlegroundMap(310080000);
 		map64.addSpawn(new SpawnPosition(275f, 181f, 162f));
 		map64.addSpawn(new SpawnPosition(275f, 242f, 158f));
@@ -695,7 +691,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map64.addSpawn(new SpawnPosition(260f, 215f, 158f));
 		map64.setKillZ(130f);
 		super.maps.add(map64);
-		// Indratu Fortress.
+		// 因德拉图要塞。 / Indratu Fortress.
 		BattlegroundMap map65 = new BattlegroundMap(310090000);
 		map65.addSpawn(new SpawnPosition(604f, 466f, 1019f));
 		map65.addSpawn(new SpawnPosition(617f, 516f, 1019f));
@@ -705,7 +701,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map65.addSpawn(new SpawnPosition(615f, 562f, 1018f));
 		map65.setKillZ(990f);
 		super.maps.add(map65);
-		// Azoturan Fortress.
+		// 阿佐图兰要塞。 / Azoturan Fortress.
 		BattlegroundMap map66 = new BattlegroundMap(310100000);
 		map66.addSpawn(new SpawnPosition(462f, 442f, 993f));
 		map66.addSpawn(new SpawnPosition(417f, 402f, 1004f));
@@ -715,7 +711,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map66.addSpawn(new SpawnPosition(443f, 419f, 991f));
 		map66.setKillZ(970f);
 		super.maps.add(map66);
-		// Sky Temple Interior.
+		// 天空神殿内部。 / Sky Temple Interior.
 		BattlegroundMap map67 = new BattlegroundMap(320050000);
 		map67.addSpawn(new SpawnPosition(376f, 417f, 374f));
 		map67.addSpawn(new SpawnPosition(462f, 399f, 375f));
@@ -725,7 +721,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map67.addSpawn(new SpawnPosition(443f, 448f, 375f));
 		map67.setKillZ(350f);
 		super.maps.add(map67);
-		// Space Of Destiny.
+		// 命运空间。 / Space Of Destiny.
 		// BattlegroundMap map68 = new BattlegroundMap(320070000);
 		// map68.addSpawn(new SpawnPosition(210f, 250f, 125f));
 		// map68.addSpawn(new SpawnPosition(271f, 246f, 125f));
@@ -735,7 +731,7 @@ public class TwoTeamSmallBg extends Battleground {
 		// map68.addSpawn(new SpawnPosition(221f, 272f, 125f));
 		// map68.setKillZ(110f);
 		// super.maps.add(map68);
-		// Fire Temple.
+		// 火神殿。 / Fire Temple.
 		BattlegroundMap map69 = new BattlegroundMap(320100000);
 		map69.addSpawn(new SpawnPosition(414f, 97f, 117f));
 		map69.addSpawn(new SpawnPosition(392f, 88f, 117f));
@@ -745,7 +741,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map69.addSpawn(new SpawnPosition(361f, 126f, 116f));
 		map69.setKillZ(95f);
 		super.maps.add(map69);
-		// Alquimia Research Center.
+		// 阿尔奎米亚研究中心。 / Alquimia Research Center.
 		BattlegroundMap map70 = new BattlegroundMap(320110000);
 		map70.addSpawn(new SpawnPosition(286f, 501f, 211f));
 		map70.addSpawn(new SpawnPosition(292f, 521f, 209f));
@@ -755,7 +751,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map70.addSpawn(new SpawnPosition(329f, 501f, 209f));
 		map70.setKillZ(200f);
 		super.maps.add(map70);
-		// Padmarashka's Cave.
+		// 帕德玛拉什卡洞穴。 / Padmarashka's Cave.
 		BattlegroundMap map71 = new BattlegroundMap(320150000);
 		map71.addSpawn(new SpawnPosition(576f, 279f, 66f));
 		map71.addSpawn(new SpawnPosition(605f, 235f, 66f));
@@ -765,7 +761,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map71.addSpawn(new SpawnPosition(535f, 279f, 66f));
 		map71.setKillZ(50f);
 		super.maps.add(map71);
-		// Transidium Annex.
+		// 特兰西迪姆附楼。 / Transidium Annex.
 		BattlegroundMap map72 = new BattlegroundMap(400030000);
 		map72.addSpawn(new SpawnPosition(481f, 500f, 674f));
 		map72.addSpawn(new SpawnPosition(480f, 524f, 674f));
@@ -777,7 +773,7 @@ public class TwoTeamSmallBg extends Battleground {
 		map72.addSpawn(new SpawnPosition(497f, 483f, 674f));
 		map72.setKillZ(650f);
 		super.maps.add(map72);
-		// Live Party Concert Hall.
+		// 现场派对音乐厅。 / Live Party Concert Hall.
 		// BattlegroundMap map73 = new BattlegroundMap(600080000);
 		// map73.addSpawn(new SpawnPosition(1543f, 1529f, 565f));
 		// map73.addSpawn(new SpawnPosition(1543f, 1493f, 565f));
@@ -789,6 +785,12 @@ public class TwoTeamSmallBg extends Battleground {
 		// super.maps.add(map73);
 	}
 
+	/**
+	 * 从排队列表创建小型双队对局。
+	 * Creates a small two-team match from the queue.
+	 *
+	 * @param players 排队玩家对象 ID / queued player object ids
+	 */
 	public void createMatch(List<Integer> players) {
 		super.handleQueueGroup(players);
 		if (super.getGroups().isEmpty()) {
@@ -797,6 +799,10 @@ public class TwoTeamSmallBg extends Battleground {
 		startMatch();
 	}
 
+	/**
+	 * 开始小型双队对局。
+	 * Starts the small two-team match.
+	 */
 	public void startMatch() {
 		super.createInstance();
 		super.openStaticDoors();
@@ -825,10 +831,23 @@ public class TwoTeamSmallBg extends Battleground {
 	}
 
 	@Override
+	/**
+	 * 小型双队限制隐身技能。
+	 * Small two-team restricts stealth skills.
+	 *
+	 * always true
+	 */
 	public boolean isStealthRestricted() {
 		return true;
 	}
 
+	/**
+	 * 处理死亡：检测回合胜负。
+	 * Handles death: detect round winner.
+	 *
+	 * dead player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 */
 	public void onDie(final Player player, Creature lastAttacker) {
 		super.onDieDefault(player, lastAttacker);
 		if (lastAttacker instanceof Player && ((Player) lastAttacker).getObjectId() != player.getObjectId()) {
@@ -850,6 +869,13 @@ public class TwoTeamSmallBg extends Battleground {
 	}
 
 	@Override
+	/**
+	 * 创建小型双队锦标赛对局。
+	 * Creates a small two-team tournament match.
+	 *
+	 * @param teams 各队玩家 / teams of players
+	 * true on success
+	 */
 	public boolean createTournament(List<List<Player>> teams) {
 		if (!super.createGroups(teams)) {
 			return false;
@@ -862,6 +888,14 @@ public class TwoTeamSmallBg extends Battleground {
 		return true;
 	}
 
+	/**
+	 * 处理玩家离开小型双队战场。
+	 * Handles a player leaving small two-team BG.
+	 *
+	 * 玩家 / player
+	 * logout
+	 * @param isAfk 是否挂机 / AFK
+	 */
 	public void onLeave(Player player, boolean isLogout, boolean isAfk) {
 		super.onLeaveDefault(player, isLogout, isAfk);
 		for (PlayerGroup group : super.getGroups()) {
@@ -872,6 +906,10 @@ public class TwoTeamSmallBg extends Battleground {
 		}
 	}
 
+	/**
+	 * 开始新回合：重置并重新布置双方。
+	 * Starts a new round: reset and re-position both teams.
+	 */
 	private void startNewRound() {
 		super.setStartStamp(System.currentTimeMillis());
 		synchronized (super.getGroups()) {
@@ -915,6 +953,12 @@ public class TwoTeamSmallBg extends Battleground {
 		}, 1000);
 	}
 
+	/**
+	 * 为指定小队累计回合胜场。
+	 * Adds a round win for the given group.
+	 *
+	 * @param group 胜方小队 / winning group
+	 */
 	private void addRoundWin(PlayerGroup group) {
 		if (group == null) {
 			return;
@@ -927,6 +971,12 @@ public class TwoTeamSmallBg extends Battleground {
 		}
 	}
 
+	/**
+	 * 判定本回合胜方小队。
+	 * Determines the current round winning group.
+	 *
+	 * winning group
+	 */
 	private PlayerGroup getRoundWinner() {
 		PlayerGroup winner = null;
 		Map<PlayerGroup, Integer> deadCounts = new HashMap<PlayerGroup, Integer>();
@@ -956,6 +1006,12 @@ public class TwoTeamSmallBg extends Battleground {
 		return winner;
 	}
 
+	/**
+	 * 获取整场胜方小队。
+	 * Returns overall match winning group.
+	 *
+	 * winning group
+	 */
 	private PlayerGroup getWinner() {
 		PlayerGroup winner = null;
 		int drawPoints = 0;
@@ -974,6 +1030,12 @@ public class TwoTeamSmallBg extends Battleground {
 		return winner;
 	}
 
+	/**
+	 * 结束双队对局并结算奖励。
+	 * Ends the two-team match and settles rewards.
+	 *
+	 * whether draw
+	 */
 	private void endTwoTeamMatch(boolean isDraw) {
 		if (endCalled) {
 			return;
@@ -1031,13 +1093,13 @@ public class TwoTeamSmallBg extends Battleground {
 				for (Player pl : group.getMembers()) {
 					super.scheduleAnnouncement(pl, "Draw!", 0);
 					byte level = pl.getLevel();
-					// Reward Player if "DRAW"
+					// 若为“平局”则奖励玩家 / Reward Player if "DRAW"
 					if (level >= 10 && level <= 50) {
 						ItemService.addItem(pl, 186000030, 2); // Gold Medal.
 						ItemService.addItem(pl, 186000031, 2); // Silver Medal.
-						ItemService.addItem(pl, 166030005, 1); // Tempering Solution.
-						ItemService.addItem(pl, 166020000, 1); // Omega Enchantment Stone.
-						ItemService.addItem(pl, 188100335, 50); // Enchantment Stone Dust.
+						ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+						ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+						ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
 						AbyssPointsService.addAp(pl, 500);
 						AbyssPointsService.addGp(pl, 2);
 					}
@@ -1045,15 +1107,15 @@ public class TwoTeamSmallBg extends Battleground {
 						ItemService.addItem(pl, 186000096, 2); // Platinum Medal.
 						ItemService.addItem(pl, 186000147, 2); // Mithril Medal.
 						ItemService.addItem(pl, 186000223, 2); // Honorable Mithril Medal.
-						ItemService.addItem(pl, 166030005, 1); // Tempering Solution.
-						ItemService.addItem(pl, 166020000, 1); // Omega Enchantment Stone.
-						ItemService.addItem(pl, 188100335, 100); // Enchantment Stone Dust.
+						ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+						ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+						ItemService.addItem(pl, 188100335, 100); // 强化石粉末。 / Enchantment Stone Dust.
 						AbyssPointsService.addAp(pl, 1500);
 						AbyssPointsService.addGp(pl, 5);
 					}
 					if (level >= 66 && level <= 83) {
-						ItemService.addItem(pl, 166030005, 1); // Tempering Solution.
-						ItemService.addItem(pl, 166020000, 1); // Omega Enchantment Stone.
+						ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+						ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
 						AbyssPointsService.addAp(pl, 2500);
 						AbyssPointsService.addGp(pl, 15);
 
@@ -1067,13 +1129,13 @@ public class TwoTeamSmallBg extends Battleground {
 					for (Player pl : group.getMembers()) {
 						super.playerWinMatch(pl, super.K_VALUE / 2);
 						byte level = pl.getLevel();
-						// Reward Player if "WINNER"
+						// 若为“胜者”则奖励玩家 / Reward Player if "WINNER"
 						if (level >= 10 && level <= 50) {
 							ItemService.addItem(pl, 186000030, 5); // Gold Medal.
 							ItemService.addItem(pl, 186000031, 5); // Silver Medal.
-							ItemService.addItem(pl, 166030005, 2); // Tempering Solution.
-							ItemService.addItem(pl, 166020000, 2); // Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 100); // Enchantment Stone Dust.
+							ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
+							ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
+							ItemService.addItem(pl, 188100335, 100); // 强化石粉末。 / Enchantment Stone Dust.
 							ItemService.addItem(pl, 188710113, 1); // No Limits Pack "1 Day"
 							AbyssPointsService.addAp(pl, 1000);
 							AbyssPointsService.addGp(pl, 5);
@@ -1082,16 +1144,16 @@ public class TwoTeamSmallBg extends Battleground {
 							ItemService.addItem(pl, 186000096, 5); // Platinum Medal.
 							ItemService.addItem(pl, 186000147, 5); // Mithril Medal.
 							ItemService.addItem(pl, 186000223, 5); // Honorable Mithril Medal.
-							ItemService.addItem(pl, 166030005, 2); // Tempering Solution.
-							ItemService.addItem(pl, 166020000, 2); // Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 200); // Enchantment Stone Dust.
+							ItemService.addItem(pl, 166030005, 2); // 淬炼溶液。 / Tempering Solution.
+							ItemService.addItem(pl, 166020000, 2); // 欧米伽强化石。 / Omega Enchantment Stone.
+							ItemService.addItem(pl, 188100335, 200); // 强化石粉末。 / Enchantment Stone Dust.
 							ItemService.addItem(pl, 188710113, 1); // No Limits Pack "1 Day"
 							AbyssPointsService.addAp(pl, 3000);
 							AbyssPointsService.addGp(pl, 10);
 						}
 						if (level >= 66 && level <= 83) {
-							ItemService.addItem(pl, 166030005, 1); // Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // Omega Enchantment Stone.
+							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
 							AbyssPointsService.addAp(pl, 5000);
 							AbyssPointsService.addGp(pl, 25);
 						}
@@ -1102,13 +1164,13 @@ public class TwoTeamSmallBg extends Battleground {
 					for (Player pl : group.getMembers()) {
 						super.playerLoseMatch(pl, -super.K_VALUE / 4);
 						byte level = pl.getLevel();
-						// Reward Player if "LOSER"
+						// 若为“败者”则奖励玩家 / Reward Player if "LOSER"
 						if (level >= 10 && level <= 50) {
 							ItemService.addItem(pl, 186000030, 2); // Gold Medal.
 							ItemService.addItem(pl, 186000031, 2); // Silver Medal.
-							ItemService.addItem(pl, 166030005, 1); // Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 50); // Enchantment Stone Dust.
+							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+							ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
 							AbyssPointsService.addAp(pl, 500);
 							AbyssPointsService.addGp(pl, 3);
 						}
@@ -1116,18 +1178,18 @@ public class TwoTeamSmallBg extends Battleground {
 							ItemService.addItem(pl, 186000096, 2); // Platinum Medal.
 							ItemService.addItem(pl, 186000147, 2); // Mithril Medal.
 							ItemService.addItem(pl, 186000223, 2); // Honorable Mithril Medal.
-							ItemService.addItem(pl, 166030005, 1); // Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 50); // Enchantment Stone Dust.
+							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+							ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
 							AbyssPointsService.addAp(pl, 1500);
 							AbyssPointsService.addGp(pl, 7);
 						}
 						if (level >= 66 && level <= 83) {
 							ItemService.addItem(pl, 186000236, 2); // Blood Mark.
 							ItemService.addItem(pl, 186000414, 2); // Blood Medal.
-							ItemService.addItem(pl, 166030005, 1); // Tempering Solution.
-							ItemService.addItem(pl, 166020000, 1); // Omega Enchantment Stone.
-							ItemService.addItem(pl, 188100335, 50); // Enchantment Stone Dust.
+							ItemService.addItem(pl, 166030005, 1); // 淬炼溶液。 / Tempering Solution.
+							ItemService.addItem(pl, 166020000, 1); // 欧米伽强化石。 / Omega Enchantment Stone.
+							ItemService.addItem(pl, 188100335, 50); // 强化石粉末。 / Enchantment Stone Dust.
 							AbyssPointsService.addAp(pl, 2500);
 							AbyssPointsService.addGp(pl, 15);
 						}

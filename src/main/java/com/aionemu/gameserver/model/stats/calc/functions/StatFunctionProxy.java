@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
 import com.aionemu.gameserver.model.stats.calc.Stat2;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.utils.stats.CalculationType;
 
 /**
+ * 属性函数 Proxy 模型。
+ * Stat Function Proxy model.
+ *
  * @author ATracer
  */
 public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunction> {
@@ -42,10 +29,12 @@ public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunctio
 		this.stat = statEnum;
 	}
 
+	/** 返回 proxied function / Returns the proxied function */
 	public IStatFunction getProxiedFunction() {
 		return proxiedFunction;
 	}
 
+	/** 返回哈希码。 / Returns hash code. */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -54,6 +43,7 @@ public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunctio
 		return result;
 	}
 
+	/** 是否相等。 / Equality check. */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -76,56 +66,69 @@ public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunctio
 		return true;
 	}
 
+	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(IStatFunction o) {
 		return proxiedFunction.compareTo(o);
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	@Override
 	public StatOwner getOwner() {
 		return owner;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public StatEnum getName() {
 		return stat;
 	}
 
+	/** 是否加成。 / Whether Bonus. */
 	@Override
 	public boolean isBonus() {
 		return proxiedFunction.isBonus();
 	}
 
+	/** 返回 priority / Returns the priority */
 	@Override
 	public int getPriority() {
 		return proxiedFunction.getPriority();
 	}
 
+	/** 获取值。 / Returns the value. */
 	@Override
 	public int getValue() {
 		return proxiedFunction.getValue();
 	}
 
+	/** 校验。 / Validate. */
 	@Override
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
 		return proxiedFunction.validate(stat, statFunction);
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat) {
 		proxiedFunction.apply(stat);
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat, CalculationType... calculationTypes) {
 		proxiedFunction.apply(stat, calculationTypes);
 	}
 
+	/**
+	 * @return Whether conditions / Whether conditions
+	 */
 	@Override
 	public boolean hasConditions() {
 		return proxiedFunction.hasConditions();
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		return "Proxy [name=" + proxiedFunction.getName() + ", bonus=" + isBonus() + ", value=" + getValue()

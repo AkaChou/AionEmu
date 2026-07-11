@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,6 +5,11 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.templates.housing.HousingNpc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
+
+/**
+ * NPC 对象。
+ * Npc Object game object.
+ */
 
 public class NpcObject extends HouseObject<HousingNpc> {
 
@@ -30,10 +19,12 @@ public class NpcObject extends HouseObject<HousingNpc> {
 		super(owner, objId, templateId);
 	}
 
+	/** 使用时 / on Use. */
 	@Override
 	public void onUse(Player player) {
 	}
 
+	/** 生成。 / Spawn. */
 	public synchronized void spawn() {
 		super.spawn();
 		if (npc == null) {
@@ -44,6 +35,7 @@ public class NpcObject extends HouseObject<HousingNpc> {
 		}
 	}
 
+	/** 消失时 / on Despawn. */
 	@Override
 	public synchronized void onDespawn() {
 		super.onDespawn();
@@ -53,6 +45,7 @@ public class NpcObject extends HouseObject<HousingNpc> {
 		}
 	}
 
+	/** 是否立即过期 / Whether expire now */
 	@Override
 	public synchronized boolean canExpireNow() {
 		if (npc == null) {
@@ -61,6 +54,7 @@ public class NpcObject extends HouseObject<HousingNpc> {
 		return npc.getTarget() == null;
 	}
 
+	/** 返回 npc object id / Returns the npc object id */
 	public int getNpcObjectId() {
 		return npc == null ? 0 : npc.getObjectId();
 	}

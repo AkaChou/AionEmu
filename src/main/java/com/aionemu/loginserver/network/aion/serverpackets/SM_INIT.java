@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion.serverpackets;
 
 import javax.crypto.SecretKey;
@@ -24,42 +6,57 @@ import com.aionemu.loginserver.network.aion.AionServerPacket;
 import com.aionemu.loginserver.network.aion.LoginConnection;
 
 /**
- * Format: dd b dddd s d: session id d: protocol revision b: 0x90 bytes : 0x80
- * bytes for the scrambled RSA public key 0x10 bytes at 0x00 d: unknow d: unknow
- * d: unknow d: unknow s: blowfish key
+ * 登录服→客户端：握手初始化包，下发会话 ID、RSA 公钥与 Blowfish 密钥。
+ * LoginServer → client: handshake init with session id, RSA public key and Blowfish key.
+ *
+ * <pre>
+ * Format: dd b dddd s
+ * d: session id
+ * d: protocol revision
+ * b: 0x90 bytes — 0x80 scrambled RSA public key + 0x10 zeros
+ * d: unknown
+ * d: unknown
+ * d: unknown
+ * d: unknown
+ * s: blowfish key
+ * </pre>
  */
 public final class SM_INIT extends AionServerPacket {
 
     /**
-     * Session Id of this connection
+     * 本连接的会话 ID。
+     * Session id of this connection.
      */
     private final int sessionId;
     /**
-     * public Rsa key that client will use to encrypt login and password that
-     * will be send in RequestAuthLogin client packet.
+     * 客户端用于加密登录密码的 RSA 公钥（已打乱模数）。
+     * Public RSA key (scrambled modulus) the client uses to encrypt login/password.
      */
     private final byte[] publicRsaKey;
     /**
-     * blowfish key for packet encryption/decryption.
+     * 后续包加解密用的 Blowfish 密钥。
+     * Blowfish key for subsequent packet encryption/decryption.
      */
     private final byte[] blowfishKey;
 
     /**
-     * Constructor
+     * 从连接与 Blowfish 密钥构造 SM_INIT。
+     * Constructs SM_INIT from the login connection and Blowfish key.
      *
-     * @param client
-     * @param blowfishKey
+     * login connection
+     * Blowfish secret key
      */
     public SM_INIT(LoginConnection client, SecretKey blowfishKey) {
         this(client.getEncryptedModulus(), blowfishKey.getEncoded(), client.getSessionId());
     }
 
     /**
-     * Creates new instance of <tt>SM_INIT</tt> packet.
+     * 创建 SM_INIT 包。
+     * Creates a new SM_INIT packet.
      *
-     * @param publicRsaKey Public RSA key
-     * @param blowfishKey Blowfish key
-     * @param sessionId Session identifier
+     * public RSA key
+     * Blowfish key
+     * session identifier
      */
     private SM_INIT(byte[] publicRsaKey, byte[] blowfishKey, int sessionId) {
         super(0x00);
@@ -76,10 +73,10 @@ public final class SM_INIT extends AionServerPacket {
         writeD(sessionId); // session id
         writeD(0x0000c621); // protocol revision
         writeB(publicRsaKey); // RSA Public Key
-        // unk
+        // 未知 / unk
         writeB(new byte[16]);
         writeB(blowfishKey); // BlowFish key
-        writeD(197635); // unk
-        writeD(2097152); // unk
+        writeD(197635); // 未知 / unk
+        writeD(2097152); // 未知 / unk
     }
 }

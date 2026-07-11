@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -41,6 +25,9 @@ import com.aionemu.gameserver.model.templates.stats.SummonStatsTemplate;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
+ * 召唤物游戏对象。
+ * Summon game object.
+ *
  * @author ATracer
  */
 public class Summon extends Creature {
@@ -87,6 +74,7 @@ public class Summon extends Creature {
 		};
 	}
 
+	/** 返回 always resist element / Returns the always resist element */
 	public SkillElement getAlwaysResistElement() {
 		return alwaysResistElement;
 	}
@@ -96,11 +84,13 @@ public class Summon extends Creature {
 		return new PlayerAggroList(this);
 	}
 
+	/** 获取游戏属性。 / Returns the game stats. */
 	@Override
 	public SummonGameStats getGameStats() {
 		return (SummonGameStats) super.getGameStats();
 	}
 
+	/** 返回大师 / Returns the master*/
 	@Override
 	public Player getMaster() {
 		return master;
@@ -113,6 +103,7 @@ public class Summon extends Creature {
 		this.master = master;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return objectTemplate.getName();
@@ -126,15 +117,18 @@ public class Summon extends Creature {
 		return level;
 	}
 
+	/** 获取对象模板。 / Returns the object template. */
 	@Override
 	public NpcTemplate getObjectTemplate() {
 		return (NpcTemplate) super.getObjectTemplate();
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return getObjectTemplate().getTemplateId();
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return getObjectTemplate().getNameId();
 	}
@@ -147,6 +141,7 @@ public class Summon extends Creature {
 		return NpcObjectType.SUMMON;
 	}
 
+	/** 返回 controller / Returns the controller */
 	@Override
 	public SummonController getController() {
 		return (SummonController) super.getController();
@@ -166,21 +161,29 @@ public class Summon extends Creature {
 		this.mode = mode;
 	}
 
+	/** 是否敌对。 / Whether Enemy. */
 	@Override
 	public boolean isEnemy(Creature creature) {
 		return master != null ? master.isEnemy(creature) : false;
 	}
 
+	/**
+	 * @param npc 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
 		return master != null ? master.isEnemyFrom(npc) : false;
 	}
 
+	/**
+	 * @param player 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return master != null ? master.isEnemyFrom(player) : false;
 	}
 
+	/** 获取部落。 / Returns the tribe. */
 	@Override
 	public TribeClass getTribe() {
 		if (master == null) {
@@ -189,6 +192,9 @@ public class Summon extends Creature {
 		return master.getTribe();
 	}
 
+	/**
+	 * @param npc 是否 aggro 从 / 是否 aggro 从。 / Whether aggro from / Whether aggro from
+	 */
 	@Override
 	public final boolean isAggroFrom(Npc npc) {
 		if (getMaster() == null) {
@@ -197,16 +203,19 @@ public class Summon extends Creature {
 		return getMaster().isAggroFrom(npc);
 	}
 
+	/** 返回 move controller / Returns the move controller */
 	@Override
 	public SummonMoveController getMoveController() {
 		return (SummonMoveController) super.getMoveController();
 	}
 
+	/** 返回 acting creature / Returns the acting creature */
 	@Override
 	public Creature getActingCreature() {
 		return getMaster() == null ? this : getMaster();
 	}
 
+	/** 获取种族。 / Returns the race. */
 	@Override
 	public Race getRace() {
 		return getMaster() != null ? getMaster().getRace() : Race.NONE;
@@ -226,10 +235,12 @@ public class Summon extends Creature {
 		this.liveTime = liveTime;
 	}
 
+	/** 设置释放任务 / Sets the release task */
 	public void setReleaseTask(Future<?> task) {
 		releaseTask = task;
 	}
 
+	/** 取消释放任务 / Cancel release task */
 	public void cancelReleaseTask() {
 		if (releaseTask != null && !releaseTask.isDone()) {
 			releaseTask.cancel(true);

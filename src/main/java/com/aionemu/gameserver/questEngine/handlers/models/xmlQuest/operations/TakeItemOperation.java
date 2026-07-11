@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,22 +8,27 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * 从玩家背包扣除指定数量物品的操作。
+ * Operation that removes a configured amount of an item from the player's inventory.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TakeItemOperation")
 public class TakeItemOperation extends QuestOperation {
 
+	/** 物品模板 ID / Item template id */
 	@XmlAttribute(name = "item_id", required = true)
 	protected int itemId;
+	/** 扣除数量 / Amount to remove */
 	@XmlAttribute(required = true)
 	protected int count;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations.
-	 * QuestOperation#doOperate(com.aionemu.gameserver .questEngine.model.QuestEnv)
+	/**
+	 * 按物品 ID 减少背包数量。
+	 * Decreases inventory count by item id.
+	 *
+	 * @param env 任务环境 / Quest environment
 	 */
 	@Override
 	public void doOperate(QuestEnv env) {

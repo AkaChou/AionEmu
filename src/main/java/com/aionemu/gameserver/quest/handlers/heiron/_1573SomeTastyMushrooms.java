@@ -12,8 +12,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * @author Ritsu
+ * 希隆任务脚本：Some Tasty Mushrooms（任务 ID 1573）。
+ * Heiron quest script: Some Tasty Mushrooms (quest ID 1573).
  *
+ * @author Ritsu
  */
 public class _1573SomeTastyMushrooms extends QuestHandler {
 
@@ -42,7 +44,6 @@ public class _1573SomeTastyMushrooms extends QuestHandler {
 		}
 		return HandlerResult.SUCCESS;
 	}
-
 
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {

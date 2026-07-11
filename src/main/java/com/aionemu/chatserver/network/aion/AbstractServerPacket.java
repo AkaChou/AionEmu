@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.aion;
 
 import com.aionemu.chatserver.common.netty.BaseServerPacket;
@@ -23,20 +5,29 @@ import com.aionemu.chatserver.common.netty.PacketWriter;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 
 /**
+ * 聊天服务端数据包抽象基类。
+ * Abstract base class for chat server packets.
+ *
  * @author ATracer
  */
 public abstract class AbstractServerPacket extends BaseServerPacket {
 
     /**
-     * @param opCode
+     * 构造服务端数据包。
+     * Constructs a server packet.
+     *
+     * operation code
      */
     public AbstractServerPacket(int opCode) {
         super(opCode);
     }
 
     /**
-     * @param clientChannelHandler
-     * @param buf
+     * 写入完整数据包（含长度占位后委托具体实现）。
+     * Writes the full packet (length placeholder then delegates to the concrete implementation).
+     *
+     * @param clientChannelHandler 客户端通道处理器 / client channel handler
+     * @param buf 包写入器 / packet writer
      */
     public void write(ClientChannelHandler clientChannelHandler, PacketWriter buf) {
         buf.writeH(0);
@@ -44,8 +35,11 @@ public abstract class AbstractServerPacket extends BaseServerPacket {
     }
 
     /**
-     * @param cHandler
-     * @param buf
+     * 由子类实现的具体写入逻辑。
+     * Concrete write logic implemented by subclasses.
+     *
+     * @param cHandler 客户端通道处理器 / client channel handler
+     * @param buf 包写入器 / packet writer
      */
     protected abstract void writeImpl(ClientChannelHandler cHandler, PacketWriter buf);
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.gather;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 材料模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,8 +25,8 @@ public class Material implements Comparable<Material> {
 	protected int rate;
 
 	/**
-	 * Gets the value of the name property.
-	 * 
+	 * 获取 value 的名称 property。 / Gets the value of the name property
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getName() {
@@ -53,24 +40,25 @@ public class Material implements Comparable<Material> {
 		return itemid;
 	}
 
-	/**
-	 * Gets the value of the nameid property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 nameid 属性值。
+	  * Gets the value of the nameid property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getNameid() {
 		return nameid * 2 + 1;
 	}
 
-	/**
-	 * Gets the value of the rate property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 rate 属性值。
+	  * Gets the value of the rate property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getRate() {
 		return rate;
 	}
 
+	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(Material o) {
 		return o.rate - rate;

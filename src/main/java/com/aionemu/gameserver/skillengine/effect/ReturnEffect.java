@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,10 +9,18 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 回城效果：将施法者传送至绑定点（灵魂绑定位置）。
+ * Return effect: teleports the effector to their bind location.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ReturnEffect")
 
 public class ReturnEffect extends EffectTemplate {
+	/**
+	 * 若在副本中则先触发离本逻辑，再传送到绑定点。
+	 * Leaves the instance if needed, then moves the player to bind location.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		if (effect.getEffected().isInInstance()) {
@@ -37,6 +29,10 @@ public class ReturnEffect extends EffectTemplate {
 		TeleportService2.moveToBindLocation((Player) effect.getEffector(), true);
 	}
 
+	/**
+	 * 目标已生成时标记本效果成功。
+	 * Marks this effect successful when the target is spawned.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected().isSpawned()) {

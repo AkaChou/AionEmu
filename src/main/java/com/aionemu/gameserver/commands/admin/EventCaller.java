@@ -1,21 +1,7 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RESURRECT;
@@ -27,16 +13,30 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Created by Kill3r
+ * 活动报名召集管理命令（{@code //eventcaller}）。
+ * Event registration caller admin command ({@code //eventcaller}).
+ *
+ * @author Kill3r
  */
 @Slf4j(topic = "GM_MONITOR_LOG")
 public class EventCaller extends AdminCommand {
 
+    /**
+     * 注册命令名为 {@code eventcaller}。
+     * Registers the command name {@code eventcaller}.
+     */
     public EventCaller(){
         super("eventcaller");
     }
 
 
+    /**
+     * 启动/停止/取消活动报名，或列出已报名玩家并传送。
+     * Starts, stops or cancels event registration, or lists and teleports registered players.
+     *
+     * admin
+     * @param params show|start|stop|cancel 及可选人数上限 / show|start|stop|cancel and optional player limit
+     */
     public void execute(Player player, String...params){
         if(params.length == 0){
             onFail(player, "" +
@@ -71,7 +71,7 @@ public class EventCaller extends AdminCommand {
                     Player p1 = iter.next();
                     PacketSendUtility.sendSys3Message(p1, player.getName(), "[EVENT] Registering for Event has Started! Type .queue to register to the event!");
                 }
-                log.info("[eventcaller-start{unlim]] GM : " + player.getName() + " started an Unlimited Slot Event in mapId '" + player.getWorldId() + "'");
+                log.info(I18n.get("log.a87a1544f909", player.getName(), player.getWorldId()));
             }
 
             if (params.length == 2) {//eventcaller start {number of player}
@@ -84,7 +84,7 @@ public class EventCaller extends AdminCommand {
                     Player p1 = ita.next();
                     PacketSendUtility.sendSys3Message(p1, player.getName(), "[EVENT] Registering for Event has Started! Type .queue to register to the event! ( '"+countP+"' Slots Available)");
                 }
-                log.info("[eventcaller-start{limited]] GM : " + player.getName() + " started an limited Slot of [" + countP + "] Event in mapId '" + player.getWorldId() + "'");
+                log.info(I18n.get("log.b81705c5ff3a", player.getName(), countP, player.getWorldId()));
             }
         }else if(params[0].equals("stop")){
             AdminCommand test = new MoveToMe();
@@ -108,12 +108,12 @@ public class EventCaller extends AdminCommand {
                 PacketSendUtility.sendSys3Message(p1, player.getName(), "[EVENT] Event is Closed! Better luck next time!!");
                 p1.setRegedEvent(false);
             }
-            log.info("[eventcaller-stop{ported}] GM : " + player.getName() + " stopped the queue process and ported total of [" + count + "] players  in mapId '" + player.getWorldId() + "'");
+            log.info(I18n.get("log.b767c467d456", player.getName(), count, player.getWorldId()));
             PacketSendUtility.sendMessage(player, "All the players have been added to you're queue list for rewarding!");
             PacketSendUtility.sendMessage(player, "=========================\n" +
                     "Total Players : " +count+ "\n" +
                     "=========================");
-            //reseting all configs
+            // 重置全部配置 / reseting all configs
             count = 0;
             player.setCountPlayers(0);
         }else if (params[0].equals("cancel")){
@@ -128,7 +128,7 @@ public class EventCaller extends AdminCommand {
                 p1.setRegedEvent(false);
                 PacketSendUtility.sendSys3Message(p1, player.getName(), "[EVENT] Event has been Canceled!");
             }
-            log.info("[eventcaller-cancel] GM : " + player.getName() + " event has been canceled for some reasons in mapId '" + player.getWorldId() + "'");
+            log.info(I18n.get("log.288b87d468f8", player.getName(), player.getWorldId()));
             player.setCountPlayers(0);
         }
     }

@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 西奥博莫斯任务脚本：Searchingforthe Elderof Wisdom（任务 ID 3083）。
+ * Theobomos quest script: Searchingforthe Elderof Wisdom (quest ID 3083).
  */
 public class _3083SearchingfortheElderofWisdom extends QuestHandler {
 

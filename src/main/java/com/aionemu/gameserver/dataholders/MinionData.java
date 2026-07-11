@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -30,6 +14,10 @@ import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 守护灵 / 宠物（Minion）模板数据容器，按 ID 索引 {@link MinionTemplate}。
+ * Minion template data holder, indexing {@link MinionTemplate} by id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "minions")
 public class MinionData {
@@ -40,6 +28,10 @@ public class MinionData {
 	@XmlTransient
 	private List<Integer> minionDataList = new ArrayList<Integer>();
 
+	/**
+	 * JAXB 反序列化完成后，按 ID 建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes templates by id and clears the list.
+	 */
 	void afterUnmarshal(final Unmarshaller unmarshaller, final Object o) {
 		for (MinionTemplate minionTemplate : minionTemplates) {
 			minionData.put(minionTemplate.getId(), minionTemplate);
@@ -49,14 +41,34 @@ public class MinionData {
 		minionTemplates = null;
 	}
 
+	/**
+	 * 返回已加载的守护灵模板数量。
+	 * Returns the number of loaded minion templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return minionData.size();
 	}
 
+	/**
+	 * 按守护灵 ID 获取模板。
+	 * Returns the minion template for the given minion id.
+	 *
+	 * minion id
+	 *
+	 * @param minionId @return 守护灵模板或 null / minion template or null
+	 */
 	public MinionTemplate getMinionTemplate(int minionId) {
 		return minionData.get(minionId);
 	}
 
+	/**
+	 * 返回全部守护灵 ID 列表。
+	 * Returns the full list of minion ids.
+	 *
+	 * @return 守护灵 ID 列表 / minion id list
+	 */
 	public List<Integer> getAll() {
 		return minionDataList;
 	}

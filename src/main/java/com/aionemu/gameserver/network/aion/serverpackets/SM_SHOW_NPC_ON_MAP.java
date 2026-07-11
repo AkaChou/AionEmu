@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端在地图上高亮显示指定 NPC 位置。
+ * Server packet highlighting an NPC position on the client map.
+ *
  * @author Lyahim
  */
 public class SM_SHOW_NPC_ON_MAP extends AionServerPacket {
@@ -27,6 +14,16 @@ public class SM_SHOW_NPC_ON_MAP extends AionServerPacket {
 	private int npcid, worldid;
 	private float x, y, z;
 
+	/**
+	 * 使用给定参数构造 SM_SHOW_NPC_ON_MAP 包。
+	 * Creates a SM_SHOW_NPC_ON_MAP packet with the given parameters.
+	 *
+	 * NPC 模板 ID / npc template id
+	 * world map id
+	 * @param x X 坐标 / x coordinate
+	 * @param y Y 坐标 / y coordinate
+	 * @param z Z 坐标 / z coordinate
+	 */
 	public SM_SHOW_NPC_ON_MAP(int npcid, int worldid, float x, float y, float z) {
 		this.npcid = npcid;
 		this.worldid = worldid;

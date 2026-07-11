@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.toypet;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.Pet;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -24,9 +10,21 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 宠物心情服务，处理抚摸互动与心情礼物领取。
+ * Pet mood service handling cuddle interaction and mood gift claims.
+ */
 @Slf4j
 public class PetMoodService {
 
+	/**
+	 * 按类型处理宠物心情相关客户端请求。
+	 * Handle pet-mood client requests by type.
+	 *
+	 * Pet
+	 * @param type 请求类型（0 查看 / 1 互动 / 3 领礼） / Request type (0 check / 1 interact / 3 gift)
+	 * Shuggle emotion id
+	 */
 	public static void checkMood(Pet pet, int type, int shuggleEmotion) {
 		switch (type) {
 		case 0:
@@ -41,9 +39,15 @@ public class PetMoodService {
 		}
 	}
 
+	/**
+	 * 在心情达标且冷却结束时发放礼物。
+	 * Grant a gift when mood threshold is met and cooldown is over.
+	 *
+	 * Pet
+	 */
 	private static void requestPresent(Pet pet) {
 		if (pet.getCommonData().getMoodPoints(false) < 9000) {
-			log.warn("Requested present before mood fill up: {}", pet.getMaster().getName());
+			log.warn(I18n.get("log.d24173d153f7", pet.getMaster().getName()));
 			return;
 		}
 		if (pet.getCommonData().getGiftRemainingTime() > 0) {
@@ -51,7 +55,7 @@ public class PetMoodService {
 			return;
 		}
 		if (pet.getMaster().getInventory().isFull()) {
-			// Your cube is full. Wait before asking for a gift.
+			// 背包已满。请腾出空间后再请求礼物。 / Your cube is full. Wait before asking for a gift.
 			PacketSendUtility.sendPacket(pet.getMaster(), SM_SYSTEM_MESSAGE.STR_PET_CONDITION_REWARD_FULL_INVEN);
 			return;
 		}
@@ -64,6 +68,13 @@ public class PetMoodService {
 		}
 	}
 
+	/**
+	 * 与宠物互动（抚摸）并提升心情。
+	 * Interact (shuggle) with the pet and raise mood.
+	 *
+	 * Pet
+	 * Shuggle emotion id
+	 */
 	private static void interactWithPet(Pet pet, int shuggleEmotion) {
 		if (pet.getCommonData() != null) {
 			if (pet.getCommonData().increaseShuggleCounter()) {
@@ -73,6 +84,12 @@ public class PetMoodService {
 		}
 	}
 
+	/**
+	 * 向客户端发送当前心情状态。
+	 * Send current mood state to the client.
+	 *
+	 * Pet
+	 */
 	private static void startCheckingMood(Pet pet) {
 		PacketSendUtility.sendPacket(pet.getMaster(), new SM_PET(pet, 0, 0));
 	}

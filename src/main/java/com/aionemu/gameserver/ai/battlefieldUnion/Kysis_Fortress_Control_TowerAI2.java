@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.battlefieldUnion;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 战场同盟相关 NPC AI：Kysis Fortress Control Tower（@AIName "Kysis_Fortress_Control_Tower"），继承 NpcAI2。
+ * Battlefield-union related NPC AI: Kysis Fortress Control Tower (@AIName "Kysis_Fortress_Control_Tower"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Kysis_Fortress_Control_Tower")
 public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 {
@@ -126,8 +112,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians's 1st Kysis Control Tower has appeared.
-				//The Elyos's 1st Kysis Control Tower has appeared.
+				// 魔族第 1 基西斯控制塔已出现。 / The Asmodians's 1st Kysis Control Tower has appeared.
+				// 天族第 1 基西斯控制塔已出现。 / The Elyos's 1st Kysis Control Tower has appeared.
 				final int msgAppears01 = MsgRace == Race.ASMODIANS ? 1403939 : 1403935;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgAppears01));
 			}
@@ -137,8 +123,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians's 2nd Kysis Control Tower has appeared.
-				//The Elyos's 2nd Kysis Control Tower has appeared.
+				// 魔族第 2 基西斯控制塔已出现。 / The Asmodians's 2nd Kysis Control Tower has appeared.
+				// 天族第 2 基西斯控制塔已出现。 / The Elyos's 2nd Kysis Control Tower has appeared.
 				final int msgAppears02 = MsgRace == Race.ASMODIANS ? 1403940 : 1403936;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgAppears02));
 			}
@@ -148,8 +134,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians's 3rd Kysis Control Tower has appeared.
-				//The Elyos's 3rd Kysis Control Tower has appeared.
+				// 魔族第 3 基西斯控制塔已出现。 / The Asmodians's 3rd Kysis Control Tower has appeared.
+				// 天族第 3 基西斯控制塔已出现。 / The Elyos's 3rd Kysis Control Tower has appeared.
 				final int msgAppears03 = MsgRace == Race.ASMODIANS ? 1403941 : 1403937;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgAppears03));
 			}
@@ -159,8 +145,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians's 4th Kysis Control Tower has appeared.
-				//The Elyos's 4th Kysis Control Tower has appeared.
+				// 魔族第 4 基西斯控制塔已出现。 / The Asmodians's 4th Kysis Control Tower has appeared.
+				// 天族第 4 基西斯控制塔已出现。 / The Elyos's 4th Kysis Control Tower has appeared.
 				final int msgAppears04 = MsgRace == Race.ASMODIANS ? 1403942 : 1403938;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgAppears04));
 			}
@@ -171,8 +157,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos have occupied the 1st Kysis Control Tower.
-				//The Asmodians have occupied the 1st Kysis Control Tower.
+				// 天族占领了第 1 基西斯控制塔。 / The Elyos have occupied the 1st Kysis Control Tower.
+				// 魔族占领了第 1 基西斯控制塔。 / The Asmodians have occupied the 1st Kysis Control Tower.
 				final int msgOccupied01 = MsgRace == Race.ASMODIANS ? 1403916 : 1403912;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgOccupied01));
 			}
@@ -182,8 +168,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos have occupied the 2nd Kysis Control Tower.
-				//The Asmodians have occupied the 2nd Kysis Control Tower.
+				// 天族占领了第 2 基西斯控制塔。 / The Elyos have occupied the 2nd Kysis Control Tower.
+				// 魔族占领了第 2 基西斯控制塔。 / The Asmodians have occupied the 2nd Kysis Control Tower.
 				final int msgOccupied02 = MsgRace == Race.ASMODIANS ? 1403917 : 1403913;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgOccupied02));
 			}
@@ -193,8 +179,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos have occupied the 3rd Kysis Control Tower.
-				//The Asmodians have occupied the 3rd Kysis Control Tower.
+				// 天族占领了第 3 基西斯控制塔。 / The Elyos have occupied the 3rd Kysis Control Tower.
+				// 魔族占领了第 3 基西斯控制塔。 / The Asmodians have occupied the 3rd Kysis Control Tower.
 				final int msgOccupied03 = MsgRace == Race.ASMODIANS ? 1403918 : 1403914;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgOccupied03));
 			}
@@ -204,8 +190,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos have occupied the 4th Kysis Control Tower.
-				//The Asmodians have occupied the 4th Kysis Control Tower.
+				// 天族占领了第 4 基西斯控制塔。 / The Elyos have occupied the 4th Kysis Control Tower.
+				// 魔族占领了第 4 基西斯控制塔。 / The Asmodians have occupied the 4th Kysis Control Tower.
 				final int msgOccupied04 = MsgRace == Race.ASMODIANS ? 1403919 : 1403915;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgOccupied04));
 			}
@@ -216,8 +202,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians are trying to destroy the 1st Kysis Control Tower.
-				//The Elyos are trying to destroy the 1st Kysis Control Tower.
+				// 魔族正试图摧毁第 1 基西斯控制塔。 / The Asmodians are trying to destroy the 1st Kysis Control Tower.
+				// 天族正试图摧毁第 1 基西斯控制塔。 / The Elyos are trying to destroy the 1st Kysis Control Tower.
 				final int msgTalked01 = MsgRace == Race.ASMODIANS ? 1403923 : 1403927;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgTalked01));
 			}
@@ -227,8 +213,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians are trying to destroy the 2nd Kysis Control Tower.
-				//The Elyos are trying to destroy the 2nd Kysis Control Tower.
+				// 魔族正试图摧毁第 2 基西斯控制塔。 / The Asmodians are trying to destroy the 2nd Kysis Control Tower.
+				// 天族正试图摧毁第 2 基西斯控制塔。 / The Elyos are trying to destroy the 2nd Kysis Control Tower.
 				final int msgTalked02 = MsgRace == Race.ASMODIANS ? 1403924 : 1403928;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgTalked02));
 			}
@@ -238,8 +224,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians are trying to destroy the 3rd Kysis Control Tower.
-				//The Elyos are trying to destroy the 3rd Kysis Control Tower.
+				// 魔族正试图摧毁第 3 基西斯控制塔。 / The Asmodians are trying to destroy the 3rd Kysis Control Tower.
+				// 天族正试图摧毁第 3 基西斯控制塔。 / The Elyos are trying to destroy the 3rd Kysis Control Tower.
 				final int msgTalked03 = MsgRace == Race.ASMODIANS ? 1403925 : 1403929;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgTalked03));
 			}
@@ -249,8 +235,8 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodians are trying to destroy the 4th Kysis Control Tower.
-				//The Elyos are trying to destroy the 4th Kysis Control Tower.
+				// 魔族正试图摧毁第 4 基西斯控制塔。 / The Asmodians are trying to destroy the 4th Kysis Control Tower.
+				// 天族正试图摧毁第 4 基西斯控制塔。 / The Elyos are trying to destroy the 4th Kysis Control Tower.
 				final int msgTalked04 = MsgRace == Race.ASMODIANS ? 1403926 : 1403930;
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msgTalked04));
 			}
@@ -278,9 +264,9 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Balaur's 1st Kysis Control Tower has appeared.
+				// 龙族第 1 基西斯控制塔已出现。 / The Balaur's 1st Kysis Control Tower has appeared.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_Spawn_01_Dr, 0);
-				//The Balaur have occupied the 1st Kysis Control Tower.
+				// 龙族占领了第 1 基西斯控制塔。 / The Balaur have occupied the 1st Kysis Control Tower.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_100th_01_Dr, 10000);
 				
 			}
@@ -290,9 +276,9 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Balaur's 2nd Kysis Control Tower has appeared.
+				// 龙族第 2 基西斯控制塔已出现。 / The Balaur's 2nd Kysis Control Tower has appeared.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_Spawn_02_Dr, 20000);
-				//The Balaur have occupied the 2nd Kysis Control Tower.
+				// 龙族占领了第 2 基西斯控制塔。 / The Balaur have occupied the 2nd Kysis Control Tower.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_100th_02_Dr, 30000);
 			}
 		});
@@ -301,9 +287,9 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Balaur's 3rd Kysis Control Tower has appeared.
+				// 龙族第 3 基西斯控制塔已出现。 / The Balaur's 3rd Kysis Control Tower has appeared.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_Spawn_03_Dr, 40000);
-				//The Balaur have occupied the 3rd Kysis Control Tower.
+				// 龙族占领了第 3 基西斯控制塔。 / The Balaur have occupied the 3rd Kysis Control Tower.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_100th_03_Dr, 50000);
 			}
 		});
@@ -312,9 +298,9 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Balaur's 4th Kysis Control Tower has appeared.
+				// 龙族第 4 基西斯控制塔已出现。 / The Balaur's 4th Kysis Control Tower has appeared.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_Spawn_04_Dr, 60000);
-				//The Balaur have occupied the 4th Kysis Control Tower.
+				// 龙族占领了第 4 基西斯控制塔。 / The Balaur have occupied the 4th Kysis Control Tower.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Dkisas_Position_100th_04_Dr, 70000);
 			}
 		});

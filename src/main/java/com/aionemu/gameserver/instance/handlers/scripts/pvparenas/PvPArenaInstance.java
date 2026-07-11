@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -57,17 +41,32 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * PvP 竞技场副本事件处理器。
+ * Instance event handler for PvP Arena.
+ *
+ * @author Encom
+ */
 
 public class PvPArenaInstance extends GeneralInstanceHandler
 {
+	/** 击杀奖励分 / kill bonus points */
 	protected int killBonus;
+	/** 死亡扣分 / death fine */
 	protected int deathFine;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 副本奖励对象 / instance reward object */
 	protected PvPArenaReward instanceReward;
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * 玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * result
+	 */
 	@Override
 	public boolean onDie(Player player, Creature lastAttacker) {
 		PvPArenaPlayerReward ownerReward = getPlayerReward(player.getObjectId());
@@ -122,6 +121,14 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 		sendPacket();
 	}
+	/**
+	 * 处理 sendSystemMsg。
+	 * Handle sendSystemMsg.
+	 *
+	 * 玩家 / player
+	 * creature
+	 * rewardPoints
+	 */
 	
 	protected void sendSystemMsg(Player player, Creature creature, int rewardPoints) {
 		int nameId = creature.getObjectTemplate().getNameId();
@@ -129,6 +136,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, nameId == 0 ? creature.getName() : name, rewardPoints));
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		if (npc.getAggroList().getMostPlayerDamage() == null) {
@@ -145,6 +158,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		Integer object = player.getObjectId();
@@ -160,6 +179,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	
 	private void sendPacket(final AionServerPacket packet) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, packet);
@@ -169,6 +194,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	
 	private void spawnBlessedRelics(int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -180,6 +209,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	
 	private void spawnCursedRelics(int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -207,7 +240,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			case 243673: //Pale Carmina.
 			case 243674: //Corrupt Casus.
 				return 1500;
-			//Blessed Relics/Cursed Relics
+			// 祝福遗物/诅咒遗物 / Blessed Relics/Cursed Relics
 			case 701173:
 			case 701174:
 			case 701187:
@@ -222,21 +255,45 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * result
+	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		getPlayerReward(player.getObjectId()).updateLogOutTime();
 	}
 	
+	/**
+	 * 玩家登录到该副本时处理。
+	 * Handle a player logging into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogin(Player player) {
 		getPlayerReward(player.getObjectId()).updateBonusTime();
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -249,15 +306,23 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 		instanceReward.setInstanceStartTime();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded() && canStart()) {
 					openDoors();
-					//The member recruitment window has passed. You cannot recruit any more members.
+					// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 					sendMsgByRace(1401181, Race.PC_ALL, 0);
 					instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 					sendPacket();
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -265,9 +330,13 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 								instanceReward.setRndZone();
 								sendPacket();
 								changeZone();
-								//If you defeat a higher rank group in this round, you can earn additional points.
+								// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
 								sendMsgByRace(1401491, Race.PC_ALL, 2000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+									/**
+									 * 处理 run。
+									 * Handle run.
+									 */
 									@Override
 									public void run() {
 										if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -275,9 +344,13 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 											instanceReward.setRndZone();
 											sendPacket();
 											changeZone();
-											//If you defeat a higher rank group in this round, you can earn additional points.
+											// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
 											sendMsgByRace(1401491, Race.PC_ALL, 2000);
 											GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+												/**
+												 * 处理 run。
+												 * Handle run.
+												 */
 												@Override
 												public void run() {
 													if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -301,7 +374,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	private boolean canStart() {
 		if (instance.getPlayersInside().size() < 2) {
 			onInstanceDestroy();
-			//Unavailable to use when you're alone.
+			// 独自一人时无法使用。 / Unavailable to use when you're alone.
 			sendMsgByRace(1403045, Race.PC_ALL, 0);
 			instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 			reward();
@@ -310,12 +383,30 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 		return true;
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -327,6 +418,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}, time);
 	}
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
@@ -343,12 +440,26 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	private boolean containPlayer(Integer object) {
 		return instanceReward.containPlayer(object);
 	}
+	/**
+	 * 返回玩家奖励记录。
+	 * Return the player's reward record.
+	 *
+	 * visible object
+	 * result
+	 */
 	
 	protected PvPArenaPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
 		return (PvPArenaPlayerReward) instanceReward.getPlayerReward(object);
 	}
 	
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	@Override
 	public boolean onReviveEvent(Player player) {
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
@@ -360,6 +471,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		return true;
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		PvPArenaPlayerReward playerReward = getPlayerReward(player.getObjectId());
@@ -369,6 +486,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			instanceReward.removePlayerReward(playerReward);
 		}
 	}
+	/**
+	 * 向副本内玩家发送数据包。
+	 * Send a packet to players in the instance.
+	 */
 	
 	protected void sendPacket() {
 		instanceReward.sendPacket();
@@ -380,6 +501,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -388,6 +513,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	
 	private void changeZone() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				for (Player player : instance.getPlayersInside()) {
@@ -397,6 +526,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 	
 	protected void reward() {
 		for (Player player : instance.getPlayersInside()) {
@@ -405,9 +538,9 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			    PvPArenaPlayerReward reward = getPlayerReward(player.getObjectId());
 			if (!reward.isRewarded()) {
 				reward.setRewarded();
-				//<Abyss Points>
+				// <欧比斯点数> / <Abyss Points>
 				AbyssPointsService.addAp(player, reward.getBasicAP() + reward.getRankingAP() + reward.getScoreAP());
-				//<Glory Points>
+				// <荣耀点数> / <Glory Points>
 				AbyssPointsService.addGp(player, reward.getBasicGP() + reward.getRankingGP() + reward.getScoreGP());
 				int courage = reward.getBasicCourage() + reward.getRankingCourage() + reward.getScoreCourage();
 				if (courage != 0) {
@@ -451,6 +584,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -462,9 +599,22 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			}
 		}, 10000);
 	}
+	/**
+	 * 处理 spawnRings。
+	 * Handle spawnRings.
+	 */
 	
 	protected void spawnRings() {
 	}
+	/**
+	 * 返回 npc。
+	 * Return the npc.
+	 *
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * result
+	 */
 	
 	protected Npc getNpc(float x, float y, float z) {
 		if (!isInstanceDestroyed) {
@@ -478,6 +628,13 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		return null;
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch(npc.getNpcId()) {
@@ -506,9 +663,8 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				player.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 10000);
 			break;
 		   /**
-			* Treasure Box
-			* [Arena Of Chaos/Chaos Training Grounds]
-			*/
+	 * Treasure Box [Arena Of Chaos/Chaos Training Grounds]
+	 */
 			case 218784:
 			case 218785:
 			case 218786:
@@ -516,9 +672,8 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			case 218788:
 			case 218789:
 		   /**
-			* Treasure Box
-			* [Arena Of Discipline/Discipline Training Grounds]
-			*/
+	 * Treasure Box [Arena Of Discipline/Discipline Training Grounds]
+	 */
 			case 218791:
 			case 218792:
 			case 218793:
@@ -575,6 +730,15 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		sendSystemMsg(player, npc, rewardetPoints);
 		sendPacket();
 	}
+	/**
+	 * 处理 useSkill。
+	 * Handle useSkill.
+	 *
+	 * npc
+	 * 玩家 / player
+	 * skill id
+	 * level
+	 */
 	
 	protected void useSkill(Npc npc, Player player, int skillId, int level) {
 		GameEngineServices.skillEngine().getSkill(npc, skillId, level, player).useNoAnimationSkill();

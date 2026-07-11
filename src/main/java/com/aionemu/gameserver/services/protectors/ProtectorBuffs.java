@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.protectors;
 
 import java.util.ArrayList;
@@ -31,11 +15,22 @@ import com.aionemu.gameserver.model.templates.serial_guard.GuardTypePenaltyAttr;
 import com.aionemu.gameserver.model.templates.serial_guard.GuardTypeRestriction;
 import com.aionemu.gameserver.skillengine.change.Func;
 
+/**
+ * 守护者等级/类型属性惩罚与增益应用器。
+ * Applies protector rank/type penalty and buff attributes.
+ */
 public class ProtectorBuffs implements StatOwner {
 	private GuardRankRestriction guardRankRestriction;
 	private GuardTypeRestriction guardTypeRestriction;
 	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
 
+	/**
+	 * 按守护等级对玩家施加属性效果。
+	 * Applies rank-based attribute effects to the player.
+	 *
+	 * target player
+	 * @param rank 守护等级 / guard rank
+	 */
 	public void applyRankEffect(Player player, int rank) {
 		if (rank == 0) {
 			return;
@@ -56,6 +51,13 @@ public class ProtectorBuffs implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
+	/**
+	 * 按守护类型对玩家施加属性效果。
+	 * Applies type-based attribute effects to the player.
+	 *
+	 * target player
+	 * @param type 守护类型 / guard type
+	 */
 	public void applyTypeEffect(Player player, int type) {
 		if (type == 0) {
 			return;
@@ -76,10 +78,22 @@ public class ProtectorBuffs implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
+	/**
+	 * 是否已有生效中的属性效果。
+	 * Whether an active attribute effect is currently applied.
+	 *
+	 * @return 有效果时为 true / true if effect functions exist
+	 */
 	public boolean hasDebuff() {
 		return !functions.isEmpty();
 	}
 
+	/**
+	 * 结束并移除玩家身上的守护者属性效果。
+	 * Ends and removes protector attribute effects from the player.
+	 *
+	 * target player
+	 */
 	public void endEffect(Player player) {
 		functions.clear();
 		player.getGameStats().endEffect(this);

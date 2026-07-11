@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.schedule;
 
 import java.nio.charset.StandardCharsets;
@@ -30,23 +14,41 @@ import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
 
 /**
+ * Anoha 活动时间表配置。
+ * Anoha event schedule configuration.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlRootElement(name = "anoha_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AnohaSchedule {
+	/**
+	 * Anoha 列表。
+	 * List of anohas.
+	 */
 	@XmlElement(name = "anoha", required = true)
 	private List<Anoha> anohasList;
 
+	/**
+	 * 获取 Anoha 列表。
+	 * Returns the anoha list.
+	 */
 	public List<Anoha> getAnohasList() {
 		return anohasList;
 	}
 
+	/**
+	 * 设置 Anoha 列表。
+	 * Sets the anoha list.
+	 */
 	public void setBerserksList(List<Anoha> anohaList) {
 		this.anohasList = anohaList;
 	}
 
+	/**
+	 * 从 XML 加载时间表。
+	 * Loads the schedule from XML.
+	 */
 	public static AnohaSchedule load() {
 		AnohaSchedule as;
 		try {
@@ -58,27 +60,54 @@ public class AnohaSchedule {
 		return as;
 	}
 
+	/**
+	 * 单个 Anoha 的时间表条目。
+	 * Schedule entry for a single anoha.
+	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "anoha")
 	public static class Anoha {
+		/**
+	 * 阿诺哈 ID / Anoha ID
+	 */
 		@XmlAttribute(required = true)
 		private int id;
 
+		/**
+		 * 狂暴时间列表。
+		 * List of berserk times.
+		 */
 		@XmlElement(name = "berserkTime", required = true)
 		private List<String> berserkTimes;
 
+		/**
+		 * 获取 Anoha ID。
+		 * Returns the anoha ID.
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * 设置 Anoha ID。
+		 * Sets the anoha ID.
+		 */
 		public void setId(int id) {
 			this.id = id;
 		}
 
+		/**
+		 * 获取狂暴时间列表。
+		 * Returns the berserk times.
+		 */
 		public List<String> getBerserkTimes() {
 			return berserkTimes;
 		}
 
+		/**
+		 * 设置狂暴时间列表。
+		 * Sets the berserk times.
+		 */
 		public void setBerserkTimes(List<String> berserkTimes) {
 			this.berserkTimes = berserkTimes;
 		}

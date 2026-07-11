@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.ai;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,6 +7,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * AI，用于 ai 相关逻辑。
+ * Ai for ai logic.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,14 +25,17 @@ public class Ai {
 	@XmlAttribute(name = "npcId")
 	private int npcId;
 
+	/** 返回 summons / Returns the summons */
 	public Summons getSummons() {
 		return this.summons;
 	}
 
+	/** 返回 bombs / Returns the bombs */
 	public Bombs getBombs() {
 		return this.bombs;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return this.npcId;
 	}

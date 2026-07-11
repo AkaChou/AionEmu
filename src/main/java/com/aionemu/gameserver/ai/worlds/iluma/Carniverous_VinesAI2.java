@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.iluma;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Iluma 区域 NPC AI：Carniverous Vines（@AIName "carniverous_vines"），继承 NpcAI2。
+ * Iluma zone NPC AI: Carniverous Vines (@AIName "carniverous_vines"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("carniverous_vines")
 public class Carniverous_VinesAI2 extends NpcAI2
 {
@@ -47,7 +33,7 @@ public class Carniverous_VinesAI2 extends NpcAI2
 			final Player player = (Player) creature;
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
-					//Thank you for saving me!
+					// 谢谢你救了我！ / Thank you for saving me!
 					sendMsg(1501531, getObjectId(), false, 0);
 				}
 			}

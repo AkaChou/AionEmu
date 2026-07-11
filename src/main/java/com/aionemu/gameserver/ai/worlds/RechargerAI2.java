@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -33,6 +17,13 @@ import java.util.Map;
  * @author (Encom)
  */
 @AIName("recharger") //730397
+
+/**
+ * 开放世界区域 NPC AI：Recharger（@AIName "recharger"），继承 ActionItemNpcAI2。
+ * Open-world zone NPC AI: Recharger (@AIName "recharger"), extends ActionItemNpcAI2.
+ *
+ * @author (Encom)
+ */
 public class RechargerAI2 extends ActionItemNpcAI2 {
 
     @Override

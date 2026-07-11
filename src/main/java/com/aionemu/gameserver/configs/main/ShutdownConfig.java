@@ -1,54 +1,46 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
 /**
+ * 服务器关闭/重启钩子相关配置。
+ * Server shutdown/reboot hook related configuration.
+ *
  * @author lord_rex
  */
 public class ShutdownConfig {
 
 	/**
-	 * Shutdown Hook Mode.
+	 * 关闭钩子模式。
+	 * Shutdown hook mode.
 	 */
 	@Property(key = "gameserver.shutdown.mode", defaultValue = "1")
 	public static int HOOK_MODE;
 
 	/**
-	 * Shutdown Hook delay.
+	 * 关闭钩子延迟（秒）。
+	 * Shutdown hook delay in seconds.
 	 */
 	@Property(key = "gameserver.shutdown.delay", defaultValue = "60")
 	public static int HOOK_DELAY;
 
 	/**
-	 * Shutdown announce interval.
+	 * 关闭公告广播间隔（秒）。
+	 * Shutdown announce interval in seconds.
 	 */
 	@Property(key = "gameserver.shutdown.interval", defaultValue = "1")
 	public static int ANNOUNCE_INTERVAL;
 
 	/**
-	 * Safe reboot mode.
+	 * 是否启用安全重启模式。
+	 * Whether safe reboot mode is enabled.
 	 */
 	@Property(key = "gameserver.shutdown.safereboot", defaultValue = "true")
 	public static boolean SAFE_REBOOT;
 
 	/**
-	 * Despawn all npcs in shoutdown mode
+	 * 关闭时是否清理全部 NPC。
+	 * Whether to despawn all NPCs during shutdown.
 	 */
 	@Property(key = "gameserver.shutdown.despnpcs", defaultValue = "false")
 	public static boolean DESPAWN_NPCS;

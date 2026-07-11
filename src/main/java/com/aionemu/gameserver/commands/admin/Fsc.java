@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,29 +7,33 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
- * This server command is used for creating and sending custom packets from server to client. It's used in development
- * purpose.<br>
- * <b>command name: //fsc</b></br> <b>params:</b>
- * <ul>
- * <li>packet id (it's one byte) - maybe in dec format (for example 227), but may be also in hex format (for example
- * 0xE3)</li>
- * <li>package format string - string containing with letters: d (represents writeD()), h (represents writeH()), c
- * (represents writeC()), f (represents writeF()), e (represents write DF()), q (represents writeQ()), s (represents
- * writeS())</li>
- * <li>list of data - here goes all data for corresponding to proper format parts.</li>
- * </ul>
- * Example:<br>
- * //fsc 0xD8 cdds 8 50 80 someText - will send packet with id 0xD8 (subids will be added automaticaly) then will be
- * sent one byte - 8, later two ints -50 and 80 and at the end a String - someText
- * 
+ * 开发用自定义发包命令（{@code //fsc}）：按格式串向客户端发送自定义包。
+ * Development command to craft and send custom client packets ({@code //fsc}).
+ * <p>
+ * 参数：包 ID（十进制或 0x 十六进制）、格式串（d/h/c/f/e/q/s）、以及对应数据列表。
+ * Params: packet id (decimal or 0x hex), format string (d/h/c/f/e/q/s), then data values.
+ * </p>
+ * 示例 / Example: {@code //fsc 0xD8 cdds 8 50 80 someText}
+ *
  * @author Luno
  */
 public class Fsc extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code fsc}。
+	 * Registers the command name {@code fsc}.
+	 */
 	public Fsc() {
 		super("fsc");
 	}
 
+	/**
+	 * 按包 ID 与格式串组装并发送自定义包。
+	 * Builds and sends a custom packet from id, format string and values.
+	 *
+	 * admin
+	 * @param params 包 ID、格式串、数据值 / packet id, format string, data values
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length < 3) {
@@ -69,6 +57,13 @@ public class Fsc extends AdminCommand {
 		PacketSendUtility.sendPacket(player, packet);
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Incorrent number of params in //fsc command");

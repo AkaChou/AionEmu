@@ -1,56 +1,56 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection;
 import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 
 /**
- * The universal packet for account/IP bans
- * 
+ * 游戏服向登录服下发账号/IP 封禁（或解封）指令的服务端包。
+ * Universal server packet for account/IP ban or unban requests sent to the login server.
+ *
  * @author Watson
  */
 public class SM_BAN extends LsServerPacket {
 
 	/**
-	 * Ban type 1 = account 2 = IP 3 = Full ban (account and IP)
+	 * 封禁类型：1=账号，2=IP，3=账号+IP 全封。
+	 * Ban type: 1 = account, 2 = IP, 3 = full ban (account and IP).
 	 */
 	private final byte type;
 
 	/**
-	 * Account to ban
+	 * 待封禁的账号 ID。
+	 * Account to ban.
 	 */
 	private final int accountId;
 
 	/**
-	 * IP or mask to ban
+	 * 待封禁的 IP 或掩码。
+	 * IP or mask to ban.
 	 */
 	private final String ip;
 
 	/**
-	 * Time in minutes. 0 = infinity; If time < 0 then it's unban command
+	 * 封禁时长（分钟）。0=永久；time &lt; 0 表示解封。
+	 * Duration in minutes. 0 = infinity; if time &lt; 0 then it is an unban command.
 	 */
 	private final int time;
 
 	/**
-	 * Object ID of Admin, who request the ban
+	 * 发起封禁的管理员对象 ID。
+	 * Object id of the admin who requested the ban.
 	 */
 	private final int adminObjId;
 
+	/**
+	 * 构造封禁/解封控制包。
+	 * Constructs a new ban/unban control packet.
+	 *
+	 * @param type 封禁类型 / ban type
+	 * 账号 ID / account id
+	 * @param ip IP 或掩码 / IP or mask
+	 * @param time 时长（分钟）/ duration in minutes
+	 * @param adminObjId 管理员对象 ID / admin object id
+	 */
 	public SM_BAN(byte type, int accountId, String ip, int time, int adminObjId) {
 		super(0x06);
 		this.type = type;
@@ -61,7 +61,8 @@ public class SM_BAN extends LsServerPacket {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 写入封禁类型、账号、IP、时长与管理员 ID。
+	 * Writes ban type, account, IP, duration and admin id.
 	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {

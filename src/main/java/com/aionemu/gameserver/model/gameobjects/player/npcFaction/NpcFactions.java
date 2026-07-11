@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player.npcFaction;
 
 import java.util.Calendar;
@@ -44,6 +28,11 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * NpcFactions 游戏对象。
+ * Npc Factions game object.
+ */
+
 public class NpcFactions {
 	private Player owner;
 
@@ -55,6 +44,7 @@ public class NpcFactions {
 		this.owner = owner;
 	}
 
+	/** 添加 npc faction / Adds npc faction */
 	public void addNpcFaction(NpcFaction faction) {
 		factions.put(faction.getId(), faction);
 		int type = 0;
@@ -69,14 +59,17 @@ public class NpcFactions {
 		}
 	}
 
+	/** 按 ID 返回 npc faction / Returns the npc faction by id */
 	public NpcFaction getNpcFactionById(int id) {
 		return factions.get(id);
 	}
 
+	/** 返回 npc factions / Returns the npc factions */
 	public Collection<NpcFaction> getNpcFactions() {
 		return factions.values();
 	}
 
+	/** 返回当前 NPCfaction / Returns the active npc faction */
 	public NpcFaction getActiveNpcFaction(boolean mentor) {
 		if (mentor) {
 			return activeNpcFaction[1];
@@ -85,6 +78,7 @@ public class NpcFactions {
 		}
 	}
 
+	/** 设置 active / Sets the active */
 	public NpcFaction setActive(int npcFactionId) {
 		NpcFaction npcFaction = factions.get(npcFactionId);
 		if (npcFaction == null) {
@@ -100,6 +94,7 @@ public class NpcFactions {
 		return npcFaction;
 	}
 
+	/** Leave Npc Faction / Leave Npc Faction */
 	public void leaveNpcFaction(Npc npc) {
 		int targetObjectId = npc.getObjectId();
 		NpcFactionTemplate npcFactionTemplate = DataManager.NPC_FACTIONS_DATA.getNpcFactionByNpcId(npc.getNpcId());
@@ -127,6 +122,7 @@ public class NpcFactions {
 		}
 	}
 
+	/** 进入公会 / enter Guild. */
 	public void enterGuild(Npc npc) {
 		int targetObjectId = npc.getObjectId();
 		NpcFactionTemplate npcFactionTemplate = DataManager.NPC_FACTIONS_DATA.getNpcFactionByNpcId(npc.getNpcId());
@@ -185,12 +181,14 @@ public class NpcFactions {
 		NpcFactionTemplate activeNpcFactionTemplate = DataManager.NPC_FACTIONS_DATA
 				.getNpcFactionById(activeNpcFaction.getId());
 		RequestResponseHandler responseHandler = new RequestResponseHandler(owner) {
+			/** 接受请求 / Accept Request */
 			@Override
 			public void acceptRequest(Creature requester, Player responder) {
 				leaveNpcFaction(activeNpcFaction);
 				enterGuild(npc);
 			}
 
+			/** 拒绝请求 / Deny Request */
 			@Override
 			public void denyRequest(Creature requester, Player responder) {
 			}
@@ -206,6 +204,7 @@ public class NpcFactions {
 		return;
 	}
 
+	/** 启动任务。 / Start quest. */
 	public void startQuest(QuestTemplate questTemplate) {
 		NpcFaction npcFaction = activeNpcFaction[questTemplate.isMentor() ? 1 : 0];
 		if (npcFaction == null) {
@@ -217,6 +216,7 @@ public class NpcFactions {
 		npcFaction.setState(ENpcFactionQuestState.START);
 	}
 
+	/** Abort Quest / Abort Quest */
 	public void abortQuest(QuestTemplate questTemplate) {
 		NpcFaction npcFaction = this.factions.get(questTemplate.getNpcFactionId());
 		if (npcFaction == null || !npcFaction.isActive()) {
@@ -226,6 +226,7 @@ public class NpcFactions {
 		sendDailyQuest();
 	}
 
+	/** Complete Quest / Complete Quest */
 	public void completeQuest(QuestTemplate questTemplate) {
 		NpcFaction npcFaction = activeNpcFaction[questTemplate.isMentor() ? 1 : 0];
 		if (npcFaction == null) {
@@ -241,6 +242,9 @@ public class NpcFactions {
 		}
 	}
 
+	/**
+	 * Send daily quest / Send daily quest
+	 */
 	public void sendDailyQuest() {
 		for (int i = 0; i < 2; i++) {
 			NpcFaction faction = activeNpcFaction[i];
@@ -278,6 +282,7 @@ public class NpcFactions {
 		}
 	}
 
+	/** 等级 / On Level Up */
 	public void onLevelUp() {
 		for (int i = 0; i < 2; i++) {
 			NpcFaction faction = activeNpcFaction[i];
@@ -310,6 +315,7 @@ public class NpcFactions {
 		return (int) (repeatDate.getTimeInMillis() / 1000);
 	}
 
+	/** 是否开始任务 / Whether start quest*/
 	public boolean canStartQuest(QuestTemplate template) {
 		int type = template.isMentor() ? 1 : 0;
 		NpcFaction faction = activeNpcFaction[type];

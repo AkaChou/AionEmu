@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -31,12 +17,24 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
+/**
+ * 向目标玩家发起交易请求的客户端包。
+ * Client packet that requests an exchange with a target player.
+ */
 @Slf4j
 
 public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 	public Integer targetObjectId;
 
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_EXCHANGE_REQUEST(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -51,18 +49,16 @@ public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 		final Player activePlayer = getConnection().getActivePlayer();
 		final Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetObjectId);
 		if (targetPlayer == null) {
-			log.warn("CM_EXCHANGE_REQUEST null target from {} to {}", activePlayer.getObjectId(), targetObjectId);
+			log.warn(I18n.get("log.2ed9d56579b2", activePlayer.getObjectId(), targetObjectId));
 			return;
 		}
 		if (!activePlayer.equals(targetPlayer)) {
 			if (activePlayer.getKnownList().getObject(targetPlayer.getObjectId()) == null) {
-				log.info("[AUDIT] Player " + activePlayer.getName() + " tried trade with player ("
-						+ targetPlayer.getName() + ") not from knownlist.");
+				log.info(I18n.get("log.61516bb8047e", activePlayer.getName(), targetPlayer.getName()));
 				return;
 			}
 			if (!activePlayer.getRace().equals(targetPlayer.getRace())) {
-				log.info("[AUDIT] Player " + activePlayer.getName() + " tried trade with player ("
-						+ targetPlayer.getName() + ") another race.");
+				log.info(I18n.get("log.92dc0d1a576a", activePlayer.getName(), targetPlayer.getName()));
 				return;
 			}
 			if (targetPlayer != null) {
@@ -71,12 +67,12 @@ public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 					return;
 				}
 				if (targetPlayer.getInventory().isFull()) {
-					// You cannot trade with the target as the target is carrying too many items.
+					// 对方携带物品过多，无法交易。 / You cannot trade with the target as the target is carrying too many items.
 					PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_PARTNER_TOO_HEAVY_TO_EXCHANGE);
 					return;
 				}
 				if (activePlayer.getInventory().isFull()) {
-					// You cannot trade with the target as you are carrying too many items.
+					// 你携带物品过多，无法与对方交易。 / You cannot trade with the target as you are carrying too many items.
 					PacketSendUtility.sendPacket(activePlayer,
 							SM_SYSTEM_MESSAGE.STR_EXCHANGE_CANT_EXCHANGE_HEAVY_TO_ADD_EXCHANGE_ITEM);
 					return;

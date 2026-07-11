@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -39,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 管理员军团命令：解散、改级/积分/名称、邀请/踢出、任命团长与领地管理。
+ * Admin legion command: disband, set level/points/name, invite/kick, promote BG, and territory control.
+ *
  * @author KID
  */
 public class LegionCommand extends AdminCommand {
@@ -48,6 +35,13 @@ public class LegionCommand extends AdminCommand {
 		service = GameCoreGameplayServices.legionService();
 	}
 	
+	/**
+	 * 处理 legion 子命令（disband/setlevel/setpoints/setname/bg/kick/invite/info/territory 等）。
+	 * Handle legion subcommands (disband/setlevel/setpoints/setname/bg/kick/invite/info/territory, etc.).
+	 *
+	 * @param player 执行命令的管理员 / Admin executing the command
+	 * @param params 子命令与参数 / Subcommand and arguments
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		
@@ -239,7 +233,7 @@ public class LegionCommand extends AdminCommand {
 					}
 				}
 			}
-			if(bgplayer == null) { //TODO
+			if(bgplayer == null) {
 				PacketSendUtility.sendMessage(player, "You can't assign a new general while old is offline.");
 				return;
 			}
@@ -329,6 +323,13 @@ public class LegionCommand extends AdminCommand {
 		return ok;
 	}
 
+	/**
+	 * 参数错误时显示命令语法与可选失败原因。
+	 * Show command syntax and optional failure reason on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		if(message != null)

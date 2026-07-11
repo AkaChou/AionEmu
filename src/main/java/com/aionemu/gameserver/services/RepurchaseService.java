@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import java.util.Collection;
@@ -32,6 +16,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 /**
+ * 回购服务，缓存玩家卖出物品并支持从商店回购。
+ * Repurchase service that caches sold items and allows buying them back from the shop.
+ *
  * @author xTz
  */
 public class RepurchaseService {
@@ -39,33 +26,67 @@ public class RepurchaseService {
 	private static volatile ObjectProvider<RepurchaseService> instanceProvider;
 	private Multimap<Integer, Item> repurchaseItems;
 
+	/**
+	 * 构造服务并初始化回购缓存。
+	 * Constructs the service and initializes the repurchase cache.
+	 */
 	public RepurchaseService() {
 		repurchaseItems = ArrayListMultimap.create();
 	}
 
 	/**
-	 * Save items for repurchase for this player
+	 * 为玩家登记可回购物品。
+	 * Registers items available for repurchase for this player.
+	 *
+	 * @param player 玩家 / player
+	 * @param items 物品列表 / item list
 	 */
 	public void addRepurchaseItems(Player player, List<Item> items) {
 		repurchaseItems.putAll(player.getObjectId(), items);
 	}
 
 	/**
-	 * Delete all repurchase items for this player
+	 * 清除该玩家全部可回购物品。
+	 * Removes all repurchase items for this player.
+	 *
+	 * @param player 玩家 / player
 	 */
 	public void removeRepurchaseItems(Player player) {
 		repurchaseItems.removeAll(player.getObjectId());
 	}
 
+	/**
+	 * 移除玩家的单个可回购物品。
+	 * Removes a single repurchase item for the player.
+	 *
+	 * 玩家 / player
+	 * item
+	 */
 	public void removeRepurchaseItem(Player player, Item item) {
 		repurchaseItems.get(player.getObjectId()).remove(item);
 	}
 
+	/**
+	 * 获取玩家当前可回购物品集合。
+	 * Returns the current repurchase item collection for the player.
+	 *
+	 * player object id
+	 *
+	 * @param playerObjectId @return 可回购物品；无则空集合 / repurchase items, or empty if none
+	 */
 	public Collection<Item> getRepurchaseItems(int playerObjectId) {
 		Collection<Item> items = repurchaseItems.get(playerObjectId);
 		return items != null ? items : Collections.<Item>emptyList();
 	}
 
+	/**
+	 * 按物品 objectId 查找可回购物品。
+	 * Finds a repurchase item by item object id.
+	 *
+	 * 玩家 / player
+	 * item object id
+	 * @return 匹配物品，未找到返回 null / matching item, or null if not found
+	 */
 	public Item getRepurchaseItem(Player player, int itemObjectId) {
 		Collection<Item> items = getRepurchaseItems(player.getObjectId());
 		for (Item item : items) {
@@ -77,8 +98,11 @@ public class RepurchaseService {
 	}
 
 	/**
-	 * @param player
-	 * @param repurchaseList
+	 * 按回购列表从商店回购物品，扣基纳并写审计日志。
+	 * Repurchases items from the shop per list, deducts kinah, and audits abuse.
+	 *
+	 * 玩家 / player
+	 * repurchase list
 	 */
 	public void repurchaseFromShop(Player player, RepurchaseList repurchaseList) {
 		Storage inventory = player.getInventory();
@@ -99,6 +123,10 @@ public class RepurchaseService {
 		}
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 */
 	public static RepurchaseService getInstance() {
 		ObjectProvider<RepurchaseService> provider = instanceProvider;
 		if (provider != null) {
@@ -107,6 +135,12 @@ public class RepurchaseService {
 		return SingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<RepurchaseService> provider) {
 		instanceProvider = provider;
 	}

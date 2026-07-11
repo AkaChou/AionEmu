@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.recipe;
 
 import java.util.ArrayList;
@@ -26,10 +10,10 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 月华模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LunaTemplate")
@@ -70,6 +54,7 @@ public class LunaTemplate {
 	@XmlAttribute
 	protected int id;
 
+	/** 返回 luna component / Returns the luna component */
 	public List<LunaComponent> getLunaComponent() {
 		if (luna_component_panel_1 == null) {
 			luna_component_panel_1 = new ArrayList<LunaComponent>();
@@ -77,6 +62,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_1;
 	}
 
+	/** 返回 luna component 2 / Returns the luna component 2 */
 	public List<LunaComponent> getLunaComponent2() {
 		if (luna_component_panel_2 == null) {
 			luna_component_panel_2 = new ArrayList<LunaComponent>();
@@ -84,6 +70,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_2;
 	}
 
+	/** 返回 luna component 3 / Returns the luna component 3 */
 	public List<LunaComponent> getLunaComponent3() {
 		if (luna_component_panel_3 == null) {
 			luna_component_panel_3 = new ArrayList<LunaComponent>();
@@ -91,6 +78,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_3;
 	}
 
+	/** 返回 luna component 4 / Returns the luna component 4 */
 	public List<LunaComponent> getLunaComponent4() {
 		if (luna_component_panel_4 == null) {
 			luna_component_panel_4 = new ArrayList<LunaComponent>();
@@ -98,6 +86,7 @@ public class LunaTemplate {
 		return this.luna_component_panel_4;
 	}
 
+	/** 返回 luna component 5 / Returns the luna component 5 */
 	public List<LunaComponent> getLunaComponent5() {
 		if (luna_component_panel_5 == null) {
 			luna_component_panel_5 = new ArrayList<LunaComponent>();
@@ -105,42 +94,52 @@ public class LunaTemplate {
 		return this.luna_component_panel_5;
 	}
 
+	/** 返回 quantity / Returns the quantity */
 	public Integer getQuantity() {
 		return quantity;
 	}
 
+	/** 获取队伍。 / Returns the group. */
 	public Integer getGroup() {
 		return group;
 	}
 
+	/** 获取比率。 / Returns the rate. */
 	public int getRate() {
 		return success_rate;
 	}
 
+	/** 返回 productid / Returns the productid */
 	public Integer getProductid() {
 		return productid;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回物品 ID / Returns the itemid */
 	public Integer getItemid() {
 		return itemid;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回 nameid / Returns the nameid */
 	public int getNameid() {
 		return nameid;
 	}
 
+	/** 返回 ID / Returns the id */
 	public Integer getId() {
 		return id;
 	}
 
+	/** 返回 max production count / Returns the max production count */
 	public Integer getMaxProductionCount() {
 		return maxProductionCount;
 	}

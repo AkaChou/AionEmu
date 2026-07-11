@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection;
 import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 
 /**
+ * 游戏服向登录服上报账号 MAC 地址的服务端包。
+ * Server packet that reports an account MAC address to the login server.
+ *
  * @author nrg
  */
 public class SM_MAC extends LsServerPacket {
@@ -27,12 +14,23 @@ public class SM_MAC extends LsServerPacket {
 	private int accountId;
 	private String address;
 
+	/**
+	 * 构造 MAC 地址上报包。
+	 * Constructs a MAC address report packet.
+	 *
+	 * 账号 ID / account id
+	 * MAC address
+	 */
 	public SM_MAC(int accountId, String address) {
 		super(13);
 		this.accountId = accountId;
 		this.address = address;
 	}
 
+	/**
+	 * 写入账号 ID 与 MAC 地址。
+	 * Writes account id and MAC address.
+	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {
 		writeD(accountId);

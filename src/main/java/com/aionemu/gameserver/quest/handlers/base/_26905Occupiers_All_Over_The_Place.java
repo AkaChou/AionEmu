@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.base;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,10 +8,12 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique). correct DainAvenger.
-/****/
-
+/**
+ * 基地任务脚本：Occupiers All Over The Place（任务 ID 26905）。
+ * Base quest script: Occupiers All Over The Place (quest ID 26905).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique). correct DainAvenger.
+ */
 public class _26905Occupiers_All_Over_The_Place extends QuestHandler {
 
     private final static int questId = 26905;

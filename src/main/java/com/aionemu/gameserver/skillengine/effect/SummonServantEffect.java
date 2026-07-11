@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -39,6 +25,9 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 
 /**
+ * 召唤侍从效果：生成会主动攻击的侍从型 NPC。
+ * Summon servant effect: spawns a servant NPC that engages the target.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -50,6 +39,10 @@ public class SummonServantEffect extends SummonEffect {
 	@XmlAttribute(name = "skill_id", required = true)
 	protected int skillId;
 
+	/**
+	 * 在施法者位置生成 SERVANT 类型侍从。
+	 * Spawns a SERVANT-type servant at the effector position.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Creature effector = effect.getEffector();
@@ -60,8 +53,8 @@ public class SummonServantEffect extends SummonEffect {
 	}
 
 	/**
-	 * @param effect
-	 * @param time
+	 * 按坐标生成侍从，调度超时删除，并向目标发起攻击。
+	 * Spawns the servant at the given coords, schedules despawn, and issues an attack AI event.
 	 */
 	protected Servant spawnServant(Effect effect, int time, NpcObjectType npcObjectType, float x, float y, float z) {
 		Creature effector = effect.getEffector();
@@ -75,7 +68,7 @@ public class SummonServantEffect extends SummonEffect {
 		SkillTemplate template = effect.getSkillTemplate();
 
 		if (template.getProperties().getFirstTarget() != FirstTargetAttribute.ME && target == null) {
-			log.warn("Servant trying to attack null target!!");
+			log.warn(I18n.get("log.6806029742a7"));
 			return null;
 		}
 

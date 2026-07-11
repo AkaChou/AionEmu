@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.npcshout;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,31 +8,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 /**
+ * NPC 喊话条目模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
- */
-
-/**
- * <p>
- * Java class for NpcShout complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
- * <pre>
- * &lt;complexType name="NpcShout">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="string_id" use="required" type="{http://www.w3.org/2001/XMLSchema}int" />
- *       &lt;attribute name="when" use="required" type="{}ShoutEventType" />
- *       &lt;attribute name="pattern" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="param" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="type" type="{}ShoutType" default="BROADCAST" />
- *       &lt;attribute name="skill_no" type="{http://www.w3.org/2001/XMLSchema}int" default="0" />
- *       &lt;attribute name="poll_delay" type="{http://www.w3.org/2001/XMLSchema}int" default="0" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcShout")
@@ -75,45 +38,46 @@ public class NpcShout {
 	@XmlAttribute(name = "poll_delay")
 	protected Integer pollDelay;
 
-	/**
-	 * Gets the value of the stringId property.
-	 */
+	 /**
+	  * 获取 stringId 属性值。
+	  * Gets the value of the stringId property
+	  */
 	public int getStringId() {
 		return stringId;
 	}
 
-	/**
-	 * Gets the value of the when property.
-	 * 
-	 * @return possible object is {@link ShoutEventType }
-	 */
+	 /**
+	  * 获取 when 属性值。
+	  * Gets the value of the when property
+	  * @return possible object is {@link ShoutEventType }
+	  */
 	public ShoutEventType getWhen() {
 		return when;
 	}
 
-	/**
-	 * Gets the value of the pattern property.
-	 * 
-	 * @return possible object is {@link String }
-	 */
+	 /**
+	  * 获取 pattern 属性值。
+	  * Gets the value of the pattern property
+	  * @return possible object is {@link String }
+	  */
 	public String getPattern() {
 		return pattern;
 	}
 
-	/**
-	 * Gets the value of the param property.
-	 * 
-	 * @return possible object is {@link String }
-	 */
+	 /**
+	  * 获取 param 属性值。
+	  * Gets the value of the param property
+	  * @return possible object is {@link String }
+	  */
 	public String getParam() {
 		return param;
 	}
 
-	/**
-	 * Gets the value of the type property.
-	 * 
-	 * @return possible object is {@link ShoutType }
-	 */
+	 /**
+	  * 获取 type 属性值。
+	  * Gets the value of the type property
+	  * @return possible object is {@link ShoutType }
+	  */
 	public ShoutType getShoutType() {
 		if (type == null) {
 			return ShoutType.BROADCAST;
@@ -121,11 +85,11 @@ public class NpcShout {
 		return type;
 	}
 
-	/**
-	 * Gets the value of the skillNo property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 skillNo 属性值。
+	  * Gets the value of the skillNo property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getSkillNo() {
 		if (skillNo == null) {
 			return 0;
@@ -133,6 +97,7 @@ public class NpcShout {
 		return skillNo;
 	}
 
+	/** 返回 poll delay / Returns the poll delay */
 	public int getPollDelay() {
 		if (pollDelay == null) {
 			return 0;
@@ -140,6 +105,7 @@ public class NpcShout {
 		return pollDelay;
 	}
 
+	/** 返回 shout range / Returns the shout range */
 	public int getShoutRange(Npc npc) {
 		return npc.getObjectTemplate().getMinimumShoutRange();
 	}

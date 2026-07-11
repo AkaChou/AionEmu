@@ -1,63 +1,79 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import org.springframework.beans.factory.ObjectProvider;
-
 import com.aionemu.gameserver.configs.main.EventsConfig;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Setter;
+import org.springframework.beans.factory.ObjectProvider;
 
-@Slf4j
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 玩家活动服务，按计划推送/结算玩家侧活动。
+ * Player event service pushing/settling player-side events on schedule.
+ */
 public class PlayerEventService {
-	private static volatile ObjectProvider<PlayerEventService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *
+     * provider
+     */
+    @Setter
+    private static volatile ObjectProvider<PlayerEventService> instanceProvider;
+	private Future<?> awakeTask;
+	private Future<?> vipTask;
 
 	public PlayerEventService() {
-		/**
-		 * Event Awake [Event JAP] http://event2.ncsoft.jp/1.0/aion/1503awake/
-		 */
-		final EventAwake awake = new EventAwake();
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(awake);
-			}
-		}, EventsConfig.SEED_TRANSFORMATION_PERIOD * 60000, EventsConfig.SEED_TRANSFORMATION_PERIOD * 60000);
-		/**
-		 * VIP Tickets.
-		 */
-		final AnnounceVIPTickets vipTickets = new AnnounceVIPTickets();
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(vipTickets);
-			}
-		}, EventsConfig.VIP_TICKETS_PERIOD * 60000, EventsConfig.VIP_TICKETS_PERIOD * 60000);
+		reload();
+	}
+
+	/**
+	 * 重载配置。
+	 * Reloads configuration.
+	 */
+	public synchronized void reload() {
+		if (awakeTask != null) {
+			awakeTask.cancel(false);
+			awakeTask = null;
+		}
+		if (vipTask != null) {
+			vipTask.cancel(false);
+			vipTask = null;
+		}
+		if (!EventsConfig.EVENT_ENABLED) {
+			return;
+		}
+		if (EventsConfig.ENABLE_AWAKE_EVENT && EventsConfig.SEED_TRANSFORMATION_PERIOD > 0) {
+			long period = TimeUnit.MINUTES.toMillis(EventsConfig.SEED_TRANSFORMATION_PERIOD);
+			EventAwake awake = new EventAwake();
+			awakeTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+					() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(awake),
+					period, period);
+		}
+		if (EventsConfig.ENABLE_VIP_TICKETS && EventsConfig.VIP_TICKETS_PERIOD > 0) {
+			long period = TimeUnit.MINUTES.toMillis(EventsConfig.VIP_TICKETS_PERIOD);
+			AnnounceVIPTickets vipTickets = new AnnounceVIPTickets();
+			vipTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+					() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(vipTickets),
+					period, period);
+		}
 	}
 
 	private static final class AnnounceVIPTickets implements Visitor<Player> {
 		@Override
+		/**
+		 * visit 方法。
+		 * visit method.
+		 *
+		 * @param player 玩家 / player
+		 */
 		public void visit(Player player) {
 			if (EventsConfig.ENABLE_VIP_TICKETS) {
 				if (player.getClientConnection().getAccount().getMembership() == 1) {
@@ -68,8 +84,8 @@ public class PlayerEventService {
 				}
 				if (player.getClientConnection().getAccount().getMembership() == 0) {
 					HTMLService.sendGuideHtml(player, "Regular_Benefits");
-					// You can become stronger with the VIP benefits.\n See the VIP Tickets in the
-					// in-game shop.
+					// 可用 VIP 福利变得更强。\n 参见商城 VIP 票。 / You can become stronger with the VIP benefits.\n See the VIP Tickets in the
+					// 游戏内商店。 / in-game shop.
 				    PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_VIP_LOBBY_NOTICE_CASE12_POPUP_01, 0, 0));
 				}
 			}
@@ -78,6 +94,12 @@ public class PlayerEventService {
 
 	private static final class EventAwake implements Visitor<Player> {
 		@Override
+		/**
+		 * visit 方法。
+		 * visit method.
+		 *
+		 * @param player 玩家 / player
+		 */
 		public void visit(Player player) {
 			if (EventsConfig.ENABLE_AWAKE_EVENT) {
 				if (player.getLevel() >= 10 && player.getLevel() <= 64) {
@@ -90,6 +112,11 @@ public class PlayerEventService {
 		}
 	};
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static PlayerEventService getInstance() {
 		ObjectProvider<PlayerEventService> provider = instanceProvider;
 		if (provider != null) {
@@ -98,11 +125,7 @@ public class PlayerEventService {
 		return SingletonHolder.instance;
 	}
 
-	public static void setInstanceProvider(ObjectProvider<PlayerEventService> provider) {
-		instanceProvider = provider;
-	}
-
-	private static class SingletonHolder {
+    private static class SingletonHolder {
 		protected static final PlayerEventService instance = new PlayerEventService();
 	}
 }

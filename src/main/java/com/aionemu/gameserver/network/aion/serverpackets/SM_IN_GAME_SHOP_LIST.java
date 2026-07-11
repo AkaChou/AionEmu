@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -30,12 +14,24 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 向客户端发送商城商品列表或销售排行的服务端包。
+ * Server packet that sends an in-game shop item list or sales ranking to the client.
+ */
 public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 	private Player player;
 	private int nrList;
 	private int salesRanking;
 	private IntObjectHashMap<List<IGItem>> allItems = new IntObjectHashMap<List<IGItem>>();
 
+	/**
+	 * 构造商城列表包。
+	 * Creates an in-game shop list packet.
+	 *
+	 * target player
+	 * list page number
+	 * @param salesRanking 列表模式（1=普通列表，其他=销售排行） / list mode (1=normal list, otherwise sales ranking)
+	 */
 	public SM_IN_GAME_SHOP_LIST(Player player, int nrList, int salesRanking) {
 		this.player = player;
 		this.nrList = nrList;

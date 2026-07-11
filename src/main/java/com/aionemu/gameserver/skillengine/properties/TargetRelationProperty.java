@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.properties;
 
 import java.util.Iterator;
@@ -27,7 +11,20 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
+/**
+ * 目标关系属性处理器：按敌友/队伍关系过滤受影响列表。
+ * Target relation property handler: filters the effected list by enemy/friend/party relation.
+ */
 public class TargetRelationProperty {
+
+	/**
+	 * 按目标关系过滤受影响单位，必要时回退为自身。
+	 * Filters effected creatures by relation; may fall back to self.
+	 *
+	 * @param skill 技能上下文 / skill context
+	 * @param properties 目标筛选属性 / target filter properties
+	 * always true
+	 */
 	public static boolean set(Skill skill, Properties properties) {
 		TargetRelationAttribute value = properties.getTargetRelation();
 		final List<Creature> effectedList = skill.getEffectedList();
@@ -103,6 +100,14 @@ public class TargetRelationProperty {
 		return true;
 	}
 
+	/**
+	 * 判断目标是否允许被增益（排除部分攻城 NPC 类型）。
+	 * Returns whether the target may receive buffs (excludes some siege NPC types).
+	 *
+	 * effected creature
+	 *
+	 * @param effected @return 是否允许增益 / true if buff is allowed
+	 */
 	public static boolean isBuffAllowed(Creature effected) {
 		if (effected instanceof SiegeNpc) {
 			switch (((SiegeNpc) effected).getObjectTemplate().getAbyssNpcType()) {

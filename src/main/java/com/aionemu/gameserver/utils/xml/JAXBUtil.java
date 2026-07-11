@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.utils.xml;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -25,15 +26,25 @@ import java.io.IOException;
 import javax.xml.XMLConstants;
 import javax.xml.validation.SchemaFactory;
 
-
 /**
+ * 静态数据 JAXB 绑定/校验工具。
+ * JAXB bind/validate helpers for static-data XML.
+ *
  * @author ginho1
- * @author Dezalmado (compilation error correction)
+ * @author Dezalmado
  */
 @Slf4j
 public class JAXBUtil {
 
-
+	/**
+	 * 从输入流反序列化对象（带 schema 校验）。
+	 * Unmarshal an object from an input stream (with schema validation).
+	 *
+	 * @param is 输入流 / Input stream
+	 * @param clazz 目标类型 / Target class
+	 * @param <T> 结果类型 / Result type
+	 * Object or null
+	 */
 	public static <T> T unmarshal(InputStream is, Class<T> clazz) {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(clazz);
@@ -43,19 +54,38 @@ public class JAXBUtil {
 			return (T) unmarshaller.unmarshal(is);
 		}
 		catch (JAXBException e) {
-			log.error("Error unmarshalling file.", e);
+			log.error(I18n.get("log.b82c1d87c438", e));
 		}
 		return null;
 	}
 
-    public static <T> T unmarshal(File file, Class<T> clazz) throws JAXBException {
-        try (InputStream is = new java.io.FileInputStream(file)) {
-            return unmarshal(is, clazz);
-        } catch (java.io.IOException e) {
-            throw new JAXBException("Error reading file: " + file.getAbsolutePath(), e);
-        }
-    }
+	/**
+	 * 从文件反序列化对象。
+	 * Unmarshal an object from a file.
+	 *
+	 * File
+	 * @param clazz 目标类型 / Target class
+	 * @param <T> 结果类型 / Result type
+	 * Object
+	 * On read/bind failure。 / On read/bind failure.
+	 */
+	public static <T> T unmarshal(File file, Class<T> clazz) throws JAXBException {
+		try (InputStream is = new java.io.FileInputStream(file)) {
+			return unmarshal(is, clazz);
+		} catch (java.io.IOException e) {
+			throw new JAXBException("Error reading file: " + file.getAbsolutePath(), e);
+		}
+	}
 
+	/**
+	 * 从 XML 字符串反序列化对象（带 schema 校验）。
+	 * Unmarshal an object from an XML string (with schema validation).
+	 *
+	 * XML string
+	 * @param clazz 目标类型 / Target class
+	 * @param <T> 结果类型 / Result type
+	 * Object or null
+	 */
 	public static <T> T unmarshal(String stream, Class<T> clazz) {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(clazz);
@@ -65,11 +95,20 @@ public class JAXBUtil {
 			return (T) unmarshaller.unmarshal(new StringReader(stream));
 		}
 		catch (JAXBException e) {
-			log.error("Error unmarshalling file.", e);
+			log.error(I18n.get("log.b82c1d87c438", e));
 		}
 		return null;
 	}
 
+	/**
+	 * 将对象序列化到文件。
+	 * Marshal an object to a file.
+	 *
+	 * @param file 输出路径 / Output path
+	 * Class
+	 * Object
+	 * @param <T> 对象类型 / Object type
+	 */
 	public static <T> void marshal(String file, Class<T> clazz, T object) {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(clazz);
@@ -79,10 +118,19 @@ public class JAXBUtil {
 			marshaller.marshal(object, new File(file));
 		}
 		catch (JAXBException e) {
-			log.error("Error marshalling file.", e);
+			log.error(I18n.get("log.adbf3f704f02", e));
 		}
 	}
 
+	/**
+	 * 将对象序列化为 XML 字符串。
+	 * Marshal an object to an XML string.
+	 *
+	 * Class
+	 * Object
+	 * @param <T> 对象类型 / Object type
+	 * XML string or null
+	 */
 	public static <T> String marshal(Class<T> clazz, T object) {
 		try {
 			StringWriter sw = new StringWriter();
@@ -94,11 +142,21 @@ public class JAXBUtil {
 			return sw.toString();
 		}
 		catch (JAXBException e) {
-			log.error("Error marshalling file.", e);
+			log.error(I18n.get("log.adbf3f704f02", e));
 		}
 		return null;
 	}
 
+	/**
+	 * 校验 XML 字符串是否符合类型 schema。
+	 * Validate an XML string against the type's schema.
+	 *
+	 * XML string
+	 * Class
+	 *
+	 * @param xml @param <T> 类型参数 / Type param
+	 * @param clazz 若 valid 则为 true / True if valid
+	 */
 	public static <T> boolean validate(String xml, Class<T> clazz) {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(clazz);
@@ -109,11 +167,21 @@ public class JAXBUtil {
 			return true;
 		}
 		catch (JAXBException e) {
-			log.warn("Validation failed for input XML", e);
+			log.warn(I18n.get("log.33fe4a6282a7", e));
 			return false;
 		}
 	}
 
+	/**
+	 * 校验输入流 XML 是否符合类型 schema。
+	 * Validate input-stream XML against the type's schema.
+	 *
+	 * @param is 输入流 / Input stream
+	 * Class
+	 *
+	 * @param is @param <T> 类型参数 / Type param
+	 * @param clazz 若 valid 则为 true / True if valid
+	 */
 	public static <T> boolean validate(InputStream is, Class<T> clazz) {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(clazz);
@@ -124,38 +192,54 @@ public class JAXBUtil {
 			return true;
 		}
 		catch (JAXBException e) {
-			log.warn("Validation failed for input XML", e);
+			log.warn(I18n.get("log.33fe4a6282a7", e));
 			return false;
 		}
 	}
-	
+
+	/**
+	 * 由 JAXB 模型运行时生成 schema。
+	 * Generate a schema at runtime from the JAXB model.
+	 *
+	 * Class
+	 * Schema or null
+	 */
 	private static Schema getSchema(Class<?> clazz) {
-        try {
-            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            StringSchemaOutputResolver ssor = new StringSchemaOutputResolver();
-            JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
-            jaxbContext.generateSchema(ssor);
-            String schemaString = ssor.getSchemaString();
-            if (schemaString != null && !schemaString.isEmpty()) {
-                InputStream schemaStream = new ByteArrayInputStream(schemaString.getBytes(StandardCharsets.UTF_8));
-                return sf.newSchema(new StreamSource(schemaStream));
-            }
-        } catch (JAXBException | SAXException | IOException e) {
-            log.error("Error getting schema for class: " + clazz.getName(), e);
-        }
-        return null;
-    }
-	
+		try {
+			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			StringSchemaOutputResolver ssor = new StringSchemaOutputResolver();
+			JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+			jaxbContext.generateSchema(ssor);
+			String schemaString = ssor.getSchemaString();
+			if (schemaString != null && !schemaString.isEmpty()) {
+				InputStream schemaStream = new ByteArrayInputStream(schemaString.getBytes(StandardCharsets.UTF_8));
+				return sf.newSchema(new StreamSource(schemaStream));
+			}
+		} catch (JAXBException | SAXException | IOException e) {
+			log.error(I18n.get("log.d834008aca15", clazz.getName(), e));
+		}
+		return null;
+	}
+
+	/**
+	 * 用外部 XSD URL 校验 XML 字符串。
+	 * Validate an XML string against an external XSD URL.
+	 *
+	 * XML string
+	 * @param schemaUrl Schema URL
+	 *
+	 * @return 若 valid 则为 true / True if valid
+	 */
 	public static boolean validateSchema(String xmlString, URL schemaUrl) {
-        try {
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = schemaFactory.newSchema(schemaUrl);
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))));
-            return true;
-        } catch (SAXException | java.io.IOException e) {
-            log.warn("Schema validation failed: " + e.getMessage());
-            return false;
-        }
-    }
+		try {
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = schemaFactory.newSchema(schemaUrl);
+			Validator validator = schema.newValidator();
+			validator.validate(new StreamSource(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))));
+			return true;
+		} catch (SAXException | java.io.IOException e) {
+			log.warn(I18n.get("log.5c43c98b7147", e.getMessage()));
+			return false;
+		}
+	}
 }

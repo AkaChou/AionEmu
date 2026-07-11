@@ -1,24 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 玩家团队 Member，用于团队2相关逻辑。
+ * Player Team Member for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerTeamMember implements TeamMember<Player> {
@@ -30,49 +17,60 @@ public class PlayerTeamMember implements TeamMember<Player> {
 		this.player = player;
 	}
 
+	/** 返回对象 ID / Returns the object id */
 	@Override
 	public Integer getObjectId() {
 		return player.getObjectId();
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return player.getName();
 	}
 
+	/** 获取对象。 / Returns the object. */
 	@Override
 	public Player getObject() {
 		return player;
 	}
 
+	/** 返回 last online time / Returns the last online time */
 	public long getLastOnlineTime() {
 		return lastOnlineTime;
 	}
 
+	/** 更新 last online time / Update last online time */
 	public void updateLastOnlineTime() {
 		lastOnlineTime = System.currentTimeMillis();
 	}
 
+	/** 是否在线。 / Whether Online. */
 	public boolean isOnline() {
 		return player.isOnline();
 	}
 
+	/** 返回 x / Returns the x */
 	public float getX() {
 		return player.getX();
 	}
 
+	/** 返回 y / Returns the y */
 	public float getY() {
 		return player.getY();
 	}
 
+	/** 返回 z / Returns the z */
 	public float getZ() {
 		return player.getZ();
 	}
 
+	/** 返回 heading / Returns the heading */
 	public byte getHeading() {
 		return player.getHeading();
 	}
 
+	/** 获取等级。 / Returns the level. */
 	public byte getLevel() {
 		return player.getLevel();
 	}

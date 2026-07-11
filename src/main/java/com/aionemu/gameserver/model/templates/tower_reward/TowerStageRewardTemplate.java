@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.tower_reward;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,7 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Created by Wnkrz on 17/10/2017.
+ * 高塔 Stage 奖励模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -58,42 +43,52 @@ public class TowerStageRewardTemplate {
 	@XmlAttribute(name = "exp_count")
 	protected int expCount;
 
+	/** 返回 floor / Returns the floor */
 	public int getFloor() {
 		return this.floor;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return this.name;
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return this.itemId;
 	}
 
+	/** 返回物品 ID2 / Returns the item id 2 */
 	public int getItemId2() {
 		return this.itemId2;
 	}
 
+	/** 获取物品计数。 / Returns the item count. */
 	public int getItemCount() {
 		return this.itemCount;
 	}
 
+	/** 返回物品统计2 / Returns the item count 2 */
 	public int getItemCount2() {
 		return this.itemCount2;
 	}
 
+	/** 获取欧比斯点数计数。 / Returns the ap count. */
 	public int getApCount() {
 		return this.apCount;
 	}
 
+	/** 返回荣耀点数量 / Returns the gp count */
 	public int getGpCount() {
 		return this.gpCount;
 	}
 
+	/** 获取基纳计数。 / Returns the kinah count. */
 	public int getKinahCount() {
 		return this.kinahCount;
 	}
 
+	/** 获取经验计数。 / Returns the exp count. */
 	public int getExpCount() {
 		return this.expCount;
 	}

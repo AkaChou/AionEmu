@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion;
 
 /**
+ * 物品相关包场景类型：仓库、背包、邮件/回购、个人商店、武器切换等。
+ * Inventory-related packet scene types: warehouse, inventory, mail/repurchase, private store, weapon switch.
+ *
  * @author ATracer
  */
 public enum InventoryPacketType {
@@ -40,22 +27,52 @@ public enum InventoryPacketType {
 		this.isWeaponSwitch = isWeaponSwitch;
 	}
 
+	/**
+	 * 是否为背包场景。
+	 * Whether this is an inventory scene.
+	 *
+	 * @return 若 inventory 则为 true / true if inventory
+	 */
 	public final boolean isInventory() {
 		return isInventory;
 	}
 
+	/**
+	 * 是否为邮件场景。
+	 * Whether this is a mail scene.
+	 *
+	 * @return 若 mail 则为 true / true if mail
+	 */
 	public final boolean isMail() {
 		return isMailOrRepurchase;
 	}
 
+	/**
+	 * 是否为回购场景。
+	 * Whether this is a repurchase scene.
+	 *
+	 * @return 若 repurchase 则为 true / true if repurchase
+	 */
 	public final boolean isRepurchase() {
 		return isMailOrRepurchase;
 	}
 
+	/**
+	 * 是否为个人商店场景。
+	 * Whether this is a private store scene.
+	 *
+	 * @return 是否个人商店 / true if private store
+	 */
 	public final boolean isPrivateStore() {
 		return isPrivateStore;
 	}
 
+	/**
+	 * 是否为武器切换场景。
+	 * Whether this is a weapon-switch scene.
+	 *
+	 * @return 是否武器切换 / true if weapon switch
+	 */
 	public final boolean isWeaponSwitch() {
 		return isWeaponSwitch;
 	}

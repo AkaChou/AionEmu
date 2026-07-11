@@ -1,26 +1,16 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates;
+
+/**
+ * 制作 Learn 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 public class CraftLearnTemplate {
 
 	private int skillId;
 	private boolean isCraftSkill;
 
+	/** 是否为制作技能。 / Whether craft skill. */
 	public boolean isCraftSkill() {
 		return isCraftSkill;
 	}
@@ -30,6 +20,7 @@ public class CraftLearnTemplate {
 		this.isCraftSkill = isCraftSkill;
 	}
 
+	/** 返回技能 ID / Returns the skill id */
 	public int getSkillId() {
 		return skillId;
 	}

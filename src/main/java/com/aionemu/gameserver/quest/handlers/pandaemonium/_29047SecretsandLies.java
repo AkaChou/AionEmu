@@ -7,6 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 潘德莫尼姆任务脚本：Secretsand Lies（任务 ID 29047）。
+ * Pandaemonium quest script: Secretsand Lies (quest ID 29047).
+ */
 public class _29047SecretsandLies extends QuestHandler {
 
 	private final static int questId = 29047;

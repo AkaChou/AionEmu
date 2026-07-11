@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.taskmanager.handler;
 
 import com.aionemu.loginserver.taskmanager.handler.implementations.CleanAccountsHandler;
@@ -23,6 +5,8 @@ import com.aionemu.loginserver.taskmanager.handler.implementations.RestartHandle
 import com.aionemu.loginserver.taskmanager.handler.implementations.ShutdownHandler;
 
 /**
+ * 数据库任务处理器类型枚举，映射名称到具体实现类。
+ * Enum of DB task handler types mapping names to concrete handler classes.
  *
  * @author nrg
  */
@@ -37,6 +21,12 @@ public enum TaskFromDBHandlerHolder {
         this.taskClass = taskClass;
     }
 
+    /**
+     * 获取对应的处理器实现类。
+     * Returns the associated handler implementation class.
+     *
+     * handler class
+     */
     public Class<? extends TaskFromDBHandler> getTaskClass() {
         return taskClass;
     }

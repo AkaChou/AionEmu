@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
@@ -11,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 玩家随从（Minion）DAO 的 MySQL 8 实现。
+ * MySQL 8 implementation of PlayerMinionsDAO.
+ *
  * @author Falke_34
  * Updated for MySQL 8 support
  */
@@ -18,24 +23,44 @@ import java.util.List;
 public class MySQL8PlayerMinionsDAO extends PlayerMinionsDAO {
 
 
+    /** 插入玩家随从 / Insert player minion */
     private static final String INSERT_QUERY = "INSERT INTO player_minions (player_id, object_id, minion_id, name, grade, level, growthpoints, birthday, is_locked, buff_bag) VALUES (?, ?, ?, ?, ?, ?, 0, NOW(), 0, '')";
+    /** 删除玩家随从 / Delete player minion */
     private static final String DELETE_QUERY = "DELETE FROM player_minions WHERE player_id = ? AND object_id = ?";
+    /** 查询玩家随从列表 / Select player minions */
     private static final String SELECT_QUERY = "SELECT * FROM player_minions WHERE player_id = ?";
+    /** 更新随从名称 / Update minion name */
     private static final String UPDATE_NAME_QUERY = "UPDATE player_minions SET name = ? WHERE player_id = ? AND object_id = ?";
+    /** 更新随从成长点 / Update minion growth points */
     private static final String UPDATE_GROWTH_QUERY = "UPDATE player_minions SET growthpoints = ? WHERE player_id = ? AND object_id = ?";
+    /** Checkminionexistencevia 次数 / Check minion existence via COUNT */
     private static final String CHECK_EXIST_QUERY = "SELECT COUNT(*) FROM player_minions WHERE player_id = ? AND object_id = ?";
+    /**
+	 * Check minion existence via LIMIT 1 / Check minion existence via LIMIT 1
+	 */
     private static final String CHECK_EXIST_LIMIT_QUERY = "SELECT 1 FROM player_minions WHERE player_id = ? AND object_id = ? LIMIT 1";
+    /** 随从进化 / Evolve minion */
     private static final String EVOLUTION_QUERY = "UPDATE player_minions SET minion_id = ?, growthpoints = 0, level = ? WHERE player_id = ? AND object_id = ?";
+    /** 锁定/解锁随从 / Lock or unlock minion */
     private static final String LOCK_QUERY = "UPDATE player_minions SET is_locked = ? WHERE player_id = ? AND object_id = ?";
+    /** 更新随从增益背包 / Update minion doping bag */
     private static final String UPDATE_DOPING_QUERY = "UPDATE player_minions SET buff_bag = ? WHERE player_id = ? AND object_id = ?";
+    /** 查询随从生日 / Select minion birthday */
     private static final String SELECT_BIRTHDAY_QUERY = "SELECT birthday FROM player_minions WHERE player_id = ? AND object_id = ?";
+    /** 清理孤儿随从数据 / Clean orphaned minion rows */
     private static final String CLEAN_ORPHANED_QUERY = "DELETE FROM player_minions WHERE player_id NOT IN (SELECT id FROM players)";
 
+    /**
+     * 插入新的玩家随从记录。
+     * Inserts a new player minion record.
+     *
+     * @param minionCommonData 随从公共数据 / minion common data
+     */
     @Override
     public void insertPlayerMinion(MinionCommonData minionCommonData) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
-            
+
             stmt.setInt(1, minionCommonData.getMasterObjectId());
             stmt.setInt(2, minionCommonData.getObjectId());
             stmt.setInt(3, minionCommonData.getMinionId());
@@ -43,50 +68,64 @@ public class MySQL8PlayerMinionsDAO extends PlayerMinionsDAO {
             stmt.setString(5, minionCommonData.getMinionGrade());
             stmt.setInt(6, minionCommonData.getMinionLevel());
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
-            log.error("Error inserting new minion #{} [{}]", minionCommonData.getMinionId(), minionCommonData.getName(), e);
+            log.error(I18n.get("log.2527877e3b8c", minionCommonData.getMinionId(), minionCommonData.getName(), e));
         }
     }
 
+    /**
+     * 移除玩家的指定随从。
+     * Removes the specified minion for the player.
+     *
+     * 玩家 / player
+     * minion object id
+     */
     @Override
     public void removePlayerMinion(Player player, int minionObjectId) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
-            
+
             stmt.setInt(1, player.getObjectId());
             stmt.setInt(2, minionObjectId);
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
-            log.error("Error removing minion #{}", minionObjectId, e);
+            log.error(I18n.get("log.85f2880b076f", minionObjectId, e));
         }
     }
 
+    /**
+     * 加载玩家的全部随从数据。
+     * Loads all minions belonging to the player.
+     *
+     * 玩家 / player
+     * minion list
+     */
     @Override
     public List<MinionCommonData> getPlayerMinions(Player player) {
         List<MinionCommonData> minions = new ArrayList<>();
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
-            
+
             stmt.setInt(1, player.getObjectId());
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     MinionCommonData minionCommonData = new MinionCommonData(
-                        rs.getInt("minion_id"), 
-                        player.getObjectId(), 
-                        rs.getString("name"), 
-                        rs.getString("grade"), 
-                        rs.getInt("level"), 
+                        rs.getInt("minion_id"),
+                        player.getObjectId(),
+                        rs.getString("name"),
+                        rs.getString("grade"),
+                        rs.getInt("level"),
                         rs.getInt("growthpoints")
                     );
-                    
+
                     minionCommonData.setObjectId(rs.getInt("object_id"));
                     minionCommonData.setBirthday(rs.getTimestamp("birthday"));
                     minionCommonData.setLock(rs.getInt("is_locked") == 1);
-                    
+
                     int minionId = rs.getInt("minion_id");
                     if (minionId > 980013) {
                         MinionDopingBag dopingBag = minionCommonData.getDopingBag();
@@ -100,182 +139,255 @@ public class MySQL8PlayerMinionsDAO extends PlayerMinionsDAO {
                                             int itemId = Integer.parseInt(ids[i]);
                                             dopingBag.setItem(itemId, i);
                                         } catch (NumberFormatException e) {
-                                            log.warn("Invalid item ID format for minion {}: {}", minionCommonData.getObjectId(), ids[i]);
+                                            log.warn(I18n.get("log.e8efb9fcad1f", minionCommonData.getObjectId(), ids[i]));
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    
+
                     minions.add(minionCommonData);
                 }
             }
         } catch (Exception e) {
-            log.error("Error getting minions for player {}", player.getObjectId(), e);
+            log.error(I18n.get("log.6b0198f98c6b", player.getObjectId(), e));
         }
-        
+
         return minions;
     }
 
+    /**
+     * 更新随从名称。
+     * Updates the minion name.
+     *
+     * @param minionCommonData 随从公共数据 / minion common data
+     */
     @Override
     public void updateMinionName(MinionCommonData minionCommonData) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(UPDATE_NAME_QUERY)) {
-            
+
             stmt.setString(1, minionCommonData.getName());
             stmt.setInt(2, minionCommonData.getMasterObjectId());
             stmt.setInt(3, minionCommonData.getObjectId());
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
-            log.error("Error updating minion name #{}", minionCommonData.getMinionId(), e);
+            log.error(I18n.get("log.d5697671e606", minionCommonData.getMinionId(), e));
         }
     }
-    
+
+    /**
+     * 更新玩家随从的成长点。
+     * Updates the growth points of a player minion.
+     *
+     * @param player 玩家 / player
+     * @param minionCommonData 随从公共数据 / minion common data
+     */
     @Override
     public void updatePlayerMinionGrowthPoint(Player player, MinionCommonData minionCommonData) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(UPDATE_GROWTH_QUERY)) {
-            
+
             stmt.setInt(1, minionCommonData.getMinionGrowthPoint());
             stmt.setInt(2, minionCommonData.getMasterObjectId());
             stmt.setInt(3, minionCommonData.getObjectId());
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
-            log.error("Error updating minion growth point #{}", minionCommonData.getMinionId(), e);
+            log.error(I18n.get("log.d7a903023f02", minionCommonData.getMinionId(), e));
         }
     }
 
+    /**
+     * 检查玩家是否拥有指定对象 ID 的随从。
+     * Checks whether the player owns a minion with the given object id.
+     *
+     * player id
+     * minion object id
+     * whether exists
+     */
     @Override
     public boolean PlayerMinions(int playerId, int minionObjId) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(CHECK_EXIST_QUERY)) {
-            
+
             stmt.setInt(1, playerId);
             stmt.setInt(2, minionObjId);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
                 }
             }
         } catch (Exception e) {
-            log.error("Error checking minion for player {} object {}", playerId, minionObjId, e);
+            log.error(I18n.get("log.5f240eba7beb", playerId, minionObjId, e));
         }
         return false;
     }
-    
+
+    /**
+     * 以 LIMIT 1 方式检查玩家是否拥有指定随从。
+     * Checks whether the player has the specified minion using LIMIT 1.
+     *
+     * player id
+     * minion object id
+     * whether exists
+     */
     public boolean playerHasMinion(int playerid, int minionObjId) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(CHECK_EXIST_LIMIT_QUERY)) {
-            
+
             stmt.setInt(1, playerid);
             stmt.setInt(2, minionObjId);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
             }
         } catch (Exception e) {
-            log.error("Error checking minion for player {}", playerid, e);
+            log.error(I18n.get("log.780ebd2118b2", playerid, e));
             return false;
         }
     }
 
+    /**
+     * 执行随从进化（更新 minion_id 与 level，重置成长点）。
+     * Evolves a minion (updates minion_id and level, resets growth points).
+     *
+     * @param player 玩家 / player
+     * @param minionCommonData 随从公共数据 / minion common data
+     */
     @Override
     public void evolutionMinion(Player player, MinionCommonData minionCommonData) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(EVOLUTION_QUERY)) {
-            
+
             stmt.setInt(1, minionCommonData.getMinionId());
             stmt.setInt(2, minionCommonData.getMinionLevel());
             stmt.setInt(3, minionCommonData.getMasterObjectId());
             stmt.setInt(4, minionCommonData.getObjectId());
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
-            log.error("Error evolving minion #{}", minionCommonData.getMinionId(), e);
+            log.error(I18n.get("log.188874aa8e51", minionCommonData.getMinionId(), e));
         }
     }
 
+    /**
+     * 锁定或解锁指定随从。
+     * Locks or unlocks the specified minion.
+     *
+     * 玩家 / player
+     * minion object id
+     * lock flag
+     */
     @Override
     public void lockMinions(Player player, int minionObjId, int isLocked) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(LOCK_QUERY)) {
-            
+
             stmt.setInt(1, isLocked);
             stmt.setInt(2, player.getObjectId());
             stmt.setInt(3, minionObjId);
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
-            log.error("Error locking minion #{}", minionObjId, e);
+            log.error(I18n.get("log.65bb4c6328f8", minionObjId, e));
         }
     }
-    
+
+    /**
+     * 保存随从的增益（doping）背包内容。
+     * Saves the minion doping bag contents.
+     *
+     * @param player 玩家 / player
+     * @param minionCommonData 随从公共数据 / minion common data
+     * @param bag 增益背包 / doping bag
+     */
     @Override
     public void saveDopingBag(Player player, MinionCommonData minionCommonData, MinionDopingBag bag) {
         if (bag == null) {
-            log.warn("Attempted to save null doping bag for minion #{}", minionCommonData.getObjectId());
+            log.warn(I18n.get("log.342c6a28af85", minionCommonData.getObjectId()));
             return;
         }
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(UPDATE_DOPING_QUERY)) {
-            
+
             StringBuilder itemIds = new StringBuilder();
-            
+
             itemIds.append(bag.getFoodItem() > 0 ? bag.getFoodItem() : "0");
             itemIds.append(",");
             itemIds.append(bag.getDrinkItem() > 0 ? bag.getDrinkItem() : "0");
-            
+
             for (int itemId : bag.getScrollsUsed()) {
                 itemIds.append(",").append(itemId > 0 ? itemId : "0");
             }
-            
+
             stmt.setString(1, itemIds.toString());
             stmt.setInt(2, player.getObjectId());
             stmt.setInt(3, minionCommonData.getObjectId());
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
-            log.error("Error updating doping for minion #{}", minionCommonData.getObjectId(), e);
+            log.error(I18n.get("log.0c8cc68553ee", minionCommonData.getObjectId(), e));
         }
     }
-    
+
+    /**
+     * 从数据库读取并写回随从生日时间戳。
+     * Loads the minion birthday timestamp from the database into the model.
+     *
+     * @param minionCommonData 随从公共数据 / minion common data
+     */
     public void saveBirthday(MinionCommonData minionCommonData) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_BIRTHDAY_QUERY)) {
-            
+
             stmt.setInt(1, minionCommonData.getMasterObjectId());
             stmt.setInt(2, minionCommonData.getObjectId());
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     minionCommonData.setBirthday(rs.getTimestamp("birthday"));
                 }
             }
         } catch (Exception e) {
-            log.error("Error getting birthday for minion {}", minionCommonData.getMasterObjectId(), e);
+            log.error(I18n.get("log.8896cfb9d7f2", minionCommonData.getMasterObjectId(), e));
         }
     }
-    
+
+    /**
+     * 清理所属玩家已不存在的孤儿随从记录。
+     * Cleans orphaned minion rows whose owner player no longer exists.
+     *
+     * deleted row count
+     */
     public int cleanOrphanedMinions() {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(CLEAN_ORPHANED_QUERY)) {
-            
+
             int deleted = stmt.executeUpdate();
             if (deleted > 0) {
-                log.info("Cleaned {} orphaned minions from database", deleted);
+                log.info(I18n.get("log.51adbf82f7b2", deleted));
             }
             return deleted;
         } catch (Exception e) {
-            log.error("Error cleaning orphaned minions", e);
+            log.error(I18n.get("log.55b90eeb49ae", e));
             return 0;
         }
     }
 
+    /**
+     * 判断当前数据库是否受本 DAO 支持。
+     * Checks whether the given database is supported by this DAO.
+     *
+     * @param databaseName 数据库名称 / database name
+     * major version
+     * minor version
+     * whether supported
+     */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {
         return MySQL8DAOUtils.supports(databaseName, majorVersion, minorVersion);

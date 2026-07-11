@@ -1,55 +1,44 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver;
 
-import lombok.extern.slf4j.Slf4j;
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.network.packet.BaseClientPacket;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Base class for every GameServer -> LS Client Packet
+ * 所有 GameServer → LoginServer 客户端封包的基类。
+ * Base class for every GameServer → LoginServer client packet.
  *
  * @author -Nemesiss-
  */
 @Slf4j
 public abstract class GsClientPacket extends BaseClientPacket<GsConnection> {
 
+    /**
+     * 构造空 opcode 的 GS 客户端封包。
+     * Construct a GS client packet with empty opcode.
+     */
     public GsClientPacket() {
         super(0);
     }
 
     /**
-     * run runImpl catching and logging Throwable.
+     * 执行 {@link #runImpl()} 并捕获、记录异常。
+     * Run {@link #runImpl()} while catching and logging any throwable.
      */
     @Override
     public final void run() {
         try {
             runImpl();
         } catch (Throwable e) {
-            log.warn("error handling gs (" + getConnection().getIP() + ") message " + this, e);
+            log.warn(I18n.get("log.8fd86409bd46", getConnection().getIP(), this, e));
         }
     }
 
     /**
-     * Send new GsServerPacket to connection that is owner of this packet. This
-     * method is equivalent to: getConnection().sendPacket(msg);
+     * 向本封包所属连接发送服务端封包，等价于 {@code getConnection().sendPacket(msg)}。
+     * Send a server packet to the owning connection; equivalent to {@code getConnection().sendPacket(msg)}.
      *
-     * @param msg
+     * @param msg 待发送的服务端封包 / Server packet to send
      */
     protected void sendPacket(GsServerPacket msg) {
         getConnection().sendPacket(msg);

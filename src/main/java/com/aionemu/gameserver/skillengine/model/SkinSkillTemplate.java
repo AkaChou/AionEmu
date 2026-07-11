@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * 皮肤技能模板：外观/皮肤关联的技能元数据。
+ * Skin skill template: skill metadata linked to appearance/skin.
+ *
  * @author Ranastic
  */
 @XmlRootElement(name = "skin_skill")
@@ -40,18 +27,42 @@ public class SkinSkillTemplate {
 	@XmlAttribute(name = "skill_group")
 	private String skill_group;
 
+	/**
+	 * 获取技能 ID。
+	 * Gets skill id.
+	 *
+	 * id
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * 获取名称。
+	 * Gets name.
+	 *
+	 * name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * 获取描述。
+	 * Gets description.
+	 *
+	 * description
+	 */
 	public String getDesc() {
 		return desc;
 	}
 
+	/**
+	 * 获取技能分组。
+	 * Gets skill group.
+	 *
+	 * group
+	 */
 	public String getGroup() {
 		return skill_group;
 	}

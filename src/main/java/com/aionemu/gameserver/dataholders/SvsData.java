@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -32,9 +16,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * SVS 活动数据容器，按位置 ID 索引 SVS 地点实例。
+ * SVS event data holder, indexing SVS location instances by location id.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "svs")
 public class SvsData {
@@ -44,16 +30,32 @@ public class SvsData {
 	@XmlTransient
 	private Map<Integer, SvsLocation> svs = new LinkedHashMap<Integer, SvsLocation>();
 
+	/**
+	 * JAXB 反序列化完成后，将模板实例化为 SVS 地点并建立索引。
+	 * After JAXB unmarshalling, instantiates SVS locations from templates and indexes them.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SvsTemplate template : svsTemplates) {
 			svs.put(template.getId(), new SvsLocation(template));
 		}
 	}
 
+	/**
+	 * 返回已加载的 SVS 地点数量。
+	 * Returns the number of loaded SVS locations.
+	 *
+	 * location count
+	 */
 	public int size() {
 		return svs.size();
 	}
 
+	/**
+	 * 返回全部 SVS 地点映射。
+	 * Returns the full map of SVS locations.
+	 *
+	 * @return 位置 ID → SVS 地点映射 / location-id to SVS-location map
+	 */
 	public Map<Integer, SvsLocation> getSvsLocations() {
 		return svs;
 	}

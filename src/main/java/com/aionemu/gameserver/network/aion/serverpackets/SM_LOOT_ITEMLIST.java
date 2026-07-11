@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,18 +16,30 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 掉落物品列表的服务端包，向玩家展示可拾取物品。
+ * Server packet that delivers the loot item list for a drop target.
+ */
 @Slf4j
 public class SM_LOOT_ITEMLIST extends AionServerPacket {
 	private int targetObjectId;
 	private final boolean teamMembersNearby;
 	private List<DropItem> dropItems;
 
+	/**
+	 * 构造玩家可见的掉落物品列表包。
+	 * Builds the loot item list visible to the given player.
+	 *
+	 * drop NPC
+	 * @param setItems 掉落物品集合 / set of drop items
+	 * @param player 接收列表的玩家 / player receiving the list
+	 */
 	public SM_LOOT_ITEMLIST(DropNpc dropNpc, Set<DropItem> setItems, Player player) {
 		this.targetObjectId = dropNpc.getObjectId();
 		this.teamMembersNearby = dropNpc.getInRangePlayers().size() > 1 && dropNpc.getInRangePlayers().contains(player);
 		this.dropItems = new ArrayList<>();
 		if (setItems == null) {
-			log.warn("null Set<DropItem>, skip");
+			log.warn(I18n.get("log.4c7339d87f1f"));
 			return;
 		}
 		for (DropItem item : setItems) {

@@ -1,51 +1,43 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 好友操作响应包：添加/拒绝/已满等结果码与目标名。
+ * Friend operation response: result code (added, denied, full, …) and target name.
+ */
 public class SM_FRIEND_RESPONSE extends AionServerPacket {
-	// The friend was successfully added to your list
+	/** 好友添加成功 / friend successfully added */
 	public static final int TARGET_ADDED = 0x00;
-	// The target of a friend request is offline
+	/** 目标离线 / target offline */
 	public static final int TARGET_OFFLINE = 0x01;
-	// The target is already a friend
+	/** 已是好友 / already a friend */
 	public static final int TARGET_ALREADY_FRIEND = 0x02;
-	// The target does not exist
+	/** 目标不存在 / target not found */
 	public static final int TARGET_NOT_FOUND = 0x03;
-	// The friend denied your request to add him
+	/** 对方拒绝 / target denied */
 	public static final int TARGET_DENIED = 0x04;
-	// The target's friend list is full
+	/** 对方好友列表已满 / target friend list full */
 	public static final int TARGET_LIST_FULL = 0x05;
-	// The friend was removed from your list
+	/** 已从列表移除 / removed from list */
 	public static final int TARGET_REMOVED = 0x06;
-	// The target is in your blocked list, and cannot be added to your friends list.
+	/** 目标在黑名单中 / target is blocked */
 	public static final int TARGET_BLOCKED = 0x08;
-	// The target is dead and cannot be befriended yet.
+	/** 目标已死亡，暂不可加好友 / target dead */
 	public static final int TARGET_DEAD = 0x09;
-	// The target become a note.
+	/** 好友备注更新 / friend note update */
 	public static final int TARGET_NOTE = 0x21;
-	// The target become a note.
+	/** 离线添加相关 / offline-add related */
 	public static final int FRIEND_LOGOUT_ADD = 0x11;
 
 	private final String player;
 	private final int code;
 
+	/**
+	 * @param playerName  目标玩家名 / target player name
+	 * result code
+	 */
 	public SM_FRIEND_RESPONSE(String playerName, int messageType) {
 		player = playerName;
 		code = messageType;

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.ai.siege;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -17,6 +19,11 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * 攻城战相关 NPC AI：Treasure Box Success Boss（@AIName "treasure_box_success_boss"），继承 AggressiveNpcAI2。
+ * Siege-related NPC AI: Treasure Box Success Boss (@AIName "treasure_box_success_boss"), extends AggressiveNpcAI2.
+ */
 @AIName("treasure_box_success_boss")
 @Slf4j
 public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
@@ -83,7 +90,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
             onDropRegistered(chest);
             return chest;
         } catch (Exception e) {
-            log.error("Error spawning treasure chest", e);
+            log.error(I18n.get("log.a2aee0eb2e44", e));
             return null;
         }
     }

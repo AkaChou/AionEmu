@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,8 +20,12 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 街机升级活动服务，管理街机升级窗口、抽奖与奖励发放。
+ * Arcade upgrade event service managing the upgrade window, rolls and rewards.
+ *
  * @author Rinzler (Encom)
  */
+
 public class ArcadeUpgradeService {
 	private static volatile ObjectProvider<ArcadeUpgradeService> instanceProvider;
 	private final int frenzyTime = 90;
@@ -45,10 +33,23 @@ public class ArcadeUpgradeService {
 	public ArcadeUpgradeService() {
 	}
 
+	/**
+	 * 玩家进入世界时处理。
+	 * Handles player entering the world.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onEnterWorld(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(true));
 	}
 
+	/**
+	 * getRewardItem 方法。
+	 * getRewardItem method.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public static ArcadeTabItem getRewardItem(Player player) {
 		PlayerUpgradeArcade arcade = player.getUpgradeArcade();
 		int frenzyLevel = arcade.getFrenzyLevel();
@@ -68,6 +69,12 @@ public class ArcadeUpgradeService {
 		return items.get(Rnd.get(0, count));
 	}
 
+	/**
+	 * getSpecialRewardItem 方法。
+	 * getSpecialRewardItem method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void getSpecialRewardItem(Player player) {
 		PlayerUpgradeArcade arcade = player.getUpgradeArcade();
 		List<ArcadeTabItem> items = DataManager.ARCADE_UPGRADE_DATA.getArcadeTabById(4);
@@ -77,7 +84,7 @@ public class ArcadeUpgradeService {
 			itemCount = item.getFrenzyCount();
 		}
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(11));
-		// You've reached Frenzy four times and received %1 %0!
+		// 你已达到狂热四次，获得了 %1 %0！ / You've reached Frenzy four times and received %1 %0!
 		PacketSendUtility.sendPacket(player,
 				itemCount > 1 ? SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVER_ITEM_REWARD_MULTI(item.getItemId(), itemCount)
 						: SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVER_ITEM_REWARD(item.getItemId()));
@@ -85,6 +92,11 @@ public class ArcadeUpgradeService {
 		arcade.setFrenzy(false);
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static ArcadeUpgradeService getInstance() {
 		ObjectProvider<ArcadeUpgradeService> provider = instanceProvider;
 		if (provider != null) {
@@ -93,14 +105,32 @@ public class ArcadeUpgradeService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<ArcadeUpgradeService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 关闭窗口。
+	 * Closes the window.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void closeWindow(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(2));
 	}
 
+	/**
+	 * 打开街机升级。
+	 * Opens arcade upgrade.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void startArcadeUpgrade(Player player) {
 		PlayerUpgradeArcade arcade = player.getUpgradeArcade();
 		if (arcade == null) {
@@ -110,14 +140,31 @@ public class ArcadeUpgradeService {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(arcade.getFrenzyPoints(), arcade.getFrenzyCount()));
 	}
 
+	/**
+	 * 显示奖励列表。
+	 * Shows reward list.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void showRewardList(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(10));
 	}
 
+	/**
+	 * getTabs 方法。
+	 * getTabs method.
+	 * result
+	 */
 	public List<ArcadeTab> getTabs() {
 		return DataManager.ARCADE_UPGRADE_DATA.getArcadeTabs();
 	}
 
+	/**
+	 * 尝试街机升级。
+	 * Attempts arcade upgrade.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void tryArcadeUpgrade(final Player player) {
 		if (!EventsConfig.ENABLE_EVENT_ARCADE) {
 			return;
@@ -125,17 +172,17 @@ public class ArcadeUpgradeService {
 		PlayerUpgradeArcade arcade = player.getUpgradeArcade();
 		Storage localStorage = player.getInventory();
 		if (player.getInventory().isFull()) {
-			// Your cube is full.
+			// 你的背包已满。 / Your cube is full.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 			return;
 		}
 		if ((arcade.getFrenzyLevel() == 1) && (!localStorage.decreaseByItemId(186000389, 1L))) {
-			// You do not have enough %0s.
+			// 你的 %0 不足。 / You do not have enough %0s.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GACHA_ITEM_CHECK);
 			return;
 		}
 		if (arcade.isReTry() && (!localStorage.decreaseByItemId(186000389, 2L))) {
-			// You do not have enough %0s.
+			// 你的 %0 不足。 / You do not have enough %0s.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GACHA_ITEM_CHECK);
 			return;
 		}
@@ -153,21 +200,43 @@ public class ArcadeUpgradeService {
 		}
 	}
 
+	/**
+	 * getPlaySuccesArcade 方法。
+	 * getPlaySuccesArcade method.
+	 *
+	 * 玩家 / player
+	 * arcade
+	 */
 	public void getPlaySuccesArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		arcade.setFrenzyLevel(arcade.getFrenzyLevel() + 1);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, true, arcade.getFrenzyPoints()));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(player, 4, arcade.getFrenzyLevel()));
 			}
 		}, 3000);
 	}
 
+	/**
+	 * getPlayFailedArcade 方法。
+	 * getPlayFailedArcade method.
+	 *
+	 * 玩家 / player
+	 * arcade
+	 */
 	public void getPlayFailedArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, false, arcade.getFrenzyPoints()));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				PacketSendUtility.sendPacket(player,
 						new SM_UPGRADE_ARCADE(player, 5, arcade.isReTry() ? arcade.getFailedLevel() : 1));
@@ -184,6 +253,13 @@ public class ArcadeUpgradeService {
 		}, 3000);
 	}
 
+	/**
+	 * getFrenzyArcade 方法。
+	 * getFrenzyArcade method.
+	 *
+	 * 玩家 / player
+	 * arcade
+	 */
 	public void getFrenzyArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		if (arcade.getFrenzyCount() < 4) {
 			arcade.setFrenzyCount(arcade.getFrenzyCount() + 1);
@@ -192,11 +268,15 @@ public class ArcadeUpgradeService {
 			arcade.setFrenzy(true);
 			getSpecialRewardItem(player);
 		}
-		// Upgrade Frenzy!
+		// 升级狂热！ / Upgrade Frenzy!
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVERTIME_START);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, frenzyTime, arcade.getFrenzyCount()));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				PlayerUpgradeArcade arcade = player.getUpgradeArcade();
 				PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, 0, arcade.getFrenzyCount()));
@@ -212,6 +292,12 @@ public class ArcadeUpgradeService {
 		}
 	}
 
+	/**
+	 * getReward 方法。
+	 * getReward method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void getReward(Player player) {
 		if (!EventsConfig.ENABLE_EVENT_ARCADE) {
 			return;
@@ -220,13 +306,13 @@ public class ArcadeUpgradeService {
 		ArcadeTabItem item = getRewardItem(player);
 		int itemCount = arcade.isFrenzy() ? item.getNormalCount() : item.getFrenzyCount();
 		if (arcade.isFrenzy()) {
-			// You've reached Frenzy four times and received %1 %0!
+			// 你已达到狂热四次，获得了 %1 %0！ / You've reached Frenzy four times and received %1 %0!
 			PacketSendUtility.sendPacket(player,
 					itemCount >= 1
 							? SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVER_ITEM_REWARD_MULTI(item.getItemId(), itemCount)
 							: SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVER_ITEM_REWARD(item.getItemId()));
 		} else {
-			// You won %1 of %0 from the Upgrade Arcade.
+			// 你从升级街机获得了 %1 个 %0。 / You won %1 of %0 from the Upgrade Arcade.
 			PacketSendUtility.sendPacket(player,
 					itemCount >= 1 ? SM_SYSTEM_MESSAGE.STR_MSG_GACHA_ITEM_REWARD_MULTI(item.getItemId(), itemCount)
 							: SM_SYSTEM_MESSAGE.STR_MSG_GACHA_ITEM_REWARD(item.getItemId()));

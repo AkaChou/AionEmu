@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.assemblednpc;
 
 import java.util.List;
@@ -23,6 +7,11 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 组装 NPC 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AssembledNpcTemplate")
@@ -42,22 +31,27 @@ public class AssembledNpcTemplate {
 	@XmlElement(name = "assembled_part")
 	private List<AssembledNpcPartTemplate> parts;
 
+	/** 返回 nr / Returns the nr */
 	public int getNr() {
 		return nr;
 	}
 
+	/** 返回 route id / Returns the route id */
 	public int getRouteId() {
 		return routeId;
 	}
 
+	/** 返回映射 ID / Returns the map id */
 	public int getMapId() {
 		return mapId;
 	}
 
+	/** 返回 live time / Returns the live time */
 	public int getLiveTime() {
 		return liveTime;
 	}
 
+	/** 返回 assembled npc part templates / Returns the assembled npc part templates */
 	public List<AssembledNpcPartTemplate> getAssembledNpcPartTemplates() {
 		return parts;
 	}
@@ -72,10 +66,12 @@ public class AssembledNpcTemplate {
 		@XmlAttribute(name = "entityId")
 		private int entityId;
 
+		/** 返回 NPC ID / Returns the npc id */
 		public int getNpcId() {
 			return npcId;
 		}
 
+		/** 返回 entity id / Returns the entity id */
 		public int getEntityId() {
 			return entityId;
 		}

@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -41,8 +26,9 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Automatic Announcement System
- * 
+ * 自动公告服务，按间隔向在线玩家广播系统公告。
+ * Automatic announcement service broadcasting system messages to online players on a schedule.
+ *
  * @author Divinity
  */
 @Slf4j
@@ -50,13 +36,25 @@ public class AnnouncementService {
 
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
+	/** 已加载的公告集合。 / Loaded announcements. */
 	private Collection<Announcement> announcements;
+	/** 定时广播任务列表。 / Scheduled broadcast task list. */
 	private List<Future<?>> delays = new ArrayList<Future<?>>();
 
+	/**
+	 * 构造服务并加载公告。
+	 * Constructs the service and loads announcements.
+	 */
 	public AnnouncementService() {
 		this.load();
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final AnnouncementService getInstance() {
 		ObjectProvider<AnnouncementService> provider = instanceProvider;
 		if (provider == null) {
@@ -65,29 +63,37 @@ public class AnnouncementService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AnnouncementService> instanceProvider) {
 		AnnouncementService.instanceProvider = instanceProvider;
 	}
 
 	/**
-	 * Reload the announcements system
+	 * 取消已有定时任务并重新加载公告。
+	 * Cancels existing schedules and reloads announcements.
 	 */
 	public void reload() {
-		// Cancel all tasks
+		// 取消全部任务 / Cancel all tasks
 		if (delays != null && delays.size() > 0) {
 			for (Future<?> delay : delays) {
 				delay.cancel(false);
 			}
 		}
-		// Clear all announcements
+		// 清除全部公告 / Clear all announcements
 		announcements.clear();
 
-		// And load again all announcements
+		// 并重新加载全部公告 / And load again all announcements
 		load();
 	}
 
 	/**
-	 * Load the announcements system
+	 * 从数据库加载公告并注册定时广播。
+	 * Loads announcements from DB and schedules fixed-rate broadcasts.
 	 */
 	private void load() {
 		announcements = new HashSet<Announcement>(getDAO().getAnnouncements());
@@ -131,25 +137,46 @@ public class AnnouncementService {
 				}
 			}, announce.getDelay() * 1000, announce.getDelay() * 1000));
 		}
-		log.info("Loaded " + announcements.size() + " announcements");
+		log.info(I18n.get("log.60ed3a14c1fd", announcements.size()));
 	}
 
+	/**
+	 * 新增一条公告到数据库。
+	 * Adds an announcement to the database.
+	 *
+	 * announcement
+	 */
 	public void addAnnouncement(Announcement announce) {
 		getDAO().addAnnouncement(announce);
 	}
 
+	/**
+	 * 按 ID 删除公告。
+	 * Deletes an announcement by id.
+	 *
+	 * announcement id
+	 *
+	 * @param idAnnounce @return 删除成功返回 true / true if deleted
+	 */
 	public boolean delAnnouncement(final int idAnnounce) {
 		return getDAO().delAnnouncement(idAnnounce);
 	}
 
+	/**
+	 * 获取数据库中的全部公告。
+	 * Returns all announcements from the database.
+	 *
+	 * announcement set
+	 */
 	public Set<Announcement> getAnnouncements() {
 		return getDAO().getAnnouncements();
 	}
 
 	/**
-	 * Retuns {@link com.aionemu.loginserver.dao.AnnouncementDAO} , just a shortcut
-	 * 
-	 * @return {@link com.aionemu.loginserver.dao.AnnouncementDAO}
+	 * 获取公告 DAO 的快捷方法。
+	 * Shortcut to the announcements DAO.
+	 *
+	 * DAO instance
 	 */
 	private AnnouncementsDAO getDAO() {
 		return DAOManager.getDAO(AnnouncementsDAO.class);

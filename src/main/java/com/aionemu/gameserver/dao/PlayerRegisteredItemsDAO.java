@@ -1,34 +1,56 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.gameserver.model.house.HouseRegistry;
 
+/**
+ * 玩家房屋注册物品数据访问抽象层。
+ * DAO for player house registered items persistence.
+ */
 public abstract class PlayerRegisteredItemsDAO implements IDFactoryAwareDAO {
+
+	/**
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
+	 */
 	@Override
 	public String getClassName() {
 		return PlayerRegisteredItemsDAO.class.getName();
 	}
 
+	/**
+	 * 加载玩家房屋注册表。
+	 * Loads the house registry for the player.
+	 *
+	 * player object id
+	 */
 	public abstract void loadRegistry(int playerId);
 
+	/**
+	 * 保存玩家房屋注册表。
+	 * Stores the house registry for the player.
+	 *
+	 * @param registry 房屋注册表 / house registry
+	 * player object id
+	 * @return 是否保存成功 / true if stored
+	 */
 	public abstract boolean store(HouseRegistry registry, int playerId);
 
+	/**
+	 * 删除玩家全部已注册物品。
+	 * Deletes all registered items for the player.
+	 *
+	 * player object id
+	 * @return 是否删除成功 / true if deleted
+	 */
 	public abstract boolean deletePlayerItems(int playerId);
 
+	/**
+	 * 重置玩家房屋注册表。
+	 * Resets the house registry for the player.
+	 *
+	 * player object id
+	 */
 	public abstract void resetRegistry(int playerId);
 }

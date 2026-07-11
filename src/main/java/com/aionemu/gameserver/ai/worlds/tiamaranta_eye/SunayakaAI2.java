@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -37,10 +21,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Tiamaranta eye 区域 NPC AI：Sunayaka（@AIName "sunayaka"），继承 AggressiveNpcAI2。
+ * Tiamaranta eye zone NPC AI: Sunayaka (@AIName "sunayaka"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("sunayaka")
 public class SunayakaAI2 extends AggressiveNpcAI2
 {
@@ -67,7 +53,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 				//////////////////////////////////
 				case 249144: //Governor Sunayaka.
 				case 249145: //Berserker Sunayaka.
-					//Berserker Sunayaka goes berserk 15 minutes after the battle starts.
+					// 狂战士苏纳亚卡在开战 15 分钟后狂暴。 / Berserker Sunayaka goes berserk 15 minutes after the battle starts.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401459, 0);
 					getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 						@Override
@@ -80,7 +66,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 					sunayakaRageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
-							//Berserker Sunayaka has gone berserk.
+							// 狂战士苏纳亚卡已狂暴。 / Berserker Sunayaka has gone berserk.
 							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401460, 0);
 							getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 								@Override

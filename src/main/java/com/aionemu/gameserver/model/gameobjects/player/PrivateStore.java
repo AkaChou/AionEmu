@@ -5,18 +5,19 @@ import java.util.LinkedHashMap;
 import com.aionemu.gameserver.model.trade.TradePSItem;
 
 /**
+ * PrivateStore 游戏对象。
+ * Private Store game object.
+ *
  * @author Xav Modified by Simple
  */
 public class PrivateStore {
 
-	private Player owner;
-	private LinkedHashMap<Integer, TradePSItem> items;
+	private final Player owner;
+	private final LinkedHashMap<Integer, TradePSItem> items;
 	private String storeMessage;
 
 	/**
-	 * This method binds a player to the store and creates a list of items
-	 *
-	 * @param owner
+	 * 将玩家绑定到商店并创建物品列表。 / This method binds a player to the store and creates a list of items.
 	 */
 	public PrivateStore(Player owner) {
 		this.owner = owner;
@@ -24,6 +25,7 @@ public class PrivateStore {
 	}
 
 	/**
+	 * 将 return 所有者。
 	 * This method will return the owner of the store
 	 *
 	 * @return Player
@@ -33,51 +35,74 @@ public class PrivateStore {
 	}
 
 	/**
+	 * 将 returnitemsbeingsold。
 	 * This method will return the items being sold
 	 *
 	 * @return LinkedHashMap<Integer, TradePSItem>
 	 */
-	public LinkedHashMap<Integer, TradePSItem> getSoldItems() {
-		return items;
+	public synchronized LinkedHashMap<Integer, TradePSItem> getSoldItems() {
+		LinkedHashMap<Integer, TradePSItem> snapshot = new LinkedHashMap<Integer, TradePSItem>();
+		for (TradePSItem item : items.values()) {
+			snapshot.put(item.getItemObjId(), copy(item));
+		}
+		return snapshot;
 	}
 
 	/**
+	 * 将物品列表 price。
 	 * This method will add an item to the list and price
 	 *
 	 * @param itemObjId
 	 * @param tradeItem
 	 */
-	public void addItemToSell(int itemObjId, TradePSItem tradeItem) {
-		items.put(itemObjId, tradeItem);
+	public synchronized void addItemToSell(int itemObjId, TradePSItem tradeItem) {
+		items.put(itemObjId, copy(tradeItem));
 	}
 
 	/**
+	 * 将物品列表。
 	 * This method will remove an item from the list
 	 *
 	 * @param itemObjId
 	 */
-	public void removeItem(int itemObjId) {
+	public synchronized void removeItem(int itemObjId) {
 		items.remove(itemObjId);
 	}
 
 	/**
 	 * @param itemObjId return tradeItem
 	 */
-	public TradePSItem getTradeItemByObjId(int itemObjId) {
-		return items.get(itemObjId);
+	public synchronized TradePSItem getTradeItemByObjId(int itemObjId) {
+		TradePSItem item = items.get(itemObjId);
+		return item == null ? null : copy(item);
+	}
+
+	/**
+	 * 减少上架物品数量，售罄时移除。 / Decreases a listed item count and removes it when sold out.
+	 */
+	public synchronized void decreaseItemCount(int itemObjId, long count) {
+		TradePSItem item = items.get(itemObjId);
+		item.decreaseCount(count);
+		if (item.getCount() <= 0) {
+			items.remove(itemObjId);
+		}
 	}
 
 	/**
 	 * @param storeMessage the storeMessage to set
 	 */
-	public void setStoreMessage(String storeMessage) {
+	public synchronized void setStoreMessage(String storeMessage) {
 		this.storeMessage = storeMessage;
 	}
 
 	/**
 	 * @return the storeMessage
 	 */
-	public String getStoreMessage() {
+	public synchronized String getStoreMessage() {
 		return storeMessage;
+	}
+
+	private static TradePSItem copy(TradePSItem item) {
+		return new TradePSItem(item.getItemObjId(), item.getItemId(), item.getCount(), item.getPrice());
 	}
 }

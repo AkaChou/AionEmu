@@ -7,6 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 圣所任务脚本：Just Between Me And Fasimedes（任务 ID 19047）。
+ * Sanctum quest script: Just Between Me And Fasimedes (quest ID 19047).
+ */
 public class _19047Just_Between_Me_And_Fasimedes extends QuestHandler {
 
 	private final static int questId = 19047;

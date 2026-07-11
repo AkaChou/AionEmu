@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.agentFight;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 代理人战争相关 NPC AI：Mastarius Aether Concentrator（@AIName "mastarius_aether_concentrator"），继承 ActionItemNpcAI2。
+ * Agent-fight related NPC AI: Mastarius Aether Concentrator (@AIName "mastarius_aether_concentrator"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("mastarius_aether_concentrator")
 public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 {
@@ -54,36 +40,36 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
-		    //Mastarius's Aether Concentrator I
+		    // 玛斯塔里乌斯以太集中器 I / Mastarius's Aether Concentrator I
 			case 296913:
 				if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceMastariusI();
 				    AI2Actions.targetCreature(Mastarius_Aether_ConcentratorAI2.this, getPosition().getWorldMapInstance().getNpc(235065)); //Empowered Mastarius.
 				    AI2Actions.useSkill(Mastarius_Aether_ConcentratorAI2.this, 20107); //Defense Aether.
 				} else {
-					//You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
+					// 使用天族/魔族化身失败。需重新汇聚力量并召唤。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 		    break;
-			//Mastarius's Aether Concentrator II
+			// 玛斯塔里乌斯以太集中器 II / Mastarius's Aether Concentrator II
 			case 296914:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceMastariusII();
 				    AI2Actions.targetCreature(Mastarius_Aether_ConcentratorAI2.this, getPosition().getWorldMapInstance().getNpc(235065)); //Empowered Mastarius.
 				    AI2Actions.useSkill(Mastarius_Aether_ConcentratorAI2.this, 20108); //Elemental Resistance Aether.
 				} else {
-					//You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
+					// 使用天族/魔族化身失败。需重新汇聚力量并召唤。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 			break;
-			//Mastarius's Aether Concentrator III
+			// 玛斯塔里乌斯以太集中器 III / Mastarius's Aether Concentrator III
 			case 296915:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceMastariusII();
 				    AI2Actions.targetCreature(Mastarius_Aether_ConcentratorAI2.this, getPosition().getWorldMapInstance().getNpc(235065)); //Empowered Mastarius.
 				    AI2Actions.useSkill(Mastarius_Aether_ConcentratorAI2.this, 20109); //Power Aether.
 				} else {
-					//You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
+					// 使用天族/魔族化身失败。需重新汇聚力量并召唤。 / You have failed to use the Empyrean Avatar. You will need to gather power and summon it again.
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 			break;
@@ -95,7 +81,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The first Sphere of Destiny has been activated.
+				// 第一命运球已激活。 / The first Sphere of Destiny has been activated.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_FIRST_OBJECT_ON_DF);
 			}
 		});
@@ -104,7 +90,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The second Sphere of Destiny has been activated. Marchutan's Agent Mastarius prepares to cast the Empyrean Lord's blessing.
+				// 第二命运球已激活。玛尔库坦代理人玛斯塔里乌斯准备施放主神祝福。 / The second Sphere of Destiny has been activated. Marchutan's Agent Mastarius prepares to cast the Empyrean Lord's blessing.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_SECOND_OBJECT_ON_DF);
 			}
 		});
@@ -113,7 +99,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//You may use the Sphere of Destiny again.
+				// 你可再次使用命运球。 / You may use the Sphere of Destiny again.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_CAN_USE_OBJECT_DF, 120000);
 			}
 		});

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.flyring;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,6 +7,11 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.utils3d.Point3D;
+
+/**
+ * 飞行光环模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FlyRing")
@@ -45,26 +34,32 @@ public class FlyRingTemplate {
 	@XmlElement(name = "right")
 	protected FlyRingPoint right;
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 获取地图。 / Returns the map. */
 	public int getMap() {
 		return map;
 	}
 
+	/** 获取半径。 / Returns the radius. */
 	public float getRadius() {
 		return radius;
 	}
 
+	/** 返回居中 / Returns the center*/
 	public FlyRingPoint getCenter() {
 		return center;
 	}
 
+	/** 返回 left / Returns the left */
 	public FlyRingPoint getLeft() {
 		return left;
 	}
 
+	/** 返回 right / Returns the right */
 	public FlyRingPoint getRight() {
 		return right;
 	}

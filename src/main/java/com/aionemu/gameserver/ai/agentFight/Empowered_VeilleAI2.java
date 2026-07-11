@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.agentFight;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -42,10 +26,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 代理人战争相关 NPC AI：Empowered Veille（@AIName "empowered_veille"），继承 AggressiveNpcAI2。
+ * Agent-fight related NPC AI: Empowered Veille (@AIName "empowered_veille"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("empowered_veille")
 public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 {
@@ -121,7 +107,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 				AionObject winner = getAggroList().getMostDamage();
 				if (winner instanceof Creature) {
 					final Creature kill = (Creature) winner;
-					//"Player Name" of the "Race" has killed Kaisinel's Agent Veille.
+					// “种族”的“玩家名”击杀了凯希内尔代理人维勒。 / "Player Name" of the "Race" has killed Kaisinel's Agent Veille.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400324, kill.getRace().getRaceDescriptionId(), kill.getName()));
 				}
 			}
@@ -131,7 +117,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Kaisinel's Agent Veille is under attack!
+				// 凯希内尔代理人维勒遭受攻击！ / Kaisinel's Agent Veille is under attack!
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_LIGHTBOSS_ATTACKED);
 			}
 		});
@@ -140,9 +126,9 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Empyrean Lord Agent summoned the Aether Concentrator.
+				// 主神代理人召唤了以太集中器。 / The Empyrean Lord Agent summoned the Aether Concentrator.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_OdSpawn, 0);
-				//The Empyrean Lord Agent has enabled the Aether Concentrator.
+				// 主神代理人已启用以太集中器。 / The Empyrean Lord Agent has enabled the Aether Concentrator.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_OdStart, 20000);
 			}
 		});
@@ -151,7 +137,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Empyrean Lord Agent's HP has dropped below 50%
+				// 主神代理人生命值已降至 50% 以下。 / The Empyrean Lord Agent's HP has dropped below 50%
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_Hp50);
 			}
 		});
@@ -160,7 +146,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Empyrean Lord Agent's HP has dropped below 10%
+				// 主神代理人生命值已降至 10% 以下。 / The Empyrean Lord Agent's HP has dropped below 10%
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_Hp10);
 			}
 		});
@@ -169,7 +155,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Agent battle has ended.
+				// 代理人之战已结束。 / The Agent battle has ended.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite_time_03);
 			}
 		});

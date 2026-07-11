@@ -1,34 +1,30 @@
-/*
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.conquestservice;
 
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
 
 /**
+ * 征服/供奉默认实现：切入 CONQUEST 并初始化 BOSS / 回到 PEACE。
+ * back to PEACE. / back to PEACE.
+ *
  * @author Rinzler (Encom)
  */
-
 public class Offering extends ConquestOffering<ConquestLocation> {
+
+	/**
+	 * 绑定征服地点。
+	 * Binds the conquest location.
+	 *
+	 * location
+	 */
 	public Offering(ConquestLocation conquest) {
 		super(conquest);
 	}
 
+	/**
+	 * 激活供奉、刷新 CONQUEST 刷怪并初始化 BOSS。
+	 * Activates offering, spawns CONQUEST entities and inits the boss.
+	 */
 	@Override
 	public void startConquest() {
 		getConquestLocation().setActiveConquest(this);
@@ -37,6 +33,10 @@ public class Offering extends ConquestOffering<ConquestLocation> {
 		initConquestBoss();
 	}
 
+	/**
+	 * 结束供奉：移除监听并恢复 PEACE。
+	 * Ends offering: removes listeners and restores PEACE.
+	 */
 	@Override
 	public void stopConquest() {
 		getConquestLocation().setActiveConquest(null);

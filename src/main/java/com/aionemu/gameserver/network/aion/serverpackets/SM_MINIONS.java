@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -26,6 +10,16 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 随从（Minion）多模式操作服务端包。
+ * Multi-mode server packet for minion (companion) operations.
+ * <p>
+ * action 取值概览：0=列表、1=新增/升级、2=删除、3=重命名、4=锁定、5=召唤、6=收回、
+ * 7=成长、8=功能子切换（物品/自动拾取/移动/Buff）、9=激活功能、10=关闭功能、
+ * 11=技能点/自动充能、12=自动充能开关、13=测试。
+ * action overview: 0=list, 1=add/level-up, 2=delete, 3=rename, 4=lock, 5=spawn, 6=despawn,
+ * 7=growth, 8=function sub-switch (item/auto-loot/move/buff), 9=activate function,
+ * 10=deactivate function, 11=skill points/auto-charge, 12=auto-charge toggle, 13=test.
+ *
  * @author Falke_34, FrozenKiller Reworked by G-Robson26
  */
 @Slf4j
@@ -49,44 +43,110 @@ public class SM_MINIONS extends AionServerPacket {
 	private boolean isloot;
 	private int lootNpcId;
 
+	/**
+	 * 仅指定 action 的简单构造。
+	 * Simple constructor with action only.
+	 *
+	 * operation type
+	 */
 	public SM_MINIONS(int action) {
 		this.action = action;
 	}
 
+	/**
+	 * 技能点与自动充能状态（action=11）。
+	 * Skill points and auto-charge state (action=11).
+	 *
+	 * operation type
+	 * @param minionSkillPoints 随从技能点 / minion skill points
+	 * @param autoCharge 是否自动充能 / auto-charge enabled
+	 */
 	public SM_MINIONS(int action, int minionSkillPoints, boolean autoCharge) {
 		this.action = action;
 		this.minionSkillPoints = minionSkillPoints;
 		this.autoCharge = autoCharge;
 	}
 
+	/**
+	 * 带新增类型的单随从数据（action=1 新增/合成/升级特效）。
+	 * Single minion data with add type (action=1 add/combine/level-up effect).
+	 *
+	 * operation type
+	 * @param commonData 随从公共数据 / minion common data
+	 * @param addType 新增类型（0=新随从、1=升级、2=合成成功、3=合成失败） / add type
+	 */
 	public SM_MINIONS(int action, MinionCommonData commonData, int addType) {
 		this.action = action;
 		this.commonData = commonData;
 		this.addType = addType;
 	}
 
+	/**
+	 * 单随从数据操作（召唤/收回/重命名/锁定/成长等）。
+	 * Single-minion data operations (spawn/despawn/rename/lock/growth, etc.).
+	 *
+	 * operation type
+	 * @param commonData 随从公共数据 / minion common data
+	 */
 	public SM_MINIONS(int action, MinionCommonData commonData) {
 		this.action = action;
 		this.commonData = commonData;
 	}
 
+	/**
+	 * 同步全部随从列表（action=0）。
+	 * Syncs the full minion list (action=0).
+	 *
+	 * operation type
+	 * minion collection
+	 */
 	public SM_MINIONS(int action, Collection<MinionCommonData> minions) {
 		this.action = action;
 		this.minions = minions;
 	}
 
-	public SM_MINIONS(int action, long timeLeft) { // TODO
+	/**
+	 * 功能剩余时间（action=9）。
+	 * Function remaining time (action=9).
+	 *
+	 * operation type
+	 * remaining time
+	 */
+	public SM_MINIONS(int action, long timeLeft) {
 		this.action = action;
 		this.timeLeft = timeLeft;
 	}
 
-	public SM_MINIONS(int action, int subSwitch, int lootNpcId, boolean isloot) { // TODO
+	/**
+	 * 自动拾取子功能（action=8, subSwitch=1）。
+	 * Auto-loot sub-function (action=8, subSwitch=1).
+	 *
+	 * operation type
+	 * @param subSwitch 子切换类型 / sub-switch type
+	 * loot npc id
+	 * @param isloot 是否启用拾取 / whether looting is enabled
+	 */
+	public SM_MINIONS(int action, int subSwitch, int lootNpcId, boolean isloot) {
 		this.action = action;
 		this.subSwitch = subSwitch;
 		this.isloot = isloot;
 		this.lootNpcId = lootNpcId;
 	}
 
+	/**
+	 * 功能子切换（物品增删移/Buff 等，action=8）。
+	 * Function sub-switch (item add/remove/move/buff, action=8).
+	 * <p>
+	 * subSwitch 映射：0→0 加物品、1→256 功能、2→512 移动物品、3→768 Buff、4→1 自动拾取。
+	 * subSwitch mapping: 0→0 add item, 1→256 function, 2→512 move item, 3→768 buff, 4→1 auto-loot.
+	 *
+	 * operation type
+	 * @param subSwitch 子切换原始值 / raw sub-switch value
+	 * minion object id
+	 * item template id
+	 * slot
+	 * @param slot2 目标槽位 / target slot
+	 */
 	public SM_MINIONS(int action, int subSwitch, int minionObjectId, int ItemId, int slot, int slot2) {
 		this.action = action;
 		switch (subSwitch) {
@@ -123,6 +183,14 @@ public class SM_MINIONS extends AionServerPacket {
 		}
 	}
 
+	/**
+	 * 删除随从（可选作为材料，action=2）。
+	 * Deletes a minion (optionally as material, action=2).
+	 *
+	 * operation type
+	 * @param isMaterial 是否作为材料删除 / whether deleted as material
+	 * @param commonData 随从公共数据 / minion common data
+	 */
 	public SM_MINIONS(int action, boolean isMaterial, MinionCommonData commonData) {
 		this.action = action;
 		this.isMaterial = isMaterial;
@@ -170,7 +238,7 @@ public class SM_MINIONS extends AionServerPacket {
 				return;
 			}
 			writeD(addType);// 3 nem siker combination, 2 siker combination, 1 levelup, 0 new minion
-							// (effect)
+							// （效果） / (effect)
 			writeD(0);
 			writeH(0);
 			writeD(commonData.getObjectId());
@@ -282,7 +350,7 @@ public class SM_MINIONS extends AionServerPacket {
 			}
 			break;
 		}
-		case 9: {// Aktivate Miol funktion Warn TODO
+		case 9: { // activate minion function warning
 			writeD((int) timeLeft);
 			writeD(1);
 			break;

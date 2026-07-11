@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -36,6 +20,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.LinkedHashMap;
 
 /**
+ * Mailbox 游戏对象。
+ * Mailbox game object.
+ *
  * @author kosyachok
  * @modified Atracer
  */
@@ -46,9 +33,9 @@ public class Mailbox {
 	private Player owner;
 	public boolean isMailListUpdateRequired;
 
-	// 0x00 - closed
-	// 0x01 - regular
-	// 0x02 - express
+	// 0x00 - 关闭 / 0x00 - closed
+	// 0x01 - 普通 / 0x01 - regular
+	// 0x02 - 快递 / 0x02 - express
 	public byte mailBoxState = 0;
 
 	public Mailbox(Player player) {
@@ -67,13 +54,15 @@ public class Mailbox {
 	}
 
 	/**
+	 * 获取全部 lettersmailboxsortedaccording 时间 received。
 	 * Get all letters in mailbox (sorted according to time received)
-	 * 
+	 *
 	 * @return
 	 */
 	public Collection<Letter> getLetters() {
 		SortedSet<Letter> letters = new TreeSet<Letter>(new Comparator<Letter>() {
 
+			/** 比较 / compare. */
 			@Override
 			public int compare(Letter o1, Letter o2) {
 				if (o1.getTimeStamp().getTime() > o2.getTimeStamp().getTime()) {
@@ -93,9 +82,9 @@ public class Mailbox {
 	}
 
 	/**
-	 * Get system letters which senders start with the string specified and were
-	 * received since the last player login
-	 * 
+	 * 获取 systemletterswhichsendersstartstringspecifiedwerereceivedsincelast 玩家 login。
+	 * Get system letters which senders start with the string specified and were received since the last player login
+	 *
 	 * @param substring must start with special characters: % or $$
 	 * @return new list of letters
 	 */
@@ -118,8 +107,9 @@ public class Mailbox {
 	}
 
 	/**
+	 * 获取 letterspecifiedletterID。
 	 * Get letter with specified letter id
-	 * 
+	 *
 	 * @param letterObjId
 	 * @return
 	 */
@@ -128,8 +118,8 @@ public class Mailbox {
 	}
 
 	/**
-	 * Check whether mailbox contains empty letters
-	 * 
+	 * 检查是否 mailboxcontains 空 letters。 / Check whether mailbox contains empty letters
+	 *
 	 * @return
 	 */
 	public boolean haveUnread() {
@@ -141,6 +131,7 @@ public class Mailbox {
 		return false;
 	}
 
+	/** 返回 unread count / Returns the unread count */
 	public final int getUnreadCount() {
 		int unreadCount = 0;
 		for (Letter letter : mails.values()) {
@@ -151,6 +142,7 @@ public class Mailbox {
 		return unreadCount;
 	}
 
+	/** 按类型是否有未读 / Have Unread By Type */
 	public boolean haveUnreadByType(LetterType letterType) {
 		for (Letter letter : mails.values()) {
 			if (letter.isUnread() && letter.getLetterType() == letterType) {
@@ -160,6 +152,7 @@ public class Mailbox {
 		return false;
 	}
 
+	/** 按 type 返回 unread count / Returns the unread count by type */
 	public final int getUnreadCountByType(LetterType letterType) {
 		int count = 0;
 		for (Letter letter : mails.values()) {
@@ -186,14 +179,13 @@ public class Mailbox {
 	}
 
 	/**
-	 * Current size of mailbox
-	 * 
-	 * @return
+	 * @return 邮箱当前容量 / 大小。 / Current size of mailbox @return
 	 */
 	public int size() {
 		return mails.size();
 	}
 
+	/** 上传预留信件 / upload Reserve Letters. */
 	public void uploadReserveLetters() {
 		if (reserveMail.size() > 0 && haveFreeSlots()) {
 			boolean promoted = false;
@@ -212,10 +204,12 @@ public class Mailbox {
 		}
 	}
 
+	/** 发送邮件列表。 / Send mail list. */
 	public void sendMailList(boolean expressOnly) {
 		PacketSendUtility.sendPacket(owner, new SM_MAIL_SERVICE(owner, getLetters(), expressOnly));
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	public Player getOwner() {
 		return owner;
 	}

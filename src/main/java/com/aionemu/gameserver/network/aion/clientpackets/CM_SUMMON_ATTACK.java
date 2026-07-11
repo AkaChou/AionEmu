@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +7,12 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-@Slf4j
 
+/**
+ * 客户端召唤物攻击请求包。
+ * Client packet for summon attack requests.
+ */
+@Slf4j
 public class CM_SUMMON_ATTACK extends AionClientPacket {
 
 	private int summonObjId;
@@ -35,6 +23,11 @@ public class CM_SUMMON_ATTACK extends AionClientPacket {
 	@SuppressWarnings("unused")
 	private int unk3;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_SUMMON_ATTACK(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

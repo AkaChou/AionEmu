@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import java.util.ArrayList;
@@ -26,6 +10,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Stigma 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler
  */
 
@@ -41,6 +28,7 @@ public class Stigma {
 	@XmlAttribute
 	protected int shard;
 
+	/** 返回技能 / Returns the skills */
 	public List<StigmaSkill> getSkills() {
 		List<StigmaSkill> list = new ArrayList<StigmaSkill>();
 		for (String st : skill) {
@@ -50,6 +38,7 @@ public class Stigma {
 		return list;
 	}
 
+	/** 返回技能 IDonly / Returns the skill id only */
 	public List<Integer> getSkillIdOnly() {
 		List<Integer> ids = new ArrayList<Integer>();
 		List<String> skill = this.skill;
@@ -68,10 +57,12 @@ public class Stigma {
 		return ids;
 	}
 
+	/** 返回碎片 / Returns the shard*/
 	public int getShard() {
 		return shard;
 	}
 
+	/** 返回 require skill / Returns the require skill */
 	public List<RequireSkill> getRequireSkill() {
 		if (requireSkill == null) {
 			requireSkill = new ArrayList<RequireSkill>();
@@ -88,10 +79,12 @@ public class Stigma {
 			this.skillLvl = skillLvl;
 		}
 
+		/** 返回 skill lvl / Returns the skill lvl */
 		public int getSkillLvl() {
 			return this.skillLvl;
 		}
 
+		/** 返回技能 ID / Returns the skill id */
 		public int getSkillId() {
 			return this.skillId;
 		}

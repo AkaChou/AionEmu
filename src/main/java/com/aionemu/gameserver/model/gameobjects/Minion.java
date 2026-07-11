@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.controllers.MinionController;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
+ * 守护灵游戏对象。
+ * Minion game object.
+ *
  * @author Falke_34
  */
 public class Minion extends VisibleObject {
@@ -42,27 +29,33 @@ public class Minion extends VisibleObject {
 		this.moveController = new MinionMoveController();
 	}
 
+	/** 返回大师 / Returns the master*/
 	public Player getMaster() {
 		return master;
 	}
 
+	/** 返回 minion id / Returns the minion id */
 	public int getMinionId() {
 		return objectTemplate.getTemplateId();
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return objectTemplate.getName();
 	}
 
+	/** 获取公共数据。 / Returns the common data. */
 	public final MinionCommonData getCommonData() {
 		return (MinionCommonData) objectTemplate;
 	}
 
+	/** 返回 move controller / Returns the move controller */
 	public final MoveController getMoveController() {
 		return moveController;
 	}
 
+	/** 获取守护灵模板。 / Returns the minion template. */
 	public final MinionTemplate getMinionTemplate() {
 		return minionTemplate;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -32,13 +16,8 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * Author Rinzler (Encom) Player receive "AP" everytime, if he uses any of these
- * items: Abyss Armor 35% Extraction Tools. Abyss Accessory 35% Extraction
- * Tools. Abyss Equipment 35% Extraction Tools. Abyss Weapon 35% Extraction
- * Tools. Abyss Wing 35% Extraction Tools. Vindachinerk's Durable Abyss Armor
- * Extraction Tools. Vindachinerk's Durable Abyss Weapon Extraction Tools.
- * Vindachinerk's Noble Abyss Armor Extraction Tools. Vindachinerk's Noble Abyss
- * Weapon Extraction Tools.
+ * Extract 欧比斯动作模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -57,22 +36,29 @@ public class ExtractAbyssAction extends AbstractItemAction {
 		this.itemCategory = itemCategory;
 	}
 
+	/** 获取比率。 / Returns the rate. */
 	public Integer getRate() {
 		return apextractionrate;
 	}
 
+	/** 设置比率。 / Sets the rate. */
 	public void setRate(Integer apextractionrate) {
 		this.apextractionrate = apextractionrate;
 	}
 
+	/** 获取物品分类。 / Returns the item category. */
 	public String getItemCategory() {
 		return itemCategory;
 	}
 
+	/** 设置物品分类。 / Sets the item category. */
 	public void setItemCategory(String itemCategory) {
 		this.itemCategory = itemCategory;
 	}
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null) {
@@ -82,18 +68,20 @@ public class ExtractAbyssAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		player.getController().cancelUseItem();
 		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(),
 				parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				if (targetItem.getItemTemplate().getAcquisition().getRequiredAp() != 0) {
 					AbyssPointsService.addAp(player,
 							(int) (targetItem.getItemTemplate().getAcquisition().getRequiredAp()
-									* (getRate() / 1000f)));
+									* 1000f)));
 					player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1);
 					player.getInventory().decreaseItemCount(targetItem, 1);
 				}

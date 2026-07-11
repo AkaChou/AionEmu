@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,10 +19,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Legion Advance Corridor（@AIName "direct_portal"），继承 NpcAI2。
+ * RvR-related NPC AI: Legion Advance Corridor (@AIName "direct_portal"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("direct_portal")
 public class Legion_Advance_CorridorAI2 extends NpcAI2
 {
@@ -82,8 +68,8 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
 	
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 45) {
-			//Do you want to infiltrate the enemy zone through the Dimensional Vortex ?
-			//This will automatically remove you from your current group/alliance and and place you in an infiltration alliance.
+			// 是否要通过次元漩涡渗透敌区？ / Do you want to infiltrate the enemy zone through the Dimensional Vortex ?
+			// 将自动把你从当前小队/联盟移出并加入渗透联盟。 / This will automatically remove you from your current group/alliance and and place you in an infiltration alliance.
 			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_INVADE_DIRECT_PORTAL, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
 				private boolean decisionTaken = false;
 				@Override
@@ -126,8 +112,8 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
 	}
 	
    /**
-	* Elyos.
-	*/
+	 * @param responder 天族 / Elyos
+	 */
     private void transferRvrElyos1(Player responder) {
         TeleportService2.teleportTo(responder, 220040000, 720.6933f, 2137.6619f, 305.9253f, (byte) 90);
     }
@@ -136,8 +122,8 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
     }
 	
    /**
-	* Asmodians.
-	*/
+	 * @param responder 魔族 / Asmodians
+	 */
 	private void transferRvrAsmodians1(Player responder) {
         TeleportService2.teleportTo(responder, 210040000, 862.318f, 318.10703f, 139.89037f, (byte) 6);
     }

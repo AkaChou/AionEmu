@@ -2,19 +2,46 @@ package com.aionemu.commons.utils.collections;
 
 import java.util.LinkedHashMap;
 
+/**
+ * int→int 哈希映射，缺失键时返回 0。
+ * Int-to-int hash map that returns 0 for missing keys.
+ */
 public class IntIntHashMap extends LinkedHashMap<Integer, Integer> {
 
-	public int get(int key) {
-		Integer value = super.get(key);
-		return value == null ? 0 : value;
-	}
+    /**
+     * 按 int 键取值，缺失返回 0。
+     * Get by int key, returning 0 when missing.
+     *
+     * Key
+     * Value or 0
+     */
+    public int get(int key) {
+        Integer value = super.get(key);
+        return value == null ? 0 : value;
+    }
 
-	public int put(int key, int value) {
-		Integer previous = super.put(key, value);
-		return previous == null ? 0 : previous;
-	}
+    /**
+     * 按 int 键写入，返回旧值（缺失为 0）。
+     * Put by int key, returning the previous value (0 if none).
+     *
+     * Key
+     * Value
+     * Previous value or 0
+     */
+    public int put(int key, int value) {
+        Integer previous = super.put(key, value);
+        return previous == null ? 0 : previous;
+    }
 
-	public boolean contains(int key) {
-		return containsKey(key);
-	}
+    /**
+     * 是否包含 int 键。
+     * Whether the map contains the int key.
+     *
+     * Key
+     *
+     * @param key 存在则为 true / True if present
+     */
+    public boolean contains(int key) {
+        return containsKey(key);
+    }
 }

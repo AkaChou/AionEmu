@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,18 +20,42 @@ import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
 import java.util.concurrent.ForkJoinPool;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
-@Slf4j
 
+/**
+ * 游戏服线程池管理器：调度、即时、长任务与工作窃取池的统一入口。
+ * Game-server thread-pool manager: unified entry for scheduled, instant, long-running, and work-stealing pools.
+ */
+@Slf4j
 public final class ThreadPoolManager {
+
+	/** 无警告的最大运行时长（毫秒，常量备份） / Max runtime without warning (ms, constant backup) */
 	public static final long MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000;
+
+	/** 可调度延迟上限（毫秒） / Maximum schedulable delay in milliseconds */
 	private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
+
+	/** 长任务队列容量 / Long-running queue capacity */
 	private static final int LONG_RUNNING_QUEUE_CAPACITY = 100000;
+
+	/** 可选 Spring 实例提供者 / Optional Spring instance provider */
 	private static volatile ObjectProvider<ThreadPoolManager> instanceProvider;
+
+	/** 定时任务池 / Scheduled task pool */
 	private final ScheduledThreadPoolExecutor scheduledPool;
+
+	/** 即时任务池 / Instant task pool */
 	private final ThreadPoolExecutor instantPool;
+
+	/** 长时任务池 / Long-running task pool */
 	private final ThreadPoolExecutor longRunningPool;
+
+	/** 工作窃取（ForkJoin）线程池 / Work-stealing (ForkJoin) pool */
 	private final ForkJoinPool workStealingPool;
 
+	/**
+	 * 初始化各线程池并启动周期性 purge。
+	 * Initialize all pools and start periodic purge.
+	 */
 	public ThreadPoolManager() {
 		final int instantPoolSize = Math.max(1, ThreadConfig.THREAD_POOL_SIZE)
 				* Runtime.getRuntime().availableProcessors();
@@ -76,26 +86,60 @@ public final class ThreadPoolManager {
 		}, 1000000, 1000000);
 	}
 
+	/**
+	 * 将延迟钳制到 [0, MAX_DELAY]。
+	 * Clamp delay into [0, MAX_DELAY].
+	 *
+	 * @param delay 原始延迟（毫秒） / Raw delay in milliseconds
+	 * Validated delay
+	 */
 	private long validate(long delay) {
 		return Math.max(0, Math.min(MAX_DELAY, delay));
 	}
 
+	/**
+	 * 计算长时任务池大小（至少 2，默认 CPU 核数）。
+	 * Compute long-running pool size (at least 2, default = CPU count).
+	 *
+	 * Pool size
+	 */
 	private int longRunningPoolSize() {
 		return Math.max(2, Runtime.getRuntime().availableProcessors());
 	}
 
+	/**
+	 * 使用线程配置超时阈值的 Runnable 包装器。
+	 * Runnable wrapper using thread-config warning threshold.
+	 */
 	private static final class ThreadPoolRunnableWrapper extends RunnableWrapper {
 		private ThreadPoolRunnableWrapper(Runnable runnable) {
 			super(runnable, ThreadConfig.MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING);
 		}
 	}
 
+	/**
+	 * 延迟执行一次任务。
+	 * Schedule a one-shot delayed task.
+	 *
+	 * @param r 任务 / Task
+	 * @param delay 延迟毫秒 / Delay in milliseconds
+	 * Scheduled future
+	 */
 	public final ScheduledFuture<?> schedule(Runnable r, long delay) {
 		r = new ThreadPoolRunnableWrapper(r);
 		delay = validate(delay);
 		return scheduledPool.schedule(r, delay, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * 以固定频率周期性执行任务。
+	 * Schedule a fixed-rate periodic task.
+	 *
+	 * @param r 任务 / Task
+	 * @param delay 首次延迟毫秒 / Initial delay in milliseconds
+	 * 周期（毫秒） / Period in milliseconds
+	 * Scheduled future
+	 */
 	public final ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
 		r = new ThreadPoolRunnableWrapper(r);
 		delay = validate(delay);
@@ -103,48 +147,93 @@ public final class ThreadPoolManager {
 		return scheduledPool.scheduleAtFixedRate(r, delay, period, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * 获取工作窃取（ForkJoin）池。
+	 * Get the work-stealing (ForkJoin) pool.
+	 *
+	 * ForkJoin pool
+	 */
 	public ForkJoinPool getForkingPool() {
 		return workStealingPool;
 	}
 
+	/**
+	 * 在即时池中执行任务。
+	 * Execute a task on the instant pool.
+	 *
+	 * @param r 任务 / Task
+	 */
 	public final void execute(Runnable r) {
 		r = new ThreadPoolRunnableWrapper(r);
 		instantPool.execute(r);
 	}
 
+	/**
+	 * 在长时任务池中执行任务。
+	 * Execute a task on the long-running pool.
+	 *
+	 * @param r 任务 / Task
+	 */
 	public final void executeLongRunning(Runnable r) {
 		r = new RunnableWrapper(r);
 		longRunningPool.execute(r);
 	}
 
+	/**
+	 * 向即时池提交任务并返回 Future。
+	 * Submit a task to the instant pool and return a Future.
+	 *
+	 * @param r 任务 / Task
+	 * Future handle
+	 */
 	public final Future<?> submit(Runnable r) {
 		r = new ThreadPoolRunnableWrapper(r);
 		return instantPool.submit(r);
 	}
 
+	/**
+	 * 向长时任务池提交任务并返回 Future。
+	 * Submit a task to the long-running pool and return a Future.
+	 *
+	 * @param r 任务 / Task
+	 * Future handle
+	 */
 	public final Future<?> submitLongRunning(Runnable r) {
 		r = new RunnableWrapper(r);
 		return longRunningPool.submit(r);
 	}
 
+	/**
+	 * 执行登录服相关数据包任务（委托即时池）。
+	 * Execute a login-server packet task (delegates to the instant pool).
+	 *
+	 * @param pkt 数据包任务 / Packet task
+	 */
 	public void executeLsPacket(Runnable pkt) {
 		execute(pkt);
 	}
 
+	/**
+	 * 清理各线程池已取消任务。
+	 * Purge cancelled tasks from all pools.
+	 */
 	public void purge() {
 		scheduledPool.purge();
 		instantPool.purge();
 		longRunningPool.purge();
 	}
 
+	/**
+	 * 优雅关闭全部线程池并记录队列状态。
+	 * Gracefully shut down all pools and log queue state.
+	 */
 	public void shutdown() {
 		final long begin = System.currentTimeMillis();
-		log.info("ThreadPoolManager: Shutting down.");
-		log.info("\t... executing " + getTaskCount(scheduledPool) + " scheduled tasks.");
-		log.info("\t... executing " + getTaskCount(instantPool) + " instant tasks.");
-		log.info("\t... executing " + getTaskCount(longRunningPool) + " long running tasks.");
-		log.info("\t... " + (workStealingPool.getQueuedTaskCount() + workStealingPool.getQueuedSubmissionCount())
-				+ " forking tasks left.");
+		log.info(I18n.get("log.8a50f53595f0"));
+		log.info(I18n.get("log.e0894695d98b", getTaskCount(scheduledPool)));
+		log.info(I18n.get("log.6aca868692a9", getTaskCount(instantPool)));
+		log.info(I18n.get("log.f6e5ab713d99", getTaskCount(longRunningPool)));
+		log.info(I18n.get("log.ab2806542e7c", (workStealingPool.getQueuedTaskCount() + workStealingPool.getQueuedSubmissionCount())));
 		scheduledPool.shutdown();
 		instantPool.shutdown();
 		longRunningPool.shutdown();
@@ -156,22 +245,34 @@ public final class ThreadPoolManager {
 			scheduledPool.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
 			success |= awaitTermination(10000);
 		} catch (InterruptedException e) {
-			log.warn("Interrupted while shutting down thread pools", e);
+			log.warn(I18n.get("log.8f2ed10ffefe", e));
 			Thread.currentThread().interrupt();
 		}
-		log.info("\t... success: " + success + " in " + (System.currentTimeMillis() - begin) + " msec.");
-		log.info("\t... " + getTaskCount(scheduledPool) + " scheduled tasks left.");
-		log.info("\t... " + getTaskCount(instantPool) + " instant tasks left.");
-		log.info("\t... " + getTaskCount(longRunningPool) + " long running tasks left.");
-		log.info("\t... " + (workStealingPool.getQueuedTaskCount() + workStealingPool.getQueuedSubmissionCount())
-				+ " forking tasks left.");
+		log.info(I18n.get("log.e2793575e244", success, (System.currentTimeMillis() - begin)));
+		log.info(I18n.get("log.a4e82809c60b", getTaskCount(scheduledPool)));
+		log.info(I18n.get("log.5e21f4d731c1", getTaskCount(instantPool)));
+		log.info(I18n.get("log.63d1ee00d183", getTaskCount(longRunningPool)));
+		log.info(I18n.get("log.ab2806542e7c", (workStealingPool.getQueuedTaskCount() + workStealingPool.getQueuedSubmissionCount())));
 		workStealingPool.shutdownNow();
 	}
 
+	/**
+	 * 统计线程池队列长度与活跃线程数之和。
+	 * Sum of queue size and active count for a pool.
+	 *
+	 * @param tp 线程池 / Thread pool
+	 * Task count
+	 */
 	private int getTaskCount(ThreadPoolExecutor tp) {
 		return tp.getQueue().size() + tp.getActiveCount();
 	}
 
+	/**
+	 * 收集各线程池的运行时统计行。
+	 * Collect runtime statistics lines for all pools.
+	 *
+	 * @return 统计文本行列表 / List of stats lines
+	 */
 	public List<String> getStats() {
 		List<String> list = new ArrayList<String>();
 		list.add("");
@@ -218,6 +319,15 @@ public final class ThreadPoolManager {
 		return list;
 	}
 
+	/**
+	 * 在超时内轮询等待各池终止。
+	 * Poll-wait for all pools to terminate within a timeout.
+	 *
+	 * Timeout in milliseconds
+	 *
+	 * @param timeoutInMillisec @return 全部终止返回 true / True if all terminated
+	 * @return @throws InterruptedException 等待被中断 / Wait interrupted
+	 */
 	private boolean awaitTermination(long timeoutInMillisec) throws InterruptedException {
 		final long begin = System.currentTimeMillis();
 		while (System.currentTimeMillis() - begin < timeoutInMillisec) {
@@ -239,10 +349,20 @@ public final class ThreadPoolManager {
 		return false;
 	}
 
+	/**
+	 * 单例持有者。
+	 * Singleton holder.
+	 */
 	private static final class SingletonHolder {
 		private static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
 	}
 
+	/**
+	 * 获取实例（优先 Spring 提供者，否则单例）。
+	 * Get instance (prefer Spring provider, else singleton).
+	 *
+	 * ThreadPoolManager instance
+	 */
 	public static ThreadPoolManager getInstance() {
 		ObjectProvider<ThreadPoolManager> provider = instanceProvider;
 		if (provider == null) {
@@ -251,6 +371,12 @@ public final class ThreadPoolManager {
 		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject a Spring instance provider.
+	 *
+	 * Spring ObjectProvider
+	 */
 	public static void setInstanceProvider(ObjectProvider<ThreadPoolManager> instanceProvider) {
 		ThreadPoolManager.instanceProvider = instanceProvider;
 	}

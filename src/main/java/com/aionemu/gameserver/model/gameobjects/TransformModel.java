@@ -1,24 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.TransformType;
+
+/**
+ * 变身 Model 游戏对象。
+ * Transform Model game object.
+ */
 
 public class TransformModel {
 	private int modelId;
@@ -41,6 +30,7 @@ public class TransformModel {
 		this.transformType = TransformType.NONE;
 	}
 
+	/** 返回 model id / Returns the model id */
 	public int getModelId() {
 		if (isActive && modelId > 0) {
 			return modelId;
@@ -48,6 +38,7 @@ public class TransformModel {
 		return originalModelId;
 	}
 
+	/** 设置 model id / Sets the model id */
 	public void setModelId(int modelId) {
 		if (modelId == 0 || modelId == originalModelId) {
 			modelId = originalModelId;
@@ -58,6 +49,7 @@ public class TransformModel {
 		}
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		if (ItemId > 0) {
 			return ItemId;
@@ -65,6 +57,7 @@ public class TransformModel {
 		return 0;
 	}
 
+	/** 设置物品 ID / Sets the item id */
 	public void setItemId(int itemId) {
 		if (itemId == 0) {
 			ItemId = 0;
@@ -73,6 +66,7 @@ public class TransformModel {
 		}
 	}
 
+	/** 获取类型。 / Returns the type. */
 	public TransformType getType() {
 		if (isActive) {
 			return transformType;
@@ -80,10 +74,12 @@ public class TransformModel {
 		return originalType;
 	}
 
+	/** 设置变身类型。 / Sets the transform type. */
 	public void setTransformType(TransformType transformType) {
 		this.transformType = transformType;
 	}
 
+	/** 返回 panel id / Returns the panel id */
 	public int getPanelId() {
 		if (isActive) {
 			return panelId;
@@ -91,18 +87,22 @@ public class TransformModel {
 		return 0;
 	}
 
+	/** 设置 panel id / Sets the panel id */
 	public void setPanelId(int id) {
 		this.panelId = id;
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		return this.isActive;
 	}
 
+	/** 设置 active / Sets the active */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
+	/** 获取部落。 / Returns the tribe. */
 	public TribeClass getTribe() {
 		if (isActive && transformTribe != null) {
 			return transformTribe;
@@ -110,6 +110,7 @@ public class TransformModel {
 		return overrideTribe;
 	}
 
+	/** 设置部落。 / Sets the tribe. */
 	public void setTribe(TribeClass transformTribe, boolean override) {
 		if (override) {
 			this.overrideTribe = transformTribe;

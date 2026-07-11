@@ -1,20 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
+
+/**
+ * XPCape 枚举。
+ * XP Cape enumeration.
+ */
 
 public enum XPCape {
 	_0(0), _1(130), _2(284), _3(418), _4(561), _5(721), _6(970), _7(1200), _8(1450), _9(1750), _10(2007), _11(2362),
@@ -29,7 +18,7 @@ public enum XPCape {
 	// 5.0
 	_66(4640620), _67(6641631), _68(8642642), _69(10643653), _70(12644664), _71(14645675), _72(16646686), _73(20670697),
 	_74(22680708), _75(24690719),
-	// Custom
+	// 自定义 / Custom
 	_76(26600720), _77(28610731), _78(30620742), _79(32630753), _80(34640764), _81(36650775), _82(38660786),
 	_83(40670787);
 
@@ -39,6 +28,7 @@ public enum XPCape {
 		this.id = id;
 	}
 
+	/** 值。 / Value. */
 	public int value() {
 		return id;
 	}

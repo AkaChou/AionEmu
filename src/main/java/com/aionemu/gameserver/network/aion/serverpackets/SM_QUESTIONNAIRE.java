@@ -1,28 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Sends Survey HTML data to the client. This packet can be splitted over max
- * 255 packets The max length of the HTML may therefore be 255 * 65525 byte
- * 
+ * 向客户端分片发送问卷/调查 HTML 内容（最多 255 片）。
+ * Server packet that sends survey HTML to the client in chunks (up to 255).
+ *
  * @author lhw and Kaipo
  */
 public class SM_QUESTIONNAIRE extends AionServerPacket {
@@ -32,6 +16,15 @@ public class SM_QUESTIONNAIRE extends AionServerPacket {
 	private byte count;
 	private String html;
 
+	/**
+	 * 使用给定参数构造 SM_QUESTIONNAIRE 包。
+	 * Creates a SM_QUESTIONNAIRE packet with the given parameters.
+	 *
+	 * message id
+	 * @param chunk 分片序号 / chunk index
+	 * @param count 分片总数 / chunk count
+	 * HTML content
+	 */
 	public SM_QUESTIONNAIRE(int messageId, byte chunk, byte count, String html) {
 		this.messageId = messageId;
 		this.chunk = chunk;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,18 +8,33 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * DP 转移效果：将施法者当前 DP 转给目标玩家。
+ * DP transfer effect: transfers the effector's current DP to the target player.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DPTransferEffect")
 public class DPTransferEffect extends EffectTemplate {
 
+	/**
+	 * 从目标扣除预留 DP，并加到施法者（方向以 reserved1 符号为准）。
+	 * Subtracts reserved DP from the target and adds it to the effector (sign via reserved1).
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		((Player) effect.getEffected()).getCommonData().addDp(-effect.getReserved1());
 		((Player) effect.getEffector()).getCommonData().addDp(effect.getReserved1());
 	}
 
+	/**
+	 * 计算可转移 DP，写入 reserved1。
+	 * Calculates transferable DP into reserved1.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, null, null)) {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,23 +12,44 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 失明效果：移除隐身，并按概率使攻击者判定为闪避。
+ * Blind effect: removes hide and makes attacker hits miss by chance.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BlindEffect")
 public class BlindEffect extends EffectTemplate {
 
+	/**
+	 * 移除隐身效果并加入效果控制器。
+	 * Removes hide effects and adds this effect to the controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.getEffected().getEffectController().removeHideEffects();
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 按失明抗性计算是否命中。
+	 * Calculates hit using blind resistance.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.BLIND_RESISTANCE, null);
 	}
 
+	/**
+	 * 设置失明异常并注册攻击判定观察者。
+	 * Sets blind abnormal and registers an attack-calc observer.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		effect.setAbnormal(AbnormalState.BLIND.getId());
@@ -60,6 +65,12 @@ public class BlindEffect extends EffectTemplate {
 		effect.setAttackStatusObserver(acObserver, position);
 	}
 
+	/**
+	 * 移除观察者并清除失明异常。
+	 * Removes the observer and clears the blind abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		AttackCalcObserver acObserver = effect.getAttackStatusObserver(position);

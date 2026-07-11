@@ -1,21 +1,7 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -44,15 +30,30 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
- * Created by Ataba
+ * 活动管理 GM 命令（{@code //eventai}）：范围奖励、拉人、复活、公告等。
+ * Event-management GM command ({@code //eventai}): ranged rewards, gather, revive, announce, etc.
+ *
+ * @author Ataba
  */
 @Slf4j(topic = "GM_MONITOR_LOG")
 public class EventAi extends AdminCommand {
+
+    /**
+     * 注册命令名为 {@code eventai}。
+     * Registers the command name {@code eventai}.
+     */
     public EventAi() {
         super("eventai");
     }
 
 
+    /**
+     * 按子命令分发活动操作（奖励、传送、复活、公告、麻痹等）。
+     * Dispatches event ops by subcommand (reward, teleport, revive, announce, paralyze, etc.).
+     *
+     * @param admin 执行 GM / admin player
+     * @param params 子命令与参数 / subcommand and arguments
+     */
     public void execute(final Player admin, String...params){
         if(params.length < 1){
             onFail(admin,null);
@@ -64,7 +65,6 @@ public class EventAi extends AdminCommand {
             return;
         }
 
-        //TODO IN DISTANCE 100
         if(params[0].equals("rewardall_inzone")){
             int rewardAmount = Integer.parseInt(params[2]);
 
@@ -73,29 +73,31 @@ public class EventAi extends AdminCommand {
 
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
+					if (player != admin && player.getWorldId() == admin.getWorldId()
+							&& MathUtil.isInRange(admin, player, 100)) {
                         AbyssPointsService.addGp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" GP from an Event!");
                         PacketSendUtility.sendMessage(admin, "Player : "+player.getName()+" has been rewarded!");
                     }
                 }
 
-                log.info("[eventai-rewardall_inzone] GM : " + admin.getName() + " gave GP : " + rewardAmount + " in mapId '" + admin.getWorldId() + "'");
-                PacketSendUtility.sendMessage(admin, "Every player on the map has been sucessfully rewarded with " + rewardAmount + " GP !");
+                log.info(I18n.get("log.07df9960ae0e", admin.getName(), rewardAmount, admin.getWorldId()));
+                PacketSendUtility.sendMessage(admin, "Every player within 100 meters has been successfully rewarded with " + rewardAmount + " GP!");
 
             }else if(params[1].equals("ap")){
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
+					if (player != admin && player.getWorldId() == admin.getWorldId()
+							&& MathUtil.isInRange(admin, player, 100)) {
                     	AbyssPointsService.addAp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" AP from an Event!");
                     }
                 }
-                log.info("[eventai-rewardall_inzone] GM : " + admin.getName() + " gave AP : " + rewardAmount + " in mapId '" + admin.getWorldId() + "'");
-                PacketSendUtility.sendMessage(admin, "Every player on the map has been sucessfully rewarded with "+rewardAmount+" AP !");
+                log.info(I18n.get("log.f603c5aa946c", admin.getName(), rewardAmount, admin.getWorldId()));
+                PacketSendUtility.sendMessage(admin, "Every player within 100 meters has been successfully rewarded with " + rewardAmount + " AP!");
             }
         } else if (params[0].equalsIgnoreCase("reward_range")) {
-            //eventai reward_range [TS] [Omega] [gp] [toll] [range]
+            // eventai reward_range [TS] [Omega] [gp] [toll] [range]
             final int TS = Integer.parseInt(params[1]);
             final int Omega = Integer.parseInt(params[2]);
             final int GP = Integer.parseInt(params[3]);
@@ -115,7 +117,7 @@ public class EventAi extends AdminCommand {
                                     }
                                     if(Omega != 0){
                                         ItemService.addItem(player, 166020000, Omega);
-										
+
 									}
 									if(GP != 0){
 										AbyssPointsService.addGp(player, GP);
@@ -131,7 +133,7 @@ public class EventAi extends AdminCommand {
                             }
                         }
                     });
-                    log.info("[eventai-reward_range] GM : " + admin.getName() + " gave TS : " + TS + " Omega : " + Omega + " GP : " + GP + " Toll : " + toll + " in range of " + range + "m in mapId '" + admin.getWorldId() + "'");
+                    log.info(I18n.get("log.85150f4815fc", admin.getName(), TS, Omega, GP, toll, range, admin.getWorldId()));
                 }
 
                 @Override
@@ -165,7 +167,7 @@ public class EventAi extends AdminCommand {
                     }
                 }
 
-                log.info("[eventai-rewardall_all] GM : " + admin.getName() + " gave GP : " + rewardAmount + " in mapId '" + admin.getWorldId() + "'");
+                log.info(I18n.get("log.cd8beb549016", admin.getName(), rewardAmount, admin.getWorldId()));
                 PacketSendUtility.sendMessage(admin, "Every player on the map has been sucessfully rewarded with "+rewardAmount+" GP !");
 
             }else if(params[1].equals("ap")){
@@ -177,7 +179,7 @@ public class EventAi extends AdminCommand {
                     }
                 }
 
-                log.info("[eventai-rewardall_inzone] GM : " + admin.getName() + " gave AP : " + rewardAmount + " in mapId '" + admin.getWorldId() + "'");
+                log.info(I18n.get("log.f603c5aa946c", admin.getName(), rewardAmount, admin.getWorldId()));
                 PacketSendUtility.sendMessage(admin, "Every player on the map has been sucessfully rewarded with "+rewardAmount+" AP !");
             }
         }else if(params[0].equals("rewardall_queue")){
@@ -198,7 +200,7 @@ public class EventAi extends AdminCommand {
                         AbyssPointsService.addGp(player, rewardAmount);
                     }
                 }
-                log.info("[eventai-rewardall_queue] GM : " + admin.getName() + " gave GP : " + rewardAmount + " in mapId '" + admin.getWorldId() + "'");
+                log.info(I18n.get("log.954b6df4135a", admin.getName(), rewardAmount, admin.getWorldId()));
                 admin.QueuedPlayers.clear();
             }
 
@@ -211,7 +213,7 @@ public class EventAi extends AdminCommand {
                    PacketSendUtility.sendMessage(player, "You have been ported by a GM");
                }
            }
-            log.info("[eventai-movetomeall_inzone] GM : " + admin.getName() + " teleported everyone to him in mapId '" + admin.getWorldId() + "'");
+            log.info(I18n.get("log.7feaee0e9ca2", admin.getName(), admin.getWorldId()));
             PacketSendUtility.sendMessage(admin, "Every player in this Map as been gathered to Your location!");
 
         }else if(params[0].equals("resall_inzone")){
@@ -224,7 +226,7 @@ public class EventAi extends AdminCommand {
                     return;
                 }
             }
-            log.info("[eventai-resall_inzone] GM : " + admin.getName() + " resurrected everyone inzone in mapId '" + admin.getWorldId() + "'");
+            log.info(I18n.get("log.4ad3f2d803be", admin.getName(), admin.getWorldId()));
         }else if(params[0].equals("announce_inzone")){
             String Message;
             String type;
@@ -235,7 +237,7 @@ public class EventAi extends AdminCommand {
             for (int i = 2; i < params.length - 1; i++) {
                 Message += params[i] + " ";
             }
-            // Add the last without the end space
+            // 添加最后一项，末尾不加空格 / Add the last without the end space
             Message += params[params.length - 1];
 
             String actual;
@@ -249,7 +251,7 @@ public class EventAi extends AdminCommand {
                     PacketSendUtility.sendYellowMessageOnCenter(player, actual);
                 }
             }
-            log.info("[eventai-announce_inzone] GM : " + admin.getName() + " announced inzone saying [" + actual + "] in mapId '" + admin.getWorldId() + "'");
+            log.info(I18n.get("log.de9525bd4665", admin.getName(), actual, admin.getWorldId()));
         }else if(params[0].equals("announce_all")){
             String Message;
             String type;
@@ -260,7 +262,7 @@ public class EventAi extends AdminCommand {
                 Message += params[i] + " ";
             }
 
-            // Add the last without the end space
+            // 添加最后一项，末尾不加空格 / Add the last without the end space
             Message += params[params.length - 1];
 
 
@@ -275,7 +277,7 @@ public class EventAi extends AdminCommand {
                 PacketSendUtility.sendYellowMessageOnCenter(player, actual);
 
             }
-            log.info("[eventai-announce_all] GM : " + admin.getName() + " announced all saying [" + actual + "] in mapId '" + admin.getWorldId() + "'");
+            log.info(I18n.get("log.4743056a2a29", admin.getName(), actual, admin.getWorldId()));
         }else if(params[0].equalsIgnoreCase("stop")){
             if(params[1].equalsIgnoreCase("all")){
 
@@ -288,7 +290,7 @@ public class EventAi extends AdminCommand {
                         GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, player, (10 * 1000));
                     }
                 }
-                log.info("[eventai-stop{all}] GM : " + admin.getName() + " paralyzed everyone in mapId '" + admin.getWorldId() + "'");
+                log.info(I18n.get("log.302d6ae1ff78", admin.getName(), admin.getWorldId()));
 
             }else{
 
@@ -302,7 +304,7 @@ public class EventAi extends AdminCommand {
 
             GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, (Creature) target, (10 * 1000));
             GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, (Creature) targetsTarget, (10 * 1000));
-            log.info("[eventai-stop{target}] GM : " + admin.getName() + " paralyzed both [" + target.getName() + "][" + targetsTarget.getName() +"] in mapId '" + admin.getWorldId() + "'");
+            log.info(I18n.get("log.b236acc93f74", admin.getName(), target.getName(), targetsTarget.getName(), admin.getWorldId()));
             }
         }else if(params[0].equalsIgnoreCase("returnall_inzone")){
             Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
@@ -315,7 +317,7 @@ public class EventAi extends AdminCommand {
                 }
 
             }
-            log.info("[eventai-returnall_inzone] GM : " + admin.getName() + " returned everyone in mapId '" + admin.getWorldId() + "'");
+            log.info(I18n.get("log.f6904c34ebe4", admin.getName(), admin.getWorldId()));
         }else if(params[0].equalsIgnoreCase("port2jumping")){
             Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 
@@ -327,7 +329,7 @@ public class EventAi extends AdminCommand {
             TeleportService2.teleportTo(player, 300260000, 468.792f, 423.079f, 233.494f);
             PacketSendUtility.sendMessage(admin, "Player : "+player.getName()+" Ported to Jumping Instance StartPoint!");
 
-            log.info("[eventai-port2jumping] GM : " + admin.getName() + " tried to port2jumping player [" + player.getName() + "] mapId '" + admin.getWorldId() + "'");
+            log.info(I18n.get("log.039e40fa923a", admin.getName(), player.getName(), admin.getWorldId()));
         }else if(params[0].equalsIgnoreCase("test")){
 
 
@@ -338,6 +340,13 @@ public class EventAi extends AdminCommand {
         }
     }
 
+    /**
+     * 发送 {@code //eventai} 子命令用法说明。
+     * Sends {@code //eventai} subcommand usage help.
+     *
+     * 执行 GM / admin player
+     * @param Msg 可选消息 / optional message
+     */
     public void onFail(Player admin, String Msg){
         PacketSendUtility.sendMessage(admin, "=====EVENT AI====\n//eventai [type]\n" +
                 "[type1] : rewardall_inzone - Gives reward to all in map\n" +

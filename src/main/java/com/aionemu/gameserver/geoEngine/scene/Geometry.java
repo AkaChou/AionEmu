@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene;
 
 import com.aionemu.gameserver.geoEngine.bounding.BoundingVolume;
@@ -24,34 +8,40 @@ import com.aionemu.gameserver.geoEngine.math.Matrix4f;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
+/**
+ * 场景图中的几何体节点，持有网格数据并参与碰撞检测。
+ * Scene-graph geometry node that holds mesh data and participates in collision detection.
+ */
 public class Geometry extends Spatial {
 
-	/**
-	 * The mesh contained herein
-	 */
+	/** 本节点包含的网格。 / The mesh contained herein. */
 	protected Mesh mesh;
+	/** 缓存的世界变换矩阵。 / Cached world transform matrix. */
 	protected Matrix4f cachedWorldMat = new Matrix4f();
 
 	/**
+	 * 仅用于序列化的空构造，请勿在业务代码中使用。
 	 * Do not use this constructor. Serialization purposes only.
 	 */
 	public Geometry() {
 	}
 
 	/**
-	 * Create a geometry node without any mesh data.
+	 * 创建无网格数据的几何体节点。
+	 * Creates a geometry node without any mesh data.
 	 *
-	 * @param name The name of this geometry
+	 * @param name 几何体名称 / name of this geometry
 	 */
 	public Geometry(String name) {
 		super(name);
 	}
 
 	/**
-	 * Create a geometry node with mesh data.
+	 * 创建带网格数据的几何体节点。
+	 * Creates a geometry node with mesh data.
 	 *
-	 * @param name The name of this geometry
-	 * @param mesh The mesh data for this geometry
+	 * @param name 几何体名称 / name of this geometry
+	 * @param mesh 网格数据 / mesh data for this geometry
 	 */
 	public Geometry(String name, Mesh mesh) {
 		this(name);
@@ -62,35 +52,62 @@ public class Geometry extends Spatial {
 		this.mesh = mesh;
 	}
 
+	/**
+	 * 返回网格顶点数。
+	 * Returns the mesh vertex count.
+	 *
+	 * vertex count
+	 */
 	@Override
 	public int getVertexCount() {
 		return mesh.getVertexCount();
 	}
 
+	/**
+	 * 返回网格三角形数。
+	 * Returns the mesh triangle count.
+	 *
+	 * triangle count
+	 */
 	@Override
 	public int getTriangleCount() {
 		return mesh.getTriangleCount();
 	}
 
+	/**
+	 * 设置网格。
+	 * Sets the mesh.
+	 *
+	 * mesh
+	 */
 	public void setMesh(Mesh mesh) {
 
 		this.mesh = mesh;
 	}
 
+	/**
+	 * 获取网格。
+	 * Gets the mesh.
+	 *
+	 * mesh
+	 */
 	public Mesh getMesh() {
 		return mesh;
 	}
 
 	/**
-	 * @return The bounding volume of the mesh, in model space.
+	 * 返回模型空间中的网格包围体。
+	 * Returns the bounding volume of the mesh in model space.
+	 *
+	 * @return 模型空间包围体 / model-space bounding volume
 	 */
 	public BoundingVolume getModelBound() {
 		return mesh.getBound();
 	}
 
 	/**
-	 * Updates the bounding volume of the mesh. Should be called when the mesh has
-	 * been modified.
+	 * 在网格被修改后更新包围体，并变换到世界空间。
+	 * Updates the mesh bounding volume after modification and transforms it into world space.
 	 */
 	@Override
 	public void updateModelBound() {
@@ -98,15 +115,35 @@ public class Geometry extends Spatial {
 		worldBound = getModelBound().transform(cachedWorldMat, worldBound);
 	}
 
+	/**
+	 * 返回缓存的世界变换矩阵。
+	 * Returns the cached world transform matrix.
+	 *
+	 * world matrix
+	 */
 	public Matrix4f getWorldMatrix() {
 		return cachedWorldMat;
 	}
 
+	/**
+	 * 设置模型空间包围体到网格。
+	 * Sets the model-space bounding volume on the mesh.
+	 *
+	 * @param modelBound 模型包围体 / model bounding volume
+	 */
 	@Override
 	public void setModelBound(BoundingVolume modelBound) {
 		mesh.setBound(modelBound);
 	}
 
+	/**
+	 * 与可碰撞对象进行碰撞检测（射线先做包围体剔除）。
+	 * Collides with another collidable (rays are first culled against the world bound).
+	 *
+	 * @param other 目标可碰撞对象 / target collidable
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * @return 新增命中次数 / number of collisions added
+	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
 		if (other instanceof Ray) {
@@ -114,8 +151,8 @@ public class Geometry extends Spatial {
 				return 0;
 			}
 		}
-		// NOTE: BIHTree in mesh already checks collision with the
-		// mesh's bound
+		// 注意：网格中的 BIHTree 已检查与……的碰撞 / NOTE: BIHTree in mesh already checks collision with the
+		// 网格边界 / mesh's bound
 		int prevSize = results.size();
 		int added = mesh.collideWith(other, cachedWorldMat, worldBound, results);
 		int newSize = results.size();
@@ -125,6 +162,14 @@ public class Geometry extends Spatial {
 		return added;
 	}
 
+	/**
+	 * 用旋转、平移与均匀缩放设置世界变换。
+	 * Sets the world transform from rotation, translation and uniform scale.
+	 *
+	 * rotation matrix
+	 * translation
+	 * @param scale 均匀缩放 / uniform scale
+	 */
 	@Override
 	public void setTransform(Matrix3f rotation, Vector3f loc, float scale) {
 		cachedWorldMat.loadIdentity();
@@ -133,6 +178,14 @@ public class Geometry extends Spatial {
 		cachedWorldMat.setTranslation(loc);
 	}
 
+	/**
+	 * 用旋转、平移与非均匀缩放设置世界变换。
+	 * Sets the world transform from rotation, translation and non-uniform scale.
+	 *
+	 * rotation matrix
+	 * translation
+	 * @param scale 各轴缩放 / per-axis scale
+	 */
 	@Override
 	public void setTransform(Matrix3f rotation, Vector3f loc, Vector3f scale) {
 		cachedWorldMat.loadIdentity();
@@ -141,11 +194,23 @@ public class Geometry extends Spatial {
 		cachedWorldMat.setTranslation(loc);
 	}
 
+	/**
+	 * 返回网格碰撞标志。
+	 * Returns the mesh collision flags.
+	 *
+	 * collision flags
+	 */
 	@Override
 	public short getCollisionFlags() {
 		return mesh.getCollisionFlags();
 	}
 
+	/**
+	 * 设置网格碰撞标志。
+	 * Sets the mesh collision flags.
+	 *
+	 * @param flags 碰撞标志 / collision flags
+	 */
 	@Override
 	public void setCollisionFlags(short flags) {
 		mesh.setCollisionFlags(flags);

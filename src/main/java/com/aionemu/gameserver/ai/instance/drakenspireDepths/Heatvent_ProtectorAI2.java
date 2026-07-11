@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -43,10 +27,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Drakenspire Depths 副本 NPC AI：Heatvent Protector（@AIName "heatvent_protector"），继承 AggressiveNpcAI2。
+ * Drakenspire Depths instance NPC AI: Heatvent Protector (@AIName "heatvent_protector"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("heatvent_protector")
 public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 {
@@ -64,17 +50,17 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
 				case 236228: //Heatvent Protector.
-					//If the Protectors are not defeated in 5 minutes, the Detachment's Rush Squad will sacrifice themselves to destroy the Fount.
+					// 若 5 分钟内未击败守护者，分遣队突击小队将牺牲自身摧毁泉源。 / If the Protectors are not defeated in 5 minutes, the Detachment's Rush Squad will sacrifice themselves to destroy the Fount.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402684, 0);
-					//In 1 minute, the Detachment's Rush Squad will resolve to sacrifice themselves and attempt to destroy the Fount.
+					// 1 分钟后，分遣队突击小队将决心牺牲并尝试摧毁泉源。 / In 1 minute, the Detachment's Rush Squad will resolve to sacrifice themselves and attempt to destroy the Fount.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402685, 240000);
-					//In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
+					// 片刻后，分遣队突击小队将怀着牺牲决心攻击泉源。 / In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402686, 270000);
 					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							AI2Actions.deleteOwner(Heatvent_ProtectorAI2.this);
-							//Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
+							// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
 						}
 					}, 300000);

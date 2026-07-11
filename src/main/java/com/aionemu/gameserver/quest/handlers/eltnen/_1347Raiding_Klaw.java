@@ -8,6 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 艾特南任务脚本：Raiding Klaw（任务 ID 1347）。
+ * Eltnen quest script: Raiding Klaw (quest ID 1347).
+ */
 public class _1347Raiding_Klaw extends QuestHandler {
 
 	private final static int questId = 1347;

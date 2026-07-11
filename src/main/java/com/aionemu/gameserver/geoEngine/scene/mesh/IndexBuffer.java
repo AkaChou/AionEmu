@@ -1,37 +1,46 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene.mesh;
 
 import java.nio.Buffer;
 
 /**
- * <code>IndexBuffer</code> is an abstraction for integer index buffers, it is
- * used to retrieve indices without knowing in which format they are stored
- * (ushort or uint).
+ * 整数索引缓冲抽象，用于在不关心底层存储格式（ushort/uint 等）的情况下读写索引。
+ * Abstraction over integer index buffers, used to read/write indices without knowing the storage format (ushort/uint, etc.).
  *
  * @author lex
  */
 public abstract class IndexBuffer {
 
+	/**
+	 * 读取指定位置的索引值。
+	 * Reads the index value at the given position.
+	 *
+	 * @param i 索引位置 / index position
+	 * index value
+	 */
 	public abstract int get(int i);
 
+	/**
+	 * 写入指定位置的索引值。
+	 * Writes an index value at the given position.
+	 *
+	 * @param i 索引位置 / index position
+	 * index value
+	 */
 	public abstract void put(int i, int value);
 
+	/**
+	 * 返回缓冲中的元素个数。
+	 * Returns the number of elements in the buffer.
+	 *
+	 * element count
+	 */
 	public abstract int size();
 
+	/**
+	 * 返回底层 NIO 缓冲。
+	 * Returns the underlying NIO buffer.
+	 *
+	 * underlying buffer
+	 */
 	public abstract Buffer getBuffer();
 }

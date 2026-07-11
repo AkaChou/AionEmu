@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -34,12 +18,23 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.sql.Timestamp;
 
+/**
+ * 管理员房屋命令：传送至房屋、为目标玩家获取或收回房屋。
+ * Admin house command: teleport to a house, or acquire/revoke ownership for the selected player.
+ */
 public class HouseCommand extends AdminCommand
 {
 	public HouseCommand() {
 		super("house");
 	}
-	
+
+	/**
+	 * 处理 tp/acquire/revoke 子命令。
+	 * Handle tp/acquire/revoke subcommands.
+	 *
+	 * @param admin 执行命令的管理员 / Admin executing the command
+	 * @param params 子命令与房屋 ID / Subcommand and house id
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length == 0) {
@@ -71,7 +66,7 @@ public class HouseCommand extends AdminCommand
 			TeleportService2.teleportTo(admin, address.getMapId(), address.getX(), address.getY(), address.getZ());
 		}
 	}
-	
+
 	private void ChangeHouseOwner(Player admin, String houseName, boolean acquire) {
 		Player target = null;
 		VisibleObject creature = admin.getTarget();
@@ -149,7 +144,14 @@ public class HouseCommand extends AdminCommand
 			((HouseController) revokedHouse.getController()).updateAppearance();
 		}
 	}
-	
+
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //house <tp | list | acquire | revoke>");

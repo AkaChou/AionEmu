@@ -1,6 +1,6 @@
 package com.aionemu.commons.network;
 
-import lombok.extern.slf4j.Slf4j;
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.services.ServiceContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -12,9 +12,14 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Netty 入站处理器，桥接通道与 {@link AConnection}，负责帧解析与写出。
+ * Netty inbound handler bridging channel and {@link AConnection} for framing and writes.
+ */
 @Slf4j
 public class NettyConnectionHandler extends ChannelInboundHandlerAdapter implements ConnectionTransport {
-
 
     private final NettyConnectionFactory connectionFactory;
     private final Executor disconnectionExecutor;
@@ -24,20 +29,48 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     private ChannelHandlerContext context;
     private AConnection connection;
 
+    /**
+     * 使用默认断开连接执行器构造。
+     * Construct with default disconnection executor.
+     *
+     * Connection factory
+     */
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory) {
         this(connectionFactory, CommonsNetworkThreadPoolServices.threadPoolManager());
     }
 
+    /**
+     * 使用指定断开连接执行器构造。
+     * Construct with a disconnection executor.
+     *
+     * Connection factory
+     * @param disconnectionExecutor 断开连接执行器 / Disconnection executor
+     */
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {
         this(connectionFactory, disconnectionExecutor, ServiceContext.current());
     }
 
+    /**
+     * 完整构造。
+     * Full constructor.
+     *
+     * Connection factory
+     * @param disconnectionExecutor 断开连接执行器 / Disconnection executor
+     * @param serviceContext 服务上下文 / Service context
+     */
     NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor, String serviceContext) {
         this.connectionFactory = connectionFactory;
         this.disconnectionExecutor = disconnectionExecutor;
         this.serviceContext = serviceContext;
     }
 
+    /**
+     * 通道激活时创建业务连接并初始化。
+     * Create business connection and initialize on channel active.
+     *
+     * @param context 通道上下文 / Channel context
+     * Connection creation failure。 / Connection creation failure.
+     */
     @Override
     public void channelActive(ChannelHandlerContext context) throws IOException {
         this.context = context;
@@ -56,6 +89,13 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 读取入站消息并在连接上下文中处理。
+     * Read inbound message and process in connection context.
+     *
+     * @param context 通道上下文 / Channel context
+     * Inbound message
+     */
     @Override
     public void channelRead(ChannelHandlerContext context, Object message) {
         if (connection != null) {
@@ -70,6 +110,13 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         read(context, message);
     }
 
+    /**
+     * 将 ByteBuf 数据写入读缓冲并解析完整帧。
+     * Copy ByteBuf data into read buffer and parse complete frames.
+     *
+     * @param context 通道上下文 / Channel context
+     * Inbound message
+     */
     private void read(ChannelHandlerContext context, Object message) {
         if (!(message instanceof ByteBuf byteBuf)) {
             context.fireChannelRead(message);
@@ -104,6 +151,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 通道失活时通知断开。
+     * Notify disconnect on channel inactive.
+     *
+     * @param context 通道上下文 / Channel context
+     */
     @Override
     public void channelInactive(ChannelHandlerContext context) {
         if (connection != null) {
@@ -111,12 +164,25 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 捕获异常并强制关闭。
+     * Catch exception and force close.
+     *
+     * @param context 通道上下文 / Channel context
+     * @param cause 异常原因 / Cause
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
         log.debug("Netty connection error from {}", getIP(), cause);
         close(true);
     }
 
+    /**
+     * 获取对端 IP。
+     * Get remote IP.
+     *
+     * IP or "unknown"
+     */
     @Override
     public String getIP() {
         if (context == null || context.channel().remoteAddress() == null) {
@@ -128,6 +194,10 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         return context.channel().remoteAddress().toString();
     }
 
+    /**
+     * 在事件循环中刷写待发送数据。
+     * Flush pending writes on the event loop.
+     */
     @Override
     public void enableWriteInterest() {
         if (context != null) {
@@ -140,6 +210,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 关闭连接并通知断开。
+     * Close connection and notify disconnect.
+     *
+     * @param forced 是否强制关闭 / Whether to force close
+     */
     @Override
     public void close(boolean forced) {
         if (onlyClose()) {
@@ -147,6 +223,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 仅关闭底层通道（幂等）。
+     * Close underlying channel only (idempotent).
+     *
+     * @return 是否实际关闭 / Whether close was performed
+     */
     @Override
     public boolean onlyClose() {
         if (connection == null || connection.closed) {
@@ -159,6 +241,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         return true;
     }
 
+    /**
+     * 解析读缓冲中已就绪的完整帧。
+     * Parse complete ready frames from the read buffer.
+     *
+     * @return 是否解析成功 / Whether parsing succeeded
+     */
     private boolean processReadyFrames() {
         ByteBuffer readBuffer = connection.readBuffer;
         readBuffer.flip();
@@ -178,10 +266,25 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 读取帧头中的帧长度。
+     * Read frame size from frame header.
+     *
+     * Buffer
+     * Frame size
+     */
     private int frameSize(ByteBuffer buffer) {
         return Short.toUnsignedInt(buffer.getShort(buffer.position()));
     }
 
+    /**
+     * 解析单帧并交给连接处理。
+     * Parse a single frame and hand off to connection.
+     *
+     * Buffer
+     *
+     * @param buffer @return 是否处理成功 / Whether processing succeeded
+     */
     private boolean parse(ByteBuffer buffer) {
         int size = 0;
         try {
@@ -195,11 +298,15 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
             buffer.position(buffer.position() + payloadSize);
             return connection.processData(packetBuffer);
         } catch (IllegalArgumentException e) {
-            log.warn("Error parsing input from client - account: {} packet size: {} real size: {}", connection, size, buffer.remaining(), e);
+            log.warn(I18n.get("log.cd089b86f7e3", connection, size, buffer.remaining(), e));
             return false;
         }
     }
 
+    /**
+     * 在连接服务上下文中刷写。
+     * Flush writes in connection service context.
+     */
     private void flushWrites() {
         if (connection == null || context == null) {
             return;
@@ -209,6 +316,10 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 同步写出缓冲中的数据并刷写通道。
+     * Synchronously write buffered data and flush the channel.
+     */
     private void flushWritesInConnectionContext() {
 
         synchronized (connection.guard) {
@@ -233,6 +344,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    /**
+     * 将 NIO 缓冲复制为 ByteBuf 写出并消费源位置。
+     * Copy NIO buffer to ByteBuf, write it, and advance source position.
+     *
+     * Source buffer
+     */
     private void writeAndConsume(ByteBuffer source) {
         if (!source.hasRemaining()) {
             return;
@@ -242,12 +359,22 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         context.write(output);
     }
 
+    /**
+     * 仅通知一次断开连接任务。
+     * Notify disconnection task at most once.
+     */
     private void notifyDisconnect() {
         if (disconnectNotified.compareAndSet(false, true)) {
             disconnectionExecutor.execute(new DisconnectionTask(connection));
         }
     }
 
+    /**
+     * 在连接绑定的服务上下文中运行任务。
+     * Run task in the connection's service context.
+     *
+     * Task
+     */
     private void runInConnectionContext(Runnable runnable) {
         try (ServiceContext.Scope ignored = ServiceContext.use(connection.getServiceContext())) {
             runnable.run();

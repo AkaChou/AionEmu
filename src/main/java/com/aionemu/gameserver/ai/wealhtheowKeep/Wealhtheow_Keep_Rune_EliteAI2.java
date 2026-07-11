@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.wealhtheowKeep;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 维尔索要塞相关 NPC AI：Wealhtheow Keep Rune Elite（@AIName "rune_elite"），继承 AggressiveNpcAI2。
+ * Wealhtheow Keep related NPC AI: Wealhtheow Keep Rune Elite (@AIName "rune_elite"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("rune_elite")
 public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 {
@@ -49,7 +35,7 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//Wealhtheow's Keep.
+			// 韦尔休堡垒。 / Wealhtheow's Keep.
 			case 251825:
 			case 251830:
 				treasureChest();
@@ -70,7 +56,7 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//A treasure chest has appeared.
+				// 出现了一个宝箱。 / A treasure chest has appeared.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 			}
 		});

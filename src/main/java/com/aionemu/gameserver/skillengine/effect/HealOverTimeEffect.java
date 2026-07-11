@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,9 +13,17 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 
+/**
+ * 持续治疗基类：按周期结算治疗量，供 HP/MP/FP 持续治疗效果复用。
+ * Heal-over-time base: periodic heal settlement reused by HP/MP/FP HoT effects.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HealOverTimeEffect")
 public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
+	/**
+	 * 计算持续治疗是否生效。
+	 * Calculates whether the HoT applies.
+	 */
 	public void calculate(Effect effect, HealType healType) {
 		if (!super.calculate(effect, null, null)) {
 			return;
@@ -67,6 +59,10 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 		effect.setReservedInt(position, finalHeal);
 	}
 
+	/**
+	 * 周期结算治疗量并广播。
+	 * Periodically settles heal amount and broadcasts.
+	 */
 	public void onPeriodicAction(Effect effect, HealType healType) {
 		Creature effected = effect.getEffected();
 		int currentValue = getCurrentStatValue(effect);
@@ -93,7 +89,15 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 		}
 	}
 
+	/**
+	 * 返回当前对应属性值（HP/MP/FP 等）。
+	 * Returns the current value of the related stat (HP/MP/FP, etc.).
+	 */
 	protected abstract int getCurrentStatValue(Effect effect);
 
+	/**
+	 * 返回对应属性上限。
+	 * Returns the maximum value of the related stat.
+	 */
 	protected abstract int getMaxStatValue(Effect effect);
 }

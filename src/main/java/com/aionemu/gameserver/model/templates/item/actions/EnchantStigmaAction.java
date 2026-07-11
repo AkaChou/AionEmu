@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,9 +21,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * Created by Wnkrz on 25/08/2017.
- * Modified to support Event Stigma Preservation (skill_id=4714, effectid=900003)
- * When this effect is active, failed stigma enchanting reduces level by 1 instead of resetting to 0
+ * EnchantStigma 动作模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -59,15 +43,18 @@ public class EnchantStigmaAction extends AbstractItemAction {
 	@XmlAttribute(name = "chance")
 	private float chance;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null || targetItem == null) {
-			// The item cannot be found.
+			// 找不到该物品。 / The item cannot be found.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
 		if (targetItem.getEnchantLevel() >= 10) {
-			// You cannot enchant %0 any further.
+			// 你无法再强化 %0。 / You cannot enchant %0 any further.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_IT_CAN_NOT_BE_ENCHANTED_MORE_TIME(targetItem.getNameId()));
 			return false;
 		}
@@ -82,6 +69,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		if (!canAct(player, parentItem, targetItem)) {
@@ -94,12 +82,13 @@ public class EnchantStigmaAction extends AbstractItemAction {
 		final int nameId = targetItem.getNameId();
 		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, 3000, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
 				player.removeItemCoolDown(parentItem.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(parentNameId)));
-				// Stigma enchantment of %0 has been cancelled.
+				// %0 的烙印之石强化已取消。 / Stigma enchantment of %0 has been cancelled.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_CANCEL(new DescriptionId(parentNameId)));
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, parentItemId, 0, 2, 0), true);
 				player.getObserveController().removeObserver(this);
@@ -107,6 +96,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 		};
 		player.getObserveController().attach(observer);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				if (isSuccess) {
@@ -150,6 +140,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 		}, 3000));
 	}
 
+	/** 按 quality 返回 stigma / Returns the stigma by quality */
 	public static int getStigmaByQuality(Item item) {
 		int price = 0;
 		switch (item.getItemTemplate().getItemQuality()) {

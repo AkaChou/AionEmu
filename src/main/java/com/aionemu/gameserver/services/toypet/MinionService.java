@@ -1,21 +1,7 @@
-/**
- *  This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.toypet;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -58,9 +44,11 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
-/*
- * Reworked by G-Robson26
- * Rework & Test : MATTY
+/**
+ * 守护灵（Minion）服务，管理召唤、成长、进化、组合与功能增益。
+ * Minion service managing summon, growth, evolution, combination and functional buffs.
+ *
+ * <p>Reworked by G-Robson26; Rework &amp; Test: MATTY</p>
  */
 @Slf4j
 public class MinionService {
@@ -72,12 +60,22 @@ public class MinionService {
 	private static List<Integer> minions;
 	private MinionBuff minionbuff;
 
+	/**
+	 * 初始化守护灵模板缓存与增益对象。
+	 * Initialize minion template cache and buff holder.
+	 */
 	public void init() {
 		minions = DataManager.MINION_DATA.getAll();
 		minionbuff = new MinionBuff();
-		log.info("MinionService initialized");
+		log.info(I18n.get("log.1d620f7162e6"));
 	}
 
+	/**
+	 * 玩家登录时同步守护灵列表，并尝试恢复上次使用的守护灵。
+	 * Sync minion list on login and restore the last-used minion if any.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void onPlayerLogin(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(0, player.getMinionList().getMinions()));
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(9, 0));
@@ -101,6 +99,13 @@ public class MinionService {
 		}
 	}
 
+	/**
+	 * 使用契约/票券物品抽取并添加守护灵。
+	 * Use a contract/ticket item to roll and add a minion.
+	 *
+	 * 玩家 / Player
+	 * Item object id
+	 */
 	public void addMinion(final Player player, final int itemObjId) {
 		if (rejectIfMinionLimitReached(player)) {
 			return;
@@ -224,6 +229,13 @@ public class MinionService {
 		}, 1500));
 	}
 
+	/**
+	 * 若已达守护灵数量上限则提示并拒绝操作。
+	 * Reject the action when minion limit is reached.
+	 *
+	 * @param player 玩家 / Player
+	 * @return 是否已拒绝 / Whether rejected
+	 */
 	private static boolean rejectIfMinionLimitReached(Player player) {
 		if (!isMinionLimitReached(player.getMinionList().getMinions().size())) {
 			return false;
@@ -232,10 +244,25 @@ public class MinionService {
 		return true;
 	}
 
+	/**
+	 * 判断守护灵数量是否达到上限。
+	 * Whether the minion count has reached the maximum.
+	 *
+	 * Current count
+	 *
+	 * @param minionCount @return 是否达上限 / Whether limit reached
+	 */
 	static boolean isMinionLimitReached(int minionCount) {
 		return minionCount >= MAX_MINIONS;
 	}
 
+	/**
+	 * 契约相关任务进度推进。
+	 * Advance quest progress related to minion contracts.
+	 *
+	 * @param player 玩家 / Player
+	 * @param item 使用的契约物品 / Contract item used
+	 */
 	private static void checkQuest(Player player, Item item) {
 		switch (player.getRace()) {
 		case ELYOS:
@@ -283,16 +310,23 @@ public class MinionService {
 		}
 	}
 
+	/**
+	 * 召唤指定守护灵；若已有则先解散。
+	 * Spawn the given minion; despawn the current one first if present.
+	 *
+	 * @param player 玩家 / Player
+	 * @param minionObjId 守护灵对象 ID / Minion object id
+	 */
 	public void spawnMinion(Player player, int minionObjId) {
 		MinionCommonData minionCommonData = player.getMinionList().getMinion(minionObjId);
 		if (minionCommonData == null) {
-			log.warn("MinionCommonData is null for minionObjId: " + minionObjId);
+			log.warn(I18n.get("log.9dcf7dbcf415", minionObjId));
 			return;
 		}
 		
 		MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionCommonData.getMinionId());
 		if (minionTemplate == null) {
-			log.warn("MinionTemplate is null for minionId: " + minionCommonData.getMinionId());
+			log.warn(I18n.get("log.9c4fbbb87d87", minionCommonData.getMinionId()));
 			return;
 		}
 		
@@ -324,6 +358,13 @@ public class MinionService {
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(5, minionCommonData));
 	}
 
+	/**
+	 * 解散守护灵并移除其授予的技能与增益。
+	 * Despawn the minion and remove granted skills and buffs.
+	 *
+	 * @param player 玩家 / Player
+	 * @param minionObjId 守护灵对象 ID（0 表示当前） / Minion object id (0 = current)
+	 */
 	public void despawnMinion(Player player, int minionObjId) {
 		Minion minion = player.getMinion();
 		if (minion == null && minionObjId == 0) {
@@ -334,13 +375,13 @@ public class MinionService {
 		int despawnMinionObjId = minionObjId == 0 ? minion.getObjectId() : minionObjId;
 		MinionCommonData minionCommonData = player.getMinionList().getMinion(despawnMinionObjId);
 		if (minionCommonData == null) {
-			log.warn("MinionCommonData is null for minionObjId: " + despawnMinionObjId);
+			log.warn(I18n.get("log.9dcf7dbcf415", despawnMinionObjId));
 			return;
 		}
 		
 		MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionCommonData.getMinionId());
 		if (minionTemplate == null) {
-			log.warn("MinionTemplate is null for minionId: " + minionCommonData.getMinionId());
+			log.warn(I18n.get("log.9c4fbbb87d87", minionCommonData.getMinionId()));
 			return;
 		}
 		
@@ -366,6 +407,14 @@ public class MinionService {
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(6, minionCommonData));
 	}
 
+	/**
+	 * 消耗材料守护灵提升目标守护灵成长点。
+	 * Consume material minions to raise target minion growth points.
+	 *
+	 * @param player 玩家 / Player
+	 * @param minionObjectId 目标守护灵对象 ID / Target minion object id
+	 * @param material 材料守护灵对象 ID 列表 / Material minion object ids
+	 */
 	public void growthUpMinion(Player player, int minionObjectId, List<Integer> material) {
 		int growthPoint = 0;
 		long growthCost = 0;
@@ -409,6 +458,13 @@ public class MinionService {
 		player.getMinionList().updateMinionsList();
 	}
 
+	/**
+	 * 消耗基纳与进化材料提升守护灵等级。
+	 * Evolve a minion by spending kinah and evolution materials.
+	 *
+	 * @param player 玩家 / Player
+	 * @param minionObjId 守护灵对象 ID / Minion object id
+	 */
 	public void evolutionUpMinion(Player player, int minionObjId) {
 		MinionCommonData minion = player.getMinionList().getMinion(minionObjId);
 		MinionEvolved items = DataManager.MINION_DATA.getMinionTemplate(player.getMinionList().getMinion(minionObjId).getMinionId()).getEvolved();
@@ -434,6 +490,14 @@ public class MinionService {
 		player.getMinionList().updateMinionsList();
 	}
 
+	/**
+	 * 删除守护灵（普通删除或作为材料消耗）。
+	 * Delete a minion (normal delete or material consumption).
+	 *
+	 * @param player 玩家 / Player
+	 * @param minionObjId 守护灵对象 ID / Minion object id
+	 * @param isMaterial 是否作为材料 / Whether used as material
+	 */
 	public void deleteMinion(Player player, int minionObjId, boolean isMaterial) {
 		MinionCommonData minion = player.getMinionList().getMinion(minionObjId);
 		if (minion != null) {
@@ -444,6 +508,14 @@ public class MinionService {
 		}
 	}
 
+	/**
+	 * 锁定或解锁守护灵，防止误操作。
+	 * Lock or unlock a minion to prevent accidental actions.
+	 *
+	 * @param player 玩家 / Player
+	 * @param minionObjId 守护灵对象 ID / Minion object id
+	 * @param lock 0 解锁 / 1 lock / 0 unlock。 / 0 解锁 / 1 lock / 0 unlock
+	 */
 	public void lockMinion(Player player, int minionObjId, int lock) {
 		MinionCommonData minion = player.getMinionList().getMinion(minionObjId);
 		if (lock == 1) {
@@ -457,6 +529,14 @@ public class MinionService {
 		}
 	}
 
+	/**
+	 * 重命名守护灵。
+	 * Rename a minion.
+	 *
+	 * 玩家 / Player
+	 * @param minionObjId 守护灵对象 ID / Minion object id
+	 * New name
+	 */
 	public void renameMinion(Player player, int minionObjId, String name) {
 		MinionCommonData minion = player.getMinionList().getMinion(minionObjId);
 		minion.setName(name);
@@ -464,6 +544,14 @@ public class MinionService {
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(3, minion));
 	}
 
+	/**
+	 * 充能守护灵技能点数，并可设置自动充能。
+	 * Charge minion skill points and optionally enable auto-charge.
+	 *
+	 * @param player 玩家 / Player
+	 * @param charge 是否立即充能 / Whether to charge now
+	 * @param autoCharge 是否自动充能 / Whether auto-charge
+	 */
 	public void addMinionSkillPoints(Player player, boolean charge, boolean autoCharge) {
 		int currentSkillPoints = player.getMinionSkillPoints();
 		player.getCommonData().setMinionSkillPointsAutoCharge(autoCharge);
@@ -478,6 +566,15 @@ public class MinionService {
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(11, currentSkillPoints, autoCharge));
 	}
 
+	/**
+	 * 消耗守护灵技能能量；自动充能开启时不足则尝试购买。
+	 * Consume minion skill energy; auto-charge buys more when short.
+	 *
+	 * 玩家 / Player
+	 * Skill id
+	 *
+	 * @return 是否允许施放 / Whether cast is allowed
+	 */
 	public boolean consumeMinionSkillPoints(Player player, int skillId) {
 		if (player.getMinion() == null || player.getMinion().getMinionTemplate().getAction() == null
 				|| player.getMinion().getMinionTemplate().getAction().getSkillsCollections() == null) {
@@ -515,10 +612,23 @@ public class MinionService {
 		return true;
 	}
 
+	/**
+	 * 计算将技能点充至上限所需基纳。
+	 * Compute kinah cost to charge skill points to the maximum.
+	 *
+	 * @param currentSkillPoints 当前技能点 / Current skill points
+	 * Kinah cost
+	 */
 	static int chargePrice(int currentSkillPoints) {
 		return Math.max(0, MAX_SKILL_POINTS - currentSkillPoints) * KINAH_PER_SKILL_POINT;
 	}
 
+	/**
+	 * 激活守护灵功能（30 天，消耗基纳）。
+	 * Activate minion functions for 30 days (costs kinah).
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void activateMinionFunction(Player player) {
 		long leftTime = System.currentTimeMillis() + (30 * 24 * 60 * 60 * 1000);
 		log.debug("Activate minion function. playerId={} expiresAt={}", player.getObjectId(), new Timestamp(leftTime));
@@ -531,11 +641,21 @@ public class MinionService {
 		}
 	}
 
-	public void addMinionFunctionItems(Player player, int action, int minionObjectId, int itemId, int targetSlot, int destinationSlot) {
-		if (player.getMinion() == null) {
+	/**
+	 * 向守护灵功能背包添加增益物品。
+	 * Add functional/doping items into the minion bag.
+	 *
+	 * 玩家 / Player
+	 * @param minionObjectId 守护灵对象 ID / Minion object id
+	 * Item template id
+	 * Target slot
+	 */
+	public void addMinionFunctionItem(Player player, int minionObjectId, int itemId, int targetSlot) {
+		Minion minions = player.getMinion();
+		if (minions == null || minions.getObjectId() != minionObjectId || minions.getCommonData().getDopingBag() == null
+				|| !isDopingSlot(targetSlot)) {
 			return;
 		}
-		Minion minions = player.getMinion();
 		minions.getCommonData().getDopingBag().setItem(itemId, targetSlot);
 
 		if (minions.getCommonData().getDopingBag().getFoodItem() != 0) {
@@ -553,12 +673,44 @@ public class MinionService {
 		PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, itemId, targetSlot, 0), true);
 	}
 
+	/**
+	 * 从守护灵功能槽移除物品。
+	 * Removes an item from a minion function slot.
+	 */
+	public void removeMinionFunctionItem(Player player, int minionObjectId, int slot) {
+		Minion minion = player.getMinion();
+		if (minion == null || minion.getObjectId() != minionObjectId || minion.getCommonData().getDopingBag() == null
+				|| !isDopingSlot(slot)) {
+			return;
+		}
+		minion.getCommonData().getDopingBag().setItem(0, slot);
+		DAOManager.getDAO(PlayerMinionsDAO.class).saveDopingBag(player, minion.getCommonData(), minion.getCommonData().getDopingBag());
+		PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 1, minionObjectId, 0, slot, 0), true);
+	}
+
+	static boolean isDopingSlot(int slot) {
+		return slot >= 0 && slot < 6;
+	}
+
+	/**
+	 * 使用守护灵背包中的物品为玩家施加增益。
+	 * Use an item from the minion bag to buff the player.
+	 *
+	 * 玩家 / Player
+	 * @param minionObjectId 守护灵对象 ID / Minion object id
+	 * Item template id
+	 * Slot
+	 */
 	public void buffPlayer(final Player player, final int minionObjectId, int itemId, final int slot) {
 		Minion minion = player.getMinion();
-		if (minion == null || minion.getCommonData().getDopingBag() == null) {
+		if (minion == null || minion.getObjectId() != minionObjectId || minion.getCommonData().getDopingBag() == null
+				|| !isDopingSlot(slot)) {
 			return;
 		}
 		List<Item> items = player.getInventory().getItemsByItemId(itemId);
+		if (items.isEmpty()) {
+			return;
+		}
 		Item useItem = items.get(0);
 		ItemActions itemActions = useItem.getItemTemplate().getActions();
 		ItemUseLimits limit = new ItemUseLimits();
@@ -605,59 +757,76 @@ public class MinionService {
 		}
 	}
 
+	/**
+	 * 调整守护灵增益背包中卷轴槽位。
+	 * Relocate doping bag scroll slots for a minion.
+	 *
+	 * 玩家 / Player
+	 * @param minionObjectId 守护灵对象 ID / Minion object id
+	 * Source slot
+	 * Destination slot
+	 */
 	public void relocateDoping(Player player, int minionObjectId, int targetSlot, int destinationSlot) {
 		MinionCommonData minions = player.getMinionList().getMinion(minionObjectId);
-		if (minions == null || minions.getDopingBag() == null) {
+		if (minions == null || minions.getDopingBag() == null || targetSlot < 2 || !isDopingSlot(targetSlot)
+				|| destinationSlot < 2 || !isDopingSlot(destinationSlot)) {
 			return;
 		}
 		int[] scrollBag = minions.getDopingBag().getScrollsUsed();
-		int targetItem = scrollBag[targetSlot - 2];
-		if (destinationSlot - 2 > scrollBag.length - 1) {
-			minions.getDopingBag().setItem(targetItem, destinationSlot);
-			PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, targetItem, targetSlot, destinationSlot), true);
-			minions.getDopingBag().setItem(0, targetSlot);
-			PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, targetItem, targetSlot, 0), true);
-		} else {
-			minions.getDopingBag().setItem(scrollBag[destinationSlot - 2], targetSlot);
-			PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, scrollBag[destinationSlot - 2], targetSlot, 0), true);
-			minions.getDopingBag().setItem(targetItem, destinationSlot);
-			PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, targetItem, 0, destinationSlot), true);
-		}
-	}
-
-	public void activateLoot(Player player, boolean activate) {
-		Minion minion = player.getMinion();
-		if (minion == null) {
+		if (targetSlot - 2 >= scrollBag.length || destinationSlot - 2 >= scrollBag.length
+				|| scrollBag[targetSlot - 2] == 0 || scrollBag[destinationSlot - 2] == 0) {
 			return;
 		}
-		if (!minion.getCommonData().isLooting()) {
-			if (activate) {
-				if (player.isInTeam()) {
-					LootRuleType lootType = player.getLootGroupRules().getLootRule();
-					if (lootType == LootRuleType.FREEFORALL) {
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOTING_PET_MESSAGE03);
-						return;
-					}
-				}
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOTING_PET_MESSAGE01);
-			}
-			minion.getCommonData().setIsLooting(true);
-			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, 0, true));
-		} else {
-			minion.getCommonData().setIsLooting(false);
-			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, 0, false));
-		}
+		int targetItem = scrollBag[targetSlot - 2];
+		minions.getDopingBag().setItem(scrollBag[destinationSlot - 2], targetSlot);
+		PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, scrollBag[destinationSlot - 2], targetSlot, 0), true);
+		minions.getDopingBag().setItem(targetItem, destinationSlot);
+		PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, targetItem, 0, destinationSlot), true);
 	}
 
+	/**
+	 * 切换守护灵自动拾取状态。
+	 * Toggle minion auto-loot state.
+	 *
+	 * 玩家 / Player
+	 * @param minionObjectId 守护灵对象 ID / Minion object id
+	 * Whether to activate
+	 */
+	public void activateLoot(Player player, int minionObjectId, boolean activate) {
+		Minion minion = player.getMinion();
+		if (minion == null || minion.getObjectId() != minionObjectId || minion.getCommonData().isLooting() == activate) {
+			return;
+		}
+		if (activate) {
+			if (player.isInTeam()) {
+				LootRuleType lootType = player.getLootGroupRules().getLootRule();
+				if (lootType == LootRuleType.FREEFORALL) {
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOTING_PET_MESSAGE03);
+					return;
+				}
+			}
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOTING_PET_MESSAGE01);
+		}
+		minion.getCommonData().setIsLooting(activate);
+		PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, 0, activate));
+	}
+
+	/**
+	 * 组合多只守护灵生成新守护灵。
+	 * Combine multiple minions into a new minion.
+	 *
+	 * @param player 玩家 / Player
+	 * @param minionObjIds 参与组合的对象 ID 列表 / Object ids to combine
+	 */
 	public void CombinationMinion(Player player, List<Integer> minionObjIds) {
 		log.debug("Minion Combination");
 
 		if (player == null) {
-			log.error("CRITICAL ERROR: Player is null!");
+			log.error(I18n.get("log.48fe7386f00a"));
 			return;
 		}
 		if (player.getInventory() == null) {
-			log.error("CRITICAL ERROR: Player's inventory is null!");
+			log.error(I18n.get("log.97c2776a982e"));
 			return;
 		}
 
@@ -794,7 +963,7 @@ public class MinionService {
 		levelNewMinion = minionTemplate.getLevel();
 		name = minionTemplate.getName();
 		
-		log.info("Creating new minion with ID: " + minionId + ", Name: " + name + ", Grade: " + grade + ", Level: " + levelNewMinion);
+		log.info(I18n.get("log.7c43b9b99db4", minionId, name, grade, levelNewMinion));
 		MinionCommonData addNewMinion = player.getMinionList().addNewMinion(player, minionId, name, grade, levelNewMinion, averageGrowthPoint);
 		if (addNewMinion == null) {
 			return;
@@ -809,6 +978,14 @@ public class MinionService {
 		player.getMinionList().updateMinionsList();
 	}
 
+	/**
+	 * 按随机值映射守护灵模板 ID。
+	 * Map a random roll value to a minion template id.
+	 *
+	 * Random roll
+	 *
+	 * @param rnd @return 守护灵模板 ID / Minion template id
+	 */
 	private static int minionId(int rnd) {
 		if (rnd <= 35) {
 			return 980010; // Kerubar D
@@ -907,6 +1084,12 @@ public class MinionService {
 		}
 	}
 
+	/**
+	 * 返回服务单例；优先通过 Spring 提供者获取。
+	 * Returns service singleton; prefers Spring provider when available.
+	 *
+	 * Service instance
+	 */
 	public static MinionService getInstance() {
 		ObjectProvider<MinionService> provider = instanceProvider;
 		if (provider != null) {
@@ -915,6 +1098,12 @@ public class MinionService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject Spring instance provider.
+	 *
+	 * Provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<MinionService> provider) {
 		instanceProvider = provider;
 	}

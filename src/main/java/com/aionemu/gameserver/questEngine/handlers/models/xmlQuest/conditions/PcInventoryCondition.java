@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.conditions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,36 +9,48 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * 按玩家背包中指定物品数量与配置值比较的条件。
+ * Condition that compares the player's inventory count of an item against a configured value.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PcInventoryCondition")
 public class PcInventoryCondition extends QuestCondition {
 
+	/** 物品模板 ID / Item template id */
 	@XmlAttribute(name = "item_id", required = true)
 	protected int itemId;
+	/** 比较用数量阈值 / Count threshold for comparison */
 	@XmlAttribute(required = true)
 	protected long count;
 
 	/**
-	 * Gets the value of the itemId property.
+	 * 返回物品模板 ID。
+	 * Returns the item template id.
+	 *
+	 * Item id
 	 */
 	public int getItemId() {
 		return itemId;
 	}
 
 	/**
-	 * Gets the value of the count property.
+	 * 返回比较用数量阈值。
+	 * Returns the count threshold used for comparison.
+	 *
+	 * Count
 	 */
 	public long getCount() {
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.gameserver.questEngine.handlers.template.xmlQuest.condition.
-	 * QuestCondition#doCheck(com.aionemu.gameserver .questEngine.model.QuestEnv)
+	/**
+	 * 比较玩家背包中该物品数量与配置阈值。
+	 * Compares the player's item count with the configured threshold.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 比较是否成立 / Whether the comparison holds
 	 */
 	@Override
 	public boolean doCheck(QuestEnv env) {

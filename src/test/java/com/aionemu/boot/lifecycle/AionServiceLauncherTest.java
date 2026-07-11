@@ -215,10 +215,11 @@ class AionServiceLauncherTest {
     void contextCloseCompletesGameShutdownAfterWaitingForPlayers() throws Exception {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/boot/lifecycle/AionServiceLauncher.java"));
         int contextClose = source.indexOf("void onApplicationEvent(ContextClosedEvent event)");
+        int gameContext = source.indexOf("ServiceContext.use(\"game\")", contextClose);
         int waitForPlayers = source.indexOf("GameShutdownRequest.waitForPlayersToLeave", contextClose);
         int completeShutdown = source.indexOf("GameShutdownRequest.completeShutdown", contextClose);
 
-        assertTrue(waitForPlayers > contextClose && completeShutdown > waitForPlayers);
+        assertTrue(gameContext > contextClose && waitForPlayers > gameContext && completeShutdown > waitForPlayers);
     }
 
     private static final class RecordingTransportBoundary extends AionTransportBoundary {

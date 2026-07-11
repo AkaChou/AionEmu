@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -27,13 +11,23 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 阿佐图兰要塞副本事件处理器。
+ * Instance event handler for Azoturan Fortress.
+ *
+ * @author Encom
+ */
 
 @InstanceID(310100000)
 public class AzoturanFortressInstance extends GeneralInstanceHandler
 {
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
         if (zone.getAreaTemplate().getZoneName() == ZoneName.get("AZOTURAN_FORTRESS_310100000")) {
@@ -55,11 +49,23 @@ public class AzoturanFortressInstance extends GeneralInstanceHandler
 		effectController.removeEffect(274); //Shadow Guard.
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);

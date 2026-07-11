@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -36,6 +20,10 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 攻城管理指令；启停攻城、列出据点、强制占领与发起龙族突袭。
+ * Admin command for starting/stopping sieges, listing locations, forced capture and Balaur assaults.
+ */
 @SuppressWarnings("rawtypes")
 public class SiegeCommand extends AdminCommand {
 
@@ -51,6 +39,13 @@ public class SiegeCommand extends AdminCommand {
 		super("siegecommand");
 	}
 	
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param player 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
@@ -189,60 +184,60 @@ public class SiegeCommand extends AdminCommand {
 			GameFeatureServices.siegeService().spawnNpcs(siegeLocationId, sr, SiegeModType.PEACE);
 			DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
 			switch (siegeLocationId) {
-				//Siel's Western Fortress.
+				// 希尔西要塞。 / Siel's Western Fortress.
 				case 1131:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
-						//Shairing At Carpus Isle.
+						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
 						GameFeatureServices.baseService().capture(108, Race.ASMODIANS);
-						//Bomishung At Siel's Left Wing.
+						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
 						GameFeatureServices.baseService().capture(109, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
-						//Shairing At Carpus Isle.
+						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
 						GameFeatureServices.baseService().capture(108, Race.ELYOS);
-						//Bomishung At Siel's Left Wing.
+						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
 						GameFeatureServices.baseService().capture(109, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
-						//Shairing At Carpus Isle.
+						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
 						GameFeatureServices.baseService().capture(108, Race.NPC);
-						//Bomishung At Siel's Left Wing.
+						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
 						GameFeatureServices.baseService().capture(109, Race.NPC);
 					}
 				break;
-				//Siel's Eastern Fortress.
+				// 希尔东要塞。 / Siel's Eastern Fortress.
 				case 1132:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
-						//Sasming At Siel's Right Wing.
+						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
 						GameFeatureServices.baseService().capture(110, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
-						//Sasming At Siel's Right Wing.
+						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
 						GameFeatureServices.baseService().capture(110, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
-						//Sasming At Siel's Right Wing.
+						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
 						GameFeatureServices.baseService().capture(110, Race.NPC);
 					}
 				break;
-				//Sulfur Fortress.
+				// 硫磺要塞。 / Sulfur Fortress.
 				case 1141:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
-						//Oharung At The Sulfur Archipelago.
+						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
 						GameFeatureServices.baseService().capture(105, Race.ASMODIANS);
-						//Joarin At Zephyr Island.
+						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
 					    GameFeatureServices.baseService().capture(106, Race.ASMODIANS);
-						//Temirun At Leibo Island.
+						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
 					    GameFeatureServices.baseService().capture(107, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
-						//Oharung At The Sulfur Archipelago.
+						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
 						GameFeatureServices.baseService().capture(105, Race.ELYOS);
-						//Joarin At Zephyr Island.
+						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
 					    GameFeatureServices.baseService().capture(106, Race.ELYOS);
-						//Temirun At Leibo Island.
+						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
 					    GameFeatureServices.baseService().capture(107, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
-						//Oharung At The Sulfur Archipelago.
+						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
 						GameFeatureServices.baseService().capture(105, Race.NPC);
-						//Joarin At Zephyr Island.
+						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
 					    GameFeatureServices.baseService().capture(106, Race.NPC);
-						//Temirun At Leibo Island.
+						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
 					    GameFeatureServices.baseService().capture(107, Race.NPC);
 					}
 				break;

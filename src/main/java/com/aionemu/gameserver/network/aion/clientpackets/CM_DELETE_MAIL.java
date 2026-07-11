@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -24,12 +8,23 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.mail.MailService;
 
 /**
+ * 请求删除邮件的客户端包。
+ * Client packet requesting deletion of mail.
+ *
  * @author kosyachok
  */
 public class CM_DELETE_MAIL extends AionClientPacket {
 
 	int[] mailObjId;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_DELETE_MAIL(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -39,7 +34,7 @@ public class CM_DELETE_MAIL extends AionClientPacket {
 		int count = readC();
 		mailObjId = new int[count];
 		for (int i = 0; i < count; i++) {
-			readC(); // unk
+			readC(); // 未知 / unk
 			mailObjId[i] = readD();
 		}
 	}

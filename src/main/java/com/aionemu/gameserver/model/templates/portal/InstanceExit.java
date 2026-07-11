@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.portal;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Race;
 
 /**
+ * 副本 Exit 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,58 +32,72 @@ public class InstanceExit {
 	@XmlAttribute(name = "h")
 	protected byte h;
 
+	/** 返回副本 ID / Returns the instance id */
 	public Integer getInstanceId() {
 		return instanceId;
 	}
 
+	/** 设置 instance id / Sets the instance id */
 	public void setInstanceId(int value) {
 		this.instanceId = value;
 	}
 
+	/** 返回 exit world / Returns the exit world */
 	public int getExitWorld() {
 		return exitWorld;
 	}
 
+	/** 设置 exit world / Sets the exit world */
 	public void setExitWorld(int value) {
 		this.exitWorld = value;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 设置种族。 / Sets the race. */
 	public void setRace(Race value) {
 		this.race = value;
 	}
 
+	/** 返回 x / Returns the x */
 	public float getX() {
 		return x;
 	}
 
+	/** 设置 x / Sets the x */
 	public void setX(float value) {
 		this.x = value;
 	}
 
+	/** 返回 y / Returns the y */
 	public float getY() {
 		return y;
 	}
 
+	/** 设置 y / Sets the y */
 	public void setY(float value) {
 		this.y = value;
 	}
 
+	/** 返回 z / Returns the z */
 	public float getZ() {
 		return z;
 	}
 
+	/** 设置 z / Sets the z */
 	public void setZ(float value) {
 		this.z = value;
 	}
 
+	/** 返回 h / Returns the h */
 	public byte getH() {
 		return h;
 	}
 
+	/** 设置 h / Sets the h */
 	public void setH(byte value) {
 		this.h = value;
 	}

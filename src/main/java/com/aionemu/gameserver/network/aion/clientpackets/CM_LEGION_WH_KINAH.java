@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -30,23 +14,39 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 军团仓库基纳存取的客户端包。
+ * Client packet for legion warehouse kinah deposit/withdraw.
+ *
  * @author ATracer
  */
 public class CM_LEGION_WH_KINAH extends AionClientPacket {
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_LEGION_WH_KINAH(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
 
 	private long amount;
 	private int operation;
-
+	/**
+	 * 读取军团仓库基纳操作类型与数量。
+	 * Reads legion warehouse kinah operation and amount.
+	 */
 	@Override
 	protected void readImpl() {
 		this.amount = readQ();
 		this.operation = readC();
 	}
-
+	/**
+	 * 按权限存入或取出军团仓库基纳。
+	 * Deposits or withdraws legion warehouse kinah by rights.
+	 */
 	@Override
 	protected void runImpl() {
 		final Player activePlayer = getConnection().getActivePlayer();
@@ -57,7 +57,7 @@ public class CM_LEGION_WH_KINAH extends AionClientPacket {
 			switch (operation) {
 			case 0:
 				if (!LM.hasRights(LegionPermissionsMask.WH_DEPOSIT)) {
-					// You do not have the authority to use the Legion warehouse.
+					// 你无权使用军团仓库。 / You do not have the authority to use the Legion warehouse.
 					PacketSendUtility.sendPacket(activePlayer, new SM_SYSTEM_MESSAGE(1300322));
 					return;
 				}
@@ -69,7 +69,7 @@ public class CM_LEGION_WH_KINAH extends AionClientPacket {
 				break;
 			case 1:
 				if (!LM.hasRights(LegionPermissionsMask.WH_WITHDRAWAL)) {
-					// You do not have the authority to use the Legion warehouse.
+					// 你无权使用军团仓库。 / You do not have the authority to use the Legion warehouse.
 					PacketSendUtility.sendPacket(activePlayer, new SM_SYSTEM_MESSAGE(1300322));
 					return;
 				}

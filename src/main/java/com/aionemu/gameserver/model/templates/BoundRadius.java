@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -21,6 +5,11 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 边界半径模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BoundRadius")
@@ -56,18 +45,22 @@ public class BoundRadius {
 		this.collision = (float) Math.sqrt(side * front);
 	}
 
+	/** 返回 front / Returns the front */
 	public float getFront() {
 		return front;
 	}
 
+	/** 返回 side / Returns the side */
 	public float getSide() {
 		return side;
 	}
 
+	/** 返回 upper / Returns the upper */
 	public float getUpper() {
 		return upper;
 	}
 
+	/** 返回碰撞 / Returns the collision */
 	public float getCollision() {
 		return collision;
 	}

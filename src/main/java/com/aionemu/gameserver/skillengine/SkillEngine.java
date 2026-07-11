@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -28,26 +12,42 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
+ * 技能引擎门面：按模板/玩家技能列表创建并应用技能与效果。
+ * Skill engine facade: create and apply skills/effects from templates and player skill lists.
+ *
  * @author ATracer
  */
 public class SkillEngine {
 
+	/**
+	 * 静态单例引用。
+	 * Static singleton reference.
+	 */
 	public static final SkillEngine skillEngine = new SkillEngine();
+
+	/**
+	 * Spring 实例提供者（可选覆盖静态单例）。
+	 * Optional Spring provider that may override the static singleton.
+	 */
 	private static volatile ObjectProvider<SkillEngine> instanceProvider;
 
 	/**
-	 * should not be instantiated directly
+	 * 私有构造，禁止外部直接实例化。
+	 * Private constructor; not for direct instantiation.
 	 */
 	private SkillEngine() {
 
 	}
 
 	/**
-	 * This method is used for skills that were learned by player
-	 * 
-	 * @param player
-	 * @param skillId
-	 * @return Skill
+	 * 为玩家已学习技能创建 Skill 实例。
+	 * Creates a Skill for a skill the player has learned.
+	 *
+	 * casting player
+	 * skill id
+	 * first target
+	 *
+	 * @return Skill 实例，模板不存在时为 null / skill instance, or null if template missing
 	 */
 	public Skill getSkillFor(Player player, int skillId, VisibleObject firstTarget) {
 		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
@@ -59,15 +59,17 @@ public class SkillEngine {
 	}
 
 	/**
-	 * This method is used for skills that were learned by player
-	 * 
-	 * @param player
-	 * @param template
-	 * @param firstTarget
-	 * @return
+	 * 按模板为玩家已学习技能创建 Skill 实例（非激怒激活时须已学习）。
+	 * Creates a Skill from a template for a learned player skill (must be learned unless PROVOKED).
+	 *
+	 * casting player
+	 * skill template
+	 * first target
+	 *
+	 * @return Skill 实例，未学习且非激怒时为 null / skill instance, or null if not learned and not provoked
 	 */
 	public Skill getSkillFor(Player player, SkillTemplate template, VisibleObject firstTarget) {
-		// player doesn't have such skill and ist not provoked
+		// 玩家没有该技能且未被挑衅 / player doesn't have such skill and ist not provoked
 		if (template.getActivationAttribute() != ActivationAttribute.PROVOKED) {
 			if (!player.getSkillList().isSkillPresent(template.getSkillId())) {
 				return null;
@@ -81,6 +83,16 @@ public class SkillEngine {
 		return new Skill(template, player, target);
 	}
 
+	/**
+	 * 按模板与指定技能等级为玩家创建 Skill 实例。
+	 * Creates a Skill for a player with an explicit skill level.
+	 *
+	 * casting player
+	 * skill template
+	 * first target
+	 * skill level
+	 * skill instance
+	 */
 	public Skill getSkillFor(Player player, SkillTemplate template, VisibleObject firstTarget, int skillLevel) {
 		Creature target = null;
 		if (firstTarget instanceof Creature) {
@@ -90,17 +102,31 @@ public class SkillEngine {
 	}
 
 	/**
-	 * This method is used for not learned skills (item skills etc)
-	 * 
-	 * @param creature
-	 * @param skillId
-	 * @param skillLevel
-	 * @return Skill
+	 * 为未学习技能（如物品技能）创建 Skill 实例。
+	 * Creates a Skill for skills not learned by the player (e.g. item skills).
+	 *
+	 * caster
+	 * skill id
+	 * skill level
+	 * first target
+	 *
+	 * @return Skill 实例，模板不存在时为 null / skill instance, or null if template missing
 	 */
 	public Skill getSkill(Creature creature, int skillId, int skillLevel, VisibleObject firstTarget) {
 		return getSkill(creature, skillId, skillLevel, firstTarget, null);
 	}
 
+	/**
+	 * 为未学习技能创建 Skill，可附带物品模板。
+	 * Creates a Skill for non-learned skills, optionally bound to an item template.
+	 *
+	 * caster
+	 * skill id
+	 * skill level
+	 * first target
+	 * @param itemTemplate 关联物品模板，可为 null / related item template, may be null
+	 * @return Skill 实例，模板不存在时为 null / skill instance, or null if template missing
+	 */
 	public Skill getSkill(Creature creature, int skillId, int skillLevel, VisibleObject firstTarget,
 			ItemTemplate itemTemplate) {
 		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
@@ -114,6 +140,12 @@ public class SkillEngine {
 		return new Skill(template, creature, skillLevel, target, itemTemplate);
 	}
 
+	/**
+	 * 获取技能引擎实例（优先 Spring 提供者，否则静态单例）。
+	 * Returns the skill engine instance (Spring provider if set, else static singleton).
+	 *
+	 * skill engine instance
+	 */
 	public static SkillEngine getInstance() {
 		ObjectProvider<SkillEngine> provider = instanceProvider;
 		if (provider != null) {
@@ -122,10 +154,25 @@ public class SkillEngine {
 		return skillEngine;
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<SkillEngine> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 强制直接对目标应用技能效果（忽略学习状态，可指定持续时长）。
+	 * Applies a skill effect directly to the target as a forced effect (optional duration).
+	 *
+	 * skill id
+	 * caster
+	 * effected creature
+	 * @param duration 强制持续时长（毫秒），&gt;0 时锁定时长 / forced duration in ms; &gt;0 locks duration
+	 */
 	public void applyEffectDirectly(int skillId, Creature effector, Creature effected, int duration) {
 		SkillTemplate st = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		if (st == null) {
@@ -138,5 +185,22 @@ public class SkillEngine {
 			ef.setForcedDuration(true);
 		}
 		ef.applyEffect();
+	}
+
+	/**
+	 * 对目标应用普通技能效果，保留命中与抗性判定。
+	 * Applies a regular skill effect while preserving hit and resistance checks.
+	 *
+	 * @return 创建的效果，技能不存在时为 null / created effect, or null if the skill is missing
+	 */
+	public Effect applyEffect(int skillId, Creature effector, Creature effected) {
+		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+		if (template == null) {
+			return null;
+		}
+		Effect effect = new Effect(effector, effected, template, template.getLvl(), 0);
+		effect.initialize();
+		effect.applyEffect();
+		return effect;
 	}
 }

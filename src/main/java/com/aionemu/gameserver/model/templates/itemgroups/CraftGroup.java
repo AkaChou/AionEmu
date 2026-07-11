@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.itemgroups;
 
 import java.util.ArrayList;
@@ -30,6 +14,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 制作队伍模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 public abstract class CraftGroup extends BonusItemGroup {
@@ -37,6 +24,7 @@ public abstract class CraftGroup extends BonusItemGroup {
 	@XmlTransient
 	private Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder;
 
+	/** 获取奖励。 / Returns the rewards. */
 	public ItemRaceEntry[] getRewards(Integer skillId) {
 		if (!dataHolder.containsKey(skillId)) {
 			return new ItemRaceEntry[0];
@@ -48,6 +36,7 @@ public abstract class CraftGroup extends BonusItemGroup {
 		return result.toArray(new ItemRaceEntry[0]);
 	}
 
+	/** 获取奖励。 / Returns the rewards. */
 	public ItemRaceEntry[] getRewards(Integer skillId, Integer skillPoints) {
 		if (!dataHolder.containsKey(skillId)) {
 			return new ItemRaceEntry[0];

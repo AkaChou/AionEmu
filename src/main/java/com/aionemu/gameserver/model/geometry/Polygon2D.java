@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.geometry;
 
 import java.awt.Point;
@@ -28,8 +12,9 @@ import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 /**
- * This class is a Polygon with float coordinates.
- * 
+ * 多边形2D，用于几何相关逻辑。
+ * Polygon 2 D for geometry logic.
+ *
  * @version $Id: Polygon2D.java 594018 2007-11-12 04:17:41Z cam $
  */
 public class Polygon2D implements Shape, Cloneable, Serializable {
@@ -40,27 +25,22 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The total number of points. The value of <code>npoints</code> represents the
-	 * number of valid points in this <code>Polygon</code>.
+	 * 点总数。<code>npoints</code> 表示此多边形有效点数。 / The total number of points. The value of <code>npoints</code> represents the number of valid points in this <code>Polygon</code>
 	 */
 	public int npoints;
 
 	/**
-	 * The array of <i>x</i> coordinates. The value of {@link #npoints npoints} is
-	 * equal to the number of points in this <code>Polygon2D</code>.
+	 * x 坐标数组。 / The array of <i>x</i> coordinates. The value of {@link #npoints npoints} is equal to the number of points in this <code>Polygon2D</code>
 	 */
 	public float[] xpoints;
 
 	/**
-	 * The array of <i>x</i> coordinates. The value of {@link #npoints npoints} is
-	 * equal to the number of points in this <code>Polygon2D</code>.
+	 * x 坐标数组。 / The array of <i>x</i> coordinates. The value of {@link #npoints npoints} is equal to the number of points in this <code>Polygon2D</code>
 	 */
 	public float[] ypoints;
 
 	/**
-	 * Bounds of the Polygon2D.
-	 * 
-	 * @see #getBounds()
+	 * Bounds of the Polygon2D. @see #getBounds()。 / Bounds of the Polygon2D. @see #getBounds()
 	 */
 	protected Rectangle2D bounds;
 
@@ -68,7 +48,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	private GeneralPath closedPath;
 
 	/**
-	 * Creates an empty Polygon2D.
+	 * Creates an empty Polygon2D
 	 */
 	public Polygon2D() {
 		xpoints = new float[4];
@@ -76,11 +56,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Constructs and initializes a <code>Polygon2D</code> from the specified
-	 * Rectangle2D.
-	 * 
-	 * @param rec the Rectangle2D
-	 * @exception NullPointerException rec is <code>null</code>.
+	 * 由指定 Rectangle2D 构造并初始化 Polygon2D。 / Constructs and initializes a <code>Polygon2D</code> from the specified Rectangle2D.
 	 */
 	public Polygon2D(Rectangle2D rec) {
 		if (rec == null) {
@@ -101,11 +77,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Constructs and initializes a <code>Polygon2D</code> from the specified
-	 * Polygon.
-	 * 
-	 * @param pol the Polygon
-	 * @exception NullPointerException pol is <code>null</code>.
+	 * 由指定 Polygon 构造并初始化 Polygon2D。 / Constructs and initializes a <code>Polygon2D</code> from the specified Polygon.
 	 */
 	public Polygon2D(Polygon pol) {
 		if (pol == null) {
@@ -122,20 +94,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Constructs and initializes a <code>Polygon2D</code> from the specified
-	 * parameters.
-	 * 
-	 * @param xpoints an array of <i>x</i> coordinates
-	 * @param ypoints an array of <i>y</i> coordinates
-	 * @param npoints the total number of points in the <code>Polygon2D</code>
-	 * @exception NegativeArraySizeException if the value of <code>npoints</code> is
-	 *                                       negative.
-	 * @exception IndexOutOfBoundsException  if <code>npoints</code> is greater than
-	 *                                       the length of <code>xpoints</code> or
-	 *                                       the length of <code>ypoints</code>.
-	 * @exception NullPointerException       if <code>xpoints</code> or
-	 *                                       <code>ypoints</code> is
-	 *                                       <code>null</code>.
+	 * 由指定参数构造并初始化 Polygon2D。 / Constructs and initializes a <code>Polygon2D</code> from the specified parameters.
 	 */
 	public Polygon2D(float[] xpoints, float[] ypoints, int npoints) {
 		if (npoints > xpoints.length || npoints > ypoints.length) {
@@ -150,20 +109,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Constructs and initializes a <code>Polygon2D</code> from the specified
-	 * parameters.
-	 * 
-	 * @param xpoints an array of <i>x</i> coordinates
-	 * @param ypoints an array of <i>y</i> coordinates
-	 * @param npoints the total number of points in the <code>Polygon2D</code>
-	 * @exception NegativeArraySizeException if the value of <code>npoints</code> is
-	 *                                       negative.
-	 * @exception IndexOutOfBoundsException  if <code>npoints</code> is greater than
-	 *                                       the length of <code>xpoints</code> or
-	 *                                       the length of <code>ypoints</code>.
-	 * @exception NullPointerException       if <code>xpoints</code> or
-	 *                                       <code>ypoints</code> is
-	 *                                       <code>null</code>.
+	 * 由指定参数构造并初始化 Polygon2D。 / Constructs and initializes a <code>Polygon2D</code> from the specified parameters.
 	 */
 	public Polygon2D(int[] xpoints, int[] ypoints, int npoints) {
 		if (npoints > xpoints.length || npoints > ypoints.length) {
@@ -180,7 +126,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Resets this <code>Polygon</code> object to an empty polygon.
+	 * 将此 Polygon 重置为空多边形。 / Resets this <code>Polygon</code> object to an empty polygon
 	 */
 	public void reset() {
 		npoints = 0;
@@ -189,6 +135,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 		closedPath = null;
 	}
 
+	/** 克隆 / clone. */
 	public Object clone() {
 		Polygon2D pol = new Polygon2D();
 		for (int i = 0; i < npoints; i++) {
@@ -245,25 +192,24 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 		return pol;
 	}
 
+	/** 获取多边形。 / Returns the polygon. */
 	public Polygon getPolygon() {
 		int[] _xpoints = new int[npoints];
 		int[] _ypoints = new int[npoints];
 		for (int i = 0; i < npoints; i++) {
-			_xpoints[i] = (int) xpoints[i]; // todo maybe rounding is better ?
+			_xpoints[i] = (int) xpoints[i];
 			_ypoints[i] = (int) ypoints[i];
 		}
 		return new Polygon(_xpoints, _ypoints, npoints);
 	}
 
+	/** 添加点。 / Adds point. */
 	public void addPoint(Point2D p) {
 		addPoint((float) p.getX(), (float) p.getY());
 	}
 
 	/**
-	 * Appends the specified coordinates to this <code>Polygon2D</code>.
-	 * 
-	 * @param x the specified x coordinate
-	 * @param y the specified y coordinate
+	 * 向此 Polygon2D 追加指定坐标。 / Appends the specified coordinates to this <code>Polygon2D</code>.
 	 */
 	public void addPoint(float x, float y) {
 		if (npoints == xpoints.length) {
@@ -284,42 +230,29 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Determines whether the specified {@link Point} is inside this
-	 * <code>Polygon</code>.
-	 * 
-	 * @param p the specified <code>Point</code> to be tested
-	 * @return <code>true</code> if the <code>Polygon</code> contains the
-	 *         <code>Point</code>; <code>false</code> otherwise.
-	 * @see #contains(double, double)
+	 * 判断指定点/坐标是否在此几何内。 / Determines whether the specified {@link Point} is inside this <code>Polygon</code>.
 	 */
 	public boolean contains(Point p) {
 		return contains(p.x, p.y);
 	}
 
 	/**
-	 * Determines whether the specified coordinates are inside this
-	 * <code>Polygon</code>.
-	 * <p>
-	 * 
-	 * @param x the specified x coordinate to be tested
-	 * @param y the specified y coordinate to be tested
-	 * @return <code>true</code> if this <code>Polygon</code> contains the specified
-	 *         coordinates, (<i>x</i>,&amp;nbsp;<i>y</i>); <code>false</code>
-	 *         otherwise.
+	 * 判断指定点/坐标是否在此几何内。 / Determines whether the specified coordinates are inside this <code>Polygon</code>. <p>.
 	 */
 	public boolean contains(int x, int y) {
 		return contains((double) x, (double) y);
 	}
 
 	/**
-	 * Returns the high precision bounding box of the {@link Shape}.
-	 * 
-	 * @return a {@link Rectangle2D} that precisely bounds the <code>Shape</code>.
+	 * Returns the high precision bounding box of the {@link Shape}。 / Returns the high precision bounding box of the {@link Shape}
+	 *
+	 * @return a {@link Rectangle2D} that precisely bounds the <code>Shape< / code>.
 	 */
 	public Rectangle2D getBounds2D() {
 		return bounds;
 	}
 
+	/** 返回 bounds / Returns the bounds */
 	public Rectangle getBounds() {
 		if (bounds == null) {
 			return null;
@@ -329,14 +262,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Determines if the specified coordinates are inside this <code>Polygon</code>.
-	 * For the definition of <i>insideness</i>, see the class comments of
-	 * {@link Shape}.
-	 * 
-	 * @param x the specified x coordinate
-	 * @param y the specified y coordinate
-	 * @return <code>true</code> if the <code>Polygon</code> contains the specified
-	 *         coordinates; <code>false</code> otherwise.
+	 * 判断指定坐标是否在此几何内。 / Determines if the specified coordinates are inside this <code>Polygon</code>. For the definition of <i>insideness</i>, see the class comments of {@link Shape}.
 	 */
 	public boolean contains(double x, double y) {
 		if (npoints <= 2 || !bounds.contains(x, y)) {
@@ -356,29 +282,14 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Tests if a specified {@link Point2D} is inside the boundary of this
-	 * <code>Polygon</code>.
-	 * 
-	 * @param p a specified <code>Point2D</code>
-	 * @return <code>true</code> if this <code>Polygon</code> contains the specified
-	 *         <code>Point2D</code>; <code>false</code> otherwise.
-	 * @see #contains(double, double)
+	 * 测试指定 Point2D 是否在此几何内。 / Tests if a specified {@link Point2D} is inside the boundary of this <code>Polygon</code>.
 	 */
 	public boolean contains(Point2D p) {
 		return contains(p.getX(), p.getY());
 	}
 
 	/**
-	 * Tests if the interior of this <code>Polygon</code> intersects the interior of
-	 * a specified set of rectangular coordinates.
-	 * 
-	 * @param x the x coordinate of the specified rectangular shapes top-left corner
-	 * @param y the y coordinate of the specified rectangular shapes top-left corner
-	 * @param w the width of the specified rectangular shape
-	 * @param h the height of the specified rectangular shape
-	 * @return <code>true</code> if the interior of this <code>Polygon</code> and
-	 *         the interior of the specified set of rectangular coordinates
-	 *         intersect each other; <code>false</code> otherwise.
+	 * 测试此多边形内部是否与给定形状相交。 / Tests if the interior of this <code>Polygon</code> intersects the interior of a specified set of rectangular coordinates.
 	 */
 	public boolean intersects(double x, double y, double w, double h) {
 		if (npoints <= 0 || !bounds.intersects(x, y, w, h)) {
@@ -389,31 +300,14 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Tests if the interior of this <code>Polygon</code> intersects the interior of
-	 * a specified <code>Rectangle2D</code>.
-	 * 
-	 * @param r a specified <code>Rectangle2D</code>
-	 * @return <code>true</code> if this <code>Polygon</code> and the interior of
-	 *         the specified <code>Rectangle2D</code> intersect each other;
-	 *         <code>false</code> otherwise.
+	 * 测试此多边形内部是否与给定形状相交。 / Tests if the interior of this <code>Polygon</code> intersects the interior of a specified <code>Rectangle2D</code>.
 	 */
 	public boolean intersects(Rectangle2D r) {
 		return intersects(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
 	/**
-	 * Tests if the interior of this <code>Polygon</code> entirely contains the
-	 * specified set of rectangular coordinates.
-	 * 
-	 * @param x the x coordinate of the top-left corner of the specified set of
-	 *          rectangular coordinates
-	 * @param y the y coordinate of the top-left corner of the specified set of
-	 *          rectangular coordinates
-	 * @param w the width of the set of rectangular coordinates
-	 * @param h the height of the set of rectangular coordinates
-	 * @return <code>true</code> if this <code>Polygon</code> entirely contains the
-	 *         specified set of rectangular coordinates; <code>false</code>
-	 *         otherwise.
+	 * 测试此多边形内部是否与给定形状相交。 / Tests if the interior of this <code>Polygon</code> entirely contains the specified set of rectangular coordinates.
 	 */
 	public boolean contains(double x, double y, double w, double h) {
 		if (npoints <= 0 || !bounds.intersects(x, y, w, h)) {
@@ -424,30 +318,14 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Tests if the interior of this <code>Polygon</code> entirely contains the
-	 * specified <code>Rectangle2D</code>.
-	 * 
-	 * @param r the specified <code>Rectangle2D</code>
-	 * @return <code>true</code> if this <code>Polygon</code> entirely contains the
-	 *         specified <code>Rectangle2D</code>; <code>false</code> otherwise.
-	 * @see #contains(double, double, double, double)
+	 * 测试此多边形内部是否与给定形状相交。 / Tests if the interior of this <code>Polygon</code> entirely contains the specified <code>Rectangle2D</code>.
 	 */
 	public boolean contains(Rectangle2D r) {
 		return contains(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
 	/**
-	 * Returns an iterator object that iterates along the boundary of this
-	 * <code>Polygon</code> and provides access to the geometry of the outline of
-	 * this <code>Polygon</code>. An optional {@link AffineTransform} can be
-	 * specified so that the coordinates returned in the iteration are transformed
-	 * accordingly.
-	 * 
-	 * @param at an optional <code>AffineTransform</code> to be applied to the
-	 *           coordinates as they are returned in the iteration, or
-	 *           <code>null</code> if untransformed coordinates are desired
-	 * @return a {@link PathIterator} object that provides access to the geometry of
-	 *         this <code>Polygon</code>.
+	 * 返回遍历路径几何的迭代器。 / Returns an iterator object that iterates along the boundary of this <code>Polygon</code> and provides access to the geometry of the outline of this <code>Polygon</code>. An optional {@link AffineTransform} can be specified so that the coordinates returned in the iteration are transformed accordingly.
 	 */
 	public PathIterator getPathIterator(AffineTransform at) {
 		updateComputingPath();
@@ -459,22 +337,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns an iterator object that iterates along the boundary of the
-	 * <code>Polygon2D</code> and provides access to the geometry of the outline of
-	 * the <code>Shape</code>. Only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point
-	 * types are returned by the iterator. Since polygons are already flat, the
-	 * <code>flatness</code> parameter is ignored.
-	 * 
-	 * @param at       an optional <code>AffineTransform</code> to be applied to the
-	 *                 coordinates as they are returned in the iteration, or
-	 *                 <code>null</code> if untransformed coordinates are desired
-	 * @param flatness the maximum amount that the control points for a given curve
-	 *                 can vary from colinear before a subdivided curve is replaced
-	 *                 by a straight line connecting the endpoints. Since polygons
-	 *                 are already flat the <code>flatness</code> parameter is
-	 *                 ignored.
-	 * @return a <code>PathIterator</code> object that provides access to the
-	 *         <code>Shape</code> objects geometry.
+	 * 返回遍历路径几何的迭代器。 / Returns an iterator object that iterates along the boundary of the <code>Polygon2D</code> and provides access to the geometry of the outline of the <code>Shape</code>. Only SEG_MOVETO, SEG_LINETO, and SEG_CLOSE point types are returned by the iterator. Since polygons are already flat, the <code>flatness</code> parameter is ignored.
 	 */
 	public PathIterator getPathIterator(AffineTransform at, double flatness) {
 		return getPathIterator(at);

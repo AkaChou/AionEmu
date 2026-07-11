@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.ArrayList;
@@ -23,16 +7,33 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 征服者/守护者状态包：同步 debuff 等级，或推送领地入侵扫描/雷达玩家列表。
+ * Server packet for conqueror/protector status: debuff level, or territory intruder scan/radar player list.
+ */
 public class SM_CONQUEROR_PROTECTOR extends AionServerPacket {
 	private int type;
 	private int debuffLvl;
 	private Collection<Player> players;
 
+	/**
+	 * debuff 等级同步（type 0/1）。
+	 * Debuff-level sync (type 0/1).
+	 *
+	 * @param showMsg   是否显示消息 / whether to show a message
+	 * debuff level
+	 */
 	public SM_CONQUEROR_PROTECTOR(boolean showMsg, int debuffLvl) {
 		this.type = showMsg ? 1 : 0;
 		this.debuffLvl = debuffLvl;
 	}
 
+	/**
+	 * 领地入侵自动扫描玩家列表（type 4）。
+	 * Automatic territory-intruder scan player list (type 4).
+	 *
+	 * @param players 扫描到的玩家 / scanned players
+	 */
 	public SM_CONQUEROR_PROTECTOR(Collection<Player> players) {
 		this.type = 4;
 		this.players = new ArrayList<Player>(players);

@@ -75,7 +75,6 @@ import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.WeatherService;
-import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.WindyGorgeService;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
@@ -204,7 +203,6 @@ class GameServiceProviderCompatibilityTest {
         NpcShoutsService npcShoutsService = instance(NpcShoutsService.class);
         ShieldService shieldService = instance(ShieldService.class);
         RewardService rewardService = instance(RewardService.class);
-        WeddingService weddingService = instance(WeddingService.class);
         VeteranRewardsService veteranRewardsService = instance(VeteranRewardsService.class);
         ProtectorConquerorService protectorConquerorService = instance(ProtectorConquerorService.class);
         FFAService ffaService = instance(FFAService.class);
@@ -318,7 +316,6 @@ class GameServiceProviderCompatibilityTest {
             NpcShoutsService.setInstanceProvider(provider(NpcShoutsService.class, npcShoutsService));
             ShieldService.setInstanceProvider(provider(ShieldService.class, shieldService));
             RewardService.setInstanceProvider(provider(RewardService.class, rewardService));
-            WeddingService.setInstanceProvider(provider(WeddingService.class, weddingService));
             VeteranRewardsService.setInstanceProvider(provider(VeteranRewardsService.class, veteranRewardsService));
             ProtectorConquerorService.setInstanceProvider(provider(ProtectorConquerorService.class, protectorConquerorService));
             FFAService.setInstanceProvider(provider(FFAService.class, ffaService));
@@ -435,7 +432,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(npcShoutsService, NpcShoutsService.getInstance());
             assertSame(shieldService, ShieldService.getInstance());
             assertSame(rewardService, RewardService.getInstance());
-            assertSame(weddingService, WeddingService.getInstance());
             assertSame(veteranRewardsService, VeteranRewardsService.getInstance());
             assertSame(protectorConquerorService, ProtectorConquerorService.getInstance());
             assertSame(ffaService, FFAService.getInstance());
@@ -567,7 +563,6 @@ class GameServiceProviderCompatibilityTest {
             NpcShoutsService.setInstanceProvider(null);
             ShieldService.setInstanceProvider(null);
             RewardService.setInstanceProvider(null);
-            WeddingService.setInstanceProvider(null);
             VeteranRewardsService.setInstanceProvider(null);
             ProtectorConquerorService.setInstanceProvider(null);
             FFAService.setInstanceProvider(null);
@@ -656,7 +651,6 @@ class GameServiceProviderCompatibilityTest {
         DredgionService2 dredgionService = instance(DredgionService2.class);
         AsyunatarService asyunatarService = instance(AsyunatarService.class);
         ShieldService shieldService = instance(ShieldService.class);
-        WeddingService weddingService = instance(WeddingService.class);
         ProtectorConquerorService protectorConquerorService = instance(ProtectorConquerorService.class);
         PetService petService = instance(PetService.class);
         ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
@@ -685,7 +679,6 @@ class GameServiceProviderCompatibilityTest {
                 provider(NpcShoutsService.class, npcShoutsService),
                 provider(ShieldService.class, shieldService),
                 provider(RewardService.class, instance(RewardService.class)),
-                provider(WeddingService.class, weddingService),
                 provider(VeteranRewardsService.class, instance(VeteranRewardsService.class)),
                 provider(ProtectorConquerorService.class, protectorConquerorService),
                 provider(FFAService.class, ffaService),
@@ -715,7 +708,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(dredgionService, GameFeatureServices.dredgionService());
             assertSame(asyunatarService, GameFeatureServices.asyunatarService());
             assertSame(shieldService, GameFeatureServices.shieldService());
-            assertSame(weddingService, GameFeatureServices.weddingService());
             assertSame(protectorConquerorService, GameFeatureServices.protectorConquerorService());
             assertSame(disputeLandService, GameFeatureServices.disputeLandService());
             assertSame(banditService, GameFeatureServices.banditService());

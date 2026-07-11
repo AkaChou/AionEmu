@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -24,10 +8,19 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 聊天窗口信息包：展示目标玩家的军团/个人资料，或队伍/联盟成员等级与职业。
+ * Server packet for chat-window info: legion/profile of a target, or group/alliance member levels and classes.
+ */
 public class SM_CHAT_WINDOW extends AionServerPacket {
 	private Player target;
 	private boolean isGroup;
 
+	/**
+	 * target player
+	 * @param isGroup {@code true} 时写入队伍/联盟信息，否则写个人资料
+	 * when {@code true} writes group/alliance info, else personal profile。 / when {@code true} writes group/alliance info, else personal profile
+	 */
 	public SM_CHAT_WINDOW(Player target, boolean isGroup) {
 		this.target = target;
 		this.isGroup = isGroup;

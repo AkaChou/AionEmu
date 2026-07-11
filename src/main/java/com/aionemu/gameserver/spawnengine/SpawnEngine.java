@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -57,21 +42,29 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
- * This class is responsible for NPCs spawn management. Current implementation
- * is temporal and will be replaced in the future.
- * 
- * @author Luno modified by ATracer, Source, Wakizashi, xTz, nrg
+ * NPC 刷怪引擎入口：按模板创建可见对象并刷入世界。
+ * NPC spawn engine entry: creates visible objects from templates and brings them into the world.
+ * <p>
+ * 当前实现为临时方案，后续可能替换。
+ * Current implementation is temporal and may be replaced.
+ *
+ * @author Luno
+ * @author ATracer
+ * @author Source
+ * @author Wakizashi
+ * @author xTz
+ * @author nrg
  */
 @Slf4j
 public class SpawnEngine {
 
-
 	/**
-	 * Creates VisibleObject instance and spawns it using given
-	 * {@link SpawnTemplate} instance.
-	 * 
-	 * @param spawn
-	 * @return created and spawned VisibleObject
+	 * 根据刷怪模板创建并刷出 VisibleObject。
+	 * Creates and spawns a VisibleObject from the given spawn template.
+	 *
+	 * @param spawn 刷怪模板 / spawn template
+	 * instance index
+	 * @return 已创建并刷出的可见对象 / created and spawned visible object
 	 */
 	public static VisibleObject spawnObject(SpawnTemplate spawn, int instanceIndex) {
 		final VisibleObject visObj = getSpawnedObject(spawn, instanceIndex);
@@ -83,6 +76,14 @@ public class SpawnEngine {
 		return visObj;
 	}
 
+	/**
+	 * 按模板类型分派到具体刷怪实现。
+	 * Dispatches to a concrete spawner by template type.
+	 *
+	 * @param spawn 刷怪模板 / spawn template
+	 * instance index
+	 * @return 刷出的可见对象 / spawned visible object
+	 */
 	private static VisibleObject getSpawnedObject(SpawnTemplate spawn, int instanceIndex) {
 		int objectId = spawn.getNpcId();
 		if (objectId > 400000 && objectId < 499999) {
@@ -135,21 +136,34 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * @param worldId
-	 * @param npcId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
-	 * @return
+	 * 创建基础刷怪模板（无重生、无主人）。
+	 * Creates a basic spawn template (no respawn, no master).
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * spawn template
 	 */
 	static SpawnTemplate createSpawnTemplate(int worldId, int npcId, float x, float y, float z, byte heading) {
 		return new SpawnTemplate(new SpawnGroup2(worldId, npcId), x, y, z, heading, 0, null, 0, 0);
 	}
 
 	/**
-	 * Should be used when you need to add a siegespawn through code and not from
-	 * static_data spawns (e.g. CustomBalaurAssault)
+	 * 创建带创建者与主人名的刷怪模板（如代码侧攻城刷怪）。
+	 * Creates a spawn template with creator and master name (e.g. code-side siege spawns).
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * creator id
+	 * master name
+	 * spawn template
 	 */
 	static SpawnTemplate createSpawnTemplate(int worldId, int npcId, float x, float y, float z, byte heading,
 			int creatorId, String masterName) {
@@ -159,6 +173,21 @@ public class SpawnEngine {
 		return template;
 	}
 
+	/**
+	 * 添加攻城刷怪模板（非 static_data，如 CustomBalaurAssault）。
+	 * Adds a siege spawn template from code rather than static_data (e.g. CustomBalaurAssault).
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * siege id
+	 * @param race 攻城种族 / siege race
+	 * @param mod 攻城模式类型 / siege mod type
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * @return 攻城刷怪模板 / siege spawn template
+	 */
 	public static SiegeSpawnTemplate addNewSiegeSpawn(int worldId, int npcId, int siegeId, SiegeRace race,
 			SiegeModType mod, float x, float y, float z, byte heading) {
 		SiegeSpawnTemplate spawnTemplate = new SiegeSpawnTemplate(new SpawnGroup2(worldId, npcId), x, y, z, heading, 0,
@@ -170,17 +199,20 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * Should be used when need to define whether spawn will be deleted after death
-	 * Using this method spawns will not be saved with //save_spawn command
-	 * 
-	 * @param worldId
-	 * @param npcId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
-	 * @param respawnTime
-	 * @return SpawnTemplate
+	 * 添加可配置重生时间的刷怪模板；死亡后是否删除由 respawnTime 决定。
+	 * Adds a spawn template with configurable respawn; death cleanup depends on respawnTime.
+	 * <p>
+	 * 通过本方法创建的刷怪不会被 //save_spawn 持久化。
+	 * Spawns created this way are not saved by //save_spawn.
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * @param respawnTime 重生时间（秒，0 表示不重生） / respawn time in seconds (0 = no respawn)
+	 * spawn template
 	 */
 	public static SpawnTemplate addNewSpawn(int worldId, int npcId, float x, float y, float z, byte heading,
 			int respawnTime) {
@@ -190,20 +222,35 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * Create non-permanent spawn template with no respawn
-	 * 
-	 * @param worldId
-	 * @param npcId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
-	 * @return
+	 * 创建一次性、无重生的刷怪模板。
+	 * Creates a non-permanent spawn template with no respawn.
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * spawn template
 	 */
 	public static SpawnTemplate addNewSingleTimeSpawn(int worldId, int npcId, float x, float y, float z, byte heading) {
 		return addNewSpawn(worldId, npcId, x, y, z, heading, 0);
 	}
 
+	/**
+	 * 创建带创建者与主人名的一次性刷怪模板。
+	 * Creates a single-time spawn template with creator and master name.
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * 朝向 / heading
+	 * creator id
+	 * master name
+	 * spawn template
+	 */
 	public static SpawnTemplate addNewSingleTimeSpawn(int worldId, int npcId, float x, float y, float z, byte heading,
 			int creatorId, String masterName) {
 		SpawnTemplate template = addNewSpawn(worldId, npcId, x, y, z, heading, 0);
@@ -212,11 +259,31 @@ public class SpawnEngine {
 		return template;
 	}
 
+	/**
+	 * 将可见对象按刷怪模板坐标刷入指定实例。
+	 * Brings a visible object into the world using spawn template coordinates.
+	 *
+	 * visible object
+	 * @param spawn 刷怪模板 / spawn template
+	 * instance index
+	 */
 	static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
 		bringIntoWorld(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
 				spawn.getHeading());
 	}
 
+	/**
+	 * 将可见对象登记、定位并刷入世界。
+	 * Stores, positions and spawns a visible object into the world.
+	 *
+	 * visible object
+	 * 世界 ID / world id
+	 * instance index
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / heading
+	 */
 	public static void bringIntoWorld(VisibleObject visibleObject, int worldId, int instanceIndex, float x, float y,
 			float z, byte h) {
 		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
@@ -225,6 +292,14 @@ public class SpawnEngine {
 		world.spawn(visibleObject);
 	}
 
+	/**
+	 * 将已有位置的可见对象登记并刷入世界。
+	 * Stores and spawns a visible object that already has a position.
+	 *
+	 * visible object
+	 *
+	 * @param visibleObject @throws IllegalArgumentException 位置为空时 / when position is null
+	 */
 	public static void bringIntoWorld(VisibleObject visibleObject) {
 		if (visibleObject.getPosition() == null)
 			throw new IllegalArgumentException("Position is null");
@@ -234,11 +309,12 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * Spawn all NPC's from templates
+	 * 从模板刷出所有非副本世界的 NPC。
+	 * Spawns all NPCs from templates for non-instance world maps.
 	 */
 	public static void spawnAll() {
 		if (!DeveloperConfig.SPAWN_ENABLE) {
-			log.info("Spawns are disabled");
+			log.info(I18n.get("log.6bd421074785"));
 			return;
 		}
 		for (WorldMapTemplate worldMapTemplate : DataManager.WORLD_MAPS_DATA) {
@@ -252,7 +328,10 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * @param worldId
+	 * 刷出指定世界地图（非副本）的全部刷怪。
+	 * Spawns all objects for the given non-instance world map.
+	 *
+	 * 世界 ID / world id
 	 */
 	public static void spawnWorldMap(int worldId) {
 		WorldMapTemplate template = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
@@ -262,7 +341,10 @@ public class SpawnEngine {
 	}
 
 	/**
-	 * @param worldMapTemplate
+	 * 按世界模板刷出所有双子实例。
+	 * Spawns all twin instances defined by the world map template.
+	 *
+	 * @param worldMapTemplate 世界地图模板 / world map template
 	 */
 	private static void spawnBasedOnTemplate(WorldMapTemplate worldMapTemplate) {
 		int maxTwin = worldMapTemplate.getTwinCount();
@@ -274,13 +356,26 @@ public class SpawnEngine {
 		}
 	}
 
+	/**
+	 * 刷出指定世界实例（难度 0）。
+	 * Spawns the given world instance with difficulty 0.
+	 *
+	 * 世界 ID / world id
+	 * instance id
+	 * difficulty id
+	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId) {
 		spawnInstance(worldId, instanceId, difficultId, 0);
 	}
 
 	/**
-	 * @param worldId
-	 * @param instanceId
+	 * 刷出指定世界实例的门、NPC、静态物与房屋。
+	 * Spawns doors, NPCs, static objects and houses for the world instance.
+	 *
+	 * 世界 ID / world id
+	 * instance id
+	 * difficulty id
+	 * @param ownerId 房屋所有者 ID / house owner id
 	 */
 	public static void spawnInstance(int worldId, int instanceId, int difficultId, int ownerId) {
 		List<SpawnGroup2> worldSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(worldId);
@@ -294,8 +389,8 @@ public class SpawnEngine {
 					continue;
 				}
 
-				// Disable temporary spawns in instances, TemporarySpawnEngine
-				// doesn't support removing spawns
+				// 副本中禁用临时生成，TemporarySpawnEngine / Disable temporary spawns in instances, TemporarySpawnEngine
+				// 不支持移除生成 / doesn't support removing spawns
 				if (spawn.isTemporarySpawn() && !worldTemplate.isInstance()) {
 					TemporarySpawnEngine.addSpawnGroup(spawn, instanceId);
 					continue;
@@ -329,28 +424,53 @@ public class SpawnEngine {
 			}
 			WalkerFormator.organizeAndSpawn(worldId, instanceId);
 		}
-		log.info("Spawned " + worldId + " [" + instanceId + "] : " + spawnedCounter);
+		log.info(I18n.get("log.1a270a579228", worldId, instanceId, spawnedCounter));
 		GameHousingServices.housingService().spawnHouses(worldId, instanceId, ownerId);
 	}
 
+	/**
+	 * 校验池大小是否不超过可用模板数。
+	 * Validates that pool size does not exceed available templates.
+	 *
+	 * spawn group
+	 *
+	 * @param spawn 若 valid 则为 true / true if valid
+	 */
 	private static boolean checkPool(SpawnGroup2 spawn) {
 		if (spawn.getSpawnTemplates().size() < spawn.getPool()) {
-			log.warn("Pool size more then spots, npcId: " + spawn.getNpcId() + ", worldId: " + spawn.getWorldId());
+			log.warn(I18n.get("log.05d6e85f725b", spawn.getNpcId(), spawn.getWorldId()));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 统计并打印世界中 NPC 与采集物数量。
+	 * Counts and logs NPC and gatherable totals in the world.
+	 */
 	public static void printWorldSpawnStats() {
 		StatsCollector visitor = new StatsCollector();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(visitor);
-		log.info("Loaded " + visitor.getNpcCount() + " Npc Spawns");
-		log.info("Loaded " + visitor.getGatherableCount() + " Gatherable Spawns");
+		log.info(I18n.get("log.6931cfbae670", visitor.getNpcCount()));
+		log.info(I18n.get("log.a6e250bd76ce", visitor.getGatherableCount()));
 	}
 
+	/**
+	 * 世界对象统计访问者。
+	 * Visitor that tallies NPCs and gatherables.
+	 */
 	static class StatsCollector implements Visitor<VisibleObject> {
 
+		/**
+		 * NPC 计数。
+		 * NPC count.
+		 */
 		int npcCount;
+
+		/**
+		 * 采集物计数。
+		 * Gatherable count.
+		 */
 		int gatherableCount;
 
 		@Override
@@ -362,10 +482,16 @@ public class SpawnEngine {
 			}
 		}
 
+		/**
+		 * NPC 数量 / npc count
+		 */
 		public int getNpcCount() {
 			return npcCount;
 		}
 
+		/**
+		 * @return 采集物数量 / gatherable count
+		 */
 		public int getGatherableCount() {
 			return gatherableCount;
 		}

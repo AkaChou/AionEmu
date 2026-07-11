@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import java.util.List;
@@ -30,17 +14,41 @@ import com.aionemu.gameserver.questEngine.handlers.template.SkillUse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 技能使用类任务的 XML 数据模型，注册 {@link SkillUse} 模板。
+ * XML data model for skill-use quests; registers the {@link SkillUse} template.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SkillUseData")
 public class SkillUseData extends XMLQuest {
 
+	/**
+	 * 接取任务的起始 NPC ID。
+	 * Start NPC id that offers the quest.
+	 */
 	@XmlAttribute(name = "start_npc_id")
 	protected int startNpc;
+
+	/**
+	 * 交还任务的结束 NPC ID。
+	 * End NPC id for turn-in.
+	 */
 	@XmlAttribute(name = "end_npc_id")
 	protected int endNpc;
+
+	/**
+	 * 需要使用的技能步骤列表。
+	 * Skill-use steps required by the quest.
+	 */
 	@XmlElement(name = "skill", required = true)
 	protected List<QuestSkillData> skills;
 
+	/**
+	 * 注册 {@link SkillUse} 模板处理器。
+	 * Registers the {@link SkillUse} template handler.
+	 *
+	 * Quest engine
+	 */
 	@Override
 	public void register(QuestEngine questEngine) {
 		Map<List<Integer>, QuestSkillData> questSkills = new LinkedHashMap<List<Integer>, QuestSkillData>();

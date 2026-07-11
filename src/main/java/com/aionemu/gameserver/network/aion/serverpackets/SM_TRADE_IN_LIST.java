@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -23,14 +7,21 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 打开 NPC 以物易物（Trade-In）列表的服务端包。
+ * Server packet that opens an NPC's trade-in list.
+ *
  * @author Rinzler (30.03.2014)
  */
-
 public class SM_TRADE_IN_LIST extends AionServerPacket {
 	private Npc npc;
 	private TradeListTemplate tlist;
 	private int buyPriceModifier;
 
+	/**
+	 * trade NPC
+	 * @param tlist            以物易物列表模板 / trade-in list template
+	 * price modifier
+	 */
 	public SM_TRADE_IN_LIST(Npc npc, TradeListTemplate tlist, int buyPriceModifier) {
 		this.npc = npc;
 		this.tlist = tlist;

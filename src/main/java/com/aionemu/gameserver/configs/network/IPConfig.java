@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.network;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.net.InetAddress;
@@ -34,24 +20,27 @@ import com.aionemu.commons.network.IPRange;
 import com.aionemu.gameserver.configs.Config;
 
 /**
- * @author Taran, SoulKeeper Class that is designed to read IPConfig.xml
+ * 读取 IPConfig.xml，按客户端来源网段映射游戏服对外地址。
+ * Loads IPConfig.xml and maps game-server public addresses by client IP ranges.
+ *
+ * @author Taran, SoulKeeper
  */
 @Slf4j
 public class IPConfig {
 	/**
-	 * Location of config file
-	 */
-	/**
-	 * List of all ip ranges
+	 * 全部 IP 段映射列表。
+	 * List of all IP ranges.
 	 */
 	private static final List<IPRange> ranges = new ArrayList<IPRange>();
 	/**
-	 * Default address
+	 * 默认对外地址字节。
+	 * Default public address bytes.
 	 */
 	private static byte[] defaultAddress;
 
 	/**
-	 * Method that loads IPConfig
+	 * 加载 IP 配置（支持启动覆盖项）。
+	 * Loads IP configuration (supports boot overrides).
 	 */
 	public static void load() {
 		try {
@@ -85,11 +74,15 @@ public class IPConfig {
 				}
 			});
 		} catch (Exception e) {
-			log.error("Critical error while parsing ipConfig", e);
+			log.error(I18n.get("log.2fb10c85ccbb", e));
 			throw new Error("Can't load ipConfig", e);
 		}
 	}
 
+	/**
+	 * 返回首个非空白字符串。
+	 * Returns the first non-blank string.
+	 */
 	private static String firstNonBlank(String... values) {
 		for (String value : values) {
 			if (value != null && !value.isBlank()) {
@@ -100,18 +93,20 @@ public class IPConfig {
 	}
 
 	/**
-	 * Returns list of ip ranges
-	 * 
-	 * @return list of ip ranges
+	 * 返回 IP 段映射列表。
+	 * Returns the list of IP ranges.
+	 *
+	 * list of IP ranges
 	 */
 	public static List<IPRange> getRanges() {
 		return ranges;
 	}
 
 	/**
-	 * Returns default address
-	 * 
-	 * @return default address
+	 * 返回默认对外地址。
+	 * Returns the default public address.
+	 *
+	 * @return 默认地址字节 / default address
 	 */
 	public static byte[] getDefaultAddress() {
 		return defaultAddress;

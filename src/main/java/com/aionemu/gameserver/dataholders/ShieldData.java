@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -28,6 +12,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.shield.ShieldTemplate;
 
 /**
+ * 护盾模板数据容器，持有全部 ShieldTemplate 列表。
+ * Shield template data holder storing the full ShieldTemplate list.
+ *
  * @author Wakizashi
  */
 @XmlRootElement(name = "shields")
@@ -37,6 +24,12 @@ public class ShieldData {
 	@XmlElement(name = "shield")
 	private List<ShieldTemplate> shieldTemplates;
 
+	/**
+	 * 返回护盾模板数量；列表为空时初始化为空列表并返回 0。
+	 * Returns the number of shield templates; initializes an empty list and returns 0 when null.
+	 *
+	 * template count
+	 */
 	public int size() {
 		if (shieldTemplates == null) {
 			shieldTemplates = new ArrayList<ShieldTemplate>();
@@ -45,6 +38,12 @@ public class ShieldData {
 		return shieldTemplates.size();
 	}
 
+	/**
+	 * 返回护盾模板列表；为空时返回新空列表。
+	 * Returns the shield template list; returns a new empty list when null.
+	 *
+	 * @return 护盾模板列表 / shield template list
+	 */
 	public List<ShieldTemplate> getShieldTemplates() {
 		if (shieldTemplates == null) {
 			return new ArrayList<ShieldTemplate>();
@@ -52,6 +51,12 @@ public class ShieldData {
 		return shieldTemplates;
 	}
 
+	/**
+	 * 批量追加护盾模板。
+	 * Appends all given shield templates.
+	 *
+	 * @param templates 待追加的模板集合 / templates to append
+	 */
 	public void addAll(Collection<ShieldTemplate> templates) {
 		if (shieldTemplates == null) {
 			shieldTemplates = new ArrayList<ShieldTemplate>();

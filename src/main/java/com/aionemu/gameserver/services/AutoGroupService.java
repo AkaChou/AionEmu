@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +56,10 @@ import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 
 import java.util.List;
 import java.util.Map;
+/**
+ * 自动组队/匹配服务：管理副本排队、入场确认、实例创建与登录/登出时的匹配状态恢复。
+ * matchmaking service: manages instance queues, entry confirmation, instance creation, and match state on login/logout. / matchmaking service: manages instance queues, entry confirmation, instance creation, and match state on login/logout.
+ */
 @Slf4j
 
 public class AutoGroupService {
@@ -82,9 +70,21 @@ public class AutoGroupService {
 	private Collection<Integer> penaltys = ConcurrentHashMap.newKeySet();
 	private Lock lock = new ReentrantLock();
 
+	/**
+	 * 默认构造。
+	 * Default constructor.
+	 */
 	public AutoGroupService() {
 	}
 
+	/**
+	 * 开始为指定副本 mask 排队匹配。
+	 * Starts looking/queueing for the given instance mask.
+	 *
+	 * 玩家 / player
+	 * instance mask id
+	 * @param ert 入场请求类型 / entry request type
+	 */
 	public void startLooking(Player player, int instanceMaskId, EntryRequestType ert) {
 		AutoGroupType agt = AutoGroupType.getAGTByMaskId(instanceMaskId);
 		if (agt == null) {
@@ -183,6 +183,13 @@ public class AutoGroupService {
 		startSort(ert, instanceMaskId, true);
 	}
 
+	/**
+	 * 玩家确认进入已匹配的副本。
+	 * Player confirms entry into a matched instance.
+	 *
+	 * 玩家 / player
+	 * instance mask id
+	 */
 	public synchronized void pressEnter(Player player, int instanceMaskId) {
 		AutoInstance instance = getAutoInstance(player, instanceMaskId);
 		if (instance == null || instance.players.get(player.getObjectId()).isPressedEnter()) {
@@ -198,6 +205,12 @@ public class AutoGroupService {
 		PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 5));
 	}
 
+	/**
+	 * 玩家实际进入实例后的匹配状态处理。
+	 * Handles match state after the player actually enters the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onEnterInstance(Player player) {
 		if (player.isInInstance()) {
 			Integer obj = player.getObjectId();
@@ -208,6 +221,13 @@ public class AutoGroupService {
 		}
 	}
 
+	/**
+	 * 取消玩家对指定副本的排队。
+	 * Unregisters the player from looking for the given instance.
+	 *
+	 * 玩家 / player
+	 * instance mask id
+	 */
 	public void unregisterLooking(Player player, byte instanceMaskId) {
 		Integer obj = player.getObjectId();
 		LookingForParty lfp = searchers.get(obj);
@@ -220,11 +240,24 @@ public class AutoGroupService {
 					searchers.remove(obj);
 					startPenalty(obj);
 				}
+	/**
+	 * 获取服务单例（优先 Spring 提供者）。
+	 * Returns the service singleton (preferring the Spring provider).
+	 *
+	 * service instance
+	 */
 				getInstance().unRegisterSearchInstance(player, si);
 			}
 		}
 	}
 
+	/**
+	 * 取消进入已匹配副本。
+	 * Cancels entry into a matched instance.
+	 *
+	 * 玩家 / player
+	 * instance mask id
+	 */
 	public void cancelEnter(Player player, int instanceMaskId) {
 		AutoInstance autoInstance = getAutoInstance(player, instanceMaskId);
 		if (autoInstance != null) {
@@ -284,6 +317,12 @@ public class AutoGroupService {
 		}
 	}
 
+	/**
+	 * 登录时恢复/推送可用自动组队入口。
+	 * On login, restores/pushes available auto-group entry points.
+	 *
+	 * logging-in player
+	 */
 	public void onPlayerLogin(Player player) {
 		if (GameFeatureServices.dredgionService().isDredgionAvailable() && player.getLevel() > DredgionService2.minLevel
 				&& player.getLevel() < DredgionService2.capLevel
@@ -472,6 +511,12 @@ public class AutoGroupService {
 		}
 	}
 
+	/**
+	 * 登出时清理排队与自动实例状态。
+	 * On logout, cleans queue and auto-instance state.
+	 *
+	 * logging-out player
+	 */
 	public void onPlayerLogOut(Player player) {
 		Integer obj = player.getObjectId();
 		int instanceId = player.getInstanceId();
@@ -481,6 +526,13 @@ public class AutoGroupService {
 			if (lfp.isOnStartEnterTask()) {
 				for (AutoInstance autoInstance : autoInstances.values()) {
 					if (autoInstance.players.containsKey(obj) && !autoInstance.players.get(obj).isInInstance()) {
+	/**
+	 * 取消进入已匹配副本。
+	 * Cancels entry into a matched instance.
+	 *
+	 * 玩家 / player
+	 * instance mask id
+	 */
 						cancelEnter(player, autoInstance.agt.getInstanceMaskId());
 					}
 				}
@@ -502,6 +554,12 @@ public class AutoGroupService {
 		}
 	}
 
+	/**
+	 * 离开实例时清理自动组队相关状态。
+	 * Cleans auto-group state when leaving an instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onLeaveInstance(Player player) {
 		if (player.isInInstance()) {
 			Integer obj = player.getObjectId();
@@ -833,13 +891,31 @@ public class AutoGroupService {
 		}, 10000);
 	}
 
+	/**
+	 * 注销指定副本 mask 的自动组队排队。
+	 * Unregisters auto-group queue entries for the given instance mask.
+	 *
+	 * instance mask id
+	 */
 	public void unRegisterInstance(byte instanceMaskId) {
 		for (Map.Entry<Integer, LookingForParty> entry : searchers.entrySet()) {
 			LookingForParty lfp = entry.getValue();
 			if (lfp.isRegistredInstance(instanceMaskId)) {
 				if (lfp.getPlayer() != null) {
+	/**
+	 * 获取服务单例（优先 Spring 提供者）。
+	 * Returns the service singleton (preferring the Spring provider).
+	 *
+	 * service instance
+	 */
 					getInstance().unregisterLooking(lfp.getPlayer(), instanceMaskId);
 				} else {
+	/**
+	 * 获取服务单例（优先 Spring 提供者）。
+	 * Returns the service singleton (preferring the Spring provider).
+	 *
+	 * service instance
+	 */
 					getInstance().unRegisterSearchInstance(null, lfp.getSearchInstance(instanceMaskId));
 					if (lfp.unregisterInstance(instanceMaskId) == 0) {
 						searchers.remove(entry.getKey(), lfp);
@@ -915,6 +991,12 @@ public class AutoGroupService {
 		}
 	}
 
+	/**
+	 * 注销并清理指定实例 ID 的自动组队实例。
+	 * Unregisters and cleans up the auto-group instance for the given instance id.
+	 *
+	 * instance id
+	 */
 	public void unRegisterInstance(Integer instanceId) {
 		AutoInstance autoInstance = autoInstances.remove(instanceId);
 		if (autoInstance != null) {
@@ -926,10 +1008,24 @@ public class AutoGroupService {
 		}
 	}
 
+	/**
+	 * 判断实例是否由自动组队创建。
+	 * Returns whether the instance was created by auto-group.
+	 *
+	 * instance id
+	 *
+	 * @param instanceId @return 是否自动实例 / whether auto instance
+	 */
 	public boolean isAutoInstance(int instanceId) {
 		return autoInstances.containsKey(instanceId);
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring 提供者）。
+	 * Returns the service singleton (preferring the Spring provider).
+	 *
+	 * service instance
+	 */
 	public static AutoGroupService getInstance() {
 		ObjectProvider<AutoGroupService> provider = instanceProvider;
 		if (provider != null) {
@@ -938,6 +1034,12 @@ public class AutoGroupService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Injects the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AutoGroupService> provider) {
 		instanceProvider = provider;
 	}

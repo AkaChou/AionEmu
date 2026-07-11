@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.container;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 
 /**
+ * Summoned 对象游戏属性，用于属性相关逻辑。
+ * Summoned Object Game Stats for stats logic.
+ *
  * @author ATracer
  */
 public class SummonedObjectGameStats extends NpcGameStats {
@@ -28,6 +15,7 @@ public class SummonedObjectGameStats extends NpcGameStats {
 		super(owner);
 	}
 
+	/** 获取属性。 / Returns the stat. */
 	@Override
 	public Stat2 getStat(StatEnum statEnum, int base) {
 		Stat2 stat = super.getStat(statEnum, base);
@@ -53,6 +41,7 @@ public class SummonedObjectGameStats extends NpcGameStats {
 		return stat;
 	}
 
+	/** 返回 m attack / Returns the m attack */
 	@Override
 	public Stat2 getMAttack() {
 		int power = owner.getObjectTemplate().getStatsTemplate().getPower();

@@ -1,5 +1,7 @@
 package com.aionemu.commons.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.services.cron.CronServiceException;
 import com.aionemu.commons.services.cron.RunnableRunner;
@@ -14,6 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -33,12 +36,12 @@ import org.slf4j.LoggerFactory;
  * 定时任务调度服务类
  * Cron Task Scheduling Service Class
  *
- * 该类基于Quartz框架实现定时任务的调度管理，采用单例模式。
+ * 该类基于 Quartz 框架实现定时任务的调度管理，采用单例模式。
  * This class implements scheduled task management based on Quartz framework using Singleton pattern.
  *
  * 主要功能:
  * Main features:
- * 1. 支持基于cron表达式的任务调度
+ * 1. 支持基于 cron 表达式的任务调度
  *    Supports cron expression based task scheduling
  * 2. 支持长短任务的区分执行
  *    Supports differentiated execution of long and short running tasks
@@ -51,7 +54,7 @@ public final class CronService {
     /** 单例实例 Singleton instances */
     private static final Map<String, CronService> instances = new ConcurrentHashMap<String, CronService>();
     
-    /** Quartz调度器 Quartz scheduler */
+ /** Quartz 调度器 Quartz scheduler */
     private Scheduler scheduler;
     
     /** 可运行任务执行器类 Runnable task executor class */
@@ -59,15 +62,23 @@ public final class CronService {
     private String context;
 
     /**
-     * 获取CronService实例
+ * 获取 CronService 实例
      * Get CronService instance
      *
-     * @return CronService单例实例 CronService singleton instance
+ * @return CronService 单例实例 CronService singleton instance
      */
     public static CronService getInstance() {
         return instances.get(ServiceContext.current());
     }
 
+    /**
+     * 获取当前上下文已初始化的 CronService，未初始化则抛异常
+     * Get the initialized CronService for the current context, or throw if missing
+     *
+     * Current CronService instance
+     *
+     * @return @throws CronServiceException 服务未初始化时 / When the service is not initialized
+     */
     public static CronService requireCurrent() {
       CronService cronService = instances.get(ServiceContext.current());
       if (cronService == null) {
@@ -76,10 +87,22 @@ public final class CronService {
       return cronService;
    }
 
+    /**
+     * 判断当前服务上下文的 CronService 是否已初始化
+     * Check whether CronService is initialized for the current service context
+     *
+     * @return 已初始化返回 true / True if initialized
+     */
     public static boolean isInitialized() {
         return instances.containsKey(ServiceContext.current());
     }
 
+    /**
+     * 若当前上下文已初始化则关闭并返回 true
+     * Shutdown the current-context instance if initialized and return true
+     *
+     * @return 执行了关闭返回 true，否则 false / True if a shutdown was performed, otherwise false
+     */
     public static boolean shutdownCurrentIfInitialized() {
       CronService cronService = instances.get(ServiceContext.current());
       if (cronService == null) {
@@ -90,7 +113,7 @@ public final class CronService {
    }
 
     /**
-     * 初始化CronService单例
+ * 初始化 CronService 单例
      * Initialize CronService singleton
      *
      * @param runableRunner 任务执行器类 Task executor class
@@ -163,7 +186,7 @@ public final class CronService {
       try {
          localScheduler.shutdown(false);
       } catch (SchedulerException var4) {
-         log.error("Failed to shutdown CronService correctly", var4);
+         log.error(I18n.get("log.40cdf7c012ed", var4));
       }
 
       if (context != null) {
@@ -176,7 +199,7 @@ public final class CronService {
      * Schedule a timed task
      *
      * @param r 要执行的任务 Task to execute
-     * @param cronExpression cron表达式 Cron expression
+ * @param cronExpression cron 表达式 Cron expression
      */
     public void schedule(Runnable r, String cronExpression) {
       this.schedule(r, cronExpression, false);
@@ -187,14 +210,30 @@ public final class CronService {
      * Schedule a timed task with long-running option
      *
      * @param r 要执行的任务 Task to execute
-     * @param cronExpression cron表达式 Cron expression
+ * @param cronExpression cron 表达式 Cron expression
      * @param longRunning 是否为长时任务 Whether it's a long-running task
      * @throws CronServiceException 调度失败时 when scheduling fails
      */
     public void schedule(Runnable r, String cronExpression, boolean longRunning) {
+      schedule(r, cronExpression, longRunning, null);
+   }
+
+    public void schedule(Runnable r, Supplier<String> cronExpression) {
+      schedule(r, cronExpression.get(), false, cronExpression);
+   }
+
+    public void schedule(Runnable r, Supplier<String> cronExpression, boolean longRunning) {
+      schedule(r, cronExpression.get(), longRunning, cronExpression);
+   }
+
+    private void schedule(Runnable r, String cronExpression, boolean longRunning, Supplier<String> cronExpressionSupplier) {
       try {
          JobDataMap jdm = new JobDataMap();
          jdm.put("cronservice.scheduled.runnable.instance", ServiceContext.wrap(r));
+         jdm.put("cronservice.scheduled.runnable.original", r);
+         if (cronExpressionSupplier != null) {
+            jdm.put("cronservice.scheduled.runnable.cronexpression.supplier", cronExpressionSupplier);
+         }
          jdm.put("cronservice.scheduled.runnable.islognrunning", longRunning);
          jdm.put("cronservice.scheduled.runnable.cronexpression", cronExpression);
          String jobId = "Started at ms" + System.currentTimeMillis() + "; ns" + System.nanoTime();
@@ -205,6 +244,23 @@ public final class CronService {
          this.scheduler.scheduleJob(jobDetail, trigger);
       } catch (Exception var10) {
          throw new CronServiceException("Failed to start job", var10);
+      }
+   }
+
+    @SuppressWarnings("unchecked")
+    public void reload() {
+      for (JobDetail job : getJobDetails()) {
+         Supplier<String> supplier = (Supplier<String>) job.getJobDataMap()
+               .get("cronservice.scheduled.runnable.cronexpression.supplier");
+         if (supplier == null) {
+            continue;
+         }
+         Runnable runnable = (Runnable) job.getJobDataMap().get("cronservice.scheduled.runnable.original");
+         boolean longRunning = job.getJobDataMap().getBoolean("cronservice.scheduled.runnable.islognrunning");
+         String expression = supplier.get();
+         CronScheduleBuilder.cronSchedule(expression);
+         cancel(job);
+         schedule(runnable, expression, longRunning, supplier);
       }
    }
 
@@ -290,7 +346,8 @@ public final class CronService {
          while(i$.hasNext()) {
             JobDetail jd = (JobDetail)i$.next();
             if (!GenericValidator.isBlankOrNull((Map)jd.getJobDataMap()) && jd.getJobDataMap().containsKey("cronservice.scheduled.runnable.instance")) {
-               result.put((Runnable)jd.getJobDataMap().get("cronservice.scheduled.runnable.instance"), jd);
+               Runnable runnable = (Runnable) jd.getJobDataMap().get("cronservice.scheduled.runnable.original");
+               result.put(runnable == null ? (Runnable) jd.getJobDataMap().get("cronservice.scheduled.runnable.instance") : runnable, jd);
             }
          }
 

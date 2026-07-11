@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -26,13 +10,22 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 和谐训练场副本事件处理器。
+ * Instance event handler for Harmony Training Ground.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300570000)
 public class HarmonyTrainingGroundInstance extends HarmonyArenaInstance
 {
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		killBonus = 1000;
@@ -40,6 +33,10 @@ public class HarmonyTrainingGroundInstance extends HarmonyArenaInstance
 		super.onInstanceCreate(instance);
 	}
 	
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 	@Override
 	protected void reward() {
 		float totalScoreAP = (1.0f * 3) * 100;
@@ -109,6 +106,10 @@ public class HarmonyTrainingGroundInstance extends HarmonyArenaInstance
 		super.reward();
 	}
 	
+	/**
+	 * 处理 spawnRings。
+	 * Handle spawnRings.
+	 */
 	@Override
 	protected void spawnRings() {
 		FlyRing f1 = new FlyRing(new FlyRingTemplate("PVP_ARENA_1", mapId,
@@ -293,6 +294,14 @@ public class HarmonyTrainingGroundInstance extends HarmonyArenaInstance
 		f36.spawn();
 	}
 	
+	/**
+	 * 玩家通过飞行环时处理。
+	 * Handle a player passing a flying ring.
+	 *
+	 * 玩家 / player
+	 * @param flyingRing 飞行环标识 / flying-ring id
+	 * result
+	 */
 	@Override
 	public boolean onPassFlyingRing(Player player, String flyingRing) {
 		if (!instanceReward.isStartProgress()) {
@@ -425,6 +434,15 @@ public class HarmonyTrainingGroundInstance extends HarmonyArenaInstance
 			instanceReward.sendPacket(10, object);
 		}
 	}
+	/**
+	 * 返回 npc。
+	 * Return the npc.
+	 *
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * result
+	 */
 	
 	protected Npc getNpc(float x, float y, float z) {
 		if (!isInstanceDestroyed) {

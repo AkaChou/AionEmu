@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_SETTINGS;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 更新玩家显示与拒绝设置的客户端包。
+ * Client packet that updates player display and deny settings.
+ *
  * @author Sweetkr
  */
 public class CM_CUSTOM_SETTINGS extends AionClientPacket {
@@ -30,6 +17,14 @@ public class CM_CUSTOM_SETTINGS extends AionClientPacket {
 	private int display;
 	private int deny;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_CUSTOM_SETTINGS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -40,13 +35,12 @@ public class CM_CUSTOM_SETTINGS extends AionClientPacket {
 	@Override
 	protected void readImpl() {
 		/**
-		 * 1 : show legion mantle 2 : priority equipment 4 : show helmet
-		 */
+	 * 1 : show 军团 mantle2 :优先装备 4 :显示头盔。 / 1 : show legion mantle 2 : priority equipment 4 : show helmet
+	 */
 		display = readH();
 		/**
-		 * 1 : view detail player 2 : trade 4 : party/force 8 : legion 16 : friend 32 :
-		 * dual(pvp)
-		 */
+	 * 1 查看玩家详情；2 交易；4 小队/团队；8 军团；16 好友；32 决斗(PvP) / 1 : view detail player 2 : trade 4 : party/force 8 : legion 16 : friend 32 : dual(pvp)
+	 */
 		deny = readH();
 	}
 

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.controllers.PlaceableObjectController;
@@ -34,6 +18,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
 /**
+ * 房屋对象。
+ * House Object game object.
+ *
  * @author Rolandas
  */
 public abstract class HouseObject<T extends PlaceableHouseObject> extends VisibleObject implements IExpirable {
@@ -49,7 +36,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	private int colorExpireEnd;
 
 	private House ownerHouse;
-	// don't set it directly, ever!!! Use setPersistentState() method instead
+	// 切勿直接设置！！！请改用 setPersistentState()。 / don't set it directly, ever!!! Use setPersistentState() method instead
 	private PersistentState persistentState = PersistentState.NEW;
 
 	public HouseObject(House owner, int objId, int templateId) {
@@ -60,10 +47,12 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		setKnownlist(new PlayerAwareKnownList(this));
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {
 		case DELETED:
@@ -86,23 +75,27 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
+	/** 获取过期时间。 / Returns the expire time. */
 	@Override
 	public int getExpireTime() {
 		return expireEnd;
 	}
 
+	/** 设置过期时间。 / Sets the expire time. */
 	public void setExpireTime(int time) {
 		expireEnd = time;
 	}
 
+	/** 到期结束 / Expire End */
 	@Override
 	public void expireEnd(Player player) {
 		setPersistentState(PersistentState.DELETED);
 	}
 
 	/**
+	 * 获取 secondsleft 对象 usehasnoexpirationreturn1。
 	 * Gets seconds left for the object use. If has no expiration return -1
-	 * 
+	 *
 	 * @return
 	 */
 	public int getUseSecondsLeft() {
@@ -116,26 +109,30 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		return diff;
 	}
 
+	/** 过期消息。 / Expire Message. */
 	@Override
 	public void expireMessage(Player player, int time) {
-		// TODO Add if it exists
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return String.valueOf(objectTemplate.getNameId());
 	}
 
 	@SuppressWarnings("unchecked")
+	/** 获取对象模板。 / Returns the object template. */
 	public T getObjectTemplate() {
 		return (T) objectTemplate;
 	}
 
+	/** 返回 x / Returns the x */
 	@Override
 	public float getX() {
 		return x;
 	}
 
+	/** 设置 x / Sets the x */
 	public void setX(float x) {
 		if (this.x != x) {
 			this.x = x;
@@ -147,11 +144,13 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
+	/** 返回 y / Returns the y */
 	@Override
 	public float getY() {
 		return y;
 	}
 
+	/** 设置 y / Sets the y */
 	public void setY(float y) {
 		if (this.y != y) {
 			this.y = y;
@@ -162,11 +161,13 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
+	/** 返回 z / Returns the z */
 	@Override
 	public float getZ() {
 		return z;
 	}
 
+	/** 设置 z / Sets the z */
 	public void setZ(float z) {
 		if (this.z != z) {
 			this.z = z;
@@ -177,11 +178,13 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
+	/** 返回 heading / Returns the heading */
 	@Override
 	public byte getHeading() {
 		return heading;
 	}
 
+	/** 设置 heading / Sets the heading */
 	public void setHeading(byte heading) {
 		if (this.heading != heading) {
 			this.heading = heading;
@@ -192,23 +195,28 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
+	/** 返回 rotation / Returns the rotation */
 	public int getRotation() {
 		int rotation = this.heading & 0xFF;
 		return rotation * 3;
 	}
 
+	/** 设置 rotation / Sets the rotation */
 	public void setRotation(int rotation) {
 		setHeading((byte) Math.ceil(rotation / 3f));
 	}
 
+	/** 返回 place location / Returns the place location */
 	public PlaceLocation getPlaceLocation() {
 		return ((PlaceableHouseObject) objectTemplate).getLocation();
 	}
 
+	/** 返回 place area / Returns the place area */
 	public PlaceArea getPlaceArea() {
 		return ((PlaceableHouseObject) objectTemplate).getArea();
 	}
 
+	/** 返回 placement limit / Returns the placement limit */
 	public int getPlacementLimit(boolean trial) {
 		LimitType limitType = ((PlaceableHouseObject) objectTemplate).getPlacementLimit();
 		HouseType size = HouseType.fromValue(ownerHouse.getBuilding().getSize());
@@ -218,40 +226,49 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		return limitType.getObjectPlaceLimit(size);
 	}
 
+	/** 返回 quality / Returns the quality */
 	public ItemQuality getQuality() {
 		return ((AbstractHouseObject) objectTemplate).getQuality();
 	}
 
+	/** 返回 talking distance / Returns the talking distance */
 	public float getTalkingDistance() {
 		return ((AbstractHouseObject) objectTemplate).getTalkingDistance();
 	}
 
+	/** 获取分类。 / Returns the category. */
 	public HousingCategory getCategory() {
 		return ((AbstractHouseObject) objectTemplate).getCategory();
 	}
 
+	/** 返回 owner house / Returns the owner house */
 	public House getOwnerHouse() {
 		return ownerHouse;
 	}
 
+	/** 返回玩家 ID / Returns the player id */
 	public int getPlayerId() {
 		return ownerHouse.getOwnerId();
 	}
 
+	/** 返回所有者已使用数量 / Returns the owner used count*/
 	public int getOwnerUsedCount() {
 		return ownerUsedCount;
 	}
 
+	/** 递增所有者已用次数 / Increment Owner Used Count */
 	public void incrementOwnerUsedCount() {
 		this.ownerUsedCount++;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/** 递增 visitor used count / Increment Visitor Used Count */
 	public void incrementVisitorUsedCount() {
 		this.visitorUsedCount++;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/** 设置所有者已使用数量 / Sets the owner used count*/
 	public void setOwnerUsedCount(int ownerUsedCount) {
 		if (this.ownerUsedCount != ownerUsedCount) {
 			this.ownerUsedCount = ownerUsedCount;
@@ -259,10 +276,12 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
+	/** 返回 visitor used count / Returns the visitor used count */
 	public int getVisitorUsedCount() {
 		return visitorUsedCount;
 	}
 
+	/** 设置 visitor used count / Sets the visitor used count */
 	public void setVisitorUsedCount(int visitorUsedCount) {
 		if (this.visitorUsedCount != visitorUsedCount) {
 			this.visitorUsedCount = visitorUsedCount;
@@ -271,18 +290,20 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	}
 
 	/**
-	 * Means the player has it spawned, not the game server
+	 * @return 表示玩家已生成该对象，而非游戏服务器侧。 / Means the player has it spawned, not the game server
 	 */
 	public boolean isSpawnedByPlayer() {
 		return x != 0 || y != 0 || z != 0;
 	}
 
 	@SuppressWarnings("unchecked")
+	/** 返回 controller / Returns the controller */
 	@Override
 	public PlaceableObjectController<T> getController() {
 		return (PlaceableObjectController<T>) super.getController();
 	}
 
+	/** 生成。 / Spawn. */
 	public void spawn() {
 		if (!isSpawnedByPlayer()) {
 			return;
@@ -296,7 +317,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	}
 
 	/**
-	 * Removes house from spawn but it remains in registry
+	 * 移除 house 从 spawnbut 其 remains 在 registry。 / Removes house from spawn but it remains in registry
 	 */
 	public void removeFromHouse() {
 		this.setX(0);
@@ -305,21 +326,26 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		this.setHeading((byte) 0);
 	}
 
+	/** 使用时 / on Use. */
 	public void onUse(Player player) {
 	}
 
+	/** 在 DialogRequest / On Dialog Request */
 	public void onDialogRequest(Player player) {
 		onUse(player);
 	}
 
+	/** 消失时 / on Despawn. */
 	public void onDespawn() {
 
 	}
 
+	/** 返回 color / Returns the color */
 	public Integer getColor() {
 		return color;
 	}
 
+	/** 设置 color / Sets the color */
 	public void setColor(Integer color) {
 		if (color != this.color) {
 			this.color = color;
@@ -327,10 +353,12 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		}
 	}
 
+	/** 返回 color expire end / Returns the color expire end */
 	public int getColorExpireEnd() {
 		return colorExpireEnd;
 	}
 
+	/** 设置 color expire end / Sets the color expire end */
 	public void setColorExpireEnd(int colorExpireEnd) {
 		this.colorExpireEnd = colorExpireEnd;
 	}

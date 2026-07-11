@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,17 +6,21 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 
 /**
- * Handler for "/loc" command
- * 
+ * 处理客户端 /loc 命令的包，返回当前坐标。
+ * Client packet for the /loc command, returning the player's current coordinates.
+ *
  * @author SoulKeeper
  * @author EvilSpirit
  */
 public class CM_CLIENT_COMMAND_LOC extends AionClientPacket {
 
 	/**
-	 * Constructs new client packet instance.
-	 * 
-	 * @param opcode
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_CLIENT_COMMAND_LOC(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -40,15 +28,15 @@ public class CM_CLIENT_COMMAND_LOC extends AionClientPacket {
 	}
 
 	/**
-	 * Nothing to do
+	 * 无操作 / Nothing to do
 	 */
 	@Override
 	protected void readImpl() {
-		// empty
+		// 空 / empty
 	}
 
 	/**
-	 * Logging
+	 * 记录日志 / Logging
 	 */
 	@Override
 	protected void runImpl() {

@@ -7,6 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 奥特加德任务脚本：An Important Announcement（任务 ID 2258）。
+ * Altgard quest script: An Important Announcement (quest ID 2258).
+ */
 public class _2258AnImportantAnnouncement extends QuestHandler {
 
 	private final static int questId = 2258;

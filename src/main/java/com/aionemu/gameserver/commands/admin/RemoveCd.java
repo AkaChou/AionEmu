@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
@@ -33,6 +17,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
+ * 冷却清除指令；清除目标玩家的技能/物品/房屋物品冷却，或指定副本冷却。
+ * Admin command that clears skill/item/house-object cooldowns, or specific instance cooldowns, for the target player.
+ *
  * @author kecimis
  */
 public class RemoveCd extends AdminCommand {
@@ -41,6 +28,13 @@ public class RemoveCd extends AdminCommand {
 		super("removecd");
 	}
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		VisibleObject target = admin.getTarget();

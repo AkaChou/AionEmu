@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.util.ArrayList;
@@ -22,26 +6,34 @@ import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.tasks.TaskFromDB;
 
 /**
+ * 数据库定时任务数据访问抽象层。
+ * DAO for scheduled tasks loaded from the database.
+ *
  * @author Divinity
  */
 public abstract class TaskFromDBDAO implements DAO {
 
 	/**
-	 * Return all tasks from DB
-	 * 
-	 * @return all tasks
+	 * 查询数据库中全部定时任务。
+	 * Returns all tasks from the database.
+	 *
+	 * task list
 	 */
 	public abstract ArrayList<TaskFromDB> getAllTasks();
 
 	/**
-	 * Set the last activation to NOW()
+	 * 将指定任务的最后激活时间设为 NOW()。
+	 * Sets the last activation time of the task to NOW().
+	 *
+	 * @param id 任务 ID / task id
 	 */
 	public abstract void setLastActivation(final int id);
 
 	/**
-	 * Returns class name that will be uses as unique identifier for all DAO classes
-	 * 
-	 * @return class name
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
 	 */
 	@Override
 	public final String getClassName() {

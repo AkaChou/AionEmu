@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -42,6 +26,10 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 随机位移效果：按距离与方向将目标传送到随机/指定相对位置。
+ * Random move-loc effect: teleports the target by distance/direction to a relative location.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RandomMoveLocEffect")
 public class RandomMoveLocEffect extends EffectTemplate {
@@ -52,6 +40,10 @@ public class RandomMoveLocEffect extends EffectTemplate {
 	@XmlAttribute(name = "direction")
 	private float direction;
 
+	/**
+	 * 执行随机/相对位移传送。
+	 * Performs the random/relative teleport.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		final Player effector = (Player) effect.getEffector();
@@ -60,12 +52,16 @@ public class RandomMoveLocEffect extends EffectTemplate {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
+	/**
+	 * 计算位移落点坐标。
+	 * Calculates the destination coordinates.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
 		if (((Player) effect.getEffector()).getRobotId() != 0) {
 			if (effect.getSkill().getSkillId() == 2424 || effect.getSkill().getSkillId() == 2425) { // Hypergate
-																									// Detonation.
+																									// 引爆。 / Detonation.
 				effect.setDashStatus(DashStatus.RANDOMMOVELOC);
 			} else {
 				effect.setDashStatus(DashStatus.RIDERMOVELOC);
@@ -84,7 +80,7 @@ public class RandomMoveLocEffect extends EffectTemplate {
 			PacketSendUtility.broadcastPacket(effector, new SM_USE_ROBOT(effector, 0), true);
 			effector.setUseRobot(false);
 			effector.setRobotId(0);
-			// Remove Cooldown Skill.
+			// 移除冷却技能。 / Remove Cooldown Skill.
 			List<Integer> delayIds = new ArrayList<Integer>();
 			if (effector.getSkillCoolDowns() != null) {
 				long currentTime = System.currentTimeMillis();
@@ -112,6 +108,10 @@ public class RandomMoveLocEffect extends EffectTemplate {
 				effector.getHeading());
 	}
 
+	/**
+	 * 位移后移除指定技能效果。
+	 * Removes configured skill effects after relocation.
+	 */
 	private void RemoveSkill(Player player) {
 		player.getEffectController().removeEffect(2767); // Embark I
 		player.getEffectController().removeEffect(2768); // Embark II

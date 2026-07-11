@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.theEternalBastion;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * The Eternal Bastion 副本 NPC AI：Defense Cannon（@AIName "defense_cannon"），继承 NpcAI2。
+ * The Eternal Bastion instance NPC AI: Defense Cannon (@AIName "defense_cannon"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("defense_cannon")
 public class Defense_CannonAI2 extends NpcAI2
 {
@@ -48,7 +34,7 @@ public class Defense_CannonAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000136, 1)) { //Aetheric Power Crystal.
 		    switch (getNpcId()) {
-				//Defense Cannon Elyos.
+				// 防御加农 天族。 / Defense Cannon Elyos.
 				case 701596:
 				case 701597:
 				case 701598:
@@ -63,7 +49,7 @@ public class Defense_CannonAI2 extends NpcAI2
 			    case 701607:
 				    GameEngineServices.skillEngine().getSkill(player, 21065, 1, player).useNoAnimationSkill();
 				break;
-				//Defense Cannon Asmodians.
+				// 防御加农 魔族。 / Defense Cannon Asmodians.
 				case 701610:
 				case 701611:
 				case 701612:

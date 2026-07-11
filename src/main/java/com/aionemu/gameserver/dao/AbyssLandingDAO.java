@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.util.Map;
@@ -21,17 +5,53 @@ import java.util.Map;
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 
+/**
+ * 欧比斯着陆点数据访问对象。
+ * Abyss landing location data access object.
+ */
 public abstract class AbyssLandingDAO implements DAO {
+	/**
+	 * 加载所有着陆点。
+	 * Loads all landing locations.
+	 *
+	 * target map
+	 * whether successful
+	 */
 	public abstract boolean loadLandingLocations(Map<Integer, LandingLocation> locations);
 
+	/**
+	 * 存储着陆点。
+	 * Stores a landing location.
+	 *
+	 * landing location
+	 */
 	public abstract void store(LandingLocation location);
 
+	/**
+	 * 更新着陆点。
+	 * Updates a landing location.
+	 *
+	 * landing location
+	 * whether successful
+	 */
 	public abstract boolean updateLandingLocation(LandingLocation location);
 
+	/**
+	 * 更新着陆点（委托给 {@link #updateLandingLocation}）。
+	 * Updates a landing location (delegates to {@link #updateLandingLocation}).
+	 *
+	 * landing location
+	 */
 	public void updateLocation(final LandingLocation location) {
 		updateLandingLocation(location);
 	}
 
+	/**
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier for this DAO.
+	 *
+	 * class name
+	 */
 	@Override
 	public String getClassName() {
 		return AbyssLandingDAO.class.getName();

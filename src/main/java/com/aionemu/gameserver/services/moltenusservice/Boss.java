@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.moltenusservice;
 
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
 import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
 
 /**
+ * 熔岩领主默认实现：切入 FIGHT / 回到 PEACE。
+ * back to PEACE. / back to PEACE.
+ *
  * @author Rinzler (Encom)
  */
-
 public class Boss extends MoltenusFight<MoltenusLocation> {
+
+	/**
+	 * 绑定熔岩领主地点。
+	 * Binds the Moltenus location.
+	 *
+	 * location
+	 */
 	public Boss(MoltenusLocation moltenus) {
 		super(moltenus);
 	}
 
+	/**
+	 * 激活活动并刷新 FIGHT 刷怪。
+	 * Activates the event and spawns FIGHT entities.
+	 */
 	@Override
 	public void startMoltenus() {
 		getMoltenusLocation().setActiveMoltenus(this);
@@ -35,6 +32,10 @@ public class Boss extends MoltenusFight<MoltenusLocation> {
 		spawn(MoltenusStateType.FIGHT);
 	}
 
+	/**
+	 * 结束活动并恢复 PEACE 刷怪。
+	 * Ends the event and restores PEACE spawns.
+	 */
 	@Override
 	public void stopMoltenus() {
 		getMoltenusLocation().setActiveMoltenus(null);

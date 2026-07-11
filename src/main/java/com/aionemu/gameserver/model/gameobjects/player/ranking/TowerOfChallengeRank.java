@@ -1,25 +1,10 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player.ranking;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 /**
- * Created by Wnkrz on 24/07/2017.
+ * 高塔 Of 挑战军阶游戏对象。
+ * Tower Of Challenge Rank game object.
  */
 
 public class TowerOfChallengeRank {
@@ -40,58 +25,72 @@ public class TowerOfChallengeRank {
 		this.bestTime = best_time;
 	}
 
+	/** 获取军阶。 / Returns the rank. */
 	public int getRank() {
 		return rank;
 	}
 
+	/** 返回 best rank / Returns the best rank */
 	public int getBestRank() {
 		return bestRank;
 	}
 
+	/** 返回 low rank / Returns the low rank */
 	public int getLowRank() {
 		return lowRank;
 	}
 
+	/** 返回当前时间 / Returns the current time */
 	public int getCurrentTime() {
 		return currentTime;
 	}
 
+	/** 返回上次时间 / Returns the last time*/
 	public int getLastTime() {
 		return lastTime;
 	}
 
+	/** 返回 best time / Returns the best time */
 	public int getBestTime() {
 		return bestTime;
 	}
 
+	/** 设置军阶。 / Sets the rank. */
 	public void setRank(int r) {
 		this.rank = r;
 	}
 
+	/** 设置 best rank / Sets the best rank */
 	public void setBestRank(int r) {
 		this.bestRank = r;
 	}
 
+	/** 设置 low rank / Sets the low rank */
 	public void setLowRank(int r) {
 		this.lowRank = r;
 	}
 
+	/** 设置 current time / Sets the current time */
 	public void setCurrentTime(int r) {
 		this.currentTime = r;
 	}
 
+	/** 设置 last time / Sets the last time */
 	public void setLastTime(int r) {
 		this.lastTime = r;
 	}
 
+	/** 设置 best time / Sets the best time */
 	public void setBestTime(int r) {
 		this.bestTime = r;
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		if (persistentState != PersistentState.UPDATE_REQUIRED || this.persistentState != PersistentState.NEW) {
 			this.persistentState = persistentState;

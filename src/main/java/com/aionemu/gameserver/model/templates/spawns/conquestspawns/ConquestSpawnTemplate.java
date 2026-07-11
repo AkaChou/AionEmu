@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.conquestspawns;
 
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
+ * 征服刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -38,26 +25,34 @@ public class ConquestSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 o state type / Returns the o state type */
 	public ConquestStateType getOStateType() {
 		return conquestType;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/** 设置 o state type / Sets the o state type */
 	public void setOStateType(ConquestStateType conquestType) {
 		this.conquestType = conquestType;
 	}
 
+	/** 是否为征服。 / Whether conquest. */
 	public final boolean isConquest() {
 		return conquestType.equals(ConquestStateType.CONQUEST);
 	}
 
+	/**
+	 * @return Whether conquest peace / Whether conquest peace
+	 */
 	public final boolean isConquestPeace() {
 		return conquestType.equals(ConquestStateType.PEACE);
 	}

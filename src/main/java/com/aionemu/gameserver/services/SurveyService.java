@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -25,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -45,6 +32,9 @@ import com.aionemu.gameserver.world.World;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 问卷/调查奖励服务，轮询待领调查并向玩家发放奖励。
+ * Survey reward service polling pending surveys and granting player rewards.
+ *
  * @author KID
  */
 @Slf4j
@@ -52,8 +42,17 @@ public class SurveyService {
 
 	private static volatile ObjectProvider<SurveyService> instanceProvider;
 	private ConcurrentMap<Integer, SurveyItem> activeItems;
-	private final String htmlTemplate;
+	private volatile String htmlTemplate;
+	private Future<?> updateTask;
 
+	/**
+	 * 判断调查是否有效；若有效则触发领取流程。
+	 * Checks whether the survey is active; if so, requests the reward flow.
+	 *
+	 * 玩家 / player
+	 * survey id
+	 * whether active
+	 */
 	public boolean isActive(Player player, int survId) {
 		boolean avail = this.activeItems.containsKey(survId);
 		if (avail) {
@@ -62,24 +61,46 @@ public class SurveyService {
 		return avail;
 	}
 
+	/**
+	 * 构造服务并启动周期刷新任务。
+	 * Constructs the service and starts the periodic update task.
+	 */
 	public SurveyService() {
 		activeItems = new ConcurrentHashMap<Integer, SurveyItem>();
-		this.htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
+		reload();
+	}
+
+	/**
+	 * 重载 HTML 模板与刷新间隔。
+	 * Reloads the HTML template and refresh interval.
+	 */
+	public synchronized void reload() {
+		htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
+		if (updateTask != null) {
+			updateTask.cancel(false);
+		}
+		updateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
 				SecurityConfig.SURVEY_DELAY * 60000);
 	}
 
+	/**
+	 * 处理玩家领取调查奖励。
+	 * Handles a player claiming a survey reward.
+	 *
+	 * 玩家 / player
+	 * survey id
+	 */
 	public void requestSurvey(Player player, int survId) {
 
 		SurveyItem item = activeItems.get(survId);
 		if (item == null) {
-			// There is no survey underway.
+			// 当前没有进行中的调查。 / There is no survey underway.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300684));
 			return;
 		}
 
 		if (item.ownerId != player.getObjectId()) {
-			// There is no remaining survey to take part in.
+			// 没有可参与的调查。 / There is no remaining survey to take part in.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300037));
 			return;
 		}
@@ -89,7 +110,7 @@ public class SurveyService {
 		}
 		if (player.getInventory().isFull(template.getExtraInventoryId())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
-			log.warn("[SurveyController] player " + player.getName() + " tried to receive item with full inventory.");
+			log.warn(I18n.get("log.b817769a6b45", player.getName()));
 			return;
 		}
 		if (DAOManager.getDAO(SurveyControllerDAO.class).useItem(item.uniqueId)) {
@@ -101,7 +122,7 @@ public class SurveyService {
 				PacketSendUtility.sendPacket(player,
 						new SM_SYSTEM_MESSAGE(1300945, new DescriptionId(template.getNameId())));
 			} else {
-				// You received %num1 %0 items as reward for the survey.
+				// 你因调查获得了 %num1 个 %0 作为奖励。 / You received %num1 %0 items as reward for the survey.
 				PacketSendUtility.sendPacket(player,
 						new SM_SYSTEM_MESSAGE(1300946, item.count, new DescriptionId(template.getNameId())));
 			}
@@ -110,6 +131,10 @@ public class SurveyService {
 		}
 	}
 
+	/**
+	 * 从数据库拉取新调查并通知在线玩家。
+	 * Loads new surveys from DB and notifies online owners.
+	 */
 	public void taskUpdate() {
 		List<SurveyItem> newList = DAOManager.getDAO(SurveyControllerDAO.class).getAllNew();
 		if (newList.size() == 0) {
@@ -124,7 +149,7 @@ public class SurveyService {
 				players.add(item.ownerId);
 			}
 		}
-		log.info("[SurveyController] found new " + cnt + " items for " + players.size() + " players.");
+		log.info(I18n.get("log.febfef8995af", cnt, players.size()));
 		for (int ownerId : players) {
 			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(ownerId);
 			if (player != null) {
@@ -133,6 +158,12 @@ public class SurveyService {
 		}
 	}
 
+	/**
+	 * 向玩家展示其可用的调查 HTML。
+	 * Shows available survey HTML pages to the player.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void showAvailable(Player player) {
 		for (SurveyItem item : this.activeItems.values()) {
 			if (item.ownerId != player.getObjectId()) {
@@ -152,7 +183,7 @@ public class SurveyService {
 
 		@Override
 		public void run() {
-			log.info("[SurveyController] update task start.");
+			log.info(I18n.get("log.644783da9bbc"));
 			taskUpdate();
 		}
 	}
@@ -162,6 +193,12 @@ public class SurveyService {
 		protected static final SurveyService instance = new SurveyService();
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring Provider）。
+	 * Returns the service singleton (prefers Spring provider).
+	 *
+	 * service instance
+	 */
 	public static final SurveyService getInstance() {
 		ObjectProvider<SurveyService> provider = instanceProvider;
 		if (provider != null) {
@@ -170,6 +207,12 @@ public class SurveyService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<SurveyService> provider) {
 		instanceProvider = provider;
 	}

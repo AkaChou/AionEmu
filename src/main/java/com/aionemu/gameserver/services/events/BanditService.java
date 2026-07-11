@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -53,8 +39,12 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 土匪活动服务，管理土匪变身、宣战与结算。
+ * Bandit event service managing bandit morph, attack state and settlement.
+ *
  * @author Rinzler (Encom)
  */
+
 @Slf4j
 public class BanditService {
 	private static volatile ObjectProvider<BanditService> instanceProvider;
@@ -62,16 +52,32 @@ public class BanditService {
 	private Map<Player, Long> outlaws = new HashMap<Player, Long>();
 	private WorldMapInstance activeInstance;
 
+	/**
+	 * 初始化服务。
+	 * Initializes the service.
+	 */
 	public void onInit() {
-		log.info("[PKService] is initialized...");
+		log.info(I18n.get("log.74d903aaf6ee"));
 	}
 
+	/**
+	 * 开始土匪状态。
+	 * Starts bandit state.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void startBandit(final Player player) {
 		player.getEffectController().setAbnormal(AbnormalState.SLEEP.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
 		final ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
 			@Override
+			/**
+			 * attacked 方法。
+			 * attacked method.
+			 *
+			 * creature
+			 */
 			public void attacked(Creature creature) {
 				if (player.getController().hasTask(TaskId.PK)) {
 					player.getController().cancelTask(TaskId.PK);
@@ -84,6 +90,10 @@ public class BanditService {
 		player.getObserveController().attach(observer);
 		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				player.getObserveController().removeObserver(observer);
 				if (player.getLifeStats().isAlreadyDead()) {
@@ -115,12 +125,24 @@ public class BanditService {
 		}, 10 * 1000));
 	}
 
+	/**
+	 * 结束土匪状态。
+	 * Stops bandit state.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void stopBandit(final Player player) {
 		player.getEffectController().setAbnormal(AbnormalState.SLEEP.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
 		final ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
 			@Override
+			/**
+			 * attacked 方法。
+			 * attacked method.
+			 *
+			 * creature
+			 */
 			public void attacked(Creature creature) {
 				if (player.getController().hasTask(TaskId.PK)) {
 					player.getController().cancelTask(TaskId.PK);
@@ -133,6 +155,10 @@ public class BanditService {
 		player.getObserveController().attach(observer);
 		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				player.getObserveController().removeObserver(observer);
 				if (player.getLifeStats().isAlreadyDead()) {
@@ -163,6 +189,13 @@ public class BanditService {
 		}, 10 * 1000));
 	}
 
+	/**
+	 * 单位死亡时处理。
+	 * Handles unit death.
+	 *
+	 * @param player 玩家 / player
+	 * @param lastAttacker 最后攻击者 / lastAttacker
+	 */
 	public void onDie(final Player player, final Creature lastAttacker) {
 		Summon summon = player.getSummon();
 		if (summon != null) {
@@ -182,6 +215,10 @@ public class BanditService {
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				if (player.isBandit()) {
 					if (player.getLifeStats().isAlreadyDead()) {
@@ -204,6 +241,13 @@ public class BanditService {
 		}, 6000);
 	}
 
+	/**
+	 * 土匪变身。
+	 * Morphs into bandit form.
+	 *
+	 * @param player 玩家 / player
+	 * @param die 是否死亡 / die
+	 */
 	public void morphBandit(Player player, boolean die) {
 		if (!die) {
 			player.getTransformModel().setModelId(219655); // Bloodthirsty Vampidaru.
@@ -222,9 +266,21 @@ public class BanditService {
 		}
 	}
 
+	/**
+	 * 发送公告。
+	 * Sends an announcement.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void sendAnnounce(final Player player) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * @param pl 玩家 / pl
+			 */
 			public void visit(Player pl) {
 				if (pl.getWorldId() == player.getWorldId() && pl != player) {
 					PacketSendUtility.sendSys3Message(pl, "[PK] Bandit", "A player just passed <Outlaw>, RUN!");
@@ -233,9 +289,22 @@ public class BanditService {
 		});
 	}
 
+	/**
+	 * sendDieAnnounce 方法。
+	 * sendDieAnnounce method.
+	 *
+	 * looser
+	 * killer
+	 */
 	public void sendDieAnnounce(final Player looser, final Player killer) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * @param pl 玩家 / pl
+			 */
 			public void visit(Player pl) {
 				if (pl.getWorldId() == looser.getWorldId()) {
 					PacketSendUtility.sendSys3Message(pl, "[PK] Bandit",
@@ -245,6 +314,13 @@ public class BanditService {
 		});
 	}
 
+	/**
+	 * 击杀时处理。
+	 * Handles a kill event.
+	 *
+	 * 玩家 / player
+	 * diedPlayer
+	 */
 	public void onKill(Player player, Player diedPlayer) {
 		player.setbanditKillStreak(player.getBanditKillStreak() + 1);
 		if (player.getBanditKillStreak() == 5) {
@@ -260,6 +336,11 @@ public class BanditService {
 		protected static final BanditService instance = new BanditService();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static final BanditService getInstance() {
 		ObjectProvider<BanditService> provider = instanceProvider;
 		if (provider == null) {
@@ -268,6 +349,12 @@ public class BanditService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * @param instanceProvider 副本提供者 / instanceProvider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BanditService> instanceProvider) {
 		BanditService.instanceProvider = instanceProvider;
 	}

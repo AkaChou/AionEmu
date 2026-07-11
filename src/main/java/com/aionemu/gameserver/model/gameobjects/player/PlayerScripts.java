@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +16,9 @@ import com.aionemu.gameserver.model.house.PlayerScript;
 import com.aionemu.gameserver.utils.xml.CompressUtil;
 
 /**
+ * 玩家 Scripts 游戏对象。
+ * Player Scripts game object.
+ *
  * @author Rolandas
  */
 @Slf4j
@@ -46,10 +35,12 @@ public class PlayerScripts {
 		this.houseObjId = houseObjectId;
 	}
 
+	/** 返回 scripts / Returns the scripts */
 	public Map<Integer, PlayerScript> getScripts() {
 		return Collections.unmodifiableMap(scripts);
 	}
 
+	/** 添加 script / Adds script */
 	public boolean addScript(int position, String scriptXML) {
 		PlayerScript script = scripts.get(position);
 
@@ -67,12 +58,13 @@ public class PlayerScripts {
 			}
 			script.setData(bytes, scriptXML.length() * 2);
 		} catch (Exception ex) {
-			log.error("Script compression failed: " + ex);
+			log.error(I18n.get("log.3d086e850a89", ex));
 			return false;
 		}
 		return script == null;
 	}
 
+	/** 返回 uncompressed script / Returns the uncompressed script */
 	public String getUncompressedScript(int position) {
 		if (!scripts.containsKey(position)) {
 			return null;
@@ -96,17 +88,18 @@ public class PlayerScripts {
 		try {
 			return CompressUtil.Decompress(bytes);
 		} catch (Exception ex) {
-			log.error("Script decompression failed: " + ex);
+			log.error(I18n.get("log.4c634fc1f594", ex));
 			return null;
 		}
 	}
 
+	/** 添加 script / Adds script */
 	public boolean addScript(int position, byte[] compressedXML, int uncompressedSize) {
 		String content = null;
 		int size = -1;
 
 		if (compressedXML == null) {
-			// Nothing to do
+			// 无事可做 / Nothing to do
 		} else if (compressedXML.length == 0) {
 			content = StringUtils.EMPTY;
 			size = 0;
@@ -141,6 +134,7 @@ public class PlayerScripts {
 		return true;
 	}
 
+	/** 移除 script / Removes script */
 	public boolean removeScript(int position) {
 		PlayerScript script = scripts.get(position);
 
@@ -157,6 +151,7 @@ public class PlayerScripts {
 		return true;
 	}
 
+	/** 返回大小 / Returns the size*/
 	public int getSize() {
 		return 8;
 	}

@@ -1,25 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.playerreward;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * ContaminatedUnderpath 玩家奖励，用于副本相关逻辑。
+ * Contaminated Underpath Player Reward for instance logic.
+ */
 
 public class ContaminatedUnderpathPlayerReward extends InstancePlayerReward {
 	private int scoreAP;
@@ -32,42 +16,72 @@ public class ContaminatedUnderpathPlayerReward extends InstancePlayerReward {
 		super(object);
 	}
 
+	/**
+	 * @return Whether rewarded / Whether rewarded
+	 */
 	public boolean isRewarded() {
 		return isRewarded;
 	}
 
+	/** 设置 rewarded / Sets the rewarded */
 	public void setRewarded() {
 		isRewarded = true;
 	}
 
+	/** 返回 score ap / Returns the score ap */
 	public int getScoreAP() {
 		return scoreAP;
 	}
 
+	/** 设置 score ap / Sets the score ap */
 	public void setScoreAP(int ap) {
 		this.scoreAP = ap;
 	}
 
+	/**
+	 * 获取 ContaminatedPremium 奖励 Bundle。
+	 * Returns the contaminated premium reward bundle.
+	 */
 	public int getContaminatedPremiumRewardBundle() {
 		return contaminatedPremiumRewardBundle;
 	}
 
+	/**
+	 * 获取 ContaminatedHighest 奖励 Bundle。
+	 * Returns the contaminated highest reward bundle.
+	 */
 	public int getContaminatedHighestRewardBundle() {
 		return contaminatedHighestRewardBundle;
 	}
 
+	/**
+	 * 获取 ContaminatedUnderpathSpecialPouch。
+	 * Returns the contaminated underpath special pouch.
+	 */
 	public int getContaminatedUnderpathSpecialPouch() {
 		return contaminatedUnderpathSpecialPouch;
 	}
 
+	/**
+	 * 设置 ContaminatedPremium 奖励 Bundle。
+	 * Sets the contaminated premium reward bundle.
+	 */
 	public void setContaminatedPremiumRewardBundle(int contaminatedPremiumRewardBundle) {
 		this.contaminatedPremiumRewardBundle = contaminatedPremiumRewardBundle;
 	}
 
+	/**
+	 * 设置 ContaminatedHighest 奖励 Bundle。
+	 * Sets the contaminated highest reward bundle.
+	 */
 	public void setContaminatedHighestRewardBundle(int contaminatedHighestRewardBundle) {
 		this.contaminatedHighestRewardBundle = contaminatedHighestRewardBundle;
 	}
 
+	/**
+	 * 设置 ContaminatedUnderpathSpecialPouch。
+	 * Sets the contaminated underpath special pouch.
+	 */
 	public void setContaminatedUnderpathSpecialPouch(int contaminatedUnderpathSpecialPouch) {
 		this.contaminatedUnderpathSpecialPouch = contaminatedUnderpathSpecialPouch;
 	}

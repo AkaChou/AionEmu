@@ -7,10 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
-* DainAvenger
-*/
-
+/**
+ * 莫尔海姆任务脚本：Allthe Spellsand Whistles（任务 ID 24242）。
+ * Morheim quest script: Allthe Spellsand Whistles (quest ID 24242).
+ */
 public class _24242AlltheSpellsandWhistles extends QuestHandler {
 
 	private static final int questId = 24242;

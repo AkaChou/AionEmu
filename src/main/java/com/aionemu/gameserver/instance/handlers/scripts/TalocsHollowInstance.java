@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -55,19 +39,33 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 塔洛克空洞副本事件处理器。
+ * Instance event handler for Talocs Hollow.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300190000)
 public class TalocsHollowInstance extends GeneralInstanceHandler
 {
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> talocTask = new ArrayList<Future<?>>();
-	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+	/** taloc 任务 / taloc task */
+		private final List<Future<?>> talocTask = new ArrayList<Future<?>>();
+	/** 对象 / objects */
+		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
     
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -76,6 +74,12 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		spawnHugeInsectEgg();
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(Player player) {
 		switch (player.getRace()) {
@@ -96,14 +100,20 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			    sendMovie(player, 438);
 		    break;
 		}
-		//You must destroy the enemies of Taloc. It allows you to acquire objects with great power.
+		// 你必须消灭塔洛克的敌人，才能获得强大物品。 / You must destroy the enemies of Taloc. It allows you to acquire objects with great power.
 		sendMsgByRace(1400704, Race.PC_ALL, 5000);
-		//An object of great power waits in your cube. Transform into a mighty being with Taloc's Fruit.
+		// 背包中有强大物品。使用塔洛克果实可变为强力形态。 / An object of great power waits in your cube. Transform into a mighty being with Taloc's Fruit.
 		sendMsgByRace(1400752, Race.PC_ALL, 10000);
-		//An object of great power waits in your cube. Launch a powerful aerial attack with Taloc's Tears.
+		// 背包中有强大物品。使用塔洛克之泪可发动强力空中攻击。 / An object of great power waits in your cube. Launch a powerful aerial attack with Taloc's Tears.
 		sendMsgByRace(1400753, Race.PC_ALL, 15000);
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/talocHollow.xhtml"));
     }
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -123,16 +133,16 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			case 215488: //Celestius.
 			    switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
 					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
@@ -142,6 +152,13 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -158,33 +175,39 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		}
 	}
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
     public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215456: //Shishir.
-				//An object of great power waits in Shishir's carcass. Obtain it, then register it in the skill window.
+				// 希希尔尸体中有强大物品。获取后登记到技能窗口。 / An object of great power waits in Shishir's carcass. Obtain it, then register it in the skill window.
 		        sendMsgByRace(1400754, Race.PC_ALL, 0);
             break;
 			case 215457: //Ancient Octanus.
-				//You sense a movement in Taloc's Roots. You won't be able to meet him unless you hurry.
+				// 你感觉塔洛克之根有动静。再不快点就见不到他了。 / You sense a movement in Taloc's Roots. You won't be able to meet him unless you hurry.
 				sendMsgByRace(1400659, Race.PC_ALL, 0);
             break;
 			case 215478: //Neith.
-				//An object of great power waits in Neith's carcass. Obtain it, then register it in the skill window.
+				// 奈斯尸体中有强大物品。获取后登记到技能窗口。 / An object of great power waits in Neith's carcass. Obtain it, then register it in the skill window.
 		        sendMsgByRace(1400756, Race.PC_ALL, 0);
             break;
 			case 215480: //Queen Mosqua.
                 deleteNpc(700738); //Huge Insect Egg.
 				sendMovie(player, 435);
-				//Release Summon: "Engeius & Abyla"
+				// 解除召唤：“恩盖乌斯与阿比拉” / Release Summon: "Engeius & Abyla"
 				if (player.getSummon() != null) {
 					SummonsService.release(player.getSummon(), UnsummonType.UNSPECIFIED, false);
 				}
 				sp(700739, 653.63f, 838.66998f, 1304.72f, (byte) 0, 11, 0, 0, null); //Cracked Huge Insect Egg.
             break;
 			case 215482: //Gellmar.
-				//An object of great power waits in Gellmar's carcass. Obtain it, then register it in the skill window.
+				// 盖尔玛尸体中有强大物品。获取后登记到技能窗口。 / An object of great power waits in Gellmar's carcass. Obtain it, then register it in the skill window.
 		        sendMsgByRace(1400755, Race.PC_ALL, 0);
             break;
             case 215488: //Celestius.
@@ -198,8 +221,8 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
             break;
 			case 700739: //Cracked Huge Insect Egg.
 				despawnNpc(npc);
-				//An ascending air current is rising from the spot where the egg was.
-				//You can fly vertically up by spreading your wings and riding the current.
+				// 卵所在处升起上升气流。 / An ascending air current is rising from the spot where the egg was.
+				// 展开双翼乘气流可垂直飞升。 / You can fly vertically up by spreading your wings and riding the current.
 				sendMsgByRace(1400477, Race.PC_ALL, 5000);
 				sp(281817, 653.77478f, 838.88306f, 1303.8502f, (byte) 0, 1308, 0, 0, null); //Geyser.
             break;
@@ -215,18 +238,25 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		objects.put(700738, SpawnEngine.spawnObject(IDElim2FEntity, instanceId));
 	}
 	
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
         if (zone.getAreaTemplate().getZoneName() == ZoneName.get("KINQUIDS_DEN_300190000")) {
             sendMovie(player, 463);
-			//Smoke is being discharged. Exposure to smoke will destroy Kinquid's Barrier.
+			// 烟雾正在释放。接触烟雾将破坏金奎德的屏障。 / Smoke is being discharged. Exposure to smoke will destroy Kinquid's Barrier.
 			sendMsgByRace(1400660, Race.PC_ALL, 0);
 	    } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MOSQUAS_NEST_300190000")) {
 			sendMovie(player, 464);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("COCCOONING_CHAMBER_300190000")) {
-			//The cocoons are wriggling--something's inside!
+			// 茧在蠕动——里面有东西！ / The cocoons are wriggling--something's inside!
 			sendMsgByRace(1400475, Race.PC_ALL, 2000);
-			//You can save one of the two Reians imprisoned in the cocoon.
+			// 你可救出茧中两名雷安之一。 / You can save one of the two Reians imprisoned in the cocoon.
 			sendMsgByRace(1400630, Race.PC_ALL, 8000);
 		}
     }
@@ -238,6 +268,12 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -247,6 +283,12 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
@@ -305,17 +347,59 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			}
         }
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * entity id
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -327,9 +411,25 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -343,18 +443,42 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -366,6 +490,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		}, time);
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
 		isInstanceDestroyed = true;

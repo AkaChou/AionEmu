@@ -1,50 +1,47 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.attack;
 
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 
 /**
- * AggroInfo: - hate of creature - damage of creature
- * 
+ * 仇恨信息：记录攻击者对本单位的仇恨值与累计伤害。
+ * Aggro info: stores an attacker's hate and accumulated damage against this unit.
+ *
  * @author ATracer, Sarynth
  */
 public class AggroInfo {
 
+	/** 攻击者 / Attacker */
 	private AionObject attacker;
+	/** 仇恨值 / Hate value */
 	private int hate;
+	/** 累计伤害 / Accumulated damage */
 	private int damage;
 
 	/**
-	 * @param attacker
+	 * 以指定攻击者创建仇恨条目。
+	 * Creates an aggro entry for the given attacker.
+	 *
+	 * attacker
 	 */
 	AggroInfo(AionObject attacker) {
 		this.attacker = attacker;
 	}
 
 	/**
-	 * @return attacker
+	 * 返回该条目对应的攻击者。
+	 * Returns the attacker associated with this entry.
+	 *
+	 * attacker
 	 */
 	public AionObject getAttacker() {
 		return attacker;
 	}
 
 	/**
-	 * @param damage
+	 * 累加伤害，结果不会低于 0。
+	 * Adds damage; the total is clamped to be non-negative.
+	 *
+	 * @param damage 本次伤害增量 / damage delta to add
 	 */
 	public synchronized void addDamage(int damage) {
 		this.damage += damage;
@@ -54,7 +51,10 @@ public class AggroInfo {
 	}
 
 	/**
-	 * @param damage
+	 * 累加仇恨，结果不会低于 1。
+	 * Adds hate; the total is clamped to be at least 1.
+	 *
+	 * @param damage 本次仇恨增量 / hate delta to add
 	 */
 	public synchronized void addHate(int damage) {
 		this.hate += damage;
@@ -64,28 +64,40 @@ public class AggroInfo {
 	}
 
 	/**
-	 * @return hate
+	 * 返回当前仇恨值。
+	 * Returns the current hate value.
+	 *
+	 * hate
 	 */
 	public synchronized int getHate() {
 		return this.hate;
 	}
 
 	/**
-	 * @param hate
+	 * 直接设置仇恨值。
+	 * Sets the hate value directly.
+	 *
+	 * @param hate 新的仇恨值 / new hate value
 	 */
 	public synchronized void setHate(int hate) {
 		this.hate = hate;
 	}
 
 	/**
-	 * @return damage
+	 * 返回累计伤害。
+	 * Returns the accumulated damage.
+	 *
+	 * damage
 	 */
 	public synchronized int getDamage() {
 		return this.damage;
 	}
 
 	/**
-	 * @param damage
+	 * 直接设置累计伤害。
+	 * Sets the accumulated damage directly.
+	 *
+	 * @param damage 新的累计伤害 / new damage value
 	 */
 	public synchronized void setDamage(int damage) {
 		this.damage = damage;

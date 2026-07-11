@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.serial_guard;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,6 +7,11 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.change.Func;
+
+/**
+ * 守卫军阶 PenaltyAttr 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GuardRankPenaltyAttr")
@@ -36,26 +25,32 @@ public class GuardRankPenaltyAttr {
 	@XmlAttribute(required = true)
 	protected int value;
 
+	/** 获取属性。 / Returns the stat. */
 	public StatEnum getStat() {
 		return stat;
 	}
 
+	/** 设置属性。 / Sets the stat. */
 	public void setStat(StatEnum value) {
 		this.stat = value;
 	}
 
+	/** 返回 func / Returns the func */
 	public Func getFunc() {
 		return func;
 	}
 
+	/** 设置 func / Sets the func */
 	public void setFunc(Func value) {
 		this.func = value;
 	}
 
+	/** 获取值。 / Returns the value. */
 	public int getValue() {
 		return value;
 	}
 
+	/** 设置值。 / Sets the value. */
 	public void setValue(int value) {
 		this.value = value;
 	}

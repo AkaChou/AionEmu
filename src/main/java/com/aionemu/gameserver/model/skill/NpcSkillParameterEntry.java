@@ -1,20 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill;
+
+/**
+ * NPC 技能 Parameter 条目，用于技能相关逻辑。
+ * Npc Skill Parameter Entry for skill logic.
+ */
 
 class NpcSkillParameterEntry extends NpcSkillEntry {
 
@@ -22,31 +11,37 @@ class NpcSkillParameterEntry extends NpcSkillEntry {
 		super(skillId, skillLevel);
 	}
 
+	/** 是否就绪。 / Whether Ready. */
 	@Override
 	public boolean isReady(int hpPercentage, long fightingTimeInMSec) {
 		return true;
 	}
 
+	/** 概率就绪 / chance Ready. */
 	@Override
 	public boolean chanceReady() {
 		return true;
 	}
 
+	/** 生命就绪 / Hp Ready */
 	@Override
 	public boolean hpReady(int hpPercentage) {
 		return true;
 	}
 
+	/** 时间就绪 / time Ready. */
 	@Override
 	public boolean timeReady(long fightingTimeInMSec) {
 		return true;
 	}
 
+	/** 是否拥有冷却。 / Whether cooldown. */
 	@Override
 	public boolean hasCooldown() {
 		return false;
 	}
 
+	/** 刷新时使用 / Use In Spawned. */
 	@Override
 	public boolean UseInSpawned() {
 		return true;

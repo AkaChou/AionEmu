@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import java.util.Iterator;
@@ -32,9 +16,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
- * @author Wakizashi, Imaginary
- * @revork Alex
- * @rework Eloann
+ * 玩家 VIP 改模命令：消耗 Toll/材料更换双手武器外观。
+ * Player VIP reskin command: spends Toll/materials to change two-handed weapon looks.
+ *
+ * @author Wakizashi
+ * @author Imaginary
+ * @author Eloann
  */
 public class cmd_reskin2 extends PlayerCommand {
 
@@ -42,6 +29,13 @@ public class cmd_reskin2 extends PlayerCommand {
 		super("reskinvip");
 	}
 
+	/**
+	 * 解析目标玩家与物品并启动 VIP 改模流程。
+	 * Parses target player/item and starts the VIP reskin flow.
+	 *
+	 * @param admin 执行命令的玩家 / invoking player
+	 * command parameters
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length != 2) {
@@ -137,7 +131,7 @@ public class cmd_reskin2 extends PlayerCommand {
 			return;
 		}
 
-		// Change the appearance of any item. Gun on the mace, sword, shield and so on
+		// 更改任意物品外观。枪可改钉锤、剑、盾等。 / Change the appearance of any item. Gun on the mace, sword, shield and so on
 		if (DataManager.ITEM_DATA.getItemTemplate(oldItemId).getItemSlot() != DataManager.ITEM_DATA.getItemTemplate(newItemId).getItemSlot()) {
 			PacketSendUtility.sendMessage(admin, "You can't :D");
 			return;
@@ -170,6 +164,15 @@ public class cmd_reskin2 extends PlayerCommand {
 		}
 	}
 
+	/**
+	 * 弹出确认框，确认后执行外观替换与扣费。
+	 * Shows a confirmation dialog, then applies the look and charges costs.
+	 *
+	 * @param admin 执行命令的玩家 / invoking player
+	 * toll cost
+	 * item id
+	 * @param items 候选物品列表 / candidate item list
+	 */
 	public void reskin(final Player admin, final int toll, final int itemId, final List<Item> items) {
 		final long tolls = admin.getClientConnection().getAccount().getToll();
 		RequestResponseHandler responseHandler = new RequestResponseHandler(admin) {
@@ -198,6 +201,13 @@ public class cmd_reskin2 extends PlayerCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时提示用法。
+	 * Shows usage when arguments are invalid.
+	 *
+	 * @param admin 执行命令的玩家 / invoking player
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player admin, String message) {
 		PacketSendUtility.sendMessage(admin, "syntax //reskinvip <Link@ | Old Item ID> <Link@ | New Item ID>");

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.ophidanBridge;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -37,10 +21,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Ophidan Bridge 副本 NPC AI：Fugitive Mazikin（@AIName "fugitive_mazikin"），继承 GeneralNpcAI2。
+ * Ophidan Bridge instance NPC AI: Fugitive Mazikin (@AIName "fugitive_mazikin"), extends GeneralNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("fugitive_mazikin")
 public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 {
@@ -60,11 +46,11 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
 				case 235759: //Fugitive Mazikin Leader.
-					//The fugitive will get away in 8 minutes!
+					// 逃犯将在 8 分钟后逃脱！ / The fugitive will get away in 8 minutes!
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402860, 0);
-					//The fugitive will get away in 4 minutes!
+					// 逃犯将在 4 分钟后逃脱！ / The fugitive will get away in 4 minutes!
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402861, 240000);
-					//The fugitive will get away in 1 minute!
+					// 逃犯将在 1 分钟后逃脱！ / The fugitive will get away in 1 minute!
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402862, 420000);
 					mazikinTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
@@ -84,7 +70,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 			if (startedEvent.compareAndSet(false, true)) {
 				canThink = false;
 				spawn(235756, 673.1745f, 465.6297f, 599.5734f, (byte) 1);
-				//Fugitive Mazikin is attempting to flee to the next sentry post. Pursue the fugitive.
+				// 逃犯马兹金正逃往哨所。跟随继续追击。 / Fugitive Mazikin is attempting to flee to the next sentry post. Pursue the fugitive.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_U_01_RA_Wi_Start, 0);
 				getOwner().getMoveController().moveToPoint(754.0731f, 487.0167f, 584.6798f);
 				WalkManager.startWalking(this);
@@ -104,13 +90,13 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 				switch (Rnd.get(1, 2)) {
 					case 1:
 						spawn(235757, 524.93365f, 437.3637f, 620.2102f, (byte) 114);
-						//Fugitive Mazikin is attempting to flee to one of the two sentry posts. Follow the fugitive to continue the pursuit.
+						// 逃犯马兹金正逃往两处哨所之一。跟随逃犯继续追击。 / Fugitive Mazikin is attempting to flee to one of the two sentry posts. Follow the fugitive to continue the pursuit.
 						PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_U_01_RA_Wi_Point_01, 0);
 				        getOwner().getMoveController().moveToPoint(653.04736f, 437.94086f, 603.3876f);
 				    break;
 					case 2:
 						spawn(235787, 606.0667f, 556.59625f, 590.5f, (byte) 105);
-						//Fugitive Mazikin is attempting to flee to one of the two sentry posts. Follow the fugitive to continue the pursuit.
+						// 逃犯马兹金正逃往两处哨所之一。跟随逃犯继续追击。 / Fugitive Mazikin is attempting to flee to one of the two sentry posts. Follow the fugitive to continue the pursuit.
 						PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_U_01_RA_Wi_Point_01, 0);
 				        getOwner().getMoveController().moveToPoint(673.487f, 510.5843f, 596.98785f);
 				    break;
@@ -131,7 +117,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 		} else if (getNpcId() == 235757 && isInRange(creature, 15) && creature instanceof Player) {
 			if (startedEvent.compareAndSet(false, true)) {
 				spawn(235758, 479.04312f, 528.6785f, 597.375f, (byte) 9);
-				//Fugitive Mazikin is attempting to flee to the next sentry post. Pursue the fugitive.
+				// 逃犯马兹金正逃往哨所。跟随继续追击。 / Fugitive Mazikin is attempting to flee to the next sentry post. Pursue the fugitive.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_U_01_RA_Wi_Point_02, 0);
 				getOwner().getMoveController().moveToPoint(537.80994f, 477.11905f, 615.0119f);
 				canThink = false;
@@ -150,7 +136,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 		} else if (getNpcId() == 235787 && isInRange(creature, 15) && creature instanceof Player) {
 			if (startedEvent.compareAndSet(false, true)) {
 				spawn(235758, 479.04312f, 528.6785f, 597.375f, (byte) 9);
-				//Fugitive Mazikin is attempting to flee to the next sentry post. Pursue the fugitive.
+				// 逃犯马兹金正逃往哨所。跟随继续追击。 / Fugitive Mazikin is attempting to flee to the next sentry post. Pursue the fugitive.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_U_01_RA_As_Point_02, 0);
 				getOwner().getMoveController().moveToPoint(574.60815f, 565.70074f, 595.37823f);
 				canThink = false;
@@ -169,7 +155,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 		} else if (getNpcId() == 235758 && isInRange(creature, 15) && creature instanceof Player) {
 			if (startedEvent.compareAndSet(false, true)) {
 				spawn(235759, 329.5612f, 489.43942f, 607.64343f, (byte) 1);
-				//Fugitive Mazikin is attempting to flee using teleport. Pursue the fugitive.
+				// 逃犯马兹金正逃往哨所。跟随继续追击。 / Fugitive Mazikin is attempting to flee using teleport. Pursue the fugitive.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_U_01_RA_Wi_Point_03, 0);
 				getOwner().getMoveController().moveToPoint(462.4221f, 499.83743f, 597.72363f);
 				canThink = false;

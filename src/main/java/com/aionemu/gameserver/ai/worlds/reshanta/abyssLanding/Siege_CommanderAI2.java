@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -27,17 +11,19 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Siege Commander（@AIName "siege_commander"），继承 AggressiveNpcAI2。
+ * Reshanta zone NPC AI: Siege Commander (@AIName "siege_commander"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("siege_commander")
 public class Siege_CommanderAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//Elyos Commander.
+			// 天族指挥官。 / Elyos Commander.
 			case 883635: //Krotan Commander <15,000 Points>
 				updateCommanderLanding1(4);
 			break;
@@ -47,7 +33,7 @@ public class Siege_CommanderAI2 extends AggressiveNpcAI2
 			case 883666: //Kysis Commander <20,000 Points>
 				updateCommanderLanding2(6);
 			break;
-			//Asmodians Commander.
+			// 魔族指挥官。 / Asmodians Commander.
 			case 883636: //Krotan Commander <15,000 Points>
 				updateCommanderLanding1(16);
 			break;

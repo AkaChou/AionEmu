@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.ride;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,10 +7,10 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.RideBound;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * Ride 信息模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RideInfo", propOrder = { "ridebound" })
@@ -54,38 +38,49 @@ public class RideInfo {
 	@XmlAttribute(required = true)
 	protected int id;
 
+	/** 返回 ride bound / Returns the ride bound */
 	public RideBound getRideBound() {
 		return ridebound;
 	}
 
+	/** 返回 cost fp / Returns the cost fp */
 	public Integer getCostFp() {
 		return costFp;
 	}
 
+	/** 返回开始飞行点 / Returns the start fp*/
 	public int getStartFp() {
 		return startFp;
 	}
 
+	/** 返回 sprint speed / Returns the sprint speed */
 	public float getSprintSpeed() {
 		return sprintSpeed;
 	}
 
+	/** 返回 fly speed / Returns the fly speed */
 	public float getFlySpeed() {
 		return flySpeed;
 	}
 
+	/** 返回 move speed / Returns the move speed */
 	public float getMoveSpeed() {
 		return moveSpeed;
 	}
 
+	/** 获取类型。 / Returns the type. */
 	public Integer getType() {
 		return type;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return id;
 	}
 
+	/**
+	 * @return Whether sprint / Whether sprint
+	 */
 	public boolean canSprint() {
 		return sprintSpeed != 0.0f;
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -32,12 +16,23 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.Arrays;
 
+/**
+ * 属性设置指令；设置目标玩家的职业、经验、AP/GP、等级、称号、点数、Luna 与钥匙等。
+ * Admin command that sets class, exp, AP/GP, level, title, toll, Luna and keys on the target player.
+ */
 public class Set extends AdminCommand
 {
 	public Set() {
 		super("set");
 	}
 	
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		Player target = null;
@@ -83,7 +78,7 @@ public class Set extends AdminCommand
 			target.getCommonData().setExp(exp, false);
 			PacketSendUtility.sendMessage(admin, "Set exp of target to " + paramValue);
 		}
-		//<Abyss Points>
+		// <欧比斯点数> / <Abyss Points>
 		else if (params[0].equals("ap")) {
 			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
@@ -104,7 +99,7 @@ public class Set extends AdminCommand
 				PacketSendUtility.sendMessage(target, "Admin add Abyss Points + " + ap + ".");
 			}
 		}
-		//<Glory Points>
+		// <荣耀点数> / <Glory Points>
 		else if (params[0].equals("gp")) {
 			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
@@ -266,6 +261,13 @@ public class Set extends AdminCommand
 		PacketSendUtility.sendMessage(player, "You have successfuly switched class");
 	}
 	
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //set <class|exp|ap|gp|level|title|luna>");

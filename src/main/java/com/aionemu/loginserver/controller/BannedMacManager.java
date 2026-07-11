@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.controller;
 
 import java.sql.Timestamp;
@@ -26,25 +8,52 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.model.base.BannedMacEntry;
 
+import lombok.Getter;
+
 /**
+ * MAC 封禁管理器：内存缓存 + 数据库持久化。
+ * MAC ban manager: in-memory cache with database persistence.
  *
  * @author KID
- *
  */
 public class BannedMacManager {
 
     private BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
+
+    /**
+     * 当前封禁 MAC 映射。
+     * Current banned MAC map.
+     */
+    @Getter
     private Map<String, BannedMacEntry> bannedList = new ConcurrentHashMap<>();
 
+    /**
+     * 获取单例（遗留入口，启动迁移后弃用）。
+     * Returns singleton (legacy entry, deprecated after boot migration).
+     *
+     * @return 管理器实例 / Manager instance
+     * Prefer injection
+     */
     @Deprecated(since = "boot-migration")
     public static BannedMacManager getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
+    /**
+     * 构造并加载全部 MAC 封禁。
+     * Constructs manager and loads all MAC bans.
+     */
     public BannedMacManager() {
         bannedList = dao.load();
     }
 
+    /**
+     * 解除 MAC 封禁并写库。
+     * Unbans MAC and removes from database.
+     *
+     * MAC address
+     * @param details 备注（保留参数） / Details (kept for API)
+     */
     public void unban(String address, String details) {
         if (bannedList.containsKey(address)) {
             bannedList.remove(address);
@@ -52,12 +61,26 @@ public class BannedMacManager {
         }
     }
 
+    /**
+     * 封禁 MAC 并持久化。
+     * Bans MAC and persists the entry.
+     *
+     * MAC address
+     * @param time 到期时间戳（毫秒） / Expiration epoch millis
+     * Details
+     */
     public void ban(String address, long time, String details) {
         BannedMacEntry mac = new BannedMacEntry(address, new Timestamp(time), details);
         this.bannedList.put(address, mac);
         this.dao.update(mac);
     }
 
+    /**
+     * 返回封禁映射（兼容旧 API）。
+     * Returns ban map (legacy API alias).
+     *
+     * Banned MAC map
+     */
     public final Map<String, BannedMacEntry> getMap() {
         return this.bannedList;
     }

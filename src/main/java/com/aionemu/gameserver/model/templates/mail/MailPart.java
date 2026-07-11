@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.mail;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,11 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 邮件 Part 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MailPart")
 @XmlSeeAlso({ Sender.class, Header.class, Body.class, Tail.class, Title.class })
@@ -32,14 +21,17 @@ public abstract class MailPart extends StringParamList implements IMailFormatter
 	@XmlAttribute(name = "id")
 	protected Integer id;
 
+	/** 获取类型。 / Returns the type. */
 	public MailPartType getType() {
 		return MailPartType.CUSTOM;
 	}
 
+	/** 返回 ID / Returns the id */
 	public Integer getId() {
 		return id;
 	}
 
+	/** 返回 formatted string / Returns the formatted string */
 	public String getFormattedString(IMailFormatter customFormatter) {
 		String result = "";
 		IMailFormatter formatter = this;
@@ -63,6 +55,7 @@ public abstract class MailPart extends StringParamList implements IMailFormatter
 		return result;
 	}
 
+	/** 返回 formatted string / Returns the formatted string */
 	@Override
 	public String getFormattedString(MailPartType partType) {
 		String result = "";

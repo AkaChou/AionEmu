@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -45,9 +29,21 @@ import com.aionemu.gameserver.world.World;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 房屋控制器，管理房屋渲染、外观更新与访客踢出。
+ * House controller managing house rendering, appearance updates and visitor kicks.
+ */
 public class HouseController extends VisibleObjectController<House> {
+
+	/** 正在观察该房屋的玩家映射。 / Map of players currently observing this house. */
 	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
 
+	/**
+	 * 玩家进入房屋范围时发送渲染包并生成室内物件。
+	 * Sends render packets and spawns house objects when a player enters range.
+	 *
+	 * @param object 进入视野的可见对象 / the visible object entering sight
+	 */
 	@Override
 	public void see(VisibleObject object) {
 		Player p = (Player) object;
@@ -64,6 +60,13 @@ public class HouseController extends VisibleObjectController<House> {
 		spawnObjects();
 	}
 
+	/**
+	 * 玩家离开房屋范围时移除观察者并可发送删除包。
+	 * Removes the observer and may send a delete packet when a player leaves range.
+	 *
+	 * @param object 离开视野的可见对象 / the visible object leaving sight
+	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
+	 */
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		Player p = (Player) object;
@@ -77,6 +80,10 @@ public class HouseController extends VisibleObjectController<House> {
 		p.getObserveController().removeObserver(observer);
 	}
 
+	/**
+	 * 生成房屋登记处中所有已放置物件。
+	 * Spawns all placeable objects registered on this house.
+	 */
 	public void spawnObjects() {
 		if (getOwner().getRegistry() != null) {
 			for (HouseObject<?> obj : getOwner().getRegistry().getSpawnedObjects()) {
@@ -85,6 +92,10 @@ public class HouseController extends VisibleObjectController<House> {
 		}
 	}
 
+	/**
+	 * 生成后同步房屋门状态到地理服务。
+	 * After spawn, syncs the house door state to the geo service.
+	 */
 	@Override
 	public void onAfterSpawn() {
 		super.onAfterSpawn();
@@ -92,6 +103,10 @@ public class HouseController extends VisibleObjectController<House> {
 				getOwner().getAddress().getId(), getOwner().getDoorState().isDoorOpen());
 	}
 
+	/**
+	 * 向所有观察者异步推送房屋外观更新。
+	 * Asynchronously pushes a house appearance update to all observers.
+	 */
 	public void updateAppearance() {
 		GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
 			@Override
@@ -107,6 +122,10 @@ public class HouseController extends VisibleObjectController<House> {
 		});
 	}
 
+	/**
+	 * 向所有观察者异步广播完整房屋渲染包。
+	 * Asynchronously broadcasts the full house render packet to all observers.
+	 */
 	public void broadcastAppearance() {
 		GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
 			@Override
@@ -122,6 +141,14 @@ public class HouseController extends VisibleObjectController<House> {
 		});
 	}
 
+	/**
+	 * 将访客踢出房屋区域。
+	 * Kicks visitors out of the house zone.
+	 *
+	 * @param kicker 发起踢出的玩家，可为 null / player who initiated the kick, may be null
+	 * @param kickFriends 是否连同好友一并踢出 / whether friends are also kicked
+	 * @param onSettingsChange 是否因权限设置变更触发 / whether triggered by a settings change
+	 */
 	public void kickVisitors(Player kicker, boolean kickFriends, boolean onSettingsChange) {
 		List<ZoneInfo> zoneInfo = DataManager.ZONE_DATA.getZones().get(getOwner().getWorldId());
 		for (ZoneInfo info : zoneInfo) {
@@ -152,6 +179,13 @@ public class HouseController extends VisibleObjectController<House> {
 		}
 	}
 
+	/**
+	 * 将玩家传送到房屋外部并发送系统消息。
+	 * Teleports a player outside the house and sends a system message.
+	 *
+	 * target player
+	 * @param onSettingsChange 是否因设置变更 / whether due to a settings change
+	 */
 	private void moveOutside(Player player, boolean onSettingsChange) {
 		if (getOwner().getHouseType() == HouseType.STUDIO) {
 			float x = getOwner().getAddress().getExitX();

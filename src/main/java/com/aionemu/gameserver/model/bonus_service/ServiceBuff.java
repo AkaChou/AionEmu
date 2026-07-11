@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.bonus_service;
 
 import java.util.ArrayList;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 服务 Buff，用于加成服务相关逻辑。
+ * Service Buff for bonus service logic.
+ *
  * @author Ranastic (Encom)
  */
 
@@ -43,6 +30,7 @@ public class ServiceBuff implements StatOwner {
 		serviceBonusAttr = DataManager.SERVICE_BUFF_DATA.getInstanceBonusattr(buffId);
 	}
 
+	/** 应用效果。 / Apply effect. */
 	public void applyEffect(Player player, int buffId) {
 		if (serviceBonusAttr == null) {
 			return;
@@ -59,6 +47,7 @@ public class ServiceBuff implements StatOwner {
 		PacketSendUtility.sendPacket(player, new SM_ICON_INFO(buffId, true));
 	}
 
+	/** 结束效果 / End Effect */
 	public void endEffect(Player player, int buffId) {
 		functions.clear();
 		player.setBonus(false);

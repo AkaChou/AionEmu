@@ -11,8 +11,10 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * @author Ritsu
+ * 寂静峡谷任务脚本：Stoneto Flesh（任务 ID 30155）。
+ * Silentera Canyon quest script: Stoneto Flesh (quest ID 30155).
  *
+ * @author Ritsu
  */
 public class _30155StonetoFlesh extends QuestHandler {
 

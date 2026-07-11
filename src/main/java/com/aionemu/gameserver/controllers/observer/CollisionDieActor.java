@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
@@ -22,11 +6,19 @@ import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
+ * 碰撞致死行为者：与材质几何碰撞时杀死生物。
+ * Collision die actor: kills the creature when colliding with material geometry.
+ *
  * @author Rolandas
  */
 public class CollisionDieActor extends AbstractCollisionObserver implements IActor {
+	/** 是否启用 / Whether enabled */
 	private boolean isEnabled = true;
 
+	/**
+	 * @param creature 被观察生物 / observed creature
+	 * @param geometry 碰撞几何体 / collision geometry
+	 */
 	public CollisionDieActor(Creature creature, Spatial geometry) {
 		super(creature, geometry, CollisionIntention.MATERIAL.getId());
 	}

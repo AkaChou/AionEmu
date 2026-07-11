@@ -1,58 +1,18 @@
 package com.aionemu.gameserver.controllers;
 
-import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
-import com.aionemu.gameserver.lifecycle.GameCraftServices;
-
-import com.aionemu.gameserver.lifecycle.GameEventServices;
-
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
-
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
-
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
-
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
-
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
-
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.concurrent.Future;
-
-import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.configs.main.HTMLConfig;
-import com.aionemu.gameserver.configs.main.MembershipConfig;
-import com.aionemu.gameserver.configs.main.PvPConfig;
-import com.aionemu.gameserver.configs.main.SecurityConfig;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.main.*;
 import com.aionemu.gameserver.controllers.attack.AttackUtil;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
+import com.aionemu.gameserver.lifecycle.*;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.actions.PlayerMode;
-import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.Gatherable;
-import com.aionemu.gameserver.model.gameobjects.Item;
-import com.aionemu.gameserver.model.gameobjects.Kisk;
-import com.aionemu.gameserver.model.gameobjects.Minion;
-import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.Pet;
-import com.aionemu.gameserver.model.gameobjects.StaticObject;
-import com.aionemu.gameserver.model.gameobjects.Summon;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.model.gameobjects.*;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.BindPointPosition;
 import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
@@ -74,88 +34,43 @@ import com.aionemu.gameserver.model.templates.robot.RobotInfo;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
+import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DIE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION_NPC;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_GATHERABLE_INFO;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_HEADING_UPDATE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_KISK_UPDATE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_LEVEL_UPDATE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_NEARBY_QUESTS;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_INFO;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STANCE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STATE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_PRIVATE_STORE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_CANCEL;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_LIST;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_TRANSFORM;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_ROBOT;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
-import com.aionemu.gameserver.services.ClassChangeService;
-import com.aionemu.gameserver.services.DuelService;
-import com.aionemu.gameserver.services.HTMLService;
-import com.aionemu.gameserver.services.ProtectorConquerorService;
-import com.aionemu.gameserver.services.PvPSpreeService;
-import com.aionemu.gameserver.services.PvpService;
-import com.aionemu.gameserver.services.QuestService;
-import com.aionemu.gameserver.services.SkillLearnService;
+import com.aionemu.gameserver.services.*;
 import com.aionemu.gameserver.services.abyss.AbyssService;
-import com.aionemu.gameserver.services.events.BanditService;
-import com.aionemu.gameserver.services.events.CrazyDaevaService;
-import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.bg.DeathmatchBg;
 import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
-import com.aionemu.gameserver.skillengine.model.Effect;
-import com.aionemu.gameserver.skillengine.model.HealType;
-import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.skillengine.model.*;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
-import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
-import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
-import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.MapRegion;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
+import java.util.concurrent.Future;
 
 
 /**
- * This class is for controlling players.
- * 
- * @author -Nemesiss-, ATracer, xavier, Sarynth, RotO, xTz, KID 
- *  modified by Sippolo
- *  modified by yayaya
+ * 玩家控制器，管理视野、区域、战斗、技能、死亡与姿态等玩家行为。
+ * Player controller managing sight, zones, combat, skills, death and stance behaviors.
+ *
+ * @author -Nemesiss-, ATracer, xavier, Sarynth, RotO, xTz, KID
+ * @modified Sippolo, yayaya
  */
 @Slf4j
 public class PlayerController extends CreatureController<Player> {
@@ -166,6 +81,12 @@ public class PlayerController extends CreatureController<Player> {
 	private int stance = 0;
 	private Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<Integer, VisibleObject>();
 
+	/**
+	 * 玩家看到其他可见对象时同步状态包。
+	 * Syncs state packets when the player sees another visible object.
+	 *
+	 * @param object 进入视野的对象 / the object entering sight
+	 */
 	@Override
 	public void see(VisibleObject object) {
 		super.see(object);
@@ -230,6 +151,13 @@ public class PlayerController extends CreatureController<Player> {
 		return DataManager.ROBOT_DATA.getRobotInfo(template.getRobotId());
 	}
 
+	/**
+	 * 对象离开玩家视野时回调。
+	 * Callback when an object leaves the player's sight.
+	 *
+	 * @param object 离开视野的对象 / the object leaving sight
+	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
+	 */
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		super.notSee(object, isOutOfRange);
@@ -243,6 +171,11 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 更新附近可接任务提示。
+	 * Updates nearby quest availability hints.
+	 *
+	 */
 	public void updateNearbyQuests() {
 		HashMap<Integer, Integer> nearbyQuestList = new HashMap<>();
 		for (int questId : getOwner().getPosition().getMapRegion().getParent().getQuestIds()) {
@@ -257,6 +190,12 @@ public class PlayerController extends CreatureController<Player> {
 		PacketSendUtility.sendPacket(getOwner(), new SM_NEARBY_QUESTS(nearbyQuestList));
 	}
 
+	/**
+	 * 玩家进入区域时触发任务/事件逻辑。
+	 * Triggers quest/event logic when the player enters a zone.
+	 *
+	 * @param zone 进入的区域 / entered zone
+	 */
 	@Override
 	public void onEnterZone(ZoneInstance zone) {
 		Player player = getOwner();
@@ -265,7 +204,8 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		if (zone.getZoneTemplate().getZoneType().equals(ZoneClassName.FORT) && (player.isInState(CreatureState.FLYING))) {
 			/**
-			 * If a player enter in zone "Panesterra Fortress" of while player flying, then the system will landing the player.
+			 * 玩家飞行中进入「潘尼特拉要塞」区域时，系统强制降落。
+	 * If a player enters zone "Panesterra Fortress" while flying, the system will land the player.
 			 */
 			switch (player.getWorldId()) {
 			case 400020000: // Belus.
@@ -275,7 +215,7 @@ public class PlayerController extends CreatureController<Player> {
 				player.setFlyState(0);
 				player.getFlyController().endFly(true);
 				player.unsetState(CreatureState.FLYING);
-				// You cannot fly in this area.
+				// 此区域无法飞行。 / You cannot fly in this area.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FLYING_FORBIDDEN_ZONE);
 				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.LAND, 0, 0), true);
 				break;
@@ -283,24 +223,25 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		InstanceService.onEnterZone(player, zone);
 		if (zone.getAreaTemplate().getZoneName() == null) {
-			log.error("No name found for a Zone in the map " + zone.getAreaTemplate().getWorldId());
+			log.error(I18n.get("log.f297922b6249", zone.getAreaTemplate().getWorldId()));
 		} else {
 			GameEngineServices.questEngine().onEnterZone(new QuestEnv(null, player, 0, 0), zone.getAreaTemplate().getZoneName());
 		}
-		/**
-		 * These instances portal are "spawn & reversed" to the opposite race. If a player enter in fews area, a portal will appear automatically. These portals
+	/**
+		 * 这些副本传送门对敌对种族为「刷新并反向」。玩家进入部分区域时会出现传送门。
+	 * These instance portals are "spawn & reversed" to the opposite race. If a player enters a few areas, a portal will appear automatically. These portals
 		 * are only 2 minute ingame before despawn. PS: Please, check "portal/AI2" for these portal.
 		 */
 		SpawnTemplate template;
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("REIAN_REFUGEE_CAMP_210070000")) {
 			switch (player.getRace()) {
-			// Rentus Base
+			// 伦图斯基地 / Rentus Base
 			case ELYOS:
 				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 730399, 1147.6155f, 800.88049f, 563.40173f, (byte) 0);
 				template.setEntityId(885);
 				autoPortals.put(730399, SpawnEngine.spawnObject(template, 1));
 				break;
-			// Occupied Rentus Base
+			// 被占领的伦图斯基地 / Occupied Rentus Base
 			case ASMODIANS:
 				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832992, 1147.6155f, 800.88049f, 563.40173f, (byte) 0);
 				template.setEntityId(885);
@@ -311,13 +252,13 @@ public class PlayerController extends CreatureController<Player> {
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("RENTUS_RECOVERY_BASE_220080000")) {
 			switch (player.getRace()) {
-			// Occupied Rentus Base
+			// 被占领的伦图斯基地 / Occupied Rentus Base
 			case ELYOS:
 				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832991, 1973.3156f, 2017.3612f, 329.13571f, (byte) 0);
 				template.setEntityId(900);
 				autoPortals.put(832991, SpawnEngine.spawnObject(template, 1));
 				break;
-			// Rentus Base
+			// 伦图斯基地 / Rentus Base
 			case ASMODIANS:
 				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 730399, 1973.3156f, 2017.3612f, 329.13571f, (byte) 0);
 				template.setEntityId(900);
@@ -329,17 +270,17 @@ public class PlayerController extends CreatureController<Player> {
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("RUINHOLD_SCATTERINGS_210070000")) {
 			switch (player.getRace()) {
 			case ELYOS:
-				// Tiamat Stronghold
+				// 提亚马特要塞 / Tiamat Stronghold
 				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832995, 93.335602f, 1474.6055f, 491.90103f, (byte) 0);
 				template.setEntityId(306);
 				autoPortals.put(832995, SpawnEngine.spawnObject(template, 1));
-				// Dragon Lord Refuge
+				// 龙主避难所 / Dragon Lord Refuge
 				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832998, 103.8532f, 1461.7725f, 494.52884f, (byte) 0);
 				template.setEntityId(865);
 				autoPortals.put(832998, SpawnEngine.spawnObject(template, 1));
 				break;
 			case ASMODIANS:
-				// [Anguished] Dragon Lord Refuge
+				// 【痛苦】龙主避难所 / [Anguished] Dragon Lord Refuge
 				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 832997, 103.8532f, 1461.7725f, 494.52884f, (byte) 0);
 				template.setEntityId(865);
 				autoPortals.put(832997, SpawnEngine.spawnObject(template, 1));
@@ -350,17 +291,17 @@ public class PlayerController extends CreatureController<Player> {
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DRAGONFALLS_GLARE_220080000")) {
 			switch (player.getRace()) {
 			case ELYOS:
-				// [Anguished] Dragon Lord Refuge
+				// 【痛苦】龙主避难所 / [Anguished] Dragon Lord Refuge
 				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832997, 2862.9939f, 1679.4772f, 308.87949f, (byte) 0);
 				template.setEntityId(422);
 				autoPortals.put(832997, SpawnEngine.spawnObject(template, 1));
 				break;
 			case ASMODIANS:
-				// Tiamat Stronghold
+				// 提亚马特要塞 / Tiamat Stronghold
 				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832996, 2845.8596f, 1659.2727f, 302.67017f, (byte) 0);
 				template.setEntityId(364);
 				autoPortals.put(832996, SpawnEngine.spawnObject(template, 1));
-				// Dragon Lord Refuge
+				// 龙主避难所 / Dragon Lord Refuge
 				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 832998, 2862.9939f, 1679.4772f, 308.87949f, (byte) 0);
 				template.setEntityId(422);
 				autoPortals.put(832998, SpawnEngine.spawnObject(template, 1));
@@ -370,13 +311,13 @@ public class PlayerController extends CreatureController<Player> {
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DANUAR_SANCTUARY_INSPECTOR_210070000")) {
 			switch (player.getRace()) {
-			// Danuar Sanctuary
+			// 达努阿尔圣所 / Danuar Sanctuary
 			case ELYOS:
 				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 731570, 2097.4739f, 2276.1729f, 294.90442f, (byte) 0);
 				template.setEntityId(888);
 				autoPortals.put(731570, SpawnEngine.spawnObject(template, 1));
 				break;
-			// [Seized] Danuar Sanctuary
+			// 【被占领】达努阿尔圣所 / [Seized] Danuar Sanctuary
 			case ASMODIANS:
 				template = SpawnEngine.addNewSingleTimeSpawn(210070000, 731549, 2097.4739f, 2276.1729f, 294.90442f, (byte) 0);
 				template.setEntityId(888);
@@ -387,13 +328,13 @@ public class PlayerController extends CreatureController<Player> {
 			}
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DANUAR_SANCTUARY_INVESTIGATION_AREA_220080000")) {
 			switch (player.getRace()) {
-			// [Seized] Danuar Sanctuary
+			// 【被占领】达努阿尔圣所 / [Seized] Danuar Sanctuary
 			case ELYOS:
 				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 731549, 1667.7465f, 562.70654f, 258.88382f, (byte) 0);
 				template.setEntityId(407);
 				autoPortals.put(731549, SpawnEngine.spawnObject(template, 1));
 				break;
-			// Danuar Sanctuary
+			// 达努阿尔圣所 / Danuar Sanctuary
 			case ASMODIANS:
 				template = SpawnEngine.addNewSingleTimeSpawn(220080000, 731570, 1667.7465f, 562.70654f, 258.88382f, (byte) 0);
 				template.setEntityId(407);
@@ -403,27 +344,27 @@ public class PlayerController extends CreatureController<Player> {
 				break;
 			}
 		}
-		/**
-		 * For Protect City. If a opposite race player enter on these zone ==> return to
-		 * "Bind Location"
+	/**
+		 * 保护城市：敌对种族玩家进入这些区域时送回绑定点。
+	 * For Protect City: if an opposite-race player enters these zones, return to "Bind Location"
 		 */
 		if (player.getAccessLevel() == 0) {
 			if (
-			// Morheim
+			// 莫尔海姆 / Morheim
 			zone.getAreaTemplate().getZoneName() == ZoneName.get("MORHEIM_SNOW_FIELD_220020000") ||
-			// Beluslan
+			// 贝卢斯兰 / Beluslan
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("KURNGALFBERG_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("RED_MANE_CAVERN_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("BELUSLAN_FORTRESS_220040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("HOARFROST_SHELTER_220040000") ||
-					// Brusthonin
+					// 布鲁斯特霍宁 / Brusthonin
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("POLLUTED_WASTE_220050000") ||
-					// Enshar
+					// 恩沙尔 / Enshar
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("DAWNBREAK_TEMPLE_220080000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("WHIRLPOOL_TEMPLE_220080000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("DRAGONREST_TEMPLE_220080000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("FATEBOUND_LEGION_OUTPOST_220080000") ||
-					// Norsvold
+					// 诺斯沃尔德 / Norsvold
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("AZPHEL_SANCTUARY_220110000")) {
 				switch (player.getRace()) {
 				case ELYOS:
@@ -433,26 +374,26 @@ public class PlayerController extends CreatureController<Player> {
 					break;
 				}
 			} else if (
-			// Eltnen
+			// 艾特南 / Eltnen
 			zone.getAreaTemplate().getZoneName() == ZoneName.get("MANDURI_FOREST_210020000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("GOLDEN_BOUGH_GARRISON_210020000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("MYSTIC_SPRING_OF_AGAIRON_210020000") ||
-					// Heiron
+					// 海隆 / Heiron
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("HEIRONOPOLIS_210040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("PATEMA_RUINS_210040000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("ARBOLUS_HAVEN_210040000") ||
-					// Theobomos
+					// 西奥波莫斯 / Theobomos
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("PORT_ANANGKE_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("JOSNACKS_VIGIL_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("CRIMSON_BARRENS_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("OBSERVATORY_VILLAGE_210060000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("SOUTHERN_LATHERON_COAST_210060000") ||
-					// Cygnea
+					// 西格尼亚 / Cygnea
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_OUTPOST_210070000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_HEADQUARTERS_210070000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_ADVANCE_POST_210070000")
 					|| zone.getAreaTemplate().getZoneName() == ZoneName.get("AEQUIS_DETACHMENT_POST_210070000") ||
-					// Iluma
+					// 伊卢玛 / Iluma
 					zone.getAreaTemplate().getZoneName() == ZoneName.get("ARIEL_SANCTUARY_210100000")) {
 				switch (player.getRace()) {
 				case ASMODIANS:
@@ -465,13 +406,19 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 玩家离开区域时回调。
+	 * Callback when the player leaves a zone.
+	 *
+	 * @param zone 离开的区域 / left zone
+	 */
 	@Override
 	public void onLeaveZone(ZoneInstance zone) {
 		Player player = getOwner();
 		InstanceService.onLeaveZone(player, zone);
 		ZoneName zoneName = zone.getAreaTemplate().getZoneName();
 		if (zoneName == null) {
-			log.warn("No name for zone template in " + zone.getAreaTemplate().getWorldId());
+			log.warn(I18n.get("log.cdc4102324ff", zone.getAreaTemplate().getWorldId()));
 			return;
 		}
 		GameEngineServices.questEngine().onLeaveZone(new QuestEnv(null, player, 0, 0), zoneName);
@@ -480,7 +427,11 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * {@inheritDoc} Should only be triggered from one place (life stats)
 	 */
-	// TODO [AT] move
+	/**
+	 * 玩家进入世界时的处理。
+	 * Processing when the player enters the world.
+	 *
+	 */
 	public void onEnterWorld() {
 		InstanceService.onEnterInstance(getOwner());
 		TeleportService2.playerTransformation(getOwner());
@@ -491,7 +442,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		for (Effect ef : getOwner().getEffectController().getAbnormalEffects()) {
 			if (ef.isDeityAvatar()) {
-				// Remove abyss transformation if worldtype != "Abyss" && worldtype != "Balaurea" && worldtype != "Panesterra"
+				// 若世界类型非欧比斯/巴劳雷亚/帕内斯特拉则移除欧比斯变身。 / Remove abyss transformation if worldtype != "Abyss" && worldtype != "Balaurea" && worldtype != "Panesterra"
 				if (getOwner().getWorldType() != WorldType.ABYSS && getOwner().getWorldType() != WorldType.BALAUREA && getOwner().getWorldType() != WorldType.PANESTERRA || getOwner().isInInstance()) {
 					ef.endEffect();
 					getOwner().getEffectController().clearEffect(ef);
@@ -503,12 +454,21 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
-	// TODO [AT] move
+	/**
+	 * 玩家离开世界时的处理。
+	 * Processing when the player leaves the world.
+	 *
+	 */
 	public void onLeaveWorld() {
 		GameFeatureServices.protectorConquerorService().onLeaveMap(getOwner());
 		InstanceService.onLeaveInstance(getOwner());
 	}
 
+	/**
+	 * 校验登录落点区域是否合法。
+	 * Validates whether the login zone position is legal.
+	 *
+	 */
 	public void validateLoginZone() {
 		int mapId;
 		float x, y, z;
@@ -548,6 +508,13 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 玩家死亡完整处理（可选是否显示死亡包）。
+	 * Full player death handling (optionally showing the die packet).
+	 *
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * @param showPacket 是否显示死亡包 / whether to show the die packet
+	 */
 	public void onDie(Creature lastAttacker, boolean showPacket) {
 		Player player = this.getOwner();
 		player.getController().cancelCurrentSkill();
@@ -600,25 +567,25 @@ public class PlayerController extends CreatureController<Player> {
 			return;
 		}
 
-		/**
-		 * Release Summon
-		 */
+	/**
+	 * 释放召唤物 / Release Summon
+	 */
 		Summon summon = player.getSummon();
 		if (summon != null) {
 			SummonsService.doMode(SummonMode.RELEASE, summon, UnsummonType.UNSPECIFIED);
 		}
 
-		/**
-		 * Release Pet
-		 */
+	/**
+	 * 释放宠物 / Release Pet
+	 */
 		Pet pet = player.getPet();
 		if (pet != null) {
 			PetSpawnService.dismissPet(player, true);
 		}
 
-		/**
-		 * Release Minion
-		 */
+	/**
+	 * 释放守护灵 / Release Minion
+	 */
 		Minion minion = player.getMinion();
 		if (minion != null) {
 			GameEventBootstrapServices.minionService().despawnMinion(player, minion.getObjectId());
@@ -628,12 +595,12 @@ public class PlayerController extends CreatureController<Player> {
 			player.setIsFlyingBeforeDeath(true);
 		}
 
-		// ride
+		// 骑乘 / ride
 		player.setPlayerMode(PlayerMode.RIDE, null);
 		player.unsetState(CreatureState.RESTING);
 		player.unsetState(CreatureState.FLOATING_CORPSE);
 
-		// unsetflying
+		// 取消飞行 / unsetflying
 		player.unsetState(CreatureState.FLYING);
 		player.unsetState(CreatureState.GLIDING);
 		player.setFlyState(0);
@@ -662,11 +629,22 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 玩家死亡（默认显示死亡包）。
+	 * Player death (shows the die packet by default).
+	 *
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 */
 	@Override
 	public void onDie(Creature lastAttacker) {
 		this.onDie(lastAttacker, true);
 	}
 
+	/**
+	 * 向客户端发送死亡相关包。
+	 * Sends death-related packets to the client.
+	 *
+	 */
 	public void sendDie() {
 		sendDieFromCreature(getOwner(), true);
 	}
@@ -693,16 +671,32 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 处理玩家击杀奖励。
+	 * Handles player kill rewards.
+	 *
+	 */
 	@Override
 	public void doReward() {
 		GameCoreGameplayServices.pvpService().doReward(getOwner());
 	}
 
+	/**
+	 * 生成前处理。
+	 * Processing before spawn.
+	 *
+	 */
 	@Override
 	public void onBeforeSpawn() {
 		this.onBeforeSpawn(true);
 	}
 
+	/**
+	 * 生成前处理，可选闪烁保护。
+	 * Processing before spawn with optional blink protection.
+	 *
+	 * @param blink 是否启用闪烁保护 / whether blink protection is enabled
+	 */
 	public void onBeforeSpawn(boolean blink) {
 		super.onBeforeSpawn();
 		if (blink) {
@@ -716,6 +710,13 @@ public class PlayerController extends CreatureController<Player> {
 		getOwner().setState(CreatureState.ACTIVE);
 	}
 
+	/**
+	 * 玩家攻击目标。
+	 * Player attacks a target.
+	 *
+	 * attack target
+	 * @param time 攻击时间参数 / attack timing parameter
+	 */
 	@Override
 	public void attackTarget(Creature target, int time) {
 
@@ -739,19 +740,30 @@ public class PlayerController extends CreatureController<Player> {
 		int attackSpeed = gameStats.getAttackSpeed().getCurrent();
 
 		long milis = System.currentTimeMillis();
-		// network ping..
+		// 网络 ping…… / network ping..
 		if (milis - lastAttackMilis + 300 < attackSpeed) {
-			// hack
+			// 漏洞利用 / hack
 			return;
 		}
 		lastAttackMilis = milis;
 
-		/**
-		 * notify attack observers
-		 */
+	/**
+	 * 通知攻击观察者 / notify attack observers
+	 */
 		super.attackTarget(target, time);
 	}
 
+	/**
+	 * 玩家受到攻击时的处理。
+	 * Handles the player being attacked.
+	 *
+	 * attacker
+	 * skill id
+	 * @param type 伤害类型 / damage type
+	 * damage
+	 * @param notifyAttack 是否通知攻击 / whether to notify attack
+	 * @param log 日志类型 / log type
+	 */
 	@Override
 	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log) {
 		if (getOwner().getLifeStats().isAlreadyDead())
@@ -770,11 +782,15 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * @param skillId
-	 * @param targetType
-	 * @param x
-	 * @param y
-	 * @param z
+	 * 使用技能（客户端坐标与时间）。
+	 * Uses a skill with client coordinates and timing.
+	 *
+	 * skill id
+	 * target type
+	 * @param x X 坐标 / x coordinate
+	 * @param y Y 坐标 / y coordinate
+	 * @param z Z 坐标 / z coordinate
+	 * @param time 时间参数 / time parameter
 	 */
 	public void useSkill(int skillId, int targetType, float x, float y, float z, int time) {
 		Player player = getOwner();
@@ -792,12 +808,16 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * @param template
-	 * @param targetType
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param clientHitTime
+	 * 使用技能模板施放技能。
+	 * Casts a skill from a skill template.
+	 *
+	 * skill template
+	 * target type
+	 * @param x X 坐标 / x coordinate
+	 * @param y Y 坐标 / y coordinate
+	 * @param z Z 坐标 / z coordinate
+	 * @param clientHitTime 客户端命中时间 / client hit time
+	 * skill level
 	 */
 	public void useSkill(SkillTemplate template, int targetType, float x, float y, float z, int clientHitTime, int skillLevel) {
 		Player player = getOwner();
@@ -822,12 +842,22 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 玩家移动过程中回调。
+	 * Callback while the player is moving.
+	 *
+	 */
 	@Override
 	public void onMove() {
 		getOwner().getObserveController().notifyMoveObservers();
 		super.onMove();
 	}
 
+	/**
+	 * 玩家停止移动时回调。
+	 * Callback when the player stops moving.
+	 *
+	 */
 	@Override
 	public void onStopMove() {
 		GameMovementLoopServices.playerMoveTaskManager().removePlayer(getOwner());
@@ -838,6 +868,11 @@ public class PlayerController extends CreatureController<Player> {
 		super.onStopMove();
 	}
 
+	/**
+	 * 玩家开始移动时回调。
+	 * Callback when the player starts moving.
+	 *
+	 */
 	@Override
 	public void onStartMove() {
 		getOwner().getMoveController().setInMove(true);
@@ -847,6 +882,11 @@ public class PlayerController extends CreatureController<Player> {
 		super.onStartMove();
 	}
 
+	/**
+	 * 取消当前技能。
+	 * Cancels the current skill.
+	 *
+	 */
 	@Override
 	public void cancelCurrentSkill() {
 		if (getOwner().getCastingSkill() == null) {
@@ -869,6 +909,11 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 取消物品使用。
+	 * Cancels item use.
+	 *
+	 */
 	@Override
 	public void cancelUseItem() {
 		Player player = getOwner();
@@ -880,6 +925,11 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 取消采集。
+	 * Cancels gathering.
+	 *
+	 */
 	public void cancelGathering() {
 		Player player = getOwner();
 		if (player.getTarget() instanceof Gatherable) {
@@ -888,6 +938,11 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 更新被动属性。
+	 * Updates passive stats.
+	 *
+	 */
 	public void updatePassiveStats() {
 		Player player = getOwner();
 		for (PlayerSkillEntry skillEntry : player.getSkillList().getAllSkills()) {
@@ -898,11 +953,24 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 获取所有者玩家。
+	 * Gets the owner player.
+	 *
+	 * @return 所有者玩家 / owner player / 所有者玩家 / owner player
+	 */
 	@Override
 	public Player getOwner() {
 		return (Player) super.getOwner();
 	}
 
+	/**
+	 * 恢复玩家属性。
+	 * Restores player stats.
+	 *
+	 * heal type
+	 * @param value 恢复数值 / restore value
+	 */
 	@Override
 	public void onRestore(HealType healType, int value) {
 		super.onRestore(healType, value);
@@ -919,23 +987,50 @@ public class PlayerController extends CreatureController<Player> {
 	 * @param player
 	 * @return
 	 */
-	// TODO [AT] move to Player
+	/**
+	 * 是否正在与指定玩家决斗。
+	 * Whether currently dueling the given player.
+	 *
+	 * opponent player
+	 *
+	 * @param player @return 决斗中则为 true / true if dueling / 决斗中则为 true / true if dueling
+	 */
 	public boolean isDueling(Player player) {
 		return GameGameplayServices.duelService().isDueling(player.getObjectId(), getOwner().getObjectId());
 	}
 
-	// TODO [AT] rename or remove
+	/**
+	 * 服务器是否处于关闭流程中。
+	 * Whether the server is in shutdown progress.
+	 *
+	 * @return 关闭中则为 true / true if shutting down / 关闭中则为 true / true if shutting down
+	 */
 	public boolean isInShutdownProgress() {
 		return isInShutdownProgress;
 	}
 
-	// TODO [AT] rename or remove
+	/**
+	 * 设置关闭流程标志。
+	 * Sets the shutdown-progress flag.
+	 *
+	 * @param isInShutdownProgress 是否关闭中 / whether shutting down
+	 */
 	public void setInShutdownProgress(boolean isInShutdownProgress) {
 		this.isInShutdownProgress = isInShutdownProgress;
 	}
 
+	/**
+	 * 处理对话选项选择。
+	 * Handles dialog option selection.
+	 *
+	 * dialog id
+	 * 玩家 / player
+	 * quest id
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @param unk 未知参数 / unknown parameter
+	 */
 	@Override
-	public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex, int unk) {// TODO unk need to be figure out
+	public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex) {
 		switch (dialogId) {
 		case 2:
 			PacketSendUtility.sendPacket(player, new SM_PRIVATE_STORE(getOwner().getStore(), player));
@@ -943,6 +1038,11 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 提升/刷新玩家属性与状态。
+	 * Upgrades/refreshes player stats and state.
+	 *
+	 */
 	public void upgradePlayer() {
 		Player player = getOwner();
 		byte level = player.getLevel();
@@ -962,42 +1062,42 @@ public class PlayerController extends CreatureController<Player> {
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 		if (level == 10) {
 			GameCraftServices.craftSkillUpdateService().setMorphRecipe(player);
-			// You reached the level where you can join a legion.
-			// Use the legion search to find the legion you want.
+			// 你已达到可加入军团的等级。 / You reached the level where you can join a legion.
+			// 使用军团搜索查找你想要的军团。 / Use the legion search to find the legion you want.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GUILD_CAN_JOIN_LEVEL);
 		}
-		// Stigma 5.1
-		// Characters will receive "Chargeable Stigma" bundles based on their class and level.
+		// 烙印之石 5.1 / Stigma 5.1
+		// 角色将按职业与等级获得“可充能烙印之石”礼包。 / Characters will receive "Chargeable Stigma" bundles based on their class and level.
 		// http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_110916.pdf
 		if (level == 20) {
-			ItemService.addItem(player, 188053787, 1); // Stigma Support Bundle.
-			// An additional normal Stigma slot is now available.
+			ItemService.addItem(player, 188053787, 1); // 烙印之石支援包。 / Stigma Support Bundle.
+			// 额外普通烙印之石槽位现已可用。 / An additional normal Stigma slot is now available.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_NORMAL_SLOT);
 		}
 		if (level == 30) {
-			ItemService.addItem(player, 188053787, 2); // Stigma Support Bundle.
+			ItemService.addItem(player, 188053787, 2); // 烙印之石支援包。 / Stigma Support Bundle.
 		}
 		if (level == 40) {
-			ItemService.addItem(player, 188053787, 3); // Stigma Support Bundle.
+			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
 		}
 		if (level == 45) {
-			ItemService.addItem(player, 188053787, 3); // Stigma Support Bundle.
+			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
 			ItemService.addItem(player, 188053785, 1); // Greater Stigma Bundle.
-			// An additional Greater Stigma slot is now available.
+			// 额外高级烙印之石槽位现已可用。 / An additional Greater Stigma slot is now available.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_ENHANCED1_SLOT);
 		}
 		if (level == 50) {
-			ItemService.addItem(player, 188053787, 3); // Stigma Support Bundle.
+			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
 			ItemService.addItem(player, 188053785, 2); // Greater Stigma Bundle.
 		}
 		if (level == 55) {
-			ItemService.addItem(player, 188053787, 3); // Stigma Support Bundle.
+			ItemService.addItem(player, 188053787, 3); // 烙印之石支援包。 / Stigma Support Bundle.
 			ItemService.addItem(player, 188053785, 2); // Greater Stigma Bundle.
 			ItemService.addItem(player, 188053786, 1); // Major Stigma Bundle.
-			// An additional Major Stigma slot is now available.
+			// 额外大型烙印之石槽位现已可用。 / An additional Major Stigma slot is now available.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_OPEN_ENHANCED2_SLOT);
 		}
-		// Essence Cores 5.3
+		// 精华核心 5.3 / Essence Cores 5.3
 		if (level == 66) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CPSTONE_OPEN_SLOT);
 		}
@@ -1016,16 +1116,14 @@ public class PlayerController extends CreatureController<Player> {
 			GameCoreGameplayServices.legionService().updateMemberInfo(player);
 		}
 
-		/**
-		 * http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_061715.pdf
-		 * Mentor status now cancels automatically as soon as the lowest level group
-		 * member reaches level 51
-		 */
+	/**
+	 * 导师状态会在满足条件时自动取消。 / http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_061715.pdf Mentor status now cancels automatically as soon as the lowest level group member reaches level 51
+	 */
 		if (level == 51) {
 			PlayerGroupService.stopMentoring(player);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_BE_MENTEE_BY_LEVEL_LIMIT);
 		}
-		if (level == 66) { // TODO This is temporary solution, player need to complete quests to become highdeava, i guess
+		if (level == 66) { // Level 66 is already gated by the ArchDaeva mission in PlayerCommonData.setExp().
 			player.getCommonData().setArchDaeva(true);
 		}
 		if (level >= 66 && level <= 83) {
@@ -1035,11 +1133,17 @@ public class PlayerController extends CreatureController<Player> {
 		GameCreativityServices.creativityEssenceService().pointPerLevel(player);
 	}
 
+	/**
+	 * 玩家升级到达某等级时的广播/处理。
+	 * Broadcasts/handles when a player reaches a level.
+	 *
+	 * leveling player
+	 */
 	public static final void reachedPlayerLvl(final Player player) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player players) {
-				// "Player Name" has reached level %1.
+				// “玩家名”已达到 %1 级。 / "Player Name" has reached level %1.
 				byte playerLevel = player.getLevel();
 				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1300086, player.getName(), playerLevel));
 			}
@@ -1047,9 +1151,9 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * After entering game player char is "blinking" which means that it's in under
-	 * some protection, after making an action char stops blinking. - Starts
-	 * protection active - Schedules task to end protection
+	 * 启动出生/传送保护任务。
+	 * Starts spawn/teleport protection task.
+	 *
 	 */
 	public void startProtectionActiveTask() {
 		if (!getOwner().isProtectionActive()) {
@@ -1071,7 +1175,9 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * Stops protection active task after first move or use skill
+	 * 停止保护任务。
+	 * Stops the protection task.
+	 *
 	 */
 	public void stopProtectionActiveTask() {
 		cancelTask(TaskId.PROTECTION_ACTIVE);
@@ -1084,7 +1190,9 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * When player arrives at destination point of flying teleport
+	 * 飞行传送结束时的处理。
+	 * Processing when fly teleport ends.
+	 *
 	 */
 	public void onFlyTeleportEnd() {
 		Player player = getOwner();
@@ -1110,15 +1218,10 @@ public class PlayerController extends CreatureController<Player> {
 				if (diff < path.getTimeInMs()) {
 					AuditLogger.info(player, "Player " + player.getName() + " used flypath bug " + diff + " instead of " + path.getTimeInMs());
 				}
-				//FIX no anime for fly pass that is changed in client:D
+				// 修复：客户端已改动的飞行通行证无动画 / FIX no anime for fly pass that is changed in client:D
 				if (diff < 5000) { // to check x_flipath file in client
 					AuditLogger.info(player, "Flypath: " + path.getId() + " bug, time: " + (diff / 1000) + " Fly teleport less than 5 sec; Kick-");
 					player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
-
-					/*
-					 * todo if works teleport player to start_* xyz, or even ban
-					 */
-
 				}
 				
 				player.setCurrentFlypath(null);
@@ -1130,28 +1233,66 @@ public class PlayerController extends CreatureController<Player> {
 		}
 	}
 
+	/**
+	 * 向玩家背包添加物品。
+	 * Adds items to the player inventory.
+	 *
+	 * item id
+	 * count
+	 *
+	 * @return whether successful / 是否成功 / whether successful。 / whether successful / 是否成功 / whether successful
+	 */
 	public boolean addItems(int itemId, int count) {
 		return ItemService.addQuestItems(getOwner(), Collections.singletonList(new QuestItems(itemId, count)));
 	}
 
+	/**
+	 * 开始姿态技能。
+	 * Starts a stance skill.
+	 *
+	 * stance skill id
+	 */
 	public void startStance(final int skillId) {
 		stance = skillId;
 	}
 
+	/**
+	 * 停止当前姿态。
+	 * Stops the current stance.
+	 *
+	 */
 	public void stopStance() {
 		getOwner().getEffectController().removeEffect(stance);
 		PacketSendUtility.sendPacket(getOwner(), new SM_PLAYER_STANCE(getOwner(), 0));
 		stance = 0;
 	}
 
+	/**
+	 * 获取当前姿态技能 ID。
+	 * Gets the current stance skill id.
+	 *
+	 * @return stance skill id / 姿态技能 ID / stance skill id。 / stance skill id / 姿态技能 ID / stance skill id
+	 */
 	public int getStanceSkillId() {
 		return stance;
 	}
 
+	/**
+	 * 是否处于姿态中。
+	 * Whether currently under stance.
+	 *
+	 * @return 处于姿态则为 true / true if under stance / 处于姿态则为 true / true if under stance
+	 */
 	public boolean isUnderStance() {
 		return stance != 0;
 	}
 
+	/**
+	 * 更新灵魂疾病效果。
+	 * Updates soul sickness effect.
+	 *
+	 * skill id
+	 */
 	public void updateSoulSickness(int skillId) {
 		Player player = getOwner();
 		House house = player.getActiveHouse();
@@ -1179,15 +1320,21 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * Player is considered in combat if he's been attacked or has attacked less or
-	 * equal 10s before
-	 * 
-	 * @return true if the player is actively in combat
+	 * 是否处于战斗状态。
+	 * Whether currently in combat.
+	 *
+	 * @return 战斗中则为 true / true if in combat / true if the player is actively in combat
 	 */
 	public boolean isInCombat() {
 		return (((System.currentTimeMillis() - lastAttackedMilis) <= 10000) || ((System.currentTimeMillis() - lastAttackMilis) <= 10000));
 	}
 
+	/**
+	 * 是否有无死亡惩罚效果。
+	 * Whether a no-death-penalty effect is active.
+	 *
+	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 */
 	public boolean isNoDeathPenaltyInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
@@ -1199,6 +1346,12 @@ public class PlayerController extends CreatureController<Player> {
 		return false;
 	}
 
+	/**
+	 * 是否有无死亡惩罚减免效果。
+	 * Whether a no-death-penalty-reduce effect is active.
+	 *
+	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 */
 	public boolean isNoDeathPenaltyReduceInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
@@ -1210,6 +1363,12 @@ public class PlayerController extends CreatureController<Player> {
 		return false;
 	}
 
+	/**
+	 * 是否有死亡惩罚减免效果。
+	 * Whether a death-penalty-reduce effect is active.
+	 *
+	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 */
 	public boolean isDeathPenaltyReduceInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
@@ -1221,6 +1380,12 @@ public class PlayerController extends CreatureController<Player> {
 		return false;
 	}
 
+	/**
+	 * 是否有无复活惩罚效果。
+	 * Whether a no-resurrect-penalty effect is active.
+	 *
+	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 */
 	public boolean isNoResurrectPenaltyInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {
@@ -1232,6 +1397,12 @@ public class PlayerController extends CreatureController<Player> {
 		return false;
 	}
 
+	/**
+	 * 是否有 HiPass 效果。
+	 * Whether a HiPass effect is active.
+	 *
+	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 */
 	public boolean isHiPassInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
 		while (iterator.hasNext()) {

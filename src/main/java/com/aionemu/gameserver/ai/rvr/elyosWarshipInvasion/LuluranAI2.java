@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr.elyosWarshipInvasion;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Luluran（@AIName "luluran"），继承 AggressiveNpcAI2。
+ * RvR-related NPC AI: Luluran (@AIName "luluran"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("luluran")
 public class LuluranAI2 extends AggressiveNpcAI2
 {
@@ -51,7 +37,7 @@ public class LuluranAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Elyos Frigate Commander has arrived.
+				// 天族护卫舰指挥官已抵达。 / The Elyos Frigate Commander has arrived.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DF6_G1_Boss_Spawn_01);
 			}
 		});

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -38,6 +22,8 @@ import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_IMMOBILIZE;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -46,6 +32,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
 
 /**
+ * 恐惧效果：强制目标逃跑/失控，可按抗性与抵抗几率被打断。
+ * Fear effect: forces the target to flee/lose control; may break by resist chance.
+ *
  * @author Sarynth
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -59,17 +48,33 @@ public class FearEffect extends EffectTemplate {
 		resistchance = 100;
 	}
 
+	/**
+	 * 移除隐身类效果后将恐惧加入目标控制器。
+	 * Removes hide effects then attaches fear to the controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
-		effect.getEffected().getEffectController().removeHideEffects();
+		Creature effected = effect.getEffected();
+		effected.getEffectController().removeHideEffects();
+		if (effected instanceof Player && effected.isInState(CreatureState.GLIDING)) {
+			((Player) effected).getFlyController().onStopGliding(true);
+		}
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 按恐惧抗性计算是否生效。
+	 * Calculates success against fear resistance.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.FEAR_RESISTANCE, null);
 	}
 
+	/**
+	 * 启动恐惧：设置异常、AI 逃跑与抗性观察者。
+	 * Starts fear: sets abnormal, flee AI, and resist observers.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		final Creature effector = effect.getEffector();
@@ -88,9 +93,9 @@ public class FearEffect extends EffectTemplate {
 			effect.setPeriodicTask(fearTask, position);
 		}
 
-		// resistchance of fear effect to damage, if value is lower than 100, fear can
-		// be interrupted bz damage
-		// example skillId: 540 Terrible howl
+		// 恐惧效果对伤害的抵抗几率；若值低于 100，恐惧可 / resistchance of fear effect to damage, if value is lower than 100, fear can
+		// 可被伤害打断 / be interrupted bz damage
+		// 示例 skillId: 540 恐怖嚎叫 / example skillId: 540 Terrible howl
 		if (resistchance < 100) {
 			ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
 
@@ -106,13 +111,17 @@ public class FearEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 结束恐惧：恢复 AI 与异常状态。
+	 * Ends fear: restores AI and clears the abnormal state.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.getEffected().getEffectController().unsetAbnormal(AbnormalState.FEAR.getId());
 
-		// for now we support only players
+		// 目前仅支持玩家 / for now we support only players
 		if (GeoDataConfig.FEAR_ENABLE) {
-			effect.getEffected().getMoveController().abortMove();// TODO impl stopMoving?
+			effect.getEffected().getMoveController().abortMove();
 		}
 		if (effect.getEffected() instanceof Npc) {
 			((NpcAI2) effect.getEffected().getAi2()).onCreatureEvent(AIEventType.ATTACK, effect.getEffector());

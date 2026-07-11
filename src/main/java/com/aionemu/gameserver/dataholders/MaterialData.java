@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -34,9 +18,11 @@ import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 
 /**
+ * 材质模板数据容器，按材质 ID 索引并缓存相关技能 ID。
+ * Material template data holder, indexing by material id and caching related skill ids.
+ *
  * @author Rolandas
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "materialTemplates" })
 @XmlRootElement(name = "material_templates")
@@ -51,6 +37,10 @@ public class MaterialData {
 	@XmlTransient
 	Set<Integer> skillIds = new HashSet<Integer>();
 
+	/**
+	 * JAXB 反序列化完成后，按材质 ID 索引并收集技能 ID，随后释放列表。
+	 * After JAXB unmarshalling, indexes by material id, collects skill ids, then clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (materialTemplates == null)
 			return;
@@ -68,14 +58,36 @@ public class MaterialData {
 		materialTemplates = null;
 	}
 
+	/**
+	 * 按材质 ID 获取材质模板。
+	 * Returns the material template for the given material id.
+	 *
+	 * material id
+	 *
+	 * @param materialId @return 材质模板或 null / material template or null
+	 */
 	public MaterialTemplate getTemplate(int materialId) {
 		return materialsById.get(materialId);
 	}
 
+	/**
+	 * 判断给定技能 ID 是否为材质技能。
+	 * Returns whether the given skill id is a material skill.
+	 *
+	 * skill id
+	 *
+	 * @param skillId @return 是材质技能则为 true / true if it is a material skill
+	 */
 	public boolean isMaterialSkill(int skillId) {
 		return skillIds.contains(skillId);
 	}
 
+	/**
+	 * 返回已加载的材质模板数量。
+	 * Returns the number of loaded material templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return materialsById.size();
 	}

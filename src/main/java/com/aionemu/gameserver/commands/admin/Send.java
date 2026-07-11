@@ -1,21 +1,6 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -36,17 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This admin command is used for sending custom packets from server to client.
- * <p/>
- * Sends packets based on xml mappings in folder "./data/packets".<br />
- * Command details: "//send [1]<br />
- * * 1 - packet mappings name.<br />
- * * - 'demo' for file './data/packets/demo.xml'<br />
- * * - 'test' for file './data/packets/test.xml'<br />
- * * Reciever is a targetted by admin player. If target is 'null' or not a Player - sends to admin.<br />
- * <p/>
- * Created on: 14.07.2009 13:54:46
- * 
+ * 自定义数据包发送指令；按 {@code ./data/packets} 下 XML 映射向目标客户端下发包序列。
+ * Admin command that sends sequenced custom packets defined by XML mappings under {@code ./data/packets}.
+ *
  * @author Aquanox
  */
 @Slf4j
@@ -54,7 +31,7 @@ public class Send extends AdminCommand {
 
 	public Send() {
 		super("send");
-		// init unmrshaller once.
+		// 初始化反编组器一次。 / init unmrshaller once.
 		try {
 			unmarshaller = JAXBContext.newInstance(Packets.class, Packet.class, Part.class).createUnmarshaller();
 		}
@@ -68,6 +45,13 @@ public class Send extends AdminCommand {
 
 	private Unmarshaller unmarshaller;
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length != 1) {
@@ -94,7 +78,7 @@ public class Send extends AdminCommand {
 			packetsTemplate = (Packets) unmarshaller.unmarshal(packetsData);
 		}
 		catch (JAXBException e) {
-			log.error("Unmarshalling error", e);
+			log.error(I18n.get("log.79e5f0e82fd8", e));
 			return;
 		}
 
@@ -272,8 +256,4 @@ public class Send extends AdminCommand {
 		}
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

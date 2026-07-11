@@ -1,22 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.house;
 
+/**
+ * 房屋 Permissions 枚举。
+ * House Permissions enumeration.
+ */
+
 public enum HousePermissions {
+	/** 非设置 / Not Set*/
 	NOT_SET(0), SHOW_OWNER(1 << 0), DOOR_OPENED_ALL(1 << 8), DOOR_OPENED_FRIENDS(2 << 8), DOOR_CLOSED(3 << 8);
 
 	private int value;
@@ -25,6 +15,7 @@ public enum HousePermissions {
 		this.value = value;
 	}
 
+	/** 获取数据包值。 / Returns the packet value. */
 	public byte getPacketValue() {
 		int result = value;
 		if (value > 1) {
@@ -33,10 +24,12 @@ public enum HousePermissions {
 		return (byte) result;
 	}
 
+	/** 是否门打开 / Whether door open*/
 	public boolean isDoorOpen() {
 		return this == DOOR_OPENED_ALL || this == DOOR_OPENED_FRIENDS;
 	}
 
+	/** 返回数据包门状态 / Returns the packet door state*/
 	public static HousePermissions getPacketDoorState(int value) {
 		value <<= 8;
 		for (HousePermissions perm : HousePermissions.values()) {
@@ -47,6 +40,7 @@ public enum HousePermissions {
 		return NOT_SET;
 	}
 
+	/** 返回门状态 / Returns the door state*/
 	public static HousePermissions getDoorState(int value) {
 		value &= 0xFF00;
 		for (HousePermissions perm : HousePermissions.values()) {
@@ -57,11 +51,13 @@ public enum HousePermissions {
 		return NOT_SET;
 	}
 
+	/** 设置 door state / Sets the door state */
 	public static int setDoorState(int value, HousePermissions doorState) {
 		int state = doorState.value & 0xFF00;
 		return (value & 0x00FF) | state;
 	}
 
+	/** 返回 notice state / Returns the notice state */
 	public static HousePermissions getNoticeState(int value) {
 		if ((value & SHOW_OWNER.value) == SHOW_OWNER.value) {
 			return SHOW_OWNER;
@@ -69,6 +65,7 @@ public enum HousePermissions {
 		return NOT_SET;
 	}
 
+	/** 设置 notice state / Sets the notice state */
 	public static int setNoticeState(int value, HousePermissions noticeState) {
 		if (noticeState == NOT_SET) {
 			return value & 0xFF00;

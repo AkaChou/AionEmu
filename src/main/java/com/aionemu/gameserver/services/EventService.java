@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -44,6 +29,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
+ * 活动服务，管理限时活动启停及活动任务的发放与维护。
+ * Event service managing timed event start/stop and event quest start/maintain.
+ *
  * @author Rolandas
  */
 @Slf4j
@@ -51,16 +39,22 @@ public class EventService {
 
 	private static volatile ObjectProvider<EventService> instanceProvider;
 
+	/** 活动状态检查周期（毫秒）。 / Event status check period in ms. */
 	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
 
+	/** 服务是否已启动。 / Whether the service is started. */
 	private boolean isStarted = false;
 
+	/** 周期检查任务。 / Periodic check task. */
 	private Future<?> checkTask = null;
 
+	/** 当前活跃活动列表。 / Currently active events. */
 	private List<EventTemplate> activeEvents;
 
+	/** 可开启任务 ID → 活动模板。 / Startable quest id → event templates. */
 	Map<Integer, List<EventTemplate>> eventsForStartQuest = new HashMap<Integer, List<EventTemplate>>();
 
+	/** 可维护任务 ID → 活动模板。 / Maintainable quest id → event templates. */
 	Map<Integer, List<EventTemplate>> eventsForMaintainQuest = new HashMap<Integer, List<EventTemplate>>();
 
 	private static class SingletonHolder {
@@ -68,6 +62,12 @@ public class EventService {
 		protected static final EventService instance = new EventService();
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final EventService getInstance() {
 		ObjectProvider<EventService> provider = instanceProvider;
 		if (provider != null) {
@@ -76,18 +76,32 @@ public class EventService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<EventService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 构造服务并加载当前活跃活动。
+	 * Constructs the service and loads currently active events.
+	 */
 	public EventService() {
 		activeEvents = Collections.synchronizedList(DataManager.EVENT_DATA.getActiveEvents());
 		updateQuestMap();
 	}
 
 	/**
-	 * This method is called just after player logged in to the game.
-	 * This method must not be called from anywhere else.
+	 * 玩家登录后发放/维护活跃活动任务。
+	 * Starts or maintains active event quests after player login.
+	 * 仅应在登录流程中调用。
+	 * Must not be called from anywhere else.
+	 *
+	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
 		List<Integer> activeStartQuests = new ArrayList<Integer>();
@@ -115,6 +129,15 @@ public class EventService {
 		map2.clear();
 	}
 
+	/**
+	 * 按条件为玩家开启或重置/维护活动任务。
+	 * Starts or resets/maintains event quests for the player by conditions.
+	 *
+	 * 玩家 / player
+	 * @param questList 任务 ID 迭代器 / quest id iterator
+	 * @param templateMap 任务 → 活动模板映射 / quest → event template map
+	 * @param start true 表示可新开任务 / true to start new quests
+	 */
 	void StartOrMaintainQuests(Player player, ListIterator<Integer> questList, Map<Integer, List<EventTemplate>> templateMap, boolean start) {
 		while (questList.hasNext()) {
 			int questId = questList.next();
@@ -165,7 +188,7 @@ public class EventService {
 						}
 						if (templateMap.containsKey(questId)) {
 							for (EventTemplate et : templateMap.get(questId)) {
-								// recurring event, reset it
+								// 循环事件，重置它 / recurring event, reset it
 								if (et.getStartDate().isAfter(completed)) {
 									if (start) {
 										status = QuestStatus.START;
@@ -178,7 +201,7 @@ public class EventService {
 							}
 						}
 					}
-					// re-register quests
+					// 重新登记任务 / re-register quests
 					if (status == QuestStatus.COMPLETE) {
 						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, status, qs.getQuestVars().getQuestVars()));
 					} else {
@@ -191,10 +214,20 @@ public class EventService {
 		}
 	}
 
+	/**
+	 * 判断活动检查服务是否已启动。
+	 * Returns whether the event check service is started.
+	 *
+	 * @return 已启动返回 true / true if started
+	 */
 	public boolean isStarted() {
 		return isStarted;
 	}
 
+	/**
+	 * 启动周期性活动状态检查。
+	 * Starts the periodic event status check.
+	 */
 	public void start() {
 		if (isStarted) {
 			checkTask.cancel(false);
@@ -210,6 +243,10 @@ public class EventService {
 		}, 0, CHECK_TIME_PERIOD);
 	}
 
+	/**
+	 * 停止周期性活动状态检查。
+	 * Stops the periodic event status check.
+	 */
 	public void stop() {
 		if (isStarted) {
 			checkTask.cancel(false);
@@ -218,6 +255,10 @@ public class EventService {
 		isStarted = false;
 	}
 
+	/**
+	 * 刷新活跃活动列表，启停过期/新增活动。
+	 * Refreshes the active event list, starting new and stopping expired events.
+	 */
 	private void checkEvents() {
 		List<EventTemplate> newEvents = new ArrayList<EventTemplate>();
 		List<EventTemplate> allEvents = DataManager.EVENT_DATA.getAllEvents();
@@ -246,6 +287,10 @@ public class EventService {
 		allEvents.clear();
 	}
 
+	/**
+	 * 根据活跃活动重建任务映射。
+	 * Rebuilds quest maps from active events.
+	 */
 	private void updateQuestMap() {
 		for (EventTemplate et : activeEvents) {
 			for (int qId : et.getStartableQuests()) {
@@ -263,6 +308,14 @@ public class EventService {
 		}
 	}
 
+	/**
+	 * 判断任务是否属于当前活跃活动。
+	 * Returns whether the quest is part of a currently active event.
+	 *
+	 * quest id
+	 *
+	 * @param questId 若 active 则为 true / true if active
+	 */
 	public boolean checkQuestIsActive(int questId) {
 		synchronized (activeEvents) {
 			if (eventsForStartQuest.containsKey(questId) || eventsForMaintainQuest.containsKey(questId)) {
@@ -272,6 +325,12 @@ public class EventService {
 		return false;
 	}
 
+	/**
+	 * 获取当前活动主题类型；无活动时返回 NONE。
+	 * Returns the current event theme type, or NONE when no event is active.
+	 *
+	 * event type
+	 */
 	public EventType getEventType() {
 		if (EventsConfig.ENABLE_EVENT_SERVICE) {
 			for (EventTemplate et : activeEventsSnapshot()) {
@@ -287,10 +346,22 @@ public class EventService {
 		return EventType.NONE;
 	}
 
+	/**
+	 * 获取当前活跃活动快照列表。
+	 * Returns a snapshot list of currently active events.
+	 *
+	 * event list
+	 */
 	public List<EventTemplate> getActiveEvents() {
 		return activeEventsSnapshot();
 	}
 
+	/**
+	 * 线程安全地复制活跃活动列表。
+	 * Thread-safely copies the active event list.
+	 *
+	 * event snapshot
+	 */
 	private List<EventTemplate> activeEventsSnapshot() {
 		synchronized (activeEvents) {
 			return new ArrayList<EventTemplate>(activeEvents);

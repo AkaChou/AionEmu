@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,6 +13,10 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.utils.MathUtil;
 
+/**
+ * 受击回施法者效果：目标被攻击时按配置治疗施法者。
+ * Heal castor on attacked: heals the caster when the target is hit.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "HealCastorOnAttackedEffect")
 public class HealCastorOnAttackedEffect extends EffectTemplate {
@@ -38,11 +26,19 @@ public class HealCastorOnAttackedEffect extends EffectTemplate {
 	@XmlAttribute
 	protected float range;
 
+	/**
+	 * 将受击回血效果加入控制器。
+	 * Attaches heal-on-attacked to the controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 计算受击回施法者效果。
+	 * Calculates heal-castor-on-attacked.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected() instanceof Player) {
@@ -50,6 +46,10 @@ public class HealCastorOnAttackedEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 注册受击观察以治疗施法者。
+	 * Registers attacked observer to heal the caster.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
@@ -87,6 +87,10 @@ public class HealCastorOnAttackedEffect extends EffectTemplate {
 		effect.setActionObserver(observer, position);
 	}
 
+	/**
+	 * 移除受击回血观察者。
+	 * Removes the heal-on-attacked observer.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);

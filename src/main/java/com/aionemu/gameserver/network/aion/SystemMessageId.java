@@ -1,21 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion;
 
+/**
+ * 客户端系统消息 ID 枚举，对应客户端字符串表条目。
+ * Client system message ID enum mapping to client string-table entries.
+ */
 public enum SystemMessageId {
 	THE_WEAPON_HAS_BEEN_CHANGED(0x13D620), YOU_CAN_USE_IT_AFTER_REGISTERING_IT_ON_QUICKBAR(0x13D621),
 	YOU_DONT_HAVE_MUCHFLIGHT_TIME_LEFT_LAND_ON_SECURE_PLACE(0x13D622),
@@ -198,10 +186,19 @@ public enum SystemMessageId {
 
 	private int _id;
 
+	/**
+	 * @param id 客户端消息 ID / client message id
+	 */
 	private SystemMessageId(int id) {
 		_id = id;
 	}
 
+	/**
+	 * 获取客户端消息 ID。
+	 * Returns the client message id.
+	 *
+	 * message id
+	 */
 	public int getId() {
 		return _id;
 	}

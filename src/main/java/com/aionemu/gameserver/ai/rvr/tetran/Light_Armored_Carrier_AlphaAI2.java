@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr.tetran;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -35,10 +19,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Light Armored Carrier Alpha（@AIName "Light_Armored_Carrier_Alpha"），继承 GeneralNpcAI2。
+ * RvR-related NPC AI: Light Armored Carrier Alpha (@AIName "Light_Armored_Carrier_Alpha"), extends GeneralNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Light_Armored_Carrier_Alpha")
 public class Light_Armored_Carrier_AlphaAI2 extends GeneralNpcAI2
 {
@@ -93,8 +79,8 @@ public class Light_Armored_Carrier_AlphaAI2 extends GeneralNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The enemy is retrieving our fragment.
-					//Destroy the enemy's carrier and stop them from taking the fragment!
+					// 敌人正在取回我们的碎片。 / The enemy is retrieving our fragment.
+					// 摧毁敌方运输体，阻止其夺走碎片！ / Destroy the enemy's carrier and stop them from taking the fragment!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404264));
 				}
 			}
@@ -105,7 +91,7 @@ public class Light_Armored_Carrier_AlphaAI2 extends GeneralNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Light Armored Carrier Alpha was destroyed, and some users were given a special effect.
+					// 轻甲运输阿尔法被摧毁，部分玩家获得特殊效果。 / Light Armored Carrier Alpha was destroyed, and some users were given a special effect.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404266));
 				}
 			}

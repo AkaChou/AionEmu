@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -30,6 +14,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeTaskTemplate;
 
+/**
+ * 挑战任务数据容器，按任务 ID 与任务链任务 ID 多路索引。
+ * Challenge task data holder, multi-indexed by task id and quest id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "task" })
 @XmlRootElement(name = "challenge_tasks")
@@ -43,6 +31,10 @@ public class ChallengeData {
 	@XmlTransient
 	private Map<Integer, ChallengeQuestTemplate> questsById = new HashMap<Integer, ChallengeQuestTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，建立任务/任务链多路索引并释放列表。
+	 * After JAXB unmarshalling, builds multi-indexes for tasks and quests, then clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ChallengeTaskTemplate t : task) {
 			tasksById.put(t.getId(), t);
@@ -55,22 +47,56 @@ public class ChallengeData {
 		task = null;
 	}
 
+	/**
+	 * 返回按任务 ID 索引的全部挑战任务。
+	 * Returns all challenge tasks indexed by task id.
+	 *
+	 * @return 任务 ID 到模板的映射 / map of task id to template
+	 */
 	public Map<Integer, ChallengeTaskTemplate> getTasks() {
 		return this.tasksById;
 	}
 
+	/**
+	 * 按任务 ID 获取挑战任务模板。
+	 * Returns the challenge task template for the given task id.
+	 *
+	 * task id
+	 *
+	 * @param taskId @return 模板，不存在则为 null / template or null
+	 */
 	public ChallengeTaskTemplate getTaskByTaskId(int taskId) {
 		return tasksById.get(taskId);
 	}
 
+	/**
+	 * 按任务链任务 ID 获取所属挑战任务模板。
+	 * Returns the challenge task that owns the given quest id.
+	 *
+	 * @param questId 任务链任务 ID / quest id
+	 * @return 任务模板，不存在则为 null / task template or null
+	 */
 	public ChallengeTaskTemplate getTaskByQuestId(int questId) {
 		return tasksByQuestId.get(questId);
 	}
 
+	/**
+	 * 按任务链任务 ID 获取挑战任务条目。
+	 * Returns the challenge quest template for the given quest id.
+	 *
+	 * @param questId 任务链任务 ID / quest id
+	 * @return 任务条目，不存在则为 null / quest template or null
+	 */
 	public ChallengeQuestTemplate getQuestByQuestId(int questId) {
 		return questsById.get(questId);
 	}
 
+	/**
+	 * 返回已加载的挑战任务数量。
+	 * Returns the number of loaded challenge tasks.
+	 *
+	 * task count
+	 */
 	public int size() {
 		return this.tasksById.size();
 	}

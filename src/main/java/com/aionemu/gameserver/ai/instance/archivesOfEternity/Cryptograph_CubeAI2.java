@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.archivesOfEternity;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
@@ -24,10 +8,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Archives Of Eternity 副本 NPC AI：Cryptograph Cube（@AIName "cryptograph_cube"），继承 GeneralNpcAI2。
+ * Archives Of Eternity instance NPC AI: Cryptograph Cube (@AIName "cryptograph_cube"), extends GeneralNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("cryptograph_cube")
 public class Cryptograph_CubeAI2 extends GeneralNpcAI2
 {
@@ -42,8 +28,8 @@ public class Cryptograph_CubeAI2 extends GeneralNpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
-				case 806152: //Cryptograph Cube.
-				case 806153: //Cryptograph Cube.
+				case 806152: //密码背包。 / Cryptograph Cube.
+				case 806153: //密码背包。 / Cryptograph Cube.
 				    ItemService.addItem(player, 125004516, 1); //?? ?? ?.
 			    break;
 			}

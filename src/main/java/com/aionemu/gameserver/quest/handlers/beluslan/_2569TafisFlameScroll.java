@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：Tafis Flame Scroll（任务 ID 2569）。
+ * Beluslan quest script: Tafis Flame Scroll (quest ID 2569).
  */
 public class _2569TafisFlameScroll extends QuestHandler {
 

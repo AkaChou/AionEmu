@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -33,17 +19,30 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 物品升级服务，校验升级材料并扣除消耗。
+ * Item upgrade service validating upgrade materials and consuming costs.
+ *
  * @author Ranastic (Encom)
  */
+
 @Slf4j
 
 public class ItemUpgradeService {
 
+	/**
+	 * 校验物品升级条件。
+	 * Validates item upgrade conditions.
+	 *
+	 * 玩家 / player
+	 * baseItem
+	 * resultItemId
+	 * result
+	 */
 	public static boolean checkItemUpgrade(Player player, Item baseItem, int resultItemId) {
 		ItemUpgradeTemplate itemUpgardeTemplate = DataManager.ITEM_UPGRADE_DATA
 				.getItemUpgradeTemplate(baseItem.getItemId());
 		if (itemUpgardeTemplate == null) {
-			log.warn(resultItemId + " item's itemupgrade template is null");
+			log.warn(I18n.get("log.e22b63d59ef2", resultItemId));
 			return false;
 		}
 		Map<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
@@ -77,7 +76,7 @@ public class ItemUpgradeService {
 		if (resultItem.getNeed_kinah() == null) {
 			for (SubMaterialItem sub : resultItem.getUpgrade_materials().getSubMaterialItem()) {
 				if (player.getInventory().getItemCountByItemId(sub.getId()) < sub.getCount()) {
-					// SubMaterial is not enough
+					// 子材料不足 / SubMaterial is not enough
 					return false;
 				}
 			}
@@ -90,6 +89,15 @@ public class ItemUpgradeService {
 		return true;
 	}
 
+	/**
+	 * 扣除升级材料。
+	 * Consumes upgrade materials.
+	 *
+	 * 玩家 / player
+	 * baseItem
+	 * resultItemId
+	 * result
+	 */
 	public static boolean decreaseMaterial(Player player, Item baseItem, int resultItemId) {
 		Map<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
 				.getResultItemMap(baseItem.getItemId());

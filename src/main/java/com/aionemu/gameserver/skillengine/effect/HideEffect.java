@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -39,6 +23,9 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 隐身效果：设置视觉状态与观察者，攻击/施法/对话等可打破隐身。
+ * Hide effect: sets visual state and observers; attacks/casts/dialogs can break stealth.
+ *
  * @author Sweetkr
  * @author Cura
  */
@@ -54,11 +41,19 @@ public class HideEffect extends BuffEffect {
 	@XmlAttribute
 	protected int type = 0;
 
+	/**
+	 * 将隐身效果加入目标控制器。
+	 * Attaches the hide effect to the target controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 结束隐身并恢复可见状态。
+	 * Ends hide and restores the visible state.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);
@@ -79,6 +74,10 @@ public class HideEffect extends BuffEffect {
 		}
 	}
 
+	/**
+	 * 设置视觉隐身状态、广播与打破隐身的观察者。
+	 * Sets visual hide state, broadcasts, and break-stealth observers.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
@@ -105,14 +104,14 @@ public class HideEffect extends BuffEffect {
 				PlayerVisualStateService.hideValidate((Player) effected);
 			}
 
-			// Remove Hide when use skill
+			// 使用技能时移除隐身 / Remove Hide when use skill
 			ActionObserver observer = new ActionObserver(ObserverType.SKILLUSE) {
 
 				int bufNumber = 1;
 
 				@Override
 				public void skilluse(Skill skill) {
-					// [2.5] Allow self buffs = (buffCount - 1)
+					// [2.5] 允许自身增益 = (buffCount - 1) / [2.5] Allow self buffs = (buffCount - 1)
 					if (skill.isSelfBuff() && bufNumber++ < buffCount) {
 						return;
 					}
@@ -126,7 +125,7 @@ public class HideEffect extends BuffEffect {
 				effect.setCancelOnDmg(true);
 			}
 
-			// Remove Hide when attacking
+			// 攻击时移除隐身 / Remove Hide when attacking
 			effected.getObserveController().attach(new ActionObserver(ObserverType.ATTACK) {
 
 				@Override
@@ -135,8 +134,8 @@ public class HideEffect extends BuffEffect {
 				}
 			});
 			/**
-			 * for player adding: Remove Hide when using any item action Remove hide when
-			 * requesting dialog to any npc
+			 * 玩家侧：使用任意物品动作或向 NPC 请求对话时移除隐身。
+	 * For player: remove Hide when using any item action or requesting dialog to any NPC
 			 */
 			effected.getObserveController().attach(new ActionObserver(ObserverType.ITEMUSE) {
 

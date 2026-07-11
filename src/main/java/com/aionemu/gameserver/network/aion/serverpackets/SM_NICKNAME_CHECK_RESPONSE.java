@@ -1,41 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * This packet is response for CM_CHECK_NICKNAME.<br>
- * It sends client information if name can be used or not
- * 
+ * 昵称可用性检查响应服务端包。
+ * Server packet that responds to {@code CM_CHECK_NICKNAME} with nickname availability.
+ * <p>
+ * 响应值示例：0x00=可用，0x0A=不可用（还有更多状态码）。
+ * Response values e.g.: 0x00=ok, 0x0A=not ok (and more status codes).
+ *
  * @author -Nemesiss-
  */
 public class SM_NICKNAME_CHECK_RESPONSE extends AionServerPacket {
 
-	/**
-	 * Value of response object
-	 */
+	/** 响应状态值 / response status value */
 	private final int value;
 
 	/**
-	 * Constructs new <tt>SM_NICKNAME_CHECK_RESPONSE</tt> packet
-	 * 
-	 * @param value Response value
+	 * 构造昵称检查响应包。
+	 * Builds a nickname-check response packet.
+	 *
+	 * @param value 响应状态值 / response status value
 	 */
 	public SM_NICKNAME_CHECK_RESPONSE(int value) {
 		this.value = value;
@@ -47,8 +33,8 @@ public class SM_NICKNAME_CHECK_RESPONSE extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		/**
-		 * Here is some msg: 0x00 = ok 0x0A = not ok and much more
-		 */
+	 * 部分消息码：0x00 成功，0x0A 失败等。 / Here is some msg: 0x00 = ok 0x0A = not ok and much more
+	 */
 		writeC(value);
 	}
 }

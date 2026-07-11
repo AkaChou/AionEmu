@@ -1,29 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端下发军团加入申请目标信息（军团 ID 与名称）的服务端包。
+ * Server packet delivering target legion info (legion id and name) for a join request to the client.
+ */
 public class SM_LEGION_REQUEST_INFO extends AionServerPacket {
 
 	private int legionId;
 	private String legionName;
 
+	/**
+	 * 构造军团申请目标信息包。
+	 * Creates a packet with target legion request info.
+	 *
+	 * legion id
+	 * legion name
+	 */
 	public SM_LEGION_REQUEST_INFO(int legionId, String legionName) {
 		this.legionId = legionId;
 		this.legionName = legionName;

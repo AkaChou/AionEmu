@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.Iterator;
 import java.util.Map;
 
 import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Block 列表。
+ * Block List game object.
+ */
 
 public class BlockList implements Iterable<BlockedPlayer> {
 	public static final int MAX_BLOCKS = 10;
@@ -34,14 +23,17 @@ public class BlockList implements Iterable<BlockedPlayer> {
 		this.blockedList = new ConcurrentHashMap<>(initialList);
 	}
 
+	/** 添加。 / Add. */
 	public void add(BlockedPlayer plr) {
 		blockedList.put(plr.getObjId(), plr);
 	}
 
+	/** 移除。 / Remove. */
 	public void remove(int objIdOfPlayer) {
 		blockedList.remove(objIdOfPlayer);
 	}
 
+	/** 返回 blocked player / Returns the blocked player */
 	public BlockedPlayer getBlockedPlayer(String name) {
 		Iterator<BlockedPlayer> iterator = blockedList.values().iterator();
 		while (iterator.hasNext()) {
@@ -53,22 +45,27 @@ public class BlockList implements Iterable<BlockedPlayer> {
 		return null;
 	}
 
+	/** 返回 blocked player / Returns the blocked player */
 	public BlockedPlayer getBlockedPlayer(int playerObjId) {
 		return blockedList.get(playerObjId);
 	}
 
+	/** 是否包含。 / Contains. */
 	public boolean contains(int playerObjectId) {
 		return blockedList.containsKey(playerObjectId);
 	}
 
+	/** 返回大小 / Returns the size*/
 	public int getSize() {
 		return blockedList.size();
 	}
 
+	/** 是否已满。 / Whether Full. */
 	public boolean isFull() {
 		return getSize() >= MAX_BLOCKS;
 	}
 
+	/** 返回迭代器。 / Returns iterator. */
 	@Override
 	public Iterator<BlockedPlayer> iterator() {
 		return blockedList.values().iterator();

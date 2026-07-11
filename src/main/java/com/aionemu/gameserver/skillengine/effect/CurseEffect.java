@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,17 +8,32 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 诅咒效果：Buff 属性削弱并标记 CURSE 异常。
+ * Curse effect: buff-based stat debuff that marks the CURSE abnormal.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CurseEffect")
 public class CurseEffect extends BuffEffect {
 
+	/**
+	 * 按诅咒抗性计算是否命中。
+	 * Calculates hit using curse resistance.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.CURSE_RESISTANCE, null);
 	}
 
+	/**
+	 * 应用属性修正并设置诅咒异常。
+	 * Applies stat modifiers and sets the curse abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		super.startEffect(effect);
@@ -42,6 +41,12 @@ public class CurseEffect extends BuffEffect {
 		effect.getEffected().getEffectController().setAbnormal(AbnormalState.CURSE.getId());
 	}
 
+	/**
+	 * 移除属性修正并清除诅咒异常。
+	 * Removes stat modifiers and clears the curse abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);

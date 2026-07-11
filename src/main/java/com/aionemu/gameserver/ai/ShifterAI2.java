@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -22,13 +6,21 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 位移/切换型 AI：触发位置或状态切换。
+ * Shifter AI that triggers position or state transitions.
+ *
+ * @author Encom
+ */
 @AIName("shifter")
 public class ShifterAI2 extends ActionItemNpcAI2
 {
+	/**
+	 * 使用交互物完成时的逻辑。
+	 * Logic when action-item use finishes.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		super.handleUseItemFinish(player);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.stats;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * 宠物属性模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author IlBuono
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,22 +26,27 @@ public class PetStatsTemplate {
 	@XmlAttribute(name = "altitude")
 	private float altitude;
 
+	/** 返回 reaction / Returns the reaction */
 	public String getReaction() {
 		return reaction;
 	}
 
+	/** 返回 run speed / Returns the run speed */
 	public float getRunSpeed() {
 		return runSpeed;
 	}
 
+	/** 返回 walk speed / Returns the walk speed */
 	public float getWalkSpeed() {
 		return walkSpeed;
 	}
 
+	/** 返回 height / Returns the height */
 	public float getHeight() {
 		return height;
 	}
 
+	/** 返回 altitude / Returns the altitude */
 	public float getAltitude() {
 		return altitude;
 	}

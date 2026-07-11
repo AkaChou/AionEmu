@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -29,16 +13,27 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 以太矿脉任务副本事件处理器。
+ * Instance event handler for Aether Mine Q.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301690000)
 public class AetherMineQInstance extends GeneralInstanceHandler
 {
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+	/** 对象 / objects */
+		private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		switch (player.getRace()) {
@@ -54,6 +49,12 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -73,9 +74,9 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 		final int npc1 = spawnRace == Race.ASMODIANS ? 806298 : 806293;
 		final int fi75An = spawnRace == Race.ASMODIANS ? 244127 : 244111;
 		final int wi75An = spawnRace == Race.ASMODIANS ? 244128 : 244112;
-		//Npc
+		// NPC / Npc
 		spawn(npc1, 320.69873f, 260.07156f, 256.3936f, (byte) 85);
-		//Mission_Fi_75_An.
+		// Mission_Fi_75_An. / Mission_Fi_75_An.
 		spawn(fi75An, 179.0f, 168.0f, 228.18404f, (byte) 8);
         spawn(fi75An, 172.0f, 149.0f, 230.51636f, (byte) 43);
         spawn(fi75An, 322.17755f, 222.98203f, 252.07573f, (byte) 28);
@@ -84,7 +85,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
         spawn(fi75An, 258.6159f, 195.05444f, 235.32248f, (byte) 12);
         spawn(fi75An, 226.57643f, 179.74837f, 231.16173f, (byte) 11);
         spawn(fi75An, 206.74022f, 178.92027f, 229.21239f, (byte) 5);
-		//Mission_Wi_75_An.
+		// Mission_Wi_75_An. / Mission_Wi_75_An.
 		spawn(wi75An, 187.0f, 152.0f, 228.18611f, (byte) 10);
         spawn(wi75An, 310.9536f, 237.79036f, 252.14915f, (byte) 25);
         spawn(wi75An, 290.05392f, 202.05699f, 243.7684f, (byte) 15);

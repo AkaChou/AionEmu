@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.Collections;
@@ -30,6 +14,9 @@ import com.aionemu.gameserver.model.templates.gather.GatherableTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 可采集物配置数据容器，按模板 ID 索引采集物模板。
+ * Gatherable configuration data holder, indexed by template id.
+ *
  * @author ATracer
  */
 @XmlRootElement(name = "gatherable_templates")
@@ -39,9 +26,13 @@ public class GatherableData {
 	@XmlElement(name = "gatherable_template")
 	private List<GatherableTemplate> gatherables;
 
-	/** A map containing all npc templates */
+	/** 全部采集物模板的 ID 索引 / ID index of all gatherable templates */
 	private IntObjectHashMap<GatherableTemplate> gatherableData = new IntObjectHashMap<GatherableTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，排序材料列表并按模板 ID 建立索引。
+	 * After JAXB unmarshalling, sorts material lists and indexes templates by id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (GatherableTemplate gatherable : gatherables) {
 			if (gatherable.getMaterials() != null) {
@@ -55,16 +46,22 @@ public class GatherableData {
 		gatherables = null;
 	}
 
+	/**
+	 * 返回采集物模板数量。
+	 * Returns the number of gatherable templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return gatherableData.size();
 	}
 
 	/**
-	 * /** Returns an {@link GatherableTemplate} object with given id.
-	 * 
-	 * @param id id of GatherableTemplate
-	 * @return GatherableTemplate object containing data about Gatherable with that
-	 *         id.
+	 * 按 ID 获取采集物模板。
+	 * Returns the gatherable template for the given id.
+	 *
+	 * @param id 采集物模板 ID / gatherable template id
+	 * @return 采集物模板，不存在则为 null / gatherable template, or null if absent
 	 */
 	public GatherableTemplate getGatherableTemplate(int id) {
 		return gatherableData.get(id);

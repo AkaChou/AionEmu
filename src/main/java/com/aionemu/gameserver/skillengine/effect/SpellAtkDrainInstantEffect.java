@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 法术攻击吸血/吸魔瞬发：造成魔法伤害并按比例回复施法者 HP/MP。
+ * Instant spell attack with drain: deals magical damage and restores effector HP/MP by percent.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,6 +25,10 @@ public class SpellAtkDrainInstantEffect extends DamageEffect {
 	@XmlAttribute(name = "mp_percent")
 	protected int mp_percent;
 
+	/**
+	 * 先结算伤害，再按配置百分比回复 HP/MP。
+	 * Applies damage first, then restores HP/MP from reserved damage by percent.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
@@ -51,6 +42,10 @@ public class SpellAtkDrainInstantEffect extends DamageEffect {
 		}
 	}
 
+	/**
+	 * 按魔法伤害类型计算。
+	 * Calculates as magical damage.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, DamageType.MAGICAL);

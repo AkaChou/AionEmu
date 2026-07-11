@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Aion Gates
+/**
+ * 布鲁斯特霍宁任务脚本：Heirnir Wantsto Rest（任务 ID 4036）。
+ * Brusthonin quest script: Heirnir Wantsto Rest (quest ID 4036).
  */
 public class _4036HeirnirWantstoRest extends QuestHandler {
 

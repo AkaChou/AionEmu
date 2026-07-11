@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,6 +25,9 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 
 /**
+ * AI2 引擎：负责加载、注册、校验并为生物装配 AI 实例。
+ * AI2 engine: loads, registers, validates and attaches AI instances to creatures.
+ *
  * @author ATracer
  */
 @Slf4j
@@ -47,9 +36,15 @@ public class AI2Engine implements GameEngine {
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
 
+	/**
+	 * 加载 AI 脚本并注册所有 AI 处理器。
+	 * Loads AI scripts and registers all AI handlers.
+	 *
+	 * @param progressLatch 进度倒计时锁 / progress latch
+	 */
 	@Override
 	public void load(CountDownLatch progressLatch) {
-		log.info("AI2 engine load started");
+		log.info(I18n.get("log.526564512218"));
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());
@@ -57,7 +52,7 @@ public class AI2Engine implements GameEngine {
 
 		try {
 			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.ai"));
-			log.info("Loaded " + aiMap.size() + " AI2.");
+			log.info(I18n.get("log.ab0828fed65a", aiMap.size()));
 			validateScripts();
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize ai handlers.", e);
@@ -68,13 +63,23 @@ public class AI2Engine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 关闭引擎并清空 AI 注册表。
+	 * Shuts down the engine and clears the AI registry.
+	 */
 	@Override
 	public void shutdown() {
-		log.info("AI2 engine shutdown started");
+		log.info(I18n.get("log.376558570f8c"));
 		aiMap.clear();
-		log.info("AI2 engine shutdown complete");
+		log.info(I18n.get("log.6bfc701929ea"));
 	}
 
+	/**
+	 * 按 {@link AIName} 注解将 AI 类注册到名称映射表。
+	 * Registers an AI class into the name map using its {@link AIName} annotation.
+	 *
+	 * AI implementation class
+	 */
 	public void registerAI(Class<? extends AbstractAI> class1) {
 		AIName nameAnnotation = class1.getAnnotation(AIName.class);
 		if (nameAnnotation != null) {
@@ -82,6 +87,15 @@ public class AI2Engine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 按名称创建 AI 实例并绑定到所有者。
+	 * Creates an AI instance by name and binds it to the owner.
+	 *
+	 * AI name
+	 *
+	 * @param owner 所有者生物 / owner creature
+	 * @param owner @return 装配好的 AI 实例 / configured AI instance
+	 */
 	public final AI2 setupAI(String name, Creature owner) {
 		AbstractAI aiInstance = null;
 		try {
@@ -92,19 +106,26 @@ public class AI2Engine implements GameEngine {
 				aiInstance.setLogging(true);
 			}
 		} catch (Exception e) {
-			log.error("[AI2] AI factory error: " + name, e);
+			log.error(I18n.get("log.b80441439b8c", name, e));
 		}
 		return aiInstance;
 	}
 
 	/**
-	 * @param aiName
-	 * @param owner
+	 * 使用 {@link AiNames} 枚举为 NPC 装配 AI。
+	 * Sets up AI for an NPC using an {@link AiNames} enum value.
+	 *
+	 * AI name enum
+	 * target NPC
 	 */
 	public void setupAI(AiNames aiName, Npc owner) {
 		setupAI(aiName.getName(), owner);
 	}
 
+	/**
+	 * 校验 NPC 模板中引用的 AI 名称是否均已注册。
+	 * Validates that all AI names referenced by NPC templates are registered.
+	 */
 	private void validateScripts() {
 		Collection<String> npcAINames = new HashSet<String>();
 		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().values()) {
@@ -112,10 +133,16 @@ public class AI2Engine implements GameEngine {
 		}
 		npcAINames.removeAll(aiMap.keySet());
 		if (npcAINames.size() > 0) {
-			log.warn("Bad AI names: " + StringUtils.join(npcAINames, ", "));
+			log.warn(I18n.get("log.84b7db63f072", StringUtils.join(npcAINames, ", ")));
 		}
 	}
 
+	/**
+	 * 获取引擎单例（优先 Spring Provider，否则回退静态持有者）。
+	 * Returns the engine singleton (Spring provider first, else static holder).
+	 *
+	 * AI2Engine instance
+	 */
 	public static final AI2Engine getInstance() {
 		ObjectProvider<AI2Engine> provider = instanceProvider;
 		if (provider != null) {
@@ -124,10 +151,20 @@ public class AI2Engine implements GameEngine {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 设置 Spring 实例 Provider。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AI2Engine> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 静态单例持有者。
+	 * Static singleton holder.
+	 */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 

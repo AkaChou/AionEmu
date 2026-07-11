@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.manager;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,18 +17,21 @@ import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
+
 /**
- * NPC技能攻击管理器
- * 负责处理NPC的技能攻击调度和攻击逻辑
- * 修复：使用正确的攻击范围进行检查，防止技能使用时范围错误
+ * NPC 技能攻击管理器：调度技能攻击、执行施法并选择下一个可用技能。
+ * NPC skill-attack manager: schedules skill attacks, performs casting, and chooses the next ready skill.
+ *
  * @modified Yon (Aion Reconstruction Project) -- removed extra delay from {@link #performAttack(NpcAI2, int)}
-*/
+ */
 public class SkillAttackManager {
 
 	/**
-	 * 执行技能攻击
-	 * @param npcAI
-	 * @param delay 攻击延迟时间（毫秒）
+	 * 执行技能攻击：校验射程后进入施法子状态，可延迟或立即释放。
+	 * Performs a skill attack: validates range, enters CAST sub-state, then casts after optional delay.
+	 *
+	 * NPC AI instance
+	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
 	public static void performAttack(NpcAI2 npcAI, int delay) {
 		// 如果攻击范围为0，使用攻击范围进行检查（而不是仇恨范围）
@@ -68,8 +55,10 @@ public class SkillAttackManager {
 	}
 
 	/**
-	 * 执行技能攻击动作
-	 * @param npcAI
+	 * 执行技能攻击动作：BUFF 去重、使用技能或在目标无效时放弃。
+	 * Executes the skill action: skips duplicate BUFF, uses skill, or gives up if the target is invalid.
+	 *
+	 * NPC AI instance
 	 */
 	protected static void skillAction(NpcAI2 npcAI) {
 		Creature target = (Creature) npcAI.getOwner().getTarget();
@@ -117,8 +106,10 @@ public class SkillAttackManager {
 	}
 
 	/**
-	 * 技能使用后的处理
-	 * @param npcAI
+	 * 技能使用后的处理：清除施法子状态并触发攻击完成事件。
+	 * Post-skill handling: clears CAST sub-state and fires ATTACK_COMPLETE.
+	 *
+	 * NPC AI instance
 	 */
 	public static void afterUseSkill(NpcAI2 npcAI) {
 		npcAI.setSubStateIfNot(AISubState.NONE);
@@ -126,9 +117,12 @@ public class SkillAttackManager {
 	}
 
 	/**
-	 * 选择下一个技能
-	 * @param npcAI
-	 * @return 下一个技能，如果没有则返回null
+	 * 选择下一个就绪技能；施法中、沉默/束缚/恐惧或 CD 未好时返回 {@code null}。
+	 * Chooses the next ready skill; returns {@code null} while casting, silenced/bound/feared, or on cooldown.
+	 *
+	 * NPC AI instance
+	 *
+	 * @param npcAI @return 下一个技能条目，无可用时为 {@code null} / next skill entry, or {@code null} if none
 	 */
 	public static NpcSkillEntry chooseNextSkill(NpcAI2 npcAI) {
 		// 如果正在施法，不选择技能

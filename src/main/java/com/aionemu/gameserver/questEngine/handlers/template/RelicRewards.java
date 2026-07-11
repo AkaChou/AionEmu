@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.HashSet;
@@ -31,15 +15,38 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 遗物兑换奖励任务模板：≥45 级时用四类遗物物品兑换对应奖励页。
+ * Relic-exchange reward quest template: at level ≥45, exchanges one of four relic item types for matching reward pages.
+ */
 public class RelicRewards extends QuestHandler {
+	/** 任务 ID / quest id */
 	private final int questId;
+	/** 起始/兑换 NPC ID 集合 / start/exchange NPC id set */
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
+	/** 遗物物品 ID 1 / relic item id 1 */
 	private final int relicVar1;
+	/** 遗物物品 ID 2 / relic item id 2 */
 	private final int relicVar2;
+	/** 遗物物品 ID 3 / relic item id 3 */
 	private final int relicVar3;
+	/** 遗物物品 ID 4 / relic item id 4 */
 	private final int relicVar4;
+	/** 每次兑换消耗的遗物数量 / relic count consumed per exchange */
 	private int relicCount;
 
+	/**
+	 * 构造遗物兑换奖励任务处理器。
+	 * Constructs a relic-rewards quest handler.
+	 *
+	 * quest id
+	 * start NPC list
+	 * relic item 1
+	 * relic item 2
+	 * relic item 3
+	 * relic item 4
+	 * @param relicCount 每次消耗数量 / count per exchange
+	 */
 	public RelicRewards(int questId, List<Integer> startNpcIds, int relicVar1, int relicVar2, int relicVar3,
 			int relicVar4, int relicCount) {
 		super(questId);
@@ -53,6 +60,10 @@ public class RelicRewards extends QuestHandler {
 		this.relicCount = relicCount;
 	}
 
+	/**
+	 * 注册兑换 NPC 的接取与对话事件。
+	 * Registers quest-start and talk events for exchange NPCs.
+	 */
 	@Override
 	public void register() {
 		Iterator<Integer> iterator = startNpcs.iterator();
@@ -63,6 +74,13 @@ public class RelicRewards extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理遗物兑换对话：校验等级与背包，扣除对应遗物并进入对应奖励页。
+	 * Handles relic-exchange dialogs: checks level/inventory, removes the chosen relic and opens the matching reward page.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		final Player player = env.getPlayer();

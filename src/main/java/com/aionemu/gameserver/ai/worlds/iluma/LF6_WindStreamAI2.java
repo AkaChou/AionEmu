@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.iluma;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Iluma 区域 NPC AI：LF6 Wind Stream（@AIName "LF6_WindStream"），继承 NpcAI2。
+ * Iluma zone NPC AI: LF6 Wind Stream (@AIName "LF6_WindStream"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("LF6_WindStream")
 public class LF6_WindStreamAI2 extends NpcAI2
 {
@@ -71,11 +57,11 @@ public class LF6_WindStreamAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The wind road will disappear in 1 minute. You need to exit the wind road.
+				// 风道将在 1 分钟后消失。你需要离开风道。 / The wind road will disappear in 1 minute. You need to exit the wind road.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Windpath_NOTICE_01, 3540000);
-				//The wind road to the defense frigate will vanish in 30 seconds.
+				// 通往防御护卫舰的风道将在 30 秒后消失。 / The wind road to the defense frigate will vanish in 30 seconds.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Windpath_Off_01, 3570000);
-				//The wind road will disappear in 10 seconds. You need to exit the wind road.
+				// 风道将在 10 秒后消失。你需要离开风道。 / The wind road will disappear in 10 seconds. You need to exit the wind road.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Windpath_NOTICE_02, 3590000);
 			}
 		});

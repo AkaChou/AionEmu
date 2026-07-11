@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步目标军团头衔/职位信息的服务端包。
+ * Server packet that synchronizes a target's legion title/rank info to the client.
+ *
  * @author sweetkr
  */
 public class SM_LEGION_UPDATE_TITLE extends AionServerPacket {
@@ -29,6 +16,15 @@ public class SM_LEGION_UPDATE_TITLE extends AionServerPacket {
 	private String legionName;
 	private int rank;
 
+	/**
+	 * 使用目标对象、军团与职位构造头衔更新包。
+	 * Creates a title-update packet from target, legion and rank data.
+	 *
+	 * target object id
+	 * legion id
+	 * legion name
+	 * @param rank 职位等级 / rank level
+	 */
 	public SM_LEGION_UPDATE_TITLE(int objectId, int legionId, String legionName, int rank) {
 		this.objectId = objectId;
 		this.legionId = legionId;

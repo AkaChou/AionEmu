@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.group;
 
 import com.aionemu.gameserver.model.gameobjects.Pet;
@@ -22,11 +6,15 @@ import com.aionemu.gameserver.model.templates.pet.PetFunctionType;
 import com.google.common.base.Predicate;
 
 /**
+ * 玩家 Filters，用于团队2相关逻辑。
+ * Player Filters for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerFilters {
 
 	public static final Predicate<Player> ONLINE = new Predicate<Player>() {
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player member) {
 			return member.isOnline();
@@ -41,6 +29,7 @@ public class PlayerFilters {
 			this.player = player;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player member) {
 			return member.getLevel() + 9 < player.getLevel();
@@ -55,6 +44,7 @@ public class PlayerFilters {
 			this.player = player;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player member) {
 			return member.getInstanceId() == player.getInstanceId();
@@ -62,6 +52,7 @@ public class PlayerFilters {
 	}
 
 	public static final Predicate<Player> HAS_LOOT_PET = new Predicate<Player>() {
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player member) {
 			Pet pet = member.getPet();
@@ -80,6 +71,7 @@ public class PlayerFilters {
 			this.player = player;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player member) {
 			return !player.getObjectId().equals(member.getObjectId());

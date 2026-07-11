@@ -1,5 +1,7 @@
 package com.aionemu.commons.versionning;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
@@ -83,12 +85,12 @@ public final class Locator {
     }
 
     /**
-     * 将URI转换为文件系统路径
+ * 将 URI 转换为文件系统路径
      * Convert URI to file system path
      *
-     * @param uri URI字符串 URI string
+ * @param uri URI 字符串 URI string
      * @return 文件系统路径 File system path
-     * @throws IllegalArgumentException 如果URI不是有效的文件URI If URI is not a valid file URI
+ * @throws IllegalArgumentException 如果 URI 不是有效的文件 URI If URI is not a valid file URI
      */
     public static String fromURI(String uri) {
         URL url = null;
@@ -121,10 +123,10 @@ public final class Locator {
     }
 
     /**
-     * 解码URI字符串中的百分号编码
+ * 解码 URI 字符串中的百分号编码
      * Decode percent encoding in URI string
      *
-     * @param uri 要解码的URI字符串 URI string to decode
+ * @param uri 要解码的 URI 字符串 URI string to decode
      * @return 解码后的字符串 Decoded string
      */
     private static String decodeUri(String uri) {
@@ -156,38 +158,38 @@ public final class Locator {
     }
 
     /**
-     * 获取系统Java编译器的位置
+ * 获取系统 Java 编译器的位置
      * Get the location of the system Java compiler.
      *
      * @return JDK 9+ exposes the compiler through the runtime image; returns null when it is available.
      */
     public static File getToolsJar() {
         if (ToolProvider.getSystemJavaCompiler() == null) {
-            log.warn("Unable to locate the system Java compiler. Run this application with a JDK, not a JRE.");
+            log.warn(I18n.get("log.2e670e192fa4"));
         }
         return null;
     }
 
     /**
-     * 获取指定位置的JAR文件URL数组
+ * 获取指定位置的 JAR 文件 URL 数组
      * Get array of URLs for JAR files at specified location
      *
      * @param location 要搜索的位置 Location to search
-     * @return JAR文件URL数组 Array of JAR file URLs
-     * @throws MalformedURLException 如果URL格式错误 If URL format is invalid
+ * @return JAR 文件 URL 数组 Array of JAR file URLs
+ * @throws MalformedURLException 如果 URL 格式错误 If URL format is invalid
      */
     public static URL[] getLocationURLs(File location) throws MalformedURLException {
         return getLocationURLs(location, new String[]{".jar"});
     }
 
     /**
-     * 获取指定位置的指定扩展名文件的URL数组
+ * 获取指定位置的指定扩展名文件的 URL 数组
      * Get array of URLs for files with specified extensions at specified location
      *
      * @param location 要搜索的位置 Location to search
      * @param extensions 文件扩展名数组 Array of file extensions
-     * @return 文件URL数组 Array of file URLs
-     * @throws MalformedURLException 如果URL格式错误 If URL format is invalid
+ * @return 文件 URL 数组 Array of file URLs
+ * @throws MalformedURLException 如果 URL 格式错误 If URL format is invalid
      */
     public static URL[] getLocationURLs(File location, final String[] extensions) throws MalformedURLException {
         URL[] urls = new URL[0];
@@ -209,6 +211,14 @@ public final class Locator {
                 return urls;
             } else {
                 File[] matches = location.listFiles(new FilenameFilter() {
+                    /**
+                     * 按扩展名过滤文件
+                     * Filter files by extension
+                     *
+                     * Directory
+                     * File name
+                     * @return 匹配扩展名返回 true / True when the extension matches
+                     */
                     public boolean accept(File dir, String name) {
                         for(int i = 0; i < extensions.length; ++i) {
                             if (name.toLowerCase().endsWith(extensions[i])) {

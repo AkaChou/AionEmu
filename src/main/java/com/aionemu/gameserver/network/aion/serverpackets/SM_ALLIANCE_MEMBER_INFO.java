@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.List;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
+ * 向客户端同步联盟成员状态/事件（加入、离开、移动、重连等）的服务端包。
+ * Server packet synchronizing alliance member status/events (join, leave, movement, reconnect, etc.) to the client.
+ *
  * @author Sarynth (Thx Rhys2002 for Packets)
  */
 public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
@@ -38,6 +25,13 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 	private final int allianceId;
 	private final int objectId;
 
+	/**
+	 * 使用联盟成员与事件类型构造同步包。
+	 * Creates a sync packet from an alliance member and event type.
+	 *
+	 * alliance member
+	 * @param event 成员事件类型 / member event type
+	 */
 	public SM_ALLIANCE_MEMBER_INFO(PlayerAllianceMember member, PlayerAllianceEvent event) {
 		this.player = member.getObject();
 		this.event = event;
@@ -51,9 +45,8 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 		WorldPosition wp = player.getPosition();
 
 		/**
-		 * Required so that when member is disconnected, and his playerAllianceGroup
-		 * slot is changed, he will continue to appear as disconnected to the alliance.
-		 */
+	 * 确保成员断线且联盟槽位变更后仍显示为断线状态。 / Required so that when member is disconnected, and his playerAllianceGroup slot is changed, he will continue to appear as disconnected to the alliance
+	 */
 		if (event == PlayerAllianceEvent.ENTER && !player.isOnline()) {
 			event = PlayerAllianceEvent.ENTER_OFFLINE;
 		}
@@ -79,7 +72,7 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 
 		writeD(0);// unk 3.5
 		writeD(wp.getMapId());
-		writeD(wp.getMapId()); // TODO Looks like some ObjId and not mapId
+		writeD(wp.getInstanceId());
 		writeF(wp.getX());
 		writeF(wp.getY());
 		writeF(wp.getZ());
@@ -106,8 +99,8 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 		case DEMOTE_VICE_CAPTAIN:
 		case APPOINT_CAPTAIN:
 			writeS(pcd.getName());
-			writeD(0); // TODO some values 4096 or 256
-			writeD(0); // unk
+			writeD(0); // retail reserves 64 bits here
+			writeD(0);
 			if (player.isOnline()) {
 				List<Effect> abnormalEffects = player.getEffectController().getAbnormalEffects();
 				writeC(127);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.conditions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,22 +11,28 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 按任务状态（可选指定任务 ID）与配置值比较的条件。
+ * Condition that compares a quest status (optionally for another quest id) against a configured value.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestStatusCondition")
 public class QuestStatusCondition extends QuestCondition {
 
+	/** 期望的任务状态 / Expected quest status */
 	@XmlAttribute(required = true)
 	protected QuestStatus value;
+	/** 可选目标任务 ID；为空时使用当前任务 / Optional target quest id; current quest when null */
 	@XmlAttribute(name = "quest_id")
 	protected Integer questId;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.gameserver.questEngine.handlers.template.xmlQuest.condition.
-	 * QuestCondition#doCheck(com.aionemu.gameserver .questEngine.model.QuestEnv)
+	/**
+	 * 比较指定（或当前）任务的状态序值与配置状态。
+	 * Compares the ordinal of the target (or current) quest status with the configured status.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 比较是否成立 / Whether the comparison holds
 	 */
 	@Override
 	public boolean doCheck(QuestEnv env) {

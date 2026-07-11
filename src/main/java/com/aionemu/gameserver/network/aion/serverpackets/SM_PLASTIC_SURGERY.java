@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 开启/确认整容（含改性别）界面的服务端包。
+ * Server packet that opens or confirms the plastic-surgery (including sex-change) UI.
+ *
  * @author IlBuono
  */
 public class SM_PLASTIC_SURGERY extends AionServerPacket {
@@ -29,6 +16,11 @@ public class SM_PLASTIC_SURGERY extends AionServerPacket {
 	private byte check_ticket;
 	private byte change_sex;
 
+	/**
+	 * target player
+	 * @param check_ticket 是否校验整容券 / whether a surgery ticket is required
+	 * @param change_sex 是否允许改性别 / whether sex change is allowed
+	 */
 	public SM_PLASTIC_SURGERY(Player player, byte check_ticket, byte change_sex) {
 		this.playerObjId = player.getObjectId();
 		this.check_ticket = check_ticket;

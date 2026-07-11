@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.Announcement;
@@ -26,17 +10,31 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.Set;
 
 /**
+ * 管理员循环公告管理命令：列出、新增或删除数据库公告。
+ * Admin scheduled-announcement command: lists, adds, or deletes DB-backed announcements.
+ *
  * @author Divinity
  */
 public class Announcements extends AdminCommand {
 
 	private AnnouncementService announceService;
 
+	/**
+	 * 注册 {@code //announcements} 命令并获取公告服务。
+	 * Registers the {@code //announcements} command and obtains the announcement service.
+	 */
 	public Announcements() {
 		super("announcements");
 		announceService = GameRuntimeServices.announcementService();
 	}
 
+	/**
+	 * 执行公告管理：list/add/delete 子命令。
+	 * Executes announcement management: list/add/delete subcommands.
+	 *
+	 * admin
+	 * @param params 参数：list|add|delete 及附加参数 / list|add|delete and extra args
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params[0].equals("list")) {
@@ -59,26 +57,26 @@ public class Announcements extends AdminCommand {
 				delay = Integer.parseInt(params[3]);
 			}
 			catch (NumberFormatException e) {
-				// 15 minutes, default
+				// 15 分钟，默认 / 15 minutes, default
 				delay = 900;
 			}
 
 			String message = "";
 
-			// Add with space
+			// 带空格添加 / Add with space
 			for (int i = 4; i < params.length - 1; i++)
 				message += params[i] + " ";
 
-			// Add the last without the end space
+			// 添加最后一项，末尾不加空格 / Add the last without the end space
 			message += params[params.length - 1];
 
-			// Create the announce
+			// 创建公告 / Create the announce
 			Announcement announce = new Announcement(message, params[1], params[2], delay);
 
-			// Add the announce in the database
+			// 在数据库中添加公告 / Add the announce in the database
 			announceService.addAnnouncement(announce);
 
-			// Reload all announcements
+			// 重新加载全部公告 / Reload all announcements
 			announceService.reload();
 
 			PacketSendUtility.sendMessage(player, "The announcement has been created with successful !");
@@ -100,10 +98,10 @@ public class Announcements extends AdminCommand {
 				return;
 			}
 
-			// Delete the announcement from the database
+			// 从数据库删除公告 / Delete the announcement from the database
 			announceService.delAnnouncement(id);
 
-			// Reload all announcements
+			// 重新加载全部公告 / Reload all announcements
 			announceService.reload();
 
 			PacketSendUtility.sendMessage(player, "The announcement has been deleted with successful !");
@@ -113,6 +111,13 @@ public class Announcements extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时输出 {@code //announcements} 用法。
+	 * Prints {@code //announcements} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		String syntaxCommand = "Syntax: //announcements list - Obtain all announcements in the database.\n";

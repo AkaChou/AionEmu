@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -40,27 +26,45 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 欧比斯宝藏活动服务，按 cron 调度刷怪与结算。
+ * Treasure Abyss event service scheduling spawns and settlement via cron.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
 public class TreasureAbyssService {
+
+	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
 	private static List<float[]> floatArray = new ArrayList<float[]>();
+
+	/** Cached event cron expression / Cached event cron expression */
 	private static final String ABYSS_EVENT_SCHEDULE = EventsConfig.ABYSS_EVENT_SCHEDULE;
+
+	/** Abyss world id / Abyss world id */
 	private static int WORLD_ID = 400010000;
+
+	/** Treasure chest NPC template id / Treasure chest NPC template id */
 	private static int NPC_ID = 210596;
 
 	/**
-	 * Rewards !
+	 * 缓存的奖励物品 ID 列表。
+	 * Cached reward item id list.
 	 */
 	private static int[] rewards = TreasureReward();// cannot get directly u must call an method
 
+	/**
+	 * 从配置解析奖励物品 ID 列表。
+	 * Parses reward item ids from config.
+	 *
+	 * @return 奖励物品 ID 数组 / reward item id array
+	 */
 	private static int[] TreasureReward() {
-		// initialize an new list
+		// 初始化新列表。 / initialize an new list
 		int[] returnArray;
-		// get an list of strings (all configs come from strings)
+		// 获取字符串列表（所有配置来自字符串）。 / get an list of strings (all configs come from strings)
 		String[] list = EventsConfig.ABYSS_EVENT_REWARDS.split(",");
 		returnArray = new int[list.length];
-		// run all the itens and put in the int array
+		// 遍历所有物品并放入 int 数组 / run all the itens and put in the int array
 		for (int i = 0; i < list.length; i++) {
 			returnArray[i] = Integer.parseInt(list[i]);
 
@@ -69,10 +73,12 @@ public class TreasureAbyssService {
 		return returnArray;
 	}
 
+	/** Current event main NPC / Current event main NPC */
 	private static Npc mainN;
 
 	/**
-	 * Schedule
+	 * 按配置 cron 调度欧比斯宝藏活动。
+	 * Schedules the Treasure Abyss event from configured cron.
 	 */
 	public static void ScheduleCron() {
 		GameCronServices.cronService().schedule(new Runnable() {
@@ -83,10 +89,13 @@ public class TreasureAbyssService {
 			}
 
 		}, ABYSS_EVENT_SCHEDULE);
-		log.info("Scheduled <Treasure Abyss Event> based on cron expression: " + EventsConfig.ABYSS_EVENT_SCHEDULE
-				+ " duration 30 min");
+		log.info(I18n.get("log.ef71d9caa077", EventsConfig.ABYSS_EVENT_SCHEDULE));
 	}
 
+	/**
+	 * 启动欧比斯宝藏活动并刷出主 NPC。
+	 * Starts the Treasure Abyss event and spawns the main NPC.
+	 */
 	public static void startEvent() {
 		if (EventsConfig.ENABLE_ABYSS_EVENT) {
 			initCoordinates();
@@ -103,7 +112,10 @@ public class TreasureAbyssService {
 	}
 
 	/**
-	 * Announce All
+	 * 向全服在线玩家广播活动消息。
+	 * Broadcasts an event message to all online players.
+	 *
+	 * @param msg 消息内容 / message text
 	 */
 	private static void announceAll(final String msg) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -115,7 +127,8 @@ public class TreasureAbyssService {
 	}
 
 	/**
-	 * Init World ID's Abyss
+	 * 在欧比斯随机坐标刷出宝藏箱并挂接受击奖励观察者。
+	 * Spawns the treasure chest at a random Abyss coordinate and attaches the attack reward observer.
 	 */
 	private static void initPig() {
 		float[] coords = floatArray.get(Rnd.get(floatArray.size()));
@@ -146,7 +159,8 @@ public class TreasureAbyssService {
 	}
 
 	/**
-	 * End Event
+	 * 结束欧比斯宝藏活动并清理生成物。
+	 * Ends the Treasure Abyss event and cleans up spawns.
 	 */
 	public static void endEvent() {
 		announceAll("[Event] The balaur treasure chest event has been ended thanks for your participation!");
@@ -154,7 +168,8 @@ public class TreasureAbyssService {
 	}
 
 	/**
-	 * Init Coordinates Abyss
+	 * 初始化欧比斯刷怪坐标。
+	 * Initializes Abyss spawn coordinates.
 	 */
 	private static void initCoordinates() {
 		floatArray.add(new float[] { 927.2632f, 1347.1643f, 2887.8228f, 0f });

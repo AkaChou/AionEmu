@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.vortex;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -42,7 +26,11 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
+
+/**
+ * 漩涡位置模型。
+ * Vortex Location model.
+ */
 
 public class VortexLocation implements ZoneHandler {
 	protected boolean isActive;
@@ -74,88 +62,115 @@ public class VortexLocation implements ZoneHandler {
 		this.start = template.getStartPoint();
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		return isActive;
 	}
 
+	/** 设置 active vortex / Sets the active vortex */
 	public void setActiveVortex(DimensionalVortex<VortexLocation> vortex) {
 		isActive = vortex != null;
 		this.activeVortex = vortex;
 	}
 
+	/** 返回 active vortex / Returns the active vortex */
 	public DimensionalVortex<VortexLocation> getActiveVortex() {
 		return activeVortex;
 	}
 
+	/** 设置 vortex controller / Sets the vortex controller */
 	public void setVortexController(RVController controller) {
 		this.vortexController = controller;
 	}
 
+	/** 返回 vortex controller / Returns the vortex controller */
 	public RVController getVortexController() {
 		return vortexController;
 	}
 
+	/** 获取模板。 / Returns the template. */
 	public final VortexTemplate getTemplate() {
 		return template;
 	}
 
+	/** 返回 home point / Returns the home point */
 	public WorldPosition getHomePoint() {
 		return home.getHomePoint();
 	}
 
+	/** 返回 resurrection point / Returns the resurrection point */
 	public WorldPosition getResurrectionPoint() {
 		return resurrection.getResurrectionPoint();
 	}
 
+	/** 返回开始点 / Returns the start point*/
 	public WorldPosition getStartPoint() {
 		return start.getStartPoint();
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 defenders race / Returns the defenders race */
 	public Race getDefendersRace() {
 		return defendsRace;
 	}
 
+	/** 返回 invaders race / Returns the invaders race */
 	public Race getInvadersRace() {
 		return offenceRace;
 	}
 
+	/** 返回 home world id / Returns the home world id */
 	public int getHomeWorldId() {
 		return home.getWorldId();
 	}
 
+	/** 返回 invasion world id / Returns the invasion world id */
 	public int getInvasionWorldId() {
 		return start.getWorldId();
 	}
 
+	/** 返回是否已刷新 / Returns the spawned */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}
 
+	/** 返回玩家集合 / Returns the players */
 	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 
+	/** 返回 invaders kisks / Returns the invaders kisks */
 	public Map<Integer, Kisk> getInvadersKisks() {
 		return kisks;
 	}
 
+	/**
+	 * @param objId Whether invader inside / Whether invader inside
+	 */
 	public boolean isInvaderInside(int objId) {
 		return isActive() && getVortexController().getPassedPlayers().containsKey(objId);
 	}
 
+	/**
+	 * @param player Whether inside active vortex / Whether inside active vortex
+	 */
 	public boolean isInsideActiveVortex(Player player) {
 		return isActive() && isInsideLocation(player);
 	}
 
+	/** 添加区域。 / Adds zone. */
 	public void addZone(InvasionZoneInstance zone) {
 		this.zones.add(zone);
 		zone.addHandler(this);
 	}
 
+	/**
+	 * @param creature Whether inside location / Whether inside location
+	 */
 	public boolean isInsideLocation(Creature creature) {
 		if (zones.isEmpty()) {
 			return false;
@@ -168,10 +183,12 @@ public class VortexLocation implements ZoneHandler {
 		return false;
 	}
 
+	/** 返回 zones / Returns the zones */
 	public List<InvasionZoneInstance> getZones() {
 		return zones;
 	}
 
+	/** 在 EnterZone / On Enter Zone */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (creature instanceof Kisk) {
@@ -196,6 +213,7 @@ public class VortexLocation implements ZoneHandler {
 		}
 	}
 
+	/** 在 LeaveZone / On Leave Zone */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		if (!isInsideLocation(creature)) {
@@ -210,6 +228,7 @@ public class VortexLocation implements ZoneHandler {
 						if (getVortexController().getPassedPlayers().containsKey(player.getObjectId())) {
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(904305));
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								/** 运行 / run. */
 								@Override
 								public void run() {
 									if (player.isOnline() && !isInsideActiveVortex(player)) {
@@ -220,6 +239,7 @@ public class VortexLocation implements ZoneHandler {
 						}
 					} else {
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							/** 运行 / run. */
 							@Override
 							public void run() {
 								if (player.isOnline() && !isInsideActiveVortex(player)) {

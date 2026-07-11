@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.HashMap;
@@ -31,14 +16,32 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 技能使用任务模板：对配置技能累计使用次数（6 位打包变量），完成后到结束 NPC 领奖；含短时去抖缓存。
+ * Skill-use quest template: counts configured skill uses with 6-bit packed vars, rewards at the end NPC; includes short debounce cache.
+ */
 public class SkillUse extends QuestHandler {
 
+	/** 任务 ID / quest id */
 	private final int questId;
+	/** 起始 NPC ID / start NPC id */
 	private final int startNpc;
+	/** 结束 NPC ID / end NPC id */
 	private final int endNpc;
+	/** 技能 ID 列表到配置的映射 / map of skill-id lists to config */
 	private final Map<List<Integer>, QuestSkillData> qsd;
+	/** 技能 usedebouncecachekeylastusetime / skill-use debounce cache: key → last use time */
 	private final Map<String, Long> lastSkillUseCache = new HashMap<String, Long>();
-	
+
+	/**
+	 * 构造技能使用任务处理器。
+	 * Constructs a skill-use quest handler.
+	 *
+	 * quest id
+	 * start NPC
+	 * @param endNpc 结束 NPC，0 则使用起始 NPC / end NPC, 0 uses startNpc
+	 * @param qsd 技能配置映射 / skill config map
+	 */
 	public SkillUse(int questId, int startNpc, int endNpc, Map<List<Integer>, QuestSkillData> qsd) {
 		super(questId);
 		this.questId = questId;
@@ -51,6 +54,10 @@ public class SkillUse extends QuestHandler {
 		this.qsd = qsd;
 	}
 
+	/**
+	 * 注册接取/对话 NPC 与技能使用监听。
+	 * Registers start/talk NPCs and skill-use listeners.
+	 */
 	@Override
 	public void register() {
 		qe.registerQuestNpc(startNpc).addOnQuestStart(questId);
@@ -67,6 +74,13 @@ public class SkillUse extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理接取、交任务与奖励对话事件。
+	 * Handles accept, turn-in and reward dialog events.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		Player player = env.getPlayer();
@@ -99,22 +113,30 @@ public class SkillUse extends QuestHandler {
 		return false;
 	}
 
+	/**
+	 * 处理技能使用事件：去抖后按配置累加 6 位打包变量。
+	 * Handles skill-use events: after debounce, increments 6-bit packed vars per config.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param skillId 使用的技能 ID / used skill id
+	 * @return 是否已处理 / whether the skill-use event was handled
+	 */
 	@Override
 	public boolean onUseSkillEvent(QuestEnv env, int skillId) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		
+
 		if (qs != null && qs.getStatus() == QuestStatus.START) {
 			String cacheKey = player.getObjectId() + "_" + skillId + "_" + questId;
 			Long lastUsed = lastSkillUseCache.get(cacheKey);
 			long currentTime = System.currentTimeMillis();
-			
+
 			if (lastUsed != null && (currentTime - lastUsed) < 500) {
 				return false;
 			}
-			
+
 			lastSkillUseCache.put(cacheKey, currentTime);
-			
+
 			if (lastSkillUseCache.size() > 1000) {
 				Iterator<Map.Entry<String, Long>> iterator = lastSkillUseCache.entrySet().iterator();
 				long cleanupTime = currentTime - 30000;
@@ -124,7 +146,7 @@ public class SkillUse extends QuestHandler {
 					}
 				}
 			}
-			
+
 			for (QuestSkillData qd : qsd.values()) {
 				if (qd.getSkillIds().contains(skillId)) {
 					int endVar = qd.getEndVar();

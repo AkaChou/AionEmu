@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import static org.apache.commons.io.filefilter.FileFilterUtils.andFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.makeSVNAware;
@@ -58,45 +43,16 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
+ * 将主 XML 中的 {@code import} 元素解析并合并为单一文档，供 JAXB 反序列化使用。
+ * Resolves {@code import} elements in a master XML and merges them into one document for JAXB unmarshalling.
  * <p>
- * <code>XmlMerger</code> is a utility that writes XML document onto an other
- * document with resolving all <code>import</code> elements.
- * </p>
- * <p>
- * Schema:
- * <p/>
- * 
- * <pre>
- * &lt;xs:element name="import"&gt;
- * &lt;xs:annotation&gt;
- * &lt;xs:documentation&gt;&lt;![CDATA[
- *      Attributes:
- *          'file' :
- *              Required attribute.
- *              Specified path to imported file or directory.
- *          'skipRoot' :
- *              Optional attribute.
- *              Default value: 'false'.
- *              If enabled, then root tags of imported files are ignored.
- *          'recirsiveImport':
- *              Optional attribute.
- *              Default value: 'true'.
- *              If enabled and attribute 'file' points to the directory, then all xml files in that
- *              directory ( and deeper - recursively ) will be imported, otherwise only files inside
- *              that directory (without it subdirectories)
- *  ]]&gt;&lt;/xs:documentation&gt;
- * &lt;/xs:annotation&gt;
- * &lt;xs:complexType&gt;
- * &lt;xs:attribute type="xs:string" name="file" use="required"/&gt;
- * &lt;xs:attribute type="xs:boolean" name="skipRoot" use="optional" default="false"/&gt;
- * &lt;xs:attribute type="xs:boolean" name="recursiveImport" use="optional" default="true" /&gt;
- * &lt;/xs:complexType&gt;
- * &lt;/xs:element&gt;
- * </pre>
- * <p/>
- * </p>
- * <p/>
- * Created on: 23.07.2009 12:55:14
+ * {@code import} 属性：
+ * Import attributes:
+ * <ul>
+ *   <li>{@code file} — 必填，导入文件或目录路径 / required path to file or directory</li>
+ *   <li>{@code skipRoot} — 可选，默认 false；为 true 时忽略被导入文件的根标签 / optional, default false; skip imported root tags when true</li>
+ *   <li>{@code recursiveImport} — 可选，默认 true；目录导入时是否递归子目录 / optional, default true; recurse into subdirs when importing a directory</li>
+ * </ul>
  *
  * @author Aquanox
  */
@@ -112,22 +68,23 @@ public class XmlMerger {
 	private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
 	/**
-	 * Create new instance of <tt>XmlMerger </tt>. Base directory is set to
-	 * directory which contains source file.
+	 * 创建 XmlMerger；基准目录默认为源文件所在目录。
+	 * Creates an XmlMerger with base directory set to the source file's parent.
 	 *
-	 * @param source Source file.
-	 * @param target Destination file.
+	 * source file
+	 * destination file
 	 */
 	public XmlMerger(File source, File target) {
 		this(source, target, source.getParentFile());
 	}
 
 	/**
-	 * Create new instance of <tt>XmlMerger </tt>
+	 * 创建 XmlMerger，并指定 import 解析的基准目录。
+	 * Creates an XmlMerger with an explicit base directory for resolving imports.
 	 *
-	 * @param source  Source file.
-	 * @param target  Destination file.
-	 * @param baseDir Root directory.
+	 * source file
+	 * destination file
+	 * root directory for relative import paths
 	 */
 	public XmlMerger(File source, File target, File baseDir) {
 		this.baseDir = baseDir;
@@ -139,12 +96,14 @@ public class XmlMerger {
 	}
 
 	/**
-	 * This method creates a result document if it is missing, or updates existing
-	 * one if the source file has modification.<br />
-	 * If there are no changes - nothing happens.
+	 * 若目标缺失或源/导入文件有变更则重建合并结果；否则保持不变。
+	 * Rebuilds the merged document when missing or when sources/imports changed; otherwise no-op.
 	 *
-	 * @throws FileNotFoundException when source file doesn't exists.
-	 * @throws XMLStreamException    when XML processing error was occurred.
+	 * @return 是否实际执行了更新 / whether an update was performed
+	 * when the source file is missing。 / when the source file is missing.
+	 * on XML processing errors
+	 *
+	 * @return @throws Exception 其它 I / O 或解析错误 / other I/O or parse errors
 	 */
 	public boolean process() throws Exception {
 		log.debug("Processing " + sourceFile + " files into " + destFile);
@@ -183,14 +142,11 @@ public class XmlMerger {
 	}
 
 	/**
-	 * Check for modifications of included files.
+	 * 检查源文件及全部 import 依赖是否相对缓存发生变更。
+	 * Checks whether the source or any imported file changed relative to the cache.
 	 *
-	 * @return <code>true</code> if at least one of included files has
-	 *         modifications.
-	 * @throws IOException                  IO Error.
-	 * @throws SAXException                 Document parsing error.
-	 * @throws ParserConfigurationException if a SAX parser cannot be created which
-	 *                                      satisfies the requested configuration.
+	 * @return 若至少有一处变更则为 true / true if any included file was modified
+	 * on I/O or parse errors。 / on I/O or parse errors.
 	 */
 	private boolean checkFileModifications() throws Exception {
 		long destFileTime = destFile.lastModified();
@@ -218,14 +174,11 @@ public class XmlMerger {
 	}
 
 	/**
-	 * This method processes the source file, replacing all of the 'import' tags by
-	 * the data from the relevant files.
+	 * 处理源文件，将全部 {@code import} 标签替换为对应文件内容并写出目标。
+	 * Processes the source file, replacing every {@code import} tag with imported content.
 	 *
-	 * @throws XMLStreamException on event writing error.
-	 * @throws IOException        if the destination file exists but is a directory
-	 *                            rather than a regular file, does not exist but
-	 *                            cannot be created, or cannot be opened for any
-	 *                            other reason
+	 * on event read/write errors。 / on event read/write errors.
+	 * if the destination cannot be created or written。 / if the destination cannot be created or written.
 	 */
 	private void doUpdate() throws XMLStreamException, IOException {
 		XMLEventReader reader = null;
@@ -254,8 +207,8 @@ public class XmlMerger {
 				}
 
 				if (xmlEvent.isCharacters()) { // skip whitespaces.
-					if (xmlEvent.asCharacters().isWhiteSpace() || xmlEvent.asCharacters().isIgnorableWhiteSpace()) { // skip
-						// whitespaces.
+					if (xmlEvent.asCharacters().isWhiteSpace() || xmlEvent.asCharacters().isIgnorableWhiteSpace()) { // 跳过 / skip
+						// 空白字符。 / whitespaces.
 						continue;
 					}
 				}
@@ -289,17 +242,20 @@ public class XmlMerger {
 	private static final QName qNameFile = new QName("file");
 	private static final QName qNameSkipRoot = new QName("skipRoot");
 	/**
-	 * If this option is enabled you import the directory, and all its
-	 * subdirectories. Default is 'true'.
+	 * 目录导入时是否递归子目录，默认 true。
+	 * When importing a directory, recurse into subdirectories; default true.
 	 */
 	private static final QName qNameRecursiveImport = new QName("recursiveImport");
 
 	/**
-	 * This method processes the 'import' element, replacing it by the data from the
-	 * relevant files.
+	 * 处理单个 {@code import} 元素，将其替换为对应文件/目录内容。
+	 * Processes one {@code import} element and replaces it with the imported file or directory content.
 	 *
-	 * @throws XMLStreamException    on event writing error.
-	 * @throws FileNotFoundException of imported file was not found.
+	 * import start element
+	 * @param writer 目标写入器 / destination writer
+	 * @param metadata 文件哈希元数据 / file-hash metadata
+	 * on event writing errors。 / on event writing errors.
+	 * if an imported file is missing or unreadable。 / if an imported file is missing or unreadable.
 	 */
 	private void processImportElement(StartElement element, XMLEventWriter writer, Properties metadata)
 			throws XMLStreamException, IOException {
@@ -337,15 +293,15 @@ public class XmlMerger {
 	}
 
 	/**
-	 * Extract an attribute value from a <code>StartElement </code> event.
+	 * 从 {@link StartElement} 提取属性值。
+	 * Extracts an attribute value from a {@link StartElement} event.
 	 *
-	 * @param element        Event object.
-	 * @param name           Attribute QName
-	 * @param def            Default value.
-	 * @param onErrorMessage On error message.
-	 * @return attribute value
-	 * @throws XMLStreamException if attribute is missing and there is no default
-	 *                            value set.
+	 * start element
+	 * attribute QName
+	 * @param def 默认值，可为 null / default value, or null if required
+	 * @param onErrorMessage 缺失且无默认值时的错误信息 / error message when missing and no default
+	 * attribute value
+	 * if the attribute is missing and no default is set。 / if the attribute is missing and no default is set.
 	 */
 	private String getAttributeValue(StartElement element, QName name, String def, String onErrorMessage)
 			throws XMLStreamException {
@@ -361,16 +317,15 @@ public class XmlMerger {
 	}
 
 	/**
-	 * Read all {@link javax.xml.stream.events.XMLEvent}'s from specified file and
-	 * write them onto the {@link javax.xml.stream.XMLEventWriter}
+	 * 读取指定文件的全部 XML 事件并写入目标 writer。
+	 * Reads all XML events from the given file and writes them to the destination writer.
 	 *
-	 * @param file     File to import
-	 * @param skipRoot Skip-root flag
-	 * @param writer   Destenation writer
-	 * @throws XMLStreamException    On event reading/writing error.
-	 * @throws FileNotFoundException if the reading file does not exist, is a
-	 *                               directory rather than a regular file, or for
-	 *                               some other reason cannot be opened for reading.
+	 * @param file 要导入的文件 / file to import
+	 * @param skipRoot 是否跳过根标签 / whether to skip the root element
+	 * @param writer 目标写入器 / destination writer
+	 * @param metadata 文件哈希元数据 / file-hash metadata
+	 * on event read/write errors。 / on event read/write errors.
+	 * if the file cannot be opened for reading。 / if the file cannot be opened for reading.
 	 */
 	private void importFile(File file, boolean skipRoot, XMLEventWriter writer, Properties metadata)
 			throws XMLStreamException, IOException {
@@ -384,21 +339,21 @@ public class XmlMerger {
 			QName firstTagQName = null;
 			while (reader.hasNext()) {
 				XMLEvent event = reader.nextEvent();
-				// skip start and end of document.
+				// 跳过文档开头与结尾。 / skip start and end of document.
 				if (event.isStartDocument() || event.isEndDocument()) {
 					continue;
 				}
-				// skip all comments.
+				// 跳过全部注释。 / skip all comments.
 				if (event instanceof Comment) {
 					continue;
 				}
-				// skip white-spaces and all ignoreable white-spaces.
+				// 跳过空白与所有可忽略空白。 / skip white-spaces and all ignoreable white-spaces.
 				if (event.isCharacters()) {
 					if (event.asCharacters().isWhiteSpace() || event.asCharacters().isIgnorableWhiteSpace()) {
 						continue;
 					}
 				}
-				// modify root-tag of imported file.
+				// 修改导入文件的根标签。 / modify root-tag of imported file.
 				if (firstTagQName == null && event.isStartElement()) {
 					firstTagQName = event.asStartElement().getName();
 
@@ -411,12 +366,12 @@ public class XmlMerger {
 					}
 				}
 
-				// if root was skipped - skip root end too.
+				// 若跳过了 root——也跳过 root 结束。 / if root was skipped - skip root end too.
 				if (event.isEndElement() && skipRoot && event.asEndElement().getName().equals(firstTagQName)) {
 					continue;
 				}
 
-				// finally - write tag
+				// 最后——写入标签 / finally - write tag
 				writer.add(event);
 			}
 		} finally {
@@ -429,6 +384,10 @@ public class XmlMerger {
 		}
 	}
 
+	/**
+	 * 检测 import 依赖是否变更的 SAX 处理器。
+	 * SAX handler that detects whether import dependencies have changed.
+	 */
 	private static class TimeCheckerHandler extends DefaultHandler {
 
 		private File basedir;
@@ -497,13 +456,18 @@ public class XmlMerger {
 					return true;
 				}
 			} catch (IOException e) {
-				log.warn("File varification error. File: " + file.getPath() + ", location=" + locator.getLineNumber()
-						+ ":" + locator.getColumnNumber(), e);
+				log.warn(I18n.get("log.20b451dc6e2b", file.getPath(), locator.getLineNumber(), locator.getColumnNumber(), e));
 				return true;// was modified.
 			}
 			return false;
 		}
 
+		/**
+		 * 是否检测到修改。
+		 * Whether a modification was detected.
+		 *
+		 * @return true 表示已修改 / true if modified
+		 */
 		public boolean isModified() {
 			return isModified;
 		}
@@ -534,7 +498,7 @@ public class XmlMerger {
 			writer = new FileWriter(file, false);
 			props.store(writer, " This file is machine-generated. DO NOT EDIT!");
 		} catch (IOException e) {
-			log.error("Failed to store file modification data.");
+			log.error(I18n.get("log.f1db332ef22f"));
 			throw e;
 		} finally {
 			IOUtils.closeQuietly(writer);
@@ -542,11 +506,12 @@ public class XmlMerger {
 	}
 
 	/**
-	 * Create a unique identifier of file and it contents.
+	 * 基于文件内容生成唯一标识（CRC32）。
+	 * Builds a unique content identifier for the file (CRC32).
 	 *
-	 * @param file the file to checksum, must not be <code>null</code>
-	 * @return String identifier
-	 * @throws IOException if an IO error occurs reading the file
+	 * @param file 待校验文件，不可为 null / file to checksum, must not be null
+	 * @return 字符串标识 / string identifier
+	 * if an I/O error occurs reading the file。 / if an I/O error occurs reading the file.
 	 */
 	private static String makeHash(File file) throws IOException {
 		return String.valueOf(FileUtils.checksumCRC32(file));

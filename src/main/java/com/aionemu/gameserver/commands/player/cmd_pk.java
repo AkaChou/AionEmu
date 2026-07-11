@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -24,15 +8,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
- * Created by wanke on 13/02/2017.
+ * 玩家命令：开启/关闭 PK（Bandit）模式。
+ * Player command: toggles PK (Bandit) mode on or off.
+ *
+ * @author wanke
  */
-
 public class cmd_pk extends PlayerCommand
 {
+	/**
+	 * 注册命令别名 {@code pk}。
+	 * Registers the command alias {@code pk}.
+	 */
     public cmd_pk() {
         super("pk");
     }
-	
+
+	/**
+	 * 在 Bandit 状态之间切换。
+	 * Starts or stops Bandit mode for the player.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param params 未使用的参数 / unused parameters
+	 */
     @Override
     public void execute(Player player, String... params) {
         if (!player.isBandit()) {

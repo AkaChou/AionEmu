@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -23,14 +7,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 管理员频道聊天命令：向所有在线 GM 广播消息。
+ * Admin staff-chat command: broadcasts a message to all online GMs.
+ *
  * @author Imaginary
  */
 public class AdminChat extends AdminCommand {
 
+	/**
+	 * 注册 {@code //s} 命令。
+	 * Registers the {@code //s} command.
+	 */
 	public AdminChat() {
 		super("s");
 	}
 
+	/**
+	 * 执行 GM 频道发言：校验权限与禁言后广播。
+	 * Executes staff chat: checks GM level/gag status, then broadcasts.
+	 *
+	 * admin
+	 * @param params 参数：消息内容 / message text
+	 */
 	@Override
 	public void execute(Player admin, String... params)
 	{
@@ -54,6 +52,13 @@ public class AdminChat extends AdminCommand {
 		}
 	}
 	
+	/**
+	 * 参数错误时输出 {@code //s} 用法。
+	 * Prints {@code //s} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player admin, String message) {
 		PacketSendUtility.sendMessage(admin, "Syntax: //s <message>");

@@ -16,13 +16,24 @@ import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.world.geo.GeoService;
 
+/**
+ * 地形区域材质行为者：根据脚下地形材质周期施加技能。
+ * Terrain-zone material actor: periodically applies skills based on terrain material underfoot.
+ */
 public class TerrainZoneCollisionMaterialActor extends ActionObserver implements IActor {
 
+	/** 被观察生物 / Observed creature */
 	private final Creature creature;
+	/** 当前生效的材质技能列表 / Currently active material skills */
 	private final AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
+	/** 上次材质 ID / Last material id */
 	private int lastMaterialId;
+	/** 周期任务 / Periodic task */
 	private Future<?> task;
 
+	/**
+	 * creature
+	 */
 	public TerrainZoneCollisionMaterialActor(Creature creature) {
 		super(ObserverType.MOVE_OR_DIE);
 		this.creature = creature;
@@ -48,6 +59,14 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 		}
 	}
 
+	/**
+	 * 按材质 ID 查找适用于当前生物的技能。
+	 * Find skills applicable to the creature for the given material id.
+	 *
+	 * material id
+	 *
+	 * @param materialId @return 匹配技能列表 / matching skill list
+	 */
 	private List<MaterialSkill> findSkills(int materialId) {
 		if (materialId == 0 || DataManager.MATERIAL_DATA == null) {
 			return Collections.emptyList();
@@ -65,6 +84,12 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 		return matches;
 	}
 
+	/**
+	 * 启动材质技能周期任务。
+	 * Start the material skill periodic task.
+	 *
+	 * material skills
+	 */
 	private void start(final List<MaterialSkill> materialSkills) {
 		if (materialSkills.isEmpty()) {
 			return;
@@ -107,12 +132,22 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 		lastMaterialId = 0;
 	}
 
+	/**
+	 * 是否存在由本行为者持有的活跃任务。
+	 * Whether an active task owned by this actor exists.
+	 *
+	 * whether active
+	 */
 	private boolean hasActiveTask() {
 		synchronized (creature.getController()) {
 			return task != null && creature.getController().getTask(TaskId.TERRAIN_MATERIAL_ACTION) == task && !task.isDone();
 		}
 	}
 
+	/**
+	 * 取消本行为者持有的控制器任务。
+	 * Cancel the controller task owned by this actor.
+	 */
 	private void cancelOwnedTask() {
 		if (task != null && creature.getController().getTask(TaskId.TERRAIN_MATERIAL_ACTION) == task) {
 			creature.getController().cancelTask(TaskId.TERRAIN_MATERIAL_ACTION);

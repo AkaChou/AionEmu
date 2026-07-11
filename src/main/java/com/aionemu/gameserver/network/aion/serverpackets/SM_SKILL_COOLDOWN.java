@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.ArrayList;
@@ -28,14 +12,31 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
+/**
+ * 向客户端同步技能冷却时间表。
+ * Server packet synchronizing the skill cooldown table to the client.
+ */
 public class SM_SKILL_COOLDOWN extends AionServerPacket {
 	private final List<Cooldown> cooldowns = new ArrayList<>();
 	private final boolean isSkillRemove;
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_COOLDOWN 包。
+	 * Creates a SM_SKILL_COOLDOWN packet with the given parameters.
+	 *
+	 * cooldown map
+	 */
 	public SM_SKILL_COOLDOWN(Map<Integer, Long> cooldowns) {
 		this(cooldowns, true);
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_COOLDOWN 包。
+	 * Creates a SM_SKILL_COOLDOWN packet with the given parameters.
+	 *
+	 * cooldown map
+	 * @param isSkillRemove 是否因移除技能 / skill-remove flag
+	 */
 	public SM_SKILL_COOLDOWN(Map<Integer, Long> cooldowns, boolean isSkillRemove) {
 		this.isSkillRemove = isSkillRemove;
 		for (Map.Entry<Integer, Long> entry : cooldowns.entrySet()) {
@@ -46,6 +47,14 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 		sortByAnimationDuration();
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_COOLDOWN 包。
+	 * Creates a SM_SKILL_COOLDOWN packet with the given parameters.
+	 *
+	 * 玩家 / player
+	 * cooldown map
+	 * @param isSkillRemove 是否因移除技能 / skill-remove flag
+	 */
 	public SM_SKILL_COOLDOWN(Player player, Map<Integer, Long> cooldowns, boolean isSkillRemove) {
 		this.isSkillRemove = isSkillRemove;
 		for (PlayerSkillEntry skill : player.getSkillList().getAllSkills()) {

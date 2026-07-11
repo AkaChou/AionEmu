@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,6 +13,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.item.AssemblyItem;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 组装物品数据容器，按物品 ID 索引组装配方模板。
+ * Assembly item data holder, indexing assembly item recipes by item id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "item" })
 @XmlRootElement(name = "assembly_items")
@@ -40,6 +28,10 @@ public class AssemblyItemsData {
 	@XmlTransient
 	private IntObjectHashMap<AssemblyItem> itemsById = new IntObjectHashMap<AssemblyItem>();
 
+	/**
+	 * JAXB 反序列化完成后，按物品 ID 建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes templates by item id and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		itemsById.clear();
 		for (AssemblyItem template : item) {
@@ -49,10 +41,24 @@ public class AssemblyItemsData {
 		item = null;
 	}
 
+	/**
+	 * 返回已加载的组装物品数量。
+	 * Returns the number of loaded assembly items.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return itemsById.size();
 	}
 
+	/**
+	 * 按物品 ID 获取组装物品模板。
+	 * Returns the assembly item template for the given item id.
+	 *
+	 * item id
+	 *
+	 * @param itemId @return 模板，不存在则为 null / template or null
+	 */
 	public AssemblyItem getAssemblyItem(int itemId) {
 		return itemsById.get(itemId);
 	}

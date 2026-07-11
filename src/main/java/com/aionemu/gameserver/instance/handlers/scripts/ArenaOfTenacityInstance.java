@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,7 +18,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.HallOfTenacityReward;
 import com.aionemu.gameserver.model.instance.playerreward.HallOfTenacityPlayerReward;
-import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -42,25 +25,45 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 孤独竞技场副本事件处理器。
+ * Instance event handler for Arena Of Tenacity.
+ *
+ * @author Encom
+ */
 
-/****/
-/** Author (Encom)
-/****/
 
 @InstanceID(302310000)
 public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
-
+	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 副本奖励对象 / instance reward object */
 	protected HallOfTenacityReward instanceReward;
-    protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
+    /** 副本是否已开始 / whether the instance started */
+        protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+    /** hot 任务 / hot task */
+        private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
+/**
+ * 返回玩家奖励记录。
+ * Return the player's reward record.
+ *
+ * visible object
+ * result
+ */
 
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
 		return (HallOfTenacityPlayerReward) instanceReward.getPlayerReward(object);
 	}
 
+    /**
+     * 副本创建时初始化逻辑。
+     * Initialize logic when the instance is created.
+     *
+     * @param instance 世界地图实例 / world-map instance
+     */
     @Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -70,6 +73,12 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         startInstanceTask();
     }
 
+    /**
+     * 玩家进入副本时处理。
+     * Handle a player entering the instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onEnterInstance(final Player player) {
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, player, 0, instanceReward));
@@ -81,6 +90,13 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         //sendEnterPacket(player);
     }
 
+    /**
+     * 处理玩家复活事件。
+     * Handle a player revive event.
+     *
+     * 玩家 / player
+     * result
+     */
     @Override
     public boolean onReviveEvent(Player player) {
         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
@@ -90,32 +106,36 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         return true;
     }
 
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * 玩家 / player
+     * @param lastAttacker 最后攻击者 / last attacker
+     * result
+     */
     @Override
     public boolean onDie(Player player, Creature lastAttacker) {
 	HallOfTenacityPlayerReward ownerReward = instanceReward.getPlayerReward(player.getObjectId());
 	sendPacket();
 		ownerReward.endBoostMoraleEffect(player);
 		ownerReward.applyBoostMoraleEffect(player);
-        int points = 60;
-        if (lastAttacker instanceof Player) {
-            if (lastAttacker.getRace() != player.getRace()) {
-                InstancePlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
-				points = 0;//TODO points
-                updateScore((Player) lastAttacker, player, points, true);
-            }
-        }
-        updateScore(player, player, -points, false);
         return true;
     }
+/**
+ * 向副本内玩家发送数据包。
+ * Send a packet to players in the instance.
+ */
 
     protected void sendPacket() {
 		instanceReward.sendPacket();
 	}
-
-    protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
-	//TODO
-    }
-
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		HallOfTenacityPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
@@ -125,19 +145,19 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 		}
 	}
 
-    private void sendEnterPacket(final Player player) {
-	instance.doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(Player player) {
-
-            }
-        });
-    }
+/**
+ * 启动副本计时/任务。
+ * Start instance timer/tasks.
+ */
 
     protected void startInstanceTask() {
 	instanceTime = System.currentTimeMillis();
 	instanceReward.setInstanceStartTime();
 	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!instanceReward.isRewarded()) {
@@ -152,6 +172,10 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
             }
         }, 60000));
 	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!instanceReward.isRewarded()) {
@@ -160,14 +184,21 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
             }
         }, 300000));
     }
+/**
+ * 停止副本并结算。
+ * Stop the instance and settle.
+ */
 
     protected void stopInstance() {
         stopInstanceTask();
         //hallOfTenacityReward.setWinner(race);
         instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
         reward();
-        instanceReward.sendPacket(5, null);//TODO id
     }
+/**
+ * 处理 reward。
+ * Handle reward.
+ */
 
     protected void reward() {
 
@@ -180,30 +211,27 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 			}
         }
     }
+/**
+ * 处理 openDoors。
+ * Handle openDoors.
+ */
 
     protected void openDoors() {
         openDoor(157);
 		openDoor(7);
     }
+/**
+ * 打开指定门。
+ * Open the given door.
+ *
+ * doorId
+ */
 
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
             door.setOpen(true);
         }
-    }
-
-    private void startInstancePacket() {
-	instance.doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(Player player) {
-	//TODO packets
-	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), hallOfTenacityReward, instance.getPlayersInside(), true));
-	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), hallOfTenacityReward, player.getObjectId(), 0, 0));
-	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), hallOfTenacityReward, instance.getPlayersInside(), true));
-	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(5, getTime(), instanceReward, player.getObjectId()));
-            }
-        });
     }
 
     private int getTime() {
@@ -215,12 +243,30 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         }
         return 0;
     }
+/**
+ * 向副本内玩家发送消息。
+ * Send a message to players in the instance.
+ *
+ * message
+ * 阵营 / race
+ * time
+ */
 
     protected void sendMsg(final int msg, final Race race, int time) {
 	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

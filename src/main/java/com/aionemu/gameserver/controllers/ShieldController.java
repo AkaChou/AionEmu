@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -31,9 +15,21 @@ import com.aionemu.gameserver.world.World;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 要塞护盾控制器，为敌对阵营玩家注册护盾伤害观察者。
+ * Fortress shield controller that registers shield-damage observers for enemy-race players.
+ */
 public class ShieldController extends VisibleObjectController<Shield> {
+
+	/** 当前受护盾观察的玩家映射。 / Map of players currently observed by the shield. */
 	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
 
+	/**
+	 * 敌对玩家进入护盾范围时注册护盾观察者。
+	 * Registers a shield observer when an enemy player enters the shield range.
+	 *
+	 * @param object 进入视野的可见对象 / the visible object entering sight
+	 */
 	@Override
 	public void see(VisibleObject object) {
 		FortressLocation loc = GameFeatureServices.siegeService().getFortress(getOwner().getId());
@@ -49,6 +45,13 @@ public class ShieldController extends VisibleObjectController<Shield> {
 		}
 	}
 
+	/**
+	 * 敌对玩家离开护盾范围时移除护盾观察者。
+	 * Removes the shield observer when an enemy player leaves the shield range.
+	 *
+	 * @param object 离开视野的可见对象 / the visible object leaving sight
+	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
+	 */
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		FortressLocation loc = GameFeatureServices.siegeService().getFortress(getOwner().getId());
@@ -65,6 +68,10 @@ public class ShieldController extends VisibleObjectController<Shield> {
 		}
 	}
 
+	/**
+	 * 禁用护盾并清理所有已注册的玩家观察者。
+	 * Disables the shield and clears all registered player observers.
+	 */
 	public void disable() {
 		for (Integer playerId : observed.keySet().toArray(Integer[]::new)) {
 			ActionObserver observer = observed.remove(playerId);

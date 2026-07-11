@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -22,21 +6,38 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_CHARACTER;
 
 /**
+ * 登录服查询账号角色数量的请求包，游戏服以 SM_GS_CHARACTER 回复。
+ * LoginServer request for the character count of an account; Gameserver replies with SM_GS_CHARACTER.
+ *
  * @author cura
  */
 public class CM_GS_CHARACTER_RESPONSE extends LsClientPacket {
 
+	/**
+	 * 构造函数。
+	 * Constructor.
+	 *
+	 * @param opCode 操作码 opcode
+	 */
 	public CM_GS_CHARACTER_RESPONSE(int opCode) {
 		super(opCode);
 	}
 
 	private int accountId;
 
+	/**
+	 * 读取待查询的账号 ID。
+	 * Reads the account id to query.
+	 */
 	@Override
 	public void readImpl() {
 		accountId = readD();
 	}
 
+	/**
+	 * 查询账号角色数并回复登录服。
+	 * Queries character count for the account and replies to the login server.
+	 */
 	@Override
 	public void runImpl() {
 		int characterCount = DAOManager.getDAO(PlayerDAO.class).getCharacterCountOnAccount(accountId);

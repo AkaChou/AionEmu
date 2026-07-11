@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.mission;
 
 import com.aionemu.gameserver.model.EmotionType;
@@ -25,10 +13,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 主线任务脚本：Rumors On Wings（任务 ID 14045）。
+ * Campaign mission quest script: Rumors On Wings (quest ID 14045).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _14045Rumors_On_Wings extends QuestHandler {
 
     private final static int questId = 14045;
@@ -78,7 +68,7 @@ public class _14045Rumors_On_Wings extends QuestHandler {
                             playQuestMovie(env, 272);
                             break;
                         } case STEP_TO_1: {
-                            //Tigraki Island.
+                            // 蒂格拉基岛。 / Tigraki Island.
 							TeleportService2.teleportTo(player, 400010000, 136.4838f, 790.4456f, 2836.5127f, (byte) 48);
                             return defaultCloseDialog(env, 0, 1);
                         }

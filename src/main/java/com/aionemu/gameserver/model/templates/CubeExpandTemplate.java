@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates;
 
 import java.util.List;
@@ -27,6 +11,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.expand.Expand;
 
 /**
+ * 魔立方 Expand 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Simple
  */
 @XmlRootElement(name = "cube_npc")
@@ -39,10 +26,12 @@ public class CubeExpandTemplate {
 	@XmlAttribute(name = "id", required = true)
 	private int Id;
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return Id;
 	}
 
+	/** 是否包含。 / Contains. */
 	public boolean contains(int level) {
 		for (Expand expand : cubeExpands) {
 			if (expand.getLevel() == level) {
@@ -52,6 +41,7 @@ public class CubeExpandTemplate {
 		return false;
 	}
 
+	/** 获取。 / Get. */
 	public Expand get(int level) {
 		for (Expand expand : cubeExpands) {
 			if (expand.getLevel() == level) {

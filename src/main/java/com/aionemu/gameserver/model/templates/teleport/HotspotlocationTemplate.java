@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.teleport;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.Race;
 
 /**
+ * Hotspotlocation 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 @XmlRootElement(name = "hotspot_template")
@@ -60,42 +47,52 @@ public class HotspotlocationTemplate {
 	@XmlAttribute(name = "heading")
 	private int heading = 0;
 
+	/** 返回 loc id / Returns the loc id */
 	public int getLocId() {
 		return locId;
 	}
 
+	/** 返回映射 ID / Returns the map id */
 	public int getMapId() {
 		return mapid;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return nameId;
 	}
 
+	/** 获取价格。 / Returns the price. */
 	public int getPrice() {
 		return price;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回 x / Returns the x */
 	public float getX() {
 		return x;
 	}
 
+	/** 返回 y / Returns the y */
 	public float getY() {
 		return y;
 	}
 
+	/** 返回 z / Returns the z */
 	public float getZ() {
 		return z;
 	}
 
+	/** 返回 heading / Returns the heading */
 	public int getHeading() {
 		return heading;
 	}

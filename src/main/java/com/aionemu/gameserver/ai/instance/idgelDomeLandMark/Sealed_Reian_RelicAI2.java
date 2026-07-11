@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.idgelDomeLandMark;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Idgel Dome Land Mark 副本 NPC AI：Sealed Reian Relic（@AIName "Sealed_Reian_Relic"），继承 ActionItemNpcAI2。
+ * Idgel Dome Land Mark instance NPC AI: Sealed Reian Relic (@AIName "Sealed_Reian_Relic"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Sealed_Reian_Relic")
 public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 {
@@ -58,12 +44,12 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 				    switch (player.getRace()) {
 						case ELYOS:
 						    IDFortressWarElyos();
-							//The Elyos removed the last stage of the device.
+							// 天族移除了装置的最后阶段。 / The Elyos removed the last stage of the device.
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403432));
 						break;
 						case ASMODIANS:
 						    IDFortressWarAsmodians();
-							//The Asmodians removed the last stage of the device.
+							// 魔族移除了装置的最后阶段。 / The Asmodians removed the last stage of the device.
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403439));
 					    break;
 					}

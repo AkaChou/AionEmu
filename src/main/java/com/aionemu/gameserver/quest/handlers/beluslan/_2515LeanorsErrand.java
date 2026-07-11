@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：Leanors Errand（任务 ID 2515）。
+ * Beluslan quest script: Leanors Errand (quest ID 2515).
  */
 public class _2515LeanorsErrand extends QuestHandler {
 

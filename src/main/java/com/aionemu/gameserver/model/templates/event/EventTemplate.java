@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.event;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -47,6 +34,11 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.world.World;
+
+/**
+ * 活动模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventTemplate")
@@ -90,22 +82,27 @@ public class EventTemplate {
 	@XmlTransient
 	private List<Future<?>> invDropTasks = null;
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 活动掉落。 / Event Drop. */
 	public EventDrops EventDrop() {
 		return eventDrops;
 	}
 
+	/** 返回开始日期 / Returns the start date*/
 	public ZonedDateTime getStartDate() {
 		return DateTimeUtil.fromCalendar(startDate.toGregorianCalendar());
 	}
 
+	/** 返回结束日期 / Returns the end date*/
 	public ZonedDateTime getEndDate() {
 		return DateTimeUtil.fromCalendar(endDate.toGregorianCalendar());
 	}
 
+	/** 返回 startable quests / Returns the startable quests */
 	public List<Integer> getStartableQuests() {
 		if (quests == null) {
 			return new ArrayList<Integer>();
@@ -113,6 +110,7 @@ public class EventTemplate {
 		return quests.getStartableQuests();
 	}
 
+	/** 返回 maintainable quests / Returns the maintainable quests */
 	public List<Integer> getMaintainableQuests() {
 		if (quests == null) {
 			return new ArrayList<Integer>();
@@ -120,11 +118,15 @@ public class EventTemplate {
 		return quests.getMaintainQuests();
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		ZonedDateTime now = DateTimeUtil.now();
 		return getStartDate().isBefore(now) && getEndDate().isAfter(now);
 	}
 
+	/**
+	 * @return Whether expired / Whether expired
+	 */
 	public boolean isExpired() {
 		return !isActive();
 	}
@@ -132,14 +134,19 @@ public class EventTemplate {
 	@XmlTransient
 	volatile boolean isStarted = false;
 
+	/** 设置 started / Sets the started */
 	public void setStarted() {
 		isStarted = true;
 	}
 
+	/**
+	 * @return Whether started / Whether started
+	 */
 	public boolean isStarted() {
 		return isStarted;
 	}
 
+	/** 开始 / Start. */
 	public void Start() {
 		if (isStarted) {
 			return;
@@ -164,7 +171,7 @@ public class EventTemplate {
 					}
 				}
 			}
-			log.info("[EventService] Spawned " + spawnCount + " Event objects:" + " (" + this.getName() + ")");
+			log.info(I18n.get("log.ac12f1e2f672", spawnCount, this.getName()));
 			DataManager.SPAWNS_DATA2.afterUnmarshal(null, null);
 			DataManager.SPAWNS_DATA2.clearTemplates();
 		}
@@ -204,6 +211,7 @@ public class EventTemplate {
 		}
 	}
 
+	/** 停止 / Stop. */
 	public void Stop() {
 		if (!isStarted) {
 			return;
@@ -215,7 +223,7 @@ public class EventTemplate {
 				}
 			}
 			DataManager.SPAWNS_DATA2.removeEventSpawnObjects(spawnedObjects);
-			log.info("Despawned " + spawnedObjects.size() + " event objects (" + this.getName() + ")");
+			log.info(I18n.get("log.81239f5579ea", spawnedObjects.size(), this.getName()));
 			spawnedObjects.clear();
 			spawnedObjects = null;
 		}
@@ -236,6 +244,7 @@ public class EventTemplate {
 		isStarted = false;
 	}
 
+	/** Adds 已刷新对象 / Adds spawned object */
 	public void addSpawnedObject(VisibleObject object) {
 		if (spawnedObjects == null) {
 			spawnedObjects = new ArrayList<VisibleObject>();
@@ -243,6 +252,7 @@ public class EventTemplate {
 		spawnedObjects.add(object);
 	}
 
+	/** 返回主题 / Returns the theme */
 	public String getTheme() {
 		if (theme != null) {
 			return theme.toLowerCase();
@@ -250,6 +260,7 @@ public class EventTemplate {
 		return theme;
 	}
 
+	/** 获取背包掉落。 / Returns the inventory drop. */
 	public InventoryDrop getInventoryDrop() {
 		return inventoryDrops == null || inventoryDrops.isEmpty() ? null : inventoryDrops.get(0);
 	}

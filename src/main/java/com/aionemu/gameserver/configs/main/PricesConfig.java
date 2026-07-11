@@ -1,49 +1,47 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
 /**
+ * 物价、税率与商店买卖系数相关配置。
+ * Prices, taxes and vendor buy/sell modifier related configuration.
+ *
  * @author Sarynth
  */
 public class PricesConfig {
 
 	/**
-	 * Controls the "Prices:" value in influence tab.
+	 * 影响力界面显示的默认物价系数。
+	 * Default prices value shown in the influence tab.
 	 */
 	@Property(key = "gameserver.prices.default.prices", defaultValue = "100")
 	public static int DEFAULT_PRICES;
 
 	/**
-	 * Hidden modifier for all prices.
+	 * 所有价格的隐藏修正系数。
+	 * Hidden modifier applied to all prices.
 	 */
 	@Property(key = "gameserver.prices.default.modifier", defaultValue = "100")
 	public static int DEFAULT_MODIFIER;
 
 	/**
-	 * Taxes: value = 100 + tax %
+	 * 默认税率（值为 100 + 税率百分比）。
+	 * Default taxes (value = 100 + tax percent).
 	 */
 	@Property(key = "gameserver.prices.default.taxes", defaultValue = "100")
 	public static int DEFAULT_TAXES;
 
+	/**
+	 * NPC 商店购买价格修正系数。
+	 * Vendor buy price modifier.
+	 */
 	@Property(key = "gameserver.prices.vendor.buymod", defaultValue = "100")
 	public static int VENDOR_BUY_MODIFIER;
 
+	/**
+	 * NPC 商店出售价格修正系数。
+	 * Vendor sell price modifier.
+	 */
 	@Property(key = "gameserver.prices.vendor.sellmod", defaultValue = "20")
 	public static int VENDOR_SELL_MODIFIER;
 }

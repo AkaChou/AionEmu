@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,117 +8,176 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 动作观察者基类，响应移动、攻击、装备、技能等事件。
+ * Base action observer responding to move, attack, equip, skill and related events.
+ *
  * @author ATracer
  */
 public class ActionObserver {
 
+	/** 一次性使用标记 / One-time use flag */
 	private AtomicBoolean used;
 
+	/** 观察者类型 / Observer type */
 	private ObserverType observerType;
 
+	/**
+	 * @param observerType 观察者类型 / observer type
+	 */
 	public ActionObserver(ObserverType observerType) {
 		this.observerType = observerType;
 	}
 
 	/**
-	 * Make this observer usable exactly one time
+	 * 将本观察者设为仅可使用一次。
+	 * Make this observer usable exactly one time.
 	 */
 	public void makeOneTimeUse() {
 		used = new AtomicBoolean(false);
 	}
 
 	/**
-	 * Try to use this observer. Will return true only once.
-	 * 
-	 * @return
+	 * 尝试使用本观察者，仅首次返回 true。
+	 * Try to use this observer; returns true only once.
+	 *
+	 * @return 是否成功占用 / whether successfully claimed
 	 */
 	public boolean tryUse() {
 		return used.compareAndSet(false, true);
 	}
 
 	/**
-	 * @return the observerType
+	 * 获取观察者类型。
+	 * Get observer type.
+	 *
+	 * @return 观察者类型 / observer type
 	 */
 	public ObserverType getObserverType() {
 		return observerType;
 	}
 
+	/**
+	 * 生物移动时回调。
+	 * Callback when the creature moves.
+	 */
 	public void moved() {
 	};
 
 	/**
-	 * @param creature
+	 * 受到攻击时回调。
+	 * Callback when attacked.
+	 *
+	 * attacker
 	 */
 	public void attacked(Creature creature) {
 	};
 
 	/**
-	 * @param creature
+	 * 主动攻击时回调。
+	 * Callback when attacking.
+	 *
+	 * target
 	 */
 	public void attack(Creature creature) {
 	};
 
 	/**
-	 * @param item
-	 * @param owner
+	 * 装备物品时回调。
+	 * Callback when equipping an item.
+	 *
+	 * item
+	 * owner
 	 */
 	public void equip(Item item, Player owner) {
 	};
 
 	/**
-	 * @param item
-	 * @param owner
+	 * 卸下物品时回调。
+	 * Callback when unequipping an item.
+	 *
+	 * item
+	 * owner
 	 */
 	public void unequip(Item item, Player owner) {
 	};
 
 	/**
-	 * @param skill
+	 * 使用技能时回调。
+	 * Callback when using a skill.
+	 *
+	 * skill
 	 */
 	public void skilluse(Skill skill) {
 	};
 
 	/**
-	 * @param creature
+	 * 死亡时回调。
+	 * Callback on death.
+	 *
+	 * dead creature
 	 */
 	public void died(Creature creature) {
 	};
 
 	/**
-	 * @param creature
-	 * @param dotEffect
+	 * 受到持续伤害时回调。
+	 * Callback when hit by a DoT.
+	 *
+	 * source creature
+	 * DoT effect
 	 */
 	public void dotattacked(Creature creature, Effect dotEffect) {
 	};
 
 	/**
-	 * 
-	 * @param item
+	 * 使用物品时回调。
+	 * Callback when an item is used.
+	 *
+	 * item
 	 */
 	public void itemused(Item item) {
 	};
 
 	/**
-	 * 
-	 * @param npc
+	 * 请求 NPC 对话时回调。
+	 * Callback when an NPC dialog is requested.
+	 *
+	 * @param npc NPC
 	 */
 	public void npcdialogrequested(Npc npc) {
 	};
 
 	/**
-	 * 
-	 * @param state
+	 * 异常状态被设置时回调。
+	 * Callback when an abnormal state is set.
+	 *
+	 * @param state 异常状态 / abnormal state
 	 */
 	public void abnormalsetted(AbnormalState state) {
 	};
 
 	/**
-	 * 
-	 * @param
+	 * 召唤物被释放时回调。
+	 * Callback when a summon is released.
 	 */
 	public void summonrelease() {
+	};
+
+	/**
+	 * 生命或魔法值变化时回调。
+	 * Callback when HP or MP changes.
+	 */
+	public void lifeChanged(HealType type, int value) {
+	};
+
+	/**
+	 * 观察者被移除时回调。
+	 * Callback when the observer is removed.
+	 */
+	public void onRemoved() {
 	};
 }

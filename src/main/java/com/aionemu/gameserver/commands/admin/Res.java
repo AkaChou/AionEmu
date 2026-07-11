@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 复活指令；对死亡目标玩家发送复活提示或立即技能复活。
+ * Admin command that prompts or instantly skill-revives a dead target player.
+ *
  * @author Sarynth
  */
 public class Res extends AdminCommand {
@@ -32,6 +19,13 @@ public class Res extends AdminCommand {
 		super("res");
 	}
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		final VisibleObject target = admin.getTarget();
@@ -51,7 +45,7 @@ public class Res extends AdminCommand {
 			return;
 		}
 
-		// Default action is to prompt for resurrect.
+		// 默认动作为提示复活。 / Default action is to prompt for resurrect.
 		if (params == null || params.length == 0 || ("prompt").startsWith(params[0])) {
 			player.setPlayerResActivate(true);
 			PacketSendUtility.sendPacket(player, new SM_RESURRECT(admin));
@@ -66,8 +60,4 @@ public class Res extends AdminCommand {
 		PacketSendUtility.sendMessage(admin, "[Resurrect] Usage: target player and use //res <instant|prompt>");
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.springzone;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -25,10 +9,10 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 温泉对象，用于 springzone 相关逻辑。
+ * Spring Object for springzone logic.
+ */
 
 public class SpringObject extends VisibleObject {
 	private float range;
@@ -44,18 +28,22 @@ public class SpringObject extends VisibleObject {
 		setKnownlist(new NpcKnownList(this));
 	}
 
+	/** 获取模板。 / Returns the template. */
 	public SpringTemplate getTemplate() {
 		return template;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return "";
 	}
 
+	/** 返回范围 / Returns the range*/
 	public float getRange() {
 		return range;
 	}
 
+	/** 生成。 / Spawn. */
 	public void spawn() {
 		World w = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		w.storeObject(this);

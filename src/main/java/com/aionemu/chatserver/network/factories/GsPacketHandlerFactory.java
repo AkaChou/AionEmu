@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.factories;
 
+import com.aionemu.boot.i18n.I18n;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 
@@ -30,18 +14,22 @@ import com.aionemu.chatserver.network.gameserver.clientpackets.CM_PLAYER_GAG;
 import com.aionemu.chatserver.network.gameserver.clientpackets.CM_PLAYER_LOGOUT;
 
 /**
+ * 游戏服连接的数据包工厂（按状态/操作码分发）。
+ * Packet factory for game-server connections (dispatches by state/opcode).
+ *
  * @author -Nemesiss-
  */
 @Slf4j
+@UtilityClass
 public class GsPacketHandlerFactory {
 
-
     /**
-     * Reads one packet from given ByteBuffer
+     * 从给定缓冲区读取并构造一个游戏服客户端包。
+     * Reads and constructs one game-server client packet from the given buffer.
      *
-     * @param data
-     * @param client
-     * @return GsClientPacket object from binary data
+     * @param data 原始数据缓冲区 / raw data buffer
+     * @param client 游戏服连接 / game-server connection
+     * @return 解析出的客户端包，未知时为 {@code null} / parsed client packet, or {@code null} if unknown
      */
     public static GsClientPacket handle(ByteBuffer data, GsConnection client) {
         GsClientPacket msg = null;
@@ -86,12 +74,13 @@ public class GsPacketHandlerFactory {
     }
 
     /**
-     * Logs unknown packet.
+     * 记录未知数据包警告。
+     * Logs a warning for an unknown packet.
      *
-     * @param state
-     * @param id
+     * @param state 当前连接状态 / current connection state
+     * @param id 包操作码 / packet opcode
      */
     private static void unknownPacket(State state, int id) {
-        log.warn(String.format("Unknown packet recived from Game Server: 0x%02X state=%s", id, state.toString()));
+        log.warn(I18n.get("log.2585d962bf33", String.format("%02X", id), state));
     }
 }

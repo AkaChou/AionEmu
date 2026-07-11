@@ -1,47 +1,48 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.common.netty;
 
-
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 客户端入站网络包基类。
+ * Base class for inbound client network packets.
+ */
 @Slf4j
 public abstract class BaseClientPacket extends AbstractPacket {
 
+    /**
+     * 数据包读取器。
+     * Packet reader.
+     */
     private PacketReader buf;
 
     /**
-     * @param packetReader
-     * @param opCode
+     * 使用读取器与操作码创建客户端包。
+     * Creates a client packet with the given reader and opcode.
+     *
+     * @param packetReader 数据包读取器 / Packet reader
+     * Opcode
      */
     public BaseClientPacket(PacketReader packetReader, int opCode) {
         super(opCode);
         this.buf = packetReader;
     }
 
+    /**
+     * 返回缓冲区中剩余可读字节数。
+     * Returns the number of remaining readable bytes in the buffer.
+     *
+     * @return 剩余字节数 / Remaining bytes
+     */
     public int getRemainingBytes() {
         return buf.readableBytes();
     }
 
     /**
-     * Perform packet read
+     * 执行数据包读取。
+     * Performs packet reading.
      *
-     * @return boolean
+     * @return 是否读取成功 / Whether reading succeeded
      */
     public boolean read() {
         try {
@@ -51,115 +52,131 @@ public abstract class BaseClientPacket extends AbstractPacket {
             }
             return true;
         } catch (Exception ex) {
-            log.error("Reading failed for packet " + this, ex);
+            log.error(I18n.get("log.909185c9f5d6", this, ex));
             return false;
         }
 
     }
 
     /**
-     * Perform packet action
+     * 执行数据包业务逻辑。
+     * Runs the packet business logic.
      */
     public void run() {
         try {
             runImpl();
         } catch (Exception ex) {
-            log.error("Running failed for packet " + this, ex);
+            log.error(I18n.get("log.0567970c60e1", this, ex));
         }
     }
 
+    /**
+     * 子类实现的读取逻辑。
+     * Packet-specific read implementation.
+     */
     protected abstract void readImpl();
 
+    /**
+     * 子类实现的运行逻辑。
+     * Packet-specific run implementation.
+     */
     protected abstract void runImpl();
 
     /**
-     * Read int from this packet buffer.
+     * 从缓冲区读取 int。
+     * Reads an int from this packet buffer.
      *
-     * @return int
+     * @return 整数值，失败时返回 0 / Integer value, or 0 on failure
      */
     protected final int readD() {
         try {
             return buf.readD();
         } catch (Exception e) {
-            log.error("Missing D for: " + this);
+            log.error(I18n.get("log.aa48cc356cee", this));
         }
         return 0;
     }
 
     /**
-     * Read byte from this packet buffer.
+     * 从缓冲区读取 byte（无符号）。
+     * Reads a byte from this packet buffer.
      *
-     * @return int
+     * @return 字节值，失败时返回 0 / Byte value, or 0 on failure
      */
     protected final int readC() {
         try {
             return buf.readC();
         } catch (Exception e) {
-            log.error("Missing C for: " + this);
+            log.error(I18n.get("log.b44155a94d66", this));
         }
         return 0;
     }
 
     /**
-     * Read short from this packet buffer.
+     * 从缓冲区读取 short（无符号）。
+     * Reads a short from this packet buffer.
      *
-     * @return int
+     * @return 短整数值，失败时返回 0 / Short value, or 0 on failure
      */
     protected final int readH() {
         try {
             return buf.readH();
         } catch (Exception e) {
-            log.error("Missing H for: " + this);
+            log.error(I18n.get("log.40b83b0b1a39", this));
         }
         return 0;
     }
 
     /**
-     * Read double from this packet buffer.
+     * 从缓冲区读取 double。
+     * Reads a double from this packet buffer.
      *
-     * @return double
+     * @return 双精度值，失败时返回 0 / Double value, or 0 on failure
      */
     protected final double readDF() {
         try {
             return buf.readDF();
         } catch (Exception e) {
-            log.error("Missing DF for: " + this);
+            log.error(I18n.get("log.e76069d83a06", this));
         }
         return 0;
     }
 
     /**
-     * Read double from this packet buffer.
+     * 从缓冲区读取 float。
+     * Reads a float from this packet buffer.
      *
-     * @return double
+     * @return 单精度值，失败时返回 0 / Float value, or 0 on failure
      */
     protected final float readF() {
         try {
             return buf.readF();
         } catch (Exception e) {
-            log.error("Missing F for: " + this);
+            log.error(I18n.get("log.6a94012b598f", this));
         }
         return 0;
     }
 
     /**
-     * Read long from this packet buffer.
+     * 从缓冲区读取 long。
+     * Reads a long from this packet buffer.
      *
-     * @return long
+     * @return 长整数值，失败时返回 0 / Long value, or 0 on failure
      */
     protected final long readQ() {
         try {
             return buf.readQ();
         } catch (Exception e) {
-            log.error("Missing Q for: " + this);
+            log.error(I18n.get("log.38936ac94da3", this));
         }
         return 0;
     }
 
     /**
-     * Read String from this packet buffer.
+     * 从缓冲区读取以 \\0 结尾的字符串。
+     * Reads a null-terminated string from this packet buffer.
      *
-     * @return String
+     * String value
      */
     protected final String readS() {
         StringBuffer sb = new StringBuffer();
@@ -169,24 +186,25 @@ public abstract class BaseClientPacket extends AbstractPacket {
                 sb.append(ch);
             }
         } catch (Exception e) {
-            log.error("Missing S for: " + this);
+            log.error(I18n.get("log.ceb21154a1ce", this));
         }
         return sb.toString();
 
     }
 
     /**
-     * Read n bytes from this packet buffer, n = length.
+     * 从缓冲区读取指定长度的字节数组。
+     * Reads n bytes from this packet buffer, where n is length.
      *
-     * @param length
-     * @return byte[]
+     * Number of bytes to read
+     * Byte array
      */
     protected final byte[] readB(int length) {
         byte[] result = new byte[length];
         try {
             buf.readBytes(result);
         } catch (Exception e) {
-            log.error("Missing byte[] for: " + this);
+            log.error(I18n.get("log.b84a8a529031", this));
         }
         return result;
     }

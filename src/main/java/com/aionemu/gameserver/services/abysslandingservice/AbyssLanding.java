@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.abysslandingservice;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -21,11 +5,25 @@ import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.landing.LandingStateType;
 
+/**
+ * 标准欧比斯着陆点实现：按等级刷怪/去刷并持久化位置。
+ * Standard abyss landing implementation: spawn/despawn by level and persist location.
+ */
 public class AbyssLanding extends Landing<LandingLocation> {
+
+	/**
+	 * @param landing 着陆点位置 / Landing location
+	 */
 	public AbyssLanding(LandingLocation landing) {
 		super(landing);
 	}
 
+	/**
+	 * 按等级启动着陆点刷怪（1–8 级，非法等级回退 LVL1）。
+	 * Start landing spawns by level (1–8; invalid levels fall back to LVL1).
+	 *
+	 * @param level 着陆等级 / Landing level
+	 */
 	@Override
 	public void startLanding(int level) {
 		getLandingLocation().setActiveLanding(this);
@@ -63,10 +61,18 @@ public class AbyssLanding extends Landing<LandingLocation> {
 		}
 	}
 
+	/**
+	 * 将着陆点状态写回数据库。
+	 * Persist landing location state to the database.
+	 */
 	public void saveLanding() {
 		DAOManager.getDAO(AbyssLandingDAO.class).updateLocation(getLandingLocation());
 	}
 
+	/**
+	 * 停止着陆点：清空活动引用、去刷并刷 NONE 状态。
+	 * Stop landing: clear active ref, despawn, and spawn NONE state.
+	 */
 	@Override
 	public void stopLanding() {
 		getLandingLocation().setActiveLanding(null);

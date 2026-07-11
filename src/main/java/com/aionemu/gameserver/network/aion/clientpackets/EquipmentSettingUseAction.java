@@ -6,23 +6,55 @@ import java.util.Map;
 
 import com.aionemu.gameserver.model.items.ItemSlot;
 
+/**
+ * 装备方案应用动作（穿戴/卸下/切换主副手）。
+ * unequip / switch hands). / unequip / switch hands).
+ */
 class EquipmentSettingUseAction {
 
+	/** 穿戴动作 / Equip action. */
 	private static final int ACTION_EQUIP = 0;
+	/** 卸下动作 / Unequip action. */
 	private static final int ACTION_UNEQUIP = 1;
+	/** 切换主副手 / Switch hands action. */
 	private static final int ACTION_SWITCH_HANDS = 2;
+	/** 武器槽位掩码 / Weapon slot mask. */
 	private static final long WEAPON_SLOTS = ItemSlot.MAIN_OR_SUB.getSlotIdMask() | ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask();
 
+	/**
+	 * 动作类型。
+	 * Action type.
+	 */
 	private final int action;
+	/**
+	 * 目标槽位掩码。
+	 * Target slot mask.
+	 */
 	private final long slot;
+	/**
+	 * 物品对象 ID。
+	 * Item object id.
+	 */
 	private final int itemObjectId;
 
+	/**
+	 * action type
+	 * slot
+	 * item object id
+	 */
 	EquipmentSettingUseAction(int action, long slot, int itemObjectId) {
 		this.action = action;
 		this.slot = slot;
 		this.itemObjectId = itemObjectId;
 	}
 
+	/**
+	 * 对目标执行本动作。
+	 * Applies this action to the target.
+	 *
+	 * equipment target
+	 * @return 是否变更成功 / whether changed
+	 */
 	boolean apply(EquipmentSettingUseTarget target) {
 		switch (action) {
 		case ACTION_EQUIP:

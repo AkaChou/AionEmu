@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.adma_fall;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,9 +7,12 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 阿德玛陷落任务脚本：Fallen Doorways（任务 ID 28990）。
+ * Adma Fall quest script: Fallen Doorways (quest ID 28990).
+ *
+ * @author (Encom)
+ */
 public class _28990Fallen_Doorways extends QuestHandler {
 
     private final static int questId = 28990;

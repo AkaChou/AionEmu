@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -38,10 +22,12 @@ import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Aturam Sky Fortress 副本 NPC AI：Ashunatal Shadowslip（@AIName "ashunatal_shadowslip"），继承 AggressiveNpcAI2。
+ * Aturam Sky Fortress instance NPC AI: Ashunatal Shadowslip (@AIName "ashunatal_shadowslip"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("ashunatal_shadowslip")
 public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 {
@@ -86,8 +72,8 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 	}
 	
 	/**
-	 * Security:
-	 * if Ashunatal Die!!!!
+	 * 安全：若 Ashunatal 死亡。
+	 * Security: if Ashunatal dies
 	 */
 	@Override
 	protected void handleDied() {
@@ -105,7 +91,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						//Ashunatal has retreated to another room. Hunt her down!
+						// 阿舒纳塔尔已撤到另一房间。追击她！ / Ashunatal has retreated to another room. Hunt her down!
 						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401391, 0);
 						GameEngineServices.skillEngine().getSkill(getOwner(), 19417, 49, getOwner()).useNoAnimationSkill();
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +25,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
+/**
+ * 城镇服务，加载/初始化阵营城镇并查询玩家所在城镇。
+ * Town service that loads/initializes race towns and resolves a player's town.
+ */
 @Slf4j
 public class TownService {
 	private static volatile ObjectProvider<TownService> instanceProvider;
@@ -49,6 +39,12 @@ public class TownService {
 		protected static final TownService instance = new TownService();
 	}
 
+	/**
+	 * 获取城镇服务单例（优先 Spring ObjectProvider）。
+	 * Returns the town service singleton (preferring Spring ObjectProvider).
+	 *
+	 * service instance
+	 */
 	public static final TownService getInstance() {
 		ObjectProvider<TownService> provider = instanceProvider;
 		if (provider != null) {
@@ -57,10 +53,20 @@ public class TownService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Injects the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<TownService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 从数据库加载城镇；若为空则根据房屋地块初始化并持久化。
+	 * Loads towns from DB; if empty, initializes from housing lands and persists them.
+	 */
 	public TownService() {
 		elyosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ELYOS);
 		asmosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ASMODIANS);
@@ -86,10 +92,18 @@ public class TownService {
 				}
 			}
 		}
-		log.info("Loaded " + asmosTowns.size() + " [Elyos Towns]");
-		log.info("Loaded " + asmosTowns.size() + " [Asmodians Towns]");
+		log.info(I18n.get("log.e7c70a17528c", asmosTowns.size()));
+		log.info(I18n.get("log.2ede9f09c843", asmosTowns.size()));
 	}
 
+	/**
+	 * 按城镇 ID 查询城镇（先天族后魔族）。
+	 * Looks up a town by id (Elyos first, then Asmodians).
+	 *
+	 * town id
+	 *
+	 * @param townId @return 城镇，可能为 null / town, may be null
+	 */
 	public Town getTownById(int townId) {
 		if (elyosTowns.containsKey(townId)) {
 			return elyosTowns.get(townId);
@@ -98,6 +112,13 @@ public class TownService {
 		}
 	}
 
+	/**
+	 * 获取玩家当前活跃房屋所属城镇 ID。
+	 * Returns the town id of the player's active house.
+	 *
+	 * @param player 玩家 / player
+	 * @return 城镇 ID，无房屋时为 0 / town id, or 0 if no house
+	 */
 	public int getTownResidence(Player player) {
 		House house = player.getActiveHouse();
 		if (house == null) {
@@ -107,6 +128,14 @@ public class TownService {
 		}
 	}
 
+	/**
+	 * 根据生物位置解析所在城镇 ID（NPC 优先用自身 townId）。
+	 * Resolves town id from a creature's position (NPC uses its own townId first).
+	 *
+	 * creature
+	 *
+	 * @param creature @return 城镇 ID，未命中为 0 / town id, or 0 if none
+	 */
 	public int getTownIdByPosition(Creature creature) {
 		if (creature instanceof Npc) {
 			if (((Npc) creature).getTownId() != 0) {
@@ -129,6 +158,12 @@ public class TownService {
 		return townId;
 	}
 
+	/**
+	 * 玩家进入世界时，在对应阵营主城下发城镇列表。
+	 * On enter-world, sends the race town list when the player is in the race capital.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onEnterWorld(Player player) {
 		switch (player.getRace()) {
 		case ELYOS:

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -37,12 +21,27 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * 查询在线玩家详细信息（位置、物品、队伍、技能、军团、AP/GP 等）的管理员命令。
+ * Admin command to inspect online player details (location, items, group, skills, legion, AP/GP, etc.).
+ */
 public class PlayerInfo extends AdminCommand
 {
+	/**
+	 * 以别名 {@code playerinfo} 构造命令。
+	 * Construct the command with alias {@code playerinfo}.
+	 */
 	public PlayerInfo() {
 		super("playerinfo");
 	}
-	
+
+	/**
+	 * 输出基础信息，并按第二参数切换 item/group/skill/loc/legion/ap/gp/chars/knownlist/visual 等详情。
+	 * Print basic info and switch on the second arg for item/group/skill/loc/legion/ap/gp/chars/knownlist/visual details.
+	 *
+	 * 执行 GM / Admin player
+	 * @param params 角色名与详情开关 / Character name and detail switch
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params == null || params.length < 1) {
@@ -196,7 +195,7 @@ public class PlayerInfo extends AdminCommand
 			PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars | knownlist[info|add|remove] | visual[see|notsee]> ");
 		}
 	}
-	
+
 	private void showAllLines(Player admin, String str) {
 		int index = 0;
 		String[] strarray = str.split("\n");
@@ -216,7 +215,14 @@ public class PlayerInfo extends AdminCommand
 		strbld.append(strarray[index] + "\n");
 		PacketSendUtility.sendMessage(admin, strbld.toString());
 	}
-	
+
+	/**
+	 * 参数错误时显示语法。
+	 * Show syntax when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars> ");

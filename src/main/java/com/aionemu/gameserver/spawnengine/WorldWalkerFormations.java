@@ -1,39 +1,37 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
 import java.util.Map;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 单个世界下按实例划分的巡逻编队容器。
+ * Holds per-instance walker formations for one world.
+ *
  * @author Rolandas
  */
 public class WorldWalkerFormations {
 
+	/**
+	 * 实例 ID → 实例巡逻编队。
+	 * Instance id to instance walker formations.
+	 */
 	private Map<Integer, InstanceWalkerFormations> formations;
 
+	/**
+	 * 创建空的世界巡逻编队容器。
+	 * Creates an empty world walker formation holder.
+	 */
 	public WorldWalkerFormations() {
 		formations = new ConcurrentHashMap<>();
 	}
 
 	/**
-	 * @param instanceId
-	 * @return
+	 * 获取指定实例的巡逻编队；不存在时自动创建。
+	 * Returns formations for the instance, creating if absent.
+	 *
+	 * instance id
+	 *
+	 * @param instanceId @return 实例巡逻编队 / instance walker formations
 	 */
 	protected InstanceWalkerFormations getInstanceFormations(int instanceId) {
 		InstanceWalkerFormations instanceFormation = formations.get(instanceId);

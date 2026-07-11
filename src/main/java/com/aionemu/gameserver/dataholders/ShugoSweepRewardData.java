@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -32,9 +16,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.shugosweep.ShugoSweepReward;
 
 /**
+ * 术古扫荡奖励数据容器，按棋盘 ID 与奖励序号复合键索引。
+ * Shugo Sweep reward data holder, indexed by composite board id and reward number key.
+ *
  * Created by Wnkrz on 23/10/2017.
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "ShugoSweepRewardData" })
 @XmlRootElement(name = "shugo_sweeps")
@@ -47,6 +33,10 @@ public class ShugoSweepRewardData {
 	@XmlTransient
 	private Map<Long, ShugoSweepReward> rewardsByBoardAndNum = new HashMap<Long, ShugoSweepReward>();
 
+	/**
+	 * JAXB 反序列化完成后，写入列表与复合键索引并释放 XML 列表。
+	 * After JAXB unmarshalling, populates the list and composite-key index, then releases the XML list.
+	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (ShugoSweepReward reward : ShugoSweepRewardData) {
 			ShugoSweepRewardList.add(reward);
@@ -56,10 +46,24 @@ public class ShugoSweepRewardData {
 		ShugoSweepRewardData = null;
 	}
 
+	/**
+	 * 按棋盘 ID 与奖励序号获取奖励。
+	 * Returns the reward for the given board id and reward number.
+	 *
+	 * board id
+	 * reward number
+	 * @return 奖励，不存在则为 null / reward or null
+	 */
 	public ShugoSweepReward getRewardBoard(int boardId, int rewardNum) {
 		return rewardsByBoardAndNum.get(rewardKey(boardId, rewardNum));
 	}
 
+	/**
+	 * 返回已加载的奖励数量。
+	 * Returns the number of loaded rewards.
+	 *
+	 * reward count
+	 */
 	public int size() {
 		return ShugoSweepRewardList.size();
 	}

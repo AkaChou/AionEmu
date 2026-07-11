@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 西奥博莫斯任务脚本：Enhancingthe Stone（任务 ID 3035）。
+ * Theobomos quest script: Enhancingthe Stone (quest ID 3035).
  */
 public class _3035EnhancingtheStone extends QuestHandler {
 

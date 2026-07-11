@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.configs.main.SecurityConfig;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 角色选择阶段二级密码（Passkey）相关 UI 与结果消息的服务端包。
+ * Server packet for character-select passkey UI windows and result messages.
+ *
  * @author cura
  */
 public class SM_CHARACTER_SELECT extends AionServerPacket {
@@ -30,10 +17,25 @@ public class SM_CHARACTER_SELECT extends AionServerPacket {
 	private int wrongCount;
 	private int unk;
 
+	/**
+	 * 打开二级密码相关窗口（新建/输入）。
+	 * input). / input).
+	 *
+	 * @param type 窗口类型：0 新建、1 输入、2 消息 / window type: 0 create, 1 input, 2 message
+	 */
 	public SM_CHARACTER_SELECT(int type) {
 		this.type = type;
 	}
 
+	/**
+	 * 返回二级密码操作结果消息。
+	 * Returns a passkey operation result message.
+	 *
+	 * @param type 窗口类型（通常为 2 消息窗） / window type (typically 2 message)
+	 * message type
+	 * @param unk 未知字段 / unknown field
+	 * @param wrongCount 错误输入次数 / wrong input count
+	 */
 	public SM_CHARACTER_SELECT(int type, int messageType, int unk, int wrongCount) {
 		this.type = type;
 		this.messageType = messageType;
@@ -41,9 +43,6 @@ public class SM_CHARACTER_SELECT extends AionServerPacket {
 		this.wrongCount = wrongCount;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeC(type);
@@ -59,7 +58,7 @@ public class SM_CHARACTER_SELECT extends AionServerPacket {
 			writeC(wrongCount > 0 ? 1 : 0); // 0: right passkey, 1: wrong passkey
 			writeD(wrongCount); // wrong passkey input count
 			writeD(SecurityConfig.PASSKEY_WRONG_MAXCOUNT);
-			// server default value: 5)
+			// 服务器默认值：5） / server default value: 5)
 			break;
 		}
 	}

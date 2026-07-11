@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 西奥博莫斯任务脚本：The Spice Must Flow（任务 ID 3023）。
+ * Theobomos quest script: The Spice Must Flow (quest ID 3023).
  */
 public class _3023TheSpiceMustFlow extends QuestHandler {
 

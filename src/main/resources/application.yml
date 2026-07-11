@@ -1,7 +1,12 @@
 spring:
   main:
     banner-mode: "off"
+    log-startup-info: false
     web-application-type: none
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
 
 aion:
   game:

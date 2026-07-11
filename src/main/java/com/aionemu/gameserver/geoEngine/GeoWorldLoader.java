@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -56,13 +42,26 @@ import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
+ * 地理数据加载器：网格、世界物体、地形高度与材质。
+ * Geo-data loader for meshes, world objects, terrain height and materials.
+ *
  * @author Mr. Poke
  */
 @Slf4j
 public class GeoWorldLoader {
 
+	/** 地理数据目录。 / Geo data directory. */
 	private static final String GEO_DIR = "geo/";
 
+	/**
+	 * 从网格二进制文件加载命名 Spatial 模型表。
+	 * Loads a name→Spatial model table from a mesh binary file.
+	 *
+	 * relative geo path
+	 *
+	 * @param fileName @return 小写名称到模型的映射 / lowercase name to model map
+	 * @return @throws IOException 读文件失败 / on I/O failure
+	 */
 	public static Map<String, Spatial> loadMeshs(String fileName) throws IOException {
 		Map<String, Spatial> geoms = new HashMap<String, Spatial>();
 		File geoFile = Config.geoFile(fileName);
@@ -152,6 +151,17 @@ public class GeoWorldLoader {
 
 	}
 
+	/**
+	 * 加载指定世界的放置物体到 GeoMap。
+	 * Loads placed world objects for a world into the GeoMap.
+	 *
+	 * 世界 ID / world id
+	 *
+	 * @param models 已加载模型表 / loaded model table
+	 * @param map 目标地图 / target geo map
+	 * @param missingMeshes 缺失 mesh 名称收集器 / collector for missing mesh names
+	 * @param missingMeshes @throws IOException 读文件失败 / on I/O failure
+	 */
 	public static void loadWorldObjects(int worldId, Map<String, Spatial> models, GeoMap map, Set<String> missingMeshes) throws IOException {
 		File geoFile = Config.geoFile(GEO_DIR + worldId + ".geo");
 		if (!geoFile.exists()) {
@@ -198,7 +208,7 @@ public class GeoWorldLoader {
 				} else {
 					missingMeshes.add(name);
 					if (missingMeshes.size() == 1) {
-						log.warn("Missing geo mesh {} in world {}", name, worldId);
+						log.warn(I18n.get("log.5c6e2bc4186d", name, worldId));
 					}
 				}
 			}
@@ -206,6 +216,13 @@ public class GeoWorldLoader {
 		map.updateModelBound();
 	}
 
+	/**
+	 * 从 geo 目录 PNG 加载各地图高度图与材质图。
+	 * Loads height and material PNGs from the geo directory into maps.
+	 *
+	 * @param maps 地图集合 / geo maps
+	 * on I/O failure
+	 */
 	public static void loadTerrains(Collection<GeoMap> maps) throws IOException {
 		File geoDir = Config.geoFile(GEO_DIR);
 		File[] files = geoDir.listFiles((dir, name) -> name.endsWith(".png"));
@@ -244,12 +261,31 @@ public class GeoWorldLoader {
 		}
 	}
 
+	/**
+	 * 文件名是否为单地图直接地形（无逗号别名）。
+	 * Whether the file name is a direct single-map terrain (no comma aliases).
+	 *
+	 * file name
+	 *
+	 * @param fileName @return 是否直接地形文件 / true if direct terrain
+	 */
 	private static boolean isDirectTerrainFile(String fileName) {
 		String suffix = fileName.endsWith("_materials.png") ? "_materials.png" : ".png";
 		String stem = fileName.substring(0, fileName.length() - suffix.length());
 		return stem.indexOf(',') == -1;
 	}
 
+	/**
+	 * 将普通节点包装为可消隐节点。
+	 * Wraps a node as a DespawnableNode with type/id/level metadata.
+	 *
+	 * source node
+	 * @param type 消隐类型 ID / despawnable type id
+	 * @param id 实体 ID / entity id
+	 * @param level 城镇等级 / town level
+	 * @return 可消隐节点 / despawnable node
+	 * on clone failure
+	 */
 	private static DespawnableNode despawnable(Node node, byte type, int id, byte level) throws CloneNotSupportedException {
 		DespawnableNode despawnable = new DespawnableNode();
 		despawnable.copyFrom(node);
@@ -266,6 +302,21 @@ public class GeoWorldLoader {
 		return despawnable;
 	}
 
+	/**
+	 * 加载同城镇更高等级实体变体。
+	 * Loads higher-level town entity variants sharing the same placement.
+	 *
+	 * @param map 目标地图 / target map
+	 * model table
+	 * @param townEntity 当前城镇实体 / current town entity
+	 * model name
+	 * rotation matrix
+	 * location
+	 * scale
+	 * @param level 当前等级 / current level
+	 * 世界 ID / world id
+	 * on clone failure
+	 */
 	private static void loadTownLevelEntities(GeoMap map, Map<String, Spatial> models, DespawnableNode townEntity,
 			String name, Matrix3f matrix, Vector3f loc, Vector3f scale, byte level, int worldId)
 			throws CloneNotSupportedException {
@@ -285,6 +336,15 @@ public class GeoWorldLoader {
 		}
 	}
 
+	/**
+	 * 从光栅读取高度 short 数组（行列转置存储）。
+	 * Reads height shorts from a raster (transposed storage order).
+	 *
+	 * image raster
+	 * width
+	 * height
+	 * height data
+	 */
 	private static short[] readHeightData(Raster raster, int width, int height) {
 		short[] terrainData = new short[width * height];
 		for (int x = 0; x < width; x++) {
@@ -295,6 +355,15 @@ public class GeoWorldLoader {
 		return terrainData;
 	}
 
+	/**
+	 * 从光栅读取材质 byte 数组（行列转置存储）。
+	 * Reads material bytes from a raster (transposed storage order).
+	 *
+	 * image raster
+	 * width
+	 * height
+	 * material data
+	 */
 	private static byte[] readMaterialData(Raster raster, int width, int height) {
 		byte[] materialData = new byte[width * height];
 		for (int x = 0; x < width; x++) {
@@ -305,6 +374,19 @@ public class GeoWorldLoader {
 		return materialData;
 	}
 
+	/**
+	 * 附加到地图并为材质子节点创建区域。
+	 * Attaches a spatial to the map and creates material zones for children.
+	 *
+	 * @param map 目标地图 / target map
+	 * source spatial
+	 * rotation
+	 * location
+	 * scale
+	 * 世界 ID / world id
+	 * @return 克隆后的节点 / attached clone
+	 * on clone failure
+	 */
 	private static Spatial attachToMapAndCreateZones(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location,
 			Vector3f scale, int worldId) throws CloneNotSupportedException {
 		Spatial nodeClone = attachChild(map, node, matrix, location, scale);
@@ -319,6 +401,18 @@ public class GeoWorldLoader {
 		return nodeClone;
 	}
 
+	/**
+	 * 克隆节点并设置变换后附加到地图。
+	 * Clones the node, applies transform and attaches it to the map.
+	 *
+	 * @param map 目标地图 / target map
+	 * source spatial
+	 * rotation
+	 * location
+	 * scale
+	 * clone
+	 * on clone failure
+	 */
 	private static Spatial attachChild(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location, Vector3f scale)
 			throws CloneNotSupportedException {
 		Spatial nodeClone = node.clone();
@@ -328,6 +422,14 @@ public class GeoWorldLoader {
 		return nodeClone;
 	}
 
+	/**
+	 * 为带材质意图的节点创建材质区域模板。
+	 * Creates a material zone template for nodes with material collision intention.
+	 *
+	 * spatial
+	 * 世界 ID / world id
+	 * @param childNumber 子序号（0 表示无后缀） / child number (0 = no suffix)
+	 */
 	private static void createZone(Spatial node, int worldId, int childNumber) {
 		if (GeoDataConfig.GEO_MATERIALS_ENABLE && (node.getIntentions() & CollisionIntention.MATERIAL.getId()) != 0) {
 			BoundingVolume bv = node.getWorldBound();
@@ -340,7 +442,7 @@ public class GeoWorldLoader {
 			}
 			String existingName = zoneName + "_" + regionId + "_" + worldId;
 			if (ZoneName.getId(existingName) != ZoneName.getId(ZoneName.NONE)) {
-				// for override
+				// 用于覆盖 / for override
 				zoneName += "_" + regionId;
 				node.setName(zoneName);
 				GameWorldBootstrapServices.zoneService().createMaterialZoneTemplate(node, worldId, node.getMaterialId(), true);
@@ -352,9 +454,16 @@ public class GeoWorldLoader {
 	}
 
 	/**
-	 * Hash formula from paper
-	 * http://www.beosil.com/download/CollisionDetectionHashing_VMV03.pdf Hash table
-	 * size 700001, the higher value, more precision
+	 * 空间哈希（论文 VMV03，表大小 700001）。
+	 * Spatial hash from the VMV03 paper; table size 700001.
+	 * <p>
+	 * 参考 http://www.beosil.com/download/CollisionDetectionHashing_VMV03.pdf
+	 * See http://www.beosil.com/download/CollisionDetectionHashing_VMV03.pdf
+	 *
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * hash
 	 */
 	private static int getVectorHash(float x, float y, float z) {
 		long xIntBits = Float.floatToIntBits(x);
@@ -363,6 +472,15 @@ public class GeoWorldLoader {
 		return (int) ((xIntBits * 73856093 ^ yIntBits * 19349669 ^ zIntBits * 83492791) % 700001);
 	}
 
+	/**
+	 * 将文件通道只读映射为 ByteBuffer（小端视图，调用方可改序）。
+	 * Memory-maps a file channel read-only as a ByteBuffer (little-endian view; caller may reorder).
+	 *
+	 * file channel
+	 * foreign Arena
+	 * mapped buffer
+	 * on map failure or oversized file。 / on map failure or oversized file.
+	 */
 	private static ByteBuffer mapReadOnly(FileChannel channel, Arena arena) throws IOException {
 		long size = channel.size();
 		if (size > Integer.MAX_VALUE) {

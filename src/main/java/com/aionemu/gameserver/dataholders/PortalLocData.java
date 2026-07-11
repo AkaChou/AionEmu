@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -30,6 +14,10 @@ import com.aionemu.gameserver.model.templates.portal.PortalLoc;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 传送门坐标数据容器，按坐标 ID 索引 PortalLoc。
+ * Portal location data holder, indexing PortalLoc by location id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "portalLoc" })
 @XmlRootElement(name = "portal_locs")
@@ -41,6 +29,10 @@ public class PortalLocData {
 	@XmlTransient
 	private IntObjectHashMap<PortalLoc> portalLocs = new IntObjectHashMap<PortalLoc>();
 
+	/**
+	 * JAXB 反序列化完成后，将坐标写入 ID 索引并释放列表。
+	 * After JAXB unmarshalling, indexes locations by id and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (PortalLoc loc : portalLoc) {
 			portalLocs.put(loc.getLocId(), loc);
@@ -50,10 +42,24 @@ public class PortalLocData {
 		portalLoc = null;
 	}
 
+	/**
+	 * 返回已加载的传送坐标数量。
+	 * Returns the number of loaded portal locations.
+	 *
+	 * location count
+	 */
 	public int size() {
 		return portalLocs.size();
 	}
 
+	/**
+	 * 按坐标 ID 获取传送门坐标。
+	 * Returns the portal location for the given location id.
+	 *
+	 * location id
+	 *
+	 * @param locId @return 传送坐标，不存在则为 null / portal location or null
+	 */
 	public PortalLoc getPortalLoc(int locId) {
 		return portalLocs.get(locId);
 	}

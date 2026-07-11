@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,23 +15,24 @@ import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.dao.GameServersDAO;
 
 /**
- * MySQL8 GameServers DAO implementation
- * 
+ * 游戏服务器列表 DAO 的 MySQL 8 实现。
+ * MySQL 8 GameServersDAO implementation.
+ *
  * @author Updated for MySQL 8
  */
 @Slf4j
 public class MySQL8GameServersDAO extends GameServersDAO {
-    
+
 
     @Override
     public Map<Byte, GameServerInfo> getAllGameServers() {
         Map<Byte, GameServerInfo> result = new HashMap<>();
         String query = "SELECT * FROM gameservers ORDER BY id";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query);
              ResultSet rs = st.executeQuery()) {
-            
+
             while (rs.next()) {
                 byte id = rs.getByte("id");
                 String ipMask = rs.getString("mask");
@@ -38,9 +41,9 @@ public class MySQL8GameServersDAO extends GameServersDAO {
                 result.put(id, gsi);
             }
         } catch (SQLException e) {
-            log.error("Error loading game servers", e);
+            log.error(I18n.get("log.cb987d22f8fa", e));
         }
-        
+
         return result;
     }
 

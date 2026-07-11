@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -44,10 +28,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 传送门/传送点 AI：Portal Dialog（@AIName "portal_dialog"），继承 PortalAI2。
+ * Portal/teleporter AI: Portal Dialog (@AIName "portal_dialog"), extends PortalAI2.
+ *
+ * @author Encom
+ */
 @AIName("portal_dialog")
 public class PortalDialogAI2 extends PortalAI2 {
 
@@ -185,13 +171,13 @@ public class PortalDialogAI2 extends PortalAI2 {
 				case 731549: //Seized Danuar Sanctuary.
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
-						    //Enter Seized Danuar Sanctuary.
+						    // 进入被占领的达努阿尔圣所。 / Enter Seized Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ASMODIANS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
 						break;
 						case 220080000: //Enshar.
-						    //Enter Seized Danuar Sanctuary.
+						    // 进入被占领的达努阿尔圣所。 / Enter Seized Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ELYOS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
@@ -201,13 +187,13 @@ public class PortalDialogAI2 extends PortalAI2 {
 				case 731570: //Danuar Sanctuary.
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
-						    //Enter Danuar Sanctuary.
+						    // 进入达努阿尔圣所。 / Enter Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ELYOS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
 						break;
 						case 220080000: //Enshar.
-						    //Enter Danuar Sanctuary.
+						    // 进入达努阿尔圣所。 / Enter Danuar Sanctuary.
 							if (player.getCommonData().getRace() == Race.ASMODIANS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
@@ -217,7 +203,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 				case 832995: //Tiamat Stronghold [Elyos]
 				    switch (player.getWorldId()) {
 						case 210070000: //Cygnea.
-						    //Enter Tiamat Stronghold.
+						    // 进入提亚马特要塞。 / Enter Tiamat Stronghold.
 							if (player.getCommonData().getRace() == Race.ELYOS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
@@ -227,7 +213,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 				case 832996: //Tiamat Stronghold [Asmodian]
 				    switch (player.getWorldId()) {
 						case 220080000: //Enshar.
-						    //Enter Tiamat Stronghold.
+						    // 进入提亚马特要塞。 / Enter Tiamat Stronghold.
 							if (player.getCommonData().getRace() == Race.ASMODIANS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1352, 0));
 							}
@@ -237,13 +223,13 @@ public class PortalDialogAI2 extends PortalAI2 {
 				case 832997: //[Anguished] Dragon Lord Refuge.
 				    switch (player.getWorldId()) {
 					    case 210070000: //Cygnea.
-						    //Enter the Anguished Dragon Lord's Refuge.
+						    // 进入痛苦龙主避难所。 / Enter the Anguished Dragon Lord's Refuge.
 							if (player.getCommonData().getRace() == Race.ASMODIANS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 							}
 						break;
 						case 220080000: //Enshar.
-						    //Enter the Anguished Dragon Lord's Refuge.
+						    // 进入痛苦龙主避难所。 / Enter the Anguished Dragon Lord's Refuge.
 						    if (player.getCommonData().getRace() == Race.ELYOS) {
 						  	    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011, 0));
 						    }
@@ -253,13 +239,13 @@ public class PortalDialogAI2 extends PortalAI2 {
 				case 832998: //Dragon Lord Refuge.
 					switch (player.getWorldId()) {
 					    case 210070000: //Cygnea.
-						    //Enter Dragon Lord's Refuge.
+						    // 进入龙主避难所。 / Enter Dragon Lord's Refuge.
 						    if (player.getCommonData().getRace() == Race.ELYOS) {
 						  	    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1352, 0));
 						    }
 						break;
 						case 220080000: //Enshar.
-						    //Enter Dragon Lord's Refuge.
+						    // 进入龙主避难所。 / Enter Dragon Lord's Refuge.
 							if (player.getCommonData().getRace() == Race.ASMODIANS) {
 								PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1352, 0));
 							}
@@ -277,7 +263,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The entrance to the Infernal Illuminary Obelisk has opened.
+				// 通往炼狱光明方尖碑的入口已开启。 / The entrance to the Infernal Illuminary Obelisk has opened.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_Hard_Door_Open);
 			}
 		});

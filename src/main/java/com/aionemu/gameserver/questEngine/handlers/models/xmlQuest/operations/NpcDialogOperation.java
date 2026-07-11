@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,22 +12,27 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 向玩家打开 NPC 对话窗口的操作。
+ * Operation that opens an NPC dialog window for the player.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcDialogOperation")
 public class NpcDialogOperation extends QuestOperation {
 
+	/** 对话窗口 ID / Dialog window id */
 	@XmlAttribute(required = true)
 	protected int id;
+	/** 可选任务 ID；为空时使用当前任务 / Optional quest id; current quest when null */
 	@XmlAttribute(name = "quest_id")
 	protected Integer questId;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations.
-	 * QuestOperation#doOperate(com.aionemu.gameserver .questEngine.model.QuestEnv)
+	/**
+	 * 发送对话窗口包；任务 ID 为 0 时不附带任务。
+	 * Sends the dialog-window packet; omits quest binding when quest id is 0.
+	 *
+	 * @param env 任务环境 / Quest environment
 	 */
 	@Override
 	public void doOperate(QuestEnv env) {

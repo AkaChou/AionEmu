@@ -1,28 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端确认已选择的物品添加结果。
+ * Server packet confirming the result of adding a selected item on the client.
+ */
 public class SM_SELECT_ITEM_ADD extends AionServerPacket {
 	private int uniqueItemId;
 	private int type;
 
+	/**
+	 * 使用给定参数构造 SM_SELECT_ITEM_ADD 包。
+	 * Creates a SM_SELECT_ITEM_ADD packet with the given parameters.
+	 *
+	 * unique item id
+	 * type
+	 */
 	public SM_SELECT_ITEM_ADD(int uniqueItemId, int type) {
 		this.uniqueItemId = uniqueItemId;
 		this.type = type;

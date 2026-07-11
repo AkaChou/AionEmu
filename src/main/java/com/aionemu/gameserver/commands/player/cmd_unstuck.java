@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -28,15 +12,29 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
- * @author Nemiroff Date: 11.01.2010
- * @rework Eloann Date : 12.06.2013
+ * 玩家命令：麻痹 10 秒后传送回绑定石位置。
+ * Player command: after a 10-second paralyze cast, teleports to bind location.
+ *
+ * @author Nemiroff
+ * @rework Eloann
  */
 public class cmd_unstuck extends PlayerCommand {
 
+	/**
+	 * 注册命令别名 {@code unstuck}。
+	 * Registers the command alias {@code unstuck}.
+	 */
 	public cmd_unstuck() {
 		super("unstuck");
 	}
 
+	/**
+	 * 校验状态后施加麻痹，并在延时后传送到绑定点。
+	 * Validates state, applies paralyze, and teleports to bind after delay.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param params 未使用的参数 / unused parameters
+	 */
 	@Override
 	public void execute(final Player player, String... params) {
 		if (player.getLifeStats().isAlreadyDead()) {
@@ -67,8 +65,4 @@ public class cmd_unstuck extends PlayerCommand {
 		}, (int) TimeUnit.SECONDS.toMillis(10));
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

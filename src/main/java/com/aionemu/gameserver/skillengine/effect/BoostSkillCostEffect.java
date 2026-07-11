@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 技能消耗降低效果：注册技能使用观察者，对后续技能设置消耗加成值。
+ * Skill-cost boost effect: registers a skill-use observer that applies a cost boost value.
+ *
  * @author Rama and Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,6 +23,12 @@ public class BoostSkillCostEffect extends BuffEffect {
 	@XmlAttribute
 	protected boolean percent;
 
+	/**
+	 * 启动效果并挂载技能使用观察者。
+	 * Starts the effect and attaches a skill-use observer.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
@@ -51,6 +44,12 @@ public class BoostSkillCostEffect extends BuffEffect {
 		effect.setActionObserver(observer, position);
 	}
 
+	/**
+	 * 结束效果并移除技能使用观察者。
+	 * Ends the effect and removes the skill-use observer.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);

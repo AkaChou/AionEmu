@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.model.channel;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,17 +14,24 @@ import com.aionemu.chatserver.model.Race;
 import com.aionemu.chatserver.service.GameServerService;
 
 /**
+ * 聊天频道注册表：预置 LFG/交易/地区/职业等频道，并按标识解析频道。
+ * Chat channel registry that seeds LFG/trade/region/job channels and resolves them by identifier.
+ *
  * @author ATracer
  */
 @Slf4j
 public class ChatChannels {
 
+    /**
+     * 已注册频道列表。
+     * Registered channel list.
+     */
     private static final List<Channel> channels = new ArrayList<Channel>();
 
     static {
-        // LFG channels
+        // 寻找小队频道 / LFG channels
         addGroupChannel("partyFind_PF");
-        // TRADE
+        // 交易 / TRADE
         addTradeChannel("trade_LC1");
         addTradeChannel("trade_LC2");
         addTradeChannel("trade_DC1");
@@ -204,7 +195,7 @@ public class ChatChannels {
         addTradeChannel("trade_IDElemental_2_E");
 		addTradeChannel("trade_LF6");
 		addTradeChannel("trade_DF6");
-        // REGION
+        // 区域 / REGION
         addRegionChannel(110010000, "public_LC1");
         addRegionChannel(110020000, "public_LC2");
         addRegionChannel(120010000, "public_DC1");
@@ -379,9 +370,8 @@ public class ChatChannels {
         addRegionChannel(900150000, "public_Test_Basic_Mj");
         addRegionChannel(900170000, "public_test_intro");
 		addRegionChannel(210100000, "public_LF6");
-		addRegionChannel(220110000, "public_DF6");
-        // LANG & JOB
-        // TODO : All other lang
+        addRegionChannel(220110000, "public_DF6");
+        // 语言与职业 / LANG & JOB
         if (Config.LANG_CHAT == 1) {
             // LANG
             addLangChannel("User_English");
@@ -410,7 +400,7 @@ public class ChatChannels {
             addJobChannel(Gender.MALE, PlayerClass.GUNNER, "job_gunner");
             addJobChannel(Gender.MALE, PlayerClass.BARD, "job_bard");
             addJobChannel(Gender.MALE, PlayerClass.RIDER, "job_rider");
-            // Female
+            // 女性 / Female
             addJobChannel(Gender.FEMALE, PlayerClass.GLADIATOR, "job_Gladiator");
             addJobChannel(Gender.FEMALE, PlayerClass.TEMPLAR, "job_Templar");
             addJobChannel(Gender.FEMALE, PlayerClass.SORCERER, "job_Sorcerer");
@@ -452,7 +442,7 @@ public class ChatChannels {
             addJobChannel(Gender.MALE, PlayerClass.GUNNER, "job_gunner");
             addJobChannel(Gender.MALE, PlayerClass.BARD, "job_bard");
             addJobChannel(Gender.MALE, PlayerClass.RIDER, "job_rider");
-            // Female
+            // 女性 / Female
             addJobChannel(Gender.FEMALE, PlayerClass.GLADIATOR, "job_Gladiateur[f:" + '"' + "Gladiateur" + '"' + "]");
             addJobChannel(Gender.FEMALE, PlayerClass.TEMPLAR, "job_Templier[f:" + '"' + "Templier" + '"' + "]");
             addJobChannel(Gender.FEMALE, PlayerClass.SORCERER, "job_Sorcier[f:" + '"' + "Sorcier" + '"' + "]");
@@ -499,7 +489,7 @@ public class ChatChannels {
             addJobChannel(Gender.MALE, PlayerClass.ARTIST, "job_Kuenstler");
             addJobChannel(Gender.MALE, PlayerClass.BARD, "job_Barde");
             
-            // Femaletest
+            // 女性测试 / Femaletest
             addJobChannel(Gender.FEMALE, PlayerClass.WARRIOR, "job_Krieger[f:" + '"' + "Kriegerin" + '"' + "]");
             addJobChannel(Gender.FEMALE, PlayerClass.GLADIATOR, "job_Gladiator[f:" + '"' + "Gladiatorin" + '"' + "]");
             addJobChannel(Gender.FEMALE, PlayerClass.TEMPLAR, "job_Templer[f:" + '"' + "Templerin" + '"' + "]");
@@ -525,8 +515,18 @@ public class ChatChannels {
     }
 
     /**
-     * @param channelId
-     * @return
+	 * 按频道 ID 获取频道。
+	 * Returns channel by channel id.
+	 *
+	 * channel id
+	 * channel
+	 */
+    /**
+     * 按频道 ID 查找频道。
+     * Finds a channel by id.
+     *
+     * channel id
+     * channel or null
      */
     public static Channel getChannelById(int channelId) {
         for (Channel channel : channels) {
@@ -535,15 +535,18 @@ public class ChatChannels {
             }
         }
         if (Config.LOG_CHANNEL_INVALID) {
-            log.warn("No registered channel with id " + channelId);
+            log.warn(I18n.get("log.1700dbac8256", channelId));
         }
         throw new IllegalArgumentException("No channel provided for id " + channelId);
     }
 
     /**
-     * @param identifier
-     * @return
-     */
+	 * 按标识符获取频道。
+	 * Returns channel by identifier.
+	 *
+	 * identifier
+	 * channel
+	 */
     public static Channel getChannelByIdentifier(byte[] identifier) {
         for (Channel channel : channels) {
             if (Arrays.equals(channel.getIdentifierBytes(), identifier)) {
@@ -551,22 +554,41 @@ public class ChatChannels {
             }
         }
         if (Config.LOG_CHANNEL_INVALID) {
-            log.warn("No registered channel with identifier " + identifier);
+            log.warn(I18n.get("log.b99c072ad830", identifier));
         }
-        // we can't throw runtime exceptions before support of i18n channel names
+        // 在支持 i18n 频道名前不能抛运行时异常 / we can't throw runtime exceptions before support of i18n channel names
         return null;
     }
 
+    /**
+     * 添加 LFG 组队频道。
+     * Adds an LFG party-find channel.
+     *
+     * channel name
+     */
     private static void addGroupChannel(String channelName) {
         addChannel(new LfgChannel(Race.ELYOS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".0.AION.KOR"));
         addChannel(new LfgChannel(Race.ASMODIANS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".1.AION.KOR"));
     }
 
+    /**
+     * 添加交易频道。
+     * Adds a trade channel.
+     *
+     * channel name
+     */
     private static void addTradeChannel(String channelName) {
         addChannel(new TradeChannel(Race.ELYOS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".0.AION.KOR"));
         addChannel(new TradeChannel(Race.ASMODIANS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".1.AION.KOR"));
     }
 
+    /**
+     * 添加地区频道。
+     * Adds a region channel.
+     *
+     * map id
+     * channel name
+     */
     private static void addRegionChannel(int mapId, String channelName) {
         addChannel(new RegionChannel(mapId, Race.ELYOS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".0.AION.KOR"));
         addChannel(new RegionChannel(mapId, Race.ASMODIANS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".1.AION.KOR"));

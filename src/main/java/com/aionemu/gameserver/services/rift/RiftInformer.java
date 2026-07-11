@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.rift;
 
 import java.util.ArrayList;
@@ -31,12 +15,21 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
-
+ * 裂隙信息同步器，负责向玩家广播裂隙开启/关闭与统计公告。
+ * Rift informer that broadcasts open/close state and announce stats to players.
+ *
+ * @author Rinzler (Encom)
+ */
 public class RiftInformer {
+	/**
+	 * 获取指定世界已生成的裂隙 NPC 列表。
+	 * Returns spawned rift NPCs for the given world.
+	 *
+	 * World map id
+	 *
+	 * @param worldId @return 该世界的裂隙 NPC / Rift NPCs in that world
+	 */
 	public static List<Npc> getSpawned(int worldId) {
 		List<Npc> rifts = RiftManager.getSpawned();
 		List<Npc> worldRifts = new CopyOnWriteArrayList<Npc>();
@@ -48,6 +41,12 @@ public class RiftInformer {
 		return worldRifts;
 	}
 
+	/**
+	 * 向指定世界（及其双子地图）广播完整裂隙信息。
+	 * Broadcast full rift info to the world and its twin map.
+	 *
+	 * World map id
+	 */
 	public static void sendRiftsInfo(int worldId) {
 		syncRiftsState(worldId, getPackets(worldId));
 		int twinId = getTwinId(worldId);
@@ -56,6 +55,12 @@ public class RiftInformer {
 		}
 	}
 
+	/**
+	 * 向指定玩家（及其世界双子地图）发送裂隙信息。
+	 * Send rift info to a player and the twin map of their world.
+	 *
+	 * Target player
+	 */
 	public static void sendRiftsInfo(Player player) {
 		syncRiftsState(player, getPackets(player.getWorldId()));
 		int twinId = getTwinId(player.getWorldId());
@@ -64,12 +69,25 @@ public class RiftInformer {
 		}
 	}
 
+	/**
+	 * 向多个世界同步裂隙详情（不含公告汇总）。
+	 * Sync rift details (without announce summary) to multiple worlds.
+	 *
+	 * World id array
+	 */
 	public static void sendRiftInfo(int[] worlds) {
 		for (int worldId : worlds) {
 			syncRiftsState(worldId, getPackets(worlds[0], -1));
 		}
 	}
 
+	/**
+	 * 向世界广播单个裂隙消失通知。
+	 * Broadcast a single rift despawn notice to a world.
+	 *
+	 * World map id
+	 * @param objId 裂隙对象 ID / Rift object id
+	 */
 	public static void sendRiftDespawn(int worldId, int objId) {
 		syncRiftsState(worldId, getPackets(worldId, objId), true);
 	}
@@ -154,11 +172,15 @@ public class RiftInformer {
 		return local;
 	}
 
+	/**
+	 * 返回跨种族裂隙对应的双子地图 ID；无对应时返回 0。
+	 * Returns the twin map id for cross-race rifts; 0 when none.
+	 */
 	private static int getTwinId(int worldId) {
 		switch (worldId) {
 		/**
-		 * Elyos
-		 */
+	 * 天族 / Elyos
+	 */
 		case 110070000: // Kaisinel Academy -> Brusthonin
 			return 220050000;
 		case 210020000: // Eltnen -> Morheim
@@ -174,8 +196,8 @@ public class RiftInformer {
 		case 210100000: // Iluma -> Norsvold
 			return 220110000;
 		/**
-		 * Asmodians
-		 */
+	 * 魔族 / Asmodians
+	 */
 		case 120080000: // Marchutan Priory -> Theobomos
 			return 210060000;
 		case 220020000: // Morheim -> Eltnen

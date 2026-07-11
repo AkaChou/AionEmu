@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.fissureOfOblivion.shadowOfOblivion;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Fissure Of Oblivion 副本 NPC AI：Shadow Of Oblivion 71（@AIName "Shadow_Of_Oblivion_71"），继承 AggressiveNpcAI2。
+ * Fissure Of Oblivion instance NPC AI: Shadow Of Oblivion 71 (@AIName "Shadow_Of_Oblivion_71"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Shadow_Of_Oblivion_71")
 public class Shadow_Of_Oblivion_71AI2 extends AggressiveNpcAI2
 {
@@ -55,7 +41,7 @@ public class Shadow_Of_Oblivion_71AI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Shadow of Oblivion is transforming.
+					// 遗忘之影正在变身。 / Shadow of Oblivion is transforming.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403699));
 				}
 			}

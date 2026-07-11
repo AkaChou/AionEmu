@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -61,9 +45,9 @@ import com.aionemu.gameserver.world.WorldType;
 import com.google.common.base.Preconditions;
 
 /**
- * This class is a base class for all in-game NPCs, what includes: monsters and
- * npcs that player can talk to (aka Citizens)
- * 
+ * NPC 游戏对象。
+ * Npc game object.
+ *
  * @author Luno
  */
 public class Npc extends Creature {
@@ -109,6 +93,7 @@ public class Npc extends Creature {
 		lastShoutedSeconds = System.currentTimeMillis() / 1000;
 	}
 
+	/** 返回 move controller / Returns the move controller */
 	@Override
 	public NpcMoveController getMoveController() {
 		return (NpcMoveController) super.getMoveController();
@@ -122,73 +107,93 @@ public class Npc extends Creature {
 		setLifeStats(new NpcLifeStats(this));
 	}
 
+	/** 获取对象模板。 / Returns the object template. */
 	@Override
 	public NpcTemplate getObjectTemplate() {
 		return (NpcTemplate) objectTemplate;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return getObjectTemplate().getName();
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return getObjectTemplate().getTemplateId();
 	}
 
+	/** 获取等级。 / Returns the level. */
 	@Override
 	public byte getLevel() {
 		return getObjectTemplate().getLevel();
 	}
 
+	/** 返回 life stats / Returns the life stats */
 	@Override
 	public NpcLifeStats getLifeStats() {
 		return (NpcLifeStats) super.getLifeStats();
 	}
 
+	/** 获取游戏属性。 / Returns the game stats. */
 	@Override
 	public NpcGameStats getGameStats() {
 		return (NpcGameStats) super.getGameStats();
 	}
 
+	/** 返回 controller / Returns the controller */
 	@Override
 	public NpcController getController() {
 		return (NpcController) super.getController();
 	}
 
+	/** 获取技能列表。 / Returns the skill list. */
 	public NpcSkillList getSkillList() {
 		return this.skillList;
 	}
 
+	/** 返回攻击类型 / Returns the attack type*/
 	@Override
 	public ItemAttackType getAttackType() {
 		return this.ai2.modifyAttackType(attacktype);
 	}
 
+	/**
+	 * @return Whether walk routes / Whether walk routes
+	 */
 	public boolean hasWalkRoutes() {
 		return getSpawn().getWalkerId() != null;
 	}
 
+	/** 返回 rating / Returns the rating */
 	public NpcRating getRating() {
 		return getObjectTemplate().getRating();
 	}
 
+	/** 获取军阶。 / Returns the rank. */
 	public NpcRank getRank() {
 		return getObjectTemplate().getRank();
 	}
 
+	/** 返回欧比斯 NPC 类型 / Returns the abyss npc type */
 	public AbyssNpcType getAbyssNpcType() {
 		return getObjectTemplate().getAbyssNpcType();
 	}
 
+	/** 返回 hp gauge / Returns the hp gauge */
 	public int getHpGauge() {
 		return getObjectTemplate().getHpGaugeLevel();
 	}
 
+	/**
+	 * @return 是否 peace / 是否 peace。 / Whether peace / Whether peace
+	 */
 	public boolean isPeace() {
 		return getNpcType().equals(NpcType.PEACE);
 	}
 
+	/** 是否好友到 / Whether friend to*/
 	public boolean isFriendTo(Player player) {
 		if (this.getTribe() == TribeClass.NOFIGHT) {
 			return false;
@@ -196,6 +201,7 @@ public class Npc extends Creature {
 		return DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getTribe(), player.getTribe());
 	}
 
+	/** 是否 aggressive to / Whether aggressive to */
 	@Override
 	public boolean isAggressiveTo(Creature creature) {
 		if (creature instanceof Player) {
@@ -217,14 +223,10 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * Represents the action of a guard defending its position
-	 * 
-	 * @param npc
-	 * @return true if this npc is a guard and the given npc is aggro to their PC
-	 *         race
+	 * 守卫防御其位置的行为。 / Represents the action of a guard defending its position.
 	 */
 	public boolean guardAgainst(Npc npc) {
-		// Even if NPCs aggro players they shouldn't aggro between (as Hippolytus)
+		// 即便 NPC 仇恨玩家，也不应互相仇恨（如希波吕托斯）。 / Even if NPCs aggro players they shouldn't aggro between (as Hippolytus)
 		if (this.getRace() == npc.getRace()) {
 			return false;
 		}
@@ -241,30 +243,44 @@ public class Npc extends Creature {
 		return false;
 	}
 
+	/**
+	 * @param npc 是否 aggro 从 / 是否 aggro 从。 / Whether aggro from / Whether aggro from
+	 */
 	@Override
 	public boolean isAggroFrom(Npc npc) {
 		return DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(npc.getTribe(), getTribe());
 	}
 
+	/**
+	 * 是否 hostile 从。 / Whether hostile from / Whether hostile from。 / 是否 hostile 从。 / Whether hostile from / Whether hostile from
+	 */
 	@Override
 	public boolean isHostileFrom(Npc npc) {
 		return DataManager.TRIBE_RELATIONS_DATA.isHostileRelation(npc.getTribe(), getTribe());
 	}
 
+	/**
+	 * 是否 support 从。 / Whether support from / Whether support from。 / 是否 support 从。 / Whether support from / Whether support from
+	 */
 	@Override
 	public boolean isSupportFrom(Npc npc) {
 		return DataManager.TRIBE_RELATIONS_DATA.isSupportRelation(npc.getTribe(), getTribe());
 	}
 
+	/** 是否好友 / Whether friend from*/
 	@Override
 	public boolean isFriendFrom(Npc npc) {
 		return DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(npc.getTribe(), getTribe());
 	}
 
+	/**
+	 * @param player Whether none relation / Whether none relation
+	 */
 	public boolean isNoneRelation(Player player) {
 		return DataManager.TRIBE_RELATIONS_DATA.isNoneRelation(getTribe(), player.getTribe());
 	}
 
+	/** 获取部落。 / Returns the tribe. */
 	@Override
 	public TribeClass getTribe() {
 		TribeClass transformTribe = getTransformModel().getTribe();
@@ -274,13 +290,14 @@ public class Npc extends Creature {
 		return this.getObjectTemplate().getTribe();
 	}
 
+	/** 返回 aggro range / Returns the aggro range */
 	public int getAggroRange() {
 		return ai2.modifySensoryRange(sensoryRange);
 	}
 
 	/**
 	 * Check whether npc located near initial spawn location
-	 * 
+	 *
 	 * @return true or false
 	 */
 	public boolean isAtSpawnLocation() {
@@ -294,6 +311,7 @@ public class Npc extends Creature {
 		return MathUtil.getDistance(getSpawn().getX(), getSpawn().getY(), getSpawn().getZ(), getX(), getY(), getZ());
 	}
 
+	/** 是否敌对。 / Whether Enemy. */
 	@Override
 	public boolean isEnemy(Creature creature) {
 		if (creature instanceof Player) {
@@ -304,6 +322,9 @@ public class Npc extends Creature {
 		return creature.isEnemyFrom(this);
 	}
 
+	/**
+	 * @param npc 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
 		if (npc.isFriendFrom(this)) {
@@ -312,11 +333,15 @@ public class Npc extends Creature {
 		return isAggressiveTo(npc) || npc.getAggroList().isHating(this) || getAggroList().isHating(npc);
 	}
 
+	/**
+	 * @param player 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return isAttackableNpc() || player.isAggroIconTo(this);
 	}
 
+	/** 返回 see state / Returns the see state */
 	@Override
 	public int getSeeState() {
 		int skillSeeState = super.getSeeState();
@@ -324,14 +349,19 @@ public class Npc extends Creature {
 		return Math.max(skillSeeState, congenitalSeeState);
 	}
 
+	/** 返回 is quest busy / Returns the is quest busy */
 	public boolean getIsQuestBusy() {
 		return isQuestBusy;
 	}
 
+	/** 设置 is quest busy / Sets the is quest busy */
 	public void setIsQuestBusy(boolean busy) {
 		isQuestBusy = busy;
 	}
 
+	/**
+	 * @return Whether attackable npc / Whether attackable npc
+	 */
 	@Override
 	public boolean isAttackableNpc() {
 		return getNpcType() == NpcType.ATTACKABLE;
@@ -344,6 +374,7 @@ public class Npc extends Creature {
 		return masterName;
 	}
 
+	/** 设置 master name / Sets the master name */
 	public void setMasterName(String masterName) {
 		this.masterName = masterName;
 	}
@@ -356,30 +387,37 @@ public class Npc extends Creature {
 		return creatorId;
 	}
 
+	/** 设置 creator id / Sets the creator id */
 	public void setCreatorId(int creatorId) {
 		this.creatorId = creatorId;
 	}
 
+	/** 返回城镇 ID / Returns the town id */
 	public int getTownId() {
 		return townId;
 	}
 
+	/** 设置 town id / Sets the town id */
 	public void setTownId(int townId) {
 		this.townId = townId;
 	}
 
+	/** 返回欧比斯 ID / Returns the abyss id */
 	public int getAbyssId() {
 		return abyssId;
 	}
 
+	/** 设置 abyss id / Sets the abyss id */
 	public void setAbyssId(int abyssId) {
 		this.abyssId = abyssId;
 	}
 
+	/** 返回 creator / Returns the creator */
 	public VisibleObject getCreator() {
 		return null;
 	}
 
+	/** 设置 target / Sets the target */
 	@Override
 	public void setTarget(VisibleObject creature) {
 		if (getTarget() != creature) {
@@ -392,51 +430,65 @@ public class Npc extends Creature {
 		}
 	}
 
+	/** 设置巡逻队伍。 / Sets the walker group. */
 	public void setWalkerGroup(WalkerGroup wg) {
 		this.walkerGroup = wg;
 	}
 
+	/** 获取巡逻队伍。 / Returns the walker group. */
 	public WalkerGroup getWalkerGroup() {
 		return walkerGroup;
 	}
 
+	/** 设置 walker group shift / Sets the walker group shift */
 	public void setWalkerGroupShift(WalkerGroupShift shift) {
 		this.walkerGroupShift = shift;
 	}
 
+	/** 返回 walker group shift / Returns the walker group shift */
 	public WalkerGroupShift getWalkerGroupShift() {
 		return walkerGroupShift;
 	}
 
+	/** 是否首领 / Whether boss*/
 	public boolean isBoss() {
 		return getObjectTemplate().getRank() == NpcRank.EXPERT;
 	}
 
+	/** 是否标志 / Whether flag*/
 	public boolean isFlag() {
 		return getObjectTemplate().getNpcTemplateType() == NpcTemplateType.FLAG;
 	}
 
+	/**
+	 * @return Whether entity / Whether entity
+	 */
 	public boolean hasEntity() {
 		return getSpawn().getEntityId() != 0;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	@Override
 	public Race getRace() {
 		return this.getObjectTemplate().getRace();
 	}
 
+	/** 返回 npc drop / Returns the npc drop */
 	public NpcDrop getNpcDrop() {
 		return getObjectTemplate().getNpcDrop();
 	}
 
+	/** 返回 npc type / Returns the npc type */
 	public NpcType getNpcType() {
 		return npcType;
 	}
 
+	/** SetsNPC 类型 / Sets the npc type */
 	public void setNpcType(NpcType newType) {
 		npcType = newType;
 	}
 
+	/** 是否为奖励欧比斯点数。 / Whether reward ap. */
 	public boolean isRewardAP() {
 		if (this instanceof SiegeNpc) {
 			return true;
@@ -452,6 +504,7 @@ public class Npc extends Creature {
 		return false;
 	}
 
+	/** 可喊话 / may Shout. */
 	public boolean mayShout(int delaySeconds) {
 		if (!DataManager.NPC_SHOUT_DATA.hasAnyShout(getPosition().getMapId(), getNpcId())) {
 			return false;
@@ -459,6 +512,7 @@ public class Npc extends Creature {
 		return (System.currentTimeMillis() - lastShoutedSeconds) / 1000 >= delaySeconds;
 	}
 
+	/** 喊话 / shout. */
 	public void shout(final NpcShout shout, final Creature target, final Object param, int delaySeconds) {
 		if (shout.getWhen() != ShoutEventType.DIED && shout.getWhen() != ShoutEventType.BEFORE_DESPAWN
 				&& getLifeStats().isAlreadyDead() || !mayShout(delaySeconds)) {
@@ -481,15 +535,16 @@ public class Npc extends Creature {
 
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				if (thisNpc.getLifeStats().isAlreadyDead() && shout.getWhen() != ShoutEventType.DIED
 						&& shout.getWhen() != ShoutEventType.BEFORE_DESPAWN) {
 					return;
 				}
-				// message for the specific player (when IDLE we are already broadcasting!!!)
+				// 针对特定玩家的消息（IDLE 时已在广播）。 / message for the specific player (when IDLE we are already broadcasting!!!)
 				if (shout.getShoutType() == ShoutType.SAY || shout.getWhen() == ShoutEventType.IDLE) {
-					// [RR] Should we have lastShoutedSeconds separated from broadcasts (??)
+					// 【RR】是否应将 lastShoutedSeconds 与广播分开？ / [RR] Should we have lastShoutedSeconds separated from broadcasts (??)
 					PacketSendUtility.sendPacket((Player) target, message);
 				} else {
 					Iterator<Player> iter = thisNpc.getKnownList().getKnownPlayers().values().iterator();

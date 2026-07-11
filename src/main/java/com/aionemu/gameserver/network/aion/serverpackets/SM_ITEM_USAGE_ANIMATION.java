@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -22,6 +6,10 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 向客户端播放物品使用动画的服务端包。
+ * Server packet that plays an item usage animation on the client.
+ */
 public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 	private int playerObjId;
 	private int targetObjId;
@@ -31,6 +19,14 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 	private int end;
 	private int unk;
 
+	/**
+	 * 构造即时完成的物品使用动画包（目标为自己）。
+	 * Creates an immediate item usage animation packet targeting the caster.
+	 *
+	 * @param playerObjId 使用者对象 ID / caster object id
+	 * item object id
+	 * item template id
+	 */
 	public SM_ITEM_USAGE_ANIMATION(int playerObjId, int itemObjId, int itemId) {
 		this.playerObjId = playerObjId;
 		this.targetObjId = playerObjId;
@@ -41,6 +37,16 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 		this.unk = 1;
 	}
 
+	/**
+	 * 构造带读条时长与结束状态的物品使用动画包（目标为自己）。
+	 * Creates an item usage animation packet with cast time and end flag targeting the caster.
+	 *
+	 * @param playerObjId 使用者对象 ID / caster object id
+	 * item object id
+	 * item template id
+	 * @param time 读条时长（毫秒） / cast duration in milliseconds
+	 * @param end 结束标志 / end flag
+	 */
 	public SM_ITEM_USAGE_ANIMATION(int playerObjId, int itemObjId, int itemId, int time, int end) {
 		this.playerObjId = playerObjId;
 		this.targetObjId = playerObjId;
@@ -50,6 +56,17 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 		this.end = end;
 	}
 
+	/**
+	 * 构造带读条时长、结束状态与附加标志的物品使用动画包（目标为自己）。
+	 * Creates an item usage animation packet with cast time, end flag and extra flag targeting the caster.
+	 *
+	 * @param playerObjId 使用者对象 ID / caster object id
+	 * item object id
+	 * item template id
+	 * @param time 读条时长（毫秒） / cast duration in milliseconds
+	 * @param end 结束标志 / end flag
+	 * @param unk 附加未知标志 / extra unknown flag
+	 */
 	public SM_ITEM_USAGE_ANIMATION(int playerObjId, int itemObjId, int itemId, int time, int end, int unk) {
 		this.playerObjId = playerObjId;
 		this.targetObjId = playerObjId;
@@ -60,6 +77,18 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 		this.unk = unk;
 	}
 
+	/**
+	 * 构造完整物品使用动画包（可指定目标）。
+	 * Creates a full item usage animation packet with an explicit target.
+	 *
+	 * @param playerObjId 使用者对象 ID / caster object id
+	 * target object id
+	 * item object id
+	 * item template id
+	 * @param time 读条时长（毫秒） / cast duration in milliseconds
+	 * @param end 结束标志 / end flag
+	 * @param unk 附加未知标志 / extra unknown flag
+	 */
 	public SM_ITEM_USAGE_ANIMATION(int playerObjId, int targetObjId, int itemObjId, int itemId, int time, int end,
 			int unk) {
 		this.playerObjId = playerObjId;

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.krotan;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Krotan Auxillary General（@AIName "unsealed_krotan"），继承 AggressiveNpcAI2。
+ * Reshanta zone NPC AI: Krotan Auxillary General (@AIName "unsealed_krotan"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("unsealed_krotan")
 public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
 {
@@ -59,7 +45,7 @@ public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//Krotan Refuge 5.3
+			// 克罗坦避难所 5.3 / Krotan Refuge 5.3
 			case 279149:
 			case 279443:
 			case 267811:
@@ -79,7 +65,7 @@ public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//A treasure chest has appeared.
+				// 出现了一个宝箱。 / A treasure chest has appeared.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 			}
 		});
@@ -89,9 +75,9 @@ public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Unsealed Krotan.
+				// 解封的克罗坦。 / Unsealed Krotan.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Crotan_Named_Spawn);
-				//The Krotan Balaur Prince has appeared!
+				// 克罗坦龙族王子已出现！ / The Krotan Balaur Prince has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1221_Boss_hide_Dispel, 10000);
 			}
 		});

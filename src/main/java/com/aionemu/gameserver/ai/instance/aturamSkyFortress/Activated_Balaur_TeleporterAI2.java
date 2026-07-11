@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -25,10 +9,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Aturam Sky Fortress 副本 NPC AI：Activated Balaur Teleporter（@AIName "Activated_Balaur_Teleporter"），继承 NpcAI2。
+ * Aturam Sky Fortress instance NPC AI: Activated Balaur Teleporter (@AIName "Activated_Balaur_Teleporter"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Activated_Balaur_Teleporter")
 public class Activated_Balaur_TeleporterAI2 extends NpcAI2
 {
@@ -45,18 +31,18 @@ public class Activated_Balaur_TeleporterAI2 extends NpcAI2
 		        switch (player.getWorldId()) {
 		            case 300240000: //Aturam Sky Fortress.
 				        if (dialogId == 10000) {
-							//You've heard the contents of a Flagon may help recover HP.
+							// 听说酒壶中的东西可能有助于恢复生命。 / You've heard the contents of a Flagon may help recover HP.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_Doping_02_AD, 0);
-							//Power Generator Protection System is in operation.
-							//Shutting down the protection system requires destroying the Power Generators in the correct sequence.
+							// 能量发生器防护系统运行中。 / Power Generator Protection System is in operation.
+							// 关闭防护系统须按正确顺序摧毁能量发生器。 / Shutting down the protection system requires destroying the Power Generators in the correct sequence.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_A_FOBJ_SanctuaryATK, 5000);
-							//Destroy the Power Generators in the correct sequence to attack Popuchin.
+							// 按正确顺序摧毁能量发生器以攻击波普钦。 / Destroy the Power Generators in the correct sequence to attack Popuchin.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_A_Zone_Explain_01, 10000);
 							TeleportService2.teleportTo(player, 300240000, instanceId, 613.54504f, 448.762f, 655.32684f, (byte) 59); //Dredgion Fabrication Zone.
 					    } else if (dialogId == 10001) {
-							//You see a large obelisk pulsing with energy. Go on. Take some.
+							// 你看到巨大方尖碑脉动着能量。去取一些吧。 / You see a large obelisk pulsing with energy. Go on. Take some.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_Doping_01_AD, 0);
-							//Destroying all Spy Crystals opens the door to the Talon Laboratory.
+							// 摧毁全部间谍水晶可打开通往利爪实验室的门。 / Destroying all Spy Crystals opens the door to the Talon Laboratory.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_B_Zone_Explain_01, 5000);
 							TeleportService2.teleportTo(player, 300240000, instanceId, 636.91830f, 360.335f, 638.15230f, (byte) 80); //Warehouse Zone.
 					    }
@@ -64,18 +50,18 @@ public class Activated_Balaur_TeleporterAI2 extends NpcAI2
 			    } switch (player.getWorldId()) {
 		            case 300241000: //[Event] Aturam Sky Fortress.
 				        if (dialogId == 10000) {
-							//You've heard the contents of a Flagon may help recover HP.
+							// 听说酒壶中的东西可能有助于恢复生命。 / You've heard the contents of a Flagon may help recover HP.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_Doping_02_AD, 0);
-							//Power Generator Protection System is in operation.
-							//Shutting down the protection system requires destroying the Power Generators in the correct sequence.
+							// 能量发生器防护系统运行中。 / Power Generator Protection System is in operation.
+							// 关闭防护系统须按正确顺序摧毁能量发生器。 / Shutting down the protection system requires destroying the Power Generators in the correct sequence.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_A_FOBJ_SanctuaryATK, 5000);
-							//Destroy the Power Generators in the correct sequence to attack Popuchin.
+							// 按正确顺序摧毁能量发生器以攻击波普钦。 / Destroy the Power Generators in the correct sequence to attack Popuchin.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_A_Zone_Explain_01, 10000);
 							TeleportService2.teleportTo(player, 300241000, instanceId, 613.54504f, 448.762f, 655.32684f, (byte) 59); //Dredgion Fabrication Zone.
 					    } else if (dialogId == 10001) {
-							//You see a large obelisk pulsing with energy. Go on. Take some.
+							// 你看到巨大方尖碑脉动着能量。去取一些吧。 / You see a large obelisk pulsing with energy. Go on. Take some.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_Doping_01_AD, 0);
-							//Destroying all Spy Crystals opens the door to the Talon Laboratory.
+							// 摧毁全部间谍水晶可打开通往利爪实验室的门。 / Destroying all Spy Crystals opens the door to the Talon Laboratory.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_B_Zone_Explain_01, 5000);
 							TeleportService2.teleportTo(player, 300241000, instanceId, 636.91830f, 360.335f, 638.15230f, (byte) 80); //Warehouse Zone.
 					    }
@@ -88,9 +74,9 @@ public class Activated_Balaur_TeleporterAI2 extends NpcAI2
 				        if (dialogId == 10000) {
 							TeleportService2.teleportTo(player, 300240000, instanceId, 636.24340f, 448.515f, 655.45500f, (byte) 59); //Atrium.
 					    } else if (dialogId == 10001) {
-							//You see a large obelisk pulsing with energy. Go on. Take some.
+							// 你看到巨大方尖碑脉动着能量。去取一些吧。 / You see a large obelisk pulsing with energy. Go on. Take some.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_Doping_01_AD, 0);
-							//Destroying all Spy Crystals opens the door to the Talon Laboratory.
+							// 摧毁全部间谍水晶可打开通往利爪实验室的门。 / Destroying all Spy Crystals opens the door to the Talon Laboratory.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_B_Zone_Explain_01, 5000);
 							TeleportService2.teleportTo(player, 300240000, instanceId, 636.91830f, 360.335f, 638.15230f, (byte) 80); //Warehouse Zone.
 					    }
@@ -100,9 +86,9 @@ public class Activated_Balaur_TeleporterAI2 extends NpcAI2
 				        if (dialogId == 10000) {
 							TeleportService2.teleportTo(player, 300241000, instanceId, 636.24340f, 448.515f, 655.45500f, (byte) 59); //Atrium.
 					    } else if (dialogId == 10001) {
-							//You see a large obelisk pulsing with energy. Go on. Take some.
+							// 你看到巨大方尖碑脉动着能量。去取一些吧。 / You see a large obelisk pulsing with energy. Go on. Take some.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_Doping_01_AD, 0);
-							//Destroying all Spy Crystals opens the door to the Talon Laboratory.
+							// 摧毁全部间谍水晶可打开通往利爪实验室的门。 / Destroying all Spy Crystals opens the door to the Talon Laboratory.
 							PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDStation_B_Zone_Explain_01, 5000);
 							TeleportService2.teleportTo(player, 300241000, instanceId, 636.91830f, 360.335f, 638.15230f, (byte) 80); //Warehouse Zone.
 					    }

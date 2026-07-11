@@ -4,10 +4,10 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 /**
- * 聚合类监听器，用于管理和协调多个ClassListener实例
+ * 聚合类监听器，用于管理和协调多个 ClassListener 实例
  * Aggregated class listener for managing and coordinating multiple ClassListener instances
  *
- * 该类实现了ClassListener接口，通过维护一个监听器列表来实现以下功能：
+ * 该类实现了 ClassListener 接口，通过维护一个监听器列表来实现以下功能：
  * This class implements the ClassListener interface and maintains a list of listeners to:
  * - 统一管理多个监听器 (Manage multiple listeners uniformly)
  * - 按序执行监听器方法 (Execute listener methods in sequence)
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class AggregatedClassListener implements ClassListener {
     /**
-     * 监听器列表，存储所有注册的ClassListener实例
+ * 监听器列表，存储所有注册的 ClassListener 实例
      * List of listeners storing all registered ClassListener instances
      */
     private final List<ClassListener> classListeners;
@@ -59,7 +59,7 @@ public class AggregatedClassListener implements ClassListener {
     }
 
     /**
-     * 按照注册顺序执行所有监听器的postLoad方法
+ * 按照注册顺序执行所有监听器的 postLoad 方法
      * Execute postLoad method of all listeners in registration order
      *
      * @param classes 要处理的类数组 / Array of classes to process
@@ -72,7 +72,7 @@ public class AggregatedClassListener implements ClassListener {
     }
 
     /**
-     * 按照注册顺序的反序执行所有监听器的preUnload方法
+ * 按照注册顺序的反序执行所有监听器的 preUnload 方法
      * Execute preUnload method of all listeners in reverse registration order
      *
      * @param classes 要处理的类数组 / Array of classes to process

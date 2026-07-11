@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.group;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -58,7 +44,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
+
+/**
+ * 玩家队伍服务，用于团队2相关逻辑。
+ * Player Group Service for team 2 logic.
+ */
 @Slf4j
 
 public class PlayerGroupService {
@@ -66,6 +56,7 @@ public class PlayerGroupService {
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
 	private static Map<Integer, PlayerGroup> groupMembers;
 
+	/** 邀请小队 / Invite To Group*/
 	public static final void inviteToGroup(final Player inviter, final Player invited) {
 		if (canInvite(inviter, invited)) {
 			PlayerGroupInvite invite = new PlayerGroupInvite(inviter, invited);
@@ -77,19 +68,20 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 是否邀请 / Whether invite*/
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
-				// You cannot use invite, leave or kick commands related to your group or
-				// alliance in this region.
+				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
+				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
 		}
 		if (invited.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
-				// You cannot use invite, leave or kick commands related to your group or
-				// alliance in this region.
+				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
+				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
@@ -99,8 +91,8 @@ public class PlayerGroupService {
 			if (invited.isInTeam()) {
 				for (Player pm : invited.getCurrentTeam().getMembers()) {
 					if (pm.isInInstance()) {
-						// You cannot invite the player to the force as the group leader of the player
-						// is in an Instanced Zone.
+						// 因对方为小队长，无法邀请该玩家加入战团。 / You cannot invite the player to the force as the group leader of the player
+						// 处于副本中。 / is in an Instanced Zone.
 						PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1400128));
 						return false;
 					}
@@ -111,6 +103,7 @@ public class PlayerGroupService {
 	}
 
 	@GlobalCallback(PlayerGroupCreateCallback.class)
+	/** 创建队伍。 / Create group. */
 	public static final PlayerGroup createGroup(Player leader, Player invited, TeamType type) {
 		PlayerGroup newGroup = new PlayerGroup(new PlayerGroupMember(leader), type);
 		groups.put(newGroup.getTeamId(), newGroup);
@@ -130,6 +123,7 @@ public class PlayerGroupService {
 	}
 
 	@GlobalCallback(PlayerGroupCreateCallback.class)
+	/** 创建队伍。 / Create group. */
 	public static final PlayerGroup createGroup(Player leader) {
 		PlayerGroup newGroup = new PlayerGroup(new PlayerGroupMember(leader), TeamType.GROUP);
 		groups.put(newGroup.getTeamId(), newGroup);
@@ -145,14 +139,17 @@ public class PlayerGroupService {
 	}
 
 	@GlobalCallback(AddPlayerToGroupCallback.class)
+	/** 添加玩家到小队 / Adds player to group*/
 	public static final void addPlayerToGroup(PlayerGroup group, Player invited) {
 		group.addMember(new PlayerGroupMember(invited));
 	}
 
+	/** Change 小队 Rules / Change Group Rules */
 	public static final void changeGroupRules(PlayerGroup group, LootGroupRules lootRules) {
 		group.onEvent(new ChangeGroupLootRulesEvent(group, lootRules));
 	}
 
+	/** 玩家登录 / On Player Login */
 	public static final void onPlayerLogin(Player player) {
 		for (PlayerGroup group : groups.values()) {
 			PlayerGroupMember member = group.getMember(player.getObjectId());
@@ -162,6 +159,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 玩家登出时 / On Player Logout */
 	public static final void onPlayerLogout(Player player) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -171,6 +169,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 更新队伍。 / Update group. */
 	public static final void updateGroup(Player player, GroupEvent groupEvent) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -178,11 +177,13 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 添加玩家。 / Adds player. */
 	public static final void addPlayer(PlayerGroup group, Player player) {
 		Preconditions.checkNotNull(group, "Group should not be null");
 		group.onEvent(new PlayerEnteredEvent(group, player));
 	}
 
+	/** 移除玩家。 / Removes player. */
 	public static final void removePlayer(Player player) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -207,6 +208,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 封禁玩家。 / Ban Player. */
 	public static final void banPlayer(Player bannedPlayer, Player banGiver) {
 		Preconditions.checkNotNull(bannedPlayer, "Banned player should not be null");
 		Preconditions.checkNotNull(banGiver, "Bangiver player should not be null");
@@ -215,18 +217,20 @@ public class PlayerGroupService {
 			if (group.hasMember(bannedPlayer.getObjectId())) {
 				group.onEvent(new PlayerGroupLeavedEvent(group, bannedPlayer, LeaveReson.BAN, banGiver.getName()));
 			} else {
-				log.warn("TEAM2: banning player not in group {}", group.onlineMembers());
+				log.warn(I18n.get("log.bb1e71bead26", group.onlineMembers()));
 			}
 		}
 	}
 
 	@GlobalCallback(PlayerGroupDisbandCallback.class)
+	/** 解散 / disband. */
 	public static void disband(PlayerGroup group) {
 		Preconditions.checkState(group.onlineMembers() <= 1, "Can't disband group with more than one online member");
 		groups.remove(group.getTeamId());
 		group.onEvent(new GroupDisbandEvent(group));
 	}
 
+	/** 分配基纳 / Distribute Kinah */
 	public static void distributeKinah(Player player, long kinah) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -234,6 +238,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 显示烙印标记 / show Brand. */
 	public static void showBrand(Player player, int targetObjId, int brandId) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -241,6 +246,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 更换队长 / change Leader. */
 	public static void changeLeader(Player player) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -248,6 +254,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** Start mentoring / Start mentoring */
 	public static void startMentoring(Player player) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -255,6 +262,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** Stop mentoring / Stop mentoring */
 	public static void stopMentoring(Player player) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
@@ -262,15 +270,18 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 清理 / cleanup. */
 	public static final void cleanup() {
 		log.info(getServiceStatus());
 		groups.clear();
 	}
 
+	/** 获取服务状态。 / Returns the service status. */
 	public static final String getServiceStatus() {
-		return "Number of groups: " + groups.size();
+		return I18n.get("log.5a64a545d768", groups.size());
 	}
 
+	/** 搜索队伍。 / Search group. */
 	public static final PlayerGroup searchGroup(Integer playerObjId) {
 		for (PlayerGroup group : groups.values()) {
 			if (group.hasMember(playerObjId)) {
@@ -283,6 +294,7 @@ public class PlayerGroupService {
 	public static class OfflinePlayerChecker implements Runnable, Predicate<PlayerGroupMember> {
 		private PlayerGroup currentGroup;
 
+		/** 运行 / run. */
 		@Override
 		public void run() {
 			for (PlayerGroup group : groups.values()) {
@@ -292,6 +304,7 @@ public class PlayerGroupService {
 			currentGroup = null;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(PlayerGroupMember member) {
 			if (!member.isOnline()
@@ -302,6 +315,7 @@ public class PlayerGroupService {
 		}
 	}
 
+	/** 添加 group member to cache / Adds group member to cache */
 	public static void addGroupMemberToCache(Player player) {
 		if (!groupMembers.containsKey(player.getObjectId())) {
 			groupMembers.put(player.getObjectId(), player.getPlayerGroup2());

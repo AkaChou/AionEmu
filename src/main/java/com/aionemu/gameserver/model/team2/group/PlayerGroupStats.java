@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.group;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.google.common.base.Predicate;
 
 /**
+ * 玩家队伍属性，用于团队2相关逻辑。
+ * Player Group Stats for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerGroupStats implements Predicate<Player> {
@@ -34,11 +21,13 @@ public class PlayerGroupStats implements Predicate<Player> {
 		this.group = group;
 	}
 
+	/** 添加玩家 / On Add Player*/
 	public void onAddPlayer(PlayerGroupMember member) {
 		group.applyOnMembers(this);
 		calculateExpLevels();
 	}
 
+	/** 移除玩家 / On Remove Player*/
 	public void onRemovePlayer(PlayerGroupMember member) {
 		group.applyOnMembers(this);
 	}
@@ -50,6 +39,7 @@ public class PlayerGroupStats implements Predicate<Player> {
 		maxLevelPlayer = null;
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public boolean apply(Player player) {
 		if (minLevelPlayer == null || maxLevelPlayer == null) {
@@ -66,10 +56,12 @@ public class PlayerGroupStats implements Predicate<Player> {
 		return true;
 	}
 
+	/** 返回最小经验玩家等级 / Returns the min exp player level*/
 	public int getMinExpPlayerLevel() {
 		return minExpPlayerLevel;
 	}
 
+	/** 返回最大经验玩家等级 / Returns the max exp player level*/
 	public int getMaxExpPlayerLevel() {
 		return maxExpPlayerLevel;
 	}

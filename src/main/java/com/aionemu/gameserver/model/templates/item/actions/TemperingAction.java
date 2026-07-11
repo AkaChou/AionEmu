@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,49 +20,49 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
 /**
- * Author Ranastic (Encom) /
- * mod yayaya
- *
- * Modified to support Accessory Ascension Benefits (skill_id=4843, effectid=900004)
- * When this effect is active, failed tempering reduces accessory level by 1 instead of resetting to 0
- ****/
+ * Tempering 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TemperingAction")
 public class TemperingAction extends AbstractItemAction {
 	
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (targetItem.getItemTemplate().getMaxAuthorize() == 0) {
 			return false;
 		}
 		
-		// if you don't check your inventory and fill it, the plume won't be deleted because it's impossible to drop into full inventory To extract, there must be at least one free cell in the cube.
+		// 若背包满则无法卸下羽饰；提取时背包至少需有空位。 / if you don't check your inventory and fill it, the plume won't be deleted because it's impossible to drop into full inventory To extract, there must be at least one free cell in the cube.
 		if (player.getInventory().isFull()) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330081));
 			return false;
 		}
 		
 		if (targetItem.getItemTemplate().isAccessory() && targetItem.getAuthorize() >= 15) {
-			// %0 cannot be tempered anymore.
+			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
 			return false;
 		}
 		if (targetItem.getItemTemplate().isPlume() && targetItem.getAuthorize() >= 18) {
-			// %0 cannot be tempered anymore.
+			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
 			return false;
 		}
 		if (targetItem.getItemTemplate().isBracelet() && targetItem.getAuthorize() >= 10) {
-			// %0 cannot be tempered anymore.
+			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
 			return false;
 		}
 		return targetItem.getAuthorize() < targetItem.getItemTemplate().getMaxAuthorize();
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		if (player.isAuthorizeBoost()) {
@@ -87,13 +72,14 @@ public class TemperingAction extends AbstractItemAction {
 		}
 		
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
 				player.getObserveController().removeObserver(this);
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
-				// You have canceled the tempering of %0.
+				// 你已取消 %0 的淬炼。 / You have canceled the tempering of %0.
                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANCEL(targetItem.getNameId()));
 			}
 		};
@@ -102,6 +88,7 @@ public class TemperingAction extends AbstractItemAction {
 		final boolean isTemperingSuccess = isTemperingSuccess(player, targetItem);
 		
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				if (player.getInventory().decreaseByItemId(parentItem.getItemId(), 1)) {
@@ -113,19 +100,19 @@ public class TemperingAction extends AbstractItemAction {
 						
 						if (targetItem.getItemTemplate().isBracelet()) {
 							targetItem.setAuthorize(0);
-							// Tempering of %0 has failed and the temperance level has decreased to 0.
+							// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
 	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
 							
 						} else if (targetItem.getItemTemplate().isPlume()) {
 							targetItem.setAuthorize(targetItem.getAuthorize()); // Plume doesn't decrease
-							// Tempering of %0 has failed and the temperance level has decreased to 0.
+							// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
 	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
 							
 						}
-						// New Tempering 5.8
+						// 新淬炼 5.8 / New Tempering 5.8
 						else if (parentItem.getItemId() == 166032001 || parentItem.getItemId() == 166032002) {
 							targetItem.setAuthorize(targetItem.getAuthorize() - 1);
-							// You failed to temper %0.
+							// 你淬炼 %0 失败。 / You failed to temper %0.
                             PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED_NO_PENALTY(targetItem.getNameId()));
 							
 						} else {
@@ -138,7 +125,7 @@ public class TemperingAction extends AbstractItemAction {
 								
 							} else {
 								targetItem.setAuthorize(0);
-								// Tempering of %0 has failed and the temperance level has decreased to 0.
+								// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
 	                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
 							}
 						}
@@ -150,7 +137,7 @@ public class TemperingAction extends AbstractItemAction {
 							checkTempering(player, targetItem);
 						}
 						
-						// You have successfully tempered %0. +%num1 temperance level achieved.
+						// 你成功淬炼了 %0。达到 +%num1 淬炼等级。 / You have successfully tempered %0. +%num1 temperance level achieved.
                         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_SUCCEEDED(targetItem.getNameId(), targetItem.getAuthorize()));
 					}
 					
@@ -175,6 +162,9 @@ public class TemperingAction extends AbstractItemAction {
 		}, player.isAuthorizeBoost() ? 1500 : 3000));
 	}
 
+	/**
+	 * Check tempering / Check tempering
+	 */
 	public void checkTempering(Player player, Item item) {
 		if (item.getAuthorize() >= 5 && item.getAuthorize() <= 7) {
 			item.setOptionalSocket(1);
@@ -190,6 +180,9 @@ public class TemperingAction extends AbstractItemAction {
 		}
 	}
 
+	/**
+	 * @return Whether tempering success / Whether tempering success
+	 */
 	public boolean isTemperingSuccess(Player player, Item item) {
 		if (item.getItemTemplate().isBracelet()) {
 			if (Rnd.get(1, 100) < EnchantsConfig.ENCHANT_BRACELET) {

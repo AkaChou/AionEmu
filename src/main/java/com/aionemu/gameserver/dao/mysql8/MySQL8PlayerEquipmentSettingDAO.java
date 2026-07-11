@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,14 +13,26 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.EquipmentSetting;
 import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.EquipmentSettingList;
-@Slf4j
 
+/**
+ * 玩家装备预设 DAO 的 MySQL 8 实现。
+ * MySQL 8 implementation of PlayerEquipmentSettingDAO.
+ */
+@Slf4j
 public class MySQL8PlayerEquipmentSettingDAO extends PlayerEquipmentSettingDAO {
 
 
+	/** 插入或更新装备方案 SQL / Insert or update equipment setting SQL*/
 	static final String INSERT_QUERY = "INSERT INTO `player_equipment_setting` (`player_id`, `slot`, `name`, `display`, `m_hand`, `s_hand`, `helmet`, `torso`, `glove`, `boots`, `earrings_left`, `earrings_right`, `ring_left`, `ring_right`, `necklace`, `shoulder`, `pants`, `powershard_left`, `powershard_right`, `wings`, `waist`, `m_off_hand`, `s_off_hand`, `plume`, `bracelet`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name` = IF(`name` = '', VALUES(`name`), `name`), `display` = VALUES(`display`), `m_hand` = VALUES(`m_hand`), `s_hand` = VALUES(`s_hand`), `helmet` = VALUES(`helmet`), `torso` = VALUES(`torso`), `glove` = VALUES(`glove`), `boots` = VALUES(`boots`), `earrings_left` = VALUES(`earrings_left`), `earrings_right` = VALUES(`earrings_right`), `ring_left` = VALUES(`ring_left`), `ring_right` = VALUES(`ring_right`), `necklace` = VALUES(`necklace`), `shoulder` = VALUES(`shoulder`), `pants` = VALUES(`pants`), `powershard_left` = VALUES(`powershard_left`), `powershard_right` = VALUES(`powershard_right`), `wings` = VALUES(`wings`), `waist` = VALUES(`waist`), `m_off_hand` = VALUES(`m_off_hand`), `s_off_hand` = VALUES(`s_off_hand`), `plume` = VALUES(`plume`), `bracelet` = VALUES(`bracelet`)";
+	/** 查询装备方案 SQL / Select equipment settings SQL*/
 	private static final String SELECT_QUERY = "SELECT * FROM `player_equipment_setting` WHERE `player_id` = ?";
 
+	/**
+	 * 加载玩家装备预设列表。
+	 * Loads a player's equipment setting list.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void loadEquipmentSetting(Player player) {
 		EquipmentSettingList equipmentSettingList = new EquipmentSettingList(player);
@@ -38,11 +52,18 @@ public class MySQL8PlayerEquipmentSettingDAO extends PlayerEquipmentSettingDAO {
 				}
 			}
 		} catch (Exception e) {
-			log.error("Could not restore equipment settings for player {}", player.getObjectId(), e);
+			log.error(I18n.get("log.3864e5946e2d", player.getObjectId(), e));
 		}
 		player.setEquipmentSettingList(equipmentSettingList);
 	}
 
+	/**
+	 * 插入或更新玩家装备预设。
+	 * Inserts or updates a player's equipment setting.
+	 *
+	 * 玩家 / player
+	 * equipment setting
+	 */
 	@Override
 	public void insertEquipmentSetting(Player player, EquipmentSetting equipmentSetting) {
 		try (Connection con = DatabaseFactory.getConnection();
@@ -75,10 +96,19 @@ public class MySQL8PlayerEquipmentSettingDAO extends PlayerEquipmentSettingDAO {
 			stmt.executeUpdate();
 			equipmentSetting.setPersistentState(PersistentState.UPDATED);
 		} catch (Exception e) {
-			log.error("Could not store equipment setting for player {}", player.getObjectId(), e);
+			log.error(I18n.get("log.593407c982a0", player.getObjectId(), e));
 		}
 	}
 
+	/**
+	 * 是否支持当前数据库。
+	 * Whether the current database is supported.
+	 *
+	 * database name
+	 * major version
+	 * minor version
+	 * whether supported
+	 */
 	@Override
 	public boolean supports(String databaseName, int majorVersion, int minorVersion) {
 		return MySQL8DAOUtils.supports(databaseName, majorVersion, minorVersion);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill;
 
 import java.util.ArrayList;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 
 /**
+ * NPC 技能列表，用于技能相关逻辑。
+ * Npc Skill List for skill logic.
+ *
  * @author ATracer
  */
 public class NpcSkillList implements SkillList<Npc> {
@@ -47,6 +34,7 @@ public class NpcSkillList implements SkillList<Npc> {
 		}
 	}
 
+	/** 添加技能。 / Adds skill. */
 	@Override
 	public boolean addSkill(Npc creature, int skillId, int skillLevel) {
 		initSkills();
@@ -54,6 +42,7 @@ public class NpcSkillList implements SkillList<Npc> {
 		return true;
 	}
 
+	/** 移除技能。 / Removes skill. */
 	@Override
 	public boolean removeSkill(int skillId) {
 		Iterator<NpcSkillEntry> iter = skills.iterator();
@@ -67,6 +56,7 @@ public class NpcSkillList implements SkillList<Npc> {
 		return false;
 	}
 
+	/** 是否技能存在 / Whether skill present*/
 	@Override
 	public boolean isSkillPresent(int skillId) {
 		if (skills == null) {
@@ -75,11 +65,13 @@ public class NpcSkillList implements SkillList<Npc> {
 		return getSkill(skillId) != null;
 	}
 
+	/** 获取技能等级。 / Returns the skill level. */
 	@Override
 	public int getSkillLevel(int skillId) {
 		return getSkill(skillId).getSkillLevel();
 	}
 
+	/** 大小 / size. */
 	@Override
 	public int size() {
 		return skills != null ? skills.size() : 0;
@@ -91,6 +83,7 @@ public class NpcSkillList implements SkillList<Npc> {
 		}
 	}
 
+	/** 返回随机技能 / Returns the random skill */
 	public NpcSkillEntry getRandomSkill() {
 		if (skills == null || skills.size() == 0) {
 			return null;
@@ -107,6 +100,7 @@ public class NpcSkillList implements SkillList<Npc> {
 		return null;
 	}
 
+	/** 返回 use in spawned skill / Returns the use in spawned skill */
 	public NpcSkillEntry getUseInSpawnedSkill() {
 		if (this.skills == null) {
 			return null;
@@ -122,9 +116,9 @@ public class NpcSkillList implements SkillList<Npc> {
 		return null;
 	}
 
+	/** 添加关联技能 / Adds linked skill */
 	@Override
 	public boolean addLinkedSkill(Npc creature, int skillId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

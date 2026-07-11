@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -41,22 +25,39 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
+/**
+ * 传送至房屋（自己、好友或军团相关）的客户端包。
+ * Client packet for teleporting to a house (own, friend, or legion-related).
+ */
 public class CM_HOUSE_TELEPORT extends AionClientPacket {
 	int actionId;
 	int playerId1;
 	int playerId2;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_HOUSE_TELEPORT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取房屋传送动作与目标玩家 ID。
+	 * Reads the house-teleport action and target player ids.
+	 */
 	@Override
 	protected void readImpl() {
 		actionId = readC();
 		playerId1 = readD();
 		playerId2 = readD();
 	}
-
+	/**
+	 * 将玩家传送至自己/好友/军团房屋。
+	 * Teleports the player to own/friend/legion house.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player1 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId1);

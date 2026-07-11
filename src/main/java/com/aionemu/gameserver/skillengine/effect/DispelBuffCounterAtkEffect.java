@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,6 +11,10 @@ import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 驱散 Buff 并反击效果：按可驱散 Buff 数量结算伤害并驱散。
+ * Dispel-buff counter-attack: damage scales with removable buff count, then dispels them.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DispelBuffCounterAtkEffect")
 public class DispelBuffCounterAtkEffect extends DamageEffect {
@@ -43,12 +31,24 @@ public class DispelBuffCounterAtkEffect extends DamageEffect {
 	private int i;
 	private int finalPower;
 
+	/**
+	 * 应用伤害并按层数驱散 Buff。
+	 * Applies damage and dispels buffs by computed count.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
 		effect.getEffected().getEffectController().dispelBuffCounterAtkEffect(i, dispelLevel, finalPower);
 	}
 
+	/**
+	 * 按可驱散 Buff 数计算伤害与驱散参数。
+	 * Calculates damage and dispel params from removable buff count.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, null, null)) {

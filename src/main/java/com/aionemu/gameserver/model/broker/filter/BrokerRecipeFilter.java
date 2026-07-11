@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.broker.filter;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -23,6 +7,11 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.item.actions.CraftLearnAction;
 import com.aionemu.gameserver.model.templates.item.actions.ItemActions;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
+
+/**
+ * 经纪行配方 Filter 模型。
+ * Broker Recipe Filter model.
+ */
 
 public class BrokerRecipeFilter extends BrokerFilter {
 
@@ -34,6 +23,7 @@ public class BrokerRecipeFilter extends BrokerFilter {
 		this.masks = masks;
 	}
 
+	/** 接受 / accept. */
 	public boolean accept(ItemTemplate template) {
 		ItemActions actions = template.getActions();
 		if (actions != null) {

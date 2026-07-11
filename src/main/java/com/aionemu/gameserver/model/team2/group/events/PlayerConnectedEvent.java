@@ -1,22 +1,4 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.group.events;
-
-import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.common.events.AlwaysTrueTeamEvent;
 import com.aionemu.gameserver.model.team2.common.legacy.GroupEvent;
@@ -29,9 +11,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
+ * 玩家 Connected 活动，用于团队2相关逻辑。
+ * Player Connected Event for team 2 logic.
+ *
  * @author ATracer
  */
-@Slf4j
 public class PlayerConnectedEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
 	private final PlayerGroup group;
@@ -42,20 +26,21 @@ public class PlayerConnectedEvent extends AlwaysTrueTeamEvent implements Predica
 		this.player = player;
 	}
 
+	/** 处理活动。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		group.removeMember(player.getObjectId());
-		group.addMember(new PlayerGroupMember(player));
-		// TODO this probably should never happen
+		PlayerGroupMember member = new PlayerGroupMember(player);
+		group.addMember(member);
 		if (player.sameObjectId(group.getLeader().getObjectId())) {
-			log.warn("[TEAM2] leader connected {}", group.size());
-			group.changeLeader(new PlayerGroupMember(player));
+			group.changeLeader(member);
 		}
 		PacketSendUtility.sendPacket(player, new SM_GROUP_INFO(group));
 		PacketSendUtility.sendPacket(player, new SM_GROUP_MEMBER_INFO(group, player, GroupEvent.JOIN));
 		group.applyOnMembers(this);
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public boolean apply(Player member) {
 		if (!player.equals(member)) {

@@ -1,29 +1,28 @@
 package com.aionemu.commons.utils.concurrent;
 
-import lombok.extern.slf4j.Slf4j;
+import com.aionemu.boot.i18n.I18n;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * 线程池拒绝策略处理器（Thread Pool Rejected Execution Handler）
- * 
- * 当线程池无法接受新任务时，在调用线程中执行任务以形成背压。
- * When the pool cannot accept a task, run it in the calling thread to apply backpressure.
+ * 线程池拒绝策略：在调用线程执行任务形成背压。
+ * Pool rejection policy: run the task in the caller for backpressure.
  */
 @Slf4j
 public final class AionRejectedExecutionHandler implements RejectedExecutionHandler {
-    
 
     /**
-     * 拒绝任务处理方法（Rejected task handling method）
-     * @param r 被拒绝的任务（Rejected task）
-     * @param executor 关联的线程池（Related thread pool）
+     * 处理被拒绝的任务。
+     * Handle a rejected task.
+     *
+     * @param r        被拒绝任务 / Rejected task
+     * Thread pool
      */
+    @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        // 检查线程池是否已关闭（Check if executor is shutdown）
         if (!executor.isShutdown()) {
-            // 记录拒绝警告（Log rejection warning）
-            log.warn("Task {} rejected from {}", r, executor);
-            
+            log.warn(I18n.get("log.5776856c1d75", r, executor));
             r.run();
         }
     }

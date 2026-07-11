@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.drop;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -73,37 +57,68 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
+/**
+ * 掉落注册服务，在 NPC 死亡后生成并登记掉落物。
+ * Drop registration service that builds and registers loot after NPC death.
+ */
 @Slf4j
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
 	private ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<Integer, Set<DropItem>>();
 	private ConcurrentMap<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<Integer, DropNpc>();
-	private Set<Integer> noReductionMaps;
+	private volatile Set<Integer> noReductionMaps = Set.of();
 
+	/**
+	 * 使用玩家等级注册 NPC 掉落。
+	 * Registers NPC drops using the player's level.
+	 *
+	 * dead NPC
+	 * @param player 主要拾取玩家 / primary looter
+	 * group members
+	 */
 	public void registerDrop(Npc npc, Player player, Collection<Player> groupMembers) {
 		registerDrop(npc, player, player.getLevel(), groupMembers);
 	}
 
+	/**
+	 * 构造并初始化掉落注册服务。
+	 * Constructs and initializes the drop registration service.
+	 */
 	public DropRegistrationService() {
 		init();
-		noReductionMaps = new HashSet<>();
+		reload();
+	}
+
+	public void reload() {
+		Set<Integer> maps = new HashSet<>();
 		String configuredMaps = DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES;
 		if (configuredMaps != null) {
 			for (String mapId : configuredMaps.split(",")) {
 				if (!mapId.isBlank() && !mapId.trim().equals("0")) {
-					noReductionMaps.add(Integer.parseInt(mapId.trim()));
+					maps.add(Integer.parseInt(mapId.trim()));
 				}
 			}
 		}
+		noReductionMaps = Set.copyOf(maps);
 	}
 
+	/**
+	 * 初始化服务（掉落数据按需由 NpcTemplate 加载）。
+	 * Initializes the service (drops are loaded on demand by NpcTemplate).
+	 */
 	public final void init() {
 		// Drops are loaded on demand by NpcTemplate#getNpcDrop().
 	}
 
 	/**
-	 * After NPC dies, it can register arbitrary drop
+	 * 在 NPC 死亡后注册全部掉落（NPC 表、任务、活动与全局掉落）。
+	 * Registers full drops after NPC death (NPC table, quest, event, and global drops).
+	 *
+	 * dead NPC
+	 * @param player 主要拾取玩家 / primary looter
+	 * @param highestLevel 队伍最高等级 / highest group level
+	 * group members
 	 */
 	public void registerDrop(Npc npc, Player player, int highestLevel, Collection<Player> groupMembers) {
 
@@ -112,7 +127,7 @@ public class DropRegistrationService {
 		}
 		int npcObjId = npc.getObjectId();
 
-		// Getting all possible drops for this Npc
+		// 获取该 NPC 全部可能掉落 / Getting all possible drops for this Npc
 		NpcDrop npcDrop = npc.getNpcDrop();
 		List<Player> dropPlayers = new ArrayList<>();
 		Player teamLooter = initDropNpc(player, npcObjId, dropPlayers, groupMembers);
@@ -277,7 +292,7 @@ public class DropRegistrationService {
 					int rndItemId = alloweditems.size() > 1 ? alloweditems.get(Rnd.get(0, alloweditems.size() - 1)) : alloweditems.get(0);
 					long count = 1;
 					if (rndItemId == 182400001) {
-						// 金币掉落：直接使用规则中的最小/最大值 | Gold Drop: Use min/max from rules directly
+						// 基纳掉落：直接使用规则中的最小/最大值 | Gold Drop: Use min/max from rules directly
 						count = rule.getMaxCount() > 1  ? Rnd.get((int) rule.getMinCount(), (int) rule.getMaxCount()) : rule.getMinCount();
 					} else {
 						// 其他物品：同样的随机逻辑 | Other Items: Same random logic
@@ -333,6 +348,15 @@ public class DropRegistrationService {
 		GameCoreGameplayServices.dropService().scheduleFreeForAll(npcObjId);
 	}
 
+	/**
+	 * 根据 NPC 与玩家状态构建掉落修正参数。
+	 * Builds drop modifiers from NPC and player state.
+	 *
+	 * target NPC
+	 * reference player
+	 * @param highestLevel 队伍最高等级 / highest group level
+	 * drop modifiers
+	 */
 	public DropModifiers createDropModifiers(Npc npc, Player player, int highestLevel) {
 		DropModifiers modifiers = new DropModifiers();
 		boolean isChest = npc.getAi2().getName().equals("chest");
@@ -409,6 +433,17 @@ public class DropRegistrationService {
 		return player.getRates().getDropRate() * boostDropRate / 100f;
 	}
 
+	/**
+	 * 创建并填充一条掉落物品记录。
+	 * Creates and fills a single drop item entry.
+	 *
+	 * @param index 掉落索引 / drop index
+	 * @param playerObjId 归属玩家对象 ID / owner player object id
+	 * NPC object id
+	 * item id
+	 * count
+	 * drop item
+	 */
 	public DropItem regDropItem(int index, int playerObjId, int objId, int itemId, long count) {
 		DropItem item = new DropItem(new Drop(itemId, 1, 1, 100, false, false));
 		item.setPlayerObjId(playerObjId);
@@ -431,19 +466,31 @@ public class DropRegistrationService {
 	}
 
 	/**
-	 * @return dropRegistrationMap
+	 * 获取 NPC 掉落登记映射。
+	 * Returns the NPC drop registration map.
+	 *
+	 * @return 掉落登记映射 / drop registration map
 	 */
 	public Map<Integer, DropNpc> getDropRegistrationMap() {
 		return dropRegistrationMap;
 	}
 
 	/**
-	 * @return currentDropMap
+	 * 获取当前掉落物品映射。
+	 * Returns the current drop-item map.
+	 *
+	 * @return 掉落物品映射 / current drop map
 	 */
 	public Map<Integer, Set<DropItem>> getCurrentDropMap() {
 		return currentDropMap;
 	}
 
+	/**
+	 * 获取单例实例。
+	 * Returns the singleton instance.
+	 *
+	 * service instance
+	 */
 	public static DropRegistrationService getInstance() {
 		ObjectProvider<DropRegistrationService> provider = instanceProvider;
 		if (provider == null) {
@@ -452,6 +499,12 @@ public class DropRegistrationService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<DropRegistrationService> instanceProvider) {
 		DropRegistrationService.instanceProvider = instanceProvider;
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -24,21 +8,31 @@ import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员帮助命令：以 HTML 展示可用管理命令列表。
+ * Admin help command: shows the available admin-command list via HTML.
+ *
  * @author Phantom, ATracer
  */
 public class Admin extends AdminCommand {
 
+	/**
+	 * 注册 {@code //admin} 命令。
+	 * Registers the {@code //admin} command.
+	 */
 	public Admin() {
 		super("admin");
 	}
 
+	/**
+	 * 执行帮助展示：打开 commands.xhtml 页面。
+	 * Executes help display: opens the commands.xhtml page.
+	 *
+	 * admin
+	 * @param params 参数（未使用） / unused params
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("commands.xhtml"));
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

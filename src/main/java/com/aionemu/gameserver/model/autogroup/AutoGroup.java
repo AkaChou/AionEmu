@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
 import java.util.Collections;
@@ -23,6 +7,11 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 自动队伍，用于 autogroup 相关逻辑。
+ * Auto Group for autogroup logic.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AutoGroup")
@@ -60,46 +49,59 @@ public class AutoGroup {
 	@XmlAttribute(name = "npc_ids")
 	protected List<Integer> npcIds;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回副本 ID / Returns the instance id */
 	public int getInstanceId() {
 		return instanceId;
 	}
 
+	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return nameId;
 	}
 
+	/** 返回标题 ID / Returns the title id */
 	public int getTitleId() {
 		return titleId;
 	}
 
+	/** 返回 min lvl / Returns the min lvl */
 	public int getMinLvl() {
 		return minLvl;
 	}
 
+	/** 返回 max lvl / Returns the max lvl */
 	public int getMaxLvl() {
 		return maxLvl;
 	}
 
+	/** Whether 登记 fast / Whether register fast */
 	public boolean hasRegisterFast() {
 		return registerFast;
 	}
 
+	/** Whether 登记小队 / Whether register group */
 	public boolean hasRegisterGroup() {
 		return registerGroup;
 	}
 
+	/**
+	 * @return Whether special purpose / Whether special purpose
+	 */
 	public boolean hasSpecialPurpose() {
 		return specialPurpose;
 	}
 
+	/** Whether 登记 new / Whether register new */
 	public boolean hasRegisterNew() {
 		return registerNew;
 	}
 
+	/** 返回 npc ids / Returns the npc ids */
 	public List<Integer> getNpcIds() {
 		if (npcIds == null) {
 			npcIds = Collections.emptyList();

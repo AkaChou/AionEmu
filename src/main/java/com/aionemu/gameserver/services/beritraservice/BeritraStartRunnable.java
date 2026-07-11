@@ -1,71 +1,68 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.beritraservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
-import com.aionemu.gameserver.services.BeritraService;
 
 /**
+ * 贝尔特拉/埃雷什基伽尔入侵启动定时任务。
+ * Ereshkigal invasion events. / Ereshkigal invasion events.
+ *
+ * <p>按时间轴依次刷出入口、激光、黑天与正式入侵。
+ * Stages portal, laser, black-sky and the actual invasion along a timed timeline.</p>
+ *
  * @author Rinzler (Encom)
  */
-
 public class BeritraStartRunnable implements Runnable {
+
 	private final int id;
 
+	/**
+	 * 绑定目标地点 ID。
+	 * Binds the target location id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public BeritraStartRunnable(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * 执行分阶段启动流程。
+	 * Runs the staged start sequence.
+	 */
 	@Override
 	public void run() {
-		// Beritra Invasion Portal.
+		// 贝里特拉入侵传送门。 / Beritra Invasion Portal.
 		GameLocationBootstrapServices.beritraService().adventPortalSP(id);
-		// Ereshkigal Invasion Portal.
+		// 埃雷什基伽尔入侵传送门。 / Ereshkigal Invasion Portal.
 		GameLocationBootstrapServices.beritraService().adventPortalEreshSP(id);
-		// The Beritra Legion's Invasion Corridor has appeared.
+		// 贝里特拉军团入侵走廊已出现。 / The Beritra Legion's Invasion Corridor has appeared.
 		GameLocationBootstrapServices.beritraService().invasionCorridorMsg(id);
-		// The Ereshkigal Legion's Invasion Corridor has been created.
+		// 埃雷什基伽尔军团入侵走廊已创建。 / The Ereshkigal Legion's Invasion Corridor has been created.
 		GameLocationBootstrapServices.beritraService().ereshkigalCorridorMsg(id);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				// Beritra Invasion Lazer.
+				// 贝里特拉入侵激光。 / Beritra Invasion Lazer.
 				GameLocationBootstrapServices.beritraService().adventDirectingSP(id);
-				// Ereshkigal Invasion Lazer.
+				// 埃雷什基伽尔入侵激光。 / Ereshkigal Invasion Lazer.
 				GameLocationBootstrapServices.beritraService().adventDirectingEreshSP(id);
-				// The Devil Unit has infiltrated through the Invasion Corridor.
+				// 恶魔部队已通过入侵走廊渗透。 / The Devil Unit has infiltrated through the Invasion Corridor.
 				GameLocationBootstrapServices.beritraService().devilUnitThroughMsg(id);
-				// The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
-				// Corridor.
+				// 埃雷什基伽尔军团的魔法武器已通过入侵 / The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
+				// 走廊。 / Corridor.
 				GameLocationBootstrapServices.beritraService().ereshkigalLegionThroughMsg(id);
 			}
 		}, 180000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				// Beritra Invasion Black Sky.
+				// 贝里特拉入侵黑空。 / Beritra Invasion Black Sky.
 				GameLocationBootstrapServices.beritraService().adventControlSP(id);
-				// Ereshkigal Invasion Black Sky.
+				// 埃雷什基伽尔入侵黑空。 / Ereshkigal Invasion Black Sky.
 				GameLocationBootstrapServices.beritraService().adventControlEreshSP(id);
 			}
 		}, 300000);
@@ -75,15 +72,15 @@ public class BeritraStartRunnable implements Runnable {
 				Map<Integer, BeritraLocation> locations = GameLocationBootstrapServices.beritraService().getBeritraLocations();
 				for (final BeritraLocation loc : locations.values()) {
 					if (loc.getId() == id) {
-						// Beritra Invasion Light Blue.
+						// 贝里特拉入侵浅蓝。 / Beritra Invasion Light Blue.
 						GameLocationBootstrapServices.beritraService().adventEffectSP(id);
-						// Ereshkigal Invasion Light Blue.
+						// 埃雷什基伽尔入侵浅蓝。 / Ereshkigal Invasion Light Blue.
 						GameLocationBootstrapServices.beritraService().adventEffectEreshSP(id);
-						// Beritra Invasion Start 4.7
+						// 贝里特拉入侵开始 4.7 / Beritra Invasion Start 4.7
 						GameLocationBootstrapServices.beritraService().beritraInvasionMsg(id);
-						// Ereshkigal Invasion Start 4.9.1
+						// 埃雷什基伽尔入侵开始 4.9.1 / Ereshkigal Invasion Start 4.9.1
 						GameLocationBootstrapServices.beritraService().ereshkigalInvasionMsg(id);
-						// Dredgion Defense.
+						// 战舰防御。 / Dredgion Defense.
 						GameLocationBootstrapServices.beritraService().dredgionDefenseMsg(id);
 						GameLocationBootstrapServices.beritraService().startBeritraInvasion(loc.getId());
 					}

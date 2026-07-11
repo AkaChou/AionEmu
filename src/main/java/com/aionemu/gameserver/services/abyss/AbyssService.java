@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.abyss;
 
 import com.aionemu.gameserver.model.DescriptionId;
@@ -24,6 +8,10 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 欧比斯通用工具：PvP 地图判定与军阶击杀/技能全服广播。
+ * skill world announcements. / skill world announcements.
+ */
 public class AbyssService {
 	private static final int[] abyssMapList = {
 			//// ***////
@@ -44,7 +32,7 @@ public class AbyssService {
 			220110000, // Norvsvold.
 			//// ***////
 			400010000, // Reshanta.
-			// Panesterra//
+			// 帕内斯特拉// / Panesterra//
 			400020000, // Belus.
 			400040000, // Aspida.
 			400050000, // Atanatos.
@@ -58,6 +46,13 @@ public class AbyssService {
 			600040000, // Tiamaranta's Eye.
 			600041000 }; // Tiamaranta's Eye [Master Server].
 
+	/**
+	 * 判断玩家是否位于欧比斯/PvP 地图列表中。
+	 * Whether the player is on a listed abyss/PvP map.
+	 *
+	 * 玩家 / Player
+	 * @return 在列表内则为 {@code true} / {@code true} if on a listed map
+	 */
 	public static final boolean isOnPvpMap(Player player) {
 		for (int i : abyssMapList) {
 			if (i == player.getWorldId()) {
@@ -69,6 +64,12 @@ public class AbyssService {
 		return false;
 	}
 
+	/**
+	 * 向同地图其他玩家广播高军阶玩家被击杀。
+	 * Announce a high-rank player's death to others on the same map.
+	 *
+	 * @param victim 被击杀玩家 / Victim player
+	 */
 	public static final void rankedKillAnnounce(final Player victim) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -81,6 +82,13 @@ public class AbyssService {
 		});
 	}
 
+	/**
+	 * 向同世界类型非副本玩家广播欧比斯技能释放。
+	 * Announce abyss-skill cast to non-instance players of the same world type.
+	 *
+	 * Caster
+	 * @param nameId 技能名称描述 ID / Skill name description id
+	 */
 	public static final void rankerSkillAnnounce(final Player player, final int nameId) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override

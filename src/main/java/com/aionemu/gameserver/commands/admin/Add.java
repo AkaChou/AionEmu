@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -33,11 +17,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 管理员添加物品命令：向玩家发放物品、基纳或查询限制物品。
+ * Admin add-item command: grants items/kinah to a player or checks restricted items.
+ *
  * @author Phantom, ATracer, Source
  * @modified kill3r
  */
 public class Add extends AdminCommand {
 
+    /**
+     * 注册 {@code //add} 命令。
+     * Registers the {@code //add} command.
+     */
     public Add() {
         super("add");
     }
@@ -259,7 +250,13 @@ public class Add extends AdminCommand {
             167010306, 167010293, 167010299, 167010305, 167010296, 167010302, 167010308, 167010292, 
             167010298, 167010304, 167010295, 167010301, 167010307, 167010297, 167010303, 167010309}; //Last File Illegal Stones 01-Aug
 
-
+    /**
+     * 执行添加物品：支持物品链接、基纳、限制物品检查与目标玩家发放。
+     * Executes add-item: supports item links, kinah, restricted-item checks, and granting to a target player.
+     *
+     * admin
+     * @param params 参数：玩家、物品 ID/链接、数量等 / player, item id/link, quantity, etc.
+     */
     @Override
     public void execute(Player player, String... params) {
         if ((params.length < 0) || (params.length < 1)) {
@@ -344,7 +341,7 @@ public class Add extends AdminCommand {
 
         try {
             String item = params[0];
-            // Some item links have space before Id
+            // 部分物品链接在 Id 前有空格 / Some item links have space before Id
             if (item.equals("[item:")) {
                 item = params[1];
                 Pattern id = Pattern.compile("(\\d{9})");
@@ -381,7 +378,7 @@ public class Add extends AdminCommand {
 
             try {
                 String item = params[1];
-                // Some item links have space before Id
+                // 部分物品链接在 Id 前有空格 / Some item links have space before Id
                 if (item.equals("[item:")) {
                     item = params[2];
                     Pattern id = Pattern.compile("(\\d{9})");
@@ -467,6 +464,14 @@ public class Add extends AdminCommand {
 
     }
     
+    /**
+     * 判断物品是否在运营限制列表中。
+     * Returns whether the item is on the operator-restricted list.
+     *
+     * item template id
+     *
+     * @param itemId @return 若受限返回 {@code true} / {@code true} if restricted
+     */
     private boolean isRestrictedItem(int itemId){
     	for(int item : opItemsId){
             if(item == itemId){
@@ -477,12 +482,22 @@ public class Add extends AdminCommand {
     	
     }
     
-    //add something 160009017 1
+    // 添加某物 160009017 1 / add something 160009017 1
+    /**
+     * 从参数或物品链接中解析物品 ID。
+     * Resolves an item ID from params or an item link.
+     *
+     * admin
+     *
+     * @param itemCode 数值物品 ID 回退值 / numeric item id fallback
+     * @param itemLink 命令参数（含物品链接） / command params (may include item link)
+     * @param itemLink @return 解析到的物品 ID，失败为 0 / resolved item id, or 0 on failure
+     */
     private int validateItem(Player player, int itemCode, String... itemLink){
         try {
             int itemId = 0;
             String item = itemLink[1];
-            // Some item links have space before Id
+            // 部分物品链接在 Id 前有空格 / Some item links have space before Id
             if (item.equals("[item:")) {
                 item = itemLink[2];
                 Pattern id = Pattern.compile("(\\d{9})");
@@ -510,6 +525,13 @@ public class Add extends AdminCommand {
         return 0;
     }
 
+    /**
+     * 参数错误时输出 {@code //add} 用法。
+     * Prints {@code //add} usage on invalid arguments.
+     *
+     * admin
+     * failure message
+     */
     @Override
     public void onFail(Player player, String message) {
         PacketSendUtility.sendMessage(player, "syntax //add <player> <item Id | link> <quantity>");

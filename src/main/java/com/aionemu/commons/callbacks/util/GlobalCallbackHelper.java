@@ -1,5 +1,7 @@
 package com.aionemu.commons.callbacks.util;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.callbacks.Callback;
 import com.aionemu.commons.callbacks.CallbackResult;
@@ -10,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 全局回调帮助类，提供全局级别的回调管理功能
  * Global callback helper class that provides global-level callback management
  *
- * 该类使用线程安全的CopyOnWriteArrayList存储全局回调
+ * 该类使用线程安全的 CopyOnWriteArrayList 存储全局回调
  * This class uses thread-safe CopyOnWriteArrayList to store global callbacks
  *
  * 支持添加、移除全局回调，以及在方法调用前后执行回调
@@ -62,9 +64,9 @@ public class GlobalCallbackHelper {
      * Execute callbacks before method call
      *
      * @param obj 目标对象 / Target object
-     * @param callbackClass 回调类型 / Callback class type
+     * Callback class type
      * @param args 方法参数 / Method arguments
-     * @return 回调结果 / Callback result
+     * Callback result
      */
     public static CallbackResult<?> beforeCall(Object obj, Class callbackClass, Object... args) {
         CallbackResult<?> cr = null;
@@ -79,7 +81,7 @@ public class GlobalCallbackHelper {
                         break;
                     }
                 } catch (Exception var7) {
-                    log.error("Exception in global callback", var7);
+                    log.error(I18n.get("log.20a4e454ea2f", var7));
                 }
             }
         }
@@ -92,10 +94,10 @@ public class GlobalCallbackHelper {
      * Execute callbacks after method call
      *
      * @param obj 目标对象 / Target object
-     * @param callbackClass 回调类型 / Callback class type
+     * Callback class type
      * @param args 方法参数 / Method arguments
      * @param result 方法执行结果 / Method execution result
-     * @return 回调结果 / Callback result
+     * Callback result
      */
     public static CallbackResult<?> afterCall(Object obj, Class callbackClass, Object[] args, Object result) {
         CallbackResult<?> cr = null;
@@ -110,7 +112,7 @@ public class GlobalCallbackHelper {
                         break;
                     }
                 } catch (Exception var8) {
-                    log.error("Exception in global callback", var8);
+                    log.error(I18n.get("log.20a4e454ea2f", var8));
                 }
             }
         }

@@ -1,24 +1,10 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -31,13 +17,12 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
- * This table contains all nesessary data for new players. <br/>
+ * 新玩家初始数据表，包含创建职业物品与阵营出生点。
+ * Initial data table for new players, including class starter items and race spawn locations.
+ * <br/>
  * Created on: 09.08.2009 18:20:41
- * 
+ *
  * @author Aquanox
  */
 @XmlRootElement(name = "player_initial_data")
@@ -54,6 +39,10 @@ public class PlayerInitialData {
 
 	private Map<PlayerClass, PlayerCreationData> data = new LinkedHashMap<PlayerClass, PlayerCreationData>();
 
+	/**
+	 * JAXB 反序列化完成后，按职业索引创建数据并释放列表。
+	 * After JAXB unmarshalling, indexes creation data by class and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PlayerCreationData pt : dataList) {
 			data.put(pt.getRequiredPlayerClass(), pt);
@@ -63,14 +52,35 @@ public class PlayerInitialData {
 		dataList = null;
 	}
 
+	/**
+	 * 按职业获取玩家创建数据。
+	 * Returns player creation data for the given class.
+	 *
+	 * @param cls 玩家职业 / player class
+	 * @return 创建数据，不存在则为 null / creation data or null
+	 */
 	public PlayerCreationData getPlayerCreationData(PlayerClass cls) {
 		return data.get(cls);
 	}
 
+	/**
+	 * 返回已加载的职业创建数据数量。
+	 * Returns the number of loaded class creation entries.
+	 *
+	 * entry count
+	 */
 	public int size() {
 		return data.size();
 	}
 
+	/**
+	 * 按阵营获取出生坐标。
+	 * Returns the spawn location for the given race.
+	 *
+	 * 阵营 / race
+	 * @return 出生坐标数据 / spawn location data
+	 * if race is unsupported。 / if race is unsupported.
+	 */
 	public LocationData getSpawnLocation(Race race) {
 		switch (race) {
 		case ASMODIANS:
@@ -83,7 +93,8 @@ public class PlayerInitialData {
 	}
 
 	/**
-	 * Player creation data holder.
+	 * 玩家创建数据持有者，描述职业初始物品。
+	 * Player creation data holder describing class starter items.
 	 */
 	public static class PlayerCreationData {
 
@@ -100,6 +111,12 @@ public class PlayerInitialData {
 			return requiredPlayerClass;
 		}
 
+		/**
+		 * 返回该职业不可变的初始物品列表。
+		 * Returns the unmodifiable starter item list for this class.
+		 *
+		 * @return 初始物品列表 / starter item list
+		 */
 		public List<ItemType> getItems() {
 			return Collections.unmodifiableList(itemsType.items);
 		}
@@ -110,6 +127,10 @@ public class PlayerInitialData {
 			public List<ItemType> items = new ArrayList<ItemType>();
 		}
 
+		/**
+		 * 初始物品条目：模板 ID 与数量。
+		 * Starter item entry: template id and count.
+		 */
 		public static class ItemType {
 
 			@XmlAttribute(name = "id")
@@ -118,10 +139,22 @@ public class PlayerInitialData {
 			@XmlAttribute(name = "count")
 			public int count;
 
+			/**
+			 * 返回该物品对应的物品模板。
+			 * Returns the item template for this entry.
+			 *
+			 * item template
+			 */
 			public ItemTemplate getTemplate() {
 				return DataManager.ITEM_DATA.getItemTemplate(templateId);
 			}
 
+			/**
+			 * 返回物品数量。
+			 * Returns the item count.
+			 *
+			 * count
+			 */
 			public int getCount() {
 				return count;
 			}
@@ -143,7 +176,8 @@ public class PlayerInitialData {
 	}
 
 	/**
-	 * Location data holder.
+	 * 出生坐标数据持有者。
+	 * Spawn location data holder.
 	 */
 	public static class LocationData {
 
@@ -162,22 +196,52 @@ public class PlayerInitialData {
 
 		}
 
+		/**
+		 * 返回地图 ID。
+		 * Returns the map id.
+		 *
+		 * map id
+		 */
 		public int getMapId() {
 			return mapId;
 		}
 
+		/**
+		 * 返回 X 坐标。
+		 * Returns the X coordinate.
+		 *
+		 * X 坐标 / X coordinate
+		 */
 		public float getX() {
 			return x;
 		}
 
+		/**
+		 * 返回 Y 坐标。
+		 * Returns the Y coordinate.
+		 *
+		 * Y 坐标 / Y coordinate
+		 */
 		public float getY() {
 			return y;
 		}
 
+		/**
+		 * 返回 Z 坐标。
+		 * Returns the Z coordinate.
+		 *
+		 * Z 坐标 / Z coordinate
+		 */
 		public float getZ() {
 			return z;
 		}
 
+		/**
+		 * 返回朝向。
+		 * Returns the heading.
+		 *
+		 * 朝向 / heading
+		 */
 		public byte getHeading() {
 			return heading;
 		}

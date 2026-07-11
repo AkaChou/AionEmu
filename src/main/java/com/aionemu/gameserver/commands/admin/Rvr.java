@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -24,6 +8,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 阵营对战（RvR）管理指令；按地点 ID 启动或停止 RvR 活动。
+ * Admin command that starts or stops race-versus-race events by location ID.
+ */
 public class Rvr extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
@@ -33,6 +21,13 @@ public class Rvr extends AdminCommand
 		super("rvr");
 	}
 	
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param player 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {

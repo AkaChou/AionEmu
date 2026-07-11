@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -26,13 +10,29 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.SiegeService;
 
+/**
+ * 向客户端同步要塞护盾特效状态。
+ * Server packet synchronizing fortress shield effect state to the client.
+ */
 public class SM_SHIELD_EFFECT extends AionServerPacket {
 	private Collection<SiegeLocation> locations;
 
+	/**
+	 * 使用给定参数构造 SM_SHIELD_EFFECT 包。
+	 * Creates a SM_SHIELD_EFFECT packet with the given parameters.
+	 *
+	 * @param locations 攻城地点集合 / siege locations
+	 */
 	public SM_SHIELD_EFFECT(Collection<SiegeLocation> locations) {
 		this.locations = locations;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SHIELD_EFFECT 包。
+	 * Creates a SM_SHIELD_EFFECT packet with the given parameters.
+	 *
+	 * location id
+	 */
 	public SM_SHIELD_EFFECT(int location) {
 		this.locations = new ArrayList<SiegeLocation>();
 		this.locations.add(GameFeatureServices.siegeService().getSiegeLocation(location));

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -41,10 +25,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Illuminary Obelisk 副本 NPC AI：Remodeled Dynatoum（@AIName "remodeled_dynatoum"），继承 AggressiveNpcAI2。
+ * Illuminary Obelisk instance NPC AI: Remodeled Dynatoum (@AIName "remodeled_dynatoum"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("remodeled_dynatoum")
 public class Remodeled_DynatoumAI2 extends AggressiveNpcAI2
 {
@@ -61,15 +47,16 @@ public class Remodeled_DynatoumAI2 extends AggressiveNpcAI2
 			switch (getNpcId()) {
 				case 234686: //Remodeled Dynatoum.
 					/**
-					 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
+					 * 约有 6 分钟击杀首领，启动封印前全队须就绪。
+	 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					 */
-					//The Remodeled Dynatoum bomb has begun counting down.
+					// 改造的迪纳图姆炸弹已开始倒计时。 / The Remodeled Dynatoum bomb has begun counting down.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402425, 0);
-					//The Remodeled Dynatoum will explode in 5 minutes.
+					// 改造的迪纳图姆将在 5 分钟后爆炸。 / The Remodeled Dynatoum will explode in 5 minutes.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402426, 60000);
-					//The Remodeled Dynatoum will explode in 1 minute.
+					// 改造的迪纳图姆将在 1 分钟后爆炸。 / The Remodeled Dynatoum will explode in 1 minute.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402427, 300000);
-					//The Remodeled Dynatoum is going to explode.
+					// 改造的迪纳图姆即将爆炸。 / The Remodeled Dynatoum is going to explode.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402428, 360000);
 					remodeledDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override

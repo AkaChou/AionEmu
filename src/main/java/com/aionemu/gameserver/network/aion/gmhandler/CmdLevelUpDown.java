@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -21,10 +5,17 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * GM 指令：提升或降低目标玩家等级。
+ * GM command handler that levels the target player up or down.
+ *
  * @author Alcapwnd
  */
 public class CmdLevelUpDown extends AbstractGMHandler {
 
+	/**
+	 * 升级或降级方向。
+	 * Level-up or level-down direction.
+	 */
 	public enum LevelUpDownState {
 
 		UP, DOWN;
@@ -32,12 +23,24 @@ public class CmdLevelUpDown extends AbstractGMHandler {
 
 	private LevelUpDownState state;
 
+	/**
+	 * 创建处理器并立即调整等级。
+	 * Creates the handler and immediately adjusts the level.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 等级变化量 / level delta
+	 * @param state 升级或降级 / level-up or level-down
+	 */
 	public CmdLevelUpDown(Player admin, String params, LevelUpDownState state) {
 		super(admin, params);
 		this.state = state;
 		run();
 	}
 
+	/**
+	 * 按 UP/DOWN 状态在合法范围内调整目标玩家等级。
+	 * Adjusts the target player's level within valid bounds for UP/DOWN.
+	 */
 	public void run() {
 		Player t = target != null ? target : admin;
 		Integer level = Integer.parseInt(params);

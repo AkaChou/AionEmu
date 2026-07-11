@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.bounding;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.nio.FloatBuffer;
 
 import com.aionemu.gameserver.geoEngine.collision.Collidable;
@@ -33,13 +19,13 @@ import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <code>BoundingSphere</code> defines a sphere that defines a container for a
- * group of vertices of a particular piece of geometry. This sphere defines a
- * radius and a center. <br>
+ * 包围球，以中心与半径包容一组顶点。
+ * Bounding sphere that contains a set of vertices with a center and radius.
  * <br>
- * A typical usage is to allow the class define the center and radius by calling
- * either <code>containAABB</code> or <code>averagePoints</code>. A call to
- * <code>computeFramePoint</code> in turn calls <code>containAABB</code>.
+ * 典型用法：通过 {@code containAABB} 或 {@code averagePoints} 确定中心与半径；
+ * 调用 {@code computeFramePoint} 时会转而调用 {@code containAABB}。
+ * Typical usage: define center and radius via {@code containAABB} or {@code averagePoints}.
+ * A call to {@code computeFramePoint} in turn calls {@code containAABB}.
  *
  * @author Mark Powell
  * @version $Id: BoundingSphere.java,v 1.59 2007/08/17 10:34:26 rherlitz Exp $
@@ -47,54 +33,66 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BoundingSphere extends BoundingVolume {
 
+	/** 球半径。 / Sphere radius. */
 	float radius;
+	/** 半径浮点误差容差系数。 / Floating-point radius epsilon factor. */
 	private static final float RADIUS_EPSILON = 1f + 0.00001f;
 
 	/**
-	 * Default contstructor instantiates a new <code>BoundingSphere</code> object.
+	 * 默认构造，创建一个空包围球。
+	 * Default constructor instantiating a new BoundingSphere.
 	 */
 	public BoundingSphere() {
 	}
 
 	/**
-	 * Constructor instantiates a new <code>BoundingSphere</code> object.
+	 * 以指定半径与中心构造包围球。
+	 * Constructs a BoundingSphere with the given radius and center.
 	 *
-	 * @param r the radius of the sphere.
-	 * @param c the center of the sphere.
+	 * @param r 球半径 / radius of the sphere
+	 * @param c 球中心 / center of the sphere
 	 */
 	public BoundingSphere(float r, Vector3f c) {
 		this.center.set(c);
 		this.radius = r;
 	}
 
+	/**
+	 * 返回包围体类型（球体）。
+	 * Returns the bounding-volume type (Sphere).
+	 *
+	 * type enum Sphere
+	 */
 	@Override
 	public Type getType() {
 		return Type.Sphere;
 	}
 
 	/**
-	 * <code>getRadius</code> returns the radius of the bounding sphere.
+	 * 获取包围球半径。
+	 * Returns the radius of the bounding sphere.
 	 *
-	 * @return the radius of the bounding sphere.
+	 * radius of the bounding sphere
 	 */
 	public float getRadius() {
 		return radius;
 	}
 
 	/**
-	 * <code>setRadius</code> sets the radius of this bounding sphere.
+	 * 设置包围球半径。
+	 * Sets the radius of this bounding sphere.
 	 *
-	 * @param radius the new radius of the bounding sphere.
+	 * new radius of the bounding sphere
 	 */
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}
 
 	/**
-	 * <code>computeFromPoints</code> creates a new Bounding Sphere from a given set
-	 * of points. It uses the <code>calcWelzl</code> method as default.
+	 * 根据点集计算包围球，默认使用 Welzl 最小包围球算法。
+	 * Computes a bounding sphere from a set of points using the Welzl algorithm by default.
 	 *
-	 * @param points the points to contain.
+	 * @param points 待包容的点缓冲 / points to contain
 	 */
 	@Override
 	public void computeFromPoints(FloatBuffer points) {
@@ -102,12 +100,12 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * <code>computeFromTris</code> creates a new Bounding Box from a given set of
-	 * triangles. It is used in OBBTree calculations.
+	 * 根据三角形集合计算包围球，用于 OBBTree 相关计算。
+	 * Computes a bounding sphere from a set of triangles; used in OBBTree calculations.
 	 *
-	 * @param tris
-	 * @param start
-	 * @param end
+	 * @param tris 三角形数组 / triangle array
+	 * @param start 起始下标（含） / start index (inclusive)
+	 * @param end 结束下标（不含） / end index (exclusive)
 	 */
 	public void computeFromTris(Triangle[] tris, int start, int end) {
 		if (end - start <= 0) {
@@ -127,14 +125,8 @@ public class BoundingSphere extends BoundingVolume {
 
 	//
 	// /**
-	// * <code>computeFromTris</code> creates a new Bounding Box from a given
-	// * set of triangles. It is used in OBBTree calculations.
-	// *
-	// * @param indices
-	// * @param mesh
-	// * @param start
-	// * @param end
-	// */
+	 * 由三角形集合计算包围体（OBBTree 用）。 / // * <code>computeFromTris</code> creates a new Bounding Box from a given // * set of triangles. It is used in OBBTree calculations. // * // *.
+	 */
 	// public void computeFromTris(int[] indices, Mesh mesh, int start, int end) {
 	// if (end - start <= 0) {
 	// return;
@@ -154,12 +146,12 @@ public class BoundingSphere extends BoundingVolume {
 	// }
 
 	/**
-	 * Calculates a minimum bounding sphere for the set of points. The algorithm was
-	 * originally found at
-	 * http://www.flipcode.com/cgi-bin/msg.cgi?showThread=COTD-SmallestEnclosingSpheres&forum=cotd&id=-1
-	 * in C++ and translated to java by Cep21
+	 * 用 Welzl 算法计算点集的最小包围球。
+	 * Calculates a minimum bounding sphere for the set of points via Welzl's algorithm.
+	 * 算法源自 flipcode 的 C++ 实现，由 Cep21 翻译为 Java。
+	 * Originally found at flipcode (C++) and translated to Java by Cep21.
 	 *
-	 * @param points The points to calculate the minimum bounds from.
+	 * @param points 待计算最小包围的点 / points to calculate the minimum bounds from
 	 */
 	public void calcWelzl(FloatBuffer points) {
 		if (center == null) {
@@ -173,15 +165,13 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * Used from calcWelzl. This function recurses to calculate a minimum bounding
-	 * sphere a few points at a time.
+	 * Welzl 递归步骤：逐步纳入边界点，求最小包围球。
+	 * Recursive Welzl step that builds a minimum sphere a few points at a time.
 	 *
-	 * @param points The array of points to look through.
-	 * @param p      The size of the list to be used.
-	 * @param b      The number of points currently considering to include with the
-	 *               sphere.
-	 * @param ap     A variable simulating pointer arithmatic from C++, and offset
-	 *               in <code>points</code>.
+	 * array of points to look through
+	 * @param p 使用的点列表大小 / size of the list to be used
+	 * @param b 当前已纳入球面的点数 / number of points currently on the sphere boundary
+	 * @param ap 点缓冲偏移（模拟 C++ 指针算术） / buffer offset simulating C++ pointer arithmetic
 	 */
 	private void recurseMini(FloatBuffer points, int p, int b, int ap) {
 		Vector3f tempA = Vector3f.newInstance();
@@ -239,13 +229,13 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * Calculates the minimum bounding sphere of 4 points. Used in welzl's
-	 * algorithm.
+	 * 由 4 点确定最小包围球（Welzl 算法）。
+	 * Calculates the minimum bounding sphere of 4 points (Welzl).
 	 *
-	 * @param O The 1st point inside the sphere.
-	 * @param A The 2nd point inside the sphere.
-	 * @param B The 3rd point inside the sphere.
-	 * @param C The 4th point inside the sphere.
+	 * @param O 球内第 1 点 / 1st point inside the sphere
+	 * @param A 球内第 2 点 / 2nd point inside the sphere
+	 * @param B 球内第 3 点 / 3rd point inside the sphere
+	 * @param C 球内第 4 点 / 4th point inside the sphere
 	 * @see #calcWelzl(java.nio.FloatBuffer)
 	 */
 	private void setSphere(Vector3f O, Vector3f A, Vector3f B, Vector3f C) {
@@ -268,12 +258,12 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * Calculates the minimum bounding sphere of 3 points. Used in welzl's
-	 * algorithm.
+	 * 由 3 点确定最小包围球（Welzl 算法）。
+	 * Calculates the minimum bounding sphere of 3 points (Welzl).
 	 *
-	 * @param O The 1st point inside the sphere.
-	 * @param A The 2nd point inside the sphere.
-	 * @param B The 3rd point inside the sphere.
+	 * @param O 球内第 1 点 / 1st point inside the sphere
+	 * @param A 球内第 2 点 / 2nd point inside the sphere
+	 * @param B 球内第 3 点 / 3rd point inside the sphere
 	 * @see #calcWelzl(java.nio.FloatBuffer)
 	 */
 	private void setSphere(Vector3f O, Vector3f A, Vector3f B) {
@@ -296,11 +286,11 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * Calculates the minimum bounding sphere of 2 points. Used in welzl's
-	 * algorithm.
+	 * 由 2 点确定最小包围球（Welzl 算法）。
+	 * Calculates the minimum bounding sphere of 2 points (Welzl).
 	 *
-	 * @param O The 1st point inside the sphere.
-	 * @param A The 2nd point inside the sphere.
+	 * @param O 球内第 1 点 / 1st point inside the sphere
+	 * @param A 球内第 2 点 / 2nd point inside the sphere
 	 * @see #calcWelzl(java.nio.FloatBuffer)
 	 */
 	private void setSphere(Vector3f O, Vector3f A) {
@@ -310,13 +300,13 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * <code>averagePoints</code> selects the sphere center to be the average of the
-	 * points and the sphere radius to be the smallest value to enclose all points.
+	 * 以点的平均位置为球心，取能包容全部点的最小半径。
+	 * Sets the sphere center to the average of the points and the radius to the smallest value enclosing them.
 	 *
-	 * @param points the list of points to contain.
+	 * @param points 待包容的点列表 / list of points to contain
 	 */
 	public void averagePoints(Vector3f[] points) {
-		log.info("Bounding Sphere calculated using average points.");
+		log.info(I18n.get("log.182487772b0f"));
 		center = points[0];
 
 		for (int i = 1; i < points.length; i++) {
@@ -338,6 +328,14 @@ public class BoundingSphere extends BoundingVolume {
 		radius = (float) Math.sqrt(maxRadiusSqr) + RADIUS_EPSILON - 1f;
 	}
 
+	/**
+	 * 用给定矩阵变换本包围球，结果写入 store（或新建）。
+	 * Transforms this sphere by the given matrix into store (or a new instance).
+	 *
+	 * @param trans 变换矩阵 / transform matrix
+	 * @param store 结果存储（可为 null 或非球类型） / destination volume (may be null or non-sphere)
+	 * @return 变换后的包围球 / transformed bounding sphere
+	 */
 	@Override
 	public BoundingVolume transform(Matrix4f trans, BoundingVolume store) {
 		BoundingSphere sphere;
@@ -355,6 +353,13 @@ public class BoundingSphere extends BoundingVolume {
 		return sphere;
 	}
 
+	/**
+	 * 返回缩放向量中绝对值最大的轴分量。
+	 * Returns the largest absolute axis component of a scale vector.
+	 *
+	 * @param scale 缩放向量 / scale vector
+	 * @return 最大轴分量 / max axis component
+	 */
 	private float getMaxAxis(Vector3f scale) {
 		float x = FastMath.abs(scale.x);
 		float y = FastMath.abs(scale.y);
@@ -374,11 +379,11 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * <code>whichSide</code> takes a plane (typically provided by a view frustum)
-	 * to determine which side this bound is on.
+	 * 判断本包围球相对给定平面所在侧（视锥裁剪常用）。
+	 * Determines which side of a plane (typically from a view frustum) this bound lies on.
 	 *
-	 * @param plane the plane to check against.
-	 * @return side
+	 * @param plane 检测平面 / plane to check against
+	 * @return 负侧 / 跨越 / Positive, Negative, or None (straddling)。 / 负侧 / 跨越 / Positive, Negative, or None (straddling)
 	 */
 	@Override
 	public Plane.Side whichSide(Plane plane) {
@@ -394,11 +399,11 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * <code>merge</code> combines this sphere with a second bounding sphere. This
-	 * new sphere contains both bounding spheres and is returned.
+	 * 将本球与另一包围体合并，返回包容两者的新球。
+	 * Merges this sphere with another volume and returns a new sphere containing both.
 	 *
-	 * @param volume the sphere to combine with this sphere.
-	 * @return a new sphere
+	 * @param volume 待合并的包围体 / volume to combine with this sphere
+	 * @return 合并后的新球；不支持的类型返回 null / new sphere, or null if unsupported
 	 */
 	@Override
 	public BoundingVolume merge(BoundingVolume volume) {
@@ -435,12 +440,11 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * <code>mergeLocal</code> combines this sphere with a second bounding sphere
-	 * locally. Altering this sphere to contain both the original and the additional
-	 * sphere volumes;
+	 * 就地将本球与另一包围体合并，修改自身以包容两者。
+	 * Merges this sphere with another volume in place, altering this sphere to contain both.
 	 *
-	 * @param volume the sphere to combine with this sphere.
-	 * @return this
+	 * @param volume 待合并的包围体 / volume to combine with this sphere
+	 * @return 本实例；不支持的类型返回 null / this, or null if unsupported
 	 */
 	@Override
 	public BoundingVolume mergeLocal(BoundingVolume volume) {
@@ -476,14 +480,10 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	// /**
-	// * Merges this sphere with the given OBB.
-	// *
-	// * @param volume
-	// * The OBB to merge.
-	// * @return This sphere, after merging.
-	// */
+	 * 将此球与给定 OBB 合并。 / // * Merges this sphere with the given OBB. // * // *.
+	 */
 	// private BoundingSphere mergeOBB(OrientedBoundingBox volume) {
-	// // compute edge points from the obb
+	// 从 OBB 计算边点。 / compute edge points from the obb
 	// if (!volume.correctCorners)
 	// volume.computeCorners();
 	// _mergeBuf.rewind();
@@ -493,24 +493,34 @@ public class BoundingSphere extends BoundingVolume {
 	// _mergeBuf.put(volume.vectorStore[i].z);
 	// }
 	//
-	// // remember old radius and center
+	// 记住旧半径与中心。 / remember old radius and center
 	// float oldRadius = radius;
 	// Vector3f oldCenter = _compVect2.set( center );
 	//
-	// // compute new radius and center from obb points
+	// 由 OBB 点计算新半径与中心。 / compute new radius and center from obb points
 	// computeFromPoints(_mergeBuf);
 	// Vector3f newCenter = _compVect3.set( center );
 	// float newRadius = radius;
 	//
-	// // restore old center and radius
+	// 恢复旧中心与半径。 / restore old center and radius
 	// center.set( oldCenter );
 	// radius = oldRadius;
 	//
-	// //merge obb points result
+	// 合并 OBB 点结果 / //merge obb points result
 	// merge( newRadius, newCenter, this );
 	//
 	// return this;
 	// }
+
+	/**
+	 * 将本球与给定半径/中心的球合并，结果写入 rVal。
+	 * Merges this sphere with a sphere of the given radius and center into rVal.
+	 *
+	 * @param temp_radius 另一球半径 / other sphere radius
+	 * @param temp_center 另一球中心 / other sphere center
+	 * @param rVal 结果存储 / destination sphere
+	 * merge result
+	 */
 	private BoundingVolume merge(float temp_radius, Vector3f temp_center, BoundingSphere rVal) {
 		Vector3f vect1 = Vector3f.newInstance();
 		Vector3f diff = temp_center.subtract(center, vect1);
@@ -554,12 +564,11 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * <code>clone</code> creates a new BoundingSphere object containing the same
-	 * data as this one.
+	 * 克隆本包围球（数据复制到 store，或新建）。
+	 * Clones this BoundingSphere into store, or creates a new instance.
 	 *
-	 * @param store where to store the cloned information. if null or wrong class, a
-	 *              new store is created.
-	 * @return the new BoundingSphere
+	 * @param store 结果存储；为 null 或类型不匹配时新建 / destination (new if null or wrong type)
+	 * @return 克隆后的包围球 / cloned BoundingSphere
 	 */
 	@Override
 	public BoundingVolume clone(BoundingVolume store) {
@@ -577,32 +586,34 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	/**
-	 * <code>toString</code> returns the string representation of this object. The
-	 * form is: "Radius: RRR.SSSS Center: <Vector>".
+	 * 返回字符串表示，形式为 "BoundingSphere [Radius: R Center: &lt;Vector&gt;]"。
+	 * Returns the string representation: "BoundingSphere [Radius: R Center: &lt;Vector&gt;]".
 	 *
-	 * @return the string representation of this.
+	 * @return 字符串表示 / string representation
 	 */
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " [Radius: " + radius + " Center: " + center + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jme.bounding.BoundingVolume#intersects(com.jme.bounding.BoundingVolume)
+	/**
+	 * 与另一包围体相交检测（双分派至对方的 intersectsSphere）。
+	 * Intersection test against another volume (double-dispatch via intersectsSphere).
+	 *
+	 * @param bv 另一包围体 / other bounding volume
+	 * whether they intersect
 	 */
 	@Override
 	public boolean intersects(BoundingVolume bv) {
 		return bv.intersectsSphere(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jme.bounding.BoundingVolume#intersectsSphere(com.jme.bounding.
-	 * BoundingSphere)
+	/**
+	 * 与另一包围球相交检测。
+	 * Intersection test against another bounding sphere.
+	 *
+	 * @param bs 另一包围球 / other bounding sphere
+	 * whether they intersect
 	 */
 	@Override
 	public boolean intersectsSphere(BoundingSphere bs) {
@@ -616,6 +627,13 @@ public class BoundingSphere extends BoundingVolume {
 		return eq;
 	}
 
+	/**
+	 * 与 AABB 包围盒相交检测。
+	 * Intersection test against an axis-aligned bounding box.
+	 *
+	 * axis-aligned bounding box
+	 * whether they intersect
+	 */
 	@Override
 	public boolean intersectsBoundingBox(BoundingBox bb) {
 		assert Vector3f.isValidVector(center) && Vector3f.isValidVector(bb.center);
@@ -630,13 +648,21 @@ public class BoundingSphere extends BoundingVolume {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.jme.bounding.BoundingVolume#intersectsOrientedBoundingBox(com.jme.
 	 * bounding.OrientedBoundingBox)
 	 */
 	// public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
 	// return obb.intersectsSphere(this);
 	// }
+
+	/**
+	 * 与射线是否相交（仅布尔结果）。
+	 * Tests whether this sphere intersects a ray (boolean only).
+	 *
+	 * ray
+	 * whether they intersect
+	 */
 	@Override
 	public boolean intersects(Ray ray) {
 		assert Vector3f.isValidVector(center);
@@ -646,12 +672,12 @@ public class BoundingSphere extends BoundingVolume {
 		float radiusSquared = getRadius() * getRadius();
 		float a = diff.dot(diff) - radiusSquared;
 		if (a <= 0.0) {
-			// in sphere
+			// 在球体内 / in sphere
 			Vector3f.recycle(vect1);
 			return true;
 		}
 
-		// outside sphere
+		// 球体外部 / outside sphere
 		float b = ray.getDirection().dot(diff);
 		if (b >= 0.0) {
 			Vector3f.recycle(vect1);
@@ -661,10 +687,14 @@ public class BoundingSphere extends BoundingVolume {
 		return b * b >= a;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jme.bounding.BoundingVolume#intersectsWhere(com.jme.math.Ray)
+	/**
+	 * 射线与球碰撞，将交点写入 results，返回碰撞点数量。
+	 * Collides a ray with this sphere, adding hits to results; returns hit count.
+	 *
+	 * ray
+	 *
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * @param results @return 碰撞点数量（0 / 1/2） / number of collision points (0/1/2)
 	 */
 	public int collideWithRay(Ray ray, CollisionResults results) {
 		Vector3f vect1 = Vector3f.newInstance();
@@ -672,7 +702,7 @@ public class BoundingSphere extends BoundingVolume {
 		float a = diff.dot(diff) - (getRadius() * getRadius());
 		float a1, discr, root;
 		if (a <= 0.0) {
-			// inside sphere
+			// 球体内部 / inside sphere
 			a1 = ray.direction.dot(diff);
 			discr = (a1 * a1) - a;
 			root = FastMath.sqrt(discr);
@@ -716,6 +746,15 @@ public class BoundingSphere extends BoundingVolume {
 		}
 	}
 
+	/**
+	 * 与可碰撞对象进行碰撞检测（当前仅支持 Ray）。
+	 * Collides with a Collidable (currently only Ray is supported).
+	 *
+	 * @param other 可碰撞对象 / collidable
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * @return 碰撞点数量 / number of collision points
+	 * unsupported collision type。 / unsupported collision type.
+	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
 		if (other instanceof Ray) {
@@ -726,21 +765,50 @@ public class BoundingSphere extends BoundingVolume {
 		}
 	}
 
+	/**
+	 * 判断点是否严格位于球内（不含球面）。
+	 * Tests whether a point lies strictly inside the sphere (surface excluded).
+	 *
+	 * point to test
+	 *
+	 * @param point @return 是否在球内 / whether the point is inside
+	 */
 	@Override
 	public boolean contains(Vector3f point) {
 		return center.distanceSquared(point) < (getRadius() * getRadius());
 	}
 
+	/**
+	 * 判断点是否与球相交（含球面）。
+	 * Tests whether a point intersects the sphere (surface included).
+	 *
+	 * point to test
+	 * whether the point intersects
+	 */
 	@Override
 	public boolean intersects(Vector3f point) {
 		return center.distanceSquared(point) <= (getRadius() * getRadius());
 	}
 
+	/**
+	 * 点到球表面的有符号距离（负值表示在球内）。
+	 * Signed distance from a point to the sphere surface (negative if inside).
+	 *
+	 * point to test
+	 *
+	 * @param point @return 有符号距离 / signed distance to the edge
+	 */
 	@Override
 	public float distanceToEdge(Vector3f point) {
 		return center.distance(point) - radius;
 	}
 
+	/**
+	 * 返回球体积 (4/3)πr³。
+	 * Returns the sphere volume (4/3)πr³.
+	 *
+	 * volume
+	 */
 	@Override
 	public float getVolume() {
 		return 4 * FastMath.ONE_THIRD * FastMath.PI * radius * radius * radius;

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Summon;
@@ -25,8 +11,12 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-@Slf4j
 
+/**
+ * 客户端召唤物情绪/状态切换请求包（飞行、拔刀、滑翔等）。
+ * Client packet for summon emotion/state changes (fly, attack stance, glide, etc.).
+ */
+@Slf4j
 public class CM_SUMMON_EMOTION extends AionClientPacket {
 
 	@SuppressWarnings("unused")
@@ -34,6 +24,11 @@ public class CM_SUMMON_EMOTION extends AionClientPacket {
 
 	private int emotionTypeId;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_SUMMON_EMOTION(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -49,7 +44,7 @@ public class CM_SUMMON_EMOTION extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 		EmotionType emotionType = EmotionType.getEmotionTypeById(emotionTypeId);
 		if (emotionType == EmotionType.UNK) {
-			log.error("Unknown emotion type? 0x" + Integer.toHexString(emotionTypeId).toUpperCase());
+			log.error(I18n.get("log.b376a042bdcc", Integer.toHexString(emotionTypeId).toUpperCase()));
 		}
 		Summon summon = player.getSummon();
 		if (summon == null)

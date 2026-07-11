@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
@@ -24,12 +8,20 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 
 /**
- * Created by Ghostfur
+ * 客户端术古扫雷活动操作请求包（重置棋盘或投掷骰子）。
+ * Client packet for Shugo Sweep event actions (reset board or launch dice).
+ *
+ * @author Ghostfur
  */
 public class CM_SHUGO_SWEEP extends AionClientPacket {
 
 	private int action;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_SHUGO_SWEEP(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -46,7 +38,7 @@ public class CM_SHUGO_SWEEP extends AionClientPacket {
 			return;
 		}
 		switch (action) {
-		case 0: // Reset
+		case 0: // 重置 / Reset
 			GameEventBootstrapServices.shugoSweepService().resetBoard(player);
 			break;
 		case 1: // Launch Dice

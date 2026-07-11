@@ -1,24 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.alliance;
 
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 
 /**
+ * 玩家联盟队伍，用于团队2相关逻辑。
+ * Player Alliance Group for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMember> {
@@ -30,6 +17,7 @@ public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMembe
 		this.alliance = alliance;
 	}
 
+	/** 添加 member / Adds member */
 	@Override
 	public void addMember(PlayerAllianceMember member) {
 		super.addMember(member);
@@ -37,29 +25,40 @@ public class PlayerAllianceGroup extends TemporaryPlayerTeam<PlayerAllianceMembe
 		member.setAllianceId(getTeamId());
 	}
 
+	/** 移除 member / Removes member */
 	@Override
 	public void removeMember(PlayerAllianceMember member) {
 		super.removeMember(member);
 		member.setPlayerAllianceGroup(null);
 	}
 
+	/** 是否已满。 / Whether Full. */
 	@Override
 	public boolean isFull() {
 		return size() == 6;
 	}
 
+	/** 返回最小经验玩家等级 / Returns the min exp player level*/
 	@Override
 	public int getMinExpPlayerLevel() {
-		// TODO Auto-generated method stub
-		return 0;
+		int minLevel = 99;
+		for (PlayerAllianceMember member : members.values()) {
+			minLevel = Math.min(minLevel, member.getLevel());
+		}
+		return minLevel;
 	}
 
+	/** 返回最大经验玩家等级 / Returns the max exp player level*/
 	@Override
 	public int getMaxExpPlayerLevel() {
-		// TODO Auto-generated method stub
-		return 0;
+		int maxLevel = 1;
+		for (PlayerAllianceMember member : members.values()) {
+			maxLevel = Math.max(maxLevel, member.getLevel());
+		}
+		return maxLevel;
 	}
 
+	/** 获取联盟。 / Returns the alliance. */
 	public PlayerAlliance getAlliance() {
 		return alliance;
 	}

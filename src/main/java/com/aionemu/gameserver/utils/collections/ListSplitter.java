@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.collections;
 
 import java.lang.reflect.Array;
@@ -22,17 +6,51 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * 将集合按固定块大小切分并顺序取出。
+ * Split a collection into fixed-size chunks and yield them in order.
  *
+ * @param <T> 元素类型 / Element type
  * @author xTz
  */
 public class ListSplitter<T> {
 
+	/**
+	 * 源数组。
+	 * Source array.
+	 */
 	private T[] objects;
+
+	/**
+	 * 组件类型，用于创建子数组。
+	 * Component type used to allocate sub-arrays.
+	 */
 	private Class<?> componentType;
+
+	/**
+	 * 每次切分的元素个数。
+	 * Number of elements per split.
+	 */
 	private int splitCount;
+
+	/**
+	 * 当前读取下标。
+	 * Current read index.
+	 */
 	private int curentIndex = 0;
+
+	/**
+	 * 源集合长度。
+	 * Source collection length.
+	 */
 	private int length = 0;
 
+	/**
+	 * 用集合与切分大小构造。
+	 * Construct from a collection and split size.
+	 *
+	 * Source collection
+	 * Chunk size
+	 */
 	@SuppressWarnings("unchecked")
 	public ListSplitter(Collection<T> collection, int splitCount) {
 		if (collection != null && collection.size() > 0) {
@@ -43,11 +61,24 @@ public class ListSplitter<T> {
 		}
 	}
 
+	/**
+	 * 使用新的切分大小并取下一块。
+	 * Use a new split size and return the next chunk.
+	 *
+	 * @param splitCount 新的每块大小 / New chunk size
+	 * @return 下一块列表 / Next chunk as list
+	 */
 	public List<T> getNext(int splitCount) {
 		this.splitCount = splitCount;
 		return getNext();
 	}
 
+	/**
+	 * 取下一块元素。
+	 * Return the next chunk of elements.
+	 *
+	 * @return 下一块列表 / Next chunk as list
+	 */
 	public List<T> getNext() {
 		@SuppressWarnings("unchecked")
 		T[] subArray = (T[]) Array.newInstance(componentType, Math.min(splitCount, length - curentIndex));
@@ -58,14 +89,32 @@ public class ListSplitter<T> {
 		return Arrays.asList(subArray);
 	}
 
+	/**
+	 * 源集合总长度。
+	 * Total length of the source collection.
+	 *
+	 * Length
+	 */
 	public int size() {
 		return length;
 	}
 
+	/**
+	 * 是否仍在第一块范围内。
+	 * Whether still within the first chunk.
+	 *
+	 * @return 第一块则为 true / True if first chunk
+	 */
 	public boolean isFirst() {
 		return curentIndex <= splitCount;
 	}
 
+	/**
+	 * 是否已取完所有元素。
+	 * Whether all elements have been consumed.
+	 *
+	 * @return 已取完则为 true / True if finished
+	 */
 	public boolean isLast() {
 		return curentIndex == length;
 	}

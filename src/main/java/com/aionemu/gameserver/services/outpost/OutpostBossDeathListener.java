@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.outpost;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -29,16 +13,30 @@ import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.services.OutpostService;
 
 /**
- * Created by Wnkrz on 27/08/2017.
+ * 前哨 BOSS 死亡监听器，按最大伤害方切换前哨归属。
+ * Outpost boss death listener that switches outpost ownership by top damager.
+ *
+ * @author Wnkrz
  */
-
 public class OutpostBossDeathListener extends OnDieEventCallback {
 	private final Outpost<?> outpost;
 
+	/**
+	 * 绑定目标前哨实例。
+	 * Binds the target outpost instance.
+	 *
+	 * Outpost
+	 */
 	public OutpostBossDeathListener(Outpost outpost) {
 		this.outpost = outpost;
 	}
 
+	/**
+	 * BOSS 死亡前根据仇恨列表结算归属并触发占领。
+	 * Before boss death, resolves ownership from aggro list and triggers capture.
+	 *
+	 * Dying AI
+	 */
 	@Override
 	public void onBeforeDie(AbstractAI obj) {
 		AionObject winner = outpost.getBoss().getAggroList().getMostDamage();
@@ -58,10 +56,22 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 		GameLocationBootstrapServices.outpostService().capture(outpost.getId(), outpost.getRace());
 	}
 
+	/**
+	 * BOSS 死亡后回调（当前无额外逻辑）。
+	 * After-death callback (no-op currently).
+	 *
+	 * Dying AI
+	 */
 	@Override
 	public void onAfterDie(AbstractAI obj) {
 	}
 
+	/**
+	 * 获取前哨 DAO。
+	 * Returns the outpost DAO.
+	 *
+	 * Outpost DAO
+	 */
 	private OutpostDAO getDAO() {
 		return DAOManager.getDAO(OutpostDAO.class);
 	}

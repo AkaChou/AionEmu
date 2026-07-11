@@ -1,29 +1,4 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion.clientpackets;
-
-import lombok.extern.slf4j.Slf4j;
-import java.nio.ByteBuffer;
-import java.security.GeneralSecurityException;
-import java.sql.Timestamp;
-
-import javax.crypto.Cipher;
 
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.controller.AccountController;
@@ -35,28 +10,42 @@ import com.aionemu.loginserver.network.aion.SessionKey;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_FAIL;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_OK;
 import com.aionemu.loginserver.service.LoginProtectionServices;
+import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
+import java.sql.Timestamp;
+import javax.crypto.Cipher;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 客户端登录包：RSA 解密账号密码并完成鉴权。
+ * Client login packet: RSA-decrypt credentials and authenticate.
+ *
  * @author -Nemesiss-, KID, Lyahim
  */
 @Slf4j
 public class CM_LOGIN extends AionClientPacket {
 
     /**
-     * byte array contains encrypted login and password.
+     * 加密的登录名与密码字节数组。
+     * Encrypted login and password bytes.
      */
     private byte[] data;
 
     /**
-     * Constructs new instance of <tt>CM_LOGIN </tt> packet.
+     * 构造 CM_LOGIN 包。
+     * Construct CM_LOGIN packet.
      *
-     * @param buf
-     * @param client
+     * @param buf 包体数据 / Packet data
+     * Login connection
      */
     public CM_LOGIN(ByteBuffer buf, LoginConnection client) {
         super(buf, client, 0x0b);
     }
 
+    /**
+     * 读取 128 字节加密凭证。
+     * Read 128-byte encrypted credentials.
+     */
     @Override
     protected void readImpl() {
     	readD();
@@ -65,6 +54,10 @@ public class CM_LOGIN extends AionClientPacket {
     	}
     }
 
+    /**
+     * 解密凭证、调用账号控制器，并按结果回包或封禁。
+     * Decrypt credentials, call account controller, reply or ban by result.
+     */
     @Override
     protected void runImpl() {
         if (data == null) {

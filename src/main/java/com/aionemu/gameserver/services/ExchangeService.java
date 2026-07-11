@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,19 +30,31 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
+ * 玩家交易服务：管理面对面交易会话、物品/基纳挂牌、确认与最终结算落库。
+ * Player exchange service: manages face-to-face trade sessions, item/kinah offers, confirmation and final inventory persistence.
+ *
  * @author ATracer
  */
 @Slf4j(topic = "EXCHANGE_LOG")
 public class ExchangeService {
 
 
+	/** 玩家对象 ID 到交易会话 / Player objectId to exchange session */
 	private ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<Integer, Exchange>();
 
+	/** 交易后异步存库任务管理器。 / Periodic save manager for post-trade inventory writes. */
 	private ExchangePeriodicTaskManager saveManager;
 
+	/** 交易存库延迟（毫秒）。 / Exchange save delay in milliseconds. */
 	private final int DELAY_EXCHANGE_SAVE = 5000;
 	private static volatile ObjectProvider<ExchangeService> instanceProvider;
 
+	/**
+	 * 获取服务单例（优先 Spring 提供者）。
+	 * Returns the service singleton (preferring the Spring provider).
+	 *
+	 * service instance
+	 */
 	public static final ExchangeService getInstance() {
 		ObjectProvider<ExchangeService> provider = instanceProvider;
 		if (provider == null) {
@@ -67,20 +63,30 @@ public class ExchangeService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Injects the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<ExchangeService> instanceProvider) {
 		ExchangeService.instanceProvider = instanceProvider;
 	}
 
 	/**
-	 * Default constructor
+	 * 默认构造：初始化交易存库周期任务。
+	 * Default constructor: initializes the periodic exchange save task.
 	 */
 	public ExchangeService() {
 		saveManager = new ExchangePeriodicTaskManager(DELAY_EXCHANGE_SAVE);
 	}
 
 	/**
-	 * @param player1
-	 * @param player2
+	 * 在双方通过限制校验后建立交易会话并互发请求包。
+	 * Opens an exchange session for both players after restriction checks and sends request packets.
+	 *
+	 * initiator
+	 * partner
 	 */
 	public void registerExchange(Player player1, Player player2) {
 		if (!validateParticipants(player1, player2)) {
@@ -98,21 +104,36 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param player1
-	 * @param player2
+	 * 校验双方是否允许交易。
+	 * Validates that both players are allowed to trade.
+	 *
+	 * player 1
+	 * player 2
+	 *
+	 * @return 是否可交易 / whether trade is allowed
 	 */
 	private boolean validateParticipants(Player player1, Player player2) {
 		return RestrictionsManager.canTrade(player1) && RestrictionsManager.canTrade(player2);
 	}
 
+	/**
+	 * 获取当前交易对方。
+	 * Returns the current trade partner.
+	 *
+	 * @param player 玩家 / player
+	 * @return 对方玩家，无会话则为 null / partner, or null
+	 */
 	private Player getCurrentParter(Player player) {
 		Exchange exchange = getCurrentExchange(player);
 		return exchange != null ? exchange.getTargetPlayer() : null;
 	}
 
 	/**
-	 * @param player
-	 * @return Exchange
+	 * 获取玩家当前交易会话。
+	 * Returns the player's current exchange session.
+	 *
+	 * 玩家 / player
+	 * exchange session
 	 */
 	private Exchange getCurrentExchange(Player player) {
 		synchronized (exchanges) {
@@ -121,8 +142,11 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param player
-	 * @return Exchange
+	 * 获取对方视角下的交易会话。
+	 * Returns the partner's exchange session for this player.
+	 *
+	 * @param player 玩家 / player
+	 * @return 对方交易会话 / partner exchange session
 	 */
 	public Exchange getCurrentParnterExchange(Player player) {
 		Player partner = getCurrentParter(player);
@@ -130,15 +154,22 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param player
+	 * 判断玩家是否处于交易中。
+	 * Returns whether the player is currently in an exchange.
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否交易中 / whether in exchange
 	 */
 	public boolean isPlayerInExchange(Player player) {
 		return getCurrentExchange(player) != null;
 	}
 
 	/**
-	 * @param activePlayer
-	 * @param itemCount
+	 * 向交易栏添加基纳并通知双方。
+	 * Adds kinah to the exchange offer and notifies both players.
+	 *
+	 * active player
+	 * kinah amount
 	 */
 	public void addKinah(Player activePlayer, long itemCount) {
 		Exchange currentExchange = getCurrentExchange(activePlayer);
@@ -148,10 +179,10 @@ public class ExchangeService {
 		if (itemCount < 1) {
 			return;
 		}
-		// count total amount in inventory
+		// 统计背包中总数量 / count total amount in inventory
 		long availableCount = activePlayer.getInventory().getKinah();
 
-		// count amount that was already added to exchange
+		// 统计已加入交易的数量 / count amount that was already added to exchange
 		availableCount -= currentExchange.getKinahCount();
 
 		long countToAdd = availableCount > itemCount ? itemCount : availableCount;
@@ -165,9 +196,12 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param activePlayer
-	 * @param itemObjId
-	 * @param itemCount
+	 * 向交易栏添加物品（含可堆叠增量）并通知双方。
+	 * Adds an item to the exchange offer (including stack increments) and notifies both players.
+	 *
+	 * active player
+	 * item object id
+	 * count
 	 */
 	public void addItem(Player activePlayer, int itemObjId, long itemCount) {
 		Item item = activePlayer.getInventory().getItemByObjId(itemObjId);
@@ -211,7 +245,7 @@ public class ExchangeService {
 		ExchangeItem exchangeItem = currentExchange.getItems().get(item.getObjectId());
 
 		long actuallAddCount = 0;
-		// item was not added previosly
+		// 物品先前未添加 / item was not added previosly
 		if (exchangeItem == null) {
 			Item newItem = null;
 			if (itemCount < item.getItemCount()) {
@@ -223,10 +257,10 @@ public class ExchangeService {
 			currentExchange.addItem(itemObjId, exchangeItem);
 			actuallAddCount = itemCount;
 		}
-		// item was already added
+		// 物品已添加 / item was already added
 		else {
-			// if player add item count that is more than possible
-			// happens with exploits
+			// 若玩家添加数量超过可能值 / if player add item count that is more than possible
+			// 利用漏洞时发生 / happens with exploits
 			if (item.getItemCount() == exchangeItem.getItemCount()) {
 				return;
 			}
@@ -242,7 +276,10 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param activePlayer
+	 * 锁定己方交易栏并通知对方。
+	 * Locks this side of the exchange and notifies the partner.
+	 *
+	 * active player
 	 */
 	public void lockExchange(Player activePlayer) {
 		Exchange exchange = getCurrentExchange(activePlayer);
@@ -254,18 +291,24 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param activePlayer
+	 * 取消交易并清理双方会话。
+	 * Cancels the exchange and cleans both sessions.
+	 *
+	 * active player
 	 */
 	public void cancelExchange(Player activePlayer) {
 		Player currentParter = getCurrentParter(activePlayer);
-		cleanupExchanges(activePlayer, currentParter);
+		cleanupExchanges(true, activePlayer, currentParter);
 		if (currentParter != null) {
 			PacketSendUtility.sendPacket(currentParter, new SM_EXCHANGE_CONFIRMATION(1));
 		}
 	}
 
 	/**
-	 * @param activePlayer
+	 * 确认交易；双方都确认后执行结算。
+	 * Confirms this side; when both confirmed, performs the trade.
+	 *
+	 * active player
 	 */
 	public void confirmExchange(Player activePlayer) {
 		if (activePlayer == null || !activePlayer.isOnline()) {
@@ -273,7 +316,7 @@ public class ExchangeService {
 		}
 		Exchange currentExchange = getCurrentExchange(activePlayer);
 
-		// TODO: Why is exchange null =/
+		// 取消或登出移除交易后，确认包仍可能到达。 / A confirmation packet may arrive after cancellation or logout removed the exchange.
 		if (currentExchange == null) {
 			return;
 		}
@@ -288,24 +331,24 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param activePlayer
-	 * @param currentPartner
+	 * 执行交易：校验背包、扣物、入包并排队异步存库。
+	 * Performs the trade: validates bags, removes items, deposits them, and queues async inventory save.
+	 *
+	 * one player
+	 * partner
 	 */
 	private void performTrade(Player activePlayer, Player currentPartner) {
-		// TODO message here
-		// TODO release item id if return
-		if (!validateExchange(activePlayer, currentPartner)) {
-			cleanupExchanges(activePlayer, currentPartner);
-			return;
-		}
-
 		Exchange exchange1 = getCurrentExchange(activePlayer);
 		Exchange exchange2 = getCurrentExchange(currentPartner);
 
-		cleanupExchanges(activePlayer, currentPartner);
+		if (!validateExchange(activePlayer, currentPartner)) {
+			cleanupExchanges(true, activePlayer, currentPartner);
+			return;
+		}
 
 		if (!removeItemsFromInventory(activePlayer, exchange1)
 				|| !removeItemsFromInventory(currentPartner, exchange2)) {
+			cleanupExchanges(true, activePlayer, currentPartner);
 			AuditLogger.info(activePlayer, "Exchange kinah exploit partner: " + currentPartner.getName());
 			return;
 		}
@@ -318,29 +361,42 @@ public class ExchangeService {
 
 		saveManager.add(new ExchangeOpSaveTask(exchange1.getActiveplayer().getObjectId(),
 				exchange2.getActiveplayer().getObjectId(), exchange1.getItemsToUpdate(), exchange2.getItemsToUpdate()));
+		cleanupExchanges(false, activePlayer, currentPartner);
 	}
 
 	/**
-	 * @param activePlayer
-	 * @param currentPartner
+	 * 清理交易会话与交易标记，取消或失败时释放临时拆分物品 ID。
+	 * Clears exchange sessions and flags, releasing temporary split-item ids on cancel or failure.
+	 *
+	 * @param releaseIds 是否释放临时物品 ID / whether temporary item ids should be released
+	 * exchange players
 	 */
-	private void cleanupExchanges(Player activePlayer, Player currentPartner) {
+	private void cleanupExchanges(boolean releaseIds, Player... players) {
 		synchronized (exchanges) {
-			if (activePlayer != null) {
-				exchanges.remove(activePlayer.getObjectId());
-				activePlayer.setTrading(false);
-			}
-
-			if (currentPartner != null) {
-				exchanges.remove(currentPartner.getObjectId());
-				currentPartner.setTrading(false);
+			for (Player player : players) {
+				if (player == null) {
+					continue;
+				}
+				Exchange exchange = exchanges.remove(player.getObjectId());
+				player.setTrading(false);
+				if (exchange != null && releaseIds) {
+					for (ExchangeItem exchangeItem : exchange.getItems().values()) {
+						if (exchangeItem.getItemObjId() != exchangeItem.getItem().getObjectId()) {
+							ItemService.releaseItemId(exchangeItem.getItem());
+						}
+					}
+				}
 			}
 		}
 	}
 
 	/**
-	 * @param player
-	 * @param exchange
+	 * 从背包扣除交易物品与基纳。
+	 * Removes offered items and kinah from inventory.
+	 *
+	 * 玩家 / player
+	 * exchange session
+	 * whether successful
 	 */
 	private boolean removeItemsFromInventory(Player player, Exchange exchange) {
 		Storage inventory = player.getInventory();
@@ -359,11 +415,11 @@ public class ExchangeService {
 				inventory.decreaseItemCount(itemInInventory, itemCount);
 				exchange.addItemToUpdate(itemInInventory);
 			} else {
-				// remove from source inventory only
+				// 仅从源背包移除 / remove from source inventory only
 				inventory.remove(itemInInventory);
 				exchangeItem.setItem(itemInInventory);
-				// release when only part stack was added in the beginning -> full stack in the
-				// end
+				// 开始时仅部分堆叠加入→完整堆叠时释放。 / release when only part stack was added in the beginning -> full stack in the
+				// 结束 / end
 				if (item.getObjectId() != exchangeItem.getItemObjId()) {
 					ItemService.releaseItemId(item);
 				}
@@ -377,9 +433,13 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param activePlayer
-	 * @param currentPartner
-	 * @return
+	 * 校验双方背包空间是否足以接收对方物品。
+	 * Validates both inventories have room for the partner's items.
+	 *
+	 * one player
+	 * partner
+	 *
+	 * @return 是否通过校验 / whether validation passes
 	 */
 	private boolean validateExchange(Player activePlayer, Player currentPartner) {
 		Exchange exchange1 = getCurrentExchange(activePlayer);
@@ -388,15 +448,26 @@ public class ExchangeService {
 		return validateInventorySize(activePlayer, exchange2) && validateInventorySize(currentPartner, exchange1);
 	}
 
+	/**
+	 * 校验背包空位是否足够。
+	 * Validates free inventory slots are sufficient.
+	 *
+	 * 玩家 / player
+	 * @param exchange 待接收的交易内容 / exchange content to receive
+	 * whether enough free slots
+	 */
 	private boolean validateInventorySize(Player activePlayer, Exchange exchange) {
 		int numberOfFreeSlots = activePlayer.getInventory().getFreeSlots();
 		return numberOfFreeSlots >= exchange.getItems().size();
 	}
 
 	/**
-	 * @param player
-	 * @param exchange1
-	 * @param exchange2
+	 * 将对方挂出的物品与基纳放入己方背包。
+	 * Deposits the partner's offered items and kinah into this inventory.
+	 *
+	 * receiver
+	 * @param exchange1 对方挂出内容 / partner offer
+	 * @param exchange2 己方会话（用于收集待更新物品） / own session (collects items to update)
 	 */
 	private void putItemToInventory(Player player, Exchange exchange1, Exchange exchange2) {
 		for (ExchangeItem exchangeItem : exchange1.getItems().values()) {
@@ -413,14 +484,15 @@ public class ExchangeService {
 	}
 
 	/**
-	 * Frequent running save task
+	 * 交易后周期性 FIFO 存库任务管理器。
+	 * Periodic FIFO save-task manager used after exchanges.
 	 */
 	public static final class ExchangePeriodicTaskManager extends AbstractFIFOPeriodicTaskManager<ExchangeOpSaveTask> {
 
 		private static final String CALLED_METHOD_NAME = "exchangeOperation()";
 
 		/**
-		 * @param period
+		 * 周期（毫秒） / period in milliseconds
 		 */
 		public ExchangePeriodicTaskManager(int period) {
 			super(period);
@@ -438,8 +510,8 @@ public class ExchangeService {
 	}
 
 	/**
-	 * This class is used for storing all items in one shot after any exchange
-	 * operation
+	 * 将双方交易涉及物品一次性写入数据库。
+	 * Persists all items involved in an exchange for both players in one shot.
 	 */
 	public static final class ExchangeOpSaveTask implements Runnable {
 
@@ -449,10 +521,10 @@ public class ExchangeService {
 		private List<Item> player2Items;
 
 		/**
-		 * @param player1Id
-		 * @param player2Id
-		 * @param player1Items
-		 * @param player2Items
+		 * player 1 id
+		 * player 2 id
+		 * @param player1Items 玩家1 待存物品 / player 1 items to store
+		 * @param player2Items 玩家2 待存物品 / player 2 items to store
 		 */
 		public ExchangeOpSaveTask(int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
 			this.player1Id = player1Id;

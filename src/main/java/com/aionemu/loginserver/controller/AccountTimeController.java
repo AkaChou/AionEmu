@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.controller;
 
 import java.sql.Timestamp;
@@ -26,28 +8,29 @@ import com.aionemu.loginserver.dao.AccountTimeDAO;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.AccountTime;
 
+import lombok.experimental.UtilityClass;
+
 /**
- * This class is for account time controlling. When character logins any server,
- * it should get its day online time and rest time. Some aion ingame feautres
- * also depend on player's online time
+ * 账号在线/休息时间控制；部分游戏内功能依赖累计在线时长。
+ * Account time controller. Some in-game features depend on accumulated online time.
  *
  * @author EvilSpirit
  */
+@UtilityClass
 public class AccountTimeController {
 
     /**
-     * Update account time when character logins. The following field are being
-     * updated: - LastLoginTime (set to CurrentTime) - RestTime (set to
-     * (RestTime + (CurrentTime-LastLoginTime - SessionDuration))
+     * 角色登录时更新账号时间：LastLoginTime、RestTime 等。
+     * Updates account time on login: LastLoginTime, RestTime, etc.
      *
-     * @param account
+     * @param account 账号 / Account
      */
-    public static void updateOnLogin(Account account) {
+    public void updateOnLogin(Account account) {
         AccountTime accountTime = account.getAccountTime();
 
         /**
-         * It seems the account was just created, so new accountTime should be
-         * created too
+         * 账号刚创建时需新建 AccountTime。
+         * New accounts need a fresh AccountTime.
          */
         if (accountTime == null) {
             accountTime = new AccountTime();
@@ -58,11 +41,11 @@ public class AccountTimeController {
         int returnday = getDays(accountTime.getLastLoginTime().getTime() + + 30L * 24 * 60 * 60 * 1000);
 
         /**
-         * The character from that account was online not today, so it's account
-         * timings should be nulled.
+         * 非当日登录则清零当日累计在线/休息时间。
+         * Not online today: reset daily accumulated online/rest times.
          */
         if (lastLoginDay < currentDay) {
-      		DAOManager.getDAO(AccountPlayTimeDAO.class).update(account.getId(), accountTime);
+            DAOManager.getDAO(AccountPlayTimeDAO.class).update(account.getId(), accountTime);
             accountTime.setAccumulatedOnlineTime(0);
             accountTime.setAccumulatedRestTime(0);
         } else {
@@ -76,7 +59,7 @@ public class AccountTimeController {
         DAOManager.getDAO(AccountTimeDAO.class).updateAccountTime(account.getId(), accountTime);
         account.setAccountTime(accountTime);
 
-        if (currentDay >= returnday && account.getReturn() == 0){
+        if (currentDay >= returnday && account.getReturn() == 0) {
             account.setReturn((byte) 1);
             account.setReturnEnd(new Timestamp(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000));
         }
@@ -88,13 +71,12 @@ public class AccountTimeController {
     }
 
     /**
-     * Update account time when character logouts. The following field are being
-     * updated: - SessionTime (set to CurrentTime - LastLoginTime) -
-     * AccumulatedOnlineTime (set to AccumulatedOnlineTime + SessionTime)
+     * 角色登出时更新会话时长与累计在线时间。
+     * Updates session duration and accumulated online time on logout.
      *
-     * @param account
+     * @param account 账号 / Account
      */
-    public static void updateOnLogout(Account account) {
+    public void updateOnLogout(Account account) {
         AccountTime accountTime = account.getAccountTime();
 
         accountTime.setSessionDuration(System.currentTimeMillis() - accountTime.getLastLoginTime().getTime());
@@ -104,37 +86,40 @@ public class AccountTimeController {
     }
 
     /**
-     * Checks if account is already expired or not
+     * 判断账号是否已过期。
+     * Checks whether the account is expired.
      *
-     * @param account
-     * @return true, if account is expired, false otherwise
+     * @param account 账号 / Account
+     * @return 若 expired 则为 true / True if expired
      */
-    public static boolean isAccountExpired(Account account) {
+    public boolean isAccountExpired(Account account) {
         AccountTime accountTime = account.getAccountTime();
 
         return accountTime != null && accountTime.getExpirationTime() != null && accountTime.getExpirationTime().getTime() < System.currentTimeMillis();
     }
 
     /**
-     * Checks if account is restricted by penalty or not
+     * 判断账号处罚是否仍生效。
+     * Checks whether account penalty is still active.
      *
-     * @param account
-     * @return true, is penalty is active, false otherwise
+     * @param account 账号 / Account
+     * @return 处罚生效为 true / True if penalty is active
      */
-    public static boolean isAccountPenaltyActive(Account account) {
+    public boolean isAccountPenaltyActive(Account account) {
         AccountTime accountTime = account.getAccountTime();
 
-        // 1000 is 'infinity' value
+        // 1000 表示“无限”值 / 1000 is 'infinity' value
         return accountTime != null && accountTime.getPenaltyEnd() != null && (accountTime.getPenaltyEnd().getTime() == 1000 || accountTime.getPenaltyEnd().getTime() >= System.currentTimeMillis());
     }
 
     /**
-     * Get days from time presented in milliseconds
+     * 将毫秒时间换算为天数。
+     * Converts milliseconds to whole days.
      *
-     * @param millis time in ms
-     * @return days
+     * Time in ms
+     * Days
      */
-    public static int getDays(long millis) {
+    public int getDays(long millis) {
         return (int) (millis / 1000 / 3600 / 24);
     }
 }

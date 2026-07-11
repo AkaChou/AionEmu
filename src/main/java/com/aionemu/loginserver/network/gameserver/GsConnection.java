@@ -1,24 +1,6 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver;
 
-import lombok.extern.slf4j.Slf4j;
+import com.aionemu.boot.i18n.I18n;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -30,55 +12,68 @@ import com.aionemu.loginserver.PingPongThread;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Object representing connection between LoginServer and GameServer.
+ * 表示 LoginServer 与 GameServer 之间的一条网络连接。
+ * Object representing a connection between LoginServer and GameServer.
  *
  * @author -Nemesiss-
  */
 @Slf4j
 public class GsConnection extends AConnection {
 
-
     /**
-     * Possible states of GsConnection
+     * GS 连接可能的状态。
+     * Possible states of a GsConnection.
      */
-    public static enum State {
+    public enum State {
 
         /**
-         * Means that GameServer just connect, but is not authenticated yet
+         * 已连接但尚未认证。
+         * Connected but not yet authenticated.
          */
         CONNECTED,
         /**
-         * GameServer is authenticated
+         * 游戏服已通过认证。
+         * GameServer is authenticated.
          */
         AUTHED
     }
+
     /**
-     * Server Packet "to send" Queue
+     * 待发送服务端封包队列。
+     * Queue of server packets waiting to be sent.
      */
-    private final Deque<GsServerPacket> sendMsgQueue = new ArrayDeque<GsServerPacket>();
+    private final Deque<GsServerPacket> sendMsgQueue = new ArrayDeque<>();
     /**
-     * Current state of this connection
+     * 当前连接状态。
+     * Current connection state.
      */
     private State state;
     /**
-     * GameServerInfo for this GsConnection.
+     * 本连接对应的游戏服信息。
+     * GameServerInfo bound to this connection.
      */
     private GameServerInfo gameServerInfo = null;
     private PingPongThread pingThread;
 
+    /**
+     * 基于传输层创建 GS 连接。
+     * Create a GS connection over the given transport.
+     *
+     * Connection transport
+     */
     public GsConnection(ConnectionTransport transport) {
         super(transport, 8192 * 8, 8192 * 8);
     }
 
     /**
-     * Called by the transport frame handler. ByteBuffer data contains one packet that should be
-     * processed.
+     * 由传输层帧处理器调用；缓冲区中包含一个待处理封包。
+     * Called by the transport frame handler; buffer holds one packet to process.
      *
-     * @param data
-     * @return True if data was processed correctly, False if some error
-     * occurred and connection should be closed NOW.
+     * @param data 封包数据 / Packet data
+     * @return 是否处理成功；失败时应立即关闭连接 / True if processed OK; false to close connection now
      */
     @Override
     public boolean processData(ByteBuffer data) {
@@ -92,12 +87,11 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * This method will be called by the transport frame handler, and will be repeated till
-     * return false.
+     * 由传输层反复调用直至返回 false，用于写出下一个待发封包。
+     * Called repeatedly by the transport until false; writes the next pending packet.
      *
-     * @param data
-     * @return True if data was written to buffer, False indicating that there
-     * are not any more data to write.
+     * @param data 输出缓冲区 / Output buffer
+     * @return 是否写入了数据；false 表示无更多数据 / True if data was written; false if nothing left
      */
     @Override
     protected final boolean writeData(ByteBuffer data) {
@@ -113,11 +107,10 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * This method is called by the transport when connection is ready to be
-     * closed.
+     * 连接准备关闭时由传输层调用，返回断开前回调延迟。
+     * Called by the transport when connection is ready to close; returns delay before onDisconnect.
      *
-     * @return time in ms after witch onDisconnect() method will be called.
-     * Always return 0.
+     * @return 毫秒延迟，本实现恒为 0 / Delay in ms; always 0 here
      */
     @Override
     protected final long getDisconnectionDelay() {
@@ -125,14 +118,15 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * {@inheritDoc}
+     * 连接断开后的清理：停止 ping、解绑游戏服账号。
+     * Cleanup after disconnect: stop ping and unbind game-server accounts.
      */
     @Override
     protected final void onDisconnect() {
         if (Config.ENABLE_PINGPONG) {
             this.pingThread.closeMe();
         }
-        log.info(this + " disconnected");
+        log.info(I18n.get("log.e803a1d01bbf", this));
         if (gameServerInfo != null) {
             gameServerInfo.setConnection(null);
             gameServerInfo.clearAccountsOnGameServer();
@@ -141,25 +135,22 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * {@inheritDoc}
+     * 登录服关闭时关闭本连接。
+     * Close this connection when the login server shuts down.
      */
     @Override
     protected final void onServerClose() {
-        // TODO mb some packet should be send to gameserver before closing?
         close(/* packet, */true);
     }
 
     /**
-     * Sends GsServerPacket to this client.
+     * 向本连接发送 GS 服务端封包。
+     * Send a GsServerPacket to this connection.
      *
-     * @param bp GsServerPacket to be sent.
+     * @param bp 待发送封包 / Packet to send
      */
     public final void sendPacket(GsServerPacket bp) {
         synchronized (guard) {
-            /**
-             * Connection is already closed or waiting for last (close packet)
-             * to be sent
-             */
             if (isWriteDisabled()) {
                 return;
             }
@@ -170,14 +161,11 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * Its guaranted that closePacket will be sent before closing connection,
-     * but all past and future packets wont. Connection will be closed by
-     * the transport, and onDisconnect() method will be called to clear all
-     * other things. forced means that server shouldn't wait with removing this
-     * connection.
+     * 保证 closePacket 在关闭前发出，清空历史/后续封包；forced 在本实现无额外效果。
+     * Guarantees closePacket is sent before close and clears past/future packets; forced has no extra effect here.
      *
-     * @param closePacket Packet that will be send before closing.
-     * @param forced have no effect in this implementation.
+     * @param closePacket 关闭前发送的封包 / Packet sent before closing
+     * @param forced 是否强制关闭（本实现无额外影响） / Forced close flag (no extra effect here)
      */
     public final void close(GsServerPacket closePacket, boolean forced) {
         synchronized (guard) {
@@ -194,14 +182,20 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * @return Current state of this connection.
+     * 返回当前连接状态。
+     * Return current connection state.
+     *
+     * Current state
      */
     public State getState() {
         return state;
     }
 
     /**
-     * @param state Set current state of this connection.
+     * 设置连接状态；进入 AUTHED 时按配置启动 ping。
+     * Set connection state; when AUTHED, start ping if configured.
+     *
+     * New state
      */
     public void setState(State state) {
         this.state = state;
@@ -213,22 +207,30 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * @return GameServerInfo for this GsConnection or null if this GsConnection
-     * is not authenticated yet.
+     * 返回本连接的游戏服信息；未认证时为 null。
+     * Return GameServerInfo for this connection, or null if not authenticated yet.
+     *
+     * @return 游戏服信息或 null / GameServerInfo or null
      */
     public GameServerInfo getGameServerInfo() {
         return gameServerInfo;
     }
 
     /**
-     * @param gameServerInfo Set GameServerInfo for this GsConnection.
+     * 绑定本连接的游戏服信息。
+     * Bind GameServerInfo to this connection.
+     *
+     * @param gameServerInfo 游戏服信息 / Game server info
      */
     public void setGameServerInfo(GameServerInfo gameServerInfo) {
         this.gameServerInfo = gameServerInfo;
     }
 
     /**
-     * @return String info about this connection
+     * 返回连接的可读描述（服务器 ID 与 IP）。
+     * Return a human-readable description (server id and IP).
+     *
+     * @return 连接描述字符串 / Connection description
      */
     @Override
     public String toString() {
@@ -243,15 +245,24 @@ public class GsConnection extends AConnection {
         return sb.toString();
     }
 
+    /**
+     * 处理游戏服 pong 响应。
+     * Handle GameServer pong response.
+     *
+     * Ping id
+     */
     public void pong(int pid) {
         if (Config.ENABLE_PINGPONG) {
             this.pingThread.onResponse(pid);
         }
     }
 
+    /**
+     * 连接初始化：置为 CONNECTED 并按需创建 ping 线程。
+     * Connection init: set CONNECTED and create ping thread if needed.
+     */
     @Override
     protected void initialized() {
-        // TODO Auto-generated method stub
         state = State.CONNECTED;
         String ip = getIP();
 
@@ -259,6 +270,6 @@ public class GsConnection extends AConnection {
             pingThread = new PingPongThread(this);
         }
 
-        log.info("Gameserver connection attemp from: " + ip);
+        log.info(I18n.get("log.25ae763a9d55", ip));
     }
 }

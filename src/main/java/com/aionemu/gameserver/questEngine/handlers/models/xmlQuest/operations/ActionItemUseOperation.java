@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -32,21 +16,24 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 对可交互 NPC 播放使用动画，延迟结束后执行完成操作。
+ * Plays the use animation on an interactable NPC and runs finish operations after a delay.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ActionItemUseOperation", propOrder = { "finish" })
 public class ActionItemUseOperation extends QuestOperation {
 
+	/** 使用完成后执行的操作 / Operations run after the use finishes */
 	@XmlElement(required = true)
 	protected QuestOperations finish;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seecom.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations.
-	 * QuestOperation#doOperate(com.aionemu. gameserver.services.QuestService,
-	 * com.aionemu.gameserver.questEngine.model.QuestEnv)
+	/**
+	 * 向玩家发送使用 / 表情包，并在默认 3000ms 后执行 finish。
+	 * emotion packets to the player and runs finish after the default 3000ms. / emotion packets to the player and runs finish after the default 3000ms.
+	 *
+	 * @param env 任务环境 / Quest environment
 	 */
 	@Override
 	public void doOperate(final QuestEnv env) {

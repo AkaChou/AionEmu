@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Map;
@@ -23,12 +7,21 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步物品冷却时间的服务端包。
+ * Server packet that synchronizes item cooldown timers to the client.
+ *
  * @author ATracer
  */
 public class SM_ITEM_COOLDOWN extends AionServerPacket {
 
 	private Map<Integer, ItemCooldown> cooldowns;
 
+	/**
+	 * 构造物品冷却同步包。
+	 * Creates an item cooldown synchronization packet.
+	 *
+	 * @param cooldowns 冷却组 ID 到冷却信息的映射 / map of cooldown group ids to cooldown info
+	 */
 	public SM_ITEM_COOLDOWN(Map<Integer, ItemCooldown> cooldowns) {
 		this.cooldowns = cooldowns;
 	}

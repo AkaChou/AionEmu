@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -47,12 +31,20 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
+/**
+ * Ride 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RideAction")
 public class RideAction extends AbstractItemAction {
 	@XmlAttribute(name = "npc_id")
 	protected int npcId;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null) {
@@ -61,8 +53,8 @@ public class RideAction extends AbstractItemAction {
 		if (CustomConfig.ENABLE_RIDE_RESTRICTION) {
 			for (ZoneInstance zone : player.getPosition().getMapRegion().getZones(player)) {
 				if (!zone.canRide()) {
-					// You cannot ride here.
-					// You are forced to dismount.
+					// 此处无法骑乘。 / You cannot ride here.
+					// 你被强制下马。 / You are forced to dismount.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NORIDE_AREA_STOP);
 					return false;
 				}
@@ -71,6 +63,7 @@ public class RideAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		player.getController().cancelUseItem();
@@ -81,6 +74,7 @@ public class RideAction extends AbstractItemAction {
 		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 				parentItem.getObjectId(), parentItem.getItemId(), 3000, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
@@ -94,6 +88,7 @@ public class RideAction extends AbstractItemAction {
 		};
 		player.getObserveController().attach(observer);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				player.unsetState(CreatureState.ACTIVE);
@@ -112,6 +107,7 @@ public class RideAction extends AbstractItemAction {
 			}
 		}, 3000));
 		ActionObserver rideObserver = new ActionObserver(ObserverType.ABNORMALSETTED) {
+			/** 异常状态已设置 / abnormalsetted. */
 			@Override
 			public void abnormalsetted(AbnormalState state) {
 				if ((state.getId() & AbnormalState.DISMOUT_RIDE.getId()) > 0) {
@@ -122,6 +118,7 @@ public class RideAction extends AbstractItemAction {
 		player.getObserveController().addObserver(rideObserver);
 		player.setRideObservers(rideObserver);
 		ActionObserver attackedObserver = new ActionObserver(ObserverType.ATTACKED) {
+			/** 受攻击 / attacked. */
 			@Override
 			public void attacked(Creature creature) {
 				if (Rnd.get(1000) < 200) {
@@ -132,6 +129,7 @@ public class RideAction extends AbstractItemAction {
 		player.getObserveController().addObserver(attackedObserver);
 		player.setRideObservers(attackedObserver);
 		ActionObserver dotAttackedObserver = new ActionObserver(ObserverType.DOT_ATTACKED) {
+			/** 持续伤害受击 / dotattacked. */
 			@Override
 			public void dotattacked(Creature creature, Effect dotEffect) {
 				if (Rnd.get(1000) < 200) {
@@ -143,6 +141,7 @@ public class RideAction extends AbstractItemAction {
 		player.setRideObservers(dotAttackedObserver);
 	}
 
+	/** 返回 ride info / Returns the ride info */
 	public RideInfo getRideInfo() {
 		return DataManager.RIDE_DATA.getRideInfo(npcId);
 	}

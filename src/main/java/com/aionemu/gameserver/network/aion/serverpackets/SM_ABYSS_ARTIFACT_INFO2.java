@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.ArrayList;
@@ -25,10 +9,20 @@ import com.aionemu.gameserver.model.siege.SiegeType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端同步欧比斯神器/要塞位置精简信息的服务端包（第二形态）。
+ * Server packet synchronizing compact Abyss artifact/fortress location info to the client (variant 2).
+ */
 public class SM_ABYSS_ARTIFACT_INFO2 extends AionServerPacket {
 
 	private Collection<SiegeLocation> locations;
 
+	/**
+	 * 使用围城位置集合构造精简神器信息包。
+	 * Creates a compact artifact info packet from a collection of siege locations.
+	 *
+	 * @param collection 围城位置集合 / siege locations
+	 */
 	public SM_ABYSS_ARTIFACT_INFO2(Collection<SiegeLocation> collection) {
 		this.locations = collection;
 	}

@@ -1,20 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.playerreward;
+
+/**
+ * 副本玩家奖励模型。
+ * Instance Player Reward model.
+ */
 
 public class InstancePlayerReward {
 	private int points;
@@ -26,22 +15,27 @@ public class InstancePlayerReward {
 		this.object = object;
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	public Integer getOwner() {
 		return object;
 	}
 
+	/** 获取点。 / Returns the points. */
 	public int getPoints() {
 		return points;
 	}
 
+	/** 返回 pv p kills / Returns the pv p kills */
 	public int getPvPKills() {
 		return playerPvPKills;
 	}
 
+	/** 返回 monster kills / Returns the monster kills */
 	public int getMonsterKills() {
 		return playerMonsterKills;
 	}
 
+	/** 添加点。 / Adds points. */
 	public void addPoints(int points) {
 		this.points += points;
 		if (this.points < 0) {
@@ -49,10 +43,12 @@ public class InstancePlayerReward {
 		}
 	}
 
+	/** 添加 pv p kill to player / Adds pv p kill to player */
 	public void addPvPKillToPlayer() {
 		playerPvPKills++;
 	}
 
+	/** 添加 monster kill to player / Adds monster kill to player */
 	public void addMonsterKillToPlayer() {
 		playerMonsterKills++;
 	}

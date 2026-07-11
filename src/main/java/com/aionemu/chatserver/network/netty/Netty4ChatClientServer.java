@@ -1,5 +1,8 @@
 package com.aionemu.chatserver.network.netty;
 
+
+import com.aionemu.boot.i18n.I18n;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.chatserver.common.netty.ByteBufPacketReader;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
@@ -18,7 +21,13 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.net.InetSocketAddress;
+
+/**
+ * 基于 Netty 4 的聊天客户端接入服务端，负责绑定监听地址并转发客户端通道事件。
+ * Netty 4 chat-client acceptor that binds the listen address and forwards client channel events.
+ */
 @Slf4j
+@RequiredArgsConstructor
 final class Netty4ChatClientServer {
 
     private static final int MAX_PACKET_LENGTH = 8192 * 2;
@@ -30,11 +39,10 @@ final class Netty4ChatClientServer {
     private NettyEventLoopProvider.Allocation eventLoops;
     private Channel serverChannel;
 
-    Netty4ChatClientServer(InetSocketAddress address, ClientPacketHandler clientPacketHandler) {
-        this.address = address;
-        this.clientPacketHandler = clientPacketHandler;
-    }
-
+    /**
+     * 启动并绑定聊天客户端监听端口；已启动时直接返回。
+     * Start and bind the chat-client listen port; no-op when already started.
+     */
     synchronized void connect() {
         if (eventLoops != null) {
             return;
@@ -46,6 +54,12 @@ final class Netty4ChatClientServer {
                 .group(eventLoops.bossGroup(), eventLoops.workerGroup())
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
+                    /**
+                     * 初始化客户端通道管线：长度帧解码与业务处理器。
+                     * Initialize the client channel pipeline: length-frame decoder and business handler.
+                     *
+                     * @param channel 客户端套接字通道 / Client socket channel
+                     */
                     @Override
                     protected void initChannel(SocketChannel channel) {
                         clientChannels.add(channel);
@@ -58,13 +72,17 @@ final class Netty4ChatClientServer {
                 .bind(address)
                 .syncUninterruptibly()
                 .channel();
-            log.info("Netty server listening on {}:{} for Chat Client Connections", address.getAddress().getHostAddress(), address.getPort());
+            log.info(I18n.get("log.47b8fdc8c11c", address.getAddress().getHostAddress(), address.getPort()));
         } catch (RuntimeException e) {
             shutdown();
             throw e;
         }
     }
 
+    /**
+     * 关闭服务端通道、所有客户端连接并释放事件循环。
+     * Close the server channel, all client connections, and release event loops.
+     */
     synchronized void shutdown() {
         if (serverChannel != null) {
             serverChannel.close().syncUninterruptibly();
@@ -77,30 +95,57 @@ final class Netty4ChatClientServer {
         }
     }
 
+    /**
+     * Netty 入站适配器，将通道生命周期与读事件委托给 {@link ClientChannelHandler}。
+     * Netty inbound adapter that delegates channel lifecycle and read events to {@link ClientChannelHandler}.
+     */
+    @RequiredArgsConstructor
     private static final class Netty4ClientChannelHandler extends ChannelInboundHandlerAdapter {
 
         private final ClientChannelHandler delegate;
 
-        private Netty4ClientChannelHandler(ClientChannelHandler delegate) {
-            this.delegate = delegate;
-        }
-
+        /**
+         * 通道激活时通知业务处理器。
+         * Notify the business handler when the channel becomes active.
+         *
+         * @param context 通道上下文 / Channel handler context
+         */
         @Override
         public void channelActive(ChannelHandlerContext context) {
             delegate.nettyChannelActive(context.channel());
         }
 
+        /**
+         * 通道失活时通知业务处理器。
+         * Notify the business handler when the channel becomes inactive.
+         *
+         * @param context 通道上下文 / Channel handler context
+         */
         @Override
         public void channelInactive(ChannelHandlerContext context) {
             delegate.nettyChannelInactive();
         }
 
+        /**
+         * 捕获异常后交给业务处理并关闭通道。
+         * Forward exceptions to the business handler and close the channel.
+         *
+         * @param context 通道上下文 / Channel handler context
+         * @param cause 异常原因 / Exception cause
+         */
         @Override
         public void exceptionCaught(ChannelHandlerContext context, Throwable cause) {
             delegate.nettyExceptionCaught(cause);
             context.close();
         }
 
+        /**
+         * 读取完整帧后委托解析；非 {@link ByteBuf} 继续向下游传递。
+         * Delegate complete frames for parsing; non-{@link ByteBuf} messages are forwarded downstream.
+         *
+         * @param context 通道上下文 / Channel handler context
+         * Inbound message
+         */
         @Override
         public void channelRead(ChannelHandlerContext context, Object message) {
             if (!(message instanceof ByteBuf input)) {

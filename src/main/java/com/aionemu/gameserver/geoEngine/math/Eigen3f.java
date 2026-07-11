@@ -1,21 +1,42 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package com.aionemu.gameserver.geoEngine.math;
 
+/**
+ * 3×3 对称矩阵的特征值与特征向量分解器。
+ * Eigenvalue and eigenvector decomposer for 3×3 symmetric matrices.
+ */
 public class Eigen3f {
+	/** 特征值数组。 / Eigenvalue array. */
 	float[] eigenValues = new float[3];
+	/** 特征向量数组。 / Eigenvector array. */
 	Vector3f[] eigenVectors = new Vector3f[3];
+	/** 三分之一（双精度）。 / One third (double precision). */
 	static final double ONE_THIRD_DOUBLE = 0.3333333333333333;
+	/** √3（双精度）。 / Square root of three (double precision). */
 	static final double ROOT_THREE_DOUBLE = Math.sqrt(3.0);
 
+	/**
+	 * 默认构造。
+	 * Default constructor.
+	 */
 	public Eigen3f() {
 	}
 
+	/**
+	 * 使用给定矩阵立即计算特征分解。
+	 * Immediately computes the eigen decomposition for the given matrix.
+	 *
+	 * @param data 输入 3×3 矩阵 / input 3×3 matrix
+	 */
 	public Eigen3f(Matrix3f data) {
 		this.calculateEigen(data);
 	}
 
+	/**
+	 * 计算给定 3×3 对称矩阵的特征值与特征向量。
+	 * Computes the eigenvalues and eigenvectors of the given 3×3 symmetric matrix.
+	 *
+	 * @param data 输入 3×3 矩阵 / input 3×3 matrix
+	 */
 	public void calculateEigen(Matrix3f data) {
 		this.eigenVectors[0] = new Vector3f();
 		this.eigenVectors[1] = new Vector3f();
@@ -84,6 +105,13 @@ public class Eigen3f {
 		}
 	}
 
+	/**
+	 * 按最大元素幅值缩放矩阵，提高数值稳定性。
+	 * Scales the matrix by its max element magnitude for numerical stability.
+	 *
+	 * @param mat 待缩放矩阵（原地修改） / matrix to scale (modified in place)
+	 * @return 缩放前的最大幅值 / max magnitude before scaling
+	 */
 	private float scaleMatrix(Matrix3f mat) {
 		float max = FastMath.abs(mat.m00);
 		float abs = FastMath.abs(mat.m01);
@@ -109,6 +137,16 @@ public class Eigen3f {
 		return max;
 	}
 
+	/**
+	 * 根据最大行向量计算全部特征向量。
+	 * Computes all eigenvectors from the dominant row vector.
+	 *
+	 * @param mat 缩放后的矩阵 / scaled matrix
+	 * @param vect 主导行向量 / dominant row vector
+	 * @param index1 第一特征向量索引 / first eigenvector index
+	 * @param index2 第二特征向量索引 / second eigenvector index
+	 * @param index3 第三特征向量索引 / third eigenvector index
+	 */
 	private void computeVectors(Matrix3f mat, Vector3f vect, int index1, int index2, int index3) {
 		float invLength;
 		Vector3f vectorU = new Vector3f();
@@ -170,6 +208,16 @@ public class Eigen3f {
 		this.eigenVectors[index3].cross(this.eigenVectors[index1], this.eigenVectors[index2]);
 	}
 
+	/**
+	 * 判断矩阵是否具有正秩，并记录最大行。
+	 * Tests whether the matrix has positive rank and records the dominant row.
+	 *
+	 * input matrix
+	 *
+	 * @param maxMagnitudeStore 最大幅值输出 [0] / max magnitude output [0]
+	 * @param maxRowStore 最大行向量输出 / dominant row vector output
+	 * @param maxRowStore @return 若最大幅值 ≥ 容差则为 true / true if max magnitude ≥ tolerance
+	 */
 	private boolean positiveRank(Matrix3f matrix, float[] maxMagnitudeStore, Vector3f maxRowStore) {
 		maxMagnitudeStore[0] = -1.0f;
 		int iMaxRow = -1;
@@ -186,6 +234,13 @@ public class Eigen3f {
 		return maxMagnitudeStore[0] >= 1.0E-4f;
 	}
 
+	/**
+	 * 计算特征多项式的三个实根（升序）。
+	 * Computes the three real roots of the characteristic polynomial (ascending order).
+	 *
+	 * @param mat 输入矩阵 / input matrix
+	 * @param rootsStore 根存储数组（长度 3） / root storage array (length 3)
+	 */
 	private void computeRoots(Matrix3f mat, double[] rootsStore) {
 		double mbDiv2;
 		double q;
@@ -234,18 +289,44 @@ public class Eigen3f {
 		}
 	}
 
+	/**
+	 * 获取指定索引的特征值。
+	 * Returns the eigenvalue at the given index.
+	 *
+	 * @param i 索引（0~2） / index (0~2)
+	 * eigenvalue
+	 */
 	public float getEigenValue(int i) {
 		return this.eigenValues[i];
 	}
 
+	/**
+	 * 获取指定索引的特征向量。
+	 * Returns the eigenvector at the given index.
+	 *
+	 * @param i 索引（0~2） / index (0~2)
+	 * eigenvector
+	 */
 	public Vector3f getEigenVector(int i) {
 		return this.eigenVectors[i];
 	}
 
+	/**
+	 * 获取全部特征值数组。
+	 * Returns the full eigenvalue array.
+	 *
+	 * @return 特征值数组 / eigenvalue array
+	 */
 	public float[] getEigenValues() {
 		return this.eigenValues;
 	}
 
+	/**
+	 * 获取全部特征向量数组。
+	 * Returns the full eigenvector array.
+	 *
+	 * @return 特征向量数组 / eigenvector array
+	 */
 	public Vector3f[] getEigenVectors() {
 		return this.eigenVectors;
 	}

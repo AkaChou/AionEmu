@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -28,6 +12,10 @@ import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * NPC 交易列表静态数据容器，分别索引普通交易、以物易物与收购列表。
+ * NPC trade-list static-data holder, indexing sell, trade-in and purchase lists by NPC id.
+ */
 @XmlRootElement(name = "npc_trade_list")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TradeListData {
@@ -40,13 +28,17 @@ public class TradeListData {
 	@XmlElement(name = "purchase_list_template")
 	private List<TradeListTemplate> ptlist;
 
-	/** A map containing all trade list templates */
+	/** 普通交易列表映射 / sell trade-list map */
 	private IntObjectHashMap<TradeListTemplate> npctlistData = new IntObjectHashMap<TradeListTemplate>();
 
 	private IntObjectHashMap<TradeListTemplate> npcTradeInlistData = new IntObjectHashMap<TradeListTemplate>();
 
 	private IntObjectHashMap<TradeListTemplate> npcPurchaselistData = new IntObjectHashMap<TradeListTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，将三类交易列表按 NPC ID 索引。
+	 * After JAXB unmarshalling, indexes sell, trade-in and purchase lists by NPC id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TradeListTemplate npc : tlist) {
 			npctlistData.put(npc.getNpcId(), npc);
@@ -61,30 +53,57 @@ public class TradeListData {
 		}
 	}
 
+	/**
+	 * 返回已加载的普通交易列表数量。
+	 * Returns the number of loaded sell trade lists.
+	 *
+	 * list count
+	 */
 	public int size() {
 		return npctlistData.size();
 	}
 
 	/**
-	 * Returns an {@link TradeListTemplate} object with given id.
-	 * 
-	 * @param id id of NPC
-	 * @return TradeListTemplate object containing data about NPC with that id.
+	 * 按 NPC ID 获取普通交易列表模板。
+	 * Returns the sell trade-list template for the given NPC id.
+	 *
+	 * NPC id
+	 *
+	 * @param id @return 交易列表模板，不存在则为 null / trade-list template or null
 	 */
 	public TradeListTemplate getTradeListTemplate(int id) {
 		return npctlistData.get(id);
 	}
 
+	/**
+	 * 按 NPC ID 获取以物易物列表模板。
+	 * Returns the trade-in list template for the given NPC id.
+	 *
+	 * NPC id
+	 *
+	 * @param id @return 以物易物模板，不存在则为 null / trade-in template or null
+	 */
 	public TradeListTemplate getTradeInListTemplate(int id) {
 		return npcTradeInlistData.get(id);
 	}
 
+	/**
+	 * 按 NPC ID 获取收购列表模板。
+	 * Returns the purchase list template for the given NPC id.
+	 *
+	 * NPC id
+	 *
+	 * @param id @return 收购列表模板，不存在则为 null / purchase template or null
+	 */
 	public TradeListTemplate getPurchaseListTemplate(int id) {
 		return npcPurchaselistData.get(id);
 	}
 
 	/**
-	 * @return id of NPC.
+	 * 返回全部普通交易列表映射。
+	 * Returns the full map of sell trade-list templates.
+	 *
+	 * @return 交易列表映射 / trade-list map
 	 */
 	public IntObjectHashMap<TradeListTemplate> getTradeListTemplate() {
 		return npctlistData;

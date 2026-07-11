@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  *    Can only annotate static methods
  * 2. 方法不能有参数
  *    Method must have no parameters
- * 3. 方法必须是public或protected
+ * 3. 方法必须是 public 或 protected
  *    Method must be public or protected
  */
 @Documented

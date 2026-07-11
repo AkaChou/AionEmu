@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.Race;
@@ -23,14 +7,27 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
-* @author ginho1
-*
-*/
+ * 切换管理员自身种族（天族/魔族）的命令（{@code //changerace}）。
+ * Admin command that toggles the admin's race between Elyos and Asmodians ({@code //changerace}).
+ *
+ * @author ginho1
+ */
 public class ChangeRace extends AdminCommand {
+	/**
+	 * 注册命令名为 {@code changerace}。
+	 * Registers the command name {@code changerace}.
+	 */
 	public ChangeRace() {
 		super("changerace");
 	}
 
+	/**
+	 * 在天族与魔族之间切换管理员种族并刷新外观。
+	 * Toggles the admin race between Elyos and Asmodians and refreshes appearance.
+	 *
+	 * admin
+	 * unused
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 

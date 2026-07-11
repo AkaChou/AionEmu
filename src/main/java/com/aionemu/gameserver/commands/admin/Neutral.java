@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,14 +7,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 切换管理员对玩家/NPC 中立关系（不触发敌对）的命令。
+ * Admin command to toggle admin neutrality toward players and/or NPCs.
+ *
  * @author Sarynth, (edited by Pan)
  */
 public class Neutral extends AdminCommand {
 
+	/**
+	 * 以别名 {@code neutral} 构造命令。
+	 * Construct the command with alias {@code neutral}.
+	 */
 	public Neutral() {
 		super("neutral");
 	}
 
+	/**
+	 * 设置对 players、npcs、all 的中立，或 cancel 恢复默认敌对。
+	 * Set neutrality for players, npcs, or all, or cancel back to default enmity.
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params Mode: players|npcs|all|cancel|help。 / Mode: players|npcs|all|cancel|help
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		String help = "Syntax: //neutral < players | npcs | all | cancel >\n"
@@ -87,6 +85,13 @@ public class Neutral extends AdminCommand {
 		admin.updateKnownlist();
 	}
 
+	/**
+	 * 参数错误时显示语法与 help 提示。
+	 * Show syntax and help hint when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		String syntax = "Syntax: //neutral < players | npcs | all | cancel >\n" + "If you're unsure about what you want to do, type //neutral help";

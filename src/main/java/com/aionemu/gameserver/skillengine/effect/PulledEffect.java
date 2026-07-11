@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,10 +13,18 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 拉拽效果：将目标拉向施法者并限制其移动。
+ * Pull effect: drags the target toward the caster and restricts movement.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PulledEffect")
 public class PulledEffect extends EffectTemplate {
 
+	/**
+	 * 将效果应用到目标（加入控制器或立即结算）。
+	 * Applies the effect to the target (controller attach or immediate settlement).
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
@@ -45,6 +37,10 @@ public class PulledEffect extends EffectTemplate {
 				effected.getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));
 	}
 
+	/**
+	 * 计算本效果是否成功命中/生效，并写入效果上下文。
+	 * Calculates whether this effect succeeds and writes into the effect context.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, StatEnum.PULLED_RESISTANCE, null)) {
@@ -58,6 +54,10 @@ public class PulledEffect extends EffectTemplate {
 		effect.setTragetLoc(effector.getX() + x1, effector.getY() + y1, effector.getZ() + 0.25F);
 	}
 
+	/**
+	 * 执行拉拽位移并限制目标移动。
+	 * Performs the pull relocation and restricts target movement.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		final Creature effected = effect.getEffected();
@@ -65,6 +65,10 @@ public class PulledEffect extends EffectTemplate {
 		effect.setAbnormal(AbnormalState.CANNOT_MOVE.getId());
 	}
 
+	/**
+	 * 结束拉拽并恢复可移动状态。
+	 * Ends the pull and restores mobility.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.getEffected().setPulledMulti(1);

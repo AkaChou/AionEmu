@@ -1,31 +1,30 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
+/**
+ * 切换管理员是否接受密语的命令。
+ * Admin command to toggle accepting whispers.
+ */
 public class Whisper extends AdminCommand {
 
+	/**
+	 * 构造 whisper 命令。
+	 * Creates the whisper command.
+	 */
 	public Whisper() {
 		super("whisper");
 	}
 
+	/**
+	 * on 开启接受密语，off 关闭。
+	 * on accepts whispers; off rejects them.
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params on|off。 / on|off
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 
@@ -37,8 +36,15 @@ public class Whisper extends AdminCommand {
 			admin.setWispable();
 			PacketSendUtility.sendMessage(admin, "Accepting Whisper : ON");
 		}
-	}	
+	}
 
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //whisper [on for wispable / off for unwispable]");

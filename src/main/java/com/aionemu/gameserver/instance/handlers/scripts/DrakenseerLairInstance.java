@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -45,19 +29,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: https://www.youtube.com/watch?v=hO-QSwBfeXI
-/****/
+/**
+ * 龙先知巢穴副本事件处理器。
+ * Instance event handler for Drakenseer Lair.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301620000)
 public class DrakenseerLairInstance extends GeneralInstanceHandler
 {
-	private int abyssGateEnhancerKilled;
-	private boolean isStartTimer = false;
+	/** abyss gate enhancer killed / abyss gate enhancer killed */
+		private int abyssGateEnhancerKilled;
+	/** 是否启动计时器 / is start timer */
+		private boolean isStartTimer = false;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	private final List<Future<?>> drakenseerLairTask = new ArrayList<Future<?>>();
+	/** drakenseerlair 任务 / drakenseer lair task */
+		private final List<Future<?>> drakenseerLairTask = new ArrayList<Future<?>>();
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -67,7 +63,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			case 220450: //Akhal The Oracle.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166030005, 5)); //Tempering Solution.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166030005, 5)); //淬炼溶液。 / Tempering Solution.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
                         switch (Rnd.get(1, 4)) {
@@ -97,11 +93,17 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		spawnDrakenseerLairRings();
-		//You have entered Drakenseer's Lair.
+		// 你已进入龙视者之巢。 / You have entered Drakenseer's Lair.
 		sendMsgByRace(1403376, Race.PC_ALL, 5000);
 		Npc npc = instance.getNpc(220450); //Akhal The Oracle.
 		if (npc != null) {
@@ -109,6 +111,14 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家通过飞行环时处理。
+	 * Handle a player passing a flying ring.
+	 *
+	 * 玩家 / player
+	 * @param flyingRing 飞行环标识 / flying-ring id
+	 * result
+	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("DRAKENSEER_LAIR")) {
@@ -116,12 +126,18 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			    isStartTimer = true;
 			    System.currentTimeMillis();
 			    instance.doOnAllPlayers(new Visitor<Player>() {
+			        /**
+			         * 处理 visit。
+			         * Handle visit.
+			         *
+			         * @param player 玩家 / player
+			         */
 			        @Override
 			        public void visit(Player player) {
 						if (player.isOnline()) {
 							startDrakenseerLairTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 600));
-							//Destroy the Shielding Conduits within 10 minutes and defeat Akhal.
+							// 10 分钟内摧毁护盾导管并击败阿卡哈尔。 / Destroy the Shielding Conduits within 10 minutes and defeat Akhal.
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403377));
 						}
 					}
@@ -138,16 +154,30 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
         new Point3D(270.43948, 340.3889, 336.3338), 93), instanceId);
         f1.spawn();
     }
+	/**
+	 * 处理 startDrakenseerLairTimer。
+	 * Handle startDrakenseerLairTimer.
+	 */
 	
 	protected void startDrakenseerLairTimer() {
-		//Enter Drakenseer's Lair and destroy the Shielding Conduits.
+		// 进入龙视者之巢并摧毁护盾导管。 / Enter Drakenseer's Lair and destroy the Shielding Conduits.
 		this.sendMessage(1403375, 1 * 60 * 1000);
-		//You have one minute left to destroy the remaining Shielding Conduits.
+		// 你还剩 1 分钟摧毁剩余护盾导管。 / You have one minute left to destroy the remaining Shielding Conduits.
 		this.sendMessage(1403382, 9 * 60 * 1000);
 		drakenseerLairTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 					    onExitInstance(player);
@@ -158,6 +188,12 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
         }, 600000)); //10 Minutes.
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
@@ -167,18 +203,24 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			case 857976: //Balaur Abyss Gate Enhancer C.
 				abyssGateEnhancerKilled++;
 				if (abyssGateEnhancerKilled == 1) {
-					//Two Shielding Conduits remain.
+					// 还剩两个护盾导管。 / Two Shielding Conduits remain.
 				    sendMsgByRace(1403379, Race.PC_ALL, 0);
 				} else if (abyssGateEnhancerKilled == 2) {
-					//One Shielding Conduit remains.
+					// 还剩一个护盾导管。 / One Shielding Conduit remains.
 					sendMsgByRace(1403380, Race.PC_ALL, 0);
 				} else if (abyssGateEnhancerKilled == 3) {
 					stopDrakenseerLairTimer(player);
-					//With all the Shielding Conduits destroyed, Akhal finally appears.
+					// 全部护盾导管被摧毁后，阿卡哈尔终于出现。 / With all the Shielding Conduits destroyed, Akhal finally appears.
 				    sendMsgByRace(1403381, Race.PC_ALL, 2000);
 					Npc akhalTheOracle = instance.getNpc(220450); //Akhal The Oracle.
 					akhalTheOracle.getEffectController().removeEffect(21791); //Turning Tide.
 					instance.doOnAllPlayers(new Visitor<Player>() {
+						/**
+						 * 处理 visit。
+						 * Handle visit.
+						 *
+						 * @param player 玩家 / player
+						 */
 						@Override
 						public void visit(Player player) {
 							if (player.isOnline()) {
@@ -191,10 +233,16 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			break;
 			case 220450: //Akhal The Oracle.
 			    spawn(806240, 299.1905f, 258.07004f, 319.67477f, (byte) 110); //Drakenseer's Lair Exit.
-				//sendMsg("[SUCCES]: You have finished <Drakenseer's Lair>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Drakenseer's Lair>");
 			break;
 		}
 	}
+	/**
+	 * 处理 stopDrakenseerLairTimer。
+	 * Handle stopDrakenseerLairTimer.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	protected void stopDrakenseerLairTimer(Player player) {
         stopDrakenseerLairTask();
@@ -210,18 +258,42 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -238,6 +310,10 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -245,6 +321,10 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		stopDrakenseerLairTask();
@@ -256,14 +336,26 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 	}
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
 }

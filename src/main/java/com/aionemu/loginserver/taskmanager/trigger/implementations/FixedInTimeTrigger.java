@@ -1,37 +1,28 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.taskmanager.trigger.implementations;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import java.util.Calendar;
+
 /**
+ * 定点时刻触发：按 HH:MM:SS 每日固定时间执行。
+ * Fixed-in-time trigger: run daily at a fixed HH:MM:SS.
  *
  * @author nrg
  */
 @Slf4j
 public class FixedInTimeTrigger extends TaskFromDBTrigger {
 
+    /** 一天的毫秒数 / Milliseconds in one day */
     private final int DAY_IN_MSEC = 24 * 60 * 60 * 1000;
     private int hour, minute, second;
 
+    /**
+     * 校验参数：单一字符串 HH:MM:SS。
+     * Validate params: single HH:MM:SS string.
+     */
     @Override
     public boolean isValidTrigger() {
         if (params.length == 1) {
@@ -42,17 +33,18 @@ public class FixedInTimeTrigger extends TaskFromDBTrigger {
                 second = Integer.parseInt(time[2]);
                 return true;
             } catch (NumberFormatException e) {
-                log.warn("Could not parse the time for a FixedInTimeTrigger from DB", e);
+                log.warn(I18n.get("log.93bccf2b3c83", e));
             } catch (Exception e) {
-                log.warn("A time for FixedInTimeTrigger is missing or invalid", e);
+                log.warn(I18n.get("log.1d3a1baa4ece", e));
             }
         }
-        log.warn("Not exact 1 parameter for FixedInTimeTrigger received, task is not registered");
+        log.warn(I18n.get("log.0029a966209a"));
         return false;
     }
 
     /**
-     * Run a fixed in the time (HH:MM:SS) task
+     * 按 HH:MM:SS 计算延迟并按日周期调度。
+     * Compute delay to HH:MM:SS and schedule at fixed daily rate.
      */
     @Override
     public void initTrigger() {

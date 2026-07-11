@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端显示队伍/联盟标记（Brand）。
+ * Server packet displaying a party/alliance brand marker on the client.
+ *
  * @author Sweetkr
  */
 public class SM_SHOW_BRAND extends AionServerPacket {
@@ -27,6 +14,13 @@ public class SM_SHOW_BRAND extends AionServerPacket {
 	private int brandId;
 	private int targetObjectId;
 
+	/**
+	 * 使用给定参数构造 SM_SHOW_BRAND 包。
+	 * Creates a SM_SHOW_BRAND packet with the given parameters.
+	 *
+	 * brand id
+	 * target object id
+	 */
 	public SM_SHOW_BRAND(int brandId, int targetObjectId) {
 		this.brandId = brandId;
 		this.targetObjectId = targetObjectId;
@@ -36,7 +30,7 @@ public class SM_SHOW_BRAND extends AionServerPacket {
 	protected void writeImpl(AionConnection con) {
 
 		writeH(0x01);
-		writeD(0x01); // unk
+		writeD(0x01); // 未知 / unk
 		writeD(brandId);
 		writeD(targetObjectId);
 	}

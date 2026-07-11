@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -44,10 +28,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 召唤师型 NPC AI：在战斗中按阶段召唤随从。
+ * Summoner-style NPC AI that spawns adds during combat by phase.
+ *
+ * @author Encom
+ */
 @AIName("summoner")
 public class SummonerAI2 extends AggressiveNpcAI2
 {
@@ -55,12 +41,22 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	private List<Percentage> percentage = Collections.emptyList();
 	private int spawnedPercent = 0;
 	
+	/**
+	 * 处理受到攻击事件。
+	 * Handle being attacked.
+	 *
+	 * creature
+	 */
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
 	
+	/**
+	 * 处理消失事件。
+	 * Handle despawn.
+	 */
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
@@ -71,6 +67,10 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		percentage.clear();
 	}
 	
+	/**
+	 * 处理归位完成事件。
+	 * Handle back-home.
+	 */
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
@@ -81,6 +81,10 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		spawnedPercent = 0;
 	}
 	
+	/**
+	 * 处理生成完成事件。
+	 * Handle post-spawn.
+	 */
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -119,11 +123,15 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle death.
+	 */
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		switch (getNpcId()) {
-		    //Tarmat & Prime Tarmat.
+		    // 塔马特与主塔马特。 / Tarmat & Prime Tarmat.
 			case 234610:
 			    addGpPlayer();
 				announceTarmatDie();
@@ -155,7 +163,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Devil Unit's Tarmat Beta has been destroyed.
+				// 恶魔部队的塔马特贝塔已被摧毁。 / The Devil Unit's Tarmat Beta has been destroyed.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_02);
 			}
 		});
@@ -235,12 +243,30 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		return true;
 	}
 	
+	/**
+	 * 处理生成前事件。
+	 * Handle before-spawn.
+	 *
+	 * @param percent 血量百分比 / HP percent
+	 */
 	protected void handleBeforeSpawn(Percentage percent) {
 	}
 	
+	/**
+	 * 处理召唤物生成完成。
+	 * Handle spawn-finished for summons.
+	 *
+	 * @param summonGroup 召唤组配置 / summon group config
+	 */
 	protected void handleSpawnFinished(SummonGroup summonGroup) {
 	}
 	
+	/**
+	 * 按血量百分比分批生成召唤物。
+	 * Spawn individual summons by HP percent.
+	 *
+	 * @param percent 血量百分比 / HP percent
+	 */
 	protected void handleIndividualSpawnedSummons(Percentage percent) {
 	}
 }

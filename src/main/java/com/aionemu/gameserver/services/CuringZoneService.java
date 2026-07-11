@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,22 +21,35 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 治愈区域服务，生成治愈物并周期性对范围内玩家施加治愈效果。
+ * Curing-zone service that spawns curing objects and periodically applies the heal effect to nearby players.
+ */
 @Slf4j
 public class CuringZoneService {
 
 	private static volatile ObjectProvider<CuringZoneService> instanceProvider;
+	/** 已生成的治愈物列表。 / Spawned curing objects. */
 	private List<CuringObject> curingObjects = new ArrayList<CuringObject>();
 
+	/**
+	 * 加载治愈模板、生成治愈物并启动周期任务。
+	 * Loads curing templates, spawns objects, and starts the periodic task.
+	 */
 	public CuringZoneService() {
 		for (CuringTemplate t : DataManager.CURING_OBJECTS_DATA.getCuringObject()) {
 			CuringObject obj = new CuringObject(t, 0);
 			obj.spawn();
 			curingObjects.add(obj);
 		}
-		log.info("spawned Curing Zones");
+		log.info(I18n.get("log.d429a803f8d3"));
 		startTask();
 	}
 
+	/**
+	 * 启动每秒扫描任务，对范围内未带效果的玩家施放治愈技能。
+	 * Starts the per-second scan that casts the curing skill on in-range players without the effect.
+	 */
 	private void startTask() {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
@@ -68,6 +67,12 @@ public class CuringZoneService {
 		}, 1000, 1000);
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final CuringZoneService getInstance() {
 		ObjectProvider<CuringZoneService> provider = instanceProvider;
 		if (provider == null) {
@@ -76,6 +81,12 @@ public class CuringZoneService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CuringZoneService> instanceProvider) {
 		CuringZoneService.instanceProvider = instanceProvider;
 	}

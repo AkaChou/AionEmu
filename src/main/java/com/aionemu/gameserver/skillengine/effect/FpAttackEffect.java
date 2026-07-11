@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,26 +8,37 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 飞行点持续削减效果：周期扣除目标 FP。
+ * FP drain-over-time effect: periodically reduces the target's flight points.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FpAttackEffect")
 public class FpAttackEffect extends AbstractOverTimeEffect {
 
+	/**
+	 * 计算 FP 持续削减是否生效。
+	 * Calculates whether FP DoT applies.
+	 */
 	@Override
 	public void calculate(Effect effect) {
-		// Only players have FP
+		// 仅玩家有飞行时间 / Only players have FP
 		if (effect.getEffected() instanceof Player) {
 			super.calculate(effect, null, null);
 		}
 	}
 
+	/**
+	 * 周期扣除目标飞行点。
+	 * Periodically drains the target's flight points.
+	 */
 	@Override
 	public void onPeriodicAction(Effect effect) {
 		Player effected = (Player) effect.getEffected();
 		int maxFP = effected.getLifeStats().getMaxFp();
 		int newValue = value;
-		// Support for values in percentage
+		// 支持百分比数值 / Support for values in percentage
 		if (percent) {
 			newValue = (int) ((maxFP * value) / 100);
 		}

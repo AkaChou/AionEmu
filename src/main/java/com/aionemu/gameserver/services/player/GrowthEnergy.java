@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -32,18 +18,28 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
- * Created by wanke on 26/02/2017.
+ * 成长能量服务，管理成长能量计时与发放。
+ * Growth energy service managing growth-energy timers and grants.
  */
+
 @Slf4j
 
 public class GrowthEnergy {
 	private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
 	private boolean dailyGenerated = true;
 
+	/**
+	 * 初始化。
+	 * Initializes.
+	 */
 	public void init() {
-		log.info("<Aura Of Growth Reset>");
+		log.info(I18n.get("log.bfa6a6e66239"));
 		String daily = "0 0 9 1/1 * ? *";
 		GameCronServices.cronService().schedule(new Runnable() {
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				dailyGenerated = false;
 				updateGrowthEnergy();
@@ -54,6 +50,12 @@ public class GrowthEnergy {
 	private void updateGrowthEnergy() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * @param player 玩家 / player
+			 */
 			public void visit(final Player player) {
 				player.getCommonData().setAuraOfGrowth(0);
 				PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
@@ -62,12 +64,24 @@ public class GrowthEnergy {
 		});
 	}
 
+	/**
+	 * 玩家登录时同步状态。
+	 * Syncs state when a player logs in.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onLogin(Player player) {
 		if (player.getCommonData().getAuraOfGrowth() != 0) {
 			PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 		}
 	}
 
+	/**
+	 * 增加成长能量。
+	 * Adds growth energy.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void addGrowthEnergy(Player player) {
 		PlayerCommonData pcd = player.getCommonData();
 		if (pcd.isReadyForAuraOfGrowth()) {
@@ -78,6 +92,12 @@ public class GrowthEnergy {
 		}
 	}
 
+	/**
+	 * 发送提示消息。
+	 * Sends a notice message.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void sendMessage(Player player) {
 		long points = player.getCommonData().getAuraOfGrowthPoints();
 		if (player.getCommonData().getAuraOfGrowth() == points) {
@@ -116,6 +136,11 @@ public class GrowthEnergy {
 		}
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static GrowthEnergy getInstance() {
 		ObjectProvider<GrowthEnergy> provider = instanceProvider;
 		if (provider != null) {
@@ -124,6 +149,12 @@ public class GrowthEnergy {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<GrowthEnergy> provider) {
 		instanceProvider = provider;
 	}

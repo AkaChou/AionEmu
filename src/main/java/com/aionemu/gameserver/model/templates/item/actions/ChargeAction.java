@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import java.util.Collection;
@@ -28,6 +12,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.item.ItemChargeService;
 
 /**
+ * Charge 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,6 +24,9 @@ public class ChargeAction extends AbstractItemAction {
 	@XmlAttribute
 	protected int capacity;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		Collection<Item> conditioningItems = ItemChargeService.filterItemsToCondition(player, null,
@@ -44,6 +34,7 @@ public class ChargeAction extends AbstractItemAction {
 		return conditioningItems.size() > 0;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, Item parentItem, Item targetItem) {
 		if (!player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1)) {

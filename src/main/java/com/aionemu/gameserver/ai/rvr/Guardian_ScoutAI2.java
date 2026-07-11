@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Guardian Scout（@AIName "guardian_scout"），继承 AggressiveNpcAI2。
+ * RvR-related NPC AI: Guardian Scout (@AIName "guardian_scout"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("guardian_scout")
 public class Guardian_ScoutAI2 extends AggressiveNpcAI2
 {
@@ -45,14 +31,14 @@ public class Guardian_ScoutAI2 extends AggressiveNpcAI2
 				startLifeTask();
 			break;
         }
-		//Victory is a certainty for us Elyos, yet you continue your futile struggles.
+		// 天族必胜，你们的挣扎终是徒劳。 / Victory is a certainty for us Elyos, yet you continue your futile struggles.
 		sendMsg(1501537, getObjectId(), false, 5000);
-		//You're no fools. Haven't you yet realized that this isn't a battle you can win ?
+		// 你们不傻。难道还没意识到这不是能赢的战斗？ / You're no fools. Haven't you yet realized that this isn't a battle you can win ?
 		sendMsg(1501538, getObjectId(), false, 8000);
-		//Are there really this many Asmodians ignorant of their fate… ?
-		//Then I'll teach you here and now. That today is your last day alive!
+		// 真有这么多不知死活的魔族吗……？ / Are there really this many Asmodians ignorant of their fate… ?
+		// 那我就在此立刻教训你。 / Then I'll teach you here and now. That today is your last day alive!
 		sendMsg(1501539, getObjectId(), false, 11000);
-		//Lord Ariel! Please show your power to that Asmodian!
+		// 艾瑞尔大人！请向那魔族展示您的力量！ / Lord Ariel! Please show your power to that Asmodian!
 		sendMsg(1501541, getObjectId(), false, 14000);
 	}
 	
@@ -62,7 +48,7 @@ public class Guardian_ScoutAI2 extends AggressiveNpcAI2
 			public void run() {
 				AI2Actions.deleteOwner(Guardian_ScoutAI2.this);
 			}
-		}, 300000); //5 Minutes.
+		}, 300000); //5 分钟。 / 5 Minutes.
 	}
 	
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {

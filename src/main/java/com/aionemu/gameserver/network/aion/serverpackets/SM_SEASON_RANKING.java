@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.List;
@@ -24,15 +8,26 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Created by Wnkrz on 24/07/2017.
+ * 向客户端同步赛季排行榜数据。
+ * Server packet synchronizing season ranking data to the client.
+ *
+ * @author Wnkrz
  */
-
 public class SM_SEASON_RANKING extends AionServerPacket {
 	private int tableId;
 	private int server_switch;
 	private List<SeasonRankingResult> data;
 	private int lastUpdate;
 
+	/**
+	 * 使用给定参数构造 SM_SEASON_RANKING 包。
+	 * Creates a SM_SEASON_RANKING packet with the given parameters.
+	 *
+	 * table id
+	 * switch flag
+	 * @param data 排行数据 / ranking data
+	 * @param lastUpdate 上次更新时间 / last update time
+	 */
 	public SM_SEASON_RANKING(int tableId, int s_switch, List<SeasonRankingResult> data, int lastUpdate) {
 		this.tableId = tableId;
 		this.data = data;

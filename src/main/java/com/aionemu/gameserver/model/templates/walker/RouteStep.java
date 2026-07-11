@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.walker;
 
 import jakarta.xml.bind.Marshaller;
@@ -24,6 +8,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 /**
+ * RouteStep 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author KKnD, Rolandas
  */
 @XmlRootElement(name = "routestep")
@@ -70,38 +57,47 @@ public class RouteStep {
 		time = restTime;
 	}
 
+	/** 返回 x / Returns the x */
 	public float getX() {
 		return locX;
 	}
 
+	/** 返回 y / Returns the y */
 	public float getY() {
 		return locY;
 	}
 
+	/** 返回 z / Returns the z */
 	public float getZ() {
 		return locZ;
 	}
 
+	/** 设置 z / Sets the z */
 	public void setZ(float z) {
 		locZ = z;
 	}
 
+	/** 返回 rest time / Returns the rest time */
 	public int getRestTime() {
 		return time;
 	}
 
+	/** 返回 next step / Returns the next step */
 	public RouteStep getNextStep() {
 		return nextStep;
 	}
 
+	/** 设置 next step / Sets the next step */
 	public void setNextStep(RouteStep nextStep) {
 		this.nextStep = nextStep;
 	}
 
+	/** 返回 route step / Returns the route step */
 	public int getRouteStep() {
 		return routeStep;
 	}
 
+	/** 设置 route step / Sets the route step */
 	public void setRouteStep(int routeStep) {
 		this.routeStep = routeStep;
 	}

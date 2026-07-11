@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -48,6 +34,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 伊迪安深渊服务：按计划开启各地点，管理刷怪与活动生命周期。
+ * Idian Depths service: schedule-opens locations and manages spawn/event lifecycle.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -55,16 +44,19 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class IdianDepthsService {
 	private static volatile ObjectProvider<IdianDepthsService> instanceProvider;
 	private Map<Integer, IdianDepthsLocation> idianDepths;
-	private static final int duration = CustomConfig.IDIAN_DEPTHS_DURATION;
 	private final ConcurrentMap<Integer, IdianDepths<?>> activeIdianDepths = new ConcurrentHashMap<Integer, IdianDepths<?>>();
 
+	/**
+	 * 加载伊迪安深渊地点、刷关闭态 NPC，并注册开启 cron。
+	 * Loads Idian Depths locations, spawns closed-state NPCs, and registers open cron.
+	 */
 	public void initIdianDepthsLocations() {
 		if (CustomConfig.IDIAN_DEPTHS_ENABLED) {
 			idianDepths = DataManager.IDIAN_DEPTHS_DATA.getIdianDepthsLocations();
 			for (IdianDepthsLocation loc : getIdianDepthsLocations().values()) {
 				spawn(loc, IdianDepthsStateType.CLOSED);
 			}
-			log.info("[IdianDepthsService] Loaded " + idianDepths.size() + " locations.");
+			log.info(I18n.get("log.35480b35b73c", idianDepths.size()));
 
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
@@ -79,19 +71,29 @@ public class IdianDepthsService {
 						}
 					});
 				}
-			}, CustomConfig.IDIAN_DEPTHS_SCHEDULE);
+			}, () -> CustomConfig.IDIAN_DEPTHS_SCHEDULE);
 		} else {
-			log.info("[IdianDepthsService] Idian Depths is disabled in config...");
+			log.info(I18n.get("log.b09d3ab19771"));
 			idianDepths = Collections.emptyMap();
 		}
 	}
 
+	/**
+	 * 记录伊迪安深渊功能启用日志。
+	 * Logs that Idian Depths is enabled (when configured).
+	 */
 	public void initIdianDepths() {
 		if (CustomConfig.IDIAN_DEPTHS_ENABLED) {
-			log.info("[IdianDepthsService] is initialized...");
+			log.info(I18n.get("log.5227a2ba2e5f"));
 		}
 	}
 
+	/**
+	 * 启动指定 ID 的伊迪安深渊，并在持续时长后自动关闭。
+	 * Starts Idian Depths for the given id and auto-stops after configured duration.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public void startIdianDepths(final int id) {
 		final IdianDepths<?> idian = new Idian(idianDepths.get(id));
 		if (activeIdianDepths.putIfAbsent(id, idian) != null) {
@@ -103,9 +105,15 @@ public class IdianDepthsService {
 			public void run() {
 				stopIdianDepths(id);
 			}
-		}, duration * 3600 * 1000);
+		}, CustomConfig.IDIAN_DEPTHS_DURATION * 3600 * 1000);
 	}
 
+	/**
+	 * 停止指定 ID 的伊迪安深渊。
+	 * Stops Idian Depths for the given id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public void stopIdianDepths(int id) {
 		IdianDepths<?> idian = activeIdianDepths.remove(id);
 		if (idian == null || idian.isClosed()) {
@@ -114,6 +122,13 @@ public class IdianDepthsService {
 		idian.stop();
 	}
 
+	/**
+	 * 按状态类型在地点刷出对应模板 NPC。
+	 * Spawns NPCs for the location matching the given state type.
+	 *
+	 * location
+	 * state type
+	 */
 	public void spawn(IdianDepthsLocation loc, IdianDepthsStateType istate) {
 		if (istate.equals(IdianDepthsStateType.OPEN)) {
 		}
@@ -128,6 +143,12 @@ public class IdianDepthsService {
 		}
 	}
 
+	/**
+	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
+	 * Clears spawned objects at the location (deletes immediately when no aggro).
+	 *
+	 * location
+	 */
 	public void despawn(IdianDepthsLocation loc) {
 		if (loc.getSpawned() == null) {
 			return;
@@ -143,26 +164,64 @@ public class IdianDepthsService {
 		loc.getSpawned().clear();
 	}
 
+	/**
+	 * 指定地点是否正在进行中。
+	 * Whether Idian Depths is in progress for the given id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 若 active 则为 true / true if active
+	 */
 	public boolean isIdianDepthsInProgress(int id) {
 		return activeIdianDepths.containsKey(id);
 	}
 
+	/**
+	 * 获取当前激活的伊迪安深渊映射。
+	 * Returns the map of active Idian Depths instances.
+	 *
+	 * active instances
+	 */
 	public Map<Integer, IdianDepths<?>> getActiveIdianDepths() {
 		return activeIdianDepths;
 	}
 
+	/**
+	 * 返回配置的持续时长（小时）。
+	 * Returns configured duration in hours.
+	 *
+	 * @return 持续小时数 / duration hours
+	 */
 	public int getDuration() {
-		return duration;
+		return CustomConfig.IDIAN_DEPTHS_DURATION;
 	}
 
+	/**
+	 * 按 ID 获取地点。
+	 * Returns the location by id.
+	 *
+	 * @param id 地点 ID / location id
+	 * location
+	 */
 	public IdianDepthsLocation getIdianDepthsLocation(int id) {
 		return idianDepths.get(id);
 	}
 
+	/**
+	 * 获取全部地点。
+	 * Returns all locations.
+	 *
+	 * location map
+	 */
 	public Map<Integer, IdianDepthsLocation> getIdianDepthsLocations() {
 		return idianDepths;
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
+	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
+	 *
+	 * service instance
+	 */
 	public static IdianDepthsService getInstance() {
 		ObjectProvider<IdianDepthsService> provider = instanceProvider;
 		if (provider == null) {
@@ -171,6 +230,12 @@ public class IdianDepthsService {
 		return provider.getIfAvailable(() -> IdianDepthsServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<IdianDepthsService> instanceProvider) {
 		IdianDepthsService.instanceProvider = instanceProvider;
 	}

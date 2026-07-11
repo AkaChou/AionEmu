@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.classAi;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -23,10 +7,12 @@ import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 职业技能召唤物/陷阱 AI：Sleep Trap（@AIName "sleep_trap"），继承 AggressiveNpcAI2。
+ * Class-skill summon/trap AI: Sleep Trap (@AIName "sleep_trap"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("sleep_trap")
 public class Sleep_TrapAI2 extends AggressiveNpcAI2
 {

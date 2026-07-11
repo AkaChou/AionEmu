@@ -2,13 +2,29 @@ package com.aionemu.gameserver.dao.mysql8;
 
 import com.aionemu.commons.database.dao.DAOClassProvider;
 
+/**
+ * 游戏服 MySQL 8 DAO 类提供器。
+ * Game-server MySQL 8 DAO class provider.
+ */
 public class GameMySQL8DAOClassProvider implements DAOClassProvider {
 
+	/**
+	 * 返回 DAO 上下文名称。
+	 * Returns the DAO context name.
+	 *
+	 * context name
+	 */
 	@Override
 	public String contextName() {
 		return "game";
 	}
 
+	/**
+	 * 返回本提供器注册的全部 MySQL 8 DAO 类。
+	 * Returns all MySQL 8 DAO classes registered by this provider.
+	 *
+	 * array of DAO classes
+	 */
 	@Override
 	public Class<?>[] daoClasses() {
 		return new Class<?>[] {
@@ -82,7 +98,6 @@ public class GameMySQL8DAOClassProvider implements DAOClassProvider {
 			MySQL8TaskFromDBDAO.class,
 			MySQL8TownDAO.class,
 			MySQL8VeteranRewardsDAO.class,
-			MySQL8WeddingDAO.class,
 		};
 	}
 }

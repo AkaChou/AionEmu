@@ -1,54 +1,50 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.agentservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.agent.AgentLocation;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 代理战启动定时任务。
+ * Start runnable for Agent Fight events.
+ *
+ * <p>提前广播倒计时消息，延时启动战斗并向全服玩家通知代理出现。
+ * Broadcasts countdown messages, starts the fight on delay, and notifies all players of the agent spawn.</p>
+ *
  * @author Rinzler (Encom)
  */
-
 public class AgentStartRunnable implements Runnable {
+
 	private final int id;
 
+	/**
+	 * 绑定目标地点 ID。
+	 * Binds the target location id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public AgentStartRunnable(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * 执行倒计时与启动流程。
+	 * Runs the countdown and start sequence.
+	 */
 	@Override
 	public void run() {
-		// The Agent battle will start in 10 minutes.
+		// 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
 		GameLocationBootstrapServices.agentService().agentBattleMsg1(id);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				// The Agent battle will start in 5 minutes.
+				// 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
 				GameLocationBootstrapServices.agentService().agentBattleMsg2(id);
 			}
 		}, 300000);
@@ -58,18 +54,18 @@ public class AgentStartRunnable implements Runnable {
 				Map<Integer, AgentLocation> locations = GameLocationBootstrapServices.agentService().getAgentLocations();
 				for (final AgentLocation loc : locations.values()) {
 					if (loc.getId() == id) {
-						// Governor Sunayaka 5.8
+						// 总督苏纳亚卡 5.8 / Governor Sunayaka 5.8
 						GameLocationBootstrapServices.agentService().governorSunayakaMsg(id);
-						// Berserker Sunayaka 5.8
+						// 狂战士苏纳亚卡 5.8 / Berserker Sunayaka 5.8
 						GameLocationBootstrapServices.agentService().berserkerSunayakaMsg(id);
-						// Agent Fight 4.7
+						// 代理人之战 4.7 / Agent Fight 4.7
 						GameLocationBootstrapServices.agentService().startAgentFight(loc.getId());
 					}
 				}
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
-						// An Agent has spawned.
+						// 一名代理人已生成。 / An Agent has spawned.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
 					}
 				});

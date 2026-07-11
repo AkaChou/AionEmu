@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.instancereward;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +6,11 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * 副本奖励模型。
+ * Instance Reward model.
+ */
 @Slf4j
 
 public class InstanceReward<T extends InstancePlayerReward> {
@@ -34,10 +23,12 @@ public class InstanceReward<T extends InstancePlayerReward> {
 		this.instanceId = instanceId;
 	}
 
+	/** 获取副本奖励。 / Returns the instance rewards. */
 	public List<T> getInstanceRewards() {
 		return instanceRewards;
 	}
 
+	/** 包含玩家 / Contain Player */
 	public boolean containPlayer(Integer object) {
 		for (InstancePlayerReward instanceReward : instanceRewards) {
 			if (instanceReward.getOwner().equals(object)) {
@@ -47,12 +38,14 @@ public class InstanceReward<T extends InstancePlayerReward> {
 		return false;
 	}
 
+	/** 移除玩家奖励。 / Removes player reward. */
 	public void removePlayerReward(T reward) {
 		if (instanceRewards.contains(reward)) {
 			instanceRewards.remove(reward);
 		}
 	}
 
+	/** 获取玩家奖励。 / Returns the player reward. */
 	public InstancePlayerReward getPlayerReward(Integer object) {
 		for (InstancePlayerReward instanceReward : instanceRewards) {
 			if (instanceReward.getOwner().equals(object)) {
@@ -62,42 +55,58 @@ public class InstanceReward<T extends InstancePlayerReward> {
 		return null;
 	}
 
+	/** 添加玩家奖励。 / Adds player reward. */
 	public void addPlayerReward(T reward) {
 		instanceRewards.add(reward);
 	}
 
+	/** 设置 instance score type / Sets the instance score type */
 	public void setInstanceScoreType(InstanceScoreType instanceScoreType) {
 		this.instanceScoreType = instanceScoreType;
 	}
 
+	/** 返回 instance score type / Returns the instance score type */
 	public InstanceScoreType getInstanceScoreType() {
 		return instanceScoreType;
 	}
 
+	/** 返回映射 ID / Returns the map id */
 	public Integer getMapId() {
 		return mapId;
 	}
 
+	/** 返回副本 ID / Returns the instance id */
 	public int getInstanceId() {
 		return instanceId;
 	}
 
+	/**
+	 * @return Whether rewarded / Whether rewarded
+	 */
 	public boolean isRewarded() {
 		return instanceScoreType.isEndProgress();
 	}
 
+	/**
+	 * @return Whether preparing / Whether preparing
+	 */
 	public boolean isPreparing() {
 		return instanceScoreType.isPreparing();
 	}
 
+	/**
+	 * @return Whether start progress / Whether start progress
+	 */
 	public boolean isStartProgress() {
 		return instanceScoreType.isStartProgress();
 	}
 
+	/** 设置 instance start time / Sets the instance start time */
 	public void setInstanceStartTime() {
 		System.currentTimeMillis();
 	}
 
+	/** 清空。 / Clear. */
 	public void clear() {
 		instanceRewards.clear();
 	}
@@ -106,6 +115,9 @@ public class InstanceReward<T extends InstancePlayerReward> {
 		return this;
 	}
 
+	/**
+	 * @param log 发送 log / 发送 log。 / Send log / Send log
+	 */
 	public void sendLog(String log) {
 		this.log.info(log);
 	}

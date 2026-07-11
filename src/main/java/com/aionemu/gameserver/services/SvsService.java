@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -53,6 +39,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 战场对决（SvS）服务，管理潘斯特拉等战场开关与刷怪。
+ * SvS battlefield service managing Panesterra battlefield open/close and spawns.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -60,37 +49,66 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class SvsService {
 	private static volatile ObjectProvider<SvsService> instanceProvider;
 	private SvsSchedule svsSchedule;
+	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, SvsLocation> svs;
-	private static final int duration = CustomConfig.SVS_DURATION;
-	// Transidium Annex 4.7
+	// 特兰西迪姆附楼 4.7 / Transidium Annex 4.7
 	private Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
 	private final ConcurrentMap<Integer, Panesterra<?>> activeSvs = new ConcurrentHashMap<Integer, Panesterra<?>>();
 
+	/**
+	 * 初始化 SvS 地点并按和平状态刷怪。
+	 * Initializes SvS locations and spawns them in the peace state.
+	 */
 	public void initSvsLocations() {
 		if (CustomConfig.SVS_ENABLED) {
 			svs = DataManager.SVS_DATA.getSvsLocations();
 			for (SvsLocation loc : getSvsLocations().values()) {
 				spawn(loc, SvsStateType.PEACE);
 			}
-			log.info("[PanesterraService] Loaded " + svs.size() + " panesterra locations.");
+			log.info(I18n.get("log.52d31014b3d7", svs.size()));
 		} else {
-			log.info("[PanesterraService] Panesterra is disabled in config...");
+			log.info(I18n.get("log.4719a93aa4c6"));
 			svs = Collections.emptyMap();
 		}
 	}
 
+	/**
+	 * 初始化 SvS 并加载定时计划。
+	 * Initializes SvS and loads the schedule.
+	 */
 	public void initSvs() {
 		if (CustomConfig.SVS_ENABLED) {
-			log.info("[PanesterraService] is initialized...");
-			svsSchedule = SvsSchedule.load();
+			log.info(I18n.get("log.9f1c04e917fb"));
+		}
+		reloadSchedule();
+	}
+
+	/**
+	 * 重载 SvS Cron 计划（先取消旧任务）。
+	 * Reloads the SvS cron schedule (cancels previous tasks first).
+	 */
+	public synchronized void reloadSchedule() {
+		SvsSchedule newSchedule = CustomConfig.SVS_ENABLED ? SvsSchedule.load() : null;
+		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.clear();
+		svsSchedule = newSchedule;
+		if (svsSchedule != null) {
 			for (Svs svs : svsSchedule.getSvssList()) {
 				for (String svsTime : svs.getSvsTimes()) {
-					GameCronServices.cronService().schedule(new SvsStartRunnable(svs.getId()), svsTime);
+					Runnable task = new SvsStartRunnable(svs.getId());
+					scheduledTasks.add(task);
+					GameCronServices.cronService().schedule(task, svsTime);
 				}
 			}
 		}
 	}
 
+	/**
+	 * 启动指定 ID 的 SvS 战场。
+	 * Starts the SvS battlefield for the given id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public void startSvs(final int id) {
 		Panesterra<?> gate = new Gate(svs.get(id));
 		if (activeSvs.putIfAbsent(id, gate) != null) {
@@ -103,9 +121,15 @@ public class SvsService {
 			public void run() {
 				stopSvs(id);
 			}
-		}, duration * 3600 * 1000);
+		}, CustomConfig.SVS_DURATION * 3600 * 1000);
 	}
 
+	/**
+	 * 停止指定 ID 的 SvS 战场。
+	 * Stops the SvS battlefield for the given id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public void stopSvs(int id) {
 		Panesterra<?> gate = activeSvs.remove(id);
 		if (gate == null || gate.isFinished()) {
@@ -115,6 +139,13 @@ public class SvsService {
 		gate.stop();
 	}
 
+	/**
+	 * 按状态在地点刷出对应 NPC。
+	 * Spawns NPCs for the location according to the given state.
+	 *
+	 * location
+	 * state type
+	 */
 	public void spawn(SvsLocation loc, SvsStateType pstate) {
 		if (pstate.equals(SvsStateType.SVS)) {
 		}
@@ -129,8 +160,12 @@ public class SvsService {
 		}
 	}
 
-	/**
-	 * The Advance Corridor Countdown.
+		/**
+	 * 广播前进走廊倒计时系统消息。
+	 * Broadcasts Advance Corridor countdown system messages.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean advanceCorridorCountdownMsg(int id) {
 		switch (id) {
@@ -138,19 +173,19 @@ public class SvsService {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// An Advance Corridor to a Rift Portal battle has appeared.
+					// 通往裂隙传送门战的进阶走廊已出现。 / An Advance Corridor to a Rift Portal battle has appeared.
 					PacketSendUtility.playerSendPacketTime(player,
 							SM_SYSTEM_MESSAGE.STR_MSG_SVS_INVADE_DIRECT_PORTAL_OPEN, 0);
-					// The Advance Corridor leading to the Panesterra Fortress Battle will be closed
-					// in 10 minutes.
+					// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
+					// 10 分钟后。 / in 10 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End01, 3000000);
-					// The Advance Corridor leading to the Panesterra Fortress Battle will be closed
-					// in 5 minutes.
+					// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
+					// 5 分钟后。 / in 5 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End02, 3300000);
-					// The Advance Corridor leading to the Panesterra Fortress Battle will be closed
-					// in 1 minute.
+					// 通往帕内斯特拉要塞战的进阶走廊即将关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle will be closed
+					// 1 分钟后。 / in 1 minute.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End03, 3540000);
-					// The Advance Corridor leading to the Panesterra Fortress Battle has closed.
+					// 通往帕内斯特拉要塞战的进阶走廊已关闭。 / The Advance Corridor leading to the Panesterra Fortress Battle has closed.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End05, 3600000);
 				}
 			});
@@ -160,8 +195,12 @@ public class SvsService {
 		}
 	}
 
-	/**
-	 * The Advance Corridor For Distinguished Service.
+		/**
+	 * 广播殊勋攻城传送门相关系统消息。
+	 * Broadcasts Distinguished Service siege portal system messages.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean distinguishedServiceMsg(int id) {
 		switch (id) {
@@ -169,18 +208,18 @@ public class SvsService {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Distinguished Service Siege Portal leading to Panesterra opened.
+					// 通往帕内斯特拉的功勋攻城传送门已开启。 / The Distinguished Service Siege Portal leading to Panesterra opened.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End11, 0);
-					// The Distinguished Service Siege Portal to the Panesterra Siege will close in
-					// 5 minutes.
+					// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
+					// 5 分钟。 / 5 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End06, 10000);
-					// The Distinguished Service Siege Portal to the Panesterra Siege will close in
-					// 3 minutes.
+					// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
+					// 3 分钟。 / 3 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End07, 120000);
-					// The Distinguished Service Siege Portal to the Panesterra Siege will close in
-					// 1 minute.
+					// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
+					// 1 分钟。 / 1 minute.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End08, 240000);
-					// The Distinguished Service Siege Portal to the Panesterra Siege has closed.
+					// 通往帕内斯特拉攻城的功勋攻城传送门已关闭。 / The Distinguished Service Siege Portal to the Panesterra Siege has closed.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End10, 300000);
 				}
 			});
@@ -190,8 +229,12 @@ public class SvsService {
 		}
 	}
 
-	/**
-	 * Advance Corridor [Transidium Annex]
+		/**
+	 * 广播 Transidium Annex 入口相关系统消息。
+	 * Broadcasts Transidium Annex entrance system messages.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 是否已广播 / whether message was sent
 	 */
 	public boolean transidiumAnnexMsg(int id) {
 		switch (id) {
@@ -199,19 +242,19 @@ public class SvsService {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// Loading the Advance Corridor Shield... Please wait.
+					// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
-					// The entrance to the Transidium Annex will open in 8 minutes.
+					// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_02, 10000);
-					// The entrance to the Transidium Annex will open in 6 minutes.
+					// 特兰西迪姆附楼入口将在 6 分钟后开启。 / The entrance to the Transidium Annex will open in 6 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_03, 120000);
-					// The entrance to the Transidium Annex will open in 4 minutes.
+					// 特兰西迪姆附楼入口将在 4 分钟后开启。 / The entrance to the Transidium Annex will open in 4 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_04, 240000);
-					// The entrance to the Transidium Annex will open in 2 minutes.
+					// 特兰西迪姆附楼入口将在 2 分钟后开启。 / The entrance to the Transidium Annex will open in 2 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_05, 360000);
-					// The entrance to the Transidium Annex will open in 1 minute.
+					// 特兰西迪姆附楼入口将在 1 分钟后开启。 / The entrance to the Transidium Annex will open in 1 minute.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_06, 420000);
-					// The entrance to the Transidium Annex has opened.
+					// 特兰西迪姆附楼入口已开启。 / The entrance to the Transidium Annex has opened.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_08, 480000);
 				}
 			});
@@ -221,8 +264,12 @@ public class SvsService {
 		}
 	}
 
-	/**
-	 * Advance Corridor [Transidium Annex]
+		/**
+	 * 刷出前进走廊（Transidium Annex）相关 NPC。
+	 * Spawns Advance Corridor (Transidium Annex) related NPCs.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean advanceCorridorSP(int id) {
 		switch (id) {
@@ -245,6 +292,12 @@ public class SvsService {
 		}
 	}
 
+	/**
+	 * 清除地点已刷出的 NPC。
+	 * Despawns NPCs previously spawned at the location.
+	 *
+	 * location
+	 */
 	public void despawn(SvsLocation loc) {
 		if (loc.getSpawned() == null) {
 			return;
@@ -260,26 +313,64 @@ public class SvsService {
 		loc.getSpawned().clear();
 	}
 
+	/**
+	 * 判断指定 SvS 是否进行中。
+	 * Checks whether the SvS with the given id is in progress.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 是否进行中 / whether in progress
+	 */
 	public boolean isSvsInProgress(int id) {
 		return activeSvs.containsKey(id);
 	}
 
+	/**
+	 * 获取进行中的 SvS 实例映射。
+	 * Returns the map of active SvS instances.
+	 *
+	 * @return 活动实例映射 / active instances map
+	 */
 	public Map<Integer, Panesterra<?>> getActiveSvs() {
 		return activeSvs;
 	}
 
+	/**
+	 * 获取活动持续时长（小时）。
+	 * Returns the event duration in hours.
+	 *
+	 * @return 持续小时数 / duration hours
+	 */
 	public int getDuration() {
-		return duration;
+		return CustomConfig.SVS_DURATION;
 	}
 
+	/**
+	 * 按 ID 获取 SvS 地点。
+	 * Returns the SvS location by id.
+	 *
+	 * @param id 地点 ID / location id
+	 * location
+	 */
 	public SvsLocation getSvsLocation(int id) {
 		return svs.get(id);
 	}
 
+	/**
+	 * 获取全部 SvS 地点。
+	 * Returns all SvS locations.
+	 *
+	 * locations map
+	 */
 	public Map<Integer, SvsLocation> getSvsLocations() {
 		return svs;
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring Provider）。
+	 * Returns the service singleton (prefers Spring provider).
+	 *
+	 * service instance
+	 */
 	public static SvsService getInstance() {
 		ObjectProvider<SvsService> provider = instanceProvider;
 		if (provider == null) {
@@ -288,6 +379,12 @@ public class SvsService {
 		return provider.getIfAvailable(() -> SvsServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<SvsService> instanceProvider) {
 		SvsService.instanceProvider = instanceProvider;
 	}

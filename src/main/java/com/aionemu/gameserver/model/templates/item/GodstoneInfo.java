@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Godstone 信息模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "Godstone")
@@ -37,32 +26,39 @@ public class GodstoneInfo {
 	@XmlAttribute
 	private int breakcount;
 	@XmlAttribute
-	private boolean breakable = true; // 默认true保持原有行为
+	private boolean breakable = true; // 默认 true，保持原有行为 / default true to keep original behavior
 
+	/** 返回 breakable / Returns the breakable */
 	public boolean getBreakable() {
 		return breakable;
 	}
 
+	/** 返回 skillid / Returns the skillid */
 	public int getSkillid() {
 		return skillid;
 	}
 
+	/** 返回 skilllvl / Returns the skilllvl */
 	public int getSkilllvl() {
 		return skilllvl;
 	}
 
+	/** 返回 probability / Returns the probability */
 	public int getProbability() {
 		return probability;
 	}
 
+	/** 返回 probabilityleft / Returns the probabilityleft */
 	public int getProbabilityleft() {
 		return probabilityleft;
 	}
 
+	/** 返回 breakprob / Returns the breakprob */
 	public int getBreakprob() {
 		return breakprob;
 	}
 
+	/** 返回 breakcount / Returns the breakcount */
 	public int getBreakcount() {
 		return breakcount;
 	}

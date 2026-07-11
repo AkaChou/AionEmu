@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.walker;
 
 import java.util.ArrayList;
@@ -31,6 +15,9 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.spawnengine.WalkerGroupType;
 
 /**
+ * 巡逻模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author KKnD
  */
 @XmlRootElement(name = "walker_template")
@@ -141,38 +128,49 @@ public class WalkerTemplate {
 		rowValues = null;
 	}
 
+	/** 返回 route steps / Returns the route steps */
 	public List<RouteStep> getRouteSteps() {
 		return routeStepList;
 	}
 
+	/** 返回 route step / Returns the route step */
 	public RouteStep getRouteStep(int value) {
 		return routeStepList.get(value - 1);
 	}
 
+	/** 返回 route id / Returns the route id */
 	public String getRouteId() {
 		return routeId;
 	}
 
+	/** 返回 pool / Returns the pool */
 	public int getPool() {
 		return pool;
 	}
 
+	/** 设置 pool / Sets the pool */
 	public void setPool(int pool) {
 		this.pool = pool;
 	}
 
+	/** 设置 route steps / Sets the route steps */
 	public void setRouteSteps(ArrayList<RouteStep> newSteps) {
 		routeStepList = newSteps;
 	}
 
+	/**
+	 * @return Whether reversed / Whether reversed
+	 */
 	public boolean isReversed() {
 		return isReversed;
 	}
 
+	/** 设置 is reversed / Sets the is reversed */
 	public void setIsReversed(boolean value) {
 		isReversed = value;
 	}
 
+	/** 获取类型。 / Returns the type. */
 	public WalkerGroupType getType() {
 		return formation;
 	}
@@ -184,10 +182,12 @@ public class WalkerTemplate {
 		return rows;
 	}
 	
+	/** getoffsets X / getoffsets X */
 	public int[] getoffsetsX() {
 		return offsetsx;
 	}
 	
+	/** getoffsets Y / getoffsets Y */
 	public int[] getoffsetsY() {
 		return offsetsy;
 	}	

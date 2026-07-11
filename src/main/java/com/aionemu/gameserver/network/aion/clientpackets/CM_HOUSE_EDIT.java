@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -44,6 +29,11 @@ import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
+
+/**
+ * 房屋编辑模式（进入/退出装修、放置/移除家具等）的客户端包。
+ * Client packet for house edit mode (enter/exit decoration, place/remove furniture, etc.).
+ */
 @Slf4j
 
 public class CM_HOUSE_EDIT extends AionClientPacket {
@@ -53,11 +43,21 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 	float x, y, z;
 	int rotation;
 	int buildingId;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_HOUSE_EDIT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取房屋编辑动作与相关参数。
+	 * Reads the housing edit action and related parameters.
+	 */
 	@Override
 	protected void readImpl() {
 		actionId = readC();
@@ -75,10 +75,13 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			buildingId = readD();
 		} else if (action == HousingAction.ENTER_DECORATION || action == HousingAction.EXIT_DECORATION) {
 		} else {
-			log.error("Unknown housing action type? 0x" + Integer.toHexString(actionId).toUpperCase());
+			log.error(I18n.get("log.87e9c1587136", Integer.toHexString(actionId).toUpperCase()));
 		}
 	}
-
+	/**
+	 * 按动作执行进入/退出装修、放置或移除家具等。
+	 * Handles enter/exit decoration and furniture place/remove by action.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
@@ -171,7 +174,14 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			((HouseController) house.getController()).updateAppearance();
 		}
 	}
-
+	/**
+	 * 移除装修优惠券并刷新房屋装修状态。
+	 * Removes the renovation coupon and refreshes house renovation state.
+	 *
+	 * 玩家 / player
+	 * house
+	 * @param type 装修类型 / renovation type
+	 */
 	private boolean removeRenovationCoupon(Player player, House house) {
 		int typeId = house.getHouseType().getId();
 		if (typeId == 0) {

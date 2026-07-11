@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -23,11 +8,12 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 
 /**
- * Forms the walker groups on initial spawn<br>
- * Brings NPCs back to their positions if they die<br>
- * Cleanup and rework will be made after tests and error handling<br>
- * To use only with patch!
- * 
+ * 初始刷怪时组建巡逻队；死亡后将 NPC 带回站位。
+ * Forms walker groups on initial spawn and restores NPCs after death.
+ * <p>
+ * 清理与重构将在测试与错误处理后进行；需配合补丁使用。
+ * Cleanup and rework will follow tests and error handling; use only with the patch.
+ *
  * @author vlog
  * @based on Imaginary's imagination
  * @modified Rolandas
@@ -35,16 +21,20 @@ import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 @Slf4j
 public class WalkerFormator {
 
-
 	/**
-	 * If it's the instance first spawn, WalkerFormator verifies and creates groups;
-	 * {@link #organizeAndSpawn()} must be called after to speed up spawning. If
-	 * it's a respawn, nothing to verify, then the method places NPC to the first
-	 * step and resets data to the saved, no organizing is needed.
-	 * 
-	 * @param npc
-	 * @param worldId
-	 * @return <tt>true</tt> if npc was brought into world by the method call.
+	 * 处理集群巡逻 NPC：首次刷怪时缓存候选并稍后编队；重生时直接归队。
+	 * Handles clustered walker NPCs: caches candidates on first spawn, or re-joins on respawn.
+	 * <p>
+	 * 若为实例首次刷怪，会验证并创建编队，之后需调用 {@link #organizeAndSpawn(int, int)} 加速生成；
+	 * 若为重生则无需编队，仅放回第一步并恢复已保存数据。
+	 * On instance first spawn, verifies and creates groups; call organizeAndSpawn after.
+	 * On respawn, places the NPC at the first step and restores saved data.
+	 *
+	 * npc
+	 * 世界 ID / world id
+	 * instance id
+	 *
+	 * @return 若本次调用已将 NPC 刷入世界则为 true / true if the npc was brought into world by this call
 	 */
 	public static boolean processClusteredNpc(Npc npc, int worldId, int instanceId) {
 		SpawnTemplate spawn = npc.getSpawn();
@@ -60,7 +50,7 @@ public class WalkerFormator {
 
 			WalkerTemplate template = DataManager.WALKER_DATA.getWalkerTemplate(spawn.getWalkerId());
 			if (template == null) {
-				log.warn("Missing walker ID: " + spawn.getWalkerId());
+				log.warn(I18n.get("log.dbf9e2be46c1", spawn.getWalkerId()));
 				return false;
 			}
 			if (template.getPool() < 2) {
@@ -72,8 +62,11 @@ public class WalkerFormator {
 	}
 
 	/**
-	 * Organizes spawns in all processed walker groups. Must be called only when
-	 * spawning all npcs for the instance of world.
+	 * 组织并刷出所有已处理的巡逻编队；仅应在实例 NPC 全部生成时调用。
+	 * Organizes and spawns all processed walker groups; call only when spawning all instance NPCs.
+	 *
+	 * 世界 ID / world id
+	 * instance id
 	 */
 	public static void organizeAndSpawn(int worldId, int instanceId) {
 		InstanceWalkerFormations formations = WalkerFormationsCache.getInstanceFormations(worldId, instanceId);
@@ -81,8 +74,11 @@ public class WalkerFormator {
 	}
 
 	/**
-	 * @param worldId
-	 * @param instanceId
+	 * 实例销毁时清理巡逻编队缓存。
+	 * Clears walker formation cache when an instance is destroyed.
+	 *
+	 * 世界 ID / world id
+	 * instance id
 	 */
 	public static void onInstanceDestroy(int worldId, int instanceId) {
 		WalkerFormationsCache.onInstanceDestroy(worldId, instanceId);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,22 +9,27 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * 向玩家发放指定数量物品的操作。
+ * Operation that gives a configured amount of an item to the player.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GiveItemOperation")
 public class GiveItemOperation extends QuestOperation {
 
+	/** 物品模板 ID / Item template id */
 	@XmlAttribute(name = "item_id", required = true)
 	protected int itemId;
+	/** 发放数量 / Amount to give */
 	@XmlAttribute(required = true)
 	protected int count;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations.
-	 * QuestOperation#doOperate(com.aionemu.gameserver .questEngine.model.QuestEnv)
+	/**
+	 * 通过玩家控制器添加物品。
+	 * Adds the items via the player controller.
+	 *
+	 * @param env 任务环境 / Quest environment
 	 */
 	@Override
 	public void doOperate(QuestEnv env) {

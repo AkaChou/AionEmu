@@ -1,22 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import java.sql.Timestamp;
+
+/**
+ * 信件游戏对象。
+ * Letter game object.
+ */
 
 public class Letter extends AionObject {
 	private int recipientId;
@@ -54,61 +43,77 @@ public class Letter extends AionObject {
 		this.letterType = letterType;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public String getName() {
 		return String.valueOf(attachedItem.getItemTemplate().getNameId());
 	}
 
+	/** 返回 recipient id / Returns the recipient id */
 	public int getRecipientId() {
 		return recipientId;
 	}
 
+	/** 返回 attached item / Returns the attached item */
 	public Item getAttachedItem() {
 		return attachedItem;
 	}
 
+	/** 返回 attached kinah / Returns the attached kinah */
 	public long getAttachedKinah() {
 		return attachedKinahCount;
 	}
 
+	/** 返回 attached ap / Returns the attached ap */
 	public long getAttachedAp() {
 		return attachedAPCount;
 	}
 
+	/** 获取称号。 / Returns the title. */
 	public String getTitle() {
 		return title;
 	}
 
+	/** 获取消息。 / Returns the message. */
 	public String getMessage() {
 		return message;
 	}
 
+	/** 返回 sender name / Returns the sender name */
 	public String getSenderName() {
 		return senderName;
 	}
 
+	/** 获取信件类型。 / Returns the letter type. */
 	public LetterType getLetterType() {
 		return letterType;
 	}
 
+	/** Whether 未读 / Whether unread */
 	public boolean isUnread() {
 		return unread;
 	}
 
+	/** 设置 read letter / Sets the read letter */
 	public void setReadLetter() {
 		this.unread = false;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
+	/**
+	 * @return Whether express / Whether express
+	 */
 	public boolean isExpress() {
 		return express;
 	}
 
+	/** 设置 express / Sets the express */
 	public void setExpress(boolean express) {
 		this.express = express;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
+	/** 设置信件类型。 / Sets the letter type. */
 	public void setLetterType(LetterType letterType) {
 		this.letterType = letterType;
 		if (letterType == LetterType.EXPRESS || letterType == LetterType.BLACKCLOUD) {
@@ -118,33 +123,40 @@ public class Letter extends AionObject {
 		}
 	}
 
+	/** 返回 letter persistent state / Returns the letter persistent state */
 	public PersistentState getLetterPersistentState() {
 		return persistentState;
 	}
 
+	/** 移除附件物品 / Removes attached item */
 	public void removeAttachedItem() {
 		this.attachedItem = null;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
+	/** 移除 attached kinah / Removes attached kinah */
 	public void removeAttachedKinah() {
 		this.attachedKinahCount = 0;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
+	/** 移除 attached ap / Removes attached ap */
 	public void removeAttachedAP() {
 		this.attachedAPCount = 0;
 		this.persistentState = PersistentState.UPDATE_REQUIRED;
 	}
 
+	/** 删除。 / Delete. */
 	public void delete() {
 		this.persistentState = PersistentState.DELETED;
 	}
 
+	/** 设置 persist state / Sets the persist state */
 	public void setPersistState(PersistentState state) {
 		this.persistentState = state;
 	}
 
+	/** 返回时间盖章 / Returns the time stamp*/
 	public Timestamp getTimeStamp() {
 		return timeStamp;
 	}

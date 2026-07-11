@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cradle Of Eternity 副本 NPC AI：Asmodian Elite Combat Mage（@AIName "Asmodian_Elite_Combat_Mage"），继承 NpcAI2。
+ * Cradle Of Eternity instance NPC AI: Asmodian Elite Combat Mage (@AIName "Asmodian_Elite_Combat_Mage"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Asmodian_Elite_Combat_Mage")
 public class Asmodian_Elite_Combat_MageAI2 extends NpcAI2
 {
@@ -72,9 +58,9 @@ public class Asmodian_Elite_Combat_MageAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//As the shields fell, the 1st Defense Line was breached and overrun.
+				// 护盾倒下，第 1 防线被突破。 / As the shields fell, the 1st Defense Line was breached and overrun.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_01, 0);
-				//The enemies are coming. Kill them all.
+				// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_34, 5000);
 			}
 		});
@@ -83,9 +69,9 @@ public class Asmodian_Elite_Combat_MageAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//As the shields fell, the 2nd Defense Line was breached and overrun.
+				// 护盾倒下，第 2 防线被突破。 / As the shields fell, the 2nd Defense Line was breached and overrun.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_02, 0);
-				//The enemies are coming. Kill them all.
+				// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_34, 5000);
 			}
 		});
@@ -94,9 +80,9 @@ public class Asmodian_Elite_Combat_MageAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//As the shields fell, the 3rd Defense Line was breached and overrun.
+				// 护盾倒下，第 3 防线被突破。 / As the shields fell, the 3rd Defense Line was breached and overrun.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_03, 0);
-				//The enemies are coming. Kill them all.
+				// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_34, 5000);
 			}
 		});
@@ -105,9 +91,9 @@ public class Asmodian_Elite_Combat_MageAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//As the shields fell, the 4th Defense Line was breached and overrun.
+				// 护盾倒下，第 4 防线被突破。 / As the shields fell, the 4th Defense Line was breached and overrun.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_04, 0);
-				//The enemies are coming. Kill them all.
+				// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_34, 5000);
 			}
 		});

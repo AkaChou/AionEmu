@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.beritraInvasion;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 贝里特拉入侵相关 NPC AI：Terracrusher（@AIName "terracrusher"），继承 AggressiveNpcAI2。
+ * Beritra-invasion related NPC AI: Terracrusher (@AIName "terracrusher"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("terracrusher")
 public class TerracrusherAI2 extends AggressiveNpcAI2
 {
@@ -64,7 +50,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Legion's magic weapon has been destroyed.
+				// 埃雷什基伽尔军团的魔法武器已被摧毁。 / The Ereshkigal Legion's magic weapon has been destroyed.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_DIE_01);
 			}
 		});
@@ -78,7 +64,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 				AionObject winner = getAggroList().getMostDamage();
 				if (winner instanceof Creature) {
 					final Creature kill = (Creature) winner;
-					//%0 has destroyed %0 and the Landing is now enhanced.
+					// %0 摧毁了 %0，登陆点已增强。 / %0 has destroyed %0 and the Landing is now enhanced.
 					GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(players, kill.getRace().getRaceDescriptionId(), NameId, 0, LandingPointsEnum.MONUMENT);
 				}
 			}

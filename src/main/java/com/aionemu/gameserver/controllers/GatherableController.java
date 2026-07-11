@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers;
 
 import java.util.List;
@@ -43,17 +29,42 @@ import com.aionemu.gameserver.utils.RndSelector;
 import com.aionemu.gameserver.utils.captcha.CAPTCHAUtil;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 可采集物控制器，管理采集校验、任务、奖励与采集保护。
+ * Gatherable controller managing gather validation, tasks, rewards and gather protection.
+ */
 public class GatherableController extends VisibleObjectController<Gatherable> {
+
+	/** 当前采集次数。 / Current gather count. */
 	private int gatherCount;
+	/** 当前采集者对象 ID / Current gatherer's object id */
 	private int currentGatherer;
+	/** 进行中的采集任务。 / Ongoing gathering task. */
 	private GatheringTask task;
+	/** 采集状态。 / Gather state. */
 	private GatherState state = GatherState.IDLE;
+	/** 材料随机选择器。 / Material random selector. */
 	private RndSelector<Material> mats;
 
+	/**
+	 * 采集状态枚举。
+	 * Gather state enumeration.
+	 */
 	public enum GatherState {
-		GATHERED, GATHERING, IDLE
+		/** 已采集完成。 / Gather finished. */
+		GATHERED,
+		/** 正在采集。 / Gathering in progress. */
+		GATHERING,
+		/** 空闲。 / Idle. */
+		IDLE
 	}
 
+	/**
+	 * 玩家开始采集时的入口：校验等级、技能、工具、CAPTCHA 后启动任务。
+	 * Entry when a player starts gathering: validates level, skill, tools and CAPTCHA, then starts the task.
+	 *
+	 * gathering player
+	 */
 	public void onStartUse(final Player player) {
 		final GatherableTemplate template = this.getOwner().getObjectTemplate();
 		int gatherId = template.getTemplateId();
@@ -71,7 +82,7 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 			finishGathering(player);
 		}
 		if (template.getLevelLimit() > 0) {
-			// You must be at least level %0 to perform extraction.
+			// 提取至少需要等级 %0。 / You must be at least level %0 to perform extraction.
 			if (player.getLevel() < template.getLevelLimit()) {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400737, template.getLevelLimit()));
 				return;
@@ -82,26 +93,26 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 			return;
 		}
 		if (player.getInventory().isFull()) {
-			// You must have at least one free space in your cube to gather.
+			// 采集前背包至少需有一个空位。 / You must have at least one free space in your cube to gather.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330036));
 			return;
 		}
 		if (MathUtil.getDistance(getOwner(), player) > 6) {
 			return;
 		}
-		// check is gatherable
+		// 检查是否可采集 / check is gatherable
 		if (!checkGatherable(player, template)) {
 			return;
 		}
 		if (!checkPlayerSkill(player, template)) {
 			return;
 		}
-		// check for extractor in inventory
+		// 检查背包中的提取器 / check for extractor in inventory
 		byte result = checkPlayerRequiredExtractor(player, template);
 		if (result == 0) {
 			return;
 		}
-		// CAPTCHA
+		// 验证码 / CAPTCHA
 		if (SecurityConfig.CAPTCHA_ENABLE) {
 			if (SecurityConfig.CAPTCHA_APPEAR.equals(template.getSourceType()) || SecurityConfig.CAPTCHA_APPEAR.equals("ALL")) {
 				int rate = SecurityConfig.CAPTCHA_APPEAR_RATE;
@@ -112,7 +123,7 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 					player.setCaptchaWord(CAPTCHAUtil.getRandomWord());
 					player.setCaptchaImage(CAPTCHAUtil.createCAPTCHA(player.getCaptchaWord()).array());
 					PunishmentService.setIsNotGatherable(player, 0, true, SecurityConfig.CAPTCHA_EXTRACTION_BAN_TIME * 1000);
-					// You were poisoned during extraction and cannot extract for (Time remaining: 10Min)
+					// 采集中中毒，暂时无法采集（剩余时间：10 分钟）。 / You were poisoned during extraction and cannot extract for (Time remaining: 10Min)
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CAPTCHA_RESTRICTED("10"));
 					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 600));
 				}
@@ -150,6 +161,12 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		}
 	}
 
+	/**
+	 * 按权重随机选取一种材料。
+	 * Randomly selects a material by weight.
+	 *
+	 * @return 选中的材料，可能为 null / selected material, may be null
+	 */
 	public Material getMaterial() {
 		Material m = mats.select();
 		int chance = Rnd.get(m.getRate());
@@ -163,18 +180,27 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		return null;
 	}
 
+	/**
+	 * 校验玩家是否具备足够的采集技能等级。
+	 * Validates that the player has the required gather skill level.
+	 *
+	 * 玩家 / player
+	 * gather template
+	 *
+	 * @return 校验通过则为 true / true if valid
+	 */
 	private boolean checkPlayerSkill(final Player player, final GatherableTemplate template) {
 		int harvestSkillId = template.getHarvestSkill();
 		if (!player.getSkillList().isSkillPresent(harvestSkillId)) {
 			if (harvestSkillId == 30001) {
-				// You are Daeva now, leave this to humans.
+				// 你已是守护者，把这留给人类。 / You are Daeva now, leave this to humans.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GATHER_INCORRECT_SKILL);
 			} else {
-				// You must learn the %0 skill to start gathering.
+				// 须学习 %0 技能才能开始采集。 / You must learn the %0 skill to start gathering.
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330054, new DescriptionId(DataManager.SKILL_DATA.getSkillTemplate(harvestSkillId).getNameId())));
 			}
 			return false;
-			// Your %0 skill level is not high enough.
+			// 你的 %0 技能等级不够高。 / Your %0 skill level is not high enough.
 		}
 		if (player.getSkillList().getSkillLevel(harvestSkillId) < template.getSkillLevel()) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330001, new DescriptionId(DataManager.SKILL_DATA.getSkillTemplate(harvestSkillId).getNameId())));
@@ -183,6 +209,14 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		return true;
 	}
 
+	/**
+	 * 校验玩家是否具备所需采集工具/消耗品。
+	 * Validates required extractor tools or consumables on the player.
+	 *
+	 * 玩家 / player
+	 * gather template
+	 * @return 0=失败，1=额外材料，2=普通材料 / 0=fail, 1=extra materials, 2=normal materials
+	 */
 	private byte checkPlayerRequiredExtractor(final Player player, final GatherableTemplate template) {
 		if (template.getRequiredItemId() > 0) {
 			if (template.getCheckType() == 1) {
@@ -207,15 +241,28 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		return 2;
 	}
 
+	/**
+	 * 校验玩家当前是否允许采集（惩罚/封禁计时）。
+	 * Validates whether the player is currently allowed to gather (punish/ban timer).
+	 *
+	 * 玩家 / player
+	 * gather template
+	 *
+	 * @return 若 allowed 则为 true / true if allowed
+	 */
 	private boolean checkGatherable(final Player player, final GatherableTemplate template) {
 		if (player.isNotGatherable()) {
-			// You are currently unable to extract. (Time remaining: 10Min)
+			// 当前无法提取。（剩余时间：10 分钟） / You are currently unable to extract. (Time remaining: 10Min)
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400273, (int) ((player.getGatherableTimer() - (System.currentTimeMillis() - player.getStopGatherable())) / 1000)));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 完成一次交互：计数并在达到上限后消失。
+	 * Completes one interaction: counts and despawns when the harvest limit is reached.
+	 */
 	public void completeInteraction() {
 		state = GatherState.IDLE;
 		gatherCount++;
@@ -224,6 +271,12 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		}
 	}
 
+	/**
+	 * 向玩家发放采集经验奖励。
+	 * Grants gathering experience rewards to the player.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void rewardPlayer(Player player) {
 		if (player != null) {
 			int skillLvl = getOwner().getObjectTemplate().getSkillLevel();
@@ -237,6 +290,12 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		}
 	}
 
+	/**
+	 * 结束当前玩家的采集过程。
+	 * Finishes the current player's gathering process.
+	 *
+	 * gathering player
+	 */
 	public void finishGathering(Player player) {
 		if (currentGatherer == player.getObjectId()) {
 			if (state == GatherState.GATHERING) {
@@ -248,8 +307,10 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	}
 
 	/**
-	 * This is prevent "Pvp Uncivilized" when a player want gather in peace. The
-	 * player become "Invisible" for other player.
+	 * 开启采集保护：使玩家对其他玩家隐形，避免 PvP 干扰。
+	 * Starts gather protection by hiding the player from others to avoid PvP interference.
+	 *
+	 * gathering player
 	 */
 	public void startGatherProtection(Player player) {
 		if (CraftConfig.PROTECTION_GATHER_ENABLE) {
@@ -258,6 +319,12 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		}
 	}
 
+	/**
+	 * 关闭采集保护，恢复玩家可视状态。
+	 * Stops gather protection and restores the player's visual state.
+	 *
+	 * gathering player
+	 */
 	public void stopGatherProtection(Player player) {
         if (CraftConfig.PROTECTION_GATHER_ENABLE) {
 		    player.unsetVisualState(CreatureVisualState.HIDE3);
@@ -265,6 +332,10 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
         }
 	}
 
+	/**
+	 * 可采集物消失并在非副本中安排重生。
+	 * Despawns the gatherable and schedules respawn outside instances.
+	 */
 	@Override
 	public void onDespawn() {
 		Gatherable owner = getOwner();
@@ -274,11 +345,21 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(owner);
 	}
 
+	/**
+	 * 生成前重置采集计数。
+	 * Resets gather count before spawn.
+	 */
 	@Override
 	public void onBeforeSpawn() {
 		this.gatherCount = 0;
 	}
 
+	/**
+	 * 获取所有者可采集物。
+	 * Gets the owner gatherable.
+	 *
+	 * gatherable
+	 */
 	@Override
 	public Gatherable getOwner() {
 		return super.getOwner();

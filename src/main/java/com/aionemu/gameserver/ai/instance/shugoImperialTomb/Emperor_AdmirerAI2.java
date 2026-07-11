@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.shugoImperialTomb;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Shugo Imperial Tomb 副本 NPC AI：Emperor Admirer（@AIName "Emperor_Admirer"），继承 NpcAI2。
+ * Shugo Imperial Tomb instance NPC AI: Emperor Admirer (@AIName "Emperor_Admirer"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Emperor_Admirer")
 public class Emperor_AdmirerAI2 extends NpcAI2
 {
@@ -48,7 +34,7 @@ public class Emperor_AdmirerAI2 extends NpcAI2
 			switch (getNpcId()) {
 				case 831112: //Emperor's Admirer.
 					startTombWaveC1();
-					//Pillagers incoming. Guard the Emperor's Monument!
+					// 掠夺者来袭。守卫皇帝纪念碑！ / Pillagers incoming. Guard the Emperor's Monument!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401584));
 					spawn(831130, 452.43765f, 106.14462f, 212.20023f, (byte) 68); //Crown Prince's Monument.
 					spawn(831250, 452.92874f, 85.73192f, 214.3359f, (byte) 75); //Imperial Obelisk.

@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
+import com.aionemu.boot.i18n.I18n;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -27,6 +12,10 @@ import com.aionemu.gameserver.model.templates.mail.Mails;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * JAXB 根对象，聚合全部静态数据分区（NPC、物品、技能、刷怪、活动等）。
+ * JAXB root that aggregates every static-data section (npcs, items, skills, spawns, events, etc.).
+ */
 @XmlRootElement(name = "ae_static_data")
 @XmlAccessorType(XmlAccessType.NONE)
 @Slf4j
@@ -298,146 +287,150 @@ public class StaticData {
 	@XmlElement(name = "skill_skins")
 	public SkillSkinData skillSkinData;
 
+	/**
+	 * JAXB 反序列化完成后，按配置输出各分区加载数量摘要日志。
+	 * After JAXB unmarshalling, logs a size summary for each loaded section when enabled.
+	 */
 	@SuppressWarnings("unused")
 	private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		if (!GSConfig.STATIC_DATA_SUMMARY_LOG) {
 			return;
 		}
-		log.info("Loaded " + worldMapsData.size() + " Map");
-		log.info("Loaded " + playerExperienceTable.getMaxLevel() + " Level");
-		log.info("Loaded " + playerStatsData.size() + " Player Stats Template");
-		log.info("Loaded " + summonStatsData.size() + " Summon Stats Template");
-		log.info("Loaded " + itemCleanup.size() + " Item Cleanup");
+		log.info(I18n.get("log.d43419c8da6c", worldMapsData.size()));
+		log.info(I18n.get("log.b223e19e2ce1", playerExperienceTable.getMaxLevel()));
+		log.info(I18n.get("log.cd1d2fa1265d", playerStatsData.size()));
+		log.info(I18n.get("log.b92082bc2aef", summonStatsData.size()));
+		log.info(I18n.get("log.163e26cbbede", itemCleanup.size()));
 		if (itemData != null) {
-			log.info("Loaded " + itemData.size() + " Item Template");
+			log.info(I18n.get("log.a7639d832d45", itemData.size()));
 		}
-		log.info("Loaded " + itemRandomBonuses.size() + " Random Bonus Template");
-		log.info("Loaded " + itemGroupsData.bonusSize() + " Bonus Item Group Template");
-		log.info("Loaded " + itemGroupsData.petFoodSize() + " Pet Food Item");
-		log.info("Loaded " + npcData.size() + " Npc Templates");
-		log.info("Loaded " + systemMailTemplates.size() + " System Mail Template");
-		log.info("Loaded " + npcShoutData.size() + " Npc Shout Template");
-		log.info("Loaded " + petData.size() + " Pet Template");
-		log.info("Loaded " + petFeedData.size() + " Food Flavour");
-		log.info("Loaded " + petDopingData.size() + " Pet Doping Template");
-		log.info("Loaded " + petMerchandData.size() + " Pet Merchand Template");
-		log.info("Loaded " + playerInitialData.size() + " Initial Player Template");
-		log.info("Loaded " + goodsListData.size() + " Goods List");
-		log.info("Loaded " + tradeListData.size() + " Npc Trade List");
-		log.info("Loaded " + teleporterData.size() + " Npc Teleporter Template");
-		log.info("Loaded " + teleLocationData.size() + " Teleport Location");
-		log.info("Loaded " + hotspotLocationData.size() + " Hotspot Location");
-		log.info("Loaded " + skillData.size() + " Skill Templates");
-		log.info("Loaded " + motionData.size() + " Motion Times");
-		log.info("Loaded " + skillTreeData.size() + " Skill Learn");
-		log.info("Loaded " + cubeExpandData.size() + " Cube Expander");
-		log.info("Loaded " + warehouseExpandData.size() + " Warehouse Expander");
-		log.info("Loaded " + bindPointData.size() + " Bind Point");
-		log.info("Loaded " + questData.size() + " Quest Data");
-		log.info("Loaded " + gatherableData.size() + " Gatherable");
-		log.info("Loaded " + titleData.size() + " Title");
-		log.info("Loaded " + walkerData.size() + " Walker Road");
-		log.info("Loaded " + zoneData.size() + " Zone");
-		log.info("Loaded " + tribeRelationsData.size() + " Tribe Relation");
-		log.info("Loaded " + recipeData.size() + " Recipe Template");
-		log.info("Loaded " + lunaData.size() + " Luna Template");
-		log.info("Loaded " + chestData.size() + " Chest");
-		log.info("Loaded " + staticDoorData.size() + " Static Door");
-		log.info("Loaded " + itemSetData.size() + " Item Set");
-		log.info("Loaded " + npcFactionsData.size() + " Npc Faction");
-		log.info("Loaded " + npcSkillData.size() + " Npc Skill List");
-		log.info("Loaded " + petSkillData.size() + " Pet Skill List");
-		log.info("Loaded " + siegeLocationData.size() + " Siege Location");
-		log.info("Loaded " + flyRingData.size() + " Fly Ring");
-		log.info("Loaded " + shieldData.size() + " Shield");
-		log.info("Loaded " + petData.size() + " Pet");
-		log.info("Loaded " + guideData.size() + " Guide");
-		log.info("Loaded " + roadData.size() + " Road");
-		log.info("Loaded " + instanceCooltimeData.size() + " Instance Cooltime");
-		log.info("Loaded " + disassemblyItemSetsData.size() + " Decomposable Item");
-		log.info("Loaded " + aiData.size() + " Ai2 Template");
-		log.info("Loaded " + flyPath.size() + " Flypath Template");
-		log.info("Loaded " + windstreamsData.size() + " Windstream");
-		log.info("Loaded " + assembledNpcData.size() + " Assembled Npc");
-		log.info("Loaded " + cosmeticItemsData.size() + " Cosmetics Item");
-		log.info("Loaded " + npcDropData.size() + " Npc Drop");
-		log.info("Loaded " + autoGroupData.size() + " Auto Group");
-		log.info("Loaded " + spawnsData2.size() + " Spawn Map");
-		log.info("Loaded " + eventData.size() + " Event");
-		log.info("Loaded " + panelSkillsData.size() + " Polymorph Panel");
-		log.info("Loaded " + instanceBuffData.size() + " Instance Bonus");
-		log.info("Loaded " + housingObjectData.size() + " Housing Object");
-		log.info("Loaded " + rideData.size() + " Ride");
-		log.info("Loaded " + robotData.size() + " Aethertech Armor");
-		log.info("Loaded " + instanceExitData.size() + " Instance Exit");
-		log.info("Loaded " + portalLocData.size() + " Portal Location");
-		log.info("Loaded " + portalTemplate2.size() + " Portal Template");
-		log.info("Loaded " + houseData.size() + " Housing land");
-		log.info("Loaded " + houseBuildingData.size() + " Housing Building Style");
-		log.info("Loaded " + housePartsData.size() + " House Parts");
-		log.info("Loaded " + houseNpcsData.size() + " House Spawn");
-		log.info("Loaded " + houseScriptData.size() + " House Scripts");
-		log.info("Loaded " + curingObjectsData.size() + " Curing Object");
-		log.info("Loaded " + springObjectsData.size() + " Spring Object");
-		log.info("Loaded " + assemblyItemData.size() + " Assembly Item");
-		log.info("Loaded " + challengeData.size() + " Challenge Task");
-		log.info("Loaded " + townSpawnsData.getSpawnsCount() + " Town Location");
-		log.info("Loaded " + abyssBuffData.size() + " Abyss Bonus");
-		log.info("Loaded " + abyssGroupData.size() + " Abyss Group");
-		log.info("Loaded " + absoluteStatsData.size() + " Absolute Stats");
-		log.info("Loaded " + baseData.size() + " Bases Location");
-		log.info("Loaded " + agentData.size() + " Agent Fight");
-		log.info("Loaded " + beritraData.size() + " Eresukigal/Beritra Invasion");
-		log.info("Loaded " + svsData.size() + " S.v.S Location");
-		log.info("Loaded " + rvrData.size() + " R.v.R Location");
-		log.info("Loaded " + moltenusData.size() + " Moltenus Location");
-		log.info("Loaded " + dynamicRiftData.size() + " Dynamic Rift Location");
-		log.info("Loaded " + instanceRiftData.size() + " Instance Rift Location");
-		log.info("Loaded " + nightmareCircusData.size() + " Nightmare Cirus Location");
-		log.info("Loaded " + zorshivDredgionData.size() + " Zorshiv Dredgion Location");
-		log.info("Loaded " + legionDominionData.size() + " Legion Dominion Location");
-		log.info("Loaded " + anohaData.size() + " Anoha Location");
-		log.info("Loaded " + iuData.size() + " Concert location");
-		log.info("Loaded " + conquestData.size() + " Conquest/Offering Location");
-		log.info("Loaded " + idianDepthsData.size() + " Idian Depths Location");
-		log.info("Loaded " + materiaData.size() + " Materials");
-		log.info("Loaded " + mapWeatherData.size() + " Weather Map");
-		log.info("Loaded " + vortexData.size() + " Vortex");
-		log.info("Loaded " + serialGuardData.size() + " Serial Guard");
-		log.info("Loaded " + serialKillerData.size() + " Serial Killer");
-		log.info("Loaded " + riftData.size() + " Rift/Volatile/Chaos Rift");
-		log.info("Loaded " + serviceBuffData.size() + " Service Bonus");
-		log.info("Loaded " + playersBonusData.size() + " Player Bonus");
-		log.info("Loaded " + itemEnchantData.size() + " Item Enchant Table");
-		log.info("Loaded " + itemUpgradeData.size() + " Item Upgrade");
-		log.info("Loaded " + atreianPassportData.size() + " Atreian Passport");
-		log.info("Loaded " + gameExperienceData.size() + " Game Experience Item");
-		log.info("Loaded " + abyssOpData.size() + " Abyss Landing Table");
-		log.info("Loaded " + panelCpData.size() + " Panel Cp");
-		log.info("Loaded " + petBuffData.size() + " Pet Buff");
-		log.info("Loaded " + multiReturnItemData.size() + " Multi Return Item");
-		log.info("Loaded " + landingLocationData.size() + " Abyss Landing Location");
-		log.info("Loaded " + landingSpecialLocationData.size() + " Monument Location");
-		log.info("Loaded " + lunaConsumeRewardsData.size() + " Luna Consume Reward");
-		log.info("Loaded " + itemCustomSet.size() + " Item Custom Set");
-		log.info("Loaded " + minionData.size() + " Minion templates");
-		log.info("Loaded " + f2pBonus.size() + " F2p Bonus Pack");
-		log.info("Loaded " + arcadeUpgradeData.size() + " Upgrade Arcade");
-		log.info("Loaded " + globalDropData.size() + " Global Drops");
-		log.info("Loaded " + itemSkillEnhance.size() + " Skill Boost Reassignment");
-		log.info("Loaded " + boostEvents.size() + " Boost Events");
-		log.info("Loaded " + atreianBestiary.size() + " Atreian Bestiary");
-		log.info("Loaded " + skillData.sizeOfGroup() + " Skill Templates Group");
-		log.info("Loaded " + chargeSkillData.size() + " Charge Skill");
-		log.info("Loaded " + eventsWindow.size() + " Event Window");
-		log.info("Loaded " + mailReward.size() + " Reward Mail");
-		log.info("Loaded " + lunaDice.size() + " Luna Dice Reward");
-		log.info("Loaded " + reviveWorldStartPoints.size() + " Revive World Start Points");
-		log.info("Loaded " + reviveInstanceStartPoints.size() + " Revive Instance Start Points");
-		log.info("Loaded " + outpostLocation.size() + " Outpost Location");
-		log.info("Loaded " + stoneCp.size() + " Estima Enchant");
-		log.info("Loaded " + towerReward.size() + " Tower Data Reward");
-		log.info("Loaded " + shugoSweepsRewardData.size() + " Shugo Sweep Reward");
-		log.info("Loaded " + skillSkinData.size() + " Skill Animation Entries");
+		log.info(I18n.get("log.cb813eb3067b", itemRandomBonuses.size()));
+		log.info(I18n.get("log.d7990503f474", itemGroupsData.bonusSize()));
+		log.info(I18n.get("log.b29f4c6a427b", itemGroupsData.petFoodSize()));
+		log.info(I18n.get("log.7a39ab3cdda2", npcData.size()));
+		log.info(I18n.get("log.02542267fe52", systemMailTemplates.size()));
+		log.info(I18n.get("log.3af3de6f0421", npcShoutData.size()));
+		log.info(I18n.get("log.58b469a0870e", petData.size()));
+		log.info(I18n.get("log.90c0f7b5bcfc", petFeedData.size()));
+		log.info(I18n.get("log.a64de9021b02", petDopingData.size()));
+		log.info(I18n.get("log.260b9c13369e", petMerchandData.size()));
+		log.info(I18n.get("log.9aba8952c181", playerInitialData.size()));
+		log.info(I18n.get("log.ddef83f06fc8", goodsListData.size()));
+		log.info(I18n.get("log.bb4da84ad4a0", tradeListData.size()));
+		log.info(I18n.get("log.cb32c6ebe648", teleporterData.size()));
+		log.info(I18n.get("log.b463de58d584", teleLocationData.size()));
+		log.info(I18n.get("log.031bd5830a8c", hotspotLocationData.size()));
+		log.info(I18n.get("log.b5f7ba1ed5cc", skillData.size()));
+		log.info(I18n.get("log.80c433e8573e", motionData.size()));
+		log.info(I18n.get("log.2897b432221b", skillTreeData.size()));
+		log.info(I18n.get("log.a18f09254709", cubeExpandData.size()));
+		log.info(I18n.get("log.56f737c52823", warehouseExpandData.size()));
+		log.info(I18n.get("log.0da69f2a900a", bindPointData.size()));
+		log.info(I18n.get("log.fe9338f00401", questData.size()));
+		log.info(I18n.get("log.d41021554656", gatherableData.size()));
+		log.info(I18n.get("log.f7402147d1c0", titleData.size()));
+		log.info(I18n.get("log.926913cabd63", walkerData.size()));
+		log.info(I18n.get("log.2a423e0f769e", zoneData.size()));
+		log.info(I18n.get("log.68bda207beab", tribeRelationsData.size()));
+		log.info(I18n.get("log.330854034f35", recipeData.size()));
+		log.info(I18n.get("log.412d1d563a20", lunaData.size()));
+		log.info(I18n.get("log.02db48cab2bc", chestData.size()));
+		log.info(I18n.get("log.b56d2ee109f4", staticDoorData.size()));
+		log.info(I18n.get("log.13792a5f89b7", itemSetData.size()));
+		log.info(I18n.get("log.6be770e218ef", npcFactionsData.size()));
+		log.info(I18n.get("log.b3e7ebfb7d92", npcSkillData.size()));
+		log.info(I18n.get("log.05be76e45171", petSkillData.size()));
+		log.info(I18n.get("log.817680ce4780", siegeLocationData.size()));
+		log.info(I18n.get("log.6850322d6c37", flyRingData.size()));
+		log.info(I18n.get("log.43a80a7acc11", shieldData.size()));
+		log.info(I18n.get("log.861f6a3b8237", petData.size()));
+		log.info(I18n.get("log.23acbd6ac8e3", guideData.size()));
+		log.info(I18n.get("log.41cb4bc71597", roadData.size()));
+		log.info(I18n.get("log.cc9cb867aece", instanceCooltimeData.size()));
+		log.info(I18n.get("log.d35d8517e6f0", disassemblyItemSetsData.size()));
+		log.info(I18n.get("log.7d0656872005", aiData.size()));
+		log.info(I18n.get("log.b5ce3e0bbfb7", flyPath.size()));
+		log.info(I18n.get("log.e7553a368e56", windstreamsData.size()));
+		log.info(I18n.get("log.1b0dc7dfa0c2", assembledNpcData.size()));
+		log.info(I18n.get("log.e4cbb71f003a", cosmeticItemsData.size()));
+		log.info(I18n.get("log.4103f2b9b4db", npcDropData.size()));
+		log.info(I18n.get("log.546e904b6600", autoGroupData.size()));
+		log.info(I18n.get("log.2bcccf8f811f", spawnsData2.size()));
+		log.info(I18n.get("log.a8fed52a5964", eventData.size()));
+		log.info(I18n.get("log.c43241318695", panelSkillsData.size()));
+		log.info(I18n.get("log.402505407463", instanceBuffData.size()));
+		log.info(I18n.get("log.2b693aa87217", housingObjectData.size()));
+		log.info(I18n.get("log.2b042d4f0fc3", rideData.size()));
+		log.info(I18n.get("log.266dbc9bceaf", robotData.size()));
+		log.info(I18n.get("log.2e04d52e4051", instanceExitData.size()));
+		log.info(I18n.get("log.9f9da08faf46", portalLocData.size()));
+		log.info(I18n.get("log.d9dce71ebe89", portalTemplate2.size()));
+		log.info(I18n.get("log.636e11ec5bf8", houseData.size()));
+		log.info(I18n.get("log.957eeef58141", houseBuildingData.size()));
+		log.info(I18n.get("log.1d22db488ed3", housePartsData.size()));
+		log.info(I18n.get("log.6c42b563e0d1", houseNpcsData.size()));
+		log.info(I18n.get("log.c3903bb9b1f0", houseScriptData.size()));
+		log.info(I18n.get("log.8d930393db12", curingObjectsData.size()));
+		log.info(I18n.get("log.34055ef9a6f5", springObjectsData.size()));
+		log.info(I18n.get("log.f6123674a81a", assemblyItemData.size()));
+		log.info(I18n.get("log.5ed8f689c200", challengeData.size()));
+		log.info(I18n.get("log.37e549ec154b", townSpawnsData.getSpawnsCount()));
+		log.info(I18n.get("log.aed773a27e84", abyssBuffData.size()));
+		log.info(I18n.get("log.d1d536af00c9", abyssGroupData.size()));
+		log.info(I18n.get("log.947499cbb7c5", absoluteStatsData.size()));
+		log.info(I18n.get("log.6df3c7419d07", baseData.size()));
+		log.info(I18n.get("log.0823fea5acd1", agentData.size()));
+		log.info(I18n.get("log.7a6e8b8c428e", beritraData.size()));
+		log.info(I18n.get("log.852fae89332a", svsData.size()));
+		log.info(I18n.get("log.c7b678034e04", rvrData.size()));
+		log.info(I18n.get("log.e1dd74a05c05", moltenusData.size()));
+		log.info(I18n.get("log.53914340ae4c", dynamicRiftData.size()));
+		log.info(I18n.get("log.cdedc9f5368d", instanceRiftData.size()));
+		log.info(I18n.get("log.b3b9de759aa5", nightmareCircusData.size()));
+		log.info(I18n.get("log.b2c6484f8f15", zorshivDredgionData.size()));
+		log.info(I18n.get("log.26ec849d3a7b", legionDominionData.size()));
+		log.info(I18n.get("log.c6e6280cba15", anohaData.size()));
+		log.info(I18n.get("log.5e2de94d7629", iuData.size()));
+		log.info(I18n.get("log.bb8bdbb28263", conquestData.size()));
+		log.info(I18n.get("log.47b4bb329c1b", idianDepthsData.size()));
+		log.info(I18n.get("log.6b12d0b74f9a", materiaData.size()));
+		log.info(I18n.get("log.99e6edb0d2ea", mapWeatherData.size()));
+		log.info(I18n.get("log.06d8d0191964", vortexData.size()));
+		log.info(I18n.get("log.0880d45e5fbf", serialGuardData.size()));
+		log.info(I18n.get("log.3643e7b742fa", serialKillerData.size()));
+		log.info(I18n.get("log.730296b805bd", riftData.size()));
+		log.info(I18n.get("log.f579eaf1d48c", serviceBuffData.size()));
+		log.info(I18n.get("log.75d9f8552130", playersBonusData.size()));
+		log.info(I18n.get("log.e7ffb007152a", itemEnchantData.size()));
+		log.info(I18n.get("log.0e2d6d2ba2d8", itemUpgradeData.size()));
+		log.info(I18n.get("log.89b08ae8495b", atreianPassportData.size()));
+		log.info(I18n.get("log.d8ad43b2c6cd", gameExperienceData.size()));
+		log.info(I18n.get("log.b1b871aa2fc5", abyssOpData.size()));
+		log.info(I18n.get("log.597ec87ca2b4", panelCpData.size()));
+		log.info(I18n.get("log.5b9a7fbb1888", petBuffData.size()));
+		log.info(I18n.get("log.5e32e9200de4", multiReturnItemData.size()));
+		log.info(I18n.get("log.268f567c859d", landingLocationData.size()));
+		log.info(I18n.get("log.ea87c9e412bb", landingSpecialLocationData.size()));
+		log.info(I18n.get("log.00f73b61e2e7", lunaConsumeRewardsData.size()));
+		log.info(I18n.get("log.73ecb1ad6e2b", itemCustomSet.size()));
+		log.info(I18n.get("log.57a69e9812ae", minionData.size()));
+		log.info(I18n.get("log.b9e669923cce", f2pBonus.size()));
+		log.info(I18n.get("log.2f415c5394aa", arcadeUpgradeData.size()));
+		log.info(I18n.get("log.c67bcbcd05de", globalDropData.size()));
+		log.info(I18n.get("log.5635e0855764", itemSkillEnhance.size()));
+		log.info(I18n.get("log.adfafb08b32a", boostEvents.size()));
+		log.info(I18n.get("log.596d2257b5ed", atreianBestiary.size()));
+		log.info(I18n.get("log.2e9957f776eb", skillData.sizeOfGroup()));
+		log.info(I18n.get("log.274e3cdb640a", chargeSkillData.size()));
+		log.info(I18n.get("log.6d91ec4699d0", eventsWindow.size()));
+		log.info(I18n.get("log.9de8a898475b", mailReward.size()));
+		log.info(I18n.get("log.ea3bbb559359", lunaDice.size()));
+		log.info(I18n.get("log.f71810db7f3e", reviveWorldStartPoints.size()));
+		log.info(I18n.get("log.530721e609d0", reviveInstanceStartPoints.size()));
+		log.info(I18n.get("log.59300f3e2648", outpostLocation.size()));
+		log.info(I18n.get("log.009450541e78", stoneCp.size()));
+		log.info(I18n.get("log.b9b36be371d6", towerReward.size()));
+		log.info(I18n.get("log.825d4d1861a2", shugoSweepsRewardData.size()));
+		log.info(I18n.get("log.de747e09a243", skillSkinData.size()));
 	}
 }

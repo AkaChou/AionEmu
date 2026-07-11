@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.ai;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 召唤物队伍，用于 ai 相关逻辑。
+ * Summon Group for ai logic.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -49,42 +36,52 @@ public class SummonGroup {
 	@XmlAttribute(name = "schedule")
 	protected int schedule;
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** 返回 x / Returns the x */
 	public float getX() {
 		return x;
 	}
 
+	/** 返回 y / Returns the y */
 	public float getY() {
 		return y;
 	}
 
+	/** 返回 z / Returns the z */
 	public float getZ() {
 		return z;
 	}
 
+	/** 返回 h / Returns the h */
 	public byte getH() {
 		return h;
 	}
 
+	/** 获取计数。 / Returns the count. */
 	public int getCount() {
 		return count;
 	}
 
+	/** 返回最小数量 / Returns the min count*/
 	public int getMinCount() {
 		return minCount;
 	}
 
+	/** 返回最大数量 / Returns the max count*/
 	public int getMaxCount() {
 		return maxCount;
 	}
 
+	/** 返回 distance / Returns the distance */
 	public float getDistance() {
 		return distance;
 	}
 
+	/** 返回 schedule / Returns the schedule */
 	public int getSchedule() {
 		return schedule;
 	}

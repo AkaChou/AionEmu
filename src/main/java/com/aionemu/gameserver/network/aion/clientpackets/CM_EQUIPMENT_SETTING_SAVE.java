@@ -7,6 +7,10 @@ import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.Equipmen
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 
+/**
+ * 保存装备预设方案的客户端包。
+ * Client packet that saves an equipment preset configuration.
+ */
 public class CM_EQUIPMENT_SETTING_SAVE extends AionClientPacket {
 
 	private int slot;
@@ -33,6 +37,14 @@ public class CM_EQUIPMENT_SETTING_SAVE extends AionClientPacket {
 	private int plume;
 	private int bracelet;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_EQUIPMENT_SETTING_SAVE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

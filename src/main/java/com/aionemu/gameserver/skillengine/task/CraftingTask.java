@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.task;
 
 import com.aionemu.commons.utils.Rnd;
@@ -31,22 +15,91 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CRAFT_UPDATE;
 import com.aionemu.gameserver.services.craft.CraftService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 制作任务：按配方推进成功/失败进度，处理连击暴击与批量制作。
+ * Crafting task: advances success/failure for a recipe, handling combo crits and multi-craft.
+ */
 public class CraftingTask extends AbstractCraftTask {
 
+	/**
+	 * 配方模板。
+	 * Recipe template.
+	 */
 	protected RecipeTemplate recipeTemplate;
+
+	/**
+	 * 基础产物物品模板。
+	 * Base product item template.
+	 */
 	protected ItemTemplate itemTemplate;
+
+	/**
+	 * 实际产物物品模板（可能因连击暴击变化）。
+	 * Actual product template (may change with combo crit).
+	 */
 	protected ItemTemplate itemTemplateReal;
+
+	/**
+	 * 当前连击暴击计数。
+	 * Current combo-crit count.
+	 */
 	protected int critCount;
+
+	/**
+	 * 是否触发普通连击暴击。
+	 * Whether a normal combo crit was rolled.
+	 */
 	protected boolean crit = false;
+
+	/**
+	 * 是否触发紫色连击暴击。
+	 * Whether a purple combo crit was rolled.
+	 */
 	protected boolean purpleCrit = false;
+
+	/**
+	 * 最大连击暴击次数（配方 combo 产物数）。
+	 * Max combo-crit count (recipe combo product size).
+	 */
 	protected int maxCritCount;
+
+	/**
+	 * 制作加成值。
+	 * Crafting bonus value.
+	 */
 	private int bonus;
+
+	/**
+	 * 剩余制作次数。
+	 * Remaining craft attempts.
+	 */
 	private int remainingCrafts;
 
+	/**
+	 * 构造单次制作任务。
+	 * Creates a single-craft task.
+	 *
+	 * requesting player
+	 * @param responder 制作台等静态对象 / craft station static object
+	 * recipe template
+	 * @param skillLvlDiff 技能等级差 / skill level difference
+	 * @param bonus 制作加成 / craft bonus
+	 */
 	public CraftingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplate, int skillLvlDiff, int bonus) {
 		this(requestor, responder, recipeTemplate, skillLvlDiff, bonus, 1);
 	}
 
+	/**
+	 * 构造可批量制作的任务。
+	 * Creates a craft task with optional multi-craft count.
+	 *
+	 * requesting player
+	 * @param responder 制作台等静态对象 / craft station static object
+	 * recipe template
+	 * @param skillLvlDiff 技能等级差 / skill level difference
+	 * @param bonus 制作加成 / craft bonus
+	 * craft attempt count
+	 */
 	public CraftingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplate, int skillLvlDiff, int bonus, int craftCount) {
 		super(requestor, responder, skillLvlDiff);
 		this.recipeTemplate = recipeTemplate;
@@ -55,10 +108,21 @@ public class CraftingTask extends AbstractCraftTask {
 		this.remainingCrafts = Math.max(1, craftCount);
 	}
 
+	/**
+	 * 计算一次尝试后的剩余制作次数。
+	 * Computes remaining craft attempts after one try.
+	 *
+	 * @param remainingCrafts 当前剩余次数 / current remaining count
+	 * @return 尝试后剩余次数 / remaining after attempt
+	 */
 	static int getRemainingCraftsAfterAttempt(int remainingCrafts) {
 		return Math.max(0, remainingCrafts - 1);
 	}
 
+	/**
+	 * 按物品品质重置成功/失败进度上限。
+	 * Resets success/failure caps based on item quality.
+	 */
 	private void craftSetup() {
 		this.itemQuality = this.itemTemplateReal.getItemQuality();
 		currentSuccessValue = 0;
@@ -67,6 +131,10 @@ public class CraftingTask extends AbstractCraftTask {
 		maxFailureValue = (int) Math.round((this.itemQuality.getQualityId() + 3) * 5.25) * 5;
 	}
 
+	/**
+	 * 分析本 tick 暴击与进度增量。
+	 * Analyzes this tick's crit and progress increments.
+	 */
 	@Override
 	protected void analyzeInteraction() {
 		int critVal = (int) (Rnd.get(55000) / (skillLvlDiff + 1));
@@ -97,12 +165,22 @@ public class CraftingTask extends AbstractCraftTask {
 		}
 	}
 
+	/**
+	 * 失败完成：发送失败更新与动画。
+	 * Failure finish: sends failure update and animation.
+	 */
 	@Override
 	protected void onFailureFinish() {
 		PacketSendUtility.sendPacket(requestor, new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, currentSuccessValue, currentFailureValue, 6));
 		PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), responder.getObjectId(), 0, 3), true);
 	}
 
+	/**
+	 * 成功完成：处理连击暴击升级或结算产物。
+	 * Success finish: handles combo-crit upgrades or final product settlement.
+	 *
+	 * @return true 表示整次任务结束 / true if the whole task ends
+	 */
 	@Override
 	protected boolean onSuccessFinish() {
 		if (this.checkCrit() && recipeTemplate.getComboProduct(critCount) != null) {
@@ -126,6 +204,12 @@ public class CraftingTask extends AbstractCraftTask {
 		}
 	}
 
+	/**
+	 * 完成一次制作尝试：递减剩余次数，必要时开始下一次。
+	 * Finishes one craft attempt: decrements remaining count or starts the next craft.
+	 *
+	 * @return true 表示全部次数完成 / true if all attempts are done
+	 */
 	protected boolean finishCraftAttempt() {
 		remainingCrafts = getRemainingCraftsAfterAttempt(remainingCrafts);
 		if (remainingCrafts == 0) {
@@ -135,6 +219,10 @@ public class CraftingTask extends AbstractCraftTask {
 		return false;
 	}
 
+	/**
+	 * 开始下一次批量制作。
+	 * Starts the next multi-craft attempt.
+	 */
 	protected void startNextCraft() {
 		critCount = 0;
 		crit = false;
@@ -148,6 +236,10 @@ public class CraftingTask extends AbstractCraftTask {
 		PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), responder.getObjectId(), recipeTemplate.getSkillid(), 1), true);
 	}
 
+	/**
+	 * 向客户端发送制作进度更新。
+	 * Sends craft progress update to the client.
+	 */
 	@Override
 	protected void sendInteractionUpdate() {
 		PacketSendUtility.sendPacket(requestor, new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, currentSuccessValue, currentFailureValue, this.critType.getPacketId()));
@@ -156,19 +248,31 @@ public class CraftingTask extends AbstractCraftTask {
 		}
 	}
 
+	/**
+	 * 中止制作：发包并清理玩家制作任务。
+	 * Aborts crafting: packets and clears the player's craft task.
+	 */
 	@Override
 	protected void onInteractionAbort() {
 		PacketSendUtility.sendPacket(requestor, new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, 0, 0, 4));
 		PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), responder.getObjectId(), 0, 2), true);
 		requestor.setCraftingTask(null);
-        stop(true);
+		stop(true);
 	}
 
+	/**
+	 * 交互结束：清理玩家制作任务引用。
+	 * Interaction finish: clears the player's craft task reference.
+	 */
 	@Override
 	protected void onInteractionFinish() {
 		requestor.setCraftingTask(null);
 	}
 
+	/**
+	 * 交互开始：加载产物模板、处理任务配方删除并启动动画。
+	 * Interaction start: loads product templates, handles quest recipe removal, starts animation.
+	 */
 	@Override
 	protected void onInteractionStart() {
 		this.itemTemplate = DataManager.ITEM_DATA.getItemTemplate(recipeTemplate.getProductid());
@@ -176,7 +280,7 @@ public class CraftingTask extends AbstractCraftTask {
 		craftSetup();
 		if ((this.recipeTemplate.getMaxProductionCount() != null) && (this.itemTemplateReal.getCategory() == ItemCategory.QUEST)) {
 			this.requestor.getRecipeList().deleteRecipe(this.requestor, this.recipeTemplate.getId());
-		    onInteractionAbort();
+			onInteractionAbort();
 		}
 		setupCrit();
 		PacketSendUtility.sendPacket(requestor, new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, maxSuccessValue, maxFailureValue, 0));
@@ -185,6 +289,10 @@ public class CraftingTask extends AbstractCraftTask {
 		PacketSendUtility.broadcastPacket(requestor, new SM_CRAFT_ANIMATION(requestor.getObjectId(), responder.getObjectId(), recipeTemplate.getSkillid(), 1), true);
 	}
 
+	/**
+	 * 按概率与房屋加成预掷连击暴击。
+	 * Pre-rolls combo crits using rates and house bonuses.
+	 */
 	private void setupCrit() {
 		int chance = requestor.getRates().getCraftCritRate();
 		if (maxCritCount > 0) {
@@ -212,6 +320,12 @@ public class CraftingTask extends AbstractCraftTask {
 		}
 	}
 
+	/**
+	 * 执行一次制作交互 tick。
+	 * Performs one crafting interaction tick.
+	 *
+	 * @return true 表示任务应停止 / true if the task should stop
+	 */
 	@Override
 	protected boolean onInteraction() {
 		if (currentSuccessValue == maxSuccessValue) {
@@ -226,6 +340,12 @@ public class CraftingTask extends AbstractCraftTask {
 		return false;
 	}
 
+	/**
+	 * 检查并应用连击暴击产物切换。
+	 * Checks and applies combo-crit product switching.
+	 *
+	 * @return 是否发生了暴击产物切换 / true if a crit product switch occurred
+	 */
 	private boolean checkCrit() {
 		if (crit) {
 			crit = false;

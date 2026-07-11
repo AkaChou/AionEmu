@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.quest;
 
 import java.util.ArrayList;
@@ -24,6 +8,11 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 任务 Work 物品模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestWorkItems", propOrder = { "questWorkItem" })
 public class QuestWorkItems {
@@ -32,20 +21,7 @@ public class QuestWorkItems {
 	protected List<QuestItems> questWorkItem;
 
 	/**
-	 * Gets the value of the questWorkItem property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the questWorkItem property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getQuestWorkItem().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 questWorkItem 属性值。 / Gets the value of the questWorkItem property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the questWorkItem property. <p> For example, to add a new item, do as follows: <pre> getQuestWorkItem().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getQuestWorkItem() {
 		if (questWorkItem == null) {

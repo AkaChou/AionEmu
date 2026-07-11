@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.goods;
 
 import java.util.ArrayList;
@@ -29,6 +13,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.limiteditems.LimitedItem;
 
 /**
+ * Goods 列表模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -55,7 +42,7 @@ public class GoodsList {
 	}
 
 	/**
-	 * return the limitedItems.
+	 * return the limitedItems
 	 */
 	public List<LimitedItem> getLimitedItems() {
 		List<LimitedItem> limitedItems = new ArrayList<>();
@@ -69,9 +56,10 @@ public class GoodsList {
 		return limitedItems;
 	}
 
-	/**
-	 * Gets the value of the id property.
-	 */
+	 /**
+	  * 获取 id 属性值。
+	  * Gets the value of the id property
+	  */
 	public int getId() {
 		return id;
 	}
@@ -84,21 +72,7 @@ public class GoodsList {
 	}
 
 	/**
-	 * <p>
-	 * Java class for anonymous complex type.
-	 * <p>
-	 * The following schema fragment specifies the expected content contained within
-	 * this class.
-	 * 
-	 * <pre>
-	 * &lt;complexType>
-	 *   &lt;complexContent>
-	 *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-	 *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}int" />
-	 *     &lt;/restriction>
-	 *   &lt;/complexContent>
-	 * &lt;/complexType>
-	 * </pre>
+	 * 匿名复杂类型的 Java 类（XSD 生成）。 / <p> Java class for anonymous complex type. <p> The following schema fragment specifies the expected content contained within this class. <pre> &lt;complexType> &lt;complexContent> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"> &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}int" /> &lt;/restriction> &lt;/complexContent> &lt;/complexType> </pre>
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "")
@@ -111,23 +85,24 @@ public class GoodsList {
 		@XmlAttribute(name = "buy_limit")
 		private Integer buyLimit;
 
-		/**
-		 * Gets the value of the id property.
-		 */
+	 /**
+	  * 获取 id 属性值。
+	  * Gets the value of the id property
+	  */
 		public int getId() {
 			return id;
 		}
 
 		/**
-		 * return sellLimit.
-		 */
+	 * return sellLimit
+	 */
 		public Integer getSellLimit() {
 			return sellLimit;
 		}
 
 		/**
-		 * return buyLimit.
-		 */
+	 * return buyLimit
+	 */
 		public Integer getBuyLimit() {
 			return buyLimit;
 		}

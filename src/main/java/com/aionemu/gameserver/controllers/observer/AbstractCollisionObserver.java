@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,22 +13,45 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
+ * 抽象碰撞观察者：在移动时对几何体做射线检测并回调。
+ * Abstract collision observer: ray-tests geometry on move and invokes a callback.
+ *
  * @author MrPoke
  * @moved Rolandas
  */
 public abstract class AbstractCollisionObserver extends ActionObserver {
 
+	/** 被观察生物 / Observed creature */
 	protected Creature creature;
+	/** 上一位置 / Previous position */
 	protected Vector3f oldPos;
+	/** 碰撞几何体 / Collision geometry */
 	protected Spatial geometry;
+	/** 碰撞意图掩码 / Collision intention mask */
 	protected byte intentions;
+	/** 检测类型（接触/穿越） / Check type (touch/pass) */
 	private final CheckType checkType;
+	/** 异步检测是否正在运行 / Whether async check is running */
 	private AtomicBoolean isRunning = new AtomicBoolean();
 
+	/**
+	 * 默认 PASS 检测类型构造。
+	 * Constructor with default PASS check type.
+	 *
+	 * creature
+	 * geometry
+	 * collision intentions
+	 */
 	public AbstractCollisionObserver(Creature creature, Spatial geometry, byte intentions) {
 		this(creature, geometry, intentions, CheckType.PASS);
 	}
 
+	/**
+	 * creature
+	 * geometry
+	 * collision intentions
+	 * check type
+	 */
 	public AbstractCollisionObserver(Creature creature, Spatial geometry, byte intentions, CheckType checkType) {
 		super(ObserverType.MOVE_OR_DIE);
 		this.creature = creature;
@@ -99,10 +106,22 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 		}
 	}
 
+	/**
+	 * 移动检测完成后的回调。
+	 * Callback after a move collision check completes.
+	 *
+	 * collision results
+	 */
 	public abstract void onMoved(CollisionResults result);
 
+	/**
+	 * 碰撞检测类型。
+	 * Collision check type.
+	 */
 	public enum CheckType {
+		/** 接触检测（竖直射线） / Touch check (vertical ray) */
 		TOUCH,
+		/** 穿越检测（位移路径） / Pass-through check (movement path) */
 		PASS
 	}
 }

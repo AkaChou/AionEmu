@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -30,12 +14,27 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.List;
 
+/**
+ * 查询或修改地图天气的管理员命令。
+ * Admin command to query or change map weather.
+ */
 public class Weather extends AdminCommand
 {
+	/**
+	 * 构造 weather 命令。
+	 * Creates the weather command.
+	 */
 	public Weather() {
 		super("weather");
 	}
-	
+
+	/**
+	 * 无参时显示当前区域天气；否则按地图名设置或 reset。
+	 * With no args shows current zone weather; otherwise sets by map name or resets.
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params 地图名与天气码或 reset / Map name and weather code, or reset
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		String regionName = null;
@@ -95,7 +94,14 @@ public class Weather extends AdminCommand
 			return;
 		}
 	}
-	
+
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //weather <regionName(poeta, ishalgen, etc ...)> <value(0->12)> OR //weather reset");

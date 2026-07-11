@@ -1,19 +1,7 @@
-/**
- * This file is part of the Aion Reconstruction Project Server.
- *
- * The Aion Reconstruction Project Server is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * The Aion Reconstruction Project Server is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with the Aion Reconstruction Project Server. If not, see
- * <http://www.gnu.org/licenses/>.
- *
- * @AionReconstructionProjectTeam
- */
 package com.aionemu.gameserver.world.geo.nav;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,96 +13,94 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.world.geo.nav.NavService.NavPathway;
 
 /**
- * Implements a pathfinding algorithm similar to A* to traverse through {@link NavGeometry}.
- * 
+ * 基于 A* 变体的导航网格寻路辅助类，在 {@link NavGeometry} 上搜索走廊路径。
+ * Pathfinding helper similar to A* that traverses {@link NavGeometry} corridors.
+ *
  * @author Yon (Aion Reconstruction Project)
  */
 @Slf4j
 class NavHelper {
-	
-	
+
+
 	/**
-	 * A value used when attempting to pathfind to a target that is not on the Nav Mesh.
-	 * <p>
-	 * If the estimated distance of the target is within this value, then the path will be
-	 * considered complete; from there, a straight line path will be used to finish traversal.
-	 * <p>
-	 * If this value is too large, then entities that are traversing to targets that are not on
-	 * the Nav Mesh may clip through walls or other geometry in strange ways.
+	 * 目标不在导航网格上时的容差阈值。
+	 * 若目标估计距离在此阈值内，路径视为完成，并以直线补全剩余段。
+	 * 过大可能导致实体穿墙。
+	 * Tolerance used when pathfinding toward a target off the nav mesh.
+	 * If the estimated distance is within this value, the path is considered complete
+	 * and a straight-line finish is used. Too large a value may clip through geometry.
 	 */
 	public final static float ARBITRARY_SMALL_VALUE = 5;
-	
+
 	/**
-	 * A value used when retracing or opening the list of nodes to create a pathway corridor.
-	 * <p>
-	 * This value limits how many line segments can be stored in a single list. If this
-	 * value is exceeded, pathfinding attempts are considered to have failed.
-	 * <p>
-	 * If this value is too small, pathfinding will fail over long path distances. If this
-	 * value is too large, then the JVM can consume all of its memory trying to store the corridor.
-	 * <p>
-	 * This value is mainly to prevent an issue with one of the pathfinding algorithm's assumptions
-	 * that corrupts the data structure and forces an infinite loop, but is also used as a limit
-	 * of operations while pathing.
+	 * 路径走廊节点数上限；超过则寻路失败。
+	 * 过小会使远距寻路失败，过大则可能耗尽内存。
+	 * 同时作为防无限循环的操作上限。
+	 * Maximum corridor segments; exceeding it fails the pathfinding attempt.
+	 * Too small fails long paths; too large may exhaust memory.
+	 * Also caps operations to prevent infinite loops from algorithm assumptions.
 	 */
 	public final static int ARBITRARY_LARGE_VALUE = 800;
-	
+
 	/**
-	 * A percentage of pathCost to add onto the basic path cost calculation
-	 * if the next node is moving away from the target node.
-	 * <p>
-	 * A node is considered to be in a direction moving away from the target if a vector towards
-	 * the target from the vertex opposite the edge the path passes through does not pass through
-	 * said edge. See {@link NavGeometry#isTowardsEdge(byte, float[])}.
+	 * 下一节点远离目标时附加到 pathCost 的百分比权重。
+	 * 若从对面顶点指向目标的向量不穿过路径边，则视为远离目标；
+	 * 见 {@link NavGeometry#isTowardsEdge(byte, float[])}。
+	 * Percentage of pathCost added when the next node moves away from the target.
+	 * A node moves away if a vector from the opposite vertex toward the target
+	 * does not cross the path edge; see {@link NavGeometry#isTowardsEdge(byte, float[])}.
 	 */
 	public final static float PATH_WEIGHT = 0.2F;
-	
+
 	/**
-	 * A multiplier for {@link NavHeapNode#targetDist}. When the target distance is estimated,
-	 * it will be multiplied by this value. This is to give nodes that are closer to the target
-	 * a higher priority than nodes that are further away.
+	 * 目标距离估计的乘数，使更接近目标的节点优先。
+	 * Multiplier for {@link NavHeapNode#targetDist} so closer nodes get higher priority.
 	 */
 	public final static float TARGET_WEIGHT = 20;
-	
+
 	/**
-	 * A node designed to be stored in an array treated like a heap data structure.
-	 * The heap structure should place nodes based on the {@link #compareTo(NavHeapNode)}
-	 * method, with the lowest values at the top of the heap.
-	 * 
+	 * 堆节点：按 {@link #compareTo(NavHeapNode)} 以最低优先值置于堆顶。
+	 * Heap node ordered by {@link #compareTo(NavHeapNode)}, lowest value at the top.
+	 *
 	 * @author Yon (Aion Reconstruction Project)
 	 */
 	private class NavHeapNode implements Comparable<NavHeapNode> {
-		
+
 		/**
-		 * If true, this node has been explored and opened by the pathfinding algorithm.
+		 * 是否已被寻路算法展开。
+		 * Whether this node has been explored and opened.
 		 */
 		boolean open = false;
-		
+
 		/**
+		 * 本节点对应的导航三角形。
 		 * The {@link NavGeometry} this node represents.
 		 */
 		NavGeometry tile;
-		
+
 		/**
-		 * The {@link NavHeapNode node} with the shortest {@link #pathCost} that connects to this node.
+		 * 连到本节点且 pathCost 最短的父节点。
+		 * Parent node with the shortest {@link #pathCost} connecting here.
 		 */
 		NavHeapNode parent;
-		
+
 		/**
-		 * A lookup value for the heap this node is stored within.
+		 * 在堆数组中的下标。
+		 * Lookup index within the heap array.
 		 */
 		int heapIndex;
-		
+
 		/**
-		 * A value used to compare this node to other nodes. After a summation with another value,
-		 * the summed value determines the priority of this node within the heap. 
+		 * 路径代价与目标距离估计；二者之和决定堆优先级。
+		 * Path cost and target-distance estimate; their sum drives heap priority.
 		 */
 		float pathCost, targetDist;
-		
+
 		/**
-		 * Basic constructor. Only used by the initial starting node of the path.
-		 * 
-		 * @param node -- The {@link NavGeometry} this node represents.
+		 * 仅用于路径起点节点的构造。
+		 * Constructor used only for the initial starting node.
+		 *
+		 * @param node 对应的导航三角形 / represented nav geometry
 		 */
 		NavHeapNode(NavGeometry node) {
 			this.tile = node;
@@ -124,16 +110,14 @@ class NavHelper {
 				targetDist = node.getPriority(x2, y2, z2) * targetWeight();
 			}
 		}
-		
+
 		/**
-		 * Constructor. This node is created with the given parent node (which cannot be null),
-		 * and estimates its {@link #pathCost} based on said parent node. The {@link #targetDist}
-		 * is also estimated.
-		 * 
-		 * @param node -- The {@link NavGeometry} this node represents.
-		 * @param parent -- The {@link NavHeapNode} that opened onto this node.
-		 * @param useWeight -- If true, the {@link #pathCost} will have an extra percentage added onto it
-		 * (see {@link NavHelper#PATH_WEIGHT PATH WEIGHT}).
+		 * 由父节点展开创建子节点，并估计 pathCost / targetDist。
+		 * Creates a child node opened from a parent, estimating pathCost and targetDist.
+		 *
+		 * @param node 对应的导航三角形 / represented nav geometry
+		 * @param parent 展开到本节点的父节点 / parent that opened this node
+		 * whether to apply PATH_WEIGHT
 		 */
 		NavHeapNode(NavGeometry node, NavHeapNode parent, boolean useWeight) {
 			this(node);
@@ -145,20 +129,20 @@ class NavHelper {
 				pathCost = basePriority;
 			}
 		}
-		
+
 		/**
-		 * Considers the passed in node and accepts it as the new {@link #parent} if
-		 * it has a lower {@link #pathCost}. If the new parent is accepted, then the
-		 * path cost of this node is updated.
-		 * 
-		 * @param newParent -- The node to consider as a new parent.
-		 * @param useWeight -- If {@link NavHelper#PATH_WEIGHT} should be applied to
-		 * the new path cost if the new parent is accepted.
+		 * 若新父节点 pathCost 更低则接受并更新本节点代价。
+		 * Accepts newParent when it has a lower pathCost and updates this node's cost.
+		 *
+		 * @param newParent 候选父节点 / candidate parent
+		 * @param useWeight 接受后是否叠加 PATH_WEIGHT / whether to apply PATH_WEIGHT after accept
 		 */
 		void checkAndUpdateParent(NavHeapNode newParent, boolean useWeight) {
 			assert newParent != null;
 			if (parent == null) return;
-			if (newParent.parent == this) return;
+			for (NavHeapNode ancestor = newParent; ancestor != null; ancestor = ancestor.parent) {
+				if (ancestor == this) return;
+			}
 			if (parent.pathCost > newParent.pathCost) {
 				parent = newParent;
 				if (useWeight) {
@@ -171,49 +155,43 @@ class NavHelper {
 				}
 			}
 		}
-		
+
 		/**
-		 * Sums {@link #pathCost} and {@link #targetDist} and returns the result.
-		 * This value represents the overall priority of this node. Lower values
-		 * are of a higher priority, and the position on the heap should take this
-		 * value into consideration above all others. See {@link #compareTo(NavHeapNode)}.
-		 * 
-		 * @return the summation of {@link #pathCost} and {@link #targetDist}.
+		 * 返回 pathCost + targetDist 作为整体优先级（越小越高）。
+		 * Returns pathCost + targetDist as overall priority (lower is better).
+		 *
+		 * priority value
 		 */
 		float getPriority() {
 			return pathCost + targetDist;
 		}
-		
+
 		/**
-		 * Opens this node by examining what the edges of {@link #tile} connect to. If the
-		 * edges do not connect to anything, they are skipped. If the edge connection exists,
-		 * and has yet to be explored, a new node is created to represent it and added to the heap.
-		 * If the edge connection exists, and has already been explored, this node will attempt to
-		 * become the new parent of the existing node by calling {@link #checkAndUpdateParent(NavHeapNode, boolean)}.
-		 * <p>
-		 * This operation sets {@link #open} to true.
+		 * 展开本节点：检查三条边连接，新建或更新邻居堆节点。
+		 * Opens this node by exploring edge connections and adding/updating neighbor heap nodes.
+		 * Sets {@link #open} to true.
 		 */
 		void open() {
 			if (open) return;
-			//Check connections to see if they are part of the heap
+			// 检查连接是否属于堆 / Check connections to see if they are part of the heap
 			float[] vec = {x2, y2};
-			
-			//This commented code made things worse.
+
+			// 这段注释代码反而更糟。 / This commented code made things worse.
 //			if (parent != null) {
 //				vec = new float[] {x2 - parent.tile.incenter[0], y2 - parent.tile.incenter[1]};
 //			} else {
 //				vec = new float[] {x2 - x1, y2 - y1};
 //			}
 			if (tile.getEdge1() != null) if (!contains(tile.getEdge1())) {
-				//If they aren't, then create and add them
+				// 若不是，则创建并添加它们 / If they aren't, then create and add them
 				NavHeapNode newNode = new NavHeapNode(tile.getEdge1(), this, !tile.isTowardsEdge((byte) 1, vec));
 				add(newNode);
 			} else {
-				//If they are, run checkAndUpdateParent
+				// If they are, run checkAndUpdateParent
 				NavHeapNode child = getNode(tile.getEdge1());
 				if (child != parent) child.checkAndUpdateParent(this, !tile.isTowardsEdge((byte) 1, vec));
 			}
-			
+
 			if (tile.getEdge2() != null) if (!contains(tile.getEdge2())) {
 				NavHeapNode newNode = new NavHeapNode(tile.getEdge2(), this, !tile.isTowardsEdge((byte) 2, vec));
 				add(newNode);
@@ -221,7 +199,7 @@ class NavHelper {
 				NavHeapNode child = getNode(tile.getEdge2());
 				if (child != parent) child.checkAndUpdateParent(this, !tile.isTowardsEdge((byte) 2, vec));
 			}
-			
+
 			if (tile.getEdge3() != null) if (!contains(tile.getEdge3())) {
 				NavHeapNode newNode = new NavHeapNode(tile.getEdge3(), this, !tile.isTowardsEdge((byte) 3, vec));
 				add(newNode);
@@ -231,15 +209,15 @@ class NavHelper {
 			}
 			open = true;
 		}
-		
+
 		/**
-		 * Considers the priority of this node compared to the other. If this node has a higher
-		 * priority (lower value from {@link #getPriority()}) then -1 is returned. If this node
-		 * has a lower priority, then 1 is returned. If the overall priority is equal to the
-		 * given node, {@link #targetDist} is used as a tie-breaker (lower values are higher priority).
-		 * If both the overall priority and the target distance are equal, 0 is returned. 
-		 * <p>
-		 * Note: this class has a natural ordering that is inconsistent with equals.
+		 * 按整体优先级比较；相等时以 targetDist 决胜。
+		 * 注意：自然顺序与 equals 不一致。
+		 * Compares by overall priority, breaking ties with targetDist.
+		 * Note: natural ordering is inconsistent with equals.
+		 *
+		 * @param other 另一节点 / other node
+		 * comparison result
 		 */
 		@Override
 		public int compareTo(NavHeapNode other) {
@@ -249,65 +227,58 @@ class NavHelper {
 			if (pThis < pOther) return -1;
 			if (targetDist > other.targetDist) return 1;
 			if (targetDist < other.targetDist) return -1;
-			//If priority is equal, and targetDist is equal, then pathCost is also equal.
+			// 若优先级与目标距离相等，则路径代价也相等。 / If priority is equal, and targetDist is equal, then pathCost is also equal.
 //			if (pathCost > other.pathCost) return 1;
 //			if (pathCost < other.pathCost) return -1;
 			return 0;
 		}
-		
+
 	}
-	
-	/**
-	 * Starting coordinate component
-	 */
+
+	/** 起点坐标分量。 / Starting coordinate components. */
 	final float x1, y1, z1;
-	
-	/**
-	 * Target coordinate component
-	 */
+
+	/** 终点坐标分量。 / Target coordinate components. */
 	final float x2, y2, z2;
-	
+
 	/**
-	 * The target {@link NavGeometry} to find a path to.
+	 * 寻路目标导航三角形。
+	 * Target {@link NavGeometry} to pathfind toward.
 	 */
 	NavGeometry endTile;
-	
+
 	/**
-	 * A list of {@link NavGeometry} that has been explored and stored within a {@link NavHeapNode}.
-	 * <p>
-	 * This list is used to determine if a Nav Mesh node has already been explored after it's been
-	 * removed from the heap.
+	 * 已探索导航三角形到堆节点的映射（含已出堆节点）。
+	 * Map of explored nav geometry to heap nodes (including those removed from the heap).
 	 */
 	private Map<NavGeometry, NavHeapNode> list;
-	
+
 	/**
-	 * A simple array that is treated as the underlying structure of a heap. The {@link NavHelper} class maintains
-	 * this heap, and enforces the ordering within.
-	 * <p>
-	 * This array is expanded as needed. Due to the size being larger than the contents, {@link #currentHeapCount}
-	 * is used to track how many indices of this array are relevant.
+	 * 作为堆底层结构的数组；由本类维护顺序，按需扩容。
+	 * Underlying heap array maintained by this helper; expanded as needed.
 	 */
 	private NavHeapNode[] heap;
-	
+
 	/**
-	 * The current number of items being stored on the {@link #heap}.
+	 * 当前堆中元素个数。
+	 * Current number of items stored on the heap.
 	 */
 	private int currentHeapCount = 0;
-	
+
 	/**
-	 * Creates a new {@link NavHelper} that is ready to {@link #createPathway() construct a path}
-	 * from the given starting point to the given end point.
-	 * <p>
-	 * Callers should run {@link #destroy()} when they are done with this object.
-	 * 
-	 * @param startTile -- The {@link NavGeometry} this should create a path from. Cannot be null.
-	 * @param endTile -- The {@link NavGeometry} this should pathfind to. Can be null.
-	 * @param x1 -- The x-component of the starting position.
-	 * @param y1 -- The y-component of the starting position.
-	 * @param z1 -- The z-component of the starting position.
-	 * @param x2 -- The x-component of the end position.
-	 * @param y2 -- The y-component of the end position.
-	 * @param z2 -- The z-component of the end position.
+	 * 构造就绪的寻路助手，可调用 {@link #createPathway()} 生成走廊。
+	 * 用毕请调用 {@link #destroy()}。
+	 * Creates a ready-to-run helper that can {@link #createPathway() construct a path}.
+	 * Callers should run {@link #destroy()} when done.
+	 *
+	 * @param startTile 起点三角形，不可为 null / start geometry; must not be null
+	 * @param endTile 终点三角形，可为 null / end geometry; may be null
+	 * @param x1 起点 X / start x
+	 * @param y1 起点 Y / start y
+	 * @param z1 起点 Z / start z
+	 * @param x2 终点 X / end x
+	 * @param y2 终点 Y / end y
+	 * @param z2 终点 Z / end z
 	 */
 	NavHelper(NavGeometry startTile, NavGeometry endTile, float x1, float y1, float z1, float x2, float y2, float z2) {
 		assert startTile != null;
@@ -318,22 +289,21 @@ class NavHelper {
 		this.x2 = x2; this.y2 = y2; this.z2 = z2;
 		init(startTile);
 	}
-	
+
 	/**
-	 * Creates the first node to be added to the {@link #heap} from the starting {@link NavGeometry},
-	 * and adds it to the heap.
-	 * 
-	 * @param tile -- The starting {@link NavGeometry} for the path to be generated.
+	 * 以起点三角形创建首个堆节点并入堆。
+	 * Creates the first heap node from the start geometry and adds it.
+	 *
+	 * @param tile 起点三角形 / start geometry
 	 */
 	private void init(NavGeometry tile) {
 		NavHeapNode startNode = new NavHeapNode(tile);
 		add(startNode);
 	}
-	
+
 	/**
-	 * Schedules a cleanup task that iterates through {@link #list} and nulls all
-	 * {@link NavHeapNode#parent} references to prevent memory leaks. The list is then
-	 * {@link Map#clear() cleared}.
+	 * 异步清理 list 中节点的 parent 引用，防止内存泄漏。
+	 * Schedules cleanup that nulls parent refs in list and clears it to avoid leaks.
 	 */
 	public void destroy() {
 		GameThreadPoolServices.threadPoolManager().executeLongRunning(new Runnable() {
@@ -345,16 +315,12 @@ class NavHelper {
 			}
 		});
 	}
-	
+
 	/**
-	 * Creates a list of {@link NavHeapNode NavHeapNodes} that connect the starting
-	 * node to the ending node or destination. The list is passed to {@link #retrace(NavHeapNode)},
-	 * returning the result.
-	 * <p>
-	 * If this method considers more than an {@link #ARBITRARY_LARGE_VALUE} number of nodes, it gives up,
-	 * returning an empty pathway.
-	 * 
-	 * @return A {@link NavPathway} that represents a corridor to path through.
+	 * 构造连接起点到终点的走廊路径；超过节点上限则返回空路径。
+	 * Builds a corridor path from start to goal; returns empty pathway if node limit is exceeded.
+	 *
+	 * path corridor
 	 */
 	public NavPathway[] createPathway() {
 		boolean finished = false;
@@ -388,14 +354,13 @@ class NavHelper {
 		}
 		return new NavPathway[0];
 	}
-	
+
 	/**
-	 * Attempts to backtrack through the given {@link NavHeapNode node's} parent references until
-	 * the starting point is discovered. If more than an {@link #ARBITRARY_LARGE_VALUE} number of nodes
-	 * is considered, this method will give up and return an empty pathway. 
-	 * 
-	 * @param node -- The {@link NavHeapNode} representing the final {@link NavGeometry} on the path.
-	 * @return The {@link NavPathway} that represents the corridor of the found path.
+	 * 沿 parent 回溯构造走廊；节点数超限则返回空路径。
+	 * Retraces parents to build the corridor; returns empty pathway if length is exceeded.
+	 *
+	 * @param node 终点堆节点 / final heap node on the path
+	 * path corridor
 	 */
 	private NavPathway[] retrace(NavHeapNode node) {
 		ArrayList<NavPathway> ret = new ArrayList<NavPathway>();
@@ -415,24 +380,20 @@ class NavHelper {
 				port = new NavPathway(parent.tile, (byte) 3);
 			}
 			ret.add(port);
-			/*
-			 * TODO: Figure out how the nodes are getting looped together.
-			 * This method is looping until all memory is consumed by the ArrayList in some odd edge case.
-			 * Could be related to pathCost.
-			 */
 			if (ret.size() > corridorLength) {
-				log.error("Retracing path produced too many portals: (" + x1 + ", " + y1 + ", " + z1 + ") --> (" + x2 + ", " + y2 + ", " + z2 + ")");
+				log.error(I18n.get("log.df7236389a8e", x1, y1, z1, x2, y2, z2));
 				return new NavPathway[0];
 			}
 			child = parent;
 		}
 		return ret.toArray(new NavPathway[0]);
 	}
-	
+
 	/**
-	 * Adds the given {@link NavHeapNode} to the heap, and enforces a new heap order as needed.
-	 * 
-	 * @param node -- The {@link NavHeapNode} to be added to the heap.
+	 * 将节点加入堆并上浮维护堆序。
+	 * Adds a node to the heap and sorts it up.
+	 *
+	 * @param node 待加入节点 / node to add
 	 */
 	private void add(NavHeapNode node) {
 		list.put(node.tile, node);
@@ -445,34 +406,34 @@ class NavHelper {
 		}
 		sortUp(node);
 	}
-	
+
 	/**
-	 * Checks if this {@link NavHelper} has considered the given {@link NavGeometry} yet, and returns
-	 * true if it has. False otherwise.
-	 * 
-	 * @param tile -- the {@link NavGeometry} to check for.
-	 * @return True if this NavHelper has encountered the given {@link NavGeometry}, false otherwise.
+	 * 判断给定三角形是否已探索过。
+	 * Whether the given geometry has already been considered.
+	 *
+	 * @param tile 导航三角形 / nav geometry
+	 * @return 已探索则为 true / true if already considered
 	 */
 	private boolean contains(NavGeometry tile) {
 		return list.containsKey(tile);
 	}
-	
+
 	/**
-	 * Returns the {@link NavHeapNode} that represents the given {@link NavGeometry} as specified
-	 * by the {@link HashMap#get(Object) get()} method for {@link #list}.
-	 * 
-	 * @param tile -- the {@link NavGeometry} that the retrieved {@link NavHeapNode} represents.
-	 * @return The {@link NavHeapNode} representing the given {@link NavGeometry}.
+	 * 获取表示给定三角形的堆节点。
+	 * Returns the heap node representing the given geometry.
+	 *
+	 * @param tile 导航三角形 / nav geometry
+	 * @return 对应堆节点 / matching heap node
 	 */
 	private NavHeapNode getNode(NavGeometry tile) {
 		return list.get(tile);
 	}
-	
+
 	/**
-	 * Removes the highest priority {@link NavHeapNode} from the {@link #heap}, and returns it.
-	 * Before returning, the heap is rearranged to maintain the correct order.
-	 * 
-	 * @return The highest priority {@link NavHeapNode} stored within the {@link #heap}.
+	 * 弹出堆顶最高优先级节点并重整堆。
+	 * Removes the highest-priority node from the heap and reorders it.
+	 *
+	 * top heap node
 	 */
 	private NavHeapNode removeFirst() {
 		if (currentHeapCount == 0) return null;
@@ -483,28 +444,28 @@ class NavHelper {
 		sortDown(heap[0]);
 		return ret;
 	}
-	
+
 	/**
-	 * Verifies that the given {@link NavHeapNode} is in the correct position on the {@link #heap}
-	 * after its values have been adjusted.
-	 * 
-	 * @param node -- the {@link NavHeapNode} to verify the position of.
+	 * 节点代价更新后校验其在堆中的位置。
+	 * Revalidates the node's heap position after its values change.
+	 *
+	 * @param node 已更新节点 / updated node
 	 */
 	private void onUpdateNode(NavHeapNode node) {
 		if (node.open) return;
 		sortUp(node);
 		sortDown(node); //Unneeded for this application
 	}
-	
+
 	/**
-	 * Enforces the correct position of the given {@link NavHeapNode} within the heap.
-	 * This method only verifies that the node should not be further down the {@link #heap}.
-	 * 
-	 * @param node -- The {@link NavHeapNode} to validate the position of.
+	 * 下沉调整，确保节点不高于其子节点应有位置。
+	 * Sorts a node down so it is not above its proper child position.
+	 *
+	 * @param node 待调整节点 / node to validate
 	 */
 	private void sortDown(NavHeapNode node) {
 		do {
-			//Child Index
+			// 子索引 / Child Index
 			int ciLeft = node.heapIndex * 2 + 1;
 			int ciRight = node.heapIndex * 2 + 2;
 			int swapIndex;
@@ -525,12 +486,12 @@ class NavHelper {
 			}
 		} while (true);
 	}
-	
+
 	/**
-	 * Enforces the correct position of the given {@link NavHeapNode} within the heap.
-	 * This method only verifies that the node should not be further up the {@link #heap}.
-	 * 
-	 * @param node -- The {@link NavHeapNode} to validate the position of.
+	 * 上浮调整，确保节点不低于其父节点应有位置。
+	 * Sorts a node up so it is not below its proper parent position.
+	 *
+	 * @param node 待调整节点 / node to validate
 	 */
 	private void sortUp(NavHeapNode node) {
 		int pi; //Parent Index
@@ -543,12 +504,13 @@ class NavHelper {
 			}
 		} while (true);
 	}
-	
+
 	/**
-	 * Swaps the position of the two given {@link NavHeapNode nodes} within the {@link #heap}.
-	 * 
-	 * @param node1
-	 * @param node2
+	 * 交换两节点在堆中的位置。
+	 * Swaps the positions of two nodes on the heap.
+	 *
+	 * node 1
+	 * node 2
 	 */
 	private void swap(NavHeapNode node1, NavHeapNode node2) {
 		heap[node1.heapIndex] = node2;
@@ -558,24 +520,54 @@ class NavHelper {
 		node2.heapIndex = heapIndex1;
 	}
 
+	/**
+	 * 最大展开节点数配置。
+	 * Configured maximum nodes to expand.
+	 *
+	 * max nodes
+	 */
 	private static int maxNodes() {
 		return Math.max(1, GeoDataConfig.GEO_NAV_MAX_NODES);
 	}
 
+	/**
+	 * 走廊最大长度配置。
+	 * Configured maximum corridor length.
+	 *
+	 * @return 走廊长度上限 / corridor length limit
+	 */
 	private static int corridorLength() {
 		return Math.max(1, GeoDataConfig.GEO_NAV_CORRIDOR_LENGTH);
 	}
 
+	/**
+	 * 无终点三角形时的目标距离阈值。
+	 * Target-distance threshold when no end tile is set.
+	 *
+	 * threshold
+	 */
 	private static float targetThreshold() {
 		return Math.max(0F, GeoDataConfig.GEO_NAV_TARGET_THRESHOLD);
 	}
 
+	/**
+	 * 路径权重配置。
+	 * Configured path weight.
+	 *
+	 * path weight
+	 */
 	private static float pathWeight() {
 		return Math.max(0F, GeoDataConfig.GEO_NAV_PATH_WEIGHT);
 	}
 
+	/**
+	 * 目标距离权重配置。
+	 * Configured target-distance weight.
+	 *
+	 * target weight
+	 */
 	private static float targetWeight() {
 		return Math.max(0F, GeoDataConfig.GEO_NAV_TARGET_WEIGHT);
 	}
-	
+
 }

@@ -8,9 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/****/
-/** DainAvenger
-/****/
+/**
+ * 希隆任务脚本：The Secretof Surkana（任务 ID 3920）。
+ * Heiron quest script: The Secretof Surkana (quest ID 3920). DainAvenger /***
+ */
 public class _3920TheSecretofSurkana extends QuestHandler {
 
 	private final static int questId = 3920;

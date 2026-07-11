@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -30,6 +14,10 @@ import com.aionemu.gameserver.model.templates.stats.SummonStatsTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 召唤物属性数据容器，按 NPC ID 与等级哈希索引召唤属性模板。
+ * Summon stats data holder, indexing summon stat templates by npc-id and level hash.
+ */
 @XmlRootElement(name = "summon_stats_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SummonStatsData {
@@ -38,6 +26,10 @@ public class SummonStatsData {
 
 	private final IntObjectHashMap<SummonStatsTemplate> summonTemplates = new IntObjectHashMap<SummonStatsTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，分别为暗/光 NPC ID 与等级建立属性模板索引。
+	 * After JAXB unmarshalling, indexes stat templates for dark and light npc ids with level.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SummonStatsType st : summonTemplatesList) {
 			int summonDark = makeHash(st.getNpcIdDark(), st.getRequiredLevel());
@@ -47,10 +39,18 @@ public class SummonStatsData {
 		}
 	}
 
+	/**
+	 * 按 NPC ID 与等级获取召唤物属性模板；未命中时回退到内置默认哈希序列。
+	 * Returns the summon stats template for the given npc id and level; falls back to a built-in hash sequence on miss.
+	 *
+	 * npc id
+	 * level
+	 * @return 召唤属性模板，可能为 null / summon stats template, may be null
+	 */
 	public SummonStatsTemplate getSummonTemplate(int npcId, int level) {
 		SummonStatsTemplate template = summonTemplates.get(makeHash(npcId, level));
 		if (template == null) {
-			// Water Spirit 4.8
+			// 水精灵 4.8 / Water Spirit 4.8
 			template = summonTemplates.get(makeHash(833305, 19));
 			template = summonTemplates.get(makeHash(833306, 19));
 			template = summonTemplates.get(makeHash(833307, 24));
@@ -71,7 +71,7 @@ public class SummonStatsData {
 			template = summonTemplates.get(makeHash(833322, 59));
 			template = summonTemplates.get(makeHash(833255, 64));
 			template = summonTemplates.get(makeHash(833256, 64));
-			// Fire Spirit 4.8
+			// 火焰精灵 4.8 / Fire Spirit 4.8
 			template = summonTemplates.get(makeHash(833343, 10));
 			template = summonTemplates.get(makeHash(833344, 10));
 			template = summonTemplates.get(makeHash(833345, 15));
@@ -96,7 +96,7 @@ public class SummonStatsData {
 			template = summonTemplates.get(makeHash(833364, 60));
 			template = summonTemplates.get(makeHash(833259, 65));
 			template = summonTemplates.get(makeHash(833260, 65));
-			// Earth Spirit 4.8
+			// 大地精灵 4.8 / Earth Spirit 4.8
 			template = summonTemplates.get(makeHash(833287, 16));
 			template = summonTemplates.get(makeHash(833288, 16));
 			template = summonTemplates.get(makeHash(833289, 21));
@@ -117,7 +117,7 @@ public class SummonStatsData {
 			template = summonTemplates.get(makeHash(833304, 56));
 			template = summonTemplates.get(makeHash(833253, 61));
 			template = summonTemplates.get(makeHash(833254, 61));
-			// Wind Spirit 4.8
+			// 风精灵 4.8 / Wind Spirit 4.8
 			template = summonTemplates.get(makeHash(833323, 13));
 			template = summonTemplates.get(makeHash(833324, 13));
 			template = summonTemplates.get(makeHash(833325, 18));
@@ -140,20 +140,20 @@ public class SummonStatsData {
 			template = summonTemplates.get(makeHash(833342, 58));
 			template = summonTemplates.get(makeHash(833257, 63));
 			template = summonTemplates.get(makeHash(833258, 63));
-			// Magma Spirit 4.8
+			// 岩浆精灵 4.8 / Magma Spirit 4.8
 			template = summonTemplates.get(makeHash(833366, 50));
 			template = summonTemplates.get(makeHash(833368, 55));
 			template = summonTemplates.get(makeHash(833370, 60));
 			template = summonTemplates.get(makeHash(833262, 65));
-			// Tempest Spirit 4.8
+			// 风暴精灵 4.8 / Tempest Spirit 4.8
 			template = summonTemplates.get(makeHash(833365, 50));
 			template = summonTemplates.get(makeHash(833367, 55));
 			template = summonTemplates.get(makeHash(833369, 60));
 			template = summonTemplates.get(makeHash(833261, 65));
-			// Siege Weapon
+			// 攻城武器 / Siege Weapon
 			template = summonTemplates.get(makeHash(201054, 40));
 			template = summonTemplates.get(makeHash(201055, 40));
-			// Quality Siege Weapon
+			// 优质攻城武器 / Quality Siege Weapon
 			template = summonTemplates.get(makeHash(201056, 56));
 			template = summonTemplates.get(makeHash(201057, 56));
 			template = summonTemplates.get(makeHash(201058, 60));
@@ -162,10 +162,20 @@ public class SummonStatsData {
 		return template;
 	}
 
+	/**
+	 * 返回已加载的召唤属性模板数量。
+	 * Returns the number of loaded summon stats templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return summonTemplates.size();
 	}
 
+	/**
+	 * 单条召唤属性条目，绑定暗/光 NPC ID、需求等级与属性模板。
+	 * Single summon-stats entry binding dark/light npc ids, required level, and the stats template.
+	 */
 	@XmlRootElement(name = "summonStatsTemplateType")
 	private static class SummonStatsType {
 		@XmlAttribute(name = "npc_id_dark", required = true)
@@ -180,18 +190,42 @@ public class SummonStatsData {
 		@XmlElement(name = "stats_template")
 		private SummonStatsTemplate template;
 
+		/**
+		 * 返回暗属性 NPC ID。
+		 * Returns the dark-side npc id.
+		 *
+		 * dark npc id
+		 */
 		public int getNpcIdDark() {
 			return npcIdDark;
 		}
 
+		/**
+		 * 返回光属性 NPC ID。
+		 * Returns the light-side npc id.
+		 *
+		 * light npc id
+		 */
 		public int getNpcIdLight() {
 			return npcIdLight;
 		}
 
+		/**
+		 * 返回需求等级。
+		 * Returns the required level.
+		 *
+		 * required level
+		 */
 		public int getRequiredLevel() {
 			return requiredLevel;
 		}
 
+		/**
+		 * 返回召唤属性模板。
+		 * Returns the summon stats template.
+		 *
+		 * stats template
+		 */
 		public SummonStatsTemplate getTemplate() {
 			return template;
 		}

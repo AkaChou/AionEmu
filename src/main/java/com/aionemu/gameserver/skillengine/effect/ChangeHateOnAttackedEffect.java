@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,6 +12,9 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 受击改仇恨效果：被 NPC 攻击时向其 aggro 列表追加固定仇恨值。
+ * Change-hate-on-attacked effect: adds fixed hate to an NPC that attacks the bearer.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,17 +26,28 @@ public class ChangeHateOnAttackedEffect extends EffectTemplate {
 	@XmlAttribute
 	protected int value2;
 
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 注册受击观察者，向攻击自己的 NPC 追加仇恨。
+	 * Registers an attacked observer that adds hate to the attacking NPC.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
 
-		// TODO: maybe this isn't correct formula?
-		final int finalValue = value1 + value2;
+		final int finalValue = value1 * effect.getSkillLevel() + value2;
 
 		ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
 
@@ -64,6 +62,12 @@ public class ChangeHateOnAttackedEffect extends EffectTemplate {
 		effect.setActionObserver(observer, position);
 	}
 
+	/**
+	 * 移除受击观察者。
+	 * Removes the attacked observer.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);

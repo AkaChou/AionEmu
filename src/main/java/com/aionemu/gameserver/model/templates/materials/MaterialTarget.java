@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.materials;
 
 import jakarta.xml.bind.annotation.XmlEnum;
@@ -25,22 +9,29 @@ import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 材料 Target 枚举。
+ * Material Target enumeration.
+ *
  * @author Rolandas
  */
 @XmlType(name = "MaterialTarget")
 @XmlEnum
 public enum MaterialTarget {
 
+	/** 全部 / All. */
 	ALL, NPC, PLAYER, PLAYER_WITH_PET;
 
+	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
+	/** 值 / From Value*/
 	public static MaterialTarget fromValue(String value) {
 		return valueOf(value);
 	}
 
+	/** 是否目标 / Whether target */
 	public boolean isTarget(Creature creature) {
 		if (this == ALL) {
 			return true;

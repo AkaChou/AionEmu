@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,6 +5,9 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * Parts 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,68 +23,71 @@ public class Parts {
 	protected int inwall;
 	protected int door;
 
-	/**
-	 * Gets the value of the fence property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 fence 属性值。
+	  * Gets the value of the fence property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getFence() {
 		return fence;
 	}
 
-	/**
-	 * Gets the value of the garden property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 garden 属性值。
+	  * Gets the value of the garden property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getGarden() {
 		return garden;
 	}
 
-	/**
-	 * Gets the value of the frame property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 frame 属性值。
+	  * Gets the value of the frame property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getFrame() {
 		return frame;
 	}
 
-	/**
-	 * Gets the value of the outwall property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 outwall 属性值。
+	  * Gets the value of the outwall property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getOutwall() {
 		return outwall;
 	}
 
-	/**
-	 * Gets the value of the roof property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 roof 属性值。
+	  * Gets the value of the roof property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getRoof() {
 		return roof;
 	}
 
-	/**
-	 * Gets the value of the infloor property.
-	 */
+	 /**
+	  * 获取 infloor 属性值。
+	  * Gets the value of the infloor property
+	  */
 	public int getInfloor() {
 		return infloor;
 	}
 
-	/**
-	 * Gets the value of the inwall property.
-	 */
+	 /**
+	  * 获取 inwall 属性值。
+	  * Gets the value of the inwall property
+	  */
 	public int getInwall() {
 		return inwall;
 	}
 
-	/**
-	 * Gets the value of the door property.
-	 */
+	 /**
+	  * 获取 door 属性值。
+	  * Gets the value of the door property
+	  */
 	public int getDoor() {
 		return door;
 	}

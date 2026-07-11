@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.steelRake;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Steel Rake 副本 NPC AI：Main Deck Mobile Cannon（@AIName "main_deck_mobile_cannon"），继承 ActionItemNpcAI2。
+ * Steel Rake instance NPC AI: Main Deck Mobile Cannon (@AIName "main_deck_mobile_cannon"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("main_deck_mobile_cannon")
 public class Main_Deck_Mobile_CannonAI2 extends ActionItemNpcAI2
 {
@@ -69,7 +55,7 @@ public class Main_Deck_Mobile_CannonAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//I'll need Largimark's Flint.
+					// 我需要拉吉马克的燧石。 / I'll need Largimark's Flint.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111302, player.getObjectId(), 2));
 				}
 			}

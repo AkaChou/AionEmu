@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -36,6 +20,8 @@ import com.aionemu.gameserver.model.gameobjects.*;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
@@ -43,19 +29,34 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 贝斯蒙迪尔神殿副本事件处理器。
+ * Instance event handler for Beshmundir Temple.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300170000)
 public class BeshmundirTempleInstance extends GeneralInstanceHandler
 {
-	private int macunbelloSoul;
-	private int warriorMonument;
+	/** macunbello soul / macunbello soul */
+		private int macunbelloSoul;
+	/** warrior monument / warrior monument */
+		private int warriorMonument;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> beshmundirTask = new ArrayList<Future<?>>();
+	/** beshmundir 任务 / beshmundir task */
+		private final List<Future<?>> beshmundirTask = new ArrayList<Future<?>>();
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -72,8 +73,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051387, 1)); //Flarestorm's Fabled Headgear Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
@@ -117,8 +118,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 122001163, 1)); //Lakhara's Ring.
 					}
 				}
@@ -127,8 +128,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051390, 1)); //Ahbana's Eternal Shoes Chest.
 					}
 				}
@@ -140,8 +141,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051391, 1)); //Macunbello's Eternal Gloves Chest.
 					}
 				}
@@ -150,8 +151,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					} switch (Rnd.get(1, 4)) {
 				        case 1:
 				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100001006, 1)); //Virhana's Sword.
@@ -172,8 +173,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051392, 1)); //Dorakiki The Bold's Eternal Shoulder Armor Chest.
 					}
 				}
@@ -182,8 +183,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
 				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051388, 1)); //Isbariya's Fabled Jacket Chest.
@@ -198,8 +199,8 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 186000099, 1)); //Vorpal Essence.
 					} switch (Rnd.get(1, 3)) {
 				        case 1:
@@ -247,6 +248,12 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -258,19 +265,42 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		}
     }
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
         switch (npc.getNpcId()) {
+			case 730274: // Altar Of Soul Invocation.
+				if (instance.getNpc(799506) == null
+						&& (canSummonRespondent(player, 30208, 182209610)
+								|| canSummonRespondent(player, 30308, 182209710))) {
+					spawn(799506, 1360, 390, 250, (byte) 183);
+				}
+				break;
 			case 730290: //Entrance Of Blue Flame Incinerator.
 				if (player.getInventory().decreaseByItemId(185000091, 1)) { //Incinerator Key.
 					despawnNpc(npc);
 			    } else {
-					//Key required.
+					// 需要钥匙。 / Key required.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403686));
 				}
             break;
         }
     }
+
+	private static boolean canSummonRespondent(Player player, int questId, int itemId) {
+		return canSummonRespondent(player.getQuestStateList().getQuestState(questId),
+				player.getInventory().getItemCountByItemId(itemId));
+	}
+
+	static boolean canSummonRespondent(QuestState questState, long itemCount) {
+		return questState != null && questState.getStatus() == QuestStatus.START && itemCount > 0;
+	}
 	
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
@@ -282,38 +312,44 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000096, storage.getItemCountByItemId(185000096)); //Petition Chamber Key.
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 		   /**
-			* Path To Watcher's Nexus.
-			*/
+	 * Path To Watcher's Nexus
+	 */
 			case 216238: //Captain Lakhara.
 			    doors.get(470).setOpen(true);
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
             break;
 			case 216739: //Warrior Monument.
                 warriorMonument++;
 				if (warriorMonument == 15) {
-                	//Ahbana the Wicked has appeared in the Watcher's Nexus.
+                	// 邪恶的阿巴纳已出现在看守者之枢纽。 / Ahbana the Wicked has appeared in the Watcher's Nexus.
 					sendMsgByRace(1400470, Race.PC_ALL, 5000);
 					sp(216239, 1356.9945f, 149.51117f, 246.27036f, (byte) 29, 5000, 0, null); //Ahbana The Wicked.
                 }
 				despawnNpc(npc);
-				//The Warrior Monument has been destroyed. Ahbana the Wicked is on alert.
+				// 战士纪念碑已被摧毁。邪恶的阿巴纳进入警戒。 / The Warrior Monument has been destroyed. Ahbana the Wicked is on alert.
 				sendMsgByRace(1400465, Race.PC_ALL, 0);
             break;
 			case 216239: //Ahbana The Wicked.
 			    doors.get(471).setOpen(true);
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
             break;
 			
 		   /**
-			* Path To Macunbello's Refuge.
-			*/
+	 * Path To Macunbello's Refuge
+	 */
 			case 216583: //Brutal Soulwatcher (1st Island)
 				sp(799518, 933.982971f, 444.269104f, 222.00f, (byte) 21, 3000, 0, null); //Plegeton Boatman II.
 			break;
@@ -335,17 +371,17 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    macunbelloSoul++;
 				if (macunbello != null) {
 				    if (macunbelloSoul == 7) {
-					    //Macunbello's power is weakening.
+					    // 马昆贝洛的力量正在减弱。 / Macunbello's power is weakening.
 					    sendMsgByRace(1400466, Race.PC_ALL, 2000);
 						macunbello.getEffectController().removeEffect(19046); //Soul Starved I.
 						GameEngineServices.skillEngine().applyEffectDirectly(19047, macunbello, macunbello, 0); //Soul Starved II.
 				    } else if (macunbelloSoul == 14) {
-					    //Macunbello's power has weakened.
+					    // 马昆贝洛的力量已减弱。 / Macunbello's power has weakened.
 					    sendMsgByRace(1400467, Race.PC_ALL, 2000);
 						macunbello.getEffectController().removeEffect(19047); //Soul Starved II.
 						GameEngineServices.skillEngine().applyEffectDirectly(19048, macunbello, macunbello, 0); //Soul Starved III.
 				    } else if (macunbelloSoul == 21) {
-					    //Macunbello has been crippled.
+					    // 马昆贝洛已被削弱。 / Macunbello has been crippled.
 					    sendMsgByRace(1400468, Race.PC_ALL, 2000);
 						macunbello.getEffectController().removeEffect(19048); //Soul Starved III.
 				    }
@@ -354,17 +390,17 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			case 216586: //Temadaro.
 			    sendMovie(player, 445);
 				doors.get(467).setOpen(true);
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
 			    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 			break;
 			
 		   /**
-			* Path To Garden Of The Entombed.
-			*/
+	 * Path To Garden Of The Entombed
+	 */
 			case 216246: //The Great Virhana.
 				doors.get(473).setOpen(true);
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
 			break;
 			case 216250: //Dorakiki The Bold.
@@ -374,11 +410,11 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			break;
 			
 		   /**
-			* Path To The Prison Of Ice.
-			*/
+	 * Path To The Prison Of Ice
+	 */
 			case 216263: //Isbariya The Resolute.
 				sendMovie(player, 439);
-				//The Seal Protector has fallen. The Rift Orb shines while the seal weakens.
+				// 封印守护者已倒下。裂隙宝珠发光，封印削弱。 / The Seal Protector has fallen. The Rift Orb shines while the seal weakens.
 				sendMsgByRace(1400480, Race.PC_ALL, 0);
 				deleteNpc(281645); //Sacrificial Soul.
 				sp(216264, 556.59375f, 1367.2274f, 224.79459f, (byte) 75, 3000, 0, null); //Stormwing.
@@ -415,17 +451,59 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			}
         }
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * entity id
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -437,9 +515,25 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -453,18 +547,42 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	
     private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -482,6 +600,10 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		}
 	}
 	
+    /**
+     * 副本销毁时清理资源。
+     * Clean up resources when the instance is destroyed.
+     */
     @Override
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
@@ -489,11 +611,23 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		doors.clear();
     }
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);

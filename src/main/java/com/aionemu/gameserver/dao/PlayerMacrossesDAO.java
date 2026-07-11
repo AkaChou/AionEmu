@@ -1,37 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.MacroList;
 
 /**
- * Macrosses DAO
+ * 玩家宏（Macrosses）数据访问对象。
+ * Player macros (Macrosses) data access object.
  * <p/>
  * Created on: 13.07.2009 17:05:56
- * 
+ *
  * @author Aquanox
  */
 public abstract class PlayerMacrossesDAO implements DAO {
 
 	/**
-	 * Returns unique identifier for PlayerMacroDAO
-	 * 
-	 * @return unique identifier for PlayerMacroDAO
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -39,36 +25,40 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	}
 
 	/**
-	 * Returns a list of macrosses for player
-	 * 
-	 * @param playerId Player object id.
-	 * @return a list of macrosses for player
+	 * 加载玩家宏列表。
+	 * Restores the list of macros for the player.
+	 *
+	 * player object id
+	 * macro list
 	 */
 	public abstract MacroList restoreMacrosses(int playerId);
 
 	/**
-	 * Add a macro information into database
-	 * 
-	 * @param playerId      player object id
-	 * @param macroPosition macro order # of player
-	 * @param macro         macro contents.
+	 * 向数据库添加一条宏。
+	 * Adds macro information into the database.
+	 *
+	 * player object id
+	 * @param macroPosition 宏槽位序号 / macro order number
+	 * macro contents
 	 */
 	public abstract void addMacro(int playerId, int macroPosition, String macro);
 
 	/**
-	 * Update a macro information into database
-	 * 
-	 * @param playerId      player object id
-	 * @param macroPosition macro order # of player
-	 * @param macro         macro contents.
+	 * 更新数据库中的宏。
+	 * Updates macro information in the database.
+	 *
+	 * player object id
+	 * @param macroPosition 宏槽位序号 / macro order number
+	 * macro contents
 	 */
 	public abstract void updateMacro(int playerId, int macroPosition, String macro);
 
 	/**
-	 * Remove macro in database
-	 * 
-	 * @param playerId      player object id
-	 * @param macroPosition order of macro in macro list
+	 * 删除数据库中的宏。
+	 * Removes a macro from the database.
+	 *
+	 * player object id
+	 * @param macroPosition 宏槽位序号 / order of macro in macro list
 	 */
 	public abstract void deleteMacro(int playerId, int macroPosition);
 }

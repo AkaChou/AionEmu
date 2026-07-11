@@ -1,87 +1,77 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver;
 
-import com.aionemu.commons.utils.AionProcessExit;
-import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
+import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.ExitCode;
+import com.aionemu.loginserver.configs.SvStatsConfig;
+import com.aionemu.loginserver.dao.SvStatsDAO;
 import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.loginserver.configs.SvStatsConfig;
-import com.aionemu.loginserver.dao.SvStatsDAO;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 登录服关闭钩子：有序关闭网络、线程池与数据库。
+ * LoginServer shutdown hook: orderly stop of network, pools and database.
+ *
  * @author -Nemesiss-, nrg
  */
 @Slf4j
 public class Shutdown extends Thread {
+
     /**
-     * Instance of Shutdown.
+     * 单例实例。
+     * Singleton instance.
      */
     private static Shutdown instance = new Shutdown();
     private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     /**
-     * Indicates wether the loginserver should shut dpwn or only restart
+     * 为 true 时仅重启，否则正常退出。
+     * When true, restart only; otherwise normal exit.
      */
     private static boolean restartOnly = false;
 
     /**
-     * Set's restartOnly attribute
+     * 设置是否仅重启。
+     * Set whether to restart only.
      *
-     * @param restartOnly Indicates wether the loginserver should shut dpwn or
-     * only restart
+     * @param restartOnly 仅重启则为 true / true for restart only
      */
     public void setRestartOnly(boolean restartOnly) {
         Shutdown.restartOnly = restartOnly;
     }
 
     /**
-     * get the shutdown-hook instance the shutdown-hook instance is created by
-     * the first call of this function, but it has to be registrered externaly.
+     * 获取关闭钩子单例（需外部注册到 Runtime）。
+     * Get the shutdown-hook singleton (must be registered externally).
      *
-     * @return instance of Shutdown, to be used as shutdown hook
+     * @return 关闭钩子实例 / Shutdown hook instance
      */
     public static Shutdown getInstance() {
         return instance;
     }
 
     /**
-     * this function is called, when a new thread starts if this thread is the
-     * thread of getInstance, then this is the shutdown hook and we save all
-     * data and disconnect all clients. after this thread ends, the server will
-     * completely exit if this is not the thread of getInstance, then this is a
-     * countdown thread. we start the countdown, and when we finished it, and it
-     * was not aborted, we tell the shutdown-hook why we call exit, and then
-     * call exit when the exit status of the server is 1, startServer.sh /
-     * startServer.bat will restart the server.
+     * 作为 shutdown hook 线程入口，执行完整关闭并 halt JVM。
+     * Entry as shutdown-hook thread: full shutdown then halt JVM.
      */
     @Override
     public void run() {
         shutdown(true);
     }
 
+    /**
+     * 有序关闭登录服资源。
+     * Orderly shut down LoginServer resources.
+     *
+     * @param haltJvm 是否在结束后 halt JVM / Whether to halt JVM afterwards
+     */
     public void shutdown(boolean haltJvm) {
         if (!shutdownStarted.compareAndSet(false, true)) {
             return;
@@ -89,26 +79,26 @@ public class Shutdown extends Thread {
         try {
             NetConnector.shutdownIfInitialized();
         } catch (Throwable t) {
-            log.error("Can't shutdown NetConnector", t);
+            log.error(I18n.get("log.8a48277abecd", t));
         }
 
-        // shutdown cron service prior to threadpool shutdown
+        // 在线程池关闭前先关闭 cron 服务 / shutdown cron service prior to threadpool shutdown
         try {
             LoginCronServices.shutdownIfInitialized();
         } catch (Throwable t) {
-            log.error("Can't shutdown CronService", t);
+            log.error(I18n.get("log.203da8e5761c", t));
         }
 
         /* Shuting down threadpools */
         try {
             LoginThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
-            log.error("Can't shutdown ThreadPoolManager", t);
+            log.error(I18n.get("log.6fb05b263d35", t));
         }
         try {
             CommonsNetworkThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
-            log.error("Can't shutdown common network ThreadPoolManager", t);
+            log.error(I18n.get("log.c02220991afd", t));
         }
 
         try {
@@ -116,27 +106,27 @@ public class Shutdown extends Thread {
                 DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
             }
         } catch (Throwable t) {
-            log.error("Can't update server stats before shutdown", t);
+            log.error(I18n.get("log.3c9d0695e9af", t));
         }
 
         try {
             DAOManager.shutdown();
         } catch (Throwable t) {
-            log.error("Can't shutdown DAOManager", t);
+            log.error(I18n.get("log.432427ebe7b1", t));
         }
 
         /* Shuting down DB connections */
         try {
             DatabaseFactory.shutdown();
         } catch (Throwable t) {
-            log.error("Can't shutdown DatabaseFactory", t);
+            log.error(I18n.get("log.206f2b67e382", t));
         }
 
         if (!haltJvm) {
             return;
         }
 
-        // Do system exit
+        // 执行系统退出 / Do system exit
         if (restartOnly) {
             AionProcessExit.halt(ExitCode.CODE_RESTART);
         } else {

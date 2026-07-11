@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -35,6 +19,10 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 后撤斩击效果：造成物理伤害并沿朝向后方位移。
+ * Back-dash effect: deals physical damage and moves the caster backward.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BackDashEffect")
 public class BackDashEffect extends DamageEffect {
@@ -43,6 +31,12 @@ public class BackDashEffect extends DamageEffect {
 
 	private float direction = 1;
 
+	/**
+	 * 应用伤害并更新施法者坐标。
+	 * Applies damage and updates the effector position.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
@@ -52,6 +46,12 @@ public class BackDashEffect extends DamageEffect {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
+	/**
+	 * 计算物理伤害与后撤落点（含碰撞检测）。
+	 * Calculates physical damage and back-dash landing point (with collision checks).
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, DamageType.PHYSICAL)) {

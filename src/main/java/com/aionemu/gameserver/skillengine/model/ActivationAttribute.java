@@ -1,27 +1,28 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 技能激活属性：定义技能如何被触发与维持。
+ * Skill activation attribute: how a skill is triggered and maintained.
+ */
 @XmlType(name = "activationAttribute")
 @XmlEnum
 public enum ActivationAttribute {
 
-	NONE, ACTIVE, PROVOKED, MAINTAIN, TOGGLE, PASSIVE, CHARGE;
+	/** 无 / None */
+	NONE,
+	/** 主动施放 / Active cast */
+	ACTIVE,
+	/** 被激怒/反击触发 / Provoked (counter) */
+	PROVOKED,
+	/** 维持型 / Maintain */
+	MAINTAIN,
+	/** 切换型（开关） / Toggle */
+	TOGGLE,
+	/** 被动 / Passive */
+	PASSIVE,
+	/** 充能 / Charge */
+	CHARGE;
 }

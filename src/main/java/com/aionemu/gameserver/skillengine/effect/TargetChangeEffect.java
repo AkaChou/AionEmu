@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,13 +12,30 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_UPDATE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 目标变更效果：对玩家强制切换或清空当前目标（部分技能有概率切向施法者）。
+ * Target-change effect: forces a player to retarget or clear target (some skills may retarget the effector).
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TargetChangeEffect")
 public class TargetChangeEffect extends EffectTemplate {
+
+	/**
+	 * 本效果无即时结算逻辑。
+	 * No instant apply logic for this effect.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 	}
 
+	/**
+	 * 启动时变更玩家目标：特定技能概率切向施法者，否则清空目标。
+	 * On start, changes player target: listed skills may retarget effector, otherwise clear target.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		Creature effected = effect.getEffected();

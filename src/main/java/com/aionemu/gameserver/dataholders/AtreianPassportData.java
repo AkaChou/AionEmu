@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.model.templates.event.AtreianPassport;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 阿特里亚通行证数据容器，按 ID 索引通行证模板。
+ * Atreian passport data holder, indexing passport templates by id.
+ *
  * @author Alcapwnd
  */
 @XmlRootElement(name = "atreian_passports")
@@ -39,15 +26,13 @@ public class AtreianPassportData {
 
 	@XmlElement(name = "atreian_passport")
 	private List<AtreianPassport> tlist;
-	/**
-	 * A map containing all teleport location templates
-	 */
+	/** 通行证模板索引 / passport template index */
 	private IntObjectHashMap<AtreianPassport> passportData = new IntObjectHashMap<AtreianPassport>();
 	private Map<Integer, AtreianPassport> passportDataMap = new HashMap<Integer, AtreianPassport>(1);
 
 	/**
-	 * @param u
-	 * @param parent
+	 * JAXB 反序列化完成后，将列表写入双索引映射。
+	 * After JAXB unmarshalling, populates both index maps from the list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AtreianPassport id : tlist) {
@@ -56,14 +41,33 @@ public class AtreianPassportData {
 		}
 	}
 
+	/**
+	 * 返回已加载的通行证数量。
+	 * Returns the number of loaded passports.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return passportData.size();
 	}
 
+	/**
+	 * 按 ID 获取通行证模板。
+	 * Returns the passport template for the given id.
+	 *
+	 * @param id 通行证 ID / passport id
+	 * @return 模板，不存在则为 null / template or null
+	 */
 	public AtreianPassport getAtreianPassportId(int id) {
 		return passportData.get(id);
 	}
 
+	/**
+	 * 返回全部通行证映射。
+	 * Returns the full passport map.
+	 *
+	 * @return ID 到模板的映射 / map of id to template
+	 */
 	public Map<Integer, AtreianPassport> getAll() {
 		return passportDataMap;
 	}

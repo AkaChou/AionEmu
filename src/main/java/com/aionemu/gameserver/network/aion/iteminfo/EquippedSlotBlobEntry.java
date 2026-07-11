@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.iteminfo;
 
 import java.nio.ByteBuffer;
@@ -22,18 +6,28 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 
 /**
- * This block is sent for all items that can be equipped. If item is equipped.
- * This block says to which slot it's equipped. If not, then it says 0.
- * 
+ * 当前装备槽位 Blob。
+ * 对所有可装备物品发送；已装备时写槽位 ID，否则写 0。
+ * Blob sent for all equipable items.
+ * Writes the equipped slot id when worn, otherwise 0.
+ *
  * @author -Nemesiss-
  * @modified Rolandas
  */
 public class EquippedSlotBlobEntry extends ItemBlobEntry {
 
+	/**
+	 * 构造装备槽位 Blob 条目。
+	 * Constructs an equipped-slot blob entry.
+	 */
 	EquippedSlotBlobEntry() {
 		super(ItemBlobType.EQUIPPED_SLOT);
 	}
 
+	/**
+	 * 将本 Blob 的具体内容写入缓冲区。
+	 * Writes this blob's concrete payload into the buffer.
+	 */
 	@Override
 	public void writeThisBlob(ByteBuffer buf) {
 		Item item = ownerItem;
@@ -41,6 +35,10 @@ public class EquippedSlotBlobEntry extends ItemBlobEntry {
 		writeQ(buf, item.isEquipped() ? item.getEquipmentSlot() : 0x00);
 	}
 
+	/**
+	 * 返回本 Blob 负载的字节长度。
+	 * Returns the payload size of this blob in bytes.
+	 */
 	@Override
 	public int getSize() {
 		return 8;

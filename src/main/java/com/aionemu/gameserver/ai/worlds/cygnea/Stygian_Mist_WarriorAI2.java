@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cygnea 区域 NPC AI：Stygian Mist Warrior（@AIName "lizardman_1"），继承 AggressiveNpcAI2。
+ * Cygnea zone NPC AI: Stygian Mist Warrior (@AIName "lizardman_1"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("lizardman_1")
 public class Stygian_Mist_WarriorAI2 extends AggressiveNpcAI2
 {
@@ -56,7 +42,7 @@ public class Stygian_Mist_WarriorAI2 extends AggressiveNpcAI2
 					    public void run() {
 						    despawnNpc(235912);
 				        }
-			        }, 300000); //5 Minutes.
+			        }, 300000); //5 分钟。 / 5 Minutes.
 				}
 			}
 		}

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
@@ -70,6 +56,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 向客户端同步各类副本/战场计分板、奖励与玩家状态的服务端包。
+ * Server packet synchronizing instance/battlefield scoreboard, rewards, and player state to the client.
+ */
 @SuppressWarnings("rawtypes")
 @Slf4j
 public class SM_INSTANCE_SCORE extends AionServerPacket {
@@ -86,6 +76,17 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private Player player;
 	private Player opponent;
 
+	/**
+	 * 按类型同步计分，并附带目标对象、玩家状态与种族。
+	 * Syncs score by type with target object, player status, and race.
+	 *
+	 * @param type 同步类型 / sync type
+	 * @param instanceTime 副本剩余/经过时间 / instance time
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 * related object id
+	 * player status
+	 * player race id
+	 */
 	public SM_INSTANCE_SCORE(int type, int instanceTime, InstanceReward instanceReward, Integer object,
 			int PlayerStatus, int PlayerRaceId) {
 		this.mapId = instanceReward.getMapId();
@@ -98,6 +99,15 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		instanceScoreType = instanceReward.getInstanceScoreType();
 	}
 
+	/**
+	 * 按类型同步计分，并附带目标对象。
+	 * Syncs score by type with a target object.
+	 *
+	 * @param type 同步类型 / sync type
+	 * @param instanceTime 副本剩余/经过时间 / instance time
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 * related object id
+	 */
 	public SM_INSTANCE_SCORE(int type, int instanceTime, InstanceReward instanceReward, Integer object) {
 		this.mapId = instanceReward.getMapId();
 		this.type = type;
@@ -107,6 +117,14 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		instanceScoreType = instanceReward.getInstanceScoreType();
 	}
 
+	/**
+	 * 按玩家列表同步整场计分板。
+	 * Syncs the full scoreboard for a player list.
+	 *
+	 * @param instanceTime 副本剩余/经过时间 / instance time
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 * player list
+	 */
 	public SM_INSTANCE_SCORE(int instanceTime, InstanceReward instanceReward, List<Player> players) {
 		this.mapId = instanceReward.getMapId();
 		this.instanceTime = instanceTime;
@@ -115,6 +133,16 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		instanceScoreType = instanceReward.getInstanceScoreType();
 	}
 
+	/**
+	 * 按类型与玩家列表同步计分（兼容重载，{@code tis} 未使用）。
+	 * Syncs score by type and player list (compat overload; {@code tis} unused).
+	 *
+	 * @param type 同步类型 / sync type
+	 * @param instanceTime 副本剩余/经过时间 / instance time
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 * player list
+	 * @param tis 未使用的兼容参数 / unused compatibility flag
+	 */
 	public SM_INSTANCE_SCORE(int type, int instanceTime, InstanceReward instanceReward, List<Player> players,
 			boolean tis) {
 		this.mapId = instanceReward.getMapId();
@@ -125,18 +153,40 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		instanceScoreType = instanceReward.getInstanceScoreType();
 	}
 
+	/**
+	 * 使用显式计分类型同步副本奖励。
+	 * Syncs instance reward with an explicit score type.
+	 *
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 * score type
+	 */
 	public SM_INSTANCE_SCORE(InstanceReward instanceReward, InstanceScoreType instanceScoreType) {
 		this.mapId = instanceReward.getMapId();
 		this.instanceReward = instanceReward;
 		this.instanceScoreType = instanceScoreType;
 	}
 
+	/**
+	 * 使用奖励自带的计分类型同步。
+	 * Syncs using the score type carried by the reward.
+	 *
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 */
 	public SM_INSTANCE_SCORE(InstanceReward instanceReward) {
 		this.mapId = instanceReward.getMapId();
 		this.instanceReward = instanceReward;
 		this.instanceScoreType = instanceReward.getInstanceScoreType();
 	}
 
+	/**
+	 * 按类型同步指定玩家的计分信息。
+	 * Syncs score info for a specific player by type.
+	 *
+	 * @param type 同步类型 / sync type
+	 * target player
+	 * @param instanceTime 副本剩余/经过时间 / instance time
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 */
 	public SM_INSTANCE_SCORE(int type, Player player, int instanceTime, InstanceReward instanceReward) {
 		this.mapId = instanceReward.getMapId();
 		this.type = type;
@@ -146,6 +196,16 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		instanceScoreType = instanceReward.getInstanceScoreType();
 	}
 
+	/**
+	 * 按类型同步玩家与对手的计分信息（如 1v1 场景）。
+	 * Syncs score info for a player and opponent by type (e.g. 1v1).
+	 *
+	 * @param type 同步类型 / sync type
+	 * target player
+	 * opponent player
+	 * @param instanceTime 副本剩余/经过时间 / instance time
+	 * @param instanceReward 副本奖励上下文 / instance reward context
+	 */
 	public SM_INSTANCE_SCORE(int type, Player player, Player opponent, int instanceTime,
 			InstanceReward instanceReward) {
 		this.mapId = instanceReward.getMapId();
@@ -313,7 +373,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(kbpr.getBonusAp());
 				writeD(kbpr.getRewardGp());
 				writeD(kbpr.getBonusGp());
-				// Reward.
+				// 奖励。 / Reward.
 				writeD(kbpr.getKamarRewardBox());
 				writeQ(kbpr.getRewardCount());
 				writeD(kbpr.getBrokenSpinel());
@@ -431,7 +491,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(eobpr.getBonusAp());
 				writeD(eobpr.getRewardGp());
 				writeD(eobpr.getBonusGp());
-				// Reward.
+				// 奖励。 / Reward.
 				writeD(eobpr.getOphidanVictoryBox());
 				writeQ(eobpr.getRewardCount());
 				writeD(eobpr.getBrokenSpinel());
@@ -539,7 +599,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(iwwpr.getBonusAp());
 				writeD(iwwpr.getRewardGp());
 				writeD(iwwpr.getBonusGp());
-				// Reward.
+				// 奖励。 / Reward.
 				writeD(iwwpr.getMedalBundle());
 				writeQ(iwwpr.getRewardCount());
 				writeD(iwwpr.getBrokenSpinel());
@@ -647,7 +707,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(idpr.getBonusAp());
 				writeD(idpr.getRewardGp());
 				writeD(idpr.getBonusGp());
-				// Reward.
+				// 奖励。 / Reward.
 				writeD(idpr.getIdgelDomeBox());
 				writeQ(idpr.getRewardCount());
 				writeD(idpr.getBloodMark());
@@ -755,7 +815,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(lmpr.getBonusAp());
 				writeD(lmpr.getRewardGp());
 				writeD(lmpr.getBonusGp());
-				// Reward.
+				// 奖励。 / Reward.
 				writeD(lmpr.getLandMarkBox());
 				writeQ(lmpr.getRewardCount());
 				writeD(lmpr.getBrokenSpinel());
@@ -863,7 +923,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(ecpr.getBonusAp());
 				writeD(ecpr.getRewardGp());
 				writeD(ecpr.getBonusGp());
-				// Reward.
+				// 奖励。 / Reward.
 				writeD(ecpr.getCoinIdEternityWar01());
 				writeQ(ecpr.getRewardCount());
 				writeD(ecpr.getBrokenSpinel());
@@ -1304,28 +1364,28 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			writeD(type);
 			switch (type) {
 			case 4:
-				writeC(player.getHOTVSId());// TODO 0 | 1 you and your opponent slot id
+				writeC(player.getHOTVSId()); // match side: 0 or 1
 				writeC(0x0E);// unk static
 				writeH(0x10);// unk static
 				break;
 			case 5:
-				writeC(player.getHOTVSId());// TODO 0 | 1 you and your opponent slot id
+				writeC(player.getHOTVSId()); // match side: 0 or 1
 				writeC(0x0E);// unk static
 				writeH(0x10);// unk static
 				break;
 			case 6:
-				writeC(player.getHOTVSId());// TODO 0 | 1 you and your opponent slot id
+				writeC(player.getHOTVSId()); // match side: 0 or 1
 				writeC(0x0E);// unk static
 				writeH(0x10);// unk static
 				writeD(0);// this player win count
 
-				writeC(opponent.getHOTVSId());// TODO 0 | 1 you and your opponent slot id
+				writeC(opponent.getHOTVSId()); // opponent match side: 0 or 1
 				writeC(0x0E);// unk static
 				writeH(0x10);// unk static
 				writeD(0);// this player win count
 				break;
 			case 11:
-				writeD(1);// unk
+				writeD(1);// 未知 / unk
 				writeD(opponent.getHOTMyOpponentObjId());// player objectId
 				writeD(player.getObjectId());// opponent objectId
 				break;
@@ -1337,29 +1397,23 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			writeD(type);
 			switch (type) {
 			case 0: // Enter Hall Of Tenacity
-				writeD(5); // unk
+				writeD(5); // 未知 / unk
 				writeD(players.size());
 				for (Player p : players) {
 					writeD(p.getObjectId());
 					writeS(p.getName() + " - ENCOM", 52);
 					writeD(p.getPlayerClass().getClassId());
 					writeH(p.getLevel());
-					writeC(p.getHOTVSId());// TODO 0 | 1 you and your opponent slot id
+					writeC(p.getHOTVSId()); // match side: 0 or 1
 					writeC(0x0E);// unk static
 					writeH(0x10);// unk static
-					writeD(p.getHOTCoupleId());// TODO 0 to 15 couple slot id
-					writeD(0);// unk
-					writeD(0);// unk
-					writeH(0);// unk
-					writeC(0);// unk
-					log.info("Player " + p.getName() + " CoupleId:" + p.getHOTCoupleId() + " VSId:" + p.getHOTVSId());
+					writeD(p.getHOTCoupleId()); // match slot: 0 to 15
+					writeD(0);// 未知 / unk
+					writeD(0);// 未知 / unk
+					writeH(0);// 未知 / unk
+					writeC(0);// 未知 / unk
+					log.info(I18n.get("log.e3b9fa7335db", p.getName(), p.getHOTCoupleId(), p.getHOTVSId()));
 				}
-				break;
-			case 1:
-				// TODO
-				break;
-			case 2:
-				// TODO
 				break;
 			case 9:// competition points
 				for (Player p : players) {

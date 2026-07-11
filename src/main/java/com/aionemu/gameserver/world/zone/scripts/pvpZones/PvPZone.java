@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone.scripts.pvpZones;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -31,16 +15,43 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.handler.AdvencedZoneHandler;
 
-public abstract class PvPZone implements AdvencedZoneHandler
-{
+/**
+ * PvP 区域脚本基类：处理玩家死亡播报、延迟复活与传送。
+ * Base PvP zone script: handles player-death broadcast, delayed revive, and teleport.
+ */
+public abstract class PvPZone implements AdvencedZoneHandler {
+
+	/**
+	 * 进入 PvP 区：默认无操作。
+	 * Enter PvP zone: no-op by default.
+	 *
+	 * creature
+	 * @param zone   区域实例 / zone instance
+	 */
 	@Override
 	public void onEnterZone(Creature player, ZoneInstance zone) {
 	}
-	
+
+	/**
+	 * 离开 PvP 区：默认无操作。
+	 * Leave PvP zone: no-op by default.
+	 *
+	 * creature
+	 * @param zone   区域实例 / zone instance
+	 */
 	@Override
 	public void onLeaveZone(Creature player, ZoneInstance zone) {
 	}
-	
+
+	/**
+	 * 玩家在 PvP 区内死亡：广播死亡、通知区内玩家，并在延迟后复活传送。
+	 * Player dies inside PvP zone: broadcast death, notify zone players, then revive and teleport after delay.
+	 *
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * dead target
+	 * @param zone         区域实例 / zone instance
+	 * @return 是否已处理 / whether handled
+	 */
 	@Override
 	public boolean onDie(final Creature lastAttacker, Creature target, final ZoneInstance zone) {
 		if (!(target instanceof Player)) {
@@ -66,5 +77,13 @@ public abstract class PvPZone implements AdvencedZoneHandler
 		}
 		return true;
 	}
+
+	/**
+	 * 子类实现：将玩家传送到区域对应复活点。
+	 * Implemented by subclasses: teleport the player to the zone-specific revive point.
+	 *
+	 * 玩家 / player
+	 * zone name
+	 */
 	protected abstract void doTeleport(Player player, ZoneName zoneName);
 }

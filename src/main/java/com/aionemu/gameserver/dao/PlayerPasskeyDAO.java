@@ -1,66 +1,69 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 
 /**
+ * 玩家/账号二级密码（Passkey）数据访问对象。
+ * Player/account passkey data access object.
+ *
  * @author cura
  */
 public abstract class PlayerPasskeyDAO implements DAO {
 
 	/**
-	 * @param accountId
-	 * @param passkey
+	 * 为账号插入二级密码。
+	 * Inserts a passkey for the account.
+	 *
+	 * 账号 ID / account id
+	 * passkey
 	 */
 	public abstract void insertPlayerPasskey(int accountId, String passkey);
 
 	/**
-	 * @param accountId
-	 * @param oldPasskey
-	 * @param newPasskey
-	 * @return
+	 * 在校验旧密码后更新二级密码。
+	 * Updates the passkey after verifying the old one.
+	 *
+	 * 账号 ID / account id
+	 * old passkey
+	 * new passkey
+	 * 若 successful 则为 true / true if successful
 	 */
 	public abstract boolean updatePlayerPasskey(int accountId, String oldPasskey, String newPasskey);
 
 	/**
-	 * @param accountId
-	 * @param newPasskey
-	 * @return
+	 * 强制更新二级密码（不校验旧密码）。
+	 * Force-updates the passkey without verifying the old one.
+	 *
+	 * 账号 ID / account id
+	 * new passkey
+	 * 若 successful 则为 true / true if successful
 	 */
 	public abstract boolean updateForcePlayerPasskey(int accountId, String newPasskey);
 
 	/**
-	 * @param accountId
-	 * @param passkey
-	 * @return
+	 * 校验账号二级密码是否匹配。
+	 * Checks whether the passkey matches the account.
+	 *
+	 * 账号 ID / account id
+	 * passkey
+	 * 若 matched 则为 true / true if matched
 	 */
 	public abstract boolean checkPlayerPasskey(int accountId, String passkey);
 
 	/**
-	 * @param accountId
-	 * @return
+	 * 判断账号是否已设置二级密码。
+	 * Checks whether the account already has a passkey.
+	 *
+	 * 账号 ID / account id
+	 * @return 是否已设置 / true if a passkey exists
 	 */
 	public abstract boolean existCheckPlayerPasskey(int accountId);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.commons.database.dao.DAO#getClassName()
+	/**
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
 	 */
 	@Override
 	public final String getClassName() {

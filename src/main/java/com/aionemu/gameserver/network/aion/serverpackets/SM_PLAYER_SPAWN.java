@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -28,13 +12,22 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
 /**
+ * 玩家进入世界/地图时的出生同步服务端包（世界 ID、坐标、个人副本标记、副本组队增益等）。
+ * Server packet that spawns the player into a world/map
+ * (world id, coordinates, personal-instance flag, instance party buffs, etc.).
+ * <p>
+ * 构造时若玩家正在使用机甲，会额外广播 {@link SM_USE_ROBOT}。
+ * If the player is using a robot on construction, an extra {@link SM_USE_ROBOT} is broadcast.
+ *
  * @author Ranastic (Encom)
  */
-
 public class SM_PLAYER_SPAWN extends AionServerPacket {
 	private final Player player;
 	private static InstanceBuff instanceBuff;
 
+	/**
+	 * @param player 进入世界的玩家 / player entering the world
+	 */
 	public SM_PLAYER_SPAWN(Player player) {
 		super();
 		this.player = player;
@@ -74,14 +67,14 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 		 * }
 		 */
 
-		// [LIVE_Party_Match_Boost 20+]
+		// [现场派对匹配加成 20+] / [LIVE_Party_Match_Boost 20+]
 		if ((player.getWorldId() == 300200000 || player.getWorldId() == 320100000 || player.getWorldId() == 320050000
 				|| player.getWorldId() == 300030000)) {
 			writeD(2);
 			instanceBuff = new InstanceBuff(2);
 			instanceBuff.applyPledge(player, 2);
 		}
-		// [LIVE_Party_Match_Boost 30+]
+		// [现场派对匹配加成 30+] / [LIVE_Party_Match_Boost 30+]
 		else if ((player.getWorldId() == 300080000 || player.getWorldId() == 300090000
 				|| player.getWorldId() == 300060000 || player.getWorldId() == 301160000
 				|| player.getWorldId() == 310050000 || player.getWorldId() == 320110000
@@ -91,7 +84,7 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 			instanceBuff = new InstanceBuff(3);
 			instanceBuff.applyPledge(player, 3);
 		}
-		// [LIVE_Party_Match_Boost 40+]
+		// [现场派对匹配加成 40+] / [LIVE_Party_Match_Boost 40+]
 		else if ((player.getWorldId() == 300050000 || player.getWorldId() == 300070000
 				|| player.getWorldId() == 300110000 || player.getWorldId() == 300140000
 				|| player.getWorldId() == 300120000 || player.getWorldId() == 300130000
@@ -102,7 +95,7 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 			instanceBuff = new InstanceBuff(4);
 			instanceBuff.applyPledge(player, 4);
 		}
-		// [LIVE_Party_Match_Boost 50+]
+		// [现场派对匹配加成 50+] / [LIVE_Party_Match_Boost 50+]
 		else if ((player.getWorldId() == 300210000 || player.getWorldId() == 300300000
 				|| player.getWorldId() == 300320000 || player.getWorldId() == 300250000
 				|| player.getWorldId() == 300160000 || player.getWorldId() == 300560000
@@ -114,44 +107,44 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 			instanceBuff = new InstanceBuff(5);
 			instanceBuff.applyPledge(player, 5);
 		}
-		// [LIVE_Party_Match_Boost 60+]
+		// [现场派对匹配加成 60+] / [LIVE_Party_Match_Boost 60+]
 		else if ((player.getWorldId() == 300220000 || player.getWorldId() == 300510000
 				|| player.getWorldId() == 300520000 || player.getWorldId() == 300600000
 				|| player.getWorldId() == 300480000 || player.getWorldId() == 301110000
 				|| player.getWorldId() == 301140000 || player.getWorldId() == 300800000
 				|| player.getWorldId() == 300590000 || player.getWorldId() == 301130000
 				|| player.getWorldId() == 300540000 ||
-				// Illuminary Obelisk & Linkgate Foundry.
+				// 光明方尖碑与链门铸造厂。 / Illuminary Obelisk & Linkgate Foundry.
 				player.getWorldId() == 301230000 || player.getWorldId() == 301270000 ||
-				// [Infernal] Illuminary Obelisk. & [Infernal] Danuar Reliquary.
+				// 【炼狱】光明方尖碑与【炼狱】达努阿尔圣物匣。 / [Infernal] Illuminary Obelisk. & [Infernal] Danuar Reliquary.
 				player.getWorldId() == 301360000 || player.getWorldId() == 301370000 ||
-				// [Occupied] Rentus Base. & [Anguished] Dragon Lord's Refuge. & Raksang Ruins.
-				// & Danuar Sanctuary.
+				// 【占领】伦图斯基地、【痛苦】龙主避难所、拉克桑遗迹。 / [Occupied] Rentus Base. & [Anguished] Dragon Lord's Refuge. & Raksang Ruins.
+				// 与达努阿尔圣所。 / & Danuar Sanctuary.
 				player.getWorldId() == 300610000 || player.getWorldId() == 300620000 || player.getWorldId() == 300630000
 				|| player.getWorldId() == 301380000 ||
-				// Drakenspire Depths. & Sealed Argent Manor.
+				// 龙脊深渊与封印的银白庄园。 / Drakenspire Depths. & Sealed Argent Manor.
 				player.getWorldId() == 301390000 || player.getWorldId() == 301510000 ||
-				// Archives/Cradle/Trials Of Eternity.
+				// 档案/摇篮/永恒试炼。 / Archives/Cradle/Trials Of Eternity.
 				player.getWorldId() == 301540000 || player.getWorldId() == 301550000 || player.getWorldId() == 301560000
 				||
-				// Adma's Fall. & Theobomos Test Chamber.
+				// 阿德玛之陨与西奥波莫斯试验室。 / Adma's Fall. & Theobomos Test Chamber.
 				player.getWorldId() == 301600000 || player.getWorldId() == 301610000 ||
-				// Drakenseer's Lair. & Ashunatal Dredgion.
+				// 龙视者之巢与阿舒纳塔尔战舰。 / Drakenseer's Lair. & Ashunatal Dredgion.
 				player.getWorldId() == 301620000 || player.getWorldId() == 301650000 ||
-				// Fallen Poeta & Fissure Of Oblivion.
+				// 陨落波埃塔与遗忘裂隙。 / Fallen Poeta & Fissure Of Oblivion.
 				player.getWorldId() == 301660000 || player.getWorldId() == 302100000 ||
-				// Mirash Sanctuary & Divine Tower L & Divine Tower D.
+				// 米拉什圣所与神圣塔 L、神圣塔 D。 / Mirash Sanctuary & Divine Tower L & Divine Tower D.
 				player.getWorldId() == 301720000 || player.getWorldId() == 310160000 || player.getWorldId() == 320160000
 				||
-				// Dredgion Defense: Sanctum/Pandaemonium.
+				// 战舰防御：圣所/潘达梦宁。 / Dredgion Defense: Sanctum/Pandaemonium.
 				player.getWorldId() == 302200000 || player.getWorldId() == 302300000 ||
-				// Bastion Of Souls. & Crucible Spire.
+				// 灵魂堡垒与试炼尖塔。 / Bastion Of Souls. & Crucible Spire.
 				player.getWorldId() == 302340000 || player.getWorldId() == 302400000)) {
 			writeD(6);
 			instanceBuff = new InstanceBuff(6);
 			instanceBuff.applyPledge(player, 6);
 		}
-		// [Arena Pvp]
+		// 【竞技场 PvP】 / [Arena Pvp]
 		else if ((player.getWorldId() == 210120000 || player.getWorldId() == 220130000
 				|| player.getWorldId() == 300350000 || player.getWorldId() == 300360000
 				|| player.getWorldId() == 300420000 || player.getWorldId() == 300430000
@@ -163,22 +156,22 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 			instanceBuff = new InstanceBuff(9);
 			instanceBuff.applyPledge(player, 9);
 		}
-		// [Lucky] Ophidan Bridge & [Lucky] Danuar Reliquary.
+		// 【幸运】奥菲丹桥与【幸运】达努阿尔圣物匣。 / [Lucky] Ophidan Bridge & [Lucky] Danuar Reliquary.
 		else if ((player.getWorldId() == 301320000 || player.getWorldId() == 301330000 ||
-		// Shugo Emperor's Vault. & Emperor Trillirunerk's Safe.
+		// 术古皇帝宝库与皇帝特里利伦克保险箱。 / Shugo Emperor's Vault. & Emperor Trillirunerk's Safe.
 				player.getWorldId() == 301400000 || player.getWorldId() == 301590000 ||
-				// Contaminated Underpath & IDEvent_Def & Secret Munitions Factory.
+				// 污染地下通道、IDEvent_Def 与秘密军需工厂。 / Contaminated Underpath & IDEvent_Def & Secret Munitions Factory.
 				player.getWorldId() == 301630000 || player.getWorldId() == 301631000 || player.getWorldId() == 301640000
 				||
-				// Smoldering Fire Temple. & [Opportunity] Fissure Of Oblivion.
+				// 闷燃火神殿与【机遇】遗忘裂隙。 / Smoldering Fire Temple. & [Opportunity] Fissure Of Oblivion.
 				player.getWorldId() == 302000000 || player.getWorldId() == 302110000 ||
-				// Kumuki Cave. & IDStation_Event.
+				// 库穆基洞穴与 IDStation_Event。 / Kumuki Cave. & IDStation_Event.
 				player.getWorldId() == 302330000 || player.getWorldId() == 300241000)) {
 			writeD(14);
 			instanceBuff = new InstanceBuff(14);
 			instanceBuff.applyPledge(player, 14);
 		}
-		// Evergale Canyon.
+		// 永风峡谷。 / Evergale Canyon.
 		else if ((player.getWorldId() == 302350000)) {
 			writeD(17);
 			instanceBuff = new InstanceBuff(17);
@@ -199,6 +192,13 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 		writeC(0);
 	}
 
+	/**
+	 * 根据主手武器皮肤模板解析机甲信息。
+	 * Resolves robot info from the main-hand weapon skin template.
+	 *
+	 * 玩家 / player
+	 * robot info
+	 */
 	public static RobotInfo getRobotInfo(Player player) {
 		ItemTemplate template = player.getEquipment().getMainHandWeapon().getItemSkinTemplate();
 		return DataManager.ROBOT_DATA.getRobotInfo(template.getRobotId());

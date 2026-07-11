@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 同步玩家姿态（格挡、飞行、滑翔、跳跃、静止物体等）的服务端包。
+ * Server packet that synchronizes a player's stance (block, flight, glide, jump, stationary object, etc.).
+ *
  * @author prix
  */
 public class SM_PLAYER_STANCE extends AionServerPacket {
@@ -28,10 +15,14 @@ public class SM_PLAYER_STANCE extends AionServerPacket {
 	private Player player;
 	private int state;
 
+	/**
+	 * target player
+	 * @param state 姿态状态：0=关闭，1=格挡/飞行/滑翔/跳跃等，2=静止物体 / stance: 0=off, 1=block/flight/glide/jump, 2=stationary object
+	 */
 	public SM_PLAYER_STANCE(Player player, int state) {
 		this.player = player;
 		this.state = state; // 0 = off, 1 = block, flight, glide, jump, etc.
-		// 2 = stationary object
+		// 2 = 静止物体 / 2 = stationary object
 	}
 
 	@Override

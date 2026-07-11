@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -30,12 +14,14 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * This is a container holding and serving all {@link NpcTemplate}
- * instances.<br>
- * Briefly: Every {@link Npc} instance represents some class of NPCs among which
- * each have the same id, name, items, statistics. Data for such NPC class is
- * defined in {@link NpcTemplate} and is uniquely identified by npc id.
- * 
+ * NPC 模板数据容器，持有并索引全部 {@link NpcTemplate}。
+ * 每个 {@link Npc} 实例对应某一 NPC 类别，同类 NPC 共享同一 id、名称、物品与属性，
+ * 其数据定义于 {@link NpcTemplate} 并以 NPC ID 唯一标识。
+ * Container holding and serving all {@link NpcTemplate} instances.
+ * Every {@link Npc} instance represents a class of NPCs sharing the same id, name,
+ * items and statistics. That class data is defined in {@link NpcTemplate} and uniquely
+ * identified by npc id.
+ *
  * @author Luno
  */
 @XmlRootElement(name = "npc_templates")
@@ -45,9 +31,13 @@ public class NpcData {
 	@XmlElement(name = "npc_template")
 	private List<NpcTemplate> npcs;
 
-	/** A map containing all npc templates */
+	/** 全部 NPC 模板映射 / map containing all npc templates */
 	private IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<NpcTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，按模板 ID 建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes templates by id and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (NpcTemplate npc : npcs) {
 			npcData.put(npc.getTemplateId(), npc);
@@ -56,22 +46,32 @@ public class NpcData {
 		npcs = null;
 	}
 
+	/**
+	 * 返回已加载的 NPC 模板数量。
+	 * Returns the number of loaded NPC templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return npcData.size();
 	}
 
 	/**
-	 * /** Returns an {@link NpcTemplate} object with given id.
-	 * 
-	 * @param id id of NPC
-	 * @return NpcTemplate object containing data about NPC with that id.
+	 * 按 ID 返回 NPC 模板。
+	 * Returns the {@link NpcTemplate} for the given id.
+	 *
+	 * NPC 模板 ID / npc template id
+	 * template or null
 	 */
 	public NpcTemplate getNpcTemplate(int id) {
 		return npcData.get(id);
 	}
 
 	/**
-	 * @return the npcData
+	 * 返回全部 NPC 模板映射。
+	 * Returns the full NPC template map.
+	 *
+	 * @return 模板 ID 到 NPC 模板的映射 / map of template id to NpcTemplate
 	 */
 	public IntObjectHashMap<NpcTemplate> getNpcData() {
 		return npcData;

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -22,13 +6,22 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 荣耀竞技场副本事件处理器。
+ * Instance event handler for Arena Of Glory.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300550000)
 public class ArenaOfGloryInstance extends PvPArenaInstance
 {
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		killBonus = 1000;
@@ -36,6 +29,10 @@ public class ArenaOfGloryInstance extends PvPArenaInstance
 		super.onInstanceCreate(instance);
 	}
 	
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 	@Override
 	protected void reward() {
 		int totalPoints = instanceReward.getTotalPoints();
@@ -71,14 +68,14 @@ public class ArenaOfGloryInstance extends PvPArenaInstance
 				}
 				int scoreAP = (int) (totalScoreAP * scoreRate);
 				int scoreGP = (int) (totalScoreGP * scoreRate);
-				//<Abyss Points>
+				// <欧比斯点数> / <Abyss Points>
 				basicAP *= percent;
 				rankingAP *= percent;
 				rankingAP *= playerRate;
 				reward.setBasicAP(basicAP);
 				reward.setRankingAP((int) rankingAP);
 				reward.setScoreAP(scoreAP);
-				//<Glory Points>
+				// <荣耀点数> / <Glory Points>
 				basicGP *= percent;
 				rankingGP *= percent;
 				rankingGP *= playerRate;

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Levinshor 区域 NPC AI：Zorshiv Commander（@AIName "zorshiv_commander"），继承 AggressiveNpcAI2。
+ * Levinshor zone NPC AI: Zorshiv Commander (@AIName "zorshiv_commander"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("zorshiv_commander")
 public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 {
@@ -73,7 +59,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//You joined the battle against the Invading Balaur.
+				// 你加入了对抗入侵龙族的战斗。 / You joined the battle against the Invading Balaur.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Public_Quest_Accept);
 			}
 		});
@@ -82,7 +68,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//You won the battle against the Invading Balaur.
+				// 你赢得了对抗入侵龙族的战斗。 / You won the battle against the Invading Balaur.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Public_Quest_Reward);
 			}
 		});
@@ -94,7 +80,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 				AionObject winner = getAggroList().getMostDamage();
 				if (winner instanceof Creature) {
 					final Creature kill = (Creature) winner;
-					//"Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
+					// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
 				}
 			}

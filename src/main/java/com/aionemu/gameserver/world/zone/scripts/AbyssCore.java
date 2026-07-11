@@ -1,21 +1,7 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone.scripts;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
@@ -28,23 +14,41 @@ import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 欧比斯核心碰撞区：非 GM 玩家进入时挂载碰撞致死观察者。
+ * Abyss core collision zone: attaches a collision-die observer for non-GM players on enter.
+ */
 @ZoneNameAnnotation("CORE_400010000")
 @Slf4j
-public class AbyssCore implements ZoneHandler
-{
+public class AbyssCore implements ZoneHandler {
+
+	/** 核心几何体资源路径 / core geometry resource path */
 	private static final String CORE_GEOMETRY = "levels/common/abyss/abground/landmark/ground_a/na_ab_lmark_col_01a.cgf";
 
+	/** 已挂载的碰撞观察者 / attached collision observers */
 	Map<Integer, CollisionDieActor> observed = new ConcurrentHashMap<Integer, CollisionDieActor>();
-	
+
+	/** 核心几何体 / core geometry */
 	private final Spatial geometry;
-	
+
+	/**
+	 * 加载欧比斯核心碰撞几何体。
+	 * Load the abyss-core collision geometry.
+	 */
 	public AbyssCore() {
 		geometry = GeoService.getInstance().getGeometry(400010000, CORE_GEOMETRY);
 		if (geometry == null) {
-			log.error("Abyss core geometry is missing from 400010000.geo: {}", CORE_GEOMETRY);
+			log.error(I18n.get("log.a1345eb67e87", CORE_GEOMETRY));
 		}
 	}
-	
+
+	/**
+	 * 进入核心区：为非 GM 玩家挂载碰撞致死观察者。
+	 * Enter core zone: attach a collision-die observer for non-GM players.
+	 *
+	 * creature
+	 * @param zone     区域实例 / zone instance
+	 */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		Creature acting = creature.getActingCreature();
@@ -54,7 +58,14 @@ public class AbyssCore implements ZoneHandler
 			observed.put(creature.getObjectId(), observer);
 		}
 	}
-	
+
+	/**
+	 * 离开核心区：移除碰撞致死观察者。
+	 * Leave core zone: remove the collision-die observer.
+	 *
+	 * creature
+	 * @param zone     区域实例 / zone instance
+	 */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		Creature acting = creature.getActingCreature();

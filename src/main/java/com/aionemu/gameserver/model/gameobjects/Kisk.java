@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import java.util.ArrayList;
@@ -34,7 +18,11 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.HashSet;
-import java.util.Set;
+
+/**
+ * 归还之石游戏对象。
+ * Kisk game object.
+ */
 
 public class Kisk extends SummonedObject<Player> {
 	private final Legion ownerLegion;
@@ -59,30 +47,40 @@ public class Kisk extends SummonedObject<Player> {
 		this.ownerRace = owner.getRace();
 	}
 
+	/** 是否敌对。 / Whether Enemy. */
 	@Override
 	public boolean isEnemy(Creature creature) {
 		return creature.isEnemyFrom(this);
 	}
 
+	/**
+	 * @param npc 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
 		return npc.isAttackableNpc() || npc.isAggressiveTo(this);
 	}
 
+	/**
+	 * @param player 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
+	 */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return player.getRace() != this.ownerRace;
 	}
 
+	/** 返回 npc object type / Returns the npc object type */
 	@Override
 	public NpcObjectType getNpcObjectType() {
 		return NpcObjectType.NORMAL;
 	}
 
+	/** 返回 use mask / Returns the use mask */
 	public int getUseMask() {
 		return this.kiskStatsTemplate.getUseMask();
 	}
 
+	/** 返回 current member list / Returns the current member list */
 	public List<Player> getCurrentMemberList() {
 		List<Player> currentMemberList = new ArrayList<Player>();
 		for (int memberId : this.kiskMemberIds) {
@@ -94,32 +92,39 @@ public class Kisk extends SummonedObject<Player> {
 		return currentMemberList;
 	}
 
+	/** 返回 current member count / Returns the current member count */
 	public int getCurrentMemberCount() {
 		return this.kiskMemberIds.size();
 	}
 
+	/** 返回 current member ids / Returns the current member ids */
 	public Set<Integer> getCurrentMemberIds() {
 		return this.kiskMemberIds;
 	}
 
+	/** 返回 max members / Returns the max members */
 	public int getMaxMembers() {
 		return this.kiskStatsTemplate.getMaxMembers();
 	}
 
+	/** 返回 remaining resurrects / Returns the remaining resurrects */
 	public int getRemainingResurrects() {
 		return this.remainingResurrections;
 	}
 
+	/** 返回 max ressurects / Returns the max ressurects */
 	public int getMaxRessurects() {
 		return this.kiskStatsTemplate.getMaxResurrects();
 	}
 
+	/** 返回 remaining lifetime / Returns the remaining lifetime */
 	public int getRemainingLifetime() {
 		long timeElapsed = (System.currentTimeMillis() / 1000) - kiskSpawnTime;
 		int timeRemaining = (int) (KISK_LIFETIME_IN_SEC - timeElapsed);
 		return (timeRemaining > 0 ? timeRemaining : 0);
 	}
 
+	/** 是否可以绑定。 / Whether bind. */
 	public boolean canBind(Player player) {
 		if (!player.getName().equals(getMasterName())) {
 			switch (this.getUseMask()) {
@@ -155,6 +160,7 @@ public class Kisk extends SummonedObject<Player> {
 		return true;
 	}
 
+	/** 添加玩家。 / Adds player. */
 	public synchronized void addPlayer(Player player) {
 		if (kiskMemberIds.add(player.getObjectId())) {
 			this.broadcastKiskUpdate();
@@ -164,6 +170,7 @@ public class Kisk extends SummonedObject<Player> {
 		player.setKisk(this);
 	}
 
+	/** 移除玩家。 / Removes player. */
 	public synchronized void removePlayer(Player player) {
 		player.setKisk(null);
 		if (kiskMemberIds.remove(player.getObjectId())) {
@@ -179,6 +186,7 @@ public class Kisk extends SummonedObject<Player> {
 		}
 		final Kisk kisk = this;
 		getKnownList().doOnAllPlayers(new Visitor<Player>() {
+			/** 访问 / visit. */
 			@Override
 			public void visit(Player object) {
 				if (object.getRace() == ownerRace) {
@@ -188,6 +196,7 @@ public class Kisk extends SummonedObject<Player> {
 		});
 	}
 
+	/** Broadcast Packet / Broadcast Packet */
 	public void broadcastPacket(SM_SYSTEM_MESSAGE message) {
 		for (Player member : this.getCurrentMemberList()) {
 			if (member != null) {
@@ -196,6 +205,7 @@ public class Kisk extends SummonedObject<Player> {
 		}
 	}
 
+	/** 已使用复活 / resurrection Used. */
 	public void resurrectionUsed() {
 		remainingResurrections -= 1;
 		broadcastKiskUpdate();
@@ -204,10 +214,12 @@ public class Kisk extends SummonedObject<Player> {
 		}
 	}
 
+	/** 返回所有者种族 / Returns the owner race*/
 	public Race getOwnerRace() {
 		return this.ownerRace;
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		return !this.getLifeStats().isAlreadyDead() && this.getRemainingResurrects() > 0;
 	}

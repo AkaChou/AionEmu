@@ -5,40 +5,104 @@ import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavData;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 
+/**
+ * 世界服务回退：在无 Spring 提供者时返回各组件 getInstance 单例。
+ * World-service fallbacks: return each component's {@code getInstance} singleton when no Spring provider.
+ */
 final class GameWorldServiceFallbacks {
 
+    /**
+     * 工具类不可实例化。
+     * Utility class is not instantiable.
+     */
     private GameWorldServiceFallbacks() {
     }
 
+    /**
+     * 回退 GeoService。
+     * Fallback GeoService.
+     *
+     * GeoService singleton
+     */
     static GeoService geoService() {
         return GeoServiceFallback.INSTANCE;
     }
 
+    /**
+     * 回退 NavService。
+     * Fallback NavService.
+     *
+     * NavService singleton
+     */
     static NavService navService() {
         return NavServiceFallback.INSTANCE;
     }
 
+    /**
+     * 回退 NavData。
+     * Fallback NavData.
+     *
+     * NavData singleton
+     */
     static NavData navData() {
         return NavDataFallback.INSTANCE;
     }
 
+    /**
+     * 回退 DropRegistrationService。
+     * Fallback DropRegistrationService.
+     *
+     * DropRegistrationService singleton
+     */
     static DropRegistrationService dropRegistrationService() {
         return DropRegistrationServiceFallback.INSTANCE;
     }
 
+    /**
+     * GeoService 回退持有者。
+     * GeoService fallback holder.
+     */
     private static final class GeoServiceFallback {
+        /**
+         * GeoService 单例。
+         * GeoService singleton.
+         */
         private static final GeoService INSTANCE = GeoService.getInstance();
     }
 
+    /**
+     * NavService 回退持有者。
+     * NavService fallback holder.
+     */
     private static final class NavServiceFallback {
+        /**
+         * NavService 单例。
+         * NavService singleton.
+         */
         private static final NavService INSTANCE = NavService.getInstance();
     }
 
+    /**
+     * NavData 回退持有者。
+     * NavData fallback holder.
+     */
     private static final class NavDataFallback {
+        /**
+         * NavData 单例。
+         * NavData singleton.
+         */
         private static final NavData INSTANCE = NavData.getInstance();
     }
 
+    /**
+     * DropRegistrationService 回退持有者。
+     * DropRegistrationService fallback holder.
+     */
     private static final class DropRegistrationServiceFallback {
+        /**
+         * DropRegistrationService 单例。
+         * DropRegistrationService singleton.
+         */
         private static final DropRegistrationService INSTANCE = DropRegistrationService.getInstance();
     }
 }

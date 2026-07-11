@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.loginserver.GameServerTable;
@@ -25,19 +7,22 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
 
 /**
- * Reads the list of accoutn id's that are logged to game server
+ * GS→LS：上报当前已登录游戏服的账号名列表。
+ * GS→LS: report the list of account names currently logged into this GameServer.
  *
  * @author SoulKeeper
  */
 public class CM_ACCOUNT_LIST extends GsClientPacket {
 
     /**
-     * Array with accounts that are logged in
+     * 当前在线账号名数组。
+     * Array of account names currently logged in.
      */
     private String[] accountNames;
 
     /**
-     * {@inheritDoc}
+     * 读取账号名列表。
+     * Reads the account-name list.
      */
     @Override
     protected void readImpl() {
@@ -48,7 +33,8 @@ public class CM_ACCOUNT_LIST extends GsClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 将账号登记到本 GS；若已在其他 GS 在线则请求踢下线。
+     * Registers each account on this GS; requests kick if already online on another GS.
      */
     @Override
     protected void runImpl() {

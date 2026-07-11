@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.abyss_op;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Race;
 
 /**
+ * 欧比斯 Op 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -51,30 +38,37 @@ public class AbyssOp {
 	@XmlAttribute(name = "points", required = true)
 	private int points;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return this.id;
 	}
 
+	/** 返回 abyss op type / Returns the abyss op type */
 	public AbyssOpType getAbyssOpType() {
 		return abyssOpType;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回攻城 ID / Returns the siege id */
 	public int getSiegeId() {
 		return siegeId;
 	}
 
+	/** 返回组 ID / Returns the group id */
 	public int getGroupId() {
 		return groupId;
 	}
 
+	/** 获取点。 / Returns the points. */
 	public int getPoints() {
 		return points;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}

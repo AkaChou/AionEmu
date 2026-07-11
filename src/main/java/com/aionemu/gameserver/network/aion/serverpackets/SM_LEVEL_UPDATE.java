@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步目标等级变化的服务端包。
+ * Server packet that synchronizes a target's level change to the client.
+ *
  * @author ATracer
  */
 public class SM_LEVEL_UPDATE extends AionServerPacket {
@@ -28,20 +15,25 @@ public class SM_LEVEL_UPDATE extends AionServerPacket {
 	private int effect;
 	private int level;
 
+	/**
+	 * 使用目标对象、效果与等级构造等级更新包。
+	 * Creates a level-update packet from target, effect and level values.
+	 *
+	 * target object id
+	 * effect value
+	 * new level
+	 */
 	public SM_LEVEL_UPDATE(int targetObjectId, int effect, int level) {
 		this.targetObjectId = targetObjectId;
 		this.effect = effect;
 		this.level = level;
 	}
 
-	/**
-	 * {@inheritDoc} dc
-	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeD(targetObjectId);
-		writeH(effect); // unk
+		writeH(effect); // 未知 / unk
 		writeH(level);
-		writeH(0x00); // unk
+		writeH(0x00); // 未知 / unk
 	}
 }

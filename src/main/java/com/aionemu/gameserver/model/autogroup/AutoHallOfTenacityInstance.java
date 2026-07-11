@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
 import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
@@ -24,9 +8,13 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 
 /**
+ * 自动 HallOfTenacity 副本，用于 autogroup 相关逻辑。
+ * Auto Hall Of Tenacity Instance for autogroup logic.
+ *
  * @author Ranastic
  */
 public class AutoHallOfTenacityInstance extends AutoInstance {
+	/** 添加玩家。 / Adds player. */
 	@Override
 	public AGQuestion addPlayer(Player player, SearchInstance searchInstance) {
 		super.writeLock();
@@ -42,6 +30,7 @@ public class AutoHallOfTenacityInstance extends AutoInstance {
 		}
 	}
 
+	/** 按下回车时 / on Press Enter. */
 	@Override
 	public void onPressEnter(Player player) {
 		super.onPressEnter(player);
@@ -50,6 +39,7 @@ public class AutoHallOfTenacityInstance extends AutoInstance {
 		instance.register(player.getObjectId());
 	}
 
+	/** 离开副本 / On Leave Instance*/
 	@Override
 	public void onLeaveInstance(Player player) {
 		super.unregister(player);

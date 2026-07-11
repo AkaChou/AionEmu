@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import java.util.ArrayList;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.HTMLService;
 
 /**
+ * 客户端 HTML 问卷/调查回包，领取对应奖励。
+ * Client packet for HTML questionnaire responses; grants associated rewards.
+ *
  * @author xTz
  */
 public class CM_QUESTIONNAIRE extends AionClientPacket {
@@ -36,13 +23,18 @@ public class CM_QUESTIONNAIRE extends AionClientPacket {
 	private int itemSize;
 	private List<Integer> items;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_QUESTIONNAIRE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.aionemu.commons.network.packet.BaseClientPacket#readImpl()
 	 */
 	@Override
@@ -59,7 +51,7 @@ public class CM_QUESTIONNAIRE extends AionClientPacket {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.aionemu.commons.network.packet.BaseClientPacket#runImpl()
 	 */
 	@Override

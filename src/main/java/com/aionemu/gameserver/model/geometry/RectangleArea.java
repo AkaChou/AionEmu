@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.geometry;
 
 import java.awt.Point;
@@ -24,8 +8,9 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * Rectangle area, most wide spread in the game
- * 
+ * Rectangle 区域，用于几何相关逻辑。
+ * Rectangle Area for geometry logic.
+ *
  * @author SoulKeeper
  */
 public class RectangleArea extends AbstractArea {
@@ -79,8 +64,8 @@ public class RectangleArea extends AbstractArea {
 	private final float maxY;
 
 	/**
-	 * Creates new area from given points. Point order doesn't matter
-	 * 
+	 * 创建新 area 从给定 points.Pointorderdoesn ' tmatter。 / Creates new area from given points. Point order doesn't matter
+	 *
 	 * @param zoneName   point
 	 * @param worldId   point
 	 * @param p1   point
@@ -104,8 +89,8 @@ public class RectangleArea extends AbstractArea {
 	}
 
 	/**
-	 * Creates new are from given coords
-	 * 
+	 * 创建新为从给定 coords。 / Creates new are from given coords
+	 *
 	 * @param zoneName mimal x point
 	 * @param worldId minimal y point
 	 * @param minX maximal x point
@@ -130,6 +115,9 @@ public class RectangleArea extends AbstractArea {
 		return x >= minX && x <= maxX && y >= minY && y <= maxY;
 	}
 
+	/**
+	 * @return Whether inside 3 d / Whether inside 3 d
+	 */
 	@Override
 	public boolean isInside3D(float x, float y, float z) {
 		if (!isInside2D(x, y)) {
@@ -175,11 +163,11 @@ public class RectangleArea extends AbstractArea {
 		if (isInside2D(x, y)) {
 			return new Point2D(x, y);
 		} else {
-			// bottom edge
+			// 底边 / bottom edge
 			Point2D closestPoint = MathUtil.getClosestPointOnSegment(minX, minY, maxX, minY, x, y);
 			double distance = MathUtil.getDistance(x, y, closestPoint.getX(), closestPoint.getY());
 
-			// top edge
+			// 顶边 / top edge
 			Point2D cp = MathUtil.getClosestPointOnSegment(minX, maxY, maxX, maxY, x, y);
 			double d = MathUtil.getDistance(x, y, cp.getX(), cp.getY());
 			if (d < distance) {
@@ -187,7 +175,7 @@ public class RectangleArea extends AbstractArea {
 				distance = d;
 			}
 
-			// left edge
+			// 左边 / left edge
 			cp = MathUtil.getClosestPointOnSegment(minX, minY, minX, maxY, x, y);
 			d = MathUtil.getDistance(x, y, cp.getX(), cp.getY());
 			if (d < distance) {
@@ -195,27 +183,21 @@ public class RectangleArea extends AbstractArea {
 				distance = d;
 			}
 
-			// Right edge
+			// 右边 / Right edge
 			cp = MathUtil.getClosestPointOnSegment(maxX, minY, maxX, maxY, x, y);
 			d = MathUtil.getDistance(x, y, cp.getX(), cp.getY());
 			if (d < distance) {
 				closestPoint = cp;
-				// distance = d;
+				// distance = d;。 / distance = d;
 			}
 			return closestPoint;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.aionemu.gameserver.model.geometry.Area#intersectsRectangle(com.aionemu.
-	 * gameserver.model.geometry.RectangleArea)
-	 */
 	@Override
 	public boolean intersectsRectangle(RectangleArea area) {
-		// TODO Auto-generated method stub
-		return false;
+		return area.getMinZ() <= getMaxZ() && area.getMaxZ() >= getMinZ()
+				&& area.minX <= maxX && area.maxX >= minX
+				&& area.minY <= maxY && area.maxY >= minY;
 	}
 }

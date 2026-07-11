@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.dynamicrift;
 
 import java.util.ArrayList;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.templates.dynamicrift.DynamicRiftTemplate;
 import com.aionemu.gameserver.services.dynamicriftservice.DynamicRift;
 
 /**
+ * 动态裂隙位置模型。
+ * Dynamic Rift Location model.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -46,31 +33,38 @@ public class DynamicRiftLocation {
 		this.id = template.getId();
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		return isActive;
 	}
 
+	/** 设置 active dynamic rift / Sets the active dynamic rift */
 	public void setActiveDynamicRift(DynamicRift<DynamicRiftLocation> dynamicRift) {
 		isActive = dynamicRift != null;
 		this.activeDynamicRift = dynamicRift;
 	}
 
+	/** 返回 active dynamic rift / Returns the active dynamic rift */
 	public DynamicRift<DynamicRiftLocation> getActiveDynamicRift() {
 		return activeDynamicRift;
 	}
 
+	/** 获取模板。 / Returns the template. */
 	public final DynamicRiftTemplate getTemplate() {
 		return template;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回是否已刷新 / Returns the spawned */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}
 
+	/** 返回玩家集合 / Returns the players */
 	public Map<Integer, Player> getPlayers() {
 		return players;
 	}

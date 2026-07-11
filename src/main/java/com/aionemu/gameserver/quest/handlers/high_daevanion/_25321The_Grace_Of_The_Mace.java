@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.high_daevanion;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,26 +8,28 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 高等大天使任务脚本：The Grace Of The Mace（任务 ID 25321）。
+ * High Daevanion quest script: The Grace Of The Mace (quest ID 25321).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _25321The_Grace_Of_The_Mace extends QuestHandler {
 
     public static final int questId = 25321;
-	//Enshar
+	// 恩沙尔 / Enshar
 	private final static int[] DF5_P1 = {219693, 219694, 219695, 219696, 219697, 219698};
 	private final static int[] DF5_P2 = {219778, 219779, 219780, 219781, 219782, 219783, 219784, 219786};
-	//Gelkmaros [Conquest Offering]
+	// 吉尔克马罗斯【征服供奉】 / Gelkmaros [Conquest Offering]
 	private final static int[] DF4_Rotation = {236586, 236587, 236588, 236589, 236590, 236591,
 	236592, 236593, 236594, 236595, 236596, 236597, 236598, 236599, 236600, 236601, 236602, 236603,
 	236604, 236605, 236606, 236607, 236608, 236609};
-	//Levinshor
+	// 莱文肖尔 / Levinshor
 	private final static int[] LDF4_Advance = {234695, 234696, 234697, 234700, 234701, 234702, 234703};
-	//Kaldor
+	// 卡尔多 / Kaldor
 	private final static int[] LDF5_Fortress = {234244, 234246, 234247, 234503, 234505, 234504, 234517,
 	234518, 234519, 234520, 234521, 234522, 234523, 234524, 234525, 234526, 234527, 234528};
-	//Reshanta [Upper Abyss]
+	// 雷珊塔【上欧比斯】 / Reshanta [Upper Abyss]
 	private final static int[] AB1 = {883301, 883302, 883303, 883304, 883305, 883306, 883307, 883308};
 	public _25321The_Grace_Of_The_Mace() {
         super(questId);

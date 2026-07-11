@@ -1,19 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -47,6 +31,9 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 技能 Use 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -61,20 +48,25 @@ public class SkillUseAction extends AbstractItemAction {
 	private Integer mapid;
 	boolean teleportBack = false;
 
-	/**
-	 * Gets the value of the skillid property.
-	 */
+	 /**
+	  * 获取 skillid 属性值。
+	  * Gets the value of the skillid property
+	  */
 	public int getSkillid() {
 		return skillid;
 	}
 
-	/**
-	 * Gets the value of the level property.
-	 */
+	 /**
+	  * 获取 level 属性值。
+	  * Gets the value of the level property
+	  */
 	public int getLevel() {
 		return level;
 	}
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		Skill skill = GameEngineServices.skillEngine().getSkill(player, skillid, level, player.getTarget(),
@@ -89,7 +81,7 @@ public class SkillUseAction extends AbstractItemAction {
 					SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_TOO_LOW_LEVEL_MUST_BE_THIS_LEVEL(levelRestrict, nameId));
 			return false;
 		}
-		// Cant use transform items while already transformed
+		// 已变身时不能使用变身物品 / Cant use transform items while already transformed
 		if (player.isTransformed()) {
 			for (EffectTemplate template : skill.getSkillTemplate().getEffects().getEffects()) {
 				if (template instanceof TransformEffect) {
@@ -117,6 +109,7 @@ public class SkillUseAction extends AbstractItemAction {
 		return skill.canUseSkill();
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
 		final Skill skill = GameEngineServices.skillEngine().getSkill(player, skillid, level, player.getTarget(),
@@ -125,10 +118,12 @@ public class SkillUseAction extends AbstractItemAction {
 			if (skill.getSkillId() == 8198) {
 				RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
 
+					/** 接受请求 / Accept Request */
 					@Override
 					public void acceptRequest(Creature requester, Player responder) {
 						final ActionObserver moveObserver = new ActionObserver(ObserverType.MOVE) {
 
+							/** 已移动 / moved. */
 							@Override
 							public void moved() {
 								player.getController().cancelTask(TaskId.ITEM_USE);
@@ -138,6 +133,7 @@ public class SkillUseAction extends AbstractItemAction {
 						player.getController().addTask(TaskId.ITEM_USE,
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
+									/** 运行 / run. */
 									@Override
 									public void run() {
 										player.getObserveController().removeObserver(moveObserver);
@@ -150,6 +146,7 @@ public class SkillUseAction extends AbstractItemAction {
 
 					}
 
+					/** 拒绝请求 / Deny Request */
 					@Override
 					public void denyRequest(Creature requester, Player responder) {
 						player.getController().cancelUseItem();
@@ -194,6 +191,7 @@ public class SkillUseAction extends AbstractItemAction {
 		}
 	}
 
+	/** 返回 mapid / Returns the mapid */
 	public int getMapid() {
 		if (mapid == null) {
 			return 0;

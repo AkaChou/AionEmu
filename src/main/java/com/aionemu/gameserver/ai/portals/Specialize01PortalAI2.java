@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.portals;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -36,10 +20,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 传送门/传送点 AI：Specialize01 Portal（@AIName "specialize_portal"），继承 PortalAI2。
+ * Portal/teleporter AI: Specialize01 Portal (@AIName "specialize_portal"), extends PortalAI2.
+ *
+ * @author Encom
+ */
 @AIName("specialize_portal")
 public class Specialize01PortalAI2 extends PortalAI2
 {

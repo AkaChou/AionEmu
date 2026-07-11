@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,9 +13,18 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 客户端快递邮件操作包：召唤或解散邮差。
+ * Client packet for express mail actions: summon or dismiss the postman.
+ */
 public class CM_READ_EXPRESS_MAIL extends AionClientPacket {
 	private int action;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_READ_EXPRESS_MAIL(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -55,19 +48,19 @@ public class CM_READ_EXPRESS_MAIL extends AionClientPacket {
 			break;
 		case 1:
 			if (player.getPostman() != null) {
-				// An express courier has already arrived.
+				// 快递邮差已经到达。 / An express courier has already arrived.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_POSTMAN_ALREADY_SUMMONED);
 				return;
 			} else if (player.isInPrison()) {
-				// You cannot call a courier here.
+				// 此处无法呼叫邮差。 / You cannot call a courier here.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_POSTMAN_UNABLE_POSITION);
 				return;
 			} else if (player.isFlying()) {
-				// You cannot call a courier while flying.
+				// 飞行中无法呼叫邮差。 / You cannot call a courier while flying.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_POSTMAN_UNABLE_IN_FLIGHT);
 				return;
 			} else if (player.getController().hasTask(TaskId.EXPRESS_MAIL_USE)) {
-				// Please wait for a while before you call for the courier again.
+				// 请稍候再呼叫邮差。 / Please wait for a while before you call for the courier again.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_POSTMAN_UNABLE_IN_COOLTIME);
 				return;
 			} else if (haveUnreadExpress) {

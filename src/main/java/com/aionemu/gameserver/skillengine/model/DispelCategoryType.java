@@ -1,25 +1,33 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 /**
+ * 驱散分类：按增益/减益等类别筛选可驱散效果。
+ * Dispel category: filters dispellable effects by buff/debuff class.
+ *
  * @author kecimis
  */
 public enum DispelCategoryType {
 
-	NONE, ALL, BUFF, DEBUFF, DEBUFF_MENTAL, DEBUFF_PHYSICAL, EXTRA, NEVER, NPC_BUFF, NPC_DEBUFF_PHYSICAL, STUN;
+	/** 无 / None */
+	NONE,
+	/** 全部 / All */
+	ALL,
+	/** 增益 / Buff */
+	BUFF,
+	/** 减益 / Debuff */
+	DEBUFF,
+	/** 精神减益 / Mental debuff */
+	DEBUFF_MENTAL,
+	/** 物理减益 / Physical debuff */
+	DEBUFF_PHYSICAL,
+	/** 额外类别 / Extra */
+	EXTRA,
+	/** 永不驱散 / Never dispel */
+	NEVER,
+	/** NPC 增益 / NPC buff */
+	NPC_BUFF,
+	/** NPC 物理减益 / NPC physical debuff */
+	NPC_DEBUFF_PHYSICAL,
+	/** 眩晕类 / Stun category */
+	STUN;
 }

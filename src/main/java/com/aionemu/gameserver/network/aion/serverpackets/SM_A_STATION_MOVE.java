@@ -1,33 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 通知客户端执行 A-Station（跨服中转站）地图迁移的服务端包。
+ * Server packet instructing the client to perform an A-Station (cross-server hub) map move.
+ *
  * @author Ranastic
  */
-
 public class SM_A_STATION_MOVE extends AionServerPacket {
 	private int currentServerId;
 	private int newServerId;
 	private int mapId;
 
+	/**
+	 * @param currentServer 当前服务器 ID / current server id
+	 * @param newServerId 目标服务器 ID / destination server id
+	 * @param mapId 目标地图 ID / destination map id
+	 */
 	public SM_A_STATION_MOVE(int currentServer, int newServerId, int mapId) {
 		this.currentServerId = currentServer;
 		this.newServerId = newServerId;

@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.aion.serverpackets;
 
 import com.aionemu.chatserver.common.netty.PacketWriter;
@@ -23,14 +5,28 @@ import com.aionemu.chatserver.network.aion.AbstractServerPacket;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 
 /**
+ * 服务端玩家聊天鉴权成功响应包。
+ * Server packet for successful player chat authentication.
+ *
  * @author ATracer
  */
 public class SM_PLAYER_AUTH_RESPONSE extends AbstractServerPacket {
 
+    /**
+     * 构造玩家鉴权成功响应包。
+     * Constructs a player auth success response packet.
+     */
     public SM_PLAYER_AUTH_RESPONSE() {
         super(0x02);
     }
 
+    /**
+     * 写入鉴权成功固定字段。
+     * Writes the fixed fields of the auth success response.
+     *
+     * @param clientChannelHandler 客户端通道处理器 / client channel handler
+     * @param buf 包写入器 / packet writer
+     */
     @Override
     protected void writeImpl(ClientChannelHandler clientChannelHandler, PacketWriter buf) {
         writeC(buf, getOpCode());

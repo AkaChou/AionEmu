@@ -1,23 +1,6 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.factories;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 
@@ -31,6 +14,9 @@ import com.aionemu.loginserver.network.aion.clientpackets.CM_SERVER_LIST;
 import com.aionemu.loginserver.network.aion.clientpackets.CM_UPDATE_SESSION;
 
 /**
+ * 登录服 Aion 客户端包工厂：按连接状态与 opcode 分发客户端包。
+ * Login-server Aion client-packet factory: dispatches packets by connection state and opcode.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -38,11 +24,13 @@ public class AionPacketHandlerFactory {
 
 
     /**
-     * Reads one packet from given ByteBuffer
+     * 从 ByteBuffer 读取并构造一个客户端包。
+     * Reads one client packet from the given ByteBuffer.
      *
-     * @param data
-     * @param client
-     * @return AionClientPacket object from binary data
+     * @param data 原始包数据 / raw packet data
+     * login connection
+     * @return 解析出的 AionClientPacket，未知包返回 null
+     *         Parsed AionClientPacket, or null for unknown packets
      */
     public static AionClientPacket handle(ByteBuffer data, LoginConnection client) {
         AionClientPacket msg = null;
@@ -92,12 +80,13 @@ public class AionPacketHandlerFactory {
     }
 
     /**
-     * Logs unknown packet.
+     * 记录未知客户端包。
+     * Logs an unknown client packet.
      *
-     * @param state
-     * @param id
+     * @param state 当前连接状态 / current connection state
+     * packet opcode
      */
     private static void unknownPacket(State state, int id) {
-        log.warn(String.format("Unknown packet recived from Aion client: 0x%02X state=%s", id, state.toString()));
+        log.warn(I18n.get("log.1d0c01d73a77", String.format("%02X", id), state));
     }
 }

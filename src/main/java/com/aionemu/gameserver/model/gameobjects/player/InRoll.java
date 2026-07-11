@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 /**
+ * InRoll 游戏对象。
+ * In Roll game object.
+ *
  * @author xTz
  */
 public class InRoll {
@@ -33,34 +20,42 @@ public class InRoll {
 		this.rollType = rollType;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return itemId;
 	}
 
+	/** 返回索引 / Returns the index*/
 	public int getIndex() {
 		return index;
 	}
 
+	/** 返回 roll type / Returns the roll type */
 	public int getRollType() {
 		return rollType;
 	}
 
+	/** 设置 npc id / Sets the npc id */
 	public void setNpcId(int npcId) {
 		this.npcId = npcId;
 	}
 
+	/** 设置物品 ID / Sets the item id */
 	public void setItemId(int itemId) {
 		this.itemId = itemId;
 	}
 
+	/** 设置 indexd / Sets the indexd */
 	public void setIndexd(int index) {
 		this.index = itemId;
 	}
 
+	/** 设置 roll type / Sets the roll type */
 	public void setRollType(int rollType) {
 		this.rollType = rollType;
 	}

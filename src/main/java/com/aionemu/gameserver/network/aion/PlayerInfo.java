@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.List;
@@ -27,14 +13,28 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.GodStone;
 import com.aionemu.gameserver.model.items.ItemSlot;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
-@Slf4j
 
+/**
+ * 角色信息写入辅助基类，用于选角列表等服务端包。
+ * Player info write helper base used by character-list and related server packets.
+ */
+@Slf4j
 public abstract class PlayerInfo extends AionServerPacket {
 
 
+	/**
+	 * 子类构造入口。
+	 * Subclass constructor entry.
+	 */
 	protected PlayerInfo() {
 	}
 
+	/**
+	 * 写入单个角色的外观、位置、装备摘要等选角信息。
+	 * Writes one character's appearance, position, equipment summary for character select.
+	 *
+	 * @param accPlData 角色账号数据 / player account data
+	 */
 	protected void writePlayerInfo(PlayerAccountData accPlData) {
 		PlayerCommonData pbd = accPlData.getPlayerCommonData();
 		final int raceId = pbd.getRace().getRaceId();
@@ -86,7 +86,7 @@ public abstract class PlayerInfo extends AionServerPacket {
 		writeC(playerAppearance.getChinJut());
 		writeC(playerAppearance.getEarShape());
 		writeC(playerAppearance.getHeadSize());
-		// 1.5.x 0x00, shoulderSize, armLength, legLength (BYTE) after HeadSize
+		// 1.5.x：HeadSize 后为 0x00、肩宽、臂长、腿长（BYTE）。 / 1.5.x 0x00, shoulderSize, armLength, legLength (BYTE) after HeadSize
 
 		writeC(playerAppearance.getNeck());
 		writeC(playerAppearance.getNeckLength());
@@ -143,7 +143,7 @@ public abstract class PlayerInfo extends AionServerPacket {
 			}
 			ItemTemplate itemTemplate = item.getItemTemplate();
 			if (itemTemplate == null) {
-				log.warn("Missing item. PlayerId: " + pbd.getPlayerObjId() + " ItemId: " + item.getObjectId());
+				log.warn(I18n.get("log.afc9d6d2f89b", pbd.getPlayerObjId(), item.getObjectId()));
 				continue;
 			}
 			long slot = item.getEquipmentSlot();

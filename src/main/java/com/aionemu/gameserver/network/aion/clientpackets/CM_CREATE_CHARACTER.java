@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -43,6 +27,10 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
+/**
+ * 请求创建角色的客户端包。
+ * Client packet requesting creation of a new character.
+ */
 public class CM_CREATE_CHARACTER extends AionClientPacket {
 	private PlayerAppearance playerAppearance;
 	private PlayerCommonData playerCommonData;
@@ -52,6 +40,14 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 	private int playerClassId;
 	private int create_protocol_47;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_CREATE_CHARACTER(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

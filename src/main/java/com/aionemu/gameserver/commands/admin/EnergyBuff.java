@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -24,14 +8,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理休息能量/救赎点数的命令（{@code //energy}）。
+ * Admin command that manages repose energy and salvation points ({@code //energy}).
+ *
  * @author Source
  */
 public class EnergyBuff extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code energy}。
+	 * Registers the command name {@code energy}.
+	 */
 	public EnergyBuff() {
 		super("energy");
 	}
 
+	/**
+	 * 对目标玩家查看、增加或重置休息/救赎能量，或刷新属性包。
+	 * Views, adds or resets repose/salvation energy on the target player, or refreshes stats.
+	 *
+	 * admin
+	 * repose|salvation|refresh and sub-action。 / repose|salvation|refresh and sub-action
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		VisibleObject target = player.getTarget();
@@ -72,6 +70,13 @@ public class EnergyBuff extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "This is not player");
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		String syntax = "//energy repose|salvation|refresh info|reset|add [points]";

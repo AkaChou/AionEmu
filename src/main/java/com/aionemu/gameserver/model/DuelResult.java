@@ -1,22 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
+/**
+ * 决斗结果。
+ * Duel Result enumeration.
+ */
+
 public enum DuelResult {
+	/** 决斗你胜利 / Duel You Win*/
 	DUEL_YOU_WIN(1300098, (byte) 2), DUEL_YOU_LOSE(1300099, (byte) 0), DUEL_TIMEOUT(1300100, (byte) 1);
 
 	private int msgId;
@@ -27,10 +17,12 @@ public enum DuelResult {
 		this.resultId = resultId;
 	}
 
+	/** 返回消息 ID / Returns the msg id */
 	public int getMsgId() {
 		return msgId;
 	}
 
+	/** 返回结果 ID / Returns the result id */
 	public byte getResultId() {
 		return resultId;
 	}

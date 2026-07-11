@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -33,6 +18,11 @@ import com.aionemu.gameserver.services.PrivateStoreService;
 import com.aionemu.gameserver.services.RepurchaseService;
 import com.aionemu.gameserver.services.TradeService;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+
+/**
+ * 商店/私人商店买卖与回购的客户端包。
+ * Client packet for shop/private-store buy/sell and repurchase.
+ */
 @Slf4j
 
 public class CM_BUY_ITEM extends AionClientPacket {
@@ -101,7 +91,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 			return;
 		}
 		VisibleObject target = player.getKnownList().getKnownObjects().get(sellerObjId);
-		// added x64 enum
+		// 添加 x64 枚举 / added x64 enum
 		if (tradeActionId != 18 && target == null && tradeActionId != 19) {
 			return;
 		}
@@ -122,7 +112,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 						npc.getObjectTemplate().getTitleId() == 357026 || // Atanatos Abyss Equipment Merchand.
 						npc.getObjectTemplate().getTitleId() == 357037 || // Disilon Relic Supervisor.
 						npc.getObjectTemplate().getTitleId() == 357038 || // Disilon Abyss Equipment Merchand.
-						// Sell To Shop [Purchase List AP 4.3]
+						// 卖给商店【购买列表 AP 4.3】 / Sell To Shop [Purchase List AP 4.3]
 						npc.getObjectTemplate().getTitleId() == 463209 || npc.getObjectTemplate().getTitleId() == 463222
 						|| npc.getObjectTemplate().getTitleId() == 463224
 						|| npc.getObjectTemplate().getTitleId() == 463230
@@ -135,7 +125,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 						|| npc.getObjectTemplate().getTitleId() == 464194
 						|| npc.getObjectTemplate().getTitleId() == 464201
 						|| npc.getObjectTemplate().getTitleId() == 466388 ||
-						// Sell To Shop [Purchase List AP 4.8]
+						// 卖给商店【购买列表 AP 4.8】 / Sell To Shop [Purchase List AP 4.8]
 						npc.getObjectTemplate().getTitleId() == 314357 || // Ancient Icon Administration Officer.
 						npc.getObjectTemplate().getTitleId() == 314358 || // Ancient Seal Administration Officer.
 						npc.getObjectTemplate().getTitleId() == 314359 || // Ancient Goblet Administration Officer.
@@ -154,11 +144,11 @@ public class CM_BUY_ITEM extends AionClientPacket {
 						npc.getObjectTemplate().getTitleId() == 370409 || // Ancien Seal Custodian.
 						npc.getObjectTemplate().getTitleId() == 370410 || // Ancien Goblet Custodian.
 						npc.getObjectTemplate().getTitleId() == 370411 || // Ancien Crown Custodian.
-						// Sell To Shop [Purchase List AP 5.3/5.5]
+						// 卖给商店【购买列表 AP 5.3/5.5】 / Sell To Shop [Purchase List AP 5.3/5.5]
 						npc.getObjectTemplate().getTitleId() == 468783) {
 					TradeService.performSellForAPToShop(player, tradeList, purchaseTemplate);
 				}
-				// Sell To Shop [Purchase List Kinah 4.3]
+				// 卖给商店【购买列表 基纳 4.3】 / Sell To Shop [Purchase List Kinah 4.3]
 				else if (npc.getObjectTemplate().getTitleId() == 463203
 						|| npc.getObjectTemplate().getTitleId() == 463206
 						|| npc.getObjectTemplate().getTitleId() == 463490) {
@@ -189,7 +179,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 				TradeService.performSellForKinahToShop(player, tradeList, purchaseTemplate);
 				break;
 			default:
-				log.info(String.format("Unhandle shop action unk1: %d", tradeActionId));
+				log.info(I18n.get("log.873f3259e0d5", tradeActionId));
 				break;
 			}
 		}

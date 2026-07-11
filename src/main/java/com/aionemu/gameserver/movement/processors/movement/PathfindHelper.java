@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package com.aionemu.gameserver.movement.processors.movement;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -13,10 +10,32 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
 
+/**
+ * 寻路辅助：在可见扇形内采样可通行点，用于跟随与步进路径选择。
+ * Pathfinding helper: samples walkable points in a visible sector for follow and step selection.
+ */
 public class PathfindHelper {
+
+	/**
+	 * 可见扇形总角度（度）。
+	 * Total visible sector angle in degrees.
+	 */
 	private static final int VISIBLE_ANGLE = 180;
+
+	/**
+	 * 扇形内角度采样步长（度）。
+	 * Angle sampling step within the sector, in degrees.
+	 */
 	private static final int PATHFIND_ANGLE_STEP = 20;
 
+	/**
+	 * 从源生物到目标点选择下一步可通行位置（扇形采样）。
+	 * Select the next walkable step from a creature toward a target via sector sampling.
+	 *
+	 * Source creature
+	 * Target point
+	 * @return 最近可通行采样点，若无则为 null / Closest walkable sample, or null
+	 */
 	public static Vector3f selectStep(Creature source, Vector3f target) {
 		int mapId = source.getPosition().getMapId();
 		int instanceId = source.getPosition().getInstanceId();
@@ -62,6 +81,14 @@ public class PathfindHelper {
 		return closetsPoint;
 	}
 
+	/**
+	 * 为跟随目标选择下一步位置；地图或实例不一致时返回 null。
+	 * Select the next follow step toward a visible target; returns null on map/instance mismatch.
+	 *
+	 * Source creature
+	 * Follow target
+	 * @return 下一步点，不可用为 null / Next step, or null if unavailable
+	 */
 	public static Vector3f selectFollowStep(Creature source, VisibleObject target) {
 		int mapId = source.getPosition().getMapId();
 		int instanceId = source.getPosition().getInstanceId();
@@ -73,6 +100,20 @@ public class PathfindHelper {
 		return PathfindHelper.selectStep(source, point);
 	}
 
+	/**
+	 * 以源点为圆心、给定半径与角度偏移旋转目标，并采样地表高度。
+	 * Rotate a target around a center by radius and degree offset, then sample ground Z.
+	 *
+	 * @param owner 用于取世界/实例的生物 / Creature used for world/instance lookup
+	 * @param cx 圆心 X / Center X
+	 * @param cy 圆心 Y / Center Y
+	 * @param x1 参考点 X / Reference X
+	 * @param y1 参考点 Y / Reference Y
+	 * Radius
+	 * @param degrees 相对角度偏移（度） / Relative angle offset in degrees
+	 * Default Z
+	 * @return 旋转后的三维点 / Rotated 3D point
+	 */
 	private static Vector3f Rotate(Creature owner, float cx, float cy, float x1, float y1, double radius, float degrees,
 			float defaultZ) {
 		double beginDeg = Math.toDegrees(Math.atan2(y1 - cy, x1 - cx));
@@ -84,6 +125,15 @@ public class PathfindHelper {
 		return new Vector3f((float) x, (float) y, (float) z);
 	}
 
+	/**
+	 * 在给定距离范围内尝试选取随机可走点（当前实现恒返回 null）。
+	 * Try to pick a random walkable point within a range (currently always returns null).
+	 *
+	 * Source creature
+	 * Minimum range
+	 * Maximum range
+	 * @return 随机点，当前恒为 null / Random point; currently always null
+	 */
 	public static Vector3f getRandomPoint(Creature source, float minRange, float maxRange) {
 		Vector3f origin = new Vector3f(source.getX(), source.getY(), source.getZ());
 		assert (minRange > 0.0f && maxRange > minRange);

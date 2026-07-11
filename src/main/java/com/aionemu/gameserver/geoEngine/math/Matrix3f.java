@@ -1,40 +1,66 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  object factory
- *  reusable object
- */
 package com.aionemu.gameserver.geoEngine.math;
 
+import com.aionemu.boot.i18n.I18n;
 import java.nio.FloatBuffer;
 
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 3×3 矩阵，用于旋转与线性变换；支持对象池复用。
+ * 3×3 matrix for rotation and linear transforms; supports object-pool reuse.
+ */
 @Slf4j
 public final class Matrix3f implements Cloneable, Reusable {
+	/** 对象工厂，用于矩阵实例池化。 / Object factory for pooling matrix instances. */
 	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
 
 		public Object create() {
 			return new Matrix3f();
 		}
 	};
+	/** 第 0 行 0 列元素。 / Element at row 0, column 0. */
 	protected float m00;
+	/** 第 0 行 1 列元素。 / Element at row 0, column 1. */
 	protected float m01;
+	/** 第 0 行 2 列元素。 / Element at row 0, column 2. */
 	protected float m02;
+	/** 第 1 行 0 列元素。 / Element at row 1, column 0. */
 	protected float m10;
+	/** 第 1 行 1 列元素。 / Element at row 1, column 1. */
 	protected float m11;
+	/** 第 1 行 2 列元素。 / Element at row 1, column 2. */
 	protected float m12;
+	/** 第 2 行 0 列元素。 / Element at row 2, column 0. */
 	protected float m20;
+	/** 第 2 行 1 列元素。 / Element at row 2, column 1. */
 	protected float m21;
+	/** 第 2 行 2 列元素。 / Element at row 2, column 2. */
 	protected float m22;
 
+	/**
+	 * 构造单位矩阵。
+	 * Constructs an identity matrix.
+	 */
 	public Matrix3f() {
 		this.loadIdentity();
 	}
 
+	/**
+	 * 按给定 9 个元素构造矩阵（行主序）。
+	 * Constructs a matrix from the given 9 elements (row-major).
+	 *
+	 * @param m00 第 0 行 0 列 / row 0 col 0
+	 * @param m01 第 0 行 1 列 / row 0 col 1
+	 * @param m02 第 0 行 2 列 / row 0 col 2
+	 * @param m10 第 1 行 0 列 / row 1 col 0
+	 * @param m11 第 1 行 1 列 / row 1 col 1
+	 * @param m12 第 1 行 2 列 / row 1 col 2
+	 * @param m20 第 2 行 0 列 / row 2 col 0
+	 * @param m21 第 2 行 1 列 / row 2 col 1
+	 * @param m22 第 2 行 2 列 / row 2 col 2
+	 */
 	public Matrix3f(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
 		this.m00 = m00;
 		this.m01 = m01;
@@ -47,10 +73,20 @@ public final class Matrix3f implements Cloneable, Reusable {
 		this.m22 = m22;
 	}
 
+	/**
+	 * 复制构造，从另一矩阵复制全部元素。
+	 * Copy constructor; copies all elements from another matrix.
+	 *
+	 * source matrix
+	 */
 	public Matrix3f(Matrix3f mat) {
 		this.set(mat);
 	}
 
+	/**
+	 * 就地将每个元素取绝对值。
+	 * Sets each element to its absolute value in place.
+	 */
 	public void absoluteLocal() {
 		this.m00 = FastMath.abs(this.m00);
 		this.m01 = FastMath.abs(this.m01);
@@ -63,6 +99,13 @@ public final class Matrix3f implements Cloneable, Reusable {
 		this.m22 = FastMath.abs(this.m22);
 	}
 
+	/**
+	 * 将本矩阵设为与给定矩阵相同；若参数为 null 则设为单位矩阵。
+	 * Sets this matrix equal to the given matrix; loads identity if null.
+	 *
+	 * @param matrix 源矩阵，可为 null / source matrix, may be null
+	 * this matrix
+	 */
 	public Matrix3f set(Matrix3f matrix) {
 		if (null == matrix) {
 			this.loadIdentity();
@@ -80,6 +123,15 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return this;
 	}
 
+	/**
+	 * 获取指定行列处的元素。
+	 * Gets the element at the given row and column.
+	 *
+	 * @param i 行索引（0–2） / row index (0–2)
+	 * @param j 列索引（0–2） / column index (0–2)
+	 * @return 该位置的元素值 / element value at that position
+	 * if indices are out of range。 / if indices are out of range.
+	 */
 	public float get(int i, int j) {
 		switch (i) {
 		case 0: {
@@ -122,10 +174,21 @@ public final class Matrix3f implements Cloneable, Reusable {
 			}
 		}
 		}
-		log.warn("Invalid matrix index.");
+		log.warn(I18n.get("log.6ed00c7cd279"));
 		throw new IllegalArgumentException("Invalid indices into matrix.");
 	}
 
+	/**
+	 * 将矩阵元素写入浮点数组。
+	 * Writes matrix elements into a float array.
+	 * <p>
+	 * 支持长度为 9 或 16 的数组；16 时仅填充左上 3×3 区域。
+	 * Supports length 9 or 16; for 16 only the upper-left 3×3 is filled.
+	 *
+	 * @param data 目标数组，长度须为 9 或 16 / destination array of length 9 or 16
+	 * @param rowMajor true 为行主序，false 为列主序 / true for row-major, false for column-major
+	 * if array length is invalid。 / if array length is invalid.
+	 */
 	public void get(float[] data, boolean rowMajor) {
 		if (data.length == 9) {
 			if (rowMajor) {
@@ -176,10 +239,26 @@ public final class Matrix3f implements Cloneable, Reusable {
 		}
 	}
 
+	/**
+	 * 获取指定列向量（新建存储）。
+	 * Gets the specified column vector (allocates storage).
+	 *
+	 * @param i 列索引（0–2） / column index (0–2)
+	 * the column vector
+	 */
 	public Vector3f getColumn(int i) {
 		return this.getColumn(i, null);
 	}
 
+	/**
+	 * 获取指定列向量，结果写入 store（可为 null 则新建）。
+	 * Gets the specified column vector into store (allocates if null).
+	 *
+	 * @param i 列索引（0–2） / column index (0–2)
+	 * @param store 结果存储，可为 null / result storage, may be null
+	 * @return 列向量（store 或新建） / the column vector (store or new)
+	 * if column index is invalid。 / if column index is invalid.
+	 */
 	public Vector3f getColumn(int i, Vector3f store) {
 		if (store == null) {
 			store = new Vector3f();
@@ -204,17 +283,33 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			log.warn("Invalid column index.");
+			log.warn(I18n.get("log.885d8d676fff"));
 			throw new IllegalArgumentException("Invalid column index. " + i);
 		}
 		}
 		return store;
 	}
 
+	/**
+	 * 获取指定行向量（新建存储）。
+	 * Gets the specified row vector (allocates storage).
+	 *
+	 * @param i 行索引（0–2） / row index (0–2)
+	 * the row vector
+	 */
 	public Vector3f getRow(int i) {
 		return this.getRow(i, null);
 	}
 
+	/**
+	 * 获取指定行向量，结果写入 store（可为 null 则新建）。
+	 * Gets the specified row vector into store (allocates if null).
+	 *
+	 * @param i 行索引（0–2） / row index (0–2)
+	 * @param store 结果存储，可为 null / result storage, may be null
+	 * @return 行向量（store 或新建） / the row vector (store or new)
+	 * if row index is invalid。 / if row index is invalid.
+	 */
 	public Vector3f getRow(int i, Vector3f store) {
 		if (store == null) {
 			store = new Vector3f();
@@ -239,13 +334,19 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			log.warn("Invalid row index.");
+			log.warn(I18n.get("log.c9cf152b9e07"));
 			throw new IllegalArgumentException("Invalid row index. " + i);
 		}
 		}
 		return store;
 	}
 
+	/**
+	 * 将矩阵以行主序写入新的 FloatBuffer。
+	 * Writes this matrix in row-major order into a new FloatBuffer.
+	 *
+	 * @return 含 9 个浮点的缓冲区（position 已 rewind） / buffer of 9 floats (rewound)
+	 */
 	public FloatBuffer toFloatBuffer() {
 		FloatBuffer fb = BufferUtils.createFloatBuffer(9);
 		fb.put(this.m00).put(this.m01).put(this.m02);
@@ -255,6 +356,14 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return fb;
 	}
 
+	/**
+	 * 将矩阵元素追加写入给定 FloatBuffer。
+	 * Appends matrix elements into the given FloatBuffer.
+	 *
+	 * @param fb 目标缓冲区 / destination buffer
+	 * @param columnMajor true 为列主序，false 为行主序 / true for column-major, false for row-major
+	 * @return 传入的缓冲区 / the given buffer
+	 */
 	public FloatBuffer fillFloatBuffer(FloatBuffer fb, boolean columnMajor) {
 		if (columnMajor) {
 			fb.put(this.m00).put(this.m10).put(this.m20);
@@ -268,9 +377,19 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return fb;
 	}
 
+	/**
+	 * 设置指定列为给定向量。
+	 * Sets the specified column from the given vector.
+	 *
+	 * @param i 列索引（0–2） / column index (0–2)
+	 * @param column 列向量；为 null 时忽略 / column vector; ignored if null
+	 * this matrix
+	 *
+	 * @return @throws IllegalArgumentException 列索引非法时 / if column index is invalid
+	 */
 	public Matrix3f setColumn(int i, Vector3f column) {
 		if (column == null) {
-			log.warn("Column is null. Ignoring.");
+			log.warn(I18n.get("log.df539499d2b4"));
 			return this;
 		}
 		switch (i) {
@@ -293,16 +412,26 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			log.warn("Invalid column index.");
+			log.warn(I18n.get("log.885d8d676fff"));
 			throw new IllegalArgumentException("Invalid column index. " + i);
 		}
 		}
 		return this;
 	}
 
+	/**
+	 * 设置指定行为给定向量。
+	 * Sets the specified row from the given vector.
+	 *
+	 * @param i 行索引（0–2） / row index (0–2)
+	 * @param row 行向量；为 null 时忽略 / row vector; ignored if null
+	 * this matrix
+	 *
+	 * @return @throws IllegalArgumentException 行索引非法时 / if row index is invalid
+	 */
 	public Matrix3f setRow(int i, Vector3f row) {
 		if (row == null) {
-			log.warn("Row is null. Ignoring.");
+			log.warn(I18n.get("log.78c7a0feb6f0"));
 			return this;
 		}
 		switch (i) {
@@ -325,13 +454,23 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			log.warn("Invalid row index.");
+			log.warn(I18n.get("log.c9cf152b9e07"));
 			throw new IllegalArgumentException("Invalid row index. " + i);
 		}
 		}
 		return this;
 	}
 
+	/**
+	 * 设置指定行列处的元素。
+	 * Sets the element at the given row and column.
+	 *
+	 * @param i 行索引（0–2） / row index (0–2)
+	 * @param j 列索引（0–2） / column index (0–2)
+	 * new value
+	 * this matrix
+	 * if indices are out of range。 / if indices are out of range.
+	 */
 	public Matrix3f set(int i, int j, float value) {
 		switch (i) {
 		case 0: {
@@ -383,10 +522,19 @@ public final class Matrix3f implements Cloneable, Reusable {
 			}
 		}
 		}
-		log.warn("Invalid matrix index.");
+		log.warn(I18n.get("log.6ed00c7cd279"));
 		throw new IllegalArgumentException("Invalid indices into matrix.");
 	}
 
+	/**
+	 * 从 3×3 二维数组设置矩阵元素（行主序）。
+	 * Sets matrix elements from a 3×3 two-dimensional array (row-major).
+	 *
+	 * 3×3 array。 / 3×3 array
+	 * this matrix
+	 *
+	 * @param matrix @throws IllegalArgumentException 尺寸不为 3×3 时 / if dimensions are not 3×3
+	 */
 	public Matrix3f set(float[][] matrix) {
 		if (matrix.length != 3 || matrix[0].length != 3) {
 			throw new IllegalArgumentException("Array must be of size 9.");
@@ -403,6 +551,14 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return this;
 	}
 
+	/**
+	 * 由三个正交基轴构造旋转矩阵（列分别为 u、v、w）。
+	 * Builds a rotation matrix from three orthonormal axes (columns u, v, w).
+	 *
+	 * U axis
+	 * V axis
+	 * W axis
+	 */
 	public void fromAxes(Vector3f uAxis, Vector3f vAxis, Vector3f wAxis) {
 		this.m00 = uAxis.x;
 		this.m10 = uAxis.y;
@@ -415,10 +571,26 @@ public final class Matrix3f implements Cloneable, Reusable {
 		this.m22 = wAxis.z;
 	}
 
+	/**
+	 * 从长度为 9 的数组按行主序设置矩阵。
+	 * Sets this matrix from a length-9 array in row-major order.
+	 *
+	 * @param matrix 长度 9 的数组 / array of length 9
+	 * this matrix
+	 */
 	public Matrix3f set(float[] matrix) {
 		return this.set(matrix, true);
 	}
 
+	/**
+	 * 从长度为 9 的数组设置矩阵。
+	 * Sets this matrix from a length-9 array.
+	 *
+	 * @param matrix 长度 9 的数组 / array of length 9
+	 * @param rowMajor true 为行主序，false 为列主序 / true for row-major, false for column-major
+	 * this matrix
+	 * if array length is not 9。 / if array length is not 9.
+	 */
 	public Matrix3f set(float[] matrix, boolean rowMajor) {
 		if (matrix.length != 9) {
 			throw new IllegalArgumentException("Array must be of size 9.");
@@ -447,6 +619,10 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return this;
 	}
 
+	/**
+	 * 将矩阵设为单位矩阵。
+	 * Loads the identity matrix.
+	 */
 	public void loadIdentity() {
 		this.m21 = 0.0f;
 		this.m20 = 0.0f;
@@ -459,16 +635,36 @@ public final class Matrix3f implements Cloneable, Reusable {
 		this.m00 = 1.0f;
 	}
 
+	/**
+	 * 判断是否为单位矩阵（精确比较）。
+	 * Returns whether this is exactly the identity matrix.
+	 *
+	 * @return 是单位矩阵则为 true / true if identity
+	 */
 	public boolean isIdentity() {
 		return this.m00 == 1.0f && this.m01 == 0.0f && this.m02 == 0.0f && this.m10 == 0.0f && this.m11 == 1.0f
 				&& this.m12 == 0.0f && this.m20 == 0.0f && this.m21 == 0.0f && this.m22 == 1.0f;
 	}
 
+	/**
+	 * 由旋转角与轴构造旋转矩阵（轴会先归一化）。
+	 * Builds a rotation matrix from an angle and axis (axis is normalized first).
+	 *
+	 * @param angle 旋转角（弧度） / rotation angle in radians
+	 * rotation axis
+	 */
 	public void fromAngleAxis(float angle, Vector3f axis) {
 		Vector3f normAxis = axis.normalize();
 		this.fromAngleNormalAxis(angle, normAxis);
 	}
 
+	/**
+	 * 由旋转角与已归一化轴构造旋转矩阵（Rodrigues 公式）。
+	 * Builds a rotation matrix from an angle and a unit axis (Rodrigues' formula).
+	 *
+	 * @param angle 旋转角（弧度） / rotation angle in radians
+	 * @param axis 已归一化的旋转轴 / normalized rotation axis
+	 */
 	public void fromAngleNormalAxis(float angle, Vector3f axis) {
 		float fCos = FastMath.cos(angle);
 		float fSin = FastMath.sin(angle);
@@ -493,10 +689,25 @@ public final class Matrix3f implements Cloneable, Reusable {
 		this.m22 = fZ2 * fOneMinusCos + fCos;
 	}
 
+	/**
+	 * 本矩阵右乘 mat，返回新矩阵（不修改自身）。
+	 * Right-multiplies this by mat and returns a new matrix (this is unchanged).
+	 *
+	 * @param mat 右乘矩阵 / matrix to multiply on the right
+	 * product matrix
+	 */
 	public Matrix3f mult(Matrix3f mat) {
 		return this.mult(mat, null);
 	}
 
+	/**
+	 * 本矩阵右乘 mat，结果写入 product（可为 null 则新建）。
+	 * Right-multiplies this by mat into product (allocates if null).
+	 *
+	 * @param mat 右乘矩阵 / matrix to multiply on the right
+	 * @param product 结果存储，可为 null / result storage, may be null
+	 * product matrix
+	 */
 	public Matrix3f mult(Matrix3f mat, Matrix3f product) {
 		if (product == null) {
 			product = new Matrix3f();
@@ -522,10 +733,25 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return product;
 	}
 
+	/**
+	 * 用本矩阵变换向量，返回新向量。
+	 * Transforms the vector by this matrix and returns a new vector.
+	 *
+	 * @param vec 待变换向量 / vector to transform
+	 * @return 变换后的向量 / transformed vector
+	 */
 	public Vector3f mult(Vector3f vec) {
 		return this.mult(vec, null);
 	}
 
+	/**
+	 * 用本矩阵变换向量，结果写入 product（可为 null 则新建）。
+	 * Transforms the vector by this matrix into product (allocates if null).
+	 *
+	 * @param vec 待变换向量 / vector to transform
+	 * @param product 结果存储，可为 null / result storage, may be null
+	 * @return 变换后的向量 / transformed vector
+	 */
 	public Vector3f mult(Vector3f vec, Vector3f product) {
 		if (null == product) {
 			product = new Vector3f();
@@ -539,6 +765,13 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return product;
 	}
 
+	/**
+	 * 就地将本矩阵每个元素乘以标量。
+	 * Multiplies every element of this matrix by the scalar in place.
+	 *
+	 * scalar
+	 * this matrix
+	 */
 	public Matrix3f multLocal(float scale) {
 		this.m00 *= scale;
 		this.m01 *= scale;
@@ -552,6 +785,13 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return this;
 	}
 
+	/**
+	 * 就地用本矩阵变换向量。
+	 * Transforms the vector by this matrix in place.
+	 *
+	 * @param vec 待变换向量；为 null 时返回 null / vector to transform; returns null if null
+	 * @return 变换后的同一向量 / the same vector after transform
+	 */
 	public Vector3f multLocal(Vector3f vec) {
 		if (vec == null) {
 			return null;
@@ -564,10 +804,23 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return vec;
 	}
 
+	/**
+	 * 就地右乘 mat（this = this * mat）。
+	 * Right-multiplies this by mat in place (this = this * mat).
+	 *
+	 * @param mat 右乘矩阵 / matrix to multiply on the right
+	 * this matrix
+	 */
 	public Matrix3f multLocal(Matrix3f mat) {
 		return this.mult(mat, this);
 	}
 
+	/**
+	 * 就地转置本矩阵。
+	 * Transposes this matrix in place.
+	 *
+	 * this matrix
+	 */
 	public Matrix3f transposeLocal() {
 		float tmp = this.m01;
 		this.m01 = this.m10;
@@ -581,10 +834,23 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return this;
 	}
 
+	/**
+	 * 求逆矩阵，返回新矩阵（不修改自身）；奇异时返回零矩阵。
+	 * Returns the inverse as a new matrix (this unchanged); returns zero if singular.
+	 *
+	 * inverse matrix
+	 */
 	public Matrix3f invert() {
 		return this.invert(null);
 	}
 
+	/**
+	 * 求逆矩阵，结果写入 store（可为 null 则新建）；奇异时 store 置零。
+	 * Inverts into store (allocates if null); zeros store if singular.
+	 *
+	 * @param store 结果存储，可为 null / result storage, may be null
+	 * inverse matrix
+	 */
 	public Matrix3f invert(Matrix3f store) {
 		float det;
 		if (store == null) {
@@ -606,6 +872,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return store;
 	}
 
+	/**
+	 * 就地求逆；奇异时置为零矩阵。
+	 * Inverts this matrix in place; zeros if singular.
+	 *
+	 * this matrix
+	 */
 	public Matrix3f invertLocal() {
 		float det = this.determinant();
 		if (FastMath.abs(det) <= 1.1920929E-7f) {
@@ -633,10 +905,23 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return this;
 	}
 
+	/**
+	 * 求伴随矩阵，返回新矩阵。
+	 * Returns the adjugate (classical adjoint) as a new matrix.
+	 *
+	 * adjugate matrix
+	 */
 	public Matrix3f adjoint() {
 		return this.adjoint(null);
 	}
 
+	/**
+	 * 求伴随矩阵，结果写入 store（可为 null 则新建）。
+	 * Computes the adjugate into store (allocates if null).
+	 *
+	 * @param store 结果存储，可为 null / result storage, may be null
+	 * adjugate matrix
+	 */
 	public Matrix3f adjoint(Matrix3f store) {
 		if (store == null) {
 			store = new Matrix3f();
@@ -653,6 +938,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return store;
 	}
 
+	/**
+	 * 计算行列式。
+	 * Computes the determinant.
+	 *
+	 * determinant value
+	 */
 	public float determinant() {
 		float fCo00 = this.m11 * this.m22 - this.m12 * this.m21;
 		float fCo10 = this.m12 * this.m20 - this.m10 * this.m22;
@@ -661,6 +952,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return fDet;
 	}
 
+	/**
+	 * 将本矩阵所有元素置零。
+	 * Sets all elements of this matrix to zero.
+	 *
+	 * this matrix
+	 */
 	public Matrix3f zero() {
 		this.m22 = 0.0f;
 		this.m21 = 0.0f;
@@ -674,6 +971,13 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return this;
 	}
 
+	/**
+	 * 就地将 mat 加到本矩阵（已弃用）。
+	 * Adds mat to this matrix in place (deprecated).
+	 *
+	 * @param mat 加数矩阵 / matrix to add
+	 * @deprecated 请使用显式加法 API / use an explicit addition API instead
+	 */
 	@Deprecated
 	public void add(Matrix3f mat) {
 		this.m00 += mat.m00;
@@ -687,16 +991,34 @@ public final class Matrix3f implements Cloneable, Reusable {
 		this.m22 += mat.m22;
 	}
 
+	/**
+	 * 转置本矩阵（就地，与 {@link #transposeLocal()} 相同）。
+	 * Transposes this matrix in place (same as {@link #transposeLocal()}).
+	 *
+	 * this matrix
+	 */
 	public Matrix3f transpose() {
 		return this.transposeLocal();
 	}
 
+	/**
+	 * 返回转置后的新矩阵（不修改自身）。
+	 * Returns a new transposed matrix (this is unchanged).
+	 *
+	 * transposed matrix
+	 */
 	public Matrix3f transposeNew() {
 		Matrix3f ret = new Matrix3f(this.m00, this.m10, this.m20, this.m01, this.m11, this.m21, this.m02, this.m12,
 				this.m22);
 		return ret;
 	}
 
+	/**
+	 * 返回矩阵的可读字符串表示。
+	 * Returns a human-readable string representation of this matrix.
+	 *
+	 * @return 多行字符串 / multi-line string
+	 */
 	public String toString() {
 		StringBuffer result = new StringBuffer("Matrix3f\n[\n");
 		result.append(" ");
@@ -723,6 +1045,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return result.toString();
 	}
 
+	/**
+	 * 基于全部元素计算哈希码。
+	 * Computes a hash code from all elements.
+	 *
+	 * hash code
+	 */
 	public int hashCode() {
 		int hash = 37;
 		hash = 37 * hash + Float.floatToIntBits(this.m00);
@@ -737,6 +1065,13 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return hash;
 	}
 
+	/**
+	 * 判断与另一对象是否元素完全相等。
+	 * Returns whether the other object is a Matrix3f with identical elements.
+	 *
+	 * @param o 比较对象 / object to compare
+	 * @return 元素全等则为 true / true if all elements match
+	 */
 	public boolean equals(Object o) {
 		if (!(o instanceof Matrix3f) || o == null) {
 			return false;
@@ -772,10 +1107,23 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return Float.compare(this.m22, comp.m22) == 0;
 	}
 
+	/**
+	 * 返回运行时类型标签（本类或其子类）。
+	 * Returns the runtime class tag (this class or a subclass).
+	 *
+	 * class object
+	 */
 	public Class<? extends Matrix3f> getClassTag() {
 		return this.getClass();
 	}
 
+	/**
+	 * 由起始向量与目标向量构造将 start 旋转到 end 的旋转矩阵。
+	 * Builds a rotation matrix that rotates start onto end.
+	 *
+	 * @param start 起始方向 / start direction
+	 * @param end 目标方向 / end direction
+	 */
 	public void fromStartEndVectors(Vector3f start, Vector3f end) {
 		float f;
 		Vector3f v = new Vector3f();
@@ -844,6 +1192,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 		}
 	}
 
+	/**
+	 * 按向量分量对矩阵列缩放（第 0 列 × scale.x，第 1 列 × scale.y，第 2 列 × scale.z）。
+	 * Scales matrix columns by the vector components (col0 × scale.x, col1 × scale.y, col2 × scale.z).
+	 *
+	 * @param scale 各轴缩放因子 / per-axis scale factors
+	 */
 	public void scale(Vector3f scale) {
 		this.m00 *= scale.x;
 		this.m10 *= scale.x;
@@ -856,6 +1210,13 @@ public final class Matrix3f implements Cloneable, Reusable {
 		this.m22 *= scale.z;
 	}
 
+	/**
+	 * 容差判断矩阵是否近似为单位矩阵。
+	 * Returns whether the matrix is approximately the identity within tolerance.
+	 *
+	 * @param mat 待检测矩阵 / matrix to test
+	 * @return 近似单位矩阵则为 true / true if approximately identity
+	 */
 	static final boolean equalIdentity(Matrix3f mat) {
 		if ((double) Math.abs(mat.m00 - 1.0f) > 1.0E-4) {
 			return false;
@@ -884,6 +1245,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 		return !((double) Math.abs(mat.m21) > 1.0E-4);
 	}
 
+	/**
+	 * 浅克隆本矩阵。
+	 * Returns a shallow clone of this matrix.
+	 *
+	 * cloned instance
+	 */
 	public Matrix3f clone() {
 		try {
 			return (Matrix3f) super.clone();
@@ -892,14 +1259,30 @@ public final class Matrix3f implements Cloneable, Reusable {
 		}
 	}
 
+	/**
+	 * 重置为可复用状态（加载单位矩阵）。
+	 * Resets to a reusable state (loads identity).
+	 */
 	public void reset() {
 		this.loadIdentity();
 	}
 
+	/**
+	 * 从对象池获取矩阵实例。
+	 * Obtains a matrix instance from the object pool.
+	 *
+	 * @return 池化矩阵实例 / pooled matrix instance
+	 */
 	public static Matrix3f newInstance() {
 		return (Matrix3f) FACTORY.object();
 	}
 
+	/**
+	 * 将矩阵实例归还对象池。
+	 * Recycles a matrix instance into the object pool.
+	 *
+	 * @param instance 待回收实例 / instance to recycle
+	 */
 	public static void recycle(Matrix3f instance) {
 		FACTORY.recycle((Object) instance);
 	}

@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.action;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 伤害类型枚举：物理或魔法。
+ * Damage type enum: physical or magical.
+ *
  * @author ATracer
  */
 @XmlType(name = "DamageType")
@@ -28,10 +15,23 @@ public enum DamageType {
 
 	PHYSICAL, MAGICAL;
 
+	/**
+	 * 返回枚举名字符串。
+	 * Returns the enum name as a string.
+	 *
+	 * enum name
+	 */
 	public String value() {
 		return name();
 	}
 
+	/**
+	 * 由字符串解析伤害类型。
+	 * Parses a damage type from a string value.
+	 *
+	 * @param v 名称字符串 / name string
+	 * matching enum constant
+	 */
 	public static DamageType fromValue(String v) {
 		return valueOf(v);
 	}

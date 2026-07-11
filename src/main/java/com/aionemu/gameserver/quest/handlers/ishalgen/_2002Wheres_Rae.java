@@ -1,19 +1,3 @@
-/*
- * This file is part of aion-unique <aion-unique.org>.
- *
- * aion-unique is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aion-unique is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aion-unique. If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.ishalgen;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -39,6 +23,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
+ * 伊沙尔根任务脚本：Wheres Rae（任务 ID 2002）。
+ * Ishalgen quest script: Wheres Rae (quest ID 2002).
+ *
  * @author Mr. Poke
  * @modified Hellboy, Gigi, Bobobear
  */
@@ -135,7 +122,7 @@ public class _2002Wheres_Rae extends QuestHandler {
                                 qs.setQuestVar(99);
                                 updateQuestStatus(env);
                                 PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(env.getVisibleObject().getObjectId(), 0));
-                                // Create instance
+                                // 创建副本 / Create instance
                                 WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(320010000);
                                 InstanceService.registerPlayerWithInstance(newInstance, player);
                                 TeleportService2.teleportTo(player, 320010000, newInstance.getInstanceId(), 457.65f, 426.8f, 230.4f);

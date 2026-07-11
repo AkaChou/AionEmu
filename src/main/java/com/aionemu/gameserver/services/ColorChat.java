@@ -1,30 +1,21 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 /**
+ * 彩色聊天文本工具，按固定步长为消息字符注入客户端颜色标签。
+ * Color-chat text utility that injects client color tags into message characters at a fixed stride.
+ *
  * @author KorLightning (Encom)
  */
-
 public class ColorChat {
+
 	/**
-	 * @param message
-	 * @param color
-	 * @return
+	 * 将消息按每 3 个字符分段并套上指定颜色标签。
+	 * Wraps the message with the given color tag in 3-character segments.
+	 *
+	 * original message
+	 *
+	 * @param color 颜色代码 / color code
+	 * @param color @return 带颜色标签的消息 / color-tagged message
 	 */
 	public static String colorChat(String message, String color) {
 		StringBuilder sb = new StringBuilder();

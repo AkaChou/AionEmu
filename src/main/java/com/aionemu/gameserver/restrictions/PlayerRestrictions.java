@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.restrictions;
 
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -37,7 +21,20 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
+/**
+ * 常规玩法限制：攻击、技能、组队/联盟/军团联盟、仓库、交易、换装、聊天与物品使用。
+ * Normal-play restrictions for attack, skill, group/alliance/league, warehouse, trade, equip, chat and item use.
+ */
 public class PlayerRestrictions extends AbstractRestrictions {
+	/**
+	 * 校验技能是否可作用于目标（骑乘、保护、飞行传送、复活目标等）。
+	 * Validates whether a skill may affect the target (ride, protection, fly teleport, resurrect target, etc.).
+	 *
+	 * caster
+	 * target
+	 * skill
+	 * true when allowed
+	 */
 	@Override
 	public boolean canAffectBySkill(Player player, VisibleObject target, Skill skill) {
 		if (skill == null) {
@@ -89,6 +86,14 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 自身或目标处于飞行传送/气流时禁止。
+	 * windstreaming. / windstreaming.
+	 *
+	 * 玩家 / player
+	 * target, may be null
+	 * true when allowed
+	 */
 	private boolean checkFly(Player player, VisibleObject target) {
 		if ((player.isUsingFlyTeleport()) || (player.isInPlayerMode(PlayerMode.WINDSTREAM))) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_RESTRICTION_NO_FLY);
@@ -103,6 +108,14 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 校验是否可使用技能（飞行、施法中、骑乘、负重、沉默/束缚、变身、复活目标等）。
+	 * Validates skill use (fly, casting, ride, overweight, silence/bind, transform, resurrect target, etc.).
+	 *
+	 * 玩家 / player
+	 * skill
+	 * true when allowed
+	 */
 	@Override
 	public boolean canUseSkill(Player player, Skill skill) {
 		VisibleObject target = player.getTarget();
@@ -118,7 +131,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			return false;
 		}
 		if (player.getInventory().isFull()) {
-			// You are too overburdened to fight.
+			// 你负重过重，无法战斗。 / You are too overburdened to fight.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_TOO_HEAVY_TO_ATTACK);
 			return false;
 		}
@@ -161,6 +174,14 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 校验是否可邀请目标进组。
+	 * Validates group invite against target.
+	 *
+	 * inviter
+	 * target
+	 * true when allowed
+	 */
 	@Override
 	public boolean canInviteToGroup(Player player, Player target) {
 		final com.aionemu.gameserver.model.team2.group.PlayerGroup group = player.getPlayerGroup2();
@@ -206,6 +227,14 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 校验是否可邀请目标进联盟。
+	 * Validates alliance invite against target.
+	 *
+	 * inviter
+	 * target
+	 * true when allowed
+	 */
 	public boolean canInviteToAlliance(Player player, Player target) {
 		int level = player.getLevel();
 		if (target == null) {
@@ -218,7 +247,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		}
 		final com.aionemu.gameserver.model.team2.alliance.PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (level < 10) {
-			// Characters under level 10 cannot send Alliance invitations.
+			// 10 级以下角色无法发送联盟邀请。 / Characters under level 10 cannot send Alliance invitations.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_TOO_LOW_LEVEL_TO_INVITE("10"));
 			return false;
 		}
@@ -276,6 +305,14 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 校验是否可邀请目标进军团联盟。
+	 * Validates league invite against target.
+	 *
+	 * inviter
+	 * target
+	 * true when allowed
+	 */
 	public boolean canInviteToLeague(Player player, Player target) {
 		if (target == null) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_UNION_ONLY_INVITE_FORCE_MEMBER);
@@ -326,6 +363,14 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 校验是否可攻击目标。
+	 * Validates whether the player may attack the target.
+	 *
+	 * 玩家 / player
+	 * target
+	 * true when allowed
+	 */
 	@Override
 	public boolean canAttack(Player player, VisibleObject target) {
 		if (target == null) {
@@ -342,18 +387,25 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			return false;
 		}
 		if (player.isInPlayerMode(PlayerMode.RIDE)) {
-			// You cannot attack while mounted.
+			// 骑乘时无法攻击。 / You cannot attack while mounted.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ATTACK_RESTRICTION_RIDE);
 			return false;
 		}
 		if (player.getInventory().isFull()) {
-			// You are too overburdened to fight.
+			// 你负重过重，无法战斗。 / You are too overburdened to fight.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_TOO_HEAVY_TO_ATTACK);
 			return false;
 		}
 		return player.isEnemy(creature);
 	}
 
+	/**
+	 * 校验是否可使用仓库（在线、非交易中、等级限制）。
+	 * Validates warehouse use (online, not trading, level gate).
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	@Override
 	public boolean canUseWarehouse(Player player) {
 		int level = player.getLevel();
@@ -364,8 +416,8 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			return false;
 		}
 		if (level < 10) {
-			// Characters under level 10 who are using a free trial cannot use the Account
-			// warehouse.
+			// 试用账号且等级低于 10 不能使用账号仓库。 / Characters under level 10 who are using a free trial cannot use the Account
+			// 仓库。 / warehouse.
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_FREE_EXPERIENCE_CHARACTER_CANT_USE_ACCOUNT_WAREHOUSE("10"));
 			return false;
@@ -373,6 +425,13 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 校验是否可交易（在线、未在交易、非隐身）。
+	 * Validates trade (online, not already trading, not invisible).
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	@Override
 	public boolean canTrade(Player player) {
 		int level = player.getLevel();
@@ -380,18 +439,25 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			return false;
 		}
 		if (player.isTrading()) {
-			// The target is already trading with someone else.
+			// 目标已在与他人交易。 / The target is already trading with someone else.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_EXCHANGE_PARTNER_IS_EXCHANGING_WITH_OTHER);
 			return false;
 		}
 		if (player.getEffectController().isAbnormalSet(AbnormalState.HIDE)) {
-			// You cannot trade while you are invisible.
+			// 隐身时无法交易。 / You cannot trade while you are invisible.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_EXCHANGE_CANT_EXCHANGE_WHILE_INVISIBLE);
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 异常状态（无法攻击）下禁止换装。
+	 * Forbids equip change under cant-attack abnormal.
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	@Override
 	public boolean canChangeEquip(Player player) {
 		if (player.getEffectController().isAbnormalSet(AbnormalState.CANT_ATTACK_STATE)) {
@@ -400,6 +466,13 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return true;
 	}
 
+	/**
+	 * 在线且未禁言时可聊天。
+	 * Chat allowed when online and not gagged.
+	 *
+	 * 玩家 / player
+	 * true when allowed
+	 */
 	@Override
 	public boolean canChat(Player player) {
 		if (player == null || !player.isOnline()) {
@@ -408,6 +481,14 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		return !player.isGagged();
 	}
 
+	/**
+	 * 校验是否可使用物品（异常状态、大天使、区域限制）。
+	 * Validates item use (abnormal, Archdaeva, area restriction).
+	 *
+	 * 玩家 / player
+	 * item
+	 * true when allowed
+	 */
 	@Override
 	public boolean canUseItem(Player player, Item item) {
 		if (player == null || !player.isOnline()) {

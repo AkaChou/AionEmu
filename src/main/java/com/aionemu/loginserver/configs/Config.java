@@ -1,34 +1,20 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.configs;
 
 import java.util.Properties;
 
-import lombok.extern.slf4j.Slf4j;
-
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.configs.CommonsConfig;
 import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.configuration.ConfigurableProcessor;
 import com.aionemu.commons.configuration.Property;
 import com.aionemu.commons.utils.PropertiesUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
+ * 登录服配置项与加载逻辑。
+ * LoginServer configuration properties and loader.
+ *
  * @author -Nemesiss-
  * @author SoulKeeper
  */
@@ -36,76 +22,119 @@ import com.aionemu.commons.utils.PropertiesUtils;
 public class Config {
 
     private static volatile Properties bootOverrides = new Properties();
+    /**
+     * 账号字符集。
+     * Account charset.
+     */
     @Property(key = "accounts.charset", defaultValue = "ISO8859_2")
     public static String ACCOUNT_CHARSET;
+    /**
+     * 快速重连判定时间（秒）。
+     * Fast reconnection threshold in seconds.
+     */
     @Property(key = "network.fastreconnection.time", defaultValue = "10")
     public static int FAST_RECONNECTION_TIME;
     /**
-     * Login Server port
+     * 客户端监听端口。
+     * Client listen port.
      */
     @Property(key = "loginserver.network.client.port", defaultValue = "2106")
     public static int LOGIN_PORT;
     /**
-     * Login Server bind ip
+     * 客户端绑定地址。
+     * Client bind address.
      */
     @Property(key = "loginserver.network.client.host", defaultValue = "localhost")
     public static String LOGIN_BIND_ADDRESS;
     /**
-     * Login Server port
+     * 游戏服监听端口。
+     * GameServer listen port.
      */
     @Property(key = "loginserver.network.gameserver.port", defaultValue = "9014")
     public static int GAME_PORT;
     /**
-     * Login Server bind ip
+     * 游戏服绑定地址。
+     * GameServer bind address.
      */
     @Property(key = "loginserver.network.gameserver.host", defaultValue = "*")
     public static String GAME_BIND_ADDRESS;
     /**
-     * Number of trys of login before ban
+     * 封禁前允许的失败登录次数。
+     * Failed login attempts before ban.
      */
     @Property(key = "loginserver.network.client.logintrybeforeban", defaultValue = "5")
     public static int LOGIN_TRY_BEFORE_BAN;
     /**
-     * Ban time in minutes
+     * 暴力破解封禁时长（分钟）。
+     * Brute-force ban duration in minutes.
      */
     @Property(key = "loginserver.network.client.bantimeforbruteforcing", defaultValue = "15")
     public static int WRONG_LOGIN_BAN_TIME;
     /**
-     * Should server automaticly create accounts for users or not?
+     * 是否自动创建账号。
+     * Whether to auto-create accounts.
      */
     @Property(key = "loginserver.accounts.autocreate", defaultValue = "true")
     public static boolean ACCOUNT_AUTO_CREATION;
     /**
-     * Set the server on maintenance mod
+     * 是否维护模式。
+     * Whether maintenance mode is enabled.
      */
     @Property(key = "loginserver.server.maintenance", defaultValue = "false")
     public static boolean MAINTENANCE_MOD;
     /**
-     * Set GM level for maintenance mod
+     * 维护模式下允许登录的 GM 等级。
+     * GM level allowed during maintenance.
      */
     @Property(key = "loginserver.server.maintenance.gmlevel", defaultValue = "3")
     public static int MAINTENANCE_MOD_GMLEVEL;
     /**
-     * Enable\disable flood protector from 1 ip on account login
+     * 是否启用同 IP 洪水防护。
+     * Enable flood protection per IP on login.
      */
     @Property(key = "loginserver.server.floodprotector", defaultValue = "true")
     public static boolean ENABLE_FLOOD_PROTECTION;
     /**
-     * Enable\disable flood protector from 1 ip on account login
+     * 是否启用暴力破解防护。
+     * Enable brute-force protection.
      */
     @Property(key = "loginserver.server.bruteforceprotector", defaultValue = "true")
     public static boolean ENABLE_BRUTEFORCE_PROTECTION;
+    /**
+     * 是否启用游戏服 ping/pong。
+     * Enable GameServer ping/pong.
+     */
     @Property(key = "loginserver.server.pingpong", defaultValue = "true")
     public static boolean ENABLE_PINGPONG;
+    /**
+     * ping/pong 间隔（毫秒）。
+     * Ping/pong delay in milliseconds.
+     */
     @Property(key = "loginserver.server.pingpong.delay", defaultValue = "3000")
     public static int PINGPONG_DELAY;
+    /**
+     * 洪水防护排除 IP 列表（逗号分隔）。
+     * Flood-protection excluded IPs (comma-separated).
+     */
     @Property(key = "loginserver.excluded.ips", defaultValue = "")
     public static String EXCLUDED_IP;
 
+    /**
+     * 配置目录路径。
+     * Config directory path.
+     *
+     * Config directory
+     */
     private static String configDir() {
         return System.getProperty("aion.login.config.dir", "./config");
     }
 
+    /**
+     * 设置 boot 层属性覆盖。
+     * Set boot-layer property overrides.
+     *
+     * Override properties
+     */
     public static void setBootOverrides(Properties properties) {
         Properties copy = new Properties();
         if (properties != null) {
@@ -115,33 +144,34 @@ public class Config {
     }
 
     /**
-     * Load configs from files.
+     * 从文件加载配置。
+     * Load configuration from files.
      */
     public static void load() {
         try {
             Properties myProps = null;
             try {
-                log.info("Loading: myls.properties");
+                log.info(I18n.get("log.d74fbaa2d37d"));
                 myProps = PropertiesUtils.load(configDir() + "/myls.properties");
             } catch (Exception e) {
-                log.info("No override properties found");
+                log.info(I18n.get("log.c453f21e95f6"));
             }
 
             String network = configDir() + "/network";
             Properties[] props = PropertiesUtils.loadAllFromDirectory(network);
             PropertiesUtils.overrideProperties(props, myProps);
             PropertiesUtils.overrideProperties(props, bootOverrides);
-            log.info("Loading: " + network + "/network.properties");
+            log.info(I18n.get("log.82761a77d855", network));
             ConfigurableProcessor.process(Config.class, props);
-            log.info("Loading: " + network + "/svstats.properties");
-			ConfigurableProcessor.process(SvStatsConfig.class, props);
-            log.info("Loading: " + network + "/commons.properties");
+            log.info(I18n.get("log.b4cc54f61657", network));
+            ConfigurableProcessor.process(SvStatsConfig.class, props);
+            log.info(I18n.get("log.9d5403420a43", network));
             ConfigurableProcessor.process(CommonsConfig.class, props);
-            log.info("Loading: " + network + "/database.properties");
+            log.info(I18n.get("log.e2109203a77c", network));
             ConfigurableProcessor.process(DatabaseConfig.class, props);
 
         } catch (Exception e) {
-            log.error("Can't load loginserver configuration", e);
+            log.error(I18n.get("log.a4dc4f436c94", e));
             throw new Error("Can't load loginserver configuration", e);
         }
     }

@@ -1,7 +1,7 @@
 package com.aionemu.commons.network;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.services.ServiceContext;
-import lombok.extern.slf4j.Slf4j;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -14,9 +14,14 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Netty 客户端传输，主动连接远端并托管通道生命周期。
+ * Netty client transport that connects outbound and manages channel lifecycle.
+ */
 @Slf4j
 public class NettyClient implements ServerTransport {
-
 
     private final InetSocketAddress address;
     private final String connectionName;
@@ -27,10 +32,27 @@ public class NettyClient implements ServerTransport {
     private NettyEventLoopProvider.Allocation eventLoops;
     private Channel channel;
 
+    /**
+     * 使用默认断开连接执行器构造客户端。
+     * Construct client with default disconnection executor.
+     *
+     * Remote address
+     * Connection name
+     * Connection factory
+     */
     public NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory) {
         this(address, connectionName, connectionFactory, null);
     }
 
+    /**
+     * 构造客户端（可指定断开连接执行器）。
+     * Construct client with optional disconnection executor.
+     *
+     * Remote address
+     * Connection name
+     * Connection factory
+     * @param disconnectionExecutor 断开连接执行器，null 时用默认线程池 / Disconnection executor, null uses default pool
+     */
     NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {
         this.address = address;
         this.connectionName = connectionName;
@@ -38,6 +60,10 @@ public class NettyClient implements ServerTransport {
         this.disconnectionExecutor = disconnectionExecutor;
     }
 
+    /**
+     * 连接远端（已连接则跳过）。
+     * Connect to remote (no-op when already open).
+     */
     @Override
     public synchronized void connect() {
         if (channel != null && channel.isOpen()) {
@@ -67,13 +93,17 @@ public class NettyClient implements ServerTransport {
                 .syncUninterruptibly();
 
             channel = connectFuture.channel();
-            log.info("Netty client connected to {} for {}", address, connectionName);
+            log.info(I18n.get("log.fe77f296ff0c", address, connectionName));
         } catch (RuntimeException e) {
             shutdown();
             throw e;
         }
     }
 
+    /**
+     * 关闭通道并释放事件循环（若自持有）。
+     * Close channels and release event loops when owned.
+     */
     @Override
     public synchronized void shutdown() {
         channels.close().syncUninterruptibly();
@@ -85,6 +115,12 @@ public class NettyClient implements ServerTransport {
         }
     }
 
+    /**
+     * 获取活跃连接数。
+     * Get active connection count.
+     *
+     * @return 活跃连接数 / Active connections
+     */
     @Override
     public int getActiveConnections() {
         return channels.size();

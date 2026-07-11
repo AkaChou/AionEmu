@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -30,22 +14,39 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 修改房屋权限与欢迎设置的客户端包。
+ * Client packet for changing house permissions and welcome settings.
+ */
 public class CM_HOUSE_SETTINGS extends AionClientPacket {
 	int doorState;
 	int displayOwner;
 	String signNotice;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_HOUSE_SETTINGS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取房屋权限、欢迎语与显示设置。
+	 * Reads house permissions, welcome text, and display settings.
+	 */
 	@Override
 	protected void readImpl() {
 		doorState = readC();
 		displayOwner = readC();
 		signNotice = readS();
 	}
-
+	/**
+	 * 保存房屋门/仓库权限与欢迎设置。
+	 * Saves house door/warehouse permissions and welcome settings.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();

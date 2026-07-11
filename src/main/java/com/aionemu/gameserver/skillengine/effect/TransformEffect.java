@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -33,6 +17,9 @@ import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 变身效果基类：切换模型/面板，并在结束时恢复或叠加其他变身。
+ * Base transform effect: switches model/panel and restores or stacks other transforms on end.
+ *
  * @author Sweetkr, kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -53,6 +40,13 @@ public abstract class TransformEffect extends EffectTemplate {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 结束变身：清除异常状态、恢复模型并广播。
+	 * Ends transform: clears abnormal, restores model and broadcasts.
+	 *
+	 * @param effect 运行中效果 / runtime effect
+	 * @param state 关联异常状态，可为 null / related abnormal state, may be null
+	 */
 	public void endEffect(Effect effect, AbnormalState state) {
 		final Creature effected = effect.getEffected();
 
@@ -93,6 +87,13 @@ public abstract class TransformEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 开始变身：设置异常状态、模型/面板并广播。
+	 * Starts transform: sets abnormal, model/panel and broadcasts.
+	 *
+	 * @param effect 运行中效果 / runtime effect
+	 * @param effectId 异常状态，可为 null / abnormal state, may be null
+	 */
 	public void startEffect(Effect effect, AbnormalState effectId) {
 		final Creature effected = effect.getEffected();
 
@@ -116,14 +117,32 @@ public abstract class TransformEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 获取变身类型。
+	 * Returns the transform type.
+	 *
+	 * transform type
+	 */
 	public TransformType getTransformType() {
 		return type;
 	}
 
+	/**
+	 * 获取变身模型 ID。
+	 * Returns the transform model id.
+	 *
+	 * model id
+	 */
 	public int getTransformId() {
 		return model;
 	}
 
+	/**
+	 * 获取变身面板 ID。
+	 * Returns the transform panel id.
+	 *
+	 * panel id
+	 */
 	public int getPanelId() {
 		return panelid;
 	}

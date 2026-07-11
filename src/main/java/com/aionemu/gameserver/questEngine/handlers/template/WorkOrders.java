@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.Iterator;
@@ -37,14 +21,29 @@ import com.aionemu.gameserver.services.RecipeService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 制作工单任务模板：接取后发放材料与配方，收集成品后交任务并删除配方。
+ * Crafting work-order quest template: grants materials and recipe on accept, turns in finished goods and removes the recipe.
+ */
 public class WorkOrders extends QuestHandler {
+	/** 工单 XML 配置数据 / work-order XML config data */
 	private final WorkOrdersData workOrdersData;
 
+	/**
+	 * 构造制作工单任务处理器。
+	 * Constructs a work-orders quest handler.
+	 *
+	 * work-order config
+	 */
 	public WorkOrders(WorkOrdersData workOrdersData) {
 		super(workOrdersData.getId());
 		this.workOrdersData = workOrdersData;
 	}
 
+	/**
+	 * 注册工单起始 NPC 的接取与对话事件。
+	 * Registers quest-start and talk events for work-order start NPCs.
+	 */
 	@Override
 	public void register() {
 		Iterator<Integer> iterator = workOrdersData.getStartNpcIds().iterator();
@@ -55,6 +54,13 @@ public class WorkOrders extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理接取（发材料/配方）、交成品与奖励对话；领奖时清理收集物与配方。
+	 * Handles accept (materials/recipe), finished-goods turn-in and reward dialogs; clears collect items and recipe on reward.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		Player player = env.getPlayer();

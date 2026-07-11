@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,12 +6,27 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 import com.aionemu.gameserver.services.item.ItemService;
 
 /**
- * Created By (Aion-Unique)
+ * 玩家命令：领取增益型宠物道具。
+ * Player command: grants a buffer pet item.
+ *
+ * @author Aion-Unique
  */
-public class cmd_pet extends PlayerCommand {	
+public class cmd_pet extends PlayerCommand {
+	/**
+	 * 注册命令别名 {@code pet}。
+	 * Registers the command alias {@code pet}.
+	 */
 	public cmd_pet() {
 		super("pet");
 	}
+
+	/**
+	 * 处理 {@code .pet add}，向背包添加宠物卷轴。
+	 * Handles {@code .pet add} and adds a pet scroll to inventory.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param param 子命令参数 / sub-command parameters
+	 */
 		@Override
 		public void execute(final Player player, String...param){
         if(param.length < 1){
@@ -39,7 +38,14 @@ public class cmd_pet extends PlayerCommand {
 			PacketSendUtility.sendMessage(player, "\uE020 You Just Added a Buffer Pet! \uE020");
 		}
 	 }
-	
+
+	/**
+	 * 参数错误时提示用法。
+	 * Shows usage when arguments are invalid.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param msg 失败消息 / failure message
+	 */
     public void onFail(Player player, String msg){
         PacketSendUtility.sendMessage(player, " " +
                 "syntax : .pet add  -- To Add a Buffer Pet\n");

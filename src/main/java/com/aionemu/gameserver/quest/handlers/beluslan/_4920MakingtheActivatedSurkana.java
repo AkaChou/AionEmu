@@ -8,9 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/****/
-/** DainAvenger
-/****/
+/**
+ * 贝勒斯兰任务脚本：Makingthe Activated Surkana（任务 ID 4920）。
+ * Beluslan quest script: Makingthe Activated Surkana (quest ID 4920). DainAvenger /***
+ */
 public class _4920MakingtheActivatedSurkana extends QuestHandler {
 
 	private final static int questId = 4920;

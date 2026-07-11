@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.rewards;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,28 +9,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.itemgroups.ItemRaceEntry;
 
 /**
- * @author Rolandas
+ * 制作奖励模板（静态数据/XML）。
+ * XML template. / XML template.
  *
- */
-
-/**
- * <p>
- * Java class for CraftReward complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
- * <pre>
- * &lt;complexType name="CraftReward">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}int" />
- *       &lt;attribute name="skill" type="{http://www.w3.org/2001/XMLSchema}int" />
- *       &lt;attribute name="race" type="{}Race" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
+ * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CraftReward")
@@ -56,11 +22,11 @@ public abstract class CraftReward extends ItemRaceEntry {
 	@XmlAttribute(name = "skill")
 	protected Integer skill;
 
-	/**
-	 * Gets the value of the skill property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 skill 属性值。
+	  * Gets the value of the skill property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getSkill() {
 		return skill;
 	}

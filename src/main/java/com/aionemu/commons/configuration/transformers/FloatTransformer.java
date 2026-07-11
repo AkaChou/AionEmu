@@ -22,12 +22,12 @@ public class FloatTransformer implements PropertyTransformer<Float> {
     public static final FloatTransformer SHARED_INSTANCE = new FloatTransformer();
 
     /**
-     * 将字符串值转换为Float对象
+ * 将字符串值转换为 Float 对象
      * Transforms string value into Float object
      *
      * @param value 要转换的字符串值 String value to transform
      * @param field 字段对象 Field that will be transformed
-     * @return 转换后的Float对象 Transformed Float object
+ * @return 转换后的 Float 对象 Transformed Float object
      * @throws TransformationException 如果转换失败 if transformation fails
      */
     public Float transform(String value, Field field) throws TransformationException {

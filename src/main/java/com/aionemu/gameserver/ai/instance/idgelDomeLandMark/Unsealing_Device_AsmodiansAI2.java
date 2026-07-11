@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.idgelDomeLandMark;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Idgel Dome Land Mark 副本 NPC AI：Unsealing Device Asmodians（@AIName "Unsealing_Device_Asmodians"），继承 ActionItemNpcAI2。
+ * Idgel Dome Land Mark instance NPC AI: Unsealing Device Asmodians (@AIName "Unsealing_Device_Asmodians"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Unsealing_Device_Asmodians")
 public class Unsealing_Device_AsmodiansAI2 extends ActionItemNpcAI2
 {
@@ -91,19 +77,19 @@ public class Unsealing_Device_AsmodiansAI2 extends ActionItemNpcAI2
 			AI2Actions.deleteOwner(this);
 			AI2Actions.handleUseItemFinish(this, player);
 			switch (getNpcId()) {
-			    case 806375: //Unsealing Device.
+			    case 806375: //解封装置。 / Unsealing Device.
 					spawn(806359, 264.12469f, 273.46167f, 85.796768f, (byte) 0, 154);
 					spawn(806280, 264.74783f, 259.22983f, 88.351212f, (byte) 0, 194);
 				break;
-				case 806376: //Unsealing Device.
+				case 806376: //解封装置。 / Unsealing Device.
 			        spawn(806280, 264.74783f, 259.22983f, 89.924179f, (byte) 0, 195);
 					spawn(806360, 265.26395f, 245.08080f, 85.796768f, (byte) 0, 106);
 				break;
-				case 806377: //Unsealing Device.
+				case 806377: //解封装置。 / Unsealing Device.
 					spawn(806280, 264.74783f, 259.22983f, 91.488808f, (byte) 0, 196);
 					spawn(806361, 250.50882f, 258.67883f, 85.796768f, (byte) 0, 153);
 				break;
-				case 806378: //Unsealing Device.
+				case 806378: //解封装置。 / Unsealing Device.
 			        spawn(806362, 278.85132f, 259.72498f, 85.796768f, (byte) 0, 104);
 				break;
 			}

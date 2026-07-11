@@ -9,6 +9,10 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
+/**
+ * 艾特南任务脚本：Pratical Aerobatics（任务 ID 1354）。
+ * Eltnen quest script: Pratical Aerobatics (quest ID 1354).
+ */
 public class _1354Pratical_Aerobatics extends QuestHandler {
 
 	private final static int questId = 1354;
@@ -98,7 +102,7 @@ public class _1354Pratical_Aerobatics extends QuestHandler {
 							return sendQuestDialog(env, 2375);
 					case STEP_TO_1:
 						if (qs.getQuestVarById(0) == 0) {
-							QuestService.questTimerStart(env, 300); //5 Minutes.
+							QuestService.questTimerStart(env, 300); //5 分钟。 / 5 Minutes.
 							return defaultCloseDialog(env, 0, 1);
 						}
 					case SELECT_REWARD:

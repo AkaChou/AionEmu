@@ -1,15 +1,31 @@
 package com.aionemu.commons.utils;
 
-public final class AionProcessExit {
+import lombok.experimental.UtilityClass;
 
-    private AionProcessExit() {
-    }
+/**
+ * 进程退出封装，便于测试替换与统一调用。
+ * Process exit helpers for consistent invocation and testability.
+ */
+@UtilityClass
+public class AionProcessExit {
 
-    public static void exit(int status) {
+    /**
+     * 正常退出 JVM（可执行关闭钩子）。
+     * Exit the JVM normally (shutdown hooks may run).
+     *
+     * Exit status
+     */
+    public void exit(int status) {
         System.exit(status);
     }
 
-    public static void halt(int status) {
+    /**
+     * 强制终止 JVM（不执行关闭钩子）。
+     * Halt the JVM immediately (shutdown hooks are skipped).
+     *
+     * Exit status
+     */
+    public void halt(int status) {
         Runtime.getRuntime().halt(status);
     }
 }

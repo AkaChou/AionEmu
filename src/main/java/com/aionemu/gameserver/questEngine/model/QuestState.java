@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.model;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -25,22 +11,45 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 
 /**
+ * 玩家单个任务的运行时状态，包含进度变量、状态、完成次数与持久化标记。
+ * Runtime state of a single player quest, including progress vars, status, completion count and persistence flag.
+ *
  * @author MrPoke
  * @modified vlog, Rolandas
  */
 @Slf4j
 public class QuestState {
 
+	/** 任务 ID。 Quest id. */
 	private final int questId;
+	/** 任务进度变量。 Quest progress variables. */
 	private QuestVars questVars;
+	/** 当前任务状态。 Current quest status. */
 	private QuestStatus status;
+	/** 完成次数。 Completion count. */
 	private int completeCount;
+	/** 最近完成时间。 Last completion time. */
 	private Timestamp completeTime;
+	/** 下次可重复时间。 Next allowed repeat time. */
 	private Timestamp nextRepeatTime;
+	/** 已选奖励索引。 Selected reward index. */
 	private Integer reward;
+	/** 数据库持久化状态。 Database persistent state. */
 	private PersistentState persistentState;
 
 
+	/**
+	 * 构造任务状态。
+	 * Constructs a quest state.
+	 *
+	 * Quest id
+	 * Initial status
+	 * @param questVars 打包的任务变量 / Packed quest vars
+	 * Completion count
+	 * @param nextRepeatTime 下次可重复时间 / Next repeat time
+	 * Reward index
+	 * Completion time
+	 */
 	public QuestState(int questId, QuestStatus status, int questVars, int completeCount, Timestamp nextRepeatTime,
 			Integer reward, Timestamp completeTime) {
 		this.questId = questId;
@@ -53,13 +62,22 @@ public class QuestState {
 		this.persistentState = PersistentState.NEW;
 	}
 
+	/**
+	 * 返回任务变量集合。
+	 * Returns the quest variable set.
+	 *
+	 * Quest vars
+	 */
 	public QuestVars getQuestVars() {
 		return questVars;
 	}
 
 	/**
-	 * @param id
-	 * @param var
+	 * 按索引设置任务子变量，并标记需要持久化更新。
+	 * Sets a quest sub-variable by index and marks the state for persistence update.
+	 *
+	 * @param id 子变量索引 / Sub-variable index
+	 * @param var 子变量值 / Sub-variable value
 	 */
 	public void setQuestVarById(int id, int var) {
 		questVars.setVarById(id, var);
@@ -67,22 +85,43 @@ public class QuestState {
 	}
 
 	/**
-	 * @param id
-	 * @return Quest var by id.
+	 * 按索引获取任务子变量。
+	 * Returns the quest sub-variable at the given index.
+	 *
+	 * @param id 子变量索引 / Sub-variable index
+	 * Sub-variable value
 	 */
 	public int getQuestVarById(int id) {
 		return questVars.getVarById(id);
 	}
 
+	/**
+	 * 用打包整型设置全部任务变量，并标记需要持久化更新。
+	 * Sets all quest variables from a packed int and marks the state for persistence update.
+	 *
+	 * @param var 打包的任务变量值 / Packed quest-var value
+	 */
 	public void setQuestVar(int var) {
 		questVars.setVar(var);
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/**
+	 * 返回当前任务状态。
+	 * Returns the current quest status.
+	 *
+	 * Quest status
+	 */
 	public QuestStatus getStatus() {
 		return status;
 	}
 
+	/**
+	 * 设置任务状态；首次进入 COMPLETE 时自动更新完成时间，并标记持久化。
+	 * Sets quest status; auto-updates completion time on first transition to COMPLETE and marks for persistence.
+	 *
+	 * New status
+	 */
 	public void setStatus(QuestStatus status) {
 		if (status == QuestStatus.COMPLETE && this.status != QuestStatus.COMPLETE)
 			updateCompleteTime();
@@ -90,53 +129,117 @@ public class QuestState {
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/**
+	 * 返回最近完成时间。
+	 * Returns the last completion time.
+	 *
+	 * @return 完成时间戳 / Completion timestamp
+	 */
 	public Timestamp getCompleteTime() {
 		return completeTime;
 	}
 
+	/**
+	 * 设置完成时间。
+	 * Sets the completion time.
+	 *
+	 * @param time 完成时间 / Completion time
+	 */
 	public void setCompleteTime(Timestamp time) {
 		completeTime = time;
 	}
 
+	/**
+	 * 将完成时间更新为当前时刻。
+	 * Updates the completion time to now.
+	 */
 	public void updateCompleteTime() {
 		completeTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
 	}
 
+	/**
+	 * 返回任务 ID。
+	 * Returns the quest id.
+	 *
+	 * Quest id
+	 */
 	public int getQuestId() {
 		return questId;
 	}
 
+	/**
+	 * 设置完成次数，并标记需要持久化更新。
+	 * Sets the completion count and marks the state for persistence update.
+	 *
+	 * Completion count
+	 */
 	public void setCompleteCount(int completeCount) {
 		this.completeCount = completeCount;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/**
+	 * 返回完成次数。
+	 * Returns the completion count.
+	 *
+	 * Completion count
+	 */
 	public int getCompleteCount() {
 		return completeCount;
 	}
 
+	/**
+	 * 设置下次可重复时间。
+	 * Sets the next allowed repeat time.
+	 *
+	 * @param nextRepeatTime 下次可重复时间 / Next repeat time
+	 */
 	public void setNextRepeatTime(Timestamp nextRepeatTime) {
 		this.nextRepeatTime = nextRepeatTime;
 	}
 
+	/**
+	 * 返回下次可重复时间。
+	 * Returns the next allowed repeat time.
+	 *
+	 * @return 下次可重复时间 / Next repeat time
+	 */
 	public Timestamp getNextRepeatTime() {
 		return nextRepeatTime;
 	}
 
+	/**
+	 * 设置已选奖励索引，并标记需要持久化更新。
+	 * Sets the selected reward index and marks the state for persistence update.
+	 *
+	 * Reward index
+	 */
 	public void setReward(Integer reward) {
 		this.reward = reward;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/**
+	 * 返回已选奖励索引；未设置时记警告并返回 0。
+	 * Returns the selected reward index; logs a warning and returns 0 when unset.
+	 *
+	 * @return 奖励索引，缺省为 0 / Reward index, default 0
+	 */
 	public Integer getReward() {
 		if (reward == null) {
-			log.warn("No reward for the quest " + String.valueOf(questId));
+			log.warn(I18n.get("log.b673a467afac", String.valueOf(questId)));
 		} else {
 			return reward;
 		}
 		return 0;
 	}
 
+	/**
+	 * 判断该任务当前是否允许再次接取（状态、完成次数、变量与时间限制）。
+	 * Returns whether the quest may currently be repeated (status, completion count, vars and time limits).
+	 *
+	 * @return true 可重复；false 不可 / true if repeatable; false otherwise
+	 */
 	public boolean canRepeat() {
 		QuestTemplate template = DataManager.QUEST_DATA.getQuestById(questId);
 		if (status != QuestStatus.NONE && (status != QuestStatus.COMPLETE
@@ -156,14 +259,20 @@ public class QuestState {
 	}
 
 	/**
-	 * @return the pState
+	 * 返回数据库持久化状态。
+	 * Returns the database persistent state.
+	 *
+	 * @return 持久化状态 / Persistent state
 	 */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
 	/**
-	 * @param persistentState the pState to set
+	 * 设置持久化状态；禁止 NEW→DELETED，且 NEW 状态下忽略 UPDATE_REQUIRED。
+	 * Sets persistent state; forbids NEW→DELETED and ignores UPDATE_REQUIRED while still NEW.
+	 *
+	 * @param persistentState 目标持久化状态 / Target persistent state
 	 */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {

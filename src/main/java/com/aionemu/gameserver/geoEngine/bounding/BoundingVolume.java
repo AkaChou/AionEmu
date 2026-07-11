@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.bounding;
 
 import java.nio.FloatBuffer;
@@ -25,212 +9,264 @@ import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
 /**
- * <code>BoundingVolume</code> defines an interface for dealing with containment
- * of a collection of points.
+ * 包围体抽象基类，定义点集的包容与相交检测接口。
+ * Abstract base for bounding volumes dealing with containment of a collection of points.
  *
  * @author Mark Powell
  * @version $Id: BoundingVolume.java,v 1.24 2007/09/21 15:45:32 nca Exp $
  */
 public abstract class BoundingVolume implements Collidable {
 
+	/**
+	 * 包围体类型枚举。
+	 * Bounding-volume type enum.
+	 */
 	public enum Type {
 
 		Sphere, AABB, OBB, Capsule;
 	}
 
+	/** 优先检测的裁剪平面索引。 / Index of the clip plane to check first. */
 	protected int checkPlane = 0;
+	/** 包围体中心点。 / Center of the bounding volume. */
 	Vector3f center = new Vector3f();
 
+	/**
+	 * 默认构造，中心位于原点。
+	 * Default constructor with center at the origin.
+	 */
 	public BoundingVolume() {
 	}
 
+	/**
+	 * 以给定中心构造包围体。
+	 * Constructs a bounding volume with the given center.
+	 *
+	 * center point
+	 */
 	public BoundingVolume(Vector3f center) {
 		this.center.set(center);
 	}
 
 	/**
-	 * Grabs the checkplane we should check first.
+	 * 获取应优先检测的裁剪平面索引。
+	 * Returns the clip-plane index that should be checked first.
+	 *
+	 * plane index
 	 */
 	public int getCheckPlane() {
 		return checkPlane;
 	}
 
 	/**
+	 * 设置渲染时优先检测的平面索引。
 	 * Sets the index of the plane that should be first checked during rendering.
 	 *
-	 * @param value
+	 * @param value 平面索引 / plane index
 	 */
 	public final void setCheckPlane(int value) {
 		checkPlane = value;
 	}
 
 	/**
-	 * getType returns the type of bounding volume this is.
+	 * 返回此包围体的类型。
+	 * Returns the type of this bounding volume.
+	 *
+	 * type enum
 	 */
 	public abstract Type getType();
 
 	/**
-	 * <code>transform</code> alters the location of the bounding volume by a
-	 * rotation, translation and a scalar.
+	 * 通过旋转、平移与缩放变换包围体。
+	 * Transforms the bounding volume by rotation, translation and scale.
 	 *
-	 * @param trans the transform to affect the bound.
-	 * @param store sphere to store result in
-	 * @return the new bounding volume.
+	 * @param trans 变换矩阵 / transform matrix
+	 * @param store 结果存储（可为 null） / destination volume (may be null)
+	 * @return 变换后的包围体 / transformed bounding volume
 	 */
 	public abstract BoundingVolume transform(Matrix4f trans, BoundingVolume store);
 
 	/**
-	 * <code>whichSide</code> returns the side on which the bounding volume lies on
-	 * a plane. Possible values are POSITIVE_SIDE, NEGATIVE_SIDE, and NO_SIDE.
+	 * 判断包围体相对平面所在侧（正侧、负侧或跨越）。
+	 * Returns which side of a plane the volume lies on (positive, negative, or none/straddling).
 	 *
-	 * @param plane the plane to check against this bounding volume.
-	 * @return the side on which this bounding volume lies.
+	 * @param plane 检测平面 / plane to test against
+	 * side relative to the plane
 	 */
 	public abstract Plane.Side whichSide(Plane plane);
 
 	/**
-	 * <code>computeFromPoints</code> generates a bounding volume that encompasses a
-	 * collection of points.
+	 * 根据点集计算包围体。
+	 * Computes a bounding volume that encompasses a collection of points.
 	 *
-	 * @param points the points to contain.
+	 * point buffer
 	 */
 	public abstract void computeFromPoints(FloatBuffer points);
 
 	/**
-	 * <code>merge</code> combines two bounding volumes into a single bounding
-	 * volume that contains both this bounding volume and the parameter volume.
+	 * 合并两个包围体，返回包含两者的新包围体。
+	 * Merges two volumes into a new volume containing both.
 	 *
-	 * @param volume the volume to combine.
-	 * @return the new merged bounding volume.
+	 * @param volume 另一包围体 / the volume to combine
+	 * @return 合并后的包围体 / merged bounding volume
 	 */
 	public abstract BoundingVolume merge(BoundingVolume volume);
 
 	/**
-	 * <code>mergeLocal</code> combines two bounding volumes into a single bounding
-	 * volume that contains both this bounding volume and the parameter volume. The
-	 * result is stored locally.
+	 * 就地合并两个包围体，结果存于自身。
+	 * Merges two volumes in place; the result is stored in this volume.
 	 *
-	 * @param volume the volume to combine.
+	 * @param volume 另一包围体 / the volume to combine
 	 * @return this
 	 */
 	public abstract BoundingVolume mergeLocal(BoundingVolume volume);
 
 	/**
-	 * <code>clone</code> creates a new BoundingVolume object containing the same
-	 * data as this one.
+	 * 克隆包围体数据到指定存储（类型不符或为 null 时新建）。
+	 * Clones this volume into the given store (creates a new one if null or wrong class).
 	 *
-	 * @param store where to store the cloned information. if null or wrong class, a
-	 *              new store is created.
-	 * @return the new BoundingVolume
+	 * @param store 存储目标 / destination store
+	 * cloned bounding volume
 	 */
 	public abstract BoundingVolume clone(BoundingVolume store);
 
+	/**
+	 * 获取中心点引用。
+	 * Returns the center vector reference.
+	 *
+	 * center
+	 */
 	public final Vector3f getCenter() {
 		return center;
 	}
 
+	/**
+	 * 将中心点写入给定向量并返回。
+	 * Copies the center into the given store and returns it.
+	 *
+	 * @param store 目标向量 / destination vector
+	 * @return store
+	 */
 	public final Vector3f getCenter(Vector3f store) {
 		store.set(center);
 		return store;
 	}
 
+	/**
+	 * 设置中心点引用。
+	 * Sets the center vector reference.
+	 *
+	 * new center
+	 */
 	public final void setCenter(Vector3f newCenter) {
 		center = newCenter;
 	}
 
 	/**
-	 * Find the distance from the center of this Bounding Volume to the given point.
+	 * 计算中心到给定点的距离。
+	 * Distance from the volume center to the given point.
 	 *
-	 * @param point The point to get the distance to
-	 * @return distance
+	 * target point
+	 * distance
 	 */
 	public final float distanceTo(Vector3f point) {
 		return center.distance(point);
 	}
 
 	/**
-	 * Find the squared distance from the center of this Bounding Volume to the
-	 * given point.
+	 * 计算中心到给定点的距离平方。
+	 * Squared distance from the volume center to the given point.
 	 *
-	 * @param point The point to get the distance to
-	 * @return distance
+	 * target point
+	 * squared distance
 	 */
 	public final float distanceSquaredTo(Vector3f point) {
 		return center.distanceSquared(point);
 	}
 
 	/**
-	 * Find the distance from the nearest edge of this Bounding Volume to the given
-	 * point.
+	 * 计算最近边到给定点的距离。
+	 * Distance from the nearest edge of this volume to the given point.
 	 *
-	 * @param point The point to get the distance to
-	 * @return distance
+	 * target point
+	 * @return 到边的距离 / distance to edge
 	 */
 	public abstract float distanceToEdge(Vector3f point);
 
 	/**
-	 * determines if this bounding volume and a second given volume are
-	 * intersecting. Intersecting being: one volume contains another, one volume
-	 * overlaps another or one volume touches another.
+	 * 判断两包围体是否相交（包含、重叠或接触）。
+	 * Whether this volume and the other intersect (contain, overlap, or touch).
 	 *
-	 * @param bv the second volume to test against.
-	 * @return true if this volume intersects the given volume.
+	 * @param bv 另一包围体 / other volume
+	 * 若 intersecting 则为 true / true if intersecting
 	 */
 	public abstract boolean intersects(BoundingVolume bv);
 
 	/**
-	 * determines if a ray intersects this bounding volume.
+	 * 判断射线是否与本包围体相交。
+	 * Whether a ray intersects this bounding volume.
 	 *
-	 * @param ray the ray to test.
-	 * @return true if this volume is intersected by a given ray.
+	 * ray to test
+	 * 若 intersecting 则为 true / true if intersecting
 	 */
 	public abstract boolean intersects(Ray ray);
 
 	/**
-	 * determines if this bounding volume and a given bounding sphere are
-	 * intersecting.
+	 * 判断与给定包围球是否相交。
+	 * Whether this volume intersects the given sphere.
 	 *
-	 * @param bs the bounding sphere to test against.
-	 * @return true if this volume intersects the given bounding sphere.
+	 * @param bs 包围球 / bounding sphere
+	 * 若 intersecting 则为 true / true if intersecting
 	 */
 	public abstract boolean intersectsSphere(BoundingSphere bs);
 
 	/**
-	 * determines if this bounding volume and a given bounding box are intersecting.
+	 * 判断与给定包围盒是否相交。
+	 * Whether this volume intersects the given axis-aligned box.
 	 *
-	 * @param bb the bounding box to test against.
-	 * @return true if this volume intersects the given bounding box.
+	 * @param bb 包围盒 / bounding box
+	 * 若 intersecting 则为 true / true if intersecting
 	 */
 	public abstract boolean intersectsBoundingBox(BoundingBox bb);
 
 	/**
-	 * determines if this bounding volume and a given bounding box are intersecting.
-	 *
-	 * @param bb the bounding box to test against.
-	 * @return true if this volume intersects the given bounding box.
+	 * 判断此包围体是否与给定包围盒相交。 / determines if this bounding volume and a given bounding box are intersecting.
 	 */
 	// public abstract boolean intersectsOrientedBoundingBox(OrientedBoundingBox
 	// bb);
 
 	/**
-	 * determines if a given point is contained within this bounding volume.
+	 * 判断点是否严格包含于包围体内。
+	 * Whether the given point is strictly contained inside this volume.
 	 *
-	 * @param point the point to check
-	 * @return true if the point lies within this bounding volume.
+	 * point to check
+	 * 若 contained 则为 true / true if contained
 	 */
 	public abstract boolean contains(Vector3f point);
 
 	/**
-	 * Determines if a given point intersects (touches or is inside) this bounding
-	 * volume.
+	 * 判断点是否与包围体相交（接触或在内部）。
+	 * Whether the given point intersects (touches or is inside) this volume.
 	 *
-	 * @param point the point to check
-	 * @return true if the point lies within this bounding volume.
+	 * point to check
+	 * 若 intersecting 则为 true / true if intersecting
 	 */
 	public abstract boolean intersects(Vector3f point);
 
+	/**
+	 * 返回包围体体积。
+	 * Returns the volume of this bounding volume.
+	 *
+	 * volume
+	 */
 	public abstract float getVolume();
 
+	/**
+	 * 浅克隆，中心向量深拷贝。
+	 * Clones this volume with a deep-copied center vector.
+	 *
+	 * clone
+	 */
 	@Override
 	public BoundingVolume clone() {
 		try {

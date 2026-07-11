@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -31,16 +16,29 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 背包扩展服务，处理 NPC 付费扩展与任务/道具扩展。
+ * Cube expand service handling paid NPC expands and quest/ticket expands.
+ */
 @Slf4j
 public class CubeExpandService {
+	/** 最小扩展等级。 / Minimum expand level. */
 	private static final int MIN_EXPAND = 0;
+	/** 最大扩展等级。 / Maximum expand level. */
 	private static final int MAX_EXPAND = 15;
 
+	/**
+	 * 通过 NPC 发起背包扩展确认与扣费。
+	 * Starts a cube expand confirmation and kinah charge via NPC.
+	 *
+	 * 玩家 / player
+	 * expand NPC
+	 */
 	public static void expandCube(final Player player, Npc npc) {
 		final CubeExpandTemplate expandTemplate = DataManager.CUBEEXPANDER_DATA
 				.getCubeExpandListTemplate(npc.getNpcId());
 		if (expandTemplate == null) {
-			log.error("Cube Expand Template could not be found for Npc ID: " + npc.getObjectId());
+			log.error(I18n.get("log.a3b71cc3084c", npc.getObjectId()));
 			return;
 		}
 		if (npcCanExpandLevel(expandTemplate, player.getNpcExpands() + 1) && canExpand(player)) {
@@ -74,6 +72,13 @@ public class CubeExpandService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300430));
 	}
 
+	/**
+	 * 实际增加背包扩展次数并同步客户端。
+	 * Actually increases cube expands and syncs the client size.
+	 *
+	 * @param player 玩家 / player
+	 * @param isNpcExpand true 为 NPC 扩展，false 为任务扩展 / true for NPC expand, false for quest expand
+	 */
 	public static void expand(Player player, boolean isNpcExpand) {
 		if (!canExpand(player)) {
 			return;
@@ -87,10 +92,26 @@ public class CubeExpandService {
 		PacketSendUtility.sendPacket(player, SM_CUBE_UPDATE.cubeSize(StorageType.CUBE, player));
 	}
 
+	/**
+	 * 判断玩家是否还能继续扩展背包。
+	 * Returns whether the player can expand the cube further.
+	 *
+	 * @param player 玩家 / player
+	 * @return 可扩展返回 true / true if expandable
+	 */
 	public static boolean canExpand(Player player) {
 		return validateNewSize(player.getNpcExpands() + player.getQuestExpands() + 1);
 	}
 
+	/**
+	 * 判断玩家是否可用指定等级的扩展票继续扩展。
+	 * Returns whether the player can expand further with a ticket of the given level.
+	 *
+	 * 玩家 / player
+	 * ticket level
+	 *
+	 * @return 若 allowed 则为 true / true if allowed
+	 */
 	public static boolean canExpandByTicket(Player player, int ticketLevel) {
 		if (!canExpand(player))
 			return false;
@@ -98,12 +119,28 @@ public class CubeExpandService {
 		return ticketExpands < ticketLevel;
 	}
 
+	/**
+	 * 校验新的总扩展等级是否在合法区间。
+	 * Validates that the new total expand level is within bounds.
+	 *
+	 * new level
+	 *
+	 * @param level 若 valid 则为 true / true if valid
+	 */
 	private static boolean validateNewSize(int level) {
 		if (level < MIN_EXPAND || level > MAX_EXPAND)
 			return false;
 		return true;
 	}
 
+	/**
+	 * 判断 NPC 模板是否支持指定扩展等级。
+	 * Returns whether the NPC template supports the given expand level.
+	 *
+	 * @param clist 扩展模板 / expand template
+	 * @param level 目标等级 / target level
+	 * @return 若 supported 则为 true / true if supported
+	 */
 	private static boolean npcCanExpandLevel(CubeExpandTemplate clist, int level) {
 		if (!clist.contains(level)) {
 			return false;
@@ -111,6 +148,13 @@ public class CubeExpandService {
 		return true;
 	}
 
+	/**
+	 * 统计已完成的背包扩展任务数（上限 2）。
+	 * Counts completed cube expand quests (capped at 2).
+	 *
+	 * 玩家 / player
+	 * completed count
+	 */
 	private static int getCompletedCubeQuests(Player player) {
 		int result = 0;
 		QuestStateList qs = player.getQuestStateList();
@@ -122,6 +166,14 @@ public class CubeExpandService {
 		return result > 2 ? 2 : result;
 	}
 
+	/**
+	 * 按扩展等级获取价格。
+	 * Returns the expand price for the given level.
+	 *
+	 * @param clist 扩展模板 / expand template
+	 * @param level 目标等级 / target level
+	 * price
+	 */
 	private static int getPriceByLevel(CubeExpandTemplate clist, int level) {
 		return clist.get(level).getPrice();
 	}

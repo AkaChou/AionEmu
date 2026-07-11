@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -28,6 +12,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.road.RoadTemplate;
 
 /**
+ * 道路模板数据容器，持有全部 RoadTemplate 列表。
+ * Road template data holder storing the full RoadTemplate list.
+ *
  * @author SheppeR
  */
 @XmlRootElement(name = "roads")
@@ -37,6 +24,12 @@ public class RoadData {
 	@XmlElement(name = "road")
 	private List<RoadTemplate> roadTemplates;
 
+	/**
+	 * 返回道路模板数量；列表为空时初始化为空列表并返回 0。
+	 * Returns the number of road templates; initializes an empty list and returns 0 when null.
+	 *
+	 * template count
+	 */
 	public int size() {
 		if (roadTemplates == null) {
 			roadTemplates = new ArrayList<RoadTemplate>();
@@ -45,6 +38,12 @@ public class RoadData {
 		return roadTemplates.size();
 	}
 
+	/**
+	 * 返回道路模板列表；为空时返回新空列表。
+	 * Returns the road template list; returns a new empty list when null.
+	 *
+	 * @return 道路模板列表 / road template list
+	 */
 	public List<RoadTemplate> getRoadTemplates() {
 		if (roadTemplates == null) {
 			return new ArrayList<RoadTemplate>();
@@ -52,6 +51,12 @@ public class RoadData {
 		return roadTemplates;
 	}
 
+	/**
+	 * 批量追加道路模板。
+	 * Appends all given road templates.
+	 *
+	 * @param templates 待追加的模板集合 / templates to append
+	 */
 	public void addAll(Collection<RoadTemplate> templates) {
 		if (roadTemplates == null) {
 			roadTemplates = new ArrayList<RoadTemplate>();

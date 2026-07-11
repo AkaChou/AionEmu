@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,7 +7,10 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * @rework FrozenKiller
+ * 向客户端同步技能皮肤/动画外观。
+ * Server packet synchronizing skill skin/animation appearance to the client.
+ *
+ * @author FrozenKiller
  */
 public class SM_SKILL_ANIMATION extends AionServerPacket {
 	private SkillSkinList skillSkinList;
@@ -32,6 +19,13 @@ public class SM_SKILL_ANIMATION extends AionServerPacket {
 	private int expire;
 	private int isActive;
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_ANIMATION 包。
+	 * Creates a SM_SKILL_ANIMATION packet with the given parameters.
+	 *
+	 * skill skin id
+	 * expire time
+	 */
 	public SM_SKILL_ANIMATION(int skillSkinId, int expire) {
 		action = 0;
 		this.skillSkinId = skillSkinId;
@@ -39,6 +33,12 @@ public class SM_SKILL_ANIMATION extends AionServerPacket {
 		isActive = 1;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_SKILL_ANIMATION 包。
+	 * Creates a SM_SKILL_ANIMATION packet with the given parameters.
+	 *
+	 * 玩家 / player
+	 */
 	public SM_SKILL_ANIMATION(Player player) {
 		action = 1;
 		skillSkinList = player.getSkillSkinList();

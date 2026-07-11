@@ -1,24 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events.thievesguildservice;
 
 /**
+ * 盗贼类型枚举，区分盗贼公会相关业务类型。
+ * Thieves type enum classifying thieves-guild related business types.
+ *
  * @author Rinzler (Encom)
  */
+
 public enum ThievesType {
 
 	NONE(0), // Нет
@@ -30,10 +18,22 @@ public enum ThievesType {
 		this.id = id;
 	}
 
+	/**
+	 * getId 方法。
+	 * getId method.
+	 * result
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * getThievesType 方法。
+	 * getThievesType method.
+	 *
+	 * @param id ID / id
+	 * result
+	 */
 	public static ThievesType getThievesType(int id) {
 		for (ThievesType type : values()) {
 			if (id == type.getId()) {

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -38,14 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 发送系统邮件（含黑云邮件）的管理员命令。
+ * Admin command to send system mail including black-cloud letters.
+ *
  * @author xTz
  */
 public class SysMail extends AdminCommand {
 
+	/**
+	 * 构造 sysmail 命令。
+	 * Creates the sysmail command.
+	 */
 	public SysMail() {
 		super("sysmail");
 	}
 
+	/**
+	 * 收件人范围：天族/魔族/全体/指定玩家。
+	 * Recipient scope: Elyos, Asmodians, all, or one player.
+	 */
 	enum RecipientType {
 
 		ELYOS,
@@ -53,6 +48,13 @@ public class SysMail extends AdminCommand {
 		ALL,
 		PLAYER;
 
+		/**
+		 * 判断给定种族是否在本收件范围内。
+		 * Whether the given race is allowed for this recipient type.
+		 *
+		 * @param race 阵营 / Race
+		 * @return 若 allowed 则为 true / True if allowed
+		 */
 		public boolean isAllowed(Race race) {
 			switch (this) {
 				case ELYOS:
@@ -67,6 +69,13 @@ public class SysMail extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 向指定玩家或种族批量发送系统邮件。
+	 * Sends system mail to a player or race groups.
+	 *
+	 * 执行 GM / Admin player
+	 * Send parameters
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 5) {
@@ -127,7 +136,7 @@ public class SysMail extends AdminCommand {
 
 		if (letterType == LetterType.BLACKCLOUD)
 			sender = "$$CASH_ITEM_MAIL";
-		
+
 		Boolean express = checkExpress(admin, item, count, kinah, recipient, recipientType, letterType);
 		if (express == null)
 			return;
@@ -183,6 +192,15 @@ public class SysMail extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 从 |...| 包裹的词列表中提取标题或正文。
+	 * Extracts title or message text enclosed in pipe chars from word tokens.
+	 *
+	 * Word tokens
+	 *
+	 * @param outText 输出缓冲区（长度 1） / Output buffer of length 1
+	 * @param outText @return 消耗的词数 / Consumed word count
+	 */
 	private int extractText(String[] words, String[] outText) {
 		if (words.length == 0 || outText.length == 0)
 			return 0;
@@ -217,9 +235,23 @@ public class SysMail extends AdminCommand {
 		return wordCount;
 	}
 
+	/**
+	 * 校验收件人、物品、数量与基纳附件是否合法。
+	 * Validates recipient, item, count, and kinah attachment rules.
+	 *
+	 * 执行 GM / Admin player
+	 * Item id
+	 * Count
+	 * Kinah
+	 * Recipient name
+	 * Recipient type
+	 * Letter type
+	 *
+	 * @return 是否快递 / 在线相关标志；非法时返回 null / Express/online flag, or null if invalid
+	 */
 	private static Boolean checkExpress(Player admin, int item, int count, int kinah, String recipient, RecipientType recipientType, LetterType letterType) {
 		Boolean shouldExpress = null;
-		
+
 		if (recipientType == null) {
 			PacketSendUtility.sendMessage(admin, "Please insert Recipient Type.\n" + "Recipient = player, @all, @elyos or @asmodians");
 			return null;
@@ -230,7 +262,7 @@ public class SysMail extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, recipient + "Players mail box is full");
 				return null;
 			}
-			
+
 			if (letterType == LetterType.NORMAL) {
 				if (!DAOManager.getDAO(PlayerDAO.class).isNameUsed(recipient)) {
 					PacketSendUtility.sendMessage(admin, "Could not find a Recipient by that name.");
@@ -290,15 +322,22 @@ public class SysMail extends AdminCommand {
 		return shouldExpress;
 	}
 
+	/**
+	 * 参数错误时的详细用法提示。
+	 * Detailed usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "No parameters detected.\n"
 			+ "Please use //sysmail [%|$$<Sender>] <Recipient> <Regular|Blackcloud|Express> <Item> <Count> <Kinah> [|Title|] [|Message|]\n"
-			+ "Sender name must start with % or $$. Can be ommitted.\n" 
+			+ "Sender name must start with % or $$. Can be ommitted.\n"
 			+ "Regular mail type is 0, Express mail type is 1, Blackcloud type is 2.\n"
-			+ "If parameters (Item, Count) = 0 than the item will not be send\n" 
+			+ "If parameters (Item, Count) = 0 than the item will not be send\n"
 			+ "If parameters (Kinah) = 0 not send Kinah\n"
-			+ "Recipient = Player name, @all, @elyos or @asmodians\n" 
+			+ "Recipient = Player name, @all, @elyos or @asmodians\n"
 			+ "Optional Title and Message must be enclosed within pipe chars");
 	}
 }

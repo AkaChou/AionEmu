@@ -1,23 +1,6 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.controller;
 
+import com.aionemu.boot.i18n.I18n;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Set;
@@ -26,52 +9,68 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.dao.BannedIpDAO;
 import com.aionemu.loginserver.model.BannedIP;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Class that controlls all ip banning activity
+ * IP 封禁活动总控。
+ * Controller for all IP banning activity.
  *
  * @author SoulKeeper
  */
 @Slf4j
+@UtilityClass
 public class BannedIpController {
-    /**
-     * List of banned ip adresses
-     */
-    private static Set<BannedIP> banList;
 
-    public static void start() {
+    /**
+     * 当前封禁 IP / 掩码集合。
+     * Set of banned IP addresses or masks.
+     */
+    private Set<BannedIP> banList;
+
+    /**
+     * 启动：清理过期封禁并加载列表。
+     * Starts controller: cleans expired bans then loads list.
+     */
+    public void start() {
         clean();
         load();
     }
 
-    private static void clean() {
+    /**
+     * 清理数据库中已过期的封禁。
+     * Cleans expired bans from database.
+     */
+    private void clean() {
         getDAO().cleanExpiredBans();
     }
 
     /**
-     * Loads list of banned ips
+     * 加载封禁列表（委托 {@link #reload()}）。
+     * Loads banned IP list (delegates to {@link #reload()}).
      */
-    public static void load() {
+    public void load() {
         reload();
     }
 
     /**
-     * Loads list of banned ips
+     * 从数据库重新加载封禁列表。
+     * Reloads banned IP list from database.
      */
-    public static void reload() {
-        // we are not going to make ip ban every minute, so it's ok to simplify a concurrent code a bit
+    public void reload() {
+        // 不会每分钟都做 IP 封禁，可适当简化并发代码。 / we are not going to make ip ban every minute, so it's ok to simplify a concurrent code a bit
         banList = getDAO().getAllBans();
-        log.info("BannedIpController loaded " + banList.size() + " IP bans.");
+        log.info(I18n.get("log.28d603c6c74b", banList.size()));
     }
 
     /**
-     * Checks if ip (or mask) is banned
+     * 检查 IP（或是否命中掩码）是否被封禁。
+     * Checks if IP (or matching mask) is banned.
      *
-     * @param ip ip address to check for ban
-     * @return is it banned or not
+     * @param ip 待检查 IP / IP address to check
+     * Whether banned
      */
-    public static boolean isBanned(String ip) {
+    public boolean isBanned(String ip) {
         for (BannedIP ipBan : banList) {
             if (ipBan.isActive() && NetworkUtils.checkIPMatching(ipBan.getMask(), ip)) {
                 return true;
@@ -81,23 +80,25 @@ public class BannedIpController {
     }
 
     /**
-     * Bans ip or mask for infinite period of time
+     * 永久封禁 IP 或掩码。
+     * Bans IP or mask for an infinite period.
      *
-     * @param ip ip to ban
-     * @return was ip banned or not
+     * @param ip 待封 IP / IP to ban
+     * @return 是否封禁成功 / Whether ban succeeded
      */
-    public static boolean banIp(String ip) {
+    public boolean banIp(String ip) {
         return banIp(ip, null);
     }
 
     /**
-     * Bans ip (or mask)
+     * 封禁 IP（或掩码），可指定到期时间。
+     * Bans IP (or mask) with optional expiration.
      *
-     * @param ip ip to ban
-     * @param expireTime ban expiration time, null = never expires
-     * @return was ip banned or not
+     * @param ip 待封 IP / IP to ban
+     * @param expireTime 到期时间，null 表示永不过期 / Expiration time, null = never expires
+     * @return 是否封禁成功 / Whether ban succeeded
      */
-    public static boolean banIp(String ip, Timestamp expireTime) {
+    public boolean banIp(String ip, Timestamp expireTime) {
         if (ip.equals("127.0.0.1")) {
             return false;
         }
@@ -110,18 +111,19 @@ public class BannedIpController {
             getDAO().insert(ipBan);
             return true;
         } catch (Exception e) {
-            log.warn("Ip " + ip + " is already banned.");
+            log.warn(I18n.get("log.79fba389e8b1", ip));
             return false;
         }
     }
 
     /**
-     * Adds or updates ip ban. Changes are reflected in DB
+     * 新增或更新 IP 封禁，变更会写库。
+     * Adds or updates IP ban; changes are reflected in DB.
      *
-     * @param ipBan banned ip to add or change
-     * @return was it updated or not
+     * @param ipBan 封禁记录 / Banned IP entry
+     * @return 是否更新成功 / Whether update succeeded
      */
-    public static boolean addOrUpdateBan(BannedIP ipBan) {
+    public boolean addOrUpdateBan(BannedIP ipBan) {
         if (ipBan.getId() == null) {
             if (getDAO().insert(ipBan)) {
                 banList.add(ipBan);
@@ -133,12 +135,13 @@ public class BannedIpController {
     }
 
     /**
-     * Removes ip ban.
+     * 解除 IP 封禁。
+     * Removes IP ban.
      *
-     * @param ip ip to unban
-     * @return returns true if ip was successfully unbanned
+     * @param ip 待解封 IP / IP to unban
+     * @return 是否解封成功 / Whether unban succeeded
      */
-    public static boolean unbanIp(String ip) {
+    public boolean unbanIp(String ip) {
         Iterator<BannedIP> it = banList.iterator();
         while (it.hasNext()) {
             BannedIP ipBan = it.next();
@@ -154,11 +157,12 @@ public class BannedIpController {
     }
 
     /**
-     * Retuns {@link com.aionemu.loginserver.dao.BannedIpDAO} , just a shortcut
+     * 获取 {@link BannedIpDAO} 快捷方法。
+     * Shortcut for {@link BannedIpDAO}.
      *
-     * @return {@link com.aionemu.loginserver.dao.BannedIpDAO}
+     * Banned IP DAO
      */
-    private static BannedIpDAO getDAO() {
+    private BannedIpDAO getDAO() {
         return DAOManager.getDAO(BannedIpDAO.class);
     }
 }

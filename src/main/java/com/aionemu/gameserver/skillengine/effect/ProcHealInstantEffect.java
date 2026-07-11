@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,17 +8,32 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 
 /**
+ * 触发即时 HP 治疗：按 HP 治疗类型计算并应用回复。
+ * Proc instant HP heal: calculates and applies HP recovery via heal type HP.
+ *
  * @author ATracer modified by Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProcHealInstantEffect")
 public class ProcHealInstantEffect extends AbstractHealEffect {
 
+	/**
+	 * 以 HP 类型计算治疗量。
+	 * Calculates heal amount as HP.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, HealType.HP);
 	}
 
+	/**
+	 * 以 HP 类型应用治疗。
+	 * Applies heal as HP.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect, HealType.HP);

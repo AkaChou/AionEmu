@@ -1,5 +1,6 @@
 package com.aionemu.commons.utils;
 
+import com.aionemu.boot.i18n.I18n;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,24 +10,26 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 类工具类，提供了类的继承关系判断、包成员判断和类名获取等功能
- * Class utility for checking inheritance relationships, package membership and class name retrieval
+ * 类继承关系、包归属与类名扫描工具。
+ * Class inheritance, package membership and class-name scanning helpers.
  */
 @Slf4j
+@UtilityClass
 public class ClassUtils {
 
     /**
-     * 判断类a是否是类b的子类或实现了接口b
-     * Check if class a is a subclass of or implements interface b
-     * 
-     * @param a 要检查的类 / Class to check
+     * 判断类 {@code a} 是否为 {@code b} 的子类或实现了接口 {@code b}。
+     * Whether class {@code a} is a subclass of or implements {@code b}.
+     *
+     * @param a 待检查类 / Class to check
      * @param b 目标父类或接口 / Target superclass or interface
-     * @return 如果a是b的子类或实现了接口b则返回true / Returns true if a is subclass of or implements b
+     * @return 若 subclass or implementor 则为 true / True if subclass or implementor
      */
-    public static boolean isSubclass(Class<?> a, Class<?> b) {
+    public boolean isSubclass(Class<?> a, Class<?> b) {
         if (a == b) {
             return true;
         } else if (a != null && b != null) {
@@ -49,26 +52,28 @@ public class ClassUtils {
     }
 
     /**
-     * 判断类是否属于指定包
-     * Check if class belongs to specified package
-     * 
-     * @param clazz 要检查的类 / Class to check
-     * @param packageName 包名 / Package name
-     * @return 如果类属于指定包则返回true / Returns true if class belongs to package
+     * 判断类是否属于指定包。
+     * Whether the class belongs to the given package.
+     *
+     * @param clazz       待检查类 / Class to check
+     * Package name
+     *
+     * @return 若 package member 则为 true / True if package member
      */
-    public static boolean isPackageMember(Class<?> clazz, String packageName) {
+    public boolean isPackageMember(Class<?> clazz, String packageName) {
         return isPackageMember(clazz.getName(), packageName);
     }
 
     /**
-     * 判断类名是否属于指定包
-     * Check if class name belongs to specified package
-     * 
-     * @param className 类名 / Class name
-     * @param packageName 包名 / Package name
-     * @return 如果类名属于指定包则返回true / Returns true if class name belongs to package
+     * 判断类名是否属于指定包。
+     * Whether the class name belongs to the given package.
+     *
+     * Class name
+     * Package name
+     *
+     * @return 若 package member 则为 true / True if package member
      */
-    public static boolean isPackageMember(String className, String packageName) {
+    public boolean isPackageMember(String className, String packageName) {
         if (className.contains(".")) {
             String classPackage = className.substring(0, className.lastIndexOf('.'));
             return packageName.equals(classPackage);
@@ -78,14 +83,15 @@ public class ClassUtils {
     }
 
     /**
-     * 从目录中获取所有类名
-     * Get all class names from directory
-     * 
-     * @param directory 目录 / Directory
-     * @return 类名集合 / Set of class names
-     * @throws IllegalArgumentException 如果目录不存在或不是目录 / If directory doesn't exist or is not a directory
+     * 从目录扫描全部类名。
+     * Collect all class names under a directory.
+     *
+     * Directory
+     * Set of class names
+     *
+     * @param directory @throws IllegalArgumentException 目录无效时 / When directory is invalid
      */
-    public static Set<String> getClassNamesFromDirectory(File directory) throws IllegalArgumentException {
+    public Set<String> getClassNamesFromDirectory(File directory) throws IllegalArgumentException {
         if (directory.isDirectory() && directory.exists()) {
             return getClassNamesFromPackage(directory, null, true);
         } else {
@@ -94,15 +100,15 @@ public class ClassUtils {
     }
 
     /**
-     * 从包中获取所有类名
-     * Get all class names from package
-     * 
-     * @param directory 目录 / Directory
-     * @param packageName 包名 / Package name
-     * @param recursive 是否递归搜索子目录 / Whether to search subdirectories recursively
-     * @return 类名集合 / Set of class names
+     * 从包目录扫描类名。
+     * Collect class names from a package directory.
+     *
+     * Directory
+     * Package name
+     * @param recursive   是否递归子目录 / Whether to recurse
+     * Set of class names
      */
-    public static Set<String> getClassNamesFromPackage(File directory, String packageName, boolean recursive) {
+    public Set<String> getClassNamesFromPackage(File directory, String packageName, boolean recursive) {
         Set<String> classes = new HashSet<String>();
         if (!directory.exists()) {
             return classes;
@@ -130,14 +136,14 @@ public class ClassUtils {
     }
 
     /**
-     * 从JAR文件中获取所有类名
-     * Get all class names from JAR file
-     * 
-     * @param file JAR文件 / JAR file
-     * @return 类名集合 / Set of class names
-     * @throws IOException 如果读取JAR文件失败 / If failed to read JAR file
+     * 从 JAR（含嵌套 JAR 路径）读取类名。
+     * Collect class names from a JAR (including nested JAR paths).
+     *
+     * JAR file
+     * Set of class names
+     * On read failure
      */
-    public static Set<String> getClassNamesFromJarFile(File file) throws IOException {
+    public Set<String> getClassNamesFromJarFile(File file) throws IOException {
         if (!file.exists() || file.isDirectory()) {
             Set<String> nestedJarClasses = getClassNamesFromNestedJarFile(file);
             if (nestedJarClasses != null) {
@@ -165,14 +171,22 @@ public class ClassUtils {
                 try {
                     jarFile.close();
                 } catch (IOException e) {
-                    log.error("Failed to close jar file " + jarFile.getName(), e);
+                    log.error(I18n.get("log.5f2c41da34b9", jarFile.getName(), e));
                 }
             }
         }
         return result;
     }
 
-    private static Set<String> getClassNamesFromNestedJarFile(File file) throws IOException {
+    /**
+     * 从嵌套 JAR 路径（{@code outer.jar/!entry.jar}）读取类名。
+     * Collect class names from a nested JAR path ({@code outer.jar/!entry.jar}).
+     *
+     * @param file 嵌套路径文件对象 / Nested path file object
+     * @return 类名集合；无法解析时返回 null / Class names, or null if unresolvable
+     * On read failure
+     */
+    private Set<String> getClassNamesFromNestedJarFile(File file) throws IOException {
         String path = file.getPath().replace('\\', '/');
         int separator = path.indexOf(".jar/!");
         if (separator < 0) {
@@ -211,14 +225,14 @@ public class ClassUtils {
                 try {
                     nestedJar.close();
                 } catch (IOException e) {
-                    log.error("Failed to close nested jar stream " + file, e);
+                    log.error(I18n.get("log.aad47c1b2c2d", file, e));
                 }
             }
             if (jarFile != null) {
                 try {
                     jarFile.close();
                 } catch (IOException e) {
-                    log.error("Failed to close jar file " + jarFile.getName(), e);
+                    log.error(I18n.get("log.5f2c41da34b9", jarFile.getName(), e));
                 }
             }
         }

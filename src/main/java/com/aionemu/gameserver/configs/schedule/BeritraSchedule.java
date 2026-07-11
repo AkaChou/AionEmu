@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.schedule;
 
 import java.nio.charset.StandardCharsets;
@@ -30,23 +14,41 @@ import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
 
 /**
+ * Beritra 入侵活动时间表配置。
+ * Beritra invasion event schedule configuration.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlRootElement(name = "beritra_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BeritraSchedule {
+	/**
+	 * Beritra 列表。
+	 * List of beritras.
+	 */
 	@XmlElement(name = "beritra", required = true)
 	private List<Beritra> beritrasList;
 
+	/**
+	 * 获取 Beritra 列表。
+	 * Returns the beritra list.
+	 */
 	public List<Beritra> getBeritrasList() {
 		return beritrasList;
 	}
 
+	/**
+	 * 设置 Beritra 列表。
+	 * Sets the beritra list.
+	 */
 	public void setInvasionsList(List<Beritra> beritraList) {
 		this.beritrasList = beritraList;
 	}
 
+	/**
+	 * 从 XML 加载时间表。
+	 * Loads the schedule from XML.
+	 */
 	public static BeritraSchedule load() {
 		BeritraSchedule bs;
 		try {
@@ -58,27 +60,54 @@ public class BeritraSchedule {
 		return bs;
 	}
 
+	/**
+	 * 单个 Beritra 的时间表条目。
+	 * Schedule entry for a single beritra.
+	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "beritra")
 	public static class Beritra {
+		/**
+	 * 贝里特拉 ID / Beritra ID。 Beritra ID
+	 */
 		@XmlAttribute(required = true)
 		private int id;
 
+		/**
+		 * 入侵时间列表。
+		 * List of invasion times.
+		 */
 		@XmlElement(name = "invasionTime", required = true)
 		private List<String> invasionTimes;
 
+		/**
+		 * 获取 Beritra ID。
+		 * Returns the beritra ID.
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * 设置 Beritra ID。
+		 * Sets the beritra ID.
+		 */
 		public void setId(int id) {
 			this.id = id;
 		}
 
+		/**
+		 * 获取入侵时间列表。
+		 * Returns the invasion times.
+		 */
 		public List<String> getInvasionTimes() {
 			return invasionTimes;
 		}
 
+		/**
+		 * 设置入侵时间列表。
+		 * Sets the invasion times.
+		 */
 		public void setInvasionTimes(List<String> invasionTimes) {
 			this.invasionTimes = invasionTimes;
 		}

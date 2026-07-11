@@ -3,9 +3,10 @@ package com.aionemu.commons.logging.slf4j.filters;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
+import com.aionemu.commons.logging.LogTags;
 
 /**
- * GM管理员命令日志过滤器
+ * GM 管理员命令日志过滤器
  * GM Admin command log filter that filters admin command messages
  */
 public class GmAuditFilter extends Filter<ILoggingEvent> {
@@ -19,7 +20,7 @@ public class GmAuditFilter extends Filter<ILoggingEvent> {
      *         (FilterReply.ACCEPT if message starts with [ADMIN COMMAND]; FilterReply.DENY if not)
      */
     public FilterReply decide(ILoggingEvent loggingEvent) {
-        Object message = loggingEvent.getMessage();
-        return ((String)message).startsWith("[ADMIN COMMAND]") ? FilterReply.ACCEPT : FilterReply.DENY;
+        String message = loggingEvent.getMessage();
+        return message.startsWith(LogTags.ADMIN) ? FilterReply.ACCEPT : FilterReply.DENY;
     }
 }

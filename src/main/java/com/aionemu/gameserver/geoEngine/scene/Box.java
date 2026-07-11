@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene;
 
 import java.nio.FloatBuffer;
@@ -23,6 +7,7 @@ import com.aionemu.gameserver.geoEngine.scene.VertexBuffer.Type;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
 /**
+ * 带实体（填充）面的盒子网格。
  * A box with solid (filled) faces.
  *
  * @author Mark Powell
@@ -31,6 +16,7 @@ import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
  */
 public class Box extends AbstractBox {
 
+	/** 六个面的三角形索引数据。 / Triangle index data for the six faces. */
 	private static final short[] GEOMETRY_INDICES_DATA = { 2, 1, 0, 3, 2, 0, // back
 			6, 5, 4, 7, 6, 4, // right
 			10, 9, 8, 11, 10, 8, // front
@@ -38,6 +24,7 @@ public class Box extends AbstractBox {
 			18, 17, 16, 19, 18, 16, // top
 			22, 21, 20, 23, 22, 20 // bottom
 	};
+	/** 六个面的法线数据。 / Normal data for the six faces. */
 	private static final float[] GEOMETRY_NORMALS_DATA = { 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, // back
 			1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, // right
 			0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, // front
@@ -47,15 +34,15 @@ public class Box extends AbstractBox {
 	};
 
 	/**
-	 * Creates a new box.
-	 * <p/>
-	 * The box has a center of 0,0,0 and extends in the out from the center by the
-	 * given amount in <em>each</em> direction. So, for example, a box with extent
-	 * of 0.5 would be the unit cube.
+	 * 创建中心在原点、各轴半长为给定值的盒子。
+	 * Creates a new box centered at the origin with the given per-axis extents.
+	 * <p>
+	 * 半长 0.5 时即为单位立方体。
+	 * An extent of 0.5 yields the unit cube.
 	 *
-	 * @param x the size of the box along the x axis, in both directions.
-	 * @param y the size of the box along the y axis, in both directions.
-	 * @param z the size of the box along the z axis, in both directions.
+	 * @param x X 轴半长（双向） / size along X in both directions
+	 * @param y Y 轴半长（双向） / size along Y in both directions
+	 * @param z Z 轴半长（双向） / size along Z in both directions
 	 */
 	public Box(float x, float y, float z) {
 		super();
@@ -63,16 +50,16 @@ public class Box extends AbstractBox {
 	}
 
 	/**
-	 * Creates a new box.
-	 * <p/>
-	 * The box has the given center and extends in the out from the center by the
-	 * given amount in <em>each</em> direction. So, for example, a box with extent
-	 * of 0.5 would be the unit cube.
+	 * 创建指定中心与各轴半长的盒子。
+	 * Creates a new box with the given center and per-axis extents.
+	 * <p>
+	 * 半长 0.5 时即为单位立方体。
+	 * An extent of 0.5 yields the unit cube.
 	 *
-	 * @param center the center of the box.
-	 * @param x      the size of the box along the x axis, in both directions.
-	 * @param y      the size of the box along the y axis, in both directions.
-	 * @param z      the size of the box along the z axis, in both directions.
+	 * center of the box
+	 * @param x X 轴半长（双向） / size along X in both directions
+	 * @param y Y 轴半长（双向） / size along Y in both directions
+	 * @param z Z 轴半长（双向） / size along Z in both directions
 	 */
 	public Box(Vector3f center, float x, float y, float z) {
 		super();
@@ -80,17 +67,11 @@ public class Box extends AbstractBox {
 	}
 
 	/**
-	 * Constructor instantiates a new <code>Box</code> object.
-	 * <p/>
-	 * The minimum and maximum point are provided, these two points define the shape
-	 * and size of the box but not it's orientation or position. You should use the
-	 * {@link com.jme3.scene.Spatial#setLocalTranslation(com.jme3.math.Vector3f) }
-	 * and
-	 * {@link com.jme3.scene.Spatial#setLocalRotation(com.jme3.math.Quaternion) }
-	 * methods to define those properties.
+	 * 按最小点与最大点构造盒子（定义形状与尺寸，不含朝向/平移）。
+	 * Constructs a box from minimum and maximum points (shape and size only; orientation/position are separate).
 	 *
-	 * @param min the minimum point that defines the box.
-	 * @param max the maximum point that defines the box.
+	 * @param min 定义盒子的最小点 / minimum point defining the box
+	 * @param max 定义盒子的最大点 / maximum point defining the box
 	 */
 	public Box(Vector3f min, Vector3f max) {
 		super();
@@ -98,6 +79,7 @@ public class Box extends AbstractBox {
 	}
 
 	/**
+	 * 仅用于序列化的空构造，请勿在业务代码中使用。
 	 * Empty constructor for serialization only. Do not use.
 	 */
 	public Box() {
@@ -105,16 +87,20 @@ public class Box extends AbstractBox {
 	}
 
 	/**
-	 * Creates a clone of this box.
-	 * <p/>
-	 * The cloned box will have '_clone' appended to it's name, but all other
-	 * properties will be the same as this box.
+	 * 克隆本盒子（中心与半长相同）。
+	 * Creates a clone of this box with the same center and extents.
+	 *
+	 * @return 克隆的盒子 / cloned box
 	 */
 	@Override
 	public Box clone() {
 		return new Box(center.clone(), xExtent, yExtent, zExtent);
 	}
 
+	/**
+	 * 若尚无索引缓冲则写入固定索引数据。
+	 * Writes fixed index data if no index buffer is present yet.
+	 */
 	@Override
 	protected void duUpdateGeometryIndices() {
 		if (getBuffer(Type.Index) == null) {
@@ -122,6 +108,10 @@ public class Box extends AbstractBox {
 		}
 	}
 
+	/**
+	 * 若尚无法线缓冲则写入固定法线数据。
+	 * Writes fixed normal data if no normal buffer is present yet.
+	 */
 	@Override
 	protected void duUpdateGeometryNormals() {
 		if (getBuffer(Type.Normal) == null) {
@@ -129,6 +119,10 @@ public class Box extends AbstractBox {
 		}
 	}
 
+	/**
+	 * 根据当前中心与半长重算顶点并更新包围体。
+	 * Recomputes vertices from the current center/extents and updates the bound.
+	 */
 	@Override
 	protected void duUpdateGeometryVertices() {
 		FloatBuffer fpb = BufferUtils.createVector3Buffer(24);

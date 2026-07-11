@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.assemblednpc;
 
 import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate.AssembledNpcPartTemplate;
@@ -21,6 +5,8 @@ import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate.
 import lombok.Getter;
 
 /**
+ * 组装 NPCPart，用于 assemblednpc 相关逻辑。
+ * Assembled Npc Part for assemblednpc logic.
  *
  * @author xTz
  */
@@ -35,14 +21,17 @@ public class AssembledNpcPart {
 		this.template = template;
 	}
 
+	/** 返回 assembled npc part template / Returns the assembled npc part template */
 	public AssembledNpcPartTemplate getAssembledNpcPartTemplate() {
 		return template;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return template.getNpcId();
 	}
 
+	/** 返回 entity id / Returns the entity id */
 	public int getEntityId() {
 		return template.getEntityId();
 	}

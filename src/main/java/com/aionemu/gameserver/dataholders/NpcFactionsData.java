@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.model.templates.factions.NpcFactionTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * NPC 势力数据容器，按势力 ID 与关联 NPC ID 索引 {@link NpcFactionTemplate}。
+ * NPC faction data holder, indexing {@link NpcFactionTemplate} by faction id and related npc id.
+ *
  * @author vlog
  */
 @XmlRootElement(name = "npc_factions")
@@ -40,6 +27,10 @@ public class NpcFactionsData {
 	private IntObjectHashMap<NpcFactionTemplate> factionsById = new IntObjectHashMap<NpcFactionTemplate>();
 	private IntObjectHashMap<NpcFactionTemplate> factionsByNpcId = new IntObjectHashMap<NpcFactionTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，按势力 ID 与 NPC ID 建立索引。
+	 * After JAXB unmarshalling, indexes factions by faction id and npc id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		factionsById.clear();
 		for (NpcFactionTemplate template : npcFactionsData) {
@@ -50,18 +41,45 @@ public class NpcFactionsData {
 		}
 	}
 
+	/**
+	 * 按势力 ID 获取势力模板。
+	 * Returns the faction template for the given faction id.
+	 *
+	 * @param id 势力 ID / faction id
+	 * @return 势力模板或 null / faction template or null
+	 */
 	public NpcFactionTemplate getNpcFactionById(int id) {
 		return factionsById.get(id);
 	}
 
+	/**
+	 * 按关联 NPC ID 获取势力模板。
+	 * Returns the faction template associated with the given npc id.
+	 *
+	 * npc id
+	 *
+	 * @param id @return 势力模板或 null / faction template or null
+	 */
 	public NpcFactionTemplate getNpcFactionByNpcId(int id) {
 		return factionsByNpcId.get(id);
 	}
 
+	/**
+	 * 返回原始势力模板列表。
+	 * Returns the raw faction template list.
+	 *
+	 * @return 势力模板列表 / faction template list
+	 */
 	public List<NpcFactionTemplate> getNpcFactionsData() {
 		return npcFactionsData;
 	}
 
+	/**
+	 * 返回已加载的势力模板数量。
+	 * Returns the number of loaded faction templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return npcFactionsData.size();
 	}

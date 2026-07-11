@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -26,15 +10,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员添加表情命令：为目标玩家解锁表情动作。
+ * Admin add-emotion command: unlocks an emotion action for the target player.
+ *
  * @author ginho1, Damon
- * 
  */
 public class AddEmotion extends AdminCommand {
 
+	/**
+	 * 注册 {@code //addemotion} 命令。
+	 * Registers the {@code //addemotion} command.
+	 */
 	public AddEmotion() {
 		super("addemotion");
 	}
 
+	/**
+	 * 执行添加表情：解析表情 ID/过期时间，或展示 HTML 列表。
+	 * Executes add-emotion: parses emotion id/expiry, or shows the HTML list.
+	 *
+	 * admin
+	 * @param params 参数：表情 ID、过期分钟或 html / emotion id, expire minutes, or html
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		

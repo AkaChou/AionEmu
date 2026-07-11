@@ -7,10 +7,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
+import com.aionemu.boot.i18n.I18n;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.support.StaticMessageSource;
 
 class ConsoleStartupProgressReporterTest {
+	@BeforeEach
+	void setUpMessages() {
+		StaticMessageSource source = new StaticMessageSource();
+		source.addMessage("console.progress.loading_group", Locale.ENGLISH, "Loading {0}..");
+		source.addMessage("console.progress.loaded_group", Locale.ENGLISH, "Loaded {0} in {1} ms");
+		I18n.setMessageSource(source);
+		I18n.applyCountryCode(1);
+	}
+
+	@AfterEach
+	void clearMessages() {
+		I18n.setMessageSource(null);
+	}
 
 	@Test
 	void enabledReporterPrintsYarnStyleStepBarsWithCurrentAndTotal() {

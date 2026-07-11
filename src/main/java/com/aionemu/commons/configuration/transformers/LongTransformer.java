@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
  * 支持的输入格式:
  * Supported input formats:
  * - 十进制数字 decimal numbers
- * - 十六进制数字(0x前缀) hexadecimal numbers (0x prefix)
+ * - 十六进制数字(0x 前缀) hexadecimal numbers (0x prefix)
  * - 八进制数字(0前缀) octal numbers (0 prefix)
  */
 public class LongTransformer implements PropertyTransformer<Long> {
@@ -23,12 +23,12 @@ public class LongTransformer implements PropertyTransformer<Long> {
     public static final LongTransformer SHARED_INSTANCE = new LongTransformer();
 
     /**
-     * 将字符串值转换为Long对象
+ * 将字符串值转换为 Long 对象
      * Transforms string value into Long object
      *
      * @param value 要转换的字符串值 String value to transform
      * @param field 字段对象 Field that will be transformed
-     * @return 转换后的Long对象 Transformed Long object
+ * @return 转换后的 Long 对象 Transformed Long object
      * @throws TransformationException 如果转换失败 if transformation fails
      */
     public Long transform(String value, Field field) throws TransformationException {

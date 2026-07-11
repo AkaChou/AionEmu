@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -29,14 +13,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Wakizashi, Imaginary
+ * 物品换肤指令；将目标背包中旧物品的外观替换为新物品模板外观。
+ * Admin command that applies another item template as the visual skin of an inventory item.
  *
+ * @author Wakizashi, Imaginary
  */
 public class Reskin extends AdminCommand {
 	public Reskin()	{
 		super("reskin");
     }
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length != 2) {
@@ -101,6 +94,13 @@ public class Reskin extends AdminCommand {
 		}
 	}
 	
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param admin 接收提示的管理员 / admin receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player admin, String message) {
 		PacketSendUtility.sendMessage(admin, "syntax //reskin <Old Item ID> <New Item ID>");

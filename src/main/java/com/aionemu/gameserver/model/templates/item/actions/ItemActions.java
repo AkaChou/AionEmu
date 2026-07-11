@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import java.util.ArrayList;
@@ -24,6 +8,11 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 物品 Actions 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ItemActions")
@@ -73,6 +62,7 @@ public class ItemActions {
 			@XmlElement(name = "skill_skin", type = SkillAnimationAction.class), })
 	protected List<AbstractItemAction> itemActions;
 
+	/** 返回 item actions / Returns the item actions */
 	public List<AbstractItemAction> getItemActions() {
 		if (itemActions == null) {
 			itemActions = new ArrayList<AbstractItemAction>();
@@ -80,6 +70,7 @@ public class ItemActions {
 		return this.itemActions;
 	}
 
+	/** 返回 toy pet spawn actions / Returns the toy pet spawn actions */
 	public List<ToyPetSpawnAction> getToyPetSpawnActions() {
 		List<ToyPetSpawnAction> result = new ArrayList<ToyPetSpawnAction>();
 		if (itemActions == null) {
@@ -93,6 +84,7 @@ public class ItemActions {
 		return result;
 	}
 
+	/** 返回强化动作 / Returns the enchant action*/
 	public EnchantItemAction getEnchantAction() {
 		if (itemActions == null) {
 			return null;
@@ -105,6 +97,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回强化烙印之石动作 / Returns the enchant stigma action*/
 	public EnchantStigmaAction getEnchantStigmaAction() {
 		if (itemActions == null) {
 			return null;
@@ -117,6 +110,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 获取房屋对象动作。 / Returns the house object action. */
 	public SummonHouseObjectAction getHouseObjectAction() {
 		if (itemActions == null) {
 			return null;
@@ -129,6 +123,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回 craft learn action / Returns the craft learn action */
 	public CraftLearnAction getCraftLearnAction() {
 		if (itemActions == null) {
 			return null;
@@ -141,6 +136,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回 decorate action / Returns the decorate action */
 	public DecorateAction getDecorateAction() {
 		if (itemActions == null) {
 			return null;
@@ -153,6 +149,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回 dye action / Returns the dye action */
 	public DyeAction getDyeAction() {
 		if (itemActions == null) {
 			return null;
@@ -165,6 +162,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回收养宠物动作 / Returns the adopt pet action*/
 	public AdoptPetAction getAdoptPetAction() {
 		if (itemActions == null) {
 			return null;
@@ -177,6 +175,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回 tuning action / Returns the tuning action */
 	public RetuningAction getTuningAction() {
 		if (itemActions == null) {
 			return null;
@@ -189,6 +188,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回 polish action / Returns the polish action */
 	public IdianAction getPolishAction() {
 		if (itemActions == null) {
 			return null;
@@ -201,6 +201,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回 tempering / Returns the tempering */
 	public TemperingAction getTempering() {
 		if (itemActions == null) {
 			return null;
@@ -213,6 +214,7 @@ public class ItemActions {
 		return null;
 	}
 
+	/** 返回 unbinding / Returns the unbinding */
 	public UnbindingAction getUnbinding() {
 		if (itemActions == null) {
 			return null;

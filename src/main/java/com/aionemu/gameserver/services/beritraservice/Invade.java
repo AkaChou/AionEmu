@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.beritraservice;
 
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
 import com.aionemu.gameserver.model.beritra.BeritraStateType;
 
 /**
+ * 贝尔特拉入侵默认实现：切入 INVASION / 回到 PEACE。
+ * back to PEACE. / back to PEACE.
+ *
  * @author Rinzler (Encom)
  */
-
 public class Invade extends BeritraInvasion<BeritraLocation> {
+
+	/**
+	 * 绑定入侵地点。
+	 * Binds the invasion location.
+	 *
+	 * invasion location
+	 */
 	public Invade(BeritraLocation beritra) {
 		super(beritra);
 	}
 
+	/**
+	 * 激活入侵并刷新 INVASION 刷怪。
+	 * Activates invasion and spawns INVASION entities.
+	 */
 	@Override
 	public void startBeritraInvasion() {
 		getBeritraLocation().setActiveBeritra(this);
@@ -35,6 +32,10 @@ public class Invade extends BeritraInvasion<BeritraLocation> {
 		spawn(BeritraStateType.INVASION);
 	}
 
+	/**
+	 * 结束入侵并恢复 PEACE 刷怪。
+	 * Ends invasion and restores PEACE spawns.
+	 */
 	@Override
 	public void stopBeritraInvasion() {
 		getBeritraLocation().setActiveBeritra(null);

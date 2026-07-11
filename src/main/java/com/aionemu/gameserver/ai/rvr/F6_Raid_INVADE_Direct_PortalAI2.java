@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,10 +20,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：F6 Raid INVADE Direct Portal（@AIName "F6_Raid_INVADE_Direct_Portal"），继承 NpcAI2。
+ * RvR-related NPC AI: F6 Raid INVADE Direct Portal (@AIName "F6_Raid_INVADE_Direct_Portal"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("F6_Raid_INVADE_Direct_Portal")
 public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2
 {
@@ -83,7 +69,7 @@ public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2
 	
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 66) {
-			//Do you want to travel through the Legion Rift ?
+			// 是否要通过军团裂隙旅行？ / Do you want to travel through the Legion Rift ?
 			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_RVR_DIRECT_PORTAL, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
 				private boolean decisionTaken = false;
 				@Override
@@ -124,15 +110,15 @@ public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2
 	}
 	
    /**
-	* Elyos.
-	*/
+	 * @param responder 天族 / Elyos
+	 */
 	private void transferInvasion1(Player responder) {
         TeleportService2.teleportTo(responder, 220110000, 2406.4836f, 1819.9683f, 226.93954f, (byte) 116);
     }
 	
    /**
-	* Asmodians.
-	*/
+	 * @param responder 魔族 / Asmodians
+	 */
 	private void transferInvasion2(Player responder) {
         TeleportService2.teleportTo(responder, 210100000, 2672.5808f, 1438.1235f, 226.1613f, (byte) 118);
     }

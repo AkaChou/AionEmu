@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.taskmanager;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import com.aionemu.commons.database.dao.DAOManager;
@@ -25,6 +9,9 @@ import com.aionemu.loginserver.dao.TaskFromDBDAO;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 
 /**
+ * 数据库任务管理器：启动时加载全部任务并注册有效触发器。
+ * Database task manager: loads all tasks at startup and registers valid triggers.
+ *
  * @author nrg
  */
 @Slf4j
@@ -32,40 +19,47 @@ public class TaskFromDBManager {
 
     private ArrayList<TaskFromDBTrigger> tasksList;
 
+    /**
+     * 从数据库加载任务列表并初始化触发器。
+     * Loads the task list from the database and initializes triggers.
+     */
     public TaskFromDBManager() {
         tasksList = getDAO().getAllTasks();
-        log.info("Loaded " + tasksList.size() + " task" + (tasksList.size() > 1 ? "s" : "") + " from the database");
+        log.info(I18n.get("log.8fed1ca907ff", tasksList.size(), (tasksList.size() > 1 ? "s" : "")));
 
         registerTaskInstances();
     }
 
     /**
-     * Launching & checking task process
+     * 注册并启动所有有效的任务触发器。
+     * Registers and starts all valid task triggers.
      */
     private void registerTaskInstances() {
-        // For all tasks from DB
+        // 用于所有来自 DB 的任务 / For all tasks from DB
         for (TaskFromDBTrigger trigger : tasksList) {
             if (trigger.isValid()) {
                 trigger.initTrigger();
             } else {
-                log.error("Invalid task from db with ID: " + trigger.getTaskId());
+                log.error(I18n.get("log.cf872b497fc9", trigger.getTaskId()));
             }
         }
     }
 
     /**
-     * Retuns {@link com.aionemu.gameserver.dao.TaskFromDBDAO} , just a shortcut
+     * 获取 TaskFromDBDAO 快捷方法。
+     * Shortcut to obtain {@link TaskFromDBDAO}.
      *
-     * @return {@link com.aionemu.gameserver.dao.TaskFromDBDAO}
+     * DAO instance
      */
     private static TaskFromDBDAO getDAO() {
         return DAOManager.getDAO(TaskFromDBDAO.class);
     }
 
     /**
-     * Get the instance
+     * 获取单例实例（已弃用，请走 boot 注入）。
+     * Returns the singleton instance (deprecated; prefer boot injection).
      *
-     * @return
+     * singleton instance
      */
     @Deprecated(since = "boot-migration")
     public static TaskFromDBManager getInstance() {
@@ -73,7 +67,8 @@ public class TaskFromDBManager {
     }
 
     /**
-     * SingletonHolder
+     * 单例持有者。
+     * Singleton holder.
      */
     private static class SingletonHolder {
 

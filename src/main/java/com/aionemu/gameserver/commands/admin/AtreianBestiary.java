@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -28,14 +12,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员亚特雷亚图鉴命令：为管理员增加指定 NPC 的图鉴击杀计数。
+ * Admin Atreian Bestiary command: adds a bestiary kill count for a given NPC.
+ *
  * @author Ranastic
  */
 public class AtreianBestiary extends AdminCommand {
 
+	/**
+	 * 注册 {@code //bestiary} 命令。
+	 * Registers the {@code //bestiary} command.
+	 */
 	public AtreianBestiary() {
 		super("bestiary");
 	}
 
+	/**
+	 * 执行图鉴击杀：校验模板后增加击杀计数。
+	 * Executes bestiary kill: validates the template then increments kill count.
+	 *
+	 * admin
+	 * npc id
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 2) {
@@ -53,6 +51,13 @@ public class AtreianBestiary extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时输出 {@code //bestiary} 用法。
+	 * Prints {@code //bestiary} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //bestiary <npc_id>");

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,12 +8,27 @@ import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 设置游戏内时间（时段或小时）的管理员命令。
+ * Admin command to set in-game time by period name or hour.
+ */
 public class Time extends AdminCommand
 {
+	/**
+	 * 构造 time 命令。
+	 * Creates the time command.
+	 */
 	public Time() {
 		super("time");
 	}
-	
+
+	/**
+	 * 将游戏时间切换为 dawn/day/dusk/night 或指定小时，并广播给全体在线玩家。
+	 * Switches game time to dawn/day/dusk/night or a given hour and broadcasts to all online players.
+	 *
+	 * 执行 GM / Admin player
+	 * @param params 时段名或小时 / Period name or hour
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params == null || params.length < 1) {
@@ -71,7 +70,14 @@ public class Time extends AdminCommand
 		});
 		PacketSendUtility.sendMessage(admin, "You changed the time to " + params[0].toString() + ".");
 	}
-	
+
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		String syntax = "Syntax: //time < dawn | day | dusk | night | desired hour (number) >";

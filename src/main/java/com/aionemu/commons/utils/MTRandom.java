@@ -3,13 +3,12 @@ package com.aionemu.commons.utils;
 import java.util.Random;
 
 /**
- * 基于Mersenne Twister算法的随机数生成器实现
- * Random number generator implementation based on Mersenne Twister algorithm
+ * 基于 Mersenne Twister 算法的随机数生成器。
+ * Random number generator based on the Mersenne Twister algorithm.
  */
 public class MTRandom extends Random {
     private static final long serialVersionUID = -515082678588212038L;
 
-    // 常量定义 / Constants definition
     private static final int UPPER_MASK = Integer.MIN_VALUE;
     private static final int LOWER_MASK = Integer.MAX_VALUE;
     private static final int N = 624;
@@ -23,25 +22,24 @@ public class MTRandom extends Random {
     private static final int MAGIC_SEED = 19650218;
     private static final long DEFAULT_SEED = 5489L;
 
-    // 实例变量 / Instance variables
     private transient int[] mt;
     private transient int mti;
     private transient boolean compat;
     private transient int[] ibuf;
 
     /**
-     * 创建一个新的MTRandom实例
-     * Create a new MTRandom instance
+     * 创建默认实例。
+     * Create a default instance.
      */
     public MTRandom() {
         this(false);
     }
 
     /**
-     * 创建一个新的MTRandom实例，可指定是否使用兼容模式
-     * Create a new MTRandom instance with specified compatibility mode
-     * 
-     * @param compatible 是否使用兼容模式 / Whether to use compatibility mode
+     * 创建实例，可指定兼容模式。
+     * Create an instance with optional compatibility mode.
+     *
+     * @param compatible 是否兼容模式 / Whether compatibility mode
      */
     public MTRandom(boolean compatible) {
         super(0L);
@@ -51,10 +49,10 @@ public class MTRandom extends Random {
     }
 
     /**
-     * 使用指定的种子创建MTRandom实例
-     * Create MTRandom instance with specified seed
-     * 
-     * @param seed 随机数生成器的种子 / Seed for random number generator
+     * 使用 long 种子创建实例。
+     * Create an instance with a long seed.
+     *
+     * Seed
      */
     public MTRandom(long seed) {
         super(seed);
@@ -62,10 +60,10 @@ public class MTRandom extends Random {
     }
 
     /**
-     * 使用字节数组作为种子创建MTRandom实例
-     * Create MTRandom instance with byte array as seed
-     * 
-     * @param buf 用作种子的字节数组 / Byte array used as seed
+     * 使用字节数组种子创建实例。
+     * Create an instance with a byte-array seed.
+     *
+     * @param buf 种子字节 / Seed bytes
      */
     public MTRandom(byte[] buf) {
         super(0L);
@@ -74,10 +72,10 @@ public class MTRandom extends Random {
     }
 
     /**
-     * 使用整数数组作为种子创建MTRandom实例
-     * Create MTRandom instance with integer array as seed
-     * 
-     * @param buf 用作种子的整数数组 / Integer array used as seed
+     * 使用 int 数组种子创建实例。
+     * Create an instance with an int-array seed.
+     *
+     * @param buf 种子数组 / Seed array
      */
     public MTRandom(int[] buf) {
         super(0L);
@@ -86,10 +84,10 @@ public class MTRandom extends Random {
     }
 
     /**
-     * 设置随机数生成器的种子
-     * Set the seed for random number generator
-     * 
-     * @param seed 种子值 / Seed value
+     * 以单 int 种子初始化状态。
+     * Initialize state with a single int seed.
+     *
+     * Seed
      */
     private void setSeed(int seed) {
         if (mt == null) {
@@ -101,6 +99,12 @@ public class MTRandom extends Random {
         }
     }
 
+    /**
+     * 设置 long 种子（兼容模式退化为 int 种子）。
+     * Set a long seed (compat mode falls back to int seed).
+     *
+     * Seed
+     */
     @Override
     public synchronized void setSeed(long seed) {
         if (compat) {
@@ -116,9 +120,9 @@ public class MTRandom extends Random {
     }
 
     /**
-     * 使用字节数组设置种子
-     * Set seed using byte array
-     * 
+     * 使用字节数组设置种子。
+     * Set seed from a byte array.
+     *
      * @param buf 字节数组 / Byte array
      */
     public final void setSeed(byte[] buf) {
@@ -126,10 +130,10 @@ public class MTRandom extends Random {
     }
 
     /**
-     * 使用整数数组设置种子
-     * Set seed using integer array
-     * 
-     * @param buf 整数数组 / Integer array
+     * 使用 int 数组设置种子。
+     * Set seed from an int array.
+     *
+     * @param buf 整数数组 / Int array
      */
     public final synchronized void setSeed(int[] buf) {
         int length = buf.length;
@@ -166,6 +170,13 @@ public class MTRandom extends Random {
         mt[0] = UPPER_MASK;
     }
 
+    /**
+     * 生成下一批随机位。
+     * Generate the next random bits.
+     *
+     * Bit count
+     * Random bits
+     */
     @Override
     protected final synchronized int next(int bits) {
         if (mti >= N) {
@@ -195,11 +206,11 @@ public class MTRandom extends Random {
     }
 
     /**
-     * 将字节数组打包成整数数组
-     * Pack byte array into integer array
-     * 
+     * 将字节数组打包为 int 数组。
+     * Pack a byte array into an int array.
+     *
      * @param buf 字节数组 / Byte array
-     * @return 整数数组 / Integer array
+     * Int array
      */
     public static int[] pack(byte[] buf) {
         int blen = buf.length;

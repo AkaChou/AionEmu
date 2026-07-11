@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,6 +12,9 @@ import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 充能条件：在属性计算路径上校验物品充能等级是否达到要求。
+ * Charge condition: on the stat path, validates the item charge level meets the requirement.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,6 +24,14 @@ public class ChargeCondition extends Condition {
 	@XmlAttribute(name = "level")
 	private int level;
 
+	/**
+	 * 校验属性函数所属物品的充能等级。
+	 * Validates the charge level of the item owning the stat function.
+	 *
+	 * @param env 属性对象 / stat object
+	 * stat function
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Stat2 env, IStatFunction statFunction) {
 		StatOwner owner = statFunction.getOwner();
@@ -47,6 +42,13 @@ public class ChargeCondition extends Condition {
 		return false;
 	}
 
+	/**
+	 * 技能施放路径不支持充能条件，恒为失败。
+	 * Charge condition is not supported on the skill cast path; always fails.
+	 *
+	 * @param env 技能环境 / skill environment
+	 * always false
+	 */
 	@Override
 	public boolean validate(Skill env) {
 		return false;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.mail;
 
 import java.util.ArrayList;
@@ -25,6 +9,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * StringParam 列表模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StringParamList", propOrder = { "param" })
 @XmlSeeAlso({ MailPart.class })
@@ -32,6 +21,7 @@ public class StringParamList {
 
 	protected List<Param> param;
 
+	/** 返回参数 / Returns the param*/
 	public List<Param> getParam() {
 		if (param == null) {
 			param = new ArrayList<Param>();
@@ -46,6 +36,7 @@ public class StringParamList {
 		@XmlAttribute(name = "id", required = true)
 		protected String id;
 
+		/** 返回 ID / Returns the id */
 		public String getId() {
 			return id;
 		}

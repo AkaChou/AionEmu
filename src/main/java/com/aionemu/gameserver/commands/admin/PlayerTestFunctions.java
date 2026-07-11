@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -30,6 +14,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 玩家相关测试/调试功能管理员命令（守护者、征服者、成长光环、月神等）。
+ * Admin command for player-related test/debug features (protector, conqueror, aura, luna, etc.).
+ */
 public class PlayerTestFunctions extends AdminCommand
 {
 	private static final String COMMAND_PROTECTOR = "pro";
@@ -44,10 +32,21 @@ public class PlayerTestFunctions extends AdminCommand
 	private static final String LUNA_BUY = "lbuy";
 	private static final String LUNA_Consume = "lcon";
 
+	/**
+	 * 以别名 {@code test} 构造命令。
+	 * Construct the command with alias {@code test}.
+	 */
 	public PlayerTestFunctions() {
 		super("test");
 	}
 
+	/**
+	 * 分发 pro/con/star/unk1 等子命令；外观相关会刷新 knownlist。
+	 * Dispatch pro/con/star/unk1 and related subcommands; appearance paths refresh the knownlist.
+	 *
+	 * 执行 GM / Admin player
+	 * @param params 子命令与数值 / Subcommand and values
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
@@ -62,7 +61,14 @@ public class PlayerTestFunctions extends AdminCommand
 			handleUpdate(player, params);
 		}
 	}
-	
+
+	/**
+	 * 对当前目标（Creature/Player）应用测试数值更新。
+	 * Apply the test value update to the current Creature/Player target.
+	 *
+	 * 执行 GM / Admin player
+	 * @param params 子命令与整型值 / Subcommand and int value
+	 */
 	protected void handleUpdate(Player player, String... params) {
 		VisibleObject target = player.getTarget();
 		if (target == null) {
@@ -119,7 +125,13 @@ public class PlayerTestFunctions extends AdminCommand
 			PacketSendUtility.sendMessage(player, "luna account " + targetPlayer.getPlayerAccount().getToll());
 		}
 	}
-	
+
+	/**
+	 * 向管理员显示命令帮助。
+	 * Show command help to the admin.
+	 *
+	 * @param player 执行 GM / Admin player
+	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "//test pro|con|star|unk1 <int values>");
 	}

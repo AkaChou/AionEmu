@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员击杀命令：击杀选中目标、范围内生物或已知列表中的全部生物。
+ * Admin kill command: kill selected target, creatures in range, or all known creatures.
+ *
  * @author ATracer, Wakizashi
  */
 public class Kill extends AdminCommand {
@@ -32,6 +19,13 @@ public class Kill extends AdminCommand {
 		super("kill");
 	}
 
+	/**
+	 * 无参击杀选中目标；all 击杀已知列表；否则按距离范围击杀。
+	 * No args kills selection; all kills known list; otherwise kill by range.
+	 *
+	 * @param admin 执行命令的管理员 / Admin executing the command
+	 * @param params 可选 all 或范围距离 / Optional all or range distance
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length > 1) {
@@ -73,6 +67,13 @@ public class Kill extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //kill <target | all | <range>>");

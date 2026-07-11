@@ -1,31 +1,26 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
+/**
+ * 管理员 GPS 坐标查询命令：输出自身 X/Y/Z、朝向与世界 ID。
+ * Admin GPS command: print own X/Y/Z, heading and world id.
+ */
 public class Gps extends AdminCommand
 {
 	public Gps() {
 		super("gps");
 	}
-	
+
+	/**
+	 * 向管理员输出当前坐标信息。
+	 * Print the admin's current coordinates.
+	 *
+	 * @param admin 执行命令的管理员 / Admin executing the command
+	 * Unused
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		PacketSendUtility.sendMessage(admin, "== GPS Coordinates ==");
@@ -36,7 +31,14 @@ public class Gps extends AdminCommand
 		PacketSendUtility.sendMessage(admin, "World: = " + admin.getWorldId());
 		PacketSendUtility.sendMessage(admin, "=====================");
 	}
-	
+
+	/**
+	 * 失败回调（本命令无额外语法提示）。
+	 * Failure callback (no extra syntax for this command).
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.actions;
 
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -26,12 +10,13 @@ import com.aionemu.gameserver.model.templates.windstreams.WindstreamPath;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 玩家 Actions，用于 actions 相关逻辑。
+ * Player Actions for actions logic.
+ */
 
 public class PlayerActions extends CreatureActions {
+	/** 是否 in player mode / Whether in player mode */
 	public static boolean isInPlayerMode(Player player, PlayerMode mode) {
 		switch (mode) {
 		case RIDE:
@@ -44,6 +29,7 @@ public class PlayerActions extends CreatureActions {
 		return false;
 	}
 
+	/** 设置玩家模式 / Sets the player mode */
 	public static void setPlayerMode(Player player, PlayerMode mode, Object obj) {
 		switch (mode) {
 		case RIDE:
@@ -58,6 +44,7 @@ public class PlayerActions extends CreatureActions {
 		}
 	}
 
+	/** 取消设置玩家模式 / Unset Player Mode */
 	public static boolean unsetPlayerMode(Player player, PlayerMode mode) {
 		switch (mode) {
 		case RIDE:

@@ -1,35 +1,6 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- * Aion-Lightning is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * Aion-Lightning is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. *
- *
- * You should have received a copy of the GNU General Public License along with Aion-Lightning. If not, see <http://www.gnu.org/licenses/>.
- *
- * Credits goes to all Open Source Core Developer Groups listed below Please do not change here something, ragarding the developer credits, except the
- * "developed by XXXX". Even if you edit a lot of files in this source, you still have no rights to call it as "your Core". Everybody knows that this
- * Emulator Core was developed by Aion Lightning
- * 
- * @-Aion-Unique-
- * @-Aion-Lightning
- * @Aion-Engine
- * @Aion-Extreme
- * @Aion-NextGen
- * @Aion-Core Dev.
- */
 package com.aionemu.commons.network.util;
 
-import lombok.extern.slf4j.Slf4j;
-import java.util.concurrent.Executor;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
@@ -39,65 +10,59 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * 线程池管理器，负责管理和调度系统中的线程池
- * Thread Pool Manager responsible for managing and scheduling thread pools in the system
- *
- * 该类实现了单例模式，提供以下功能:
- * 1. 管理定时任务线程池
- * 2. 管理游戏服务器数据包处理线程池
- * 3. 提供任务调度和执行接口
- * 4. 集成死锁检测
- *
- * This class implements Singleton pattern and provides:
- * 1. Scheduled task thread pool management
- * 2. Game server packet processing thread pool management 
- * 3. Task scheduling and execution interface
- * 4. Integrated deadlock detection
+ * 网络相关线程池管理器：定时任务、数据包池与死锁检测。
+ * Network thread-pool manager for scheduled tasks, packet pool, and deadlock detection.
  *
  * @author -Nemesiss-, Rolandas
  */
 @Slf4j
 public class ThreadPoolManager implements Executor {
     private static final int PACKET_QUEUE_CAPACITY = 100000;
-    
+
     /**
-     * 单例持有者
-     * Singleton holder
+     * 单例持有者。
+     * Singleton holder.
      */
     private static class SingletonHolder {
         protected static final ThreadPoolManager instance = new ThreadPoolManager();
     }
-    
-    
+
     /**
-     * 获取ThreadPoolManager实例
-     * Get ThreadPoolManager instance
+     * 获取单例实例。
+     * Get singleton instance.
      *
-     * @return ThreadPoolManager实例 / ThreadPoolManager instance
+     * @return 线程池管理器 / Thread pool manager
      */
     public static final ThreadPoolManager getInstance() {
         return SingletonHolder.instance;
     }
-    
+
     /**
-     * 定时任务线程池执行器
-     * Scheduled task thread pool executor
+     * 定时任务线程池执行器。
+     * Scheduled task thread-pool executor.
      */
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     private ListeningScheduledExecutorService scheduledThreadPool;
-    
+
     /**
-     * 游戏服务器数据包处理线程池执行器
-     * Game server packet processing thread pool executor
+     * 数据包处理线程池执行器。
+     * Packet processing thread-pool executor.
      */
     private final ThreadPoolExecutor generalPacketsThreadPoolExecutor;
     private final ListeningExecutorService generalPacketsThreadPool;
-    
+
     /**
-     * 构造函数，初始化线程池和死锁检测器
-     * Constructor, initialize thread pools and deadlock detector
+     * 初始化线程池并启动死锁检测。
+     * Initialize thread pools and start deadlock detection.
      */
     public ThreadPoolManager() {
         DeadLockDetector deadLockDetector = new DeadLockDetector(
@@ -106,10 +71,10 @@ public class ThreadPoolManager implements Executor {
         );
         deadLockDetector.setDaemon(AionRuntimeMode.isBootEmbedded());
         deadLockDetector.start();
-        
+
         scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(4, new PriorityThreadFactory("ScheduledThreadPool", Thread.NORM_PRIORITY));
         scheduledThreadPool = MoreExecutors.listeningDecorator(scheduledThreadPoolExecutor);
-        
+
         int packetPoolSize = packetPoolSize();
         generalPacketsThreadPoolExecutor = new ThreadPoolExecutor(packetPoolSize, packetPoolSize, 0L, TimeUnit.SECONDS,
             new ArrayBlockingQueue<Runnable>(PACKET_QUEUE_CAPACITY),
@@ -119,39 +84,45 @@ public class ThreadPoolManager implements Executor {
         generalPacketsThreadPool = MoreExecutors.listeningDecorator(generalPacketsThreadPoolExecutor);
     }
 
+    /**
+     * 计算数据包池大小。
+     * Compute packet pool size.
+     *
+     * Pool size
+     */
     private int packetPoolSize() {
         return Math.max(2, Runtime.getRuntime().availableProcessors() * 2);
     }
-    
+
     /**
-     * 执行游戏服务器客户端数据包任务
-     * Execute game server client packet task
+     * 执行数据包任务。
+     * Execute packet task.
      *
-     * @param pkt 要执行的任务 / Task to execute
+     * Task
      */
     @Override
     public void execute(final Runnable pkt) {
         generalPacketsThreadPool.execute(new RunnableWrapper(pkt));
     }
-    
+
     /**
-     * 获取数据包处理线程池
-     * Get packet processing thread pool
+     * 获取数据包线程池。
+     * Get packet thread pool.
      *
-     * @return 数据包处理线程池 / Packet processing thread pool
+     * @return 可监听执行器 / Listening executor
      */
     public ListeningExecutorService getPacketsThreadPool() {
         return generalPacketsThreadPool;
     }
-    
+
     /**
-     * 调度任务在指定延迟后执行
-     * Schedule task to execute after specified delay
+     * 延迟调度任务。
+     * Schedule task after delay.
      *
      * @param <T> 任务类型 / Task type
-     * @param r 要执行的任务 / Task to execute
-     * @param delay 延迟时间(毫秒) / Delay time in milliseconds
-     * @return 可监听的Future / Listenable future
+     * @param r 任务 / Task
+     * @param delay 延迟毫秒 / Delay in milliseconds
+     * @return 可监听 Future，关闭时可能为 null / Listenable future, may be null when shutting down
      */
     @SuppressWarnings("unchecked")
     public <T extends Runnable> ListenableFuture<T> schedule(final T r, long delay) {
@@ -165,16 +136,16 @@ public class ThreadPoolManager implements Executor {
             return null; /* shutdown, ignore */
         }
     }
-    
+
     /**
-     * 调度任务以固定速率执行
-     * Schedule task to execute at fixed rate
+     * 固定频率调度任务。
+     * Schedule task at fixed rate.
      *
      * @param <T> 任务类型 / Task type
-     * @param r 要执行的任务 / Task to execute
-     * @param initial 初始延迟(毫秒) / Initial delay in milliseconds
-     * @param delay 执行间隔(毫秒) / Execution interval in milliseconds
-     * @return 可监听的Future / Listenable future
+     * @param r 任务 / Task
+     * @param initial 初始延迟毫秒 / Initial delay in milliseconds
+     * @param delay 周期毫秒 / Period in milliseconds
+     * @return 可监听 Future，关闭时可能为 null / Listenable future, may be null when shutting down
      */
     @SuppressWarnings("unchecked")
     public <T extends Runnable> ListenableFuture<T> scheduleAtFixedRate(final T r, long initial, long delay) {
@@ -191,10 +162,10 @@ public class ThreadPoolManager implements Executor {
             return null;
         }
     }
-    
+
     /**
-     * 关闭所有线程池
-     * Shutdown all thread pools
+     * 关闭全部线程池。
+     * Shutdown all thread pools.
      */
     public void shutdown() {
         try {
@@ -202,9 +173,9 @@ public class ThreadPoolManager implements Executor {
             generalPacketsThreadPool.shutdown();
             scheduledThreadPool.awaitTermination(2, TimeUnit.SECONDS);
             generalPacketsThreadPool.awaitTermination(2, TimeUnit.SECONDS);
-            log.info("All ThreadPools are now stopped.");
+            log.info(I18n.get("log.4ed0b19373c7"));
         } catch (InterruptedException e) {
-            log.error("Can't shutdown ThreadPoolManager", e);
+            log.error(I18n.get("log.6fb05b263d35", e));
             Thread.currentThread().interrupt();
         }
     }

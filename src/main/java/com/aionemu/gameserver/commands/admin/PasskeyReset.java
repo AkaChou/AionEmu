@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -26,14 +10,28 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 强制重置玩家账号二级密码（Passkey）的管理员命令。
+ * Admin command to force-reset a player's account passkey.
+ *
  * @author cura
  */
 public class PasskeyReset extends AdminCommand {
 
+	/**
+	 * 以别名 {@code passkeyreset} 构造命令。
+	 * Construct the command with alias {@code passkeyreset}.
+	 */
 	public PasskeyReset() {
 		super("passkeyreset");
 	}
 
+	/**
+	 * 按角色名解析账号并写入新的 6–8 位数字二级密码，随后通知登录服。
+	 * Resolve the account by character name, write a new 6–8 digit passkey, and notify the login server.
+	 *
+	 * @param player 执行 GM / Admin player
+	 * @param params 角色名与新 passkey / Character name and new passkey
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -67,6 +65,13 @@ public class PasskeyReset extends AdminCommand {
 		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, accountId, "", -1, player.getObjectId());
 	}
 
+	/**
+	 * 参数错误时显示语法。
+	 * Show syntax when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax: //passkeyreset <player> <passkey>");

@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：The Brigade Generals Call（任务 ID 2553）。
+ * Beluslan quest script: The Brigade Generals Call (quest ID 2553).
  */
 public class _2553TheBrigadeGeneralsCall extends QuestHandler {
 

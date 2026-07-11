@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 延迟飞行值攻击即时效果：延迟后按固定值或百分比削减目标 FP。
+ * Delayed FP attack instant effect: after delay, reduces target FP by fixed or percent value.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,6 +25,12 @@ public class DelayedFPAttackInstantEffect extends EffectTemplate {
 	@XmlAttribute
 	protected boolean percent;
 
+	/**
+	 * 仅对玩家目标计算 FP 削减量并写入 reserved2。
+	 * Calculates FP reduction for player targets into reserved2.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!(effect.getEffected() instanceof Player)) {
@@ -52,6 +45,12 @@ public class DelayedFPAttackInstantEffect extends EffectTemplate {
 		effect.setReserved2(newValue);
 	}
 
+	/**
+	 * 延迟 delay 毫秒后削减目标 FP。
+	 * Schedules FP reduction after the configured delay milliseconds.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(final Effect effect) {
 		final Player effected = (Player) effect.getEffected();

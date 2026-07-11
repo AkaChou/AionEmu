@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -23,6 +7,8 @@ import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
+ * Random 加成效果，用于物品相关逻辑。
+ * Random Bonus Effect for items logic.
  *
  * @author Ranastic
  */
@@ -34,10 +20,12 @@ public class RandomBonusEffect implements StatOwner {
 		template = DataManager.ITEM_RANDOM_BONUSES.getTemplate(type, polishSetId, polishNumber);
 	}
 
+	/** 应用效果。 / Apply effect. */
 	public void applyEffect(Player player) {
 		player.getGameStats().addEffect(this, template.getModifiers());
 	}
 
+	/** 结束效果 / End Effect */
 	public void endEffect(Player player) {
 		player.getGameStats().endEffect(this);
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,13 +32,25 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 
 /**
+ * 物品融合服务：消耗核心与材料，随机产出同槽位大天使装备。
+ * Item coalescence service — consumes core and materials, rolls same-slot Archdaeva gear.
+ *
  * @author Ranastic
  */
 @Slf4j
-
 public class CoalescenceService {
+
+	/** Spring ObjectProvider preferred over local singleton / Spring ObjectProvider preferred over local singleton */
 	private static volatile ObjectProvider<CoalescenceService> instanceProvider;
 
+	/**
+	 * 执行融合：播放读条动画，消耗核心与材料，随机发放同槽位大天使装备，并按材料数判定奖励。
+	 * Performs coalescence: plays cast animation, consumes core and materials, grants random same-slot Archdaeva gear, and rolls bonus by material count.
+	 *
+	 * @param player 玩家 / player
+	 * @param core_item_object_id 核心物品对象 ID / core item object id
+	 * @param material_item_object_id_collection 材料物品对象 ID 列表 / material item object ids
+	 */
 	public void letsCoalescence(final Player player, int core_item_object_id, final List<Integer> material_item_object_id_collection) {
 		final Item core_item = player.getInventory().getItemByObjId(core_item_object_id);
 		if (core_item.getEnchantLevel() == 25) {
@@ -102,7 +98,6 @@ public class CoalescenceService {
 					return;
 				}
 				ItemService.addItem(player, item_id_taken, 1);
-				// player.getInventory().decreaseKinah(amount);//TODO
 				float success = 15;
 				if (material_item_object_id_collection.size() == 1) {
 					success += 5;
@@ -129,36 +124,55 @@ public class CoalescenceService {
 					bonus_item_id_taken = bonus_item_id_collection[rand.nextInt(bonus_item_id_collection.length)];
 					bonus_item_count = Rnd.get(1, 200);
 					ItemService.addItem(player, bonus_item_id_taken, bonus_item_count);
-					// TODO message for bonus
 				}
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), core_item.getObjectId(), core_item.getItemId(), 0, 24, 0), true);
-				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403620, new DescriptionId(core_item.getItemTemplate().getNameId())));
+				DescriptionId resultItem = new DescriptionId(DataManager.ITEM_DATA.getItemTemplate(item_id_taken).getNameId());
+				if (result_of_random) {
+					DescriptionId bonusItem = new DescriptionId(DataManager.ITEM_DATA.getItemTemplate(bonus_item_id_taken).getNameId());
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403621, resultItem, bonusItem));
+				} else {
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403620, resultItem));
+				}
 				PacketSendUtility.sendPacket(player, new SM_COALESCENCE_RESULT(core_item.getItemId(), core_item.getObjectId(), bonus_item_id_taken, bonus_item_count, result_of_random));
-                updateQuestsOnCoalescenceComplete(player, core_item, result_of_random);
+				updateQuestsOnCoalescenceComplete(player, core_item, result_of_random);
 			}
 		}, 4000));
 	}
 
-    public void updateQuestsOnCoalescenceComplete(Player player, Item coreItem, boolean success) {
-    if (player.getQuestStateList().hasQuest(15542)) {
-        QuestState qs = player.getQuestStateList().getQuestState(15542);
-        if (qs != null && qs.getStatus() == QuestStatus.START) {
-            qs.setStatus(QuestStatus.REWARD);
-            PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(15542, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-            player.getController().updateNearbyQuests();
-        }
-    }
-    
-    if (player.getQuestStateList().hasQuest(25542)) {
-        QuestState qs = player.getQuestStateList().getQuestState(25542);
-        if (qs != null && qs.getStatus() == QuestStatus.START) {
-            qs.setStatus(QuestStatus.REWARD);
-            PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(25542, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-            player.getController().updateNearbyQuests();
-          }
-       }
-    }
+	/**
+	 * 融合完成后推进相关任务（15542 / 25542）至可领奖状态。
+	 * 25542) to reward status after coalescence completes. / 25542) to reward status after coalescence completes.
+	 *
+	 * 玩家 / player
+	 * core item
+	 * @param success 是否触发奖励 / whether bonus reward succeeded
+	 */
+	public void updateQuestsOnCoalescenceComplete(Player player, Item coreItem, boolean success) {
+		if (player.getQuestStateList().hasQuest(15542)) {
+			QuestState qs = player.getQuestStateList().getQuestState(15542);
+			if (qs != null && qs.getStatus() == QuestStatus.START) {
+				qs.setStatus(QuestStatus.REWARD);
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(15542, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+				player.getController().updateNearbyQuests();
+			}
+		}
 
+		if (player.getQuestStateList().hasQuest(25542)) {
+			QuestState qs = player.getQuestStateList().getQuestState(25542);
+			if (qs != null && qs.getStatus() == QuestStatus.START) {
+				qs.setStatus(QuestStatus.REWARD);
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(25542, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+				player.getController().updateNearbyQuests();
+			}
+		}
+	}
+
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static CoalescenceService getInstance() {
 		ObjectProvider<CoalescenceService> provider = instanceProvider;
 		if (provider != null) {
@@ -167,10 +181,20 @@ public class CoalescenceService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CoalescenceService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 本地默认单例持有者。
+	 * Local default singleton holder.
+	 */
 	private static class NewSingletonHolder {
 		private static final CoalescenceService INSTANCE = new CoalescenceService();
 	}

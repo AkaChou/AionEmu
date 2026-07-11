@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -22,22 +6,70 @@ import com.aionemu.gameserver.model.skinskill.SkillSkin;
 import com.aionemu.gameserver.model.skinskill.SkillSkinList;
 
 /**
+ * 玩家技能皮肤列表数据访问抽象层。
+ * DAO for player skill skin list persistence.
+ *
  * @author Rinzler (Encom)
  */
 public abstract class PlayerSkillSkinListDAO implements DAO {
 
+	/**
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
+	 */
 	@Override
 	public final String getClassName() {
 		return PlayerSkillSkinListDAO.class.getName();
 	}
 
+	/**
+	 * 加载玩家技能皮肤列表。
+	 * Loads the skill skin list for the player.
+	 *
+	 * player object id
+	 * @return 技能皮肤列表 / skill skin list
+	 */
 	public abstract SkillSkinList loadSkillSkinList(int playerId);
 
+	/**
+	 * 保存玩家一条技能皮肤记录。
+	 * Stores a skill skin entry for the player.
+	 *
+	 * 玩家 / player
+	 * @param entry 技能皮肤条目 / skill skin entry
+	 * @return 是否保存成功 / true if stored
+	 */
 	public abstract boolean storeSkillSkins(Player player, SkillSkin entry);
 
+	/**
+	 * 移除玩家一条技能皮肤。
+	 * Removes a skill skin from the player.
+	 *
+	 * player object id
+	 * skin id
+	 * @return 是否移除成功 / true if removed
+	 */
 	public abstract boolean removeSkillSkin(int playerId, int skinId);
 
+	/**
+	 * 激活玩家指定技能皮肤。
+	 * Activates a skill skin for the player.
+	 *
+	 * player object id
+	 * skin id
+	 * @return 是否激活成功 / true if activated
+	 */
 	public abstract boolean setActive(int playerId, int skinId);
 
+	/**
+	 * 取消激活玩家指定技能皮肤。
+	 * Deactivates a skill skin for the player.
+	 *
+	 * player object id
+	 * skin id
+	 * @return 是否取消成功 / true if deactivated
+	 */
 	public abstract boolean setDeactive(int playerId, int skinId);
 }

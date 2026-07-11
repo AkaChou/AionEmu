@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.util.ArrayList;
@@ -22,81 +6,89 @@ import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 
 /**
- * Class that is responsible for storing/loading legion data
- * 
+ * 负责存储与加载军团成员数据。
+ * Class that is responsible for storing/loading legion member data.
+ *
  * @author Simple
  */
-
 public abstract class LegionMemberDAO implements IDFactoryAwareDAO {
 
 	/**
-	 * Returns true if name is used, false in other case
-	 * 
-	 * @param name name to check
-	 * @return true if name is used, false in other case
+	 * 检查玩家对象 ID 是否已作为军团成员使用。
+	 * Returns true if the ID is used, false otherwise.
+	 *
+	 * player object ID
+	 * @return 是否已使用 / whether used
 	 */
 	public abstract boolean isIdUsed(int playerObjId);
 
 	/**
-	 * Creates legion member in DB
-	 * 
-	 * @param legionMember
+	 * 在数据库中创建新军团成员。
+	 * Creates a legion member in the DB.
+	 *
+	 * legion member
+	 * whether successful
 	 */
 	public abstract boolean saveNewLegionMember(LegionMember legionMember);
 
 	/**
-	 * Stores legion member to DB
-	 * 
-	 * @param player
+	 * 将军团成员存储到数据库。
+	 * Stores a legion member to the DB.
+	 *
+	 * player object ID
+	 * legion member
 	 */
 	public abstract void storeLegionMember(int playerObjId, LegionMember legionMember);
 
 	/**
-	 * Loads a legion member
-	 * 
-	 * @param playerObjId
-	 * @param legionService
-	 * @return LegionMember
+	 * 加载军团成员。
+	 * Loads a legion member.
+	 *
+	 * player object ID
+	 * legion member
 	 */
 	public abstract LegionMember loadLegionMember(int playerObjId);
 
 	/**
-	 * Loads an off line legion member by id
-	 * 
-	 * @param playerObjId
-	 * @param legionService
-	 * @return LegionMemberEx
+	 * 按 ID 加载离线军团成员扩展信息。
+	 * Loads an offline legion member by ID.
+	 *
+	 * player object ID
+	 * @return 军团成员扩展信息 / extended legion member
 	 */
 	public abstract LegionMemberEx loadLegionMemberEx(int playerObjId);
 
 	/**
-	 * Loads an off line legion member by name
-	 * 
-	 * @param playerName
-	 * @param legionService
-	 * @return LegionMemberEx
+	 * 按名称加载离线军团成员扩展信息。
+	 * Loads an offline legion member by name.
+	 *
+	 * player name
+	 * @return 军团成员扩展信息 / extended legion member
 	 */
 	public abstract LegionMemberEx loadLegionMemberEx(String playerName);
 
 	/**
-	 * Loads all legion members of a legion
-	 * 
-	 * @param legionId
-	 * @return ArrayList<Integer>
+	 * 加载军团的全部成员对象 ID。
+	 * Loads all legion member object IDs of a legion.
+	 *
+	 * legion ID
+	 * @return 成员对象 ID 列表 / member object ID list
 	 */
 	public abstract ArrayList<Integer> loadLegionMembers(int legionId);
 
 	/**
-	 * Removes legion member and all related data (Done by CASCADE DELETION)
-	 * 
-	 * @param playerId legion member to delete
+	 * 删除军团成员及相关数据（依赖数据库 CASCADE 删除）。
+	 * Removes a legion member and all related data (done by CASCADE deletion).
+	 *
+	 * @param playerObjId 要删除的军团成员玩家对象 ID / player object ID of the legion member to delete
 	 */
 	public abstract void deleteLegionMember(int playerObjId);
 
 	/**
-	 * Identifier name for all LegionDAO classes
-	 * 
-	 * @return LegionDAO.class.getName()
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier for this DAO.
+	 *
+	 * class name
 	 */
 	@Override
 	public final String getClassName() {

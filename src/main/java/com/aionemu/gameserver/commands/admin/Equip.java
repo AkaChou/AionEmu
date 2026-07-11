@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.DescriptionId;
@@ -44,12 +28,27 @@ import com.aionemu.gameserver.world.World;
 
 import java.lang.reflect.Field;
 
+/**
+ * 装备强化管理命令（{@code //equip}）：镶嵌、附魔、回火、神石。
+ * Equipment enhancement admin command ({@code //equip}): socket, enchant, tempering, godstone.
+ */
 public class Equip extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code equip}。
+	 * Registers the command name {@code equip}.
+	 */
 	public Equip() {
 		super("equip");
 	}
 	
+	/**
+	 * 对目标玩家执行镶嵌、附魔、回火或神石操作。
+	 * Runs socket, enchant, tempering or godstone actions on a target player.
+	 *
+	 * admin
+	 * @param params 子命令与参数 / sub-command and arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length != 0) {
@@ -280,6 +279,13 @@ public class Equip extends AdminCommand {
 		}
 	}
 	
+	/**
+	 * 按装备部位随机选取增幅技能 ID。
+	 * Picks a random amplification skill id by equipment slot.
+	 *
+	 * equipped item
+	 * skill id
+	 */
 	public int getRndSkills(Item item) {
 		if (item.getItemTemplate().getArmorType() == ArmorType.WING) {
 			return RndArray.get(skills4Wing);
@@ -395,6 +401,14 @@ public class Equip extends AdminCommand {
 		}
 	}
 	
+	/**
+	 * 判断物品是否可回火。
+	 * Whether the item supports tempering.
+	 *
+	 * item
+	 *
+	 * @param item @return 可回火则为 true / true if temperable
+	 */
 	public static boolean isTempering(Item item) {
 		if (item.getItemTemplate().isNoEnchant()) {
 			return false;
@@ -424,6 +438,14 @@ public class Equip extends AdminCommand {
 		return false;
 	}
 	
+	/**
+	 * 判断物品是否可附魔升级。
+	 * Whether the item supports enchant upgrades.
+	 *
+	 * item
+	 *
+	 * @param item @return 可升级则为 true / true if upgradable
+	 */
 	public static boolean isUpgradable(Item item) {
 		if (item.getItemTemplate().isNoEnchant()) {
 			return false;
@@ -447,6 +469,13 @@ public class Equip extends AdminCommand {
 		return false;
 	}
 	
+	/**
+	 * 按品质与物品类型计算最大镶嵌孔数。
+	 * Computes max socket slots from quality and item type.
+	 *
+	 * item
+	 * max slots
+	 */
 	public static int getMaxSlots(Item item) {
 		int slots = 0;
 		switch (item.getItemTemplate().getItemQuality()) {
@@ -519,6 +548,13 @@ public class Equip extends AdminCommand {
 		+ "  Default Value: Rate is 100 witch is the default action .");
 	}
 	
+	/**
+	 * 执行失败时显示帮助。
+	 * Shows help on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		showHelp(player);

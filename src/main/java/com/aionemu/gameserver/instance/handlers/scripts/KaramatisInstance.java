@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -25,13 +9,23 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 卡拉马提斯副本事件处理器。
+ * Instance event handler for Karamatis.
+ *
+ * @author Encom
+ */
 
 @InstanceID(310010000)
 public class KaramatisInstance extends GeneralInstanceHandler
 {
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
         if (zone.getAreaTemplate().getZoneName() == ZoneName.get("AFIRA_OBELISK_310010000")) {

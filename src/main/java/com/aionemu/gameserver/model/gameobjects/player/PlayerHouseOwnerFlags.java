@@ -1,27 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+/**
+ * 玩家房屋 OwnerFlags 枚举。
+ * Player House Owner Flags enumeration.
+ */
+
 public enum PlayerHouseOwnerFlags {
+	/** 所有者 / Is Owner*/
 	IS_OWNER(1 << 0), HAS_OWNER(1 << 0), BUY_STUDIO_ALLOWED(1 << 1), SINGLE_HOUSE(1 << 1), BIDDING_ALLOWED(1 << 2),
+	/** 房屋所有者 / House Owner */
 	HOUSE_OWNER((IS_OWNER.getId() | BIDDING_ALLOWED.getId()) & ~BUY_STUDIO_ALLOWED.getId()),
+	/** Selling 房屋 / Selling House */
 	SELLING_HOUSE(IS_OWNER.getId() | BUY_STUDIO_ALLOWED.getId()),
 
-	// Player Status
+	// 玩家状态 / Player Status
+	/** Sold 房屋 / Sold House */
 	SOLD_HOUSE(BIDDING_ALLOWED.getId() | BUY_STUDIO_ALLOWED.getId());
 
 	private byte id;
@@ -30,6 +23,7 @@ public enum PlayerHouseOwnerFlags {
 		this.id = (byte) (id & 0xFF);
 	}
 
+	/** 返回 ID / Returns the id */
 	public byte getId() {
 		return id;
 	}

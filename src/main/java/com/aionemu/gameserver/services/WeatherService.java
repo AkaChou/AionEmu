@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -42,10 +26,21 @@ import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 天气服务，按地图区域维护天气条目，并在变更时同步客户端与攻城系统。
+ * Weather service that maintains per-map zone weather entries and syncs clients and siege systems on change.
+ */
 public class WeatherService {
 	private static volatile ObjectProvider<WeatherService> instanceProvider;
+	/** 各地图天气键到区域天气数组的映射。 / Map of weather keys to per-zone weather entry arrays. */
 	private Map<WeatherKey, WeatherEntry[]> worldZoneWeathers;
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final WeatherService getInstance() {
 		ObjectProvider<WeatherService> provider = instanceProvider;
 		if (provider == null) {
@@ -54,10 +49,20 @@ public class WeatherService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider。
+	 * Injects the Spring ObjectProvider.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<WeatherService> instanceProvider) {
 		WeatherService.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 初始化所有带天气表的地图区域天气。
+	 * Initializes weather for all maps that have a weather table.
+	 */
 	public WeatherService() {
 		worldZoneWeathers = new HashMap<WeatherKey, WeatherEntry[]>();
 		GameTime gameTime = (GameTime) GameTimeManager.getGameTime().clone();
@@ -72,6 +77,10 @@ public class WeatherService {
 		}
 	}
 
+	/**
+	 * 地图天气键，按 mapId 相等比较。
+	 * Weather key for a map; equality is based on mapId only.
+	 */
 	private class WeatherKey {
 		private GameTime created;
 		private final int mapId;
@@ -101,6 +110,10 @@ public class WeatherService {
 		}
 	}
 
+	/**
+	 * 检查并推进所有地图的天气到下一阶段，随后广播变更。
+	 * Advances weather for all maps to the next stage and broadcasts the change.
+	 */
 	public void checkWeathersTime() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -113,6 +126,12 @@ public class WeatherService {
 		}, 0);
 	}
 
+	/**
+	 * 为指定地图键计算并写入下一轮区域天气。
+	 * Computes and stores the next weather entries for the given map key.
+	 *
+	 * weather key
+	 */
 	private synchronized void setNextWeather(WeatherKey key) {
 		WeatherEntry[] weatherEntries = getWeatherEntries(key.getMapId());
 		WeatherTable table = DataManager.MAP_WEATHER_DATA.getWeather(key.getMapId());
@@ -132,6 +151,15 @@ public class WeatherService {
 		}
 	}
 
+	/**
+	 * 按属性等级与时段修正随机选取天气条目。
+	 * Randomly picks a weather entry by attribute ranking with daytime correction.
+	 *
+	 * creation time
+	 * weather table
+	 * zone id
+	 * weather entry
+	 */
 	private WeatherEntry getRandomWeather(GameTime createdTime, WeatherTable table, int zoneId) {
 		List<WeatherEntry> weathers = table.getWeathersForZone(zoneId);
 		int attRanking = 2;
@@ -162,7 +190,7 @@ public class WeatherService {
 			newWeather = new WeatherEntry();
 		} else {
 			newWeather = chosenWeather.get(Rnd.get(chosenWeather.size()));
-			// Weather Before.
+			// 天气之前。 / Weather Before.
 			if (!newWeather.isBefore()) {
 				for (WeatherEntry entry : weathers) {
 					if (newWeather.getWeatherName().equals(entry.getWeatherName()) && entry.isBefore()) {
@@ -171,7 +199,7 @@ public class WeatherService {
 					}
 				}
 			}
-			// Weather After.
+			// 天气之后。 / Weather After.
 			if (!newWeather.isAfter()) {
 				for (WeatherEntry entry : weathers) {
 					if (newWeather.getWeatherName().equals(entry.getWeatherName()) && entry.isAfter()) {
@@ -194,10 +222,23 @@ public class WeatherService {
 		return newWeather;
 	}
 
+	/**
+	 * 为玩家加载当前地图天气。
+	 * Loads current map weather for the given player.
+	 *
+	 * target player
+	 */
 	public void loadWeather(Player player) {
 		onWeatherChange(player.getWorldId(), player);
 	}
 
+	/**
+	 * 按地图 ID 查找天气键。
+	 * Finds the weather key by map id.
+	 *
+	 * map id
+	 * weather key or null
+	 */
 	private WeatherKey getWeatherKeyByMapId(int mapId) {
 		for (WeatherKey key : worldZoneWeathers.keySet()) {
 			if (key.getMapId() == mapId) {
@@ -207,6 +248,14 @@ public class WeatherService {
 		return null;
 	}
 
+	/**
+	 * 获取指定地图的区域天气数组。
+	 * Returns the per-zone weather array for the map.
+	 *
+	 * map id
+	 *
+	 * @param mapId @return 天气条目数组 / weather entry array
+	 */
 	private WeatherEntry[] getWeatherEntries(int mapId) {
 		WeatherKey key = getWeatherKeyByMapId(mapId);
 		if (key == null) {
@@ -215,6 +264,13 @@ public class WeatherService {
 		return worldZoneWeathers.get(key);
 	}
 
+	/**
+	 * 强制将指定地图所有区域天气改为给定代码。
+	 * Forces all weather zones of the map to the given weather code.
+	 *
+	 * map id
+	 * weather code
+	 */
 	public synchronized void changeRegionWeather(int mapId, int weatherCode) {
 		WeatherKey key = new WeatherKey(null, mapId);
 		WeatherEntry[] weatherEntries = worldZoneWeathers.get(key);
@@ -232,6 +288,10 @@ public class WeatherService {
 		onWeatherChange(mapId, null);
 	}
 
+	/**
+	 * 重置所有已加载地图天气为晴朗（code 0）。
+	 * Resets weather of all loaded maps to clear (code 0).
+	 */
 	public synchronized void resetWeather() {
 		Set<WeatherKey> loadedWeathers = new HashSet<WeatherKey>(worldZoneWeathers.keySet());
 		for (WeatherKey key : loadedWeathers) {
@@ -243,6 +303,14 @@ public class WeatherService {
 		}
 	}
 
+	/**
+	 * 查询地图指定天气区域的天气代码。
+	 * Returns the weather code for a map weather zone.
+	 *
+	 * map id
+	 * weather zone id
+	 * weather code
+	 */
 	public int getWeatherCode(int mapId, int weatherZoneId) {
 		WeatherEntry[] weatherEntries = getWeatherEntries(mapId);
 		for (WeatherEntry entry : weatherEntries) {
@@ -253,6 +321,13 @@ public class WeatherService {
 		return 0;
 	}
 
+	/**
+	 * 天气变更后向玩家发送 SM_WEATHER，并通知攻城服务。
+	 * After weather change, sends SM_WEATHER to players and notifies the siege service.
+	 *
+	 * map id
+	 * @param player 单播目标；null 表示广播该地图所有在线玩家 / unicast target; null broadcasts to all online players on the map
+	 */
 	private void onWeatherChange(int mapId, Player player) {
 		WeatherEntry[] weatherEntries = getWeatherEntries(mapId);
 		if (weatherEntries == null) {

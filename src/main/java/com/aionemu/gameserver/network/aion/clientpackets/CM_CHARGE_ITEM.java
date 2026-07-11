@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import java.util.ArrayList;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.item.ItemChargeService;
 
 /**
+ * 物品充能的客户端包。
+ * Client packet to charge (empower) items.
+ *
  * @author ATracer
  */
 public class CM_CHARGE_ITEM extends AionClientPacket {
@@ -53,7 +40,7 @@ public class CM_CHARGE_ITEM extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		if (!player.isTargeting(targetNpcObjectId)) {
-			return; // TODO audit?
+			return;
 		}
 
 		for (int itemObjId : itemIds) {

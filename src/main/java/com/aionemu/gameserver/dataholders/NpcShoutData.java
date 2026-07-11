@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -37,27 +21,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * NPC 喊话数据容器，按世界 ID 与 NPC ID 索引 {@link NpcShout}。
+ * NPC shout data holder, indexing {@link NpcShout} by world id and npc id.
+ *
  * @author Rolandas
- */
-
-/**
- * <p>
- * Java class for anonymous complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
- * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="shout_group" type="{}ShoutGroup" maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "shoutGroups" })
@@ -73,6 +40,10 @@ public class NpcShoutData {
 	@XmlTransient
 	private int count = 0;
 
+	/**
+	 * JAXB 反序列化完成后，按世界与 NPC 建立喊话索引并释放原始分组。
+	 * After JAXB unmarshalling, indexes shouts by world and npc, then clears raw groups.
+	 */
 	public void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ShoutGroup group : shoutGroups) {
 			for (int i = group.getShoutNpcs().size() - 1; i >= 0; i--) {
@@ -106,15 +77,23 @@ public class NpcShoutData {
 		this.shoutGroups = null;
 	}
 
+	/**
+	 * 返回已加载的喊话条目数量。
+	 * Returns the number of loaded shout entries.
+	 *
+	 * shout count
+	 */
 	public int size() {
 		return this.count;
 	}
 
 	/**
-	 * Get global npc shouts plus world specific shouts. Make sure to clean it after
-	 * the use.
-	 * 
-	 * @return null if not found
+	 * 获取全局喊话与世界限定喊话的合并副本；用完后请清理。
+	 * Returns a combined copy of global and world-specific shouts; clean up after use.
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @return 喊话列表，不存在则为 null / shout list or null
 	 */
 	public List<NpcShout> getNpcShouts(int worldId, int npcId) {
 		Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
@@ -136,8 +115,13 @@ public class NpcShoutData {
 	}
 
 	/**
-	 * Lightweight check for shouts, doesn't use memory as
-	 * {@link #getNpcShouts(int worldId, int npcId)})
+	 * 轻量检查是否存在喊话，不复制列表。
+	 * Lightweight check for any shouts without copying lists.
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 *
+	 * @return 存在喊话则为 true / true if any shout exists
 	 */
 	public boolean hasAnyShout(int worldId, int npcId) {
 		Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
@@ -152,8 +136,13 @@ public class NpcShoutData {
 	}
 
 	/**
-	 * Lightweight check for shouts, doesn't use memory as
-	 * {@link #getNpcShouts(int worldId, int npcId, ShoutEventType type, String pattern, int skillNo)})
+	 * 轻量检查是否存在指定事件类型的喊话。
+	 * Lightweight check for shouts of the given event type.
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @param type 喊话事件类型 / shout event type
+	 * @return 存在匹配喊话则为 true / true if any matching shout exists
 	 */
 	public boolean hasAnyShout(int worldId, int npcId, ShoutEventType type) {
 		List<NpcShout> shouts = getNpcShouts(worldId, npcId);
@@ -169,13 +158,15 @@ public class NpcShoutData {
 	}
 
 	/**
-	 * Gets shouts for npc
-	 * 
-	 * @param worldId - npc World Id
-	 * @param npcId   - npc Id
-	 * @param type    - shout event type
-	 * @param pattern - specific pattern; if null, returns all
-	 * @param skillNo - specific skill number; if 0, returns all
+	 * 按事件类型 / 模式 / 技能序号筛选 NPC 喊话。
+	 * Filters NPC shouts by event type, pattern and skill number.
+	 *
+	 * 世界 ID / world id
+	 * npc id
+	 * @param type 喊话事件类型 / shout event type
+	 * @param pattern 模式；null 表示不过滤 / pattern, null for any
+	 * @param skillNo 技能序号；0 表示不过滤 / skill number, 0 for any
+	 * @return 匹配的喊话列表，无匹配则为 null / matching shout list or null
 	 */
 	public List<NpcShout> getNpcShouts(int worldId, int npcId, ShoutEventType type, String pattern, int skillNo) {
 		List<NpcShout> shouts = getNpcShouts(worldId, npcId);

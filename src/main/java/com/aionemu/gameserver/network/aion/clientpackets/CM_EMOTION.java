@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.EmotionType;
@@ -30,6 +16,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 处理玩家动作/情绪状态变更的客户端包。
+ * Client packet handling player emotion and state changes.
+ *
  * @author SoulKeeper
  * @author_fix nerolory
  */
@@ -44,6 +33,14 @@ public class CM_EMOTION extends AionClientPacket {
 
 	int targetObjectId;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_EMOTION(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -63,13 +60,13 @@ public class CM_EMOTION extends AionClientPacket {
 		case LAND: // land
 		case RIDE:
 		case RIDE_END:
-		case DIE: // die
+		case DIE: // 死亡 / die
 		case ATTACKMODE: // get equip weapon
 		case NEUTRALMODE: // remove equip weapon
 		case END_DUEL: // duel end
 		case WALK: // walk on
 		case RUN: // walk off
-			// case OPEN_DOOR: // open static doors
+			// case OPEN_DOOR: // 打开静态门 / open static doors
 		case CLOSE_DOOR: // close static doors
 		case POWERSHARD_ON: // powershard on
 		case POWERSHARD_OFF: // powershard off
@@ -95,7 +92,7 @@ public class CM_EMOTION extends AionClientPacket {
 			heading = (byte) readC();
 			break;
 		default:
-			log.error("Unknown emotion type? 0x" + Integer.toHexString(et/* !!!!! */).toUpperCase());
+			log.error(I18n.get("log.b376a042bdcc", Integer.toHexString(et/* !!!!! */).toUpperCase()));
 			break;
 		}
 	}
@@ -152,7 +149,7 @@ public class CM_EMOTION extends AionClientPacket {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANT_FLY_NOW_DUE_TO_NOFLY);
 				return;
 			}
-			player.getFlyController().startFly();
+			player.getFlyController().startFly(false);
 			break;
 		case LAND:
 			player.getFlyController().endFly(false);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -21,11 +5,12 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * So far I've found only one usage for this packet - to stop character blinking
- * ( just after login into game, player's character is blinking )
- * 
- * @author Luno, Sweetkr states: 0 - normal char 1- crounched invisible char 64
- *         - standing blinking char 128- char is invisible
+ * 同步生物可见状态（visual/see state）的服务端包；常见用途是停止角色登入后的闪烁。
+ * Server packet that synchronizes a creature's visual/see state; commonly used to stop the post-login blink.
+ * <p>
+ * states: 0 - normal char; 1 - crouched invisible char; 64 - standing blinking char; 128 - char is invisible
+ *
+ * @author Luno, Sweetkr
  */
 public class SM_PLAYER_STATE extends AionServerPacket {
 
@@ -33,6 +18,9 @@ public class SM_PLAYER_STATE extends AionServerPacket {
 	private int visualState;
 	private int seeState;
 
+	/**
+	 * @param creature 目标生物（通常为玩家） / target creature (usually a player)
+	 */
 	public SM_PLAYER_STATE(Creature creature) {
 		this.playerObjId = creature.getObjectId();
 		this.visualState = creature.getVisualState();

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.enragedGuardian;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Enraged Western Guardian（@AIName "Ab1_BossNamed_60_02_Al"），继承 AggressiveNpcAI2。
+ * Reshanta zone NPC AI: Enraged Western Guardian (@AIName "Ab1_BossNamed_60_02_Al"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Ab1_BossNamed_60_02_Al")
 public class Enraged_Western_GuardianAI2 extends AggressiveNpcAI2
 {
@@ -56,7 +42,7 @@ public class Enraged_Western_GuardianAI2 extends AggressiveNpcAI2
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Enraged_Western_GuardianAI2.this);
-						//Enraged Western Guardian has disappeared.
+						// 暴怒的西部守护者已消失。 / Enraged Western Guardian has disappeared.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_02);
 			        }
 				});
@@ -68,7 +54,7 @@ public class Enraged_Western_GuardianAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Siel's Western Guardian has appeared.
+				// 希尔西部守护者已出现。 / Siel's Western Guardian has appeared.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Named_Spawn_In_02, 0);
 			}
 		});
@@ -79,7 +65,7 @@ public class Enraged_Western_GuardianAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Enraged Western Guardian has been defeated.
+				// 暴怒的西部守护者已被击败。 / Enraged Western Guardian has been defeated.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_02);
 			}
 		});

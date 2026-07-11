@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.time.Instant;
 
@@ -30,6 +17,9 @@ import com.aionemu.gameserver.services.ChatService;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
+ * 客户端版本校验应答服务端包（含建角限制、服务器模式、聊天服地址等）。
+ * Server packet for client version-check response (char limits, server mode, chat server address, etc.).
+ *
  * @author -Nemesiss- CC fix
  * @modified by Novo, cura
  * @author GiGatR00n, NewLives
@@ -39,21 +29,24 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 public class SM_VERSION_CHECK extends AionServerPacket {
 
 	/**
-	 * Aion Client version
+	 * Aion 客户端版本。
+	 * Aion Client version.
 	 */
 	private int version;
 	/**
-	 * Number of characters can be created
+	 * 可创建角色数量。
+	 * Number of characters that can be created.
 	 */
 	private int characterLimitCount;
 	/**
-	 * Related to the character creation mode
+	 * 建角阵营模式相关。
+	 * Related to the character creation mode.
 	 */
 	private final int characterFactionsMode;
 	private final int characterCreateMode;
 
 	/**
-	 * @param version
+	 * @param version 客户端版本号 / client version number
 	 */
 	public SM_VERSION_CHECK(int version) {
 		this.version = version;
@@ -83,23 +76,23 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
-		// aion 3.0 = 194
-		// aion 3.5 = 196
-		// aion 4.0 = 201
-		// aion 4.5 = 203
-		// aion 4.7 = 204
-		// aion 4.7.0.7 = 205
-		// aion 4.7.5.x = 206
-		// aion 5.1.x.x = 212
+		// aion 3.0 = 194 / aion 3.0 = 194
+		// aion 3.5 = 196 / aion 3.5 = 196
+		// aion 4.0 = 201 / aion 4.0 = 201
+		// aion 4.5 = 203 / aion 4.5 = 203
+		// aion 4.7 = 204 / aion 4.7 = 204
+		// aion 4.7.0.7 = 205 / aion 4.7.0.7 = 205
+		// aion 4.7.5.x = 206 / aion 4.7.5.x = 206
+		// aion 5.1.x.x = 212 / aion 5.1.x.x = 212
 		if (version < 213) {
-			// Send wrong client version
+			// 发送错误的客户端版本 / Send wrong client version
 			writeC(0x02);
 			return;
 		}
 		if (version == 213) {
-			log.info("Authentication with Client Version 5.8");
+			log.info(I18n.get("log.96cb08bb7c66"));
 		} else if (version < 213) {
-			log.info("Authentication with Client Version lower than 5.8");
+			log.info(I18n.get("log.6a1b02a86399"));
 		}
 		
 		int utcTimeSeconds = (int) (System.currentTimeMillis() / 1000);

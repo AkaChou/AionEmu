@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.loginserver.controller.AccountTimeController;
@@ -23,20 +5,22 @@ import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 
 /**
- * In this packet GameServer is informing LoginServer that some account is no
- * longer on GameServer [ie was disconencted]
+ * GS→LS：通知某账号已从游戏服断开。
+ * GS→LS: inform LoginServer that an account disconnected from GameServer.
  *
  * @author -Nemesiss-
  */
 public class CM_ACCOUNT_DISCONNECTED extends GsClientPacket {
 
     /**
-     * AccountId of account that was disconnected form GameServer.
+     * 已断开账号 ID。
+     * Disconnected account id.
      */
     private int accountId;
 
     /**
-     * {@inheritDoc}
+     * 读取已断开账号 ID。
+     * Reads the disconnected account id.
      */
     @Override
     protected void readImpl() {
@@ -44,15 +28,17 @@ public class CM_ACCOUNT_DISCONNECTED extends GsClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 从 GS 在线表移除账号；若非空则更新累计在线时间。
+     * Removes account from GS online table; if present, updates accumulated online time.
+     * <p>
+     * 账号可能为 null（例如快速重连场景，见 {@link CM_ACCOUNT_RECONNECT_KEY}）。
+     * Account may be null (e.g. fast reconnect; see {@link CM_ACCOUNT_RECONNECT_KEY}).
      */
     @Override
     protected void runImpl() {
         Account account = this.getConnection().getGameServerInfo().removeAccountFromGameServer(accountId);
 
-        /**
-         * account can be null if a player logged out from gs {@link CM_ACCOUNT_RECONNECT_KEY
-         */
+        // 若玩家从 GS 登出，account 可能为 null（见 CM_ACCOUNT_RECONNECT_KEY） / account can be null if a player logged out from gs (see CM_ACCOUNT_RECONNECT_KEY)
         if (account != null) {
             AccountTimeController.updateOnLogout(account);
         }

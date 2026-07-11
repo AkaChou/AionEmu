@@ -1,27 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 
 /**
- * Manages the asking of and responding to <tt>SM_QUESTION_WINDOW</tt>
- * 
+ * 响应 Requester 游戏对象。
+ * Response Requester game object.
+ *
  * @author Ben
  */
 @Slf4j
@@ -35,9 +20,8 @@ public class ResponseRequester {
 	}
 
 	/**
-	 * Adds this handler to this messageID, returns false if there already exists
-	 * one
-	 * 
+	 * 添加此 handler 到此 messageID ,返回若为假则 there 已经存在一个。 / Adds this handler to this messageID, returns false if there already exists one
+	 *
 	 * @param messageId ID of the request message
 	 * @return true or false
 	 */
@@ -50,11 +34,7 @@ public class ResponseRequester {
 	}
 
 	/**
-	 * Responds to the given message ID with the given response Returns success
-	 * 
-	 * @param messageId
-	 * @param response
-	 * @return Success
+	 * 以给定响应对给定消息 ID 作答，返回是否成功。 / Responds to the given message ID with the given response Returns success.
 	 */
 	public synchronized boolean respond(int messageId, int response) {
 		RequestResponseHandler handler = map.get(messageId);
@@ -68,8 +48,7 @@ public class ResponseRequester {
 	}
 
 	/**
-	 * Automatically responds 0 to all requests, passing the given player as the
-	 * responder
+	 * 对所有请求自动以 0 响应，传入给定玩家为响应者。 / Automatically responds 0 to all requests, passing the given player as the responder
 	 */
 	public synchronized void denyAll() {
 		for (RequestResponseHandler handler : map.values()) {

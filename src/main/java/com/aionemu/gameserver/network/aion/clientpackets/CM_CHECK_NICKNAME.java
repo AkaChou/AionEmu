@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -26,22 +10,24 @@ import com.aionemu.gameserver.services.NameRestrictionService;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
- * In this packets aion client is asking if given nickname is ok/free?.
- * 
+ * 检查角色昵称是否可用的客户端包。
+ * Client packet that checks whether a character nickname is available.
+ *
  * @author -Nemesiss-
  * @modified cura
  */
 public class CM_CHECK_NICKNAME extends AionClientPacket {
 
-	/**
-	 * nick name that need to be checked
-	 */
+	/** 待检查的角色昵称 / nickname to check */
 	private String nick;
 
 	/**
-	 * Constructs new instance of <tt>CM_CHECK_NICKNAME </tt> packet
-	 * 
-	 * @param opcode
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_CHECK_NICKNAME(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

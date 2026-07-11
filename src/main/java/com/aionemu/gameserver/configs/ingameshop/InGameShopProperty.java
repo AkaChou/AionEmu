@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.ingameshop;
 
 import java.nio.charset.StandardCharsets;
@@ -30,13 +14,25 @@ import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.ingameshop.IGCategory;
 
+/**
+ * 游戏内商城分类属性（由 in_game_shop.xml 加载）。
+ * In-game shop category properties loaded from in_game_shop.xml.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "in_game_shop")
 public class InGameShopProperty {
 
+	/**
+	 * 商城分类列表。
+	 * In-game shop category list.
+	 */
 	@XmlElement(name = "category", required = true)
 	private List<IGCategory> categories;
 
+	/**
+	 * 获取商城分类列表（懒初始化）。
+	 * Returns the category list (lazily initialized).
+	 */
 	public List<IGCategory> getCategories() {
 		if (categories == null) {
 			categories = new ArrayList<IGCategory>();
@@ -44,16 +40,28 @@ public class InGameShopProperty {
 		return categories;
 	}
 
+	/**
+	 * 返回分类数量。
+	 * Returns the number of categories.
+	 */
 	public int size() {
 		return getCategories().size();
 	}
 
+	/**
+	 * 清空已加载的分类。
+	 * Clears loaded categories.
+	 */
 	public void clear() {
 		if (categories != null) {
 			categories.clear();
 		}
 	}
 
+	/**
+	 * 从配置文件加载游戏内商城属性。
+	 * Loads in-game shop properties from the config file.
+	 */
 	public static InGameShopProperty load() {
 		InGameShopProperty ing = null;
 		try {

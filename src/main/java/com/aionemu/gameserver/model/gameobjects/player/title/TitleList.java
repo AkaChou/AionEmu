@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player.title;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
@@ -34,6 +18,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 称号列表。
+ * Title List game object.
+ */
+
 public class TitleList {
 
 	private final Map<Integer, Title> titles;
@@ -44,18 +33,22 @@ public class TitleList {
 		this.owner = null;
 	}
 
+	/** 设置所有者 / Sets the owner*/
 	public void setOwner(Player owner) {
 		this.owner = owner;
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	public Player getOwner() {
 		return owner;
 	}
 
+	/** 是否包含。 / Contains. */
 	public boolean contains(int titleId) {
 		return titles.containsKey(titleId);
 	}
 
+	/** 添加条目。 / Adds entry. */
 	public void addEntry(int titleId, int remaining) {
 		TitleTemplate tt = DataManager.TITLE_DATA.getTitleTemplate(titleId);
 		if (tt == null) {
@@ -64,6 +57,7 @@ public class TitleList {
 		titles.put(titleId, new Title(tt, titleId, remaining));
 	}
 
+	/** 添加称号。 / Adds title. */
 	public boolean addTitle(int titleId, boolean questReward, int time) {
 		TitleTemplate tt = DataManager.TITLE_DATA.getTitleTemplate(titleId);
 		if (tt == null) {
@@ -95,12 +89,14 @@ public class TitleList {
 		return false;
 	}
 
+	/** 设置 display title / Sets the display title */
 	public void setDisplayTitle(int titleId) {
 		PacketSendUtility.sendPacket(owner, new SM_TITLE_INFO(titleId));
 		PacketSendUtility.broadcastPacketAndReceive(owner, new SM_TITLE_INFO(owner, titleId));
 		owner.getCommonData().setTitleId(titleId);
 	}
 
+	/** 设置加成称号。 / Sets the bonus title. */
 	public void setBonusTitle(int bonusTitleId) {
 		PacketSendUtility.sendPacket(owner, new SM_TITLE_INFO(6, bonusTitleId));
 		if (owner.getCommonData().getBonusTitleId() > 0) {
@@ -115,6 +111,7 @@ public class TitleList {
 		}
 	}
 
+	/** 移除称号。 / Removes title. */
 	public void removeTitle(int titleId) {
 		if (!titles.containsKey(titleId)) {
 			return;
@@ -130,10 +127,12 @@ public class TitleList {
 		DAOManager.getDAO(PlayerTitleListDAO.class).removeTitle(owner.getObjectId(), titleId);
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return titles.size();
 	}
 
+	/** 返回 titles / Returns the titles */
 	public Collection<Title> getTitles() {
 		return titles.values();
 	}

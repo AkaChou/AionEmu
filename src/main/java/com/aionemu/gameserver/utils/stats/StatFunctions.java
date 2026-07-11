@@ -1,21 +1,6 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.stats;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -58,19 +43,27 @@ import com.aionemu.gameserver.model.stats.container.RatioType;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.ArmorType;
 import com.aionemu.gameserver.model.templates.item.WeaponStats;
+import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
 import com.aionemu.gameserver.skillengine.model.HitType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Preconditions;
-@Slf4j
 
+/**
+ * 核心战斗与属性计算工具：经验/DP/AP/GP 奖励、物理与魔法伤害、闪避/招架/格挡/暴击与跌落伤害
+ * Core combat and stat math: XP/DP/AP/GP rewards, physical/magical damage, dodge/parry/block/crit and fall damage
+ */
+@Slf4j
 public class StatFunctions {
 
 	/**
-	 * @param player
-	 * @param target
-	 * @return "XP Solo" reward from target
+	 * 计算单人击杀目标的经验奖励
+	 * Calculate solo XP reward from target
+	 *
+	 * 玩家 / Player
+	 * Target
+	 * @return 单人经验奖励 / Solo XP reward
 	 */
 	public static long calculateSoloExperienceReward(Player player, Creature target) {
 		int playerLevel = player.getCommonData().getLevel();
@@ -81,9 +74,12 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param maxLevelInRange
-	 * @param target
-	 * @return "XP Group" reward from target
+	 * 计算队伍击杀目标的经验奖励（按范围内最高等级）
+	 * Calculate group XP reward from target using max level in range
+	 *
+	 * @param maxLevelInRange 范围内最高等级 / Max level in range
+	 * Target
+	 * @return 队伍经验奖励 / Group XP reward
 	 */
 	public static long calculateGroupExperienceReward(int maxLevelInRange, Creature target) {
 		int targetLevel = target.getLevel();
@@ -93,11 +89,13 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param player
-	 * @param target
-	 * @return DP reward from target
+	 * 计算单人击杀目标的 DP 奖励
+	 * Calculate solo DP reward from target
+	 *
+	 * 玩家 / Player
+	 * Target
+	 * Solo DP reward
 	 */
-
 	public static int calculateSoloDPReward(Player player, Creature target) {
 		int playerLevel = player.getCommonData().getLevel();
 		int targetLevel = target.getLevel();
@@ -109,9 +107,12 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param player
-	 * @param target
-	 * @return AP reward
+	 * 计算 PvE 击杀获得的 AP
+	 * Calculate AP gained from PvE kill
+	 *
+	 * 玩家 / Player
+	 * Target
+	 * AP reward
 	 */
 	public static int calculatePvEApGained(Player player, Creature target) {
 		float apPercentage = target instanceof SiegeNpc ? 100f
@@ -123,9 +124,12 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param defeated
-	 * @param winner
-	 * @return Points Lost in PvP Death
+	 * 计算 PvP 死亡损失的 AP
+	 * Calculate AP lost on PvP death
+	 *
+	 * @param defeated 被击败玩家 / Defeated player
+	 * Winner
+	 * AP lost
 	 */
 	public static int calculatePvPApLost(Player defeated, Player winner) {
 		int pointsLost = Math
@@ -147,51 +151,13 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param defeated
-	 * @param maxRank
-	 * @param maxLevel
-	 * @return Glory Gained in PvP Kill
-	 */
-	public static int calculatePvpGpGained(Player defeated, int maxRank, int maxLevel) {
-		int pointsGained = defeated.getAbyssRank().getRank().getPointsGained();
-		// Level penalty calculation
-		int difference = maxLevel - defeated.getLevel();
-		if (difference > 4) {
-			pointsGained = Math.round(pointsGained * 0.1f);
-		} else if (difference < -3) {
-			pointsGained = Math.round(pointsGained * 1.3f);
-		} else {
-			switch (difference) {
-			case 3:
-				pointsGained = Math.round(pointsGained * 0.85f);
-				break;
-			case 4:
-				pointsGained = Math.round(pointsGained * 0.65f);
-				break;
-			case -2:
-				pointsGained = Math.round(pointsGained * 1.1f);
-				break;
-			case -3:
-				pointsGained = Math.round(pointsGained * 1.2f);
-				break;
-			}
-		}
-		// Abyss rank penalty calculation
-		int winnerAbyssRank = maxRank;
-		int defeatedAbyssRank = defeated.getAbyssRank().getRank().getId();
-		int abyssRankDifference = winnerAbyssRank - defeatedAbyssRank;
-		if (winnerAbyssRank <= 7 && abyssRankDifference > 0) {
-			float penaltyPercent = abyssRankDifference * 0.05f;
-			pointsGained -= Math.round(pointsGained * penaltyPercent);
-		}
-		return pointsGained;
-	}
-
-	/**
-	 * @param defeated
-	 * @param maxRank
-	 * @param maxLevel
-	 * @return Points Gained in PvP Kill
+	 * 计算 PvP 击杀获得的 AP
+	 * Calculate AP gained from PvP kill
+	 *
+	 * @param defeated 被击败玩家 / Defeated player
+	 * @param maxRank 击杀方最高军衔 / Winner max rank
+	 * @param maxLevel 击杀方最高等级 / Winner max level
+	 * AP gained
 	 */
 	public static int calculatePvpApGained(Player defeated, int maxRank, int maxLevel) {
 		int pointsGained = defeated.getAbyssRank().getRank().getPointsGained();
@@ -227,14 +193,17 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param defeated
-	 * @param winner
-	 * @return Glory Lost in PvP Death
+	 * 计算 PvP 死亡损失的 GP
+	 * Calculate GP lost on PvP death
+	 *
+	 * @param defeated 被击败玩家 / Defeated player
+	 * Winner
+	 * GP lost
 	 */
 	public static int calculatePvPGpLost(Player defeated, Player winner) {
 		int pointsLost = Math
 				.round(defeated.getAbyssRank().getRank().getPointsLost() * defeated.getRates().getGpPlayerLossRate());
-		// Level penalty calculation
+		// 等级惩罚计算 / Level penalty calculation
 		int difference = winner.getLevel() - defeated.getLevel();
 		if (difference > 4) {
 			pointsLost = Math.round(pointsLost * 0.1f);
@@ -251,6 +220,15 @@ public class StatFunctions {
 		return pointsLost;
 	}
 
+	/**
+	 * 计算 PvP 击杀获得的经验
+	 * Calculate XP gained from PvP kill
+	 *
+	 * @param defeated 被击败玩家 / Defeated player
+	 * @param maxRank 击杀方最高军衔 / Winner max rank
+	 * @param maxLevel 击杀方最高等级 / Winner max level
+	 * XP gained
+	 */
 	public static int calculatePvpXpGained(Player defeated, int maxRank, int maxLevel) {
 		int pointsGained = 5000;
 		int difference = maxLevel - defeated.getLevel();
@@ -284,6 +262,15 @@ public class StatFunctions {
 		return pointsGained;
 	}
 
+	/**
+	 * 计算 PvP 击杀获得的 DP
+	 * Calculate DP gained from PvP kill
+	 *
+	 * @param defeated 被击败玩家 / Defeated player
+	 * @param maxRank 击杀方最高军衔 / Winner max rank
+	 * @param maxLevel 击杀方最高等级 / Winner max level
+	 * DP gained
+	 */
 	public static int calculatePvpDpGained(Player defeated, int maxRank, int maxLevel) {
 		int pointsGained = 0;
 		int baseDp = 1064;
@@ -293,6 +280,15 @@ public class StatFunctions {
 		return pointsGained;
 	}
 
+	/**
+	 * 按等级差调整 PvP DP 奖励
+	 * Adjust PvP DP reward by level difference
+	 *
+	 * Base points
+	 * @param defeatedLvl 被击败等级 / Defeated level
+	 * @param killerLvl 击杀者等级 / Killer level
+	 * Adjusted DP
+	 */
 	public static int adjustPvpDpGained(int points, int defeatedLvl, int killerLvl) {
 		int pointsGained = points;
 		int difference = killerLvl - defeatedLvl;
@@ -308,6 +304,14 @@ public class StatFunctions {
 		return pointsGained;
 	}
 
+	/**
+	 * 计算队伍击杀目标的 DP 奖励
+	 * Calculate group DP reward from target
+	 *
+	 * 玩家 / Player
+	 * Target
+	 * Group DP reward
+	 */
 	public static int calculateGroupDPReward(Player player, Creature target) {
 		int playerLevel = player.getCommonData().getLevel();
 		int targetLevel = target.getLevel();
@@ -319,18 +323,28 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Hate based on BOOST_HATE stat Now used only from skills, probably need to use
-	 * for regular attack
-	 * 
-	 * @param creature
-	 * @param value
-	 * @return
+	 * 按 BOOST_HATE 属性计算仇恨（当前主要用于技能）
+	 * Calculate hate based on BOOST_HATE (currently used mainly from skills)
+	 *
+	 * Creature
+	 * @param value 基础仇恨 / Base hate value
+	 * Final hate
 	 */
 	public static int calculateHate(Creature creature, int value) {
 		Stat2 stat = new AdditionStat(StatEnum.BOOST_HATE, value, creature, 0.1f);
 		return (int) (creature.getGameStats().getStat(StatEnum.BOOST_HATE, stat).getCurrent());
 	}
 
+	/**
+	 * 计算一次攻击的主/副手伤害结果列表
+	 * Calculate main/off-hand attack damage results for one attack
+	 *
+	 * Attacker
+	 * Skill element
+	 * Attack status
+	 * @param calculationTypes 计算类型标记 / Calculation type flags
+	 * @return 攻击结果列表 / Attack result list
+	 */
 	public static List<AttackResult> calculateAttackDamage(Creature attacker, SkillElement element, AttackStatus status,
 			CalculationType... calculationTypes) {
 		List<AttackResult> attackResultList = new ArrayList<AttackResult>();
@@ -400,10 +414,13 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param attacker
-	 * @param target
-	 * @param isMainHand
-	 * @return Damage made to target (-hp value)
+	 * 计算物理普攻伤害（含目标防御）
+	 * Calculate physical auto-attack damage including target defense
+	 *
+	 * Attacker
+	 * Target
+	 * Whether main hand
+	 * @return 对目标造成的伤害 / Damage dealt to target
 	 */
 	public static int calculatePhysicalAttackDamage(Creature attacker, Creature target, boolean isMainHand) {
 		Stat2 pAttack;
@@ -431,23 +448,22 @@ public class StatFunctions {
 				int totalMin = weaponStat.getMinDamage();
 				int totalMax = weaponStat.getMaxDamage();
 				if (totalMax - totalMin < 1) {
-					log.warn("Weapon stat MIN_MAX_DAMAGE resulted average zero in main-hand calculation");
-					log.warn("Weapon ID: "
-							+ String.valueOf(equipment.getMainHandWeapon().getItemTemplate().getTemplateId()));
-					log.warn("MIN_DAMAGE = " + String.valueOf(totalMin));
-					log.warn("MAX_DAMAGE = " + String.valueOf(totalMax));
+					log.warn(I18n.get("log.bbf300e93b6a"));
+					log.warn(I18n.get("log.9b25cf6c9dbb", String.valueOf(equipment.getMainHandWeapon().getItemTemplate().getTemplateId())));
+					log.warn(I18n.get("log.c4ee9fd27bbf", String.valueOf(totalMin)));
+					log.warn(I18n.get("log.c24cbde05206", String.valueOf(totalMax)));
 				}
 				float power = attacker.getGameStats().getPower().getCurrent() * 0.01f;
 				int diff = Math.round((totalMax - totalMin) * power / 2);
 				resultDamage = pAttack.getBonus() + baseDamage;
-				// adjust with value from WeaponDualEffect
-				// it makes lower cap of damage lower, so damage is more random on offhand
+				// 按 WeaponDualEffect 数值调整 / adjust with value from WeaponDualEffect
+				// 使伤害下限更低，副手伤害更随机。 / it makes lower cap of damage lower, so damage is more random on offhand
 				int negativeDiff = diff;
 				if (!isMainHand) {
 					negativeDiff = (int) Math.round((200 - ((Player) attacker).getDualEffectValue()) * 0.01 * diff);
 				}
 				resultDamage += Rnd.get(-negativeDiff, diff);
-				// add powerShard damage
+				// 添加力量碎片伤害 / add powerShard damage
 				if (attacker.isInState(CreatureState.POWERSHARD)) {
 					Item firstShard;
 					Item secondShard = null;
@@ -483,7 +499,7 @@ public class StatFunctions {
 			int rnd = (int) (resultDamage * 0.25);
 			resultDamage += Rnd.get(-rnd, rnd);
 		}
-		// subtract defense
+		// 减去防御 / subtract defense
 		float pDef = target.getGameStats().getPDef().getBonus()
 				+ getMovementModifier(target, StatEnum.PHYSICAL_DEFENSE, target.getGameStats().getPDef().getBase());
 		resultDamage -= (pDef * 0.10f);
@@ -494,6 +510,15 @@ public class StatFunctions {
     	return Math.max(1, Math.round(resultDamage));
 	}
 
+	/**
+	 * 计算物理普攻伤害（忽略目标防御）
+	 * Calculate physical auto-attack damage without applying target defense
+	 *
+	 * Attacker
+	 * Target
+	 * Whether main hand
+	 * @return 忽略防御后的伤害 / Damage without defense reduction
+	 */
 	public static int calculatePhysicalAttackDamageNoDef(Creature attacker, Creature target, boolean isMainHand) {
 		Stat2 pAttack;
 		if (isMainHand) {
@@ -520,23 +545,22 @@ public class StatFunctions {
 				int totalMin = weaponStat.getMinDamage();
 				int totalMax = weaponStat.getMaxDamage();
 				if (totalMax - totalMin < 1) {
-					log.warn("Weapon stat MIN_MAX_DAMAGE resulted average zero in main-hand calculation");
-					log.warn("Weapon ID: "
-							+ String.valueOf(equipment.getMainHandWeapon().getItemTemplate().getTemplateId()));
-					log.warn("MIN_DAMAGE = " + String.valueOf(totalMin));
-					log.warn("MAX_DAMAGE = " + String.valueOf(totalMax));
+					log.warn(I18n.get("log.bbf300e93b6a"));
+					log.warn(I18n.get("log.9b25cf6c9dbb", String.valueOf(equipment.getMainHandWeapon().getItemTemplate().getTemplateId())));
+					log.warn(I18n.get("log.c4ee9fd27bbf", String.valueOf(totalMin)));
+					log.warn(I18n.get("log.c24cbde05206", String.valueOf(totalMax)));
 				}
 				float power = attacker.getGameStats().getPower().getCurrent() * 0.01f;
 				int diff = Math.round((totalMax - totalMin) * power / 2);
 				resultDamage = pAttack.getBonus() + baseDamage;
-				// adjust with value from WeaponDualEffect
-				// it makes lower cap of damage lower, so damage is more random on offhand
+				// 按 WeaponDualEffect 数值调整 / adjust with value from WeaponDualEffect
+				// 使伤害下限更低，副手伤害更随机。 / it makes lower cap of damage lower, so damage is more random on offhand
 				int negativeDiff = diff;
 				if (!isMainHand) {
 					negativeDiff = (int) Math.round((200 - ((Player) attacker).getDualEffectValue()) * 0.01 * diff);
 				}
 				resultDamage += Rnd.get(-negativeDiff, diff);
-				// add powerShard damage
+				// 添加力量碎片伤害 / add powerShard damage
 				if (attacker.isInState(CreatureState.POWERSHARD)) {
 					Item firstShard;
 					Item secondShard = null;
@@ -579,6 +603,16 @@ public class StatFunctions {
     	return Math.round(resultDamage);
 	}
 
+	/**
+	 * 计算魔法普攻伤害（含元素抗性与魔防）
+	 * Calculate magical auto-attack damage with elemental resist and magic defense
+	 *
+	 * Attacker
+	 * Target
+	 * Skill element
+	 * Whether main hand
+	 * Magical damage
+	 */
 	public static int calculateMagicalAttackDamage(Creature attacker, Creature target, SkillElement element,
 			boolean isMainHand) {
 		Preconditions.checkNotNull(element, "Skill element should be NONE instead of null");
@@ -603,11 +637,10 @@ public class StatFunctions {
 				int totalMin = weaponStat.getMinDamage();
 				int totalMax = weaponStat.getMaxDamage();
 				if (totalMax - totalMin < 1) {
-					log.warn("Weapon stat MIN_MAX_DAMAGE resulted average zero in main-hand calculation");
-					log.warn("Weapon ID: "
-							+ String.valueOf(equipment.getMainHandWeapon().getItemTemplate().getTemplateId()));
-					log.warn("MIN_DAMAGE = " + String.valueOf(totalMin));
-					log.warn("MAX_DAMAGE = " + String.valueOf(totalMax));
+					log.warn(I18n.get("log.bbf300e93b6a"));
+					log.warn(I18n.get("log.9b25cf6c9dbb", String.valueOf(equipment.getMainHandWeapon().getItemTemplate().getTemplateId())));
+					log.warn(I18n.get("log.c4ee9fd27bbf", String.valueOf(totalMin)));
+					log.warn(I18n.get("log.c24cbde05206", String.valueOf(totalMax)));
 				}
 				float knowledge = attacker.getGameStats().getKnowledge().getCurrent() * 0.01f;
 				int diff = Math.round((totalMax - totalMin) * knowledge / 2);
@@ -647,6 +680,21 @@ public class StatFunctions {
     	return Math.max(1, Math.round(resultDamage));
 	}
 
+	/**
+	 * 计算魔法技能伤害
+	 * Calculate magical skill damage
+	 *
+	 * Speller
+	 * Target
+	 * Base damages
+	 * @param bonus 额外加成 / Bonus damage
+	 * Skill element
+	 * @param useMagicBoost 是否使用魔增 / Whether to use magic boost
+	 * @param useKnowledge 是否使用智力 / Whether to use knowledge
+	 * @param noReduce 是否跳过减伤 / Whether to skip reductions
+	 * PvP damage parameter
+	 * @return 魔法技能伤害 / Magical skill damage
+	 */
 	public static int calculateMagicalSkillDamage(Creature speller, Creature target, int baseDamages, int bonus,
 			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce, int pvpDamage) {
 		CreatureGameStats<?> sgs = speller.getGameStats();
@@ -686,6 +734,14 @@ public class StatFunctions {
 		return Math.min(magicBoost, CustomConfig.MAGICBOOST_CAP);
 	}
 
+	/**
+	 * 应用全局伤害倍率配置
+	 * Apply global damage multiplier from rate config
+	 *
+	 * Raw damage
+	 *
+	 * @param damage @return 缩放后伤害 / Scaled damage
+	 */
 	public static int applyDamageMultiplier(int damage) {
 		return Math.round(damage * RateConfig.DAMAGE_MULTIPLIER);
 	}
@@ -698,15 +754,28 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Calculates MAGICAL CRITICAL chance
+	 * 计算魔法暴击是否触发
+	 * Calculate whether a magical critical hit occurs
 	 *
-	 * @param attacker
-	 * @return boolean
+	 * Attacker
+	 * Attacked
+	 * @param criticalProb 暴击概率修正 / Critical probability modifier
+	 * Whether critical
 	 */
 	public static boolean calculateMagicalCriticalRate(Creature attacker, Creature attacked, int criticalProb) {
 		return calculateMagicalCriticalRate(attacker, attacked, criticalProb, true);
 	}
 
+	/**
+	 * 计算魔法暴击是否触发（可关闭魔暴）
+	 * Calculate whether a magical critical hit occurs (optional mcrit apply)
+	 *
+	 * Attacker
+	 * Attacked
+	 * @param criticalProb 暴击概率修正 / Critical probability modifier
+	 * @param applyMcrit 是否应用魔法暴击 / Whether to apply magical crit
+	 * Whether critical
+	 */
 	public static boolean calculateMagicalCriticalRate(Creature attacker, Creature attacked, int criticalProb, boolean applyMcrit) {
 		if (!applyMcrit) {
 			return false;
@@ -727,11 +796,14 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param npcRating
-	 * @return
+	 * 按 NPC 评级返回 DP 倍率
+	 * Return DP multiplier by NPC rating
+	 *
+	 * NPC rating
+	 * Multiplier
 	 */
 	public static int calculateRatingMultipler(NpcRating npcRating) {
-		// FIXME: to correct formula, have any reference?
+		// 兼容回退：正式服按 NPC 存 DP，当前模板未暴露。 / Compatibility fallback: retail stores DP per NPC, which current templates do not expose.
 		int multipler;
 		switch (npcRating) {
 		case JUNK:
@@ -756,8 +828,11 @@ public class StatFunctions {
 	}
 
 	/**
-	 * @param npcRating
-	 * @return
+	 * 按 NPC 评级返回 AP 倍率
+	 * Return AP multiplier by NPC rating
+	 *
+	 * NPC rating
+	 * AP multiplier
 	 */
 	public static int ApNpcRating(NpcRating npcRating) {
 		int multipler;
@@ -784,35 +859,40 @@ public class StatFunctions {
 	}
 
 	/**
-	 * adjust baseDamages according to their level || is PVP? PVP_ATTACK_RATIO,
-	 * PVP_DEFEND_RATIO removed?
-	 * 
-	 * @ref:
-	 * @param attacker    lvl
-	 * @param target      lvl
-	 * @param damages
-	 * @param pvpDamage
-	 * @param useMovement
-	 **/
+	 * 按等级差与 PvP/PvE 比率调整伤害
+	 * Adjust damage by level difference and PvP/PvE ratios
+	 *
+	 * Attacker
+	 * Target
+	 * Base damages
+	 * PvP damage parameter
+	 * @param useMovement 是否应用移动修正 / Whether to apply movement modifier
+	 * @return 调整后伤害 / Adjusted damage
+	 */
 	public static float adjustDamages(Creature attacker, Creature target, float damages, int pvpDamage,
 			boolean useMovement) {
 		return adjustDamages(attacker, target, damages, pvpDamage, useMovement, SkillElement.NONE);
 	}
 
+	/**
+	 * 按等级差、PvP/PvE 比率与元素调整伤害
+	 * Adjust damage by level difference, PvP/PvE ratios and element
+	 *
+	 * Attacker
+	 * Target
+	 * Base damages
+	 * PvP damage parameter
+	 * @param useMovement 是否应用移动修正 / Whether to apply movement modifier
+	 * Skill element
+	 * @return 调整后伤害 / Adjusted damage
+	 */
 	public static float adjustDamages(Creature attacker, Creature target, float damages, int pvpDamage,
 			boolean useMovement, SkillElement element) {
 		if (element == null) {
 			element = SkillElement.NONE;
 		}
-		// Artifacts haven't this limitation
-		// TODO: maybe set correct artifact npc levels on npc_template.xml and delete
-		// this?
-		if (attacker instanceof Npc) {
-			if (((Npc) attacker).getAi2() != null) {
-				if (((Npc) attacker).getAi2().getName().equalsIgnoreCase("artifact")) {
-					return damages;
-				}
-			}
+		if (attacker instanceof Npc && ((Npc) attacker).getAbyssNpcType() == AbyssNpcType.ARTIFACT) {
+			return damages;
 		}
 
 		if (attacker.isPvpTarget(target)) {
@@ -916,18 +996,20 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Calculates DODGE chance
+	 * 计算物理闪避是否触发
+	 * Calculate whether a physical dodge occurs
 	 *
-	 * @param attacker
-	 * @param attacked
-	 * @return boolean
+	 * Attacker
+	 * Attacked
+	 * Accuracy modifier
+	 * Whether dodged
 	 */
 	public static boolean calculatePhysicalDodgeRate(Creature attacker, Creature attacked, int accMod) {
-		// check if attacker is blinded
+		// 检查攻击者是否目盲 / check if attacker is blinded
 		if (attacker.getObserveController().checkAttackerStatus(AttackStatus.DODGE)) {
 			return true;
 		}
-		// check always dodge
+		// 始终检查闪避 / check always dodge
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.DODGE)) {
 			return true;
 		}
@@ -947,7 +1029,7 @@ public class StatFunctions {
 			int levelDiff = attacked.getLevel() - attacker.getLevel();
 			dodgeRate *= 1 + getNpcLevelDiffMod(levelDiff, 0);
 
-			// static npcs never dodge
+			// 静态 NPC 永不闪避 / static npcs never dodge
 			if (((Npc) attacked).hasEntity()) {
 				return false;
 			}
@@ -956,18 +1038,28 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Calculates PARRY chance
-	 * 
-	 * @param attacker
-	 * @param attacked
-	 * @return int
+	 * 计算物理招架是否触发
+	 * Calculate whether a physical parry occurs
+	 *
+	 * Attacker
+	 * Attacked
+	 * Whether parried
 	 */
 	public static boolean calculatePhysicalParryRate(Creature attacker, Creature attacked) {
 		return calculatePhysicalParryRate(attacker, attacked, 0);
 	}
 
+	/**
+	 * 计算物理招架是否触发（带命中修正）
+	 * Calculate whether a physical parry occurs with accuracy modifier
+	 *
+	 * Attacker
+	 * Attacked
+	 * Accuracy modifier
+	 * Whether parried
+	 */
 	public static boolean calculatePhysicalParryRate(Creature attacker, Creature attacked, int accMod) {
-		// check always parry
+		// 始终检查招架 / check always parry
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.PARRY)) {
 			return true;
 		}
@@ -986,16 +1078,26 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Calculates BLOCK chance
-	 * 
-	 * @param attacker
-	 * @param attacked
-	 * @return int
+	 * 计算物理格挡是否触发
+	 * Calculate whether a physical block occurs
+	 *
+	 * Attacker
+	 * Attacked
+	 * Whether blocked
 	 */
 	public static boolean calculatePhysicalBlockRate(Creature attacker, Creature attacked) {
 		return calculatePhysicalBlockRate(attacker, attacked, 0);
 	}
 
+	/**
+	 * 计算物理格挡是否触发（带命中修正）
+	 * Calculate whether a physical block occurs with accuracy modifier
+	 *
+	 * Attacker
+	 * Attacked
+	 * Accuracy modifier
+	 * Whether blocked
+	 */
 	public static boolean calculatePhysicalBlockRate(Creature attacker, Creature attacked, int accMod) {
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.BLOCK)) {
 			return true;
@@ -1019,11 +1121,13 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Accuracy (includes evasion/parry/block formulas): Accuracy formula is based
-	 * on opponents evasion/parry/block vs your own Accuracy. If your Accuracy is
-	 * 300 or more above opponents evasion/parry/block then you can not be evaded,
-	 * parried or blocked. <br>
-	 * https://docs.google.com/spreadsheet/ccc?key=0AqxBGNJV9RrzdF9tOWpwUlVLOXE5bVRWeHQtbGQxaUE&hl=en_US#gid=2
+	 * 根据防御-命中差值与上限判定是否闪避/招架/格挡
+	 * Resolve dodge/parry/block success from defense-accuracy difference and upper cap
+	 *
+	 * @param diff 防御与命中差值 / Defense-accuracy difference
+	 * Probability upper cap
+	 *
+	 * @return 是否成功规避 / Whether avoidance succeeds
 	 */
 	public static boolean calculatePhysicalEvasion(float diff, int upperCap) {
 		diff = diff * 0.6f + 50;
@@ -1034,14 +1138,15 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Calculates CRITICAL chance
-	 * http://www.wolframalpha.com/input/?i=quadratic+fit+%7B%7B300%2C+30.97%7D%2C+%7B320%2C+31.68%7D%2C+%7B340%2C+33.30%7D%2C+%7B360%2C+36.09%7D%2C+%7B380%2C+37.81%7D%2C+%7B400%2C+40.72%7D%2C+%7B420%2C+42.12%7D%2C+%7B440%2C+44.03%7D%2C+%7B480%2C+44.66%7D%2C+%7B500%2C+45.96%7D%2C%7B604%2C+51.84%7D%2C+%7B649%2C+52.69%7D%7D
-	 * http://www.aionsource.com/topic/40542-character-stats-xp-dp-origin-gerbatorteam-july-2009/
-	 * http://www.wolframalpha.com/input/?i=-0.000126341+x%5E2%2B0.184411+x-13.7738modifiersenum
-	 * https://docs.google.com/spreadsheet/ccc?key=0AqxBGNJV9RrzdGNjbEhQNHN3S3M5bUVfUVQxRkVIT3c&hl=en_US#gid=0
-	 * 
-	 * @param attacker
-	 * @return double
+	 * 计算物理暴击是否触发
+	 * Calculate whether a physical critical hit occurs
+	 *
+	 * Attacker
+	 * Attacked
+	 * Whether main hand
+	 * @param criticalProb 暴击概率修正 / Critical probability modifier
+	 * @param isSkill 是否技能攻击 / Whether skill attack
+	 * Whether critical
 	 */
 	public static boolean calculatePhysicalCriticalRate(Creature attacker, Creature attacked, boolean isMainHand,
 			int criticalProb, boolean isSkill) {
@@ -1078,16 +1183,28 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Calculates RESIST chance
+	 * 计算魔法抗性概率
+	 * Calculate magical resist rate
 	 *
-	 * @param attacker
-	 * @param attacked
-	 * @return int
+	 * Attacker
+	 * Attacked
+	 * Accuracy modifier
+	 * @return 抗性概率值 / Resist rate value
 	 */
 	public static int calculateMagicalResistRate(Creature attacker, Creature attacked, int accMod) {
 		return calculateMagicalResistRate(attacker, attacked, accMod, SkillElement.NONE);
 	}
 
+	/**
+	 * 计算指定元素的魔法抗性概率
+	 * Calculate magical resist rate for a specific element
+	 *
+	 * Attacker
+	 * Attacked
+	 * Accuracy modifier
+	 * Skill element
+	 * @return 抗性概率值 / Resist rate value
+	 */
 	public static int calculateMagicalResistRate(Creature attacker, Creature attacked, int accMod, SkillElement element) {
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.RESIST)) {
 			return 1000;
@@ -1115,11 +1232,13 @@ public class StatFunctions {
 	}
 
 	/**
-	 * Calculates the fall damage
-	 * 
-	 * @param player
-	 * @param distance
-	 * @return True if the player is forced to his bind location.
+	 * 计算跌落伤害；返回是否强制回城
+	 * Calculate fall damage; returns whether the player is forced to bind location
+	 *
+	 * 玩家 / Player
+	 * Fall distance
+	 * @param stoped 是否已停止 / Whether stopped
+	 * @return 是否强制回城 / Whether forced to bind location
 	 */
 	public static boolean calculateFallDamage(Player player, float distance, boolean stoped) {
 		if (player.isInvul()) {
@@ -1143,6 +1262,16 @@ public class StatFunctions {
 		return false;
 	}
 
+	/**
+	 * 按移动朝向修正玩家属性（前进减防、侧移加闪避等）
+	 * Modify player stats by movement heading (forward defense cut, side evasion bonus, etc.)
+	 *
+	 * Creature
+	 *
+	 * @param stat 属性枚举 / Stat enum
+	 * @param value 原始属性值 / Original stat value
+	 * @param value @return 修正后属性值 / Modified stat value
+	 */
 	public static float getMovementModifier(Creature creature, StatEnum stat, float value) {
 		if (!(creature instanceof Player) || stat == null) {
 			return value;

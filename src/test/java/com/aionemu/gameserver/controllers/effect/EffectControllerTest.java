@@ -141,6 +141,29 @@ class EffectControllerTest {
 	}
 
 	@Test
+	void referenceLongDurationSkillRemainsDispellable() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect effect = abnormalEffect(controller, "long", 21438, 1, 1, 86400000);
+		setField(effect.getSkillTemplate(), "dispelCategory", DispelCategoryType.NPC_BUFF);
+		controller.addEffect(effect);
+
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 5, 50, false);
+
+		assertNull(controller.abnormalEffect("long"));
+	}
+
+	@Test
+	void otherLongDurationSkillsRemainProtectedFromDispel() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect effect = abnormalEffect(controller, "long", 21439, 1, 1, 86400000);
+		controller.addEffect(effect);
+
+		controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 5, 50, false);
+
+		assertSame(effect, controller.abnormalEffect("long"));
+	}
+
+	@Test
 	void removeAllEffectsToleratesEndEffectRemovingFromController() {
 		TestEffectController controller = new TestEffectController();
 		TestEffect firstEffect = abnormalEffect(controller, "first", 10, 1, 1);
@@ -183,7 +206,13 @@ class EffectControllerTest {
 
 	private static TestEffect abnormalEffect(TestEffectController controller, String stack, int skillId, int effectId,
 			int basicLevel) {
-		return effect(controller, stack, skillId, effectId, basicLevel, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
+		return abnormalEffect(controller, stack, skillId, effectId, basicLevel, 0);
+	}
+
+	private static TestEffect abnormalEffect(TestEffectController controller, String stack, int skillId, int effectId,
+			int basicLevel, int duration) {
+		return effect(controller, stack, skillId, effectId, basicLevel, ActivationAttribute.ACTIVE,
+				SkillTargetSlot.BUFF, duration);
 	}
 
 	private static TestEffect passiveEffect(TestEffectController controller, String stack, int effectId, int basicLevel) {
@@ -210,9 +239,14 @@ class EffectControllerTest {
 
 	private static TestEffect effect(TestEffectController controller, String stack, int skillId, int effectId,
 			int basicLevel, ActivationAttribute activationAttribute, SkillTargetSlot targetSlot) {
+		return effect(controller, stack, skillId, effectId, basicLevel, activationAttribute, targetSlot, 0);
+	}
+
+	private static TestEffect effect(TestEffectController controller, String stack, int skillId, int effectId,
+			int basicLevel, ActivationAttribute activationAttribute, SkillTargetSlot targetSlot, int duration) {
 		SkillTemplate skillTemplate = skillTemplate(stack, skillId, activationAttribute, targetSlot);
 		setField(skillTemplate, "effects", effects(effectId, basicLevel));
-		return new TestEffect(controller, skillTemplate);
+		return new TestEffect(controller, skillTemplate, duration);
 	}
 
 	private static SkillTemplate skillTemplate(String stack, int skillId, ActivationAttribute activationAttribute,
@@ -280,7 +314,11 @@ class EffectControllerTest {
 		private boolean ended;
 
 		private TestEffect(TestEffectController controller, SkillTemplate skillTemplate) {
-			super(null, null, skillTemplate, 1, 0);
+			this(controller, skillTemplate, 0);
+		}
+
+		private TestEffect(TestEffectController controller, SkillTemplate skillTemplate, int duration) {
+			super(null, null, skillTemplate, 1, duration);
 			this.controller = controller;
 		}
 

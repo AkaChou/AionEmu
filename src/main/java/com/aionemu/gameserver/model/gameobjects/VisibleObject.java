@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.controllers.VisibleObjectController;
@@ -30,33 +14,25 @@ import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.world.knownlist.KnownList;
 
 /**
- * This class is representing visible objects. It's a base class for all in-game
- * objects that can be spawned in the world at some particular position (such as
- * players, npcs).<br>
- * <br>
- * Objects of this class, as can be spawned in game, can be seen by other
- * visible objects. To keep track of which objects are already "known" by this
- * visible object and which are not, VisibleObject is containing
- * {@link KnownList} which is responsible for holding this information.
- * 
+ * 可见对象。
+ * Visible Object game object.
+ *
  * @author -Nemesiss-
  */
 public abstract class VisibleObject extends AionObject {
 
 	protected VisibleObjectTemplate objectTemplate;
 
-	// how far player will see visible object
+	// 玩家可见物体的距离 / how far player will see visible object
 	public static final float VisibilityDistance = 95;
 
-	// maxZvisibleDistance
+	// 最大 Z 可见距离 / maxZvisibleDistance
 	public static final float maxZvisibleDistance = 95;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param objId
-	 * @param controller
-	 */
+	 /**
+	  * 构造方法。
+	  * Constructor.
+	  */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public VisibleObject(int objId, VisibleObjectController<? extends VisibleObject> controller,
 			SpawnTemplate spawnTemplate, VisibleObjectTemplate objectTemplate, WorldPosition position) {
@@ -68,90 +44,96 @@ public abstract class VisibleObject extends AionObject {
 		this.objectTemplate = objectTemplate;
 	}
 
-	/**
-	 * Position of object in the world.
-	 */
+	 /**
+	  * 对象在世界中的位置。
+	  * Position of object in the world
+	  */
 	protected WorldPosition position;
 
-	/**
-	 * KnownList of this VisibleObject.
-	 */
+	 /**
+	  * 此 VisibleObject 的 KnownList。
+	  * KnownList of this VisibleObject
+	  */
 	private KnownList knownlist;
 
-	/**
-	 * Controller of this VisibleObject
-	 */
+	 /**
+	  * 此 VisibleObject 的控制器。
+	  * Controller of this VisibleObject
+	  */
 	private final VisibleObjectController<? extends VisibleObject> controller;
 
-	/**
-	 * Visible object's target
-	 */
+	 /**
+	  * 可见对象的目标。
+	  * Visible object's target
+	  */
 	private VisibleObject target;
 
 	/**
-	 * Spawn template of this visibleObject. .
+	 * Spawn template of this visibleObject. / Spawn template of this visibleObject.
 	 */
 	private SpawnTemplate spawn;
 
 	/**
-	 * Returns current WorldRegion AionObject is in.
+	 * @return 返回当前 WorldRegionAionObject 为在。 / Returns current WorldRegion AionObject is in
 	 */
 	public MapRegion getActiveRegion() {
 		return position.getMapRegion();
 	}
 
+	/** 返回副本 ID / Returns the instance id */
 	public int getInstanceId() {
 		return position.getInstanceId();
 	}
 
 	/**
-	 * Return World map id.
+	 * @return 返回 World 映射 ID。 / Return World map id
 	 */
 	public int getWorldId() {
 		return position.getMapId();
 	}
 
 	/**
-	 * Return the WorldType of the current location
+	 * 返回 WorldType 的当前 location。 / Return the WorldType of the current location
 	 */
 	public WorldType getWorldType() {
 		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).getWorldType();
 	}
 
 	/**
-	 * Return World position x
+	 * @return 返回 World 位置 x。 / Return World position x
 	 */
 	public float getX() {
 		return position.getX();
 	}
 
 	/**
-	 * Return World position y
+	 * @return 返回 World 位置 y。 / Return World position y
 	 */
 	public float getY() {
 		return position.getY();
 	}
 
 	/**
-	 * Return World position z
+	 * @return 返回 World 位置 z。 / Return World position z
 	 */
 	public float getZ() {
 		return position.getZ();
 	}
 
+	/** 设置 xyzh / Sets the xyzh */
 	public void setXYZH(Float x, Float y, Float z, Byte h) {
 		position.setXYZH(x, y, z, h);
 	}
 
 	/**
-	 * Heading of the object. Values from <0,120)
+	 * @return 对象朝向，取值 [0,120)。 / Heading of the object. Values from <0,120)
 	 */
 	public byte getHeading() {
 		return position.getHeading();
 	}
 
 	/**
-	 * Return object position
+	 * 返回对象位置。 / Return object position
 	 *
 	 * @return position.
 	 */
@@ -160,7 +142,7 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * Check if object is spawned.
+	 * 检查是否 object 为 spawned。 / Check if object is spawned
 	 *
 	 * @return true if object is spawned.
 	 */
@@ -176,7 +158,7 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * Check if map is instance
+	 * 检查映射 is 实例。 / Check if map is instance
 	 *
 	 * @return true if object in one of the instance maps
 	 */
@@ -184,19 +166,25 @@ public abstract class VisibleObject extends AionObject {
 		return position.isInstanceMap();
 	}
 
+	/** 清除 knownlist / Clear knownlist */
 	public void clearKnownlist() {
 		getKnownList().clear();
 	}
 
+	/** 更新 knownlist / Update knownlist */
 	public void updateKnownlist() {
 		getKnownList().doUpdate();
 	}
 
+	/**
+	 * @param creature 是否 see / 是否 see。 / Whether see / Whether see
+	 */
 	public boolean canSee(Creature creature) {
 		return creature != null;
 	}
 
 	/**
+	 * 设置 knownlistvisibleobject。
 	 * Set KnownList to this VisibleObject
 	 *
 	 * @param knownlist
@@ -205,20 +193,20 @@ public abstract class VisibleObject extends AionObject {
 		this.knownlist = knownlist;
 	}
 
-	/**
-	 * Returns KnownList of this VisibleObject.
-	 *
-	 * @return knownList.
-	 */
+	 /**
+	  * 返回此 VisibleObject 的 KnownList。
+	  * Returns KnownList of this VisibleObject
+	  * @return knownList.
+	  */
 	public KnownList getKnownList() {
 		return knownlist;
 	}
 
-	/**
-	 * Return VisibleObjectController of this VisibleObject
-	 *
-	 * @return VisibleObjectController.
-	 */
+	 /**
+	  * 返回此 VisibleObject 的控制器。
+	  * Return VisibleObjectController of this VisibleObject
+	  * @return VisibleObjectController.
+	  */
 	public VisibleObjectController<? extends VisibleObject> getController() {
 		return controller;
 	}
@@ -267,6 +255,7 @@ public abstract class VisibleObject extends AionObject {
 		return spawn;
 	}
 
+	/** 设置刷新点。 / Sets the spawn. */
 	public void setSpawn(SpawnTemplate spawn) {
 		this.spawn = spawn;
 	}
@@ -292,6 +281,7 @@ public abstract class VisibleObject extends AionObject {
 		this.position = position;
 	}
 
+	/** 返回 visibility distance / Returns the visibility distance */
 	public float getVisibilityDistance() {
 		if (this instanceof Npc) {
 			NpcTemplate npcTemplate = (NpcTemplate) this.getObjectTemplate();
@@ -304,6 +294,7 @@ public abstract class VisibleObject extends AionObject {
 		return VisibilityDistance;
 	}
 
+	/** 返回 max z visible distance / Returns the max z visible distance */
 	public float getMaxZVisibleDistance() {
 		if (this instanceof Npc) {
 			NpcTemplate npcTemplate = (NpcTemplate) this.getObjectTemplate();
@@ -316,6 +307,7 @@ public abstract class VisibleObject extends AionObject {
 		return maxZvisibleDistance;
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		if (objectTemplate == null) {
@@ -324,6 +316,7 @@ public abstract class VisibleObject extends AionObject {
 		return objectTemplate.getName() + " (" + objectTemplate.getTemplateId() + ")";
 	}
 
+	/** 获取世界掉落类型。 / Returns the world drop type. */
 	public WorldDropType getWorldDropType() {
 		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).getWorldDropType();
 	}

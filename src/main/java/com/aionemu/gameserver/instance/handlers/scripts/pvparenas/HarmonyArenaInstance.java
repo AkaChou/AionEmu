@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -56,22 +40,41 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 合作竞技场副本事件处理器。
+ * Instance event handler for Harmony Arena.
+ *
+ * @author Encom
+ */
 
 public class HarmonyArenaInstance extends GeneralInstanceHandler
 {
+	/** 击杀奖励分 / kill bonus points */
 	protected int killBonus = 1000;
+	/** 死亡扣分 / death fine */
 	protected int deathFine = -150;
+	/** 副本奖励对象 / instance reward object */
 	protected HarmonyArenaReward instanceReward;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed;
 	
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * result
+	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		Integer object = player.getObjectId();
@@ -92,6 +95,12 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			return;
 		}
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * opponent
+			 */
 			@Override
 			public void visit(Player opponent) {
 				if (!group.containPlayer(opponent.getObjectId())) {
@@ -149,6 +158,12 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		if (npc.getAggroList().getMostPlayerDamage() == null) {
@@ -156,6 +171,14 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}
 		updatePoints(npc);
 	}
+	/**
+	 * 处理 sendSystemMsg。
+	 * Handle sendSystemMsg.
+	 *
+	 * 玩家 / player
+	 * creature
+	 * rewardPoints
+	 */
 	
 	protected void sendSystemMsg(Player player, Creature creature, int rewardPoints) {
 		int nameId = creature.getObjectTemplate().getNameId();
@@ -185,11 +208,23 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		return instanceReward.getTime();
 	}
 	
+	/**
+	 * 玩家登录到该副本时处理。
+	 * Handle a player logging into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogin(Player player) {
 		sendEnterPacket(player);
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -198,16 +233,24 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceStartTime();
 		spawnRings();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded() && canStart()) {
 					openDoors();
-					//The member recruitment window has passed. You cannot recruit any more members.
+					// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 					sendMsgByRace(1401181, Race.PC_ALL, 0);
 					instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 					instanceReward.sendPacket(10, null);
 					instanceReward.sendPacket(2, null);
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -216,9 +259,13 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 								instanceReward.sendPacket(10, null);
 								instanceReward.sendPacket(2, null);
 								changeZone();
-								//If you defeat a higher rank group in this round, you can earn additional points.
+								// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
 								sendMsgByRace(1401491, Race.PC_ALL, 2000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+									/**
+									 * 处理 run。
+									 * Handle run.
+									 */
 									@Override
 									public void run() {
 										if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -227,9 +274,13 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 											instanceReward.sendPacket(10, null);
 											instanceReward.sendPacket(2, null);
 											changeZone();
-											//If you defeat a higher rank group in this round, you can earn additional points.
+											// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
 											sendMsgByRace(1401491, Race.PC_ALL, 2000);
 											GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+												/**
+												 * 处理 run。
+												 * Handle run.
+												 */
 												@Override
 												public void run() {
 													if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -249,6 +300,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			}
 		}, 120000);
 	}
+	/**
+	 * 处理 spawnRings。
+	 * Handle spawnRings.
+	 */
 	
 	protected void spawnRings() {
 	}
@@ -256,7 +311,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	private boolean canStart() {
 		if (instance.getPlayersInside().size() < 2) {
 			onInstanceDestroy();
-			//Unavailable to use when you're alone.
+			// 独自一人时无法使用。 / Unavailable to use when you're alone.
 			sendMsgByRace(1403045, Race.PC_ALL, 0);
 			instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 			reward();
@@ -268,6 +323,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	
 	private void changeZone() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				for (Player player : instance.getPlayersInside()) {
@@ -280,6 +339,12 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	
 	private void sendPacket(final AionServerPacket packet) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, packet);
@@ -287,6 +352,12 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		});
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
@@ -296,12 +367,30 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			instanceReward.removePlayerReward(playerReward);
 		}
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -313,6 +402,12 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}, time);
 	}
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
@@ -325,15 +420,19 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			}
 		}
 	}
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 	
 	protected void reward() {
 		if (instanceReward.canRewarded()) {
 			for (Player player : instance.getPlayersInside()) {
 				HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(player.getObjectId());
 				float playerRate = player.getRates().getGloryRewardRate();
-				//<Abyss Points>
+				// <欧比斯点数> / <Abyss Points>
 				AbyssPointsService.addAp(player, group.getBasicAP() + group.getRankingAP() + (int) (group.getScoreAP() * playerRate));
-				//<Glory Points>
+				// <荣耀点数> / <Glory Points>
 				AbyssPointsService.addGp(player, group.getBasicGP() + group.getRankingGP() + (int) (group.getScoreGP() * playerRate));
 				int courage = group.getBasicCourage() + group.getRankingCourage() + (int) (group.getScoreCourage()* playerRate);
 				if (courage != 0) {
@@ -353,6 +452,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -368,6 +471,14 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}, 10000);
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * 玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * result
+	 */
 	@Override
 	public boolean onDie(Player player, Creature lastAttacker) {
 		PvPArenaPlayerReward ownerReward = instanceReward.getPlayerReward(player.getObjectId());
@@ -387,6 +498,13 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		return true;
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		final Integer object = player.getObjectId();
@@ -403,11 +521,27 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		sendSystemMsg(player, npc, rewardetPoints);
 		instanceReward.sendPacket(10, object);
 	}
+	/**
+	 * 处理 useSkill。
+	 * Handle useSkill.
+	 *
+	 * npc
+	 * 玩家 / player
+	 * skill id
+	 * level
+	 */
 	
 	protected void useSkill(Npc npc, Player player, int skillId, int level) {
 		GameEngineServices.skillEngine().getSkill(npc, skillId, level, player).useNoAnimationSkill();
 	}
 	
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	@Override
 	public boolean onReviveEvent(Player player) {
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
@@ -419,6 +553,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		return true;
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;

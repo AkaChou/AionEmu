@@ -14,9 +14,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 
 /**
+ * Contamined Underpath 副本 NPC AI：Recovering Energy（@AIName "RecoveringEnergy"），继承 NpcAI2。
+ * Contamined Underpath instance NPC AI: Recovering Energy (@AIName "RecoveringEnergy"), extends NpcAI2.
+ *
  * @author MATTY (ADev Team)
  */
- 
 @AIName("RecoveringEnergy")
 public class RecoveringEnergyAI2 extends NpcAI2 {
 

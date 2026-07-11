@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.factories;
 
 import com.aionemu.gameserver.network.chatserver.ChatServerConnection.State;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.network.chatserver.clientpackets.CM_CS_AUTH_RESPON
 import com.aionemu.gameserver.network.chatserver.clientpackets.CM_CS_PLAYER_AUTH_RESPONSE;
 
 /**
+ * 聊天服包处理器工厂：注册 CS 客户端包原型。
+ * Chat-server packet handler factory: registers CS client packet prototypes.
+ *
  * @author ATracer
  */
 public class CsPacketHandlerFactory {
@@ -30,6 +17,7 @@ public class CsPacketHandlerFactory {
 	private CsPacketHandler handler = new CsPacketHandler();
 
 	/**
+	 * 注册聊天服包处理器。
 	 * Registers chat-server packet handlers.
 	 */
 	public CsPacketHandlerFactory() {
@@ -38,15 +26,21 @@ public class CsPacketHandlerFactory {
 	}
 
 	/**
-	 * @param prototype
-	 * @param states
+	 * 向处理器注册包原型及合法状态。
+	 * Registers a packet prototype with valid states.
+	 *
+	 * packet prototype
+	 * @param states 合法连接状态 / valid connection states
 	 */
 	private void addPacket(CsClientPacket prototype, State... states) {
 		handler.addPacketPrototype(prototype, states);
 	}
 
 	/**
-	 * @return handler
+	 * 获取已注册的包处理器。
+	 * Returns the registered packet handler.
+	 *
+	 * packet handler
 	 */
 	public CsPacketHandler getPacketHandler() {
 		return handler;

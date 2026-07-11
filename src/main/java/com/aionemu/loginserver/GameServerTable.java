@@ -1,29 +1,11 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver;
 
-import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.commons.utils.NetworkUtils;
@@ -33,78 +15,74 @@ import com.aionemu.loginserver.network.gameserver.GsAuthResponse;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
 
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * GameServerTable contains list of GameServers registered on this LoginServer.
- * GameServer may by online or down.
+ * 登录服已注册游戏服表（在线/离线均包含）。
+ * Table of GameServers registered on this LoginServer (online or down).
  *
  * @author -Nemesiss-
  */
 @Slf4j
+@UtilityClass
 public class GameServerTable {
 
     /**
-     * Map<Id,GameServer>
+     * 游戏服映射 Map&lt;Id, GameServerInfo&gt;。
+     * GameServer map Map&lt;Id, GameServerInfo&gt;.
      */
-    private static Map<Byte, GameServerInfo> gameservers;
+    private Map<Byte, GameServerInfo> gameservers;
 
     /**
-     * Return collection contains all registered [up/down] GameServers.
+     * 返回全部已注册游戏服的不可变集合。
+     * Return an unmodifiable collection of all registered GameServers.
      *
-     * @return collection of GameServers.
+     * @return 游戏服集合 / GameServer collection
      */
-    public static Collection<GameServerInfo> getGameServers() {
+    public Collection<GameServerInfo> getGameServers() {
         return Collections.unmodifiableCollection(gameservers.values());
     }
 
     /**
+     * 从数据库加载游戏服列表。
      * Load GameServers from database.
      */
-    public static void load() {
+    public void load() {
         gameservers = getDAO().getAllGameServers();
-        log.info("GameServerTable loaded " + gameservers.size() + " registered GameServers.");
+        log.info(I18n.get("log.f7d64efdf7a8", gameservers.size()));
     }
 
     /**
-     * Register GameServer if its possible.
+     * 在允许时注册游戏服连接。
+     * Register a GameServer connection when allowed.
      *
-     * @param gsConnection Connection object
-     * @param requestedId id of server that was requested
-     * @param defaultAddress default network address from server, usually
-     * internet address
-     * @param ipRanges mapping of various ip ranges, usually used for local area
-     * networks
-     * @param port port that is used by server
-     * @param maxPlayers maximum amount of players
-     * @param password server password that is specified configs, used to check
-     * if gs can auth on ls
-     * @return GsAuthResponse
+     * @param gsConnection 游戏服连接 / GameServer connection
+     * @param requestedId 请求的服务器 ID / Requested server id
+     * @param defaultAddress 默认网络地址（通常公网） / Default network address (usually public)
+     * @param ipRanges IP 段映射（通常局域网） / IP range mappings (usually LAN)
+     * @param port 客户端端口 / Client port
+     * Max players
+     * @param password 配置中的服务器密码 / Server password from config
+     * Auth response
      */
-    public static GsAuthResponse registerGameServer(GsConnection gsConnection, byte requestedId, byte[] defaultAddress, List<IPRange> ipRanges, int port, int maxPlayers, String password) {
+    public GsAuthResponse registerGameServer(GsConnection gsConnection, byte requestedId, byte[] defaultAddress,
+            List<IPRange> ipRanges, int port, int maxPlayers, String password) {
         GameServerInfo gsi = gameservers.get(requestedId);
 
-        /**
-         * This id is not Registered at LoginServer.
-         */
         if (gsi == null) {
-            log.info(gsConnection + " requestedID=" + requestedId + " not aviable!");
+            log.info(I18n.get("log.af1c246e807f", gsConnection, requestedId));
             return GsAuthResponse.NOT_AUTHED;
         }
 
         synchronized (gsi) {
-            /**
-             * Check if this GameServer is not already registered.
-             */
             if (gsi.getConnection() != null) {
                 return GsAuthResponse.ALREADY_REGISTERED;
             }
 
-            /**
-             * Check if password and ip are ok.
-             */
             if (!gsi.getPassword().equals(password) || !NetworkUtils.checkIPMatching(gsi.getIp(), gsConnection.getIP())) {
-
-                log.info(gsi.getPassword() + " " + password);
-                log.info(gsConnection + " wrong ip or password!");
+                log.info(I18n.get("log.b245f5814993", gsi.getPassword(), password));
+                log.info(I18n.get("log.ef51b73f3147", gsConnection));
                 return GsAuthResponse.NOT_AUTHED;
             }
 
@@ -120,23 +98,25 @@ public class GameServerTable {
     }
 
     /**
-     * Returns GameSererInfo object for given gameserverId.
+     * 按 ID 获取游戏服信息。
+     * Get GameServerInfo by gameserver id.
      *
-     * @param gameServerId
-     * @return GameSererInfo object for given gameserverId.
+     * GameServer id
+     *
+     * @param gameServerId @return 游戏服信息 / GameServer info
      */
-    public static GameServerInfo getGameServerInfo(byte gameServerId) {
+    public GameServerInfo getGameServerInfo(byte gameServerId) {
         return gameservers.get(gameServerId);
     }
 
     /**
-     * Check if account is already in use on any GameServer. If so - kick
-     * account from GameServer.
+     * 检查账号是否已在任意游戏服在线。
+     * Check whether the account is already in use on any GameServer.
      *
-     * @param acc account to check
-     * @return true is account is logged in on one of GameServers
+     * @param acc 待检查账号 / Account to check
+     * @return 已在任意游戏服登录则为 true / true if logged in on any GameServer
      */
-    public static boolean isAccountOnAnyGameServer(Account acc) {
+    public boolean isAccountOnAnyGameServer(Account acc) {
         for (GameServerInfo gsi : getGameServers()) {
             if (gsi.isAccountOnGameServer(acc.getId())) {
                 return true;
@@ -146,11 +126,12 @@ public class GameServerTable {
     }
 
     /**
-     * Helper method, used to kick account from any gameServer if it's logged in
+     * 若账号在任意游戏服在线则踢下线。
+     * Kick account from any GameServer if it is logged in.
      *
-     * @param account account to kick
+     * Account to kick
      */
-    public static void kickAccountFromGameServer(Account account) {
+    public void kickAccountFromGameServer(Account account) {
         for (GameServerInfo gsi : getGameServers()) {
             if (gsi.isAccountOnGameServer(account.getId())) {
                 gsi.getConnection().sendPacket(new SM_REQUEST_KICK_ACCOUNT(account.getId()));
@@ -160,16 +141,23 @@ public class GameServerTable {
     }
 
     /**
-     * Retuns {@link com.aionemu.loginserver.dao.GameServersDAO} , just a
-     * shortcut
+     * 获取 {@link GameServersDAO} 快捷方法。
+     * Shortcut for {@link GameServersDAO}.
      *
-     * @return {@link com.aionemu.loginserver.dao.GameServersDAO}
+     * DAO instance
      */
-    private static GameServersDAO getDAO() {
+    private GameServersDAO getDAO() {
         return DAOManager.getDAO(GameServersDAO.class);
     }
 
-    public static void pong(byte serverId, int pid) {
+    /**
+     * 向指定游戏服转发 pong。
+     * Forward pong to the given GameServer.
+     *
+     * GameServer id
+     * Process id
+     */
+    public void pong(byte serverId, int pid) {
         for (GameServerInfo gsi : getGameServers()) {
             if (gsi.getId() == serverId) {
                 gsi.getConnection().pong(pid);

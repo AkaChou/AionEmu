@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,44 +5,58 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+import lombok.Getter;
+
+/**
+ * 多步汇报类任务中单个 NPC 对话步骤的配置。
+ * Config for one NPC dialogue step in multi-report quests.
+ */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NpcInfos")
 public class NpcInfos {
+
+	/**
+	 * 对话目标 NPC 模板 ID。
+	 * Target NPC template id.
+	 */
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
 
+	/**
+	 * 该步骤对应的任务变量值。
+	 * Quest variable value for this step.
+	 */
 	@XmlAttribute(name = "var", required = true)
 	protected int var;
 
+	/**
+	 * 打开/推进对话的 quest dialog ID。
+	 * Quest dialog id used to open/advance the talk.
+	 */
 	@XmlAttribute(name = "quest_dialog", required = true)
 	protected int questDialog;
 
+	/**
+	 * 关闭对话时的 dialog ID（可选）。
+	 * Dialog id used when closing the conversation (optional).
+	 */
 	@XmlAttribute(name = "close_dialog")
 	protected int closeDialog;
 
+	/**
+	 * 本步可播放的过场电影 ID（可选）。
+	 * Cutscene movie id for this step (optional).
+	 */
 	@XmlAttribute(name = "movie")
 	protected int movie;
 
-	public int getNpcId() {
-		return npcId;
-	}
-
-	public int getVar() {
-		return var;
-	}
-
-	public int getQuestDialog() {
-		return questDialog;
-	}
-
-	public int getCloseDialog() {
-		return closeDialog;
-	}
-
-	public int getMovie() {
-		return movie;
-	}
-
+	/**
+	 * 设置本步过场电影 ID。
+	 * Sets the cutscene movie id for this step.
+	 *
+	 * Movie id
+	 */
 	public void setMovie(int movie) {
 		this.movie = movie;
 	}

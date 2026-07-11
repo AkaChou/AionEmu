@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.battlefieldUnion;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -24,17 +8,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author(Encom)
-/****/
-
+/**
+ * 战场同盟相关 NPC AI：Miren Fortress Commander（@AIName "Miren_Fortress_Commander"），继承 AggressiveNpcAI2。
+ * Battlefield-union related NPC AI: Miren Fortress Commander (@AIName "Miren_Fortress_Commander"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Miren_Fortress_Commander")
 public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 {
 	@Override
     protected void handleSpawned() {
 		switch (getNpcId()) {
-			//Miren Fortress Commander [Balaur]
+			// 米伦要塞指挥官【龙族】 / Miren Fortress Commander [Balaur]
 			case 884063: //Ereshkigal Icecrowned Miren Commander.
 				announceIcecrownedAppears();
 			break;
@@ -53,7 +39,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 			case 884068: //Ereshkigal Iceblooded Miren Commander.
 				announceIcebloodedAppears();
 			break;
-			//Miren Fortress Commander [Elyos]
+			// 米伦要塞指挥官【天族】 / Miren Fortress Commander [Elyos]
 			case 884100: //Miren Fortress Sunbathed Commander.
 				announceSunbathedAppears();
 			break;
@@ -72,7 +58,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 			case 884220: //Miren Fortress Sunblessed Commander.
 				announceSunblessedAppears();
 			break;
-			//Miren Fortress Commander [Asmodians]
+			// 米伦要塞指挥官【魔族】 / Miren Fortress Commander [Asmodians]
 			case 884112: //Miren Fortress Shadeprotected Commander.
 				announceShadeprotectedAppears();
 			break;
@@ -96,13 +82,13 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
     }
 	
    /**
-	* Elyos
-	*/
+	 * 天族 / Elyos
+	 */
 	private void announceSunbathedAppears() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunbathed Commander has appeared!
+				// 米伦要塞浴日指挥官已出现！ / The Miren Fortress Sunbathed Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Li, 0);
 			}
 		});
@@ -111,7 +97,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunsoaked Commander has appeared!
+				// 米伦要塞浸日指挥官已出现！ / The Miren Fortress Sunsoaked Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Li, 10000);
 			}
 		});
@@ -120,7 +106,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Suntouched Commander has appeared!
+				// 米伦要塞触日指挥官已出现！ / The Miren Fortress Suntouched Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Li, 20000);
 			}
 		});
@@ -129,7 +115,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunsteeped Commander has appeared!
+				// 米伦要塞深日指挥官已出现！ / The Miren Fortress Sunsteeped Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Li, 30000);
 			}
 		});
@@ -138,7 +124,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sundrenched Commander has appeared!
+				// 米伦要塞沐日指挥官已出现！ / The Miren Fortress Sundrenched Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Li, 40000);
 			}
 		});
@@ -147,20 +133,20 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunblessed Commander has appeared!
+				// 米伦要塞日福指挥官已出现！ / The Miren Fortress Sunblessed Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Li, 50000);
 			}
 		});
 	}
 	
    /**
-	* Asmodians
-	*/
+	 * 魔族 / Asmodians
+	 */
 	private void announceShadeprotectedAppears() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadeprotected Commander has appeared!
+				// 米伦要塞蔽护指挥官已出现！ / The Miren Fortress Shadeprotected Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Da, 0);
 			}
 		});
@@ -169,7 +155,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadesoaked Commander has appeared!
+				// 米伦要塞浸影指挥官已出现！ / The Miren Fortress Shadesoaked Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Da, 10000);
 			}
 		});
@@ -178,7 +164,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadetouched Commander has appeared!
+				// 米伦要塞触影指挥官已出现！ / The Miren Fortress Shadetouched Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Da, 20000);
 			}
 		});
@@ -187,7 +173,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadesteeped Commander has appeared!
+				// 米伦要塞深影指挥官已出现！ / The Miren Fortress Shadesteeped Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Da, 30000);
 			}
 		});
@@ -196,7 +182,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadedrenched Commander has appeared!
+				// 米伦要塞浸影指挥官已出现！ / The Miren Fortress Shadedrenched Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Da, 40000);
 			}
 		});
@@ -205,20 +191,20 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadeblessed Commander has appeared!
+				// 米伦要塞荫福指挥官已出现！ / The Miren Fortress Shadeblessed Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Da, 50000);
 			}
 		});
 	}
 	
    /**
-	* Balaur
-	*/
+	 * 龙族 / Balaur
+	 */
 	private void announceIcecrownedAppears() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icecrowned Miren Commander has appeared!
+				// 埃雷什基伽尔冰冠米伦指挥官已出现！ / The Ereshkigal Icecrowned Miren Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Dr, 0);
 			}
 		});
@@ -227,7 +213,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icecoated Miren Commander has appeared!
+				// 埃雷什基伽尔覆冰米伦指挥官已出现！ / The Ereshkigal Icecoated Miren Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Dr, 10000);
 			}
 		});
@@ -236,7 +222,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icebladed Miren Commander has appeared!
+				// 埃雷什基伽尔冰刃米伦指挥官已出现！ / The Ereshkigal Icebladed Miren Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Dr, 20000);
 			}
 		});
@@ -245,7 +231,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icesteeped Miren Commander has appeared!
+				// 埃雷什基伽尔深冰米伦指挥官已出现！ / The Ereshkigal Icesteeped Miren Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Dr, 30000);
 			}
 		});
@@ -254,7 +240,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icedrenched Miren Commander has appeared!
+				// 埃雷什基伽尔冰浸米伦指挥官已出现！ / The Ereshkigal Icedrenched Miren Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Dr, 40000);
 			}
 		});
@@ -263,7 +249,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Iceblooded Miren Commander has appeared!
+				// 埃雷什基伽尔冰血米伦指挥官已出现！ / The Ereshkigal Iceblooded Miren Commander has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Dr, 50000);
 			}
 		});
@@ -272,7 +258,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//Miren Fortress Commander [Balaur]
+			// 米伦要塞指挥官【龙族】 / Miren Fortress Commander [Balaur]
 			case 884063: //Ereshkigal Icecrowned Miren Commander.
 				announceIcecrownedDied();
 			break;
@@ -291,7 +277,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 			case 884068: //Ereshkigal Iceblooded Miren Commander.
 				announceIcebloodedDied();
 			break;
-			//Miren Fortress Commander [Elyos]
+			// 米伦要塞指挥官【天族】 / Miren Fortress Commander [Elyos]
 			case 884100: //Miren Fortress Sunbathed Commander.
 				announceSunbathedDied();
 			break;
@@ -310,7 +296,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 			case 884220: //Miren Fortress Sunblessed Commander.
 				announceSunblessedDied();
 			break;
-			//Miren Fortress Commander [Asmodians]
+			// 米伦要塞指挥官【魔族】 / Miren Fortress Commander [Asmodians]
 			case 884112: //Miren Fortress Shadeprotected Commander.
 				announceShadeprotectedDied();
 			break;
@@ -334,13 +320,13 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	}
 	
    /**
-	* Elyos
-	*/
+	 * 天族 / Elyos
+	 */
 	private void announceSunbathedDied() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunbathed Commander has been slain!
+				// 米伦要塞浴日指挥官已被击杀！ / The Miren Fortress Sunbathed Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Li, 0);
 			}
 		});
@@ -349,7 +335,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunsoaked Commander has been slain!
+				// 米伦要塞浸日指挥官已被击杀！ / The Miren Fortress Sunsoaked Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Li, 0);
 			}
 		});
@@ -358,7 +344,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Suntouched Commander has been slain!
+				// 米伦要塞触日指挥官已被击杀！ / The Miren Fortress Suntouched Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Li, 0);
 			}
 		});
@@ -367,7 +353,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunsteeped Commander has been slain!
+				// 米伦要塞深日指挥官已被击杀！ / The Miren Fortress Sunsteeped Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Li, 0);
 			}
 		});
@@ -376,7 +362,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sundrenched Commander has been slain!
+				// 米伦要塞沐日指挥官已被击杀！ / The Miren Fortress Sundrenched Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Li, 0);
 			}
 		});
@@ -385,20 +371,20 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Sunblessed Commander has been slain!
+				// 米伦要塞日福指挥官已被击杀！ / The Miren Fortress Sunblessed Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Li, 0);
 			}
 		});
 	}
 	
    /**
-	* Asmodians
-	*/
+	 * 魔族 / Asmodians
+	 */
 	private void announceShadeprotectedDied() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadeprotected Commander has been slain!
+				// 米伦要塞蔽护指挥官已被击杀！ / The Miren Fortress Shadeprotected Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Da, 0);
 			}
 		});
@@ -407,7 +393,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadesoaked Commander has been slain!
+				// 米伦要塞浸影指挥官已被击杀！ / The Miren Fortress Shadesoaked Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Da, 0);
 			}
 		});
@@ -416,7 +402,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadetouched Commander has been slain!
+				// 米伦要塞触影指挥官已被击杀！ / The Miren Fortress Shadetouched Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Da, 0);
 			}
 		});
@@ -425,7 +411,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadesteeped Commander has been slain!
+				// 米伦要塞深影指挥官已被击杀！ / The Miren Fortress Shadesteeped Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Da, 0);
 			}
 		});
@@ -434,7 +420,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadedrenched Commander has been slain!
+				// 米伦要塞浸影指挥官已被击杀！ / The Miren Fortress Shadedrenched Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Da, 0);
 			}
 		});
@@ -443,20 +429,20 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Fortress Shadeblessed Commander has been slain!
+				// 米伦要塞荫福指挥官已被击杀！ / The Miren Fortress Shadeblessed Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Da, 0);
 			}
 		});
 	}
 	
    /**
-	* Balaur
-	*/
+	 * 龙族 / Balaur
+	 */
 	private void announceIcecrownedDied() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icecrowned Miren Commander has been slain!
+				// 埃雷什基伽尔冰冠米伦指挥官已被击杀！ / The Ereshkigal Icecrowned Miren Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Dr, 0);
 			}
 		});
@@ -465,7 +451,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icecoated Miren Commander has been slain!
+				// 埃雷什基伽尔覆冰米伦指挥官已被击杀！ / The Ereshkigal Icecoated Miren Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Dr, 0);
 			}
 		});
@@ -474,7 +460,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icebladed Miren Commander has been slain!
+				// 埃雷什基伽尔冰刃米伦指挥官已被击杀！ / The Ereshkigal Icebladed Miren Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Dr, 0);
 			}
 		});
@@ -483,7 +469,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icesteeped Miren Commander has been slain!
+				// 埃雷什基伽尔深冰米伦指挥官已被击杀！ / The Ereshkigal Icesteeped Miren Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Dr, 0);
 			}
 		});
@@ -492,7 +478,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Icedrenched Miren Commander has been slain!
+				// 埃雷什基伽尔冰浸米伦指挥官已被击杀！ / The Ereshkigal Icedrenched Miren Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Dr, 0);
 			}
 		});
@@ -501,7 +487,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Ereshkigal Iceblooded Miren Commander has been slain!
+				// 埃雷什基伽尔冰血米伦指挥官已被击杀！ / The Ereshkigal Iceblooded Miren Commander has been slain!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Dr, 0);
 			}
 		});

@@ -1232,4 +1232,289 @@
             <set name="PROC_REDUCE_RATE" value="1000"/>
         </modifiers>
     </stats_set>
+	<stats_set id="58">
+        <modifiers>
+            <set name="POWER" value="100"/>
+            <set name="HEALTH" value="100"/>
+            <set name="AGILITY" value="100"/>
+            <set name="ACCURACY" value="100"/>
+            <set name="KNOWLEDGE" value="100"/>
+            <set name="WILL" value="100"/>
+            <set name="FIRE_RESISTANCE" value="0"/>
+            <set name="EARTH_RESISTANCE" value="0"/>
+            <set name="WATER_RESISTANCE" value="0"/>
+            <set name="WIND_RESISTANCE" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_LIGHT" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_DARK" value="0"/>
+            <set name="MAXHP" value="20000"/>
+            <set name="REGEN_HP" value="1000"/>
+            <set name="MAXHP" value="0" bonus="true"/>
+            <set name="MAXMP" value="20000"/>
+            <set name="REGEN_MP" value="700"/>
+            <set name="MAXMP" value="20000" bonus="true"/>
+            <set name="MIN_DAMAGES" value="700"/>
+            <set name="MAX_DAMAGES" value="800"/>
+            <set name="PHYSICAL_DEFENSE" value="7000"/>
+            <set name="EVASION" value="0"/>
+            <set name="PARRY" value="0"/>
+            <set name="BLOCK" value="0"/>
+            <set name="DAMAGE_REDUCE" value="0"/>
+            <set name="DAMAGE_REDUCE_MAX" value="0"/>
+            <set name="PHYSICAL_CRITICAL" value="1500"/>
+            <set name="HIT_COUNT" value="1"/>
+            <set name="PHYSICAL_ACCURACY" value="3500"/>
+            <set name="PHYSICAL_CRITICAL_RESIST" value="0"/>
+            <set name="PHYSICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVP_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="MAGICAL_DEFEND" value="1000"/>
+            <set name="MAGICAL_RESIST" value="2500"/>
+            <set name="BOOST_MAGICAL_SKILL" value="4000"/>
+            <set name="MAGIC_SKILL_BOOST_RESIST" value="3000"/>
+            <set name="HEAL_BOOST" value="0"/>
+            <set name="MAGICAL_CRITICAL" value="1000"/>
+            <set name="MAGICAL_ACCURACY" value="3500"/>
+            <set name="CONCENTRATION" value="500"/>
+            <set name="MAGICAL_CRITICAL_RESIST" value="400"/>
+            <set name="MAGICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_MAGICAL" value="50"/>
+            <set name="PVP_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="ATTACK_RANGE" value="20000"/>
+            <set name="ATTACK_SPEED" value="2000"/>
+            <set name="BOOST_CASTING_TIME" value="1000"/>
+            <set name="PROC_REDUCE_RATE" value="1000"/>
+        </modifiers>
+    </stats_set>
+	<stats_set id="59">
+        <modifiers>
+            <set name="POWER" value="100"/>
+            <set name="HEALTH" value="100"/>
+            <set name="AGILITY" value="100"/>
+            <set name="ACCURACY" value="100"/>
+            <set name="KNOWLEDGE" value="100"/>
+            <set name="WILL" value="100"/>
+            <set name="FIRE_RESISTANCE" value="0"/>
+            <set name="EARTH_RESISTANCE" value="0"/>
+            <set name="WATER_RESISTANCE" value="0"/>
+            <set name="WIND_RESISTANCE" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_LIGHT" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_DARK" value="0"/>
+            <set name="MAXHP" value="30000"/>
+            <set name="REGEN_HP" value="1000"/>
+            <set name="MAXHP" value="0" bonus="true"/>
+            <set name="MAXMP" value="20000"/>
+            <set name="REGEN_MP" value="700"/>
+            <set name="MAXMP" value="20000" bonus="true"/>
+            <set name="MIN_DAMAGES" value="700"/>
+            <set name="MAX_DAMAGES" value="800"/>
+            <set name="PHYSICAL_DEFENSE" value="7000"/>
+            <set name="EVASION" value="0"/>
+            <set name="PARRY" value="0"/>
+            <set name="BLOCK" value="0"/>
+            <set name="DAMAGE_REDUCE" value="0"/>
+            <set name="DAMAGE_REDUCE_MAX" value="0"/>
+            <set name="PHYSICAL_CRITICAL" value="1500"/>
+            <set name="HIT_COUNT" value="1"/>
+            <set name="PHYSICAL_ACCURACY" value="3500"/>
+            <set name="PHYSICAL_CRITICAL_RESIST" value="0"/>
+            <set name="PHYSICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVP_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="MAGICAL_DEFEND" value="1000"/>
+            <set name="MAGICAL_RESIST" value="2500"/>
+            <set name="BOOST_MAGICAL_SKILL" value="4000"/>
+            <set name="MAGIC_SKILL_BOOST_RESIST" value="3000"/>
+            <set name="HEAL_BOOST" value="0"/>
+            <set name="MAGICAL_CRITICAL" value="1000"/>
+            <set name="MAGICAL_ACCURACY" value="3500"/>
+            <set name="CONCENTRATION" value="500"/>
+            <set name="MAGICAL_CRITICAL_RESIST" value="400"/>
+            <set name="MAGICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_MAGICAL" value="50"/>
+            <set name="PVP_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="ATTACK_RANGE" value="20000"/>
+            <set name="ATTACK_SPEED" value="2000"/>
+            <set name="BOOST_CASTING_TIME" value="1000"/>
+            <set name="PROC_REDUCE_RATE" value="1000"/>
+        </modifiers>
+    </stats_set>
+	<stats_set id="60">
+        <modifiers>
+            <set name="POWER" value="100"/>
+            <set name="HEALTH" value="100"/>
+            <set name="AGILITY" value="100"/>
+            <set name="ACCURACY" value="100"/>
+            <set name="KNOWLEDGE" value="100"/>
+            <set name="WILL" value="100"/>
+            <set name="FIRE_RESISTANCE" value="0"/>
+            <set name="EARTH_RESISTANCE" value="0"/>
+            <set name="WATER_RESISTANCE" value="0"/>
+            <set name="WIND_RESISTANCE" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_LIGHT" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_DARK" value="0"/>
+            <set name="MAXHP" value="40000"/>
+            <set name="REGEN_HP" value="1000"/>
+            <set name="MAXHP" value="0" bonus="true"/>
+            <set name="MAXMP" value="20000"/>
+            <set name="REGEN_MP" value="700"/>
+            <set name="MAXMP" value="20000" bonus="true"/>
+            <set name="MIN_DAMAGES" value="700"/>
+            <set name="MAX_DAMAGES" value="800"/>
+            <set name="PHYSICAL_DEFENSE" value="7000"/>
+            <set name="EVASION" value="0"/>
+            <set name="PARRY" value="0"/>
+            <set name="BLOCK" value="0"/>
+            <set name="DAMAGE_REDUCE" value="0"/>
+            <set name="DAMAGE_REDUCE_MAX" value="0"/>
+            <set name="PHYSICAL_CRITICAL" value="1500"/>
+            <set name="HIT_COUNT" value="1"/>
+            <set name="PHYSICAL_ACCURACY" value="3500"/>
+            <set name="PHYSICAL_CRITICAL_RESIST" value="0"/>
+            <set name="PHYSICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVP_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="MAGICAL_DEFEND" value="1000"/>
+            <set name="MAGICAL_RESIST" value="2500"/>
+            <set name="BOOST_MAGICAL_SKILL" value="4000"/>
+            <set name="MAGIC_SKILL_BOOST_RESIST" value="3000"/>
+            <set name="HEAL_BOOST" value="0"/>
+            <set name="MAGICAL_CRITICAL" value="1000"/>
+            <set name="MAGICAL_ACCURACY" value="3500"/>
+            <set name="CONCENTRATION" value="500"/>
+            <set name="MAGICAL_CRITICAL_RESIST" value="400"/>
+            <set name="MAGICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_MAGICAL" value="50"/>
+            <set name="PVP_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="ATTACK_RANGE" value="20000"/>
+            <set name="ATTACK_SPEED" value="2000"/>
+            <set name="BOOST_CASTING_TIME" value="1000"/>
+            <set name="PROC_REDUCE_RATE" value="1000"/>
+        </modifiers>
+    </stats_set>
+	<stats_set id="61">
+        <modifiers>
+            <set name="POWER" value="100"/>
+            <set name="HEALTH" value="100"/>
+            <set name="AGILITY" value="100"/>
+            <set name="ACCURACY" value="100"/>
+            <set name="KNOWLEDGE" value="100"/>
+            <set name="WILL" value="100"/>
+            <set name="FIRE_RESISTANCE" value="0"/>
+            <set name="EARTH_RESISTANCE" value="0"/>
+            <set name="WATER_RESISTANCE" value="0"/>
+            <set name="WIND_RESISTANCE" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_LIGHT" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_DARK" value="0"/>
+            <set name="MAXHP" value="50000"/>
+            <set name="REGEN_HP" value="1000"/>
+            <set name="MAXHP" value="0" bonus="true"/>
+            <set name="MAXMP" value="20000"/>
+            <set name="REGEN_MP" value="700"/>
+            <set name="MAXMP" value="20000" bonus="true"/>
+            <set name="MIN_DAMAGES" value="700"/>
+            <set name="MAX_DAMAGES" value="800"/>
+            <set name="PHYSICAL_DEFENSE" value="7000"/>
+            <set name="EVASION" value="0"/>
+            <set name="PARRY" value="0"/>
+            <set name="BLOCK" value="0"/>
+            <set name="DAMAGE_REDUCE" value="0"/>
+            <set name="DAMAGE_REDUCE_MAX" value="0"/>
+            <set name="PHYSICAL_CRITICAL" value="1500"/>
+            <set name="HIT_COUNT" value="1"/>
+            <set name="PHYSICAL_ACCURACY" value="3500"/>
+            <set name="PHYSICAL_CRITICAL_RESIST" value="0"/>
+            <set name="PHYSICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVP_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="MAGICAL_DEFEND" value="1000"/>
+            <set name="MAGICAL_RESIST" value="2500"/>
+            <set name="BOOST_MAGICAL_SKILL" value="4000"/>
+            <set name="MAGIC_SKILL_BOOST_RESIST" value="3000"/>
+            <set name="HEAL_BOOST" value="0"/>
+            <set name="MAGICAL_CRITICAL" value="1000"/>
+            <set name="MAGICAL_ACCURACY" value="3500"/>
+            <set name="CONCENTRATION" value="500"/>
+            <set name="MAGICAL_CRITICAL_RESIST" value="400"/>
+            <set name="MAGICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_MAGICAL" value="50"/>
+            <set name="PVP_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="ATTACK_RANGE" value="20000"/>
+            <set name="ATTACK_SPEED" value="2000"/>
+            <set name="BOOST_CASTING_TIME" value="1000"/>
+            <set name="PROC_REDUCE_RATE" value="1000"/>
+        </modifiers>
+    </stats_set>
+	<stats_set id="62">
+        <modifiers>
+            <set name="POWER" value="100"/>
+            <set name="HEALTH" value="100"/>
+            <set name="AGILITY" value="100"/>
+            <set name="ACCURACY" value="100"/>
+            <set name="KNOWLEDGE" value="100"/>
+            <set name="WILL" value="100"/>
+            <set name="FIRE_RESISTANCE" value="0"/>
+            <set name="EARTH_RESISTANCE" value="0"/>
+            <set name="WATER_RESISTANCE" value="0"/>
+            <set name="WIND_RESISTANCE" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_LIGHT" value="0"/>
+            <set name="ELEMENTAL_RESISTANCE_DARK" value="0"/>
+            <set name="MAXHP" value="60000"/>
+            <set name="REGEN_HP" value="1000"/>
+            <set name="MAXHP" value="0" bonus="true"/>
+            <set name="MAXMP" value="20000"/>
+            <set name="REGEN_MP" value="700"/>
+            <set name="MAXMP" value="20000" bonus="true"/>
+            <set name="MIN_DAMAGES" value="700"/>
+            <set name="MAX_DAMAGES" value="800"/>
+            <set name="PHYSICAL_DEFENSE" value="7000"/>
+            <set name="EVASION" value="0"/>
+            <set name="PARRY" value="0"/>
+            <set name="BLOCK" value="0"/>
+            <set name="DAMAGE_REDUCE" value="0"/>
+            <set name="DAMAGE_REDUCE_MAX" value="0"/>
+            <set name="PHYSICAL_CRITICAL" value="1500"/>
+            <set name="HIT_COUNT" value="1"/>
+            <set name="PHYSICAL_ACCURACY" value="3500"/>
+            <set name="PHYSICAL_CRITICAL_RESIST" value="0"/>
+            <set name="PHYSICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVP_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_PHYSICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_PHYSICAL" value="100"/>
+            <set name="MAGICAL_DEFEND" value="1000"/>
+            <set name="MAGICAL_RESIST" value="2500"/>
+            <set name="BOOST_MAGICAL_SKILL" value="4000"/>
+            <set name="MAGIC_SKILL_BOOST_RESIST" value="3000"/>
+            <set name="HEAL_BOOST" value="0"/>
+            <set name="MAGICAL_CRITICAL" value="1000"/>
+            <set name="MAGICAL_ACCURACY" value="3500"/>
+            <set name="CONCENTRATION" value="500"/>
+            <set name="MAGICAL_CRITICAL_RESIST" value="400"/>
+            <set name="MAGICAL_CRITICAL_DAMAGE_REDUCE" value="0"/>
+            <set name="PVP_ATTACK_RATIO_MAGICAL" value="50"/>
+            <set name="PVP_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_ATTACK_RATIO_MAGICAL" value="100"/>
+            <set name="PVE_DEFEND_RATIO_MAGICAL" value="100"/>
+            <set name="ATTACK_RANGE" value="20000"/>
+            <set name="ATTACK_SPEED" value="2000"/>
+            <set name="BOOST_CASTING_TIME" value="1000"/>
+            <set name="PROC_REDUCE_RATE" value="1000"/>
+        </modifiers>
+    </stats_set>
 </absolute_stats>

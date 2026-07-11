@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
@@ -51,6 +37,9 @@ import com.aionemu.gameserver.model.templates.zone.ZoneTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 区域数据容器，按地图 ID 索引区域信息，并维护天气区域序号。
+ * Zone data holder, indexing zone info by map id and tracking weather-zone order numbers.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -72,6 +61,10 @@ public class ZoneData {
 	@XmlTransient
 	private int count;
 
+	/**
+	 * JAXB 反序列化完成后，按区域类型构建几何区域，按地图 ID 分组，并为天气区域分配序号。
+	 * After JAXB unmarshalling, builds geometry areas by type, groups them by map id, and assigns weather-zone order numbers.
+	 */
 	protected void afterUnmarshal(Unmarshaller u, Object parent) {
 		int lastMapId = 0;
 		int weatherZoneId = 1;
@@ -116,16 +109,33 @@ public class ZoneData {
 		zoneList = null;
 	}
 
+	/**
+	 * 返回按地图 ID 分组的区域信息映射。
+	 * Returns the zone-info map keyed by map id.
+	 *
+	 * @return 区域信息映射 / zone-info map
+	 */
 	public IntObjectHashMap<List<ZoneInfo>> getZones() {
 		return zoneNameMap;
 	}
 
+	/**
+	 * 返回已加载的区域数量。
+	 * Returns the number of loaded zones.
+	 *
+	 * zone count
+	 */
 	public int size() {
 		return count;
 	}
 
 	/**
-	 * Weather zone ID it's an order number (starts from 1)
+	 * 获取天气区域序号（从 1 开始）；模板未登记时返回 0。
+	 * Returns the weather-zone order number (starting from 1), or 0 if the template is unregistered.
+	 *
+	 * zone template
+	 *
+	 * @param template @return 天气区域序号，未登记则为 0 / weather-zone id or 0
 	 */
 	public int getWeatherZoneId(ZoneTemplate template) {
 		Integer id = weatherZoneIds.get(template);
@@ -135,6 +145,10 @@ public class ZoneData {
 		return id;
 	}
 
+	/**
+	 * 将当前区域数据按 XSD 校验后写出到 generated_zones.xml。
+	 * Marshals the current zone data to generated_zones.xml after XSD validation.
+	 */
 	public void saveData() {
 		Schema schema = null;
 		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -142,7 +156,7 @@ public class ZoneData {
 		try {
 			schema = sf.newSchema(Config.dataFile("./data/static_data/zones/zones.xsd"));
 		} catch (SAXException e1) {
-			log.error("Error while saving data: " + e1.getMessage(), e1.getCause());
+			log.error(I18n.get("log.a52b870058c9", e1.getMessage(), e1.getCause()));
 			return;
 		}
 
@@ -156,7 +170,7 @@ public class ZoneData {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.marshal(this, xml);
 		} catch (JAXBException e) {
-			log.error("Error while saving data: " + e.getMessage(), e.getCause());
+			log.error(I18n.get("log.a52b870058c9", e.getMessage(), e.getCause()));
 			return;
 		}
 	}

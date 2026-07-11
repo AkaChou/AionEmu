@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import java.util.Iterator;
@@ -27,24 +11,39 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 使用喇叭道具发送全服/阵营喊话的客户端包。
+ * Client packet for megaphone shout messages (server/faction-wide).
+ *
  * @author Ranastic
  */
-
 public class CM_MEGAPHONE_MESSAGE extends AionClientPacket {
 	private String chatMessage;
 	private int itemObjectId;
 	private boolean isAll = false;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_MEGAPHONE_MESSAGE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取喇叭消息、道具对象 ID 与范围标志。
+	 * Reads megaphone message, item object id, and range flag.
+	 */
 	@Override
 	protected void readImpl() {
 		chatMessage = readS();
 		itemObjectId = readD();
 	}
-
+	/**
+	 * 消耗喇叭道具并广播喊话消息。
+	 * Consumes the megaphone item and broadcasts the shout.
+	 */
 	@Override
 	protected void runImpl() {
 		final Player activePlayer = getConnection().getActivePlayer();

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.fallenPoeta;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -39,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Fallen Poeta 副本 NPC AI：Artifact Overlord Kroban（@AIName "Artifact_Overlord_Kroban"），继承 AggressiveNpcAI2。
+ * Fallen Poeta instance NPC AI: Artifact Overlord Kroban (@AIName "Artifact_Overlord_Kroban"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Artifact_Overlord_Kroban")
 public class Artifact_Overlord_KrobanAI2 extends AggressiveNpcAI2
 {
@@ -57,7 +43,7 @@ public class Artifact_Overlord_KrobanAI2 extends AggressiveNpcAI2
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
 				case 243684: //Artifact Overlord Kroban.
-					//The Fractured Elemental is building up power. Gather together to disperse the damage.
+					// 破碎元素正在积蓄力量。聚集在一起以分摊伤害。 / The Fractured Elemental is building up power. Gather together to disperse the damage.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_02, 4000);
 				break;
 			}
@@ -68,7 +54,7 @@ public class Artifact_Overlord_KrobanAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				//Fractured Elemental Lord is boiling over. Gather together to spread the damage out.
+				// 破碎元素领主即将爆发。聚集在一起分摊伤害。 / Fractured Elemental Lord is boiling over. Gather together to spread the damage out.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_01, 0);
 				startPhaseTask();
 			}
@@ -98,7 +84,7 @@ public class Artifact_Overlord_KrobanAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					//A massive blast of elemental power will soon explode with destructive force.
+					// 元素力量即将以毁灭性爆炸释放。 / A massive blast of elemental power will soon explode with destructive force.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
 					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); //Gravitational Shift.
 					List<Player> players = getLifedPlayers();
@@ -177,9 +163,9 @@ public class Artifact_Overlord_KrobanAI2 extends AggressiveNpcAI2
 			deleteNpcs(p.getWorldMapInstance().getNpcs(244038)); //IDF6_LF1_Vanq_Summon_Ae_73_01.
 			deleteNpcs(p.getWorldMapInstance().getNpcs(856597));
 		}
-		//The Brilliant Elemental has disappeared.
+		// 辉煌元素已消失。 / The Brilliant Elemental has disappeared.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_End_01, 0);
-		//The Brilliant Elemental has failed to find a focus for its power and has faded.
+		// 辉煌元素未能找到力量焦点而消散。 / The Brilliant Elemental has failed to find a focus for its power and has faded.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_End_02, 4000);
 		super.handleDied();
 	}

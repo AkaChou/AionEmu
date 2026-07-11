@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,13 +5,21 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+import lombok.Getter;
+
+/**
+ * 任务脚本中引用的世界地图条目。
+ * World-map entry referenced by quest scripts.
+ */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WorldData")
 public class WorldData {
+
+	/**
+	 * 世界地图 ID（mapId）。
+	 * World map id (mapId).
+	 */
 	@XmlAttribute(name = "id", required = true)
 	protected int worldId;
-
-	public int getWorldId() {
-		return worldId;
-	}
 }

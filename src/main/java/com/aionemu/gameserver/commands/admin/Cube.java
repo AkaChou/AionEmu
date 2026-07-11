@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,15 +6,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
- * @author Kamui
+ * 将管理员背包扩展到最大格数的命令（{@code //cube}）。
+ * Admin command that expands the inventory cube to maximum ({@code //cube}).
  *
+ * @author Kamui
  */
 public class Cube extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code cube}。
+	 * Registers the command name {@code cube}.
+	 */
 	public Cube() {
 		super("cube");
 	}
 
+	/**
+	 * 循环扩展背包直至满级（9 次）。
+	 * Expands the inventory cube up to the maximum (9 expansions).
+	 *
+	 * admin
+	 * unused
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (player.getNpcExpands() >= 9) {
@@ -42,7 +39,14 @@ public class Cube extends AdminCommand {
         }
 		PacketSendUtility.sendMessage(player, "Vous venez de recevoir toutes les extensions de votre inventaire.");
 	}
-	
+
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player admin, String message) {
 		PacketSendUtility.sendMessage(admin, "Syntaxe : .cube");

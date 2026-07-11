@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.EnumMap;
@@ -31,9 +15,11 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.templates.item.ItemSkillEnhance;
 
 /**
+ * 物品技能强化数据容器，按 ID 与职业索引 {@link ItemSkillEnhance}。
+ * Item skill-enhance data holder, indexing {@link ItemSkillEnhance} by id and player class.
+ *
  * Created by wanke on 01/03/2017.
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "item_skill_enhances")
 public class ItemSkillEnhanceData {
@@ -46,10 +32,25 @@ public class ItemSkillEnhanceData {
 	@XmlTransient
 	protected IntObjectHashMap<EnumMap<PlayerClass, ItemSkillEnhance>> enhanceSkillsByIdAndClass = new IntObjectHashMap<EnumMap<PlayerClass, ItemSkillEnhance>>();
 
+	/**
+	 * 按 ID 获取技能强化模板（忽略职业）。
+	 * Returns the skill-enhance template for the given id (class-agnostic).
+	 *
+	 * @param id 强化 ID / enhance id
+	 * @return 技能强化模板或 null / skill-enhance template or null
+	 */
 	public ItemSkillEnhance getSkillEnhance(int id) {
 		return enhanceSkillsById.get(id);
 	}
 
+	/**
+	 * 按 ID 与职业获取技能强化模板；无精确匹配时回退到 {@link PlayerClass#ALL}。
+	 * Returns the skill-enhance template for the given id and class; falls back to {@link PlayerClass#ALL}.
+	 *
+	 * @param id 强化 ID / enhance id
+	 * player class
+	 * @return 技能强化模板或 null / skill-enhance template or null
+	 */
 	public ItemSkillEnhance getSkillEnhance(int id, PlayerClass playerClass) {
 		EnumMap<PlayerClass, ItemSkillEnhance> enhanceSkillsByClass = enhanceSkillsByIdAndClass.get(id);
 		if (enhanceSkillsByClass == null) {
@@ -62,6 +63,10 @@ public class ItemSkillEnhanceData {
 		return enhanceSkillsByClass.get(PlayerClass.ALL);
 	}
 
+	/**
+	 * JAXB 反序列化完成后，建立 ID 与 ID+职业双重索引并释放列表。
+	 * After JAXB unmarshalling, builds id and id+class indexes and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		enhanceSkillsById.clear();
 		enhanceSkillsByIdAndClass.clear();
@@ -74,6 +79,12 @@ public class ItemSkillEnhanceData {
 		skillEnhances = null;
 	}
 
+	/**
+	 * 返回已加载的技能强化数量。
+	 * Returns the number of loaded skill enhances.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return enhanceSkillsById.size();
 	}

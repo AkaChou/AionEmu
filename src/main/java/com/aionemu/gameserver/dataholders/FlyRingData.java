@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -28,6 +12,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 
 /**
+ * 飞行环配置数据容器，维护全部飞行环模板列表。
+ * Fly ring configuration data holder for all fly ring templates.
+ *
  * @author M@xx
  */
 @XmlRootElement(name = "fly_rings")
@@ -37,6 +24,12 @@ public class FlyRingData {
 	@XmlElement(name = "fly_ring")
 	private List<FlyRingTemplate> flyRingTemplates;
 
+	/**
+	 * 返回飞行环模板数量；若列表尚未初始化则初始化为空列表并返回 0。
+	 * Returns the number of fly ring templates; initializes an empty list and returns 0 if null.
+	 *
+	 * template count
+	 */
 	public int size() {
 		if (flyRingTemplates == null) {
 			flyRingTemplates = new ArrayList<FlyRingTemplate>();
@@ -45,6 +38,12 @@ public class FlyRingData {
 		return flyRingTemplates.size();
 	}
 
+	/**
+	 * 返回飞行环模板列表；若尚未初始化则返回空列表。
+	 * Returns the fly ring template list; returns an empty list if not yet initialized.
+	 *
+	 * @return 飞行环模板列表 / fly ring template list
+	 */
 	public List<FlyRingTemplate> getFlyRingTemplates() {
 		if (flyRingTemplates == null) {
 			return new ArrayList<FlyRingTemplate>();
@@ -52,6 +51,12 @@ public class FlyRingData {
 		return flyRingTemplates;
 	}
 
+	/**
+	 * 批量追加飞行环模板。
+	 * Appends the given fly ring templates.
+	 *
+	 * @param templates 待添加的模板集合 / templates to add
+	 */
 	public void addAll(Collection<FlyRingTemplate> templates) {
 		if (flyRingTemplates == null) {
 			flyRingTemplates = new ArrayList<FlyRingTemplate>();

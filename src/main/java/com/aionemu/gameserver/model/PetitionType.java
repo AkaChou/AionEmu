@@ -1,26 +1,15 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
 /**
+ * 请愿类型枚举。
+ * Petition Type enumeration.
+ *
  * @author zdead
  */
 public enum PetitionType {
+	/** 角色卡住 / Character Stuck */
 	CHARACTER_STUCK(256), CHARACTER_RESTORATION(512), BUG(768), QUEST(1024), UNACCEPTABLE_BEHAVIOR(1280),
+	/** 建议 / Suggestion. */
 	SUGGESTION(1536), INQUIRY(65280);
 
 	private int element;
@@ -29,6 +18,7 @@ public enum PetitionType {
 		this.element = id;
 	}
 
+	/** 返回元素 ID / Returns the element id */
 	public int getElementId() {
 		return element;
 	}

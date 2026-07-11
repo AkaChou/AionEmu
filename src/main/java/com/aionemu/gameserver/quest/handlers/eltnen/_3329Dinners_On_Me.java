@@ -8,6 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 艾特南任务脚本：Dinners On Me（任务 ID 3329）。
+ * Eltnen quest script: Dinners On Me (quest ID 3329).
+ */
 public class _3329Dinners_On_Me extends QuestHandler {
 
 	private final static int questId = 3329;

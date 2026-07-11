@@ -1,21 +1,7 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -37,18 +23,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
-@Slf4j
 
+/**
+ * 批量修正 NPC 刷出高度/位置的管理命令（{@code //fixnpc}）。
+ * Admin command that batch-fixes NPC spawn heights/positions ({@code //fixnpc}).
+ */
+@Slf4j
 public class FixNpc extends AdminCommand
 {
 	private Npc npc = null;
     private int numofspawns = 0;
     private int spawned = 0;
     private Future<?> task = null;
+
+	/**
+	 * 注册命令名为 {@code fixnpc}。
+	 * Registers the command name {@code fixnpc}.
+	 */
 	public FixNpc() {
 		super("fixnpc");
 	}
-	
+
+	/**
+	 * 对当前目标或按 start/stop 批量修正刷出并保存。
+	 * Fixes the current target spawn or batch-fixes via start/stop.
+	 *
+	 * admin
+	 * @param params start [counter] | stop，或无参时处理当前目标 / start [counter] | stop, or current target when empty
+	 */
 	@Override
 	public void execute(final Player admin, String... params) {
 		if (admin.getAccessLevel() < 5) {
@@ -83,7 +85,7 @@ public class FixNpc extends AdminCommand
                 			try {
                 				DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
                 			} catch (IOException e) {
-								log.error("Could not save fixed spawn {}", visibleObject.getObjectId(), e);
+								log.error(I18n.get("log.242d2bd13c3f", visibleObject.getObjectId(), e));
                 				PacketSendUtility.sendMessage(admin, "Could not save spawn");
                 			}
                         }
@@ -160,7 +162,7 @@ public class FixNpc extends AdminCommand
                             comment.append("lvl:").append(npc.getLevel()).append(")");
                             Spawn spawnId = DataManager.SPAWNS_DATA2.getSpawnsForNpc(admin.getWorldId(), npc.getNpcId());
                             if (spawnId != null) {
-                                log.info("[AUDIT] Deleted npc id=" + template.getNpcId() + ": //moveto " + template.getWorldId() + " " + template.getX() + " " + template.getY() + " " + template.getZ());
+                                log.info(I18n.get("log.ee4fb40d60d3", template.getNpcId(), template.getWorldId(), template.getX(), template.getY(), template.getZ()));
                             }
                             SpawnTemplate spawn2 = SpawnEngine.addNewSpawn(template.getWorldId(), template.getNpcId(), template.getX(), template.getY(), admin2.getZ(), template.getHeading(), template.getRespawnTime());
                             VisibleObject visibleObject = SpawnEngine.spawnObject(spawn2, admin.getInstanceId());
@@ -168,7 +170,7 @@ public class FixNpc extends AdminCommand
                         	try {
                         		DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
                         	} catch (IOException e) {
-								log.error("Could not save fixed spawn {}", visibleObject.getObjectId(), e);
+								log.error(I18n.get("log.242d2bd13c3f", visibleObject.getObjectId(), e));
                         		PacketSendUtility.sendMessage(admin, "Could not save spawn");
                         	}
                             ++spawned;
@@ -176,7 +178,7 @@ public class FixNpc extends AdminCommand
                             npc = null;
                         } else {
                             if (template != null) {
-                                log.info("[AUDIT] Missing npc id=" + template.getNpcId() + ": //moveto " + template.getWorldId() + " " + template.getX() + " " + template.getY() + " " + template.getZ());
+                                log.info(I18n.get("log.15d5ee9b4d27", template.getNpcId(), template.getWorldId(), template.getX(), template.getY(), template.getZ()));
                             }
                         }
                     }
@@ -194,7 +196,14 @@ public class FixNpc extends AdminCommand
         }
         PacketSendUtility.sendMessage(admin, "[Number Of Spawns]: " + numofspawns);
 	}
-	
+
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //kill <target | all | <range>>");

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cradle Of Eternity 副本 NPC AI：Library Gap Bind Point（@AIName "Library_Gap_Bind_Point"），继承 NpcAI2。
+ * Cradle Of Eternity instance NPC AI: Library Gap Bind Point (@AIName "Library_Gap_Bind_Point"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Library_Gap_Bind_Point")
 public class Library_Gap_Bind_PointAI2 extends NpcAI2
 {
@@ -68,7 +54,7 @@ public class Library_Gap_Bind_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The Library Gap's bind point device was activated.
+					// 图书馆裂隙的绑定点装置已激活。 / The Library Gap's bind point device was activated.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_13);
 				}
 			}

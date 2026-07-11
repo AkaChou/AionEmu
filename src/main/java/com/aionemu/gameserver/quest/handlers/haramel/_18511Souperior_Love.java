@@ -7,10 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/****/
-/** Remake Rinzler (Encom)
-/****/
-
+/**
+ * 哈拉梅尔任务脚本：Souperior Love（任务 ID 18511）。
+ * Haramel quest script: Souperior Love (quest ID 18511). Remake Rinzler (Encom) /***
+ */
 public class _18511Souperior_Love extends QuestHandler {
 
     private static final int questId = 18511;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.event;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,11 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+
+/**
+ * 活动掉落模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventDrop")
@@ -50,42 +39,52 @@ public class EventDrop {
 	@XmlTransient
 	private ItemTemplate template;
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return itemId;
 	}
 
+	/** 获取计数。 / Returns the count. */
 	public long getCount() {
 		return count;
 	}
 
+	/** 返回概率 / Returns the chance*/
 	public float getChance() {
 		return chance;
 	}
 
+	/** 返回 min diff / Returns the min diff */
 	public int getMinDiff() {
 		return minDiff;
 	}
 
+	/** 返回 max diff / Returns the max diff */
 	public int getMaxDiff() {
 		return maxDiff;
 	}
 
+	/** 返回 loc id / Returns the loc id */
 	public int getLocId() {
 		return locId;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** 返回 min lvl / Returns the min lvl */
 	public int getMinLvl() {
 		return minLvl;
 	}
 
+	/** 返回 max lvl / Returns the max lvl */
 	public int getMaxLvl() {
 		return maxLvl;
 	}
 
+	/** 获取物品模板。 / Returns the item template. */
 	public ItemTemplate getItemTemplate() {
 		if (template == null) {
 			template = DataManager.ITEM_DATA.getItemTemplate(itemId);

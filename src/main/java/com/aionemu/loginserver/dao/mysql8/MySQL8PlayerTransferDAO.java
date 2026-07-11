@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +15,9 @@ import com.aionemu.loginserver.dao.PlayerTransferDAO;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
 
 /**
- * MySQL8 PlayerTransfer DAO implementation
- * 
+ * 玩家转服任务 DAO 的 MySQL 8 实现。
+ * MySQL 8 PlayerTransferDAO implementation.
+ *
  * @author Updated for MySQL 8
  */
 @Slf4j
@@ -25,12 +28,12 @@ public class MySQL8PlayerTransferDAO extends PlayerTransferDAO {
     public List<PlayerTransferTask> getNew() {
         List<PlayerTransferTask> list = new ArrayList<>();
         String query = "SELECT * FROM player_transfers WHERE `status` = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setInt(1, 0);
-            
+
             try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     PlayerTransferTask task = new PlayerTransferTask();
@@ -44,7 +47,7 @@ public class MySQL8PlayerTransferDAO extends PlayerTransferDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error("Can't select new player transfers", e);
+            log.error(I18n.get("log.ced4ca54368a", e));
         }
 
         return list;
@@ -53,7 +56,7 @@ public class MySQL8PlayerTransferDAO extends PlayerTransferDAO {
     @Override
     public boolean update(final PlayerTransferTask task) {
         StringBuilder query = new StringBuilder("UPDATE player_transfers SET status = ?, comment = ?");
-        
+
         switch (task.status) {
             case PlayerTransferTask.STATUS_ACTIVE:
                 query.append(", time_performed = NOW()");
@@ -63,21 +66,21 @@ public class MySQL8PlayerTransferDAO extends PlayerTransferDAO {
                 query.append(", time_done = NOW()");
                 break;
         }
-        
+
         query.append(" WHERE id = ?");
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query.toString())) {
-            
+
             st.setByte(1, task.status);
             st.setString(2, task.comment);
             st.setInt(3, task.id);
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update player transfer task: " + task.id, e);
+            log.error(I18n.get("log.84835322c373", task.id, e));
         }
-        
+
         return false;
     }
 

@@ -7,19 +7,20 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
- * @author
+ * 回火保护效果：为装备强化提供保护（Buff 形态）。
+ * Tempering protection effect: protects gear enhancement (buff form).
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TemperingProtectionEffect")
 public class TemperingProtectionEffect extends BuffEffect {
-    
-    @Override
-    public void calculate(Effect effect) {
-        effect.addSucessEffect(this);
-    }
-    
-    @Override
-    public void applyEffect(Effect effect) {
-        effect.addToEffectedController();
-    }
+
+	@Override
+	public void calculate(Effect effect) {
+		effect.addSucessEffect(this);
+	}
+
+	@Override
+	public void applyEffect(Effect effect) {
+		effect.addToEffectedController();
+	}
 }

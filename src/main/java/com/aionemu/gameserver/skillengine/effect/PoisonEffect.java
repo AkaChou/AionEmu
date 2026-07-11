@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,14 +11,26 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 中毒效果：按周期造成魔法持续伤害，并写入 POISON 异常。
+ * Poison effect: deals periodic magical DoT and sets the POISON abnormal state.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PoisonEffect")
 public class PoisonEffect extends AbstractOverTimeEffect {
+	/**
+	 * 按中毒抗性计算是否生效。
+	 * Calculates success against poison resistance.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.POISON_RESISTANCE, null);
 	}
 
+	/**
+	 * 预结算持续伤害并设置 POISON 异常。
+	 * Precomputes DoT and sets the POISON abnormal state.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		int valueWithDelta = value + delta * effect.getSkillLevel();
@@ -44,12 +40,20 @@ public class PoisonEffect extends AbstractOverTimeEffect {
 		super.startEffect(effect, AbnormalState.POISON);
 	}
 
+	/**
+	 * 清除 POISON 异常状态。
+	 * Clears the POISON abnormal state.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		// super.endEffect(effect, AbnormalState.POISON);
 		effect.getEffected().getEffectController().unsetAbnormal(AbnormalState.POISON.getId());
 	}
 
+	/**
+	 * 周期造成中毒伤害并通知 DoT 观察者。
+	 * Deals poison damage and notifies DoT observers.
+	 */
 	@Override
 	public void onPeriodicAction(Effect effect) {
 		Creature effected = effect.getEffected();

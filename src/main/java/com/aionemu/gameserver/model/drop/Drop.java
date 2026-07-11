@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.drop;
 
 import java.nio.ByteBuffer;
@@ -26,6 +10,11 @@ import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+
+/**
+ * 掉落模型。
+ * Drop model.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "drop")
@@ -72,34 +61,44 @@ public class Drop {
 		}
 	}
 
+	/** 获取物品模板。 / Returns the item template. */
 	public ItemTemplate getItemTemplate() {
 		return template == null ? DataManager.ITEM_DATA.getItemTemplate(itemId) : template;
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return itemId;
 	}
 
+	/** 返回 min amount / Returns the min amount */
 	public int getMinAmount() {
 		return minAmount;
 	}
 
+	/** 返回 max amount / Returns the max amount */
 	public int getMaxAmount() {
 		return maxAmount;
 	}
 
+	/** 返回概率 / Returns the chance*/
 	public float getChance() {
 		return chance;
 	}
 
+	/**
+	 * @return Whether no reduction / Whether no reduction
+	 */
 	public boolean isNoReduction() {
 		return noReduce;
 	}
 
+	/** Whethereach 成员 / Whether each member */
 	public Boolean isEachMember() {
 		return aionServerEachMember == null ? eachMember : aionServerEachMember;
 	}
 
+	/** 加载。 / Load. */
 	public static Drop load(ByteBuffer buffer) {
 		Drop drop = new Drop();
 		drop.itemId = buffer.getInt();
@@ -111,6 +110,7 @@ public class Drop {
 		return drop;
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	public String toString() {
 		return "Drop [itemId=" + itemId + ", minAmount=" + minAmount + ", maxAmount=" + maxAmount + ", chance=" + chance
 				+ ", noReduce=" + noReduce + ", eachMember=" + eachMember + "]";

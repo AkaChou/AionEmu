@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.siegespawns;
 
 import com.aionemu.gameserver.model.siege.SiegeModType;
@@ -24,6 +8,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
+ * 要塞刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
  *
  * @author xTz
  */
@@ -43,46 +29,61 @@ public class SiegeSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
+	/** 返回攻城 ID / Returns the siege id */
 	public int getSiegeId() {
 		return siegeId;
 	}
 
+	/** 获取要塞种族。 / Returns the siege race. */
 	public SiegeRace getSiegeRace() {
 		return siegeRace;
 	}
 
+	/** 获取要塞刷新点类型。 / Returns the siege spawn type. */
 	public SiegeSpawnType getSiegeSpawnType() {
 		return siegeSpawnType;
 	}
 
+	/** 获取要塞模式类型。 / Returns the siege mod type. */
 	public SiegeModType getSiegeModType() {
 		return siegeModType;
 	}
 
+	/** 设置 siege id / Sets the siege id */
 	public void setSiegeId(int siegeId) {
 		this.siegeId = siegeId;
 	}
 
+	/** 设置要塞种族。 / Sets the siege race. */
 	public void setSiegeRace(SiegeRace siegeRace) {
 		this.siegeRace = siegeRace;
 	}
 
+	/** 设置要塞刷新点类型。 / Sets the siege spawn type. */
 	public void setSiegeSpawnType(SiegeSpawnType siegeSpawnType) {
 		this.siegeSpawnType = siegeSpawnType;
 	}
 
+	/** 设置要塞模式类型。 / Sets the siege mod type. */
 	public void setSiegeModType(SiegeModType siegeModType) {
 		this.siegeModType = siegeModType;
 	}
 
+	/**
+	 * @return 是否 peace / 是否 peace。 / Whether peace / Whether peace
+	 */
 	public final boolean isPeace() {
 		return siegeModType.equals(SiegeModType.PEACE);
 	}
 
+	/** 是否要塞。 / Whether Siege. */
 	public final boolean isSiege() {
 		return siegeModType.equals(SiegeModType.SIEGE);
 	}
 
+	/**
+	 * @return Whether assault / Whether assault
+	 */
 	public final boolean isAssault() {
 		return siegeModType.equals(SiegeModType.ASSAULT);
 	}

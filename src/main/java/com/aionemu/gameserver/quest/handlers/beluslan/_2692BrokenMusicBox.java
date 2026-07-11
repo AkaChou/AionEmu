@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：Broken Music Box（任务 ID 2692）。
+ * Beluslan quest script: Broken Music Box (quest ID 2692).
  */
 public class _2692BrokenMusicBox extends QuestHandler {
 

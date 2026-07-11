@@ -23,7 +23,7 @@ public class CallbacksUtil {
      *
      * @param method 要检查的方法 / Method to check
      * @param annotation 要查找的注解类 / Annotation class to look for
-     * @return 如果方法包含指定注解则返回true / Returns true if the method contains the specified annotation
+     * 返回若为真则 methodcontainsspecifiedannotation。 / Returns true if the method contains the specified annotation
      */
     public static boolean isAnnotationPresent(CtMethod method, Class<? extends Annotation> annotation) {
         Iterator i$ = method.getMethodInfo().getAttributes().iterator();

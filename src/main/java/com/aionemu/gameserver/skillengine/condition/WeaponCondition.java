@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import java.util.List;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 
 /**
+ * 武器条件：校验施法者主手武器类型是否在允许列表中（仅 CAST 路径强制）。
+ * Weapon condition: validates the effector main-hand weapon type is in the allowed list (enforced on CAST only).
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,6 +28,13 @@ public class WeaponCondition extends Condition {
 	@XmlAttribute(name = "weapon")
 	private List<WeaponType> weaponType;
 
+	/**
+	 * 校验技能环境是否满足本条件。
+	 * Validates whether the skill environment satisfies this condition.
+	 *
+	 * @param env 技能环境 / skill environment
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Skill env) {
 		if (env.getSkillMethod() != SkillMethod.CAST) {
@@ -49,21 +43,32 @@ public class WeaponCondition extends Condition {
 		return isValidWeapon(env.getEffector());
 	}
 
+	/**
+	 * 校验属性计算环境是否满足本条件。
+	 * Validates whether the stat calculation environment satisfies this condition.
+	 *
+	 * @param stat 属性对象 / stat object
+	 * stat function
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
 		return isValidWeapon(stat.getOwner());
 	}
 
 	/**
-	 * @param creature
-	 * @return
+	 * 判断生物主手武器是否在允许类型列表中（NPC 不校验）。
+	 * Checks whether the creature's main-hand weapon is in the allowed type list (NPCs skip validation).
+	 *
+	 * creature
+	 * whether valid
 	 */
 	private boolean isValidWeapon(Creature creature) {
 		if (creature instanceof Player) {
 			Player player = (Player) creature;
 			return weaponType.contains(player.getEquipment().getMainHandWeaponType());
 		}
-		// for npcs we don't validate weapon, though in templates they are present
+		// 对 NPC 不校验武器，尽管模板中存在。 / for npcs we don't validate weapon, though in templates they are present
 		return true;
 	}
 }

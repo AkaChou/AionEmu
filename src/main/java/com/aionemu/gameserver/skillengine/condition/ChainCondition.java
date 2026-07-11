@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 连锁技能条件：校验前序/自身连锁类别、次数与时间窗是否允许施放。
+ * Chain skill condition: validates precursor/self chain category, count and time window allow casting.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,6 +29,13 @@ public class ChainCondition extends Condition {
 	@XmlAttribute(name = "time")
 	private int time;
 
+	/**
+	 * 校验技能环境是否满足本条件。
+	 * Validates whether the skill environment satisfies this condition.
+	 *
+	 * @param env 技能环境 / skill environment
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Skill env) {
 		if ((env.getEffector() instanceof Player) && (precategory != null || selfCount > 0)) {
@@ -81,14 +75,32 @@ public class ChainCondition extends Condition {
 		return true;
 	}
 
+	/**
+	 * 获取自身连锁允许次数上限。
+	 * Gets the self-chain allowed count limit.
+	 *
+	 * @return 自身连锁次数 / self chain count
+	 */
 	public int getSelfCount() {
 		return selfCount;
 	}
 
+	/**
+	 * 获取本技能所属连锁类别。
+	 * Gets the chain category this skill belongs to.
+	 *
+	 * chain category
+	 */
 	public String getCategory() {
 		return category;
 	}
 
+	/**
+	 * 获取连锁时间窗（毫秒）。
+	 * Gets the chain time window in milliseconds.
+	 *
+	 * time window
+	 */
 	public int getTime() {
 		return time;
 	}

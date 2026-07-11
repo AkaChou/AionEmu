@@ -9,9 +9,11 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 贝勒斯兰任务脚本：Spy The Last Persuasion（任务 ID 2654）。
+ * Beluslan quest script: Spy The Last Persuasion (quest ID 2654).
+ *
  * @author gigi
  */
-
 public class _2654SpyTheLastPersuasion extends QuestHandler {
 
 	private final static int questId = 2654;

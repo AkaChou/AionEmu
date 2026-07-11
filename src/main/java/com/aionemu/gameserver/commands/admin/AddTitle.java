@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -23,12 +7,27 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 管理员添加称号命令：为目标玩家解锁称号。
+ * Admin add-title command: unlocks a title for the target player.
+ */
 public class AddTitle extends AdminCommand
 {
+	/**
+	 * 注册 {@code //addtitle} 命令。
+	 * Registers the {@code //addtitle} command.
+	 */
 	public AddTitle() {
 		super("addtitle");
 	}
 	
+	/**
+	 * 执行添加称号：按种族偏移解析称号 ID 并授予目标。
+	 * Executes add-title: resolves race-offset title id and grants it to the target.
+	 *
+	 * admin
+	 * @param params 参数：称号 ID、玩家名（可选） / title id, optional player name
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if ((params.length < 1) || (params.length > 2)) {
@@ -68,6 +67,13 @@ public class AddTitle extends AdminCommand
 		}
 	}
 	
+	/**
+	 * 参数错误时输出 {@code //addtitle} 用法。
+	 * Prints {@code //addtitle} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //addtitle title_id [playerName]");

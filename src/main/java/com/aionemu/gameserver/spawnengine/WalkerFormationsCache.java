@@ -1,35 +1,38 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
 import java.util.Map;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 按世界与实例缓存巡逻编队数据的静态缓存。
+ * Static cache of walker formations keyed by world and instance.
+ *
  * @author Rolandas
  */
 class WalkerFormationsCache {
 
+	/**
+	 * 世界 ID → 世界级巡逻编队容器。
+	 * World id to world-level walker formation holder.
+	 */
 	private static Map<Integer, WorldWalkerFormations> formations = new ConcurrentHashMap<>();
 
+	/**
+	 * 禁止实例化。
+	 * Prevents instantiation.
+	 */
 	private WalkerFormationsCache() {
 	}
 
+	/**
+	 * 获取指定世界与实例的巡逻编队容器；不存在时自动创建。
+	 * Returns the instance walker formations for the world, creating if absent.
+	 *
+	 * 世界 ID / world id
+	 * instance id
+	 *
+	 * @return 实例巡逻编队 / instance walker formations
+	 */
 	protected static InstanceWalkerFormations getInstanceFormations(int worldId, int instanceId) {
 		WorldWalkerFormations wwf = formations.get(worldId);
 		if (wwf == null) {
@@ -39,6 +42,13 @@ class WalkerFormationsCache {
 		return wwf.getInstanceFormations(instanceId);
 	}
 
+	/**
+	 * 实例销毁时清理对应巡逻编队缓存。
+	 * Clears walker formation cache when an instance is destroyed.
+	 *
+	 * 世界 ID / world id
+	 * instance id
+	 */
 	protected static void onInstanceDestroy(int worldId, int instanceId) {
 		getInstanceFormations(worldId, instanceId).onInstanceDestroy();
 	}

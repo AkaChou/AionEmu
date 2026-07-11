@@ -59,7 +59,7 @@ public class CallbackResult<T> {
      * 获取回调结果值
      * Get the callback result value
      *
-     * @return 结果值 / Result value
+     * Result value
      */
     public T getResult() {
         return this.result;
@@ -109,8 +109,9 @@ public class CallbackResult<T> {
      * 创建完全阻止（回调和目标方法）的结果
      * Create a callback result that blocks both callbacks and target method
      *
-     * @param result 结果值 / Result value
-     * @return 完全阻止的结果实例 / Callback result instance for full blocking
+     * Result value
+     *
+     * @param result @return 完全阻止的结果实例 / Callback result instance for full blocking
      */
     public static <T> CallbackResult<T> newFullBlocker(T result) {
         return new CallbackResult(result, 3);

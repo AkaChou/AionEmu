@@ -1,21 +1,7 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.GameServerError;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
@@ -25,25 +11,17 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.*;
-import com.aionemu.gameserver.dataholders.loadingutils.XmlValidationHandler;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
+import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
-import com.aionemu.gameserver.services.EventService;
-import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.xml.sax.SAXException;
-
-import javax.xml.XMLConstants;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +30,9 @@ import java.util.List;
 import static org.apache.commons.io.filefilter.FileFilterUtils.*;
 
 /**
+ * 运行时热重载指令；可重载任务、技能、传送门、指令、掉落、商城、活动与配置。
+ * Runtime hot-reload admin command for quests, skills, portals, chat commands, drops, shop, events and config.
+ *
  * @author MrPoke
  */
 @Slf4j
@@ -62,83 +43,78 @@ public class Reload extends AdminCommand {
 		super("reload");
 	}
 
+	/**
+	 * 按子命令热重载对应静态数据或运行时组件。
+	 * Hot-reloads the static data or runtime component selected by the sub-command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * @param params 单一子命令：quest / skill/portal/commands/drop/gameshop/events/config
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params == null || params.length != 1) {
-			PacketSendUtility.sendMessage(admin, "syntax //reload <quest | skill | portal | commands | drop | gameshop | events | config | mail>");
+			PacketSendUtility.sendMessage(admin, "syntax //reload <quest | skill | portal | commands | drop | gameshop | events | config>");
 			return;
 		}
 		if (params[0].equals("quest")) {
-			File xml = new File("./data/static_data/quest_data/quest_data.xml");
-			File dir = new File("./data/static_data/quest_script_data");
+			File xml = Config.dataFile("./data/static_data/quest_data/quest_data.xml");
+			File dir = Config.dataFile("./data/static_data/quest_script_data");
 			try {
-				GameEngineServices.questEngine().shutdown();
 				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 				Unmarshaller un = jc.createUnmarshaller();
-				un.setSchema(getSchema("./data/static_data/static_data.xsd"));
 				QuestsData newQuestData = (QuestsData) un.unmarshal(xml);
-				QuestsData questsData = DataManager.QUEST_DATA;
-				questsData.setQuestsData(newQuestData.getQuestsData());
-				XMLQuests questScriptsData = DataManager.XML_QUESTS;
-				questScriptsData.getQuest().clear();
+				List<XMLQuest> newQuestScripts = new ArrayList<>();
 				for (File file : listFiles(dir, true)) {
 					XMLQuests data = ((XMLQuests) un.unmarshal(file));
-					if (data != null)
-						if (data.getQuest() != null)
-							questScriptsData.getQuest().addAll(data.getQuest());
+					if (data != null && data.getQuest() != null)
+						newQuestScripts.addAll(data.getQuest());
 				}
-				GameEngineServices.questEngine().load(null);
-			}
-			catch (Exception e) {
-				PacketSendUtility.sendMessage(admin, "Quest reload failed!");
-				log.error("quest reload fail", e);
-			}
-			finally {
+				reloadQuests(newQuestData.getQuestsData(), newQuestScripts);
 				PacketSendUtility.sendMessage(admin, "Quest reload Success!");
+			}
+			catch (Exception | GameServerError e) {
+				PacketSendUtility.sendMessage(admin, "Quest reload failed!");
+				log.error(I18n.get("log.bc69156970fe", e));
 			}
 		}
 
 		else if (params[0].equals("skill")) {
-			File dir = new File("./data/static_data/skills");
 			try {
 				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 				Unmarshaller un = jc.createUnmarshaller();
-				un.setSchema(getSchema("./data/static_data/static_data.xsd"));
-				List<SkillTemplate> newTemplates = new ArrayList<SkillTemplate>();
-				for (File file : listFiles(dir, true)) {
-					SkillData data = (SkillData) un.unmarshal(file);
-					if (data != null)
-						newTemplates.addAll(data.getSkillTemplates());
-				}
-				DataManager.SKILL_DATA.setSkillTemplates(newTemplates);
-				DataManager.SKILL_DATA.initializeCooldownGroups();
+				SkillData data = (SkillData) un.unmarshal(Config.dataFile("./data/static_data/skills/skill_templates.xml"));
+				data.initializeCooldownGroups();
+				DataManager.SKILL_DATA = data;
+				PacketSendUtility.sendMessage(admin, "Skill reload Success!");
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Skill reload failed!");
-				log.error("Skill reload failed!", e);
-			}
-			finally {
-				PacketSendUtility.sendMessage(admin, "Skill reload Success!");
+				log.error(I18n.get("log.9229e36d9667", e));
 			}
 		}
 		else if (params[0].equals("portal")) {
-
 			try {
 				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 				Unmarshaller un = jc.createUnmarshaller();
-				un.setSchema(getSchema("./data/static_data/static_data.xsd"));
+				PortalLocData portalLocData = (PortalLocData) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_loc.xml"));
+				Portal2Data portal2Data = (Portal2Data) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_template2.xml"));
+				DataManager.PORTAL_LOC_DATA = portalLocData;
+				DataManager.PORTAL2_DATA = portal2Data;
+				PacketSendUtility.sendMessage(admin, "Portal reload Success!");
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Portal reload failed!");
-				log.error("Portal reload failed!", e);
-			}
-			finally {
-				PacketSendUtility.sendMessage(admin, "Portal reload Success!");
+				log.error(I18n.get("log.e210b296177e", e));
 			}
 		}
 		else if (params[0].equals("commands")) {
-			GameEngineServices.chatProcessor().reload();
-			PacketSendUtility.sendMessage(admin, "Admin commands successfully reloaded!");
+			try {
+				GameEngineServices.chatProcessor().reload();
+				PacketSendUtility.sendMessage(admin, "Admin commands successfully reloaded!");
+			} catch (GameServerError e) {
+				PacketSendUtility.sendMessage(admin, "Admin command reload failed; existing commands were kept.");
+				log.error(I18n.get("log.555f9d822d8e"), e);
+			}
 		}
 		else if (params[0].equals("config")) {
 			Config.reload();
@@ -153,18 +129,16 @@ public class Reload extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "Gameshop successfully reloaded!");
 		}
 		else if (params[0].equals("events")) {
-			File eventXml = new File("./data/static_data/events_config/events_config.xml");
+			File eventXml = Config.dataFile("./data/static_data/events_config/events_config.xml");
 			EventData data = null;
 			try {
 				JAXBContext jc = JAXBContext.newInstance(EventData.class);
 				Unmarshaller un = jc.createUnmarshaller();
-				un.setEventHandler(new XmlValidationHandler());
-				un.setSchema(getSchema("./data/static_data/static_data.xsd"));
 				data = (EventData) un.unmarshal(eventXml);
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Event reload failed! Keeping the last version ...");
-				log.error("Event reload failed!", e);
+				log.error(I18n.get("log.e8459365ba32", e));
 				return;
 			}
 			if (data != null) {
@@ -182,20 +156,43 @@ public class Reload extends AdminCommand {
 
 	}
 
-	private Schema getSchema(String xml_schema) {
-		Schema schema = null;
-		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
+	/**
+	 * 原子替换任务数据与脚本；失败时回滚到旧数据并重新加载。
+	 * Atomically replaces quest data/scripts; rolls back and reloads previous data on failure.
+	 *
+	 * @param quests 新任务模板列表 / new quest templates
+	 * @param scripts 新 XML 任务脚本列表 / new XML quest scripts
+	 */
+	private void reloadQuests(List<QuestTemplate> quests, List<XMLQuest> scripts) {
+		List<QuestTemplate> oldQuests = DataManager.QUEST_DATA.getQuestsData();
+		List<XMLQuest> oldScripts = DataManager.XML_QUESTS.getQuest();
+		QuestEngine questEngine = GameEngineServices.questEngine();
+		questEngine.shutdown();
 		try {
-			schema = sf.newSchema(new File(xml_schema));
+			DataManager.QUEST_DATA.setQuestsData(quests);
+			DataManager.XML_QUESTS.setData(scripts);
+			questEngine.load(null);
+		} catch (GameServerError e) {
+			questEngine.shutdown();
+			DataManager.QUEST_DATA.setQuestsData(oldQuests);
+			DataManager.XML_QUESTS.setData(oldScripts);
+			try {
+				questEngine.load(null);
+			} catch (Throwable rollbackFailure) {
+				e.addSuppressed(rollbackFailure);
+			}
+			throw e;
 		}
-		catch (SAXException saxe) {
-			throw new Error("Error while getting schema", saxe);
-		}
-
-		return schema;
 	}
 
+	/**
+	 * 列出目录下可见的 {@code .xml} 文件，跳过 {@code new} 前缀与隐藏文件。
+	 * Lists visible {@code .xml} files under root, skipping {@code new}-prefixed and hidden files.
+	 *
+	 * root directory
+	 * whether to recurse
+	 * @return 匹配的文件集合 / matching files
+	 */
 	private Collection<File> listFiles(File root, boolean recursive) {
 		IOFileFilter dirFilter = recursive ? makeSVNAware(HiddenFileFilter.VISIBLE) : null;
 
@@ -203,6 +200,13 @@ public class Reload extends AdminCommand {
 			and(and(notFileFilter(prefixFileFilter("new")), suffixFileFilter(".xml")), HiddenFileFilter.VISIBLE), dirFilter);
 	}
 
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player,

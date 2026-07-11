@@ -1,26 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
- * Implemented by handlers of <tt>CM_QUESTION_RESPONSE</tt> responses
- * 
+ * 请求响应处理器。
+ * Request Response Handler game object.
+ *
  * @author Ben
  * @modified Lyahim
  */
@@ -33,10 +18,7 @@ public abstract class RequestResponseHandler {
 	}
 
 	/**
-	 * Called when a response is received
-	 * 
-	 * @param responder    Player whom requested this response
-	 * @param response    Player whom responded to this request
+	 * 收到响应时调用。 / Called when a response is received.
 	 */
 	public void handle(Player responder, int response) {
 		if (response == 0) {
@@ -47,18 +29,12 @@ public abstract class RequestResponseHandler {
 	}
 
 	/**
-	 * Called when the player accepts a request
-	 * 
-	 * @param requester Creature whom requested this response
-	 * @param responder Player whom responded to this request
+	 * 玩家接受请求时调用。 / Called when the player accepts a request.
 	 */
 	public abstract void acceptRequest(Creature requester, Player responder);
 
 	/**
-	 * Called when the player denies a request
-	 * 
-	 * @param requester Creature whom requested this response
-	 * @param responder Player whom responded to this request
+	 * 玩家拒绝请求时调用。 / Called when the player denies a request.
 	 */
 	public abstract void denyRequest(Creature requester, Player responder);
 

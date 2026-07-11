@@ -1,19 +1,3 @@
-/**
- * This file is part of Aion 5.8 Community Project.
- *
- *  Aion 5.8 Community Project is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion 5.8 Community Project is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Aion 5.8 Community Project.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,15 +8,29 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 /**
+ * GM 指令：设置物品强化等级或赋能等级。
+ * GM command handler that sets an item's enchant or authorize level.
+ *
  * @author Angry Catster
  */
 public class CmdSetEnchantCount extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即设置强化/赋能等级。
+	 * Creates the handler and immediately sets enchant/authorize levels.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 物品对象 ID、强化增量、赋能增量 / item object id, enchant delta, authorize delta
+	 */
 	public CmdSetEnchantCount(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 在背包或装备中定位物品并增加强化/赋能等级。
+	 * Locates the item in inventory or equipment and increases enchant/authorize level.
+	 */
 	private void run() {
 		String[] p = params.split(" ");
 		Integer objid = Integer.parseInt(p[0]);

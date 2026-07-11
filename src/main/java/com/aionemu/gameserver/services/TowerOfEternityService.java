@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -52,23 +38,29 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
- * Created by Wnkrz on 22/08/2017.
+ * 永恒之塔服务，管理塔地点开关、刷怪与旗帜同步。
+ * Tower of Eternity service managing tower open/close, spawns, and flag sync.
+ *
+ * @author Wnkrz
  */
 @Slf4j
 
 public class TowerOfEternityService {
 	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
 	private Map<Integer, TowerOfEternityLocation> towerOfEternity;
-	private static final int duration = CustomConfig.TOWER_OF_ETERNITY_DURATION;
 	private final ConcurrentMap<Integer, TowerOfEternity<?>> activeTowerOfEternity = new ConcurrentHashMap<Integer, TowerOfEternity<?>>();
 
+	/**
+	 * 初始化永恒之塔地点并按关闭状态刷怪，注册定时开启。
+	 * Initializes tower locations in closed state and registers scheduled opens.
+	 */
 	public void initTowerOfEternityLocation() {
 		if (CustomConfig.TOWER_OF_ETERNITY_ENABLED) {
 			towerOfEternity = DataManager.TOWER_OF_ETERNITY_DATA.getTowerOfEternityLocations();
 			for (TowerOfEternityLocation loc : getTowerOfEternityLocations().values()) {
 				spawn(loc, TowerOfEternityStateType.CLOSED);
 			}
-			log.info("[TowerOfEternityService] Loaded " + towerOfEternity.size() + " locations.");
+			log.info(I18n.get("log.42697e23a860", towerOfEternity.size()));
 
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
@@ -76,19 +68,30 @@ public class TowerOfEternityService {
 					startTowerOfEternity(Rnd.get(1, 5));
 					startTowerOfEternity(Rnd.get(6, 10));
 				}
-			}, CustomConfig.TOWER_OF_ETERNITY_SCHEDULE);
+			}, () -> CustomConfig.TOWER_OF_ETERNITY_SCHEDULE);
 		} else {
-			log.info("[TowerOfEternityService] Tower Of Eternity is disabled in config...");
+			log.info(I18n.get("log.1f021afa9f81"));
 			towerOfEternity = Collections.emptyMap();
 		}
 	}
 
+	/**
+	 * 初始化永恒之塔服务日志入口。
+	 * Initializes Tower of Eternity service logging entry.
+	 */
 	public void initTowerOfEternity() {
 		if (CustomConfig.TOWER_OF_ETERNITY_ENABLED) {
-			log.info("[TowerOfEternityService] is initialized...");
+			log.info(I18n.get("log.8cba40ef1e05"));
 		}
 	}
 
+	/**
+	 * 按状态在地点刷出对应 NPC 并广播旗帜更新。
+	 * Spawns NPCs for the location by state and broadcasts flag updates.
+	 *
+	 * location
+	 * state type
+	 */
 	public void spawn(TowerOfEternityLocation loc, TowerOfEternityStateType tstate) {
 		if (tstate.equals(TowerOfEternityStateType.OPEN)) {
 		}
@@ -104,6 +107,12 @@ public class TowerOfEternityService {
 		}
 	}
 
+	/**
+	 * 清除地点已刷出的 NPC 并广播旗帜消失。
+	 * Despawns NPCs at the location and broadcasts flag despawn.
+	 *
+	 * location
+	 */
 	public void despawn(TowerOfEternityLocation loc) {
 		if (loc.getSpawned() == null) {
 			return;
@@ -120,6 +129,12 @@ public class TowerOfEternityService {
 		loc.getSpawned().clear();
 	}
 
+	/**
+	 * 启动指定 ID 的永恒之塔活动。
+	 * Starts the Tower of Eternity event for the given id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public void startTowerOfEternity(final int id) {
 		TowerOfEternity<?> tower = new Tower(towerOfEternity.get(id));
 		if (activeTowerOfEternity.putIfAbsent(id, tower) != null) {
@@ -131,9 +146,15 @@ public class TowerOfEternityService {
 			public void run() {
 				stopTowerOfEternity(id);
 			}
-		}, duration * 3600 * 1000);
+		}, CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
 	}
 
+	/**
+	 * 停止指定 ID 的永恒之塔活动。
+	 * Stops the Tower of Eternity event for the given id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public void stopTowerOfEternity(int id) {
 		TowerOfEternity<?> tower = activeTowerOfEternity.remove(id);
 		if (tower == null || tower.isClosed()) {
@@ -142,14 +163,34 @@ public class TowerOfEternityService {
 		tower.stop();
 	}
 
+	/**
+	 * 判断指定塔是否处于活动状态。
+	 * Checks whether the tower with the given id is active.
+	 *
+	 * @param id 地点 ID / location id
+	 * whether active
+	 */
 	public boolean isActive(int id) {
 		return activeTowerOfEternity.containsKey(id);
 	}
 
+	/**
+	 * 获取指定 ID 的活动塔实例。
+	 * Returns the active tower instance for the given id.
+	 *
+	 * @param id 地点 ID / location id
+	 * tower instance
+	 */
 	public TowerOfEternity<?> getActiveTower(int id) {
 		return activeTowerOfEternity.get(id);
 	}
 
+	/**
+	 * 玩家进入永恒之塔相关世界时同步旗帜信息。
+	 * Syncs flag info when a player enters a tower-related world.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onEnterTowerWorld(Player player) {
 		if (((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS))
 				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS))
@@ -245,30 +286,75 @@ public class TowerOfEternityService {
 				});
 	}
 
+	/**
+	 * 判断指定永恒之塔是否进行中。
+	 * Checks whether the tower with the given id is in progress.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 是否进行中 / whether in progress
+	 */
 	public boolean isTowerOfEternityInProgress(int id) {
 		return activeTowerOfEternity.containsKey(id);
 	}
 
+	/**
+	 * 获取进行中的永恒之塔实例映射。
+	 * Returns the map of active tower instances.
+	 *
+	 * @return 活动实例映射 / active instances map
+	 */
 	public Map<Integer, TowerOfEternity<?>> getActiveTowerOfEternity() {
 		return activeTowerOfEternity;
 	}
 
+	/**
+	 * 按 ID 获取进行中的永恒之塔实例。
+	 * Returns the active tower instance by id.
+	 *
+	 * @param id 地点 ID / location id
+	 * tower instance
+	 */
 	public TowerOfEternity<?> getActiveTowerOfEternity(int id) {
 		return activeTowerOfEternity.get(id);
 	}
 
+	/**
+	 * 获取活动持续时长（小时）。
+	 * Returns the event duration in hours.
+	 *
+	 * @return 持续小时数 / duration hours
+	 */
 	public int getDuration() {
-		return duration;
+		return CustomConfig.TOWER_OF_ETERNITY_DURATION;
 	}
 
+	/**
+	 * 按 ID 获取永恒之塔地点。
+	 * Returns the tower location by id.
+	 *
+	 * @param id 地点 ID / location id
+	 * location
+	 */
 	public TowerOfEternityLocation getTowerOfEternityLocation(int id) {
 		return towerOfEternity.get(id);
 	}
 
+	/**
+	 * 获取全部永恒之塔地点。
+	 * Returns all tower locations.
+	 *
+	 * locations map
+	 */
 	public Map<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
 		return towerOfEternity;
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring Provider）。
+	 * Returns the service singleton (prefers Spring provider).
+	 *
+	 * service instance
+	 */
 	public static TowerOfEternityService getInstance() {
 		ObjectProvider<TowerOfEternityService> provider = instanceProvider;
 		if (provider == null) {
@@ -277,6 +363,12 @@ public class TowerOfEternityService {
 		return provider.getIfAvailable(() -> TowerOfEternityServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<TowerOfEternityService> instanceProvider) {
 		TowerOfEternityService.instanceProvider = instanceProvider;
 	}

@@ -1,5 +1,7 @@
 package com.aionemu.commons.callbacks.util;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.callbacks.Callback;
 import com.aionemu.commons.callbacks.CallbackResult;
@@ -77,7 +79,7 @@ public class ObjectCallbackHelper {
 
             List<Callback> list = cbMap.get(callback.getBaseClass());
             if (list == null || !list.remove(callback)) {
-                log.error("Attempt to remove callback that doesn't exists", new RuntimeException());
+                log.error(I18n.get("log.d285549b9307", new RuntimeException()));
                 return;
             }
 
@@ -98,9 +100,9 @@ public class ObjectCallbackHelper {
      * Execute callbacks before method call
      *
      * @param obj 目标增强对象 / Target enhanced object
-     * @param callbackClass 回调类型 / Callback class type
+     * Callback class type
      * @param args 方法参数 / Method arguments
-     * @return 回调结果 / Callback result
+     * Callback result
      */
     public static CallbackResult<?> beforeCall(EnhancedObject obj, Class callbackClass, Object... args) {
         Map<Class<? extends Callback>, List<Callback>> cbMap = obj.getCallbacks();
@@ -131,7 +133,7 @@ public class ObjectCallbackHelper {
                     break;
                 }
             } catch (Exception var12) {
-                log.error("Uncaught exception in callback", var12);
+                log.error(I18n.get("log.1e8eeae4d2a1", var12));
             }
         }
 
@@ -143,10 +145,10 @@ public class ObjectCallbackHelper {
      * Execute callbacks after method call
      *
      * @param obj 目标增强对象 / Target enhanced object
-     * @param callbackClass 回调类型 / Callback class type
+     * Callback class type
      * @param args 方法参数 / Method arguments
      * @param result 方法执行结果 / Method execution result
-     * @return 回调结果 / Callback result
+     * Callback result
      */
     public static CallbackResult<?> afterCall(EnhancedObject obj, Class callbackClass, Object[] args, Object result) {
         Map<Class<? extends Callback>, List<Callback>> cbMap = obj.getCallbacks();
@@ -177,7 +179,7 @@ public class ObjectCallbackHelper {
                     break;
                 }
             } catch (Exception var13) {
-                log.error("Uncaught exception in callback", var13);
+                log.error(I18n.get("log.1e8eeae4d2a1", var13));
             }
         }
 

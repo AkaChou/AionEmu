@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Rvr Officer（@AIName "rvr_officer"），继承 AggressiveNpcAI2。
+ * RvR-related NPC AI: Rvr Officer (@AIName "rvr_officer"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("rvr_officer")
 public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 {
@@ -45,7 +31,7 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
         switch (getNpcId()) {
-			//Attacker Asmodians.
+			// 攻击者 魔族。 / Attacker Asmodians.
 			case 857733: //Officer Tarkan.
 				sendRvrGuide();
 				announceGeneralMiltarRescued();
@@ -58,7 +44,7 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 			    sendRvrGuide();
 				announceGeneralLanstriRescued();
 			break;
-			//Attacker Elyos.
+			// 攻击者 天族。 / Attacker Elyos.
 			case 857740: //Officer Nars.
 			    sendRvrGuide();
 				announceGeneralMagkenRescued();
@@ -87,13 +73,13 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 	}
 	
    /**
-	* Attacker Asmodians.
-	*/
+	 * 进攻方魔族 / Attacker Asmodians
+	 */
 	private void announceGeneralMiltarRescued() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Raiders have successfully eliminated General Miltar.
+				// 魔族袭击者成功消灭了米尔塔将军。 / The Asmodian Raiders have successfully eliminated General Miltar.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_LF3_BOSS_HEAL_NOTICE_01);
 			}
 		});
@@ -102,7 +88,7 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Raiders have successfully eliminated General Kupiaro.
+				// 魔族袭击者成功消灭了库皮亚罗将军。 / The Asmodian Raiders have successfully eliminated General Kupiaro.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_LF3_BOSS_HEAL_NOTICE_02);
 			}
 		});
@@ -111,20 +97,20 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Raiders have successfully eliminated General Lanstri.
+				// 魔族袭击者成功消灭了兰斯崔将军。 / The Asmodian Raiders have successfully eliminated General Lanstri.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_LF3_BOSS_HEAL_NOTICE_03);
 			}
 		});
 	}
 	
    /**
-	* Attacker Elyos.
-	*/
+	 * 进攻方天族 / Attacker Elyos
+	 */
 	private void announceGeneralMagkenRescued() {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Protectors have successfully rescued General Magken.
+				// 魔族守护者成功救出马格肯将军。 / The Asmodian Protectors have successfully rescued General Magken.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_DF3_BOSS_HEAL_NOTICE_01);
 			}
 		});
@@ -133,7 +119,7 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Protectors have successfully rescued General Hark.
+				// 魔族守护者成功救出哈克将军。 / The Asmodian Protectors have successfully rescued General Hark.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_DF3_BOSS_HEAL_NOTICE_02);
 			}
 		});
@@ -142,7 +128,7 @@ public class Rvr_OfficerAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Asmodian Protectors have successfully rescued General Tombolk.
+				// 魔族守护者成功救出通博尔克将军。 / The Asmodian Protectors have successfully rescued General Tombolk.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_DF3_BOSS_HEAL_NOTICE_03);
 			}
 		});

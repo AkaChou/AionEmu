@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
 /**
+ * Absolute 属性 Owner 游戏对象。
+ * Absolute Stat Owner game object.
+ *
  * @author Rolandas
  */
 public class AbsoluteStatOwner implements StatOwner {
@@ -34,10 +21,12 @@ public class AbsoluteStatOwner implements StatOwner {
 		setTemplate(templateId);
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		return isActive;
 	}
 
+	/** 设置模板。 / Sets the template. */
 	public void setTemplate(int templateId) {
 		if (isActive) {
 			cancel();
@@ -45,6 +34,7 @@ public class AbsoluteStatOwner implements StatOwner {
 		this.template = DataManager.ABSOLUTE_STATS_DATA.getTemplate(templateId);
 	}
 
+	/** 应用。 / Apply. */
 	public void apply() {
 		if (template == null) {
 			return;
@@ -53,6 +43,7 @@ public class AbsoluteStatOwner implements StatOwner {
 		isActive = true;
 	}
 
+	/** 取消。 / Whether cel. */
 	public void cancel() {
 		if (template == null) {
 			return;

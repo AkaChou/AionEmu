@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -111,17 +95,44 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+/**
+ * 玩家核心服务，处理角色创建、删除、宏与持久化。
+ * Core player service handling character create/delete, macros and persistence.
+ */
 public class PlayerService {
 	private static final CacheMap<Integer, Player> playerCache = CacheMapFactory.createSoftCacheMap("Player", "player");
 
+	/**
+	 * isFreeName 方法。
+	 * isFreeName method.
+	 *
+	 * name
+	 * result
+	 */
 	public static boolean isFreeName(String name) {
 		return !DAOManager.getDAO(PlayerDAO.class).isNameUsed(name);
 	}
 
+	/**
+	 * isOldName 方法。
+	 * isOldName method.
+	 *
+	 * name
+	 * result
+	 */
 	public static boolean isOldName(String name) {
 		return DAOManager.getDAO(OldNamesDAO.class).isOldName(name);
 	}
 
+	/**
+	 * 持久化新建角色。
+	 * Persists a newly created player.
+	 *
+	 * 玩家 / player
+	 * accountName
+	 * accountId
+	 * result
+	 */
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
 		return DAOManager.getDAO(PlayerDAO.class).saveNewPlayer(player.getCommonData(), accountId, accountName)
 				&& DAOManager.getDAO(PlayerAppearanceDAO.class).store(player)
@@ -129,6 +140,12 @@ public class PlayerService {
 				&& DAOManager.getDAO(InventoryDAO.class).store(player);
 	}
 
+	/**
+	 * 持久化角色数据。
+	 * Persists player data.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void storePlayer(Player player) {
 		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
 		DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
@@ -157,6 +174,14 @@ public class PlayerService {
 		DAOManager.getDAO(EventItemsDAO.class).loadItems(player);
 	}
 
+	/**
+	 * getPlayer 方法。
+	 * getPlayer method.
+	 *
+	 * playerObjId
+	 * 账号 / account
+	 * result
+	 */
 	public static Player getPlayer(int playerObjId, Account account) {
 		Player player = playerCache.get(playerObjId);
 		if (player != null) {
@@ -204,8 +229,8 @@ public class PlayerService {
 		player.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(playerObjId));
 
 		/**
-		 * Account warehouse should be already loaded in account
-		 */
+	 * Account warehouse should be already loaded in account
+	 */
 		Storage accWarehouse = account.getAccountWarehouse();
 		player.setStorage(accWarehouse, StorageType.ACCOUNT_WAREHOUSE);
 		Storage inventory = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId, StorageType.CUBE);
@@ -278,6 +303,15 @@ public class PlayerService {
 		return player;
 	}
 
+	/**
+	 * 创建新角色对象。
+	 * Creates a new player object.
+	 *
+	 * @param playerCommonData 玩家公共数据 / playerCommonData
+	 * playerAppearance
+	 * 账号 / account
+	 * result
+	 */
 	public static Player newPlayer(PlayerCommonData playerCommonData, PlayerAppearance playerAppearance,
 			Account account) {
 		PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
@@ -336,6 +370,13 @@ public class PlayerService {
 		return newPlayer;
 	}
 
+	/**
+	 * 取消角色删除。
+	 * Cancels scheduled player deletion.
+	 *
+	 * accData
+	 * result
+	 */
 	public static boolean cancelPlayerDeletion(PlayerAccountData accData) {
 		if (accData.getDeletionDate() == null) {
 			return true;
@@ -348,6 +389,12 @@ public class PlayerService {
 		return false;
 	}
 
+	/**
+	 * 删除角色。
+	 * Deletes a player character.
+	 *
+	 * accData
+	 */
 	public static void deletePlayer(PlayerAccountData accData) {
 		if (accData.getDeletionDate() != null) {
 			return;
@@ -356,11 +403,24 @@ public class PlayerService {
 		storeDeletionTime(accData);
 	}
 
+	/**
+	 * 从数据库删除角色。
+	 * Deletes a player from the database.
+	 *
+	 * playerId
+	 */
 	public static void deletePlayerFromDB(int playerId) {
 		DAOManager.getDAO(InventoryDAO.class).deletePlayerItems(playerId);
 		DAOManager.getDAO(PlayerDAO.class).deletePlayer(playerId);
 	}
 
+	/**
+	 * 删除账号下全部角色。
+	 * Deletes all account characters from DB.
+	 *
+	 * accountId
+	 * result
+	 */
 	public static int deleteAccountsCharsFromDB(int accountId) {
 		List<Integer> charIds = DAOManager.getDAO(PlayerDAO.class).getPlayerOidsOnAccount(accountId);
 		for (int playerId : charIds) {
@@ -374,10 +434,25 @@ public class PlayerService {
 				accData.getDeletionDate());
 	}
 
+	/**
+	 * 记录创建时间。
+	 * Stores creation time.
+	 *
+	 * objectId
+	 * creationDate
+	 */
 	public static void storeCreationTime(int objectId, Timestamp creationDate) {
 		DAOManager.getDAO(PlayerDAO.class).storeCreationTime(objectId, creationDate);
 	}
 
+	/**
+	 * 添加宏。
+	 * Adds a macro.
+	 *
+	 * 玩家 / player
+	 * macroOrder
+	 * macroXML
+	 */
 	public static void addMacro(Player player, int macroOrder, String macroXML) {
 		if (player.getMacroList().addMacro(macroOrder, macroXML)) {
 			DAOManager.getDAO(PlayerMacrossesDAO.class).addMacro(player.getObjectId(), macroOrder, macroXML);
@@ -386,20 +461,48 @@ public class PlayerService {
 		}
 	}
 
+	/**
+	 * 移除宏。
+	 * Removes a macro.
+	 *
+	 * 玩家 / player
+	 * macroOrder
+	 */
 	public static void removeMacro(Player player, int macroOrder) {
 		if (player.getMacroList().removeMacro(macroOrder)) {
 			DAOManager.getDAO(PlayerMacrossesDAO.class).deleteMacro(player.getObjectId(), macroOrder);
 		}
 	}
 
+	/**
+	 * getCachedPlayer 方法。
+	 * getCachedPlayer method.
+	 *
+	 * playerObjectId
+	 * result
+	 */
 	public static Player getCachedPlayer(int playerObjectId) {
 		return playerCache.get(playerObjectId);
 	}
 
+	/**
+	 * getPlayerName 方法。
+	 * getPlayerName method.
+	 *
+	 * objectId
+	 * result
+	 */
 	public static String getPlayerName(Integer objectId) {
 		return getPlayerNames(Collections.singleton(objectId)).get(objectId);
 	}
 
+	/**
+	 * getPlayerNames 方法。
+	 * getPlayerNames method.
+	 *
+	 * @param playerObjIds 玩家对象 ID 列表 / playerObjIds
+	 * result
+	 */
 	public static Map<Integer, String> getPlayerNames(Collection<Integer> playerObjIds) {
 		if (GenericValidator.isBlankOrNull(playerObjIds)) {
 			return Collections.emptyMap();
@@ -408,6 +511,12 @@ public class PlayerService {
 		final Set<Integer> playerObjIdsCopy = Sets.newHashSet(playerObjIds);
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * object
+			 */
 			public void visit(Player object) {
 				if (playerObjIdsCopy.contains(object.getObjectId())) {
 					result.put(object.getObjectId(), object.getName());

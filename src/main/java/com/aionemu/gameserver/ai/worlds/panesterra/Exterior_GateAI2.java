@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,10 +20,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Panesterra 区域 NPC AI：Exterior Gate（@AIName "Exterior_Gate"），继承 NpcAI2。
+ * Panesterra zone NPC AI: Exterior Gate (@AIName "Exterior_Gate"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Exterior_Gate")
 public class Exterior_GateAI2 extends NpcAI2
 {
@@ -83,7 +69,7 @@ public class Exterior_GateAI2 extends NpcAI2
 	
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 65) {
-			//Do you want to pass through the castle gate ?
+			// 是否要通过城门？ / Do you want to pass through the castle gate ?
 			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_GATE, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
 				private boolean decisionTaken = false;
 				@Override
@@ -124,7 +110,7 @@ public class Exterior_GateAI2 extends NpcAI2
 				if (winner instanceof Creature) {
 					final Creature kill = (Creature) winner;
 					AI2Actions.deleteOwner(Exterior_GateAI2.this);
-					//"Player Name" of the "Race" destroyed the Castle Gate.
+					// “种族”的“玩家名”摧毁了城门。 / "Player Name" of the "Race" destroyed the Castle Gate.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301049, kill.getRace().getRaceDescriptionId(), kill.getName()));
 				}
 			}

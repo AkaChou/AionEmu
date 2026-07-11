@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.dredgionDefense;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,10 +19,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Dredgion Defense 副本 NPC AI：Pandaemonium Tank 1（@AIName "Pandaemonium_Tank_1"），继承 GeneralNpcAI2。
+ * Dredgion Defense instance NPC AI: Pandaemonium Tank 1 (@AIName "Pandaemonium_Tank_1"), extends GeneralNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Pandaemonium_Tank_1")
 public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 {
@@ -118,7 +104,7 @@ public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The Ereshkigal Legion is attacking the chariot!
+					// 埃雷什基伽尔军团正在攻击战车！ / The Ereshkigal Legion is attacking the chariot!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403978));
 				}
 			}
@@ -129,7 +115,7 @@ public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The transportation chariot was destroyed! You'll have to go back for another!
+					// 运输战车被摧毁！你得回去再找一辆！ / The transportation chariot was destroyed! You'll have to go back for another!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403975));
 				}
 			}
@@ -140,7 +126,7 @@ public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Success! Use the energy core from the chariot to charge the defense turret!
+					// 成功！用战车能量核心为防御炮塔充能！ / Success! Use the energy core from the chariot to charge the defense turret!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403976));
 				}
 			}

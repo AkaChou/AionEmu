@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.action;
 
 import java.util.ArrayList;
@@ -26,12 +10,19 @@ import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 技能动作集合：JAXB 绑定的施法消耗动作列表。
+ * Skill action collection: JAXB-bound list of cast-cost actions.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Actions", propOrder = { "actions" })
 public class Actions {
 
+	/**
+	 * 动作列表（物品/MP/HP/DP 消耗）。
+	 * Action list (item/MP/HP/DP costs).
+	 */
 	@XmlElements({ @XmlElement(name = "itemuse", type = ItemUseAction.class),
 			@XmlElement(name = "mpuse", type = MpUseAction.class),
 			@XmlElement(name = "hpuse", type = HpUseAction.class),
@@ -39,21 +30,10 @@ public class Actions {
 	protected List<Action> actions;
 
 	/**
-	 * Gets the value of the actions property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the actions property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getActions().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link ItemUseAction
-	 * } {@link MpUseAction } {@link HpUseAction } {@link DpUseAction }
+	 * 获取动作列表（活动列表，非快照；修改会反映到 JAXB 对象）。
+	 * Returns the live action list (not a snapshot; mutations affect the JAXB object).
+	 *
+	 * list of actions
 	 */
 	public List<Action> getActions() {
 		if (actions == null) {

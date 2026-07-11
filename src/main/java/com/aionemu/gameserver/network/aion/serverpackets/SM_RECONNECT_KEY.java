@@ -1,41 +1,26 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Response for CM_RECONNECT_AUTH with key that will be use for authentication
- * at LoginServer.
- * 
+ * 对 CM_RECONNECT_AUTH 的应答，下发登录服重连认证密钥。
+ * Response to CM_RECONNECT_AUTH providing a reconnection key for LoginServer auth.
+ *
  * @author -Nemesiss-
  */
 public class SM_RECONNECT_KEY extends AionServerPacket {
 
 	/**
-	 * key for reconnection - will be used for authentication
+	 * 重连密钥，用于认证。 / key for reconnection - will be used for authentication
 	 */
 	private final int key;
 
 	/**
+	 * 使用给定参数构造 SM_RECONNECT_KEY 包。
 	 * Constructs new <tt>SM_RECONNECT_KEY</tt> packet
-	 * 
-	 * @param key key for reconnection
+	 *
+	 * @param key 重连密钥 / reconnect key
 	 */
 	public SM_RECONNECT_KEY(int key) {
 		this.key = key;

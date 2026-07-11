@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.HashSet;
@@ -32,10 +16,23 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 喷泉/硬币喷泉奖励任务模板：通过交互物体消耗收集物品并立即进入奖励流程。
+ * coin-fountain reward quest template: consumes collected items via object interaction and enters reward immediately. / coin-fountain reward quest template: consumes collected items via object interaction and enters reward immediately.
+ */
 public class FountainRewards extends QuestHandler {
+	/** 任务 ID / quest id */
 	private final int questId;
+	/** 可交互的起始 NPC/物体 ID 集合 / set of interactable start NPC/object ids */
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
 
+	/**
+	 * 构造喷泉奖励任务处理器。
+	 * Constructs a fountain-rewards quest handler.
+	 *
+	 * quest id
+	 * @param startNpcIds 起始 NPC/物体 ID 列表（含占位 0） / start NPC/object id list (includes placeholder 0)
+	 */
 	public FountainRewards(int questId, List<Integer> startNpcIds) {
 		super(questId);
 		this.questId = questId;
@@ -43,6 +40,10 @@ public class FountainRewards extends QuestHandler {
 		this.startNpcs.remove(0);
 	}
 
+	/**
+	 * 注册各起始 NPC 的接取与对话事件。
+	 * Registers quest-start and talk events for every start NPC.
+	 */
 	@Override
 	public void register() {
 		Iterator<Integer> iterator = startNpcs.iterator();
@@ -53,6 +54,13 @@ public class FountainRewards extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理喷泉交互：校验物品与背包，启动任务并直接进入奖励；奖励阶段扣物品或放弃任务。
+	 * Handles fountain interaction: validates items and inventory, starts the quest into reward, then deducts items or abandons.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理该对话事件 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		Player player = env.getPlayer();
@@ -110,6 +118,16 @@ public class FountainRewards extends QuestHandler {
 		return false;
 	}
 
+	/**
+	 * 判断目标是否属于本任务可交互物体（喷泉等）。
+	 * Returns whether the target is an interactable object for this quest (fountains, etc.).
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @param questEventType 任务动作类型 / quest action type
+	 * extra objects
+	 *
+	 * @return 目标是否可交互 / whether the target may be acted on
+	 */
 	@Override
 	public boolean onCanAct(QuestEnv env, QuestActionType questEventType, Object... objects) {
 		if (startNpcs.contains(env.getTargetId())) {

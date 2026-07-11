@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -30,6 +14,10 @@ import com.aionemu.gameserver.model.autogroup.AutoGroup;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 自动组队数据容器，分别按实例 ID 与 NPC ID 索引自动组队模板。
+ * Auto-group data holder, dual-indexed by instance id and NPC id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "autoGroup" })
 @XmlRootElement(name = "auto_groups")
@@ -42,6 +30,10 @@ public class AutoGroupData {
 	@XmlTransient
 	private IntObjectHashMap<AutoGroup> autoGroupByNpcId = new IntObjectHashMap<AutoGroup>();
 
+	/**
+	 * JAXB 反序列化完成后，按实例 ID 与 NPC ID 建立双索引并释放列表。
+	 * After JAXB unmarshalling, dual-indexes by instance id and NPC id, then clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (AutoGroup ag : autoGroup) {
 			autoGroupByInstanceId.put(ag.getId(), ag);
@@ -55,10 +47,24 @@ public class AutoGroupData {
 		autoGroup = null;
 	}
 
+	/**
+	 * 按实例 mask ID 获取自动组队模板。
+	 * Returns the auto-group template for the given instance mask id.
+	 *
+	 * instance mask id
+	 *
+	 * @param maskId @return 模板，不存在则为 null / template or null
+	 */
 	public AutoGroup getTemplateByInstaceMaskId(int maskId) {
 		return autoGroupByInstanceId.get(maskId);
 	}
 
+	/**
+	 * 返回已加载的自动组队模板数量。
+	 * Returns the number of loaded auto-group templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return autoGroupByInstanceId.size();
 	}

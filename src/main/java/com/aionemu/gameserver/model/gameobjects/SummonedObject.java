@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
+ * 被召唤对象。
+ * Summoned Object game object.
+ *
  * @author ATracer
  */
 public class SummonedObject<T extends VisibleObject> extends Npc {
@@ -57,16 +44,19 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 		setLifeStats(new NpcLifeStats(this));
 	}
 
+	/** 获取等级。 / Returns the level. */
 	@Override
 	public byte getLevel() {
 		return this.level;
 	}
 
+	/** 返回 creator / Returns the creator */
 	@Override
 	public T getCreator() {
 		return creator;
 	}
 
+	/** 设置 creator / Sets the creator */
 	public void setCreator(T creator) {
 		if (creator instanceof Player) {
 			((Player) creator).setSummonedObj(this);
@@ -74,16 +64,19 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 		this.creator = creator;
 	}
 
+	/** 返回大师名称 / Returns the master name */
 	@Override
 	public String getMasterName() {
 		return creator != null ? creator.getName() : StringUtils.EMPTY;
 	}
 
+	/** 返回 creator id / Returns the creator id */
 	@Override
 	public int getCreatorId() {
 		return creator != null ? creator.getObjectId() : 0;
 	}
 
+	/** 返回 acting creature / Returns the acting creature */
 	@Override
 	public Creature getActingCreature() {
 		if (creator instanceof Creature) {
@@ -92,6 +85,7 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 		return this;
 	}
 
+	/** 返回大师 / Returns the master*/
 	@Override
 	public Creature getMaster() {
 		if (creator instanceof Creature) {
@@ -100,6 +94,7 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 		return this;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	@Override
 	public Race getRace() {
 		if (creator instanceof Creature) {

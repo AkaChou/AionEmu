@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -34,6 +18,9 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 冲刺效果：对目标造成物理伤害，并将施法者位移到目标附近（避免完全重叠）。
+ * Dash effect: deals physical damage and relocates the effector near the target (avoids full overlap).
+ *
  * @author ATracer
  * @modified 修复冲刺技能位置重叠问题，玩家不会直接落在目标身上
  */
@@ -41,16 +28,28 @@ import com.aionemu.gameserver.world.World;
 @XmlType(name = "DashEffect")
 public class DashEffect extends DamageEffect {
 
+	/**
+	 * 结算伤害并将施法者移动到技能目标坐标。
+	 * Applies damage and moves the effector to the skill target position.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
 		final Player effector = (Player) effect.getEffector();
 
-		// Move Effector to Effected
+		// 将施法者移至受影响者 / Move Effector to Effected
 		Skill skill = effect.getSkill();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
+	/**
+	 * 计算物理伤害与冲刺落点（按碰撞半径偏移，避免叠体）。
+	 * Calculates physical damage and dash landing offset by collision radii.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected() == null) {

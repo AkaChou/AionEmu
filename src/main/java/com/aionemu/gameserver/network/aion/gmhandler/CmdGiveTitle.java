@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.administration.PanelConfig;
@@ -23,15 +7,29 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * GM 指令：为目标玩家授予称号。
+ * GM command handler that grants a title to the target player.
+ *
  * @author Alcapwnd
  */
 public class CmdGiveTitle extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即授予称号。
+	 * Creates the handler and immediately grants the title.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 称号 ID 字符串 / title id as string
+	 */
 	public CmdGiveTitle(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 校验权限后为目标玩家添加指定称号。
+	 * After access check, adds the given title to the target player.
+	 */
 	public void run() {
 		Player t = admin;
 

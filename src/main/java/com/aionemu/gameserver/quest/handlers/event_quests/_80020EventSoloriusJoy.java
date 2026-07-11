@@ -1,20 +1,3 @@
-/*
- * This file is part of aion-lightning <aion-lightning.com>.
- *
- *  aion-lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  aion-lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with aion-lightning.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
 import com.aionemu.gameserver.lifecycle.GameEventServices;
@@ -36,6 +19,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.QuestService;
 
+/**
+ * 活动任务脚本：Event Solorius Joy（任务 ID 80020）。
+ * Event quest script: Event Solorius Joy (quest ID 80020).
+ */
 public class _80020EventSoloriusJoy extends QuestHandler {
 
 	private final static int questId = 80020;
@@ -127,7 +114,7 @@ public class _80020EventSoloriusJoy extends QuestHandler {
 			return QuestService.checkLevelRequirement(questId, player.getCommonData().getLevel());
 		}
 		else if (qs != null) {
-			// Set as expired
+			// 设为已过期 / Set as expired
 			QuestService.abandonQuest(player, questId);
 		}
 		return false;

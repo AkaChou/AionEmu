@@ -1,27 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * In this packet Server is sending response for CM_DELETE_CHARACTER.
- * 
+ * 角色删除响应包：回应 CM_DELETE_CHARACTER，返回角色对象 ID 与删除时间戳。
+ * Response to CM_DELETE_CHARACTER: character object id and deletion timestamp.
+ *
  * @author -Nemesiss-
  */
 public class SM_DELETE_CHARACTER extends AionServerPacket {
@@ -30,24 +15,22 @@ public class SM_DELETE_CHARACTER extends AionServerPacket {
 	private int deletionTime;
 
 	/**
-	 * Constructs new <tt>SM_DELETE_CHARACTER </tt> packet
+	 * @param playerObjId  角色对象 ID；0 表示失败 / character object id; 0 means failure
+	 * @param deletionTime 删除时间戳 / deletion timestamp
 	 */
 	public SM_DELETE_CHARACTER(int playerObjId, int deletionTime) {
 		this.playerObjId = playerObjId;
 		this.deletionTime = deletionTime;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
 		if (playerObjId != 0) {
-			writeD(0x00);// unk
+			writeD(0x00);// 未知 / unk
 			writeD(playerObjId);
 			writeD(deletionTime);
 		} else {
-			writeD(0x10);// unk
+			writeD(0x10);// 未知 / unk
 			writeD(0x00);
 			writeD(0x00);
 		}

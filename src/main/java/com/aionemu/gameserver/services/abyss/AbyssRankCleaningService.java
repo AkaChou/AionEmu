@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.abyss;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -32,8 +18,12 @@ import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
-@Slf4j
 
+/**
+ * 欧比斯排行清理服务：按配置周期剔除长期未登录上榜玩家。
+ * Abyss-rank cleaning service: drops long-offline ranked players by configured period.
+ */
+@Slf4j
 public class AbyssRankCleaningService {
 
 	private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
@@ -42,14 +32,22 @@ public class AbyssRankCleaningService {
 
 	private long startTime;
 
+	/**
+	 * 构造时若启用清理配置则立即执行一轮。
+	 * Runs one cleaning pass on construction when the cleaning config is enabled.
+	 */
 	public AbyssRankCleaningService() {
 		if (CleaningConfig.ABYSS_CLEANING_ENABLE) {
 			runCleaning();
 		}
 	}
 
+	/**
+	 * 校验最小安全周期后执行排行清理。
+	 * Validate the security-minimum period, then run ranking cleaning.
+	 */
 	private void runCleaning() {
-		log.info("AbyssRankCleaningService: Executing abyss cleaning");
+		log.info(I18n.get("log.fb9f433da952"));
 		startTime = System.currentTimeMillis();
 
 		int periodInDays = CleaningConfig.ABYSS_CLEANING_PERIOD;
@@ -57,11 +55,14 @@ public class AbyssRankCleaningService {
 		if (periodInDays > SECURITY_MINIMUM_PERIOD) {
 			runAbyssRankingCleaning();
 		} else {
-			log.warn(
-					"The configured days for database cleaning is to low. For security reasons the service will only execute with periods over 30 days!");
+			log.warn(I18n.get("log.d2c5a329849e"));
 		}
 	}
 
+	/**
+	 * 扫描双方上榜玩家，移除过期离线者并刷新缓存。
+	 * Scan both races' ranked players, remove stale offline ones, and reload cache.
+	 */
 	private void runAbyssRankingCleaning() {
 		ArrayList<AbyssRankingResult> rankingsElyos = DAOManager.getDAO(AbyssRankDAO.class)
 				.getAbyssRankingPlayers(Race.ELYOS);
@@ -96,13 +97,18 @@ public class AbyssRankCleaningService {
 		if (ToArray.size() > 0) {
 			DAOManager.getDAO(AbyssRankDAO.class).removePlayer(ToArray);
 			GameCoreGameplayServices.abyssRankingCache().reloadRankings();
-			log.info("Cleaned  " + ToArray.size() + " Abyss Ranking Rows in"
-					+ (System.currentTimeMillis() - startTime) / 1000L + " seconds!");
+			log.info(I18n.get("log.3ff8b7b008ed", ToArray.size(), (System.currentTimeMillis() - startTime) / 1000L));
 		} else {
-			log.info("None of Abyss Rankings is Out of Date.");
+			log.info(I18n.get("log.5be7179a3b2d"));
 		}
 	}
 
+	/**
+	 * 获取单例（优先 Spring {@link ObjectProvider}）。
+	 * Obtain the singleton (prefer Spring {@link ObjectProvider}).
+	 *
+	 * Service instance
+	 */
 	public static AbyssRankCleaningService getInstance() {
 		ObjectProvider<AbyssRankCleaningService> provider = instanceProvider;
 		if (provider != null) {
@@ -111,10 +117,20 @@ public class AbyssRankCleaningService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AbyssRankCleaningService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 静态单例持有者。
+	 * Static singleton holder.
+	 */
 	private static class SingletonHolder {
 		private static final AbyssRankCleaningService instance = new AbyssRankCleaningService();
 	}

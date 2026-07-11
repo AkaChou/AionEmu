@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.stats;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * 玩家属性模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Luno
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,26 +28,32 @@ public class PlayerStatsTemplate extends StatsTemplate {
 	@XmlAttribute(name = "will")
 	private int will;
 
+	/** 返回 power / Returns the power */
 	public int getPower() {
 		return power;
 	}
 
+	/** 返回 health / Returns the health */
 	public int getHealth() {
 		return health;
 	}
 
+	/** 返回 agility / Returns the agility */
 	public int getAgility() {
 		return agility;
 	}
 
+	/** 返回 accuracy / Returns the accuracy */
 	public int getAccuracy() {
 		return accuracy;
 	}
 
+	/** 返回 knowledge / Returns the knowledge */
 	public int getKnowledge() {
 		return knowledge;
 	}
 
+	/** 返回 will / Returns the will */
 	public int getWill() {
 		return will;
 	}

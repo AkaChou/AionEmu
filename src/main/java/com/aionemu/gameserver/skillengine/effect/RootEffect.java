@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -31,22 +15,39 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_IMMOBILIZE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 定身效果：禁止目标移动，受击时有概率提前解除。
+ * Root effect: immobilizes the target; may break early when attacked.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RootEffect")
 public class RootEffect extends EffectTemplate {
 	@XmlAttribute
 	protected int resistchance = 100;
 
+	/**
+	 * 将效果加入目标的效果控制器。
+	 * Adds this effect to the target effect controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 按定身抗性结算是否命中。
+	 * Resolves hit chance against root resistance.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.ROOT_RESISTANCE, null);
 	}
 
+	/**
+	 * 中止移动与当前技能，施加 ROOT 异常，并注册受击解除观察者。
+	 *
+	 * @param effect Aborts move / skill, applies ROOT abnormal, and registers an attacked observer that may remove the effect.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		final Creature effected = effect.getEffected();
@@ -70,6 +71,10 @@ public class RootEffect extends EffectTemplate {
 		effect.setActionObserver(observer, position);
 	}
 
+	/**
+	 * 清除 ROOT 异常并移除受击观察者。
+	 * Clears the ROOT abnormal and removes the attacked observer.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.getEffected().getEffectController().unsetAbnormal(AbnormalState.ROOT.getId());

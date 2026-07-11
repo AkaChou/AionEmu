@@ -8,6 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 沃特伦任务脚本：Village Seal Found（任务 ID 1158）。
+ * Verteron quest script: Village Seal Found (quest ID 1158).
+ */
 public class _1158Village_Seal_Found extends QuestHandler {
 
 	private final static int questId = 1158;

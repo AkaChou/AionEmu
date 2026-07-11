@@ -1,53 +1,27 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
- * This object is storing Account and corresponding to it reconnectionKey for
- * client that will be reconnecting to LoginServer from GameServer using fast
- * reconnect feature
+ * 快速重连账号：保存从游戏服返回登录服时的账号与 reconnectionKey。
+ * Reconnecting account: holds Account and reconnectionKey for fast reconnect from GameServer.
  *
  * @author -Nemesiss-
  */
 @Getter
+@RequiredArgsConstructor
 public class ReconnectingAccount {
 
     /**
-     * Account object of account that will be reconnecting.
+     * 即将重连的账号。
+     * Account that will reconnect.
      */
     private final Account account;
+
     /**
-     * Reconnection Key that will be used for authenticating
+     * 用于认证的重连密钥。
+     * Reconnection key used for authentication.
      */
     private final int reconnectionKey;
-
-    /**
-     * Constructor.
-     *
-     * @param account
-     * @param reconnectionKey
-     */
-    public ReconnectingAccount(Account account, int reconnectionKey) {
-        this.account = account;
-        this.reconnectionKey = reconnectionKey;
-    }
-
 }

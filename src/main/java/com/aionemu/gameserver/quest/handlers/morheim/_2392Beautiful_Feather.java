@@ -7,6 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 莫尔海姆任务脚本：Beautiful Feather（任务 ID 2392）。
+ * Morheim quest script: Beautiful Feather (quest ID 2392).
+ */
 public class _2392Beautiful_Feather extends QuestHandler {
 
 	private final static int questId = 2392;

@@ -1,26 +1,18 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.mail;
+
+/**
+ * 邮件 Formatter 接口。
+ * Mail Formatter interface.
+ */
 
 public abstract interface IMailFormatter {
 
+	/** 获取类型。 / Returns the type. */
 	public abstract MailPartType getType();
 
+	/** 返回 formatted string / Returns the formatted string */
 	public abstract String getFormattedString(MailPartType paramMailPartType);
 
+	/** 返回参数值 / Returns the param value*/
 	public abstract String getParamValue(String paramString);
 }

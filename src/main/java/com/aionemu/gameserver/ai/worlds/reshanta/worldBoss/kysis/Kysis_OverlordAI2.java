@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.kysis;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Kysis Overlord（@AIName "unsealed_kysis"），继承 AggressiveNpcAI2。
+ * Reshanta zone NPC AI: Kysis Overlord (@AIName "unsealed_kysis"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("unsealed_kysis")
 public class Kysis_OverlordAI2 extends AggressiveNpcAI2
 {
@@ -59,7 +45,7 @@ public class Kysis_OverlordAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//Kysis Fortress 5.3
+			// 基西斯要塞 5.3 / Kysis Fortress 5.3
 			case 279345:
 			case 279639:
 			case 269011:
@@ -79,7 +65,7 @@ public class Kysis_OverlordAI2 extends AggressiveNpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//A treasure chest has appeared.
+				// 出现了一个宝箱。 / A treasure chest has appeared.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 			}
 		});
@@ -89,9 +75,9 @@ public class Kysis_OverlordAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Unsealed Kysis.
+				// 解封的基西斯。 / Unsealed Kysis.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Dkisas_Named_Spawn);
-				//The Kysis Balaur Prince has appeared!
+				// 基西斯龙族王子已出现！ / The Kysis Balaur Prince has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Boss_hide_Dispel, 20000);
 			}
 		});

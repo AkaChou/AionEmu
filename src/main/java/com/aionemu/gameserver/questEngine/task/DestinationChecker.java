@@ -1,26 +1,21 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.task;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
+/**
+ * 跟随目的地检查器抽象基类，判断跟随生物是否到达目标条件。
+ * Abstract base for follow-destination checkers that decide whether a follower has reached its target condition.
+ */
 abstract class DestinationChecker {
 
+	/** 正在跟随的生物。 Creature currently following. */
 	protected Creature follower;
 
+	/**
+	 * 检查是否已到达目的地/满足目标条件。
+	 * target condition is met. / target condition is met.
+	 *
+	 * 若 destination reached 则为 true / true if destination reached
+	 */
 	abstract boolean check();
 }

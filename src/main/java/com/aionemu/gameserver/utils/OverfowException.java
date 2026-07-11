@@ -1,32 +1,21 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils;
 
 /**
- * @author MrPoke
+ * 安全数学运算溢出时抛出的错误（类名保留历史拼写 Overfow）。
+ * Error thrown when a safe math operation overflows (historical misspelling Overfow is preserved).
  *
+ * @author MrPoke
  */
 public class OverfowException extends Error {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 488570750616236378L;
 
+	/**
+	 * 使用指定消息创建溢出错误。
+	 * Creates an overflow error with the given message.
+	 *
+	 * Error message
+	 */
 	public OverfowException(String message) {
 		super(message);
 	}

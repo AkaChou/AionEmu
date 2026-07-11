@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -28,6 +12,10 @@ import com.google.common.collect.ImmutableMap;
 
 import java.lang.reflect.Field;
 
+/**
+ * 运行时查看与修改配置项的管理命令（{@code //configure}）。
+ * Admin command to show or set runtime configuration properties ({@code //configure}).
+ */
 public class Configure extends AdminCommand
 {
 	private static final ImmutableMap<String, Class<?>> commands = new ImmutableMap.Builder<String, Class<?>>()
@@ -57,16 +45,26 @@ public class Configure extends AdminCommand
 		.put("shutdown", ShutdownConfig.class)
 		.put("siege", SiegeConfig.class)
 		.put("thread", ThreadConfig.class)
-		.put("weddings", WeddingsConfig.class)
 		.put("world", WorldConfig.class)
 		.put("ipconfig", IPConfig.class)
 		.put("network", NetworkConfig.class)
 		.build();
-		
+
+	/**
+	 * 注册命令名为 {@code configure}。
+	 * Registers the command name {@code configure}.
+	 */
 	public Configure() {
 		super("configure");
 	}
-	
+
+	/**
+	 * 查看或设置配置类中的静态字段值。
+	 * Shows or sets a static field value on a config class.
+	 *
+	 * admin
+	 * @param params 参数：set|show、配置名、属性名、[新值] / set|show, config name, property, [new value]
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		String command = "";
@@ -127,7 +125,14 @@ public class Configure extends AdminCommand
 			PacketSendUtility.sendMessage(player, "Property changed and applyed");
 		}
 	}
-	
+
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //configure <set|show> <configname> <property> [<newvalue>]");

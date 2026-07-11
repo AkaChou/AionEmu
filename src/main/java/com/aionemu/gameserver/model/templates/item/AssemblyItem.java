@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import java.util.ArrayList;
@@ -23,6 +7,11 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * Assembly 物品模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AssemblyItem")
@@ -39,6 +28,7 @@ public class AssemblyItem {
 	@XmlAttribute(required = true)
 	protected List<Integer> parts;
 
+	/** 返回 parts / Returns the parts */
 	public List<Integer> getParts() {
 		if (parts == null) {
 			parts = new ArrayList<Integer>();
@@ -46,26 +36,32 @@ public class AssemblyItem {
 		return parts;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int value) {
 		id = value;
 	}
 
+	/** 返回 parts num / Returns the parts num */
 	public int getPartsNum() {
 		return partsNum;
 	}
 
+	/** 设置 parts num / Sets the parts num */
 	public void setPartsNum(int value) {
 		partsNum = value;
 	}
 
+	/** 返回 proc assembly / Returns the proc assembly */
 	public int getProcAssembly() {
 		return procAssembly;
 	}
 
+	/** 设置 proc assembly / Sets the proc assembly */
 	public void setProcAssembly(int value) {
 		procAssembly = value;
 	}

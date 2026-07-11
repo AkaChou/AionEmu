@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -29,9 +14,21 @@ import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 武器融合服务，处理双手武器合成与拆解。
+ * Arms fusion service handling two-handed weapon compound and decompound.
+ */
 @Slf4j
 public class ArmsfusionService {
 
+	/**
+	 * 将副武器属性融合到主武器上，并消耗副武器与基纳。
+	 * Fuses the secondary weapon into the primary weapon, consuming the secondary item and kinah.
+	 *
+	 * @param player 玩家 / player
+	 * @param firstItemUniqueId 主武器唯一 ID / primary weapon object id
+	 * @param secondItemUniqueId 副武器唯一 ID / secondary weapon object id
+	 */
 	public static void fusionWeapons(Player player, int firstItemUniqueId, int secondItemUniqueId) {
 		Item firstItem = player.getInventory().getItemByObjId(firstItemUniqueId);
 		if (firstItem == null) {
@@ -67,7 +64,7 @@ public class ArmsfusionService {
 		}
 		if (!firstItem.getItemTemplate().isCanFuse() || !secondItem.getItemTemplate().isCanFuse()) {
 			PacketSendUtility.sendMessage(player, "You performed illegal operation, admin will catch you");
-			log.info("[AUDIT] Client hack with item fusion, player: " + player.getName());
+			log.info(I18n.get("log.f034ccd4897a", player.getName()));
 			return;
 		}
 		if (!firstItem.getItemTemplate().isTwoHandWeapon()) {
@@ -107,6 +104,13 @@ public class ArmsfusionService {
 				SM_SYSTEM_MESSAGE.STR_COMPOUND_SUCCESS(firstItem.getNameId(), secondItem.getNameId()));
 	}
 
+	/**
+	 * 按品质返回融合价格倍率。
+	 * Returns the fusion price multiplier for the given item quality.
+	 *
+	 * item quality
+	 * price rate
+	 */
 	private static double rarityRate(ItemQuality rarity) {
 		switch (rarity) {
 		case COMMON:
@@ -126,10 +130,20 @@ public class ArmsfusionService {
 		}
 	}
 
+	/**
+	 * 拆解已融合武器，清除融合属性与融合石。
+	 * Breaks a fused weapon, clearing fusion data and fusion stones.
+	 *
+	 * @param player 玩家 / player
+	 * @param weaponToBreakUniqueId 待拆解武器唯一 ID / weapon object id to break
+	 */
 	public static void breakWeapons(Player player, int weaponToBreakUniqueId) {
 		Item weaponToBreak = player.getInventory().getItemByObjId(weaponToBreakUniqueId);
 		if (weaponToBreak == null) {
 			weaponToBreak = player.getEquipment().getEquippedItemByObjId(weaponToBreakUniqueId);
+		}
+		if (weaponToBreak == null) {
+			return;
 		}
 		if (!weaponToBreak.hasFusionedItem()) {
 			PacketSendUtility.sendPacket(player,

@@ -9,6 +9,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.item.ItemService;
 
+/**
+ * 西奥博莫斯任务脚本：Dangerous Probability（任务 ID 3074）。
+ * Theobomos quest script: Dangerous Probability (quest ID 3074).
+ */
 public class _3074Dangerous_Probability extends QuestHandler {
 
 	private final static int questId = 3074;

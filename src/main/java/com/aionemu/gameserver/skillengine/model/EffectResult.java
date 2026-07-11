@@ -1,28 +1,19 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 /**
- * @author Cheatkiller
+ * 效果结算结果：普通命中、被吸收或冲突覆盖。
+ * Effect result: normal hit, absorbed, or conflict override.
  *
+ * @author Cheatkiller
  */
 public enum EffectResult {
 
-	NORMAL(0), ABSORBED(1), CONFLICT(2);
+	/** 普通 / Normal */
+	NORMAL(0),
+	/** 被吸收 / Absorbed */
+	ABSORBED(1),
+	/** 冲突（覆盖） / Conflict (override) */
+	CONFLICT(2);
 
 	private int id;
 
@@ -30,6 +21,12 @@ public enum EffectResult {
 		this.id = id;
 	}
 
+	/**
+	 * 获取协议 ID。
+	 * Gets protocol id.
+	 *
+	 * result id
+	 */
 	public int getId() {
 		return id;
 	}

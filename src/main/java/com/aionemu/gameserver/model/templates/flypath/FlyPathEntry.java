@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.flypath;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * 飞行路径条目模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author KID
  */
 @XmlRootElement(name = "flypath_location")
@@ -50,42 +37,52 @@ public class FlyPathEntry {
 	@XmlAttribute(name = "time", required = true)
 	private float time;
 
+	/** 返回 ID / Returns the id */
 	public short getId() {
 		return id;
 	}
 
+	/** 返回开始 X / Returns the start x */
 	public float getStartX() {
 		return startX;
 	}
 
+	/** 返回开始 Y / Returns the start y */
 	public float getStartY() {
 		return startY;
 	}
 
+	/** 返回开始 Z / Returns the start z */
 	public float getStartZ() {
 		return startZ;
 	}
 
+	/** 返回结束 X / Returns the end x */
 	public float getEndX() {
 		return endX;
 	}
 
+	/** 返回结束 Y / Returns the end y */
 	public float getEndY() {
 		return endY;
 	}
 
+	/** 返回结束 Z / Returns the end z */
 	public float getEndZ() {
 		return endZ;
 	}
 
+	/** 返回开始世界 ID / Returns the start world id */
 	public int getStartWorldId() {
 		return sworld;
 	}
 
+	/** 返回结束世界 ID / Returns the end world id */
 	public int getEndWorldId() {
 		return eworld;
 	}
 
+	/** 返回 time in ms / Returns the time in ms */
 	public int getTimeInMs() {
 		return (int) (time * 1000);
 	}

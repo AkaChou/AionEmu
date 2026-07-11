@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
 import java.util.Collection;
@@ -36,13 +20,33 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
+/**
+ * 物品充能服务，处理装备充能支付与效果应用。
+ * Item charge service handling equipment charging payment and effect apply.
+ */
 public class ItemChargeService {
+	/**
+	 * 按条件过滤可充能物品。
+	 * Filters chargeable items by condition.
+	 *
+	 * 玩家 / player
+	 * selectedItem
+	 * chargeWay
+	 * result
+	 */
 	public static Collection<Item> filterItemsToCondition(Player player, Item selectedItem, final int chargeWay) {
 		if (selectedItem != null) {
 			return Collections.singletonList(selectedItem);
 		}
 		return Collections2.filter(player.getEquipment().getEquippedItems(), new Predicate<Item>() {
 			@Override
+			/**
+			 * 应用效果。
+			 * Applies the effect.
+			 *
+			 * item
+			 * result
+			 */
 			public boolean apply(Item item) {
 				return item.getChargeLevelMax() != 0 && item.getImprovement() != null
 						&& item.getImprovement().getChargeWay() == chargeWay
@@ -51,6 +55,14 @@ public class ItemChargeService {
 		});
 	}
 
+	/**
+	 * 开始对已装备物品充能。
+	 * Starts charging equipped items.
+	 *
+	 * 玩家 / player
+	 * @param senderObj 发送者对象 / senderObj
+	 * chargeWay
+	 */
 	public static void startChargingEquippedItems(final Player player, int senderObj, final int chargeWay) {
 		final Collection<Item> filteredItems = filterItemsToCondition(player, null, chargeWay);
 		if (filteredItems.isEmpty()) {
@@ -60,6 +72,13 @@ public class ItemChargeService {
 		final long payAmount = calculatePrice(filteredItems);
 		RequestResponseHandler request = new RequestResponseHandler(player) {
 			@Override
+			/**
+			 * 接受请求。
+			 * Accepts the request.
+			 *
+			 * requester
+			 * responder
+			 */
 			public void acceptRequest(Creature requester, Player responder) {
 				if (processPayment(player, chargeWay, payAmount)) {
 					for (Item item : filteredItems) {
@@ -69,6 +88,13 @@ public class ItemChargeService {
 			}
 
 			@Override
+			/**
+			 * 拒绝请求。
+			 * Denies the request.
+			 *
+			 * requester
+			 * responder
+			 */
 			public void denyRequest(Creature requester, Player responder) {
 			}
 		};
@@ -87,12 +113,28 @@ public class ItemChargeService {
 		return result;
 	}
 
+	/**
+	 * 批量充能物品。
+	 * Charges multiple items.
+	 *
+	 * 玩家 / player
+	 * @param items 物品列表 / items
+	 * level
+	 */
 	public static void chargeItems(Player player, Collection<Item> items, int level) {
 		for (Item item : items) {
 			chargeItem(player, item, level);
 		}
 	}
 
+	/**
+	 * 充能物品。
+	 * Charges an item.
+	 *
+	 * 玩家 / player
+	 * item
+	 * level
+	 */
 	public static void chargeItem(Player player, Item item, int level) {
 		Improvement improvement = item.getImprovement();
 		if (improvement == null) {
@@ -129,10 +171,28 @@ public class ItemChargeService {
 		}
 	}
 
+	/**
+	 * 处理支付。
+	 * Processes payment.
+	 *
+	 * 玩家 / player
+	 * item
+	 * level
+	 * result
+	 */
 	public static boolean processPayment(Player player, Item item, int level) {
 		return processPayment(player, item.getImprovement().getChargeWay(), getPayAmountForService(item, level));
 	}
 
+	/**
+	 * 处理支付。
+	 * Processes payment.
+	 *
+	 * 玩家 / player
+	 * chargeWay
+	 * amount
+	 * result
+	 */
 	public static boolean processPayment(Player player, int chargeWay, long amount) {
 		switch (chargeWay) {
 		case 1:
@@ -143,10 +203,26 @@ public class ItemChargeService {
 		return false;
 	}
 
+	/**
+	 * 处理基纳支付。
+	 * Processes kinah payment.
+	 *
+	 * 玩家 / player
+	 * requiredKinah
+	 * result
+	 */
 	public static boolean processKinahPayment(Player player, long requiredKinah) {
 		return player.getInventory().tryDecreaseKinah(requiredKinah);
 	}
 
+	/**
+	 * 处理欧比斯点数支付。
+	 * Processes AP payment.
+	 *
+	 * 玩家 / player
+	 * @param requiredAP 所需欧比斯点 / requiredAP
+	 * result
+	 */
 	public static boolean processAPPayment(Player player, long requiredAP) {
 		if (player.getAbyssRank().getAp() < requiredAP) {
 			return false;
@@ -155,6 +231,14 @@ public class ItemChargeService {
 		return true;
 	}
 
+	/**
+	 * getPayAmountForService 方法。
+	 * getPayAmountForService method.
+	 *
+	 * item
+	 * chargeLevel
+	 * result
+	 */
 	public static long getPayAmountForService(Item item, int chargeLevel) {
 		Improvement improvement = item.getImprovement();
 		if (improvement == null) {

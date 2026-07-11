@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -34,10 +18,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Esoterrace 副本 NPC AI：Warden Surama（@AIName "wardensurama"），继承 AggressiveNpcAI2。
+ * Esoterrace instance NPC AI: Warden Surama (@AIName "wardensurama"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("wardensurama")
 public class Warden_SuramaAI2 extends AggressiveNpcAI2
 {
@@ -119,17 +105,17 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg() {
-		//Ha, fly little Daeva... if you can.
+		// 哈，飞吧小守护者……如果你能的话。 / Ha, fly little Daeva... if you can.
 		sendMsg(1500201, getObjectId(), false, 0);
-		//I'll... kill you all...
+		// 我要……杀光你们…… / I'll... kill you all...
 		sendMsg(1500197, getObjectId(), false, 5000);
-		//It's a shame... I deceived even Tiamat... and now a mere Daeva...
+		// 真遗憾……我连提亚马特都骗过了……如今却是个区区守护者…… / It's a shame... I deceived even Tiamat... and now a mere Daeva...
 		sendMsg(1500203, getObjectId(), false, 10000);
-		//I'll show you what real power looks like!
+		// 让你见识真正的力量！ / I'll show you what real power looks like!
 		sendMsg(1500202, getObjectId(), false, 15000);
-		//The Surkana Steam Jet has generated an updraft.
+		// 苏卡纳蒸汽喷射产生了上升气流。 / The Surkana Steam Jet has generated an updraft.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF4Re_Drana_09, 5000);
-		//Management Director Surama uses Collapsing Earth.
+		// 管理总监苏拉玛使用崩塌大地。 / Management Director Surama uses Collapsing Earth.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF4Re_Drana_10, 15000);
 	}
 	
@@ -147,7 +133,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2
 			deleteNpcs(p.getWorldMapInstance().getNpcs(282428));
 			deleteNpcs(p.getWorldMapInstance().getNpcs(283173));
 		}
-		//Arrggh...
+		// 啊啊…… / Arrggh...
 		sendMsg(1500196, getObjectId(), false, 0);
 		super.handleDied();
 	}

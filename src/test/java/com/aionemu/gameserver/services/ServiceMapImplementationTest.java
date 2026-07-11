@@ -69,11 +69,6 @@ class ServiceMapImplementationTest {
 	}
 
 	@Test
-	void playerInteractionServicesUseConcurrentMapsForRuntimeState() throws Exception {
-		assertConcurrentMap(WeddingService.class, "weddings");
-	}
-
-	@Test
 	void brokerServiceUsesConcurrentMapsForRuntimeIndexes() {
 		assertAll(
 			() -> assertConcurrentMap(BrokerService.class, "elyosBrokerItems"),

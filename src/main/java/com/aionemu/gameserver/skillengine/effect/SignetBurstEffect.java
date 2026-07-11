@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,10 @@ import com.aionemu.gameserver.controllers.attack.AttackUtil;
 import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 印记爆发效果：消耗目标身上的印记，按层数放大魔法伤害。
+ * Signet-burst effect: consumes the target signet and scales magical damage by its level.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SignetBurstEffect")
 public class SignetBurstEffect extends DamageEffect {
@@ -34,6 +22,11 @@ public class SignetBurstEffect extends DamageEffect {
 	@XmlAttribute
 	protected String signet;
 
+	/**
+	 * 查找印记效果，按层数调整伤害与命中修正，结算后结束印记。
+	 *
+	 * @param effect Finds the signet, scales damage / accuracy by level, calculates magical result, then ends the signet.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		Effect signetEffect = effect.getEffected().getEffectController().getAnormalEffect(signet);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.model.Race;
@@ -27,14 +11,24 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.WorldType;
 
 /**
+ * 道路观察者：玩家穿过道路平面时按种族/地图传送到出口。
+ * Road observer: teleports the player to the road exit when passing through the road plane.
+ *
  * @author SheppeR
  */
 public class RoadObserver extends ActionObserver {
 
+	/** 被观察玩家 / Observed player */
 	private Player player;
+	/** 道路对象 / Road object */
 	private Road road;
+	/** 上一位置 / Previous position */
 	private Point3D oldPosition;
 
+	/**
+	 * 空构造（字段为 null）。
+	 * Empty constructor (fields null).
+	 */
 	public RoadObserver() {
 		super(ObserverType.MOVE);
 		this.player = null;
@@ -42,6 +36,10 @@ public class RoadObserver extends ActionObserver {
 		this.oldPosition = null;
 	}
 
+	/**
+	 * road
+	 * 玩家 / player
+	 */
 	public RoadObserver(Road road, Player player) {
 		super(ObserverType.MOVE);
 		this.player = player;

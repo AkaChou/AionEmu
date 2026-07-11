@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.kaldor;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Kaldor 区域 NPC AI：Anoha Sword（@AIName "anoha_sword"），继承 NpcAI2。
+ * Kaldor zone NPC AI: Anoha Sword (@AIName "anoha_sword"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("anoha_sword")
 public class Anoha_SwordAI2 extends NpcAI2
 {
@@ -62,7 +48,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 				break;
 			}
 		}
-		//The Anoha Sealing Stone was used to release Anoha.
+		// 使用阿诺哈封印石释放了阿诺哈。 / The Anoha Sealing Stone was used to release Anoha.
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn_Item);
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		AI2Actions.deleteOwner(this);
@@ -74,7 +60,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Berserk Anoha will return to Kaldor in 30 minutes.
+				// 狂暴阿诺哈将在 30 分钟后返回卡尔多。 / Berserk Anoha will return to Kaldor in 30 minutes.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn_System);
 			}
 		});
@@ -84,7 +70,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Release Anoha.
+				// 释放阿诺哈。 / Release Anoha.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn);
 			}
 		});

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -24,14 +8,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 清理组队/联盟/找队缓存的管理命令（{@code //clear}）。
+ * Admin command that clears group, alliance or find-group caches ({@code //clear}).
+ *
  * @author KID
  */
 public class Clear extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code clear}。
+	 * Registers the command name {@code clear}.
+	 */
 	public Clear() {
 		super("clear");
 	}
 
+	/**
+	 * 按类型清理缓存：groups、allys 或 findgroup。
+	 * Clears caches by type: groups, allys or findgroup.
+	 *
+	 * admin
+	 * groups|allys|findgroup。 / groups|allys|findgroup
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if(params[0].equalsIgnoreCase("groups")) {
@@ -45,6 +43,13 @@ public class Clear extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "<usage //clear groups | allys | findgroup");

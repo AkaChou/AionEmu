@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -24,14 +8,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.lang.reflect.Field;
 
 /**
+ * 阵营频道（.faction）开关命令（{@code //channel}）。
+ * Admin command that toggles the faction channel ({@code //channel}).
+ *
  * @author SheppeR
  */
 public class Channel extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code channel}。
+	 * Registers the command name {@code channel}.
+	 */
 	public Channel() {
 		super("channel");
 	}
-	
+
+	/**
+	 * 开关 {@code FACTION_CMD_CHANNEL} 配置。
+	 * Toggles the {@code FACTION_CMD_CHANNEL} config flag.
+	 *
+	 * admin
+	 * on|off。 / on|off
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		Class<?> classToMofify = CustomConfig.class;
@@ -53,6 +51,13 @@ public class Channel extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //channel <On | Off>");

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.action;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,17 +10,35 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 物品消耗动作：施法时从玩家背包扣除指定物品。
+ * Item cost action: removes items from the player inventory on cast.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ItemUseAction")
 public class ItemUseAction extends Action {
 
+	/**
+	 * 消耗物品 ID。
+	 * Item id to consume.
+	 */
 	@XmlAttribute(required = true)
 	protected int itemid;
+
+	/**
+	 * 消耗数量。
+	 * Quantity to consume.
+	 */
 	@XmlAttribute(required = true)
 	protected int count;
 
+	/**
+	 * 从玩家背包扣除物品；非玩家施法者忽略。
+	 * Decreases items from player inventory; ignored for non-player casters.
+	 *
+	 * @param skill 当前技能上下文 / current skill context
+	 */
 	@Override
 	public void act(Skill skill) {
 		if (skill.getEffector() instanceof Player) {

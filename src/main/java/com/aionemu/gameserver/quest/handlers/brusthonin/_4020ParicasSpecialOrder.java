@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Aion Gates
+/**
+ * 布鲁斯特霍宁任务脚本：Paricas Special Order（任务 ID 4020）。
+ * Brusthonin quest script: Paricas Special Order (quest ID 4020).
  */
 public class _4020ParicasSpecialOrder extends QuestHandler {
 

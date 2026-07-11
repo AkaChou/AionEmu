@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -32,9 +16,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 动态裂隙配置数据容器，维护裂隙地点模板与运行时地点映射。
+ * Dynamic rift configuration data holder for rift location templates and runtime locations.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "dynamic_rift")
 public class DynamicRiftData {
@@ -44,16 +30,32 @@ public class DynamicRiftData {
 	@XmlTransient
 	private Map<Integer, DynamicRiftLocation> dynamicRift = new LinkedHashMap<Integer, DynamicRiftLocation>();
 
+	/**
+	 * JAXB 反序列化完成后，将模板转换为地点实例并写入索引。
+	 * After JAXB unmarshalling, converts templates into location instances and indexes them.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (DynamicRiftTemplate template : dynamicRiftTemplates) {
 			dynamicRift.put(template.getId(), new DynamicRiftLocation(template));
 		}
 	}
 
+	/**
+	 * 返回动态裂隙地点数量。
+	 * Returns the number of dynamic rift locations.
+	 *
+	 * location count
+	 */
 	public int size() {
 		return dynamicRift.size();
 	}
 
+	/**
+	 * 返回全部动态裂隙地点映射。
+	 * Returns the map of all dynamic rift locations.
+	 *
+	 * @return 地点 ID 到地点实例的映射 / map of location id to location instance
+	 */
 	public Map<Integer, DynamicRiftLocation> getDynamicRiftLocations() {
 		return dynamicRift;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items.storage;
 
 import java.util.List;
@@ -26,11 +10,11 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Public interface for Storage, later will rename probably
- * 
+ * 仓库接口。
+ * Storage interface.
+ *
  * @author ATracer
  */
 public interface IStorage {
@@ -114,7 +98,7 @@ public interface IStorage {
 	long decreaseItemCount(Item item, long count, ItemUpdateType updateType);
 
 	/**
-	 * Add operation should be used for new items incoming into storage from outside
+	 * 添加 operation 应为 used 用于新物品 incoming 到 storage 从 outside。 / Add operation should be used for new items incoming into storage from outside
 	 */
 	Item add(Item item);
 

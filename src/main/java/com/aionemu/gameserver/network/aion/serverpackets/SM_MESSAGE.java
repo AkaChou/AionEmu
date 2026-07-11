@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -23,6 +7,14 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 聊天消息服务端包。
+ * Server packet that delivers a chat message to the client.
+ * <p>
+ * 支持多种聊天频道（普通、喊话、组队、军团、密语、联盟等），并按种族/权限控制可读性。
+ * Supports multiple chat channels (normal, shout, group, legion, whisper, league, etc.)
+ * and gates readability by race/access level.
+ */
 public class SM_MESSAGE extends AionServerPacket {
 	private Player player;
 	private int senderObjectId;
@@ -34,6 +26,14 @@ public class SM_MESSAGE extends AionServerPacket {
 	private float y;
 	private float z;
 
+	/**
+	 * 由玩家对象构造聊天消息包（含坐标，用于喊话等）。
+	 * Builds a chat message from a player entity (includes coordinates for shout, etc.).
+	 *
+	 * sender player
+	 * message body
+	 * @param chatType 聊天频道类型 / chat channel type
+	 */
 	public SM_MESSAGE(Player player, String message, ChatType chatType) {
 		this.player = player;
 		this.senderObjectId = player.getObjectId();
@@ -46,6 +46,15 @@ public class SM_MESSAGE extends AionServerPacket {
 		this.z = player.getZ();
 	}
 
+	/**
+	 * 由原始字段构造聊天消息包（系统消息、无玩家实体场景）。
+	 * no player entity). / no player entity).
+	 *
+	 * @param senderObjectId 发送者对象 ID / sender object id
+	 * @param senderName 发送者名称 / sender display name
+	 * message body
+	 * @param chatType 聊天频道类型 / chat channel type
+	 */
 	public SM_MESSAGE(int senderObjectId, String senderName, String message, ChatType chatType) {
 		this.senderObjectId = senderObjectId;
 		this.senderName = senderName;

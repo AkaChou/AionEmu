@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.utils.stats.CalculationType;
 
 /**
+ * 属性 WeaponMastery 函数模型。
+ * Stat Weapon Mastery Function model.
+ *
  * @author ATracer (based on Mr.Poke WeaponMasteryModifier)
  */
 public class StatWeaponMasteryFunction extends StatRateFunction {
@@ -37,6 +24,7 @@ public class StatWeaponMasteryFunction extends StatRateFunction {
 		this.weaponType = weaponType;
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat, CalculationType... calculationTypes) {
 		Player player = (Player) stat.getOwner();

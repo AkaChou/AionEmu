@@ -1,19 +1,3 @@
-/*
- * This file is part of aion-lightning <aion-lightning.com>.
- *
- *  aion-lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  aion-lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with aion-lightning.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -32,7 +16,19 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 对话事件处理器，负责 NPC 与玩家的对话、城镇校验及结束对话清理。
+ * Handles talk events: NPC-player dialogs, town residence checks, and finish-talk cleanup.
+ */
 public class TalkEventHandler {
+
+	/**
+	 * 处理完整对话：进入对话子状态，处理任务对话框，并按标题 / 城镇发送对话窗口。
+	 * town. / town.
+	 *
+	 * NPC AI instance
+	 * talking creature
+	 */
 	public static void onTalk(NpcAI2 npcAI, Creature creature) {
 		onSimpleTalk(npcAI, creature);
 		if (creature instanceof Player) {
@@ -43,8 +39,8 @@ public class TalkEventHandler {
 			switch (npcAI.getOwner().getObjectTemplate().getTitleId()) {
 			case 462877: // Village Trade Broker.
 			case 462878: // Village Guestbloom.
-				// case 462881: //Village Quest Board.
-				// Oriel.
+				// case 462881: // 村庄任务公告板。 / Village Quest Board.
+				// 奥利尔。 / Oriel.
 			case 730677:
 			case 831198:
 			case 831199:
@@ -60,7 +56,7 @@ public class TalkEventHandler {
 			case 831209:
 			case 831211:
 			case 831212:
-				// Pernon.
+				// 佩尔农。 / Pernon.
 			case 730679:
 			case 831223:
 			case 831224:
@@ -92,6 +88,13 @@ public class TalkEventHandler {
 		}
 	}
 
+	/**
+	 * 简化对话：对话框 NPC 进入 TALK 子状态并设定目标。
+	 * Simple talk: dialog NPCs enter TALK sub-state and set the target.
+	 *
+	 * NPC AI instance
+	 * talking creature
+	 */
 	public static void onSimpleTalk(NpcAI2 npcAI, Creature creature) {
 		if (npcAI.getOwner().getObjectTemplate().isDialogNpc()) {
 			npcAI.setSubStateIfNot(AISubState.TALK);
@@ -99,6 +102,13 @@ public class TalkEventHandler {
 		}
 	}
 
+	/**
+	 * 结束对话：清空目标（非跟随状态）并触发思考。
+	 * Finishes talk: clears target (unless following) and triggers think.
+	 *
+	 * NPC AI instance
+	 * @param creature 结束对话的对象 / creature finishing talk
+	 */
 	public static void onFinishTalk(NpcAI2 npcAI, Creature creature) {
 		Npc owner = npcAI.getOwner();
 		if (owner.isTargeting(creature.getObjectId())) {
@@ -109,6 +119,13 @@ public class TalkEventHandler {
 		}
 	}
 
+	/**
+	 * 简化结束对话：清除 TALK 子状态并清空目标。
+	 * Simple finish talk: clears TALK sub-state and target.
+	 *
+	 * NPC AI instance
+	 * @param creature 结束对话的对象 / creature finishing talk
+	 */
 	public static void onSimpleFinishTalk(NpcAI2 npcAI, Creature creature) {
 		Npc owner = npcAI.getOwner();
 		if (owner.isTargeting(creature.getObjectId()) && npcAI.setSubStateIfNot(AISubState.NONE)) {

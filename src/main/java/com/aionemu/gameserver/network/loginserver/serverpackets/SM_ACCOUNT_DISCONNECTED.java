@@ -1,41 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection;
 import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 
 /**
- * In this packet GameServer is informing LoginServer that some account is no
- * longer on GameServer [ie was disconencted]
- * 
+ * 游戏服通知登录服某账号已断开连接的服务端包。
+ * Server packet used by the game server to inform the login server that an account is no longer online.
+ *
  * @author -Nemesiss-
  */
 public class SM_ACCOUNT_DISCONNECTED extends LsServerPacket {
 
 	/**
-	 * AccountId of account that is no longer on GameServer.
+	 * 已从游戏服下线的账号 ID。
+	 * Account id that is no longer on the game server.
 	 */
 	private final int accountId;
 
 	/**
-	 * Constructs new instance of <tt>SM_ACCOUNT_DISCONNECTED </tt> packet.
-	 * 
-	 * @param accountId account id
+	 * 构造账号断开通知包。
+	 * Constructs a new account-disconnected packet.
+	 *
+	 * 账号 ID / account id
 	 */
 	public SM_ACCOUNT_DISCONNECTED(int accountId) {
 		super(0x03);
@@ -43,7 +29,8 @@ public class SM_ACCOUNT_DISCONNECTED extends LsServerPacket {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 写入已断开连接的账号 ID。
+	 * Writes the disconnected account id.
 	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {

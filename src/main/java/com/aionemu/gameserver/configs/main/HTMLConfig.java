@@ -1,32 +1,40 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
+/**
+ * HTML 欢迎页与缓存相关配置。
+ * HTML welcome and cache related configuration.
+ */
 public class HTMLConfig {
+	/**
+	 * 是否启用欢迎 HTML。
+	 * Whether welcome HTML is enabled.
+	 */
 	@Property(key = "gameserver.html.welcome.enable", defaultValue = "false")
 	public static boolean ENABLE_HTML_WELCOME;
+	/**
+	 * 是否启用新手指引 HTML。
+	 * Whether guide HTML pages are enabled.
+	 */
 	@Property(key = "gameserver.html.guides.enable", defaultValue = "true")
 	public static boolean ENABLE_GUIDES;
+	/**
+	 * HTML 静态资源根目录。
+	 * HTML static resources root directory.
+	 */
 	@Property(key = "gameserver.html.root", defaultValue = "./data/static_data/HTML/")
 	public static String HTML_ROOT;
+	/**
+	 * HTML 缓存文件路径。
+	 * HTML cache file path.
+	 */
 	@Property(key = "gameserver.html.cache.file", defaultValue = "./cache/html.cache")
 	public static String HTML_CACHE_FILE;
+	/**
+	 * HTML 文件编码。
+	 * HTML file encoding.
+	 */
 	@Property(key = "gameserver.html.encoding", defaultValue = "UTF-8")
 	public static String HTML_ENCODING;
 }

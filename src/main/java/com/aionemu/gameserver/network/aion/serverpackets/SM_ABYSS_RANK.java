@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
@@ -21,10 +5,20 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
+/**
+ * 向客户端同步玩家欧比斯军衔（AP/GP、击杀与日/周统计）的服务端包。
+ * Server packet synchronizing the player's Abyss rank (AP/GP, kills, and daily/weekly stats) to the client.
+ */
 public class SM_ABYSS_RANK extends AionServerPacket {
 	private AbyssRank rank;
 	private int currentRankId;
 
+	/**
+	 * 使用玩家当前欧比斯军衔数据构造同步包。
+	 * Creates a sync packet from the player's current Abyss rank data.
+	 *
+	 * @param rank 欧比斯军衔数据 / Abyss rank data
+	 */
 	public SM_ABYSS_RANK(AbyssRank rank) {
 		this.rank = rank;
 		this.currentRankId = rank.getRank().getId();

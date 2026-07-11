@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,17 +10,32 @@ import com.aionemu.gameserver.controllers.observer.AttackStatusObserver;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 必定格挡效果：在限定次数内强制将攻击判定为 BLOCK。
+ * Always-block effect: forces BLOCK attack status for a limited number of hits.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AlwaysBlockEffect")
 public class AlwaysBlockEffect extends EffectTemplate {
 
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 注册攻击判定观察者，命中 BLOCK 时消耗次数并可能结束效果。
+	 * Registers an attack-calc observer; BLOCK hits consume charges and may end the effect.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		AttackCalcObserver acObserver = new AttackStatusObserver(value, AttackStatus.BLOCK) {
@@ -60,6 +59,12 @@ public class AlwaysBlockEffect extends EffectTemplate {
 		effect.setAttackStatusObserver(acObserver, position);
 	}
 
+	/**
+	 * 移除攻击判定观察者。
+	 * Removes the attack-calc observer.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		AttackCalcObserver acObserver = effect.getAttackStatusObserver(position);

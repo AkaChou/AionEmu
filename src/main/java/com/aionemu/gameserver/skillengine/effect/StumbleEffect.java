@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -36,9 +20,17 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 踉跄效果：短距击退并施加 STUMBLE 物理控制。
+ * Stumble effect: short knockback with STUMBLE physical control.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StumbleEffect")
 public class StumbleEffect extends EffectTemplate {
+	/**
+	 * 非浮空/不可移动时加入控制器，结束滑翔并强制位移。
+	 * If not open-aerial/immobile, adds effect, ends glide, and forced-moves.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		if (!effect.getEffected().getEffectController().isAbnormalSet(AbnormalState.OPENAERIAL)
@@ -59,6 +51,10 @@ public class StumbleEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 清除浮空异常并施加 STUMBLE。
+	 * Clears open-aerial if set and applies STUMBLE abnormal.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		if (effect.getEffected().getEffectController().isAbnormalSet(AbnormalState.OPENAERIAL)) {
@@ -68,6 +64,10 @@ public class StumbleEffect extends EffectTemplate {
 		effect.setAbnormal(AbnormalState.STUMBLE.getId());
 	}
 
+	/**
+	 * 已有物理状态时失败；否则按踉跄抗性结算并计算击退坐标。
+	 * Fails if a physical state exists; otherwise resolves stumble resistance and target location.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected().getEffectController().hasPhysicalStateEffect()) {
@@ -94,6 +94,10 @@ public class StumbleEffect extends EffectTemplate {
 		effect.setTargetLoc(x1, y1, z);
 	}
 
+	/**
+	 * 清除物理状态标记与 STUMBLE 异常。
+	 * Clears physical-state flag and STUMBLE abnormal.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.setIsPhysicalState(false);

@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.model;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
@@ -27,41 +11,62 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 聊天客户端会话模型，绑定玩家标识、令牌、频道与禁言状态。
+ * Chat client session model binding player identity, token, channels and gag state.
+ *
  * @author ATracer
  */
 @Slf4j
 public class ChatClient {
 
     /**
-     * Id of chat client (player id)
+     * 聊天客户端 ID（玩家 ID）。
+     * Chat client id (player id).
      */
     private int clientId;
     /**
-     * Identifier used when sending message
+     * 发送消息时使用的标识字节。
+     * Identifier bytes used when sending messages.
      */
     private byte[] identifier;
     /**
-     * Token used during auth with GS
+     * 与游戏服鉴权时使用的令牌。
+     * Token used during auth with the game server.
      */
     private byte[] token;
     /**
-     * Channel handler of chat client
+     * 客户端网络通道处理器。
+     * Network channel handler of this chat client.
      */
     private ClientChannelHandler channelHandler;
     /**
-     * Map with all connected channels<br>
-     * Only one channel of specific type can be added
+     * 已加入频道映射；同类型频道仅可存在一个。
+     * Joined channels map; only one channel per type is allowed.
      */
     private Map<ChannelType, Channel> channelsList = new ConcurrentHashMap<>();
-    // last time message was requested and broadcasted
+    /**
+     * 最近一次请求并广播消息的时间戳。
+     * Timestamp of the last requested and broadcasted message.
+     */
     private long lastMessage;
+    /**
+     * 玩家真实昵称。
+     * Player real nickname.
+     */
     private String realName;
+    /**
+     * 禁言结束时间戳（毫秒）；0 表示未禁言。
+     * Gag end timestamp in millis; 0 means not gagged.
+     */
     private long gagTime;
 
     /**
-     * @param clientId
-     * @param token
-     * @param nick
+     * 创建聊天客户端会话。
+     * Creates a chat client session.
+     *
+     * @param clientId 客户端/玩家 ID / client (player) id
+     * @param token 鉴权令牌 / auth token
+     * @param nick 玩家昵称 / player nickname
      */
     public ChatClient(int clientId, byte[] token, String nick) {
         this.clientId = clientId;
@@ -70,65 +75,102 @@ public class ChatClient {
     }
 
     /**
-     * @param channel
+     * 加入指定频道（按频道类型覆盖）。
+     * Joins the given channel (overwrites by channel type).
+     *
+     * target channel
      */
     public void addChannel(Channel channel) {
         channelsList.put(channel.getChannelType(), channel);
     }
 
     /**
-     * @return the channelHandler
+     * 获取网络通道处理器。
+     * Returns the network channel handler.
+     *
+     * @return 通道处理器 / channel handler
      */
     public ClientChannelHandler getChannelHandler() {
         return channelHandler;
     }
 
     /**
-     * @return the clientId
+     * 获取客户端 ID。
+     * Returns the client id.
+     *
+     * client id
      */
     public int getClientId() {
         return clientId;
     }
 
     /**
-     * @return the identifier
+     * 获取发送标识字节。
+     * Returns the sender identifier bytes.
+     *
+     * identifier bytes
      */
     public byte[] getIdentifier() {
         return identifier;
     }
 
+    /**
+     * 获取玩家真实昵称。
+     * Returns the player real nickname.
+     *
+     * nickname
+     */
     public String getRealName() {
         return realName;
     }
 
     /**
-     * @return the token
+     * 获取鉴权令牌。
+     * Returns the auth token.
+     *
+     * token bytes
      */
     public byte[] getToken() {
         return token;
     }
 
     /**
-     * @param channel
+     * 判断是否已在指定类型频道中。
+     * Checks whether the client is already in a channel of the same type.
+     *
+     * @param channel 待检查频道 / channel to check
+     * @return 已加入则为 true / true if already joined
      */
     public boolean isInChannel(Channel channel) {
         return channelsList.containsKey(channel.getChannelType());
     }
 
     /**
-     * @param channelHandler the channelHandler to set
+     * 设置网络通道处理器。
+     * Sets the network channel handler.
+     *
+     * @param channelHandler 通道处理器 / channel handler
      */
     public void setChannelHandler(ClientChannelHandler channelHandler) {
         this.channelHandler = channelHandler;
     }
 
     /**
-     * @param identifier the identifier to set
+     * 设置发送标识字节。
+     * Sets the sender identifier bytes.
+     *
+     * identifier bytes
      */
     public void setIdentifier(byte[] identifier) {
         this.identifier = identifier;
     }
 
+    /**
+     * 校验消息发送间隔是否满足配置延迟。
+     * Verifies whether message send interval satisfies the configured delay.
+     *
+     * @return 允许发送则为 true / true if sending is allowed
+     */
     public boolean verifyLastMessage() {
         if (Config.MESSAGE_DELAY == 0) {
             return true;
@@ -140,7 +182,7 @@ public class ChatClient {
         } else {
             long diff = System.currentTimeMillis() - this.lastMessage;
             if (Config.MESSAGE_DELAY * 1000 > diff) {
-                log.warn("player " + this.getClientId() + " tried to flood (" + diff + "ms) traffic. skipped");
+                log.warn(I18n.get("log.c2c94e02b03f", this.getClientId(), diff));
                 return false;
             } else {
                 this.lastMessage = System.currentTimeMillis();
@@ -149,6 +191,12 @@ public class ChatClient {
         }
     }
 
+    /**
+     * 判断当前是否处于禁言状态。
+     * Checks whether the client is currently gagged.
+     *
+     * @return 禁言中则为 true / true if gagged
+     */
 	public boolean isGagged() {
 		if(this.gagTime == 0)
 			return false;
@@ -157,17 +205,36 @@ public class ChatClient {
 		return true;
 	}
 
+    /**
+     * 设置禁言结束时间戳。
+     * Sets the gag end timestamp.
+     *
+     * @param gagTime 结束时间戳（毫秒） / end timestamp in millis
+     */
     public void setGagTime(long gagTime) {
         this.gagTime = gagTime;
     }
 
+    /**
+     * 获取禁言结束时间戳。
+     * Returns the gag end timestamp.
+     *
+     * @return 结束时间戳（毫秒） / end timestamp in millis
+     */
     public long getGagTime() {
         return this.gagTime;
     }
 
+    /**
+     * 比较昵称是否与会话一致（当前实现始终返回 true，并在不一致时记录警告）。
+     * Compares nickname with session name (currently always returns true and logs on mismatch).
+     *
+     * @param nick 待比较昵称 / nickname to compare
+     * comparison result
+     */
     public boolean same(String nick) {
         if (!this.realName.equals(nick)) {
-            log.warn("chat hack! different name " + nick + ". expected " + this.realName);
+            log.warn(I18n.get("log.46e58c597440", nick, this.realName));
             return true;
         }
         return true;

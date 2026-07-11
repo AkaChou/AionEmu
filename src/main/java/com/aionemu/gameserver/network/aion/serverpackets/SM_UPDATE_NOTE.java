@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 更新玩家个性签名/备注的服务端包。
+ * signature. / signature.
+ *
  * @author xavier
  */
 @Slf4j
@@ -31,6 +18,10 @@ public class SM_UPDATE_NOTE extends AionServerPacket {
 	private int targetObjId;
 	private String note;
 
+	/**
+	 * target object id
+	 * @param note        新备注内容 / new note text
+	 */
 	public SM_UPDATE_NOTE(int targetObjId, String note) {
 		this.targetObjId = targetObjId;
 		this.note = note;

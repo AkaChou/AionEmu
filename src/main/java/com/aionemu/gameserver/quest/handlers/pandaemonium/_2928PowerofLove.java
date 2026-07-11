@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 潘德莫尼姆任务脚本：Powerof Love（任务 ID 2928）。
+ * Pandaemonium quest script: Powerof Love (quest ID 2928).
  */
 public class _2928PowerofLove extends QuestHandler {
 

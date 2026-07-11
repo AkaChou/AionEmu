@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * 修正行走路径（Walker）高度并保存的管理命令（{@code //fixpath}）。
+ * Admin command that corrects walker route heights and saves them ({@code //fixpath}).
+ *
  * @author Rolandas
  */
 public class FixPath extends AdminCommand {
@@ -41,10 +28,21 @@ public class FixPath extends AdminCommand {
 	static volatile boolean isRunning = false;
 	static Player runner = null;
 
+	/**
+	 * 注册命令名为 {@code fixpath}。
+	 * Registers the command name {@code fixpath}.
+	 */
 	public FixPath() {
 		super("fixpath");
 	}
 
+	/**
+	 * 沿指定路线逐步传送采样 Z 轴并写回 Walker 数据，或取消进行中的任务。
+	 * Walks a route sampling Z heights into Walker data, or cancels an in-progress run.
+	 *
+	 * admin
+	 * @param params 路线 ID 与跳跃高度，或 cancel / route id and jump height, or cancel
+	 */
 	@Override
 	public void execute(final Player admin, String... params) {
 		if (params == null || params.length < 1) {
@@ -164,6 +162,13 @@ public class FixPath extends AdminCommand {
 		}, 5000);
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax : //fixpath <route id> <jump height> | <cancel>");

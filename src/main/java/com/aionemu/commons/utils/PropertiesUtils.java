@@ -5,177 +5,175 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FileUtils;
 
 /**
- * 属性文件工具类，提供加载和处理Properties文件的功能
- * Properties file utility class providing functions for loading and processing Properties files
+ * Properties 文件加载与覆盖工具。
+ * Properties file loading and override helpers.
  */
+@UtilityClass
 public class PropertiesUtils {
-   /**
-    * 从指定文件路径加载Properties
-    * Load Properties from specified file path
-    *
-    * @param file 属性文件路径
-    *             Properties file path
-    * @return 加载的Properties对象
-    *         Loaded Properties object
-    * @throws IOException 如果文件读取失败
-    *                     If file reading fails
-    */
-   public static Properties load(String file) throws IOException {
-      return load(new File(file));
-   }
 
-   /**
-    * 从File对象加载Properties
-    * Load Properties from File object
-    *
-    * @param file 属性文件对象
-    *             Properties File object
-    * @return 加载的Properties对象
-    *         Loaded Properties object
-    * @throws IOException 如果文件读取失败
-    *                     If file reading fails
-    */
-   public static Properties load(File file) throws IOException {
-      FileInputStream fis = new FileInputStream(file);
-      Properties p = new Properties();
-      p.load(fis);
-      fis.close();
-      return p;
-   }
+    /**
+     * 从路径加载 Properties。
+     * Load Properties from a file path.
+     *
+     * @param file 属性文件路径 / Properties file path
+     * Loaded Properties
+     * On read failure
+     */
+    public Properties load(String file) throws IOException {
+        return load(new File(file));
+    }
 
-   /**
-    * 从多个文件路径加载Properties数组
-    * Load Properties array from multiple file paths
-    *
-    * @param files 属性文件路径数组
-    *              Array of Properties file paths
-    * @return 加载的Properties对象数组
-    *         Array of loaded Properties objects
-    * @throws IOException 如果任何文件读取失败
-    *                     If any file reading fails
-    */
-   public static Properties[] load(String... files) throws IOException {
-      Properties[] result = new Properties[files.length];
+    /**
+     * 从文件加载 Properties。
+     * Load Properties from a File.
+     *
+     * @param file 属性文件 / Properties file
+     * Loaded Properties
+     * On read failure
+     */
+    public Properties load(File file) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+        Properties p = new Properties();
+        p.load(fis);
+        fis.close();
+        return p;
+    }
 
-      for(int i = 0; i < result.length; ++i) {
-         result[i] = load(files[i]);
-      }
+    /**
+     * 从多个路径加载 Properties 数组。
+     * Load a Properties array from multiple paths.
+     *
+     * @param files 路径数组 / File paths
+     * Properties array
+     *
+     * @param files @throws IOException 任一文件读取失败 / On any read failure
+     */
+    public Properties[] load(String... files) throws IOException {
+        Properties[] result = new Properties[files.length];
 
-      return result;
-   }
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = load(files[i]);
+        }
 
-   /**
-    * 从多个File对象加载Properties数组
-    * Load Properties array from multiple File objects
-    *
-    * @param files 属性文件对象数组
-    *              Array of Properties File objects
-    * @return 加载的Properties对象数组
-    *         Array of loaded Properties objects
-    * @throws IOException 如果任何文件读取失败
-    *                     If any file reading fails
-    */
-   public static Properties[] load(File... files) throws IOException {
-      Properties[] result = new Properties[files.length];
+        return result;
+    }
 
-      for(int i = 0; i < result.length; ++i) {
-         result[i] = load(files[i]);
-      }
+    /**
+     * 从多个文件加载 Properties 数组。
+     * Load a Properties array from multiple Files.
+     *
+     * @param files 文件数组 / File array
+     * Properties array
+     *
+     * @param files @throws IOException 任一文件读取失败 / On any read failure
+     */
+    public Properties[] load(File... files) throws IOException {
+        Properties[] result = new Properties[files.length];
 
-      return result;
-   }
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = load(files[i]);
+        }
 
-   /**
-    * 从指定目录加载所有Properties文件
-    * Load all Properties files from specified directory
-    *
-    * @param dir 目录路径
-    *            Directory path
-    * @return 加载的Properties对象数组
-    *         Array of loaded Properties objects
-    * @throws IOException 如果目录读取失败
-    *                     If directory reading fails
-    */
-   public static Properties[] loadAllFromDirectory(String dir) throws IOException {
-      return loadAllFromDirectory(new File(dir), false);
-   }
+        return result;
+    }
 
-   public static Properties[] loadAllFromDirectory(File dir) throws IOException {
-      return loadAllFromDirectory(dir, false);
-   }
+    /**
+     * 加载目录下全部 Properties（非递归）。
+     * Load all Properties files under a directory (non-recursive).
+     *
+     * @param dir 目录路径 / Directory path
+     * Properties array
+     * On read failure
+     */
+    public Properties[] loadAllFromDirectory(String dir) throws IOException {
+        return loadAllFromDirectory(new File(dir), false);
+    }
 
-   public static Properties[] loadAllFromDirectory(String dir, boolean recursive) throws IOException {
-      return loadAllFromDirectory(new File(dir), recursive);
-   }
+    /**
+     * 加载目录下全部 Properties（非递归）。
+     * Load all Properties files under a directory (non-recursive).
+     *
+     * Directory
+     * Properties array
+     * On read failure
+     */
+    public Properties[] loadAllFromDirectory(File dir) throws IOException {
+        return loadAllFromDirectory(dir, false);
+    }
 
-   /**
-    * 从指定目录加载所有Properties文件，可选是否递归处理子目录
-    * Load all Properties files from specified directory with optional recursive processing
-    *
-    * @param dir 目录对象
-    *            Directory object
-    * @param recursive 是否递归处理子目录
-    *                  Whether to process subdirectories recursively
-    * @return 加载的Properties对象数组
-    *         Array of loaded Properties objects
-    * @throws IOException 如果目录读取失败
-    *                     If directory reading fails
-    */
-   public static Properties[] loadAllFromDirectory(File dir, boolean recursive) throws IOException {
-      Collection<File> files = FileUtils.listFiles(dir, new String[]{"properties"}, recursive);
-      return load((File[])files.toArray(new File[files.size()]));
-   }
+    /**
+     * 加载目录下全部 Properties，可选递归。
+     * Load all Properties files under a directory, optionally recursive.
+     *
+     * @param dir       目录路径 / Directory path
+     * Whether recursive
+     * Properties array
+     * On read failure
+     */
+    public Properties[] loadAllFromDirectory(String dir, boolean recursive) throws IOException {
+        return loadAllFromDirectory(new File(dir), recursive);
+    }
 
-   /**
-    * 使用新的Properties数组覆盖初始Properties数组的值
-    * Override values in initial Properties array with new Properties array
-    *
-    * @param initialProperties 初始Properties数组
-    *                         Initial Properties array
-    * @param properties 用于覆盖的Properties数组
-    *                   Properties array for overriding
-    * @return 更新后的Properties数组
-    *         Updated Properties array
-    */
-   public static Properties[] overrideProperties(Properties[] initialProperties, Properties[] properties) {
-      if (properties != null) {
-         Properties[] arr$ = properties;
-         int len$ = properties.length;
+    /**
+     * 加载目录下全部 Properties，可选递归。
+     * Load all Properties files under a directory, optionally recursive.
+     *
+     * Directory
+     * Whether recursive
+     * Properties array
+     * On read failure
+     */
+    public Properties[] loadAllFromDirectory(File dir, boolean recursive) throws IOException {
+        Collection<File> files = FileUtils.listFiles(dir, new String[]{"properties"}, recursive);
+        return load((File[]) files.toArray(new File[files.size()]));
+    }
 
-         for(int i$ = 0; i$ < len$; ++i$) {
-            Properties props = arr$[i$];
-            overrideProperties(initialProperties, props);
-         }
-      }
+    /**
+     * 用一组 Properties 覆盖初始数组中的每一项。
+     * Override each entry in the initial array with values from the override arrays.
+     *
+     * Initial array
+     *
+     * @param properties 覆盖源数组 / Override sources
+     * @param properties @return 更新后的初始数组 / Updated initial array
+     */
+    public Properties[] overrideProperties(Properties[] initialProperties, Properties[] properties) {
+        if (properties != null) {
+            Properties[] arr$ = properties;
+            int len$ = properties.length;
 
-      return initialProperties;
-   }
+            for (int i$ = 0; i$ < len$; ++i$) {
+                Properties props = arr$[i$];
+                overrideProperties(initialProperties, props);
+            }
+        }
 
-   /**
-    * 使用单个Properties对象覆盖Properties数组的值
-    * Override values in Properties array with single Properties object
-    *
-    * @param initialProperties 初始Properties数组
-    *                         Initial Properties array
-    * @param properties 用于覆盖的Properties对象
-    *                   Properties object for overriding
-    * @return 更新后的Properties数组
-    *         Updated Properties array
-    */
-   public static Properties[] overrideProperties(Properties[] initialProperties, Properties properties) {
-      if (properties != null) {
-         Properties[] arr$ = initialProperties;
-         int len$ = initialProperties.length;
+        return initialProperties;
+    }
 
-         for(int i$ = 0; i$ < len$; ++i$) {
-            Properties initialProps = arr$[i$];
-            initialProps.putAll(properties);
-         }
-      }
+    /**
+     * 用单个 Properties 覆盖初始数组中的每一项。
+     * Override each entry in the initial array with one Properties object.
+     *
+     * Initial array
+     * Override source
+     * @return 更新后的初始数组 / Updated initial array
+     */
+    public Properties[] overrideProperties(Properties[] initialProperties, Properties properties) {
+        if (properties != null) {
+            Properties[] arr$ = initialProperties;
+            int len$ = initialProperties.length;
 
-      return initialProperties;
-   }
+            for (int i$ = 0; i$ < len$; ++i$) {
+                Properties initialProps = arr$[i$];
+                initialProps.putAll(properties);
+            }
+        }
+
+        return initialProperties;
+    }
 }

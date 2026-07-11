@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -23,7 +7,13 @@ import com.aionemu.gameserver.model.instance.instancereward.PvPArenaReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 自动 PvPFFA 副本，用于 autogroup 相关逻辑。
+ * Auto Pv PFFA Instance for autogroup logic.
+ */
+
 public class AutoPvPFFAInstance extends AutoInstance {
+	/** 添加玩家。 / Adds player. */
 	@Override
 	public AGQuestion addPlayer(Player player, SearchInstance searchInstance) {
 		super.writeLock();
@@ -39,6 +29,7 @@ public class AutoPvPFFAInstance extends AutoInstance {
 		}
 	}
 
+	/** 按下回车时 / on Press Enter. */
 	@Override
 	public void onPressEnter(Player player) {
 		super.onPressEnter(player);
@@ -56,6 +47,7 @@ public class AutoPvPFFAInstance extends AutoInstance {
 		instance.register(player.getObjectId());
 	}
 
+	/** 离开副本 / On Leave Instance*/
 	@Override
 	public void onLeaveInstance(Player player) {
 		super.unregister(player);

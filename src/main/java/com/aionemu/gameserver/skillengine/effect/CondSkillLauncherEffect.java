@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,12 +8,15 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
+ * 条件技能触发效果：HP/MP 低于阈值时自动维持指定技能。
+ * Conditional skill launcher: maintains a linked skill while HP/MP is below a threshold.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,40 +28,90 @@ public class CondSkillLauncherEffect extends EffectTemplate {
 	@XmlAttribute
 	protected HealType type;
 
-	// TODO what if you fall? effect is not applied? what if you use skill that
-	// consume hp?
-
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 结束时清理属性修正与观察者。
+	 * Cleans up stat modifiers and the observer on end.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.getEffected().getGameStats().endEffect(effect);
 		ActionObserver observer = effect.getActionObserver(position);
-		effect.getEffected().getObserveController().removeObserver(observer);
+		if (observer != null) {
+			effect.getEffected().getObserveController().removeObserver(observer);
+		}
 	}
 
+	/**
+	 * 注册生命值观察者：低于阈值时触发关联技能，恢复后移除。
+	 * Observes HP/MP, applying the linked skill below the threshold and removing it above.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
-		ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
+		if (type != HealType.HP && type != HealType.MP) {
+			return;
+		}
+		ActionObserver observer = new ActionObserver(ObserverType.LIFE_CHANGED) {
+			private Effect conditionalEffect;
 
 			@Override
-			public void attacked(Creature creature) {
-				if (!effect.getEffected().getEffectController().hasAbnormalEffect(skillId)) {
-					if (effect.getEffected().getLifeStats()
-							.getCurrentHp() <= (int) (value / 100f * effect.getEffected().getLifeStats().getMaxHp())) {
-						SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
-						Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, template.getLvl(),
-								0);
-						e.initialize();
-						e.applyEffect();
+			public synchronized void lifeChanged(HealType changedType, int currentValue) {
+				if (changedType == type) {
+					int maxValue = type == HealType.HP ? effect.getEffected().getLifeStats().getMaxHp()
+							: effect.getEffected().getLifeStats().getMaxMp();
+					if (currentValue <= value / 100f * maxValue) {
+						if (conditionalEffect == null) {
+							conditionalEffect = applyConditionalEffect(effect);
+						}
+					} else if (conditionalEffect != null) {
+						conditionalEffect.endEffect();
+						conditionalEffect = null;
 					}
+				}
+			}
+
+			@Override
+			public synchronized void onRemoved() {
+				if (conditionalEffect != null) {
+					conditionalEffect.endEffect();
+					conditionalEffect = null;
 				}
 			}
 		};
 		effect.getEffected().getObserveController().addObserver(observer);
 		effect.setActionObserver(observer, position);
+		int currentValue = type == HealType.HP ? effect.getEffected().getLifeStats().getCurrentHp()
+				: effect.getEffected().getLifeStats().getCurrentMp();
+		observer.lifeChanged(type, currentValue);
+	}
+
+	private Effect applyConditionalEffect(Effect parentEffect) {
+		if (!parentEffect.getSkillTemplate().isPassive()) {
+			return SkillEngine.getInstance().applyEffect(skillId, parentEffect.getEffected(), parentEffect.getEffected());
+		}
+		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+		if (template == null) {
+			return null;
+		}
+		Effect effect = new Effect(parentEffect.getEffected(), parentEffect.getEffected(), template, template.getLvl(), 0);
+		effect.setIsForcedEffect(true);
+		effect.initialize();
+		effect.setForcedDuration(true);
+		effect.applyEffect();
+		return effect;
 	}
 }

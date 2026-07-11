@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -31,9 +15,11 @@ import com.aionemu.gameserver.model.templates.luna_dice.LunaDiceTable;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 露娜骰子奖励表数据容器，按表 ID 索引奖励物品列表。
+ * Luna dice reward-table data holder, indexing reward item lists by table id.
+ *
  * Created by Wnkrz on 26/07/2017.
  */
-
 @XmlRootElement(name = "luna_dice")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class LunaDiceData {
@@ -43,6 +29,10 @@ public class LunaDiceData {
 	@XmlTransient
 	private IntObjectHashMap<List<LunaDiceItem>> diceItemList = new IntObjectHashMap<>();
 
+	/**
+	 * JAXB 反序列化完成后，按表 ID 建立奖励物品列表索引。
+	 * After JAXB unmarshalling, indexes reward item lists by table id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		diceItemList.clear();
 		for (LunaDiceTable template : lunaDiceTabTemplate) {
@@ -50,14 +40,33 @@ public class LunaDiceData {
 		}
 	}
 
+	/**
+	 * 返回已加载的骰子表数量。
+	 * Returns the number of loaded dice tables.
+	 *
+	 * table count
+	 */
 	public int size() {
 		return diceItemList.size();
 	}
 
+	/**
+	 * 按表 ID 获取骰子奖励物品列表。
+	 * Returns the dice reward item list for the given table id.
+	 *
+	 * @param id 表 ID / table id
+	 * @return 奖励物品列表或 null / reward item list or null
+	 */
 	public List<LunaDiceItem> getLunaDiceTabById(int id) {
 		return diceItemList.get(id);
 	}
 
+	/**
+	 * 返回全部骰子表模板列表。
+	 * Returns the full list of dice table templates.
+	 *
+	 * @return 骰子表列表 / dice table list
+	 */
 	public List<LunaDiceTable> getLunaDiceTabs() {
 		return lunaDiceTabTemplate;
 	}

@@ -1,26 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.toypet;
 
 /**
+ * 宠物饥饿等级。
+ * Pet hunger level.
+ *
  * @author Rolandas
  */
 public enum PetHungryLevel {
-	HUNGRY(0), CONTENT(1), SEMIFULL(2), FULL(3);
+	/** 饥饿 / Hungry */
+	HUNGRY(0),
+	/** 满足 / Content */
+	CONTENT(1),
+	/** 半饱 / Semi-full */
+	SEMIFULL(2),
+	/** 吃饱 / Full */
+	FULL(3);
 
 	private byte value;
 
@@ -29,12 +23,21 @@ public enum PetHungryLevel {
 	}
 
 	/**
-	 * @return the value
+	 * 返回等级对应的数值。
+	 * Returns the numeric value of this level.
+	 *
+	 * Level value
 	 */
 	public byte getValue() {
 		return value;
 	}
 
+	/**
+	 * 返回下一饥饿等级；已满时回到饥饿。
+	 * Returns the next hunger level; wraps from full back to hungry.
+	 *
+	 * Next level
+	 */
 	public PetHungryLevel getNextValue() {
 		byte levelValue = value;
 		switch (levelValue) {
@@ -51,6 +54,13 @@ public enum PetHungryLevel {
 		}
 	}
 
+	/**
+	 * 按数值解析饥饿等级。
+	 * Resolve hunger level by numeric id.
+	 *
+	 * @param value 等级数值 / Level value
+	 * @return 对应枚举常量 / Matching enum constant
+	 */
 	public static PetHungryLevel fromId(int value) {
 		return PetHungryLevel.values()[value];
 	}

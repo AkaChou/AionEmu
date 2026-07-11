@@ -1,35 +1,39 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 /**
- * @author kecimis
+ * 攻击方暴击状态数据：结果、剩余次数、数值与是否百分比。
+ * Attacker critical status data: result, remaining count, value and percent flag.
  *
+ * @author kecimis
  */
 public class AttackerCriticalStatus {
+	/** 是否判定成功 / Whether the check succeeded */
 	private boolean result = false;
+	/** 剩余次数 / Remaining count */
 	private int count;
+	/** 暴击数值 / Critical value */
 	private int value;
+	/** 数值是否为百分比 / Whether value is percent-based */
 	private boolean isPercent;
 
+	/**
+	 * 仅携带判定结果的构造。
+	 * Constructor with result only.
+	 *
+	 * check result
+	 */
 	public AttackerCriticalStatus(boolean result) {
 		this.result = result;
 	}
 
+	/**
+	 * 携带次数与数值的构造。
+	 * Constructor with count and value.
+	 *
+	 * @param count 剩余次数 / remaining count
+	 * @param value 暴击数值 / critical value
+	 * @param isPercent 是否百分比 / whether percent-based
+	 */
 	public AttackerCriticalStatus(int count, int value, boolean isPercent) {
 		this.count = count;
 		this.value = value;
@@ -37,42 +41,42 @@ public class AttackerCriticalStatus {
 	}
 
 	/**
-	 * @return the count
+	 * remaining count
 	 */
 	public int getCount() {
 		return count;
 	}
 
 	/**
-	 * @param count the count to set
+	 * @param count 剩余次数 / remaining count to set
 	 */
 	public void setCount(int count) {
 		this.count = count;
 	}
 
 	/**
-	 * @return the value
+	 * critical value
 	 */
 	public int getValue() {
 		return value;
 	}
 
 	/**
-	 * @return the isPercent
+	 * @return 是否百分比 / whether percent-based
 	 */
 	public boolean isPercent() {
 		return isPercent;
 	}
 
 	/**
-	 * @return the result
+	 * check result
 	 */
 	public boolean isResult() {
 		return result;
 	}
 
 	/**
-	 * @param result the result to set
+	 * check result to set
 	 */
 	public void setResult(boolean result) {
 		this.result = result;

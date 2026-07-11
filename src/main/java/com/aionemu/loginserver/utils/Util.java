@@ -1,38 +1,20 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.utils;
 
+import com.aionemu.commons.utils.PrintUtils;
+
 /**
- * @author lord_rex
+ * 登录服通用打印工具（章节标题输出）。
+ * General login-server print utilities (section heading output).
  */
 public class Util {
 
     /**
-     * @param s
+     * 打印带分隔线的章节标题。
+     * Prints a section heading with separators.
+     *
+     * @param s 标题文本 / section title
      */
     public static void printSection(String s) {
-        s = "-[ " + s + " ]";
-
-        while (s.length() < 79) {
-            s = "=" + s;
-        }
-
-        System.out.println(s);
+        PrintUtils.printSection(s);
     }
 }

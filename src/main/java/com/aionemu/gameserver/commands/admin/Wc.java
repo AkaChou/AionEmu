@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -25,14 +9,28 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 管理员世界频道广播（按种族或全体）。
+ * Admin world-channel broadcast by race or to all.
+ *
  * @author -Evilwizard-, Wakizashi World Channel, only for GM/Admins
  */
 public class Wc extends AdminCommand {
 
+	/**
+	 * 构造 wc 命令。
+	 * Creates the wc command.
+	 */
 	public Wc() {
 		super("wc");
 	}
 
+	/**
+	 * 向天族/魔族/全体或默认本阵营发送世界频道消息。
+	 * Broadcasts a world-channel message to Elyos, Asmodians, all, or default own race.
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params ELY|ASM|ALL|default and message。 / ELY|ASM|ALL|default and message
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		int i = 1;
@@ -69,11 +67,11 @@ public class Wc extends AdminCommand {
 
 		String message = sbMessage.toString().trim();
 		int messageLenght = message.length();
-		
+
 		final String sMessage = message.substring(0, CustomConfig.MAX_CHAT_TEXT_LENGHT > messageLenght ? messageLenght : CustomConfig.MAX_CHAT_TEXT_LENGHT);
 		final boolean toAll = params[0].equals("ALL");
 		final Race race = adminRace;
-		
+
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
@@ -85,6 +83,13 @@ public class Wc extends AdminCommand {
 		});
 	}
 
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax : //wc <ELY | ASM | ALL | default> <message>");

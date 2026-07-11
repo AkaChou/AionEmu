@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns;
 
 import java.util.ArrayList;
@@ -26,6 +10,11 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 房屋刷新模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "spawns" })
 @XmlRootElement(name = "house")
@@ -37,6 +26,7 @@ public class HouseSpawns implements Comparable<HouseSpawns> {
 	@XmlAttribute(name = "address", required = true)
 	protected int address;
 
+	/** 获取刷新。 / Returns the spawns. */
 	public List<HouseSpawn> getSpawns() {
 		if (spawns == null) {
 			spawns = new ArrayList<HouseSpawn>();
@@ -44,14 +34,17 @@ public class HouseSpawns implements Comparable<HouseSpawns> {
 		return spawns;
 	}
 
+	/** 返回 address / Returns the address */
 	public int getAddress() {
 		return address;
 	}
 
+	/** 设置 address / Sets the address */
 	public void setAddress(int value) {
 		address = value;
 	}
 
+	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(HouseSpawns o) {
 		return o.address - address;

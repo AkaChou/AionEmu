@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import java.util.ArrayList;
@@ -30,15 +14,28 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_COOLDOWN;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * GM 指令：重置目标玩家技能/物品/房屋物件冷却。
+ * GM command handler that resets skill, item and house-object cooldowns for the target.
+ *
  * @author Alcapwnd
  */
 public class CmdItemCoolTime extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即重置冷却。
+	 * Creates the handler and immediately resets cooldowns.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 */
 	public CmdItemCoolTime(Player admin) {
 		super(admin, "");
 		run();
 	}
 
+	/**
+	 * 重置目标玩家的技能、物品与房屋物件冷却并同步客户端。
+	 * Resets skill, item and house-object cooldowns for the target and syncs the client.
+	 */
 	private void run() {
 		Player playerT = target != null ? target : admin;
 

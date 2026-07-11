@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.toypet;
 
 import java.util.ArrayList;
@@ -31,35 +15,33 @@ import com.aionemu.gameserver.model.templates.pet.PetFlavour;
 import com.aionemu.gameserver.model.templates.pet.PetRewards;
 
 /**
- * @author Rolandas
- */
-/**
- * <b>Current pre-calculated values multiplied by 4; in packet 14 bits. Max
- * value: 17600 / 4 is 13 bits; feed points as in retail packets.</b><br>
- * static final byte[][] pointValues = new byte[][] {<br>
- * // 10 25 40 50 100 200 -- feed max count<br>
- * { 0, 0, 0, 0, 0, 0 }, // level 1~5 items (feed points 0)<br>
- * { 80, 200, 320, 400, 800, 1600 }, // level 6~10 items (feed points 8)<br>
- * { 160, 400, 640, 800, 1600, 3200 }, // level 11~15 items (feed points 16)<br>
- * { 240, 600, 960, 1200, 2400, 4800 }, // level 16~20 items (feed points
- * 24)<br>
- * { 320, 800, 1280, 1600, 3200, 6400 }, // level 21~25 items (feed points
- * 32)<br>
- * { 400, 1000, 1600, 2000, 4000, 8000 }, // level 26~30 items (feed points
- * 40)<br>
- * { 480, 1200, 1920, 2400, 4800, 9600 }, // level 31~35 items (feed points
- * 48)<br>
- * { 560, 1400, 2240, 2800, 5600, 11200 }, // level 36~40 items (feed points
- * 56)<br>
- * { 640, 1600, 2560, 3200, 6400, 12800 }, // level 41~45 items (feed points
- * 64)<br>
- * { 720, 1800, 2880, 3600, 7200, 14400 }, // level 46~50 items (feed points
- * 72)<br>
- * { 800, 2000, 3200, 4000, 8000, 16000 }, // level 51~55 items (feed points
- * 80)<br>
- * { 880, 2200, 3520, 4400, 8800, 17600 } // level 56~60 items (feed points
- * 88)<br>
+ * 宠物喂养计算器，预计算积分表并更新喂养进度与奖励。
+ * Pet feed calculator precomputing point tables and updating feed progress/rewards.
+ *
+ * <p>
+ * 当前预计算值已乘以 4；协议中为 14 位。最大值 17600 / 4 为 13 位；喂养积分与零售包一致。
+ * Current pre-calculated values multiplied by 4; in packet 14 bits. Max value:
+ * 17600 / 4 is 13 bits; feed points as in retail packets.
+ * </p>
+ * <pre>
+ * static final byte[][] pointValues = new byte[][] {
+ * // 10 25 40 50 100 200 -- feed max count
+ * { 0, 0, 0, 0, 0, 0 }, // level 1~5 items (feed points 0)
+ * { 80, 200, 320, 400, 800, 1600 }, // level 6~10 items (feed points 8)
+ * { 160, 400, 640, 800, 1600, 3200 }, // level 11~15 items (feed points 16)
+ * { 240, 600, 960, 1200, 2400, 4800 }, // level 16~20 items (feed points 24)
+ * { 320, 800, 1280, 1600, 3200, 6400 }, // level 21~25 items (feed points 32)
+ * { 400, 1000, 1600, 2000, 4000, 8000 }, // level 26~30 items (feed points 40)
+ * { 480, 1200, 1920, 2400, 4800, 9600 }, // level 31~35 items (feed points 48)
+ * { 560, 1400, 2240, 2800, 5600, 11200 }, // level 36~40 items (feed points 56)
+ * { 640, 1600, 2560, 3200, 6400, 12800 }, // level 41~45 items (feed points 64)
+ * { 720, 1800, 2880, 3600, 7200, 14400 }, // level 46~50 items (feed points 72)
+ * { 800, 2000, 3200, 4000, 8000, 16000 }, // level 51~55 items (feed points 80)
+ * { 880, 2200, 3520, 4400, 8800, 17600 } // level 56~60 items (feed points 88)
  * };
+ * </pre>
+ *
+ * @author Rolandas
  */
 public final class PetFeedCalculator {
 
@@ -92,7 +74,8 @@ public final class PetFeedCalculator {
 	}
 
 	/**
-	 * Calculate point values for each item levels and each max feed count
+	 * 按物品等级与最大喂养次数预计算积分表。
+	 * Calculate point values for each item level and each max feed count.
 	 */
 	static void calculate() {
 		for (byte levelByte : itemLevels) {
@@ -117,11 +100,12 @@ public final class PetFeedCalculator {
 	}
 
 	/**
-	 * Formula to calculate pointValues array
-	 * 
-	 * @param feedPoints   - feed points for item
-	 * @param maxFeedCount - max feeding count
-	 * @return byte increment count after all items are fed
+	 * 计算喂满 maxFeedCount 次后的累计积分。
+	 * Formula to calculate pointValues array entries.
+	 *
+	 * @param feedPoints 单次喂养积分 / Feed points per item
+	 * @param maxFeedCount 最大喂养次数 / Max feeding count
+	 * Accumulated points after all items are fed
 	 */
 	static int getPoints(int feedPoints, int maxFeedCount) {
 		int points = 0;
@@ -147,10 +131,27 @@ public final class PetFeedCalculator {
 		return points;
 	}
 
+	/**
+	 * 按默认喂养倍率 1.0 更新喂养进度。
+	 * Update feed progress with default feeding rate 1.0.
+	 *
+	 * Feed progress
+	 * @param itemLevel 食物物品等级 / Food item level
+	 * @param maxFeedCount 最大喂养次数 / Max feed count
+	 */
 	public static void updatePetFeedProgress(PetFeedProgress progress, int itemLevel, int maxFeedCount) {
 		updatePetFeedProgress(progress, itemLevel, maxFeedCount, 1);
 	}
 
+	/**
+	 * 根据食物等级与喂养倍率更新喂养进度与饥饿等级。
+	 * Update feed progress and hunger level by food level and feeding rate.
+	 *
+	 * Feed progress
+	 * @param itemLevel 食物物品等级 / Food item level
+	 * @param maxFeedCount 最大喂养次数 / Max feed count
+	 * Feeding rate
+	 */
 	public static void updatePetFeedProgress(PetFeedProgress progress, int itemLevel, int maxFeedCount, float feedingRate) {
 		float rate = Math.max(0, feedingRate);
 		PetHungryLevel currHungryLevel = progress.getHungryLevel();
@@ -170,7 +171,7 @@ public final class PetFeedCalculator {
 		if ((currHungryLevel == PetHungryLevel.HUNGRY && regularCount > maxFeedCount * 0.5f)
 				|| (currHungryLevel == PetHungryLevel.CONTENT && regularCount > maxFeedCount * 0.8f)
 				|| (currHungryLevel == PetHungryLevel.SEMIFULL && regularCount > maxFeedCount * 1.05)) {
-			// forcefully switch level
+			// 强制切换等级 / forcefully switch level
 			needSwitch = true;
 		} else {
 			int finalLevel = itemLevel;
@@ -184,7 +185,7 @@ public final class PetFeedCalculator {
 		}
 
 		if (needSwitch) {
-			// just a prevention to not switch level
+			// 仅防止切换等级 / just a prevention to not switch level
 			PetHungryLevel nextLevel = progress.getHungryLevel().getNextValue();
 			if (nextLevel == PetHungryLevel.CONTENT && regularCount <= 0.487f * maxFeedCount
 					|| nextLevel == PetHungryLevel.SEMIFULL && regularCount <= 0.78f * maxFeedCount) {
@@ -196,6 +197,17 @@ public final class PetFeedCalculator {
 		progress.incrementCount(false);
 	}
 
+	/**
+	 * 在吃饱后按积分与奖励组选取喂养奖励。
+	 * Select feed reward from reward group after the pet is full.
+	 *
+	 * @param fullCount 吃饱所需次数 / Full count
+	 * Reward group
+	 * Feed progress
+	 * Player level
+	 *
+	 * @return 奖励结果，不可领时为 null / Reward result, or null if none
+	 */
 	public static PetFeedResult getReward(int fullCount, PetRewards rewardGroup, PetFeedProgress progress,
 			int playerLevel) {
 		if (progress.getHungryLevel() != PetHungryLevel.FULL || rewardGroup.getResults().size() == 0) {
@@ -239,7 +251,7 @@ public final class PetFeedCalculator {
 			}
 		}
 
-		// Fix rounding discrepancy
+		// 修复舍入偏差 / Fix rounding discrepancy
 		if (rewardIndex < 0) {
 			rewardIndex = 0;
 		} else if (rewardIndex > rewardGroup.getResults().size() - 1) {

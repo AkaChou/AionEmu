@@ -1,31 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.eventcallback;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 
 /**
- * Callback for {@link AIEventType#DIED} event
+ * 针对 {@link AIEventType#DIED} 事件的回调，在死亡处理前后分别触发钩子。
+ * Callback for the {@link AIEventType#DIED} event, invoking hooks before and after death handling.
  *
  * @author SoulKeeper
  */
 public abstract class OnDieEventCallback extends OnHandleAIGeneralEvent {
 
+	/**
+	 * 通用事件处理前：仅在事件为 {@link AIEventType#DIED} 时调用 {@link #onBeforeDie}。
+	 * Before general-event handling: call {@link #onBeforeDie} only when the event is {@link AIEventType#DIED}.
+	 *
+	 * AI instance
+	 * Event type
+	 */
 	@Override
 	protected void onBeforeHandleGeneralEvent(AbstractAI obj, AIEventType eventType) {
 		if (AIEventType.DIED == eventType) {
@@ -33,6 +25,13 @@ public abstract class OnDieEventCallback extends OnHandleAIGeneralEvent {
 		}
 	}
 
+	/**
+	 * 通用事件处理后：仅在事件为 {@link AIEventType#DIED} 时调用 {@link #onAfterDie}。
+	 * After general-event handling: call {@link #onAfterDie} only when the event is {@link AIEventType#DIED}.
+	 *
+	 * AI instance
+	 * Event type
+	 */
 	@Override
 	protected void onAfterHandleGeneralEvent(AbstractAI obj, AIEventType eventType) {
 		if (AIEventType.DIED == eventType) {
@@ -40,7 +39,19 @@ public abstract class OnDieEventCallback extends OnHandleAIGeneralEvent {
 		}
 	}
 
+	/**
+	 * 死亡处理前的钩子。
+	 * Hook invoked before death handling.
+	 *
+	 * @param obj 死亡的 AI 实例 / Dying AI instance
+	 */
 	public abstract void onBeforeDie(AbstractAI obj);
 
+	/**
+	 * 死亡处理后的钩子。
+	 * Hook invoked after death handling.
+	 *
+	 * @param obj 已死亡的 AI 实例 / Dead AI instance
+	 */
 	public abstract void onAfterDie(AbstractAI obj);
 }

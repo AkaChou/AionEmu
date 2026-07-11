@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.siege;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 玩家欧比斯点数，用于要塞相关逻辑。
+ * Player AP for siege logic.
+ *
  * @author antness
  */
 public class PlayerAP implements Comparable<PlayerAP> {
@@ -34,22 +21,27 @@ public class PlayerAP implements Comparable<PlayerAP> {
 		this.ap = 0;
 	}
 
+	/** 获取玩家。 / Returns the player. */
 	public Player getPlayer() {
 		return this.player;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return this.race;
 	}
 
+	/** 获取欧比斯点数。 / Returns the ap. */
 	public int getAP() {
 		return this.ap;
 	}
 
+	/** 增加欧比斯点数。 / Increase ap. */
 	public void increaseAP(int ap) {
 		this.ap += ap;
 	}
 
+	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(PlayerAP pl) {
 		return this.ap - pl.ap;

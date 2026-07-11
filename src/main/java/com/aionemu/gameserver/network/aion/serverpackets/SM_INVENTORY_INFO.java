@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collections;
@@ -27,8 +11,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 
 /**
- * In this packet Server is sending Inventory Info
- * 
+ * 向客户端发送背包物品信息的服务端包。
+ * Server packet that sends inventory item information to the client.
+ *
  * @author -Nemesiss-
  * @updater alexa026
  * @finisher Avol ;d modified by ATracer
@@ -48,11 +33,18 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 	private boolean isFirstPacket;
 
 	/**
-	 * @param isFirstPacket
+	 * 构造完整背包信息包，包含物品列表与背包扩展容量。
+	 * Creates a full inventory info packet with items and cube expand sizes.
+	 *
+	 * @param isFirstPacket 是否为首包 / whether this is the first packet
+	 * @param items 物品列表 / list of items
+	 * @param npcExpandsSize NPC 背包扩展格数 / cube expand size from NPC
+	 * @param questExpandsSize 任务背包扩展格数 / cube expand size from quest
+	 * target player
 	 */
 	public SM_INVENTORY_INFO(boolean isFirstPacket, List<Item> items, int npcExpandsSize, int questExpandsSize,
 			Player player) {
-		// this should prevent client crashes but need to discover when item is null
+		// 这应能防止客户端崩溃，但需查明物品何时为 null。 / this should prevent client crashes but need to discover when item is null
 		items.removeAll(Collections.singletonList(null));
 		this.isFirstPacket = isFirstPacket;
 		this.items = items;
@@ -62,6 +54,7 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 	}
 
 	/**
+	 * 构造空背包信息包。
 	 * Creates an empty inventory info packet.
 	 */
 	public SM_INVENTORY_INFO() {
@@ -79,7 +72,7 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 			return;
 		}
 
-		// something wrong with cube part.
+		// 背包部分有问题。 / something wrong with cube part.
 		writeC(isFirstPacket ? 1 : 0);
 		writeC(npcExpandsSize); // cube size from npc (so max 5 for now)
 		writeC(questExpandsSize); // cube size from quest (so max 2 for now)
@@ -102,7 +95,7 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 		itemInfoBlob.writeMe(getBuf());
 
 		writeH((int) (item.getEquipmentSlot() & 0xFFFF));
-		// probably a right to equip the item, related to passive skill learn
+		// 可能是装备权限，与被动技能学习相关 / probably a right to equip the item, related to passive skill learn
 		writeC(itemTemplate.isCloth() ? 1 : 0);
 	}
 }

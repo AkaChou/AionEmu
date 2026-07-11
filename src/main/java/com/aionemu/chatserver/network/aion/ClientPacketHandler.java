@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.aion;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
@@ -29,30 +11,35 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler.State;
 import com.aionemu.chatserver.service.BroadcastService;
 import com.aionemu.chatserver.service.ChatCoreServices;
 import com.aionemu.chatserver.service.ChatService;
+import lombok.RequiredArgsConstructor;
 
 /**
+ * 聊天客户端数据包分发处理器。
+ * Dispatcher for chat client packets.
+ *
  * @author ATracer
  */
+@RequiredArgsConstructor
 public class ClientPacketHandler extends AbstractPacketHandler {
 
     private final BroadcastService broadcastService;
     private final ChatService chatService;
 
+    /**
+     * 使用核心服务默认实例构造。
+     * Constructs using default core service instances.
+     */
     public ClientPacketHandler() {
         this(ChatCoreServices.broadcastService(), ChatCoreServices.chatService());
     }
 
-    public ClientPacketHandler(BroadcastService broadcastService, ChatService chatService) {
-        this.broadcastService = broadcastService;
-        this.chatService = chatService;
-    }
-
     /**
-     * Reads one packet from PacketReader
+     * 根据连接状态与操作码解析并构造客户端包。
+     * Resolves and constructs a client packet by connection state and opcode.
      *
-     * @param buf
-     * @param channelHandler
-     * @return AbstractClientPacket
+     * @param buf 包读取器 / packet reader
+     * @param channelHandler 客户端通道处理器 / client channel handler
+     * @return 客户端数据包，未知时为 {@code null} / client packet, or {@code null} if unknown
      */
     public AbstractClientPacket handle(PacketReader buf, ClientChannelHandler channelHandler) {
         int opCode = buf.readC();

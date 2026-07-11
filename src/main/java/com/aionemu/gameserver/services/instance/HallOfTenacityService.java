@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.instance;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -39,8 +25,10 @@ import com.aionemu.gameserver.world.World;
 
 /****/
 /**
- * Author Rinzler (Encom) /
- ****/
+ * 坚韧殿堂报名服务，管理开启窗口与冷却。
+ * Hall of Tenacity registration service managing open windows and cooldowns.
+ */
+
 @Slf4j
 
 public class HallOfTenacityService {
@@ -50,19 +38,31 @@ public class HallOfTenacityService {
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 125;
 
+	/**
+	 * initHallOfTenacity 方法。
+	 * initHallOfTenacity method.
+	 */
 	public void initHallOfTenacity() {
 		if (AutoGroupConfig.HALL_OF_TENACITY_ENABLED) {
-			log.info("Hall Of Tenacity 5.3");
-			// Hall Of Tenacity SAT-SUN "9AM-5PM"
+			log.info(I18n.get("log.9b3ac2974711"));
+			// 坚韧大厅 周六/日 09:00–17:00 / Hall Of Tenacity SAT-SUN "9AM-5PM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startHallOfTenacityRegistration();
 				}
 			}, AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_MORNING);
-			// Hall Of Tenacity MON-TUE-WED-THU-FRI "6PM-0AM"
+			// 坚韧大厅 周一至周五 18:00–00:00 / Hall Of Tenacity MON-TUE-WED-THU-FRI "6PM-0AM"
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					startHallOfTenacityRegistration();
 				}
@@ -73,6 +73,10 @@ public class HallOfTenacityService {
 	private void startUregisterHallOfTenacityTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
@@ -92,6 +96,10 @@ public class HallOfTenacityService {
 		}, AutoGroupConfig.HALL_OF_TENACITY_TIMER * 60 * 1000);
 	}
 
+	/**
+	 * startHallOfTenacityRegistration 方法。
+	 * startHallOfTenacityRegistration method.
+	 */
 	public void startHallOfTenacityRegistration() {
 		this.registerAvailable = true;
 		startUregisterHallOfTenacityTask();
@@ -103,17 +111,29 @@ public class HallOfTenacityService {
 				if (instanceMaskId > 0) {
 					PacketSendUtility.sendPacket(player,
 							new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon));
-					// The Hall of Tenacity is now open.
+					// 坚韧大厅现已开放。 / The Hall of Tenacity is now open.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDTM_Lobby01);
 				}
 			}
 		}
 	}
 
+	/**
+	 * isHallAvailable 方法。
+	 * isHallAvailable method.
+	 * result
+	 */
 	public boolean isHallAvailable() {
 		return this.registerAvailable;
 	}
 
+	/**
+	 * getInstanceMaskId 方法。
+	 * getInstanceMaskId method.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public byte getInstanceMaskId(Player player) {
 		int level = player.getLevel();
 		if (level < minLevel || level >= capLevel) {
@@ -122,14 +142,34 @@ public class HallOfTenacityService {
 		return maskId;
 	}
 
+	/**
+	 * 添加冷却。
+	 * Adds a cooldown.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void addCoolDown(Player player) {
 		this.playersWithCooldown.add(player.getObjectId());
 	}
 
+	/**
+	 * 是否处于冷却。
+	 * Whether cooldown is active.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	public boolean hasCoolDown(Player player) {
 		return this.playersWithCooldown.contains(player.getObjectId());
 	}
 
+	/**
+	 * 显示报名窗口。
+	 * Shows the registration window.
+	 *
+	 * 玩家 / player
+	 * instanceMaskId
+	 */
 	public void showWindow(Player player, byte instanceMaskId) {
 		if (getInstanceMaskId(player) != instanceMaskId) {
 			return;
@@ -143,6 +183,11 @@ public class HallOfTenacityService {
 		protected static final HallOfTenacityService instance = new HallOfTenacityService();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static HallOfTenacityService getInstance() {
 		ObjectProvider<HallOfTenacityService> provider = instanceProvider;
 		if (provider != null) {
@@ -151,6 +196,12 @@ public class HallOfTenacityService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<HallOfTenacityService> provider) {
 		instanceProvider = provider;
 	}

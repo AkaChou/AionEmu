@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：Foodfor Remote Places（任务 ID 2512）。
+ * Beluslan quest script: Foodfor Remote Places (quest ID 2512).
  */
 public class _2512FoodforRemotePlaces extends QuestHandler {
 

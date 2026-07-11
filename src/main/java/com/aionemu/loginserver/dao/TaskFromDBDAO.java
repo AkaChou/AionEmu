@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.dao;
 
 import java.util.ArrayList;
@@ -24,22 +6,26 @@ import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 
 /**
+ * 数据库驱动定时任务数据访问抽象层。
+ * DAO that loads scheduled tasks defined in the database.
+ *
  * @author Divinity, nrg
  */
 public abstract class TaskFromDBDAO implements DAO {
 
     /**
-     * Return all tasks from DB
+     * 加载全部数据库任务触发器。
+     * Returns all tasks from DB.
      *
-     * @return all tasks
+     * @return 任务触发器列表 / All task triggers
      */
     public abstract ArrayList<TaskFromDBTrigger> getAllTasks();
 
     /**
-     * Returns class name that will be uses as unique identifier for all DAO
-     * classes
+     * 返回实现唯一类名标识。
+     * Returns unique class name for all implementations.
      *
-     * @return class name
+     * Fully qualified class name
      */
     @Override
     public final String getClassName() {

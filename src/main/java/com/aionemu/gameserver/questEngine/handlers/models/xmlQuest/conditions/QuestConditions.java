@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.conditions;
 
 import java.util.List;
@@ -29,21 +13,33 @@ import com.aionemu.gameserver.questEngine.model.ConditionUnionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * XML 驱动任务条件集合，按 AND/OR 组合多个 {@link QuestCondition}。
+ * Set of XML-driven quest conditions combined with AND/OR via {@link ConditionUnionType}.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestConditions", propOrder = { "conditions" })
 public class QuestConditions {
 
+	/** 多态条件列表 / Polymorphic condition list */
 	@XmlElements({ @XmlElement(name = "quest_status", type = QuestStatusCondition.class),
 			@XmlElement(name = "npc_id", type = NpcIdCondition.class),
 			@XmlElement(name = "pc_inventory", type = PcInventoryCondition.class),
 			@XmlElement(name = "quest_var", type = QuestVarCondition.class),
 			@XmlElement(name = "dialog_id", type = DialogIdCondition.class) })
 	protected List<QuestCondition> conditions;
+	/** 条件组合方式（AND / OR）。 / How conditions are combined (AND / OR). */
 	@XmlAttribute(required = true)
 	protected ConditionUnionType operate;
 
+	/**
+	 * 按配置的组合方式校验整组条件。
+	 * Evaluates the whole condition set using the configured union type.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 组合结果是否通过 / Whether the combined result passes
+	 */
 	public boolean checkConditionOfSet(QuestEnv env) {
 		boolean inCondition = (operate == ConditionUnionType.AND);
 		for (QuestCondition cond : conditions) {

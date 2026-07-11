@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.materials;
 
 import java.util.HashMap;
@@ -28,6 +12,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * Mesh 列表模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MeshList", propOrder = { "meshMaterials" })
@@ -58,13 +47,14 @@ public class MeshList {
 		meshMaterials = null;
 	}
 
+	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return worldId;
 	}
 
 	/**
 	 * Find material ID for the specific mesh
-	 * 
+	 *
 	 * @param meshPath Mesh geo path
 	 * @return 0 if not found
 	 */
@@ -76,14 +66,17 @@ public class MeshList {
 		return materialId;
 	}
 
+	/** 返回 mesh paths / Returns the mesh paths */
 	public Set<String> getMeshPaths() {
 		return materialIdsByPath.keySet();
 	}
 
+	/** 获取区域名称。 / Returns the zone name. */
 	public String getZoneName(String meshPath) {
 		return pathZones.get(meshPath.hashCode());
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return materialIdsByPath.size();
 	}

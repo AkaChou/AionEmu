@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -24,15 +8,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
- * @author Eloann
+ * GM 在线/离线模式切换管理命令（{@code //gm}）。
+ * Admin command that toggles GM available/offline mode ({@code //gm}).
  *
+ * @author Eloann
  */
 public class GMMode extends AdminCommand {
 
+    /**
+     * 注册命令名为 {@code gm}。
+     * Registers the command name {@code gm}.
+     */
     public GMMode() {
         super("gm");
     }
 
+    /**
+     * 执行 GM 模式开关：{@code on|off} 与是否公告（{@code y/n}）。
+     * Executes GM mode toggle: {@code on|off} and announce flag ({@code y/n}).
+     *
+     * @param admin 执行命令的 GM / admin player
+     * @param params 参数：模式与公告标志 / mode and announce flag
+     */
     @Override
     public void execute(Player admin, String... params) {
         if (admin.getAccessLevel() < 1) {
@@ -91,11 +88,18 @@ public class GMMode extends AdminCommand {
         }
         if (params[0].equalsIgnoreCase("detector")) {
             //if (params[1].equalsIgnoreCase("on")){
-                //admin.
+                // 管理员。 / admin.
             // }
         }
     }
 
+    /**
+     * 发送命令语法帮助。
+     * Sends command syntax help.
+     *
+     * @param admin 执行 GM / admin player
+     * @param message 可选消息 / optional message
+     */
     @Override
     public void onFail(Player admin, String message) {
         String syntax = "syntax //gm <on|off> <y/n>\n y = You want to announce the players, that you are On\nAlso your Whisperable state changes to 'Whisperable'\n n = You don't want to announce the players, + You 'Whisperable' State goes Off";

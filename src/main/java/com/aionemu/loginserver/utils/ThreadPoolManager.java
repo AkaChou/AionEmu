@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.utils;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
@@ -28,11 +12,18 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
+ * 登录服线程池管理器：提供调度、瞬时与长任务三类执行池。
+ * Login-server thread-pool manager: provides scheduled, instant and long-running executor pools.
+ *
  * @author -Nemesiss-, NB4L1, MrPoke, lord_rex
  */
 @Slf4j
 public final class ThreadPoolManager {
 
+    /**
+     * 任务运行超过该毫秒数时发出警告。
+     * Warn when a runnable runs longer than this many milliseconds.
+     */
     public static final long MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000;
     private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
     private static final int LONG_RUNNING_QUEUE_CAPACITY = 100000;
@@ -40,6 +31,10 @@ public final class ThreadPoolManager {
     private final ThreadPoolExecutor instantPool;
     private final ThreadPoolExecutor longRunningPool;
 
+    /**
+     * 按 CPU 核数初始化三类线程池，并启动定期 purge。
+     * Initializes the three pools based on CPU count and starts periodic purge.
+     */
     public ThreadPoolManager() {
 
         int threadpoolsize = 2 + Runtime.getRuntime().availableProcessors() * 4;
@@ -67,7 +62,7 @@ public final class ThreadPoolManager {
             }
         }, 150000, 150000);
 
-        log.info("ThreadPoolManager: Initialized with " + scheduledPool.getPoolSize() + " scheduler, " + instantPool.getPoolSize() + " instant, " + longRunningPool.getPoolSize() + " long running thread(s).");
+        log.info(I18n.get("log.17977a3c1da1", scheduledPool.getPoolSize(), instantPool.getPoolSize(), longRunningPool.getPoolSize()));
     }
 
     private long validate(long delay) {
@@ -86,6 +81,14 @@ public final class ThreadPoolManager {
     }
 
     // ===========================================================================================
+    /**
+     * 延迟调度任务。
+     * Schedules a runnable after the given delay.
+     *
+     * @param r 任务 / runnable
+     * @param delay 延迟毫秒 / delay in milliseconds
+     * cancellable future
+     */
     public final ScheduledFuture<?> schedule(Runnable r, long delay) {
         r = new ThreadPoolRunnableWrapper(r);
         delay = validate(delay);
@@ -93,11 +96,28 @@ public final class ThreadPoolManager {
         return new ScheduledFutureWrapper(scheduledPool.schedule(r, delay, TimeUnit.MILLISECONDS));
     }
 
+    /**
+     * 延迟调度效果类任务（等同 schedule）。
+     * Schedules an effect-style task (delegates to schedule).
+     *
+     * @param r 任务 / runnable
+     * @param delay 延迟毫秒 / delay in milliseconds
+     * cancellable future
+     */
     public final ScheduledFuture<?> scheduleEffect(Runnable r, long delay) {
         return schedule(r, delay);
     }
 
     // ===========================================================================================
+    /**
+     * 固定频率周期调度。
+     * Schedules a runnable at a fixed rate.
+     *
+     * @param r 任务 / runnable
+     * @param delay 初始延迟毫秒 / initial delay in milliseconds
+     * 周期（毫秒） / period in milliseconds
+     * cancellable future
+     */
     public final ScheduledFuture<?> scheduleAtFixedRate(Runnable r, long delay, long period) {
         r = new ThreadPoolRunnableWrapper(r);
         delay = validate(delay);
@@ -106,21 +126,48 @@ public final class ThreadPoolManager {
         return new ScheduledFutureWrapper(scheduledPool.scheduleAtFixedRate(r, delay, period, TimeUnit.MILLISECONDS));
     }
 
+    /**
+     * 固定频率调度效果类任务（等同 scheduleAtFixedRate）。
+     * Schedules an effect-style task at a fixed rate (delegates to scheduleAtFixedRate).
+     *
+     * @param r 任务 / runnable
+     * @param delay 初始延迟毫秒 / initial delay in milliseconds
+     * 周期（毫秒） / period in milliseconds
+     * cancellable future
+     */
     public final ScheduledFuture<?> scheduleEffectAtFixedRate(Runnable r, long delay, long period) {
         return scheduleAtFixedRate(r, delay, period);
     }
 
     // ===========================================================================================
+    /**
+     * 在瞬时线程池中执行任务。
+     * Executes a runnable on the instant pool.
+     *
+     * @param r 任务 / runnable
+     */
     public final void execute(Runnable r) {
         r = new ThreadPoolRunnableWrapper(r);
 
         instantPool.execute(r);
     }
 
+    /**
+     * 执行普通任务（等同 execute）。
+     * Executes a general task (delegates to execute).
+     *
+     * @param r 任务 / runnable
+     */
     public final void executeTask(Runnable r) {
         execute(r);
     }
 
+    /**
+     * 在长任务线程池中执行。
+     * Executes a runnable on the long-running pool.
+     *
+     * @param r 任务 / runnable
+     */
     public final void executeLongRunning(Runnable r) {
         r = new RunnableWrapper(r);
 
@@ -128,12 +175,26 @@ public final class ThreadPoolManager {
     }
 
     // ===========================================================================================
+    /**
+     * 提交任务到瞬时线程池。
+     * Submits a runnable to the instant pool.
+     *
+     * @param r 任务 / runnable
+     * @return Future
+     */
     public final Future<?> submit(Runnable r) {
         r = new ThreadPoolRunnableWrapper(r);
 
         return instantPool.submit(r);
     }
 
+    /**
+     * 提交任务到长任务线程池。
+     * Submits a runnable to the long-running pool.
+     *
+     * @param r 任务 / runnable
+     * @return Future
+     */
     public final Future<?> submitLongRunning(Runnable r) {
         r = new RunnableWrapper(r);
 
@@ -142,25 +203,31 @@ public final class ThreadPoolManager {
 
     // ===========================================================================================
     /**
-     * Executes a loginServer packet task
+     * 执行登录服数据包任务。
+     * Executes a login-server packet task.
      *
-     * @param pkt runnable packet for Login Server
+     * @param pkt 可运行的数据包任务 / runnable packet for Login Server
      */
     public void executeLsPacket(Runnable pkt) {
         execute(pkt);
     }
 
     /**
-     * TaskManager schedulers
+     * TaskManager 使用的延迟调度入口。
+     * TaskManager delay scheduler entry point.
      *
-     * @param r runnable task
-     * @param delay wait before task execution
-     * @return scheduled task
+     * @param r 可运行任务 / runnable task
+     * @param delay 执行前等待毫秒 / wait before task execution
+     * @return 已调度任务 / scheduled task
      */
     public ScheduledFuture<?> scheduleTaskManager(Runnable r, long delay) {
         return schedule(r, delay);
     }
 
+    /**
+     * 清理各线程池中已取消的任务。
+     * Purges cancelled tasks from all pools.
+     */
     public void purge() {
         scheduledPool.purge();
         instantPool.purge();
@@ -168,15 +235,16 @@ public final class ThreadPoolManager {
     }
 
     /**
-     * Shutdown all thread pools.
+     * 关闭全部线程池并等待终止。
+     * Shutdown all thread pools and wait for termination.
      */
     public void shutdown() {
         final long begin = System.currentTimeMillis();
 
-        log.info("ThreadPoolManager: Shutting down.");
-        log.info("\t... executing " + getTaskCount(scheduledPool) + " scheduled tasks.");
-        log.info("\t... executing " + getTaskCount(instantPool) + " instant tasks.");
-        log.info("\t... executing " + getTaskCount(longRunningPool) + " long running tasks.");
+        log.info(I18n.get("log.8a50f53595f0"));
+        log.info(I18n.get("log.e0894695d98b", getTaskCount(scheduledPool)));
+        log.info(I18n.get("log.6aca868692a9", getTaskCount(instantPool)));
+        log.info(I18n.get("log.f6e5ab713d99", getTaskCount(longRunningPool)));
 
         scheduledPool.shutdown();
         instantPool.shutdown();
@@ -191,20 +259,26 @@ public final class ThreadPoolManager {
 
             success |= awaitTermination(10000);
         } catch (InterruptedException e) {
-            log.warn("Interrupted while shutting down thread pools", e);
+            log.warn(I18n.get("log.8f2ed10ffefe", e));
             Thread.currentThread().interrupt();
         }
 
-        log.info("\t... success: " + success + " in " + (System.currentTimeMillis() - begin) + " msec.");
-        log.info("\t... " + getTaskCount(scheduledPool) + " scheduled tasks left.");
-        log.info("\t... " + getTaskCount(instantPool) + " instant tasks left.");
-        log.info("\t... " + getTaskCount(longRunningPool) + " long running tasks left.");
+        log.info(I18n.get("log.e2793575e244", success, (System.currentTimeMillis() - begin)));
+        log.info(I18n.get("log.a4e82809c60b", getTaskCount(scheduledPool)));
+        log.info(I18n.get("log.5e21f4d731c1", getTaskCount(instantPool)));
+        log.info(I18n.get("log.63d1ee00d183", getTaskCount(longRunningPool)));
     }
 
     private int getTaskCount(ThreadPoolExecutor tp) {
         return tp.getQueue().size() + tp.getActiveCount();
     }
 
+    /**
+     * 收集三类线程池的运行时统计信息。
+     * Collects runtime statistics for all three pools.
+     *
+     * @return 可读统计行列表 / human-readable stats lines
+     */
     public List<String> getStats() {
         List<String> list = new ArrayList<String>();
 
@@ -273,6 +347,12 @@ public final class ThreadPoolManager {
         private static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
     }
 
+    /**
+     * 获取单例实例（已弃用，请走 boot 注入）。
+     * Returns the singleton instance (deprecated; prefer boot injection).
+     *
+     * singleton instance
+     */
     @Deprecated(since = "boot-migration")
     public static ThreadPoolManager getInstance() {
         return SingletonHolder.INSTANCE;

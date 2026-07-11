@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -36,17 +20,31 @@ import com.aionemu.gameserver.world.World;
 import java.util.Collection;
 
 /**
+ * 玩家工单（Petition）查询、删除与邮件回复的管理员命令。
+ * Admin command to list, inspect, delete or mail-reply to player petitions.
+ *
  * @author zdead
  */
 public class Petitions extends AdminCommand {
 
+	/**
+	 * 以别名 {@code petition} 构造命令。
+	 * Construct the command with alias {@code petition}.
+	 */
 	public Petitions() {
 		super("petition");
 	}
 
+	/**
+	 * 无参数列出待处理工单；{@code <id>} 查看详情；{@code <id> delete} 删除；{@code <id> reply ...} 邮件回复。
+	 * With no args list open petitions; {@code <id>} shows details; {@code <id> delete} removes; {@code <id> reply ...} mails a reply.
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params 工单 ID 与操作 / Petition id and action
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
-		// Send ticket general info
+		// 发送门票一般信息 / Send ticket general info
 		if (params == null || params.length == 0) {
 			Collection<Petition> petitions = GameRuntimeServices.petitionService().getRegisteredPetitions();
 			Petition[] petitionsArray = petitions.toArray(new Petition[0]);
@@ -97,7 +95,7 @@ public class Petitions extends AdminCommand {
 			isOnline = false;
 		}
 
-		// Read petition
+		// 读取申诉 / Read petition
 		if (params.length == 1) {
 			StringBuilder message = new StringBuilder();
 			message.append("== Petition #" + petitionId + " ==\n");
@@ -114,12 +112,12 @@ public class Petitions extends AdminCommand {
 			message.append(getFormattedAdditionalData(petition.getPetitionType(), petition.getAdditionalData()));
 			PacketSendUtility.sendMessage(admin, message.toString());
 		}
-		// Delete
+		// 删除 / Delete
 		else if (params.length == 2 && params[1].equals("delete")) {
 			GameRuntimeServices.petitionService().deletePetition(petition.getPlayerObjId());
 			PacketSendUtility.sendMessage(admin, "Petition #" + petitionId + " deleted.");
 		}
-		// Reply
+		// 回复 / Reply
 		else if (params.length >= 3 && params[1].equals("reply")) {
 			String replyMessage = "";
 			for (int i = 2; i < params.length - 1; i++)
@@ -206,6 +204,13 @@ public class Petitions extends AdminCommand {
 		return result;
 	}
 
+	/**
+	 * 参数错误时显示语法。
+	 * Show syntax when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax: //petition");

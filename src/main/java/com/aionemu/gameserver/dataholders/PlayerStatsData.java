@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -33,6 +17,10 @@ import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 玩家属性模板数据容器，按职业与等级哈希索引基础属性。
+ * Player stats template data holder, indexing base stats by class and level hash.
+ */
 @XmlRootElement(name = "player_stats_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PlayerStatsData {
@@ -41,6 +29,10 @@ public class PlayerStatsData {
 
 	private final IntObjectHashMap<PlayerStatsTemplate> playerTemplates = new IntObjectHashMap<PlayerStatsTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，归一化属性、写入等级模板并为各职业注册 0 级计算模板。
+	 * After JAXB unmarshalling, normalizes stats, indexes level templates, and registers level-0 calculated templates per class.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PlayerStatsType pt : templatesList) {
 			int code = makeHash(pt.getRequiredPlayerClass(), pt.getRequiredLevel());
@@ -71,20 +63,27 @@ public class PlayerStatsData {
 		playerTemplates.put(makeHash(PlayerClass.SPIRIT_MASTER, 0),
 				new CalculatedPlayerStatsTemplate(PlayerClass.SPIRIT_MASTER));
 
-		// News Class 4.3
+		// 资讯类 4.3 / News Class 4.3
 		playerTemplates.put(makeHash(PlayerClass.MUSE, 0), new CalculatedPlayerStatsTemplate(PlayerClass.MUSE));
 		playerTemplates.put(makeHash(PlayerClass.SONGWEAVER, 0),
 				new CalculatedPlayerStatsTemplate(PlayerClass.SONGWEAVER));
 		playerTemplates.put(makeHash(PlayerClass.TECHNIST, 0), new CalculatedPlayerStatsTemplate(PlayerClass.TECHNIST));
 		playerTemplates.put(makeHash(PlayerClass.GUNSLINGER, 0),
 				new CalculatedPlayerStatsTemplate(PlayerClass.GUNSLINGER));
-		// News Class 4.5
+		// 资讯类 4.5 / News Class 4.5
 		playerTemplates.put(makeHash(PlayerClass.AETHERTECH, 0),
 				new CalculatedPlayerStatsTemplate(PlayerClass.AETHERTECH));
 		templatesList.clear();
 		templatesList = null;
 	}
 
+	/**
+	 * 按玩家当前职业与等级获取属性模板；缺失时回退到 0 级模板。
+	 * Returns the stats template for the player's class and level; falls back to the level-0 template if missing.
+	 *
+	 * 玩家 / player
+	 * stats template
+	 */
 	public PlayerStatsTemplate getTemplate(Player player) {
 		PlayerStatsTemplate template = getTemplate(player.getCommonData().getPlayerClass(), player.getLevel());
 		if (template == null) {
@@ -93,6 +92,14 @@ public class PlayerStatsData {
 		return template;
 	}
 
+	/**
+	 * 按职业与等级获取属性模板；缺失时回退到 0 级模板。
+	 * Returns the stats template for the given class and level; falls back to the level-0 template if missing.
+	 *
+	 * player class
+	 * level
+	 * stats template
+	 */
 	public PlayerStatsTemplate getTemplate(PlayerClass playerClass, int level) {
 		PlayerStatsTemplate template = playerTemplates.get(makeHash(playerClass, level));
 		if (template == null) {
@@ -101,6 +108,12 @@ public class PlayerStatsData {
 		return template;
 	}
 
+	/**
+	 * 返回已加载的属性模板数量。
+	 * Returns the number of loaded stats templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return playerTemplates.size();
 	}

@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.FindGroup;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import java.util.Collection;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -51,6 +53,25 @@ class FindGroupServiceTest {
 		assertEquals(2, snapshot.size());
 	}
 
+	@Test
+	void updatesApplyListingAndIgnoresMissingEntries() throws ReflectiveOperationException {
+		FindGroupService service = objenesis.newInstance(FindGroupService.class);
+		FindGroup application = activeGroup(1);
+		Map<Integer, FindGroup> applications = new LinkedHashMap<Integer, FindGroup>();
+		applications.put(1, application);
+		setField(service, "elyosApplyFindGroups", applications);
+
+		Player player = objenesis.newInstance(Player.class);
+		PlayerCommonData commonData = new PlayerCommonData(1);
+		commonData.setRace(Race.ELYOS);
+		setField(player, "playerCommonData", commonData);
+
+		service.updateFindGroupList(player, 0x07, "updated", 1);
+
+		assertEquals("updated", application.getMessage());
+		assertDoesNotThrow(() -> service.updateFindGroupList(player, 0x07, "missing", 2));
+	}
+
 	private FindGroup expiredGroup(int objectId) throws ReflectiveOperationException {
 		FindGroup group = activeGroup(objectId);
 		Field field = FindGroup.class.getDeclaredField("lastUpdate");
@@ -63,10 +84,11 @@ class FindGroupServiceTest {
 		return new FindGroup(new TestAionObject(objectId), "test", 0);
 	}
 
-	private static void setField(FindGroupService service, String fieldName, Object value) throws ReflectiveOperationException {
-		Field field = FindGroupService.class.getDeclaredField(fieldName);
+	private static void setField(Object target, String fieldName, Object value) throws ReflectiveOperationException {
+		Class<?> type = target instanceof FindGroupService ? FindGroupService.class : target.getClass();
+		Field field = type.getDeclaredField(fieldName);
 		field.setAccessible(true);
-		field.set(service, value);
+		field.set(target, value);
 	}
 
 	private static class TestFindGroupService extends FindGroupService {

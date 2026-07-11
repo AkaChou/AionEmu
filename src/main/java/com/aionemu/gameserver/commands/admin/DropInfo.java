@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -28,14 +12,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 查看 NPC 掉落信息的管理命令（{@code //dropinfo}）。
+ * Admin command that shows NPC drop information ({@code //dropinfo}).
+ *
  * @author Oliver
  */
 public class DropInfo extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code dropinfo}。
+	 * Registers the command name {@code dropinfo}.
+	 */
 	public DropInfo() {
 		super("dropinfo");
 	}
 
+	/**
+	 * 按 NPC ID 或当前目标列出掉落组与掉落率。
+	 * Lists drop groups and chances by NPC id or current target.
+	 *
+	 * admin
+	 * optional NPC id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		NpcDrop npcDrop = null;
@@ -64,7 +62,7 @@ public class DropInfo extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "No drops for the selected NPC");
 			return;
 		}
-		
+
 		int count = 0;
 		PacketSendUtility.sendMessage(player, "[Drop Info for the specified NPC]\n");
 		for (DropGroup dropGroup: npcDrop.getDropGroup()){
@@ -77,8 +75,4 @@ public class DropInfo extends AdminCommand {
 		PacketSendUtility.sendMessage(player, count + " drops available for the selected NPC");
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

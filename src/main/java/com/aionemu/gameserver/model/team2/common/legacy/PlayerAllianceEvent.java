@@ -1,27 +1,17 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.common.legacy;
 
 /**
+ * 玩家联盟活动枚举。
+ * Player Alliance Event enumeration.
+ *
  * @author Sarynth
  */
 public enum PlayerAllianceEvent {
+	/** 离开 / Leave. */
 	LEAVE(0), LEAVE_TIMEOUT(0), BANNED(0), MOVEMENT(1), DISCONNECTED(3), JOIN(5), ENTER_OFFLINE(7), UNK(9),
+	/** 重连 / Reconnect. */
 	RECONNECT(13), ENTER(13), UPDATE(13), MEMBER_GROUP_CHANGE(5), APPOINT_VICE_CAPTAIN(13), DEMOTE_VICE_CAPTAIN(13),
+	/** Appoint Captain / Appoint Captain */
 	APPOINT_CAPTAIN(13);
 
 	private int id;
@@ -30,6 +20,7 @@ public enum PlayerAllianceEvent {
 		this.id = id;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return this.id;
 	}

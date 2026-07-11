@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +41,10 @@ import org.xml.sax.SAXException;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.housing.LBox;
 
+/**
+ * 房屋脚本（LBox）配置数据容器，负责默认脚本模板索引与脚本 XML 片段生成。
+ * House script (LBox) configuration data holder for default script templates and script XML fragment generation.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "lboxes")
 @Slf4j
@@ -67,10 +57,18 @@ public class HouseScriptData {
 	@XmlTransient
 	private final Map<Integer, LBox> defaultTemplates;
 
+	/**
+	 * 初始化默认模板索引容器。
+	 * Initializes the default template index container.
+	 */
 	public HouseScriptData() {
 		defaultTemplates = new HashMap<Integer, LBox>();
 	}
 
+	/**
+	 * JAXB 反序列化完成后，按脚本 ID 建立默认模板索引并释放原始列表。
+	 * After JAXB unmarshalling, indexes default templates by script id and releases the raw list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (LBox template : scriptData) {
 			defaultTemplates.put(template.getId(), template);
@@ -79,6 +77,15 @@ public class HouseScriptData {
 		scriptData = null;
 	}
 
+	/**
+	 * 基于默认脚本模板生成指定位置与图标的脚本 XML 片段。
+	 * Builds a script XML fragment for the given position and icon from a default script template.
+	 *
+	 * @param scriptId 默认脚本模板 ID / default script template id
+	 * script position id
+	 * icon id
+	 * @return 格式化后的脚本 XML 字符串 / formatted script XML string
+	 */
 	public String createScript(int scriptId, int position, int iconId) {
 		LBox template = defaultTemplates.get(scriptId);
 		LBox result = (LBox) template.clone();
@@ -95,6 +102,12 @@ public class HouseScriptData {
 		return XmlFormatter.format(writer.toString());
 	}
 
+	/**
+	 * 返回默认脚本模板数量。
+	 * Returns the number of default script templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return defaultTemplates.size();
 	}
@@ -110,15 +123,26 @@ public class HouseScriptData {
 			marshaller.setSchema(schema);
 			marshaller.setProperty("jaxb.encoding", "UTF-8");
 		} catch (Exception e) {
-			log.error("Could not instantiate HouseScriptData : \n" + e);
+			log.error(I18n.get("log.6cadba7ab22f", e));
 		}
 	}
 
+	/**
+	 * 简易 XML 格式化工具，用于缩进与 UTF-8 输出。
+	 * Simple XML formatter utility for indentation and UTF-8 output.
+	 */
 	@Slf4j
 	public static class XmlFormatter {
 		private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private static DocumentBuilder db;
 
+		/**
+		 * 将未格式化的 XML 字符串格式化为缩进输出。
+		 * Formats an unformatted XML string into indented output.
+		 *
+		 * @param unformattedXml 原始 XML 字符串 / raw XML string
+		 * @return 格式化后的 XML，失败则为 null / formatted XML, or null on failure
+		 */
 		public static String format(String unformattedXml) {
 			try {
 				Document document = parseXmlFile(unformattedXml);
@@ -134,6 +158,13 @@ public class HouseScriptData {
 			return null;
 		}
 
+		/**
+		 * 将 XML 字符串解析为 DOM 文档。
+		 * Parses an XML string into a DOM document.
+		 *
+		 * @param in XML 输入字符串 / XML input string
+		 * DOM document
+		 */
 		private static Document parseXmlFile(String in) {
 			try {
 				InputSource is = new InputSource(new StringReader(in));
@@ -149,7 +180,7 @@ public class HouseScriptData {
 			try {
 				db = dbf.newDocumentBuilder();
 			} catch (ParserConfigurationException e) {
-				log.error("Could not instantiate XmlFormatter : \n" + e);
+				log.error(I18n.get("log.dd62a8c2d8c4", e));
 			}
 		}
 	}

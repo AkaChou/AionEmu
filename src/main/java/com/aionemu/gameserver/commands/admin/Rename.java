@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -37,6 +21,9 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.Iterator;
 
 /**
+ * 角色改名指令；校验名称后重命名目标或指定玩家，并同步好友与军团。
+ * Admin command that renames a targeted or named player after validation, syncing friends and legion.
+ *
  * @author xTz
  */
 public class Rename extends AdminCommand {
@@ -45,6 +32,13 @@ public class Rename extends AdminCommand {
 		super("rename");
 	}
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 1 || params.length > 2) {
@@ -127,6 +121,15 @@ public class Rename extends AdminCommand {
 		return true;
 	}
 
+	/**
+	 * 向好友、军团与双方发送改名后的信息同步包。
+	 * Broadcasts post-rename info packets to friends, legion and both players.
+	 *
+	 * @param admin 执行改名的管理员 / admin who performed the rename
+	 * @param player 被改名的玩家 / renamed player
+	 * new name
+	 * original name
+	 */
 	public void sendPacket(Player admin, Player player, String rename, String recipient) {
 		Iterator<Friend> knownFriends = player.getFriendList().iterator();
 
@@ -144,6 +147,13 @@ public class Rename extends AdminCommand {
 		PacketSendUtility.sendMessage(admin, "Player " + recipient + " has been renamed to " + rename);
 	}
 
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "No parameters detected.\n" + "Please use //rename <Player name> <rename>\n" + "or use //rename [target] <rename>");

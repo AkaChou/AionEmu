@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -31,9 +15,11 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.revive_start_points.WorldReviveStartPoints;
 
 /**
+ * 大世界复活起始点数据容器，按世界、阵营与等级匹配。
+ * World revive start-point data holder, matched by world, race and level.
+ *
  * Created by Wnkrz on 22/08/2017.
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "WorldStartPoints" })
 @XmlRootElement(name = "revive_world_start_points")
@@ -44,6 +30,10 @@ public class ReviveWorldStartPointsData {
 	@XmlTransient
 	protected List<WorldReviveStartPoints> StartPointsList = new ArrayList<WorldReviveStartPoints>();
 
+	/**
+	 * JAXB 反序列化完成后，将起始点复制到运行时列表并释放 XML 列表。
+	 * After JAXB unmarshalling, copies start points into the runtime list and releases the XML list.
+	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (WorldReviveStartPoints exit : WorldStartPoints) {
 			StartPointsList.add(exit);
@@ -52,6 +42,15 @@ public class ReviveWorldStartPointsData {
 		WorldStartPoints = null;
 	}
 
+	/**
+	 * 按世界、阵营与玩家等级查找匹配的复活起始点。
+	 * Finds a matching revive start point by world, race and player level.
+	 *
+	 * 世界 ID / world id
+	 * 阵营 / race
+	 * player level
+	 * @return 复活起始点，不匹配则为 null / revive start point or null
+	 */
 	public WorldReviveStartPoints getReviveStartPoint(int worldId, Race race, int playerLevel) {
 		for (WorldReviveStartPoints revive : StartPointsList) {
 			if (revive.getReviveWorld() == worldId
@@ -63,6 +62,12 @@ public class ReviveWorldStartPointsData {
 		return null;
 	}
 
+	/**
+	 * 返回已加载的复活起始点数量。
+	 * Returns the number of loaded revive start points.
+	 *
+	 * @return 起始点数量 / start-point count
+	 */
 	public int size() {
 		return StartPointsList.size();
 	}

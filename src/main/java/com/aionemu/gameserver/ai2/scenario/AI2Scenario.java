@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.scenario;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -21,11 +5,29 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
+ * AI2 场景接口：在生物相关事件与通用事件上挂接自定义行为脚本。
+ * AI2 scenario interface for attaching custom behavior scripts to creature and general events.
+ *
  * @author ATracer
  */
 public interface AI2Scenario {
 
+	/**
+	 * 处理与生物相关的 AI 事件。
+	 * Handle a creature-related AI event.
+	 *
+	 * @param ai 当前 AI 实例 / Current AI instance
+	 * @param event 事件类型 / Event type
+	 * Related creature
+	 */
 	void onCreatureEvent(AbstractAI ai, AIEventType event, Creature creature);
 
+	/**
+	 * 处理通用 AI 事件（无关联生物）。
+	 * Handle a general AI event (no related creature).
+	 *
+	 * @param ai 当前 AI 实例 / Current AI instance
+	 * @param event 事件类型 / Event type
+	 */
 	void onGeneralEvent(AbstractAI ai, AIEventType event);
 }

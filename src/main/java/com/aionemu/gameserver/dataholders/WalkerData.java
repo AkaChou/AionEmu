@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
@@ -44,6 +30,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * NPC 巡逻路径静态数据容器，按路线 ID 索引 Walker 模板，并支持回写生成 XML。
+ * NPC walker-route static-data holder, indexing walker templates by route id and supporting XML export.
+ *
  * @author KKnD, Rolandas
  */
 @XmlRootElement(name = "npc_walker")
@@ -58,10 +47,14 @@ public class WalkerData {
 	@XmlTransient
 	private Map<String, WalkerTemplate> walkerlistData = new LinkedHashMap<String, WalkerTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，将路线按 ID 索引并跳过重复项，随后释放列表。
+	 * After JAXB unmarshalling, indexes routes by id (skipping duplicates) and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (WalkerTemplate route : walkerlist) {
 			if (walkerlistData.containsKey(route.getRouteId())) {
-				log.warn("Duplicate route ID: " + route.getRouteId());
+				log.warn(I18n.get("log.3bd46a3bd18f", route.getRouteId()));
 				continue;
 			}
 			walkerlistData.put(route.getRouteId(), route);
@@ -70,22 +63,48 @@ public class WalkerData {
 		walkerlist = null;
 	}
 
+	/**
+	 * 返回已加载的巡逻路线数量。
+	 * Returns the number of loaded walker routes.
+	 *
+	 * route count
+	 */
 	public int size() {
 		return walkerlistData.size();
 	}
 
+	/**
+	 * 按路线 ID 获取巡逻模板。
+	 * Returns the walker template for the given route id.
+	 *
+	 * route id
+	 *
+	 * @param routeId @return 巡逻模板，不存在或参数为 null 则为 null / walker template, or null if missing/null id
+	 */
 	public WalkerTemplate getWalkerTemplate(String routeId) {
 		if (routeId == null)
 			return null;
 		return walkerlistData.get(routeId);
 	}
 
+	/**
+	 * 追加一条待导出的巡逻模板到内部列表。
+	 * Appends a walker template to the internal list for later export.
+	 *
+	 * new template
+	 */
 	public void AddTemplate(WalkerTemplate newTemplate) {
 		if (walkerlist == null)
 			walkerlist = new ArrayList<WalkerTemplate>();
 		walkerlist.add(newTemplate);
 	}
 
+	/**
+	 * 将当前待导出模板按指定路线 ID 序列化为生成的 NPC Walker XML。
+	 * Marshals pending templates into a generated NPC walker XML for the given route id.
+	 *
+	 * @param routeId 用于命名输出文件的路线 ID / route id used to name the output file
+	 */
 	public void saveData(String routeId) {
 		Schema schema = null;
 		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -93,7 +112,7 @@ public class WalkerData {
 		try {
 			schema = sf.newSchema(Config.dataFile("./data/static_data/npc_walker/npc_walker.xsd"));
 		} catch (SAXException e1) {
-			log.error("Error while saving data: " + e1.getMessage(), e1.getCause());
+			log.error(I18n.get("log.a52b870058c9", e1.getMessage(), e1.getCause()));
 			return;
 		}
 
@@ -107,7 +126,7 @@ public class WalkerData {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.marshal(this, xml);
 		} catch (JAXBException e) {
-			log.error("Error while saving data: " + e.getMessage(), e.getCause());
+			log.error(I18n.get("log.a52b870058c9", e.getMessage(), e.getCause()));
 			return;
 		} finally {
 			if (walkerlist != null) {
@@ -117,6 +136,12 @@ public class WalkerData {
 		}
 	}
 
+	/**
+	 * 返回全部已加载的巡逻模板集合。
+	 * Returns the collection of all loaded walker templates.
+	 *
+	 * template collection
+	 */
 	public Collection<WalkerTemplate> getTemplates() {
 		return walkerlistData.values();
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -38,6 +22,9 @@ import com.aionemu.gameserver.world.World;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * 管理员游戏商城命令：增删商品/排行、设置或增加 Toll 点数。
+ * Admin gameshop command: add/delete items and rankings, set or add Toll points.
+ *
  * @author xTz
  */
 public class Gameshop extends AdminCommand {
@@ -46,6 +33,13 @@ public class Gameshop extends AdminCommand {
 		super("gameshop");
 	}
 
+	/**
+	 * 处理 add/delete/addranking/deleteranking/settoll/addtoll 等商城管理操作。
+	 * Handle add/delete/addranking/deleteranking/settoll/addtoll shop admin operations.
+	 *
+	 * @param admin 执行命令的管理员 / Admin executing the command
+	 * @param params 子命令与对应参数 / Subcommand and matching arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length == 0) {
@@ -88,7 +82,7 @@ public class Gameshop extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "<itemId, count, price, category, subCategory, itemType, gift, list, description> values must be int, long, long, byte, byte, byte, byte, int, string, Object... .");
 				return;
 			}
-			
+
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
 			if (itemTemplate == null) {
 				PacketSendUtility.sendMessage(admin, "Item id is incorrect: " + itemId);
@@ -239,7 +233,7 @@ public class Gameshop extends AdminCommand {
 					PacketSendUtility.sendMessage(admin, "<toll> value must be an integer.");
 					return;
 				}
-				
+
 				if (toll < 0) {
 					PacketSendUtility.sendMessage(admin, "<toll> must > 0.");
 					return;
@@ -285,6 +279,13 @@ public class Gameshop extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "No parameters detected please use:\n"

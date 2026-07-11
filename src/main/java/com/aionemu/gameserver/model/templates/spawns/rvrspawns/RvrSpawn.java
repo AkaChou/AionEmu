@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.rvrspawns;
 
 import java.util.List;
@@ -28,6 +12,9 @@ import com.aionemu.gameserver.model.rvr.RvrStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 
 /**
+ * 阵营战刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -37,6 +24,7 @@ public class RvrSpawn {
 	@XmlAttribute(name = "id")
 	private int id;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
@@ -44,6 +32,7 @@ public class RvrSpawn {
 	@XmlElement(name = "rvr_type")
 	private List<RvrSpawn.RvrStateTemplate> RvrStateTemplate;
 
+	/** 返回 siege mod templates / Returns the siege mod templates */
 	public List<RvrStateTemplate> getSiegeModTemplates() {
 		return RvrStateTemplate;
 	}
@@ -58,10 +47,12 @@ public class RvrSpawn {
 		@XmlAttribute(name = "rstate")
 		private RvrStateType rvrType;
 
+		/** 获取刷新。 / Returns the spawns. */
 		public List<Spawn> getSpawns() {
 			return spawns;
 		}
 
+		/** 获取阵营战类型。 / Returns the rvr type. */
 		public RvrStateType getRvrType() {
 			return rvrType;
 		}

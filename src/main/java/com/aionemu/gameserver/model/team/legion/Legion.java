@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team.legion;
 
 import java.sql.Timestamp;
@@ -36,11 +20,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 军团，用于团队相关逻辑。
+ * Legion for team logic.
+ *
  * @author Simple
  */
 public class Legion {
 
-	/** Legion Information **/
+	/** 军团信息 / Legion Information */
 	private ServiceBuff serviceBuff;
 	private int legionId = 0;
 	private String legionName = "";
@@ -65,10 +52,7 @@ public class Legion {
 	private LegionTerritory territory;
 
 	/**
-	 * Only called when a legion is created!
-	 *
-	 * @param legionId
-	 * @param legionName
+	 * 仅在创建军团时调用！。 / Only called when a legion is created!.
 	 */
 	public Legion(int legionId, String legionName) {
 		this();
@@ -77,12 +61,13 @@ public class Legion {
 	}
 
 	/**
-	 * Only called when a legion is loaded!
+	 * 仅在加载军团时调用！ / Only called when a legion is loaded!
 	 */
 	public Legion() {
 		this.legionWarehouse = new LegionWarehouse(this);
 		this.legionHistory = new TreeSet<LegionHistory>(new Comparator<LegionHistory>() {
 
+			/** 比较 / compare. */
 			@Override
 			public int compare(LegionHistory o1, LegionHistory o2) {
 				return o1.getTime().getTime() < o2.getTime().getTime() ? 1 : -1;
@@ -148,7 +133,7 @@ public class Legion {
 	}
 
 	/**
-	 * Add a legionMember to the legionMembers list
+	 * 添加 legionMember 到 legionMembers 列表。 / Add a legionMember to the legionMembers list
 	 *
 	 * @param playerObjId
 	 */
@@ -161,7 +146,7 @@ public class Legion {
 	}
 
 	/**
-	 * Delete a legionMember from the legionMembers list
+	 * 删除 legionMember 从 legionMembers 列表。 / Delete a legionMember from the legionMembers list
 	 *
 	 * @param playerObjId
 	 */
@@ -170,6 +155,7 @@ public class Legion {
 	}
 
 	/**
+	 * 将权限。
 	 * This method will set the permissions
 	 *
 	 * @param deputyPermission
@@ -264,6 +250,7 @@ public class Legion {
 	}
 
 	/**
+	 * 将军团 hasenough 成员等级 up。
 	 * This method will check whether a legion has enough members to level up
 	 *
 	 * @return true or false
@@ -290,6 +277,7 @@ public class Legion {
 	}
 
 	/**
+	 * 将 return 基纳 pricerequired 等级 up。
 	 * This method will return the kinah price required to level up
 	 *
 	 * @return int
@@ -315,6 +303,7 @@ public class Legion {
 	}
 
 	/**
+	 * 将 returncontributionpointsrequired 等级 up。
 	 * This method will return the contribution points required to level up
 	 *
 	 * @return int
@@ -340,6 +329,7 @@ public class Legion {
 	}
 
 	/**
+	 * 将 returntrue 军团 able 成员。
 	 * This method will return true if a legion is able to add a member
 	 *
 	 * @return
@@ -375,6 +365,7 @@ public class Legion {
 	}
 
 	/**
+	 * 将新公告列表。
 	 * This method will add a new announcement to the list
 	 */
 	public void addAnnouncementToList(Timestamp unixTime, String announcement) {
@@ -427,10 +418,7 @@ public class Legion {
 	}
 
 	/**
-	 * This function checks if object id is in list
-	 *
-	 * @param playerObjId
-	 * @return true if ID is found in the list
+	 * 检查对象 ID 是否在列表中。 / This function checks if object id is in list.
 	 */
 	public boolean isMember(int playerObjId) {
 		return legionMembers.contains(playerObjId);
@@ -465,6 +453,7 @@ public class Legion {
 	}
 
 	/**
+	 * 获取仓库 slots。
 	 * Get warehouse slots
 	 *
 	 * @return warehouse slots
@@ -491,6 +480,7 @@ public class Legion {
 		return LegionConfig.LWH_LEVEL1_SLOTS;
 	}
 
+	/** 获取仓库等级。 / Returns the warehouse level. */
 	public int getWarehouseLevel() {
 		return getLegionLevel() - 1;
 	}
@@ -502,6 +492,7 @@ public class Legion {
 		return legionHistory;
 	}
 
+	/** 按 tab id 返回 legion history / Returns the legion history by tab id */
 	public Collection<LegionHistory> getLegionHistoryByTabId(int tabType) {
 		if (legionHistory.isEmpty()) {
 			return legionHistory;
@@ -522,6 +513,7 @@ public class Legion {
 		this.legionHistory.add(history);
 	}
 
+	/** 添加加成。 / Adds bonus. */
 	public void addBonus() {
 		ArrayList<Player> members = getOnlineLegionMembers();
 		// 레기온 창고란 같은 레기온원들 끼리 공동으로 사용하는 창고의 개념이다.
@@ -548,6 +540,7 @@ public class Legion {
 		}
 	}
 
+	/** 移除加成。 / Removes bonus. */
 	public void removeBonus() {
 		ArrayList<Player> members = getOnlineLegionMembers();
 		if (members.size() < 2) {
@@ -568,10 +561,12 @@ public class Legion {
 		}
 	}
 
+	/** 是否拥有加成。 / Whether bonus. */
 	public boolean hasBonus() {
 		return hasBonus.get();
 	}
 
+	/** 是否相等。 / Equality check. */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -583,65 +578,82 @@ public class Legion {
 		return legionId == legion.legionId;
 	}
 
+	/** 返回哈希码。 / Returns hash code. */
 	@Override
 	public int hashCode() {
 		return legionId;
 	}
 
+	/** 获取军团描述。 / Returns the legion description. */
 	public String getLegionDescription() {
 		return description;
 	}
 
+	/** 返回军团加入类型 / Returns the legion join type*/
 	public int getLegionJoinType() {
 		return joinType;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return minJoinLevel;
 	}
 
+	/** 设置描述。 / Sets the description. */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
+	/** 设置最小加入等级 / Sets the min join level*/
 	public void setMinJoinLevel(int minJoinLevel) {
 		this.minJoinLevel = minJoinLevel;
 	}
 
+	/** 设置加入类型 / Sets the join type*/
 	public void setJoinType(int joinType) {
 		this.joinType = joinType;
 	}
 
+	/** 返回 join request map / Returns the join request map */
 	public Map<Integer, LegionJoinRequest> getJoinRequestMap() {
 		return joinRequestMap;
 	}
 
+	/** 按玩家 ID 返回 join request / Returns the join request by player id */
 	public LegionJoinRequest getJoinRequestByPlayerId(int playerId) {
 		return joinRequestMap.get(playerId);
 	}
 
+	/**
+	 * @param playerId Deletes join request / Deletes join request
+	 */
 	public void deleteJoinRequest(int playerId) {
 		joinRequestMap.remove(playerId);
 	}
 
+	/** 添加 join request / Adds join request */
 	public void addJoinRequest(LegionJoinRequest joinRequest) {
 		if (!joinRequestMap.containsKey(joinRequest.getPlayerId())) {
 			this.joinRequestMap.put(joinRequest.getPlayerId(), joinRequest);
 		}
 	}
 
+	/** 清除 territory / Clear territory */
 	public void clearTerritory() {
 		setTerritory(new LegionTerritory(0));
 	}
 
+	/** 拥有领地 / owns Terretory. */
 	public boolean ownsTerretory() {
 		return getTerritory().getId() > 0;
 	}
 
+	/** 返回 territory / Returns the territory */
 	public LegionTerritory getTerritory() {
 		return territory;
 	}
 
+	/** 设置 territory / Sets the territory */
 	public void setTerritory(LegionTerritory territory) {
 		this.territory = territory;
 	}

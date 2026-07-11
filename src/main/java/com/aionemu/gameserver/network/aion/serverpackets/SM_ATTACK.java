@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.List;
@@ -24,6 +8,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 广播普通攻击结果（伤害、格挡/招架/闪避、护盾反射等）的服务端包。
+ * Server packet broadcasting basic-attack results (damage, block/parry/dodge, shield reflection, etc.).
+ */
 public class SM_ATTACK extends AionServerPacket {
 	private int attackno;
 	private int time;
@@ -33,6 +21,14 @@ public class SM_ATTACK extends AionServerPacket {
 	private Creature attacker;
 	private Creature target;
 
+	/**
+	 * attacker
+	 * target
+	 * attack sequence number
+	 * @param time 时间戳/动画时序 / timing value for animation sync
+	 * @param type 攻击类型 / attack type flag
+	 * @param attackList 命中结果列表 / list of hit results
+	 */
 	public SM_ATTACK(Creature attacker, Creature target, int attackno, int time, int type,
 			List<AttackResult> attackList) {
 		this.attacker = attacker;
@@ -89,8 +85,8 @@ public class SM_ATTACK extends AionServerPacket {
 			writeH(0);
 			break;
 		}
-		// setting counter skill from packet to have the best synchronization of time
-		// with client
+		// 从数据包设置计数技能以获得最佳时间同步。 / setting counter skill from packet to have the best synchronization of time
+		// 与客户端 / with client
 		if (target instanceof Player) {
 			if (attackList.get(0).getAttackStatus().isCounterSkill()) {
 				((Player) target).setLastCounterSkill(attackList.get(0).getAttackStatus());
@@ -104,10 +100,7 @@ public class SM_ATTACK extends AionServerPacket {
 			byte shieldType = (byte) attack.getShieldType();
 			writeC(shieldType);
 
-			/**
-			 * shield Type: 1: reflector 2: normal shield 8: protect effect (ex. skillId:
-			 * 417 Bodyguard) TODO find out 4
-			 */
+			// 护盾标志：1 反射，2 普通护盾，8 保护效果（如技能 417 保镖）。 / Shield flags: 1 reflector, 2 normal shield, 8 protect effect (for example skill 417 Bodyguard).
 			switch (shieldType) {
 			case 0:
 			case 2:

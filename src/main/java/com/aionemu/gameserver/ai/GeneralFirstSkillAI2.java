@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -21,13 +5,19 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 通用且优先技能的 NPC AI：选择攻击意图时优先技能。
+ * General NPC AI that prefers a skill when choosing attack intention.
+ *
+ * @author Encom
+ */
 @AIName("general_first_skill")
 public class GeneralFirstSkillAI2 extends GeneralNpcAI2
 {
+	/**
+	 * 处理归位完成事件。
+	 * Handle back-home.
+	 */
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
@@ -38,6 +28,10 @@ public class GeneralFirstSkillAI2 extends GeneralNpcAI2
 		}
 	}
 	
+	/**
+	 * 处理生成完成事件。
+	 * Handle post-spawn.
+	 */
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -48,6 +42,10 @@ public class GeneralFirstSkillAI2 extends GeneralNpcAI2
 		}
 	}
 	
+	/**
+	 * 处理重生完成事件。
+	 * Handle post-respawn.
+	 */
 	@Override
 	protected void handleRespawned() {
 		super.handleRespawned();

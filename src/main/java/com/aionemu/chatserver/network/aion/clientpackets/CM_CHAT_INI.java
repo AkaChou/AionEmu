@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.aion.clientpackets;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
@@ -25,14 +7,29 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.chatserver.service.ChatService;
 
 /**
+ * 客户端聊天初始化请求包。
+ * Client packet for chat initialization request.
+ *
  * @author ginho1
  */
 public class CM_CHAT_INI extends AbstractClientPacket {
 
+    /**
+     * 构造聊天初始化客户端包。
+     * Constructs a chat init client packet.
+     *
+     * packet reader
+     * @param clientChannelHandler 客户端通道处理器 / client channel handler
+     * @param chatService 聊天服务（当前未使用） / chat service (currently unused)
+     */
     public CM_CHAT_INI(PacketReader packetReader, ClientChannelHandler clientChannelHandler, ChatService chatService) {
         super(packetReader, clientChannelHandler, 0x30);
     }
 
+    /**
+     * 读取初始化请求的固定字段。
+     * Reads the fixed fields of the init request.
+     */
     @Override
     protected void readImpl() {
         readC();
@@ -42,6 +39,10 @@ public class CM_CHAT_INI extends AbstractClientPacket {
         readD();
     }
 
+    /**
+     * 回送聊天初始化响应包。
+     * Sends the chat initialization response packet.
+     */
     @Override
     protected void runImpl() {
         clientChannelHandler.getChatClient();

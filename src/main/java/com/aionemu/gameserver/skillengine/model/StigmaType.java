@@ -1,33 +1,24 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * @author Cheatkiller
+ * 烙印类型：无、基础、进阶。
+ * Stigma type: none, basic or advanced.
  *
+ * @author Cheatkiller
  */
 @XmlType(name = "StigmaType")
 @XmlEnum
 public enum StigmaType {
 
-	NONE(0), BASIC(1), ADVANCED(2);
+	/** 无 / None */
+	NONE(0),
+	/** 基础烙印 / Basic stigma */
+	BASIC(1),
+	/** 进阶烙印 / Advanced stigma */
+	ADVANCED(2);
 
 	private int id;
 
@@ -35,6 +26,12 @@ public enum StigmaType {
 		this.id = id;
 	}
 
+	/**
+	 * 获取协议 ID。
+	 * Gets protocol id.
+	 *
+	 * stigma type id
+	 */
 	public int getId() {
 		return id;
 	}

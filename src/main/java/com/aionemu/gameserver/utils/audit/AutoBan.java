@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.audit;
 
 import com.aionemu.gameserver.configs.main.PunishmentConfig;
@@ -24,10 +8,20 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.PunishmentService;
 
 /**
+ * 自动处罚：按 {@link PunishmentConfig} 类型对审计命中玩家执行踢线/封角色/封账号/封 IP/封 MAC。
+ * Auto-ban that applies kick/char/account/IP/MAC punishments by {@link PunishmentConfig} type.
+ *
  * @author synchro2
  */
 public class AutoBan {
 
+	/**
+	 * 对玩家执行配置的自动处罚。
+	 * Applies the configured automatic punishment to the player.
+	 *
+	 * target player
+	 * @param message 处罚原因消息 / punishment reason message
+	 */
 	protected static void punishment(Player player, String message) {
 
 		String reason = "AUTO " + message;

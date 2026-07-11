@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,21 +8,48 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.ItemOrders;
 
+/**
+ * 物品订单类任务的 XML 数据模型，注册 {@link ItemOrders} 模板。
+ * XML data model for item-order quests; registers the {@link ItemOrders} template.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ItemOrdersData")
 public class ItemOrdersData extends XMLQuest {
+
+	/**
+	 * 触发任务的起始物品 ID。
+	 * Start item id that triggers the quest.
+	 */
 	@XmlAttribute(name = "start_item_id", required = true)
 	protected int startItemId;
 
+	/**
+	 * 中间对话 NPC 1。
+	 * Intermediate talk NPC 1.
+	 */
 	@XmlAttribute(name = "talk_npc_id1")
 	protected int talkNpc1;
 
+	/**
+	 * 中间对话 NPC 2。
+	 * Intermediate talk NPC 2.
+	 */
 	@XmlAttribute(name = "talk_npc_id2")
 	protected int talkNpc2;
 
+	/**
+	 * 交还任务的结束 NPC ID。
+	 * End NPC id for turn-in.
+	 */
 	@XmlAttribute(name = "end_npc_id", required = true)
 	protected int endNpcId;
 
+	/**
+	 * 注册 {@link ItemOrders} 模板处理器。
+	 * Registers the {@link ItemOrders} template handler.
+	 *
+	 * Quest engine
+	 */
 	@Override
 	public void register(QuestEngine questEngine) {
 		ItemOrders template = new ItemOrders(id, startItemId, talkNpc1, talkNpc2, endNpcId);

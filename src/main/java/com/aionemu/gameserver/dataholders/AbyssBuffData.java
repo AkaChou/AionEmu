@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -31,9 +15,11 @@ import com.aionemu.gameserver.model.templates.abyss_bonus.AbyssServiceAttr;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 欧比斯增益属性数据容器，按 buff ID 索引服务端属性模板。
+ * Abyss bonus attribute data holder, indexing service attribute templates by buff id.
+ *
  * @Author Rinzler (Encom)
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "abyssBonusattr" })
 @XmlRootElement(name = "abyss_bonusattrs")
@@ -44,6 +30,10 @@ public class AbyssBuffData {
 	@XmlTransient
 	private IntObjectHashMap<AbyssServiceAttr> templates = new IntObjectHashMap<AbyssServiceAttr>();
 
+	/**
+	 * JAXB 反序列化完成后，按 buff ID 建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes templates by buff id and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AbyssServiceAttr template : abyssBonusattr) {
 			templates.put(template.getBuffId(), template);
@@ -52,10 +42,24 @@ public class AbyssBuffData {
 		abyssBonusattr = null;
 	}
 
+	/**
+	 * 返回已加载的模板数量。
+	 * Returns the number of loaded templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return templates.size();
 	}
 
+	/**
+	 * 按 buff ID 获取欧比斯服务属性模板。
+	 * Returns the abyss service attribute template for the given buff id.
+	 *
+	 * buff id
+	 *
+	 * @param buffId @return 属性模板，不存在则为 null / attribute template or null
+	 */
 	public AbyssServiceAttr getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);
 	}

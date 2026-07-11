@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
@@ -28,8 +14,9 @@ import com.aionemu.gameserver.network.sequrity.FloodManager;
 import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
 
 /**
- * NettyConnectionFactory implementation that will be creating AionConnections.
- * 
+ * 创建 AionConnection 的 NettyConnectionFactory 实现，可选连接洪泛检测。
+ * NettyConnectionFactory implementation that creates AionConnections with optional connection flood checks.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -37,8 +24,13 @@ public class GameConnectionFactoryImpl implements NettyConnectionFactory {
 
 	private static final String GAME_CONTEXT = "game";
 
+	/** 连接洪泛管理器（可选） / optional connection flood manager */
 	private FloodManager floodAcceptor;
 
+	/**
+	 * 按配置初始化短/长周期连接洪泛过滤器。
+	 * Initializes short/long period connection flood filters when enabled.
+	 */
 	public GameConnectionFactoryImpl() {
 		if (NetworkConfig.ENABLE_FLOOD_CONNECTIONS) {
 			floodAcceptor = new FloodManager(NetworkConfig.Flood_Tick,
@@ -49,18 +41,26 @@ public class GameConnectionFactoryImpl implements NettyConnectionFactory {
 		}
 	}
 
+	/**
+	 * 为传入传输创建 AionConnection；洪泛拒绝时关闭传输并返回 null。
+	 * Creates an AionConnection for the inbound transport; closes and returns null on flood reject.
+	 *
+	 * connection transport
+	 * new connection or null
+	 * if creation fails
+	 */
 	@Override
 	public AConnection create(ConnectionTransport transport) throws IOException {
 		if (NetworkConfig.ENABLE_FLOOD_CONNECTIONS) {
 			final Result isFlooding = floodAcceptor.isFlooding(transport.getIP(), true);
 			switch (isFlooding) {
 			case REJECTED: {
-				log.warn("Rejected connection from " + transport.getIP());
+				log.warn(I18n.get("log.33eb4763c5c6", transport.getIP()));
 				transport.close(true);
 				return null;
 			}
 			case WARNED: {
-				log.warn("Connection over warn limit from " + transport.getIP());
+				log.warn(I18n.get("log.7dbdf21e7192", transport.getIP()));
 				break;
 			}
 			}

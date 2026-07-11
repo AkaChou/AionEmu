@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -41,10 +27,21 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+/**
+ * 物品镶嵌服务：魔石/融合石/神石镶嵌与移除，以及超限（amplification）。
+ * Item socket service: manastone/fusion-stone/godstone socket and removal, plus amplification.
+ */
 @Slf4j
-
 public class ItemSocketService {
 
+	/**
+	 * 为物品自动分配槽位镶嵌魔石。
+	 * Sockets a manastone onto the item using the next free slot.
+	 *
+	 * @param item 目标物品 / target item
+	 * manastone template id
+	 * @return 新魔石，失败则为 {@code null} / new manastone, or {@code null} on failure
+	 */
 	public static ManaStone addManaStone(Item item, int itemId) {
 		if (item == null) {
 			return null;
@@ -107,6 +104,15 @@ public class ItemSocketService {
 		return stone;
 	}
 
+	/**
+	 * 在指定槽位镶嵌魔石。
+	 * Sockets a manastone into a fixed slot.
+	 *
+	 * @param item 目标物品 / target item
+	 * manastone template id
+	 * slot id
+	 * @return 新魔石，失败则为 {@code null} / new manastone, or {@code null} on failure
+	 */
 	public static ManaStone addManaStone(Item item, int itemId, int slotId) {
 		if (item == null) {
 			return null;
@@ -120,6 +126,13 @@ public class ItemSocketService {
 		return stone;
 	}
 
+	/**
+	 * 复制源物品的魔石与融合石到目标物品。
+	 * Copies manastones and fusion stones from source to target.
+	 *
+	 * source item
+	 * target item
+	 */
 	public static void copyManaStones(Item source, Item target) {
 		if (source.hasManaStones()) {
 			for (ManaStone manaStone : source.getItemStones()) {
@@ -133,6 +146,13 @@ public class ItemSocketService {
 		}
 	}
 
+	/**
+	 * 将源物品魔石复制为目标物品的融合石。
+	 * Copies source manastones onto the target as fusion stones.
+	 *
+	 * source item
+	 * target item
+	 */
 	public static void copyFusionStones(Item source, Item target) {
 		if (source.hasManaStones()) {
 			for (ManaStone manaStone : source.getItemStones()) {
@@ -142,6 +162,14 @@ public class ItemSocketService {
 		}
 	}
 
+	/**
+	 * 为融合物品自动分配槽位镶嵌融合石并落库。
+	 * Sockets a fusion stone onto a fused item (next free slot) and persists.
+	 *
+	 * @param item 目标物品 / target item
+	 * @param itemId 融合石模板 ID / fusion-stone template id
+	 * @return 新融合石，失败则为 {@code null} / new fusion stone, or {@code null} on failure
+	 */
 	public static ManaStone addFusionStone(Item item, int itemId) {
 		if (item == null) {
 			return null;
@@ -206,6 +234,15 @@ public class ItemSocketService {
 		return stone;
 	}
 
+	/**
+	 * 在指定槽位镶嵌融合石。
+	 * Sockets a fusion stone into a fixed slot.
+	 *
+	 * @param item 目标物品 / target item
+	 * @param itemId 融合石模板 ID / fusion-stone template id
+	 * slot id
+	 * @return 新融合石，失败则为 {@code null} / new fusion stone, or {@code null} on failure
+	 */
 	public static ManaStone addFusionStone(Item item, int itemId, int slotId) {
 		if (item == null) {
 			return null;
@@ -219,18 +256,26 @@ public class ItemSocketService {
 		return stone;
 	}
 
+	/**
+	 * 移除玩家物品指定槽位的魔石（含已装备）。
+	 * Removes a manastone at the given slot from inventory or equipped item.
+	 *
+	 * 玩家 / player
+	 * item object id
+	 * slot number
+	 */
 	public static void removeManastone(Player player, int itemObjId, int slotNum) {
 		Storage inventory = player.getInventory();
 		Item item = inventory.getItemByObjId(itemObjId);
 		if (item == null) {
 			item = player.getEquipment().getEquippedItemByObjId(itemObjId);
 			if (item == null) {
-				log.warn("Item not found during manastone remove");
+				log.warn(I18n.get("log.e56ee8d1d462"));
 				return;
 			}
 		}
 		if (!item.hasManaStones()) {
-			log.warn("Item stone list is empty");
+			log.warn(I18n.get("log.e28c569e758a"));
 			return;
 		}
 		Set<ManaStone> itemStones = item.getItemStones();
@@ -262,18 +307,26 @@ public class ItemSocketService {
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}
 
+	/**
+	 * 移除玩家物品指定槽位的融合石（含已装备）。
+	 * Removes a fusion stone at the given slot from inventory or equipped item.
+	 *
+	 * 玩家 / player
+	 * item object id
+	 * slot number
+	 */
 	public static void removeFusionstone(Player player, int itemObjId, int slotNum) {
 		Storage inventory = player.getInventory();
 		Item item = inventory.getItemByObjId(itemObjId);
 		if (item == null) {
 			item = player.getEquipment().getEquippedItemByObjId(itemObjId);
 			if (item == null) {
-				log.warn("Item not found during manastone remove");
+				log.warn(I18n.get("log.e56ee8d1d462"));
 				return;
 			}
 		}
 		if (!item.hasFusionStones()) {
-			log.warn("Item stone list is empty");
+			log.warn(I18n.get("log.e28c569e758a"));
 			return;
 		}
 		Set<ManaStone> itemStones = item.getFusionStones();
@@ -304,9 +357,16 @@ public class ItemSocketService {
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}
 
+	/**
+	 * 移除物品上全部魔石。
+	 * Removes all manastones from the item.
+	 *
+	 * 玩家 / player
+	 * item
+	 */
 	public static void removeAllManastone(Player player, Item item) {
 		if (item == null) {
-			log.warn("Item not found during manastone remove");
+			log.warn(I18n.get("log.e56ee8d1d462"));
 			return;
 		}
 		if (!item.hasManaStones()) {
@@ -321,9 +381,16 @@ public class ItemSocketService {
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}
 
+	/**
+	 * 移除物品上全部融合石。
+	 * Removes all fusion stones from the item.
+	 *
+	 * 玩家 / player
+	 * item
+	 */
 	public static void removeAllFusionStone(Player player, Item item) {
 		if (item == null) {
-			log.warn("Item not found during manastone remove");
+			log.warn(I18n.get("log.e56ee8d1d462"));
 			return;
 		}
 		if (!item.hasFusionStones()) {
@@ -338,6 +405,14 @@ public class ItemSocketService {
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}
 
+	/**
+	 * 将神石镶嵌到武器（扣基纳、播放使用动画）。
+	 * Sockets a godstone onto a weapon (charges kinah and plays use animation).
+	 *
+	 * 玩家 / player
+	 * weapon object id
+	 * godstone object id
+	 */
 	public static void socketGodstone(final Player player, int weaponId, int stoneId) {
 		final Item weaponItem = findGodstoneTarget(player, weaponId);
 		final Item godstone = player.getInventory().getItemByObjId(stoneId);
@@ -364,7 +439,7 @@ public class ItemSocketService {
 		GodstoneInfo godstoneInfo = itemTemplate.getGodstoneInfo();
 		if (godstoneInfo == null) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_NO_PROC_GIVE_ITEM);
-			log.warn("Godstone info missing for itemid " + godStoneItemId);
+			log.warn(I18n.get("log.3d9472e37584", godStoneItemId));
 			return;
 		}
 		if (!player.getInventory().decreaseByObjectId(stoneId, 1)) {
@@ -402,11 +477,26 @@ public class ItemSocketService {
 		}, 5000));
 	}
 
+	/**
+	 * 在背包或装备栏中查找神石镶嵌目标武器。
+	 * Finds the godstone target weapon in inventory or equipment.
+	 *
+	 * 玩家 / player
+	 * weapon object id
+	 * @return 武器物品或 {@code null} / weapon item or {@code null}
+	 */
 	static Item findGodstoneTarget(Player player, int weaponId) {
 		Item weapon = player.getInventory().getItemByObjId(weaponId);
 		return weapon != null ? weapon : player.getEquipment().getEquippedItemByObjId(weaponId);
 	}
 
+	/**
+	 * 按神石品质返回镶嵌费用（基纳）。
+	 * Returns godstone socket price (kinah) by item quality.
+	 *
+	 * godstone item
+	 * price
+	 */
 	private static int getPriceByQuality(Item item) {
 		int price = 0;
 		switch (item.getItemTemplate().getItemQuality()) {
@@ -428,6 +518,15 @@ public class ItemSocketService {
 		return price;
 	}
 
+	/**
+	 * 对物品执行超限（amplification）：消耗工具与强化石。
+	 * Amplifies an item by consuming a tool and enchantment stone.
+	 *
+	 * 玩家 / player
+	 * @param itemId 目标物品对象 ID / target item object id
+	 * tool object id
+	 * @param enchantmentStoneObjectId 强化石对象 ID / enchantment-stone object id
+	 */
 	@SuppressWarnings("null")
 	public static void amplification(final Player player, int itemId, int toolUniqueId,
 			final int enchantmentStoneObjectId) {

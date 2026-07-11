@@ -1,11 +1,3 @@
-/**
- *
- *  ADev Emulation 5.8 - Based On Encom Source.
- *  Reworked by MATTY
- *  Site <www.aionasteria.ru> - Forum <forum.aionasteria.ru>
- *
- */
- 
 package com.aionemu.gameserver.quest.handlers.baranath_dredgion;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -15,10 +7,12 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 巴拉纳斯德雷金任务脚本：Dredging The Dredgion（任务 ID 3718）。
+ * Baranath Dredgion quest script: Dredging The Dredgion (quest ID 3718).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _3718Dredging_The_Dredgion extends QuestHandler {
 
 	private final static int questId = 3718;

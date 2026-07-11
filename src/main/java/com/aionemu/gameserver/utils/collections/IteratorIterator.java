@@ -1,79 +1,61 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.collections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * This class is representing an iterator, that is used to iterate through the
- * collection that has format Iterable&lt;Iterable&lt;V&gt;&gt;.<br>
- * 
+ * 双层迭代器，用于扁平遍历 {@code Iterable&lt;Iterable&lt;V&gt;&gt;} 结构。
+ * Two-level iterator for flat traversal of {@code Iterable&lt;Iterable&lt;V&gt;&gt;}.
+ *
  * <pre>
- * &lt;code&gt;
- * Usage:&lt;br&gt;
+ * 用法 / Usage:
  * List&lt;List&lt;Integer&gt;&gt; someList = ....
  * IteratorIterator&lt;Integer&gt; iterator = new IteratorIterator&lt;Integer&gt;(someList)
- * 
- * OR:
- * 
+ *
+ * 或 / OR:
+ *
  * Map&lt;Integer, Set&lt;SomeClass&gt;&gt; mapOfSets = ....
- * IteratorIterator&lt;SomeCLass&gt; iterator = new IteratorIterator&lt;SomeClass&gt;(mapsOfSets.values());
- * &lt;/code&gt;
+ * IteratorIterator&lt;SomeClass&gt; iterator = new IteratorIterator&lt;SomeClass&gt;(mapOfSets.values());
  * </pre>
- * 
- * This iterator is not thread-safe. <br>
- * This iterator omits null values for first level collection, which means that
- * if we have:
- * 
- * <pre>
- * &lt;code&gt;
- * Set&lt;Set&lt;Integer&gt;&gt; setOfSets = ....
- * setOfSets.add(null);
- * setOfSets.add(someSetOfIntegers); // Where someSetsOfIntegers is a set containing 1 and 2
- * 
- * IteratorIterator&lt;Integer&gt; it = new IteratorIterator&lt;Integer&gt;(setOfSets);
- * &lt;/code&gt;
- * </pre>
- * 
- * This <code>it</code> iterator will return only 2 values ( 1 and 2 )
- * 
+ * <p>
+ * 非线程安全。外层集合中的 null 会被跳过。
+ * Not thread-safe. Null entries in the outer collection are omitted.
+ * <p>
+ * 例如外层集合包含 null 与某个含 1、2 的集合时，本迭代器只返回 1 和 2。
+ * E.g. if the outer set holds null and a set of 1 and 2, only 1 and 2 are returned.
+ *
+ * @param <V> 元素类型 / Element type
  * @author Luno
- * @param <V> Type of the values over which this iterator iterates
  */
 public class IteratorIterator<V> implements Iterator<V> {
 
-	/** 1st Level iterator */
+	/**
+	 * 外层迭代器。
+	 * Outer-level iterator.
+	 */
 	private Iterator<? extends Iterable<V>> firstLevelIterator;
 
-	/** 2nd level iterator */
+	/**
+	 * 内层迭代器。
+	 * Inner-level iterator.
+	 */
 	private Iterator<V> secondLevelIterator;
 
 	/**
-	 * Constructor of <tt>IteratorIterator</tt>
-	 * 
-	 * @param itit an Iterator that iterate over Iterable<Value>
+	 * 使用外层可迭代对象构造。
+	 * Construct from an outer iterable of iterables.
+	 *
+	 * @param itit 外层集合 / Outer collection
 	 */
 	public IteratorIterator(Iterable<? extends Iterable<V>> itit) {
 		this.firstLevelIterator = itit.iterator();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 是否还有下一个元素。
+	 * Whether another element is available.
+	 *
+	 * @return 若 more elements 则为 true / True if more elements
 	 */
 	@Override
 	public boolean hasNext() {
@@ -95,8 +77,12 @@ public class IteratorIterator<V> implements Iterator<V> {
 	}
 
 	/**
-	 * Returns next value of collection.<br>
-	 * If there is no next value, then {@link NoSuchElementException} thrown.
+	 * 返回下一个元素；无更多元素时抛出 {@link NoSuchElementException}。
+	 * Return the next element; throws {@link NoSuchElementException} when exhausted.
+	 *
+	 * Next element
+	 *
+	 * @return @throws NoSuchElementException 无更多元素时 / When exhausted
 	 */
 	@Override
 	public V next() {
@@ -107,7 +93,10 @@ public class IteratorIterator<V> implements Iterator<V> {
 	}
 
 	/**
-	 * <font color="red"><b>NOT IMPLEMENTED</b></font>
+	 * 不支持移除。
+	 * Remove is not supported.
+	 *
+	 * Always thrown
 	 */
 	@Override
 	public void remove() {

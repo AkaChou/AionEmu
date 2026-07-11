@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.templates.gather.GatherableTemplate;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端发送采集进度与结果更新的服务端包。
+ * Server packet that sends gathering progress and result updates to the client.
+ *
  * @author ATracer
  * @author orz
  * @author Antraxx
@@ -35,6 +22,13 @@ public class SM_GATHER_UPDATE extends AionServerPacket {
 	private int failure;
 	private int nameId;
 
+	/**
+	 * @param template 可采集物模板 / Gatherable template
+	 * Material being gathered
+	 * Success progress
+	 * Failure progress
+	 * @param action 采集动作类型 / Gathering action type
+	 */
 	public SM_GATHER_UPDATE(GatherableTemplate template, Material material, int success, int failure, int action) {
 		this.action = action;
 		this.template = template;
@@ -44,6 +38,10 @@ public class SM_GATHER_UPDATE extends AionServerPacket {
 		this.nameId = material.getNameid();
 	}
 
+	/**
+	 * 按 action 写入不同阶段的采集进度、计时与结果数据。
+	 * Writes gathering progress, timers, and result data for the given action stage.
+	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
 		writeH(template.getHarvestSkill());

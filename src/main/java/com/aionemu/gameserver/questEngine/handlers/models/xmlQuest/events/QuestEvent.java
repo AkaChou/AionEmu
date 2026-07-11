@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.events;
 
 import java.util.ArrayList;
@@ -30,6 +14,9 @@ import com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations.Qu
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * XML 驱动任务事件的抽象基类，承载条件、操作与可选 ID 列表。
+ * Abstract base for XML-driven quest events, holding conditions, operations and optional ids.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,30 +24,30 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 @XmlSeeAlso({ OnKillEvent.class, OnTalkEvent.class })
 public abstract class QuestEvent {
 
+	/** 触发前条件集合 / Conditions evaluated before the event runs */
 	protected QuestConditions conditions;
+	/** 事件关联操作集合 / Operations associated with the event */
 	protected QuestOperations operations;
+	/** 可选关联 ID 列表（如 NPC / 怪物 ID） / Optional related ids (e.g. NPC / monster ids) */
 	@XmlAttribute
 	protected List<Integer> ids;
 
+	/**
+	 * 执行本事件；默认实现恒返回 false，由子类覆盖。
+	 * Runs this event; default implementation always returns false, subclasses override.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 是否处理成功 / Whether the event was handled
+	 */
 	public boolean operate(QuestEnv env) {
 		return false;
 	}
 
 	/**
-	 * Gets the value of the ids property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the ids property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getIds().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link Integer }
+	 * 返回关联 ID 的实时列表（JAXB 可变列表，非快照）。
+	 * Returns the live list of related ids (JAXB live list, not a snapshot).
+	 *
+	 * Id list
 	 */
 	public List<Integer> getIds() {
 		if (ids == null) {

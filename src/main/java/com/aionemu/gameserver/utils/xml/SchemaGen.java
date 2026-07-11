@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.xml;
 
 import java.io.File;
@@ -26,11 +10,32 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.aionemu.gameserver.dataholders.StaticData;
 
+/**
+ * 从 StaticData JAXB 模型生成 XSD 的工具。
+ * Utility that generates an XSD from the StaticData JAXB model.
+ */
 public class SchemaGen {
 
+	/**
+	 * 在指定目录生成 static_data1.xsd。
+	 * Generate static_data1.xsd under the given directory.
+	 *
+	 * Output directory
+	 *
+	 * @param baseDir @throws Exception 生成失败时 / On generation failure
+	 */
 	public static void generateStaticDataSchema(File baseDir) throws Exception {
 		class MySchemaOutputResolver extends SchemaOutputResolver {
 
+			/**
+			 * 创建 schema 输出目标。
+			 * Create the schema output target.
+			 *
+			 * Namespace URI
+			 * @param suggestedFileName 建议文件名 / Suggested file name
+			 * Output Result
+			 * On I/O error
+			 */
 			@Override
 			public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
 				return new StreamResult(new File(baseDir, "static_data1.xsd"));

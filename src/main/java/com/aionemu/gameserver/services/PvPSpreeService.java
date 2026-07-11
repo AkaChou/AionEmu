@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.PvPConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -25,6 +11,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * PvP 连杀（Spree）服务，统计连杀、升级公告与连杀终结。
+ * PvP spree service tracking kill streaks, tier announcements, and spree ends.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j(topic = "PVP_LOG")
@@ -40,6 +29,12 @@ public class PvPSpreeService {
 	private static final String STRING_SPREE9 = "WickedSick";
 	private static final String STRING_SPREE10 = "Muthafakaaas";
 
+	/**
+	 * 增加胜利者原始连杀数，并在达到阈值时升级连杀等级与奖励。
+	 * Increments the winner's raw kill count and upgrades spree level/rewards at thresholds.
+	 *
+	 * winner
+	 */
 	public static void increaseRawKillCount(Player winner) {
 		int currentRawKillCount = winner.getRawKillCount();
 		winner.setRawKillCount(currentRawKillCount + 1);
@@ -80,11 +75,25 @@ public class PvPSpreeService {
 		}
 	}
 
+	/**
+	 * 更新连杀等级并广播公告。
+	 * Updates spree level and broadcasts the announcement.
+	 *
+	 * winner
+	 * @param level 连杀等级 / spree level
+	 */
 	private static void updateSpreeLevel(Player winner, int level) {
 		winner.setSpreeLevel(level);
 		sendUpdateSpreeMessage(winner, level);
 	}
 
+	/**
+	 * 向全服广播连杀等级升级消息。
+	 * Broadcasts spree-level upgrade message to all players.
+	 *
+	 * winner
+	 * @param level 连杀等级 / spree level
+	 */
 	private static void sendUpdateSpreeMessage(Player winner, int level) {
 		for (Player p : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 			if (level == 1)
@@ -127,9 +136,17 @@ public class PvPSpreeService {
 						winner.getName() + " Of " + winner.getCommonData().getRace().toString().toLowerCase()
 								+ " CHUUCHUU " + STRING_SPREE10 + " ! IS NOW A TRUE PVP FIGHTER!!!!!!!");
 		}
-		log.info("[PvP][Spree] {Player : " + winner.getName() + "} have now " + level + " Killing Spree Level");
+		log.info(I18n.get("log.ecaed2ab0d0d", winner.getName(), level));
 	}
 
+	/**
+	 * 重置受害者连杀状态；若有连杀等级则广播终结消息。
+	 * Resets the victim's spree state; broadcasts end message if a spree level was active.
+	 *
+	 * victim
+	 * killer
+	 * whether PvP death
+	 */
 	public static void cancelSpree(Player victim, Creature killer, boolean isPvPDeath) {
 		int killsBeforeDeath = victim.getRawKillCount();
 		victim.setRawKillCount(0);
@@ -139,13 +156,21 @@ public class PvPSpreeService {
 		}
 	}
 
+	/**
+	 * 向全服广播连杀被终结的消息。
+	 * Broadcasts the spree-ended message to all players.
+	 *
+	 * victim
+	 * killer
+	 * whether PvP death
+	 * @param killsBeforeDeath 死前连杀数 / kills before death
+	 */
 	private static void sendEndSpreeMessage(Player victim, Creature killer, boolean isPvPDeath, int killsBeforeDeath) {
 		String spreeEnder = isPvPDeath ? ((Player) killer).getName() : "A monster";
 		for (Player p : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 			PacketSendUtility.sendWhiteMessageOnCenter(p, "The killing spree of " + victim.getName()
 					+ " has been stopped by " + spreeEnder + " after " + killsBeforeDeath + " uninterrupted murders !");
 		}
-		log.info(
-				"[PvP][Spree] {The killing spree of " + victim.getName() + "} has been stopped by " + spreeEnder + "}");
+		log.info(I18n.get("log.5666f236eeb6", victim.getName(), spreeEnder));
 	}
 }

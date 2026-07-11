@@ -1,22 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.summons;
 
+/**
+ * 召唤物 Mode 枚举。
+ * Summon Mode enumeration.
+ */
+
 public enum SummonMode {
+	/** 攻击 / Attack. */
 	ATTACK(0), GUARD(1), REST(2), RELEASE(3), UNK(5);
 
 	private int id;
@@ -25,10 +15,12 @@ public enum SummonMode {
 		this.id = id;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 按 ID 返回 summon mode / Returns the summon mode by id */
 	public static SummonMode getSummonModeById(int id) {
 		for (SummonMode mode : values()) {
 			if (mode.getId() == id) {

@@ -1,18 +1,3 @@
-/* This file is part of aion-lightning <aion-lightning.com>.
- *
- * aion-unique is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aion-unique is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aion-unique.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
 import com.aionemu.gameserver.lifecycle.GameEventServices;
@@ -32,6 +17,9 @@ import com.aionemu.gameserver.services.QuestService;
 import java.util.List;
 
 /**
+ * 活动任务脚本：Event Sock Hop（任务 ID 80016）。
+ * Event quest script: Event Sock Hop (quest ID 80016).
+ *
  * @author Rolandas
  */
 public class _80016EventSockHop extends QuestHandler {
@@ -102,12 +90,12 @@ public class _80016EventSockHop extends QuestHandler {
 			if (!QuestService.checkLevelRequirement(questId, player.getCommonData().getLevel()))
 				return false;
 
-			// Start once
+			// 启动一次 / Start once
 			if (qs == null || qs.getStatus() == QuestStatus.NONE)
 				return QuestService.startEventQuest(env, QuestStatus.START);
 		}
 		else if (qs != null) {
-			// Set as expired
+			// 设为已过期 / Set as expired
 			QuestService.abandonQuest(player, questId);
 		}
 		return false;
@@ -124,7 +112,7 @@ public class _80016EventSockHop extends QuestHandler {
 			if (qs.getCompleteCount() == 9) { // [Event] Hat Box
 				rewardItems.add(new QuestItems(188051106, 1));
 			}
-			// randomize movie
+			// 随机化影片 / randomize movie
 			if (Rnd.get() * 100 < 50)
 				playQuestMovie(env, 103);
 			else

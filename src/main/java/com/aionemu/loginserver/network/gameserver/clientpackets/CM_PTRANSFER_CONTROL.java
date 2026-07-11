@@ -1,33 +1,26 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.service.LoginTransferServices;
 
 /**
+ * GS→LS：角色转移任务控制（请求/错误/成功/停止）。
+ * GS→LS: player-transfer task control (request/error/ok/stop).
+ *
  * @author KID
  */
 public class CM_PTRANSFER_CONTROL extends GsClientPacket {
 
+    /**
+     * 动作 ID：1=请求转移，2=错误，3=成功，4=停止任务。
+     * Action id: 1 = request transfer, 2 = error, 3 = ok, 4 = task stop.
+     */
     private byte actionId;
 
+    /**
+     * 按 actionId 读取并立即分发到 PlayerTransferService。
+     * Reads payload by actionId and dispatches immediately to PlayerTransferService.
+     */
     @Override
     protected void readImpl() {
         actionId = this.readSC();
@@ -64,8 +57,12 @@ public class CM_PTRANSFER_CONTROL extends GsClientPacket {
         }
     }
 
+    /**
+     * 无运行期逻辑（已在 readImpl 中处理）。
+     * No runtime actions (handled in readImpl).
+     */
     @Override
     protected void runImpl() {
-        // no actions required
+        // 无需动作 / no actions required
     }
 }

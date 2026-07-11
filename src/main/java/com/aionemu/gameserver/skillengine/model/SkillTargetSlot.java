@@ -1,30 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 技能目标槽位：效果占用的 BUFF/DEBUFF 等槽位类别。
+ * Skill target slot: buff/debuff/etc. slot class occupied by an effect.
+ *
  * @author ATracer
  */
 @XmlType(name = "TargetSlot")
 @XmlEnum
 public enum SkillTargetSlot {
 
-	BUFF, DEBUFF, CHANT, SPEC, SPEC2, BOOST, NOSHOW, NONE;
+	/** 增益槽 / Buff slot */
+	BUFF,
+	/** 减益槽 / Debuff slot */
+	DEBUFF,
+	/** 咏唱/战歌槽 / Chant slot */
+	CHANT,
+	/** 特殊槽 / Special slot */
+	SPEC,
+	/** 特殊槽 2 / Special slot 2 */
+	SPEC2,
+	/** 强化槽 / Boost slot */
+	BOOST,
+	/** 不显示 / No show */
+	NOSHOW,
+	/** 无 / None */
+	NONE;
 }

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
+ * 玩家命令：荣誉/声望装备信息展示与兑换发放。
+ * Player command: shows honor/reputation gear info and exchanges rewards.
+ *
  * @author Maestross
  */
 public class cmd_honorsitems extends PlayerCommand {
@@ -33,6 +20,13 @@ public class cmd_honorsitems extends PlayerCommand {
 		super("honoritems");
 	}
 
+	/**
+	 * 按子命令展示分类信息或发放对应荣誉装备。
+	 * Shows category info or grants honor gear by sub-command.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * command parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length < 1) {
@@ -918,6 +912,13 @@ public class cmd_honorsitems extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "You have successfully received your item!");
 	}
 
+	/**
+	 * 参数错误时提示用法。
+	 * Shows usage when arguments are invalid.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax: .honoritems <plate | leather | cloth | chain | weapons>");

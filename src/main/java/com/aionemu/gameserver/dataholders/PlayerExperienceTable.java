@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,28 +6,26 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Object of this class is containing info about experience that are required
- * for each level that player can obtain.
- * 
+ * 玩家经验表，保存各等级所需经验。
+ * Player experience table holding experience required for each obtainable level.
+ *
  * @author Luno
  */
 @XmlRootElement(name = "player_experience_table")
 @XmlAccessorType(XmlAccessType.NONE)
 public class PlayerExperienceTable {
 
-	/** Exp table */
+	/** 经验表 / experience table */
 	@XmlElement(name = "exp")
 	private long[] experience;
 
 	/**
-	 * Returns the number of experience that player have at the beginning of given
-	 * level.<br>
-	 * For example at lv 1 it's 0
-	 * 
-	 * @param level
-	 * @return count of experience. If <tt>level</tt> parameter is higher than the
-	 *         max level that player can gain, then IllegalArgumentException is
-	 *         thrown.
+	 * 返回玩家在指定等级起始时拥有的经验值（例如 1 级为 0）。
+	 * Returns the experience a player has at the start of the given level (e.g. 0 at level 1).
+	 *
+	 * level
+	 * @return 起始经验；若 level 超过最大等级则抛出 IllegalArgumentException
+	 *         start experience; throws IllegalArgumentException if level exceeds max
 	 */
 	public long getStartExpForLevel(int level) {
 		if (level > experience.length) {
@@ -52,6 +34,13 @@ public class PlayerExperienceTable {
 		return level == 0 ? 0 : experience[level - 1];
 	}
 
+	/**
+	 * 根据经验值计算对应等级。
+	 * Calculates the level for the given experience value.
+	 *
+	 * experience value
+	 * level
+	 */
 	public int getLevelForExp(long expValue) {
 		int level = 0;
 		for (int i = experience.length; i > 0; i--) {
@@ -67,9 +56,10 @@ public class PlayerExperienceTable {
 	}
 
 	/**
-	 * Max possible level,that player can obtain.
-	 * 
-	 * @return max level.
+	 * 返回玩家可达到的最大等级。
+	 * Returns the maximum level a player can obtain.
+	 *
+	 * max level
 	 */
 	public int getMaxLevel() {
 		return experience == null ? 0 : experience.length;

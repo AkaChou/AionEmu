@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 玩家移动条件：校验施法者移动状态是否与 allow 配置一致。
+ * Player moved condition: validates the effector move state matches the allow configuration.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,12 +21,22 @@ public class PlayerMovedCondition extends Condition {
 	protected boolean allow;
 
 	/**
-	 * Gets the value of the allow property.
+	 * 获取是否允许移动施放。
+	 * Gets whether moving is allowed for casting.
+	 *
+	 * allow flag
 	 */
 	public boolean isAllow() {
 		return allow;
 	}
 
+	/**
+	 * 校验技能环境是否满足本条件。
+	 * Validates whether the skill environment satisfies this condition.
+	 *
+	 * @param skill 技能环境 / skill environment
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Skill skill) {
 		return allow == skill.getConditionChangeListener().isEffectorMoved();

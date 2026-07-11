@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.model.templates.flypath.FlyPathEntry;
 import com.aionemu.commons.utils.collections.ShortObjectHashMap;
 
 /**
+ * 飞行路径配置数据容器，按路径 ID 索引飞行路径条目。
+ * Fly path configuration data holder, indexed by path id.
+ *
  * @author KID
  */
 @XmlRootElement(name = "flypath_template")
@@ -39,16 +26,33 @@ public class FlyPathData {
 
 	private ShortObjectHashMap<FlyPathEntry> loctlistData = new ShortObjectHashMap<FlyPathEntry>();
 
+	/**
+	 * JAXB 反序列化完成后，将飞行路径写入 ID 索引。
+	 * After JAXB unmarshalling, indexes fly path entries by id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (FlyPathEntry loc : list) {
 			loctlistData.put(loc.getId(), loc);
 		}
 	}
 
+	/**
+	 * 返回飞行路径条目数量。
+	 * Returns the number of fly path entries.
+	 *
+	 * path count
+	 */
 	public int size() {
 		return loctlistData.size();
 	}
 
+	/**
+	 * 按路径 ID 获取飞行路径模板。
+	 * Returns the fly path template for the given path id.
+	 *
+	 * @param i 路径 ID / path id
+	 * @return 飞行路径条目，不存在则为 null / fly path entry, or null if absent
+	 */
 	public FlyPathEntry getPathTemplate(byte i) {
 		return loctlistData.get((short) i);
 	}

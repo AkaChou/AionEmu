@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.league.events;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -23,6 +7,11 @@ import com.aionemu.gameserver.model.team2.league.League;
 import com.aionemu.gameserver.model.team2.league.LeagueService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+
+/**
+ * 战团 Invite，用于团队2相关逻辑。
+ * League Invite for team 2 logic.
+ */
 
 public class LeagueInvite extends RequestResponseHandler {
 	private final Player inviter;
@@ -34,10 +23,11 @@ public class LeagueInvite extends RequestResponseHandler {
 		this.invited = invited;
 	}
 
+	/** 接受请求 / Accept Request */
 	@Override
 	public void acceptRequest(Creature requester, Player responder) {
 		if (LeagueService.canInvite(inviter, invited)) {
-			// %0's Alliance has joined the League.
+			// %0 的联盟已加入战团。 / %0's Alliance has joined the League.
 			PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_UNION_ENTER_HIM(invited.getName()));
 			League league = inviter.getPlayerAlliance2().getLeague();
 			if (league == null) {
@@ -57,9 +47,10 @@ public class LeagueInvite extends RequestResponseHandler {
 		}
 	}
 
+	/** 拒绝请求 / Deny Request */
 	@Override
 	public void denyRequest(Creature requester, Player responder) {
-		// %0's Alliance has declined your invitation to join the League.
+		// %0 的联盟拒绝了你加入战团的邀请。 / %0's Alliance has declined your invitation to join the League.
 		PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_UNION_REJECT_HIM(responder.getName()));
 	}
 }

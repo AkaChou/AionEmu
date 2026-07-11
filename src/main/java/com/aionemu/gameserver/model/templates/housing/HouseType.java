@@ -1,25 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 /**
+ * 房屋类型枚举。
+ * House Type enumeration.
+ *
  * @author Rolandas
  */
 public enum HouseType {
+	/** 地产 / Estate. */
 	ESTATE(0, 3, "a"), MANSION(1, 2, "b"), HOUSE(2, 1, "c"), STUDIO(3, 0, "d"), PALACE(4, 4, "s");
 
 	private HouseType(int index, int id, String abbrev) {
@@ -32,22 +20,27 @@ public enum HouseType {
 	private int limitTypeIndex;
 	private int id;
 
+	/** 返回 abbreviation / Returns the abbreviation */
 	public String getAbbreviation() {
 		return abbrev;
 	}
 
+	/** 返回 limit type index / Returns the limit type index */
 	public int getLimitTypeIndex() {
 		return limitTypeIndex;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
+	/** 值 / From Value*/
 	public static HouseType fromValue(String value) {
 		return valueOf(value);
 	}

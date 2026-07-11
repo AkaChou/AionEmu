@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver;
 
 import java.io.File;
@@ -36,12 +18,21 @@ import ch.qos.logback.core.joran.spi.JoranException;
 
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
+import lombok.experimental.UtilityClass;
+
 /**
+ * 聊天服务器入口与日志初始化静态门面。
+ * Static facade for chat-server entry and logger initialization.
+ *
  * @author ATracer, KID, nrg
  */
+@UtilityClass
 public class ChatServer {
 
-
+    /**
+     * 初始化日志：备份旧日志、配置 Logback；嵌入式启动时跳过。
+     * Initialize logging: back up old logs and configure Logback; skip when boot-embedded.
+     */
     static void initializeLogger() {
         if (AionRuntimeMode.isBootEmbedded()) {
             return;
@@ -86,14 +77,22 @@ public class ChatServer {
     }
 
     /**
-     * Starts ChatServer from the boot-managed service lifecycle.
+     * 由 boot 管理的服务生命周期启动聊天服（使用遗留依赖实现）。
+     * Start ChatServer from the boot-managed service lifecycle (legacy dependencies).
      *
-     * @param args startup arguments
+     * @param args 启动参数 / Startup arguments
      */
     public static void start(String[] args) {
         start(args, new ChatServerLegacyDependencies());
     }
 
+    /**
+     * 使用给定依赖启动聊天服启动序列。
+     * Start the chat-server startup sequence with the given dependencies.
+     *
+     * @param args 启动参数 / Startup arguments
+     * Startup dependencies
+     */
     static void start(String[] args, ChatServerDependencies dependencies) {
         ChatServerStartupSequence.start(dependencies);
     }

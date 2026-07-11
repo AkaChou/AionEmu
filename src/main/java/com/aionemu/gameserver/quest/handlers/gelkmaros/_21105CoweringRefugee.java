@@ -1,19 +1,3 @@
-/*
- * This file is part of aion-lightning <aion-lightning.com>.
- *
- *  aion-lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  aion-lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with aion-lightning.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.gelkmaros;
 
 import com.aionemu.commons.utils.Rnd;
@@ -27,8 +11,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
- * @author Cheatkiller
+ * 格尔克马洛斯任务脚本：Cowering Refugee（任务 ID 21105）。
+ * Gelkmaros quest script: Cowering Refugee (quest ID 21105).
  *
+ * @author Cheatkiller
  */
 public class _21105CoweringRefugee extends QuestHandler {
 

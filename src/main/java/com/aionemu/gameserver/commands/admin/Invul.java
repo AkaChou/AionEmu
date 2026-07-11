@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员无敌切换命令。
+ * Admin invulnerability toggle command.
+ *
  * @author Andy
  * @author Divinity - update
  */
@@ -30,6 +17,13 @@ public class Invul extends AdminCommand {
 		super("invul");
 	}
 
+	/**
+	 * 切换执行者的无敌状态。
+	 * Toggle the invoker's invulnerability.
+	 *
+	 * @param player 执行命令的管理员 / Admin executing the command
+	 * Unused
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (player.isInvul()) {
@@ -42,8 +36,4 @@ public class Invul extends AdminCommand {
 		}
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

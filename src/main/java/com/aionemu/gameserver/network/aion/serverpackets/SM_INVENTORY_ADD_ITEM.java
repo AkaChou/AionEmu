@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.List;
@@ -27,19 +11,36 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
 
+/**
+ * 向客户端发送背包新增物品的服务端包。
+ * Server packet that sends newly added inventory items to the client.
+ */
 public class SM_INVENTORY_ADD_ITEM extends AionServerPacket {
 	private final List<Item> items;
-	private final int size;
 	private Player player;
 	private ItemAddType addType;
 
+	/**
+	 * 以默认收集类型构造新增物品包。
+	 * Creates an add-item packet with the default item-collect type.
+	 *
+	 * @param items 新增物品列表 / list of newly added items
+	 * target player
+	 */
 	public SM_INVENTORY_ADD_ITEM(List<Item> items, Player player) {
 		this.player = player;
 		this.items = items;
-		this.size = items.size();
 		this.addType = ItemAddType.ITEM_COLLECT;
 	}
 
+	/**
+	 * 以指定添加类型构造新增物品包。
+	 * Creates an add-item packet with the given add type.
+	 *
+	 * @param items 新增物品列表 / list of newly added items
+	 * target player
+	 * @param addType 物品添加类型 / item add type
+	 */
 	public SM_INVENTORY_ADD_ITEM(List<Item> items, Player player, ItemAddType addType) {
 		this(items, player);
 		this.addType = addType;
@@ -47,17 +48,14 @@ public class SM_INVENTORY_ADD_ITEM extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
-		// TODO: Rework it, who knows where it could be bugged else.
 		int mask = addType.getMask();
-		if (addType == ItemAddType.ITEM_COLLECT) {
-			// TODO: if size != 1, then it's buy item, should not specify any slot in other
-			// places then !!!
-			if (size == 1 && items.get(0).getEquipmentSlot() != ItemStorage.FIRST_AVAILABLE_SLOT) {
-				mask = ItemAddType.PARTIAL_WITH_SLOT.getMask();
-			}
+		if (addType == ItemAddType.ITEM_COLLECT && items.size() == 1
+				&& items.get(0).getEquipmentSlot() != ItemStorage.FIRST_AVAILABLE_SLOT) {
+			mask = ItemAddType.PARTIAL_WITH_SLOT.getMask();
 		}
-		writeH(mask); //
-		writeH(size); // number of entries
+		writeC(mask);
+		writeC(0);
+		writeH(items.size());
 		for (Item item : items) {
 			writeItemInfo(item);
 		}

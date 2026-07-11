@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 异常状态条件：校验目标是否处于指定异常状态。
+ * Abnormal state condition: validates the target is under the specified abnormal state.
+ *
  * @author kecimis
  */
 public class AbnormalStateCondition extends Condition {
@@ -30,12 +17,12 @@ public class AbnormalStateCondition extends Condition {
 	@XmlAttribute(required = true)
 	protected AbnormalState value;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.aionemu.gameserver.skillengine.condition.Condition#validate(com.aionemu.
-	 * gameserver.skillengine.model.Skill)
+	/**
+	 * 校验技能首目标是否带有指定异常状态。
+	 * Validates whether the skill's first target has the specified abnormal state.
+	 *
+	 * @param env 技能环境 / skill environment
+	 * whether valid
 	 */
 	@Override
 	public boolean validate(Skill env) {
@@ -45,6 +32,13 @@ public class AbnormalStateCondition extends Condition {
 		return false;
 	}
 
+	/**
+	 * 校验效果作用目标是否带有指定异常状态。
+	 * Validates whether the effect's target has the specified abnormal state.
+	 *
+	 * effect environment
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Effect effect) {
 		if (effect.getEffected() != null) {

@@ -1,42 +1,31 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * In this packet Server is sending response for CM_RESTORE_CHARACTER.
- * 
+ * 对 CM_RESTORE_CHARACTER 的应答，返回角色恢复结果。
+ * Response to CM_RESTORE_CHARACTER returning character-restore success or failure.
+ *
  * @author -Nemesiss-
  */
 public class SM_RESTORE_CHARACTER extends AionServerPacket {
 
 	/**
-	 * Character object id.
+	 * 角色对象 ID / Character object id
 	 */
 	private final int chaOid;
 	/**
-	 * True if player was restored.
+	 * 若为真则玩家曾 restored。 / True if player was restored
 	 */
 	private final boolean success;
 
 	/**
+	 * 使用给定参数构造 SM_RESTORE_CHARACTER 包。
 	 * Constructs new <tt>SM_RESTORE_CHARACTER </tt> packet
+	 *
+	 * character object id
+	 * success flag
 	 */
 	public SM_RESTORE_CHARACTER(int chaOid, boolean success) {
 		this.chaOid = chaOid;
@@ -48,7 +37,7 @@ public class SM_RESTORE_CHARACTER extends AionServerPacket {
 	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
-		writeD(success ? 0x00 : 0x10);// unk
+		writeD(success ? 0x00 : 0x10);// 未知 / unk
 		writeD(chaOid);
 	}
 }

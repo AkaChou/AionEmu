@@ -1,33 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.configs.main.NameConfig;
 
+/**
+ * 名称限制服务，校验角色名合法性与屏蔽词。
+ * Name restriction service validating character names and filtering forbidden words.
+ */
 public class NameRestrictionService {
 
 	private static final String ENCODED_BAD_WORD = "----";
-	private static String[] forbiddenSequences;
-	private static String[] forbiddenByClient;
-
+	/**
+	 * 校验名称是否符合配置的字符模式。
+	 * Checks whether the name matches the configured character pattern.
+	 *
+	 * @param name 待校验名称 / name to validate
+	 * whether valid
+	 */
 	public static boolean isValidName(String name) {
 		return NameConfig.CHAR_NAME_PATTERN.matcher(name).matches();
 	}
 
+	/**
+	 * 判断名称是否命中客户端屏蔽词或禁用序列。
+	 * Checks whether the name hits client forbidden words or forbidden sequences.
+	 *
+	 * @param name 待检查名称 / name to check
+	 * @return 是否为禁用词 / whether forbidden
+	 */
 	public static boolean isForbiddenWord(String name) {
 		return isForbiddenByClient(name) || isForbiddenBySequence(name);
 	}
@@ -36,10 +35,7 @@ public class NameRestrictionService {
 		if (!NameConfig.NAME_FORBIDDEN_ENABLE || NameConfig.NAME_FORBIDDEN_CLIENT.equals("")) {
 			return false;
 		}
-		if ((forbiddenByClient == null) || (forbiddenByClient.length == 0)) {
-			forbiddenByClient = NameConfig.NAME_FORBIDDEN_CLIENT.split(",");
-		}
-		for (String s : forbiddenByClient) {
+		for (String s : NameConfig.NAME_FORBIDDEN_CLIENT.split(",")) {
 			if (name.equalsIgnoreCase(s)) {
 				return true;
 			}
@@ -51,10 +47,7 @@ public class NameRestrictionService {
 		if (NameConfig.NAME_SEQUENCE_FORBIDDEN.equals("")) {
 			return false;
 		}
-		if (forbiddenSequences == null || forbiddenSequences.length == 0) {
-			forbiddenSequences = NameConfig.NAME_SEQUENCE_FORBIDDEN.toLowerCase().split(",");
-		}
-		for (String s : forbiddenSequences) {
+		for (String s : NameConfig.NAME_SEQUENCE_FORBIDDEN.toLowerCase().split(",")) {
 			if (name.toLowerCase().contains(s)) {
 				return true;
 			}
@@ -62,6 +55,14 @@ public class NameRestrictionService {
 		return false;
 	}
 
+	/**
+	 * 过滤聊天消息中的屏蔽词（替换为掩码）。
+	 * Filters forbidden words in chat messages (replaces with a mask).
+	 *
+	 * original message
+	 *
+	 * @param message @return 过滤后消息 / filtered message
+	 */
 	public static String filterMessage(String message) {
 		for (String word : message.split(" ")) {
 			if (isForbiddenWord(word)) {

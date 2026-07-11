@@ -17,10 +17,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * @author Ritsu
+ * 艾特南任务脚本：Water Therapy（任务 ID 1373）。
+ * Eltnen quest script: Water Therapy (quest ID 1373).
  *
+ * @author Ritsu
  */
-
 public class _1373WaterTherapy extends QuestHandler {
 
 	private final static int   questId   = 1373;

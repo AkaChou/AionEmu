@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.world;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * Weather 条目模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -54,18 +41,22 @@ public class WeatherEntry {
 	@XmlAttribute(name = "after")
 	private Boolean isAfter;
 
+	/** 返回区域 ID / Returns the zone id */
 	public int getZoneId() {
 		return zoneId;
 	}
 
+	/** 返回 code / Returns the code */
 	public int getCode() {
 		return weatherCode;
 	}
 
+	/** 返回 att ranking / Returns the att ranking */
 	public int getAttRanking() {
 		return attRanking;
 	}
 
+	/** Whether 前 / Whether before */
 	public Boolean isBefore() {
 		if (isBefore == null) {
 			return false;
@@ -73,6 +64,7 @@ public class WeatherEntry {
 		return isBefore;
 	}
 
+	/** 是否后 / Whether after*/
 	public Boolean isAfter() {
 		if (isAfter == null) {
 			return false;
@@ -80,6 +72,7 @@ public class WeatherEntry {
 		return isAfter;
 	}
 
+	/** 返回 weather name / Returns the weather name */
 	public String getWeatherName() {
 		return weatherName;
 	}

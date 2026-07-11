@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.idiandepthsservice;
 
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsLocation;
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsStateType;
 
 /**
+ * 伊迪安深渊默认实现：切入 OPEN / 回到 CLOSED。
+ * back to CLOSED. / back to CLOSED.
+ *
  * @author Rinzler (Encom)
  */
-
 public class Idian extends IdianDepths<IdianDepthsLocation> {
+
+	/**
+	 * 绑定伊迪安深渊地点。
+	 * Binds the Idian Depths location.
+	 *
+	 * location
+	 */
 	public Idian(IdianDepthsLocation idianDepths) {
 		super(idianDepths);
 	}
 
+	/**
+	 * 激活活动并刷新 OPEN 刷怪。
+	 * Activates the event and spawns OPEN entities.
+	 */
 	@Override
 	public void startIdianDepths() {
 		getIdianDepthsLocation().setActiveIdianDepths(this);
@@ -35,6 +32,10 @@ public class Idian extends IdianDepths<IdianDepthsLocation> {
 		spawn(IdianDepthsStateType.OPEN);
 	}
 
+	/**
+	 * 结束活动并恢复 CLOSED 刷怪。
+	 * Ends the event and restores CLOSED spawns.
+	 */
 	@Override
 	public void stopIdianDepths() {
 		getIdianDepthsLocation().setActiveIdianDepths(null);

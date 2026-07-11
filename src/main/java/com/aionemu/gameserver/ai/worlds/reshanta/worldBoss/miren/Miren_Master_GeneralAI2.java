@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.miren;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Miren Master General（@AIName "unsealed_miren"），继承 AggressiveNpcAI2。
+ * Reshanta zone NPC AI: Miren Master General (@AIName "unsealed_miren"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("unsealed_miren")
 public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 {
@@ -59,7 +45,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//Miren Fortress 5.3
+			// 米伦要塞 5.3 / Miren Fortress 5.3
 			case 279247:
 			case 279541:
 			case 269911:
@@ -79,7 +65,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//A treasure chest has appeared.
+				// 出现了一个宝箱。 / A treasure chest has appeared.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 			}
 		});
@@ -89,9 +75,9 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Unsealed Miren.
+				// 解封的米伦。 / Unsealed Miren.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn);
-				//The Miren Balaur Prince has appeared!
+				// 米伦龙族王子已出现！ / The Miren Balaur Prince has appeared!
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_Boss_hide_Dispel, 30000);
 			}
 		});

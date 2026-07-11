@@ -1,46 +1,44 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.service;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.network.gameserver.GsAuthResponse;
 
 /**
+ * 游戏服接入认证服务：处理游戏服注册、口令校验与离线状态。
+ * Game-server auth service: handles game-server registration, password check, and offline state.
+ *
  * @author ATracer, KID
  */
 @Slf4j
 public class GameServerService {
 
 
+    /**
+     * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
+     * Return the singleton (deprecated; prefer injection after Boot migration).
+     *
+     * Singleton instance
+     * @deprecated boot-migration
+     */
     @Deprecated(since = "boot-migration")
     public static GameServerService getInstance() {
         return SingletonHolder.INSTANCE;
     }
+
     public static byte GAMESERVER_ID;
     private boolean isOnline = false;
 
     /**
-     * @param gameServerId
-     * @param defaultAddress
-     * @param password
-     * @return
+     * 注册游戏服；已在线则拒绝重复注册。
+     * Register a game server; reject when one is already online.
+     *
+     * Game server id
+     * @param defaultAddress 默认地址字节 / Default address bytes
+     * Access password
+     * Auth response
      */
     public GsAuthResponse registerGameServer(byte gameServerId, byte[] defaultAddress, String password) {
         GAMESERVER_ID = gameServerId;
@@ -52,7 +50,11 @@ public class GameServerService {
     }
 
     /**
-     * @return
+     * 按配置口令校验并标记在线。
+     * Authenticate against the configured password and mark online.
+     *
+     * Access password
+     * Auth response
      */
     private GsAuthResponse passwordConfigAuth(String password) {
         if (password.equals(Config.GAME_SERVER_PASSWORD)) {
@@ -60,15 +62,23 @@ public class GameServerService {
             return GsAuthResponse.AUTHED;
         }
 
-        log.warn("Gameserver #" + GAMESERVER_ID + " has invalid password.");
+        log.warn(I18n.get("log.b384a8e5934b", GAMESERVER_ID));
         return GsAuthResponse.NOT_AUTHED;
     }
 
+    /**
+     * 将游戏服标记为离线。
+     * Mark the game server as offline.
+     */
     public void setOffline() {
-        log.info("Gameserver #" + GAMESERVER_ID + " is disconnected");
+        log.info(I18n.get("log.3b0e82fbd42f", GAMESERVER_ID));
         isOnline = false;
     }
 
+    /**
+     * 单例持有者。
+     * Singleton holder.
+     */
     private static final class SingletonHolder {
 
         private static final GameServerService INSTANCE = new GameServerService();

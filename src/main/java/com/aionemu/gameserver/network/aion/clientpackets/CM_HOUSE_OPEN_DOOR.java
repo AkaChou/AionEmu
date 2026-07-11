@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -37,17 +21,29 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * @Author Wartraxx
- **/
-
+ * 打开/进入房屋门（或离开房屋）的客户端包。
+ * Client packet for opening/entering a house door (or leaving a house).
+ *
+ * @author Wartraxx
+ */
 public class CM_HOUSE_OPEN_DOOR extends AionClientPacket {
 	int address;
 	boolean leave = false;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_HOUSE_OPEN_DOOR(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取房屋地址与离开标志。
+	 * Reads the house address and leave flag.
+	 */
 	@Override
 	protected void readImpl() {
 		address = readD();
@@ -55,7 +51,10 @@ public class CM_HOUSE_OPEN_DOOR extends AionClientPacket {
 			leave = true;
 		}
 	}
-
+	/**
+	 * 校验权限后进入房屋或离开房屋。
+	 * Enters or leaves the house after permission checks.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();

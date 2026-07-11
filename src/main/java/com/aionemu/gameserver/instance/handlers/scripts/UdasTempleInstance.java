@@ -1,20 +1,5 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
+
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -37,33 +22,24 @@ import java.util.Map;
 import java.util.Set;
 
 /**
-Author (Encom)
+ * 乌达斯神殿副本事件处理器。
+ * Instance event handler for Udas Temple.
+ *
+ * @author Encom
+ */
 
-Source: http://gameguide.na.aiononline.com/aion/Udas+Temple+Guide
 
-There are three hero rank named monsters inside the Udas Temple.
-Each boss is located inside a locked room.
-You have to either get a key by defeating a Named Monster on the way to each door or defeating a specific monster in order to open the door.
-
-Three Named Elite class Dragonbound randomly spawn.
-You have to weaken the Chamber of Unity by defeating each of them.
-One of these resides in the Silent Chapel, which requires a key that can be obtained from "Cota the Gatekeeper".
-But "Cota the Gatekeeper" does not affect the seal on the chamber.
-
-Once in the Chamber of Unity, you will face Vallakhan, a Hero grade Dragonbound.
-From him, you will obtain the key to the Great Chapel.
-
-Once you defeat Vallakhan, you will receive the key to the Great Chapel.
-Anurati resides here and has a chance to drop Heroic accessories and Fabled weapons.
-
-You must defeat another named Dragonbound in order to receive the Key to the Chamber of Guidance.
-He is located in the area hilighted above.
-Once inside the Chamber of Guidance, you will face Nexus, the final boss of Udas Temple.
-**/
 @InstanceID(300150000)
 public class UdasTempleInstance extends GeneralInstanceHandler {
 
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -85,6 +61,12 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 		}
     }
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -100,11 +82,11 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 			case 215791: //Agra The Guide.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000085, 1)); //Chamber Of Guidance Key.
 		    break;
-			case 702658: //Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+			case 702658: //修道院箱子。 / Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
-			case 702659: //Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+			case 702659: //高级修道院箱子。 / Noble Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 		}
 	}
@@ -114,24 +96,24 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215783: //Nexus.
-				//sendMsg("[SUCCES]: You have finished <Udas Temple>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Udas Temple>");
 				spawn(730255, 508.3610f, 362.7170f, 137.0000f, (byte) 31); //Udas Temple Exit.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 508.4381f, 374.57526f, 135.88919f, (byte) 30); //Abbey Box.
+				        spawn(702658, 508.4381f, 374.57526f, 135.88919f, (byte) 30); //修道院箱子。 / Abbey Box.
 					break;
 					case 2:
-					    spawn(702659, 508.4381f, 374.57526f, 135.88919f, (byte) 30); //Noble Abbey Box.
+					    spawn(702659, 508.4381f, 374.57526f, 135.88919f, (byte) 30); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
             break;
 			case 215787: //Cota The Gatekeeper.
-				//The Seal of Uniformity has been weakened.
+				// 统一封印已被削弱。 / The Seal of Uniformity has been weakened.
 				sendMsgByRace(1400366, Race.PC_ALL, 2000);
 			break;
 			case 215790: //Tala The Protector.
 			    doors.get(99).setOpen(true);
-				//You can now enter the Chamber of Unity.
+				// 你现在可进入团结之室。 / You can now enter the Chamber of Unity.
 				sendMsgByRace(1400367, Race.PC_ALL, 2000);
 			break;
 		}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.eventEngine;
 
 import java.util.AbstractQueue;
@@ -27,25 +11,67 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Created by wanke on 12/02/2017.
+ * 延迟事件阻塞优先队列：按 {@link DelayedEvent#compareTo} 排序，仅在到期后可取出。
+ * Blocking priority queue of delayed events ordered by {@link DelayedEvent#compareTo}; only due items poll.
+ *
+ * @param <E> 延迟事件类型 / delayed event type
+ * @author wanke
  */
-
 public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> implements BlockingQueue<E> {
+
+	/**
+	 * 队列互斥锁。
+	 * Queue mutex.
+	 */
 	private transient final ReentrantLock lock = new ReentrantLock();
+
+	/**
+	 * 有新头元素或到期时的等待条件。
+	 * Condition signaled when head changes or becomes due.
+	 */
 	private transient final Condition available = lock.newCondition();
+
+	/**
+	 * 内部优先队列。
+	 * Backing priority queue.
+	 */
 	private final PriorityQueue<E> q = new PriorityQueue<E>();
 
+	/**
+	 * 空队列。
+	 * Empty queue.
+	 */
 	public EventQueue() {
 	}
 
+	/**
+	 * 以给定集合初始化。
+	 * Initializes from a collection.
+	 *
+	 * @param c 初始元素 / initial elements
+	 */
 	public EventQueue(Collection<? extends E> c) {
 		this.addAll(c);
 	}
 
+	/**
+	 * 添加元素（等同 {@link #offer(DelayedEvent)}）。
+	 * Adds an element (same as {@link #offer(DelayedEvent)}).
+	 *
+	 * @param e 元素 / element
+	 * always true
+	 */
 	public boolean add(E e) {
 		return offer(e);
 	}
 
+	/**
+	 * 入队；若成为新头则唤醒等待者。
+	 * Enqueues; signals waiters when the element becomes the new head.
+	 *
+	 * @param e 元素 / element
+	 * always true
+	 */
 	public boolean offer(E e) {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -61,14 +87,35 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 阻塞入队（实际非阻塞，委托 {@link #offer(DelayedEvent)}）。
+	 * Blocking put (actually non-blocking; delegates to {@link #offer(DelayedEvent)}).
+	 *
+	 * @param e 元素 / element
+	 */
 	public void put(E e) {
 		offer(e);
 	}
 
+	/**
+	 * 带超时入队（忽略超时，委托 {@link #offer(DelayedEvent)}）。
+	 * Timed offer (timeout ignored; delegates to {@link #offer(DelayedEvent)}).
+	 *
+	 * @param e 元素 / element
+	 * timeout
+	 * @param unit 时间单位 / time unit
+	 * always true
+	 */
 	public boolean offer(E e, long timeout, TimeUnit unit) {
 		return offer(e);
 	}
 
+	/**
+	 * 非阻塞取出已到期头元素；未到期或空则返回 null。
+	 * Non-blocking poll of a due head; returns null if empty or not yet due.
+	 *
+	 * @return 到期元素或 null / due element or null
+	 */
 	public E poll() {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -89,6 +136,14 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 阻塞直到有到期元素可取。
+	 * Blocks until a due element is available.
+	 *
+	 * due element
+	 *
+	 * @return @throws InterruptedException 等待被中断 / wait interrupted
+	 */
 	public E take() throws InterruptedException {
 		final ReentrantLock lock = this.lock;
 		lock.lockInterruptibly();
@@ -117,6 +172,16 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 在超时内阻塞取出到期元素。
+	 * Timed blocking poll of a due element.
+	 *
+	 * timeout
+	 *
+	 * @param unit 时间单位 / time unit
+	 * @param unit @return 到期元素或 null / due element or null
+	 * @return @throws InterruptedException 等待被中断 / wait interrupted
+	 */
 	public E poll(long timeout, TimeUnit unit) throws InterruptedException {
 		long nanos = unit.toNanos(timeout);
 		final ReentrantLock lock = this.lock;
@@ -156,6 +221,12 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 查看头元素（不移除，不论是否到期）。
+	 * Peeks head without removal (regardless of due time).
+	 *
+	 * head or null
+	 */
 	public E peek() {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -166,6 +237,12 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 当前元素数。
+	 * Current size.
+	 *
+	 * size
+	 */
 	public int size() {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -176,6 +253,13 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 将所有已到期元素转移到目标集合。
+	 * Drains all due elements into the target collection.
+	 *
+	 * @param c 目标集合 / target collection
+	 * transferred count
+	 */
 	public int drainTo(Collection<? super E> c) {
 		if (c == null) {
 			throw new NullPointerException();
@@ -204,6 +288,14 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 将至多 {@code maxElements} 个已到期元素转移到目标集合。
+	 * Drains up to {@code maxElements} due elements into the target collection.
+	 *
+	 * @param c 目标集合 / target collection
+	 * max count
+	 * transferred count
+	 */
 	public int drainTo(Collection<? super E> c, int maxElements) {
 		if (c == null) {
 			throw new NullPointerException();
@@ -235,6 +327,10 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 清空队列。
+	 * Clears the queue.
+	 */
 	public void clear() {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -245,10 +341,22 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 剩余容量（无界，返回 {@link Integer#MAX_VALUE}）。
+	 * Remaining capacity (unbounded, returns {@link Integer#MAX_VALUE}).
+	 *
+	 * remaining capacity
+	 */
 	public int remainingCapacity() {
 		return Integer.MAX_VALUE;
 	}
 
+	/**
+	 * 快照数组。
+	 * Snapshot array.
+	 *
+	 * element array
+	 */
 	public Object[] toArray() {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -259,6 +367,14 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 快照到给定数组。
+	 * Snapshot into the given array.
+	 *
+	 * @param a 目标数组 / target array
+	 * @param <T> 数组元素类型 / array element type
+	 * @return 填充后的数组 / filled array
+	 */
 	public <T> T[] toArray(T[] a) {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -269,6 +385,13 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 移除指定对象。
+	 * Removes the given object.
+	 *
+	 * @param o 对象 / object
+	 * whether removed
+	 */
 	public boolean remove(Object o) {
 		final ReentrantLock lock = this.lock;
 		lock.lock();
@@ -279,15 +402,43 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		}
 	}
 
+	/**
+	 * 基于快照的迭代器。
+	 * Snapshot-based iterator.
+	 *
+	 * iterator
+	 */
 	public Iterator<E> iterator() {
 		return new Itr(toArray());
 	}
 
+	/**
+	 * 快照迭代器；{@link #remove()} 按引用从真实队列删除。
+	 * Snapshot iterator; {@link #remove()} deletes by reference from the live queue.
+	 */
 	private class Itr implements Iterator<E> {
+
+		/**
+		 * 快照数组。
+		 * Snapshot array.
+		 */
 		final Object[] array;
+
+		/**
+		 * 当前游标。
+		 * Current cursor.
+		 */
 		int cursor;
+
+		/**
+		 * 最近返回下标；-1 表示不可 remove。
+		 * Last returned index; -1 means remove is illegal.
+		 */
 		int lastRet;
 
+		/**
+		 * 快照 / snapshot
+		 */
 		Itr(Object[] array) {
 			lastRet = -1;
 			this.array = array;

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.fissureOfOblivion;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -23,10 +7,12 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Fissure Of Oblivion 副本 NPC AI：Fissure Of Oblivion Bind Point（@AIName "Fissure_Of_Oblivion_Bind_Point"），继承 NpcAI2。
+ * Fissure Of Oblivion instance NPC AI: Fissure Of Oblivion Bind Point (@AIName "Fissure_Of_Oblivion_Bind_Point"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Fissure_Of_Oblivion_Bind_Point")
 public class Fissure_Of_Oblivion_Bind_PointAI2 extends NpcAI2
 {

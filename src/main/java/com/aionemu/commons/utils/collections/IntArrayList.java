@@ -3,29 +3,67 @@ package com.aionemu.commons.utils.collections;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * 基于 {@link ArrayList} 的 int 友好列表。
+ * Int-friendly list backed by {@link ArrayList}.
+ */
 public class IntArrayList extends ArrayList<Integer> {
 
-	public IntArrayList() {
-	}
+    /**
+     * 创建空列表。
+     * Create an empty list.
+     */
+    public IntArrayList() {
+    }
 
-	public IntArrayList(Collection<Integer> values) {
-		super(values);
-	}
+    /**
+     * 用给定集合初始化。
+     * Initialize with the given collection.
+     *
+     * Initial values
+     */
+    public IntArrayList(Collection<Integer> values) {
+        super(values);
+    }
 
-	public boolean add(int value) {
-		return super.add(value);
-	}
+    /**
+     * 添加 int 值。
+     * Add an int value.
+     *
+     * Value
+     *
+     * @param value @return 是否添加成功 / Whether added
+     */
+    public boolean add(int value) {
+        return super.add(value);
+    }
 
-	public boolean contains(int value) {
-		return super.contains(value);
-	}
+    /**
+     * 是否包含 int 值。
+     * Whether the list contains the int value.
+     *
+     * Value
+     *
+     * @param value 存在则为 true / True if present
+     */
+    public boolean contains(int value) {
+        return super.contains(value);
+    }
 
-	public boolean forEach(IntProcedure procedure) {
-		for (int value : this) {
-			if (!procedure.execute(value)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    /**
+     * 遍历元素；过程返回 false 时提前结束。
+     * Iterate elements; stop early when the procedure returns false.
+     *
+     * Callback
+     *
+     * @param procedure @return 全部执行完为 true，提前中断为 false / True if completed, false if aborted
+     */
+    public boolean forEach(IntProcedure procedure) {
+        for (int value : this) {
+            if (!procedure.execute(value)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

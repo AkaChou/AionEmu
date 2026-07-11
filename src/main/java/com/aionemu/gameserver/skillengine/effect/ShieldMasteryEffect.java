@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import java.util.ArrayList;
@@ -28,12 +12,19 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatShieldMasteryFuncti
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 盾牌专精效果：将修饰器包装为盾牌专精属性函数。
+ * Shield mastery effect: wraps modifiers as shield-mastery stat functions.
+ *
  * @author VladimirZ
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ShieldMasteryEffect")
 public class ShieldMasteryEffect extends BuffEffect {
 
+	/**
+	 * 把普通修饰器转为 StatShieldMasteryFunction 并应用到目标。
+	 * Converts modifiers to StatShieldMasteryFunction and applies them to the target.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 

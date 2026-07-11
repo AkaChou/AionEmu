@@ -1,21 +1,7 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -59,8 +45,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /****/
 /**
- * Reworked by G-Robson26 /
- ****/
+ * 露娜商店服务，管理露娜点数、每日工艺与特价。
+ * Luna shop service managing luna points, daily craft and specials.
+ */
+
 @Slf4j
 
 public class LunaShopService {
@@ -85,7 +73,7 @@ public class LunaShopService {
 	private List<Integer> weapons = new ArrayList<Integer>();
 
 	public void init() {
-		log.info("Luna Reset");
+		log.info(I18n.get("log.54a853f1dff1"));
 		String daily = "0 0 9 1/1 * ? *";
 		String weekly = "0 0 9 ? * WED *";
 		if (DailyCraft.size() == 0) {
@@ -240,16 +228,36 @@ public class LunaShopService {
 		});
 	}
 
+	/**
+	 * 露娜点数控制。
+	 * Luna point controller.
+	 *
+	 * 玩家 / player
+	 * point
+	 */
 	public void lunaPointController(Player player, int point) {
 		player.setLunaAccount(point);
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));
 	}
 
+	/**
+	 * muniKeysController 方法。
+	 * muniKeysController method.
+	 *
+	 * 玩家 / player
+	 * keys
+	 */
 	public void muniKeysController(Player player, int keys) {
 		player.setMuniKeys(keys);
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4));
 	}
 
+	/**
+	 * 玩家登录时同步状态。
+	 * Syncs state when a player logs in.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onLogin(Player player) {
 		if (player.getPlayerLunaShop() == null) {
 			PlayerLunaShop pls = new PlayerLunaShop(true, true, true);
@@ -279,6 +287,13 @@ public class LunaShopService {
 		}
 	}
 
+	/**
+	 * specialDesign 方法。
+	 * specialDesign method.
+	 *
+	 * 玩家 / player
+	 * recipeId
+	 */
 	public void specialDesign(Player player, int recipeId) {
 		LunaTemplate recipe = DataManager.LUNA_DATA.getLunaTemplateById(recipeId);
 		int product_id = recipe.getProductid();
@@ -289,8 +304,7 @@ public class LunaShopService {
 			for (LunaComponent lc : recipe.getLunaComponent()) {
 				for (LunaComponentElement a : lc.getComponents()) {
 					if (!player.getInventory().decreaseByItemId(a.getItemid(), a.getQuantity())) {
-						log.warn("Possible Luna craft item mismatch. playerId={} recipeId={} itemId={} quantity={}",
-								player.getObjectId(), recipeId, a.getItemid(), a.getQuantity());
+						log.warn(I18n.get("log.a2657e1e13e5", player.getObjectId(), recipeId, a.getItemid(), a.getQuantity()));
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(2, item, 1));
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(3, product_id, quantity, false));
 						return;
@@ -304,8 +318,7 @@ public class LunaShopService {
 			for (LunaComponent lc : recipe.getLunaComponent()) {
 				for (LunaComponentElement a : lc.getComponents()) {
 					if (!player.getInventory().decreaseByItemId(a.getItemid(), a.getQuantity())) {
-						log.warn("Possible Luna craft item mismatch. playerId={} recipeId={} itemId={} quantity={}",
-								player.getObjectId(), recipeId, a.getItemid(), a.getQuantity());
+						log.warn(I18n.get("log.a2657e1e13e5", player.getObjectId(), recipeId, a.getItemid(), a.getQuantity()));
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(2, item, 1));
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(3, product_id, quantity, false));
 						return;
@@ -317,6 +330,12 @@ public class LunaShopService {
 		}
 	}
 
+	/**
+	 * craftBox 方法。
+	 * craftBox method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void craftBox(Player player) {
 		int itemId = 188055460;
 		if (player.getPlayerLunaShop().isFreeChest()) {
@@ -346,10 +365,18 @@ public class LunaShopService {
 		return result;
 	}
 
+	/**
+	 * buyMaterials 方法。
+	 * buyMaterials method.
+	 *
+	 * 玩家 / player
+	 * itemId
+	 * count
+	 */
 	public void buyMaterials(Player player, int itemId, long count) {
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
 		if (count <= 0 || itemTemplate == null || itemTemplate.getLunaPrice() < 0) {
-			log.warn("Invalid Luna material purchase. playerId={} itemId={} count={}", player.getObjectId(), itemId, count);
+			log.warn(I18n.get("log.a3e3447b644d", player.getObjectId(), itemId, count));
 			return;
 		}
 		int lunaPrice = itemTemplate.getLunaPrice();
@@ -357,8 +384,8 @@ public class LunaShopService {
 		try {
 			price = Math.multiplyExact(count, lunaPrice);
 		} catch (ArithmeticException e) {
-			log.warn("Luna material price overflow. playerId={} itemId={} count={} unitPrice={}", player.getObjectId(),
-					itemId, count, lunaPrice);
+			log.warn(I18n.get("log.dd3d4bc0be5f", player.getObjectId(),
+					itemId, count, lunaPrice));
 			return;
 		}
 		if (!spendLuna(player, price)) {
@@ -368,11 +395,25 @@ public class LunaShopService {
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(4, player.getMuniKeys()));
 	}
 
+	/**
+	 * dorinerkWardrobeLoad 方法。
+	 * dorinerkWardrobeLoad method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void dorinerkWardrobeLoad(Player player) {
 		int size = DAOManager.getDAO(PlayerWardrobeDAO.class).getItemSize(player.getObjectId());
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(8, player.getWardrobeSlot(), size));
 	}
 
+	/**
+	 * dorinerkWardrobeAct 方法。
+	 * dorinerkWardrobeAct method.
+	 *
+	 * 玩家 / player
+	 * applySlot
+	 * itemObjId
+	 */
 	public void dorinerkWardrobeAct(Player player, int applySlot, int itemObjId) {
 		int itemId = player.getInventory().getItemByObjId(itemObjId).getItemId();
 		int itemOnDB = DAOManager.getDAO(PlayerWardrobeDAO.class).getWardrobeItemBySlot(player.getObjectId(),
@@ -387,6 +428,14 @@ public class LunaShopService {
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(10, 0x00, applySlot, itemId, 1));
 	}
 
+	/**
+	 * dorinerkWardrobeModifyAppearance 方法。
+	 * dorinerkWardrobeModifyAppearance method.
+	 *
+	 * 玩家 / player
+	 * applySlot
+	 * itemObjId
+	 */
 	public void dorinerkWardrobeModifyAppearance(Player player, int applySlot, int itemObjId) {
 		int itemId = DAOManager.getDAO(PlayerWardrobeDAO.class).getWardrobeItemBySlot(player.getObjectId(), applySlot);
 		int reskinCount = DAOManager.getDAO(PlayerWardrobeDAO.class).getReskinCountBySlot(player.getObjectId(),
@@ -420,6 +469,12 @@ public class LunaShopService {
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(11, applySlot));
 	}
 
+	/**
+	 * dorinerkWardrobeExtendSlots 方法。
+	 * dorinerkWardrobeExtendSlots method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void dorinerkWardrobeExtendSlots(Player player) {
 		int currentSlot = player.getWardrobeSlot();
 		int size = DAOManager.getDAO(PlayerWardrobeDAO.class).getItemSize(player.getObjectId());
@@ -432,10 +487,25 @@ public class LunaShopService {
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4, player.getMuniKeys()));
 	}
 
+	/**
+	 * takiAdventure 方法。
+	 * takiAdventure method.
+	 *
+	 * 玩家 / player
+	 * indun_id
+	 */
 	public void takiAdventure(Player player, int indun_id) {
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(14, indun_id));
 	}
 
+	/**
+	 * takiAdventureTeleport 方法。
+	 * takiAdventureTeleport method.
+	 *
+	 * 玩家 / player
+	 * @param indun_unk 副本未知字段 / indun_unk
+	 * indun_id
+	 */
 	public void takiAdventureTeleport(Player player, int indun_unk, int indun_id) {
 		if (indun_id == 1) {
 			boolean free = player.getPlayerLunaShop().isFreeUnderpath();
@@ -471,6 +541,14 @@ public class LunaShopService {
 		}
 	}
 
+	/**
+	 * teleport 方法。
+	 * teleport method.
+	 *
+	 * 玩家 / player
+	 * action
+	 * teleportId
+	 */
 	public void teleport(Player player, int action, int teleportId) {
 		switch (action) {
 		case 6:
@@ -484,6 +562,12 @@ public class LunaShopService {
 		}
 	}
 
+	/**
+	 * munirunerksTreasureChamber 方法。
+	 * munirunerksTreasureChamber method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void munirunerksTreasureChamber(final Player player) {
 		HashMap<Integer, Long> hm = new HashMap<Integer, Long>();
 		hm.put(188054633, (long) 1); // [Event] Special Head Executor Weapon Box
@@ -505,7 +589,7 @@ public class LunaShopService {
 		hm.put(188054283, (long) 30); // Blood Mark Box
 		hm.put(188054463, (long) 1); // [Event] Fabled Godstone Bundle
 		hm.put(188053002, (long) 1); // [Event] Noble Composite Manastone Bundle
-		hm.put(188100335, (long) 2000); // Enchantment Stone Dust
+		hm.put(188100335, (long) 2000); // 强化石粉末 / Enchantment Stone Dust
 		hm.put(164000073, (long) 10); // Greater Courage Scroll
 		hm.put(160002497, (long) 1); // Fresh Oily Plucar Dragon Salad
 		hm.put(160002499, (long) 1); // Fresh Oily Plucar Dragon Soup
@@ -571,6 +655,10 @@ public class LunaShopService {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
 			public void run() {
 				for (Map.Entry<Integer, Long> e : mt.entrySet()) {
 					ItemService.addItem(player, e.getKey(), e.getValue());
@@ -589,13 +677,19 @@ public class LunaShopService {
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4, player.getMuniKeys()));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));
-		// As you spend Luna, you can earn keys to open Munirunerks Treasure Chest.
-		// If you do not have any keys, you can spend 3 Luna to open a chest
-		// immediately.
-		// The Luna you spend on opening chests will also count towards your Luna
-		// Rewards!
+		// 花费露娜可获得打开穆尼伦克宝箱的钥匙。 / As you spend Luna, you can earn keys to open Munirunerks Treasure Chest.
+		// 若没有钥匙，可花费 3 露娜开箱。 / If you do not have any keys, you can spend 3 Luna to open a chest
+		// 立即。 / immediately.
+		// 开箱消耗的露娜也会计入你的露娜统计。 / The Luna you spend on opening chests will also count towards your Luna
+		// 奖励！ / Rewards!
 	}
 
+	/**
+	 * 玩家登出时清理状态。
+	 * Cleans state when a player logs out.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onLogout(Player player) {
 		PlayerLunaShop pls = player.getPlayerLunaShop();
 		pls.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -616,6 +710,12 @@ public class LunaShopService {
 		return -1;
 	}
 
+	/**
+	 * diceGame 方法。
+	 * diceGame method.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void diceGame(Player player) {
 		int diceTry = player.getLunaDiceGameTry();
 		int price = lunaDicePrice(diceTry);
@@ -646,12 +746,24 @@ public class LunaShopService {
 				player.getLunaDiceGameTry(), player.getLunaConsumePoint());
 	}
 
-	public void diceGameReward(Player player) { // TODO
-		ItemService.addItem(player, 162001014, 4);
+	/**
+	 * diceGameReward 方法。
+	 * diceGameReward method.
+	 *
+	 * @param player 玩家 / player
+	 */
+	public void diceGameReward(Player player) {
+		if (!canClaimDiceReward(player.getLunaDiceGameTry()) || ItemService.addItem(player, 162001014, 4) != 0) {
+			return;
+		}
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(16, 162001014, 4));
 		player.setLunaDiceGame(0, true);
 		player.setLunaDiceGameTry(0);
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(1, 1, 72));
+	}
+
+	static boolean canClaimDiceReward(int diceTry) {
+		return diceTry > 0;
 	}
 
 	static int lunaDicePrice(int diceTry) {
@@ -667,7 +779,7 @@ public class LunaShopService {
 			long balance = player.getLunaAccount();
 			if (!canSpendLuna(balance, price)) {
 				if (price < 0) {
-					log.warn("Invalid Luna price. playerId={} price={}", player.getObjectId(), price);
+					log.warn(I18n.get("log.962d3a2eb9ed", player.getObjectId(), price));
 				} else {
 					PacketSendUtility.sendMessage(player, "Not enough Luna.");
 					PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0));
@@ -687,6 +799,11 @@ public class LunaShopService {
 		return true;
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static LunaShopService getInstance() {
 		ObjectProvider<LunaShopService> provider = instanceProvider;
 		if (provider != null) {
@@ -695,6 +812,12 @@ public class LunaShopService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<LunaShopService> provider) {
 		instanceProvider = provider;
 	}

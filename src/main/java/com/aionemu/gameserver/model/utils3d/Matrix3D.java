@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.utils3d;
 
 /**
+ * Matrix3D，用于工具3d 相关逻辑。
+ * Matrix 3 D for utils 3 d logic.
+ *
  * @author M@xx
  */
 public class Matrix3D {
@@ -43,6 +30,7 @@ public class Matrix3D {
 		}
 	}
 
+	/** 替换列 / replace Column. */
 	public Matrix3D replaceColumn(int i, double[] newColumn) {
 		if (i > 3 || i < 0) {
 			throw new RuntimeException("Invalid column index " + i);
@@ -57,6 +45,7 @@ public class Matrix3D {
 		return B;
 	}
 
+	/** 相乘 / multiply. */
 	public Matrix3D multiply(Matrix3D B) {
 		Matrix3D C = new Matrix3D();
 		for (int i = 0; i < 3; i++) {
@@ -69,6 +58,7 @@ public class Matrix3D {
 		return C;
 	}
 
+	/** 相乘 / multiply. */
 	public Matrix3D multiply(double b) {
 		Matrix3D C = new Matrix3D();
 		for (int i = 0; i < 3; i++) {
@@ -79,6 +69,7 @@ public class Matrix3D {
 		return C;
 	}
 
+	/** 行列式 / determinant. */
 	public double determinant() {
 		double aei = data[0][0] * data[1][1] * data[2][2];
 		double bfg = data[0][1] * data[1][2] * data[2][0];
@@ -89,6 +80,7 @@ public class Matrix3D {
 		return (aei + bfg + cdh - afh - bdi - ceg);
 	}
 
+	/** 逆矩阵 / inverse. */
 	public Matrix3D inverse() {
 		if (Math.abs(determinant()) <= Double.MIN_VALUE) {
 			throw new RuntimeException("Matrix not inversible");
@@ -96,6 +88,7 @@ public class Matrix3D {
 		return adjugate().multiply(1 / determinant());
 	}
 
+	/** 伴随矩阵 / adjugate. */
 	public Matrix3D adjugate() {
 		Matrix3D adj = new Matrix3D();
 		adj.data[0][0] = data[1][1] * data[2][2] - data[1][2] * data[2][1];
@@ -110,6 +103,7 @@ public class Matrix3D {
 		return adj;
 	}
 
+	/** 相乘 / multiply. */
 	public double[] multiply(double[] v) {
 		if (v.length != 3) {
 			throw new RuntimeException("Vector dimensions invalid");
@@ -122,6 +116,7 @@ public class Matrix3D {
 		return result;
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		String s = "";

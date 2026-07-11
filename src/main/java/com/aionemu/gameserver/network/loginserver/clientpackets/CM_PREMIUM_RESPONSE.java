@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**
+ * 登录服回复商城点数/月华查询结果。
+ * luna query. / luna query.
+ *
  * @author KID
  */
 public class CM_PREMIUM_RESPONSE extends LsClientPacket {
@@ -30,10 +17,20 @@ public class CM_PREMIUM_RESPONSE extends LsClientPacket {
 	private long points;
 	private long luna;
 
+	/**
+	 * 构造函数。
+	 * Constructor.
+	 *
+	 * @param opCode 操作码 opcode
+	 */
 	public CM_PREMIUM_RESPONSE(int opCode) {
 		super(opCode);
 	}
 
+	/**
+	 * 读取请求 ID、结果与剩余点数。
+	 * Reads request id, result, and remaining points.
+	 */
 	@Override
 	protected void readImpl() {
 		requestId = readD();
@@ -42,6 +39,10 @@ public class CM_PREMIUM_RESPONSE extends LsClientPacket {
 		luna = readQ();
 	}
 
+	/**
+	 * 完成商城请求收尾。
+	 * Finishes the in-game shop request.
+	 */
 	@Override
 	protected void runImpl() {
 		GameRuntimeServices.inGameShopEn().finishRequest(requestId, result, points, luna);

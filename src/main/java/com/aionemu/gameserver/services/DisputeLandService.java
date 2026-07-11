@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,6 +20,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
 /**
+ * 纷争之地服务：按计划开启/关闭，并在指定地图广播与同步 PvP 状态。
+ * Dispute Land service: schedules open/close and broadcasts/syncs PvP state for listed maps.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -42,11 +31,20 @@ public class DisputeLandService {
 	private static volatile ObjectProvider<DisputeLandService> instanceProvider;
 	private boolean active;
 	private List<Integer> worlds = new ArrayList<>();
-	private static final int duration = CustomConfig.DISPUTE_LAND_DURATION;
 
+	/**
+	 * 默认构造。
+	 * Default constructor.
+	 */
 	public DisputeLandService() {
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
+	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
+	 *
+	 * service instance
+	 */
 	public static DisputeLandService getInstance() {
 		ObjectProvider<DisputeLandService> provider = instanceProvider;
 		if (provider == null) {
@@ -55,13 +53,23 @@ public class DisputeLandService {
 		return provider.getIfAvailable(() -> DisputeLandServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<DisputeLandService> instanceProvider) {
 		DisputeLandService.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 初始化纷争之地：注册世界 ID，并在启用时按 cron 调度启停。
+	 * Initializes Dispute Land: registers world IDs and schedules open/close when enabled.
+	 */
 	public void initDisputeLand() {
 		if (CustomConfig.DISPUTE_LAND_ENABLED) {
-			log.info("[DisputeLandService] is initialized...");
+			log.info(I18n.get("log.87d65384cfca"));
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
@@ -71,10 +79,10 @@ public class DisputeLandService {
 							public void run() {
 								setActive(false);
 							}
-						}, duration * 3600 * 1000);
+						}, CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);
 					}
 				}
-			}, CustomConfig.DISPUTE_LAND_SCHEDULE);
+			}, () -> CustomConfig.DISPUTE_LAND_SCHEDULE);
 		}
 		worlds.add(210020000); // Eltnen.
 		worlds.add(210040000); // Heiron.
@@ -95,10 +103,22 @@ public class DisputeLandService {
 		worlds.add(220110000); // Norsvold.
 	}
 
+	/**
+	 * 是否处于激活状态。
+	 * Whether Dispute Land is currently active.
+	 *
+	 * @return 若 active 则为 true / true if active
+	 */
 	public boolean isActive() {
 		return active;
 	}
 
+	/**
+	 * 设置激活状态，同步世界 PvP 选项并向全体玩家广播。
+	 * Sets active state, syncs world PvP options, and broadcasts to all players.
+	 *
+	 * @param value 是否激活 / whether active
+	 */
 	public void setActive(boolean value) {
 		active = value;
 		syncState();
@@ -144,6 +164,12 @@ public class DisputeLandService {
 		});
 	}
 
+	/**
+	 * 玩家登录时下发当前纷争之地状态。
+	 * Sends current Dispute Land state to the player on login.
+	 *
+	 * logging-in player
+	 */
 	public void onLogin(Player player) {
 		broadcast(player);
 	}

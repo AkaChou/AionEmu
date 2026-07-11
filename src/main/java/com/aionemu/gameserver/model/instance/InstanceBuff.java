@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,6 +17,11 @@ import com.aionemu.gameserver.model.templates.instance_bonusatrr.InstanceBonusAt
 import com.aionemu.gameserver.model.templates.instance_bonusatrr.InstancePenaltyAttr;
 import com.aionemu.gameserver.skillengine.change.Func;
 
+/**
+ * 副本 Buff 模型。
+ * Instance Buff model.
+ */
+
 public class InstanceBuff implements StatOwner {
 
 	private Future<?> task;
@@ -44,6 +33,7 @@ public class InstanceBuff implements StatOwner {
 		instanceBonusAttr = DataManager.INSTANCE_BUFF_DATA.getInstanceBonusattr(buffId);
 	}
 
+	/** 应用效果。 / Apply effect. */
 	public void applyEffect(Player player, int time) {
 
 		if (hasInstanceBuff() || instanceBonusAttr == null) {
@@ -64,6 +54,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
+	/** 结束效果 / End Effect */
 	public void endEffect(Player player) {
 		functions.clear();
 		if (hasInstanceBuff()) {
@@ -72,6 +63,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().endEffect(this);
 	}
 
+	/** Apply pledge / Apply pledge */
 	public void applyPledge(Player player, int buffId) {
 		if (instanceBonusAttr == null) {
 			return;
@@ -88,12 +80,14 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
+	/** 结束誓约 / end Pledge. */
 	public void endPledge(Player player) {
 		functions.clear();
 		player.setBonusId(0);
 		player.getGameStats().endEffect(this);
 	}
 
+	/** Apply pledge duration / Apply pledge duration */
 	public void applyPledgeDuration(Player player, int buffId, int time) {
 		if (hasInstanceBuff() || instanceBonusAttr == null) {
 			return;
@@ -114,6 +108,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
+	/** 结束誓约时长 / end Pledge Duration. */
 	public void endPledgeDuration(Player player) {
 		functions.clear();
 		if (hasInstanceBuff()) {
@@ -123,6 +118,7 @@ public class InstanceBuff implements StatOwner {
 		player.getGameStats().endEffect(this);
 	}
 
+	/** 返回 remaning time / Returns the remaning time */
 	public int getRemaningTime() {
 		return (int) ((System.currentTimeMillis() - startTime) / 1000);
 	}
@@ -135,6 +131,7 @@ public class InstanceBuff implements StatOwner {
 			this.player = player;
 		}
 
+		/** 运行 / run. */
 		@Override
 		public void run() {
 			endEffect(player);
@@ -144,6 +141,7 @@ public class InstanceBuff implements StatOwner {
 		}
 	}
 
+	/** 是否实例增益 / Whether instance buff*/
 	public boolean hasInstanceBuff() {
 		return task != null && !task.isDone();
 	}

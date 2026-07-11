@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 飞行点瞬时削减效果：立即扣除目标 FP。
+ * Instant FP attack effect: immediately reduces the target's flight points.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,24 +21,32 @@ public class FpAttackInstantEffect extends EffectTemplate {
 	@XmlAttribute
 	protected boolean percent;
 
+	/**
+	 * 计算瞬时 FP 削减。
+	 * Calculates instant FP drain.
+	 */
 	@Override
 	public void calculate(Effect effect) {
-		// Only players have FP
+		// 仅玩家有飞行时间 / Only players have FP
 		if (effect.getEffected() instanceof Player) {
 			super.calculate(effect, null, null);
 		}
 	}
 
+	/**
+	 * 立即扣除目标飞行点。
+	 * Immediately drains the target's flight points.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
-		// Restriction to players because lack of FP on other Creatures
+		// 因其他生物无飞行时间而限制仅对玩家 / Restriction to players because lack of FP on other Creatures
 		if (!(effect.getEffected() instanceof Player)) {
 			return;
 		}
 		Player player = (Player) effect.getEffected();
 		int maxFP = player.getLifeStats().getMaxFp();
 		int newValue = value;
-		// Support for values in percentage
+		// 支持百分比数值 / Support for values in percentage
 		if (percent) {
 			newValue = (int) ((maxFP * value) / 100);
 		}

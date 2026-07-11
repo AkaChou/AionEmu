@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -28,14 +12,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
+ * 玩家命令：查看指定 NPC 或当前目标的掉落表。
+ * Player command: lists drop table of a given NPC id or current target.
+ *
  * @author Eloann
  */
 public class cmd_drop extends PlayerCommand {
 
+	/**
+	 * 注册命令别名 {@code cmd_drop}。
+	 * Registers the command alias {@code cmd_drop}.
+	 */
 	public cmd_drop() {
 		super("cmd_drop");
 	}
 
+	/**
+	 * 按 NPC ID 或目标 NPC 输出掉落组与物品概率。
+	 * Prints drop groups and item chances for an NPC id or target NPC.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * optional NPC id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		NpcDrop npcDrop = null;
@@ -86,8 +84,4 @@ public class cmd_drop extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "NpcId :" + " " + npc.getNpcId());
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

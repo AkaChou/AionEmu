@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.towerofeternityservice;
 
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 
 /**
- * Created by Wnkrz on 22/08/2017.
+ * 永恒之塔默认实现：切入 OPEN / 回到 CLOSED。
+ * back to CLOSED. / back to CLOSED.
+ *
+ * @author Wnkrz
  */
-
 public class Tower extends TowerOfEternity<TowerOfEternityLocation> {
+
+	/**
+	 * 绑定永恒之塔地点。
+	 * Binds the tower location.
+	 *
+	 * location
+	 */
 	public Tower(TowerOfEternityLocation towerOfEternity) {
 		super(towerOfEternity);
 	}
 
+	/**
+	 * 激活活动并刷新 OPEN 刷怪。
+	 * Activates the event and spawns OPEN entities.
+	 */
 	@Override
 	protected void startTowerOfEternity() {
 		getTowerOfEternityLocation().setActiveTowerOfEternity(this);
@@ -35,6 +32,10 @@ public class Tower extends TowerOfEternity<TowerOfEternityLocation> {
 		spawn(TowerOfEternityStateType.OPEN);
 	}
 
+	/**
+	 * 结束活动并恢复 CLOSED 刷怪。
+	 * Ends the event and restores CLOSED spawns.
+	 */
 	@Override
 	protected void stopTowerOfEternity() {
 		getTowerOfEternityLocation().setActiveTowerOfEternity(null);

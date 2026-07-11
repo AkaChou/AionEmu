@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.HashMap;
@@ -24,6 +8,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 传送门冷却列表。
+ * Portal Cooldown List game object.
+ */
+
 public class PortalCooldownList {
 	private Player owner;
 	private Map<Integer, PortalCooldownItem> portalCooldowns;
@@ -32,6 +21,9 @@ public class PortalCooldownList {
 		this.owner = owner;
 	}
 
+	/**
+	 * @param worldId Whether portal use disabled / Whether portal use disabled
+	 */
 	public boolean isPortalUseDisabled(int worldId) {
 		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {
 			return false;
@@ -51,6 +43,7 @@ public class PortalCooldownList {
 		return true;
 	}
 
+	/** 获取传送门冷却。 / Returns the portal cooldown. */
 	public long getPortalCooldown(int worldId) {
 		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {
 			return 0;
@@ -58,6 +51,7 @@ public class PortalCooldownList {
 		return portalCooldowns.get(worldId).getCooldown();
 	}
 
+	/** 获取条目计数。 / Returns the entry count. */
 	public long getEntryCount(int worldId) {
 		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {
 			return 0;
@@ -65,6 +59,7 @@ public class PortalCooldownList {
 		return portalCooldowns.get(worldId).getEntryCount();
 	}
 
+	/** 获取传送门冷却物品。 / Returns the portal cooldown item. */
 	public PortalCooldownItem getPortalCooldownItem(int worldId) {
 		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {
 			return null;
@@ -72,14 +67,17 @@ public class PortalCooldownList {
 		return portalCooldowns.get(worldId);
 	}
 
+	/** 返回 portal cool downs / Returns the portal cool downs */
 	public Map<Integer, PortalCooldownItem> getPortalCoolDowns() {
 		return portalCooldowns;
 	}
 
+	/** 设置 portal cool downs / Sets the portal cool downs */
 	public void setPortalCoolDowns(Map<Integer, PortalCooldownItem> portalCoolDowns) {
 		this.portalCooldowns = portalCoolDowns;
 	}
 
+	/** 添加传送门冷却。 / Adds portal cooldown. */
 	public void addPortalCooldown(int worldId, int entryCount, long useDelay) {
 		if (portalCooldowns == null) {
 			portalCooldowns = new HashMap<Integer, PortalCooldownItem>();
@@ -92,6 +90,7 @@ public class PortalCooldownList {
 		}
 	}
 
+	/** 移除 portal cool down / Removes portal cool down */
 	public void removePortalCoolDown(int worldId) {
 		if (portalCooldowns != null) {
 			portalCooldowns.remove(worldId);
@@ -100,11 +99,12 @@ public class PortalCooldownList {
 			owner.getCurrentTeam().sendPacket(new SM_INSTANCE_INFO(owner, worldId));
 		} else {
 			PacketSendUtility.sendPacket(owner, new SM_INSTANCE_INFO(owner, worldId));
-			// You can enter %0 area now.
+			// 你现在可进入 %0 区域。 / You can enter %0 area now.
 			PacketSendUtility.sendPacket(owner, new SM_SYSTEM_MESSAGE(1400031, worldId));
 		}
 	}
 
+	/** 添加条目。 / Adds entry. */
 	public void addEntry(int worldId) {
 		int floor = owner.getFloor();
 		if (floor != 0) {
@@ -120,6 +120,7 @@ public class PortalCooldownList {
 		}
 	}
 
+	/** Reduce Entry / Reduce Entry */
 	public void reduceEntry(int worldId) {
 		if (portalCooldowns != null && portalCooldowns.containsKey(worldId)) {
 			portalCooldowns.get(worldId).setEntryCount(portalCooldowns.get(worldId).getEntryCount() - 1);
@@ -135,10 +136,12 @@ public class PortalCooldownList {
 		}
 	}
 
+	/** 是否冷却 / Whether cooldowns*/
 	public boolean hasCooldowns() {
 		return portalCooldowns != null && portalCooldowns.size() > 0;
 	}
 
+	/** 大小 / size. */
 	public int size() {
 		return portalCooldowns != null ? portalCooldowns.size() : 0;
 	}

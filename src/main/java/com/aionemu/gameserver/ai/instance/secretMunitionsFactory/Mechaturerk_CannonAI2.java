@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.secretMunitionsFactory;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -32,10 +16,12 @@ import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Secret Munitions Factory 副本 NPC AI：Mechaturerk Cannon（@AIName "mechaturerk_cannon"），继承 ActionItemNpcAI2。
+ * Secret Munitions Factory instance NPC AI: Mechaturerk Cannon (@AIName "mechaturerk_cannon"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("mechaturerk_cannon")
 public class Mechaturerk_CannonAI2 extends ActionItemNpcAI2
 {
@@ -44,7 +30,7 @@ public class Mechaturerk_CannonAI2 extends ActionItemNpcAI2
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
 			if (worldPosition.getMapId() == 301640000) { //Secret Munitions Factory.
-				//A heavy door has opened somewhere.
+				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_Canon, 5000);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); //Destroy Seal.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

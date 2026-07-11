@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone.scripts.pvpZones;
 
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -22,9 +6,20 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 
+/**
+ * 具体 PvP 区域：圣殿 / 暗影之城子区域死亡后传送点。
+ * Pandaemonium sub-zones. / Pandaemonium sub-zones.
+ */
 @ZoneNameAnnotation(value = "LC1_PVP_SUB_C DC1_PVP_ZONE")
-public class PvPAreaZone extends PvPZone
-{
+public class PvPAreaZone extends PvPZone {
+
+	/**
+	 * 按区域名称传送到对应复活点。
+	 * Teleport to the matching revive point by zone name.
+	 *
+	 * 玩家 / player
+	 * zone name
+	 */
 	@Override
 	protected void doTeleport(Player player, ZoneName zoneName) {
 		if (zoneName == ZoneName.get("LC1_PVP_SUB_C")) {

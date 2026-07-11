@@ -1,19 +1,7 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -39,9 +27,13 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 活动窗口服务，管理限时活动计时器与登录同步。
+ * Event window service managing timed event timers and login sync.
+ *
  * @author Rinzler (Encom)
  * @rework FrozenKiller
  */
+
 @Slf4j
 public class EventWindowService {
 
@@ -55,14 +47,15 @@ public class EventWindowService {
 	public void initialize() {
 		if (allEvents.size() != 0) {
 			for (EventsWindow eventsWindow : allEvents.values()) {
-				log.info("[EventWindowService] Start " + eventsWindow.getPeriodStart() + " End " + eventsWindow.getPeriodEnd());
+				log.info(I18n.get("log.4a260e6153da", eventsWindow.getPeriodStart(), eventsWindow.getPeriodEnd()));
 			}
 		}
 	}
 
 	/**
+	 * 获取 eventswindowstartend 时间。
 	 * get events window start and end time
-	 * 
+	 *
 	 * @return
 	 */
 	public Map<Integer, EventsWindow> getActiveEvents(Player player) {
@@ -108,10 +101,14 @@ public class EventWindowService {
 			} else {
 				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // Temp for updating TiemStamp
 			}
-			log.info("Start counting id " + eventsWindow.getId() + " time " + eventsWindow.getRemainingTime() + " minute(s)");
+			log.info(I18n.get("log.e1c6fecfcb1f", eventsWindow.getId(), eventsWindow.getRemainingTime()));
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					if (player.isOnline()) {
 						if (recivedCount == eventsWindow.getMaxCountOfDay()) {
@@ -132,6 +129,13 @@ public class EventWindowService {
 		PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW(1, sendActiveEventsForPlayer.size()));
 	}
 
+	/**
+	 * 重启计时器。
+	 * Restarts the timer.
+	 *
+	 * 玩家 / player
+	 * eventId
+	 */
 	public void restartTimer(final Player player, final int eventId) {
 		restartTimer(player, eventId, new ConcurrentHashMap<Integer, EventsWindow>(getActiveEvents(player)));
 	}
@@ -149,6 +153,10 @@ public class EventWindowService {
 			if (eventsWindow.getId() == eventId) {
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
+					/**
+					 * 执行任务。
+					 * Runs the task.
+					 */
 					public void run() {
 						if (player.isOnline()) {
 							if (recivedCount == eventsWindow.getMaxCountOfDay()) {
@@ -189,6 +197,11 @@ public class EventWindowService {
 		protected static final EventWindowService instance = new EventWindowService();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static final EventWindowService getInstance() {
 		ObjectProvider<EventWindowService> provider = instanceProvider;
 		if (provider != null) {
@@ -197,6 +210,12 @@ public class EventWindowService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<EventWindowService> provider) {
 		instanceProvider = provider;
 	}

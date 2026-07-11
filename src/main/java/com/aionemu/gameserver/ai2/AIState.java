@@ -1,25 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 /**
+ * AI 主状态枚举，描述 AI 生命周期与行为阶段。
+ * Main AI state enumeration describing lifecycle and behavioral phases.
+ *
  * @author ATracer
  */
 public enum AIState {
 
-	CREATED, DIED, DESPAWNED, IDLE, WALKING, FOLLOWING, RETURNING, FIGHT, FEAR
+	/** 已创建，尚未完成初始化 / Created, not fully initialized yet */
+	CREATED,
+	/** 已死亡 / Died */
+	DIED,
+	/** 已消失/卸载 / Despawned */
+	DESPAWNED,
+	/** 空闲 / Idle */
+	IDLE,
+	/** 巡逻/行走中 / Walking/patrolling */
+	WALKING,
+	/** 跟随目标中 / Following a target */
+	FOLLOWING,
+	/** 返回出生点中 / Returning home */
+	RETURNING,
+	/** 战斗中 / Fighting */
+	FIGHT,
+	/** 恐惧逃跑中 / Fleeing in fear */
+	FEAR
 }

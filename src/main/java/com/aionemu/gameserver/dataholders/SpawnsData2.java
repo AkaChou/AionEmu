@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +5,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import javax.xml.XMLConstants;
 import jakarta.xml.bind.JAXBContext;
@@ -83,6 +70,10 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 刷怪数据容器：按地图与活动类型索引 {@link SpawnGroup2}，并支持管理员运行时保存。
+ * Spawn data holder that indexes {@link SpawnGroup2} by map and event type, with admin runtime save support.
+ */
 @XmlRootElement(name = "spawns")
 @XmlType(namespace = "", name = "SpawnsData2")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -135,6 +126,13 @@ public class SpawnsData2 {
 		return spawnGroups;
 	}
 
+	/**
+	 * JAXB 反序列化完成后，将各类刷怪模板索引到运行时映射。
+	 * After JAXB unmarshalling, indexes all spawn templates into runtime maps.
+	 *
+	 * @param u Unmarshaller
+	 * parent object
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (templates != null) {
@@ -626,6 +624,10 @@ public class SpawnsData2 {
 		}
 	}
 
+	/**
+	 * 释放 JAXB 原始模板列表以降低内存占用。
+	 * Clears the raw JAXB template list to reduce memory use.
+	 */
 	public void clearTemplates() {
 		if (templates != null) {
 			templates.clear();
@@ -633,6 +635,60 @@ public class SpawnsData2 {
 		}
 	}
 
+	/**
+	 * 从目录加载全部刷怪 XML（使用目录内 spawns.xsd）。
+	 * Loads all spawn XML files from a directory using its spawns.xsd schema.
+	 *
+	 * @param directory 刷怪数据目录 / spawn data directory
+	 * @return 已索引的刷怪数据 / indexed spawn data
+	 * on load or validation failure。 / on load or validation failure.
+	 */
+	public static SpawnsData2 load(File directory) throws Exception {
+		Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+				.newSchema(new File(directory, "spawns.xsd"));
+		return load(directory, schema);
+	}
+
+	/**
+	 * 使用指定 Schema 从目录加载刷怪 XML 并完成索引。
+	 * Loads spawn XML from a directory with the given schema and builds indexes.
+	 *
+	 * @param directory 刷怪数据目录 / spawn data directory
+	 * @param schema XSD Schema
+	 * @return 已索引的刷怪数据 / indexed spawn data
+	 * on load failure
+	 */
+	static SpawnsData2 load(File directory, Schema schema) throws Exception {
+		JAXBContext context = JAXBContext.newInstance(SpawnsData2.class);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		unmarshaller.setSchema(schema);
+		List<SpawnMap> maps = new ArrayList<>();
+		try (Stream<Path> paths = Files.walk(directory.toPath())) {
+			for (Path path : paths.filter(Files::isRegularFile)
+					.filter(p -> p.getFileName().toString().endsWith(".xml"))
+					.filter(p -> !p.getFileName().toString().startsWith("new"))
+					.sorted().toList()) {
+				SpawnsData2 data = (SpawnsData2) unmarshaller.unmarshal(path.toFile());
+				if (data.templates != null) {
+					maps.addAll(data.templates);
+				}
+			}
+		}
+		SpawnsData2 data = new SpawnsData2();
+		data.templates = maps;
+		data.afterUnmarshal(null, null);
+		data.clearTemplates();
+		return data;
+	}
+
+	/**
+	 * 按世界地图 ID 获取全部刷怪组。
+	 * Returns all spawn groups for the given world map id.
+	 *
+	 * world map id
+	 *
+	 * @param worldId @return 刷怪组列表，不存在则为空列表 / spawn groups, or empty list
+	 */
 	public List<SpawnGroup2> getSpawnsByWorldId(int worldId) {
 		if (!allSpawnMaps.containsKey(worldId)) {
 			return Collections.emptyList();
@@ -644,6 +700,14 @@ public class SpawnsData2 {
 		return result;
 	}
 
+	/**
+	 * 按世界与 NPC ID 获取刷怪定义。
+	 * Returns the spawn definition for the given world and npc id.
+	 *
+	 * world map id
+	 * NPC 模板 ID / npc template id
+	 * @return 刷怪定义，不存在则为 null / spawn or null
+	 */
 	public Spawn getSpawnsForNpc(int worldId, int npcId) {
 		if (!allSpawnMaps.containsKey(worldId) || !allSpawnMaps.get(worldId).containsKey(npcId)) {
 			return null;
@@ -651,94 +715,261 @@ public class SpawnsData2 {
 		return allSpawnMaps.get(worldId).get(npcId).getValue();
 	}
 
+	/**
+	 * 按地点 ID 获取攻城据点刷怪组列表。
+	 * Returns siege location spawn groups for the given location id.
+	 *
+	 * siege location id
+	 *
+	 * @param siegeId @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getSiegeSpawnsByLocId(int siegeId) {
 		return siegeSpawnMaps.get(siegeId);
 	}
 
+	/**
+	 * 按地点 ID 获取军团领地刷怪组列表。
+	 * Returns legion dominion spawn groups for the given location id.
+	 *
+	 * legion dominion id
+	 *
+	 * @param legionDominionId @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getLegionDominionSpawnsByLocId(int legionDominionId) {
 		return legionDominionSpawnMaps.get(legionDominionId);
 	}
 
+	/**
+	 * 按地点 ID 获取基地刷怪组列表。
+	 * Returns base spawn groups for the given location id.
+	 *
+	 * @param id 基地 ID / base id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getBaseSpawnsByLocId(int id) {
 		return baseSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取前哨刷怪组列表。
+	 * Returns outpost spawn groups for the given location id.
+	 *
+	 * @param id 前哨 ID / outpost id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getOutpostSpawnsByLocId(int id) {
 		return outpostSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取裂隙刷怪组列表。
+	 * Returns rift spawn groups for the given location id.
+	 *
+	 * @param id 裂隙 ID / rift id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getRiftSpawnsByLocId(int id) {
 		return riftSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取次元漩涡刷怪组列表。
+	 * Returns vortex spawn groups for the given location id.
+	 *
+	 * @param id 漩涡 ID / vortex id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getVortexSpawnsByLocId(int id) {
 		return vortexSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取贝里特拉入侵刷怪组列表。
+	 * Returns beritra invasion spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getBeritraSpawnsByLocId(int id) {
 		return beritraSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取代理人战斗刷怪组列表。
+	 * Returns agent fight spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getAgentSpawnsByLocId(int id) {
 		return agentSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取阿诺哈刷怪组列表。
+	 * Returns anoha spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getAnohaSpawnsByLocId(int id) {
 		return anohaSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取征服刷怪组列表。
+	 * Returns conquest spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getConquestSpawnsByLocId(int id) {
 		return conquestSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取 Svs 刷怪组列表。
+	 * Returns svs spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getSvsSpawnsByLocId(int id) {
 		return svsSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取 Rvr 刷怪组列表。
+	 * Returns rvr spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getRvrSpawnsByLocId(int id) {
 		return rvrSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取 IU 刷怪组列表。
+	 * Returns iu spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getIuSpawnsByLocId(int id) {
 		return iuSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取动态裂隙刷怪组列表。
+	 * Returns dynamic rift spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getDynamicRiftSpawnsByLocId(int id) {
 		return dynamicRiftSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取副本裂隙刷怪组列表。
+	 * Returns instance rift spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getInstanceRiftSpawnsByLocId(int id) {
 		return instanceRiftSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取梦魇马戏团刷怪组列表。
+	 * Returns nightmare circus spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getNightmareCircusSpawnsByLocId(int id) {
 		return nightmareCircusSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取伊迪安深渊刷怪组列表。
+	 * Returns idian depths spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getIdianDepthsSpawnsByLocId(int id) {
 		return idianDepthsSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取佐尔希夫无畏舰刷怪组列表。
+	 * Returns zorshiv dredgion spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getZorshivDredgionSpawnsByLocId(int id) {
 		return zorshivDredgionSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取熔岩领主刷怪组列表。
+	 * Returns moltenus spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getMoltenusSpawnsByLocId(int id) {
 		return moltenusSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取登陆点刷怪组列表。
+	 * Returns landing spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getLandingSpawnsByLocId(int id) {
 		return landingSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取特殊登陆点刷怪组列表。
+	 * Returns special landing spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getLandingSpecialSpawnsByLocId(int id) {
 		return landingSpecialSpawnMaps.get(id);
 	}
 
+	/**
+	 * 按地点 ID 获取永恒之塔刷怪组列表。
+	 * Returns tower of eternity spawn groups for the given location id.
+	 *
+	 * @param id 地点 ID / location id
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
+	 */
 	public List<SpawnGroup2> getTowerOfEternitySpawnsByLocId(int id) {
 		return towerOfEternitySpawnMaps.get(id);
 	}
 
+	/**
+	 * 将可见对象的位置保存为自定义刷怪 XML，或删除对应点位。
+	 * Saves a visible object's position as custom spawn XML, or deletes the matching spot.
+	 *
+	 * @param admin 操作管理员 / admin player
+	 * target visible object
+	 *
+	 * @param delete true 表示删除点位 / true to delete the spot
+	 * @param visibleObject @return 是否保存成功 / whether the save succeeded
+	 * @param delete @throws IOException 文件读写失败 / on file I/O failure
+	 */
 	public synchronized boolean saveSpawn(Player admin, VisibleObject visibleObject, boolean delete)
 			throws IOException {
 		SpawnTemplate spawn = visibleObject.getSpawn();
@@ -755,7 +986,7 @@ public class SpawnsData2 {
 			schema = sf.newSchema(Config.dataFile("./data/static_data/spawns/spawns.xsd"));
 			jc = JAXBContext.newInstance(SpawnsData2.class);
 		} catch (Exception e) {
-			// ignore, if schemas are wrong then we even could not call the command;
+			// 忽略；若 schema 错误，甚至无法调用该命令。 / ignore, if schemas are wrong then we even could not call the command;
 		}
 
 		FileInputStream fin = null;
@@ -789,7 +1020,7 @@ public class SpawnsData2 {
 			if (data == null) {
 				data = DataManager.SPAWNS_DATA2;
 			}
-			// only remove from memory, will be added back later
+			// 仅从内存移除，稍后会重新加入 / only remove from memory, will be added back later
 			allSpawnMaps.get(visibleObject.getWorldId()).remove(spawn.getNpcId());
 			addGroup = true;
 		}
@@ -804,8 +1035,8 @@ public class SpawnsData2 {
 		if (changeH && visibleObject instanceof Npc) {
 			Npc npc = (Npc) visibleObject;
 			if (!npc.isAtSpawnLocation() || !npc.isInState(CreatureState.NPC_IDLE) || changeX || changeY || changeZ) {
-				// if H changed, XSD validation fails, because it may be negative; thus, reset
-				// it back
+				// 若 H 改变，XSD 校验失败，因其可能为负；因此重置。 / if H changed, XSD validation fails, because it may be negative; thus, reset
+				// 把它还回 / it back
 				visibleObject.setXYZH(null, null, null, spawn.getHeading());
 				changeH = false;
 			}
@@ -877,6 +1108,13 @@ public class SpawnsData2 {
 		return true;
 	}
 
+	/**
+	 * 计算自定义刷怪 XML 相对 spawns 目录的路径。
+	 * Computes the relative path under the spawns directory for a custom spawn XML.
+	 *
+	 * target visible object
+	 * relative path
+	 */
 	String getRelativePath(VisibleObject visibleObject) {
 		String path;
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(visibleObject.getWorldId());
@@ -895,14 +1133,24 @@ public class SpawnsData2 {
 		return path + "/New/" + visibleObject.getWorldId() + "_" + map.getName().replace(' ', '_') + ".xml";
 	}
 
+	/**
+	 * 返回已索引的世界地图数量。
+	 * Returns the number of indexed world maps.
+	 *
+	 * map count
+	 */
 	public int size() {
 		return allSpawnMaps.size();
 	}
 
 	/**
-	 * @param worldId Optional. If provided, searches in this world first
-	 * @param npcId
-	 * @return template for the spot
+	 * 按 NPC ID 查找第一个刷怪点；优先在给定世界中查找，否则遍历其它地图。
+	 * Finds the first spawn spot for an npc id, searching the given world first then other maps.
+	 *
+	 * @param worldId 优先搜索的世界 ID / world id to search first (optional preference)
+	 * NPC 模板 ID / npc template id
+	 *
+	 * @return 搜索结果，未找到则为 null / search result or null
 	 */
 	public SpawnSearchResult getFirstSpawnByNpcId(int worldId, int npcId) {
 		Spawn spawns = DataManager.SPAWNS_DATA2.getSpawnsForNpc(worldId, npcId);
@@ -926,9 +1174,10 @@ public class SpawnsData2 {
 	}
 
 	/**
-	 * Used by Event Service to add additional spawns
-	 * 
-	 * @param spawnMap templates to add
+	 * 追加一张刷怪地图（供活动服务注入额外刷怪）。
+	 * Appends a spawn map (used by the event service to inject extra spawns).
+	 *
+	 * @param spawnMap 要追加的刷怪地图 / spawn map to add
 	 */
 	public void addNewSpawnMap(SpawnMap spawnMap) {
 		if (templates == null) {
@@ -937,6 +1186,12 @@ public class SpawnsData2 {
 		templates.add(spawnMap);
 	}
 
+	/**
+	 * 移除活动刷怪对象对应的内存索引条目。
+	 * Removes in-memory index entries for the given event spawn objects.
+	 *
+	 * @param objects 可见对象列表 / visible objects to remove
+	 */
 	public void removeEventSpawnObjects(List<VisibleObject> objects) {
 		for (VisibleObject visObj : objects) {
 			if (!allSpawnMaps.contains(visObj.getWorldId())) {
@@ -953,6 +1208,12 @@ public class SpawnsData2 {
 		}
 	}
 
+	/**
+	 * 返回 JAXB 原始刷怪地图模板列表。
+	 * Returns the raw JAXB spawn-map template list.
+	 *
+	 * @return 刷怪地图列表 / spawn map list
+	 */
 	public List<SpawnMap> getTemplates() {
 		return templates;
 	}

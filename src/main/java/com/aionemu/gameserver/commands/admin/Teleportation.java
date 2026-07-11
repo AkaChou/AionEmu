@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,14 +5,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 切换管理员点击传送（teleportation）模式。
+ * Toggles admin click-to-teleport mode.
+ *
  * @author cura
  */
 public class Teleportation extends AdminCommand {
 
+	/**
+	 * 构造 teleportation 命令。
+	 * Creates the teleportation command.
+	 */
 	public Teleportation() {
 		super("teleportation");
 	}
 
+	/**
+	 * 启用或禁用管理员传送状态。
+	 * Enables or disables admin teleportation state.
+	 *
+	 * 执行 GM / Admin player
+	 * Unused
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		boolean isTeleportation = player.getAdminTeleportation();
@@ -43,8 +41,4 @@ public class Teleportation extends AdminCommand {
 		}
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

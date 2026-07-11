@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
@@ -21,11 +5,14 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端发送军团徽章元信息（含名称与数据大小）的服务端包。
+ * Server packet that sends legion emblem metadata (including name and data size) to the client.
+ *
  * @author Simple modified cura
  */
 public class SM_LEGION_SEND_EMBLEM extends AionServerPacket {
 
-	/** Legion information **/
+	/** 军团信息 / Legion information */
 	private int legionId;
 	private int emblemId;
 	private int color_r;
@@ -36,16 +23,17 @@ public class SM_LEGION_SEND_EMBLEM extends AionServerPacket {
 	private int emblemDataSize;
 
 	/**
-	 * This constructor will handle legion emblem info
-	 * 
-	 * @param legionId
-	 * @param emblemId
-	 * @param color_r
-	 * @param color_g
-	 * @param color_b
-	 * @param legionName
-	 * @param emblemType
-	 * @param emblemDataSize
+	 * 使用徽章元信息构造发送包。
+	 * Creates a send packet from emblem metadata.
+	 *
+	 * legion id
+	 * emblem id
+	 * @param color_r 红色分量 / red channel
+	 * @param color_g 绿色分量 / green channel
+	 * @param color_b 蓝色分量 / blue channel
+	 * legion name
+	 * emblem type
+	 * @param emblemDataSize 徽章数据大小 / emblem data size
 	 */
 	public SM_LEGION_SEND_EMBLEM(int legionId, int emblemId, int color_r, int color_g, int color_b, String legionName,
 			LegionEmblemType emblemType, int emblemDataSize) {

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -27,19 +11,29 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 隐身 NPC AI：限制思考/可见性相关行为。
+ * Invisible NPC AI with restricted think/visibility behavior.
+ *
  * @author Rinzler (Encom)
  */
-
 @AIName("invisible_npc")
 public class InvisibleNpcAI2 extends AggressiveNpcAI2
 {
 	private boolean canThink = true;
 	
+	/**
+	 * 是否允许进入思考逻辑。
+	 * Whether this AI is allowed to think.
+	 */
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
 	
+	/**
+	 * 处理生成完成事件。
+	 * Handle post-spawn.
+	 */
 	@Override
 	protected void handleSpawned() {
         super.handleSpawned();
@@ -236,6 +230,12 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
 	}
 	
+    /**
+     * 处理受到攻击事件。
+     * Handle being attacked.
+     *
+     * creature
+     */
     @Override
     protected void handleAttack(Creature creature) {
         super.handleAttack(creature);
@@ -244,6 +244,10 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
     }
     
+	/**
+	 * 处理放弃目标事件。
+	 * Handle target give-up.
+	 */
     @Override
 	protected void handleTargetGiveup() {
     	super.handleTargetGiveup();
@@ -271,6 +275,10 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
 	
+    /**
+     * 处理死亡事件。
+     * Handle death.
+     */
 	@Override
     protected void handleDied() {
         super.handleDied();

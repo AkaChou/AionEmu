@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.abyss_entry;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,6 +8,10 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
+/**
+ * 欧比斯入场任务脚本：Testing Flight Skills（任务 ID 1044）。
+ * Abyss entry quest script: Testing Flight Skills (quest ID 1044).
+ */
 public class _1044Testing_Flight_Skills extends QuestHandler {
 
 	private final static int questId = 1044;
@@ -90,12 +78,12 @@ public class _1044Testing_Flight_Skills extends QuestHandler {
 							}
 						} case STEP_TO_2: {
 							if (var == 1) {
-								QuestService.questTimerStart(env, 300); //5 Minutes.
+								QuestService.questTimerStart(env, 300); //5 分钟。 / 5 Minutes.
 								updateQuestStatus(env);
 								return defaultCloseDialog(env, 1, 2);
 							} else if (var == 8) {
 								playQuestMovie(env, 40);
-								QuestService.questTimerStart(env, 300); //5 Minutes.
+								QuestService.questTimerStart(env, 300); //5 分钟。 / 5 Minutes.
 								return defaultCloseDialog(env, 8, 2);
 							}
 						} case SET_REWARD: {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.idiandepths;
 
 import java.util.ArrayList;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.templates.idiandepths.IdianDepthsTemplate;
 import com.aionemu.gameserver.services.idiandepthsservice.IdianDepths;
 
 /**
+ * 伊迪安深渊位置，用于 idiandepths 相关逻辑。
+ * Idian Depths Location for idiandepths logic.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -46,31 +33,38 @@ public class IdianDepthsLocation {
 		this.id = template.getId();
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		return isActive;
 	}
 
+	/** 设置 active idian depths / Sets the active idian depths */
 	public void setActiveIdianDepths(IdianDepths<IdianDepthsLocation> idianDepths) {
 		isActive = idianDepths != null;
 		this.activeIdianDepths = idianDepths;
 	}
 
+	/** 返回当前 idiandepths / Returns the active idian depths */
 	public IdianDepths<IdianDepthsLocation> getActiveIdianDepths() {
 		return activeIdianDepths;
 	}
 
+	/** 获取模板。 / Returns the template. */
 	public final IdianDepthsTemplate getTemplate() {
 		return template;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回是否已刷新 / Returns the spawned */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}
 
+	/** 返回玩家集合 / Returns the players */
 	public Map<Integer, Player> getPlayers() {
 		return players;
 	}

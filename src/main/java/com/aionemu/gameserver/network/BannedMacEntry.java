@@ -1,65 +1,110 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network;
 
 import java.sql.Timestamp;
 
 /**
+ * MAC 地址封禁条目，记录封禁地址、截止时间与备注。
+ * MAC ban entry holding the banned address, end time and details.
+ *
  * @author KID
  */
 public class BannedMacEntry {
 	private String mac, details;
 	private Timestamp timeEnd;
 
+	/**
+	 * 以地址与截止时间（毫秒）构造条目。
+	 * Creates an entry from address and end time in milliseconds.
+	 *
+	 * banned MAC
+	 * @param newTime 截止时间戳（毫秒） / end timestamp in ms
+	 */
 	public BannedMacEntry(String address, long newTime) {
 		this.mac = address;
 		this.updateTime(newTime);
 	}
 
+	/**
+	 * 以地址、截止时间与备注构造条目。
+	 * Creates an entry from address, end timestamp and details.
+	 *
+	 * banned MAC
+	 * @param time 截止时间 / end time
+	 * details
+	 */
 	public BannedMacEntry(String address, Timestamp time, String details) {
 		this.mac = address;
 		this.timeEnd = time;
 		this.details = details;
 	}
 
+	/**
+	 * 设置封禁备注。
+	 * Sets ban details.
+	 *
+	 * details
+	 */
 	public final void setDetails(String details) {
 		this.details = details;
 	}
 
+	/**
+	 * 更新封禁截止时间。
+	 * Updates ban end time.
+	 *
+	 * @param newTime 截止时间戳（毫秒） / end timestamp in ms
+	 */
 	public final void updateTime(long newTime) {
 		this.timeEnd = new Timestamp(newTime);
 	}
 
+	/**
+	 * 获取封禁 MAC。
+	 * Returns the banned MAC.
+	 *
+	 * MAC address
+	 */
 	public final String getMac() {
 		return mac;
 	}
 
+	/**
+	 * 获取封禁截止时间。
+	 * Returns ban end time.
+	 *
+	 * end time
+	 */
 	public final Timestamp getTime() {
 		return timeEnd;
 	}
 
+	/**
+	 * 判断当前是否仍在封禁有效期内。
+	 * Whether the ban is still active now.
+	 *
+	 * @return 若 active 则为 true / true if active
+	 */
 	public final boolean isActive() {
 		return timeEnd != null && timeEnd.getTime() > System.currentTimeMillis();
 	}
 
+	/**
+	 * 判断在指定时间点是否仍处于封禁中。
+	 * Whether the ban is still active at the given time.
+	 *
+	 * @param time 时间戳（毫秒） / timestamp in ms
+	 * @return 若 active 则为 true / true if active
+	 */
 	public final boolean isActiveTill(long time) {
 		return timeEnd != null && timeEnd.getTime() > time;
 	}
 
+	/**
+	 * 获取封禁备注。
+	 * Returns ban details.
+	 *
+	 * details
+	 */
 	public final String getDetails() {
 		return details;
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.event.conquestOffering;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -25,10 +9,12 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Conquest Offering 活动 NPC AI：Conquest Npc Buff（@AIName "conquest_npc_buff"），继承 ActionItemNpcAI2。
+ * Conquest Offering event NPC AI: Conquest Npc Buff (@AIName "conquest_npc_buff"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("conquest_npc_buff")
 public class Conquest_Npc_BuffAI2 extends ActionItemNpcAI2
 {

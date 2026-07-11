@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -22,9 +6,19 @@ import com.aionemu.gameserver.model.team.legion.LegionJoinRequest;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端发送军团加入申请列表的服务端包。
+ * Server packet that sends the legion join-request list to the client.
+ */
 public class SM_LEGION_REQUEST_LIST extends AionServerPacket {
 	private Collection<LegionJoinRequest> ljrList;
 
+	/**
+	 * 使用加入申请集合构造列表包。
+	 * Creates a list packet from a collection of join requests.
+	 *
+	 * @param ljrList 加入申请集合 / join-request collection
+	 */
 	public SM_LEGION_REQUEST_LIST(Collection<LegionJoinRequest> ljrList) {
 		this.ljrList = ljrList;
 	}

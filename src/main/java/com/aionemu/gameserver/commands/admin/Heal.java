@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -26,12 +10,23 @@ import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
+/**
+ * 管理员治疗命令：恢复目标 HP/MP，或玩家的 DP/FP/安息能量。
+ * Admin heal command: restore target HP/MP, or a player's DP/FP/repose energy.
+ */
 public class Heal extends AdminCommand
 {
 	public Heal() {
 		super("heal");
 	}
-	
+
+	/**
+	 * 治疗当前选中的生物：默认满 HP/MP 并清除 SPEC2 异常；子命令 dp/fp/repose/test。
+	 * Heal the selected creature: default full HP/MP and clear SPEC2 abnormals; subcommands dp/fp/repose/test.
+	 *
+	 * @param player 执行命令的管理员 / Admin executing the command
+	 * @param params 可选子命令 / Optional subcommand
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		VisibleObject target = player.getTarget();
@@ -71,7 +66,14 @@ public class Heal extends AdminCommand
 			onFail(player, null);
 		}
 	}
-	
+
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		String syntax = "//heal : Full HP and MP\n" + "//heal dp : Full DP, must be used on a player !\n" + "//heal fpr : Full FP, must be used on a player\n" + "//heal repose : Full repose energy, must be used on a player";

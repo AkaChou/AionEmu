@@ -1,28 +1,13 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.model;
 
 /**
+ * 聊天服使用的世界地图 ID 枚举。
+ * World map id enum used by the chat server.
+ *
  * @author ATracer
  */
 public enum MapId {
-    // Asmodea
+    // 阿斯摩德 / Asmodea
 
     PANDAEMONIUM(120010000),
     MARCHUTAN(120020000),
@@ -31,7 +16,7 @@ public enum MapId {
     ALTGARD(220030000),
     BELUSLAN(220040000),
     BRUSTHONIN(220050000),
-    // Elysia
+    // 艾利西亚 / Elysia
     SANCTUM(110010000),
     KAISINEL(110020000),
     POETA(210010000),
@@ -39,16 +24,16 @@ public enum MapId {
     VERTERON(210030000),
     HEIRON(210040000),
     THEOBOMOS(210060000),
-    // Balaurea
+    // 巴劳雷亚 / Balaurea
     INGGISON(210050000),
     GELKMAROS(220070000),
     SILENTERA_CANYON(600010000),
-    // Prison
+    // 监狱 / Prison
     DE_PRISON(510010000), // For ELYOS
     DF_PRISON(520010000), // For ASMODIANS
 
     RESHANTA(400010000),
-    // Instances
+    // 副本 / Instances
     NO_ZONE_NAME(300010000),
     ID_TEST_DUNGEON(300020000),
     NOCHSANA_TRAINING_CAMP(300030000),
@@ -97,29 +82,29 @@ public enum MapId {
     SHADOW_COURT_DUNGEON(320120000),
     ADMA_STRONGHOLD(320130000),
     IDAB_PRO_D3(320140000),
-    // Maps 2.5
+    // 地图 2.5 / Maps 2.5
     KAISINEL_ACADEMY(110070000),
     MARCHUTAN_PRIORY(120080000),
     ESOTERRACE(300250000),
     EMPYREAN_CRUCIBLE(300300000),
-    // Map 2.6
+    // 地图 2.6 / Map 2.6
     CRUCIBLE_CHALLENGE(300320000),
-    // Maps 2.7
+    // 地图 2.7 / Maps 2.7
     ARENA_OF_CHAOS(300350000),
     ARENA_OF_DISCIPLINE(300360000),
     CHAOS_TRAINING_GROUNDS(300420000),
     DISCIPLINE_TRAINING_GROUNDS(300430000),
     PADMARASHKA_CAVE(320150000),
-    // Test Map
+    // 测试地图 / Test Map
     TEST_BASIC(900020000),
     TEST_SERVER(900030000),
     TEST_GIANTMONSTER(900100000),
     HOUSING_BARRACK(900110000),
     Region_housing(900130000),
     Advanced_Personal_Housing(900140000),
-    // Maps 3.0
+    // 地图 3.0 / Maps 3.0
 
-    // Instances
+    // 副本 / Instances
     RAKSANG(300310000),
     RENTUS_BASE(300280000),
     ATURAN_SKY_FORTRESS(300240000),
@@ -139,10 +124,10 @@ public enum MapId {
     HARMONY_TRAINING_GROUND(300570000),
     UNSTABLE_SPLINTER(300600000),
     HEXWAY(300700000),
-    // Housing
+    // 房屋 / Housing
     ORIEL(700010000),
     PERNON(710010000),
-    // Maps
+    // 地图 / Maps
     SARPAN(600020000),
     SARPAN_SKY(300410000),
     TIAMARANTA(600030000),
@@ -154,10 +139,10 @@ public enum MapId {
     LIVE_PARTY_CONCERT_ALL(600080000),
     LDF5_FORTRESS(600090000),
     LDF4_ADVANCE(600100000),
-    // Others
+    // 其他 / Others
     PROTECTOR_REALM(300330000),
     ISRAPHEL_TRACT(300390000),
-    // Instances 4.0
+    // 副本 4.0 / Instances 4.0
     DANUAR_MYSTICARIUM(300480000),
     IDGEL_RESEARCH_CENTER(300530000),
     ETERNAL_BASTION(300540000),
@@ -181,7 +166,7 @@ public enum MapId {
     VOID_CUBE_GROUP(301180000),
     DANUAR_MYSTICARIUM_GROUP(301190000),
     ASTERIA_IU_WORLD(301200000),
-    //Map 4.5
+    // 地图 4.5 / Map 4.5
     OPHIDAN_BRIDGE_BATTLEFIELD(301210000),
     ETERNAL_BASTION_BATTLEFIELD(301220000),
     PROTECTIVE_TOWER_RUNES(301230000),
@@ -198,27 +183,32 @@ public enum MapId {
     GAB1_02(400040000),
     GAB1_03(400050000),
     GAB1_04(400060000),
-    // Maps Tests 3.0
+    // 地图测试 3.0 / Maps Tests 3.0
     Housing_LC_legion(700020000),
     Housing_DC_legion(710020000),
     housing_idlf_personal(720010000),
     housing_iddf_personal(730010000);
     /**
-     * id of map
+     * 地图 ID。
+     * Map id.
      */
     private int mapId;
 
     /**
-     * @param mapId
+     * map id
      */
     private MapId(int mapId) {
         this.mapId = mapId;
     }
 
     /**
-     * @return the mapId
+     * 获取地图 ID。
+     * Returns the map id.
+     *
+     * map id
      */
     public int getMapId() {
         return mapId;
     }
 }
+

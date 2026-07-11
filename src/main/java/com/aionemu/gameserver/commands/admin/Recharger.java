@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -28,7 +12,10 @@ import com.aionemu.gameserver.world.World;
 import java.util.Collection;
 
 /**
- * Created by Kill3r
+ * 充能 NPC 召唤指令；在管理员位置开关充能器（NPC 730397）。
+ * Admin command that toggles a recharger NPC (id 730397) at the admin position.
+ *
+ * @author Kill3r
  */
 public class Recharger extends AdminCommand {
 
@@ -38,6 +25,13 @@ public class Recharger extends AdminCommand {
 
     private static boolean isOpened = false;
 
+    /**
+     * 按 {@code on}/{@code off} 生成或删除充能器 NPC。
+     * Spawns or removes the recharger NPC based on {@code on}/{@code off}.
+     *
+     * @param player 执行指令的管理员 / admin executing the command
+     * {@code on} or {@code off}。 / {@code on} or {@code off}
+     */
     public void execute(Player player, String...params){
         int RechargerID = 730397;
         if(params[0].equals("off")){

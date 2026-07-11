@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,27 +8,46 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 
 /**
+ * 飞行点持续恢复效果：周期回复目标 FP。
+ * FP heal-over-time effect: periodically restores the target's flight points.
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FPHealEffect")
 public class FPHealEffect extends HealOverTimeEffect {
 
+	/**
+	 * 计算 FP 持续恢复。
+	 * Calculates FP heal-over-time.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, HealType.FP);
 	}
 
+	/**
+	 * 周期恢复目标飞行点。
+	 * Periodically restores the target's flight points.
+	 */
 	@Override
 	public void onPeriodicAction(Effect effect) {
 		super.onPeriodicAction(effect, HealType.FP);
 	}
 
+	/**
+	 * 返回当前飞行点。
+	 * Returns current flight points.
+	 */
 	@Override
 	protected int getCurrentStatValue(Effect effect) {
 		return effect.getEffected().getLifeStats().getCurrentFp();
 	}
 
+	/**
+	 * 返回最大飞行点。
+	 * Returns maximum flight points.
+	 */
 	@Override
 	protected int getMaxStatValue(Effect effect) {
 		return effect.getEffected().getLifeStats().getMaxFp();

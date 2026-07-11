@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.conditions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,22 +9,28 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 
 /**
+ * 按当前任务指定变量槽位值与配置值比较的条件。
+ * Condition that compares a quest-var slot of the current quest against a configured value.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestVarCondition")
 public class QuestVarCondition extends QuestCondition {
 
+	/** 期望的变量值 / Expected var value */
 	@XmlAttribute(required = true)
 	protected int value;
+	/** 任务变量槽位 ID / Quest-var slot id */
 	@XmlAttribute(name = "var_id", required = true)
 	protected int varId;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.gameserver.questEngine.handlers.template.xmlQuest.condition.
-	 * QuestCondition#doCheck(com.aionemu.gameserver .questEngine.model.QuestEnv)
+	/**
+	 * 比较当前任务指定槽位变量与配置值。
+	 * Compares the current quest's var at the given slot with the configured value.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 比较是否成立；无任务状态时为 false / Whether it holds; false when quest state is missing
 	 */
 	@Override
 	public boolean doCheck(QuestEnv env) {

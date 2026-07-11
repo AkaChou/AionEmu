@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -22,10 +10,12 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Dragon Lord Refuge 副本 NPC AI：Collapsing Earth（@AIName "collapsing_earth"），继承 AggressiveNpcAI2。
+ * Dragon Lord Refuge instance NPC AI: Collapsing Earth (@AIName "collapsing_earth"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("collapsing_earth")
 public class Collapsing_EarthAI2 extends AggressiveNpcAI2
 {

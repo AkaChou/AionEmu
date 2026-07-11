@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.siege;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -28,34 +12,39 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * Influence，用于要塞相关逻辑。
+ * Influence for siege logic.
+ */
+
 public class Influence {
 	private static volatile ObjectProvider<Influence> instanceProvider;
 
-	// ======[ABYSS]=============
+	// ======[欧比斯]============= / ======[ABYSS]=============
 	private float abyss_e = 0;
 	private float abyss_a = 0;
 	private float abyss_b = 0;
-	// ======[KALDOR]============
+	// ======[卡尔多]============ / ======[KALDOR]============
 	private float kaldor_e = 0;
 	private float kaldor_a = 0;
 	private float kaldor_b = 0;
-	// ======[BELUS]=============
+	// ======[贝卢斯]============= / ======[BELUS]=============
 	private float belus_e = 0;
 	private float belus_a = 0;
 	private float belus_b = 0;
-	// ======[ASPIDA]============
+	// ======[阿斯皮达]============ / ======[ASPIDA]============
 	private float aspida_e = 0;
 	private float aspida_a = 0;
 	private float aspida_b = 0;
-	// ======[ATANATOS]==========
+	// ======[阿塔纳托斯]========== / ======[ATANATOS]==========
 	private float atanatos_e = 0;
 	private float atanatos_a = 0;
 	private float atanatos_b = 0;
-	// ======[DISILLON]==========
+	// ======[迪西隆]========== / ======[DISILLON]==========
 	private float disillon_e = 0;
 	private float disillon_a = 0;
 	private float disillon_b = 0;
-	// ======[GLOBAL]============
+	// ======[全局]============ / ======[GLOBAL]============
 	private float global_e = 0;
 	private float global_a = 0;
 	private float global_b = 0;
@@ -64,6 +53,7 @@ public class Influence {
 		calculateInfluence();
 	}
 
+	/** 获取副本。 / Returns the instance. */
 	public static Influence getInstance() {
 		ObjectProvider<Influence> provider = instanceProvider;
 		if (provider == null) {
@@ -72,6 +62,7 @@ public class Influence {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/** 设置实例提供者。 / Sets the instance provider. */
 	public static void setInstanceProvider(ObjectProvider<Influence> instanceProvider) {
 		Influence.instanceProvider = instanceProvider;
 	}
@@ -80,6 +71,7 @@ public class Influence {
 		protected static final Influence instance = new Influence();
 	}
 
+	/** 重算影响力 / recalculate Influence. */
 	public void recalculateInfluence() {
 		calculateInfluence();
 	}
@@ -87,19 +79,19 @@ public class Influence {
 	private void calculateInfluence() {
 		float balaurea = 0.0019512194f;
 		float abyss = 0.006097561f;
-		// ======[ABYSS]==========
+		// ======[欧比斯]========== / ======[ABYSS]==========
 		float e_abyss = 0f;
 		float a_abyss = 0f;
 		float b_abyss = 0f;
 		float t_abyss = 0f;
-		// ======[KALDOR]======
+		// ======[卡尔多]====== / ======[KALDOR]======
 		float e_kaldor = 0f;
 		float a_kaldor = 0f;
 		float b_kaldor = 0f;
 		float t_kaldor = 0f;
 		for (SiegeLocation sLoc : GameFeatureServices.siegeService().getSiegeLocations().values()) {
 			switch (sLoc.getWorldId()) {
-			// ======[ABYSS]==========
+			// ======[欧比斯]========== / ======[ABYSS]==========
 			case 400010000:
 				t_abyss += sLoc.getInfluenceValue();
 				switch (sLoc.getRace()) {
@@ -114,7 +106,7 @@ public class Influence {
 					break;
 				}
 				break;
-			// ======[KALDOR]======
+			// ======[卡尔多]====== / ======[KALDOR]======
 			case 600090000:
 				if (sLoc instanceof FortressLocation) {
 					t_kaldor += sLoc.getInfluenceValue();
@@ -133,15 +125,15 @@ public class Influence {
 				break;
 			}
 		}
-		// ======[ABYSS]=========
+		// ======[欧比斯]========= / ======[ABYSS]=========
 		abyss_e = (e_abyss / t_abyss);
 		abyss_a = (a_abyss / t_abyss);
 		abyss_b = (b_abyss / t_abyss);
-		// ======[KALDOR]=====
+		// ======[卡尔多]====== / ======[KALDOR]=====
 		kaldor_e = (e_kaldor / t_kaldor);
 		kaldor_a = (a_kaldor / t_kaldor);
 		kaldor_b = (b_kaldor / t_kaldor);
-		// ======[GLOBAL]========
+		// ======[全局]======== / ======[GLOBAL]========
 		global_e = (kaldor_e * balaurea + abyss_e * abyss) * 100f;
 		global_a = (kaldor_a * balaurea + abyss_a * abyss) * 100f;
 		global_b = (kaldor_b * balaurea + abyss_b * abyss) * 100f;
@@ -157,98 +149,126 @@ public class Influence {
 		}
 	}
 
-	// =======[GLOBAL]=========
+	// =======[全局]========= / =======[GLOBAL]=========
 	// ========================
+	/** 返回 global elyos influence / Returns the global elyos influence */
 	public float getGlobalElyosInfluence() {
 		return global_e;
 	}
 
+	/** 返回 global asmodians influence / Returns the global asmodians influence */
 	public float getGlobalAsmodiansInfluence() {
 		return global_a;
 	}
 
+	/** 返回 global balaurs influence / Returns the global balaurs influence */
 	public float getGlobalBalaursInfluence() {
 		return global_b;
 	}
 
-	// ========[ABYSS]========
+	// ========[欧比斯]======== / ========[ABYSS]========
 	// =======================
+	/** 返回欧比斯天族影响力 / Returns the abyss elyos influence*/
 	public float getAbyssElyosInfluence() {
 		return abyss_e;
 	}
 
+	/** 返回欧比斯魔族影响力 / Returns the abyss asmodians influence*/
 	public float getAbyssAsmodiansInfluence() {
 		return abyss_a;
 	}
 
+	/** 返回 abyss balaurs influence / Returns the abyss balaurs influence */
 	public float getAbyssBalaursInfluence() {
 		return abyss_b;
 	}
 
-	// =======[KALDOR]========
+	// =======[卡尔多]======== / =======[KALDOR]========
 	// =======================
+	/** 返回 kaldor elyos influence / Returns the kaldor elyos influence */
 	public float getKaldorElyosInfluence() {
 		return kaldor_e;
 	}
 
+	/** 返回 kaldor asmodians influence / Returns the kaldor asmodians influence */
 	public float getKaldorAsmodiansInfluence() {
 		return kaldor_a;
 	}
 
+	/** 返回 kaldor balaurs influence / Returns the kaldor balaurs influence */
 	public float getKaldorBalaursInfluence() {
 		return kaldor_b;
 	}
 
-	// ======[PANESTERRA]=====
+	// ======[帕内斯特拉]===== / ======[PANESTERRA]=====
 	// =======================
+	/** 返回 belus elyos influence / Returns the belus elyos influence */
 	public float getBelusElyosInfluence() {
 		return belus_e;
 	}
 
+	/** 返回 belus asmodians influence / Returns the belus asmodians influence */
 	public float getBelusAsmodiansInfluence() {
 		return belus_a;
 	}
 
+	/** 返回 belus balaurs influence / Returns the belus balaurs influence */
 	public float getBelusBalaursInfluence() {
 		return belus_b;
 	}
 
+	/** 返回 aspida elyos influence / Returns the aspida elyos influence */
 	public float getAspidaElyosInfluence() {
 		return aspida_e;
 	}
 
+	/** 返回 aspida asmodians influence / Returns the aspida asmodians influence */
 	public float getAspidaAsmodiansInfluence() {
 		return aspida_a;
 	}
 
+	/** 返回 aspida balaurs influence / Returns the aspida balaurs influence */
 	public float getAspidaBalaursInfluence() {
 		return aspida_b;
 	}
 
+	/** 返回 atanatos elyos influence / Returns the atanatos elyos influence */
 	public float getAtanatosElyosInfluence() {
 		return atanatos_e;
 	}
 
+	/**
+	 * 获取 AtanatosAsmodiansInfluence。
+	 * Returns the atanatos asmodians influence.
+	 */
 	public float getAtanatosAsmodiansInfluence() {
 		return atanatos_a;
 	}
 
+	/** 返回 atanatos balaurs influence / Returns the atanatos balaurs influence */
 	public float getAtanatosBalaursInfluence() {
 		return atanatos_b;
 	}
 
+	/** 返回 disillon elyos influence / Returns the disillon elyos influence */
 	public float getDisillonElyosInfluence() {
 		return disillon_e;
 	}
 
+	/**
+	 * 获取 DisillonAsmodiansInfluence。
+	 * Returns the disillon asmodians influence.
+	 */
 	public float getDisillonAsmodiansInfluence() {
 		return disillon_a;
 	}
 
+	/** 返回 disillon balaurs influence / Returns the disillon balaurs influence */
 	public float getDisillonBalaursInfluence() {
 		return disillon_b;
 	}
 
+	/** 返回 pvp race bonus / Returns the pvp race bonus */
 	public float getPvpRaceBonus(Race attRace) {
 		float bonus = 1;
 		float elyos = getGlobalElyosInfluence();

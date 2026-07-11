@@ -3,6 +3,7 @@ package com.aionemu.commons.logging.slf4j.filters;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
+import com.aionemu.commons.logging.LogTags;
 
 /**
  * 物品日志过滤器
@@ -19,7 +20,7 @@ public class ItemFilter extends Filter<ILoggingEvent> {
      *         (FilterReply.ACCEPT if message starts with [ITEM]; FilterReply.DENY if not)
      */
     public FilterReply decide(ILoggingEvent loggingEvent) {
-        Object message = loggingEvent.getMessage();
-        return ((String)message).startsWith("[ITEM]") ? FilterReply.ACCEPT : FilterReply.DENY;
+        String message = loggingEvent.getMessage();
+        return message.startsWith(LogTags.ITEM) ? FilterReply.ACCEPT : FilterReply.DENY;
     }
 }

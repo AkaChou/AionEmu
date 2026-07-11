@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.model;
 
 import java.sql.Timestamp;
@@ -24,7 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This class represents banned ip
+ * 封禁 IP 模型。
+ * Banned IP model.
  *
  * @author SoulKeeper
  */
@@ -33,32 +16,39 @@ import lombok.Setter;
 public class BannedIP {
 
     /**
-     * Returns id of ip ban
+     * 封禁记录 ID。
+     * Ban record id.
      */
     private Integer id;
+
     /**
-     * Returns ip mask
+     * IP 或掩码。
+     * IP or mask.
      */
     private String mask;
+
     /**
-     * Returns expiration time
+     * 封禁到期时间；null 表示永久。
+     * Ban expiration time; null means permanent.
      */
     private Timestamp timeEnd;
 
     /**
-     * Checks if ban is still active
+     * 判断封禁是否仍生效。
+     * Checks whether the ban is still active.
      *
-     * @return true if ban is still active
+     * @return 若 ban is still active 则为 true / True if ban is still active
      */
     public boolean isActive() {
         return timeEnd == null || timeEnd.getTime() > System.currentTimeMillis();
     }
 
     /**
-     * Returns true if this ip ban is equal to another. Based on {@link #mask}
+     * 基于 {@link #mask} 判断相等。
+     * Equality based on {@link #mask}.
      *
-     * @param o another ip ban
-     * @return true if ban's are equals
+     * @param o 另一对象 / Other object
+     * @return 若 masks are equal 则为 true / True if masks are equal
      */
     @Override
     public boolean equals(Object o) {
@@ -75,9 +65,10 @@ public class BannedIP {
     }
 
     /**
-     * Returns ban's hashcode. Based on mask
+     * 基于 mask 的哈希码。
+     * Hash code based on mask.
      *
-     * @return ban's hashcode
+     * Hash code
      */
     @Override
     public int hashCode() {

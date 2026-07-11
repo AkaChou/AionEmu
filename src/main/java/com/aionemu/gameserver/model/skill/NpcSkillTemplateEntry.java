@@ -1,23 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
+
+/**
+ * NPC 技能模板条目，用于技能相关逻辑。
+ * Npc Skill Template Entry for skill logic.
+ */
 
 class NpcSkillTemplateEntry extends NpcSkillEntry {
 
@@ -28,6 +17,7 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 		this.template = template;
 	}
 
+	/** 是否就绪。 / Whether Ready. */
 	@Override
 	public boolean isReady(int hpPercentage, long fightingTimeInMSec) {
 		if (hasCooldown() || !chanceReady()) {
@@ -47,11 +37,13 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 		}
 	}
 
+	/** 概率就绪 / chance Ready. */
 	@Override
 	public boolean chanceReady() {
 		return Rnd.get(0, 100) < template.getProbability();
 	}
 
+	/** 生命就绪 / Hp Ready */
 	@Override
 	public boolean hpReady(int hpPercentage) {
 		if (template.getMaxhp() == 0 && template.getMinhp() == 0) {
@@ -63,6 +55,7 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 		}
 	}
 
+	/** 时间就绪 / time Ready. */
 	@Override
 	public boolean timeReady(long fightingTimeInMSec) {
 		if (template.getMaxTime() == 0 && template.getMinTime() == 0) {
@@ -74,11 +67,13 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 		}
 	}
 
+	/** 是否拥有冷却。 / Whether cooldown. */
 	@Override
 	public boolean hasCooldown() {
 		return template.getCooldown() > (System.currentTimeMillis() - lastTimeUsed);
 	}
 
+	/** 刷新时使用 / Use In Spawned. */
 	@Override
 	public boolean UseInSpawned() {
 		return template.getUseInSpawned();

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -27,14 +11,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 删除玩家技能的管理命令（{@code //delskill}）。
+ * Admin command that removes player skills ({@code //delskill}).
+ *
  * @author xTz
  */
 public class DelSkill extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code delskill}。
+	 * Registers the command name {@code delskill}.
+	 */
 	public DelSkill() {
 		super("delskill");
 	}
 
+	/**
+	 * 按玩家名或当前目标删除指定技能或全部非烙印技能。
+	 * Removes a skill or all non-stigma skills by player name or current target.
+	 *
+	 * admin
+	 * @param params 玩家名与技能 ID/all，或目标下的技能 ID/all / player name and skillId/all, or skillId/all on target
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 1 || params.length > 2) {
@@ -104,6 +102,16 @@ public class DelSkill extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 校验技能是否存在且非烙印技能。
+	 * Validates that the skill exists and is not a stigma skill.
+	 *
+	 * admin
+	 * target player
+	 * skill id
+	 *
+	 * @return 可删除则为 true / true if removable
+	 */
 	private static boolean check(Player admin, Player player, int skillId) {
 		if (skillId != 0 && !player.getSkillList().isSkillPresent(skillId)) {
 			PacketSendUtility.sendMessage(admin, "Player dont have this skill.");
@@ -116,6 +124,15 @@ public class DelSkill extends AdminCommand {
 		return true;
 	}
 
+	/**
+	 * 删除单个技能或全部非烙印技能。
+	 * Removes one skill or all non-stigma skills.
+	 *
+	 * admin
+	 * target player
+	 * @param skillId 技能 ID（0 表示全部） / skill id (0 means all)
+	 * @param playerSkillList 技能列表（删除全部时使用） / skill list (used when removing all)
+	 */
 	public void apply(Player admin, Player player, int skillId, PlayerSkillList playerSkillList) {
 		if (skillId != 0) {
 			SkillLearnService.removeSkill(player, skillId);
@@ -133,6 +150,13 @@ public class DelSkill extends AdminCommand {
 
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "No parameters detected.\n" + "Please use //delskill <Player name> <all | skillId>\n" + "or use //delskill [target] <all | skillId>");

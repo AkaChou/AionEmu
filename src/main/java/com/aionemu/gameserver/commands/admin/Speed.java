@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.EmotionType;
@@ -31,14 +15,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 管理员移动/飞行速度百分比调整命令。
+ * Admin command to adjust walk and fly speed by percent.
+ *
  * @author ATracer
  */
 public class Speed extends AdminCommand implements StatOwner {
 
+	/**
+	 * 构造 speed 命令。
+	 * Creates the speed command.
+	 */
 	public Speed() {
 		super("speed");
 	}
 
+	/**
+	 * 按百分比覆盖管理员的行走与飞行速度。
+	 * Overrides admin walk and fly speed by the given percent.
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param params 速度百分比 0–1000 / Speed percent 0–1000
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params == null || params.length < 1) {
@@ -69,11 +67,22 @@ public class Speed extends AdminCommand implements StatOwner {
 		PacketSendUtility.broadcastPacket(admin, new SM_EMOTION(admin, EmotionType.START_EMOTE2, 0, 0), true);
 	}
 
+	/**
+	 * 参数错误时的用法提示。
+	 * Usage hint on invalid parameters.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax //speed <percent>");
 	}
 
+	/**
+	 * 速度/飞行速度百分比修正函数。
+	 * Percent modifier for walk and fly speed.
+	 */
 	class SpeedFunction extends StatFunction {
 
 		static final int speed = 6000;

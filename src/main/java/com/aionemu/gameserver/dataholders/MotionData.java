@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -32,8 +16,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @author kecimis
+ * 动作时间数据容器，按动作名索引 {@link MotionTime}。
+ * Motion-time data holder, indexing {@link MotionTime} by motion name.
  *
+ * @author kecimis
  */
 @XmlRootElement(name = "motion_times")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,6 +31,10 @@ public class MotionData {
 	@XmlTransient
 	private Map<String, MotionTime> motionTimesMap = new LinkedHashMap<String, MotionTime>();
 
+	/**
+	 * JAXB 反序列化完成后，按动作名建立索引。
+	 * After JAXB unmarshalling, indexes motion times by name.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MotionTime motion : motionTimes) {
 			motionTimesMap.put(motion.getName(), motion);
@@ -52,7 +42,10 @@ public class MotionData {
 	}
 
 	/**
-	 * @return the motionTimeList
+	 * 返回动作时间列表；若为空则惰性创建。
+	 * Returns the motion-time list, creating it lazily when null.
+	 *
+	 * @return 动作时间列表 / motion-time list
 	 */
 	public List<MotionTime> getMotionTimes() {
 		if (motionTimes == null) {
@@ -61,10 +54,24 @@ public class MotionData {
 		return motionTimes;
 	}
 
+	/**
+	 * 按动作名获取动作时间。
+	 * Returns the motion time for the given name.
+	 *
+	 * motion name
+	 *
+	 * @param name @return 动作时间或 null / motion time or null
+	 */
 	public MotionTime getMotionTime(String name) {
 		return motionTimesMap.get(name);
 	}
 
+	/**
+	 * 返回已加载的动作时间数量。
+	 * Returns the number of loaded motion times.
+	 *
+	 * @return 动作时间数量 / motion-time count
+	 */
 	public int size() {
 		if (motionTimes == null) {
 			return 0;

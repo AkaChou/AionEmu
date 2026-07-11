@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.inggison;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -32,10 +16,12 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Inggison 区域 NPC AI：Dredgion Commander（@AIName "dredgion_commander"），继承 AggressiveNpcAI2。
+ * Inggison zone NPC AI: Dredgion Commander (@AIName "dredgion_commander"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("dredgion_commander")
 public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 {
@@ -56,7 +42,7 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 				AionObject winner = getAggroList().getMostDamage();
 				if (winner instanceof Creature) {
 					final Creature kill = (Creature) winner;
-					//"Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
+					// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
 				}
 			}

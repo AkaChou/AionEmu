@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,6 +12,9 @@ import com.aionemu.gameserver.controllers.observer.AttackerCriticalStatusObserve
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 一次性技能暴击加成：在有限次数内强制/提升攻击暴击判定。
+ * One-time skill-critical boost: forces/raises critical status for limited attacks.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,10 +26,18 @@ public class OneTimeBoostSkillCriticalEffect extends EffectTemplate {
 	@XmlAttribute
 	private boolean percent;
 
+	/**
+	 * 将一次性暴击加成加入控制器。
+	 * Attaches the one-time critical boost to the controller.
+	 */
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 注册有限次数暴击状态检查。
+	 * Registers limited-count critical status checks.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
@@ -68,6 +63,10 @@ public class OneTimeBoostSkillCriticalEffect extends EffectTemplate {
 		effect.setAttackStatusObserver(observer, position);
 	}
 
+	/**
+	 * 移除一次性暴击加成。
+	 * Removes the one-time critical boost.
+	 */
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);
 
@@ -75,6 +74,10 @@ public class OneTimeBoostSkillCriticalEffect extends EffectTemplate {
 		effect.getEffected().getObserveController().removeAttackCalcObserver(observer);
 	}
 
+	/**
+	 * 是否为百分比暴击加成。
+	 * Whether the critical boost is percent-based.
+	 */
 	public boolean isPercent() {
 		return percent;
 	}

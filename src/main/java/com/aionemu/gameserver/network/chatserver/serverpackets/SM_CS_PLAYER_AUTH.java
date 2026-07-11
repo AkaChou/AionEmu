@@ -1,29 +1,39 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.chatserver.serverpackets;
 
 import com.aionemu.gameserver.network.chatserver.ChatServerConnection;
 import com.aionemu.gameserver.network.chatserver.CsServerPacket;
 
+/**
+ * 游戏服通知聊天服玩家上线并请求认证令牌的服务端包。
+ * Server packet notifying the chat server of a player login and requesting an auth token.
+ */
 public class SM_CS_PLAYER_AUTH extends CsServerPacket {
+	/**
+	 * 玩家对象 ID。
+	 * Player object id.
+	 */
 	private int playerId;
+
+	/**
+	 * 玩家账号登录名。
+	 * Player account login name.
+	 */
 	private String playerLogin;
+
+	/**
+	 * 玩家角色昵称。
+	 * Player character nick name.
+	 */
 	private String nick;
 
+	/**
+	 * 构造玩家认证请求包。
+	 * Constructs a player auth request packet.
+	 *
+	 * player object id
+	 * @param playerLogin 账号登录名 / account login name
+	 * @param nick 角色昵称 / character nick
+	 */
 	public SM_CS_PLAYER_AUTH(int playerId, String playerLogin, String nick) {
 		super(0x01);
 		this.playerId = playerId;
@@ -31,6 +41,12 @@ public class SM_CS_PLAYER_AUTH extends CsServerPacket {
 		this.nick = nick;
 	}
 
+	/**
+	 * 写出玩家 ID、账号名与昵称。
+	 * Writes player id, account name, and nick.
+	 *
+	 * @param con 目标连接 / target connection
+	 */
 	@Override
 	protected void writeImpl(ChatServerConnection con) {
 		writeD(playerId);

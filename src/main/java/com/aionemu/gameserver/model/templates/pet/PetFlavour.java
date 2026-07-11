@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.pet;
 
 import java.util.ArrayList;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.services.toypet.PetFeedProgress;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
 
 /**
+ * 宠物 Flavour 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -52,6 +39,7 @@ public class PetFlavour {
 	@XmlAttribute(name = "cd", required = true)
 	protected int cooldown = 0;
 
+	/** 返回食物 / Returns the food*/
 	public List<PetRewards> getFood() {
 		if (food == null) {
 			food = new ArrayList<PetRewards>();
@@ -60,8 +48,8 @@ public class PetFlavour {
 	}
 
 	/**
-	 * Returns a food group for the itemId. Null if doesn't match
-	 * 
+	 * 返回 foodgroup 用于 itemId. 空若 doesn ' tmatch。 / Returns a food group for the itemId. Null if doesn't match
+	 *
 	 * @param itemId
 	 */
 	public FoodType getFoodType(int itemId) {
@@ -74,9 +62,8 @@ public class PetFlavour {
 	}
 
 	/**
-	 * Returns reward details if earned, otherwise null. Updates progress
-	 * automatically
-	 * 
+	 * 返回 rewarddetails 若 earned , otherwise 空 . 更新 progressautomatically。 / Returns reward details if earned, otherwise null. Updates progress automatically
+	 *
 	 * @param progress
 	 * @param foodType
 	 * @return
@@ -86,6 +73,7 @@ public class PetFlavour {
 		return processFeedResult(progress, foodType, itemLevel, playerLevel, 1);
 	}
 
+	/** Process feed result / Process feed result */
 	public PetFeedResult processFeedResult(PetFeedProgress progress, FoodType foodType, int itemLevel,
 			int playerLevel, float feedingRate) {
 		PetRewards rewardGroup = null;
@@ -112,6 +100,9 @@ public class PetFlavour {
 		return PetFeedCalculator.getReward(maxFeedCount, rewardGroup, progress, playerLevel);
 	}
 
+	/**
+	 * @return Whether loved food / Whether loved food
+	 */
 	public boolean isLovedFood(FoodType foodType, int itemId) {
 		PetRewards rewardGroup = null;
 		for (PetRewards rewards : getFood()) {
@@ -126,18 +117,22 @@ public class PetFlavour {
 		return rewardGroup.isLoved();
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 full count / Returns the full count */
 	public int getFullCount() {
 		return fullCount;
 	}
 
+	/** 返回 loved food limit / Returns the loved food limit */
 	public int getLovedFoodLimit() {
 		return lovedFoodLimit;
 	}
 
+	/** 返回 coold down / Returns the coold down */
 	public int getCooldDown() {
 		return cooldown;
 	}

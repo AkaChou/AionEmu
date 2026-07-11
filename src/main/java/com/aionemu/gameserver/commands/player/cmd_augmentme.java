@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,12 +6,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
- * Created by Kill3r
+ * 玩家命令：对全身已装备物品执行充能/调校并扣除基纳。
+ * Player command: charges/augments all equipped items and deducts Kinah.
+ *
+ * @author Kill3r
  */
 public class cmd_augmentme extends PlayerCommand {
+
+    /**
+     * 注册命令别名 {@code augmentme}。
+     * Registers the command alias {@code augmentme}.
+     */
     public cmd_augmentme() {
         super("augmentme");
     }
+
+    /**
+     * 对已装备物品执行二级充能，并扣除 500000 基纳。
+     * Charges equipped items to level 2 and deducts 500000 Kinah.
+     *
+     * @param player 执行命令的玩家 / invoking player
+     * @param params 未使用的参数 / unused parameters
+     */
     public void execute(Player player, String...params){
 
         ItemChargeService.chargeItems(player,player.getEquipment().getEquippedItems(), 2);

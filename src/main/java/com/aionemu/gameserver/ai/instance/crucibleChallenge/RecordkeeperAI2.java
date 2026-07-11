@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Crucible Challenge 副本 NPC AI：Recordkeeper（@AIName "recordkeeper"），继承 NpcAI2。
+ * Crucible Challenge instance NPC AI: Recordkeeper (@AIName "recordkeeper"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("recordkeeper")
 public class RecordkeeperAI2 extends NpcAI2
 {
@@ -129,53 +115,53 @@ public class RecordkeeperAI2 extends NpcAI2
 				if (startedEvent.compareAndSet(false, true)) {
 					switch (getNpcId()) {
 						case 205668:
-						    //Quick lollygagging! Come over here if you want to start Stage 1.
+						    // 别磨蹭！想开始第 1 阶段就过来。 / Quick lollygagging! Come over here if you want to start Stage 1.
 						    sendMsg(1111470, getObjectId(), false, 2000);
 						break;
 						case 205669:
-						    //Get ready! It's time for Stage 2 to start, nyerk!
+						    // 准备好！第 2 阶段开始了，尼尔克！ / Get ready! It's time for Stage 2 to start, nyerk!
 						    sendMsg(1111471, getObjectId(), false, 2000);
 						break;
 						case 205670:
-						    //Now, prepare for Stage 3, nyerk.
+						    // 现在，准备第 3 阶段，尼尔克。 / Now, prepare for Stage 3, nyerk.
 						    sendMsg(1111472, getObjectId(), false, 2000);
 						break;
 						case 205666:
 						case 205671:
-						    //Take a deep breath now... it's time for Stage 4 to begin.
+						    // 深呼吸……第 4 阶段开始了。 / Take a deep breath now... it's time for Stage 4 to begin.
 						    sendMsg(1111473, getObjectId(), false, 2000);
 						break;
 						case 205672:
-						    //When you've recovered your composure, let me know and you can move on to Stage 5, nyerk.
+						    // 恢复冷静后告诉我，你就可以进入第 5 阶段，尼尔克。 / When you've recovered your composure, let me know and you can move on to Stage 5, nyerk.
 						    sendMsg(1111474, getObjectId(), false, 2000);
 						break;
 						case 205673:
-						    //Are you ready? Shall I start up Stage 6?
+						    // 准备好了吗？要我启动第 6 阶段吗？ / Are you ready? Shall I start up Stage 6?
 						    sendMsg(1111475, getObjectId(), false, 2000);
 						break;
 						case 205674:
-						    //You have completed Stage 1, nyerk.
+						    // 你已完成第 1 阶段，尼尔克。 / You have completed Stage 1, nyerk.
 						    sendMsg(1111476, getObjectId(), false, 2000);
 						break;
 						case 205675:
-						    //You have completed Stage 2, nyerk.
+						    // 你已完成第 2 阶段，尼尔克。 / You have completed Stage 2, nyerk.
 						    sendMsg(1111477, getObjectId(), false, 2000);
 						break;
 						case 205676:
-						    //You have completed Stage 3, nyerk.
+						    // 你已完成第 3 阶段，尼尔克。 / You have completed Stage 3, nyerk.
 						    sendMsg(1111478, getObjectId(), false, 2000);
 						break;
 						case 205667:
 						case 205677:
-						    //You have completed Stage 4, nyerk.
+						    // 你已完成第 4 阶段，尼尔克。 / You have completed Stage 4, nyerk.
 						    sendMsg(1111479, getObjectId(), false, 2000);
 						break;
 						case 205678:
-						    //Congratulations. You have passed Stage 5!
+						    // 恭喜。你已通过第 5 阶段！ / Congratulations. You have passed Stage 5!
 						    sendMsg(1111480, getObjectId(), false, 2000);
 						break;
 						case 205679:
-						    //Congratulations! You have completed Stage 6, nyerk!
+						    // 恭喜！你已完成第 6 阶段，尼尔克！ / Congratulations! You have completed Stage 6, nyerk!
 						    sendMsg(1111481, getObjectId(), false, 2000);
 						break;
 					}

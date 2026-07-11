@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.administration.PanelConfig;
@@ -31,15 +15,29 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * GM 指令：删除目标玩家的指定任务进度。
+ * GM command handler that deletes a quest state from the target player.
+ *
  * @author Alcapwnd
  */
 public class CmdDeleteQuest extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即执行删除任务。
+	 * Creates the handler and immediately runs the delete-quest logic.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 任务 ID 字符串 / quest id as string
+	 */
 	public CmdDeleteQuest(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 校验权限后删除目标玩家指定任务状态并刷新任务列表。
+	 * After access check, removes the quest state and refreshes the quest list.
+	 */
 	private void run() {
 		Player t = admin;
 

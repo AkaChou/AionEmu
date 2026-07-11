@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.teleport;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -50,17 +36,30 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
+
+/**
+ * 传送门服务，校验副本/门户进入条件并完成组队注册与传送。
+ * Portal service validating instance/portal entry requirements and performing team register + transfer.
+ */
 @Slf4j
 
 public class PortalService {
 
+	/**
+	 * 按门户路径将玩家送入目标实例或区域。
+	 * Ports a player into the target instance/area along a portal path.
+	 *
+	 * @param portalPath 门户路径模板 / Portal path template
+	 * 玩家 / Player
+	 * Interacting NPC object id
+	 */
 	public static void port(final PortalPath portalPath, final Player player, int npcObjectId) {
 		if (!CustomConfig.ENABLE_INSTANCES) {
 			return;
 		}
 		PortalLoc loc = DataManager.PORTAL_LOC_DATA.getPortalLoc(portalPath.getLocId());
 		if (loc == null) {
-			log.warn("No portal loc for locId" + portalPath.getLocId());
+			log.warn(I18n.get("log.e07f399d3e8d", portalPath.getLocId()));
 			return;
 		}
 		boolean instanceTitleReq = false;
@@ -471,12 +470,12 @@ public class PortalService {
 						DataManager.INSTANCE_COOLTIME_DATA.getInstanceEntranceCooltime(player, loc.getWorldId()));
 			} else {
 				player.getPortalCooldownList().addEntry(loc.getWorldId());
-				// You have successfully entered the area, consuming one of your permitted
-				// entries.
+				// 你已成功进入该区域，消耗一次允许进入次数。 / You have successfully entered the area, consuming one of your permitted
+				// 条目。 / entries.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_DUNGEON_COUNT_USE);
 			}
 		}
-		// Remove player from "Group/Alliance" if "Instance Solo/Quest Zone"
+		// 若为单人/任务副本，则从“小队/联盟”移除玩家。 / Remove player from "Group/Alliance" if "Instance Solo/Quest Zone"
 		switch (loc.getWorldId()) {
 		case 300190000: // Taloc's Hollow.
 		case 300200000: // Haramel.
@@ -503,7 +502,7 @@ public class PortalService {
 		case 302110000: // [Opportunity] Fissure Of Oblivion.
 		case 302330000: // Kumuki Cave.
 		case 302400000: // Crucible Spire.
-			// Quest & Mission
+			// 任务与使命 / Quest & Mission
 		case 310010000: // Karamatis A.
 		case 310030000: // Aerdina.
 		case 310040000: // Geranaia.
@@ -519,7 +518,7 @@ public class PortalService {
 		case 320140000: // Ataxiar D.
 			PlayerGroupService.removePlayer(player);
 			PlayerAllianceService.removePlayer(player);
-			// This Instance Group has no more openings.
+			// 此副本小队已无空位。 / This Instance Group has no more openings.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401718));
 			break;
 		}

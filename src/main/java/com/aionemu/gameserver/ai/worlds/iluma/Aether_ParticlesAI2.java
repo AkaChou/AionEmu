@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.iluma;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Iluma 区域 NPC AI：Aether Particles（@AIName "aether_particles"），继承 AggressiveNpcAI2。
+ * Iluma zone NPC AI: Aether Particles (@AIName "aether_particles"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("aether_particles")
 public class Aether_ParticlesAI2 extends AggressiveNpcAI2
 {

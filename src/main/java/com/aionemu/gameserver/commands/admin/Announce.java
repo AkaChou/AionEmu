@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,15 +8,29 @@ import com.aionemu.gameserver.world.World;
 import java.util.Iterator;
 
 /**
+ * 管理员全服公告命令：以匿名或实名向全服居中广播。
+ * Admin announce command: center-broadcasts a message server-wide, anonymously or named.
+ *
  * @author Ben, Ritsu Smart Matching Enabled //announce anon This will work. as well as //announce a This will work.
  *         Both will match the "a" or "anon" to the "anonymous" flag.
  */
 public class Announce extends AdminCommand {
 
+	/**
+	 * 注册 {@code //announce} 命令。
+	 * Registers the {@code //announce} command.
+	 */
 	public Announce() {
 		super("announce");
 	}
 
+	/**
+	 * 执行全服公告：按 anonymous/name 前缀组装消息并广播。
+	 * Executes server announce: builds the message from anonymous/name prefix and broadcasts.
+	 *
+	 * admin
+	 * anonymous|name, message。 / anonymous|name, message
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		String message;
@@ -48,11 +46,11 @@ public class Announce extends AdminCommand {
 			return;
 		}
 
-		// Add with space
+		// 带空格添加 / Add with space
 		for (int i = 1; i < params.length - 1; i++)
 			message += params[i] + " ";
 
-		// Add the last without the end space
+		// 添加最后一项，末尾不加空格 / Add the last without the end space
 		message += params[params.length - 1];
 
 		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
@@ -62,6 +60,13 @@ public class Announce extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时输出 {@code //announce} 用法。
+	 * Prints {@code //announce} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax: //announce <anonymous|name> <message>");

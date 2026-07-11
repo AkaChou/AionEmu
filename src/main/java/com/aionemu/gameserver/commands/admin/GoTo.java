@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,12 +11,23 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.model.TeleportAnimation;
 
+/**
+ * 管理员传送命令：按地点名传送至预设坐标（含副本实例处理）。
+ * Admin teleport command: go to a named location with preset coordinates (handles instance maps).
+ */
 public class GoTo extends AdminCommand
 {
 	public GoTo() {
 		super("goto");
 	}
 	
+	/**
+	 * 按地点名称将管理员传送到预设坐标。
+	 * Teleport the admin to a preset destination by location name.
+	 *
+	 * @param player 执行命令的管理员 / Admin executing the command
+	 * @param params 地点名称（可多词） / Location name (may be multi-word)
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -158,7 +153,7 @@ public class GoTo extends AdminCommand
 		else if (destination.equalsIgnoreCase("Hoarfrost"))
 			goTo(player, WorldMapType.BELUSLAN.getId(), 2431, 2063, 579);
 		
-		//Abyss & Reshanta Fortresses
+		// 欧比斯与雷珊塔要塞 / Abyss & Reshanta Fortresses
 		else if (destination.equalsIgnoreCase("Siels Eastern Fortress") || destination.equalsIgnoreCase("sieleast"))
             goTo(player, 400010000, 1792, 2412, 1479);
 		else if (destination.equalsIgnoreCase("Siels Western Fortress") || destination.equalsIgnoreCase("sielwest"))
@@ -322,7 +317,7 @@ public class GoTo extends AdminCommand
 		else if (destination.equalsIgnoreCase("harmonyTraining") || destination.equalsIgnoreCase("Harmony Training Grounds")) //3.9
 			goTo(player, 300570000, 500, 371, 211);
 
-		//(Need Client Patch)
+		// （需要客户端补丁） / (Need Client Patch)
 		else if (destination.equalsIgnoreCase("katalamely") || destination.equalsIgnoreCase("Katalam Elyos")) //4.3
 			goTo(player, 600050000, 398, 2718, 142);
 		else if (destination.equalsIgnoreCase("katalamasmo") || destination.equalsIgnoreCase("Katalam Asmo")) //4.3
@@ -332,7 +327,7 @@ public class GoTo extends AdminCommand
 		else if (destination.equalsIgnoreCase("lakrumasmo") || destination.equalsIgnoreCase("LakrumAsmo")) //6.2
 			goTo(player, 600200000, 2926, 2506, 314);
 
-        /////////////////////DUNGEONS///////////////////
+        // ///////////////////地城/////////////////// / ///////////////////DUNGEONS///////////////////
 		else if (destination.equalsIgnoreCase("ophidan") || destination.equalsIgnoreCase("Ophidan Bridge")) //4.3
 			goTo(player, 300590000, 769, 558, 572);
 		else if (destination.equalsIgnoreCase("raksang") || destination.equalsIgnoreCase("Raksang Ruins")) //4.8
@@ -475,13 +470,13 @@ public class GoTo extends AdminCommand
 			goTo(player, 310160000, 240, 222, 378);
 		else if (destination.equalsIgnoreCase("divine2") || destination.equalsIgnoreCase("Divine Tower A")) //5.8
 			goTo(player, 320160000, 240, 222, 378);
-		//**Zones**//
+		//** 区域 / Zones *//
 		else if (destination.equalsIgnoreCase("silentera")) //5.8
 			goTo(player, 600110000, 583, 767, 300);
-		//**4.3**//
+		//** 4.3 / 4.3* *//
 		else if (destination.equalsIgnoreCase("iu"))
 			goTo(player, 600080000, 1510, 1511, 565);
-		//**4.7**//
+		//** 4.7 / 4.7* *//
 		else if (destination.equalsIgnoreCase("kaldorely"))
 			goTo(player, 600090000, 1305, 1321, 199);
 		else if (destination.equalsIgnoreCase("kaldorasmo"))
@@ -490,7 +485,7 @@ public class GoTo extends AdminCommand
 			goTo(player, 600100000, 99, 101, 348);
 		else if (destination.equalsIgnoreCase("levinshorasmo"))
 			goTo(player, 600100000, 1842, 1772, 305);
-		//**5.8**//
+		//** 5.8 / 5.8* *//
 		else if (destination.equalsIgnoreCase("inggison")) //5.8
 			goTo(player, 210130000, 1335, 276, 590);
 		else if (destination.equalsIgnoreCase("gelkmaros")) //5.8
@@ -499,7 +494,7 @@ public class GoTo extends AdminCommand
 			goTo(player, 600040000, 754, 30, 1196);
 		else if (destination.equalsIgnoreCase("eyeasmo")) //5.8
 			goTo(player, 600040000, 754, 1506, 1196);
-		//**Panesterra**//
+		//** 帕内斯特拉 / Panesterra* *//
 		else if (destination.equalsIgnoreCase("belus"))
 			goTo(player, 400020000, 1238, 1232, 1518);
 		else if (destination.equalsIgnoreCase("annex") || destination.equalsIgnoreCase("Transidium Annex")) //4.7
@@ -518,7 +513,7 @@ public class GoTo extends AdminCommand
 			goTo(player, 130090000, 247, 236, 129);
 		else if (destination.equalsIgnoreCase("fatebound")) //4.7.2
 			goTo(player, 140010000, 272, 266, 96);
-		//**4.8**//
+		//** 4.8 / 4.8* *//
 		else if (destination.equalsIgnoreCase("cygnea")) //4.8
 			goTo(player, 210070000, 2917, 838, 569);
 		else if (destination.equalsIgnoreCase("griffoen")) //4.8
@@ -531,7 +526,7 @@ public class GoTo extends AdminCommand
 			goTo(player, 210090000, 701, 693, 514);
 		else if (destination.equalsIgnoreCase("idianasmo")) //4.8
 			goTo(player, 220100000, 701, 693, 514);
-		//**5.0**//
+		//** 5.0 / 5.0* *//
 		else if (destination.equalsIgnoreCase("iluma")) //5.0
 			goTo(player, 210100000, 1414, 1281, 336);
 		else if (destination.equalsIgnoreCase("tower1")) //5.0
@@ -556,7 +551,7 @@ public class GoTo extends AdminCommand
             goTo(player, 220110000, 1109, 2608, 231);
 		else if (destination.equalsIgnoreCase("Canyon of Lost Souls") || destination.equalsIgnoreCase("canyonoflostsouls"))
             goTo(player, 220110000, 2210, 1870, 239);
-		//**5.3**//
+		//** 5.3 / 5.3* *//
 		else if (destination.equalsIgnoreCase("teminon")) //5.3
 			goTo(player, 400010000, 2309, 606, 1538);
 		else if (destination.equalsIgnoreCase("redemption")) //5.3
@@ -565,7 +560,7 @@ public class GoTo extends AdminCommand
 			goTo(player, 400010000, 577, 2541, 1636);
 		else if (destination.equalsIgnoreCase("harbinger")) //5.3
 			goTo(player, 400010000, 982, 2847, 3033);
-		//**Map Test**//
+		//** 地图测试 / Map Test* *//
 		else if (destination.equalsIgnoreCase("art") || destination.equalsIgnoreCase("Test Server Art"))
 			goTo(player, 900180000, 508, 540, 100);
 		else if (destination.equalsIgnoreCase("tag") || destination.equalsIgnoreCase("Test Tag Match"))
@@ -601,6 +596,13 @@ public class GoTo extends AdminCommand
 		return newInstance.getInstanceId();
 	}
 	
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax : //goto <location>");

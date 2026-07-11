@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.HashSet;
@@ -28,13 +12,33 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 汇报任务模板：从起始 NPC 接取（可选发放任务物品），到结束 NPC 汇报并领奖。
+ * Report-to quest template: accept from start NPCs (optional quest item), report to end NPCs and claim reward.
+ */
 public class ReportTo extends QuestHandler {
+	/** 起始 NPC ID 集合 / start NPC id set */
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
+	/** 结束 NPC ID 集合 / end NPC id set */
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
+	/** 任务物品 ID，0 表示无 / quest item id, 0 if none */
 	private final int itemId;
+	/** 起始对话页 ID，0 用默认 1011 / start dialog page, 0 uses default 1011 */
 	private final int startDialogId;
+	/** 交任务对话页 ID，0 用默认 2375 / turn-in dialog page, 0 uses default 2375 */
 	private final int startDialogId2;
 
+	/**
+	 * 构造汇报任务处理器。
+	 * Constructs a report-to quest handler.
+	 *
+	 * quest id
+	 * start NPC list
+	 * @param endNpcIds 结束 NPC 列表，可为 null / end NPC list, may be null
+	 * @param startDialogId 起始对话页 / start dialog page
+	 * @param startDialogId2 交任务对话页 / turn-in dialog page
+	 * quest item id
+	 */
 	public ReportTo(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds, int startDialogId,
 			int startDialogId2, int itemId) {
 		super(questId);
@@ -49,6 +53,10 @@ public class ReportTo extends QuestHandler {
 		this.itemId = itemId;
 	}
 
+	/**
+	 * 注册起始与结束 NPC 的接取/对话事件。
+	 * Registers start and end NPC quest-start/talk events.
+	 */
 	@Override
 	public void register() {
 		Iterator<Integer> iterator = startNpcs.iterator();
@@ -64,6 +72,13 @@ public class ReportTo extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理接取、汇报与奖励对话事件；交任务时回收可选任务物品。
+	 * Handles accept, report and reward dialogs; removes the optional quest item on turn-in.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		final Player player = env.getPlayer();

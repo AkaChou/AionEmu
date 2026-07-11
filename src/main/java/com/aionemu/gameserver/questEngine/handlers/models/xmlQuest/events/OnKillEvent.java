@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.events;
 
 import java.util.ArrayList;
@@ -33,16 +17,27 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 击杀事件：按怪物配置推进任务变量，并在完成后执行操作。
+ * On-kill event: advances quest vars from monster config and runs complete operations when done.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OnKillEvent", propOrder = { "monster", "complite" })
 public class OnKillEvent extends QuestEvent {
 
+	/** 可击杀怪物配置列表 / Configured killable monster list */
 	@XmlElement(name = "monster")
 	protected List<Monster> monster;
+	/** 全部目标完成后执行的操作（字段名保持 XML 历史拼写） / Operations when all targets are done (field name keeps XML spelling) */
 	protected QuestOperations complite;
 
+	/**
+	 * 返回怪物配置的实时列表（JAXB 可变列表）。
+	 * Returns the live monster config list (JAXB live list).
+	 *
+	 * Monster list
+	 */
 	public List<Monster> getMonsters() {
 		if (monster == null) {
 			monster = new ArrayList<Monster>();
@@ -50,6 +45,13 @@ public class OnKillEvent extends QuestEvent {
 		return this.monster;
 	}
 
+	/**
+	 * 处理击杀：匹配怪物并递增变量，再尝试执行完成操作。
+	 * Handles a kill: matches monsters, increments vars, then tries complete operations.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 当前实现恒返回 false / Always returns false in the current implementation
+	 */
 	public boolean operate(QuestEnv env) {
 		if (monster == null || !(env.getVisibleObject() instanceof Npc)) {
 			return false;

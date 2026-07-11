@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,6 +15,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
+ * PvP 奖励服务，按职业与连杀状态计算勋章/代币奖励。
+ * PvP reward service computing medal/toll rewards by class and spree state.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j(topic = "PVP_LOG")
@@ -40,6 +29,13 @@ public class PvPRewardService {
 	private static final String leather = "188055157,188055164";
 	private static final String cloth = "188055157,188055166";
 
+	/**
+	 * 按职业返回高级奖励物品 ID 列表。
+	 * Returns advanced reward item ids for the given player class.
+	 *
+	 * @param pc 玩家职业 / player class
+	 * item id list
+	 */
 	private static List<Integer> getRewardList(PlayerClass pc) {
 		List<Integer> rewardList = new ArrayList<Integer>();
 		String rewardString = "";
@@ -72,11 +68,20 @@ public class PvPRewardService {
 				rewardList.add(Integer.valueOf(Integer.parseInt(parts[i])));
 			}
 		} else {
-			log.warn("[PvP][Reward] There is no reward list for the {PlayerClass: " + pc.toString() + "}");
+			log.warn(I18n.get("log.0efb21e8756c", pc.toString()));
 		}
 		return rewardList;
 	}
 
+	/**
+	 * 计算击杀奖励物品 ID（普通勋章或高级随机奖励）。
+	 * Computes the kill reward item id (normal medal or advanced random reward).
+	 *
+	 * winner
+	 * victim
+	 * @param isAdvanced 是否高级奖励 / whether advanced reward
+	 * item id
+	 */
 	public static int getRewardId(Player winner, Player victim, boolean isAdvanced) {
 		int itemId = 0;
 		if (victim.getSpreeLevel() > 2) {
@@ -94,6 +99,14 @@ public class PvPRewardService {
 		return itemId;
 	}
 
+	/**
+	 * 计算勋章奖励概率（受连杀与等级差影响）。
+	 * Computes medal reward chance (influenced by spree and level difference).
+	 *
+	 * winner
+	 * victim
+	 * @return 概率百分比 / chance percent
+	 */
 	public static float getMedalRewardChance(Player winner, Player victim) {
 		float chance = PvPConfig.MEDAL_REWARD_CHANCE;
 		chance += 1.5F * winner.getRawKillCount();
@@ -112,6 +125,14 @@ public class PvPRewardService {
 		return chance;
 	}
 
+	/**
+	 * 计算勋章奖励数量。
+	 * Computes medal reward quantity.
+	 *
+	 * winner
+	 * victim
+	 * quantity
+	 */
 	public static int getRewardQuantity(Player winner, Player victim) {
 		int rewardQuantity = winner.getSpreeLevel() + 1;
 		switch (victim.getSpreeLevel()) {
@@ -128,6 +149,14 @@ public class PvPRewardService {
 		return rewardQuantity;
 	}
 
+	/**
+	 * 计算代币（Toll）奖励概率。
+	 * Computes toll reward chance.
+	 *
+	 * winner
+	 * victim
+	 * @return 概率百分比 / chance percent
+	 */
 	public static float getTollRewardChance(Player winner, Player victim) {
 		float chance = PvPConfig.TOLL_CHANCE;
 		chance += 1.5F * winner.getRawKillCount();
@@ -146,6 +175,14 @@ public class PvPRewardService {
 		return chance;
 	}
 
+	/**
+	 * 计算代币（Toll）奖励数量。
+	 * Computes toll reward quantity.
+	 *
+	 * winner
+	 * victim
+	 * quantity
+	 */
 	public static int getTollQuantity(Player winner, Player victim) {
 		int tollQuantity = winner.getSpreeLevel() + 1;
 		switch (victim.getSpreeLevel()) {
@@ -162,6 +199,13 @@ public class PvPRewardService {
 		return tollQuantity;
 	}
 
+	/**
+	 * 获取击杀者当前等级段的高级奖励列表。
+	 * Returns advanced rewards for the winner's current level band.
+	 *
+	 * winner
+	 * item id list
+	 */
 	private static List<Integer> getAdvancedReward(Player winner) {
 		int lvl = winner.getLevel();
 		PlayerClass pc = winner.getPlayerClass();
@@ -172,6 +216,15 @@ public class PvPRewardService {
 		return rewardList;
 	}
 
+	/**
+	 * 按职业与物品等级过滤奖励列表。
+	 * Filters reward list by class and item level range.
+	 *
+	 * @param pc 玩家职业 / player class
+	 * @param minLevel 最小物品等级 / min item level
+	 * @param maxLevel 最大物品等级（不含） / max item level (exclusive)
+	 * @return 过滤后的物品 ID 列表 / filtered item id list
+	 */
 	private static List<Integer> getFilteredRewardList(PlayerClass pc, int minLevel, int maxLevel) {
 		List<Integer> filteredRewardList = new ArrayList<Integer>();
 		List<Integer> rewardList = getRewardList(pc);
@@ -179,8 +232,7 @@ public class PvPRewardService {
 			int id = i.next();
 			ItemTemplate itemTemp = DataManager.ITEM_DATA.getItemTemplate(id);
 			if (itemTemp == null) {
-				log.warn("[PvP][Reward] Incorrect {Item ID: " + id + "} reward for {PlayerClass: " + pc.toString()
-						+ "}");
+				log.warn(I18n.get("log.55ee25a26830", id, pc.toString()));
 			}
 			int itemLevel = itemTemp.getLevel();
 			if (itemLevel >= minLevel && itemLevel < maxLevel) {

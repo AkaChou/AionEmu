@@ -1,31 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
+/**
+ * 玩家职业枚举。
+ * Player Class enumeration.
+ */
+
 @XmlEnum
 public enum PlayerClass {
+	/** 战士 / Warrior. */
 	WARRIOR(0, true), GLADIATOR(1), TEMPLAR(2), SCOUT(3, true), ASSASSIN(4), RANGER(5), MAGE(6, true), SORCERER(7),
+	/** 精灵星 / Spirit Master */
 	SPIRIT_MASTER(8), PRIEST(9, true), CLERIC(10), CHANTER(11),
 
-	// News Class 4.3/4.5
+	// 资讯类 4.3/4.5 / News Class 4.3/4.5
+	/** 技师 / Technist. */
 	TECHNIST(12, true), AETHERTECH(13), GUNSLINGER(14), MUSE(15, true), SONGWEAVER(16), ALL(17);
 
 	private byte classId;
@@ -42,10 +34,12 @@ public enum PlayerClass {
 		this.idMask = (int) Math.pow(2, classId);
 	}
 
+	/** 返回职业 ID / Returns the class id */
 	public byte getClassId() {
 		return classId;
 	}
 
+	/** 返回按 ID 的玩家职业 / Returns the player class by id */
 	public static PlayerClass getPlayerClassById(byte classId) {
 		for (PlayerClass pc : values()) {
 			if (pc.getClassId() == classId) {
@@ -55,10 +49,12 @@ public enum PlayerClass {
 		throw new IllegalArgumentException("There is no player class with id " + classId);
 	}
 
+	/** 是否初始职业 / Whether starting class */
 	public boolean isStartingClass() {
 		return startingClass;
 	}
 
+	/** 返回初始职业 / Returns the starting class for*/
 	public static PlayerClass getStartingClassFor(PlayerClass pc) {
 		switch (pc) {
 		case ASSASSIN:
@@ -73,7 +69,7 @@ public enum PlayerClass {
 		case SORCERER:
 		case SPIRIT_MASTER:
 			return MAGE;
-		// News Class 4.3/4.5
+		// 资讯类 4.3/4.5 / News Class 4.3/4.5
 		case SONGWEAVER:
 			return MUSE;
 		case AETHERTECH:
@@ -91,6 +87,7 @@ public enum PlayerClass {
 		}
 	}
 
+	/** 按字符串返回玩家职业 / Returns the player class by string*/
 	public static PlayerClass getPlayerClassByString(String fieldName) {
 		for (PlayerClass pc : values()) {
 			if (pc.toString().equals(fieldName)) {
@@ -100,10 +97,12 @@ public enum PlayerClass {
 		return null;
 	}
 
+	/** 获取掩码。 / Returns the mask. */
 	public int getMask() {
 		return idMask;
 	}
 
+	/** 获取职业类型。 / Returns the class type. */
 	public String getClassType(Player player) {
 		String type = null;
 		switch (player.getPlayerClass()) {

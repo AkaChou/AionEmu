@@ -1,34 +1,31 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 限制类型枚举。
+ * Limit Type enumeration.
+ */
+
 @XmlType(name = "LimitType")
 @XmlEnum
 public enum LimitType {
+	/** 无 / None. */
 	NONE(0, new int[] { 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0 }),
+	/** 所有者 Pot / Owner Pot */
 	OWNER_POT(1, new int[] { 8, 6, 4, 3, 8 }, new int[] { 0, 0, 0, 0, 4 }),
+	/** Visitor Pot / Visitor Pot */
 	VISITOR_POT(2, new int[] { 9, 7, 5, 2, 8 }, new int[] { 0, 0, 0, 0, 4 }),
+	/** 仓库。 / Storage. */
 	STORAGE(3, new int[] { 7, 6, 5, 4, 8 }, new int[] { 0, 0, 0, 0, 4 }),
+	/** 花盆 / Pot. */
 	POT(4, new int[] { 7, 6, 5, 4, 3 }, new int[] { 7, 6, 5, 4, 1 }),
+	/** 烹饪 / Cooking. */
 	COOKING(5, new int[] { 2, 2, 2, 2, 2 }, new int[] { 2, 2, 2, 2, 2 }),
+	/** 画作 / Picture. */
 	PICTURE(6, new int[] { 1, 1, 1, 1, 1 }, new int[] { 1, 1, 1, 1, 0 }),
+	/** 点唱机 / Jukebox. */
 	JUKEBOX(7, new int[] { 1, 1, 1, 1, 1 }, new int[] { 1, 1, 1, 1, 0 });
 
 	int id;
@@ -41,22 +38,27 @@ public enum LimitType {
 		this.trialLimits = maxTrialLimits;
 	}
 
+	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 object place limit / Returns the object place limit */
 	public int getObjectPlaceLimit(HouseType houseType) {
 		return personalLimits[houseType.getLimitTypeIndex()];
 	}
 
+	/** 返回 trial object place limit / Returns the trial object place limit */
 	public int getTrialObjectPlaceLimit(HouseType houseType) {
 		return trialLimits[houseType.getLimitTypeIndex()];
 	}
 
+	/** 值 / From Value*/
 	public static LimitType fromValue(String value) {
 		return valueOf(value);
 	}

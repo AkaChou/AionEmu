@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.action;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,15 +9,28 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
- * @author ATracer Effector: Player only
+ * DP 消耗动作：施法时从玩家扣除指定 DP（仅玩家施法者）。
+ * DP cost action: deducts DP from the player caster on cast.
+ *
+ * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DpUseAction")
 public class DpUseAction extends Action {
 
+	/**
+	 * 扣除的 DP 值。
+	 * DP amount to consume.
+	 */
 	@XmlAttribute(required = true)
 	protected int value;
 
+	/**
+	 * 扣除施法玩家的 DP；不足时直接返回。
+	 * Deducts DP from the casting player; no-op if insufficient.
+	 *
+	 * @param skill 当前技能上下文 / current skill context
+	 */
 	@Override
 	public void act(Skill skill) {
 		Player effector = (Player) skill.getEffector();

@@ -1,292 +1,124 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.model;
 
 import java.sql.Timestamp;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
- * This class represents Account model
+ * 账号模型。
+ * Account model.
  *
  * @author SoulKeeper
  */
+@Getter
+@Setter
 public class Account {
 
     /**
-     * Id of account, object if assigned, null if not
+     * 账号 ID；未入库时为 null。
+     * Account id; null if not yet stored in DB.
      */
     private Integer id;
+
     /**
-     * Account name
+     * 账号名。
+     * Account name.
      */
     private String name;
+
     /**
-     * Password hash
+     * 密码哈希。
+     * Password hash.
      */
     private String passwordHash;
+
     /**
-     * Access level of account 0 = regular user, > 0 = GM
+     * 权限等级：0 普通用户，&gt;0 GM。
+     * Access level: 0 regular user, &gt;0 GM.
      */
     private byte accessLevel;
+
     /**
-     * Membership of this account (regular, premium etc)
+     * 会员等级（普通、高级等）。
+     * Membership (regular, premium, etc.).
      */
     private byte membership;
+
     /**
-     * Account activated
+     * 是否已激活。
+     * Whether account is activated.
      */
     private byte activated;
+
     /**
-     * last server visited by user -1 if none
+     * 上次访问的服务器；-1 表示无。
+     * Last visited server; -1 if none.
      */
     private byte lastServer;
+
     /**
-     * Last ip of user -1 if none
+     * 上次登录 IP；-1 表示无。
+     * Last login IP; -1 if none.
      */
     private String lastIp;
+
     /**
-     * Last mac of user xx-xx-xx-xx-xx-xx if none
+     * 上次登录 MAC；无记录时为 xx-xx-xx-xx-xx-xx。
+     * Last login MAC; xx-xx-xx-xx-xx-xx if none.
      */
     private String lastMac = "xx-xx-xx-xx-xx-xx";
+
     /**
-     * The only ip that is allowed to this account
+     * 强制绑定的唯一允许 IP。
+     * Forced IP allowed for this account.
      */
     private String ipForce;
+
     /**
-     * AccountTime data
+     * 账号时间数据。
+     * Account time data.
      */
     private AccountTime accountTime;
 
+    /**
+     * 回归标记。
+     * Return flag.
+     */
     private byte isReturn;
 
+    /**
+     * 回归活动结束时间。
+     * Return event end time.
+     */
     private Timestamp returnEnd;
 
     /**
-     * Returns account id, null if not stored in DB
+     * 返回回归标记。
+     * Returns return flag.
      *
-     * @return account id
+     * Return flag
      */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * Sets account id
-     *
-     * @param id account id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * Returns account name
-     *
-     * @return account name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets account name
-     *
-     * @param name account name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns password hash
-     *
-     * @return password hash
-     */
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    /**
-     * Sets password hash
-     *
-     * @param passwordHash password hash
-     */
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    /**
-     * Returns access level of account
-     *
-     * @return access level of account
-     */
-    public byte getAccessLevel() {
-        return accessLevel;
-    }
-
-    /**
-     * Sets access level of account
-     *
-     * @param accessLevel access level of account
-     */
-    public void setAccessLevel(byte accessLevel) {
-        this.accessLevel = accessLevel;
-    }
-
-    /**
-     * @return the membership
-     */
-    public byte getMembership() {
-        return membership;
-    }
-
-    /**
-     * @param membership the membership to set
-     */
-    public void setMembership(byte membership) {
-        this.membership = membership;
-    }
-
-    /**
-     * Returns account activated
-     *
-     * @return access level of account
-     */
-    public byte getActivated() {
-        return activated;
-    }
-
-    /**
-     * Sets access level of account
-     *
-     * @param activated access level of account
-     */
-    public void setActivated(byte activated) {
-        this.activated = activated;
-    }
-
-    /**
-     * Returns last server that player visited
-     *
-     * @return last server that player visited
-     */
-    public byte getLastServer() {
-        return lastServer;
-    }
-
-    /**
-     * Sets last server that player visited
-     *
-     * @param lastServer last server that player visited
-     */
-    public void setLastServer(byte lastServer) {
-        this.lastServer = lastServer;
-    }
-
-    /**
-     * Returns last ip that player played from
-     *
-     * @return last ip that player played from
-     */
-    public String getLastIp() {
-        return lastIp;
-    }
-
-    /**
-     * Sets last ip that player players from
-     *
-     * @param lastIp last ip that player played from
-     */
-    public void setLastIp(String lastIp) {
-        this.lastIp = lastIp;
-    }
-
-    /**
-     * Returns last mac that player played from
-     *
-     * @return last mac that player played from
-     */
-    public String getLastMac() {
-        return lastMac;
-    }
-
-    /**
-     * Sets last mac that player players from
-     *
-     * @param lastMac last mac that player played from
-     */
-    public void setLastMac(String lastMac) {
-        this.lastMac = lastMac;
-    }
-
-    /**
-     * Returns IP that player is forced to use with his account
-     *
-     * @return ip that player is forsed to use with his account
-     */
-    public String getIpForce() {
-        return ipForce;
-    }
-
-    /**
-     * Sets ip that player has to use with his account
-     *
-     * @param ipForce sets ip that players has to use with his account
-     */
-    public void setIpForce(String ipForce) {
-        this.ipForce = ipForce;
-    }
-
-    /**
-     * @return accountTime
-     */
-    public AccountTime getAccountTime() {
-        return accountTime;
-    }
-
-    /**
-     * @param accountTime
-     */
-    public void setAccountTime(AccountTime accountTime) {
-        this.accountTime = accountTime;
-    }
-
     public byte getReturn() {
         return isReturn;
     }
 
+    /**
+     * 设置回归标记。
+     * Sets return flag.
+     *
+     * Return flag
+     */
     public void setReturn(byte isReturn) {
         this.isReturn = isReturn;
     }
 
-    public Timestamp getReturnEnd() {
-        return returnEnd;
-    }
-
-    public void setReturnEnd(Timestamp end) {
-        this.returnEnd = end;
-    }
-
     /**
-     * Retunrns true if players name and password has are equals
+     * 按账号名与密码哈希判断相等。
+     * Equality based on name and password hash.
      *
-     * @param o another player to check
-     * @return true if names and password hash matches
+     * @param o 另一对象 / Other object
+     * @return 名称与密码哈希均相同则为 true / True if name and password hash match
      */
     @Override
     public boolean equals(Object o) {
@@ -310,9 +142,10 @@ public class Account {
     }
 
     /**
-     * Returns player hashcode.
+     * 基于名称与密码哈希的哈希码。
+     * Hash code based on name and password hash.
      *
-     * @return player hashcode
+     * Hash code
      */
     @Override
     public int hashCode() {

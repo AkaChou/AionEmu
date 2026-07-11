@@ -1,52 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Notifies players when their friends log in, out, or delete them
- * 
+ * 好友事件通知包：好友上线/下线/删除等事件。
+ * Friend event notify packet: login, logout or deletion by a friend.
+ *
  * @author Ben
  */
 public class SM_FRIEND_NOTIFY extends AionServerPacket {
 
-	/**
-	 * Buddy has logged in (Or become visible)
-	 */
+	/** 好友上线（或变为可见） / friend logged in (or became visible) */
 	public static final int LOGIN = 0;
-	/**
-	 * Buddy has logged out (Or become invisible)
-	 */
+	/** 好友下线（或变为隐身） / friend logged out (or became invisible) */
 	public static final int LOGOUT = 1;
-	/**
-	 * Buddy has deleted you
-	 */
+	/** 好友已将你删除 / friend deleted you */
 	public static final int DELETED = 2;
 
 	private final int code;
 	private final String name;
 
 	/**
-	 * Constructs a new notify packet
-	 * 
-	 * @param code Message code
-	 * @param name Name of friend
+	 * event code
+	 * 好友名称 / friend name
 	 */
 	public SM_FRIEND_NOTIFY(int code, String name) {
 		this.code = code;

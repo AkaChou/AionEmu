@@ -1,30 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
+/**
+ * 神器突击实现，调度神器攻城的龙族突击。
+ * Artifact assault implementation scheduling Balaur assaults on artifacts.
+ */
 public class ArtifactAssault extends Assault<ArtifactSiege> {
 
 	public ArtifactAssault(ArtifactSiege siege) {
 		super(siege);
 	}
 
+	/**
+	 * 调度突击。
+	 * Schedules the assault.
+	 *
+	 * @param delay 延迟毫秒 / delay
+	 */
 	public void scheduleAssault(int delay) {
 	}
 
+	/**
+	 * 突击结束回调。
+	 * Callback when assault finishes.
+	 *
+	 * captured
+	 */
 	public void onAssaultFinish(boolean captured) {
 	}
 }

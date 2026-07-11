@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.siege;
 
 import java.util.List;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 /**
+ * Fortress 位置，用于要塞相关逻辑。
+ * Fortress Location for siege logic.
+ *
  * @author Source
  */
 public class FortressLocation extends SiegeLocation {
@@ -48,10 +35,12 @@ public class FortressLocation extends SiegeLocation {
 		this.siegeLegionRewards = template.getSiegeLegionRewards() != null ? template.getSiegeLegionRewards() : null;
 	}
 
+	/** 获取奖励。 / Returns the reward. */
 	public List<SiegeReward> getReward() {
 		return this.siegeRewards;
 	}
 
+	/** 获取军团奖励。 / Returns the legion reward. */
 	public List<SiegeLegionReward> getLegionReward() {
 		return this.siegeLegionRewards;
 	}
@@ -104,12 +93,14 @@ public class FortressLocation extends SiegeLocation {
 		return new DescriptionId(template.getNameId());
 	}
 
+	/** 在 EnterZone / On Enter Zone */
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		super.onEnterZone(creature, zone);
 		if (isVulnerable())
 			creature.setInsideZoneType(ZoneType.SIEGE);
 	}
 
+	/** 在 LeaveZone / On Leave Zone */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		super.onLeaveZone(creature, zone);
@@ -117,6 +108,7 @@ public class FortressLocation extends SiegeLocation {
 			creature.unsetInsideZoneType(ZoneType.SIEGE);
 	}
 
+	/** 清空位置。 / Clear location. */
 	public void clearLocation() {
 		for (Creature creature : getCreaturesSnapshot()) {
 			if ((isEnemy(creature)) && ((creature instanceof Kisk))) {

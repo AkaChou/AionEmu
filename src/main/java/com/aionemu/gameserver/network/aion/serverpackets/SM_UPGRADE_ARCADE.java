@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -28,9 +12,14 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 
 /**
+ * 升级街机（Arcade Upgrade）活动交互的服务端包。
+ * Server packet for Arcade Upgrade event interactions.
+ * <p>
+ * 通过 {@code action} 区分：图标显示、会话初始化、成功判定、等级、奖励、狂热状态与奖池等。
+ * Uses {@code action} for: icon display, session init, success result, level, reward, frenzy state, and prize pool.
+ *
  * @author Ranastic
  */
-
 public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	private int action;
 	private int showicon = 1;
@@ -43,38 +32,88 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	private int frenzyTime;
 	private int frenzyCount;
 
+	/**
+	 * 图标显示。
+	 * Icon display.
+	 *
+	 * @param showicon 是否显示图标 / whether to show the icon
+	 */
 	public SM_UPGRADE_ARCADE(boolean showicon) {
 		this.action = 0;
 		this.showicon = showicon ? 1 : 0;
 	}
 
+	/**
+	 * 会话初始化（狂热点数）。
+	 * Session init with frenzy points.
+	 *
+	 * frenzy points
+	 * frenzy count
+	 */
 	public SM_UPGRADE_ARCADE(int frenzyPoints, int frenzyCount) {
 		this.action = 1;
 		this.frenzyPoints = frenzyPoints;
 		this.frenzyCount = frenzyCount;
 	}
 
+	/**
+	 * 通用 action。
+	 * Generic action.
+	 *
+	 * action type
+	 */
 	public SM_UPGRADE_ARCADE(int action) {
 		this.action = action;
 	}
 
+	/**
+	 * 升级结果。
+	 * Upgrade result.
+	 *
+	 * action type
+	 * whether successful
+	 * frenzy points
+	 */
 	public SM_UPGRADE_ARCADE(int action, boolean success, int frenzy) {
 		this.action = action;
 		this.success = success;
 		this.frenzyPoints = frenzy;
 	}
 
+	/**
+	 * 等级相关。
+	 * Level-related.
+	 *
+	 * 玩家 / player
+	 * action type
+	 * level
+	 */
 	public SM_UPGRADE_ARCADE(Player player, int action, int level) {
 		this.action = action;
 		this.level = level;
 		this.player = player;
 	}
 
+	/**
+	 * 奖励物品。
+	 * Reward item.
+	 *
+	 * action type
+	 * reward item
+	 */
 	public SM_UPGRADE_ARCADE(int action, ArcadeTabItem itemList) {
 		this.action = action;
 		this.itemList = itemList;
 	}
 
+	/**
+	 * 狂热时间与次数。
+	 * Frenzy time and count.
+	 *
+	 * action type
+	 * @param frenzyTime  狂热剩余时间 / remaining frenzy time
+	 * frenzy count
+	 */
 	public SM_UPGRADE_ARCADE(int action, int frenzyTime, int frenzyCount) {
 		this.action = action;
 		this.frenzyTime = frenzyTime;

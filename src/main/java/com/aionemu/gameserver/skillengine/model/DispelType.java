@@ -1,37 +1,44 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 驱散方式：按效果 ID、类型或槽位匹配驱散目标。
+ * Dispel type: match dispel targets by effect id, type or slot.
+ *
  * @author ATracer
  */
 @XmlType(name = "DispelType")
 @XmlEnum
 public enum DispelType {
 
-	EFFECTID, EFFECTIDRANGE, EFFECTTYPE, SLOTTYPE;
+	/** 按效果 ID / By effect id */
+	EFFECTID,
+	/** 按效果 ID 区间 / By effect id range */
+	EFFECTIDRANGE,
+	/** 按效果类型 / By effect type */
+	EFFECTTYPE,
+	/** 按目标槽位 / By target slot type */
+	SLOTTYPE;
 
+	/**
+	 * 返回枚举名（JAXB 值）。
+	 * Returns enum name (JAXB value).
+	 *
+	 * name
+	 */
 	public String value() {
 		return name();
 	}
 
+	/**
+	 * 由字符串解析驱散方式。
+	 * Parses dispel type from string.
+	 *
+	 * @param v 名称 / name
+	 * dispel type
+	 */
 	public static DispelType fromValue(String v) {
 		return valueOf(v);
 	}

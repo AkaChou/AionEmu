@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.stats;
 
 import java.util.List;
@@ -28,6 +12,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 
 /**
+ * 修正器模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author xavier
  */
 @XmlAccessorType(XmlAccessType.NONE)
@@ -47,14 +34,17 @@ public class ModifiersTemplate {
 	@XmlAttribute
 	private int level;
 
+	/** 获取修正器。 / Returns the modifiers. */
 	public List<StatFunction> getModifiers() {
 		return modifiers;
 	}
 
+	/** 返回概率 / Returns the chance*/
 	public float getChance() {
 		return chance;
 	}
 
+	/** 获取等级。 / Returns the level. */
 	public float getLevel() {
 		return level;
 	}

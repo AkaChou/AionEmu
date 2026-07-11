@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import java.util.ArrayList;
@@ -30,21 +14,48 @@ import com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.events.OnKill
 import com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.events.OnTalkEvent;
 import com.aionemu.gameserver.questEngine.handlers.template.XmlQuest;
 
+/**
+ * 通用 XML 脚本任务数据模型（对话/击杀事件驱动），注册 {@link XmlQuest} 模板。
+ * Generic XML-script quest data model (talk/kill event driven); registers the {@link XmlQuest} template.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "XmlQuest", propOrder = { "onTalkEvent", "onKillEvent" })
 public class XmlQuestData extends XMLQuest {
+
+	/**
+	 * 对话事件列表。
+	 * On-talk event list.
+	 */
 	@XmlElement(name = "on_talk_event")
 	protected List<OnTalkEvent> onTalkEvent;
 
+	/**
+	 * 击杀事件列表。
+	 * On-kill event list.
+	 */
 	@XmlElement(name = "on_kill_event")
 	protected List<OnKillEvent> onKillEvent;
 
+	/**
+	 * 接取任务的起始 NPC ID（可选）。
+	 * Start NPC id that offers the quest (optional).
+	 */
 	@XmlAttribute(name = "start_npc_id")
 	protected Integer startNpcId;
 
+	/**
+	 * 交还任务的结束 NPC ID（可选）。
+	 * End NPC id for turn-in (optional).
+	 */
 	@XmlAttribute(name = "end_npc_id")
 	protected Integer endNpcId;
 
+	/**
+	 * 返回对话事件列表；若尚未初始化则惰性创建空列表。
+	 * Returns the on-talk event list; lazily creates an empty list when null.
+	 *
+	 * @return 对话事件列表 / On-talk events
+	 */
 	public List<OnTalkEvent> getOnTalkEvent() {
 		if (onTalkEvent == null) {
 			onTalkEvent = new ArrayList<OnTalkEvent>();
@@ -52,6 +63,12 @@ public class XmlQuestData extends XMLQuest {
 		return this.onTalkEvent;
 	}
 
+	/**
+	 * 返回击杀事件列表；若尚未初始化则惰性创建空列表。
+	 * Returns the on-kill event list; lazily creates an empty list when null.
+	 *
+	 * @return 击杀事件列表 / On-kill events
+	 */
 	public List<OnKillEvent> getOnKillEvent() {
 		if (onKillEvent == null) {
 			onKillEvent = new ArrayList<OnKillEvent>();
@@ -59,14 +76,32 @@ public class XmlQuestData extends XMLQuest {
 		return this.onKillEvent;
 	}
 
+	/**
+	 * 返回起始 NPC ID。
+	 * Returns the start NPC id.
+	 *
+	 * Start NPC id
+	 */
 	public Integer getStartNpcId() {
 		return startNpcId;
 	}
 
+	/**
+	 * 返回结束 NPC ID。
+	 * Returns the end NPC id.
+	 *
+	 * End NPC id
+	 */
 	public Integer getEndNpcId() {
 		return endNpcId;
 	}
 
+	/**
+	 * 注册 {@link XmlQuest} 模板处理器。
+	 * Registers the {@link XmlQuest} template handler.
+	 *
+	 * Quest engine
+	 */
 	@Override
 	public void register(QuestEngine questEngine) {
 		questEngine.addQuestHandler(new XmlQuest(this));

@@ -3,39 +3,36 @@ package com.aionemu.commons.network;
 import java.util.Arrays;
 
 /**
- * IP地址范围类
- * IP Address Range Class
- *
- * 该类用于表示和管理IP地址范围，支持IPv4地址范围检查
- * This class represents and manages IP address ranges, supporting IPv4 address range checking
+ * IPv4 地址范围，支持范围判定与字节/字符串互转。
+ * IPv4 address range with membership checks and byte/string conversions.
  */
 public class IPRange {
-    
+
     /**
-     * 范围最小值
-     * Minimum value of the range
+     * 范围最小值（数值形式）。
+     * Minimum value of the range (numeric form).
      */
     private final long min;
-    
+
     /**
-     * 范围最大值
-     * Maximum value of the range
+     * 范围最大值（数值形式）。
+     * Maximum value of the range (numeric form).
      */
     private final long max;
-    
+
     /**
-     * 地址字节数组
-     * Address byte array
+     * 映射目标地址字节。
+     * Mapped target address bytes.
      */
     private final byte[] address;
 
     /**
-     * 使用字符串构造IP范围
-     * Construct IP range using strings
+     * 使用字符串构造 IP 范围。
+     * Construct IP range from strings.
      *
-     * @param min 最小IP地址 / Minimum IP address
-     * @param max 最大IP地址 / Maximum IP address
-     * @param address 目标IP地址 / Target IP address
+     * Minimum IP
+     * Maximum IP
+     * Target IP
      */
     public IPRange(String min, String max, String address) {
         this.min = toLong("min", toByteArray(min));
@@ -44,12 +41,12 @@ public class IPRange {
     }
 
     /**
-     * 使用字节数组构造IP范围
-     * Construct IP range using byte arrays
+     * 使用字节数组构造 IP 范围。
+     * Construct IP range from byte arrays.
      *
-     * @param min 最小IP地址字节数组 / Minimum IP address byte array
-     * @param max 最大IP地址字节数组 / Maximum IP address byte array
-     * @param address 目标IP地址字节数组 / Target IP address byte array
+     * @param min 最小 IP 字节 / Minimum IP bytes
+     * @param max 最大 IP 字节 / Maximum IP bytes
+     * Target IP bytes
      */
     public IPRange(byte[] min, byte[] max, byte[] address) {
         requireIpv4Bytes("address", address);
@@ -59,11 +56,12 @@ public class IPRange {
     }
 
     /**
-     * 检查指定IP地址是否在范围内
-     * Check if the specified IP address is in range
+     * 检查指定 IP 是否在范围内。
+     * Check whether the given IP is within range.
      *
-     * @param address 要检查的IP地址 / IP address to check
-     * @return 如果在范围内返回true / Returns true if in range
+     * IP to check
+     *
+     * @param address @return 是否在范围内 / Whether in range
      */
     public boolean isInRange(String address) {
         long addr = toLong("address", toByteArray(address));
@@ -71,41 +69,42 @@ public class IPRange {
     }
 
     /**
-     * 获取目标IP地址
-     * Get the target IP address
+     * 获取目标 IP 字节。
+     * Get target IP bytes.
      *
-     * @return IP地址字节数组 / IP address byte array
+     * IP byte array
      */
     public byte[] getAddress() {
         return this.address;
     }
 
     /**
-     * 获取最小IP地址
-     * Get the minimum IP address
+     * 获取最小 IP 字节。
+     * Get minimum IP bytes.
      *
-     * @return 最小IP地址字节数组 / Minimum IP address byte array
+     * Minimum IP bytes
      */
     public byte[] getMinAsByteArray() {
         return toBytes(this.min);
     }
 
     /**
-     * 获取最大IP地址
-     * Get the maximum IP address
+     * 获取最大 IP 字节。
+     * Get maximum IP bytes.
      *
-     * @return 最大IP地址字节数组 / Maximum IP address byte array
+     * Maximum IP bytes
      */
     public byte[] getMaxAsByteArray() {
         return toBytes(this.max);
     }
 
     /**
-     * 将字节数组转换为长整型
-     * Convert byte array to long
+     * 将 IPv4 字节转为无符号长整型。
+     * Convert IPv4 bytes to unsigned long.
      *
-     * @param field 字节数组 / Byte array
-     * @return 转换后的长整型值 / Converted long value
+     * @param field 字段名（校验报错用） / Field name for validation errors
+     * 4-byte IP
+     * @return 数值形式地址 / Numeric address
      */
     private static long toLong(String field, byte[] bytes) {
         requireIpv4Bytes(field, bytes);
@@ -113,10 +112,17 @@ public class IPRange {
         result |= (bytes[3] & 0xFF);
         result |= ((bytes[2] & 0xFF) << 8);
         result |= ((bytes[1] & 0xFF) << 16);
-        result |= ((long)(bytes[0] & 0xFF) << 24);
+        result |= ((long) (bytes[0] & 0xFF) << 24);
         return result & 0xFFFFFFFFL;
     }
 
+    /**
+     * 校验 IPv4 字节长度。
+     * Validate IPv4 byte length.
+     *
+     * Field name
+     * @param bytes 字节数组 / Byte array
+     */
     private static void requireIpv4Bytes(String field, byte[] bytes) {
         if (bytes == null || bytes.length != 4) {
             throw new IllegalArgumentException("IPRange " + field + " must be 4 bytes, got "
@@ -125,11 +131,11 @@ public class IPRange {
     }
 
     /**
-     * 将长整型转换为字节数组
-     * Convert long to byte array
+     * 将长整型地址转为 4 字节。
+     * Convert long address to 4 bytes.
      *
-     * @param val 长整型值 / Long value
-     * @return 转换后的字节数组 / Converted byte array
+     * @param val 数值地址 / Numeric address
+     * Byte array
      */
     private static byte[] toBytes(long val) {
         return new byte[] {
@@ -141,11 +147,11 @@ public class IPRange {
     }
 
     /**
-     * 将IP地址字符串转换为字节数组
-     * Convert IP address string to byte array
+     * 将点分 IPv4 字符串转为字节数组。
+     * Convert dotted IPv4 string to byte array.
      *
-     * @param address IP地址字符串 / IP address string
-     * @return 转换后的字节数组 / Converted byte array
+     * IP string
+     * Byte array
      */
     public static byte[] toByteArray(String address) {
         byte[] result = new byte[4];
@@ -161,9 +167,9 @@ public class IPRange {
         if (this == o) return true;
         if (!(o instanceof IPRange)) return false;
         IPRange ipRange = (IPRange) o;
-        return max == ipRange.max && 
-               min == ipRange.min && 
-               Arrays.equals(address, ipRange.address);
+        return max == ipRange.max
+            && min == ipRange.min
+            && Arrays.equals(address, ipRange.address);
     }
 
     @Override

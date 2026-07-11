@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -26,19 +10,34 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
+ * 玩家命令：将白名单内进行中的任务直接设为可领奖。
+ * Player command: sets a whitelisted in-progress quest directly to reward status.
+ *
  * @author ATracer
  */
 public class cmd_questauto extends PlayerCommand {
 
 	/**
+	 * 在此配置自动任务（如 new int[]{1245,1345,7895}）。
 	 * put quests for automation here (new int[]{1245,1345,7895})
 	 */
 	private final int[] questIds = new int[] {};
 
+	/**
+	 * 注册命令别名 {@code questauto}。
+	 * Registers the command alias {@code questauto}.
+	 */
 	public cmd_questauto() {
 		super("questauto");
 	}
 
+	/**
+	 * 若任务在支持列表且处于 START，则切换为 REWARD 并同步客户端。
+	 * If the quest is supported and START, switches it to REWARD and syncs the client.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * quest id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -69,8 +68,4 @@ public class cmd_questauto extends PlayerCommand {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

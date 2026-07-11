@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
@@ -37,31 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * <p>
- * Java class for EventData complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
- * <pre>
- * &lt;complexType name="EventData">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="active" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="event" maxOccurs="unbounded" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;extension base="{}EventTemplate">
- *               &lt;/extension>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
+ * 活动配置数据容器，维护全部与当前激活的活动模板。
+ * Event configuration data holder for all and currently active event templates.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventData", propOrder = { "active", "events" })
@@ -84,6 +45,10 @@ public class EventData {
 	@XmlTransient
 	private int counter = 0;
 
+	/**
+	 * JAXB 反序列化完成后，根据 active 字段筛选并索引激活活动；保留 active 文本供后续查询。
+	 * After JAXB unmarshalling, indexes active events from the active field; keeps active text for later queries.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (active == null || events == null) {
 			return;
@@ -105,17 +70,34 @@ public class EventData {
 
 		events.clear();
 		events = null;
-		active = null;
 	}
 
+	/**
+	 * 返回激活活动数量。
+	 * Returns the number of active events.
+	 *
+	 * @return 激活活动数 / active event count
+	 */
 	public int size() {
 		return counter;
 	}
 
+	/**
+	 * 返回原始激活活动文本（分号分隔的活动名列表）。
+	 * Returns the raw active-events text (semicolon-separated event names).
+	 *
+	 * @return 激活活动配置文本 / active events configuration text
+	 */
 	public String getActiveText() {
 		return active;
 	}
 
+	/**
+	 * 返回全部活动模板的快照列表。
+	 * Returns a snapshot list of all event templates.
+	 *
+	 * @return 全部活动模板 / all event templates
+	 */
 	public List<EventTemplate> getAllEvents() {
 		List<EventTemplate> result = new ArrayList<EventTemplate>();
 		synchronized (allEvents) {
@@ -124,6 +106,13 @@ public class EventData {
 		return result;
 	}
 
+	/**
+	 * 替换全部活动列表并重新构建索引；若同名旧活动已启动则保留 started 状态。
+	 * Replaces the full event list and rebuilds indexes; preserves started state from same-named old events.
+	 *
+	 * @param events 新的活动模板列表 / new event template list
+	 * @param active 激活活动名配置文本 / active event names configuration text
+	 */
 	public void setAllEvents(List<EventTemplate> events, String active) {
 		if (events == null) {
 			events = new ArrayList<EventTemplate>();
@@ -142,6 +131,12 @@ public class EventData {
 		afterUnmarshal(null, null);
 	}
 
+	/**
+	 * 返回当前激活活动模板的快照列表。
+	 * Returns a snapshot list of currently active event templates.
+	 *
+	 * @return 激活活动模板 / active event templates
+	 */
 	public List<EventTemplate> getActiveEvents() {
 		List<EventTemplate> result = new ArrayList<EventTemplate>();
 		synchronized (activeEvents) {
@@ -151,6 +146,14 @@ public class EventData {
 		return result;
 	}
 
+	/**
+	 * 判断指定名称的活动是否处于激活状态。
+	 * Checks whether the named event is currently active.
+	 *
+	 * event name
+	 *
+	 * @param eventName @return 若激活返回 true / true if the event is active
+	 */
 	public boolean Contains(String eventName) {
 		return activeEvents.containsKey(eventName);
 	}

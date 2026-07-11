@@ -1,34 +1,42 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.skill.linked_skill.PlayerEquippedStigmaList;
 
+/**
+ * 玩家已装备刺针（Stigma）数据访问抽象层。
+ * DAO for player equipped stigma items persistence.
+ */
 public abstract class PlayerStigmasEquippedDAO implements DAO {
 
+	/**
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
+	 */
 	@Override
 	public final String getClassName() {
 		return PlayerStigmasEquippedDAO.class.getName();
 	}
 
+	/**
+	 * 加载玩家已装备刺针列表。
+	 * Loads the equipped stigma item list for the player.
+	 *
+	 * player object id
+	 * @return 已装备刺针列表 / equipped stigma list
+	 */
 	public abstract PlayerEquippedStigmaList loadItemsList(int playerId);
 
+	/**
+	 * 保存玩家已装备刺针。
+	 * Stores equipped stigma items for the player.
+	 *
+	 * 玩家 / player
+	 * @return 是否保存成功 / true if stored
+	 */
 	public abstract boolean storeItems(Player player);
 
 }

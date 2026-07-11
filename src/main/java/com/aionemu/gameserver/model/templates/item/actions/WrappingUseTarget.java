@@ -1,40 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * WrappingUseTarget 枚举。
+ * Wrapping Use Target enumeration.
+ *
  * @author Ranastic
  */
 
 @XmlType(name = "WrappingUseTarget")
 @XmlEnum
 public enum WrappingUseTarget {
+	/** 全部 / All. */
 	ALL, ARMOR, OTHER, WEAPON, ACCESSORY, EQUIPMENT;
 
 	private WrappingUseTarget() {
 	}
 
+	/** 值。 / Value. */
 	public String value() {
 		return name();
 	}
 
+	/** 值 / From Value*/
 	public static WrappingUseTarget fromValue(String v) {
 		return valueOf(v);
 	}

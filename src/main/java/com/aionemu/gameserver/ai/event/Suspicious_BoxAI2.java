@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.event;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 活动事件 NPC AI：Suspicious Box（@AIName "suspicious_box"），继承 NpcAI2。
+ * Event NPC AI: Suspicious Box (@AIName "suspicious_box"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("suspicious_box")
 public class Suspicious_BoxAI2 extends NpcAI2
 {
@@ -66,7 +52,7 @@ public class Suspicious_BoxAI2 extends NpcAI2
 			if (player.isInGroup2() && MathUtil.isIn3dRange(getOwner(), creature, 10)) {
         		AI2Actions.deleteOwner(Suspicious_BoxAI2.this);
 				AI2Actions.scheduleRespawn(Suspicious_BoxAI2.this);
-				//One of the Ancient Treasure Boxes is missing.
+				// 一个古代宝箱不见了。 / One of the Ancient Treasure Boxes is missing.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_TREASUREBOX_DESPAWN_ONE, 0);
 			} else if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
 				if (startedEvent.compareAndSet(false, true)) {
@@ -108,7 +94,7 @@ public class Suspicious_BoxAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The treasure chest has disappeared because you failed to destroy the monsters within the time limit.
+				// 未在时限内消灭怪物，宝箱已消失。 / The treasure chest has disappeared because you failed to destroy the monsters within the time limit.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDABRECORE_OOPS_REWARD_IS_GONE);
 			}
 		});

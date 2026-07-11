@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import java.util.List;
@@ -26,6 +10,9 @@ import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 住房 Land 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -70,14 +57,17 @@ public class HousingLand {
 	@XmlAttribute(required = true)
 	protected int id;
 
+	/** 返回 addresses / Returns the addresses */
 	public List<HouseAddress> getAddresses() {
 		return addresses;
 	}
 
+	/** 返回 buildings / Returns the buildings */
 	public List<Building> getBuildings() {
 		return buildings;
 	}
 
+	/** 返回 default building / Returns the default building */
 	public Building getDefaultBuilding() {
 		for (Building building : buildings) {
 			if (building.isDefault()) {
@@ -87,50 +77,62 @@ public class HousingLand {
 		return buildings.get(0); // fail
 	}
 
+	/** 返回 sale options / Returns the sale options */
 	public Sale getSaleOptions() {
 		return sale;
 	}
 
+	/** 返回 maintenance fee / Returns the maintenance fee */
 	public long getMaintenanceFee() {
 		return fee;
 	}
 
+	/** 返回 capabilities / Returns the capabilities */
 	public BuildingCapabilities getCapabilities() {
 		return caps;
 	}
 
+	/** 返回 nosale sign npc id / Returns the nosale sign npc id */
 	public int getNosaleSignNpcId() {
 		return signNosale;
 	}
 
+	/** 返回 sale sign npc id / Returns the sale sign npc id */
 	public int getSaleSignNpcId() {
 		return signSale;
 	}
 
+	/** 设置 sign sale / Sets the sign sale */
 	public void setSignSale(int value) {
 		this.signSale = value;
 	}
 
+	/** 返回 waiting sign npc id / Returns the waiting sign npc id */
 	public int getWaitingSignNpcId() {
 		return signWaiting;
 	}
 
+	/** 返回 home sign npc id / Returns the home sign npc id */
 	public int getHomeSignNpcId() {
 		return signHome;
 	}
 
+	/** 返回 manager npc id / Returns the manager npc id */
 	public int getManagerNpcId() {
 		return managerNpc;
 	}
 
+	/** 返回传送 NPCID / Returns the teleport npc id */
 	public int getTeleportNpcId() {
 		return teleportNpc;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回哈希码。 / Returns hash code. */
 	@Override
 	public int hashCode() {
 		return id;

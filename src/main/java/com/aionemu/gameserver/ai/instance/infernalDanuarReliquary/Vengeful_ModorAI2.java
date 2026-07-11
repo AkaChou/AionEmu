@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.infernalDanuarReliquary;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -46,10 +30,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Infernal Danuar Reliquary 副本 NPC AI：Vengeful Modor（@AIName "vengeful_modor"），继承 AggressiveNpcAI2。
+ * Infernal Danuar Reliquary instance NPC AI: Vengeful Modor (@AIName "vengeful_modor"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("vengeful_modor")
 public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 {
@@ -71,12 +57,12 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 25) {
 				if (startedEvent.compareAndSet(false, true)) {
 					GameEngineServices.skillEngine().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
-					//It's been quite a while since someone tried to steal the fruits of my research...
-					//Could be interesting. I'll give you 15 minutes. Go!
+					// 很久没有人试图窃取我的研究成果了…… / It's been quite a while since someone tried to steal the fruits of my research...
+					// 或许有趣。我给你 15 分钟。去吧！ / Could be interesting. I'll give you 15 minutes. Go!
 					sendMsg(1500737, getObjectId(), false, 3000);
-					//My only son is safe at last.... My son? Where is he?
+					// 我唯一的儿子终于安全了……我的儿子？他在哪？ / My only son is safe at last.... My son? Where is he?
 					sendMsg(1500738, getObjectId(), false, 6000);
-					//You will not hinder my craft!
+					// 你别想妨碍我的制作！ / You will not hinder my craft!
 					sendMsg(1500740, getObjectId(), false, 9000);
 				}
 			}
@@ -88,7 +74,7 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 		if (isHome.compareAndSet(true, false)) {
-            //Be gone!
+            // 滚开！ / Be gone!
 			sendMsg(1500739, getObjectId(), false, 0);
             startSkillTask();
 		}
@@ -105,28 +91,28 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
                 switch (percent) {
                     case 75:
                         Teleport();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 70:
                         Teleport2();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 65:
 					    Teleport3();
 						startSkillTask();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 60:
                         Teleport4();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 50:
                         Teleport5();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                 }
@@ -170,7 +156,7 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 	
 	private void Teleport() {
 		if (!isAlreadyDead()) {
-			//Rise, my children, rise!
+			// 起来，我的孩子们，起来！ / Rise, my children, rise!
 			sendMsg(1500749, getObjectId(), false, 2000);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -248,9 +234,9 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 	
 	private void Teleport5() {
 		AI2Actions.targetSelf(Vengeful_ModorAI2.this);
-		//Which one, which one...
+		// 哪一个，哪一个…… / Which one, which one...
 		sendMsg(1500743, getObjectId(), false, 0);
-		//Let's see how you handle this!
+		// 看看你如何应对这个！ / Let's see how you handle this!
 		sendMsg(1500744, getObjectId(), false, 2000);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         EmoteManager.emoteStopAttacking(getOwner());
@@ -299,7 +285,7 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Modor has disappeared into another dimension.
+					//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_Rune_User_Kill);
 				}
 			}

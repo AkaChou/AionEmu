@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 物品 PurchableLimits 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Ranastic (Encom)
  */
 
@@ -31,10 +18,12 @@ public class ItemPurchableLimits {
 	@XmlAttribute(name = "rank_min")
 	private int minRank;
 
+	/** 返回最小军阶 / Returns the min rank*/
 	public int getMinRank() {
 		return minRank;
 	}
 
+	/** 校验军阶 / Verify Rank */
 	public boolean verifyRank(int rank) {
 		return minRank <= rank;
 	}

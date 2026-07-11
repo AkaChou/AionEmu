@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -33,6 +17,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 伊迪安 Stone，用于物品相关逻辑。
+ * Idian Stone for items logic.
+ *
  * @author Ranastic
  */
 public class IdianStone extends ItemStone {
@@ -59,15 +46,18 @@ public class IdianStone extends ItemStone {
 		rndBonusEffect = new RandomBonusEffect(StatBonusType.POLISH, polishSetId, polishNumber);
 	}
 
+	/** 装备时 / on Equip. */
 	public void onEquip(final Player player) {
 		if (item.getEquipmentSlot() == ItemSlot.MAIN_HAND.getSlotIdMask() || item.getItemTemplate().isTwoHandWeapon()) {
 			if (polishCharge > 0) {
 				actionListener = new ActionObserver(ObserverType.ALL) {
+					/** 受攻击 / attacked. */
 					@Override
 					public void attacked(Creature creature) {
 						decreasePolishCharge(player, true);
 					}
 
+					/** 攻击。 / Attack. */
 					@Override
 					public void attack(Creature creature) {
 						decreasePolishCharge(player, false);
@@ -83,6 +73,7 @@ public class IdianStone extends ItemStone {
 		decreasePolishCharge(player, isAttacked, 0);
 	}
 
+	/** 减少 polishcharge / Decrease polish charge */
 	public synchronized void decreasePolishCharge(Player player, int skillValue) {
 		decreasePolishCharge(player, false, skillValue);
 	}
@@ -111,18 +102,22 @@ public class IdianStone extends ItemStone {
 		}
 	}
 
+	/** 返回 polish number / Returns the polish number */
 	public int getPolishNumber() {
 		return polishNumber;
 	}
 
+	/** 返回 polish set id / Returns the polish set id */
 	public int getPolishSetId() {
 		return polishSetId;
 	}
 
+	/** 返回 polish charge / Returns the polish charge */
 	public int getPolishCharge() {
 		return polishCharge;
 	}
 
+	/** 卸下时 / on Un Equip. */
 	public void onUnEquip(Player player) {
 		if (actionListener != null) {
 			rndBonusEffect.endEffect(player);

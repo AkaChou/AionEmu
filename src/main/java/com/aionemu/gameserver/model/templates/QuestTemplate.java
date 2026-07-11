@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates;
 
 import java.util.ArrayList;
@@ -42,6 +26,11 @@ import com.aionemu.gameserver.model.templates.quest.QuestTargetType;
 import com.aionemu.gameserver.model.templates.quest.QuestWorkItems;
 import com.aionemu.gameserver.model.templates.quest.Rewards;
 import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
+
+/**
+ * 任务模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Quest")
@@ -141,34 +130,22 @@ public class QuestTemplate {
 	@XmlAttribute(name = "titleId")
 	protected int titleId;
 
-	/**
-	 * Gets the value of the collectItems property.
-	 * 
-	 * @return possible object is {@link CollectItems }
-	 */
+	 /**
+	  * 获取 collectItems 属性值。
+	  * Gets the value of the collectItems property
+	  * @return possible object is {@link CollectItems }
+	  */
 	public CollectItems getCollectItems() {
 		return collectItems;
 	}
 
+	/** 获取背包物品。 / Returns the inventory items. */
 	public InventoryItems getInventoryItems() {
 		return inventoryItems;
 	}
 
 	/**
-	 * Gets the value of the rewards property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the rewards property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getRewards().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link Rewards }
+	 * 获取 rewards 属性值。 / Gets the value of the rewards property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the rewards property. <p> For example, to add a new item, do as follows: <pre> getRewards().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Rewards }
 	 */
 	public List<Rewards> getRewards() {
 		if (rewards == null) {
@@ -177,6 +154,7 @@ public class QuestTemplate {
 		return this.rewards;
 	}
 
+	/** 返回 extended rewards / Returns the extended rewards */
 	public List<Rewards> getExtendedRewards() {
 		if (extendedRewards == null) {
 			extendedRewards = new ArrayList<Rewards>();
@@ -184,6 +162,7 @@ public class QuestTemplate {
 		return this.extendedRewards;
 	}
 
+	/** 获取加成。 / Returns the bonus. */
 	public List<QuestBonuses> getBonus() {
 		if (bonus == null) {
 			bonus = new ArrayList<QuestBonuses>();
@@ -192,20 +171,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the questDrop property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the questDrop property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getQuestDrop().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestDrop }
+	 * 获取 questDrop 属性值。 / Gets the value of the questDrop property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the questDrop property. <p> For example, to add a new item, do as follows: <pre> getQuestDrop().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestDrop }
 	 */
 	public List<QuestDrop> getQuestDrop() {
 		if (questDrop == null) {
@@ -214,6 +180,7 @@ public class QuestTemplate {
 		return this.questDrop;
 	}
 
+	/** 返回 quest kill / Returns the quest kill */
 	public List<QuestKill> getQuestKill() {
 		if (questKill == null) {
 			questKill = new ArrayList<QuestKill>();
@@ -221,6 +188,7 @@ public class QuestTemplate {
 		return this.questKill;
 	}
 
+	/** 返回 xml start conditions / Returns the xml start conditions */
 	public List<XMLStartCondition> getXMLStartConditions() {
 		if (startConds == null) {
 			startConds = new ArrayList<XMLStartCondition>();
@@ -229,20 +197,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the classPermitted property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the classPermitted property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getClassPermitted().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link PlayerClass }
+	 * 获取 classPermitted 属性值。 / Gets the value of the classPermitted property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the classPermitted property. <p> For example, to add a new item, do as follows: <pre> getClassPermitted().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link PlayerClass }
 	 */
 	public List<PlayerClass> getClassPermitted() {
 		if (classPermitted == null) {
@@ -251,39 +206,26 @@ public class QuestTemplate {
 		return this.classPermitted;
 	}
 
-	/**
-	 * Gets the value of the genderPermitted property.
-	 * 
-	 * @return possible object is {@link Gender }
-	 */
+	 /**
+	  * 获取 genderPermitted 属性值。
+	  * Gets the value of the genderPermitted property
+	  * @return possible object is {@link Gender }
+	  */
 	public Gender getGenderPermitted() {
 		return genderPermitted;
 	}
 
-	/**
-	 * Gets the value of the questWorkItems property.
-	 * 
-	 * @return possible object is {@link QuestWorkItems }
-	 */
+	 /**
+	  * 获取 questWorkItems 属性值。
+	  * Gets the value of the questWorkItems property
+	  * @return possible object is {@link QuestWorkItems }
+	  */
 	public QuestWorkItems getQuestWorkItems() {
 		return questWorkItems;
 	}
 
 	/**
-	 * Gets the value of the fighterSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the fighterSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getFighterSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 fighterSelectableReward 属性值。 / Gets the value of the fighterSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the fighterSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getFighterSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getFighterSelectableReward() {
 		if (fighterSelectableReward == null) {
@@ -293,20 +235,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the knightSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the knightSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getKnightSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 knightSelectableReward 属性值。 / Gets the value of the knightSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the knightSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getKnightSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getKnightSelectableReward() {
 		if (knightSelectableReward == null) {
@@ -316,20 +245,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the rangerSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the rangerSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getRangerSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 rangerSelectableReward 属性值。 / Gets the value of the rangerSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the rangerSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getRangerSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getRangerSelectableReward() {
 		if (rangerSelectableReward == null) {
@@ -339,20 +255,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the assassinSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the assassinSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getAssassinSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 assassinSelectableReward 属性值。 / Gets the value of the assassinSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the assassinSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getAssassinSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getAssassinSelectableReward() {
 		if (assassinSelectableReward == null) {
@@ -362,20 +265,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the wizardSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the wizardSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getWizardSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 wizardSelectableReward 属性值。 / Gets the value of the wizardSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the wizardSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getWizardSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getWizardSelectableReward() {
 		if (wizardSelectableReward == null) {
@@ -385,20 +275,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the elementalistSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the elementalistSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getElementalistSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 elementalistSelectableReward 属性值。 / Gets the value of the elementalistSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the elementalistSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getElementalistSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getElementalistSelectableReward() {
 		if (elementalistSelectableReward == null) {
@@ -408,20 +285,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the priestSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the priestSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getPriestSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 priestSelectableReward 属性值。 / Gets the value of the priestSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the priestSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getPriestSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getPriestSelectableReward() {
 		if (priestSelectableReward == null) {
@@ -431,20 +295,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the chanterSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the chanterSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getChanterSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 chanterSelectableReward 属性值。 / Gets the value of the chanterSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the chanterSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getChanterSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getChanterSelectableReward() {
 		if (chanterSelectableReward == null) {
@@ -454,20 +305,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the gunslingerSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the GunslingerSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getGunslingerSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 gunslingerSelectableReward 属性值。 / Gets the value of the gunslingerSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the GunslingerSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getGunslingerSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getGunslingerSelectableReward() {
 		if (gunslingerSelectableReward == null) {
@@ -477,20 +315,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the songweaverSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the songweaverSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getSongweaverSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 songweaverSelectableReward 属性值。 / Gets the value of the songweaverSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the songweaverSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getSongweaverSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getSongweaverSelectableReward() {
 		if (songweaverSelectableReward == null) {
@@ -500,20 +325,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * Gets the value of the aethertechSelectableReward property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the aethertechSelectableReward property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getAethertechSelectableReward().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link QuestItems }
+	 * 获取 aethertechSelectableReward 属性值。 / Gets the value of the aethertechSelectableReward property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the aethertechSelectableReward property. <p> For example, to add a new item, do as follows: <pre> getAethertechSelectableReward().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link QuestItems }
 	 */
 	public List<QuestItems> getAethertechSelectableReward() {
 		if (aethertechSelectableReward == null) {
@@ -522,53 +334,56 @@ public class QuestTemplate {
 		return this.aethertechSelectableReward;
 	}
 
-	/**
-	 * Gets the value of the id property.
-	 */
+	 /**
+	  * 获取 id 属性值。
+	  * Gets the value of the id property
+	  */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * Gets the value of the name property.
-	 * 
+	 * 获取 value 的名称 property。 / Gets the value of the name property
+	 *
 	 * @return possible object is {@link String }
 	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Gets the value of the nameId property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 nameId 属性值。
+	  * Gets the value of the nameId property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getNameId() {
 		return nameId;
 	}
 
-	/**
-	 * Gets the value of the minlevelPermitted property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 minlevelPermitted 属性值。
+	  * Gets the value of the minlevelPermitted property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getMinlevelPermitted() {
 		return minlevelPermitted;
 	}
 
+	/** 返回 maxlevel permitted / Returns the maxlevel permitted */
 	public int getMaxlevelPermitted() {
 		return maxlevelPermitted;
 	}
 
+	/** 返回 required rank / Returns the required rank */
 	public int getRequiredRank() {
 		return rank;
 	}
 
-	/**
-	 * Gets the value of the maxRepeatCount property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 maxRepeatCount 属性值。
+	  * Gets the value of the maxRepeatCount property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getMaxRepeatCount() {
 		if (maxRepeatCount == null || !(maxRepeatCount > 1)) {
 			return 1;
@@ -576,11 +391,11 @@ public class QuestTemplate {
 		return maxRepeatCount;
 	}
 
-	/**
-	 * Gets the value of the maxCountLimitedQuest property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 maxCountLimitedQuest 属性值。
+	  * Gets the value of the maxCountLimitedQuest property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getMaxCountLimitedQuest() {
 		if (maxCountLimitedQuest == null || !(maxCountLimitedQuest > 1)) {
 			return 1;
@@ -588,11 +403,11 @@ public class QuestTemplate {
 		return maxCountLimitedQuest;
 	}
 
-	/**
-	 * Gets the value of the countRecoverLimitedQuest property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 countRecoverLimitedQuest 属性值。
+	  * Gets the value of the countRecoverLimitedQuest property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getCountRecoverLimitedQuest() {
 		if (countRecoverLimitedQuest == null || !(countRecoverLimitedQuest > 1)) {
 			return 1;
@@ -600,11 +415,11 @@ public class QuestTemplate {
 		return countRecoverLimitedQuest;
 	}
 
-	/**
-	 * Gets the value of the cannotShare property.
-	 * 
-	 * @return possible object is {@link Boolean }
-	 */
+	 /**
+	  * 获取 cannotShare 属性值。
+	  * Gets the value of the cannotShare property
+	  * @return possible object is {@link Boolean }
+	  */
 	public boolean isCannotShare() {
 		if (cannotShare == null) {
 			return false;
@@ -613,11 +428,11 @@ public class QuestTemplate {
 		}
 	}
 
-	/**
-	 * Gets the value of the cannotGiveup property.
-	 * 
-	 * @return possible object is {@link Boolean }
-	 */
+	 /**
+	  * 获取 cannotGiveup 属性值。
+	  * Gets the value of the cannotGiveup property
+	  * @return possible object is {@link Boolean }
+	  */
 	public boolean isCannotGiveup() {
 		if (cannotGiveup == null) {
 			return false;
@@ -626,6 +441,9 @@ public class QuestTemplate {
 		}
 	}
 
+	/**
+	 * @return Whether bounty reward / Whether bounty reward
+	 */
 	public boolean isBountyReward() {
 		if (bountyReward == null) {
 			return false;
@@ -634,6 +452,7 @@ public class QuestTemplate {
 		}
 	}
 
+	/** 是否使用单条职业奖励 / Whether use single class reward */
 	public boolean isUseSingleClassReward() {
 		if (useClassReward == null) {
 			return false;
@@ -642,6 +461,7 @@ public class QuestTemplate {
 		}
 	}
 
+	/** 是否 use repeated class reward / Whether use repeated class reward */
 	public boolean isUseRepeatedClassReward() {
 		if (useClassReward == null) {
 			return false;
@@ -650,42 +470,45 @@ public class QuestTemplate {
 		}
 	}
 
+	/**
+	 * @return Whether repeatable / Whether repeatable
+	 */
 	public boolean isRepeatable() {
 		return getMaxRepeatCount() > 1;
 	}
 
-	/**
-	 * Gets the value of the racePermitted property.
-	 * 
-	 * @return possible object is {@link Race }
-	 */
+	 /**
+	  * 获取 racePermitted 属性值。
+	  * Gets the value of the racePermitted property
+	  * @return possible object is {@link Race }
+	  */
 	public Race getRacePermitted() {
 		return racePermitted;
 	}
 
-	/**
-	 * Gets the value of the combineskill property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 combineskill 属性值。
+	  * Gets the value of the combineskill property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getCombineSkill() {
 		return combineskill;
 	}
 
-	/**
-	 * Gets the value of the combineSkillpoint property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 combineSkillpoint 属性值。
+	  * Gets the value of the combineSkillpoint property
+	  * @return possible object is {@link Integer }
+	  */
 	public Integer getCombineSkillPoint() {
 		return combineSkillpoint;
 	}
 
-	/**
-	 * Gets the value of the timer property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 timer 属性值。
+	  * Gets the value of the timer property
+	  * @return possible object is {@link Integer }
+	  */
 
 	public boolean isTimer() {
 		if (timer == null) {
@@ -695,6 +518,7 @@ public class QuestTemplate {
 		}
 	}
 
+	/** 获取分类。 / Returns the category. */
 	public QuestCategory getCategory() {
 		if (category == null) {
 			category = QuestCategory.QUEST;
@@ -716,46 +540,63 @@ public class QuestTemplate {
 		return mentorType;
 	}
 
+	/** 返回目标类型 / Returns the target type*/
 	public QuestTargetType getTargetType() {
 		return targetType;
 	}
 
+	/** 返回 repeat cycle / Returns the repeat cycle */
 	public List<QuestRepeatCycle> getRepeatCycle() {
 		return repeatCycle;
 	}
 
+	/** 返回标题 ID / Returns the title id */
 	public int getTitleId() {
 		return titleId;
 	}
 
+	/** 返回 npc faction id / Returns the npc faction id */
 	public int getNpcFactionId() {
 		return npcFactionId;
 	}
 
+	/**
+	 * @return Whether time based / Whether time based
+	 */
 	public boolean isTimeBased() {
 		return repeatCycle != null;
 	}
 
+	/** 返回 quest cool time / Returns the quest cool time */
 	public int getQuestCoolTime() {
 		return questCooltime;
 	}
 
+	/**
+	 * @return 是否 daily / 是否 daily。 / Whether daily / Whether daily
+	 */
 	public boolean isDaily() {
 		return isTimeBased() && repeatCycle.size() == 1 && repeatCycle.get(0) == QuestRepeatCycle.ALL;
 	}
 
+	/**
+	 * @return Whether weekly / Whether weekly
+	 */
 	public boolean isWeekly() {
 		return isTimeBased() && !isDaily();
 	}
 
+	/** 是否大师 / Whether master */
 	public boolean isMaster() {
 		return getCombineSkillPoint() != null && getCombineSkillPoint() == 499;
 	}
 
+	/** 是否专家 / Whether expert */
 	public boolean isExpert() {
 		return getCombineSkillPoint() != null && getCombineSkillPoint() == 399;
 	}
 
+	/** 是否无数量 / Whether no count*/
 	public boolean isNoCount() {
 		return category.equals(QuestCategory.NON_COUNT) || category.equals(QuestCategory.EVENT);
 	}

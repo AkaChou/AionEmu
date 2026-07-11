@@ -1,39 +1,52 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.model;
 
 /**
+ * 服务器重启频率枚举。
+ * Server restart frequency enumeration.
  *
  * @author nrg
  */
 public enum RestartFrequency {
 
+    /**
+     * 从不自动重启 / Never restart automatically
+     */
     NEVER(0),
+    /**
+     * 每日重启 / Daily restart
+     */
     DAILY(1),
+    /**
+     * 每周重启 / Weekly restart
+     */
     WEEKLY(2),
+    /**
+     * 每月重启 / Monthly restart
+     */
     MONTHLY(3);
+
+    /**
+     * 频率 ID。
+     * Frequency identifier.
+     */
     private int id;
 
+    /**
+     * 构造重启频率枚举。
+     * Constructs a restart frequency enum value.
+     *
+     * @param id 频率 ID / frequency id
+     */
     private RestartFrequency(int id) {
         this.id = id;
     }
 
+    /**
+     * 获取频率 ID。
+     * Returns the frequency id.
+     *
+     * frequency id
+     */
     public int getID() {
         return id;
     }

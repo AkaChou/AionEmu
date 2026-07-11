@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.restrictions;
 
 import java.lang.reflect.Method;
@@ -27,12 +11,30 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
+/**
+ * 限制管理器：按方法维度注册/注销限制实现，并对外提供统一校验入口。
+ * Restriction manager that registers/unregisters implementations per method and exposes unified checks.
+ */
 public final class RestrictionsManager {
+	/**
+	 * 工具类，禁止实例化。
+	 * Utility class; not instantiable.
+	 */
 	private RestrictionsManager() {
 	}
 
+	/**
+	 * 按 {@link RestrictionMode} 分桶的限制实现数组。
+	 * Restriction implementations bucketed by {@link RestrictionMode}.
+	 */
 	private static final Restrictions[][] RESTRICTIONS = new Restrictions[RestrictionMode.VALUES.length][0];
 
+	/**
+	 * 激活限制：扫描未禁用方法并按优先级插入对应桶。
+	 * Activates a restriction by scanning non-disabled methods and inserting into priority-ordered buckets.
+	 *
+	 * restriction implementation
+	 */
 	public synchronized static void activate(Restrictions restriction) {
 		for (Method method : restriction.getClass().getMethods()) {
 			RestrictionMode mode = RestrictionMode.parse(method);
@@ -52,6 +54,12 @@ public final class RestrictionsManager {
 		}
 	}
 
+	/**
+	 * 从所有模式桶中移除限制实现。
+	 * Removes the restriction from all mode buckets.
+	 *
+	 * restriction implementation
+	 */
 	public synchronized static void deactivate(Restrictions restriction) {
 		for (RestrictionMode mode : RestrictionMode.VALUES) {
 			Restrictions[] restrictions = RESTRICTIONS[mode.ordinal()];
@@ -63,19 +71,21 @@ public final class RestrictionsManager {
 	}
 
 	static {
-		// This is the Restrictions when player is in normal game.
+		// 常规玩法限制 / normal-play restrictions
 		activate(new PlayerRestrictions());
-		// This is the Restrictions when player is in shutdown.
+		// 关机倒计时限制 / shutdown restrictions
 		activate(new ShutdownRestrictions());
-		// This is the Restrictions when player is in prison.
+		// 监狱限制 / prison restrictions
 		activate(new PrisonRestrictions());
 	}
 
 	/**
-	 * This function can be used for activate one restriction. Example: public
-	 * static boolean startAppleEatingEvent(Player player) {
-	 * if(RestrictionsManager.isRestricted(player,
-	 * AppleEatingEventRestriction.class)) return false; return true; }
+	 * 判断玩家是否处于指定限制状态。
+	 * Checks whether the player is under the given restriction kind.
+	 *
+	 * @param player 玩家 / player
+	 * @param callingRestriction 调用限制类型 / calling restriction type
+	 * @return true 表示被限制 / true when restricted
 	 */
 	public static boolean isRestricted(Player player, Class<? extends Restrictions> callingRestriction) {
 		if (player == null) {
@@ -90,10 +100,12 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * This function created for enable/disable attack.
-	 * 
-	 * @param player
-	 * @param target
+	 * 是否允许攻击目标。
+	 * Whether the player may attack the target.
+	 *
+	 * 玩家 / player
+	 * target
+	 * true when allowed
 	 */
 	public static boolean canAttack(Player player, VisibleObject target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canAttack.ordinal()]) {
@@ -105,10 +117,13 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * This function is created for enable/disable on specific target.
-	 * 
-	 * @param player
-	 * @param target
+	 * 是否允许技能影响目标。
+	 * Whether a skill may affect the target.
+	 *
+	 * 玩家 / player
+	 * target
+	 * skill
+	 * true when allowed
 	 */
 	public static boolean canAffectBySkill(Player player, VisibleObject target, Skill skill) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canAffectBySkill.ordinal()]) {
@@ -120,11 +135,12 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * Check whether player can use such skill
-	 * 
-	 * @param player
-	 * @param skill
-	 * @return
+	 * 是否允许使用技能。
+	 * Whether the player may use the skill.
+	 *
+	 * 玩家 / player
+	 * skill
+	 * true when allowed
 	 */
 	public static boolean canUseSkill(Player player, Skill skill) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canUseSkill.ordinal()]) {
@@ -136,9 +152,11 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * This function is created for enable/disable chat.
-	 * 
-	 * @param player
+	 * 是否允许聊天。
+	 * Whether the player may chat.
+	 *
+	 * 玩家 / player
+	 * true when allowed
 	 */
 	public static boolean canChat(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canChat.ordinal()]) {
@@ -150,10 +168,12 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * This function is created for enable/disable invite to group.
-	 * 
-	 * @param player
-	 * @param target
+	 * 是否允许邀请进组。
+	 * Whether the player may invite to a group.
+	 *
+	 * 玩家 / player
+	 * target player
+	 * true when allowed
 	 */
 	public static boolean canInviteToGroup(Player player, Player target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canInviteToGroup.ordinal()]) {
@@ -165,10 +185,12 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * This function is created for enable/disable invite to alliance.
-	 * 
-	 * @param player
-	 * @param target
+	 * 是否允许邀请进联盟。
+	 * Whether the player may invite to an alliance.
+	 *
+	 * 玩家 / player
+	 * target player
+	 * true when allowed
 	 */
 	public static boolean canInviteToAlliance(Player player, Player target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canInviteToAlliance.ordinal()]) {
@@ -180,10 +202,12 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * This function is created for enable/disable invite to league.
-	 * 
-	 * @param player
-	 * @param target
+	 * 是否允许邀请进军团联盟。
+	 * Whether the player may invite to a league.
+	 *
+	 * 玩家 / player
+	 * target player
+	 * true when allowed
 	 */
 	public static boolean canInviteToLeague(Player player, Player target) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canInviteToLeague.ordinal()]) {
@@ -195,9 +219,11 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * This function is created for enable/disable equip change.
-	 * 
-	 * @param player
+	 * 是否允许更换装备。
+	 * Whether the player may change equipment.
+	 *
+	 * 玩家 / player
+	 * true when allowed
 	 */
 	public static boolean canChangeEquip(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canChangeEquip.ordinal()]) {
@@ -209,10 +235,11 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * Check whether player can perform trade
-	 * 
-	 * @param player
-	 * @return true or false
+	 * 是否允许交易；已死亡时额外禁止。
+	 * Whether the player may trade; also forbids when already dead.
+	 *
+	 * 玩家 / player
+	 * true when allowed
 	 */
 	public static boolean canTrade(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canTrade.ordinal()]) {
@@ -227,10 +254,11 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * Check whether player can use warehouse
-	 * 
-	 * @param player
-	 * @return true or false
+	 * 是否允许使用仓库。
+	 * Whether the player may use warehouse.
+	 *
+	 * 玩家 / player
+	 * true when allowed
 	 */
 	public static boolean canUseWarehouse(Player player) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canUseWarehouse.ordinal()]) {
@@ -242,10 +270,12 @@ public final class RestrictionsManager {
 	}
 
 	/**
-	 * Check whether player can use an item
-	 * 
-	 * @param player
-	 * @return
+	 * 是否允许使用物品。
+	 * Whether the player may use the item.
+	 *
+	 * 玩家 / player
+	 * item
+	 * true when allowed
 	 */
 	public static boolean canUseItem(Player player, Item item) {
 		for (Restrictions restrictions : RESTRICTIONS[RestrictionMode.canUseItem.ordinal()]) {
@@ -256,6 +286,10 @@ public final class RestrictionsManager {
 		return true;
 	}
 
+	/**
+	 * 限制方法模式：与 {@link Restrictions} 方法一一对应，并按优先级比较实现。
+	 * Restriction method mode: one-to-one with {@link Restrictions} methods; compares implementations by priority.
+	 */
 	private static enum RestrictionMode implements Comparator<Restrictions> {
 		isRestricted, canAttack, canAffectBySkill, canUseSkill, canChat, canInviteToGroup, canInviteToAlliance,
 		canInviteToLeague, canChangeEquip, canTrade, canUseWarehouse, canUseItem;

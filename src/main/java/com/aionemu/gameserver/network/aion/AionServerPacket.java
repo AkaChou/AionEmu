@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +9,9 @@ import com.aionemu.gameserver.network.Crypt;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * Base class for every GS -> Aion Server Packet.
- * 
+ * 游戏服 → Aion 客户端服务端包基类：写操作码、载荷并加密。
+ * Base class for GS → Aion server packets: writes opcode, payload and encrypts.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -34,7 +19,8 @@ public abstract class AionServerPacket extends BaseServerPacket {
 
 
 	/**
-	 * Constructs new server packet
+	 * 构造服务端包，并从 opcode 表解析操作码。
+	 * Constructs a server packet and resolves opcode from the opcode table.
 	 */
 	protected AionServerPacket() {
 		super();
@@ -42,29 +28,37 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	}
 
 	/**
-	 * Write packet opcodec and two additional bytes
-	 * 
-	 * @param value
+	 * 写入混淆后的操作码及两个附加字节。
+	 * Writes obfuscated opcode and two additional bytes.
+	 *
+	 * @param value 原始操作码 / raw opcode
 	 */
 	private final void writeOP(int value) {
-		/** obfuscate packet id */
+		/** 混淆包 ID / obfuscate packet id */
 		int op = Crypt.encodeOpcodec(value);
 		buf.putShort((short) (op));
-		/** put static server packet code */
+		/** 写入服务端静态码 / put static server packet code */
 		buf.put(Crypt.staticServerPacketCode);
-		/** for checksum? */
+		/** 校验用反码 / for checksum? */
 		buf.putShort((short) (~op));
 	}
 
+	/**
+	 * 使用内部缓冲区向连接写入本包。
+	 * Writes this packet to the connection using the internal buffer.
+	 *
+	 * @param con 目标连接 / target connection
+	 */
 	public final void write(AionConnection con) {
 		write(con, buf);
 	}
 
 	/**
-	 * Write and encrypt this packet data for given connection, to given buffer.
-	 * 
-	 * @param con
-	 * @param buffer
+	 * 向给定缓冲区写入并加密本包数据。
+	 * Writes and encrypts this packet data for the given connection into the buffer.
+	 *
+	 * @param con 目标连接 / target connection
+	 * @param buffer 写出缓冲区 / write buffer
 	 */
 	public final synchronized void write(AionConnection con, ByteBuffer buffer) {
 		if (con.getState().equals(AionConnection.State.IN_GAME)
@@ -86,23 +80,31 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	}
 
 	/**
-	 * Write data that this packet represents to given byte buffer.
-	 * 
-	 * @param con
+	 * 将本包载荷写入内部缓冲区；子类覆盖实现。
+	 * Writes this packet's payload into the internal buffer; subclasses override.
+	 *
+	 * @param con 目标连接 / target connection
 	 */
 	protected void writeImpl(AionConnection con) {
 
 	}
 
+	/**
+	 * 获取内部写缓冲区。
+	 * Returns the internal write buffer.
+	 *
+	 * buffer
+	 */
 	public final ByteBuffer getBuf() {
 		return this.buf;
 	}
 
 	/**
-	 * Write String to buffer
-	 * 
-	 * @param text
-	 * @param size
+	 * 写入定长字符串（不足部分补 0）。
+	 * Writes a fixed-size string (zero-padded).
+	 *
+	 * text
+	 * @param size 字段字节数 / field size in bytes
 	 */
 	protected final void writeS(String text, int size) {
 		if (text == null) {
@@ -116,6 +118,12 @@ public abstract class AionServerPacket extends BaseServerPacket {
 		}
 	}
 
+	/**
+	 * 写入名称 ID 块（固定头 + nameId + 尾）。
+	 * Writes a name-id block (fixed header + nameId + trailer).
+	 *
+	 * name id
+	 */
 	protected void writeNameId(int nameId) {
 		writeH(0x24);
 		writeD(nameId);

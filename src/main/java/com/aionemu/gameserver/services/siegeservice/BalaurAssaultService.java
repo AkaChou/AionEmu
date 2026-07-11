@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -52,13 +38,27 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 龙族自动突击服务：按影响力概率对要塞/神器发起突击。
+ * Balaur auto-assault service that starts fortress/artifact assaults by influence chance.
+ */
 @Slf4j(topic = "SIEGE_LOG")
-
 public class BalaurAssaultService {
-	private static final BalaurAssaultService instance = new BalaurAssaultService();
-	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
-	private final ConcurrentMap<Integer, FortressAssault> fortressAssaults = new ConcurrentHashMap<Integer, FortressAssault>();
 
+	/** 默认单例。 / Default singleton instance. */
+	private static final BalaurAssaultService instance = new BalaurAssaultService();
+
+	/** Spring ObjectProvider override / Spring ObjectProvider override */
+	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
+
+	/** 据点 ID → 进行中的要塞突击。 / Location id → active fortress assault. */
+	private final ConcurrentMap<Integer, FortressAssault> fortressAssaults = new ConcurrentHashMap<Integer, FortressAssault>();
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static BalaurAssaultService getInstance() {
 		ObjectProvider<BalaurAssaultService> provider = instanceProvider;
 		if (provider != null) {
@@ -66,11 +66,22 @@ public class BalaurAssaultService {
 		}
 		return instance;
 	}
-
+	/**
+	 * 注入 Spring {@link ObjectProvider} 以覆盖默认单例。
+	 * Injects a Spring {@link ObjectProvider} to override the default singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BalaurAssaultService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 攻城开始时评估并可能启动龙族突击。
+	 * Evaluates and may start a Balaur assault when a siege begins.
+	 *
+	 * @param siege 关联攻城 / related siege
+	 */
 	public void onSiegeStart(final Siege<?> siege) {
 		int rvrId = siege.getSiegeLocationId();
 		if (siege instanceof FortressSiege) {
@@ -190,13 +201,13 @@ public class BalaurAssaultService {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
-					// The Balaur have destroyed the Castle Gate.
+					// 龙族摧毁了城门。 / The Balaur have destroyed the Castle Gate.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_DOOR_BROKEN,
 							600000);
-					// The Balaur have destroyed the Gate Guardian Stone.
+					// 龙族摧毁了大门守护石。 / The Balaur have destroyed the Gate Guardian Stone.
 					PacketSendUtility.playerSendPacketTime(player,
 							SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_REPAIR_BROKEN, 1500000);
-					// The Balaur have destroyed the Aetheric Field Activation Stone.
+					// 龙族摧毁了以太力场激活石。 / The Balaur have destroyed the Aetheric Field Activation Stone.
 					PacketSendUtility.playerSendPacketTime(player,
 							SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_SHIELD_BROKEN, 2100000);
 				}
@@ -210,7 +221,7 @@ public class BalaurAssaultService {
 		}
 		newAssault(siege, Rnd.get(1, 600));
 		if (LoggingConfig.LOG_SIEGE) {
-			log.info("[RVR/SIEGE] Balaur Assault scheduled on Siege ID: " + siege.getSiegeLocationId() + "!");
+			log.info(I18n.get("log.3d108b62621f", siege.getSiegeLocationId()));
 		}
 	}
 
@@ -221,8 +232,7 @@ public class BalaurAssaultService {
 			Boolean bossIsKilled = siege.isBossKilled();
 			assault.finishAssault(bossIsKilled);
 			if (bossIsKilled && siege.getSiegeLocation().getRace().equals(SiegeRace.BALAUR)) {
-				log.info("[RVR/SIEGE] > [FORTRESS:" + siege.getSiegeLocationId()
-						+ "] has been captured by Balaur Assault!");
+				log.info(I18n.get("log.9641cecdac43", siege.getSiegeLocationId()));
 				switch (locId) {
 				case 1011:
 					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
@@ -334,8 +344,7 @@ public class BalaurAssaultService {
 					break;
 				}
 			} else {
-				log.info("[RVR/SIEGE] > [FORTRESS:" + siege.getSiegeLocationId()
-						+ "] Balaur Assault finished without capture!");
+				log.info(I18n.get("log.b8e0e2aae381", siege.getSiegeLocationId()));
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
@@ -346,7 +355,14 @@ public class BalaurAssaultService {
 			}
 		}
 	}
-
+	/**
+	 * 判断要塞是否可发起龙族突击（去重、影响力、同图并发上限）。
+	 * Decides whether a fortress can start a Balaur assault (dedupe, influence, per-world limit).
+	 *
+	 * fortress location
+	 *
+	 * @param fortress @return 是否可突击 / whether assault may start
+	 */
 	private boolean calculateFortressAssault(FortressLocation fortress) {
 		boolean isBalaurea = fortress.getWorldId() != 400010000;
 		int locationId = fortress.getLocationId();
@@ -367,11 +383,25 @@ public class BalaurAssaultService {
 		}
 		return true;
 	}
-
+	/**
+	 * 判断神器是否可发起龙族突击（当前始终 false）。
+	 * Decides whether an artifact can start a Balaur assault (currently always false).
+	 *
+	 * artifact location
+	 *
+	 * @param artifact @return 是否可突击 / whether assault may start
+	 */
 	private boolean calculateArtifactAssault(ArtifactLocation artifact) {
 		return false;
 	}
-
+	/**
+	 * GM/指令手动对指定据点发起突击。
+	 * Manually starts an assault on a location (GM/command).
+	 *
+	 * initiator
+	 * location id
+	 * delay in seconds
+	 */
 	public void startAssault(Player player, int location, int delay) {
 		if (fortressAssaults.containsKey(location)) {
 			PacketSendUtility.sendMessage(player, "Assault on " + location + " was already started");
@@ -398,7 +428,14 @@ public class BalaurAssaultService {
 			assault.startAssault(delay);
 		}
 	}
-
+	/**
+	 * 按影响力/占有要塞数与配置概率判定是否触发突击。
+	 * Rolls assault chance from influence/owned forts and config rate.
+	 *
+	 * @param isBalaurea 是否巴劳雷亚 / whether on Balaurea
+	 * fortress location
+	 * whether assault triggers
+	 */
 	private boolean calcFortressInfluence(boolean isBalaurea, FortressLocation fortress) {
 		SiegeRace locationRace = fortress.getRace();
 		if (locationRace.equals(SiegeRace.BALAUR) || !fortress.isVulnerable()) {
@@ -420,7 +457,12 @@ public class BalaurAssaultService {
 		}
 		return Rnd.get() < influence * SiegeConfig.BALAUR_ASSAULT_RATE;
 	}
-
+	/**
+	 * 向在线玩家刷出组装型德雷吉恩 NPC。
+	 * Spawns an assembled dredgion NPC for all online players.
+	 *
+	 * assembled NPC template id
+	 */
 	public void spawnDredgion(int spawnId) {
 		AssembledNpcTemplate template = DataManager.ASSEMBLED_NPC_DATA.getAssembledNpcTemplate(spawnId);
 		List<AssembledNpcPart> assembledParts = new ArrayList<AssembledNpcPart>();
@@ -434,7 +476,7 @@ public class BalaurAssaultService {
 		while (iter.hasNext()) {
 			findedPlayer = iter.next();
 			PacketSendUtility.sendPacket(findedPlayer, new SM_NPC_ASSEMBLER(npc));
-			// A dredgion has appeared.
+			// 一艘战舰已出现。 / A dredgion has appeared.
 			PacketSendUtility.sendPacket(findedPlayer, SM_SYSTEM_MESSAGE.STR_ABYSS_CARRIER_SPAWN);
 		}
 	}

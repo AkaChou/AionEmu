@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +6,11 @@ import com.aionemu.gameserver.model.autogroup.AutoGroupType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 自动组队/副本匹配与战场匹配 UI 状态的服务端包（窗口、等待、入场、失败等）。
+ * instance-match and battleground-match UI state
+ * (entry, waiting, enter, fail windows, etc.).
+ */
 public class SM_AUTO_GROUP extends AionServerPacket {
 	private byte windowId;
 	private int instanceMaskId;
@@ -33,6 +22,12 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	String name = StringUtils.EMPTY;
 	public static final byte wnd_EntryIcon = 6;
 
+	/**
+	 * 按实例 mask 初始化副本匹配基础字段。
+	 * Initializes instance-match base fields from the instance mask id.
+	 *
+	 * instance mask id
+	 */
 	public SM_AUTO_GROUP(int instanceMaskId) {
 		this.isBG = false;
 		AutoGroupType agt = AutoGroupType.getAGTByMaskId(instanceMaskId);
@@ -42,12 +37,21 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 		this.mapId = agt.getInstanceMapId();
 	}
 
+	/**
+	 * instance mask id
+	 * @param windowId 客户端窗口 ID / client window id
+	 */
 	public SM_AUTO_GROUP(int instanceMaskId, Number windowId) {
 		this(instanceMaskId);
 		this.windowId = windowId.byteValue();
 		this.isBG = false;
 	}
 
+	/**
+	 * instance mask id
+	 * @param windowId 客户端窗口 ID / client window id
+	 * @param close 是否关闭入口图标 / whether to close the entry icon
+	 */
 	public SM_AUTO_GROUP(int instanceMaskId, Number windowId, boolean close) {
 		this(instanceMaskId);
 		this.windowId = windowId.byteValue();
@@ -55,6 +59,12 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 		this.isBG = false;
 	}
 
+	/**
+	 * instance mask id
+	 * @param windowId 客户端窗口 ID / client window id
+	 * @param waitTime 等待时间（秒） / wait time in seconds
+	 * @param name 显示名称 / display name
+	 */
 	public SM_AUTO_GROUP(int instanceMaskId, Number windowId, int waitTime, String name) {
 		this(instanceMaskId);
 		this.windowId = windowId.byteValue();
@@ -63,13 +73,20 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 		this.isBG = false;
 	}
 
-	// For BG System
+	// 用于战场系统 / For BG System
 	private boolean isBG;
 	private int option = 0;
 	private int extraOption = 0;
 	private int worldId = 0;
 	private int specialOption = 0;
 
+	/**
+	 * 战场入口显示/隐藏。
+	 * Battleground entry show/hide.
+	 *
+	 * world map id
+	 * @param show 是否显示入口 / whether to show the entry
+	 */
 	public SM_AUTO_GROUP(int worldId, boolean show) {
 		this.isBG = true;
 		this.option = 6;
@@ -78,6 +95,14 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 		this.specialOption = show ? 1 : 0;
 	}
 
+	/**
+	 * 战场组队选择/提示消息。
+	 * prompt message. / prompt message.
+	 *
+	 * world map id
+	 * @param teamChoice 是否为队伍选择模式 / whether team-choice mode
+	 * message id
+	 */
 	public SM_AUTO_GROUP(int worldId, boolean teamChoice, int messageId) {
 		this.isBG = true;
 		this.option = 0;
@@ -86,6 +111,14 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 		this.messageId = messageId;
 	}
 
+	/**
+	 * 战场通用选项包。
+	 * Generic battleground option packet.
+	 *
+	 * main option
+	 * world map id
+	 * special option
+	 */
 	public SM_AUTO_GROUP(int option, int worldId, int specialOption) {
 		this.isBG = true;
 		this.option = option;

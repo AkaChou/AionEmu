@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.listeners;
 
 import java.util.ArrayList;
@@ -43,6 +27,9 @@ import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.SkillLearnService;
 
 /**
+ * 物品装备监听器，用于属性相关逻辑。
+ * Item Equipment Listener for stats logic.
+ *
  * @author xavier modified by Wakizashi
  */
 @Slf4j
@@ -58,7 +45,7 @@ public class ItemEquipmentListener {
 
 		onItemEquipment(item, owner.getGameStats(), owner);
 
-		// Check if belongs to ItemSet
+		// 检查是否属于物品套装 / Check if belongs to ItemSet
 		if (itemTemplate.isItemSet()) {
 			recalculateItemSet(itemTemplate.getItemSet(), owner, item.getItemTemplate().isWeapon());
 		}
@@ -100,7 +87,7 @@ public class ItemEquipmentListener {
 		owner.getController().cancelUseItem();
 
 		ItemTemplate itemTemplate = item.getItemTemplate();
-		// Check if belongs to ItemSet
+		// 检查是否属于物品套装 / Check if belongs to ItemSet
 		if (itemTemplate.isItemSet()) {
 			recalculateItemSet(itemTemplate.getItemSet(), owner, item.getItemTemplate().isWeapon());
 		}
@@ -128,13 +115,12 @@ public class ItemEquipmentListener {
 		}
 		
 		/**
-		 * onItemUnequipment Amplify skill must be removed same as effect. We leave only effects from long time playing skills.
-		 * after that we must to update passive skills stats.   
-		 */
+	 * 卸装时强化技能须与效果一并移除，仅保留长期技能效果。 / onItemUnequipment Amplify skill must be removed same as effect. We leave only effects from long time playing skills. after that we must to update passive skills stats
+	 */
 		if (item.getAmplificationSkill() > 0) {
 			if (owner.getSkillList().isSkillPresent(item.getAmplificationSkill())) {
 				if (item.getAmplificationSkill() == 13030 || item.getAmplificationSkill() == 13029) {
-					// dont do nothing here at this moment
+					// 此刻此处什么也不做 / dont do nothing here at this moment
 				} else {
 					owner.getEffectController().removeEffect(item.getAmplificationSkill());
 				}
@@ -169,14 +155,14 @@ public class ItemEquipmentListener {
 		if ((slot & ItemSlot.MAIN_OR_SUB.getSlotIdMask()) != 0) {
 			allModifiers = wrapModifiers(item, modifiers);
 			if (item.hasFusionedItem()) {
-				// add all bonus modifiers according to rules
+				// 按规则添加全部加成修正 / add all bonus modifiers according to rules
 				ItemTemplate fusionedItemTemplate = item.getFusionedItemTemplate();
 				WeaponType weaponType = fusionedItemTemplate.getWeaponType();
 				List<StatFunction> fusionedItemModifiers = fusionedItemTemplate.getModifiers();
 				if (fusionedItemModifiers != null) {
 					allModifiers.addAll(wrapModifiers(item, fusionedItemModifiers));
 				}
-				// add 10% of Magic Boost and Attack
+				// 添加 10% 魔法增强与攻击 / add 10% of Magic Boost and Attack
 				WeaponStats weaponStats = fusionedItemTemplate.getWeaponStats();
 				if (weaponStats != null) {
 					int boostMagicalSkill = Math.round(0.1f * weaponStats.getBoostMagicalSkill());
@@ -202,7 +188,7 @@ public class ItemEquipmentListener {
 					}
 				}
 			}
-			// ArchDaeva item level limitations
+			// 高阶守护者物品等级限制 / ArchDaeva item level limitations
 			if (player.getLevel() >= 65 && itemTemplate.isArchdaeva()) {
 				int pLevel = player.getLevel();
 				int iLevel = itemTemplate.getLevel();
@@ -242,20 +228,13 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * Filter stats based on the following rules:<br>
-	 * 1) don't include fusioned stats which will be taken only from 1 weapon <br>
-	 * 2) wrap stats which are different for MAIN and OFF hands<br>
-	 * 3) add the rest<br>
-	 * 
-	 * @param item
-	 * @param modifiers
-	 * @return
+	 * 按规则过滤属性：融合属性仅取自一把武器等。 / Filter stats based on the following rules:<br> 1) don't include fusioned stats which will be taken only from 1 weapon <br> 2) wrap stats which are different for MAIN and OFF hands<br> 3) add the rest<br>.
 	 */
 	private static List<StatFunction> wrapModifiers(Item item, List<StatFunction> modifiers) {
 		List<StatFunction> allModifiers = new ArrayList<StatFunction>();
 		for (StatFunction modifier : modifiers) {
 			switch (modifier.getName()) {
-			// why they are removed look at DuplicateStatFunction
+			// 为何被移除见 DuplicateStatFunction / why they are removed look at DuplicateStatFunction
 			case ATTACK_SPEED:
 			case PVP_ATTACK_RATIO:
 			case PVP_DEFEND_RATIO:
@@ -277,12 +256,11 @@ public class ItemEquipmentListener {
 		if (itemSetTemplate == null) {
 			return;
 		}
-		// TODO quite
 		player.getGameStats().endEffect(itemSetTemplate);
-		// 1.- Check equipment for items already equip with this itemSetTemplate id
+		// 1.- 检查装备中是否已有该 itemSetTemplate id 的物品。 / 1.- Check equipment for items already equip with this itemSetTemplate id
 		int itemSetPartsEquipped = player.getEquipment().itemSetPartsEquipped(itemSetTemplate.getId());
 
-		// If main hand and off hand is same , no bonus
+		// 若主手与副手相同，无加成 / If main hand and off hand is same , no bonus
 		int mainHandItemId = 0;
 		int offHandItemId = 0;
 		if (player.getEquipment().getMainHandWeapon() != null) {
@@ -293,39 +271,36 @@ public class ItemEquipmentListener {
 		}
 		boolean mainAndOffNotSame = mainHandItemId != offHandItemId;
 
-		// 2.- Check Item Set Parts and add effects one by one if not done already
+		// 2.- 检查物品套装部件，若未应用则逐个添加效果。 / 2.- Check Item Set Parts and add effects one by one if not done already
 		for (PartBonus itempartbonus : itemSetTemplate.getPartbonus()) {
 			if (mainAndOffNotSame && isWeapon) {
-				// If the partbonus was not applied before, do it now
+				// 若部件加成此前未应用，现在应用。 / If the partbonus was not applied before, do it now
 				if (itempartbonus.getCount() <= itemSetPartsEquipped) {
 					if (itempartbonus.getModifiers() != null) {
 						player.getGameStats().addEffect(itemSetTemplate, itempartbonus.getModifiers());
 					}
 				}
 			} else if (!isWeapon) {
-				// If the partbonus was not applied before, do it now
+				// 若部件加成此前未应用，现在应用。 / If the partbonus was not applied before, do it now
 				if (itempartbonus.getCount() <= itemSetPartsEquipped) {
 					player.getGameStats().addEffect(itemSetTemplate, itempartbonus.getModifiers());
 				}
 			}
 		}
 
-		// 3.- Finally check if all items are applied and set the full bonus if not
-		// already applied
+		// 3.- 最后检查是否已应用全部物品；否则设置完整加成。 / 3.- Finally check if all items are applied and set the full bonus if not
+		// 已应用 / already applied
 		FullBonus fullbonus = itemSetTemplate.getFullbonus();
 		if (fullbonus != null && itemSetPartsEquipped == fullbonus.getCount()) {
-			// Add the full bonus with index = total parts + 1 to avoid confusion with part
-			// bonus equal to number of
-			// objects
+			// 用 index=总部件数+1 添加完整加成，避免与部件混淆。 / Add the full bonus with index = total parts + 1 to avoid confusion with part
+			// 加成等于数量 / bonus equal to number of
+			// 对象 / objects
 			player.getGameStats().addEffect(itemSetTemplate, fullbonus.getModifiers());
 		}
 	}
 
 	/**
-	 * All modifiers of stones will be applied to character
-	 * 
-	 * @param item
-	 * @param itemStones
+	 * 将所有魔石修正应用于角色。 / All modifiers of stones will be applied to character.
 	 */
 	private static void addStonesStats(Item item, Set<? extends ManaStone> itemStones, CreatureGameStats<?> cgs) {
 		if (itemStones == null || itemStones.size() == 0) {
@@ -339,11 +314,7 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * Used when socketing of equipped item
-	 * 
-	 * @param item
-	 * @param stone
-	 * @param cgs
+	 * 对已装备物品镶嵌时使用。 / Used when socketing of equipped item.
 	 */
 	public static void addStoneStats(Item item, ManaStone stone, CreatureGameStats<?> cgs) {
         if (stone == null) {
@@ -357,10 +328,7 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * All modifiers of stones will be removed
-	 * 
-	 * @param itemStones
-	 * @param cgs
+	 * 移除所有魔石修正。 / All modifiers of stones will be removed.
 	 */
 	public static void removeStoneStats(Set<? extends ManaStone> itemStones, CreatureGameStats<?> cgs) {
 		if (itemStones == null || itemStones.size() == 0) {
@@ -374,6 +342,7 @@ public class ItemEquipmentListener {
 		}
 	}
 
+	/** 移除 stone stats 1 / Removes stone stats 1 */
 	public static void removeStoneStats1(Item item, ManaStone stone, CreatureGameStats<?> cgs) {
 		if (stone == null || item == null) {
 			return;
@@ -404,10 +373,12 @@ public class ItemEquipmentListener {
 		}
 	}
 
+	/** 添加伊迪安加成属性。 / Adds idian bonus stats. */
 	public static void addIdianBonusStats(Item item, List<StatFunction> modifiers, CreatureGameStats<?> cgs) {
 		cgs.addEffect(item, modifiers);
 	}
 
+	/** 移除伊迪安加成属性。 / Removes idian bonus stats. */
 	public static void removeIdianBonusStats(Item item, CreatureGameStats<?> cgs) {
 		cgs.endEffect(item);
 	}

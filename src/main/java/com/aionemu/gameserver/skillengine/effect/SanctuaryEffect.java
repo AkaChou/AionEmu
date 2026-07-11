@@ -1,32 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 圣域效果：占位模板，生命周期方法暂无具体逻辑。
+ * Sanctuary effect: placeholder template with empty lifecycle hooks.
+ */
 public class SanctuaryEffect extends EffectTemplate {
 
+	/**
+	 * 将效果加入目标的效果控制器。
+	 * Adds this effect to the target effect controller.
+	 */
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 开始时无额外处理。
+	 * No-op on start.
+	 */
 	public void startEffect(Effect effect) {
 	}
 
+	/**
+	 * 结束时无额外处理。
+	 * No-op on end.
+	 */
 	public void endEffect(Effect effect) {
 	}
 }

@@ -1,47 +1,40 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**
- * In this packet LoginServer is sending response for SM_ACCOUNT_RECONNECT_KEY
- * with account name and reconnectionKey.
- * 
+ * 登录服对 SM_ACCOUNT_RECONNECT_KEY 的响应包，返回账号与重连密钥。
+ * LoginServer response for SM_ACCOUNT_RECONNECT_KEY with account id and reconnection key.
+ *
  * @author -Nemesiss-
  */
 public class CM_ACCOUNT_RECONNECT_KEY extends LsClientPacket {
 
+	/**
+	 * 构造函数。
+	 * Constructor.
+	 *
+	 * @param opCode 操作码 opcode
+	 */
 	public CM_ACCOUNT_RECONNECT_KEY(int opCode) {
 		super(opCode);
 	}
 
 	/**
-	 * accountId of account that will be reconnecting.
+	 * 将要重连的账号 ID。
+	 * Account id of the account that will reconnect.
 	 */
 	private int accountId;
 	/**
-	 * ReconnectKey that will be used for authentication.
+	 * 用于鉴权的重连密钥。
+	 * Reconnection key used for authentication.
 	 */
 	private int reconnectKey;
 
 	/**
-	 * {@inheritDoc}
+	 * 读取账号 ID 与重连密钥。
+	 * Reads account id and reconnection key.
 	 */
 	@Override
 	public void readImpl() {
@@ -50,7 +43,8 @@ public class CM_ACCOUNT_RECONNECT_KEY extends LsClientPacket {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 将重连密钥转交 LoginServer 门面处理。
+	 * Forwards the reconnection key to the LoginServer facade.
 	 */
 	@Override
 	public void runImpl() {

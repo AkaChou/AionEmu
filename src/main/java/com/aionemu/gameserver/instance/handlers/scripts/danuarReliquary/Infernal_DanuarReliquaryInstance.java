@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.danuarReliquary;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,18 +19,31 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 炼狱达努亚尔圣物匣副本事件处理器。
+ * Instance event handler for Infernal Danuar Reliquary.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301360000)
 public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 {
-	private int ideanKilled;
-	private int cloneModorKilled;
-	private Future<?> infernalReliquaryTask;
+	/** 理念击杀 / idean killed */
+		private int ideanKilled;
+	/** 克隆莫多尔已击杀 / clone modor killed */
+		private int cloneModorKilled;
+	/** infernalreliquary 任务 / infernal reliquary task */
+		private Future<?> infernalReliquaryTask;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -56,9 +53,9 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
             case 701795: //[Infernal] Danuar Reliquary Box.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052388, 1)); //Modor's Equipment Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053099, 1)); //Pure Modor's Equipment Crux Box.
                     }
                 }
@@ -67,21 +64,37 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
     }
 	
    /**
-	* Modor activated the Danuar Bomb of grudge.
-	*/
+	 * 莫多尔启动了达努亚怨念炸弹 / Modor activated the Danuar Bomb of grudge
+	 */
 	private void startInfernalReliquaryTimer() {
-		//Modor activated the Danuar Bomb of grudge. You have 15 minutes to defeat her.
+		// 莫多尔激活了怨恨的达努阿尔炸弹。你有 15 分钟击败她。 / Modor activated the Danuar Bomb of grudge. You have 15 minutes to defeat her.
 		sendMsgByRace(1401676, Race.PC_ALL, 5000);
 		this.sendMessage(1401677, 10 * 60 * 1000); //10 minutes elapsed.
 		this.sendMessage(1401678, 15 * 60 * 1000); //The bomb has detonated.
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
 				    infernalReliquaryTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
+								/**
+								 * 处理 visit。
+								 * Handle visit.
+								 *
+								 * @param player 玩家 / player
+								 */
 								@Override
 								public void visit(Player player) {
 									onExitInstance(player);
@@ -95,6 +108,12 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 		});
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -118,6 +137,12 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 				} else if (ideanKilled == 3) {
 				    spawn(234690, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Vengeful Modor.
 					instance.doOnAllPlayers(new Visitor<Player>() {
+					    /**
+					     * 处理 visit。
+					     * Handle visit.
+					     *
+					     * @param player 玩家 / player
+					     */
 					    @Override
 					    public void visit(Player player) {
 						    if (player.isOnline()) {
@@ -142,10 +167,16 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 			break;
 			case 234691: //Crazed Modor.
 				infernalReliquaryTask.cancel(true);
-				//sendMsg("[SUCCES]: You have finished <[Infernal] Danuar Reliquary>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <[Infernal] Danuar Reliquary>");
 				spawn(730843, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //[Infernal] Danuar Reliquary Exit.
 				spawn(701795, 256.39725f, 255.52034f, 241.78006f, (byte) 90); //[Infernal] Danuar Reliquary Box.
 				instance.doOnAllPlayers(new Visitor<Player>() {
+			        /**
+			         * 处理 visit。
+			         * Handle visit.
+			         *
+			         * @param player 玩家 / player
+			         */
 			        @Override
 			        public void visit(Player player) {
 				        if (player.isOnline()) {
@@ -159,18 +190,42 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -187,6 +242,10 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -194,6 +253,10 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -204,6 +267,12 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 	}
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());

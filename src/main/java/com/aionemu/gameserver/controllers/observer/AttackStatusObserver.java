@@ -1,34 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 
 /**
+ * 攻击状态观察者基类，携带数值与目标攻击状态。
+ * Base observer for attack status, holding a value and target attack status.
+ *
  * @author ATracer
  */
 public class AttackStatusObserver extends AttackCalcObserver {
 
+	/** 关联数值（概率、倍率等） / Associated value (chance, multiplier, etc.) */
 	protected int value;
+	/** 目标攻击状态 / Target attack status */
 	protected AttackStatus status;
 
 	/**
-	 * @param value
-	 * @param status
+	 * @param value 关联数值 / associated value
+	 * attack status
 	 */
 	public AttackStatusObserver(int value, AttackStatus status) {
 		this.value = value;

@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.aion;
 
 import com.aionemu.chatserver.common.netty.BaseClientPacket;
@@ -23,16 +5,26 @@ import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 
 /**
+ * 聊天客户端数据包抽象基类。
+ * Abstract base class for chat client packets.
+ *
  * @author ATracer
  */
 public abstract class AbstractClientPacket extends BaseClientPacket {
 
+    /**
+     * 关联的客户端通道处理器。
+     * Associated client channel handler.
+     */
     protected ClientChannelHandler clientChannelHandler;
 
     /**
-     * @param packetReader
-     * @param clientChannelHandler
-     * @param opCode
+     * 构造客户端数据包。
+     * Constructs a client packet.
+     *
+     * packet reader
+     * @param clientChannelHandler 客户端通道处理器 / client channel handler
+     * operation code
      */
     public AbstractClientPacket(PacketReader packetReader, ClientChannelHandler clientChannelHandler, int opCode) {
         super(packetReader, opCode);

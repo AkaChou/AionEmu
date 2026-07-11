@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.dredgionDefense;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Dredgion Defense 副本 NPC AI：Defence Tower Of Sanctum 2（@AIName "Defence_Tower_Of_Sanctum_2"），继承 ActionItemNpcAI2。
+ * Dredgion Defense instance NPC AI: Defence Tower Of Sanctum 2 (@AIName "Defence_Tower_Of_Sanctum_2"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Defence_Tower_Of_Sanctum_2")
 public class Defence_Tower_Of_Sanctum_2AI2 extends ActionItemNpcAI2
 {
@@ -47,15 +33,15 @@ public class Defence_Tower_Of_Sanctum_2AI2 extends ActionItemNpcAI2
 	
 	@Override
 	protected void handleUseItemFinish(Player player) {
-		//Sanctum Defense Turret Coolant.
+		// 圣所防御炮塔冷却剂。 / Sanctum Defense Turret Coolant.
 		if (!player.getInventory().decreaseByItemId(185000284, 1)) {
-			//You don’t have coolant.
+			// 你没有冷却剂。 / You don’t have coolant.
             PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403692));
 			return;
         }
 		dreadgionDrakanATK();
 		startDreadgionOverheatTask();
-		//The defense turret is now cool enough to use!
+		// 防御炮塔已冷却到可使用！ / The defense turret is now cool enough to use!
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403951));
 	}
 	
@@ -104,7 +90,7 @@ public class Defence_Tower_Of_Sanctum_2AI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The defense turret is being attacked!
+					// 防御炮塔正遭受攻击！ / The defense turret is being attacked!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403709));
 				}
 			}
@@ -115,7 +101,7 @@ public class Defence_Tower_Of_Sanctum_2AI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The defense turret has been destroyed.
+					// 防御炮塔已被摧毁。 / The defense turret has been destroyed.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403710));
 				}
 			}
@@ -126,7 +112,7 @@ public class Defence_Tower_Of_Sanctum_2AI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The defense turret is overheating. Find some coolant!
+					// 防御炮塔过热。去找冷却剂！ / The defense turret is overheating. Find some coolant!
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403947));
 				}
 			}

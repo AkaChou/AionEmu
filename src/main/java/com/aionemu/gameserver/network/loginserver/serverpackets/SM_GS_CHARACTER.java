@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection;
 import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 
 /**
+ * 游戏服向登录服回报指定账号角色数量的服务端包。
+ * Server packet that reports a given account's character count to the login server.
+ *
  * @author cura
  */
 public class SM_GS_CHARACTER extends LsServerPacket {
@@ -28,8 +15,11 @@ public class SM_GS_CHARACTER extends LsServerPacket {
 	private int characterCount;
 
 	/**
-	 * @param accountId
-	 * @param characterCount
+	 * 构造角色数量回报包。
+	 * Constructs a character-count report packet.
+	 *
+	 * 账号 ID / account id
+	 * character count
 	 */
 	public SM_GS_CHARACTER(final int accountId, final int characterCount) {
 		super(0x08);
@@ -37,6 +27,10 @@ public class SM_GS_CHARACTER extends LsServerPacket {
 		this.characterCount = characterCount;
 	}
 
+	/**
+	 * 写入账号 ID 与角色数量。
+	 * Writes account id and character count.
+	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {
 		writeD(accountId);

@@ -1,21 +1,7 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -128,14 +114,18 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 /**
- * GameServer is the main class of the application and represents the whole game
- * server. This class is also an entry point with main() method.
+ * 游戏服务器主入口与启动编排：日志、生命周期服务、阵营比例与关停。
+ * Main GameServer entry and startup orchestration: logging, lifecycle services, faction ratios and stop.
  *
- * @author (Encom)
+ * @author Encom
  */
 @Slf4j
 public class GameServer {
 
+	/**
+	 * NPC 统计集合（启动/诊断用）。
+	 * NPC counting set (startup/diagnostics).
+	 */
 	public static HashSet<String> npcs_count = new HashSet<String>();
 	private static int ELYOS_COUNT = 0;
 	private static int ASMOS_COUNT = 0;
@@ -148,10 +138,22 @@ public class GameServer {
 
 	private GameServerNetworkLifecycle networkLifecycle;
 
+	/**
+	 * 注册当前活动的 GameServer 实例。
+	 * Registers the currently active GameServer instance.
+	 *
+	 * @param server 活动实例 / active server
+	 */
 	public static void activateServer(GameServer server) {
 		activeServer = server;
 	}
 
+	/**
+	 * 绑定网络生命周期，供启停网络使用。
+	 * Attaches network lifecycle used to start/stop network services.
+	 *
+	 * @param networkLifecycle 网络生命周期 / network lifecycle
+	 */
 	public void attachNetworkLifecycle(GameServerNetworkLifecycle networkLifecycle) {
 		this.networkLifecycle = networkLifecycle;
 	}
@@ -166,7 +168,7 @@ public class GameServer {
 		}
 		File backupDir = new File("./log/backup/");
 		if (!backupDir.exists() && !backupDir.mkdirs()) {
-			log.error("Could not create backup directory: {}", backupDir.getAbsolutePath());
+			log.error(I18n.get("log.77147bf4cff7", backupDir.getAbsolutePath()));
 		}
 		
 		File logDir = new File("./log/");
@@ -194,18 +196,18 @@ public class GameServer {
 						
 						zos.closeEntry();
 					} catch (IOException e) {
-						log.error("Failed to backup log file {}", logFile.getName(), e);
+						log.error(I18n.get("log.c1a01a282f44", logFile.getName(), e));
 					}
 					
 					if (!logFile.delete()) {
-						log.error("Could not delete log file {}", logFile.getName());
+						log.error(I18n.get("log.f20ba663444a", logFile.getName()));
 					}
 				}
 				
-				log.info("Successfully backed up {} log files to {}", logFiles.length, outFilename);
+				log.info(I18n.get("log.038919cb0a3e", logFiles.length, outFilename));
 				
 			} catch (IOException e) {
-				log.error("Error during log backup to {}", outFilename, e);
+				log.error(I18n.get("log.6f01b0cf500e", outFilename, e));
 			}
 		}
 		
@@ -217,12 +219,19 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 初始化日志（备份旧日志并配置 Logback）。
+	 * Initializes logging (backs up old logs and configures Logback).
+	 */
 	public static void initializeLogger() {
 		initalizeLoggger();
 	}
 
 	/**
+	 * 由 boot 管理的服务生命周期启动游戏服。
 	 * Starts GameServer from the boot-managed service lifecycle.
+	 *
+	 * @param args 启动参数 / startup arguments
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(String[] args) {
@@ -230,7 +239,11 @@ public class GameServer {
 	}
 
 	/**
+	 * 以可选聊天服连接覆盖启动游戏服。
 	 * Starts GameServer with an optional chat-server connection override.
+	 *
+	 * @param args 启动参数 / startup arguments
+	 * @param chatServerEnabledOverride 聊天服启用覆盖，null 表示沿用配置 / chat-server enable override, null keeps config
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(String[] args, Boolean chatServerEnabledOverride) {
@@ -238,7 +251,12 @@ public class GameServer {
 	}
 
 	/**
-	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 * 在 boot 嵌入时使用指定线程池生命周期启动游戏服。
+	 * Starts GameServer with a given thread-pool lifecycle when boot-embedded.
+	 *
+	 * @param args 启动参数 / startup arguments
+	 * @param chatServerEnabledOverride 聊天服启用覆盖 / chat-server enable override
+	 * @param threadPoolLifecycle 线程池生命周期 / thread-pool lifecycle
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
@@ -250,6 +268,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -263,6 +282,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -278,6 +298,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -301,6 +322,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -326,6 +348,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -353,6 +376,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -383,6 +407,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -416,6 +441,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -451,6 +477,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -488,6 +515,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -527,6 +555,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -568,6 +597,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -611,6 +641,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -656,6 +687,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -703,6 +735,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -752,6 +785,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -803,6 +837,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -856,6 +891,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -911,6 +947,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -968,6 +1005,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -1027,6 +1065,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -1088,6 +1127,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -1151,6 +1191,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -1226,6 +1267,7 @@ public class GameServer {
 	}
 
 	/**
+	 * 在 boot 嵌入时使用 Spring 管理的游戏运行时资源启动游戏服。
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -1310,17 +1352,31 @@ public class GameServer {
 	}
 
 	/**
-	 * Starts servers for connection with aion client and login\chat server.
+	 * 启动与客户端、登录/聊天服相关的网络服务。
+	 * Starts network services for client, login and chat servers.
 	 */
 	public void startServers() {
 		networkLifecycle = new GameServerNetworkLifecycle(new GameServerNetworkGateway());
 		networkLifecycle.start(this);
 	}
 
+	/**
+	 * 以默认 {@link ShutdownHook.ShutdownMode#SHUTDOWN} 模式停止活动实例。
+	 * Stops the active instance with default {@link ShutdownHook.ShutdownMode#SHUTDOWN}.
+	 *
+	 * @return 若存在活动实例并已处理返回 true / {@code true} if an active instance was stopped
+	 */
 	public static boolean stop() {
 		return stop(ShutdownHook.ShutdownMode.SHUTDOWN);
 	}
 
+	/**
+	 * 按指定模式停止活动实例网络并完成关服收尾（不 halt 进程）。
+	 * Stops the active instance network and completes shutdown for the given mode (does not halt process).
+	 *
+	 * @param mode 关闭模式 / shutdown mode
+	 * @return 若存在活动实例并已处理返回 true / {@code true} if an active instance was stopped
+	 */
 	public static boolean stop(ShutdownHook.ShutdownMode mode) {
 		GameServer server = activeServer;
 		if (server != null) {
@@ -1335,6 +1391,10 @@ public class GameServer {
 		return false;
 	}
 
+	/**
+	 * 停止已绑定的网络生命周期。
+	 * Stops the attached network lifecycle.
+	 */
 	private void stopServers() {
 		GameServerNetworkLifecycle lifecycle = networkLifecycle;
 		if (lifecycle != null) {
@@ -1344,17 +1404,31 @@ public class GameServer {
 	}
 
 	/**
-	 * Initialize all helper services, that are not directly related to aion gs,
-	 * which includes:
+	 * 初始化与 Aion GS 无直接耦合的工具服务与配置。
+	 * Initializes utility services and config not directly tied to Aion GS.
+	 *
+	 * @param threadPoolLifecycle 线程池生命周期 / thread-pool lifecycle
 	 */
 	private static void initUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
 		new GameUtilityServicesLifecycle(new GameUtilityServicesGateway()).start(threadPoolLifecycle);
 	}
 
+	/**
+	 * 公开入口：初始化工具服务与配置。
+	 * Public entry: initialize utility services and config.
+	 *
+	 * @param threadPoolLifecycle 线程池生命周期 / thread-pool lifecycle
+	 */
 	public static void initializeUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
 		initUtilityServicesAndConfig(threadPoolLifecycle);
 	}
 
+	/**
+	 * 注册启动钩子；若钩子阶段已结束则立即执行。
+	 * Registers a startup hook; runs immediately if the hook phase already finished.
+	 *
+	 * @param hook 启动钩子 / startup hook
+	 */
 	public synchronized static void addStartupHook(StartupHook hook) {
 		if (startUpHooks != null) {
 			startUpHooks.add(hook);
@@ -1363,6 +1437,10 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 注册阵营角色数比例限制的启动钩子（从 DB 加载计数）。
+	 * Registers the faction character-ratio startup hook (loads counts from DB).
+	 */
 	public static void registerRatioLimitStartupHook() {
 		addStartupHook(new StartupHook() {
 			@Override
@@ -1376,7 +1454,7 @@ public class GameServer {
 					log.debug("Database faction query took {} ms", dbTime);
 					computeRatios();
 				} catch (Exception e) {
-					log.error("Error loading faction ratios", e);
+					log.error(I18n.get("log.a690a349a611", e));
 				} finally {
 					lock.unlock();
 				}
@@ -1385,6 +1463,10 @@ public class GameServer {
 		});
 	}
 
+	/**
+	 * 执行并清空已注册的启动钩子。
+	 * Runs and clears registered startup hooks.
+	 */
 	public static void runStartupHooks() {
 		onStartup();
 	}
@@ -1395,7 +1477,7 @@ public class GameServer {
 		startUpHooks = null;
 
 		if (startupHooks != null && !startupHooks.isEmpty()) {
-			log.info("Executing {} startup hooks", startupHooks.size());
+			log.info(I18n.get("log.a5ddca4aaca5", startupHooks.size()));
 			long hooksStart = System.currentTimeMillis();
 			
 			for (StartupHook hook : startupHooks) {
@@ -1405,17 +1487,24 @@ public class GameServer {
 					long hookTime = System.currentTimeMillis() - hookStart;
 					log.debug("Startup hook executed in {} ms", hookTime);
 				} catch (Exception e) {
-					log.error("Startup hook failed", e);
+					log.error(I18n.get("log.00fadfdcf59f", e));
 				}
 			}
 			
 			long hooksTime = System.currentTimeMillis() - hooksStart;
-			log.info("All startup hooks executed in {} ms", hooksTime);
+			log.info(I18n.get("log.ca08b9810fb8", hooksTime));
 		} else {
-			log.info("No startup hooks to execute");
+			log.info(I18n.get("log.01e9f647463e"));
 		}
 	}
 
+	/**
+	 * 按增量更新指定阵营角色计数并重算比例。
+	 * Updates the character count for a race by delta and recomputes ratios.
+	 *
+	 * @param race 阵营 / race
+	 * @param i 计数增量（可负） / count delta (may be negative)
+	 */
 	public static void updateRatio(Race race, int i) {
 		lock.lock();
 		try {
@@ -1432,7 +1521,7 @@ public class GameServer {
 			computeRatios();
 
 		} catch (Exception e) {
-			log.error("[Error] Cant update ratio limits", e);
+			log.error(I18n.get("log.d8cc88ecc91c", e));
 		} finally {
 			lock.unlock();
 		}
@@ -1440,6 +1529,10 @@ public class GameServer {
 		displayRatios(true);
 	}
 
+	/**
+	 * 根据当前阵营角色数计算 Elyos/Asmodians 比例。
+	 * Computes Elyos/Asmodians ratios from current race character counts.
+	 */
 	private static void computeRatios() {
 		if ((ASMOS_COUNT <= GSConfig.RATIO_MIN_CHARACTERS_COUNT) && (ELYOS_COUNT <= GSConfig.RATIO_MIN_CHARACTERS_COUNT)) {
 			ASMOS_RATIO = ELYOS_RATIO = 50.0;
@@ -1449,20 +1542,33 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 记录阵营比例状态；失衡超过 20% 时告警。
+	 * Logs faction ratio status; warns when imbalance exceeds 20%.
+	 *
+	 * @param updated 是否为更新后日志 / whether this is a post-update log
+	 */
     private static void displayRatios(boolean updated) {
         String status = updated ? "updated" : "initialized";
         String totalPlayers = String.valueOf(ASMOS_COUNT + ELYOS_COUNT);
-        
+
         if (log.isInfoEnabled()) {
-            log.info("[Faction Balance] {} - Total Players: {}, Elyos: {}% ({}), Asmodians: {}% ({})", status, totalPlayers, String.format("%.2f", ELYOS_RATIO), ELYOS_COUNT, String.format("%.2f", ASMOS_RATIO), ASMOS_COUNT);
-            
+            log.info(I18n.get("log.c6bf79499f11", status, totalPlayers, String.format("%.2f", ELYOS_RATIO), ELYOS_COUNT, String.format("%.2f", ASMOS_RATIO), ASMOS_COUNT));
+
             double imbalance = Math.abs(ELYOS_RATIO - ASMOS_RATIO);
             if (imbalance > 20.0) {
-                log.warn("Faction imbalance detected: {}% difference", String.format("%.1f", imbalance));
+                log.warn(I18n.get("log.dd2d045a1c76", String.format("%.1f", imbalance)));
             }
         }
     }
 
+	/**
+	 * 返回指定阵营当前角色比例（百分比）。
+	 * Returns the current character ratio percent for the given race.
+	 *
+	 * @param race 阵营 / race
+	 * @return 比例百分比，未知阵营为 0 / ratio percent, or 0 for unknown race
+	 */
 	public static double getRatiosFor(Race race) {
 		switch (race) {
 		case ASMODIANS:
@@ -1474,6 +1580,13 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 返回指定阵营当前角色计数。
+	 * Returns the current character count for the given race.
+	 *
+	 * @param race 阵营 / race
+	 * @return 角色数，未知阵营为 0 / character count, or 0 for unknown race
+	 */
 	public static int getCountFor(Race race) {
 		switch (race) {
 		case ASMODIANS:
@@ -1485,7 +1598,15 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 启动完成后回调钩子。
+	 * Callback hook invoked after startup completes.
+	 */
 	public static abstract interface StartupHook {
+		/**
+		 * 启动钩子回调。
+		 * Startup hook callback.
+		 */
 		public abstract void onStartup();
 	}
 }

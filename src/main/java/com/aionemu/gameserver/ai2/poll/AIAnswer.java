@@ -1,27 +1,26 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.poll;
 
 /**
+ * AI 决策投票的回答接口，提供是否肯定及具体结果。
+ * Answer interface for AI decision polls, exposing positivity and a concrete result.
+ *
  * @author ATracer
  */
 public interface AIAnswer {
 
+	/**
+	 * 判断该回答是否为肯定。
+	 * Whether this answer is positive.
+	 *
+	 * {@code true} if positive。 / {@code true} if positive
+	 */
 	boolean isPositive();
 
+	/**
+	 * 返回回答的具体结果对象。
+	 * Return the concrete result object of this answer.
+	 *
+	 * Result object
+	 */
 	Object getResult();
 }

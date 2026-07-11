@@ -1,20 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.veteranrewards;
+
+/**
+ * 老兵奖励，用于 veteranrewards 相关逻辑。
+ * Veteran Rewards for veteranrewards logic.
+ */
 
 public class VeteranRewards {
 	private int id;
@@ -52,6 +41,7 @@ public class VeteranRewards {
 		this.Message = Message;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		if (id != 0) {
 			return id;
@@ -60,34 +50,42 @@ public class VeteranRewards {
 		}
 	}
 
+	/** 获取玩家。 / Returns the player. */
 	public String getPlayer() {
 		return Player;
 	}
 
+	/** 获取类型。 / Returns the type. */
 	public int getType() {
 		return type;
 	}
 
+	/** 获取物品。 / Returns the item. */
 	public int getItem() {
 		return item;
 	}
 
+	/** 获取计数。 / Returns the count. */
 	public int getCount() {
 		return count;
 	}
 
+	/** 获取基纳。 / Returns the kinah. */
 	public int getKinah() {
 		return kinah;
 	}
 
+	/** 返回 sender / Returns the sender */
 	public String getSender() {
 		return Sender;
 	}
 
+	/** 获取称号。 / Returns the title. */
 	public String getTitle() {
 		return Title;
 	}
 
+	/** 获取消息。 / Returns the message. */
 	public String getMessage() {
 		return Message;
 	}

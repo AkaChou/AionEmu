@@ -1,31 +1,18 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 回复客户端 L2 认证登录校验结果的服务端包。
+ * Server packet that replies with L2-auth login check result.
+ *
  * @author -Nemesiss-
  */
 public class SM_L2AUTH_LOGIN_CHECK extends AionServerPacket {
 
 	/**
-	 * True if client is authed.
+	 * True 若客户端已认证 / True if client is authed
 	 */
 	private final boolean ok;
 	private final String accountName;
@@ -72,9 +59,11 @@ public class SM_L2AUTH_LOGIN_CHECK extends AionServerPacket {
 	}
 
 	/**
-	 * Constructs new <tt>SM_L2AUTH_LOGIN_CHECK </tt> packet
+	 * 构造 L2 认证登录校验结果包。
+	 * Constructs a L2-auth login check result packet.
 	 *
-	 * @param ok
+	 * @param ok 客户端是否已通过认证 / whether the client is authenticated
+	 * account name
 	 */
 	public SM_L2AUTH_LOGIN_CHECK(boolean ok, String accountName) {
 		this.ok = ok;

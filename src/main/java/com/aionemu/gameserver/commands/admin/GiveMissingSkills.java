@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,17 +5,35 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
+/**
+ * 管理员补齐缺失技能命令：按等级与职业为自身学习应有但未获得的技能。
+ * Admin missing-skills command: learn skills the player should have by level/class but is missing.
+ */
 public class GiveMissingSkills extends AdminCommand
 {
 	public GiveMissingSkills() {
 		super("givemissingskills");
 	}
-	
+
+	/**
+	 * 为执行者补齐缺失技能。
+	 * Grant missing skills to the invoking player.
+	 *
+	 * @param player 执行命令的管理员 / Admin executing the command
+	 * Unused
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		SkillLearnService.addMissingSkills(player);
 	}
-	
+
+	/**
+	 * 参数错误时显示命令语法。
+	 * Show command syntax on invalid arguments.
+	 *
+	 * @param player 接收提示的玩家 / Player receiving the hint
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 	    PacketSendUtility.sendMessage(player, "Syntax: //givemissingskills");

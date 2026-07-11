@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.trade;
 
 import java.util.ArrayList;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import lombok.Getter;
 
 /**
+ * 交换，用于交易相关逻辑。
+ * Exchange for trade logic.
+ *
  * @author ATracer
  */
 @Getter
@@ -48,10 +35,12 @@ public class Exchange {
 		this.targetPlayer = targetPlayer;
 	}
 
+	/** 确认 / confirm. */
 	public void confirm() {
 		confirmed = true;
 	}
 
+	/** 锁定。 / Lock. */
 	public void lock() {
 		this.locked = true;
 	}
@@ -70,6 +59,7 @@ public class Exchange {
 		this.kinahCount += countToAdd;
 	}
 
+	/** 是否 exchange list full / Whether exchange list full */
 	public boolean isExchangeListFull() {
 		return items.size() > 18;
 	}

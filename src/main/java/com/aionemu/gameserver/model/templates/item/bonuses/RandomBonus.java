@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.bonuses;
 
 import java.util.ArrayList;
@@ -27,6 +11,11 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
+/**
+ * Random 加成模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RandomBonus", propOrder = { "modifiers" })
 public class RandomBonus {
@@ -39,6 +28,7 @@ public class RandomBonus {
 	@XmlAttribute(name = "type", required = true)
 	private StatBonusType bonusType;
 
+	/** 获取修正器。 / Returns the modifiers. */
 	public List<ModifiersTemplate> getModifiers() {
 		if (modifiers == null) {
 			modifiers = new ArrayList<ModifiersTemplate>();
@@ -46,13 +36,15 @@ public class RandomBonus {
 		return this.modifiers;
 	}
 
-	/**
-	 * Gets the value of the id property.
-	 */
+	 /**
+	  * 获取 id 属性值。
+	  * Gets the value of the id property
+	  */
 	public int getId() {
 		return id;
 	}
 
+	/** 获取加成类型。 / Returns the bonus type. */
 	public StatBonusType getBonusType() {
 		return bonusType;
 	}

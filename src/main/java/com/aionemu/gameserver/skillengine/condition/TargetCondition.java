@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -30,6 +14,9 @@ import com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 目标类型条件：校验技能首目标是否符合配置的目标属性（NPC/PC 等）。
+ * Target type condition: validates the skill first target matches the configured target attribute (NPC/PC, etc.).
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,14 +27,22 @@ public class TargetCondition extends Condition {
 	protected TargetAttribute value;
 
 	/**
-	 * Gets the value of the value property.
-	 * 
-	 * @return possible object is {@link TargetAttribute }
+	 * 获取配置的目标属性。
+	 * Gets the configured target attribute.
+	 *
+	 * target attribute
 	 */
 	public TargetAttribute getValue() {
 		return value;
 	}
 
+	/**
+	 * 校验技能环境是否满足本条件。
+	 * Validates whether the skill environment satisfies this condition.
+	 *
+	 * @param skill 技能环境 / skill environment
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Skill skill) {
 		if ((value == TargetAttribute.NONE) || (value == TargetAttribute.ALL)) {

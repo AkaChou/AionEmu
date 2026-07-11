@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -35,18 +19,27 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Map;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/** Video: https://www.youtube.com/watch?v=HjAJng-e72I
-/** Source: http://aionpowerbook.com/powerbook/Library_of_Knowledge
-/****/
+/**
+ * 永恒档案库副本事件处理器。
+ * Instance event handler for Archives Of Eternity.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301540000)
 public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 {
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -69,16 +62,16 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100347, 1)); //Amethyst Starlight Crystal Dust.
 				    } switch (Rnd.get(1, 5)) {
 						case 1:
-						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 3)); //Lesser Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 3)); //低级随从契约。 / Lesser Minion Contract.
 						break;
 						case 2:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 3)); //Greater Minion Contract.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 3)); //高级随从契约。 / Greater Minion Contract.
 						break;
 						case 3:
-						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 3)); //Major Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 3)); //大型随从契约。 / Major Minion Contract.
 						break;
 						case 4:
-						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 3)); //Cute Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 3)); //可爱随从契约。 / Cute Minion Contract.
 						break;
 						case 5:
 					        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
@@ -87,13 +80,9 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 				}
 			break;
 			/**
-			 * Chosen "Guardian's Set"
-			 * Appearance change items obtainable from "Archives Of Eternity"
-			 * Can be used on any type of item.
-			 * Headgear can be obtained from "?? ??"
-			 * Pants, Shoes, Pauldrons and Gloves can be obtained from "Cryptograph Cube"
-			 */
-			case 806139: //Cryptograph Cube.
+	 * “守护者套装”外观变更物品可从永恒档案获得，可用于任意类型物品。 / Chosen "Guardian's Set" Appearance change items obtainable from "Archives Of Eternity" Can be used on any type of item. Headgear can be obtained from "?? ??" Pants, Shoes, Pauldrons and Gloves can be obtained from "Cryptograph Cube"
+	 */
+			case 806139: //密码背包。 / Cryptograph Cube.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
@@ -117,8 +106,8 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                 }
             break;
 		   /**
-			* Elyos
-			*/
+	 * 天族 / Elyos
+	 */
 			case 703131: //Histories Of Atreia.
 			    for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
@@ -189,8 +178,8 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                 }
 			break;
 		   /**
-			* Asmodians
-			*/
+	 * 魔族 / Asmodians
+	 */
 			case 703149: //Histories Of Atreia.
 			    for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
@@ -286,17 +275,23 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
 		player.getController().updateNearbyQuests();
-		//Talk with the Agent.
+		// 与代理人交谈。 / Talk with the Agent.
 		sendMsgByRace(1403340, Race.PC_ALL, 5000);
-		//You must destroy the Aether seals to enter.
+		// 须摧毁以太封印才能进入。 / You must destroy the Aether seals to enter.
 		sendMsgByRace(1403210, Race.PC_ALL, 30000);
-		//The Antiquarian has begun activating the Eternity Relics.
+		// 古物学家已开始激活永恒遗物。 / The Antiquarian has begun activating the Eternity Relics.
 		sendMsgByRace(1403212, Race.PC_ALL, 60000);
-		//The Antiquarian of Atreia has activated all Eternity Relics.
+		// 阿特雷亚古物学家已激活全部永恒遗物。 / The Antiquarian of Atreia has activated all Eternity Relics.
 		sendMsgByRace(1403213, Race.PC_ALL, 120000);
 		if (spawnRace == null) {
 			spawnRace = player.getRace();
@@ -341,6 +336,12 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		spawn(empyreanHistories, 439.38571f, 504.14023f, 468.95096f, (byte) 0, 399);
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -373,73 +374,79 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			break;
 		} switch (Rnd.get(1, 8)) {
 			case 1:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-				spawn(806139, 345.74078f, 392.68344f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+				spawn(806139, 345.74078f, 392.68344f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 			case 2:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-				spawn(806139, 345.26672f, 631.75073f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+				spawn(806139, 345.26672f, 631.75073f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 			case 3:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-				spawn(806139, 668.62073f, 630.28986f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+				spawn(806139, 668.62073f, 630.28986f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 			case 4:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 414.77441f, 352.00488f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+			    spawn(806139, 414.77441f, 352.00488f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 			case 5:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 599.04608f, 352.67654f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+			    spawn(806139, 599.04608f, 352.67654f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 			case 6:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 414.85263f, 671.28998f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+			    spawn(806139, 414.85263f, 671.28998f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 			case 7:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 668.36761f, 392.10706f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+			    spawn(806139, 668.36761f, 392.10706f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 			case 8:
-			    deleteNpc(220334); //Artifact Mimic; Mimic-In-The-Box.
-			    spawn(806139, 598.98456f, 672.07361f, 469.52179f, (byte) 0); //Cryptograph Cube.
+			    deleteNpc(220334); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
+			    spawn(806139, 598.98456f, 672.07361f, 469.52179f, (byte) 0); //密码背包。 / Cryptograph Cube.
 			break;
 		} switch (Rnd.get(1, 8)) {
 			case 1:
-			    deleteNpc(806139); //Cryptograph Cube.
-				spawn(220334, 345.74078f, 392.68344f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+				spawn(220334, 345.74078f, 392.68344f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 			case 2:
-			    deleteNpc(806139); //Cryptograph Cube.
-				spawn(220334, 345.26672f, 631.75073f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+				spawn(220334, 345.26672f, 631.75073f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 			case 3:
-			    deleteNpc(806139); //Cryptograph Cube.
-				spawn(220334, 668.62073f, 630.28986f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+				spawn(220334, 668.62073f, 630.28986f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 			case 4:
-			    deleteNpc(806139); //Cryptograph Cube.
-			    spawn(220334, 414.77441f, 352.00488f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+			    spawn(220334, 414.77441f, 352.00488f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 			case 5:
-			    deleteNpc(806139); //Cryptograph Cube.
-			    spawn(220334, 599.04608f, 352.67654f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+			    spawn(220334, 599.04608f, 352.67654f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 			case 6:
-			    deleteNpc(806139); //Cryptograph Cube.
-			    spawn(220334, 414.85263f, 671.28998f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+			    spawn(220334, 414.85263f, 671.28998f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 			case 7:
-			    deleteNpc(806139); //Cryptograph Cube.
-			    spawn(220334, 668.36761f, 392.10706f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+			    spawn(220334, 668.36761f, 392.10706f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 			case 8:
-			    deleteNpc(806139); //Cryptograph Cube.
-			    spawn(220334, 598.98456f, 672.07361f, 469.52179f, (byte) 0); //Artifact Mimic; Mimic-In-The-Box.
+			    deleteNpc(806139); //密码背包。 / Cryptograph Cube.
+			    spawn(220334, 598.98456f, 672.07361f, 469.52179f, (byte) 0); //神器拟态；箱中拟态。 / Artifact Mimic; Mimic-In-The-Box.
 			break;
 		}
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -449,45 +456,45 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			break;
 			case 703009: //Shedim Eternity Relic.
 			    despawnNpc(npc);
-				//Shedim Seal has been destroyed.
+				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
 				sendMsgByRace(1403269, Race.PC_ALL, 0);
 			break;
 			case 703010: //Seraphim Eternity Relic.
 			    despawnNpc(npc);
-				//Seraphim Seal has been destroyed.
+				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
 				sendMsgByRace(1403270, Race.PC_ALL, 0);
 				deleteNpc(703017);
 			break;
 			case 703011: //Shedim Eternity Relic.
 			    despawnNpc(npc);
-				//Shedim Seal has been destroyed.
+				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
 				sendMsgByRace(1403269, Race.PC_ALL, 0);
 			break;
 			case 703012: //Seraphim Eternity Relic.
 			    despawnNpc(npc);
-				//Seraphim Seal has been destroyed.
+				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
 				sendMsgByRace(1403270, Race.PC_ALL, 0);
 				deleteNpc(703018);
 			break;
 			case 703013: //Shedim Eternity Relic.
 			    despawnNpc(npc);
-				//Shedim Seal has been destroyed.
+				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
 				sendMsgByRace(1403269, Race.PC_ALL, 0);
 			break;
 			case 703014: //Seraphim Eternity Relic.
 				despawnNpc(npc);
-				//Seraphim Seal has been destroyed.
+				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
 				sendMsgByRace(1403270, Race.PC_ALL, 0);
 				deleteNpc(703019);
 			break;
 			case 703015: //Shedim Eternity Relic.
 			    despawnNpc(npc);
-				//Shedim Seal has been destroyed.
+				// 谢迪姆封印已被摧毁。 / Shedim Seal has been destroyed.
 				sendMsgByRace(1403269, Race.PC_ALL, 0);
 			break;
 			case 703016: //Seraphim Eternity Relic.
 			    despawnNpc(npc);
-				//Seraphim Seal has been destroyed.
+				// 炽天使封印已被摧毁。 / Seraphim Seal has been destroyed.
 				sendMsgByRace(1403270, Race.PC_ALL, 0);
 				deleteNpc(703020);
 			break;
@@ -495,32 +502,56 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			case 857462: //Fleshgolem Captain.
 			case 857464: //Mountainous Shardgolem.
 			    doors.get(33).setOpen(true);
-				//The Antiquarian of Atreia is defeated and the Eternity Relics ceased functioning.
+				// 阿特雷亚古物学家被击败，永恒遗物停止运作。 / The Antiquarian of Atreia is defeated and the Eternity Relics ceased functioning.
 				sendMsgByRace(1403214, Race.PC_ALL, 0);
 				final int ArchivesExit = spawnRace == Race.ASMODIANS ? 806192 : 806191;
 				spawn(ArchivesExit, 222.88667f, 511.78955f, 468.80215f, (byte) 0);
 				final int ArchivesToCradle = spawnRace == Race.ASMODIANS ? 806057 : 806055;
 				spawn(ArchivesToCradle, 256.28693f, 512.5591f, 468.84964f, (byte) 118);
-				spawn(806153, 245.83438f, 512.4957f, 468.80215f, (byte) 119); //Cryptograph Cube.
-				//sendMsg("[SUCCES]: You have finished <Archives Of Eternity>");
+				spawn(806153, 245.83438f, 512.4957f, 468.80215f, (byte) 119); //密码背包。 / Cryptograph Cube.
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Archives Of Eternity>");
 			break;
 		}
 	}
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -544,6 +575,10 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
         doors.clear();

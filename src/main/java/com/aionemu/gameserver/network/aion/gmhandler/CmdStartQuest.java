@@ -1,19 +1,3 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.administration.PanelConfig;
@@ -25,15 +9,29 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * GM 指令：为目标玩家启动指定任务。
+ * GM command handler that starts a quest for the target player.
+ *
  * @author Alcapwnd
  */
 public class CmdStartQuest extends AbstractGMHandler {
 
+	/**
+	 * 创建处理器并立即启动任务。
+	 * Creates the handler and immediately starts the quest.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 任务 ID 字符串 / quest id as string
+	 */
 	public CmdStartQuest(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 校验权限后为目标玩家启动指定任务。
+	 * After access check, starts the given quest for the target player.
+	 */
 	private void run() {
 		Player t = target != null ? target : admin;
 

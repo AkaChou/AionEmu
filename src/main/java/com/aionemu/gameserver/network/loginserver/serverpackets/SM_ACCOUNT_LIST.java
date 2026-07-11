@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 import java.util.Map;
@@ -23,25 +7,34 @@ import com.aionemu.gameserver.network.loginserver.LoginServerConnection;
 import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 
 /**
- * GameServer packet that sends list of logged in accounts
- * 
+ * 游戏服向登录服同步当前已登录账号列表的服务端包。
+ * Server packet that sends the list of currently logged-in accounts to the login server.
+ *
  * @author SoulKeeper
  */
 public class SM_ACCOUNT_LIST extends LsServerPacket {
 
 	/**
-	 * Map with loaded accounts
+	 * 已加载的在线账号连接映射。
+	 * Map of loaded online account connections.
 	 */
 	private final Map<Integer, AionConnection> accounts;
 
 	/**
-	 * constructs new server packet with specified opcode.
+	 * 构造已登录账号列表包。
+	 * Constructs a new logged-in account list packet.
+	 *
+	 * @param accounts 在线账号连接映射 / online account connection map
 	 */
 	public SM_ACCOUNT_LIST(Map<Integer, AionConnection> accounts) {
 		super(0x04);
 		this.accounts = accounts;
 	}
 
+	/**
+	 * 写入在线账号数量及各账号名称。
+	 * Writes the online account count and each account name.
+	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {
 		writeD(accounts.size());

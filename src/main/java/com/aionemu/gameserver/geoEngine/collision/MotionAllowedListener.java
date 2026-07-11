@@ -1,31 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.collision;
 
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
+/**
+ * 运动许可监听器，在位移发生前检查是否允许，并按需修正位置与速度。
+ * Motion-allowed listener that checks whether a move is permitted and may
+ * adjust position and velocity when it is not.
+ */
 public interface MotionAllowedListener {
 
 	/**
-	 * Check if motion allowed. Modify position and velocity vectors appropriately
-	 * if not allowed..
+	 * 检查运动是否允许；不允许时就地修改位置与速度向量。
+	 * Checks if motion is allowed; modifies position and velocity in place when not.
 	 *
-	 * @param position
-	 * @param velocity
+	 * @param position 当前位置（可修改） / current position (mutable)
+	 * @param velocity 当前速度（可修改） / current velocity (mutable)
 	 */
 	public void checkMotionAllowed(Vector3f position, Vector3f velocity);
 }

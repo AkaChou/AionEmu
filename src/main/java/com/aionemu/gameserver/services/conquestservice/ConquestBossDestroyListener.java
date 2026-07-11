@@ -1,40 +1,45 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.conquestservice;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 
 /**
+ * 征服/供奉 BOSS 死亡监听器（当前为空实现，预留钩子）。
+ * Death listener for Conquest/Offering bosses (currently no-op, reserved hook).
+ *
  * @author Rinzler (Encom)
  */
-
 @SuppressWarnings("rawtypes")
 public class ConquestBossDestroyListener extends OnDieEventCallback {
+
 	private final ConquestOffering<?> conquestOffering;
 
+	/**
+	 * 绑定所属供奉事件。
+	 * Binds the owning offering event.
+	 *
+	 * offering event
+	 */
 	public ConquestBossDestroyListener(ConquestOffering conquestOffering) {
 		this.conquestOffering = conquestOffering;
 	}
 
+	/**
+	 * 死亡前钩子（空实现）。
+	 * Pre-death hook (no-op).
+	 *
+	 * dying AI
+	 */
 	@Override
 	public void onBeforeDie(AbstractAI obj) {
 	}
 
+	/**
+	 * 死亡后钩子（空实现）。
+	 * Post-death hook (no-op).
+	 *
+	 * dying AI
+	 */
 	@Override
 	public void onAfterDie(AbstractAI obj) {
 	}

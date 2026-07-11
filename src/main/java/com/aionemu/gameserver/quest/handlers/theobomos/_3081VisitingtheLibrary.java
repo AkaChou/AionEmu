@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 西奥博莫斯任务脚本：Visitingthe Library（任务 ID 3081）。
+ * Theobomos quest script: Visitingthe Library (quest ID 3081).
  */
 public class _3081VisitingtheLibrary extends QuestHandler {
 

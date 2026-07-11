@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -22,14 +6,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员增加经验命令：给目标玩家增加指定经验值。
+ * Admin add-exp command: grants a specified amount of experience to the target player.
+ *
  * @author Wakizashi
  */
 public class AddExp extends AdminCommand {
 
+	/**
+	 * 注册 {@code //addexp} 命令。
+	 * Registers the {@code //addexp} command.
+	 */
 	public AddExp() {
 		super("addexp");
 	}
 
+	/**
+	 * 执行增加经验：解析经验值并叠加到目标玩家。
+	 * Executes add-exp: parses the amount and adds it to the target player.
+	 *
+	 * admin
+	 * @param params 参数：经验值 / experience amount
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length != 1) {
@@ -59,6 +57,13 @@ public class AddExp extends AdminCommand {
 		PacketSendUtility.sendMessage(player, "You added " + params[0] + " exp points to the target.");
 	}
 
+	/**
+	 * 参数错误时输出 {@code //addexp} 用法。
+	 * Prints {@code //addexp} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //addexp <exp>");

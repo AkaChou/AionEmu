@@ -1,24 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
+import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -30,12 +17,18 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Simple
  */
+
+/**
+ * 军团综合操作（创建、邀请、权限、公告等）的客户端包。
+ * Client packet for general legion operations (create, invite, rights, announcements, etc.).
+ *
+ * @author Simple
+ */
 @Slf4j
 public class CM_LEGION extends AionClientPacket {
 
-
 	/**
-	 * exOpcode and the rest
+	 * 扩展操作码及后续数据 / exOpcode and the rest
 	 */
 	private int exOpcode;
 	private short deputyPermission;
@@ -52,91 +45,96 @@ public class CM_LEGION extends AionClientPacket {
 	private int joinType;
 	private int minLevel;
 	private int playerId;
-
+	private int creatorNpcObjectId;
 	/**
-	 * Constructs new instance of CM_LEGION packet
-	 * 
-	 * @param opcode
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_LEGION(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
 	/**
-	 * {@inheritDoc}
+	 * 按扩展操作码读取军团操作参数。
+	 * Reads legion operation parameters by extended opcode.
 	 */
 	@Override
 	protected void readImpl() {
 		exOpcode = readC();
 
 		switch (exOpcode) {
-		/** Create a legion **/
+		/**
+	 * 创建军团。 / Create a legion *
+	 */
 		case 0x00:
-			readD(); // 00 78 19 00 40
+			creatorNpcObjectId = readD();
 			legionName = readS();
 			break;
-		/** Invite to legion **/
+		/** 邀请加入军团 / Invite to legion */
 		case 0x01:
-			readD(); // empty
+			readD(); // 空 / empty
 			charName = readS();
 			break;
-		/** Leave legion **/
+		/** 离开军团 / Leave legion */
 		case 0x02:
-			readD(); // empty
-			readH(); // empty
+			readD(); // 空 / empty
+			readH(); // 空 / empty
 			break;
-		/** Kick member from legion **/
+		/** 将成员踢出军团 / Kick member from legion */
 		case 0x04:
-			readD(); // empty
+			readD(); // 空 / empty
 			charName = readS();
 			break;
-		/** Appoint a new Brigade General **/
+		/** 任命新军团长 / Appoint a new Brigade General */
 		case 0x05:
 			readD();
 			charName = readS();
 			break;
-		/** Appoint Centurion **/
+		/** 任命百夫长 / Appoint Centurion */
 		case 0x06:
 			rank = readD();
 			charName = readS();
 			break;
-		/** Demote to Legionary **/
+		/** 降为军团兵 / Demote to Legionary */
 		case 0x07:
 			readD(); // char id? 00 78 19 00 40
 			charName = readS();
 			break;
-		/** Refresh legion info **/
+		/** 刷新军团信息 / Refresh legion info */
 		case 0x08:
 			readD();
 			readH();
 			break;
-		/** Edit announcements **/
+		/** 编辑公告 / Edit announcements */
 		case 0x09:
 			readD(); // empty or char id?
 			announcement = readS();
 			break;
-		/** Change self introduction **/
+		/** 修改自我介绍 / Change self introduction */
 		case 0x0A:
 			readD(); // empty char id?
 			newSelfIntro = readS();
 			break;
-		/** Edit permissions **/
+		/** 编辑权限 / Edit permissions */
 		case 0x0D:
 			deputyPermission = (short) readH();
 			centurionPermission = (short) readH();
 			legionarPermission = (short) readH();
 			volunteerPermission = (short) readH();
 			break;
-		/** Level legion up **/
+		/** 提升军团等级 / Level legion up */
 		case 0x0E:
-			readD(); // empty
-			readH(); // empty
+			readD(); // 空 / empty
+			readH(); // 空 / empty
 			break;
 		case 0x0F:
 			charName = readS();
 			newNickname = readS();
 			break;
-		/** Stonespear Reach **/
+		/** 石矛之地 / Stonespear Reach */
 		case 0x10:
 			readD();
 			break;
@@ -156,13 +154,13 @@ public class CM_LEGION extends AionClientPacket {
 			playerId = readD();
 			break;
 		default:
-			log.info("Unknown Legion exOpcode? 0x" + Integer.toHexString(exOpcode).toUpperCase());
+			log.info(I18n.get("log.31ee2653cc50", Integer.toHexString(exOpcode).toUpperCase()));
 			break;
 		}
 	}
-
 	/**
-	 * {@inheritDoc}
+	 * 分发军团创建、邀请、权限、公告等操作。
+	 * Dispatches legion create, invite, rights, announcement, and related ops.
 	 */
 	@Override
 	protected void runImpl() {
@@ -174,22 +172,22 @@ public class CM_LEGION extends AionClientPacket {
 				GameCoreGameplayServices.legionService().handleCharNameRequest(exOpcode, activePlayer, charName, newNickname, rank);
 			} else {
 				switch (exOpcode) {
-				/** Refresh legion info **/
+				/** 刷新军团信息 / Refresh legion info */
 				case 0x08:
 					sendPacket(new SM_LEGION_INFO(legion));
 					break;
-				/** Edit announcements **/
+				/** 编辑公告 / Edit announcements */
 				case 0x09:
 					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, announcement);
 					break;
-				/** Stonespear Reach **/
+				/** 石矛之地 / Stonespear Reach */
 				case 0x10:
 					break;
-				/** Change self introduction **/
+				/** 修改自我介绍 / Change self introduction */
 				case 0x0A:
 					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
 					break;
-				/** Edit permissions **/
+				/** 编辑权限 / Edit permissions */
 				case 0x0D:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
 						GameCoreGameplayServices.legionService().changePermissions(legion, deputyPermission, centurionPermission,
@@ -215,7 +213,7 @@ public class CM_LEGION extends AionClientPacket {
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
 						GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
 					break;
-				/** Misc. **/
+				/** 杂项 / Misc */
 				default:
 					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer);
 					break;
@@ -223,13 +221,17 @@ public class CM_LEGION extends AionClientPacket {
 			}
 		} else {
 			switch (exOpcode) {
-			/** Create a legion **/
+			/**
+	 * 创建军团。 / Create a legion *
+	 */
 			case 0x00:
 				if (NameRestrictionService.isForbiddenWord(legionName)) {
 					PacketSendUtility.sendMessage(activePlayer,
 							"You are trying to use a forbidden name. Choose another one!");
 				} else {
-					GameCoreGameplayServices.legionService().createLegion(activePlayer, legionName);
+					VisibleObject creator = activePlayer.getKnownList().getObject(creatorNpcObjectId);
+					GameCoreGameplayServices.legionService().createLegion(activePlayer, legionName,
+							creator instanceof Npc ? (Npc) creator : null);
 				}
 				break;
 			}

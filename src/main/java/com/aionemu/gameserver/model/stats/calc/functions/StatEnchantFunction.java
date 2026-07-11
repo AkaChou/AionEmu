@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +6,11 @@ import com.aionemu.gameserver.model.items.ItemSlot;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.ArmorType;
+
+/**
+ * 属性 Enchant 函数模型。
+ * Stat Enchant Function model.
+ */
 @Slf4j
 
 public class StatEnchantFunction extends StatAddFunction {
@@ -35,11 +24,13 @@ public class StatEnchantFunction extends StatAddFunction {
 		this.point = point;
 	}
 
+	/** 返回 priority / Returns the priority */
 	@Override
 	public final int getPriority() {
 		return 30;
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat) {
 		if (!item.isEquipped()) {
@@ -241,8 +232,8 @@ public class StatEnchantFunction extends StatAddFunction {
 		int equipmentSlot = (int) slot;
 		switch (item.getItemTemplate().getArmorType()) {
 		/**
-		 * 4.9 Enchant Stats
-		 */
+	 * 4.9 Enchant Stats
+	 */
 		case ROBE:
 			switch (equipmentSlot) {
 			case 1 << 5:
@@ -501,9 +492,9 @@ public class StatEnchantFunction extends StatAddFunction {
 			}
 			return 0;
 		/**
-		 * 5.0 Wings Enchant
-		 */
-		 // lol
+	 * 5.0 翅膀强化 / 5.0 Wings Enchant
+	 */
+		 // 呵呵 / lol
 		case WING:
 			if (enchantLvl+enchantAdvLvl<20)
 				enchantLvl = enchantLvl+enchantAdvLvl;

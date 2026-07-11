@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,27 +17,29 @@ import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTriggerHolder;
 
 /**
- * MySQL8 TaskFromDB DAO implementation
- * 
+ * 数据库定时任务 DAO 的 MySQL 8 实现。
+ * MySQL 8 TaskFromDBDAO implementation.
+ *
  * @author Updated for MySQL 8
  */
 @Slf4j
 public class MySQL8TaskFromDBDAO extends TaskFromDBDAO {
 
+    /** 查询全部任务 SQL / Select all tasks SQL*/
     private static final String SELECT_ALL_QUERY = "SELECT * FROM tasks ORDER BY id";
 
     @Override
     public ArrayList<TaskFromDBTrigger> getAllTasks() {
         ArrayList<TaskFromDBTrigger> result = new ArrayList<>();
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_ALL_QUERY);
              ResultSet rset = stmt.executeQuery()) {
-            
+
             while (rset.next()) {
                 try {
                     TaskFromDBTrigger trigger = TaskFromDBTriggerHolder.valueOf(rset.getString("trigger_type")).getTriggerClass().getDeclaredConstructor().newInstance();
-                    
+
                     TaskFromDBHandler handler = TaskFromDBHandlerHolder.valueOf(rset.getString("task_type")).getTaskClass().getDeclaredConstructor().newInstance();
 
                     handler.setTaskId(rset.getInt("id"));
@@ -54,11 +58,11 @@ public class MySQL8TaskFromDBDAO extends TaskFromDBDAO {
 
                     result.add(trigger);
                 } catch (Exception ex) {
-                    log.error("Error creating task from DB: " + ex.getMessage(), ex);
+                    log.error(I18n.get("log.51b28941ecc3", ex.getMessage(), ex));
                 }
             }
         } catch (SQLException e) {
-            log.error("Loading tasks failed: ", e);
+            log.error(I18n.get("log.098a63ad15f2", e));
         }
 
         return result;

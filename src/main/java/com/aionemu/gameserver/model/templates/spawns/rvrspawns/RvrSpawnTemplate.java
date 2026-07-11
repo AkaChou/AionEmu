@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.rvrspawns;
 
 import com.aionemu.gameserver.model.rvr.RvrStateType;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
+ * 阵营战刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -38,26 +25,34 @@ public class RvrSpawnTemplate extends SpawnTemplate {
 		super(spawnGroup, x, y, z, heading, randWalk, walkerId, entityId, fly);
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 r state type / Returns the r state type */
 	public RvrStateType getRStateType() {
 		return rvrType;
 	}
 
+	/** 设置 id / Sets the id */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/** 设置 r state type / Sets the r state type */
 	public void setRStateType(RvrStateType rvrType) {
 		this.rvrType = rvrType;
 	}
 
+	/** 是否为阵营战。 / Whether rvr. */
 	public final boolean isRvr() {
 		return rvrType.equals(RvrStateType.RVR);
 	}
 
+	/**
+	 * @return Whether rvr peace / Whether rvr peace
+	 */
 	public final boolean isRvrPeace() {
 		return rvrType.equals(RvrStateType.PEACE);
 	}

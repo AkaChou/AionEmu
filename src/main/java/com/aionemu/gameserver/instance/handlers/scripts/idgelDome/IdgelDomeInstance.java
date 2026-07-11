@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.idgelDome;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -60,23 +44,41 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/** Source: http://aion.power.plaync.com/wiki/%EB%A3%A8%EB%82%98%ED%86%A0%EB%A6%AC%EC%9B%80
-/****/
+/**
+ * 伊吉尔穹顶副本事件处理器。
+ * Instance event handler for Idgel Dome.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301310000)
 public class IdgelDomeInstance extends GeneralInstanceHandler
 {
-    private long instanceTime;
-	private Race RaceKilledKunax = null;
+    /** 副本时间戳 / instance timestamp */
+        private long instanceTime;
+	/** 种族 killedkunax / race killed kunax */
+		private Race RaceKilledKunax = null;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-    protected IdgelDomeReward idgelDomeReward;
-    private float loosingGroupMultiplier = 1;
+    /** idgel dome reward / idgel dome reward */
+        protected IdgelDomeReward idgelDomeReward;
+    /** 败方倍率 / losing-group multiplier */
+        private float loosingGroupMultiplier = 1;
+    /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed = false;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-    protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final List<Future<?>> idgelTask = new ArrayList<Future<?>>();
+    /** 副本是否已开始 / whether the instance started */
+        protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+    /** idgel 任务 / idgel task */
+        private final List<Future<?>> idgelTask = new ArrayList<Future<?>>();
+    /**
+     * 返回玩家奖励记录。
+     * Return the player's reward record.
+     *
+     * 玩家 / player
+     * result
+     */
     
     protected IdgelDomePlayerReward getPlayerReward(Player player) {
         idgelDomeReward.regPlayerReward(player);
@@ -87,6 +89,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         return idgelDomeReward.containPlayer(object);
     }
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -116,16 +124,24 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(164000315, storage.getItemCountByItemId(164000315)); //Freeze Bomb.
 		storage.decreaseByItemId(164000316, storage.getItemCountByItemId(164000316)); //PvP Defense Scroll.
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         idgelDomeReward.setInstanceStartTime();
 		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!idgelDomeReward.isRewarded()) {
 				    openFirstDoors();
-				    //The member recruitment window has passed. You cannot recruit any more members.
+				    // 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 				    sendMsgByRace(1401181, Race.PC_ALL, 5000);
                     idgelDomeReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
                     startInstancePacket();
@@ -134,11 +150,15 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             }
         }, 90000));
 		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 sendPacket(false);
                 idgelDomeReward.sendPacket(4, null);
-				//Supplies have been dropped in a confidential area.
+				// 补给已投放在机密区域。 / Supplies have been dropped in a confidential area.
 				sendMsgByRace(1402086, Race.PC_ALL, 0);
 				sp(702581, 312.9132f, 311.31152f, 79.86219f, (byte) 104, 0); //Intelligence Supply Box.
 				sp(702582, 216.0075f, 209.24077f, 79.86219f, (byte) 44, 0); //Intelligence Supply Box.
@@ -147,13 +167,17 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             }
         }, 300000));
 		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
             	sendPacket(false);
                 idgelDomeReward.sendPacket(4, null);
-                //Destroyer Kunax has spawned.
+                // 毁灭者库纳克斯已生成。 / Destroyer Kunax has spawned.
 				sendMsgByRace(1402598, Race.PC_ALL, 0);
-				//Destroyer Kunax has appeared in the Slaying Arena.
+				// 毁灭者库纳克斯已出现在杀戮竞技场。 / Destroyer Kunax has appeared in the Slaying Arena.
 				sendMsgByRace(1402367, Race.PC_ALL, 10000);
                 sp(234190, 266.579f, 257.436f, 85.81963f, (byte) 46, 0); //Destroyer Kunax.
 				sp(234751, 250.67055f, 257.33798f, 85.81963f, (byte) 62, 0); //Sheban Elite Stalwart.
@@ -163,6 +187,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             }
         }, 600000));
     }
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param race 阵营 / race
+	 */
 	
     protected void stopInstance(Race race) {
         stopInstanceTask();
@@ -172,6 +202,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         idgelDomeReward.sendPacket(5, null);
     }
 	
+    /**
+     * 玩家进入副本时处理。
+     * Handle a player entering the instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onEnterInstance(final Player player) {
         if (!containPlayer(player.getObjectId())) {
@@ -189,6 +225,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	
     private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * opponent
+             */
             @Override
             public void visit(Player opponent) {
                 if (player.getRace() != opponent.getRace()) {
@@ -210,6 +252,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	
     private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * @param player 玩家 / player
+             */
             @Override
             public void visit(Player player) {
             	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
@@ -223,6 +271,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
+                /**
+                 * 处理 visit。
+                 * Handle visit.
+                 *
+                 * @param player 玩家 / player
+                 */
                 @Override
                 public void visit(Player player) {
                 	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
@@ -230,6 +284,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             });
     	} else {
     		instance.doOnAllPlayers(new Visitor<Player>() {
+                /**
+                 * 处理 visit。
+                 * Handle visit.
+                 *
+                 * @param player 玩家 / player
+                 */
                 @Override
                 public void visit(Player player) {
                 	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
@@ -238,6 +298,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     	}
     }
 	
+    /**
+     * 副本创建时初始化逻辑。
+     * Initialize logic when the instance is created.
+     *
+     * @param instance 世界地图实例 / world-map instance
+     */
     @Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -246,6 +312,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         doors = instance.getDoors();
         startInstanceTask();
     }
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 	
     protected void reward() {
         int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
@@ -297,6 +367,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -319,6 +393,13 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         return 0;
     }
 	
+    /**
+     * 处理玩家复活事件。
+     * Handle a player revive event.
+     *
+     * 玩家 / player
+     * result
+     */
     @Override
     public boolean onReviveEvent(Player player) {
         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
@@ -328,6 +409,14 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         return true;
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * 玩家 / player
+     * @param lastAttacker 最后攻击者 / last attacker
+     * result
+     */
     @Override
     public boolean onDie(Player player, Creature lastAttacker) {
 		IdgelDomePlayerReward ownerReward = idgelDomeReward.getPlayerReward(player.getObjectId());
@@ -379,6 +468,15 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     private void addPvPKillToPlayer(Player player) {
         idgelDomeReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
     }
+	/**
+	 * 处理 updateScore。
+	 * Handle updateScore.
+	 *
+	 * 玩家 / player
+	 * target
+	 * points
+	 * pvpKill
+	 */
 	
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
         if (points == 0) {
@@ -424,6 +522,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         }
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
 	public void onDie(Npc npc) {
         int point = 0;
@@ -449,6 +553,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
                 point = 6000;
 				RaceKilledKunax = mostPlayerDamage.getRace();
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 					public void run() {
 						if (!idgelDomeReward.isRewarded()) {
@@ -462,11 +570,18 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         updateScore(mostPlayerDamage, npc, point, false);
     }
 	
+    /**
+     * 玩家对 NPC 使用物品完成时处理。
+     * Handle item-use finish on an NPC.
+     *
+     * 玩家 / player
+     * npc
+     */
     @Override
     public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 		    case 802192: //Flame Vent [Elyos].
-			    //The Asmodian Flame Vent has been activated.\nThe Asmodians are trapped!
+			 // 魔族火焰喷口已激活。\n 魔族被困住了！ / The Asmodian Flame Vent has been activated.\nThe Asmodians are trapped!
 				sendMsgByRace(1402368, Race.PC_ALL, 0);
 				sp(702404, 234.43842f, 194.1041f, 79.23065f, (byte) 105, 0);
 				sp(702405, 234.13383f, 194.39594f, 79.23065f, (byte) 105, 0);
@@ -475,7 +590,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
                 sp(702405, 234.53394f, 194.27177f, 79.23065f, (byte) 75, 0);
 			break;
 			case 802193: //Flame Vent [Asmodians]
-			    //The Elyos Flame Vent has been activated.\nThe Elyos are trapped!
+			 // 天族火焰喷口已激活。\n 天族被困住了！ / The Elyos Flame Vent has been activated.\nThe Elyos are trapped!
 				sendMsgByRace(1402369, Race.PC_ALL, 0);
 				sp(702404, 294.57443f, 324.22205f, 79.23065f, (byte) 45, 0);
 				sp(702405, 294.53418f, 324.0909f, 79.23065f, (byte) 105, 0);
@@ -492,6 +607,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 		}
 	}
 	
+    /**
+     * 副本销毁时清理资源。
+     * Clean up resources when the instance is destroyed.
+     */
     @Override
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
@@ -499,11 +618,21 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         stopInstanceTask();
         doors.clear();
     }
+	/**
+	 * 处理 openFirstDoors。
+	 * Handle openFirstDoors.
+	 */
 	
     protected void openFirstDoors() {
         openDoor(1);
 		openDoor(99);
     }
+	/**
+	 * 打开指定门。
+	 * Open the given door.
+	 *
+	 * doorId
+	 */
 	
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
@@ -511,17 +640,59 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             door.setOpen(true);
         }
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * entity id
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -533,9 +704,25 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -546,12 +733,30 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -565,6 +770,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -580,25 +791,49 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         }
     }
 	
+    /**
+     * 返回本副本奖励对象。
+     * Return this instance's reward object.
+     *
+     * result
+     */
     @Override
     public InstanceReward<?> getInstanceReward() {
         return idgelDomeReward;
     }
 	
+    /**
+     * 玩家请求退出副本时处理。
+     * Handle a player exit request.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
 	
+    /**
+     * 玩家离开副本时处理。
+     * Handle a player leaving the instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onLeaveInstance(Player player) {
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 		IdgelDomePlayerReward playerReward = idgelDomeReward.getPlayerReward(player.getObjectId());
 		playerReward.endBoostMoraleEffect(player);
 		removeItems(player);
     }
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -611,6 +846,12 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         }
     }
 	
+    /**
+     * 玩家登录到该副本时处理。
+     * Handle a player logging into this instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onPlayerLogin(Player player) {
         idgelDomeReward.sendPacket(10, player.getObjectId());

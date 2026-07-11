@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
@@ -23,6 +7,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 通知客户端房屋编辑操作结果的服务端包（添加、移除、放置、删除等）。
+ * Server packet that notifies the client of house edit action results (add, remove, place, delete, etc.).
+ */
 public class SM_HOUSE_EDIT extends AionServerPacket {
 	private int action;
 	private int storeId;
@@ -30,16 +18,41 @@ public class SM_HOUSE_EDIT extends AionServerPacket {
 	private float x, y, z;
 	private int rotation;
 
+	/**
+	 * 构造仅含动作类型的房屋编辑包。
+	 * Creates a house edit packet with action type only.
+	 *
+	 * @param action 编辑动作类型 / edit action type
+	 */
 	public SM_HOUSE_EDIT(int action) {
 		this.action = action;
 	}
 
+	/**
+	 * 构造含仓库与物品对象 ID 的房屋编辑包（添加/移除等）。
+	 * Creates a house edit packet with store and item object ids (add/remove, etc.).
+	 *
+	 * @param action 编辑动作类型 / edit action type
+	 * store id
+	 * item object id
+	 */
 	public SM_HOUSE_EDIT(int action, int storeId, int itemObjectId) {
 		this(action);
 		this.itemObjectId = itemObjectId;
 		this.storeId = storeId;
 	}
 
+	/**
+	 * 构造含放置坐标与旋转的房屋编辑包。
+	 * Creates a house edit packet with placement coordinates and rotation.
+	 *
+	 * @param action 编辑动作类型 / edit action type
+	 * item object id
+	 * @param x X 坐标 / x coordinate
+	 * @param y Y 坐标 / y coordinate
+	 * @param z Z 坐标 / z coordinate
+	 * rotation
+	 */
 	public SM_HOUSE_EDIT(int action, int itemObjectId, float x, float y, float z, int rotation) {
 		this.action = action;
 		this.itemObjectId = itemObjectId;

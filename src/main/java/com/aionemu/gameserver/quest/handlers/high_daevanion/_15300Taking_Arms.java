@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.high_daevanion;
 
 import com.aionemu.gameserver.model.ChatType;
@@ -26,9 +14,12 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
+/**
+ * 高等大天使任务脚本：Taking Arms（任务 ID 15300）。
+ * High Daevanion quest script: Taking Arms (quest ID 15300).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _15300Taking_Arms extends QuestHandler {
 
 	public static final int questId = 15300;
@@ -125,7 +116,7 @@ public class _15300Taking_Arms extends QuestHandler {
                         }
 					} case STEP_TO_3: {
                         if (player.isInGroup2()) {
-							//You must leave your group or alliance to enter.
+							// 须离开小队或联盟才能进入。 / You must leave your group or alliance to enter.
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403080));
 							return true;
 						} else {

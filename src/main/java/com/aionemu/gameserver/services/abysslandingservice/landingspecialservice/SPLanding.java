@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.abysslandingservice.landingspecialservice;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -21,11 +5,23 @@ import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 
+/**
+ * 特殊欧比斯着陆点实现：激活/停用刷怪并持久化。
+ * Special abyss-landing implementation: activate/deactivate spawns and persist.
+ */
 public class SPLanding extends SpecialLanding<LandingSpecialLocation> {
+
+	/**
+	 * @param landing 特殊着陆点位置 / Special landing location
+	 */
 	public SPLanding(LandingSpecialLocation landing) {
 		super(landing);
 	}
 
+	/**
+	 * 激活特殊着陆点（先去刷再刷 ACTIVE）。
+	 * Activate the special landing (despawn first, then spawn ACTIVE).
+	 */
 	@Override
 	public void startLanding() {
 		getSpecialLandingLocation().setActiveLanding(this);
@@ -35,10 +31,18 @@ public class SPLanding extends SpecialLanding<LandingSpecialLocation> {
 		spawn(LandingSpecialStateType.ACTIVE);
 	}
 
+	/**
+	 * 将特殊着陆点状态写回数据库。
+	 * Persist special landing location state to the database.
+	 */
 	public void saveLanding() {
 		DAOManager.getDAO(AbyssSpecialLandingDAO.class).updateLocation(getSpecialLandingLocation());
 	}
 
+	/**
+	 * 停用特殊着陆点：清空活动引用、去刷并刷 NO_ACTIVE。
+	 * Deactivate special landing: clear active ref, despawn, spawn NO_ACTIVE.
+	 */
 	@Override
 	public void stopLanding() {
 		getSpecialLandingLocation().setActiveLanding(null);

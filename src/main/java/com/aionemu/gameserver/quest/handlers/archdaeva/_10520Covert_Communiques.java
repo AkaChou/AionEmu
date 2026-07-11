@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -35,10 +19,12 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/** Source KOR: https://www.youtube.com/watch?v=8Qt-ZODwhoA
-/****/
+/**
+ * 大天使任务脚本：Covert Communiques（任务 ID 10520）。
+ * Archdaeva quest script: Covert Communiques (quest ID 10520). Source KOR: https://www.youtube.com/watch?v=8Qt-ZODwhoA
+ *
+ * @author Encom
+ */
 public class _10520Covert_Communiques extends QuestHandler {
 
 	public static final int questId = 10520;
@@ -97,7 +83,7 @@ public class _10520Covert_Communiques extends QuestHandler {
 							return sendQuestDialog(env, 1012);
 						}
 					} case STEP_TO_1: {
-						//Sealed Letter From Pernos.
+						// 来自佩尔诺斯的封印信件。 / Sealed Letter From Pernos.
 						giveQuestItem(env, 182215973, 1);
 						changeQuestStep(env, 0, 1, false);
 						return closeDialogWindow(env);
@@ -114,7 +100,7 @@ public class _10520Covert_Communiques extends QuestHandler {
 							return sendQuestDialog(env, 1694);
 						}
 					} case STEP_TO_3: {
-						//Orders To Report To Iluma.
+						// 前往伊卢玛报到的命令。 / Orders To Report To Iluma.
 						giveQuestItem(env, 182215953, 1);
 						changeQuestStep(env, 2, 3, false);
 						return closeDialogWindow(env);
@@ -132,7 +118,7 @@ public class _10520Covert_Communiques extends QuestHandler {
 						}
 					} case STEP_TO_4: {
 						TeleportService2.teleportTo(env.getPlayer(), 210100000, 1456.6283f, 1299.3306f, 336.49023f, (byte) 8);
-						//Orders To Report To Iluma.
+						// 前往伊卢玛报到的命令。 / Orders To Report To Iluma.
 						removeQuestItem(env, 182215953, 1);
 						changeQuestStep(env, 3, 4, false);
 						return closeDialogWindow(env);
@@ -209,12 +195,12 @@ public class _10520Covert_Communiques extends QuestHandler {
 			return HandlerResult.UNKNOWN;
 		} if (qs.getStatus() == QuestStatus.START) {
 			int var = qs.getQuestVarById(0);
-			//Sealed Letter From Pernos.
+			// 来自佩尔诺斯的封印信件。 / Sealed Letter From Pernos.
 			if (item.getItemTemplate().getTemplateId() == 182215973) {
 				if (var == 1) {
 					qs.setQuestVar(2);
 					updateQuestStatus(env);
-					//Sealed Letter From Pernos.
+					// 来自佩尔诺斯的封印信件。 / Sealed Letter From Pernos.
 					removeQuestItem(env, 182215973, 1);
 					return HandlerResult.SUCCESS;
 				}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 
+/**
+ * Temporary 刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "TemporarySpawn")
 public class TemporarySpawn {
@@ -33,30 +22,37 @@ public class TemporarySpawn {
 	@XmlAttribute(name = "despawn_time")
 	private String despawnTime;
 
+	/** 返回刷新时间 / Returns the spawn time*/
 	public String getSpawnTime() {
 		return spawnTime;
 	}
 
+	/** Ge Spawn Hour / Ge Spawn Hour */
 	public Integer geSpawnHour() {
 		return getTime(spawnTime, 0);
 	}
 
+	/** Ge Spawn Day / Ge Spawn Day */
 	public Integer geSpawnDay() {
 		return getTime(spawnTime, 1);
 	}
 
+	/** 返回 spawn month / Returns the spawn month */
 	public Integer getSpawnMonth() {
 		return getTime(spawnTime, 2);
 	}
 
+	/** 消失小时 / ge Despawn Hour. */
 	public Integer geDespawnHour() {
 		return getTime(despawnTime, 0);
 	}
 
+	/** 消失日 / ge Despawn Day. */
 	public Integer geDespawnDay() {
 		return getTime(despawnTime, 1);
 	}
 
+	/** 返回 despawn month / Returns the despawn month */
 	public Integer getDespawnMonth() {
 		return getTime(despawnTime, 2);
 	}
@@ -69,6 +65,7 @@ public class TemporarySpawn {
 		return Integer.parseInt(result);
 	}
 
+	/** 返回消失时间 / Returns the despawn time*/
 	public String getDespawnTime() {
 		return despawnTime;
 	}
@@ -86,14 +83,17 @@ public class TemporarySpawn {
 		return false;
 	}
 
+	/** 是否可以刷新点。 / Whether spawn. */
 	public boolean canSpawn() {
 		return isTime(geSpawnHour(), geSpawnDay(), getSpawnMonth());
 	}
 
+	/** 是否消失 / Whether despawn*/
 	public boolean canDespawn() {
 		return isTime(geDespawnHour(), geDespawnDay(), getDespawnMonth());
 	}
 
+	/** 是否刷新时间 / Whether in spawn time */
 	public boolean isInSpawnTime() {
 		GameTime gameTime = GameTimeManager.getGameTime();
 		Integer spawnHour = geSpawnHour();

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.league;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -35,6 +21,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Preconditions;
+
+/**
+ * 战团服务，用于团队2相关逻辑。
+ * League Service for team 2 logic.
+ */
 @Slf4j
 
 public class LeagueService {
@@ -44,6 +35,7 @@ public class LeagueService {
 		GlobalCallbackHelper.addCallback(new AllianceDisbandListener());
 	}
 
+	/** 邀请战团 / Invite To League*/
 	public static final void inviteToLeague(final Player inviter, final Player invited) {
 		if (canInvite(inviter, invited)) {
 			LeagueInvite invite = new LeagueInvite(inviter, invited);
@@ -58,19 +50,20 @@ public class LeagueService {
 		}
 	}
 
+	/** 是否邀请 / Whether invite*/
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
-				// You cannot use invite, leave or kick commands related to your group or
-				// alliance in this region.
+				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
+				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
 		}
 		if (invited.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
-				// You cannot use invite, leave or kick commands related to your group or
-				// alliance in this region.
+				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
+				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
 				return false;
 			}
@@ -78,6 +71,7 @@ public class LeagueService {
 		return RestrictionsManager.canInviteToLeague(inviter, invited);
 	}
 
+	/** 创建战团。 / Create league. */
 	public static final League createLeague(Player inviter, Player invited) {
 		PlayerAlliance alliance = inviter.getPlayerAlliance2();
 		Preconditions.checkNotNull(alliance, "League can not be null");
@@ -87,15 +81,18 @@ public class LeagueService {
 		return newLeague;
 	}
 
+	/** 添加联盟。 / Adds alliance. */
 	public static final void addAlliance(League league, PlayerAlliance alliance) {
 		Preconditions.checkNotNull(league, "League should not be null");
 		league.onEvent(new LeagueEnteredEvent(league, alliance));
 	}
 
+	/** 添加联盟到战团 / Adds alliance to league*/
 	public static final void addAllianceToLeague(League league, PlayerAlliance alliance) {
 		league.addMember(new LeagueMember(alliance, league.size()));
 	}
 
+	/** 移除联盟。 / Removes alliance. */
 	public static final void removeAlliance(PlayerAlliance alliance) {
 		if (alliance != null) {
 			League league = alliance.getLeague();
@@ -104,6 +101,7 @@ public class LeagueService {
 		}
 	}
 
+	/** Expel 联盟 / Expel Alliance */
 	public static final void expelAlliance(Player expelledPlayer, Player expelGiver) {
 		Preconditions.checkNotNull(expelledPlayer, "Expelled player should not be null");
 		Preconditions.checkNotNull(expelGiver, "ExpelGiver player should not be null");
@@ -120,6 +118,7 @@ public class LeagueService {
 				new LeagueLeftEvent(league, expelledPlayer.getPlayerAlliance2(), LeagueLeftEvent.LeaveReson.EXPEL));
 	}
 
+	/** 解散 / disband. */
 	public static void disband(League league) {
 		Preconditions.checkState(league.onlineMembers() <= 1, "Can't disband league with more than one online member");
 		leagues.remove(league.getTeamId());
@@ -127,10 +126,12 @@ public class LeagueService {
 	}
 
 	static class AllianceDisbandListener extends PlayerAllianceDisbandCallback {
+		/** 在 alliance disband 前 / On Before Alliance Disband */
 		@Override
 		public void onBeforeAllianceDisband(PlayerAlliance alliance) {
 		}
 
+		/** 在 alliance disband 后 / On After Alliance Disband */
 		@Override
 		public void onAfterAllianceDisband(PlayerAlliance alliance) {
 			try {
@@ -140,7 +141,7 @@ public class LeagueService {
 					}
 				}
 			} catch (Throwable t) {
-				// log.error("Error during alliance disband listen", t);
+				// log.error(I18n.get("log.9c4581cffa3e", t));
 			}
 		}
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player.emotion;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
@@ -32,8 +16,10 @@ import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * @author MrPoke
+ * 表情列表。
+ * Emotion List game object.
  *
+ * @author MrPoke
  */
 public class EmotionList {
 	private Map<Integer, Emotion> emotions;
@@ -46,6 +32,7 @@ public class EmotionList {
 		this.owner = owner;
 	}
 
+	/** 添加。 / Add. */
 	public void add(int emotionId, int dispearTime, boolean isNew) {
 		if (emotions == null) {
 			emotions = new HashMap<Integer, Emotion>();
@@ -62,12 +49,14 @@ public class EmotionList {
 		}
 	}
 
+	/** 移除。 / Remove. */
 	public void remove(int emotionId) {
 		emotions.remove(emotionId);
 		DAOManager.getDAO(PlayerEmotionListDAO.class).deleteEmotion(owner.getObjectId(), emotionId);
 		PacketSendUtility.sendPacket(owner, new SM_EMOTION_LIST((byte) 0, getEmotions()));
 	}
 
+	/** 是否包含。 / Contains. */
 	public boolean contains(int emotionId) {
 		if (emotions == null) {
 			return false;
@@ -75,11 +64,15 @@ public class EmotionList {
 		return emotions.containsKey(emotionId);
 	}
 
+	/**
+	 * @param emotionId 是否 use / 是否 use。 / Whether use / Whether use
+	 */
 	public boolean canUse(int emotionId) {
 		return emotionId < 64 || emotionId > 155 || (emotions != null && emotions.containsKey(emotionId))
 				|| owner.havePermission(MembershipConfig.EMOTIONS_ALL);
 	}
 
+	/** 返回 emotions / Returns the emotions */
 	public Collection<Emotion> getEmotions() {
 		if (emotions == null) {
 			return Collections.emptyList();

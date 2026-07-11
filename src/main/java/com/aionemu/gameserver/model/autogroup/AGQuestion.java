@@ -1,32 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
+/**
+ * AGQuestion 枚举。
+ * AG Question enumeration.
+ */
+
 public enum AGQuestion {
+	/** 失败 / Failed. */
 	FAILED, READY, ADDED;
 
+	/** 是否失败 / Whether failed*/
 	public boolean isFailed() {
 		return this.equals(AGQuestion.FAILED);
 	}
 
+	/** 是否就绪。 / Whether Ready. */
 	public boolean isReady() {
 		return this.equals(AGQuestion.READY);
 	}
 
+	/**
+	 * @return 是否 added / 是否 added。 / Whether added / Whether added
+	 */
 	public boolean isAdded() {
 		return this.equals(AGQuestion.ADDED);
 	}

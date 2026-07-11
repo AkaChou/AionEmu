@@ -1,33 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.nightmarecircusservice;
 
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusStateType;
 
 /**
+ * 梦魇马戏团默认实现：切入 OPEN / 回到 CLOSED。
+ * back to CLOSED. / back to CLOSED.
+ *
  * @author Rinzler (Encom)
  */
-
 public class Nightmare extends CircusInstance<NightmareCircusLocation> {
+
+	/**
+	 * 绑定梦魇马戏团地点。
+	 * Binds the Nightmare Circus location.
+	 *
+	 * location
+	 */
 	public Nightmare(NightmareCircusLocation nightmareCircus) {
 		super(nightmareCircus);
 	}
 
+	/**
+	 * 激活活动并刷新 OPEN 刷怪。
+	 * Activates the event and spawns OPEN entities.
+	 */
 	@Override
 	public void startNightmareCircus() {
 		getNightmareCircusLocation().setActiveNightmareCircus(this);
@@ -35,6 +32,10 @@ public class Nightmare extends CircusInstance<NightmareCircusLocation> {
 		spawn(NightmareCircusStateType.OPEN);
 	}
 
+	/**
+	 * 结束活动并恢复 CLOSED 刷怪。
+	 * Ends the event and restores CLOSED spawns.
+	 */
 	@Override
 	public void stopNightmareCircus() {
 		getNightmareCircusLocation().setActiveNightmareCircus(null);

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -47,25 +31,38 @@ import java.util.Map;
 import java.util.Map;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 提亚马特要塞副本事件处理器。
+ * Instance event handler for Tiamat Stronghold.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300510000)
 public class TiamatStrongholdInstance extends GeneralInstanceHandler {
-
+	/** 击杀数 / kill count */
 	private int kills;
-	private int protectorate;
-	private boolean startSuramaEvent;
+	/** protectorate / protectorate */
+		private int protectorate;
+	/** start surama event / start surama event */
+		private boolean startSuramaEvent;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
-		//Kahrun [Reian Leader]
+		// 卡伦【雷安领袖】 / Kahrun [Reian Leader]
 		spawn(800456, 1577.6334f, 1055.3899f, 492.0681f, (byte) 26);
-		//Laksyaka Colonel I
+		// 拉克夏卡上校 I / Laksyaka Colonel I
 		spawn(219363, 763.0683f, 1446.5114f, 495.65198f, (byte) 90);
         spawn(219363, 763.0781f, 1191.3202f, 495.64584f, (byte) 30);
 		spawn(219363, 893.29297f, 1190.8209f, 495.6457f, (byte) 30);
@@ -92,12 +89,22 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			break;
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				protectorateFirstWave();
 			}
 		}, 60000);
 	}
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -113,7 +120,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053208, 1)); //Tiamat Guard's Eternal Armor Chest.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 			break;
@@ -121,7 +128,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053208, 1)); //Tiamat Guard's Eternal Armor Chest.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					} switch (Rnd.get(1, 3)) {
 				        case 1:
 				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100001398, 1)); //Terath's Sword.
@@ -141,11 +148,11 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			case 219364: //Laksyaka Colonel.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000121, 1)); //Eternal Prison Key.
 			break;
-			case 702658: //Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+			case 702658: //修道院箱子。 / Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
-			case 702659: //Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+			case 702659: //高级修道院箱子。 / Noble Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 			case 701501: //Balaur Medal Box.
 			case 701527: //Stronghold Treasure Chest.
@@ -164,6 +171,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		}
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -175,6 +189,12 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -192,20 +212,24 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				}
 			break;
 		    case 219352: //Invincible Shabokan.
-				//A Balaur Medal Chest appeared in the Noble's Garden.
+				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 			    sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701501, 1075.4409f, 1078.5071f, 787.685f, (byte) 16);
 				spawn(283177, 1178.7662f, 1068.971f, 500.6963f, (byte) 0); //Tiamat Eye.
 				Npc tiamatEye1 = getNpc(283177);
-				//Insolent Daevas! Destroying my lieutenants!
+				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500679, tiamatEye1.getObjectId(), 0, 3000);
-				//Laksyaka was useful to me. You'll see what happens to those who take away my tools.
+				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500680, tiamatEye1.getObjectId(), 0, 9000);
-				//Whatever agony my lieutenants felt as they died, you will feel tenfold!
+				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500681, tiamatEye1.getObjectId(), 0, 15000);
-				//Dear Dragon Lord, please rest in peace. Let me avenge you!
+				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500682, tiamatEye1.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						deleteNpc(283177);
@@ -217,22 +241,26 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			    }, 22000);
 		    break;
 		    case 219355: //Traitor Kumbanda.
-				//A Balaur Medal Chest appeared in the Noble's Garden.
+				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 				sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701501, 1063.5973f, 1092.7402f, 787.685f, (byte) 107);
 		    break;
 			case 219356: //Brigade General Laksyaka.
 			    spawn(283178, 628.3988f, 1319.0686f, 494.79846f, (byte) 119); //Tiamat Eye.
 				Npc tiamatEye2 = getNpc(283178);
-				//Insolent Daevas! Destroying my lieutenants!
+				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500679, tiamatEye2.getObjectId(), 0, 3000);
-				//Laksyaka was useful to me. You'll see what happens to those who take away my tools.
+				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500680, tiamatEye2.getObjectId(), 0, 9000);
-				//Whatever agony my lieutenants felt as they died, you will feel tenfold!
+				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500681, tiamatEye2.getObjectId(), 0, 15000);
-				//Dear Dragon Lord, please rest in peace. Let me avenge you!
+				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500682, tiamatEye2.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						deleteNpc(283178);
@@ -244,33 +272,37 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				deleteNpc(283099); //Blade Storm.
 				doors.get(37).setOpen(true);
 			    doors.get(610).setOpen(true);
-				//A Balaur Medal Chest appeared in the Noble's Garden.
+				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 				sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701501, 1077.1716f, 1058.1995f, 787.685f, (byte) 61);
 		    break;
 		    case 219358: //Brigade General Tahabata.
 /* 			    switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 678.0355f, 1071.9641f, 497.75186f, (byte) 85); //Abbey Box.
+				        spawn(702658, 678.0355f, 1071.9641f, 497.75186f, (byte) 85); //修道院箱子。 / Abbey Box.
 					break;
 					case 2:
-					    spawn(702659, 678.0355f, 1071.9641f, 497.75186f, (byte) 85); //Noble Abbey Box.
+					    spawn(702659, 678.0355f, 1071.9641f, 497.75186f, (byte) 85); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
-				//A Balaur Medal Chest appeared in the Noble's Garden.
+				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 				sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701541, 677.35785f, 1069.5361f, 499.86716f, (byte) 0);
 				spawn(283178, 644.7906f, 1068.6279f, 506.9512f, (byte) 119); //Tiamat Eye.
 				Npc tiamatEye3 = getNpc(283178);
-				//Insolent Daevas! Destroying my lieutenants!
+				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500679, tiamatEye3.getObjectId(), 0, 3000);
-				//Laksyaka was useful to me. You'll see what happens to those who take away my tools.
+				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500680, tiamatEye3.getObjectId(), 0, 9000);
-				//Whatever agony my lieutenants felt as they died, you will feel tenfold!
+				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500681, tiamatEye3.getObjectId(), 0, 15000);
-				//Dear Dragon Lord, please rest in peace. Let me avenge you!
+				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500682, tiamatEye3.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						deleteNpc(283178);
@@ -280,13 +312,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		    break;
 		    case 219353: //Brigade General Chantra.
 			    doors.get(711).setOpen(true);
-				//A Balaur Medal Chest appeared in the Noble's Garden.
+				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 				sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701541, 677.35785f, 1069.5361f, 499.86716f, (byte) 0);
 		    break;
 		    case 219354: //Brigade General Terath.
 				spawnStrongholdTreasureChest();
-				//A Balaur Medal Chest appeared in the Noble's Garden.
+				// 贵族花园中出现了龙族勋章箱。 / A Balaur Medal Chest appeared in the Noble's Garden.
 				sendMsgByRace(1401614, Race.PC_ALL, 2000);
 				spawn(701541, 677.35785f, 1069.5361f, 499.86716f, (byte) 0);
 				sendMsg("Congratulation]: you finish <Tiamat Stronghold>");
@@ -297,15 +329,19 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				spawn(802179, 1030.0757f, 271.60504f, 409.08588f, (byte) 30); //Tiamat Stronghold Opportunity Bundle.
 				spawn(730629, 1121.5267f, 1069.9308f, 500.24982f, (byte) 0, 555); //Central Transport Passage.
 				Npc tiamatEye4 = getNpc(283180);
-				//Insolent Daevas! Destroying my lieutenants!
+				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500679, tiamatEye4.getObjectId(), 0, 3000);
-				//Laksyaka was useful to me. You'll see what happens to those who take away my tools.
+				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500680, tiamatEye4.getObjectId(), 0, 9000);
-				//Whatever agony my lieutenants felt as they died, you will feel tenfold!
+				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500681, tiamatEye4.getObjectId(), 0, 15000);
-				//Dear Dragon Lord, please rest in peace. Let me avenge you!
+				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500682, tiamatEye4.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						deleteNpc(283180);
@@ -355,44 +391,48 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 		if (despawn) {
 		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    /**
+			     * 处理 run。
+			     * Handle run.
+			     */
 			    @Override
 			    public void run() {
 			  	    if (npc.getNpcId() == 800336) {
 			  		    spawn(800338, 1104f, 1069f, 497f, (byte) 61);
 			  		    Npc kahrun = getNpc(800338);
 						Npc garnon = getNpc(800347);
-						//The Reian Soldiers will secure this area. You must press on. Hurry!
+						// 雷安士兵将守住此区域。你必须继续前进。快！ / The Reian Soldiers will secure this area. You must press on. Hurry!
 					    GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500597, kahrun.getObjectId(), 0, 5000);
-					    //I'm impressed! I thought the gatekeeper would be a greater challenge.
-						//I see we chose our champions well.
+					    // 令人印象深刻！我以为守门人会更难对付。 / I'm impressed! I thought the gatekeeper would be a greater challenge.
+						// 看来我们选对了冠军。 / I see we chose our champions well.
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500598, kahrun.getObjectId(), 0, 15000);
-						//There are reinforcements further in. We must deal with them.
+						// 更深处有增援。我们必须对付他们。 / There are reinforcements further in. We must deal with them.
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500599, kahrun.getObjectId(), 0, 25000);
-					    //What are you waiting for? Get going!
+					    // 你还在等什么？快去！ / What are you waiting for? Get going!
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500600, kahrun.getObjectId(), 0, 35000);
-						//This makes no sense. There must be a way to get to Tiamat's throne from here!
+						// 这说不通。一定有办法从这里到达提亚马特的王座！ / This makes no sense. There must be a way to get to Tiamat's throne from here!
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500601, kahrun.getObjectId(), 0, 45000);
-						//Garnon? How did you get here?
+						// 加农？你怎么到这儿的？ / Garnon? How did you get here?
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500602, kahrun.getObjectId(), 0, 55000);
-						//You've found it? Where in the world was it?
+						// 你找到了？它到底在哪？ / You've found it? Where in the world was it?
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500603, kahrun.getObjectId(), 0, 65000);
-						//Let's not waste time. The final battle is upon us.
+						// 别浪费时间。最终之战即将到来。 / Let's not waste time. The final battle is upon us.
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500604, kahrun.getObjectId(), 0, 75000);
-						//Lord Kahrun!
+						// 卡伦大人！ / Lord Kahrun!
 						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500605, garnon.getObjectId(), 0, 85000);
-						//We've found the entrance to the Dragon Lord's Refuge!
+						// 我们发现了龙主避难所的入口！ / We've found the entrance to the Dragon Lord's Refuge!
 						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500606, garnon.getObjectId(), 0, 95000);
-						//The scouts we sent to Tiamaranta's Eye are the ones you should be asking.
+						// 我们派往提亚玛兰塔之眼的侦察兵才是你该问的人。 / The scouts we sent to Tiamaranta's Eye are the ones you should be asking.
 						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500607, garnon.getObjectId(), 0, 105000);
-						//Tiamat. Hand over Siel's Relics and leave Tiamaranta.
+						// 提亚马特。交出希尔遗物并离开提亚玛兰塔。 / Tiamat. Hand over Siel's Relics and leave Tiamaranta.
 						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500608, garnon.getObjectId(), 0, 115000);
-						//My forces are on their way.
-						//Do you truly wish to face us in all-out battle? Such a choice will lead to tragedy for us all.
+						// 我的部队正在赶来。 / My forces are on their way.
+						// 你真要与我们全面开战？这选择将给双方带来悲剧。 / Do you truly wish to face us in all-out battle? Such a choice will lead to tragedy for us all.
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500609, kahrun.getObjectId(), 0, 125000);
-						//Well then, you've chosen the path of destruction. Now you will see the true power of the Reian Tribe
+						// 那么，你选择了毁灭之路。现在你将见识雷安部族的真正力量。 / Well then, you've chosen the path of destruction. Now you will see the true power of the Reian Tribe
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500610, kahrun.getObjectId(), 0, 135000);
-						//Aarrghh! Si...Siel's Relics...
-						//They are more powerful than we ever imagined! Run! You must not try to face this alone.
+						// 啊啊啊！希……希尔的遗物…… / Aarrghh! Si...Siel's Relics...
+						// 他们比我们想象的更强！快跑！别独自面对！ / They are more powerful than we ever imagined! Run! You must not try to face this alone.
 						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500611, kahrun.getObjectId(), 0, 145000);
 			  	    }
 				    npc.getController().onDelete();
@@ -417,6 +457,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		moveToForward((Npc)spawn(800336, 1178.0559f, 1069.6f, 491.02545f, (byte) 61), 1104, 1069, 497, true);
 	}
 	
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
 	public void onEnterZone(Player player, ZoneInstance zone) {
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("LAKSYAKA_LEGION_HQ_300510000")) {
@@ -429,18 +476,42 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -451,6 +522,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			}
 		}, time);
 	}
+	/**
+	 * 返回 npc。
+	 * Return the npc.
+	 *
+	 * NPC
+	 * result
+	 */
 	
 	protected Npc getNpc(int npcId) {
 		if (!isInstanceDestroyed) {
@@ -469,6 +547,10 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		doors.clear();

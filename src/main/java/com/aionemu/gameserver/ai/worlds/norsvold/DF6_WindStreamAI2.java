@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.norsvold;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Norsvold 区域 NPC AI：DF6 Wind Stream（@AIName "DF6_WindStream"），继承 NpcAI2。
+ * Norsvold zone NPC AI: DF6 Wind Stream (@AIName "DF6_WindStream"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("DF6_WindStream")
 public class DF6_WindStreamAI2 extends NpcAI2
 {

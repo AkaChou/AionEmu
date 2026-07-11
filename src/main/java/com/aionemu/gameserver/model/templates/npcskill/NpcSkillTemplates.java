@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.npcskill;
 
 import java.util.List;
@@ -25,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * NPC 技能 Templates 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author AionChs Master
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,10 +23,12 @@ public class NpcSkillTemplates {
 	@XmlElement(name = "npcskill")
 	protected List<NpcSkillTemplate> npcSkills;
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** 返回 npc skills / Returns the npc skills */
 	public List<NpcSkillTemplate> getNpcSkills() {
 		return npcSkills;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone.handler;
 
 import java.lang.reflect.Modifier;
@@ -25,11 +9,20 @@ import com.aionemu.commons.utils.ClassUtils;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 /**
+ * 脚本类加载监听器：将有效的 {@link ZoneHandler} 实现注册到区域服务。
+ * Script class-load listener: registers valid {@link ZoneHandler} implementations with the zone service.
+ *
  * @author MrPoke
  */
 @Slf4j(topic = "com.aionemu.gameserver.instance.InstanceHandlerClassListener")
 public class ZoneHandlerClassListener implements ClassListener {
 
+	/**
+	 * 类加载后扫描并注册区域处理器。
+	 * After classes are loaded, scan and register zone handlers.
+	 *
+	 * @param classes 已加载的类数组 / loaded class array
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void postLoad(Class<?>[] classes) {
@@ -50,6 +43,12 @@ public class ZoneHandlerClassListener implements ClassListener {
 		}
 	}
 
+	/**
+	 * 类卸载前记录调试日志。
+	 * Log debug messages before classes are unloaded.
+	 *
+	 * @param classes 待卸载的类数组 / classes about to be unloaded
+	 */
 	@Override
 	public void preUnload(Class<?>[] classes) {
 		if (log.isDebugEnabled()) {
@@ -59,6 +58,13 @@ public class ZoneHandlerClassListener implements ClassListener {
 		}
 	}
 
+	/**
+	 * 判断类是否可作为区域处理器（公开、非抽象、非接口）。
+	 * Whether the class is a valid zone handler (public, non-abstract, non-interface).
+	 *
+	 * @param clazz 待检查的类 / class to check
+	 * whether valid
+	 */
 	public boolean isValidClass(Class<?> clazz) {
 		final int modifiers = clazz.getModifiers();
 

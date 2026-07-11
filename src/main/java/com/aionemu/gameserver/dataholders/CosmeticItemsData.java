@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -28,9 +12,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.cosmeticitems.CosmeticItemTemplate;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
+ * 外观物品数据容器，按外观名称索引模板。
+ * Cosmetic item data holder, indexing templates by cosmetic name.
  *
  * @author xTz
  */
@@ -39,9 +24,12 @@ import java.util.Map;
 public class CosmeticItemsData {
 	@XmlElement(name = "cosmetic_item", type = CosmeticItemTemplate.class)
 	private List<CosmeticItemTemplate> templates;
-	private final Map<String, CosmeticItemTemplate> cosmeticItemTemplates = new LinkedHashMap<String, CosmeticItemTemplate>()
-			;
+	private final Map<String, CosmeticItemTemplate> cosmeticItemTemplates = new LinkedHashMap<String, CosmeticItemTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，按外观名称建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes templates by cosmetic name and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (CosmeticItemTemplate template : templates) {
 			cosmeticItemTemplates.put(template.getCosmeticName(), template);
@@ -50,10 +38,23 @@ public class CosmeticItemsData {
 		templates = null;
 	}
 
+	/**
+	 * 返回已加载的外观物品数量。
+	 * Returns the number of loaded cosmetic items.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return cosmeticItemTemplates.size();
 	}
 
+	/**
+	 * 按外观名称获取模板。
+	 * Returns the cosmetic item template for the given name.
+	 *
+	 * @param str 外观名称 / cosmetic name
+	 * @return 模板，不存在则为 null / template or null
+	 */
 	public CosmeticItemTemplate getCosmeticItemsTemplate(String str) {
 		return cosmeticItemTemplates.get(str);
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.drop;
 
 import java.util.ArrayList;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 掉落物品模型。
+ * Drop Item model.
+ *
  * @author ATracer
  */
 public class DropItem {
@@ -52,8 +39,7 @@ public class DropItem {
 	}
 
 	/**
-	 * Regenerates item count upon each call // TODO input parameters - based on
-	 * attacker stats // TODO more precise calculations (non-linear)
+	 * Regenerates item count from the drop template range
 	 */
 	public void calculateCount() {
 		count = Rnd.get(dropTemplate.getMinAmount(), dropTemplate.getMaxAmount());
@@ -101,6 +87,7 @@ public class DropItem {
 		return playerObjIds;
 	}
 
+	/** 是否 view drop item / Whether view drop item */
 	public boolean canViewDropItem(int objectId) {
 		return playerObjIds.isEmpty() || playerObjIds.contains(objectId);
 	}
@@ -191,22 +178,29 @@ public class DropItem {
 		return isDistributeItem;
 	}
 
+	/** 返回 npc obj / Returns the npc obj */
 	public int getNpcObj() {
 		return npcObj;
 	}
 
+	/** 设置 npc obj / Sets the npc obj */
 	public void setNpcObj(int npcObj) {
 		this.npcObj = npcObj;
 	}
 
+	/** 返回 optional socket / Returns the optional socket */
 	public int getOptionalSocket() {
 		return optionalSocket;
 	}
 
+	/**
+	 * @param player 是否仅 possiblelooter / 是否仅 possiblelooter。 / Whether only possible looter / Whether only possible looter
+	 */
 	public boolean isOnlyPossibleLooter(Player player) {
 		return playerObjIds.size() == 1 && playerObjIds.contains(player.getObjectId());
 	}
 
+	/** 返回 loot effect id / Returns the loot effect id */
 	public int getLootEffectId() {
 		return switch (dropTemplate.getItemId()) {
 			case 166020000, 166020001, 166020002, 166020003 -> 1003;

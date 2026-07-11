@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.factories;
 
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
@@ -33,6 +17,9 @@ import com.aionemu.gameserver.network.loginserver.clientpackets.CM_REQUEST_KICK_
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
+ * 登录服包处理器工厂：注册 LS 客户端包原型并提供处理器单例。
+ * Login-server packet handler factory: registers LS client packet prototypes and exposes the handler singleton.
+ *
  * @author Luno
  */
 public class LsPacketHandlerFactory {
@@ -40,6 +27,12 @@ public class LsPacketHandlerFactory {
 	private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
 	private LsPacketHandler handler = new LsPacketHandler();
 
+	/**
+	 * 获取工厂单例（优先 Spring Provider）。
+	 * Returns the factory singleton (prefers Spring provider).
+	 *
+	 * factory instance
+	 */
 	public static final LsPacketHandlerFactory getInstance() {
 		ObjectProvider<LsPacketHandlerFactory> provider = instanceProvider;
 		if (provider == null) {
@@ -48,11 +41,18 @@ public class LsPacketHandlerFactory {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
+	 * Injects Spring ObjectProvider to override the static singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<LsPacketHandlerFactory> provider) {
 		instanceProvider = provider;
 	}
 
 	/**
+	 * 注册登录服包处理器。
 	 * Registers login-server packet handlers.
 	 */
 	public LsPacketHandlerFactory() {
@@ -69,10 +69,23 @@ public class LsPacketHandlerFactory {
 		addPacket(new CM_PTRANSFER_RESPONSE(12), State.AUTHED);
 	}
 
+	/**
+	 * 向处理器注册包原型及合法状态。
+	 * Registers a packet prototype with valid states.
+	 *
+	 * packet prototype
+	 * @param states 合法连接状态 / valid connection states
+	 */
 	private void addPacket(LsClientPacket prototype, State... states) {
 		handler.addPacketPrototype(prototype, states);
 	}
 
+	/**
+	 * 获取已注册的包处理器。
+	 * Returns the registered packet handler.
+	 *
+	 * packet handler
+	 */
 	public LsPacketHandler getPacketHandler() {
 		return handler;
 	}

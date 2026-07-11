@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -24,50 +8,182 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemAttackType;
 
 /**
+ * AI2 核心接口，定义 NPC/召唤物等生物的人工智能行为契约。
+ * Core AI2 interface defining the artificial intelligence contract for creatures such as NPCs and summons.
+ *
  * @author ATracer
  */
 public interface AI2 {
 
+	/**
+	 * 处理与生物相关的 AI 事件。
+	 * Handles a creature-related AI event.
+	 *
+	 * @param event 事件类型 / event type
+	 * related creature
+	 */
 	void onCreatureEvent(AIEventType event, Creature creature);
 
+	/**
+	 * 处理自定义 AI 事件。
+	 * Handles a custom AI event.
+	 *
+	 * @param eventId 自定义事件 ID / custom event id
+	 * @param args 事件参数 / event arguments
+	 */
 	void onCustomEvent(int eventId, Object... args);
 
+	/**
+	 * 处理通用（无目标）AI 事件。
+	 * Handles a general (target-less) AI event.
+	 *
+	 * @param event 事件类型 / event type
+	 */
 	void onGeneralEvent(AIEventType event);
 
 	/**
-	 * If already handled dialog return true.
+	 * 处理玩家对话框选择；若已处理返回 true。
+	 * Handles player dialog selection; returns true if already handled.
+	 *
+	 * 玩家 / player
+	 * dialog id
+	 * quest id
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @return 是否已处理 / whether the dialog was handled
 	 */
 	boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex);
 
+	/**
+	 * 执行一次 AI 思考/决策循环。
+	 * Runs one AI think/decision cycle.
+	 */
 	void think();
 
+	/**
+	 * 判断当前是否允许思考。
+	 * Returns whether thinking is currently allowed.
+	 *
+	 * @return 是否可思考 / whether the AI can think
+	 */
 	boolean canThink();
 
+	/**
+	 * 获取当前主状态。
+	 * Returns the current main AI state.
+	 *
+	 * AI main state
+	 */
 	AIState getState();
 
+	/**
+	 * 获取当前子状态。
+	 * Returns the current AI sub-state.
+	 *
+	 * AI sub-state
+	 */
 	AISubState getSubState();
 
+	/**
+	 * 获取 AI 名称（通常来自 {@link AIName} 注解）。
+	 * Returns the AI name (usually from the {@link AIName} annotation).
+	 *
+	 * AI name
+	 */
 	String getName();
 
+	/**
+	 * 对指定问题进行投票式查询，返回是否肯定。
+	 * Polls the given question and returns whether the answer is positive.
+	 *
+	 * AI question
+	 * whether the answer is positive
+	 */
 	boolean poll(AIQuestion question);
 
+	/**
+	 * 询问指定问题并返回完整答案对象。
+	 * Asks the given question and returns a full answer object.
+	 *
+	 * AI question
+	 * AI answer
+	 */
 	AIAnswer ask(AIQuestion question);
 
+	/**
+	 * 是否开启 AI 调试日志。
+	 * Returns whether AI debug logging is enabled.
+	 *
+	 * @return 是否记录日志 / whether logging is enabled
+	 */
 	boolean isLogging();
 
+	/**
+	 * 获取剩余时间（例如限时 AI 行为）。
+	 * Returns remaining time (e.g. for timed AI behaviors).
+	 *
+	 * remaining time
+	 */
 	long getRemainigTime();
 
+	/**
+	 * 修改对自身造成的伤害值。
+	 * Modifies incoming damage dealt to this AI's owner.
+	 *
+	 * original damage
+	 * @return 修正后伤害 / modified damage
+	 */
 	int modifyDamage(int damage);
 
+	/**
+	 * 修改所有者造成的伤害值。
+	 * Modifies outgoing damage dealt by this AI's owner.
+	 *
+	 * original damage
+	 * @return 修正后伤害 / modified damage
+	 */
 	int modifyOwnerDamage(int damage);
 
+	/**
+	 * 处理来自其他 NPC 的个体事件通知。
+	 * Handles an individual event notification from another NPC.
+	 *
+	 * @param npc 触发事件的生物 / creature that raised the event
+	 */
 	void onIndividualNpcEvent(Creature npc);
 
+	/**
+	 * 修改治疗数值。
+	 * Modifies a heal value.
+	 *
+	 * @param value 原始治疗量 / original heal value
+	 * @return 修正后治疗量 / modified heal value
+	 */
 	int modifyHealValue(int value);
 
+	/**
+	 * 修改命中/精准相关数值。
+	 * Modifies a maccuracy (hit/accuracy) related value.
+	 *
+	 * original value
+	 * modified value
+	 */
 	int modifyMaccuracy(int value);
 
+	/**
+	 * 修改感知范围。
+	 * Modifies sensory/aggro range.
+	 *
+	 * @param value 原始范围 / original range
+	 * @return 修正后范围 / modified range
+	 */
 	int modifySensoryRange(int value);
 
+	/**
+	 * 修改攻击类型。
+	 * Modifies the item attack type.
+	 *
+	 * @param type 原始攻击类型 / original attack type
+	 * @return 修正后攻击类型 / modified attack type
+	 */
 	ItemAttackType modifyAttackType(ItemAttackType type);
 }

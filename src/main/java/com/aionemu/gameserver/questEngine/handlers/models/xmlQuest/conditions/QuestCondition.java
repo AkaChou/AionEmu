@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.conditions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.questEngine.model.ConditionOperation;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
 /**
+ * XML 驱动任务条件的抽象基类，定义比较运算符与校验入口。
+ * Abstract base for XML-driven quest conditions; defines the comparison operator and check entry.
+ *
  * @author Mr. Poke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,17 +21,26 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 		QuestStatusCondition.class })
 public abstract class QuestCondition {
 
+	/** 条件比较运算符 / Condition comparison operator */
 	@XmlAttribute(required = true)
 	protected ConditionOperation op;
 
 	/**
-	 * Gets the value of the op property.
-	 * 
-	 * @return possible object is {@link ConditionOperation }
+	 * 返回条件比较运算符。
+	 * Returns the condition comparison operator.
+	 *
+	 * @return 比较运算符 / Comparison operator
 	 */
 	public ConditionOperation getOp() {
 		return op;
 	}
 
+	/**
+	 * 在给定任务环境下校验本条件是否成立。
+	 * Evaluates whether this condition holds under the given quest environment.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 条件是否通过 / Whether the condition passes
+	 */
 	public abstract boolean doCheck(QuestEnv env);
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -25,18 +9,23 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
 /**
+ * 静态物体（如场景道具）的刷怪管理器。
+ * Spawn manager for static objects such as scene props.
+ *
  * @author ATracer
  */
 public class StaticObjectSpawnManager {
 
 	/**
-	 * @param spawn
-	 * @param instanceIndex
+	 * 按刷怪组在指定实例中刷出静态物体。
+	 * Spawns static objects from a spawn group into the given instance.
+	 *
+	 * spawn group
+	 * instance index
 	 */
 	public static void spawnTemplate(SpawnGroup2 spawn, int instanceIndex) {
 		VisibleObjectTemplate objectTemplate = DataManager.ITEM_DATA.getItemTemplate(spawn.getNpcId());
@@ -65,9 +54,12 @@ public class StaticObjectSpawnManager {
 	}
 
 	/**
-	 * @param visibleObject
-	 * @param spawn
-	 * @param instanceIndex
+	 * 将可见对象登记、定位并刷入世界。
+	 * Stores, positions and spawns a visible object into the world.
+	 *
+	 * visible object
+	 * @param spawn 刷怪模板 / spawn template
+	 * instance index
 	 */
 	private static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
 		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();

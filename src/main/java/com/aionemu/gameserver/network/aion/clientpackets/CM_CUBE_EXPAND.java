@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,12 +6,22 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.CubeExpandService;
 
 /**
+ * 请求扩展背包（背包）格子的客户端包。
+ * Client packet requesting cube (inventory) expansion.
+ *
  * @author Ranastic (Encom)
  */
-
 public class CM_CUBE_EXPAND extends AionClientPacket {
 	int type;
 
+	/**
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_CUBE_EXPAND(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -40,7 +34,7 @@ public class CM_CUBE_EXPAND extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player activePlayer = getConnection().getActivePlayer();
-		if (type == 0) { // Kinah
+		if (type == 0) { // 基纳 / Kinah
 			if (activePlayer.getNpcExpands() < 15) {
 				if (activePlayer.getNpcExpands() == 0) {
 					if (activePlayer.getInventory().tryDecreaseKinah(1000)) {
@@ -85,66 +79,66 @@ public class CM_CUBE_EXPAND extends AionClientPacket {
 				}
 			}
 		}
-		// Cube Expansion Coin.
+		// 背包扩展币。 / Cube Expansion Coin.
 		else if (type == 1) {
 			if (activePlayer.getNpcExpands() < 10) {
-				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // Cube Expansion Coin.
+				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
 				}
 			} else if (activePlayer.getNpcExpands() < 11) {
-				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // Cube Expansion Coin.
+				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
 				}
 			} else if (activePlayer.getNpcExpands() < 12) {
-				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // Cube Expansion Coin.
+				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
 				}
 			} else if (activePlayer.getNpcExpands() < 13) {
-				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // Cube Expansion Coin.
+				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
 				}
 			} else if (activePlayer.getNpcExpands() < 14) {
-				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // Cube Expansion Coin.
+				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
 				}
 			} else if (activePlayer.getNpcExpands() < 15) {
-				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // Cube Expansion Coin.
+				if (activePlayer.getInventory().decreaseByItemId(186000419, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000440, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000444, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
-				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // Cube Expansion Coin.
+				} else if (activePlayer.getInventory().decreaseByItemId(186000445, 5)) { // 背包扩展币。 / Cube Expansion Coin.
 					CubeExpandService.expand(activePlayer, true);
 				}
 			}

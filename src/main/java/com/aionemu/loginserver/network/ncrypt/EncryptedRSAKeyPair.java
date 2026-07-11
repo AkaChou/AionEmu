@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.ncrypt;
 
 import java.math.BigInteger;
@@ -23,30 +5,23 @@ import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
 
 /**
- * This class is for storing standard RSA Public/Static keyPairs The main
- * difference that N (Modulus) is encrypted to be transfered on the net with
- * simple scrambling algorythm. So public pair (e, n) , where e is exponent
- * (usually static 3 or 65537) and n is modulus, is encrypted and cannot be
- * applied to cipher some data without deciphering the modulus.
+ * 保存标准 RSA 密钥对，并对模数 N 做网络传输用的简单混淆。
+ * Holds a standard RSA key pair and scrambles modulus N for network transfer.
  *
  * @author EvilSpirit
  */
 public class EncryptedRSAKeyPair {
 
-    /**
-     * KeyPair
-     */
+    /** Original RSA key pair / Original RSA key pair */
     private KeyPair RSAKeyPair;
-    /**
-     * Byte
-     */
+    /** 混淆后的模数 / Scrambled modulus bytes */
     private byte[] encryptedModulus;
 
     /**
-     * Default constructor. Stores RSA key pair and encrypts rsa modulus N
+     * 保存 RSA 密钥对并加密其模数 N。
+     * Store the RSA key pair and encrypt its modulus N.
      *
-     * @param RSAKeyPair standard RSA KeyPair generated with standard
-     * KeyPairGenerator {@link java.security.KeyPairGenerator}
+     * @param RSAKeyPair 标准 KeyPairGenerator 生成的密钥对 / key pair from KeyPairGenerator
      */
     public EncryptedRSAKeyPair(KeyPair RSAKeyPair) {
         this.RSAKeyPair = RSAKeyPair;
@@ -54,10 +29,12 @@ public class EncryptedRSAKeyPair {
     }
 
     /**
-     * Encrypt RSA modulus N
+     * 对 RSA 模数 N 做协议约定的字节混淆。
+     * Scramble RSA modulus N with the protocol-defined byte mixing.
      *
-     * @param modulus RSA modulus from public/private pairs (e,n), (d,n)
-     * @return encrypted modulus
+     * RSA modulus
+     *
+     * @param modulus @return 混淆后的模数 / encrypted modulus
      */
     private byte[] encryptModulus(BigInteger modulus) {
         byte[] encryptedModulus = modulus.toByteArray();
@@ -93,18 +70,20 @@ public class EncryptedRSAKeyPair {
     }
 
     /**
-     * Get default RSA key pair
+     * 获取原始 RSA 密钥对。
+     * Get the original RSA key pair.
      *
-     * @return RSAKeyPair
+     * RSA key pair
      */
     public KeyPair getRSAKeyPair() {
         return RSAKeyPair;
     }
 
     /**
-     * Get encrypted modulus to be transferred on the net.
+     * 获取用于网络传输的混淆模数。
+     * Get the scrambled modulus for network transfer.
      *
-     * @return encryptedModulus
+     * encrypted modulus
      */
     public byte[] getEncryptedModulus() {
         return encryptedModulus;

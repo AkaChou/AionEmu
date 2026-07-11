@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
@@ -28,6 +13,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 月之商店（Luna Shop）操作的客户端包。
+ * Client packet for Luna Shop operations.
+ */
 @Slf4j
 public class CM_LUNA_SHOP extends AionClientPacket {
 
@@ -42,11 +31,21 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 	private int ItemObjId;
 	@SuppressWarnings("unused")
 	private int lunaCost;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_LUNA_SHOP(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 按动作 ID 读取月之商店请求参数。
+	 * Reads Luna Shop request parameters by action id.
+	 */
 	@Override
 	protected void readImpl() {
 		actionId = readC();
@@ -90,7 +89,10 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 			break;
 		}
 	}
-
+	/**
+	 * 执行月之商店购买、合成、传送等动作。
+	 * Executes Luna Shop buy, craft, teleport, and related actions.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
@@ -153,7 +155,7 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 			GameEventBootstrapServices.lunaShopService().diceGameReward(player);
 			break;
 		default:
-			log.warn("Unknown Luna shop action. playerId={} actionId={}", player.getObjectId(), actionId);
+			log.warn(I18n.get("log.c40e1a78aad4", player.getObjectId(), actionId));
 			break;
 		}
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.utils;
 
 import java.util.Iterator;
@@ -21,25 +5,50 @@ import java.util.Iterator;
 import com.aionemu.gameserver.geoEngine.utils.IntMap.Entry;
 
 /**
+ * 以 int 为键的开放链式哈希表。
+ * Open-chaining hash map with int keys.
+ * <p>
+ * 源自 http://code.google.com/p/skorpios/
  * Taken from http://code.google.com/p/skorpios/
  *
+ * @param <T> 值类型 / value type
  * @author Nate
  */
 @SuppressWarnings("rawtypes")
 public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 
+	/** 桶数组。 / Bucket table. */
 	private Entry[] table;
+	/** 负载因子。 / Load factor. */
 	private final float loadFactor;
+	/** 当前条目数、掩码、容量与扩容阈值。 / Size, mask, capacity and resize threshold. */
 	private int size, mask, capacity, threshold;
 
+	/**
+	 * 默认容量 16、负载因子 0.75。
+	 * Default capacity 16 and load factor 0.75.
+	 */
 	public IntMap() {
 		this(16, 0.75f);
 	}
 
+	/**
+	 * 指定初始容量，负载因子 0.75。
+	 * Constructs with given initial capacity and load factor 0.75.
+	 *
+	 * initial capacity
+	 */
 	public IntMap(int initialCapacity) {
 		this(initialCapacity, 0.75f);
 	}
 
+	/**
+	 * 指定初始容量与负载因子（容量上取 2 的幂）。
+	 * Constructs with initial capacity (rounded up to power of two) and load factor.
+	 *
+	 * initial capacity
+	 * load factor
+	 */
 	public IntMap(int initialCapacity, float loadFactor) {
 		if (initialCapacity > 1 << 30) {
 			throw new IllegalArgumentException("initialCapacity is too large.");
@@ -60,6 +69,12 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		this.mask = capacity - 1;
 	}
 
+	/**
+	 * 深克隆表项链表。
+	 * Deep-clones the entry chains.
+	 *
+	 * cloned map
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public IntMap<T> clone() {
@@ -78,6 +93,14 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		return null;
 	}
 
+	/**
+	 * 是否包含给定值（equals 比较）。
+	 * Whether any entry has the given value (equals comparison).
+	 *
+	 * value
+	 *
+	 * @param value 存在则为 true / true if present
+	 */
 	public boolean containsValue(Object value) {
 		Entry[] table = this.table;
 		for (int i = table.length; i-- > 0;) {
@@ -90,6 +113,14 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		return false;
 	}
 
+	/**
+	 * 是否包含给定键。
+	 * Whether the map contains the given key.
+	 *
+	 * key
+	 *
+	 * @param key 存在则为 true / true if present
+	 */
 	public boolean containsKey(int key) {
 		int index = (key) & mask;
 		for (Entry e = table[index]; e != null; e = e.next) {
@@ -100,6 +131,13 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		return false;
 	}
 
+	/**
+	 * 按键取值，不存在返回 null。
+	 * Returns the value for the key, or null if absent.
+	 *
+	 * key
+	 * value or null
+	 */
 	@SuppressWarnings("unchecked")
 	public T get(int key) {
 		int index = key & mask;
@@ -111,10 +149,18 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		return null;
 	}
 
+	/**
+	 * 放入键值对；键已存在则覆盖并返回旧值。超阈值时扩容重哈希。
+	 * Puts the entry; overwrites and returns the old value if the key exists. Rehashes when threshold is exceeded.
+	 *
+	 * key
+	 * value
+	 * previous value or null
+	 */
 	@SuppressWarnings("unchecked")
 	public T put(int key, T value) {
 		int index = key & mask;
-		// Check if key already exists.
+		// 检查键是否已存在。 / Check if key already exists.
 		for (Entry e = table[index]; e != null; e = e.next) {
 			if (e.key != key) {
 				continue;
@@ -125,7 +171,7 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		}
 		table[index] = new Entry(key, value, table[index]);
 		if (size++ >= threshold) {
-			// Rehash.
+			// 重哈希。 / Rehash.
 			int newCapacity = 2 * capacity;
 			Entry[] newTable = new Entry[newCapacity];
 			Entry[] src = table;
@@ -151,6 +197,13 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		return null;
 	}
 
+	/**
+	 * 移除键并返回旧值。
+	 * Removes the key and returns the previous value.
+	 *
+	 * key
+	 * previous value or null
+	 */
 	@SuppressWarnings("unchecked")
 	public T remove(int key) {
 		int index = key & mask;
@@ -173,10 +226,20 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		return null;
 	}
 
+	/**
+	 * 当前条目数。
+	 * Number of entries.
+	 *
+	 * size
+	 */
 	public int size() {
 		return size;
 	}
 
+	/**
+	 * 清空所有条目。
+	 * Clears all entries.
+	 */
 	public void clear() {
 		Entry[] table = this.table;
 		for (int index = table.length; --index >= 0;) {
@@ -185,35 +248,55 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		size = 0;
 	}
 
+	/**
+	 * 返回遍历所有条目的迭代器。
+	 * Returns an iterator over all entries.
+	 *
+	 * iterator
+	 */
 	@Override
 	public Iterator<Entry> iterator() {
 		return new IntMapIterator();
 	}
 
+	/**
+	 * 顺序遍历桶与链表的条目迭代器。
+	 * Entry iterator walking buckets and chains in order.
+	 */
 	final class IntMapIterator implements Iterator<Entry> {
 
-		/**
-		 * Current entry.
-		 */
+		/** 当前链表节点。 / Current chain entry. */
 		private Entry cur;
-		/**
-		 * Entry in the table
-		 */
+		/** 当前桶下标。 / Current bucket index. */
 		private int idx = 0;
-		/**
-		 * Element in the entry
-		 */
+		/** 已返回元素计数。 / Count of elements yielded. */
 		private int el = 0;
 
+		/**
+		 * 从第一个桶开始。
+		 * Starts at the first bucket.
+		 */
 		public IntMapIterator() {
 			cur = table[0];
 		}
 
+		/**
+		 * 是否还有元素。
+		 * Whether more elements remain.
+		 *
+		 * @return 有下一元素 / true if more
+		 */
 		@Override
 		public boolean hasNext() {
 			return el < size;
 		}
 
+		/**
+		 * 返回下一个条目。
+		 * Returns the next entry.
+		 *
+		 * entry
+		 */
 		@Override
 		public Entry next() {
 			if (el >= size) {
@@ -227,15 +310,15 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 				return e;
 			}
 			// if (cur != null && cur.next != null){
-			// if we have a current entry, continue to the next entry in the list
+			// 若有当前条目，继续列表中下一项 / if we have a current entry, continue to the next entry in the list
 			// cur = cur.next;
 			// el++;
 			// return cur;
 			// }
 
 			do {
-				// either we exhausted the current entry list, or
-				// the entry was null. find another non-null entry.
+				// 要么当前条目列表已耗尽，要么 / either we exhausted the current entry list, or
+				// 条目为 null。查找另一个非 null 条目。 / the entry was null. find another non-null entry.
 				cur = table[++idx];
 			} while (cur == null);
 			Entry e = cur;
@@ -244,36 +327,81 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 			return e;
 		}
 
+		/**
+		 * 不支持删除。
+		 * Remove is unsupported (no-op).
+		 */
 		@Override
 		public void remove() {
 		}
 	}
 
+	/**
+	 * 哈希表条目（键、值与同桶下一节点）。
+	 * Hash-map entry holding key, value and next link in the bucket.
+	 *
+	 * @param <T> 值类型 / value type
+	 */
 	public static final class Entry<T> implements Cloneable {
 
+		/** 键。 / Key. */
 		final int key;
+		/** 值。 / Value. */
 		T value;
+		/** 同桶下一节点。 / Next entry in the chain. */
 		Entry next;
 
+		/**
+		 * 构造条目。
+		 * Constructs an entry.
+		 *
+		 * @param k 键 / key
+		 * @param v 值 / value
+		 * @param n 下一节点 / next entry
+		 */
 		Entry(int k, T v, Entry n) {
 			key = k;
 			value = v;
 			next = n;
 		}
 
+		/**
+		 * 返回键。
+		 * Returns the key.
+		 *
+		 * key
+		 */
 		public int getKey() {
 			return key;
 		}
 
+		/**
+		 * 返回值。
+		 * Returns the value.
+		 *
+		 * value
+		 */
 		public T getValue() {
 			return value;
 		}
 
+		/**
+		 * 键值字符串表示。
+		 * String form "key => value".
+		 *
+		 * string
+		 */
 		@Override
 		public String toString() {
 			return key + " => " + value;
 		}
 
+		/**
+		 * 深克隆链表。
+		 * Deep-clones the chain starting at this entry.
+		 *
+		 * cloned entry
+		 */
 		@Override
 		@SuppressWarnings("unchecked")
 		public Entry<T> clone() {

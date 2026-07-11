@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.autogroup;
 
 import java.util.ArrayList;
@@ -22,6 +6,11 @@ import java.util.List;
 
 import com.aionemu.commons.taskmanager.AbstractLockManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+
+/**
+ * LookingForParty，用于 autogroup 相关逻辑。
+ * Looking For Party for autogroup logic.
+ */
 
 public class LookingForParty extends AbstractLockManager {
 	private List<SearchInstance> searchInstances = new ArrayList<SearchInstance>();
@@ -35,6 +24,7 @@ public class LookingForParty extends AbstractLockManager {
 				ert.isGroupEntry() ? player.getPlayerGroup2().getOnlineMembers() : null));
 	}
 
+	/** 注销副本。 / Unregister instance. */
 	public int unregisterInstance(int instanceMaskId) {
 		super.writeLock();
 		try {
@@ -51,6 +41,7 @@ public class LookingForParty extends AbstractLockManager {
 		}
 	}
 
+	/** 返回搜索副本列表 / Returns the search instances */
 	public List<SearchInstance> getSearchInstances() {
 		super.readLock();
 		try {
@@ -60,6 +51,7 @@ public class LookingForParty extends AbstractLockManager {
 		}
 	}
 
+	/** 添加 instance mask id / Adds instance mask id */
 	public void addInstanceMaskId(int instanceMaskId, EntryRequestType ert) {
 		super.writeLock();
 		try {
@@ -70,6 +62,7 @@ public class LookingForParty extends AbstractLockManager {
 		}
 	}
 
+	/** 返回搜索副本 / Returns the search instance */
 	public SearchInstance getSearchInstance(int instanceMaskId) {
 		super.readLock();
 		try {
@@ -84,6 +77,9 @@ public class LookingForParty extends AbstractLockManager {
 		}
 	}
 
+	/**
+	 * @param instanceMaskId Whether registred instance / Whether registred instance
+	 */
 	public boolean isRegistredInstance(int instanceMaskId) {
 		super.readLock();
 		try {
@@ -98,26 +94,34 @@ public class LookingForParty extends AbstractLockManager {
 		}
 	}
 
+	/** 获取玩家。 / Returns the player. */
 	public Player getPlayer() {
 		return player;
 	}
 
+	/** 设置玩家。 / Sets the player. */
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
 
+	/** 设置 penalty time / Sets the penalty time */
 	public void setPenaltyTime() {
 		penaltyTime = System.currentTimeMillis();
 	}
 
+	/**
+	 * @return Whether penalty / Whether penalty
+	 */
 	public boolean hasPenalty() {
 		return System.currentTimeMillis() - penaltyTime <= 10000;
 	}
 
+	/** 设置 start enter time / Sets the start enter time */
 	public void setStartEnterTime() {
 		startEnterTime = System.currentTimeMillis();
 	}
 
+	/** 是否开始进入任务时 / Whether on start enter task */
 	public boolean isOnStartEnterTask() {
 		return System.currentTimeMillis() - startEnterTime <= 120000;
 	}

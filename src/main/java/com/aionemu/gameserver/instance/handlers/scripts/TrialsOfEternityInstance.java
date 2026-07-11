@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -57,38 +41,66 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/** Source: https://www.youtube.com/watch?v=V8Rf-d6GnVc
-/** Final Boss: https://www.youtube.com/watch?v=LpEJVS5gyqk
-/****/
+/**
+ * 永恒试炼副本事件处理器。
+ * Instance event handler for Trials Of Eternity.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301560000)
 public class TrialsOfEternityInstance extends GeneralInstanceHandler
 {
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
-	private Race videoRace;
+	/** 视频种族 / video race */
+		private Race videoRace;
+	/** 开始时间 / start time */
 	private long startTime;
+	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
-	private Future<?> fakeBook2Task;
-	private Future<?> instanceTimer;
+	/** fake book2task / fake book2task */
+		private Future<?> fakeBook2Task;
+	/** 副本计时器 / instance timer */
+		private Future<?> instanceTimer;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
-	private int protectorOfResurrectionAgaldima;
+	/** protector of resurrection agaldima / protector of resurrection agaldima */
+		private int protectorOfResurrectionAgaldima;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	//Boss Wave.
-	private Future<?> trialsOfEternityTaskA1;
-	private Future<?> trialsOfEternityTaskA2;
-	private Future<?> trialsOfEternityTaskA3;
-	private Future<?> trialsOfEternityTaskA4;
-	private Future<?> trialsOfEternityTaskA5;
-	private Future<?> trialsOfEternityTaskA6;
-	private Future<?> trialsOfEternityTaskA7;
-	private Future<?> trialsOfEternityTaskA8;
+	// Boss 波次。 / Boss Wave.
+	/** trialseternity 任务 A1 / trials of eternity task a1 */
+		private Future<?> trialsOfEternityTaskA1;
+	/** trialseternity 任务 A2 / trials of eternity task a2 */
+		private Future<?> trialsOfEternityTaskA2;
+	/** trialseternity 任务 A3 / trials of eternity task a3 */
+		private Future<?> trialsOfEternityTaskA3;
+	/** trialseternity 任务 A4 / trials of eternity task a4 */
+		private Future<?> trialsOfEternityTaskA4;
+	/** trialseternity 任务 A5 / trials of eternity task a5 */
+		private Future<?> trialsOfEternityTaskA5;
+	/** trialseternity 任务 A6 / trials of eternity task a6 */
+		private Future<?> trialsOfEternityTaskA6;
+	/** trialseternity 任务 A7 / trials of eternity task a7 */
+		private Future<?> trialsOfEternityTaskA7;
+	/** trialseternity 任务 A8 / trials of eternity task a8 */
+		private Future<?> trialsOfEternityTaskA8;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
-	private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
-	private Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
+	/** scattered energy book / scattered energy book */
+		private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
+	/** trialseternity 任务 / trials of eternity task */
+		private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
+	/** trials shield / trials shield */
+		private Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -123,7 +135,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				}
 			break;
 			case 835409: //Nakaring Treasure Chest.
-			    //https://aionpowerbook.com/powerbook/Elegant_Peacock_Feathers_Set
+			    // https://aionpowerbook.com/powerbook/Elegant_Peacock_Feathers_Set
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 						switch (Rnd.get(1, 6)) {
@@ -152,6 +164,12 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -163,10 +181,24 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		trialsShield.put(700998, SpawnEngine.spawnObject(IDEternity03Shield1, instanceId));
 	}
 	
+	/**
+	 * 玩家通过飞行环时处理。
+	 * Handle a player passing a flying ring.
+	 *
+	 * 玩家 / player
+	 * @param flyingRing 飞行环标识 / flying-ring id
+	 * result
+	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("TRIALS_OF_ETERNITY")) {
 			instance.doOnAllPlayers(new Visitor<Player>() {
+			    /**
+			     * 处理 visit。
+			     * Handle visit.
+			     *
+			     * @param player 玩家 / player
+			     */
 			    @Override
 			    public void visit(Player player) {
 				    if (player.isOnline()) {
@@ -189,6 +221,12 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
 	private void sendPacket(Player player, final String variable, final int value) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+		    /**
+		     * 处理 visit。
+		     * Handle visit.
+		     *
+		     * @param player 玩家 / player
+		     */
 		    @Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
@@ -198,20 +236,30 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		});
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
-		//Netherworld Magic.
+		// 冥界魔法。 / Netherworld Magic.
 		sendPacket(player, "UI_Gauge_01", 0 + 1);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
 		    instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					deleteNpc(700998);
-					//Boliag is channeling dark magic to cause an eruption!
+					// 波利亚格正引导黑暗魔法引发爆发！ / Boliag is channeling dark magic to cause an eruption!
 					sendMsgByRace(1404379, Race.PC_ALL, 120000);
-					//The ground is shaking... You should hurry!
+					// 地面在震动……你得快点！ / The ground is shaking... You should hurry!
 					sendMsgByRace(1404148, Race.PC_ALL, 240000);
 				}
 			}, 60000);
@@ -220,6 +268,10 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			SpawnTrialsOfEternityRace();
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				fallingRock();
@@ -227,7 +279,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 300000); //...5Min
 	}
 	
-	//Scattered Yellow Energy Book.
+	// 散落的黄色能量书。 / Scattered Yellow Energy Book.
 	private void scatteredYellowEnergyBook() {
 		ScatteredEnergyBook.add((Npc) spawn(731752, 712.32526f, 1270.5907f, 735.4228f, (byte) 9));
 		ScatteredEnergyBook.add((Npc) spawn(731752, 775.016f, 1290.2628f, 735.4228f, (byte) 58));
@@ -257,12 +309,16 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	private void startTrialsOfEternityTimer() {
-		//The book was destroyed.
+		// 书本被摧毁。 / The book was destroyed.
 		this.sendMessage(1404208, 10 * 60 * 1000);
 		fakeBook2Task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Fake Book.
+				// 假书。 / Fake Book.
 				ScatteredEnergyBook.get(0).getController().onDelete();
 				ScatteredEnergyBook.get(1).getController().onDelete();
 				ScatteredEnergyBook.get(2).getController().onDelete();
@@ -291,6 +347,12 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 600000); //10 Minutes.
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -299,15 +361,15 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			    protectorOfResurrectionAgaldima++;
 				if (protectorOfResurrectionAgaldima == 2) {
 					deleteNpc(731766); //Book Shield.
-					//Kisk Point A
+					// Kisk 点 A / Kisk Point A
 					spawn(835392, 1195.3578f, 1034.3889f, 761.4341f, (byte) 0);
-					//Kisk Point B
+					// Kisk 点 B / Kisk Point B
 					spawn(835393, 933.1394f, 1060.0201f, 751.92633f, (byte) 75);
-					//Kisk Point C
+					// Kisk 点 C / Kisk Point C
 					spawn(835394, 915.826f, 1339.96f, 747.7376f, (byte) 90);
-					//Kisk Point D
+					// Kisk 点 D / Kisk Point D
 					spawn(835395, 566.4959f, 1317.885f, 721.9022f, (byte) 15);
-					//Kisk Point E
+					// Kisk 点 E / Kisk Point E
 					spawn(835396, 549.6273f, 1127.4685f, 710.9765f, (byte) 75);
 				}
 			break;
@@ -320,12 +382,12 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			break;
 			case 246418: //Ganesh.
 			    deleteNpc(731762);
-				//Ganesh's Gateway.
+				// 伽内什之门。 / Ganesh's Gateway.
 			    final int Peregrine_Viola2 = spawnRace == Race.ASMODIANS ? 806576 : 806567;
                 spawn(Peregrine_Viola2, 392.01886f, 1017.03314f, 711.8558f, (byte) 11);
 				final int Gampt_Kontesius2 = spawnRace == Race.ASMODIANS ? 806577 : 806568;
                 spawn(Gampt_Kontesius2, 390.57996f, 1019.0326f, 711.857f, (byte) 11);
-                //Library Of Insight.
+                // 洞察图书馆。 / Library Of Insight.
 				final int Kontesius_Gampt = spawnRace == Race.ASMODIANS ? 246425 : 246431;
 				final int Ostia_Zarik = spawnRace == Race.ASMODIANS ? 246426 : 246432;
 				final int SlaughtererGuard = spawnRace == Race.ASMODIANS ? 246412 : 246414;
@@ -344,7 +406,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 				sendMovie(player, 955);
 				startInstanceTask();
-				//The Elyos Royal Guard Captain is retreating.
+				// 天族皇家卫队长正在撤退。 / The Elyos Royal Guard Captain is retreating.
 				sendMsgByRace(1404258, Race.PC_ALL, 0);
 			break;
 			case 246431: //Gampt.
@@ -352,7 +414,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 				sendMovie(player, 952);
 				startInstanceTask();
-				//The Asmodian Royal Guard Captain is retreating.
+				// 魔族皇家卫队长正在撤退。 / The Asmodian Royal Guard Captain is retreating.
 				sendMsgByRace(1404257, Race.PC_ALL, 0);
 			break;
 			case 246440: //Boliag.
@@ -368,12 +430,11 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				spawn(731744, 236.54419f, 1025.4613f, 706.75494f, (byte) 60); //Exit.
 				spawn(835408, 222.55490f, 1031.6270f, 706.75494f, (byte) 15); //Treasure Chest A.
 				spawn(835409, 222.53116f, 1019.2116f, 706.75494f, (byte) 105); //Treasure Chest B.
-				//sendMsg("[SUCCES]: You have finished <Trials Of Eternity>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Trials Of Eternity>");
 			break;
 		   /**
-			* You will now receive "1,200 GP" instead of "200 Gp" for killing "Heart Of Boliag" in the Trials of Eternity instance.
-			* http://aionpowerbook.com/powerbook/KR_-_Update_January_18th_2017
-			*/
+	 * 击杀永恒试炼“波利亚之心”现获得 1200 GP（原 200）。 / You will now receive "1,200 GP" instead of "200 Gp" for killing "Heart Of Boliag" in the Trials of Eternity instance. http://aionpowerbook.com/powerbook/KR_-_Update_January_18th_2017
+	 */
 			case 246441: //Heart Of Boliag.
 			    AbyssPointsService.addGp(player, 1200);
 			break;
@@ -381,30 +442,44 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	//============================//
-	//** Wave Before Boss Fight **//
+	//Wave Before Boss Fight * *//
 	//============================//
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 15000);
 				sp(246724, 238.16855f, 1047.1934f, 707.12958f, (byte) 0, 1018, 0, 0, null);
 				sp(246724, 204.77652f, 1044.5760f, 706.77118f, (byte) 0, 991, 3000, 0, null);
 				sp(246724, 238.52361f, 1004.6866f, 707.12933f, (byte) 0, 1016, 6000, 0, null);
             }
-        }, 60000)); //...1Min
+        }, 60000)); //…1 分钟 / ...1Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA1();
-				//Prepare for combat! More enemies swarming in!
+				//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 				sendMsgByRace(1402832, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				sendMsg("[START]: Wave <1/8>");
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -415,93 +490,131 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
             }
         }, 90000)); //...1-30Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA2();
 				sendMsg("[START]: Wave <2/8>");
 				trialsOfEternityTaskA1.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 180000)); //...3Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA3();
 				sendMsg("[START]: Wave <3/8>");
 				trialsOfEternityTaskA2.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 300000)); //...5Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA4();
 				sendMsg("[START]: Wave <4/8>");
 				trialsOfEternityTaskA3.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 420000)); //...7Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA5();
 				sendMsg("[START]: Wave <5/8>");
 				trialsOfEternityTaskA4.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 540000)); //...9Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA6();
 				sendMsg("[START]: Wave <6/8>");
 				trialsOfEternityTaskA5.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 660000)); //...11Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA7();
 				sendMsg("[START]: Wave <7/8>");
 				trialsOfEternityTaskA6.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 780000)); //...13Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				startTrialsOfEternityA8();
 				sendMsg("[START]: Wave <8/8>");
 				trialsOfEternityTaskA7.cancel(true);
-				//Prepare for combat! Enemies approaching!
+				//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 				sendMsgByRace(1402785, Race.PC_ALL, 0);
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 900000)); //...15Min
 		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 						stopInstance(player);
@@ -518,11 +631,11 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
-		//sendMsg("[SUCCES]: You survived !!! :) ");
+		// sendMsg("[成功]：你活下来了！！！"); / sendMsg("[SUCCES]: You survived !!! :) ");
 	}
 	
 	protected void dimensionBoss01(Player player) {
-		//Boliag.
+		// 波利亚格。 / Boliag.
 		sp(246440, 189.53326f, 1025.3595f, 707.59015f, (byte) 0, 0, 40000, 0, null);
 		final int endVideo = videoRace == Race.ASMODIANS ? 964 : 953;
 		PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, endVideo));
@@ -538,6 +651,13 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		return 0;
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -545,7 +665,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			    if (player.getInventory().decreaseByItemId(185000297, 1)) {
 				    TrialsOfEternityTeleporter(player, 522.7508f, 1217.3593f, 724.3436f, (byte) 61);
 				} else {
-					//You need a restricted library admission ticket.
+					// 你需要限制图书馆入场券。 / You need a restricted library admission ticket.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404075));
 				}
 			break;
@@ -575,29 +695,29 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	private void SpawnTrialsOfEternityRace() {
-		//Npc.
+		// Npc.
 		final int Peregrine_Viola1 = spawnRace == Race.ASMODIANS ? 806572 : 806563;
 		final int Gampt_Kontesius1 = spawnRace == Race.ASMODIANS ? 806573 : 806564;
 		final int Zarik_Ostia1 = spawnRace == Race.ASMODIANS ? 806574 : 806565;
-		//Quest Book.
+		// 任务书。 / Quest Book.
 		final int QuestBook = spawnRace == Race.ASMODIANS ? 703455 : 703454;
-		//Guard Start.
+		// 守卫开始。 / Guard Start.
 		final int IDEternity03StartGuardKn = spawnRace == Race.ASMODIANS ? 246390 : 246388;
 		final int IDEternity03StartGuardWi = spawnRace == Race.ASMODIANS ? 246391 : 246389;
-		//Event Guard.
+		// 活动守卫。 / Event Guard.
 		final int IDEternity03Guard01 = spawnRace == Race.ASMODIANS ? 246715 : 246719;
 		final int IDEternity03Guard02 = spawnRace == Race.ASMODIANS ? 246716 : 246720;
 		final int IDEternity03Guard03 = spawnRace == Race.ASMODIANS ? 246717 : 246721;
 		final int IDEternity03AmbushGuardKn = spawnRace == Race.ASMODIANS ? 246738 : 246742;
 		final int IDEternity03EventGuardKn = spawnRace == Race.ASMODIANS ? 246412 : 246414;
 		final int IDEternity03EventGuardWi = spawnRace == Race.ASMODIANS ? 246413 : 246415;
-		//Npc.
+		// Npc.
 		spawn(Peregrine_Viola1, 1195.9297f, 1017.4283f, 761.1656f, (byte) 0);
 		spawn(Gampt_Kontesius1, 1195.9012f, 1019.9607f, 761.1656f, (byte) 0);
 		spawn(Zarik_Ostia1, 1195.9429f, 1014.75854f, 761.1656f, (byte) 0);
-		//Quest Book.
+		// 任务书。 / Quest Book.
 		spawn(QuestBook, 552.68518f, 883.55646f, 702.53864f, (byte) 0, 23);
-		//Guard Start.
+		// 守卫开始。 / Guard Start.
 		spawn(IDEternity03StartGuardKn, 1206.8582f, 1014.1617f, 761.1656f, (byte) 119);
 		spawn(IDEternity03StartGuardKn, 1204.0542f, 1014.14825f, 761.1656f, (byte) 0);
 		spawn(IDEternity03StartGuardKn, 1204.0986f, 1011.7326f, 761.1656f, (byte) 0);
@@ -606,7 +726,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		spawn(IDEternity03StartGuardWi, 1200.8986f, 1011.8001f, 761.1656f, (byte) 2);
 		spawn(IDEternity03StartGuardWi, 1209.6967f, 1011.7956f, 761.1656f, (byte) 0);
 		spawn(IDEternity03StartGuardWi, 1209.6384f, 1014.19434f, 761.1656f, (byte) 0);
-		//Event Guard.
+		// 活动守卫。 / Event Guard.
 		spawn(IDEternity03Guard01, 837.4585f, 1328.4395f, 735.832f, (byte) 60);
 		spawn(IDEternity03Guard02, 566.9962f, 1328.5254f, 721.5761f, (byte) 60);
 		spawn(IDEternity03Guard03, 539.8887f, 1107.7954f, 710.5968f, (byte) 90);
@@ -629,6 +749,10 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
 	private void rushTrialsOfEternity(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -646,13 +770,17 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
 	private void startTrialsOfEternityA1() {
 		trialsOfEternityTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246439, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246439, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246439, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
 				rushTrialsOfEternity((Npc)spawn(246439, 203.97627f, 1041.26380f, 706.75494f, (byte) 105));
                 rushTrialsOfEternity((Npc)spawn(246439, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
                 rushTrialsOfEternity((Npc)spawn(246439, 207.32959f, 1040.83100f, 706.75494f, (byte) 104));
@@ -661,13 +789,17 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	private void startTrialsOfEternityA2() {
 		trialsOfEternityTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246437, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246437, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246437, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
 				rushTrialsOfEternity((Npc)spawn(246439, 203.97627f, 1041.26380f, 706.75494f, (byte) 105));
                 rushTrialsOfEternity((Npc)spawn(246439, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
                 rushTrialsOfEternity((Npc)spawn(246439, 207.32959f, 1040.83100f, 706.75494f, (byte) 104));
@@ -676,17 +808,21 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	private void startTrialsOfEternityA3() {
 		trialsOfEternityTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246437, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246437, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246437, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
 				rushTrialsOfEternity((Npc)spawn(246437, 203.97627f, 1041.26380f, 706.75494f, (byte) 105));
                 rushTrialsOfEternity((Npc)spawn(246437, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
                 rushTrialsOfEternity((Npc)spawn(246437, 207.32959f, 1040.83100f, 706.75494f, (byte) 104));
-				//Portal Right.
+				// 右侧传送门。 / Portal Right.
 				rushTrialsOfEternity((Npc)spawn(246437, 235.17462f, 1046.58740f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246437, 238.82994f, 1043.69760f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246437, 235.73709f, 1043.49000f, 706.75494f, (byte) 77));
@@ -695,13 +831,17 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	private void startTrialsOfEternityA4() {
 		trialsOfEternityTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246437, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246437, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246437, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
 				rushTrialsOfEternity((Npc)spawn(246437, 203.97627f, 1041.26380f, 706.75494f, (byte) 105));
                 rushTrialsOfEternity((Npc)spawn(246437, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
                 rushTrialsOfEternity((Npc)spawn(246437, 207.32959f, 1040.83100f, 706.75494f, (byte) 104));
@@ -710,15 +850,19 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	private void startTrialsOfEternityA5() {
 		trialsOfEternityTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246439, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246439, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246439, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
                 rushTrialsOfEternity((Npc)spawn(246438, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
-				//Portal Right.
+				// 右侧传送门。 / Portal Right.
 				rushTrialsOfEternity((Npc)spawn(246437, 235.17462f, 1046.58740f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246437, 238.82994f, 1043.69760f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246437, 235.73709f, 1043.49000f, 706.75494f, (byte) 77));
@@ -727,15 +871,19 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	private void startTrialsOfEternityA6() {
 		trialsOfEternityTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246439, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246439, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246439, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
                 rushTrialsOfEternity((Npc)spawn(246438, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
-				//Portal Right.
+				// 右侧传送门。 / Portal Right.
 				rushTrialsOfEternity((Npc)spawn(246439, 235.17462f, 1046.58740f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246439, 238.82994f, 1043.69760f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246439, 235.73709f, 1043.49000f, 706.75494f, (byte) 77));
@@ -744,17 +892,21 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	private void startTrialsOfEternityA7() {
 		trialsOfEternityTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246439, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246439, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246439, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
                 rushTrialsOfEternity((Npc)spawn(246437, 203.97627f, 1041.26380f, 706.75494f, (byte) 105));
                 rushTrialsOfEternity((Npc)spawn(246437, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
                 rushTrialsOfEternity((Npc)spawn(246437, 207.32959f, 1040.83100f, 706.75494f, (byte) 104));
-				//Portal Right.
+				// 右侧传送门。 / Portal Right.
 				rushTrialsOfEternity((Npc)spawn(246439, 235.17462f, 1046.58740f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246438, 238.82994f, 1043.69760f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246439, 235.73709f, 1043.49000f, 706.75494f, (byte) 77));
@@ -763,17 +915,21 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	private void startTrialsOfEternityA8() {
 		trialsOfEternityTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Portal Left.
+				// 左侧传送门。 / Portal Left.
 				rushTrialsOfEternity((Npc)spawn(246437, 239.36716f, 1007.58734f, 706.75494f, (byte) 43));
                 rushTrialsOfEternity((Npc)spawn(246437, 235.87540f, 1004.97577f, 706.75494f, (byte) 42));
                 rushTrialsOfEternity((Npc)spawn(246437, 236.04263f, 1008.56990f, 706.75494f, (byte) 43));
-				//Portal Middle.
+				// 中间传送门。 / Portal Middle.
                 rushTrialsOfEternity((Npc)spawn(246437, 203.97627f, 1041.26380f, 706.75494f, (byte) 105));
                 rushTrialsOfEternity((Npc)spawn(246438, 207.45520f, 1044.34670f, 706.75494f, (byte) 103));
                 rushTrialsOfEternity((Npc)spawn(246437, 207.32959f, 1040.83100f, 706.75494f, (byte) 104));
-				//Portal Right.
+				// 右侧传送门。 / Portal Right.
 				rushTrialsOfEternity((Npc)spawn(246437, 235.17462f, 1046.58740f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246438, 238.82994f, 1043.69760f, 706.75494f, (byte) 78));
                 rushTrialsOfEternity((Npc)spawn(246437, 235.73709f, 1043.49000f, 706.75494f, (byte) 77));
@@ -830,6 +986,10 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -844,6 +1004,10 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -857,6 +1021,12 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -869,6 +1039,10 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -878,9 +1052,19 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -901,16 +1085,32 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000301, storage.getItemCountByItemId(185000301));
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onPlayerLogOut(Player player) {
         removeItems(player);
     }
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;

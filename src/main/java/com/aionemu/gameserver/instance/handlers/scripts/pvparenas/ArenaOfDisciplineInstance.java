@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -26,13 +10,22 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 孤独竞技场副本事件处理器。
+ * Instance event handler for Arena Of Discipline.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300360000)
 public class ArenaOfDisciplineInstance extends PvPArenaInstance
 {
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		killBonus = 200;
@@ -40,6 +33,13 @@ public class ArenaOfDisciplineInstance extends PvPArenaInstance
 		super.onInstanceCreate(instance);
 	}
 	
+	/**
+	 * 玩家采集完成时处理。
+	 * Handle player gathering completion.
+	 *
+	 * 玩家 / player
+	 * gatherable
+	 */
 	@Override
 	public void onGather(Player player, Gatherable gatherable) {
 		if (!instanceReward.isStartProgress()) {
@@ -51,6 +51,10 @@ public class ArenaOfDisciplineInstance extends PvPArenaInstance
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, name, 1250));
 	}
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 	
 	protected void reward() {
 		int totalPoints = instanceReward.getTotalPoints();
@@ -82,14 +86,14 @@ public class ArenaOfDisciplineInstance extends PvPArenaInstance
 				}
 				int scoreAP = (int) (totalAP * scoreRate);
 				int scoreGP = (int) (totalGP * scoreRate);
-				//<Abyss Points>
+				// <欧比斯点数> / <Abyss Points>
 				basicAP *= percent;
 				rankingAP *= percent;
 				rankingAP *= playerRate;
 				reward.setBasicAP(basicAP);
 				reward.setRankingAP(rankingAP);
 				reward.setScoreAP(scoreAP);
-				//<Glory Points>
+				// <荣耀点数> / <Glory Points>
 				basicGP *= percent;
 				rankingGP *= percent;
 				rankingGP *= playerRate;
@@ -120,7 +124,7 @@ public class ArenaOfDisciplineInstance extends PvPArenaInstance
 				reward.setBasicCourage(basicCoI);
 				reward.setRankingCourage(rankingCoI);
 				reward.setScoreCourage(scoreCoI);
-				//5.1 "Crucible Insignia of Infinity" can be obtained from new "ArchDaeva" Arena
+				// 5.1「无限试炼徽章」可从新「高阶守护者」竞技场获得。 / 5.1 "Crucible Insignia of Infinity" can be obtained from new "ArchDaeva" Arena
 				int basicCiI = 0;
 				basicCiI *= percent;
 				int rankingCiI = 23;

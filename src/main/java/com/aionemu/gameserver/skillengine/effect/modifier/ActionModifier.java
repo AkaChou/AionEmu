@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect.modifier;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,9 @@ import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 行动修正器基类：按条件对伤害/数值进行加减或倍率修正。
+ * Base action modifier: conditionally adjusts damage/values by add or multiply.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,22 +26,29 @@ public abstract class ActionModifier {
 	protected Func mode = Func.ADD;
 
 	/**
-	 * Applies modifier to original value
-	 * 
-	 * @param effect
-	 * @param originalValue
-	 * @return int
+	 * 计算修正值。
+	 * Computes the modifier value.
+	 *
+	 * @param effect 运行中效果 / runtime effect
+	 * modifier amount
 	 */
 	public abstract int analyze(Effect effect);
 
 	/**
-	 * Performs check of condition
-	 * 
-	 * @param effect
-	 * @return true or false
+	 * 检查修正条件是否成立。
+	 * Checks whether the modifier condition holds.
+	 *
+	 * @param effect 运行中效果 / runtime effect
+	 * 若 applicable 则为 true / true if applicable
 	 */
 	public abstract boolean check(Effect effect);
 
+	/**
+	 * 获取运算模式（加/乘等）。
+	 * Returns the arithmetic mode (add/multiply, etc.).
+	 *
+	 * function mode
+	 */
 	public Func getFunc() {
 		return mode;
 	}

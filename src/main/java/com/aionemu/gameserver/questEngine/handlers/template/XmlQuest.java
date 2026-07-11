@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
 import java.util.Iterator;
@@ -29,14 +13,29 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 通用 XML 任务模板：将 {@link XmlQuestData} 中的对话/击杀事件配置委托给对应事件处理器执行。
+ * Generic XML quest template: delegates dialog/kill handling to event configs from {@link XmlQuestData}.
+ */
 public class XmlQuest extends QuestHandler {
+	/** XML 任务配置数据 / XML quest config data */
 	private final XmlQuestData xmlQuestData;
 
+	/**
+	 * 构造 XML 驱动任务处理器。
+	 * Constructs an XML-driven quest handler.
+	 *
+	 * XML quest config
+	 */
 	public XmlQuest(XmlQuestData xmlQuestData) {
 		super(xmlQuestData.getId());
 		this.xmlQuestData = xmlQuestData;
 	}
 
+	/**
+	 * 按 XML 配置注册起始/结束 NPC、对话与击杀事件。
+	 * Registers start/end NPCs, talk and kill events from the XML config.
+	 */
 	@Override
 	public void register() {
 		if (xmlQuestData.getStartNpcId() != null) {
@@ -62,6 +61,13 @@ public class XmlQuest extends QuestHandler {
 		}
 	}
 
+	/**
+	 * 处理对话事件：优先委托 XML OnTalkEvent，再处理默认接取/奖励流程。
+	 * Handles dialog events: prefers XML OnTalkEvent handlers, then default accept/reward flow.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the dialog event was handled
+	 */
 	@Override
 	public boolean onDialogEvent(QuestEnv env) {
 		env.setQuestId(getQuestId());
@@ -87,6 +93,13 @@ public class XmlQuest extends QuestHandler {
 		return false;
 	}
 
+	/**
+	 * 处理击杀事件：委托 XML OnKillEvent 配置执行。
+	 * Handles kill events: delegates to XML OnKillEvent configs.
+	 *
+	 * @param env 任务环境 / quest environment
+	 * @return 是否已处理 / whether the kill event was handled
+	 */
 	@Override
 	public boolean onKillEvent(QuestEnv env) {
 		env.setQuestId(getQuestId());

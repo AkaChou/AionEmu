@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import java.util.HashMap;
@@ -29,6 +13,11 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import org.apache.commons.lang3.StringUtils;
+
+/**
+ * Building 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "parts" })
@@ -51,6 +40,7 @@ public class Building {
 	@XmlAttribute(required = true)
 	protected int id;
 
+	/** 是否默认 / Whether default*/
 	public boolean isDefault() {
 		return isDefault;
 	}
@@ -88,6 +78,7 @@ public class Building {
 		}
 	}
 
+	/** 返回 parts match tag / Returns the parts match tag */
 	public String getPartsMatchTag() {
 		if (StringUtils.isEmpty(partsMatch)) {
 			return DataManager.HOUSE_BUILDING_DATA.getBuilding(id).getPartsMatchTag();
@@ -95,6 +86,7 @@ public class Building {
 		return partsMatch;
 	}
 
+	/** 返回大小 / Returns the size*/
 	public String getSize() {
 		if (StringUtils.isEmpty(size)) {
 			return DataManager.HOUSE_BUILDING_DATA.getBuilding(id).getSize();
@@ -102,6 +94,7 @@ public class Building {
 		return size;
 	}
 
+	/** 获取类型。 / Returns the type. */
 	public BuildingType getType() {
 		if (type == null) {
 			return DataManager.HOUSE_BUILDING_DATA.getBuilding(id).getType();
@@ -109,10 +102,12 @@ public class Building {
 		return type;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回 default part id / Returns the default part id */
 	public Integer getDefaultPartId(PartType partType) {
 		return DataManager.HOUSE_BUILDING_DATA.getBuilding(id).partsByType.get(partType);
 	}

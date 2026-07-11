@@ -1,27 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * This packet is used to update current dp (divine points) value.
- * 
+ * 向客户端更新当前 DP（神圣点数）值。
+ * Server packet updating the current DP (divine points) value on the client.
+ *
  * @author Luno
  */
 public class SM_STATUPDATE_DP extends AionServerPacket {
@@ -29,7 +14,10 @@ public class SM_STATUPDATE_DP extends AionServerPacket {
 	private int currentDp;
 
 	/**
-	 * @param currentDp
+	 * 使用给定参数构造 SM_STATUPDATE_DP 包。
+	 * Creates a SM_STATUPDATE_DP packet with the given parameters.
+	 *
+	 * current dp
 	 */
 	public SM_STATUPDATE_DP(int currentDp) {
 		this.currentDp = currentDp;

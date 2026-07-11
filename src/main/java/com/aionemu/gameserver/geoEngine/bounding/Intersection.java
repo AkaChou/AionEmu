@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.bounding;
 
 import static java.lang.Math.max;
@@ -24,13 +8,22 @@ import com.aionemu.gameserver.geoEngine.math.Plane;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
 /**
- * This class includes some utility methods for computing intersection between
- * bounding volumes and triangles.
+ * 包围体与三角形相交检测的工具类。
+ * Utility methods for computing intersection between bounding volumes and triangles.
  *
  * @author Kirill
  */
 public class Intersection {
 
+	/**
+	 * 在给定轴上求三点最小/最大值，结果写入 minMax（x=min, y=max）。
+	 * Finds min/max of three values on one axis; stores min in x and max in y of minMax.
+	 *
+	 * @param x0 第一分量 / first component
+	 * @param x1 第二分量 / second component
+	 * @param x2 第三分量 / third component
+	 * output vector
+	 */
 	private static final void findMinMax(float x0, float x1, float x2, Vector3f minMax) {
 		minMax.set(x0, x0, 0);
 		if (x1 < minMax.x) {
@@ -65,14 +58,28 @@ public class Intersection {
 	// if(min > rad || max < -rad)
 	// return false;
 	// }
+
+	/**
+	 * 使用分离轴定理判断 AABB 与三角形是否相交。
+	 * Tests AABB-triangle overlap using the separating axis theorem.
+	 * <p>
+	 * 检测方向：三角形边与坐标轴的叉积（9 次）、三角形 AABB 轴（3 次）、三角形法线。
+	 * Tests: 9 cross-products of tri edges with axes, 3 AABB axes, and the triangle plane.
+	 *
+	 * @param bbox 轴对齐包围盒 / axis-aligned bounding box
+	 * @param v1 三角形顶点 1 / triangle vertex 1
+	 * @param v2 三角形顶点 2 / triangle vertex 2
+	 * @param v3 三角形顶点 3 / triangle vertex 3
+	 * @return 若 box and triangle overlap 则为 true / true if box and triangle overlap
+	 */
 	public static final boolean intersect(BoundingBox bbox, Vector3f v1, Vector3f v2, Vector3f v3) {
-		// use separating axis theorem to test overlap between triangle and box
-		// need to test for overlap in these directions:
-		// 1) the {x,y,z}-directions (actually, since we use the AABB of the triangle
-		// we do not even need to test these)
-		// 2) normal of the triangle
-		// 3) crossproduct(edge from tri, {x,y,z}-directin)
-		// this gives 3x3=9 more tests
+		// 用分离轴定理检测三角形与盒子是否重叠 / use separating axis theorem to test overlap between triangle and box
+		// 需在这些方向测试重叠： / need to test for overlap in these directions:
+		// 1) {x,y,z} 方向（实际上因使用三角形的 AABB / 1) the {x,y,z}-directions (actually, since we use the AABB of the triangle
+		// 我们甚至不需要测试这些） / we do not even need to test these)
+		// 2) 三角形法线 / 2) normal of the triangle
+		// 3) 叉积（三角形边，{x,y,z} 方向） / 3) crossproduct(edge from tri, {x,y,z}-directin)
+		// 这给出 3x3=9 项额外测试 / this gives 3x3=9 more tests
 
 		Vector3f tmp0 = new Vector3f(), tmp1 = new Vector3f(), tmp2 = new Vector3f();
 
@@ -83,19 +90,19 @@ public class Intersection {
 
 		// float min,max,p0,p1,p2,rad,fex,fey,fez;
 		// float normal[3]
-		// This is the fastest branch on Sun
-		// move everything so that the boxcenter is in (0,0,0)
+		// 这是 Sun 上最快的分支 / This is the fastest branch on Sun
+		// 移动使盒子中心位于 (0,0,0) / move everything so that the boxcenter is in (0,0,0)
 		v1.subtract(center, tmp0);
 		v2.subtract(center, tmp1);
 		v3.subtract(center, tmp2);
 
-		// compute triangle edges
+		// 计算三角形边 / compute triangle edges
 		tmp1.subtract(tmp0, e0); // tri edge 0
 		tmp2.subtract(tmp1, e1); // tri edge 1
 		tmp0.subtract(tmp2, e2); // tri edge 2
 
-		// Bullet 3:
-		// test the 9 tests first (this was faster)
+		// 子弹 3： / Bullet 3:
+		// 先做 9 项测试（这样更快） / test the 9 tests first (this was faster)
 		float min, max;
 		float p0, p1, p2, rad;
 		float fex = FastMath.abs(e0.x);
@@ -200,34 +207,34 @@ public class Intersection {
 			return false;
 		}
 
-		// Bullet 1:
-		// first test overlap in the {x,y,z}-directions
-		// find min, max of the triangle each direction, and test for overlap in
-		// that direction -- this is equivalent to testing a minimal AABB around
-		// the triangle against the AABB
+		// 子弹 1： / Bullet 1:
+		// 首先在 {x,y,z} 方向测试重叠 / first test overlap in the {x,y,z}-directions
+		// 找三角形各方向 min/max，并测试重叠。 / find min, max of the triangle each direction, and test for overlap in
+		// 该方向——等价于测试周围最小 AABB。 / that direction -- this is equivalent to testing a minimal AABB around
+		// 三角形对 AABB / the triangle against the AABB
 		Vector3f minMax = new Vector3f();
 
-		// test in X-direction
+		// 在 X 方向测试 / test in X-direction
 		findMinMax(tmp0.x, tmp1.x, tmp2.x, minMax);
 		if (minMax.x > extent.x || minMax.y < -extent.x) {
 			return false;
 		}
 
-		// test in Y-direction
+		// 在 Y 方向测试 / test in Y-direction
 		findMinMax(tmp0.y, tmp1.y, tmp2.y, minMax);
 		if (minMax.x > extent.y || minMax.y < -extent.y) {
 			return false;
 		}
 
-		// test in Z-direction
+		// 在 Z 方向测试 / test in Z-direction
 		findMinMax(tmp0.z, tmp1.z, tmp2.z, minMax);
 		if (minMax.x > extent.z || minMax.y < -extent.z) {
 			return false;
 		}
 
-		// // Bullet 2:
-		// // test if the box intersects the plane of the triangle
-		// // compute plane equation of triangle: normal * x + d = 0
+		// Bullet 2:
+		// 测试盒子是否与三角形平面相交。 / test if the box intersects the plane of the triangle
+		// 计算三角形平面方程：normal * x + d = 0。 / compute plane equation of triangle: normal * x + d = 0
 		// Vector3f normal = new Vector3f();
 		// e0.cross(e1, normal);
 		Plane p = new Plane();

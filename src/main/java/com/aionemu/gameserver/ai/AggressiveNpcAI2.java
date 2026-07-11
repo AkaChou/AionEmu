@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -37,21 +21,39 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 主动攻击型 NPC AI：在通用 AI 基础上增加仇恨/警戒与出生时按 NPC 模板施加的增益类型。
+ * Aggressive NPC AI that extends the general AI with aggro/guard handling and spawn-time buff types by NPC template.
+ */
 @AIName("aggressive")
 public class AggressiveNpcAI2 extends GeneralNpcAI2
 {
 	private AtomicBoolean isStartEvent = new AtomicBoolean(false);
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle death.
+	 */
 	@Override
 	protected void handleDied() {
 		DiedEventHandler.onDie(this);
 	}
 	
+	/**
+	 * 处理消失事件。
+	 * Handle despawn.
+	 */
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 	}
 	
+	/**
+	 * 处理受到攻击事件。
+	 * Handle being attacked.
+	 *
+	 * creature
+	 */
 	@Override
 	protected void handleAttack(Creature creature) {
 		AttackEventHandler.onAttack(this, creature);
@@ -62,51 +64,103 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 		*/
 	}
 	
+    /**
+     * 处理看见生物事件。
+     * Handle seeing a creature.
+     *
+     * creature
+     */
 	@Override
     protected void handleCreatureSee(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
     }
 	
+    /**
+     * 处理生物移动事件。
+     * Handle creature-moved.
+     *
+     * creature
+     */
     @Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureMoved(this, creature);
     }
 	
+	/**
+	 * 处理对生物产生仇恨。
+	 * Handle aggro toward a creature.
+	 *
+	 * creature
+	 */
     @Override
 	protected void handleCreatureAggro(Creature creature) {
 		AggroEventHandler.onAggro(this, creature);
 	}
 	
+	/**
+	 * 处理结束攻击事件。
+	 * Handle finish-attack.
+	 */
 	@Override
 	protected void handleFinishAttack() {
 		AttackEventHandler.onFinishAttack(this);
 	}
 	
+	/**
+	 * 处理单次攻击完成事件。
+	 * Handle attack-complete.
+	 */
 	@Override
 	protected void handleAttackComplete() {
 		AttackEventHandler.onAttackComplete(this);
 	}
 	
+    /**
+     * 处理放弃目标事件。
+     * Handle target give-up.
+     */
 	@Override
     protected void handleTargetGiveup() {
         TargetEventHandler.onTargetGiveup(this);
     }
 	
+    /**
+     * 处理目标变更事件。
+     * Handle target changed.
+     *
+     * creature
+     */
     @Override
     protected void handleTargetChanged(Creature creature) {
         TargetEventHandler.onTargetChange(this, creature);
     }
 	
+	/**
+	 * 处理守卫反击攻击者。
+	 * Handle guard response against an attacker.
+	 *
+	 * attacker
+	 */
 	@Override
 	protected boolean handleGuardAgainstAttacker(Creature attacker) {
 		return AggroEventHandler.onGuardAgainstAttacker(this, attacker);
 	}
 	
+	/**
+	 * 处理盟友需要支援事件。
+	 * Handle ally needs-support.
+	 *
+	 * creature
+	 */
 	@Override
 	protected boolean handleCreatureNeedsSupport(Creature creature) {
 		return AggroEventHandler.onCreatureNeedsSupport(this, creature);
 	}
 	
+	/**
+	 * 处理生成完成事件。
+	 * Handle post-spawn.
+	 */
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -7472,13 +7526,17 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 			if (isStartEvent.compareAndSet(false, true)) {
 				GameEngineServices.skillEngine().applyEffectDirectly(17818, getOwner(), getOwner(), 5000);
 				if (currentTarget instanceof Player) {
-					//%0 is running away.
+					// %0 正在逃跑。 / %0 is running away.
             	    PacketSendUtility.sendPacket((Player) currentTarget, SM_SYSTEM_MESSAGE.STR_UI_COMBAT_NPC_FLEE(getOwner().getName()));
             	}
 			}
 		}
 	}
 	
+	/**
+	 * 选择下一次攻击意图（普攻/技能/换目标/结束）。
+	 * Choose the next attack intention (simple/skill/switch/finish).
+	 */
     @Override
 	public AttackIntention chooseAttackIntention() {
 		VisibleObject currentTarget = getTarget();

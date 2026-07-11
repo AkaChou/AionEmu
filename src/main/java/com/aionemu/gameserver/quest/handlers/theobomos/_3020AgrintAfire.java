@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 西奥博莫斯任务脚本：Agrint Afire（任务 ID 3020）。
+ * Theobomos quest script: Agrint Afire (quest ID 3020).
  */
 public class _3020AgrintAfire extends QuestHandler {
 

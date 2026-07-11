@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.drakenseerLair;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -32,10 +16,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Drakenseer Lair 副本 NPC AI：IDF6 Dragon Artifact Boost C（@AIName "IDF6_Dragon_Artifact_Boost_C"），继承 NpcAI2。
+ * Drakenseer Lair instance NPC AI: IDF6 Dragon Artifact Boost C (@AIName "IDF6_Dragon_Artifact_Boost_C"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("IDF6_Dragon_Artifact_Boost_C")
 public class IDF6_Dragon_Artifact_Boost_CAI2 extends NpcAI2
 {
@@ -74,16 +60,16 @@ public class IDF6_Dragon_Artifact_Boost_CAI2 extends NpcAI2
 	}
 	
    /**
-	* Dragon Raid C
-	*/
+	 * Dragon Raid C
+	 */
 	private void startIDF6DragonRaidC1() {
-		//Reinforcements have arrived to defend the Shielding Conduits.
+		// 增援已抵达，保护护盾导管。 / Reinforcements have arrived to defend the Shielding Conduits.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF6_Dragon_Attack_Tower, 0);
-		//Prepare for combat! Enemies approaching!
+		//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402785, 10000);
-		//Hold a little longer and you will survive.
+		//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402833, 20000);
-		//Only a few enemies left!
+		//只剩少数敌人！ / Only a few enemies left!
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402834, 30000);
 		dragonRaid((Npc)spawn(220432, 333.3891f, 319.6643f, 318.8283f, (byte) 82), 312.16144f, 285.48962f, 318.85556f, false);
 		dragonRaid((Npc)spawn(220433, 333.3891f, 319.6643f, 318.8283f, (byte) 82), 312.16144f, 285.48962f, 318.85556f, false);

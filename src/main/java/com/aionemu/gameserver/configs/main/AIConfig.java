@@ -1,67 +1,67 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
 /**
+ * AI 行为相关配置。
+ * AI behavior related configuration.
+ *
  * @author ATracer
  */
 public class AIConfig {
 
 	/**
-	 * Debug (for developers)
+	 * 是否启用 AI 移动调试日志。
+	 * Whether AI move debug logging is enabled.
 	 */
 	@Property(key = "gameserver.ai.move.debug", defaultValue = "true")
 	public static boolean MOVE_DEBUG;
 
+	/**
+	 * 是否启用 AI 事件调试日志。
+	 * Whether AI event debug logging is enabled.
+	 */
 	@Property(key = "gameserver.ai.event.debug", defaultValue = "false")
 	public static boolean EVENT_DEBUG;
 
+	/**
+	 * 是否启用 AI 创建时调试日志。
+	 * Whether AI on-create debug logging is enabled.
+	 */
 	@Property(key = "gameserver.ai.oncreate.debug", defaultValue = "false")
 	public static boolean ONCREATE_DEBUG;
-	
-	
+
 	/**
-	* Level difference with the creature to be immune to aggro
-	*/
+	 * 对仇恨免疫的等级差阈值。
+	 * Level difference to be immune to aggro.
+	 */
 	@Property(key = "gameserver.ai.aggro.level.immune", defaultValue = "10")
 	public static int AGGRO_LEVEL_IMMUNE;
 
 	/**
-	 * Enable NPC movement
+	 * 是否启用 NPC 移动。
+	 * Whether NPC movement is enabled.
 	 */
 	@Property(key = "gameserver.npcmovement.enable", defaultValue = "true")
 	public static boolean ACTIVE_NPC_MOVEMENT;
 
 	/**
-	 * Minimum movement delay
+	 * NPC 移动最小延迟（秒）。
+	 * Minimum NPC movement delay in seconds.
 	 */
 	@Property(key = "gameserver.npcmovement.delay.minimum", defaultValue = "3")
 	public static int MINIMIMUM_DELAY;
 
 	/**
-	 * Maximum movement delay
+	 * NPC 移动最大延迟（秒）。
+	 * Maximum NPC movement delay in seconds.
 	 */
 	@Property(key = "gameserver.npcmovement.delay.maximum", defaultValue = "15")
 	public static int MAXIMUM_DELAY;
 
 	/**
-	 * Npc Shouts activator
+	 * 是否启用 NPC 喊话。
+	 * Whether NPC shouts are enabled.
 	 */
 	@Property(key = "gameserver.npcshouts.enable", defaultValue = "false")
 	public static boolean SHOUTS_ENABLE;

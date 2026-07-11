@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -21,16 +5,17 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PING_RESPONSE;
 
 /**
- * This packet is sent when player write /ping
- * 
+ * 客户端 /ping 命令请求包，回复延迟信息。
+ * Client packet for the /ping command; returns latency info.
+ *
  * @author dragoon112
  */
 public class CM_PING_REQUEST extends AionClientPacket {
 
 	/**
-	 * Constructs new instance of <tt>CM_PING_REQUEST </tt> packet
-	 * 
-	 * @param opcode
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_PING_REQUEST(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -41,7 +26,7 @@ public class CM_PING_REQUEST extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		// empty
+		// 空 / empty
 	}
 
 	/**

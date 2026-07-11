@@ -1,20 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
+
+/**
+ * 军阶计数模型。
+ * Rank Count model.
+ */
 
 public class RankCount {
 	private int playerId;
@@ -29,18 +18,22 @@ public class RankCount {
 		this.race = race;
 	}
 
+	/** 返回玩家 ID / Returns the player id */
 	public int getPlayerId() {
 		return playerId;
 	}
 
+	/** 获取玩家欧比斯点数。 / Returns the player ap. */
 	public int getPlayerAP() {
 		return ap;
 	}
 
+	/** 获取玩家荣耀点数。 / Returns the player gp. */
 	public int getPlayerGP() {
 		return gp;
 	}
 
+	/** 获取玩家种族。 / Returns the player race. */
 	public Race getPlayerRace() {
 		return race;
 	}

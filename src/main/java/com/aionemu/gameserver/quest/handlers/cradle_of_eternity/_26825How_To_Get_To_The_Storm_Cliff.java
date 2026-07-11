@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.cradle_of_eternity;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -21,10 +9,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 永恒摇篮任务脚本：How To Get To The Storm Cliff（任务 ID 26825）。
+ * Cradle of Eternity quest script: How To Get To The Storm Cliff (quest ID 26825).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _26825How_To_Get_To_The_Storm_Cliff extends QuestHandler {
 
     private final static int questId = 26825;
@@ -54,8 +44,8 @@ public class _26825How_To_Get_To_The_Storm_Cliff extends QuestHandler {
 					return sendQuestEndDialog(env);
 				}
 			}
-			else { // Bounty Quest made DragonicK?
-				// Selected item is not optional. correct for Selected item Reward DainAvenger
+			else { // 赏金任务（DragonicK？） / Bounty Quest made DragonicK?
+				// 所选物品不是可选的。（DainAvenger 奖励修正） / Selected item is not optional. correct for Selected item Reward DainAvenger
 				env.setDialogId(8);
 				env.setExtendedRewardIndex(8);
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(806288, 0));

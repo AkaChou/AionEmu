@@ -1,31 +1,20 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 玩家 Appearance 游戏对象。
+ * Player Appearance game object.
+ *
  * @author SoulKeeper, srx47, alexa026
  */
 
 @Slf4j
 public class PlayerAppearance implements Cloneable {
 	/**
-	 * Player's face
+	 * 玩家面部。 / Player's face
 	 */
 	private int face;
 	private int hair;
@@ -90,16 +79,17 @@ public class PlayerAppearance implements Cloneable {
 	private int voice;
 	private float height;
 
-	/**
-	 * Returns character face
-	 *
-	 * @return character face
-	 */
+	 /**
+	  * 返回角色脸型。
+	  * Returns character face
+	  * @return character face
+	  */
 	public int getFace() {
 		return face;
 	}
 
 	/**
+	 * 设置 charactersface。
 	 * Sets character's face
 	 *
 	 * @param face characters face
@@ -108,16 +98,17 @@ public class PlayerAppearance implements Cloneable {
 		this.face = face;
 	}
 
-	/**
-	 * Returns character's hair
-	 *
-	 * @return characters hair
-	 */
+	 /**
+	  * 返回角色发型。
+	  * Returns character's hair
+	  * @return characters hair
+	  */
 	public int getHair() {
 		return hair;
 	}
 
 	/**
+	 * 设置 charaxctershair。
 	 * Sets charaxcters hair
 	 *
 	 * @param hair characters hair
@@ -126,16 +117,17 @@ public class PlayerAppearance implements Cloneable {
 		this.hair = hair;
 	}
 
-	/**
-	 * Returns dunno what is this
-	 *
-	 * @return some crap, ask Neme what it is
-	 */
+	 /**
+	  * 返回未知外观字段。
+	  * Returns dunno what is this
+	  * @return some crap, ask Neme what it is
+	  */
 	public int getDeco() {
 		return deco;
 	}
 
 	/**
+	 * 设置 somecrapasknemewhatit。
 	 * Sets some crap, ask Neme what it is
 	 *
 	 * @param deco crap
@@ -144,20 +136,17 @@ public class PlayerAppearance implements Cloneable {
 		this.deco = deco;
 	}
 
-	/**
-	 * Returns sexy tattoo
-	 *
-	 * @return sexy tattoo
-	 */
+	 /**
+	  * 返回纹身。
+	  * Returns sexy tattoo
+	  * @return sexy tattoo
+	  */
 	public int getTattoo() {
 		return tattoo;
 	}
 
 	/**
-	 * Set's sexy tattoo.<br>
-	 * Not sexy will throw NotSexyTattooException. Just kidding ;)
-	 *
-	 * @param tattoo some tattoo
+	 * 设置纹身。<br>。 / Set's sexy tattoo.<br> Not sexy will throw NotSexyTattooException. Just kidding ;).
 	 */
 	public void setTattoo(int tattoo) {
 		this.tattoo = tattoo;
@@ -332,33 +321,28 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Skin color, let's create pink lesbians :D
-	 *
-	 * @return skin color
+	 * @return Skin color, let's create pink lesbians :D @return skin color。 / Skin color, let's create pink lesbians :D @return skin color
 	 */
 	public int getSkinRGB() {
 		return skinRGB;
 	}
 
 	/**
-	 * Here is the valid place to make lesbians skin pink
-	 *
-	 * @param skinRGB skin color
+	 * @param skinRGB 设置肤色。@param skinRGB 肤色 RGB / Here is the valid place to make lesbians skin pink @param skinRGB skin color
 	 */
 	public void setSkinRGB(int skinRGB) {
 		this.skinRGB = skinRGB;
 	}
 
 	/**
-	 * Hair color, personally i prefer brunettes
-	 *
-	 * @return har color
+	 * @return Hair color, personally i prefer brunettes @return har color。 / Hair color, personally i prefer brunettes @return har color
 	 */
 	public int getHairRGB() {
 		return hairRGB;
 	}
 
 	/**
+	 * 设置 haircolorsblondsmustpassiqtest。
 	 * Sets hair colors. Blonds must pass IQ test ;)
 	 *
 	 * @param hairRGB Hair color
@@ -368,13 +352,14 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Eye colour
+	 * @param eyeRGB 眼睛颜色。 / Eye colour
 	 */
 	public void setEyeRGB(int eyeRGB) {
 		this.eyeRGB = eyeRGB;
 	}
 
 	/**
+	 * 设置 eyecolour。
 	 * Sets eye colour
 	 */
 	public int getEyeRGB() {
@@ -382,15 +367,14 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Lips color.
-	 *
-	 * @return lips color
+	 * @return Lips color. @return lips color。 / Lips color. @return lips color
 	 */
 	public int getLipRGB() {
 		return lipRGB;
 	}
 
 	/**
+	 * 设置 lipscolor。
 	 * Sets lips color
 	 *
 	 * @param lipRGB face shape
@@ -399,16 +383,17 @@ public class PlayerAppearance implements Cloneable {
 		this.lipRGB = lipRGB;
 	}
 
-	/**
-	 * Returns face shape
-	 *
-	 * @return face shape
-	 */
+	 /**
+	  * 返回脸型。
+	  * Returns face shape
+	  * @return face shape
+	  */
 	public int getFaceShape() {
 		return faceShape;
 	}
 
 	/**
+	 * 设置 faceshape。
 	 * Sets face shape
 	 *
 	 * @param faceShape face shape
@@ -417,16 +402,17 @@ public class PlayerAppearance implements Cloneable {
 		this.faceShape = faceShape;
 	}
 
-	/**
-	 * Returns forehead
-	 *
-	 * @return forehead
-	 */
+	 /**
+	  * 返回前额。
+	  * Returns forehead
+	  * @return forehead
+	  */
 	public int getForehead() {
 		return forehead;
 	}
 
 	/**
+	 * 设置 forehead。
 	 * Sets forehead
 	 *
 	 * @param forehead size
@@ -435,16 +421,17 @@ public class PlayerAppearance implements Cloneable {
 		this.forehead = forehead;
 	}
 
-	/**
-	 * Returns eye heigth
-	 *
-	 * @return eye height
-	 */
+	 /**
+	  * 返回眼高。
+	  * Returns eye heigth
+	  * @return eye height
+	  */
 	public int getEyeHeight() {
 		return eyeHeight;
 	}
 
 	/**
+	 * 设置 eyeheigth。
 	 * Sets eye heigth
 	 *
 	 * @param eyeHeight eye heigth
@@ -454,33 +441,30 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Eye space
-	 *
-	 * @return eye space
+	 * @return Eye space @return eye space。 / Eye space @return eye space
 	 */
 	public int getEyeSpace() {
 		return eyeSpace;
 	}
 
 	/**
-	 * Eye space
-	 *
-	 * @param eyeSpace someting connected to eyes
+	 * @param eyeSpace 设置眼距。@param eyeSpace 眼距 / Eye space @param eyeSpace someting connected to eyes
 	 */
 	public void setEyeSpace(int eyeSpace) {
 		this.eyeSpace = eyeSpace;
 	}
 
-	/**
-	 * Returns eye width
-	 *
-	 * @return eye width
-	 */
+	 /**
+	  * 返回眼宽。
+	  * Returns eye width
+	  * @return eye width
+	  */
 	public int getEyeWidth() {
 		return eyeWidth;
 	}
 
 	/**
+	 * 设置 eyewidth。
 	 * Sets eye width
 	 *
 	 * @param eyeWidth eye width
@@ -499,10 +483,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Set's eye size.<br>
-	 * Can be . o O ;)
-	 *
-	 * @param eyeSize eye size,
+	 * 设置眼睛大小。 / Set's eye size.<br> Can be . o O ;).
 	 */
 	public void setEyeSize(int eyeSize) {
 		this.eyeSize = eyeSize;
@@ -518,8 +499,8 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Sets Eye shape.<br>
-	 * Can be . _ | 0 o O etc :)
+	 * 设置 eyeshapebrcanbe_0ooetc。
+	 * Sets Eye shape.<br> Can be . _ | 0 o O etc :)
 	 *
 	 * @param eyeShape eye shape
 	 */
@@ -537,27 +518,21 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Sets eye angle, / | \.
-	 *
-	 * @param eyeAngle eye angle
+	 * 设置眼睛角度。 / Sets eye angle, / | \.
 	 */
 	public void setEyeAngle(int eyeAngle) {
 		this.eyeAngle = eyeAngle;
 	}
 
 	/**
-	 * Rerturn brow heigth
-	 *
-	 * @return brow heigth
+	 * @return 返回眉高。@return 眉高 / Rerturn brow heigth @return brow heigth
 	 */
 	public int getBrowHeight() {
 		return browHeight;
 	}
 
 	/**
-	 * Brow heigth
-	 *
-	 * @param browHeight brow heigth
+	 * @param browHeight 设置眉高。 / Brow heigth @param browHeight brow heigth
 	 */
 	public void setBrowHeight(int browHeight) {
 		this.browHeight = browHeight;
@@ -573,6 +548,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 browangle。
 	 * Sets brow angle
 	 *
 	 * @param browAngle brow angle
@@ -591,6 +567,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 browshape。
 	 * Sets brow shape
 	 *
 	 * @param browShape brow shape
@@ -600,7 +577,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Returns nose
+	 * 返回 nose。 / Returns nose
 	 *
 	 * @return nose
 	 */
@@ -609,6 +586,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 nose。
 	 * Sets nose
 	 *
 	 * @param nose nose
@@ -627,6 +605,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 nosebridge。
 	 * Sets nose bridge
 	 *
 	 * @param noseBridge nose bridge
@@ -645,6 +624,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 nosewidth。
 	 * Sets nose width
 	 *
 	 * @param noseWidth nose width
@@ -663,6 +643,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 nocetip。
 	 * Sets noce tip
 	 *
 	 * @param noseTip noce tip
@@ -681,6 +662,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 cheeks。
 	 * Sets cheeks
 	 *
 	 * @param cheek checks
@@ -699,6 +681,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 lipheigth。
 	 * Sets lip heigth
 	 *
 	 * @param lipHeight lip heith
@@ -717,6 +700,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 mouth 大小。
 	 * Sets mouth size
 	 *
 	 * @param mouthSize mouth size
@@ -735,6 +719,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 lips 大小。
 	 * Sets lips size
 	 *
 	 * @param lipSize lips size
@@ -744,7 +729,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Returns smile
+	 * 返回 smile。 / Returns smile
 	 *
 	 * @return smile
 	 */
@@ -753,6 +738,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 smile。
 	 * Sets smile
 	 *
 	 * @param smile smile
@@ -771,6 +757,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 lipsshape。
 	 * Sets lips shape
 	 *
 	 * @param lipShape lips shape
@@ -789,6 +776,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 jawsheight。
 	 * Sets jaws height
 	 *
 	 * @param jawHeigh jaws height
@@ -807,6 +795,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 chinjut。
 	 * Sets chin jut
 	 *
 	 * @param chinJut chin jut
@@ -825,6 +814,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 earshape。
 	 * Sets ear shape
 	 *
 	 * @param earShape ear shape
@@ -843,6 +833,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 head 大小。
 	 * Sets head size
 	 *
 	 * @param headSize head size
@@ -852,7 +843,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Returns neck
+	 * 返回 neck。 / Returns neck
 	 *
 	 * @return neck
 	 */
@@ -861,6 +852,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 neck。
 	 * Sets neck
 	 *
 	 * @param neck neck
@@ -879,6 +871,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 necklengthjustcuriousitpossiblegiraffe。
 	 * Sets neck length, just curious, is it possible to create a giraffe?
 	 *
 	 * @param neckLength neck length
@@ -888,51 +881,42 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Shoulders
-	 *
-	 * @return shouldeers
+	 * @return 返回肩。 / Shoulders @return shouldeers
 	 */
 	public int getShoulders() {
 		return shoulders;
 	}
 
 	/**
-	 * Shoulders
-	 *
-	 * @param shoulders shoulders
+	 * @param shoulders 设置肩。 / Shoulders @param shoulders shoulders
 	 */
 	public void setShoulders(int shoulders) {
 		this.shoulders = shoulders;
 	}
 
 	/**
-	 * Shoulder Size
-	 *
-	 * @return shouldeerSize
+	 * @return 返回肩宽。 / Shoulder Size @return shouldeerSize
 	 */
 	public int getShoulderSize() {
 		return shoulderSize;
 	}
 
 	/**
-	 * Shoulder Size
-	 *
-	 * @param shoulderSize shoulderSize
+	 * @param shoulderSize 设置肩。 / Shoulder Size @param shoulderSize shoulderSize
 	 */
 	public void setShoulderSize(int shoulderSize) {
 		this.shoulderSize = shoulderSize;
 	}
 
 	/**
-	 * Torso
-	 *
-	 * @return torso
+	 * @return 返回躯干。 / Torso @return torso
 	 */
 	public int getTorso() {
 		return torso;
 	}
 
 	/**
+	 * 设置 torso。
 	 * Sets torso
 	 *
 	 * @param torso torso
@@ -942,7 +926,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Returns tits
+	 * 返回 tits。 / Returns tits
 	 *
 	 * @return tits
 	 */
@@ -951,6 +935,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 tits。
 	 * Sets tits
 	 *
 	 * @param chest tits
@@ -960,7 +945,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Returns waist
+	 * 返回 waist。 / Returns waist
 	 *
 	 * @return waist
 	 */
@@ -969,6 +954,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 waist。
 	 * sets waist
 	 *
 	 * @param waist waist
@@ -978,7 +964,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Returns hips
+	 * 返回 hips。 / Returns hips
 	 *
 	 * @return hips
 	 */
@@ -987,6 +973,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 hips。
 	 * Sets hips
 	 *
 	 * @param hips hips
@@ -995,16 +982,17 @@ public class PlayerAppearance implements Cloneable {
 		this.hips = hips;
 	}
 
-	/**
-	 * Returns arm thickness
-	 *
-	 * @return arm thickness
-	 */
+	 /**
+	  * 返回臂粗。
+	  * Returns arm thickness
+	  * @return arm thickness
+	  */
 	public int getArmThickness() {
 		return armThickness;
 	}
 
 	/**
+	 * 设置 armthickness。
 	 * Sets arm thickness
 	 *
 	 * @param armThickness arm thickness
@@ -1023,6 +1011,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 armlength。
 	 * Sets arm length
 	 *
 	 * @param armLength arm length
@@ -1031,16 +1020,17 @@ public class PlayerAppearance implements Cloneable {
 		this.armLength = armLength;
 	}
 
-	/**
-	 * Returns hand size
-	 *
-	 * @return hand size
-	 */
+	 /**
+	  * 返回手部尺寸。
+	  * Returns hand size
+	  * @return hand size
+	  */
 	public int getHandSize() {
 		return handSize;
 	}
 
 	/**
+	 * 设置 hand 大小。
 	 * Sets hand size
 	 *
 	 * @param handSize hand size
@@ -1059,6 +1049,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 legthickness。
 	 * Sets leg thickness
 	 *
 	 * @param legThickness leg thickness
@@ -1077,6 +1068,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 leglength。
 	 * Sets leg length
 	 *
 	 * @param legLength leg length
@@ -1085,16 +1077,17 @@ public class PlayerAppearance implements Cloneable {
 		this.legLength = legLength;
 	}
 
-	/**
-	 * Returns foot size
-	 *
-	 * @return foot size
-	 */
+	 /**
+	  * 返回脚部尺寸。
+	  * Returns foot size
+	  * @return foot size
+	  */
 	public int getFootSize() {
 		return footSize;
 	}
 
 	/**
+	 * 设置 foot 大小。
 	 * Sets foot size
 	 *
 	 * @param footSize foot size
@@ -1104,15 +1097,14 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Retunrs facial rate
-	 *
-	 * @return facial rate
+	 * @return 返回面部比例。 / Retunrs facial rate @return facial rate
 	 */
 	public int getFacialRate() {
 		return facialRate;
 	}
 
 	/**
+	 * 设置 facialrate。
 	 * Sets facial rate
 	 *
 	 * @param facialRate facial rate
@@ -1131,6 +1123,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
+	 * 设置 sexyvoice。
 	 * Sets sexy voice
 	 *
 	 * @param voice sexy voice
@@ -1139,16 +1132,24 @@ public class PlayerAppearance implements Cloneable {
 		this.voice = voice;
 	}
 
-	/**
-	 * Returns height
-	 *
-	 * @return height
-	 */
+	 /**
+	  * 返回身高。
+	  * Returns height
+	  * @return height
+	  */
 	public float getHeight() {
 		return height;
 	}
 
 	/**
+	 * Returns the approximate in-world height represented by the client scale value
+	 */
+	public float getBoundHeight() {
+		return height * 1.75f;
+	}
+
+	/**
+	 * 设置 height。
 	 * Sets height
 	 *
 	 * @param height height
@@ -1158,9 +1159,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * Allow to copy the object
-	 * 
-	 * @author Divinity
+	 * @return 允许复制该对象。 / Allow to copy the object @author Divinity
 	 */
 	public Object clone() {
 		Object newObject = null;
@@ -1168,7 +1167,7 @@ public class PlayerAppearance implements Cloneable {
 		try {
 			newObject = super.clone();
 		} catch (CloneNotSupportedException e) {
-			log.error("Failed to clone player appearance", e);
+			log.error(I18n.get("log.3854e6534415", e));
 		}
 		return newObject;
 	}

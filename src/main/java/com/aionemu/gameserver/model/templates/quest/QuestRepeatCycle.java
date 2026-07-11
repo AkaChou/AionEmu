@@ -1,27 +1,17 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.quest;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 任务 RepeatCycle 枚举。
+ * Quest Repeat Cycle enumeration.
+ */
+
 @XmlType(name = "QuestRepeatCycle")
 @XmlEnum
 public enum QuestRepeatCycle {
+	/** 全部 / All. */
 	ALL(0), MON(1), TUE(2), WED(3), THU(4), FRI(5), SAT(6), SUN(7);
 
 	private int weekDay;
@@ -30,6 +20,7 @@ public enum QuestRepeatCycle {
 		this.weekDay = weekDay;
 	}
 
+	/** 返回 day / Returns the day */
 	public int getDay() {
 		return weekDay;
 	}

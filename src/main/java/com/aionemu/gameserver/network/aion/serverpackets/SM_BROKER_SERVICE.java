@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.sql.Timestamp;
@@ -26,6 +10,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 
+/**
+ * 交易行（经纪行）服务多模式服务端包：搜索结果、已登记物品、登记反馈、结算列表/图标、均价高低价等。
+ * Multi-mode broker-service server packet: search results, registered items, registration feedback,
+ * settled list/icon, and average/low/high price data.
+ */
 public class SM_BROKER_SERVICE extends AionServerPacket {
 	private enum BrokerPacketType {
 		SEARCHED_ITEMS(0), REGISTERED_ITEMS(1), REGISTER_ITEM(3), SHOW_SETTLED_ICON(5), SETTLED_ITEMS(5),
@@ -54,6 +43,14 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	private long CurrentHigh;
 	private boolean IsLowHighSame;
 
+	/**
+	 * 登记物品成功/结果反馈。
+	 * Registration result feedback for a broker item.
+	 *
+	 * @param brokerItem 登记的物品 / registered broker item
+	 * @param message 结果消息码 / result message code
+	 * @param itemsCount 当前已登记数量 / current registered item count
+	 */
 	public SM_BROKER_SERVICE(BrokerItem brokerItem, int message, int itemsCount) {
 		this.type = BrokerPacketType.REGISTER_ITEM;
 		this.brokerItems = new BrokerItem[] { brokerItem };
@@ -61,22 +58,49 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 		this.itemsCount = itemsCount;
 	}
 
+	/**
+	 * 仅发送登记结果消息码（无物品详情）。
+	 * Sends only a registration result message code (no item details).
+	 *
+	 * @param message 结果消息码 / result message code
+	 */
 	public SM_BROKER_SERVICE(int message) {
 		this.type = BrokerPacketType.REGISTER_ITEM;
 		this.message = message;
 	}
 
+	/**
+	 * 同步玩家当前已登记在交易行的物品列表。
+	 * Synchronizes the player's currently registered broker items.
+	 *
+	 * @param brokerItems 已登记物品数组 / registered broker items
+	 */
 	public SM_BROKER_SERVICE(BrokerItem[] brokerItems) {
 		this.type = BrokerPacketType.REGISTERED_ITEMS;
 		this.brokerItems = brokerItems;
 	}
 
+	/**
+	 * 同步可结算物品列表与已结算基纳。
+	 * Synchronizes the settled-items list and settled kinah amount.
+	 *
+	 * @param brokerItems 可结算物品 / settled broker items
+	 * @param settled_kinah 已结算基纳 / settled kinah
+	 */
 	public SM_BROKER_SERVICE(BrokerItem[] brokerItems, long settled_kinah) {
 		this.type = BrokerPacketType.SETTLED_ITEMS;
 		this.brokerItems = brokerItems;
 		this.settled_kinah = settled_kinah;
 	}
 
+	/**
+	 * 交易行搜索结果分页同步。
+	 * Paged broker search-result synchronization.
+	 *
+	 * @param brokerItems 当前页物品 / items on the current page
+	 * total hit count
+	 * start page
+	 */
 	public SM_BROKER_SERVICE(BrokerItem[] brokerItems, int itemsCount, int startPage) {
 		this.type = BrokerPacketType.SEARCHED_ITEMS;
 		this.brokerItems = brokerItems;
@@ -84,11 +108,28 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 		this.startPage = startPage;
 	}
 
+	/**
+	 * 显示或移除交易行结算提示图标。
+	 * Shows or removes the broker settled-items notification icon.
+	 *
+	 * @param showSettledIcon 是否显示图标 / whether to show the icon
+	 * @param settled_kinah 已结算基纳 / settled kinah
+	 */
 	public SM_BROKER_SERVICE(boolean showSettledIcon, long settled_kinah) {
 		this.type = showSettledIcon ? BrokerPacketType.SHOW_SETTLED_ICON : BrokerPacketType.REMOVE_SETTLED_ICON;
 		this.settled_kinah = settled_kinah;
 	}
 
+	/**
+	 * 同步指定物品近 7 日均价与当前最低/最高价。
+	 * Synchronizes a given item's 7-day average price and current low/high prices.
+	 *
+	 * item unique id
+	 * 7-day average price
+	 * @param CurrentLow 当前最低价 / current low price
+	 * @param CurrentHigh 当前最高价 / current high price
+	 * @param IsLowHighSame 最低价是否等于最高价 / whether low equals high
+	 */
 	public SM_BROKER_SERVICE(int itemUniqueId, long Ave7day, long CurrentLow, long CurrentHigh, boolean IsLowHighSame) {
 		this.type = BrokerPacketType.AVE_LOW_HIGH_ITEM;
 		this.itemUniqueId = itemUniqueId;

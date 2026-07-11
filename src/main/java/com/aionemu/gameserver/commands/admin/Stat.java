@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,18 +14,29 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.TreeSet;
 
 /**
+ * 查看目标生物指定属性修饰列表的管理员命令。
+ * Admin command to inspect a target creature's modifiers for a given stat.
+ *
  * @author MrPoke
  */
 @Slf4j
 public class Stat extends AdminCommand {
 
 	/**
+	 * 构造 stat 命令。
 	 * Creates the stat admin command.
 	 */
 	public Stat() {
 		super("stat");
 	}
 
+	/**
+	 * 列出目标生物某属性的修饰函数，可选 details 输出技能来源。
+	 * Lists modifiers for a stat on the target creature; optional details dump skill source.
+	 *
+	 * 执行 GM / Admin player
+	 * StatEnum name, optional details
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length >= 1) {
@@ -54,7 +49,7 @@ public class Stat extends AdminCommand {
 				Creature creature = (Creature) target;
 
 				TreeSet<IStatFunction> stats = creature.getGameStats().getStatsByStatEnum(StatEnum.valueOf(params[0]));
-				
+
 				if (params.length == 1) {
 					for (IStatFunction stat : stats) {
 						PacketSendUtility.sendMessage(admin, stat.toString());
@@ -71,6 +66,13 @@ public class Stat extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 收集属性修饰的详细信息（代理函数、技能来源等）。
+	 * Collects detail text for a stat function (proxy, skill owner, etc.).
+	 *
+	 * @param stat 属性修饰函数 / Stat function
+	 * Detail text
+	 */
 	private String collectDetails(IStatFunction stat) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(stat.toString() + "\n");
@@ -87,9 +89,4 @@ public class Stat extends AdminCommand {
 		return sb.toString();
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-
-	}
 }

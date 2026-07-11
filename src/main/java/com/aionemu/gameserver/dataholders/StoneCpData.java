@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -32,7 +16,10 @@ import com.aionemu.gameserver.model.templates.panel_cp.StoneCP;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * Created by Rinzler (Encom)
+ * 面板 CP 石数据容器，按石 ID 索引 CP 石模板。
+ * Panel CP-stone data holder, indexing stone templates by stone id.
+ *
+ * @author Rinzler (Encom)
  */
 @XmlRootElement(name = "stones_cp")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,6 +33,10 @@ public class StoneCpData {
 	@XmlTransient
 	private Map<Integer, StoneCP> stoneDataMap = new HashMap<Integer, StoneCP>(1);
 
+	/**
+	 * JAXB 反序列化完成后，将 CP 石模板索引到两套映射中。
+	 * After JAXB unmarshalling, indexes CP-stone templates into both maps.
+	 */
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (StoneCP stoneCp : stonelist) {
 			stoneData.put(stoneCp.getId(), stoneCp);
@@ -53,14 +44,33 @@ public class StoneCpData {
 		}
 	}
 
+	/**
+	 * 返回已加载的 CP 石数量。
+	 * Returns the number of loaded CP stones.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return stoneData.size();
 	}
 
+	/**
+	 * 按石 ID 获取 CP 石模板。
+	 * Returns the CP-stone template for the given stone id.
+	 *
+	 * @param id 石 ID / stone id
+	 * @return CP 石模板，不存在则为 null / CP-stone template or null
+	 */
 	public StoneCP getStoneCpId(int id) {
 		return stoneData.get(id);
 	}
 
+	/**
+	 * 返回全部 CP 石模板映射。
+	 * Returns the full map of CP-stone templates.
+	 *
+	 * @return 石 ID → 模板映射 / stone-id to template map
+	 */
 	public Map<Integer, StoneCP> getAll() {
 		return stoneDataMap;
 	}

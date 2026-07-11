@@ -1,43 +1,35 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.taskmanager.handler.implementations;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.service.LoginShutdownRequest;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
+
 /**
+ * 重启登录服的数据库任务处理器。
+ * DB task handler that restarts the login server.
+ *
  * @author Divinity, nrg
  */
 @Slf4j
 public class RestartHandler extends TaskFromDBHandler {
 
 
+    /**
+     * 触发登录服重启（嵌入模式走 embedded 关停，否则标准重启）。
+     * Triggers login-server restart (embedded mode uses embedded shutdown, otherwise standard restart).
+     */
     @Override
     public void trigger() {
-        log.info("Task[" + taskId + "] launched : restarting the server !");
+        log.info(I18n.get("log.92ee53efe389", taskId));
 
         if (AionRuntimeMode.isBootEmbedded()) {
             if (!AionEmbeddedShutdownHandler.requestShutdown(AionEmbeddedShutdownMode.RESTART)) {
-                log.warn("Embedded shutdown handler is not registered; stopping LoginServer directly.");
+                log.warn(I18n.get("log.a611a5bc648e"));
                 LoginShutdownRequest.shutdownWithoutHalt();
             }
             return;
@@ -46,6 +38,12 @@ public class RestartHandler extends TaskFromDBHandler {
         LoginShutdownRequest.startShutdown(true);
     }
 
+    /**
+     * 本处理器无需参数，始终有效。
+     * This handler needs no params and is always valid.
+     *
+     * @return true
+     */
     @Override
     public boolean isValid() {
         return true;

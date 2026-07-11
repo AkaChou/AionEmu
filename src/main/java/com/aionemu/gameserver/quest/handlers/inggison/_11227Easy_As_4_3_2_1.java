@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.inggison;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -24,10 +8,12 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 
-/****/
-/** Author Kortana (Encom)
-/****/
-
+/**
+ * 因吉森任务脚本：Easy As 4 3 2 1（任务 ID 11227）。
+ * Inggison quest script: Easy As 4 3 2 1 (quest ID 11227).
+ *
+ * @author Kortana (Encom)
+ */
 public class _11227Easy_As_4_3_2_1 extends QuestHandler
 {
 	private final static int questId = 11227;

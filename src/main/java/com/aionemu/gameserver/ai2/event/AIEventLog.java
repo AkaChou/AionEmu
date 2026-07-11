@@ -1,41 +1,42 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.event;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
+ * AI 事件日志队列，以有界双端队列记录最近的 {@link AIEventType}，满容时丢弃最旧事件。
+ * AI event log queue that records recent {@link AIEventType} values in a bounded deque, dropping the oldest when full.
+ *
  * @author ATracer
  */
 public class AIEventLog extends LinkedBlockingDeque<AIEventType> {
 
 	private static final long serialVersionUID = -7234174243343636729L;
 
+	/**
+	 * 使用默认无界容量构造事件日志。
+	 * Construct an event log with the default unbounded capacity.
+	 */
 	public AIEventLog() {
 		super();
 	}
 
 	/**
-	 * @param capacity
+	 * 使用指定容量构造有界事件日志。
+	 * Construct a bounded event log with the given capacity.
+	 *
+	 * Queue capacity
 	 */
 	public AIEventLog(int capacity) {
 		super(capacity);
 	}
 
+	/**
+	 * 将事件插入队列头部；若已满则先移除队尾最旧事件。
+	 * Insert an event at the head; if full, remove the oldest event at the tail first.
+	 *
+	 * @param e 要记录的 AI 事件类型 / AI event type to record
+	 * @return Always {@code true}。 / Always {@code true}
+	 */
 	@Override
 	public synchronized boolean offerFirst(AIEventType e) {
 		if (remainingCapacity() == 0) {

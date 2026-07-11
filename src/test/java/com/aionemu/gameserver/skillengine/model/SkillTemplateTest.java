@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.skillengine.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,6 +27,30 @@ class SkillTemplateTest {
 			""");
 
 		assertFalse(template.isMcritApplied());
+	}
+
+	@Test
+	void defaultsHostileTypeToDirect() {
+		assertEquals(HostileType.DIRECT, new SkillTemplate().getHostileType());
+	}
+
+	@Test
+	void unmarshalsHostileType() throws Exception {
+		SkillTemplate indirect = unmarshal("""
+			<skill_data>
+				<skill_template skill_id="1" name="test" nameId="1" skilltype="MAGICAL" skillsubtype="ATTACK"
+					activation="ACTIVE" duration="0" hostile_type="INDIRECT"/>
+			</skill_data>
+			""");
+		SkillTemplate none = unmarshal("""
+			<skill_data>
+				<skill_template skill_id="1" name="test" nameId="1" skilltype="MAGICAL" skillsubtype="ATTACK"
+					activation="ACTIVE" duration="0" hostile_type="NONE"/>
+			</skill_data>
+			""");
+
+		assertEquals(HostileType.INDIRECT, indirect.getHostileType());
+		assertEquals(HostileType.NONE, none.getHostileType());
 	}
 
 	private static SkillTemplate unmarshal(String xml) throws Exception {

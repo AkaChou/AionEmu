@@ -1,42 +1,27 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
 
 /**
- * In this packet LoginSerer is requesting kicking account from GameServer.
+ * LS→GS：请求游戏服踢下线指定账号。
+ * LS→GS: request the game server to kick the given account.
  *
  * @author -Nemesiss-
  */
 public class SM_REQUEST_KICK_ACCOUNT extends GsServerPacket {
 
     /**
-     * Account that must be kicked at GameServer side.
+     * 需在游戏服侧踢下线的账号 ID。
+     * Account that must be kicked on the game server.
      */
     private final int accountId;
 
     /**
-     * Constructor.
+     * 构造踢号请求包。
+     * Constructs a kick-account request packet.
      *
-     * @param accountId
+     * 账号 ID / account id
      */
     public SM_REQUEST_KICK_ACCOUNT(int accountId) {
         this.accountId = accountId;

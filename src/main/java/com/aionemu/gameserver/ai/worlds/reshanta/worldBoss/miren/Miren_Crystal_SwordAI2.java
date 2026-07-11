@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.miren;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Miren Crystal Sword（@AIName "miren_crystal_sword"），继承 NpcAI2。
+ * Reshanta zone NPC AI: Miren Crystal Sword (@AIName "miren_crystal_sword"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("miren_crystal_sword")
 public class Miren_Crystal_SwordAI2 extends NpcAI2
 {
@@ -41,7 +27,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
         } else {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
-			//Spirit of Miren's Pendant is required to break this seal.
+			// 需要米伦之灵吊坠才能打破此封印。 / Spirit of Miren's Pendant is required to break this seal.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Named_Spawn_Fail02);
         }
     }
@@ -72,7 +58,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 				break;
 			}
 		}
-		//Spirit Of Miren's Pendant has broken the seal.
+		// 米伦之灵吊坠打破了封印。 / Spirit Of Miren's Pendant has broken the seal.
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn_Item);
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		AI2Actions.deleteOwner(this);
@@ -84,11 +70,11 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Protector Spirit will appear after 5 minutes.
+				// 米伦守护之灵将在 5 分钟后出现。 / The Miren Protector Spirit will appear after 5 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_05, 1500000);
-				//The Miren Protector Spirit will appear after 3 minutes.
+				// 米伦守护之灵将在 3 分钟后出现。 / The Miren Protector Spirit will appear after 3 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_03, 1620000);
-				//The Miren Protector Spirit will appear after 1 minute
+				// 米伦守护之灵将在 1 分钟后出现。 / The Miren Protector Spirit will appear after 1 minute
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_01, 1740000);
 			}
 		});
@@ -98,7 +84,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Spirit of Miren will be summoned from Miren's Crystal Sword in 30 minutes.
+				// 米伦之灵将在 30 分钟后从米伦水晶剑中被召唤。 / Spirit of Miren will be summoned from Miren's Crystal Sword in 30 minutes.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn_System);
 			}
 		});

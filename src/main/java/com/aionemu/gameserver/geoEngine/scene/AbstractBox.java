@@ -1,32 +1,16 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene;
 
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
 /**
- * An eight sided box.
- * <p/>
- * A {@code Box} is defined by a minimal point and a maximal point. The eight
- * vertices that make the box are then computed, they are computed in such a way
- * as to generate an axis-aligned box.
- * <p/>
- * This class does not control how the geometry data is generated, see
- * {@link Box} for that.
+ * 八顶点轴对齐盒子基类。
+ * An eight-sided axis-aligned box base class.
+ * <p>
+ * 由中心点与各轴半长（extent）定义，并据此计算八个顶点。
+ * A {@code Box} is defined by a center and per-axis extents; the eight vertices are computed to form an axis-aligned box.
+ * <p>
+ * 本类不控制几何数据如何生成，具体实现见 {@link Box}。
+ * This class does not control how geometry data is generated; see {@link Box} for that.
  *
  * @author <a href="mailto:ianp@ianp.org">Ian Phillips</a>
  * @version $Revision: 4131 $, $Date: 2009-03-19 16:15:28 -0400 (Thu, 19 Mar
@@ -34,17 +18,24 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
  */
 public abstract class AbstractBox extends Mesh {
 
+	/** 盒子中心。 / Box center. */
 	public final Vector3f center = new Vector3f(0f, 0f, 0f);
+	/** Y/Z 轴半长。 / Half-extents along X/Y/Z/Y/Z 轴半长。 / Half-extents along X/Y/Z */
 	public float xExtent, yExtent, zExtent;
 
+	/**
+	 * 默认构造。
+	 * Default constructor.
+	 */
 	public AbstractBox() {
 		super();
 	}
 
 	/**
-	 * Gets the array or vectors representing the 8 vertices of the box.
+	 * 计算表示盒子 8 个顶点的向量数组。
+	 * Computes the array of vectors representing the 8 vertices of the box.
 	 *
-	 * @return a newly created array of vertex vectors.
+	 * @return 新创建的顶点向量数组 / a newly created array of vertex vectors
 	 */
 	protected final Vector3f[] computeVertices() {
 		Vector3f[] axes = { Vector3f.UNIT_X.mult(xExtent), Vector3f.UNIT_Y.mult(yExtent),
@@ -60,55 +51,69 @@ public abstract class AbstractBox extends Mesh {
 	}
 
 	/**
-	 * Convert the indices into the list of vertices that define the box's geometry.
+	 * 将顶点索引写入定义盒子几何的索引列表。
+	 * Converts indices into the list of vertices that define the box's geometry.
 	 */
 	protected abstract void duUpdateGeometryIndices();
 
 	/**
-	 * Update the normals of each of the box's planes.
+	 * 更新盒子各面的法线。
+	 * Updates the normals of each of the box's planes.
 	 */
 	protected abstract void duUpdateGeometryNormals();
 
 	/**
-	 * Update the position of the vertices that define the box.
-	 * <p/>
-	 * These eight points are determined from the minimum and maximum point.
+	 * 根据最小/最大点更新定义盒子的顶点位置。
+	 * Updates the positions of the vertices that define the box from min/max extents.
 	 */
 	protected abstract void duUpdateGeometryVertices();
 
 	/**
-	 * Get the center point of this box.
+	 * 获取盒子中心点。
+	 * Gets the center point of this box.
+	 *
+	 * center point
 	 */
 	public final Vector3f getCenter() {
 		return center;
 	}
 
 	/**
-	 * Get the x-axis size (extent) of this box.
+	 * 获取 X 轴半长。
+	 * Gets the x-axis size (extent) of this box.
+	 *
+	 * x extent
 	 */
 	public final float getXExtent() {
 		return xExtent;
 	}
 
 	/**
-	 * Get the y-axis size (extent) of this box.
+	 * 获取 Y 轴半长。
+	 * Gets the y-axis size (extent) of this box.
+	 *
+	 * y extent
 	 */
 	public final float getYExtent() {
 		return yExtent;
 	}
 
 	/**
-	 * Get the z-axis size (extent) of this box.
+	 * 获取 Z 轴半长。
+	 * Gets the z-axis size (extent) of this box.
+	 *
+	 * z extent
 	 */
 	public final float getZExtent() {
 		return zExtent;
 	}
 
 	/**
+	 * 在直接修改属性后重建盒子几何。
 	 * Rebuilds the box after a property has been directly altered.
-	 * <p/>
-	 * For example, if you call {@code getXExtent().x = 5.0f} then you will need to
-	 * call this method afterwards in order to update the box.
+	 * <p>
+	 * 例如直接改写 extent 后需调用本方法以刷新几何。
+	 * For example, after mutating extents directly, call this method to refresh geometry.
 	 */
 	public final void updateGeometry() {
 		duUpdateGeometryVertices();
@@ -117,15 +122,16 @@ public abstract class AbstractBox extends Mesh {
 	}
 
 	/**
-	 * Rebuilds this box based on a new set of parameters.
-	 * <p/>
-	 * Note that the actual sides will be twice the given extent values because the
-	 * box extends in both directions from the center for each extent.
+	 * 按中心与各轴半长重建盒子。
+	 * Rebuilds this box from a center and per-axis extents.
+	 * <p>
+	 * 实际边长为半长的两倍，因盒子从中心向两侧延伸。
+	 * Note that actual side lengths are twice the given extents because the box extends both ways from the center.
 	 *
-	 * @param center the center of the box.
-	 * @param x      the x extent of the box, in each directions.
-	 * @param y      the y extent of the box, in each directions.
-	 * @param z      the z extent of the box, in each directions.
+	 * center of the box
+	 * @param x X 方向半长 / x extent in each direction
+	 * @param y Y 方向半长 / y extent in each direction
+	 * @param z Z 方向半长 / z extent in each direction
 	 */
 	public final void updateGeometry(Vector3f center, float x, float y, float z) {
 		if (center != null) {
@@ -138,13 +144,14 @@ public abstract class AbstractBox extends Mesh {
 	}
 
 	/**
-	 * Rebuilds this box based on a new set of parameters.
-	 * <p/>
-	 * The box is updated so that the two opposite corners are {@code minPoint} and
-	 * {@code maxPoint}, the other corners are created from those two positions.
+	 * 按最小点与最大点重建盒子。
+	 * Rebuilds this box from a minimum and maximum corner.
+	 * <p>
+	 * 盒子更新为以 {@code minPoint} 与 {@code maxPoint} 为对角，其余顶点由二者推导。
+	 * The box is updated so opposite corners are {@code minPoint} and {@code maxPoint}; other corners are derived from them.
 	 *
-	 * @param minPoint the new minimum point of the box.
-	 * @param maxPoint the new maximum point of the box.
+	 * @param minPoint 新的最小点 / new minimum point of the box
+	 * @param maxPoint 新的最大点 / new maximum point of the box
 	 */
 	public final void updateGeometry(Vector3f minPoint, Vector3f maxPoint) {
 		center.set(maxPoint).addLocal(minPoint).multLocal(0.5f);

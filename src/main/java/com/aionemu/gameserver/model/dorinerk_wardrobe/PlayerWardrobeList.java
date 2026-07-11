@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.dorinerk_wardrobe;
 
 import java.util.ArrayList;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 玩家衣橱列表，用于多里纳克衣橱相关逻辑。
+ * Player Wardrobe List for dorinerk wardrobe logic.
+ *
  * @author Ranastic
  */
 public final class PlayerWardrobeList implements WardrobeList<Player> {
@@ -44,16 +31,19 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 		}
 	}
 
+	/** 返回 all wardrobe / Returns the all wardrobe */
 	public PlayerWardrobeEntry[] getAllWardrobe() {
 		List<PlayerWardrobeEntry> allWardrobe = new ArrayList<PlayerWardrobeEntry>();
 		allWardrobe.addAll(entry.values());
 		return allWardrobe.toArray(new PlayerWardrobeEntry[allWardrobe.size()]);
 	}
 
+	/** 返回 basic wardrobe / Returns the basic wardrobe */
 	public PlayerWardrobeEntry[] getBasicWardrobe() {
 		return entry.values().toArray(new PlayerWardrobeEntry[entry.size()]);
 	}
 
+	/** 添加物品。 / Adds item. */
 	@Override
 	public boolean addItem(Player player, int itemId, int slot, int reskin_count) {
 		return addItem(player, itemId, slot, reskin_count, PersistentState.NEW);
@@ -65,6 +55,7 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 		return true;
 	}
 
+	/** 移除物品。 / Removes item. */
 	@Override
 	public synchronized boolean removeItem(Player player, int itemId) {
 		PlayerWardrobeEntry entries = entry.get(itemId);
@@ -76,6 +67,7 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 		return entry != null;
 	}
 
+	/** 大小 / size. */
 	@Override
 	public int size() {
 		return entry.size();

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.container;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -39,6 +25,9 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
+ * 玩家游戏属性，用于属性相关逻辑。
+ * Player Game Stats for stats logic.
+ *
  * @author xavier
  */
 public class PlayerGameStats extends CreatureGameStats<Player> {
@@ -62,11 +51,13 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		updateStatsAndSpeedVisually();
 	}
 
+	/** 更新 stats and speed visually / Update stats and speed visually */
 	public void updateStatsAndSpeedVisually() {
 		updateStatsVisually();
 		checkSpeedStats();
 	}
 
+	/** 更新 stats visually / Update stats visually */
 	public void updateStatsVisually() {
 		owner.addPacketBroadcastMask(BroadcastMode.UPDATE_STATS);
 	}
@@ -81,6 +72,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		cachedAttackSpeed = currentAttackSpeed;
 	}
 
+	/** 返回最大生命 / Returns the max hp*/
 	@Override
 	public Stat2 getMaxHp() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -91,6 +83,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回最大魔法 / Returns the max mp*/
 	@Override
 	public Stat2 getMaxMp() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -101,6 +94,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 strike resist / Returns the strike resist */
 	public Stat2 getStrikeResist() {
 		Stat2 stat = getStat(StatEnum.PHYSICAL_CRITICAL_RESIST, 0);
 		int HDEX = ((Player) owner).getGameStats().getStat(StatEnum.HDEX, 0).getCurrent();
@@ -109,10 +103,12 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;		
 	}
 
+	/** 返回 strike fort / Returns the strike fort */
 	public Stat2 getStrikeFort() {
 		return getStat(StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE, 0);
 	}
 
+	/** 返回 spell resist / Returns the spell resist */
 	public Stat2 getSpellResist() {
 		int base = 0;
 		int Pclass = owner.getPlayerClass().getClassId();
@@ -126,22 +122,27 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 spell fort / Returns the spell fort */
 	public Stat2 getSpellFort() {
 		return getStat(StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE, 0);
 	}
 
+	/** 返回最大神圣力 / Returns the max dp*/
 	public Stat2 getMaxDp() {
 		return getStat(StatEnum.MAXDP, 4000);
 	}
 
+	/** 返回飞行时间 / Returns the fly time*/
 	public Stat2 getFlyTime() {
 		return getStat(StatEnum.FLY_TIME, CustomConfig.BASE_FLYTIME);
 	}
 
+	/** 返回 all speed / Returns the all speed */
 	public Stat2 getAllSpeed() {
 		return getStat(StatEnum.ALLSPEED, 7500);
 	}
 
+	/** 返回 attack speed / Returns the attack speed */
 	@Override
 	public Stat2 getAttackSpeed() {
 		int base = 1500;
@@ -158,6 +159,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return aSpeed;
 	}
 
+	/** 返回 b casting time / Returns the b casting time */
 	@Override
 	public Stat2 getBCastingTime() {
 		int base = 0;
@@ -170,6 +172,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.BOOST_CASTING_TIME, base);
 	}
 
+	/** 返回 concentration / Returns the concentration */
 	@Override
 	public Stat2 getConcentration() {
 		int base = 0;
@@ -187,6 +190,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 root resistance / Returns the root resistance */
 	@Override
 	public Stat2 getRootResistance() {
 		int base = 0;
@@ -197,6 +201,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.ROOT_RESISTANCE, base);
 	}
 
+	/** 返回 snare resistance / Returns the snare resistance */
 	@Override
 	public Stat2 getSnareResistance() {
 		int base = 0;
@@ -207,6 +212,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.SNARE_RESISTANCE, base);
 	}
 
+	/** 返回 bind resistance / Returns the bind resistance */
 	@Override
 	public Stat2 getBindResistance() {
 		int base = 0;
@@ -217,6 +223,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.BIND_RESISTANCE, base);
 	}
 
+	/** 返回 fear resistance / Returns the fear resistance */
 	@Override
 	public Stat2 getFearResistance() {
 		int base = 0;
@@ -227,6 +234,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.FEAR_RESISTANCE, base);
 	}
 
+	/** 返回 sleep resistance / Returns the sleep resistance */
 	@Override
 	public Stat2 getSleepResistance() {
 		int base = 0;
@@ -237,6 +245,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.SLEEP_RESISTANCE, base);
 	}
 
+	/** 返回 p def / Returns the p def */
 	@Override
 	public Stat2 getPDef() {
 		int base = 0;
@@ -254,6 +263,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stats;
 	}
 
+	/** 返回 m resist / Returns the m resist */
 	@Override
 	public Stat2 getMResist() {
 		int base = 0;
@@ -268,6 +278,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 mb resist / Returns the mb resist */
 	@Override
 	public Stat2 getMBResist() {
 		int base = 0;
@@ -291,6 +302,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 movement speed / Returns the movement speed */
 	@Override
 	public Stat2 getMovementSpeed() {
 		Stat2 movementSpeed;
@@ -320,6 +332,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return movementSpeed;
 	}
 
+	/** 返回攻击范围 / Returns the attack range*/
 	@Override
 	public Stat2 getAttackRange() {
 		int base = 1500;
@@ -360,9 +373,8 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 						if (mainHandWeapon != null && offHandWeapon != null
 								&& offHandWeapon.getItemTemplate().getArmorType() != ArmorType.SHIELD) {
 							base = mainHandWeapon.getItemTemplate().getWeaponStats().getAttackRange();
-							log.info("Unexpected dual weapon combination. playerId={} mainHandType={} offHandType={}",
-									owner.getObjectId(), mainHandWeapon.getItemTemplate().getItemType(),
-									offHandWeapon.getItemTemplate().getItemType());
+							log.info(I18n.get("log.69a559ecbbb6", owner.getObjectId(), mainHandWeapon.getItemTemplate().getItemType(),
+									offHandWeapon.getItemTemplate().getItemType()));
 						}
 					}
 				}
@@ -371,47 +383,55 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.ATTACK_RANGE, base);
 	}
 
+	/** 返回 m def / Returns the m def */
 	@Override
 	public Stat2 getMDef() {
 		return getStat(StatEnum.MAGICAL_DEFEND, 0);
 	}
 
+	/** 返回 power / Returns the power */
 	@Override
 	public Stat2 getPower() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		return getStat(StatEnum.POWER, pst.getPower());
 	}
 
+	/** 返回 health / Returns the health */
 	@Override
 	public Stat2 getHealth() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		return getStat(StatEnum.HEALTH, pst.getHealth());
 	}
 
+	/** 返回 accuracy / Returns the accuracy */
 	@Override
 	public Stat2 getAccuracy() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		return getStat(StatEnum.ACCURACY, pst.getAccuracy());
 	}
 
+	/** 返回 agility / Returns the agility */
 	@Override
 	public Stat2 getAgility() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		return getStat(StatEnum.AGILITY, pst.getAgility());
 	}
 
+	/** 返回 knowledge / Returns the knowledge */
 	@Override
 	public Stat2 getKnowledge() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		return getStat(StatEnum.KNOWLEDGE, pst.getKnowledge());
 	}
 
+	/** 返回 will / Returns the will */
 	@Override
 	public Stat2 getWill() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
 		return getStat(StatEnum.WILL, pst.getWill());
 	}
 
+	/** 返回 evasion / Returns the evasion */
 	@Override
 	public Stat2 getEvasion() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -422,6 +442,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 parry / Returns the parry */
 	@Override
 	public Stat2 getParry() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -437,6 +458,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回黑名单 / Returns the block */
 	@Override
 	public Stat2 getBlock() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -447,11 +469,13 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 main hand p attack / Returns the main hand p attack */
 	@Override
 	public Stat2 getMainHandPAttack() {
 		return getMainHandPAttack(new CalculationType[0]);
 	}
 
+	/** 返回 main hand p attack / Returns the main hand p attack */
 	@Override
 	public Stat2 getMainHandPAttack(CalculationType... calculationTypes) {
 		calculationTypes = ArrayUtils.add(calculationTypes, CalculationType.MAIN_HAND);
@@ -480,10 +504,12 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.MAIN_HAND_POWER, stat, calculationTypes);
 	}
 
+	/** 返回 off hand p attack / Returns the off hand p attack */
 	public Stat2 getOffHandPAttack() {
 		return getOffHandPAttack(new CalculationType[0]);
 	}
 
+	/** 返回 off hand p attack / Returns the off hand p attack */
 	public Stat2 getOffHandPAttack(CalculationType... calculationTypes) {
 		Equipment equipment = owner.getEquipment();
 		Item offHandWeapon = equipment.getOffHandWeapon();
@@ -513,6 +539,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return new AdditionStat(StatEnum.OFF_HAND_POWER, 0, owner);
 	}
 
+	/** 返回 main hand p critical / Returns the main hand p critical */
 	@Override
 	public Stat2 getMainHandPCritical() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), (owner.getLevel()));
@@ -521,11 +548,6 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		Item mainHandWeapon = equipment.getMainHandWeapon();
 		if (mainHandWeapon != null) {
 			base = mainHandWeapon.getItemTemplate().getWeaponStats().getPhysicalCritical();
-
-			// TODO dead code!!!
-		} else if (mainHandWeapon != null && mainHandWeapon.hasFusionedItem()) {
-			base = mainHandWeapon.getItemTemplate().getWeaponStats().getPhysicalCritical()
-					+ mainHandWeapon.getFusionedItemTemplate().getWeaponStats().getPhysicalCritical();
 		}
 		Stat2 stat = getStat(StatEnum.PHYSICAL_CRITICAL, base);
 		int HAGI = ((Player) owner).getGameStats().getStat(StatEnum.HAGI, 0).getCurrent();
@@ -534,6 +556,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 off hand p critical / Returns the off hand p critical */
 	public Stat2 getOffHandPCritical() {
 		Equipment equipment = owner.getEquipment();
 		Item offHandWeapon = equipment.getOffHandWeapon();
@@ -548,6 +571,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return new AdditionStat(StatEnum.OFF_HAND_CRITICAL, 0, owner);
 	}
 
+	/** 返回 main hand p accuracy / Returns the main hand p accuracy */
 	@Override
 	public Stat2 getMainHandPAccuracy() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -564,6 +588,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 off hand p accuracy / Returns the off hand p accuracy */
 	public Stat2 getOffHandPAccuracy() {
 		Equipment equipment = owner.getEquipment();
 		Item offHandWeapon = equipment.getOffHandWeapon();
@@ -582,6 +607,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return new AdditionStat(StatEnum.OFF_HAND_ACCURACY, 0, owner);
 	}
 
+	/** 返回 m attack / Returns the m attack */
 	@Override
 	public Stat2 getMAttack() {
 		int base;
@@ -598,11 +624,13 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.MAGICAL_ATTACK, base);
 	}
 
+	/** 返回 main hand m attack / Returns the main hand m attack */
 	@Override
 	public Stat2 getMainHandMAttack() {
 		return getMainHandMAttack(new CalculationType[0]);
 	}
 
+	/** 返回 main hand m attack / Returns the main hand m attack */
 	@Override
 	public Stat2 getMainHandMAttack(CalculationType... calculationTypes) {
 		calculationTypes = ArrayUtils.add(calculationTypes, CalculationType.MAIN_HAND);
@@ -622,11 +650,13 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return getStat(StatEnum.MAIN_HAND_MAGICAL_POWER, stat, calculationTypes);
 	}
 
+	/** 返回 off hand m attack / Returns the off hand m attack */
 	@Override
 	public Stat2 getOffHandMAttack() {
 		return getOffHandMAttack(new CalculationType[0]);
 	}
 
+	/** 返回 off hand m attack / Returns the off hand m attack */
 	@Override
 	public Stat2 getOffHandMAttack(CalculationType... calculationTypes) {
 		float base = 0;
@@ -649,6 +679,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return new AdditionStat(StatEnum.OFF_HAND_MAGICAL_POWER, 0, owner);
 	}
 
+	/** 返回 m boost / Returns the m boost */
 	@Override
 	public Stat2 getMBoost() {
 		int base = 0;
@@ -664,6 +695,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 m accuracy / Returns the m accuracy */
 	@Override
 	public Stat2 getMAccuracy() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -679,6 +711,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 m critical / Returns the m critical */
 	@Override
 	public Stat2 getMCritical() {
 		PlayerStatsTemplate pst = DataManager.PLAYER_STATS_DATA.getTemplate(owner.getPlayerClass(), owner.getLevel());
@@ -691,6 +724,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 hp regen rate / Returns the hp regen rate */
 	@Override
 	public Stat2 getHpRegenRate() {
 		int base = owner.getLevel() + 3;
@@ -705,6 +739,7 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 返回 mp regen rate / Returns the mp regen rate */
 	@Override
 	public Stat2 getMpRegenRate() {
 		int base = owner.getLevel() + 8;
@@ -719,11 +754,13 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return stat;
 	}
 
+	/** 更新属性信息。 / Update stat info. */
 	@Override
 	public void updateStatInfo() {
 		PacketSendUtility.sendPacket(owner, new SM_STATS_INFO(owner));
 	}
 
+	/** 更新 speed info / Update speed info */
 	@Override
 	public void updateSpeedInfo() {
 		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.START_EMOTE2, 0, 0), true);
@@ -763,30 +800,37 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 		return damage;
 	}
 
+	/** 返回 skill efficiency / Returns the skill efficiency */
 	public float getSkillEfficiency() {
 		return skillEfficiency;
 	}
 
+	/** 返回最大伤害概率 / Returns the max damage chance*/
 	public int getMaxDamageChance() {
 		return maxDamageChance;
 	}
 
+	/** 返回 min damage ratio / Returns the min damage ratio */
 	public float getMinDamageRatio() {
 		return minDamageRatio;
 	}
 
+	/** 设置 skill efficiency / Sets the skill efficiency */
 	public void setSkillEfficiency(float skillEfficiency) {
 		this.skillEfficiency = skillEfficiency;
 	}
 
+	/** 设置最大伤害概率 / Sets the max damage chance*/
 	public void setMaxDamageChance(int maxDamageChance) {
 		this.maxDamageChance = maxDamageChance;
 	}
 
+	/** 设置 min damage ratio / Sets the min damage ratio */
 	public void setMinDamageRatio(float minDamageRatio) {
 		this.minDamageRatio = minDamageRatio;
 	}
 
+	/** 返回 off hand damage ratio / Returns the off hand damage ratio */
 	public float getOffHandDamageRatio() {
 		return getMinDamageRatio() * (1 - getMaxDamageChance() / 1000f) + getMaxDamageChance() / 1000f;
 	}

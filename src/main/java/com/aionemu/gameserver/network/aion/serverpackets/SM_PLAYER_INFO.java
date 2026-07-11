@@ -4,12 +4,10 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -30,11 +28,24 @@ import com.aionemu.gameserver.services.events.bg.DeathmatchBg;
 import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.model.account.Account;
 
+/**
+ * 向客户端同步可见玩家完整外观与状态的服务端包（位置、种族显示、装备外观、脸部、军团/战场标识等）。
+ * Server packet that synchronizes a fully visible player appearance and state to the client
+ * (position, race display, equipment look, face, legion/battleground badges, etc.).
+ * <p>
+ * 种族显示会根据中立 GM、FFA、PK、敌对关系等条件重映射，使客户端正确渲染敌我阵营。
+ * FFA / PK / enemy conditions so the client
+ * paints faction correctly.
+ */
 public class SM_PLAYER_INFO extends AionServerPacket {
 
 	private final Player player;
 	private boolean enemy;
 
+	/**
+	 * @param player 被同步的玩家 / player being synchronized
+	 * @param enemy 相对观察者是否视为敌对 / whether the observer treats this player as an enemy
+	 */
 	public SM_PLAYER_INFO(Player player, boolean enemy) {
 		this.player = player;
 		this.enemy = enemy;
@@ -84,15 +95,14 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeF(player.getZ());// z
 		writeD(player.getObjectId());
 		/**
-		 * A3 female asmodian A2 male asmodian A1 female elyos A0 male elyos
-		 */
+	 * A3 female asmodian A2 male asmodian A1 female elyos A0 male elyos
+	 */
 		writeD(pcd.getTemplateId());
 		writeD(player.getRobotId());// 4.5 protocol changed
 
 		/**
-		 * Transformed state - send transformed model id Regular state - send player
-		 * model id (from common data)
-		 */
+	 * 变身状态发送变身模型 ID；普通状态发送玩家模型 ID。 / Transformed state - send transformed model id Regular state - send player model id (from common data)
+	 */
 		int model = player.getTransformModel().getModelId();
 
 		writeD(model != 0 ? model : pcd.getTemplateId());
@@ -112,13 +122,13 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeH(player.getState());
 		writeB(new byte[8]);
 		writeC(player.getHeading());
-        String nameFormat = "%s";   
+        String nameFormat = "%s";
 		/**
-		 * Premium & VIP Membership
-		 */
+	 * 高级与 VIP 会员。 / Premium & VIP Membership
+	 */
 		StringBuilder sb = new StringBuilder(nameFormat);
 		if (player.getClientConnection() != null) {
-			// * = Premium & VIP Membership
+			// * = 高级与 VIP 会员 / * = Premium & VIP Membership
 			if (MembershipConfig.PREMIUM_TAG_DISPLAY_ENABLE) {
 				switch (player.getClientConnection().getAccount().getMembership()) {
 				case 1:
@@ -130,15 +140,9 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 				}
 			}
 
-			// * = Wedding
-			if (player.isMarried()) {
-				String partnerName = DAOManager.getDAO(PlayerDAO.class).getPlayerNameByObjId(player.getPartnerId());
-				nameFormat += "\uE020" + partnerName;
-			}
-
 			/**
-			 * WPvP Related Features
-			 */
+	 * WPvP Related Features
+	 */
 			if (player.isInPvEMode()) {
 				nameFormat = sb.insert(0, CustomConfig.TAG_PVE.substring(0, 2)).toString();
 			}
@@ -147,7 +151,7 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 				nameFormat = sb.insert(0, CustomConfig.TAG_PK.substring(0, 2)).toString();
 			}
 
-			// * = Server Staff Access Level
+			// * = 服务器职员访问等级 / * = Server Staff Access Level
 			if (AdminConfig.ADMIN_TAG_ENABLE) {
 				switch (player.getClientConnection().getAccount().getAccessLevel()) {
 				case 1:
@@ -224,8 +228,8 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeC(0x00);// unk (0x00)
 
 		/**
-		 * Start Item Appearance
-		 */
+	 * Start Item Appearance
+	 */
 		int mask = 0;
 
 		List<Item> items = player.getEquipment().getEquippedForApparence();
@@ -251,8 +255,8 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		}
 
 		/**
-		 * Item Appearance End
-		 */
+	 * Item Appearance End
+	 */
 		writeD(playerAppearance.getSkinRGB());
 		writeD(playerAppearance.getHairRGB());
 		writeD(playerAppearance.getEyeRGB());
@@ -331,8 +335,8 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeS(player.hasStore() ? player.getStore().getStoreMessage() : "");// private store message
 
 		/**
-		 * Movement
-		 */
+	 * Movement
+	 */
 		writeF(0);
 		writeF(0);
 		writeF(0);
@@ -354,8 +358,8 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeD(player.getHouseOwnerId());
 
 		/**
-		 * System By Ranastic
-		 */
+	 * System By Ranastic
+	 */
 		writeD(player.getPlayersBonusId());
 		writeD(10); // Player Buff.
 		writeD(0); // New Buff Icons.

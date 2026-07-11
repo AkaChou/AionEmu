@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team.legion;
 
 /**
+ * 军团 Member，用于团队相关逻辑。
+ * Legion Member for team logic.
+ *
  * @author Simple
  */
 public class LegionMember {
@@ -28,7 +15,7 @@ public class LegionMember {
 	protected LegionRank rank = LegionRank.VOLUNTEER;
 
 	/**
-	 * If player is defined later on this constructor is called
+	 * 若稍后定义玩家则调用此构造。 / If player is defined later on this constructor is called
 	 */
 	public LegionMember(int objectId) {
 		this.objectId = objectId;
@@ -77,6 +64,9 @@ public class LegionMember {
 		return rank;
 	}
 
+	/**
+	 * @return 是否军团长 / 是否军团长。 / Whether brigade general / Whether brigade general
+	 */
 	public boolean isBrigadeGeneral() {
 		return rank == LegionRank.BRIGADE_GENERAL;
 	}
@@ -144,6 +134,9 @@ public class LegionMember {
 		return objectId;
 	}
 
+	/**
+	 * @param permissions Whether rights / Whether rights
+	 */
 	public boolean hasRights(LegionPermissionsMask permissions) {
 		int legionarPermission = 0;
 		switch (this.getRank()) {

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,8 +16,9 @@ import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
 
 /**
- * Object representing connection between LoginServer and GameServer.
- * 
+ * 表示游戏服与登录服之间的一条网络连接。
+ * Object representing a connection between LoginServer and GameServer.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -39,63 +26,81 @@ public class LoginServerConnection extends AConnection {
 
 
 	/**
-	 * Possible states of GsConnection
+	 * 登录服连接可能的状态。
+	 * Possible states of a LoginServer connection.
 	 */
 	public static enum State {
 		/**
-		 * game server just connect
+		 * 已连接但尚未认证。
+		 * Connected but not yet authenticated.
 		 */
 		CONNECTED,
 		/**
-		 * game server is authenticated
+		 * 游戏服已通过认证。
+		 * GameServer is authenticated.
 		 */
 		AUTHED
 	}
 
 	/**
-	 * Server Packet "to send" Queue
+	 * 待发送服务端封包队列。
+	 * Queue of server packets waiting to be sent.
 	 */
 	private final Deque<LsServerPacket> sendMsgQueue = new ArrayDeque<LsServerPacket>();
 
 	/**
-	 * Current state of this connection
+	 * 当前连接状态。
+	 * Current state of this connection.
 	 */
 	private State state;
+
+	/**
+	 * LS 封包处理器。
+	 * LS packet handler.
+	 */
 	private LsPacketHandler lsPacketHandler;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param transport
-	 * @throws IOException
+	 * 基于传输层创建登录服连接。
+	 * Create a LoginServer connection over the given transport.
+	 *
+	 * Connection transport
 	 */
 	public LoginServerConnection(ConnectionTransport transport) {
 		super(transport, 8192 * 8, 8192 * 8);
 		init();
 	}
 
+	/**
+	 * 初始化封包处理器与连接状态，并记录连接日志。
+	 * Initialize packet handler and connection state, then log the connect event.
+	 */
 	private void init() {
 		LsPacketHandlerFactory lsPacketHandlerFactory = GameServerNetworkServices.lsPacketHandlerFactory();
 		this.lsPacketHandler = lsPacketHandlerFactory.getPacketHandler();
 		state = State.CONNECTED;
-		log.info("Connected to LoginServer!");
+		log.info(I18n.get("log.344132a769b8"));
 	}
 
+	/**
+	 * 连接初始化完成后发送首个认证包。
+	 * After connection is initialized, send the first authentication packet.
+	 */
 	@Override
 	protected void initialized() {
 		/**
-		 * send first packet - authentication.
+		 * 发送首个封包 —— 游戏服认证。
+		 * Send first packet — GameServer authentication.
 		 */
 		this.sendPacket(new SM_GS_AUTH());
 	}
 
 	/**
-	 * Called by the transport frame handler. ByteBuffer data contains one packet that should be
-	 * processed.
-	 * 
-	 * @param data
-	 * @return True if data was processed correctly, False if some error occurred
-	 *         and connection should be closed NOW.
+	 * 由传输层帧处理器调用；缓冲区中包含一个待处理封包。
+	 * Called by the transport frame handler; buffer holds one packet to process.
+	 *
+	 * @param data 封包数据 / Packet data
+	 * @return 是否处理成功；失败时应立即关闭连接 / True if processed OK; false to close connection now
 	 */
 	@Override
 	public boolean processData(ByteBuffer data) {
@@ -103,7 +108,8 @@ public class LoginServerConnection extends AConnection {
 		log.debug("received packet: " + pck);
 
 		/**
-		 * Execute packet only if packet exist (!= null) and read was ok.
+		 * 仅当封包存在且读取成功时才执行。
+		 * Execute packet only if it exists and was read successfully.
 		 */
 		if (pck != null && pck.read()) {
 			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
@@ -112,12 +118,11 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	/**
-	 * This method will be called by the transport frame handler, and will be repeated till return
-	 * false.
-	 * 
-	 * @param data
-	 * @return True if data was written to buffer, False indicating that there are
-	 *         not any more data to write.
+	 * 由传输层反复调用直至返回 false，用于写出下一个待发封包。
+	 * Called repeatedly by the transport until false; writes the next pending packet.
+	 *
+	 * @param data 输出缓冲区 / Output buffer
+	 * @return 是否写入了数据；false 表示无更多数据 / True if data was written; false if nothing left
 	 */
 	@Override
 	protected final boolean writeData(ByteBuffer data) {
@@ -132,10 +137,10 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	/**
-	 * This method is called by the transport when connection is ready to be closed.
-	 * 
-	 * @return time in ms after witch onDisconnect() method will be called. Always
-	 *         return 0.
+	 * 传输层准备关闭连接时调用，返回 onDisconnect 延迟毫秒数。
+	 * Called by the transport when the connection is ready to close; returns delay before onDisconnect().
+	 *
+	 * @return 延迟毫秒，始终为 0 / Delay in ms; always 0
 	 */
 	@Override
 	protected final long getDisconnectionDelay() {
@@ -143,7 +148,8 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 连接断开时通知 LoginServer 门面处理断线逻辑。
+	 * On disconnect, notify the LoginServer facade to handle the down event.
 	 */
 	@Override
 	protected final void onDisconnect() {
@@ -151,23 +157,25 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * 服务端主动关闭时的回调（本实现直接强制关闭）。
+	 * Callback when the server side initiates close (this implementation force-closes immediately).
 	 */
 	@Override
 	protected final void onServerClose() {
-		// TODO mb some packet should be send to loginserver before closing?
 		close(/* packet, */true);
 	}
 
 	/**
-	 * Sends GsServerPacket to this client.
-	 * 
-	 * @param bp GsServerPacket to be sent.
+	 * 向登录服发送服务端封包。
+	 * Send an LS server packet to the LoginServer.
+	 *
+	 * @param bp 待发送的服务端封包 / Server packet to send
 	 */
 	public final void sendPacket(LsServerPacket bp) {
 		synchronized (guard) {
 			/**
-			 * Connection is already closed or waiting for last (close packet) to be sent
+			 * 连接已关闭或正在等待最后关闭包发送时忽略。
+			 * Ignore when connection is already closed or waiting for the last close packet.
 			 */
 			if (isWriteDisabled()) {
 				return;
@@ -180,13 +188,11 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	/**
-	 * Its guaranted that closePacket will be sent before closing connection, but
-	 * all past and future packets wont. Connection will be closed by the transport,
-	 * and onDisconnect() method will be called to clear all other things.
-	 * forced means that server shouldn't wait with removing this connection.
-	 * 
-	 * @param closePacket Packet that will be send before closing.
-	 * @param forced      have no effect in this implementation.
+	 * 保证 closePacket 在关闭前发出，之后清空队列；forced 在本实现中无效果。
+	 * Guarantees closePacket is sent before closing; clears past/future packets. forced has no effect here.
+	 *
+	 * @param closePacket 关闭前发送的封包 / Packet sent before closing
+	 * @param forced 强制关闭标志（本实现忽略） / Forced close flag (ignored in this implementation)
 	 */
 	public final void close(LsServerPacket closePacket, boolean forced) {
 		synchronized (guard) {
@@ -204,21 +210,30 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	/**
-	 * @return Current state of this connection.
+	 * 返回当前连接状态。
+	 * Returns the current connection state.
+	 *
+	 * Current state
 	 */
 	public State getState() {
 		return state;
 	}
 
 	/**
-	 * @param state Set current state of this connection.
+	 * 设置当前连接状态。
+	 * Sets the current connection state.
+	 *
+	 * New state
 	 */
 	public void setState(State state) {
 		this.state = state;
 	}
 
 	/**
-	 * @return String info about this connection
+	 * 返回本连接的字符串描述。
+	 * Returns a string description of this connection.
+	 *
+	 * Connection info
 	 */
 	@Override
 	public String toString() {

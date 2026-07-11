@@ -15,7 +15,7 @@ public class ThrowablePresentFilter extends Filter<ILoggingEvent> {
      * Decides whether to accept or deny a logging event
      *
      * @param loggingEvent 待处理的日志事件 (The logging event to be processed)
-     * @return FilterReply.ACCEPT 如果消息是Throwable类型；FilterReply.DENY 如果不是
+ * @return FilterReply.ACCEPT 如果消息是 Throwable 类型；FilterReply.DENY 如果不是
      *         (FilterReply.ACCEPT if message is instance of Throwable; FilterReply.DENY if not)
      */
     public FilterReply decide(ILoggingEvent loggingEvent) {

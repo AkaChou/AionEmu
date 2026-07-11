@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 大天使任务脚本：Finding The Traces Of The Sage Of The Tower Of Eternity（任务 ID 20527）。
+ * Archdaeva quest script: Finding The Traces Of The Sage Of The Tower Of Eternity (quest ID 20527).
+ *
+ * @author (Encom)
+ */
 public class _20527Finding_The_Traces_Of_The_Sage_Of_The_Tower_Of_Eternity extends QuestHandler
 {
     public static final int questId = 20527;

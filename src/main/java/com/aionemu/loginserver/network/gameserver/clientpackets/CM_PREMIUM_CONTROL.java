@@ -1,36 +1,41 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.service.LoginPremiumServices;
 
 /**
+ * GS→LS：请求消耗 premium 点数购买。
+ * GS→LS: request premium-point purchase/deduction.
+ *
  * @author KID
  */
 public class CM_PREMIUM_CONTROL extends GsClientPacket {
 
+    /**
+     * 账号 ID。
+     * Account id.
+     */
     private int accountId;
+    /**
+     * 请求 ID。
+     * Request id.
+     */
     private int requestId;
+    /**
+     * 所需费用。
+     * Required cost.
+     */
     private long requiredCost;
+    /**
+     * 游戏服 ID。
+     * GameServer id.
+     */
     private byte serverId;
 
+    /**
+     * 读取账号、请求 ID、费用与服务器 ID。
+     * Reads account, request id, cost, and server id.
+     */
     @Override
     protected void readImpl() {
         accountId = readD();
@@ -39,6 +44,10 @@ public class CM_PREMIUM_CONTROL extends GsClientPacket {
         serverId = (byte) readC();
     }
 
+    /**
+     * 委托 PremiumController 处理购买请求。
+     * Delegates purchase request to PremiumController.
+     */
     @Override
     protected void runImpl() {
         LoginPremiumServices.premiumController().requestBuy(accountId, requestId, requiredCost, serverId);

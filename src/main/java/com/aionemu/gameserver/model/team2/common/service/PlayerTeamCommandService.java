@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.common.service;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,10 +11,14 @@ import com.aionemu.gameserver.model.team2.league.LeagueService;
 import com.google.common.base.Preconditions;
 
 /**
+ * 玩家团队 Command 服务，用于团队2相关逻辑。
+ * Player Team Command Service for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerTeamCommandService {
 
+	/** 执行命令 / execute Command. */
 	public static final void executeCommand(Player player, TeamCommand command, int playerObjId) {
 		Player teamSubjective = getTeamSubjective(player, playerObjId);
 		Preconditions.checkArgument(playerObjId == 0 || teamSubjective.getObjectId().equals(playerObjId)

@@ -1,21 +1,6 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,24 +33,37 @@ import com.aionemu.gameserver.world.exceptions.WorldMapNotExistException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-@Slf4j
 
+/**
+ * 游戏世界单例：管理全部地图、玩家与可见对象的生成/位置更新。
+ * Game-world singleton: manages all maps, players, and spawn/position updates of visible objects.
+ */
+@Slf4j
 public class World {
 
+	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<World> instanceProvider;
+	/** 在线玩家容器 / online player container */
 	private final PlayerContainer allPlayers;
+	/** 全部可见对象 / all visible objects */
 	private final Map<Integer, VisibleObject> allObjects;
+	/** 按据点 ID 索引的攻城 NPC / siege NPCs indexed by siege location id */
 	private final IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<Collection<SiegeNpc>>();
+	/** 按基地 ID 索引的基地 NPC / base NPCs indexed by base id */
 	private final IntObjectHashMap<Collection<BaseNpc>> localBaseNpcs = new IntObjectHashMap<Collection<BaseNpc>>();
+	/** 按前哨 ID 索引的前哨 NPC / outpost NPCs indexed by outpost id */
 	private final IntObjectHashMap<Collection<OutpostNpc>> localOutpostNpcs = new IntObjectHashMap<Collection<OutpostNpc>>();
+	/** 全部 NPC / all NPCs */
 	private final Map<Integer, Npc> allNpcs;
+	/** 全部世界地图 / all world maps */
 	private final IntObjectHashMap<WorldMap> worldMaps;
 
 	/**
-	 * Constructor.
+	 * 构造世界并加载全部地图模板。
+	 * Construct the world and load all map templates.
 	 */
 	public World() {
-		Util.printSection(" *** World *** ");
+		Util.printSection(I18n.get("console.section.world"));
 		allPlayers = new PlayerContainer();
 		allObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 		allNpcs = Collections.synchronizedMap(new LinkedHashMap<Integer, Npc>());
@@ -73,9 +71,15 @@ public class World {
 		for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
 			worldMaps.put(template.getMapId(), new WorldMap(template, this));
 		}
-		log.info("World: " + worldMaps.size() + " worlds map created.");
+		log.info(I18n.get("log.e9ec75b7b736", worldMaps.size()));
 	}
 
+	/**
+	 * 返回世界单例。
+	 * Return the world singleton.
+	 *
+	 * world instance
+	 */
 	public static World getInstance() {
 		ObjectProvider<World> provider = instanceProvider;
 		if (provider == null) {
@@ -84,16 +88,25 @@ public class World {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<World> instanceProvider) {
 		World.instanceProvider = instanceProvider;
 	}
 
 	/**
-	 * Store object in the world.
+	 * 将对象登记到世界（玩家/NPC/本地索引）。
+	 * Store an object into the world (player/NPC/local indexes).
+	 *
+	 * visible object
 	 */
 	public void storeObject(VisibleObject object) {
 		if (object.getPosition() == null) {
-			log.warn("Not putting object with null position!!! " + object.getObjectTemplate().getTemplateId());
+			log.warn(I18n.get("log.4f8199cf634c", object.getObjectTemplate().getTemplateId()));
 			return;
 		}
 		boolean objectStored = false;
@@ -129,6 +142,12 @@ public class World {
 		}
 	}
 
+	/**
+	 * 加入全局可见对象表；重复 objectId 抛异常。
+	 * Add to the global visible-object table; throws on duplicate objectId.
+	 *
+	 * visible object
+	 */
 	private void addVisibleObject(VisibleObject object) {
 		synchronized (allObjects) {
 			if (allObjects.containsKey(object.getObjectId())) {
@@ -138,6 +157,14 @@ public class World {
 		}
 	}
 
+	/**
+	 * 按类型加入本地（攻城/基地/前哨）索引。
+	 * Add to local (siege/base/outpost) indexes by type.
+	 *
+	 * visible object
+	 *
+	 * @param object @return 是否写入本地索引 / whether a local index was updated
+	 */
 	private boolean addLocalObject(VisibleObject object) {
 		if (object instanceof SiegeNpc) {
 			SiegeNpc siegeNpc = (SiegeNpc) object;
@@ -177,8 +204,10 @@ public class World {
 	}
 
 	/**
-	 * Remove Object from the world.<br>
-	 * If the given object is Npc then it also releases it's objId from IDFactory.
+	 * 从世界移除对象；Npc 也会从 NPC 表清除。
+	 * Remove an object from the world; NPCs are also cleared from the NPC table.
+	 *
+	 * visible object
 	 */
 	public void removeObject(VisibleObject object) {
 		allObjects.remove(object.getObjectId());
@@ -191,6 +220,12 @@ public class World {
 		}
 	}
 
+	/**
+	 * 从本地（攻城/基地/前哨）索引移除。
+	 * Remove from local (siege/base/outpost) indexes.
+	 *
+	 * visible object
+	 */
 	private void removeLocalObject(VisibleObject object) {
 		if (object instanceof SiegeNpc) {
 			SiegeNpc siegeNpc = (SiegeNpc) object;
@@ -220,12 +255,22 @@ public class World {
 	}
 
 	/**
-	 * Returns Players iterator.
+	 * 玩家迭代器。
+	 * Players iterator.
+	 *
+	 * @return 玩家迭代器 / player iterator
 	 */
 	public Iterator<Player> getPlayersIterator() {
 		return allPlayers.iterator();
 	}
 
+	/**
+	 * 指定据点的攻城 NPC 快照。
+	 * Snapshot of siege NPCs for a location.
+	 *
+	 * location id
+	 * NPC collection
+	 */
 	public Collection<SiegeNpc> getLocalSiegeNpcs(int locationId) {
 		synchronized (localSiegeNpcs) {
 			Collection<SiegeNpc> result = localSiegeNpcs.get(locationId);
@@ -233,6 +278,13 @@ public class World {
 		}
 	}
 
+	/**
+	 * 指定基地的基地 NPC 快照。
+	 * Snapshot of base NPCs for a location.
+	 *
+	 * base id
+	 * NPC collection
+	 */
 	public Collection<BaseNpc> getLocalBaseNpcs(int locationId) {
 		synchronized (localBaseNpcs) {
 			Collection<BaseNpc> result = localBaseNpcs.get(locationId);
@@ -240,6 +292,13 @@ public class World {
 		}
 	}
 
+	/**
+	 * 指定前哨的前哨 NPC 快照。
+	 * Snapshot of outpost NPCs for a location.
+	 *
+	 * outpost id
+	 * NPC collection
+	 */
 	public Collection<OutpostNpc> getLocalOutpostNpcs(int locationId) {
 		synchronized (localOutpostNpcs) {
 			Collection<OutpostNpc> result = localOutpostNpcs.get(locationId);
@@ -247,6 +306,12 @@ public class World {
 		}
 	}
 
+	/**
+	 * 全部 NPC 快照。
+	 * Snapshot of all NPCs.
+	 *
+	 * NPC collection
+	 */
 	public Collection<Npc> getNpcs() {
 		synchronized (allNpcs) {
 			return new ArrayList<Npc>(allNpcs.values());
@@ -254,35 +319,57 @@ public class World {
 	}
 
 	/**
-	 * Finds player by player name.
+	 * 按名称查找玩家。
+	 * Find a player by name.
+	 *
+	 * player name
+	 * player or null
 	 */
 	public Player findPlayer(String name) {
 		return allPlayers.get(name);
 	}
 
 	/**
-	 * Finds player by player objectId.
+	 * 按 objectId 查找玩家。
+	 * Find a player by objectId.
+	 *
+	 * object id
+	 * player or null
 	 */
 	public Player findPlayer(int objectId) {
 		return allPlayers.get(objectId);
 	}
 
 	/**
-	 * Finds VisibleObject by objectId.
+	 * 按 objectId 查找可见对象。
+	 * Find a visible object by objectId.
+	 *
+	 * object id
+	 *
+	 * @param objectId @return 可见对象或 null / visible object or null
 	 */
 	public VisibleObject findVisibleObject(int objectId) {
 		return allObjects.get(objectId);
 	}
 
 	/**
-	 * Check whether object is in world
+	 * 对象是否已在世界中。
+	 * Whether the object is stored in the world.
+	 *
+	 * visible object
+	 *
+	 * @param object @return 在世界中返回 true / true if in world
 	 */
 	public boolean isInWorld(VisibleObject object) {
 		return allObjects.containsKey(object.getObjectId());
 	}
 
 	/**
-	 * Return World Map by id
+	 * 按地图 ID 返回世界地图；不存在时抛异常。
+	 * Return world map by id; throws if missing.
+	 *
+	 * @param id 地图 ID / map id
+	 * world map
 	 */
 	public WorldMap getWorldMap(int id) {
 		WorldMap map = worldMaps.get(id);
@@ -293,25 +380,29 @@ public class World {
 	}
 
 	/**
-	 * Update position of VisibleObject [used when object is moving on one map
-	 * instance]. Check if active map region changed and do all needed updates.
-	 * 
-	 * @param object
-	 * @param newX
-	 * @param newY
-	 * @param newZ
-	 * @param newHeading
+	 * 更新对象位置并刷新已知列表。
+	 * Update object position and refresh known list.
+	 *
+	 * visible object
+	 * new X
+	 * new Y
+	 * new Z
+	 * new heading
 	 */
 	public void updatePosition(VisibleObject object, float newX, float newY, float newZ, byte newHeading) {
 		this.updatePosition(object, newX, newY, newZ, newHeading, true);
 	}
 
 	/**
-	 * @param object
-	 * @param newX
-	 * @param newY
-	 * @param newZ
-	 * @param newHeading
+	 * 更新对象在同一地图实例内的位置；区域变化时迁移并重校验 Zone。
+	 * Update position within the same map instance; migrate regions and revalidate zones on change.
+	 *
+	 * visible object
+	 * new X
+	 * new Y
+	 * new Z
+	 * new heading
+	 * @param updateKnownList 是否刷新已知列表 / whether to update known list
 	 */
 	public void updatePosition(VisibleObject object, float newX, float newY, float newZ, byte newHeading,
 			boolean updateKnownList) {
@@ -320,14 +411,12 @@ public class World {
 		}
 		MapRegion oldRegion = object.getActiveRegion();
 		if (oldRegion == null) {
-			log.warn(String.format("CHECKPOINT: oldRegion is null, map - %d, object coordinates - %f %f %f",
-					object.getWorldId(), object.getX(), object.getY(), object.getZ()));
+			log.warn(I18n.get("log.c4b0d5c0760a", object.getWorldId(), object.getX(), object.getY(), object.getZ()));
 			return;
 		}
 		MapRegion newRegion = oldRegion.getParent().getRegion(newX, newY, newZ);
 		if (newRegion == null) {
-			log.warn(String.format("CHECKPOINT: newRegion is null, map - %d, object coordinates - %f %f %f",
-					object.getWorldId(), newX, newY, newZ), new Throwable());
+			log.warn(I18n.get("log.b6b1d45cbd0f", object.getWorldId(), newX, newY, newZ), new Throwable());
 			if (object instanceof Creature) {
 				((Creature) object).getMoveController().abortMove();
 			}
@@ -371,15 +460,15 @@ public class World {
 	}
 
 	/**
-	 * Set position of VisibleObject without spawning [object will be invisible]. If
-	 * object is spawned it will be despawned first.
-	 * 
-	 * @param object
-	 * @param mapId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
+	 * 设置对象位置但不生成（已生成则先 despawn）；保留同图实例 ID。
+	 * Set position without spawning (despawn first if spawned); keeps instance id on same map.
+	 *
+	 * visible object
+	 * map id
+	 * @param x 坐标 X / X coordinate
+	 * @param y 坐标 Y / Y coordinate
+	 * @param z 坐标 Z / Z coordinate
+	 * 朝向 / heading
 	 */
 	public void setPosition(VisibleObject object, int mapId, float x, float y, float z, byte heading) {
 		int instanceId = 1;
@@ -390,13 +479,16 @@ public class World {
 	}
 
 	/**
-	 * @param object
-	 * @param mapId
-	 * @param instance
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
+	 * 设置对象到指定地图实例的位置（不生成）。
+	 * Set object position on a specific map instance (without spawning).
+	 *
+	 * visible object
+	 * map id
+	 * instance id
+	 * @param x 坐标 X / X coordinate
+	 * @param y 坐标 Y / Y coordinate
+	 * @param z 坐标 Z / Z coordinate
+	 * 朝向 / heading
 	 */
 	public void setPosition(VisibleObject object, int mapId, int instance, float x, float y, float z, byte heading) {
 		if (object.isSpawned()) {
@@ -413,16 +505,16 @@ public class World {
 	}
 
 	/**
-	 * Creates and return {@link WorldPosition} object, representing position with
-	 * given parameters.
-	 * 
-	 * @param mapId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
-	 * @param instanceId
-	 * @return WorldPosition
+	 * 创建并返回给定参数的 {@link WorldPosition}。
+	 * Create and return a {@link WorldPosition} for the given parameters.
+	 *
+	 * map id
+	 * @param x 坐标 X / X coordinate
+	 * @param y 坐标 Y / Y coordinate
+	 * @param z 坐标 Z / Z coordinate
+	 * 朝向 / heading
+	 * instance id
+	 * world position
 	 */
 	public WorldPosition createPosition(int mapId, float x, float y, float z, byte heading, int instanceId) {
 		WorldPosition position = new WorldPosition(mapId);
@@ -432,6 +524,12 @@ public class World {
 		return position;
 	}
 
+	/**
+	 * 玩家预生成：设 ACTIVE、加入区域与实例。
+	 * Pre-spawn a player: set ACTIVE, add to region and instance.
+	 *
+	 * player object
+	 */
 	public void preSpawn(VisibleObject object) {
 		((Player) object).setState(CreatureState.ACTIVE);
 		object.getPosition().setIsSpawned(true);
@@ -441,8 +539,10 @@ public class World {
 	}
 
 	/**
-	 * Spawn VisibleObject at current position [use setPosition ]. Object will be
-	 * visible by others and will see other objects.
+	 * 在当前位置生成对象，使其可见并更新已知列表。
+	 * Spawn the object at its current position so it becomes visible and updates known list.
+	 *
+	 * visible object
 	 */
 	public void spawn(VisibleObject object) {
 		if (object.getPosition().isSpawned()) {
@@ -457,13 +557,22 @@ public class World {
 	}
 
 	/**
-	 * Despawn VisibleObject, object will become invisible and object position will
-	 * become invalid. All others objects
+	 * 取消生成并使对象不可见（默认清空已知列表）。
+	 * Despawn the object and make it invisible (clears known list by default).
+	 *
+	 * visible object
 	 */
 	public void despawn(VisibleObject object) {
 		despawn(object, true);
 	}
 
+	/**
+	 * 取消生成；可选是否清空已知列表。
+	 * Despawn the object; optionally clear known list.
+	 *
+	 * visible object
+	 * @param clearKnownlist 是否清空已知列表 / whether to clear known list
+	 */
 	public void despawn(VisibleObject object, boolean clearKnownlist) {
 		MapRegion oldMapRegion = object.getActiveRegion();
 		if (object.getActiveRegion() != null) {
@@ -482,21 +591,30 @@ public class World {
 	}
 
 	/**
-	 * @return
+	 * 全部在线玩家。
+	 * All online players.
+	 *
+	 * player collection
 	 */
 	public Collection<Player> getAllPlayers() {
 		return allPlayers.getAllPlayers();
 	}
 
 	/**
-	 * @param visitor
+	 * 对全部玩家执行访问者。
+	 * Visit all players.
+	 *
+	 * visitor
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		allPlayers.doOnAllPlayers(visitor);
 	}
 
 	/**
-	 * @param visitor
+	 * 对全部可见对象执行访问者。
+	 * Visit all visible objects.
+	 *
+	 * visitor
 	 */
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
 		try {
@@ -506,7 +624,7 @@ public class World {
 				}
 			}
 		} catch (Exception ex) {
-			log.error("Exception when running visitor on all objects", ex);
+			log.error(I18n.get("log.e15440de12ca", ex));
 		}
 	}
 
@@ -515,6 +633,12 @@ public class World {
 		protected static final World instance = new World();
 	}
 
+	/**
+	 * 全部可见对象快照。
+	 * Snapshot of all visible objects.
+	 *
+	 * object list
+	 */
 	private List<VisibleObject> allObjectsSnapshot() {
 		synchronized (allObjects) {
 			return new ArrayList<VisibleObject>(allObjects.values());

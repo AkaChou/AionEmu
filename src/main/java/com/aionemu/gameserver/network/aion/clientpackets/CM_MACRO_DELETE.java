@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +7,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MACRO_RESULT;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
- * Packet that is responsible for macro deletion.<br>
- * Client sends id in the macro list.<br>
- * For instance client has 4 macros and we are going to delete macro #3.<br>
- * Client sends request to delete macro #3.<br>
- * And macro #4 becomes macro #3.<br>
- * So we have to use a list to store macros properly.
+	 * 负责删除宏的数据包。 / Packet that is responsible for macro deletion.<br> Client sends id in the macro list.<br> For instance client has 4 macros and we are going to delete macro #3.<br> Client sends request to delete macro #3.<br> And macro #4 becomes macro #3.<br> So we have to use a list to store macros properly.
+	 */
+
+/**
+ * 删除指定槽位宏的客户端包。
+ * Client packet for deleting a macro by slot.
  *
  * @author SoulKeeper
  */
@@ -36,21 +20,23 @@ import com.aionemu.gameserver.services.player.PlayerService;
 public class CM_MACRO_DELETE extends AionClientPacket {
 
 	/**
-	 * Macro id that has to be deleted
+	 * 待删除的宏 ID / Macro id that has to be deleted
 	 */
 	private int macroPosition;
-
 	/**
-	 * Constructs new client packet instance.
+	 * 构造该客户端包。
+	 * Constructs this client packet.
 	 *
-	 * @param opcode
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_MACRO_DELETE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
 
 	/**
-	 * Reading macro id
+	 * 读取宏 ID / Reading macro id
 	 */
 	@Override
 	protected void readImpl() {
@@ -58,7 +44,7 @@ public class CM_MACRO_DELETE extends AionClientPacket {
 	}
 
 	/**
-	 * Logging
+	 * 记录日志 / Logging
 	 */
 	@Override
 	protected void runImpl() {

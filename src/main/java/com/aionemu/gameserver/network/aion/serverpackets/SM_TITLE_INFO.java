@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,6 +7,12 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 称号相关信息的服务端包（列表、自身/广播设置、导师标记、奖励称号等）。
+ * Server packet for title-related info (list, self/broadcast set, mentor flag, bonus title, etc.).
+ * <p>
+ * 通过 {@code action} 区分用途：0 列表、1 自身设置、3 广播设置、4/5 导师标记、6 奖励称号。
+ * Uses {@code action} to distinguish purpose: 0 list, 1 self set, 3 broadcast set, 4/5 mentor flag, 6 bonus title.
+ *
  * @author cura, xTz
  */
 public class SM_TITLE_INFO extends AionServerPacket {
@@ -34,9 +24,10 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	private int playerObjId;
 
 	/**
-	 * title list
-	 * 
-	 * @param player
+	 * 称号列表。
+	 * Title list.
+	 *
+	 * 玩家 / player
 	 */
 	public SM_TITLE_INFO(Player player) {
 		this.action = 0;
@@ -44,9 +35,10 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	}
 
 	/**
-	 * self title set
-	 * 
-	 * @param titleId
+	 * 自身称号设置。
+	 * Self title set.
+	 *
+	 * title id
 	 */
 	public SM_TITLE_INFO(int titleId) {
 		this.action = 1;
@@ -54,10 +46,11 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	}
 
 	/**
-	 * broad title set
-	 * 
-	 * @param player
-	 * @param titleId
+	 * 广播称号设置。
+	 * Broadcast title set.
+	 *
+	 * 玩家 / player
+	 * title id
 	 */
 	public SM_TITLE_INFO(Player player, int titleId) {
 		this.action = 3;
@@ -65,17 +58,37 @@ public class SM_TITLE_INFO extends AionServerPacket {
 		this.titleId = titleId;
 	}
 
+	/**
+	 * 自身导师标记。
+	 * Self mentor flag.
+	 *
+	 * @param flag 是否开启 / whether enabled
+	 */
 	public SM_TITLE_INFO(boolean flag) {
 		this.action = 4;
 		this.titleId = flag ? 1 : 0;
 	}
 
+	/**
+	 * 广播导师标记。
+	 * Broadcast mentor flag.
+	 *
+	 * 玩家 / player
+	 * @param flag   是否开启 / whether enabled
+	 */
 	public SM_TITLE_INFO(Player player, boolean flag) {
 		this.action = 5;
 		this.playerObjId = player.getObjectId();
 		this.titleId = flag ? 1 : 0;
 	}
 
+	/**
+	 * 奖励称号等其它 action。
+	 * Bonus title or other action.
+	 *
+	 * action type
+	 * bonus title id
+	 */
 	public SM_TITLE_INFO(int action, int bonusTitleId) {
 		this.action = action;
 		this.bonusTitleId = bonusTitleId;

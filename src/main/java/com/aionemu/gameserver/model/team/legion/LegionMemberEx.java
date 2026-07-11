@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team.legion;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 
@@ -24,6 +10,9 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 军团 MemberEx，用于团队相关逻辑。
+ * Legion Member Ex for team logic.
+ *
  * @author Simple
  */
 @Slf4j
@@ -53,57 +42,64 @@ public class LegionMemberEx extends LegionMember {
 	}
 
 	/**
-	 * If player is defined later on this constructor is called
+	 * 若稍后定义玩家则调用此构造。 / If player is defined later on this constructor is called
 	 */
 	public LegionMemberEx(int playerObjId) {
 		super(playerObjId);
 	}
 
 	/**
-	 * If player is defined later on this constructor is called
+	 * 若稍后定义玩家则调用此构造。 / If player is defined later on this constructor is called
 	 */
 	public LegionMemberEx(String name) {
 		super();
 		this.name = name;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 设置名称。 / Sets the name. */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/** 获取玩家职业。 / Returns the player class. */
 	public PlayerClass getPlayerClass() {
 		return playerClass;
 	}
 
+	/** 设置玩家职业。 / Sets the player class. */
 	public void setPlayerClass(PlayerClass playerClass) {
 		this.playerClass = playerClass;
 	}
 
+	/** 返回 last online / Returns the last online */
 	public int getLastOnline() {
 		if (lastOnline == null || isOnline())
 			return 0;
 		return (int) (lastOnline.getTime() / 1000);
 	}
 
+	/** 设置 last online / Sets the last online */
 	public void setLastOnline(Timestamp timestamp) {
 		lastOnline = timestamp;
 	}
 
+	/** 获取等级。 / Returns the level. */
 	public int getLevel() {
 		return level;
 	}
 
 	/**
-	 * sets the exp value
-	 * 
+	 * 设置经验值。 / sets the exp value
+	 *
 	 * @param exp : enable decrease level
 	 */
 	public void setExp(long exp) {
-		// maxLevel is 51 but in game 50 should be shown with full XP bar
+		// maxLevel 为 51，但游戏中 50 级应显示满经验条 / maxLevel is 51 but in game 50 should be shown with full XP bar
 		int maxLevel = DataManager.PLAYER_EXPERIENCE_TABLE.getMaxLevel();
 
 		if (getPlayerClass() != null && getPlayerClass().isStartingClass())
@@ -116,7 +112,7 @@ public class LegionMemberEx extends LegionMember {
 			exp = maxExp;
 		}
 
-		// make sure level is never larger than maxLevel-1
+		// 确保等级永不大于 maxLevel-1 / make sure level is never larger than maxLevel-1
 		while ((level + 1) != maxLevel && exp >= DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(level + 1)) {
 			level++;
 		}
@@ -124,10 +120,12 @@ public class LegionMemberEx extends LegionMember {
 		this.level = level;
 	}
 
+	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return worldId;
 	}
 
+	/** 设置 world id / Sets the world id */
 	public void setWorldId(int worldId) {
 		this.worldId = worldId;
 	}
@@ -146,36 +144,37 @@ public class LegionMemberEx extends LegionMember {
 		return online;
 	}
 
+	/** 相同对象 ID / Same Object Id */
 	public boolean sameObjectId(int objectId) {
 		return getObjectId() == objectId;
 	}
 
 	/**
-	 * Checks if a LegionMemberEx is valid or not
-	 * 
+	 * 检查是否 LegionMemberEx 为有效与否。 / Checks if a LegionMemberEx is valid or not
+	 *
 	 * @return true if LegionMemberEx is valid
 	 */
 	public boolean isValidLegionMemberEx() {
 		if (getObjectId() < 1) {
-			log.error("[LegionMemberEx] Player Object ID is empty.");
+			log.error(I18n.get("log.61b5cdc2a429"));
 		} else if (getName() == null) {
-			log.error("[LegionMemberEx] Player Name is empty." + getObjectId());
+			log.error(I18n.get("log.1d1c27f5e58f", getObjectId()));
 		} else if (getPlayerClass() == null) {
-			log.error("[LegionMemberEx] Player Class is empty." + getObjectId());
+			log.error(I18n.get("log.0a53d0645d0e", getObjectId()));
 		} else if (getLevel() < 1) {
-			log.error("[LegionMemberEx] Player Level is empty." + getObjectId());
+			log.error(I18n.get("log.645e827cf120", getObjectId()));
 		} else if (getLastOnline() == 0) {
-			log.error("[LegionMemberEx] Last Online is empty." + getObjectId());
+			log.error(I18n.get("log.ab2c10f95931", getObjectId()));
 		} else if (getWorldId() < 1) {
-			log.error("[LegionMemberEx] World Id is empty." + getObjectId());
+			log.error(I18n.get("log.8d41955bf31f", getObjectId()));
 		} else if (getLegion() == null) {
-			log.error("[LegionMemberEx] Legion is empty." + getObjectId());
+			log.error(I18n.get("log.37f2ca6d52c9", getObjectId()));
 		} else if (getRank() == null) {
-			log.error("[LegionMemberEx] Rank is empty." + getObjectId());
+			log.error(I18n.get("log.420d947ebea9", getObjectId()));
 		} else if (getNickname() == null) {
-			log.error("[LegionMemberEx] Nickname is empty." + getObjectId());
+			log.error(I18n.get("log.3127f18a4594", getObjectId()));
 		} else if (getSelfIntro() == null) {
-			log.error("[LegionMemberEx] Self Intro is empty." + getObjectId());
+			log.error(I18n.get("log.57219d9a4038", getObjectId()));
 		} else {
 			return true;
 		}

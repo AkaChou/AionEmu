@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -24,6 +8,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_EXP;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 触发即时安息能量（VP/Reposte）治疗：在上限内增加玩家安息能量。
+ * Proc instant repose-energy (VP) heal: adds repose energy up to a configured cap.
+ */
 public class ProcVPHealInstantEffect extends EffectTemplate {
 	@XmlAttribute(required = true)
 	protected int value2;
@@ -31,6 +19,12 @@ public class ProcVPHealInstantEffect extends EffectTemplate {
 	@XmlAttribute
 	protected boolean percent;
 
+	/**
+	 * 在安息能量未达 value2% 上限时增加能量并同步经验包。
+	 * Adds repose energy while under the value2% cap and syncs the exp packet.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	public void applyEffect(Effect effect) {
 		if ((effect.getEffected() instanceof Player)) {
 			Player player = (Player) effect.getEffected();

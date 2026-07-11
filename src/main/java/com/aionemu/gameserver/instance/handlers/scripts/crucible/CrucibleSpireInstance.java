@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -50,24 +34,34 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.*;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: https://www.youtube.com/watch?v=KURJ3_EcrB4&feature=youtu.be
-/****/
+/**
+ * 熔炉尖塔副本事件处理器。
+ * Instance event handler for Crucible Spire.
+ *
+ * @author Encom
+ */
 
 @InstanceID(302400000)
 public class CrucibleSpireInstance extends GeneralInstanceHandler {
-
+    /** 层数 / floor */
     private byte floor;
+    /** 刷怪种族 / spawn race */
     private Race spawnRace;
+    /** 门映射 / door map */
     private Map<Integer, StaticDoor> doors;
+    /** 副本是否已销毁 / whether the instance is destroyed */
     protected boolean isInstanceDestroyed = false;
-    private final List<Future<?>> crucibleTask = new ArrayList<>();
-    private final Map<Integer, Long> lastTeleportTime = new HashMap<>();
-    private boolean isSpawning = false;
-
+    /** crucible 任务 / crucible task */
+        private final List<Future<?>> crucibleTask = new ArrayList<>();
+    /** last teleport time / last teleport time */
+        private final Map<Integer, Long> lastTeleportTime = new HashMap<>();
+    /** is spawning / is spawning */
+        private boolean isSpawning = false;
+    /** boss timer start / boss timer start */
     private long bossTimerStart;
-    private long bossTimerEnd;
+    /** boss timer end / boss timer end */
+        private long bossTimerEnd;
+    /** floor npcs / floor npcs */
     
     private static final int[][] FLOOR_NPCS = {
         {247247, 247248},
@@ -112,6 +106,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         {247245}
     };
     
+    /**
+     * NPC 掉落表注册时处理。
+     * Handle NPC drop-table registration.
+     *
+     * npc
+     */
     @Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -128,6 +128,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         storage.decreaseByItemId(164000530, storage.getItemCountByItemId(164000530));
     }
     
+    /**
+     * 玩家进入副本时处理。
+     * Handle a player entering the instance.
+     *
+     * @param player 玩家 / player
+     */
     @Override
     public void onEnterInstance(final Player player) {
         super.onEnterInstance(player); 
@@ -141,6 +147,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         }
     }
     
+    /**
+     * 副本创建时初始化逻辑。
+     * Initialize logic when the instance is created.
+     *
+     * @param instance 世界地图实例 / world-map instance
+     */
     @Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -176,6 +188,10 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         int pfloor = player.getFloor();
         spawnNextFloor(pfloor + 1);
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 deleteNpc(701773);
@@ -503,6 +519,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         return true;
     }
     
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
     public void onDie(final Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
@@ -571,6 +593,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             spawn(247400, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading());
         }
     }
+    /**
+     * 处理 rewardForFloorId。
+     * Handle rewardForFloorId.
+     *
+     * @param player 玩家 / player
+     */
     
     public void rewardForFloorId(Player player) {
         final TowerStageRewardTemplate reward = DataManager.TOWER_REWARD_DATA.getTowerReward(player.getFloor());
@@ -649,6 +677,14 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         PacketSendUtility.sendMessage(player, "You received a reward for completing floor " + floor + "!");
     }
     
+    /**
+     * 玩家通过飞行环时处理。
+     * Handle a player passing a flying ring.
+     *
+     * 玩家 / player
+     * @param flyingRing 飞行环标识 / flying-ring id
+     * result
+     */
     @Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("FLOOR")) {
@@ -663,12 +699,30 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         }
         return false;
     }
+    /**
+     * 处理 sendMsgByRace。
+     * Handle sendMsgByRace.
+     *
+     * message
+     * 阵营 / race
+     * time
+     */
     
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -691,6 +745,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             npc.getController().onDelete();
         }
     }
+    /**
+     * 处理 despawnNpcs。
+     * Handle despawnNpcs.
+     *
+     * npcs
+     */
     
     protected void despawnNpcs(List<Npc> npcs) {
         if (npcs == null) return;
@@ -700,6 +760,13 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             }
         }
     }
+    /**
+ * 返回 npcs。
+     * Return the npcs.
+     *
+     * NPC
+     * result
+     */
     
     protected List<Npc> getNpcs(int npcId) {
         if (!isInstanceDestroyed && instance != null) {
@@ -707,21 +774,43 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         }
         return new ArrayList<>();
     }
+    /**
+     * 处理 onFailCrucible。
+     * Handle onFailCrucible.
+     *
+     * @param player 玩家 / player
+     */
     
     public void onFailCrucible(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
+    /**
+     * 玩家请求退出副本时处理。
+     * Handle a player exit request.
+     *
+     * @param player 玩家 / player
+     */
     
     public void onExitInstance(Player player) {
         removeItems(player);
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
+    /**
+     * 玩家从该副本登出时处理。
+     * Handle a player logging out from this instance.
+     *
+     * @param player 玩家 / player
+     */
     
     public void onPlayerLogOut(Player player) {
         removeItems(player);
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
     
+    /**
+     * 副本销毁时清理资源。
+     * Clean up resources when the instance is destroyed.
+     */
     @Override
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
@@ -743,11 +832,28 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             }
         }
     }
+    /**
+     * 处理 teleportFloor。
+     * Handle teleportFloor.
+     *
+     * @param player 玩家 / player
+     * @param x X 坐标 / X
+     * @param y Y 坐标 / Y
+     * @param z Z 坐标 / Z
+     * @param h 朝向 / h
+     */
     
     protected void teleportFloor(Player player, float x, float y, float z, byte h) {
         TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
     }
     
+    /**
+     * 处理玩家复活事件。
+     * Handle a player revive event.
+     *
+     * 玩家 / player
+     * result
+     */
     @Override
     public boolean onReviveEvent(Player player) {
         for (Npc npc: instance.getNpcs()) {

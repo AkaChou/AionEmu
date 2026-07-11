@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +10,28 @@ import com.aionemu.commons.utils.ClassUtils;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 
 /**
+ * 任务处理器脚本加载器：在脚本引擎装载/卸载类时注册或清空 {@link QuestHandler}。
+ * Quest-handler script loader that registers or clears {@link QuestHandler}
+ * instances when the script engine loads or unloads classes.
+ *
  * @author MrPoke
  */
 @Slf4j
 public class QuestHandlerLoader implements ClassListener {
 
-
+	/**
+	 * 创建空加载器。
+	 * Create an empty loader.
+	 */
 	public QuestHandlerLoader() {
 	}
 
+	/**
+	 * 类装载完成后：实例化并注册所有合法的 {@link QuestHandler} 子类。
+	 * After classes are loaded: instantiate and register every valid {@link QuestHandler} subclass.
+	 *
+	 * @param classes 新装载的类数组 / Newly loaded classes
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void postLoad(Class<?>[] classes) {
@@ -58,17 +55,30 @@ public class QuestHandlerLoader implements ClassListener {
 		}
 	}
 
+	/**
+	 * 类卸载前：清空任务引擎中全部已注册处理器。
+	 * Before classes unload: clear every registered handler from the quest engine.
+	 *
+	 * @param classes 即将卸载的类数组 / Classes about to unload
+	 */
 	@Override
 	public void preUnload(Class<?>[] classes) {
 		if (log.isDebugEnabled()) {
 			for (Class<?> c : classes) {
-				// debug messages
+				// 调试消息 / debug messages
 				log.debug("Unload class " + c.getName());
 			}
 		}
 		GameEngineServices.questEngine().clear();
 	}
 
+	/**
+	 * 判断类是否可作为任务处理器装载（非抽象/接口且 public）。
+	 * Whether a class is loadable as a quest handler (public, non-abstract, non-interface).
+	 *
+	 * @param clazz 待检查类 / Class under inspection
+	 * @return {@code true} when valid。 / {@code true} when valid
+	 */
 	public boolean isValidClass(Class<?> clazz) {
 		final int modifiers = clazz.getModifiers();
 

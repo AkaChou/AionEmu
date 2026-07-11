@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -28,6 +12,10 @@ import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 技能皮肤数据容器，按皮肤 ID 索引 SkillSkinTemplate。
+ * Skill skin data holder, indexing SkillSkinTemplate by skin id.
+ */
 @XmlRootElement(name = "skill_skins")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SkillSkinData {
@@ -36,6 +24,10 @@ public class SkillSkinData {
 	private List<SkillSkinTemplate> sst;
 	private IntObjectHashMap<SkillSkinTemplate> skillskins;
 
+	/**
+	 * JAXB 反序列化完成后，将技能皮肤写入 ID 索引并释放列表。
+	 * After JAXB unmarshalling, indexes skill skins by id and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		skillskins = new IntObjectHashMap<SkillSkinTemplate>();
 		for (SkillSkinTemplate st : sst) {
@@ -44,10 +36,24 @@ public class SkillSkinData {
 		sst = null;
 	}
 
+	/**
+	 * 按皮肤 ID 获取技能皮肤模板。
+	 * Returns the skill skin template for the given skin id.
+	 *
+	 * skin id
+	 *
+	 * @param skinId @return 技能皮肤模板，不存在则为 null / skill skin template or null
+	 */
 	public SkillSkinTemplate getSkillSkinTemplate(int skinId) {
 		return skillskins.get(skinId);
 	}
 
+	/**
+	 * 返回已加载的技能皮肤数量。
+	 * Returns the number of loaded skill skins.
+	 *
+	 * skin count
+	 */
 	public int size() {
 		return skillskins.size();
 	}

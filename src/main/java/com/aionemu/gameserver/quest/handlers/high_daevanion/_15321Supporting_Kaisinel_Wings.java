@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.high_daevanion;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,26 +8,28 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 高等大天使任务脚本：Supporting Kaisinel Wings（任务 ID 15321）。
+ * High Daevanion quest script: Supporting Kaisinel Wings (quest ID 15321).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _15321Supporting_Kaisinel_Wings extends QuestHandler {
 
     public static final int questId = 15321;
-	//Cygnea
+	// 西格尼亚 / Cygnea
 	private final static int[] LF5_P1 = {235829, 235831, 235851};
 	private final static int[] LF5_P2 = {235915, 235917, 235920};
-	//Inggison [Conquest Offering]
+	// 因格森【征服供奉】 / Inggison [Conquest Offering]
 	private final static int[] LF4_Rotation = {236530, 236531, 236532, 236533, 236534, 236535,
 	236536, 236537, 236538, 236539, 236540, 236541, 236542, 236543, 236544, 236545, 236546, 236547,
 	236548, 236549, 236550, 236551, 236552, 236553};
-	//Levinshor
+	// 莱文肖尔 / Levinshor
 	private final static int[] LDF4_Advance = {233910, 233911, 233912, 233915, 233955, 233916, 234159};
-	//Kaldor
+	// 卡尔多 / Kaldor
 	private final static int[] LDF5_Fortress = {234248, 234250, 234251, 234517, 234518, 234519, 234520, 234521, 234522, 234523,
 	234524, 234525, 234526, 234527, 234528};
-	//Reshanta [Upper Abyss]
+	// 雷珊塔【上欧比斯】 / Reshanta [Upper Abyss]
 	private final static int[] AB1 = {883276, 883277, 883278, 883279, 883280, 883281, 883282, 883283};
 	public _15321Supporting_Kaisinel_Wings() {
         super(questId);

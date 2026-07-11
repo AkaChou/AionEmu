@@ -1,24 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 玩家死亡界面包：重生/道具可用标志、Kisk 剩余时间、死亡类型与入侵标记。
+ * Death UI packet: rebirth/item flags, remaining kisk time, death type and invasion flag.
+ */
 public class SM_DIE extends AionServerPacket {
 	private boolean hasRebirth;
 	private boolean hasItem;
@@ -26,10 +14,23 @@ public class SM_DIE extends AionServerPacket {
 	private int type = 0;
 	private boolean invasion;
 
+	/**
+	 * @param hasRebirth        是否可用技能重生 / skill rebirth available
+	 * @param hasItem           是否可用道具重生 / item rebirth available
+	 * remaining kisk time
+	 * @param type              死亡类型 / death type
+	 */
 	public SM_DIE(boolean hasRebirth, boolean hasItem, int remainingKiskTime, int type) {
 		this(hasRebirth, hasItem, remainingKiskTime, type, false);
 	}
 
+	/**
+	 * @param hasRebirth        是否可用技能重生 / skill rebirth available
+	 * @param hasItem           是否可用道具重生 / item rebirth available
+	 * remaining kisk time
+	 * @param type              死亡类型 / death type
+	 * @param invasion          是否入侵相关死亡 / invasion-related death
+	 */
 	public SM_DIE(boolean hasRebirth, boolean hasItem, int remainingKiskTime, int type, boolean invasion) {
 		this.hasRebirth = hasRebirth;
 		this.hasItem = hasItem;

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -42,7 +44,10 @@ import com.aionemu.gameserver.utils.SafeMath;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
- *  Fix: MATTY (ADev.Team)
+ * 交易服务，处理 NPC 买卖、欧比斯商店与以物易物。
+ * Trade service for NPC buy/sell, abyss shop, and trade-in.
+ *
+ * @author MATTY (ADev.Team)
  */
 @Slf4j
 
@@ -50,6 +55,15 @@ public class TradeService {
 	private static final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
 	private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 
+	/**
+	 * 从普通商店 NPC 购买物品。
+	 * Performs a buy from a regular shop NPC.
+	 *
+	 * shop npc
+	 * 玩家 / player
+	 * 交易列表 / trade list
+	 * whether successful
+	 */
 	public static boolean performBuyFromShop(Npc npc, Player player, TradeList tradeList) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
@@ -124,9 +138,8 @@ public class TradeService {
 			}
 			long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
 			if (count != 0) {
-				log.warn(String.format("CHECKPOINT: itemservice couldnt add all items on buy: %d %d %d %d",
-						player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount(),
-						count));
+			log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
+					tradeItem.getCount(), count));
 				inventory.decreaseKinah(tradeListPrice);
 				return false;
 			}
@@ -135,6 +148,15 @@ public class TradeService {
 		return true;
 	}
 
+	/**
+	 * 从欧比斯商店以 AP 购买物品。
+	 * Performs a buy from an abyss shop using AP.
+	 *
+	 * shop npc
+	 * 玩家 / player
+	 * 交易列表 / trade list
+	 * whether successful
+	 */
 	public static boolean performBuyFromAbyssShop(Npc npc, Player player, TradeList tradeList) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
@@ -211,9 +233,8 @@ public class TradeService {
 			}
 			long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
 			if (count != 0) {
-				log.warn(String.format("CHECKPOINT: itemservice couldnt add all items on buy: %d %d %d %d",
-						player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount(),
-						count));
+			log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
+					tradeItem.getCount(), count));
 				return false;
 			}
 			if (tradeItem.getCount() > 1) {
@@ -227,6 +248,15 @@ public class TradeService {
 		return true;
 	}
 
+	/**
+	 * 从奖励商店购买物品。
+	 * Performs a buy from a reward shop.
+	 *
+	 * shop npc
+	 * 玩家 / player
+	 * 交易列表 / trade list
+	 * whether successful
+	 */
 	public static boolean performBuyFromRewardShop(Npc npc, Player player, TradeList tradeList) {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
@@ -288,7 +318,8 @@ public class TradeService {
 			}
 			long count = ItemService.addItem(player, tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount());
 			if (count != 0) {
-				log.warn(String.format("CHECKPOINT: itemservice couldnt add all items on buy: %d %d %d %d", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(), tradeItem.getCount(), count));
+			log.warn(I18n.get("log.d629f8029e04", player.getObjectId(), tradeItem.getItemTemplate().getTemplateId(),
+					tradeItem.getCount(), count));
 				return false;
 			}
 		}
@@ -317,6 +348,14 @@ public class TradeService {
 		return true;
 	}
 
+	/**
+	 * 向商店出售物品换取基纳。
+	 * Sells items to a shop for Kinah.
+	 *
+	 * 玩家 / player
+	 * 交易列表 / trade list
+	 * whether successful
+	 */
 	public static boolean performSellToShop(Player player, TradeList tradeList) {
 		Storage inventory = player.getInventory();
 		long kinahReward = 0;
@@ -361,6 +400,16 @@ public class TradeService {
 		return true;
 	}
 
+	/**
+	 * 执行以物易物（Trade-in）购买。
+	 * Performs a trade-in purchase.
+	 *
+	 * 玩家 / player
+	 * npc object id
+	 * target item id
+	 * count
+	 * whether successful
+	 */
 	public static boolean performBuyFromTradeInTrade(Player player, int npcObjectId, int itemId, int count,
 			int TradeinListCount, int TradeinItemObjectId1, int TradeinItemObjectId2, int TradeinItemObjectId3) {
 		if (!RestrictionsManager.canTrade(player)) {
@@ -416,9 +465,14 @@ public class TradeService {
 		return true;
 	}
 
-	/**
-	 * Purchase List AP 4.3
-	 **/
+		/**
+	 * 向商店出售物品换取 AP。
+	 * Sells items to a shop for AP.
+	 *
+	 * 玩家 / player
+	 * 交易列表 / trade list
+	 * whether successful
+	 */
 	public static boolean performSellForAPToShop(Player player, TradeList tradeList,
 			TradeListTemplate purchaseTemplate)
 	{
@@ -429,7 +483,7 @@ public class TradeService {
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
 			int itemObjectId = tradeItem.getItemId();
 			long count = tradeItem.getCount();
-			int priceModifier = purchaseTemplate.getBuyPriceRate(); // todo should be getApBuyPriceRate(), but parsed wrong
+			int priceModifier = purchaseTemplate.getApBuyPriceRate();
 			Item item = inventory.getItemByObjId(itemObjectId);
 			if (item == null) {
 				return false;
@@ -453,6 +507,14 @@ public class TradeService {
 		return true;
 	}
 
+	/**
+	 * 出售损坏物品以回收 AP。
+	 * Sells broken items to reclaim AP.
+	 *
+	 * 玩家 / player
+	 * 交易列表 / trade list
+	 * whether successful
+	 */
 	public static boolean performSellBrokenAPItems(Player player, TradeList tradeList) {
 		int apReward = 0;
 		if (!RestrictionsManager.canTrade(player)) {
@@ -476,9 +538,14 @@ public class TradeService {
 		return true;
 	}
 
-	/**
-	 * Purchase List KINAH 4.3
-	 **/
+		/**
+	 * 按模板配置向商店出售物品换取基纳。
+	 * Sells items to a shop for Kinah using trade template pricing.
+	 *
+	 * 玩家 / player
+	 * 交易列表 / trade list
+	 * whether successful
+	 */
 	public static boolean performSellForKinahToShop(Player player, TradeList tradeList,
 			TradeListTemplate purchaseTemplate) {
 		if (!RestrictionsManager.canTrade(player)) {
@@ -512,6 +579,13 @@ public class TradeService {
 		return true;
 	}
 
+	/**
+	 * 处理已终止/失效物品退回商店逻辑。
+	 * Handles returning a terminated item to shop logic.
+	 *
+	 * @param player 玩家 / player
+	 * @param objId 物品对象 ID / item object id
+	 */
 	public static void terminatedItemToShop(Player player, int objId) {
 		try {
 			Storage inventory = player.getInventory();
@@ -526,15 +600,27 @@ public class TradeService {
 				inventory.increaseKinah(price);
 			}
 		} catch (NullPointerException e) {
-			log.info("Cannot selll Terminated item, check item objId: " + objId);
+			log.info(I18n.get("log.b0750906232e", objId));
 			return;
 		}
 	}
 
+	/**
+	 * 获取交易列表静态数据。
+	 * Returns trade list static data.
+	 *
+	 * @return 交易列表数据 / trade list data
+	 */
 	public static TradeListData getTradeListData() {
 		return tradeListData;
 	}
 
+	/**
+	 * 获取商品列表静态数据。
+	 * Returns goods list static data.
+	 *
+	 * @return 商品列表数据 / goods list data
+	 */
 	public static GoodsListData getGoodsListData() {
 		return goodsListData;
 	}

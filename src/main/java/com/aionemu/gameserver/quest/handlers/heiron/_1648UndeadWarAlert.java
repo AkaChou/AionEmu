@@ -9,6 +9,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 希隆任务脚本：Undead War Alert（任务 ID 1648）。
+ * Heiron quest script: Undead War Alert (quest ID 1648).
+ *
  * @author Balthazar
  */
 public class _1648UndeadWarAlert extends QuestHandler {

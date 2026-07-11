@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 通知客户端军团成员离开（或被踢出）的服务端包。
+ * Server packet notifying the client that a legion member has left (or been kicked).
+ *
  * @author Simple
  */
 public class SM_LEGION_LEAVE_MEMBER extends AionServerPacket {
@@ -29,12 +16,29 @@ public class SM_LEGION_LEAVE_MEMBER extends AionServerPacket {
 	private int playerObjId;
 	private int msgId;
 
+	/**
+	 * 构造仅含单名称的成员离开通知包。
+	 * Creates a leave-member packet with a single name.
+	 *
+	 * message id
+	 * @param playerObjId 离开成员对象 ID / leaving member object id
+	 * @param name 成员名称 / member name
+	 */
 	public SM_LEGION_LEAVE_MEMBER(int msgId, int playerObjId, String name) {
 		this.msgId = msgId;
 		this.playerObjId = playerObjId;
 		this.name = name;
 	}
 
+	/**
+	 * 构造含双名称的成员离开通知包（如踢出时同时带操作者与被踢者名称）。
+	 * Creates a leave-member packet with two names (e.g. kicker and kicked).
+	 *
+	 * message id
+	 * @param playerObjId 离开成员对象 ID / leaving member object id
+	 * primary name
+	 * secondary name
+	 */
 	public SM_LEGION_LEAVE_MEMBER(int msgId, int playerObjId, String name, String name1) {
 		this.msgId = msgId;
 		this.playerObjId = playerObjId;

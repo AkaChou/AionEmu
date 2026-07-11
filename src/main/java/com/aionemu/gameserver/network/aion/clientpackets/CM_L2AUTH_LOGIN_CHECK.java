@@ -1,60 +1,39 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 
 /**
- * In this packets aion client is authenticating himself by providing accountId
- * and rest of sessionKey - we will check if its valid at login server side.
- * 
+ * 客户端登录会话校验（playOk/loginOk）的客户端包。
+ * Client packet for login session validation (playOk/loginOk).
+ *
  * @author -Nemesiss-
  */
-// TODO: L2AUTH? Really? :O
 public class CM_L2AUTH_LOGIN_CHECK extends AionClientPacket {
 
 	/**
-	 * playOk2 is part of session key - its used for security purposes we will check
-	 * if this is the key what login server sends.
+	 * playOk2 为会话密钥一部分，用于安全校验（与登录服下发密钥比对）。 / playOk2 is part of session key - its used for security purposes we will check if this is the key what login server sends
 	 */
 	private int playOk2;
 	/**
-	 * playOk1 is part of session key - its used for security purposes we will check
-	 * if this is the key what login server sends.
+	 * playOk1 为会话密钥一部分，用于安全校验（与登录服下发密钥比对）。 / playOk1 is part of session key - its used for security purposes we will check if this is the key what login server sends
 	 */
 	private int playOk1;
 	/**
-	 * accountId is part of session key - its used for authentication we will check
-	 * if this accountId is matching any waiting account login server side and check
-	 * if rest of session key is ok.
+	 * accountId 为会话密钥一部分，用于认证（校验是否匹配登录服等待账号）。 / accountId is part of session key - its used for authentication we will check if this accountId is matching any waiting account login server side and check if rest of session key is ok
 	 */
 	private int accountId;
 	/**
-	 * loginOk is part of session key - its used for security purposes we will check
-	 * if this is the key what login server sends.
+	 * loginOk 为会话密钥一部分，用于安全校验（与登录服下发密钥比对）。 / loginOk is part of session key - its used for security purposes we will check if this is the key what login server sends
 	 */
 	private int loginOk;
-
 	/**
-	 * Constructs new instance of <tt>CM_L2AUTH_LOGIN_CHECK </tt> packet
-	 * 
-	 * @param opcode
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_L2AUTH_LOGIN_CHECK(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -27,15 +11,30 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 管理员天族/魔族代理战命令：启动或停止指定代理战。
+ * Admin agent-fight command: starts or stops a specified agent fight.
+ */
 public class Agent extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
 	
+	/**
+	 * 注册 {@code //agent} 命令。
+	 * Registers the {@code //agent} command.
+	 */
 	public Agent() {
 		super("agent");
 	}
 	
+	/**
+	 * 执行代理战控制：解析 start/stop 与地点 ID。
+	 * Executes agent-fight control: parses start/stop and location id.
+	 *
+	 * admin
+	 * start|stop, location id。 / start|stop, location id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
@@ -46,6 +45,13 @@ public class Agent extends AdminCommand
 		}
 	}
 	
+	/**
+	 * 处理代理战的开始/停止逻辑。
+	 * Handles start/stop logic for an agent fight.
+	 *
+	 * admin
+	 * @param params 参数：动作与地点 ID / action and location id
+	 */
 	protected void handleStartStopFight(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
 			showHelp(player);
@@ -78,6 +84,15 @@ public class Agent extends AdminCommand
 		}
 	}
 	
+	/**
+	 * 校验代理战地点 ID 是否有效。
+	 * Validates whether the agent location id exists.
+	 *
+	 * admin
+	 * location id
+	 *
+	 * @return {@code true} if valid。 / {@code true} if valid
+	 */
 	protected boolean isValidAgentLocationId(Player player, int agentId) {
 		if (!GameLocationBootstrapServices.agentService().getAgentLocations().keySet().contains(agentId)) {
 			PacketSendUtility.sendMessage(player, "Id " + agentId + " is invalid");
@@ -86,6 +101,12 @@ public class Agent extends AdminCommand
 		return true;
 	}
 	
+	/**
+	 * 向管理员输出 {@code //agent} 用法。
+	 * Sends {@code //agent} usage help to the admin.
+	 *
+	 * admin
+	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //agent start|stop <Id>");
 	}

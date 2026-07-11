@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -38,9 +22,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
-* Author (Encom)
-* Rework MATTY (ADev.Team)
-**/
+ * 诺克萨纳训练营副本事件处理器。
+ * Instance event handler for Nochsana Training Camp.
+ *
+ * @author Encom
+ * @author MATTY (ADev.Team)
+ */
 
 @InstanceID(300030000)
 public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
@@ -51,17 +38,23 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/nochsanaTrainingCamp.xhtml"));
     }
 **/
-	
+
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
-			case 256693: //Nochsana General.
+			case 256693: // 诺克萨纳将军。 / Nochsana General.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051138, 1)); //[Event] Nochsana Camp Treasure Chest.
 					}
 				}
@@ -73,18 +66,25 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 //	public void onDie(Npc npc) {
 //		Player player = npc.getAggroList().getMostPlayerDamage();
 //		switch (npc.getObjectTemplate().getTemplateId()) {
-//			case 256689: //Nochsana Guard.
+//			case 256689: // 诺克萨纳卫兵。 / Nochsana Guard.
 //				despawnNpc(npc);
 //				sendMsg("<Nochsana General> appear"); // Появился Лорд Насана
-//				spawn(256693, 331.097f, 269.36f, 384.553f, (byte) 25); //Nochsana General.
+//				spawn(256693, 331.097f, 269.36f, 384.553f, (byte) 25); // 诺克萨纳将军。 / Nochsana General.
 //			break;
-//			case 256693: //Nochsana General.
+//			case 256693: // 诺克萨纳将军。 / Nochsana General.
 //			    sendMsg("<Nochsana Abyss Gate> is now open");
 //				spawn(700438, 466.7858f, 706.5129f, 346.2541f, (byte) 0, 14);
 //			break;
 //		}
 //	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch(npc.getNpcId()) {
@@ -97,6 +97,12 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);

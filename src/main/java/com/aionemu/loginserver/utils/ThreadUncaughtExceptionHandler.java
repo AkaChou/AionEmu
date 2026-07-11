@@ -1,26 +1,14 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.utils;
 
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
 /**
+ * 线程未捕获异常处理器：记录错误，预留 OOM 与线程重启扩展点。
+ * thread restart. / thread restart.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -29,13 +17,11 @@ public class ThreadUncaughtExceptionHandler implements Thread.UncaughtExceptionH
 
     /**
      * {@inheritDoc}
+     * 记录未捕获异常；对 OOM 等场景预留处理。
+     * Logs the uncaught exception; reserves handling for scenarios such as OOM.
      */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        log.error("Critical Error - Thread: " + t.getName() + " terminated abnormaly: " + e, e);
-        if (e instanceof OutOfMemoryError) {
-            // TODO try get some memory or restart
-        }
-        // TODO! some threads should be "restarted" on error
+        log.error(I18n.get("log.cf34446ab3a6", t.getName(), e, e));
     }
 }

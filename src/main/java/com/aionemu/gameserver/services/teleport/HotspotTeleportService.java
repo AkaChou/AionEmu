@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.teleport;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -35,6 +21,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 热点传送服务，处理地图热点（快捷传送点）的读条、打断与扣费传送。
+ * Hotspot teleport service handling cast, interrupt and paid travel via map hotspots.
+ *
  * @author Ranastic
  */
 @Slf4j
@@ -42,6 +31,12 @@ public class HotspotTeleportService {
 
 	private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
 
+	/**
+	 * 获取 {@link HotspotTeleportService} 单例（优先 Spring 提供的实例）。
+	 * Returns the {@link HotspotTeleportService} singleton (prefers Spring-provided instance).
+	 *
+	 * Service instance
+	 */
 	public static HotspotTeleportService getInstance() {
 		ObjectProvider<HotspotTeleportService> provider = instanceProvider;
 		if (provider != null) {
@@ -50,22 +45,40 @@ public class HotspotTeleportService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<HotspotTeleportService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 初始化并记录热点位置模板数量。
+	 * Initializes and logs the number of hotspot location templates.
+	 */
 	public HotspotTeleportService() {
 		int hotspotList = DataManager.HOTSPOT_LOCATION_DATA.size();
-		log.info(hotspotList + " <Hotspot Location 5.8> loaded.");
+		log.info(I18n.get("log.162c2b724010", hotspotList));
 	}
 
+	/**
+	 * 执行热点传送：读条 10 秒后传送并扣费，期间受击/异常/DoT 可打断。
+	 * Performs hotspot teleport: 10s cast then travel and fee; interruptible by attack/abnormal/DoT.
+	 *
+	 * 玩家 / Player
+	 * @param teleportId 热点传送点 ID / Hotspot teleport id
+	 * @param price 基纳费用 / Kinah price
+	 */
 	public void doTeleport(final Player player, final int teleportId, final int price) {
 		final int worldId = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getMapId();
 		final float getX = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getX();
 		final float getY = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getY();
 		final float getZ = DataManager.HOTSPOT_LOCATION_DATA.getHotspotlocationTemplate(teleportId).getZ();
-		// KR - Update December 16th 2015
-		// - Base teleportation cooldown has been reduced from 10min to 1min.
+		// KR - 2015 年 12 月 16 日更新 / KR - Update December 16th 2015
+		// 基地传送冷却已从 10 分钟减至 1 分钟。 / - Base teleportation cooldown has been reduced from 10min to 1min.
 		final int cooldown = 60; // 1 Minute = 60 Seconds
 		player.getController().addTask(TaskId.HOTSPOT_TELEPORT,
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

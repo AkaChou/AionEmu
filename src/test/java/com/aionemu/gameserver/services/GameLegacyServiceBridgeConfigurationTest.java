@@ -439,21 +439,11 @@ class GameLegacyServiceBridgeConfigurationTest {
     void exposesRewardServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("rewardService"));
-            assertTrue(context.containsBeanDefinition("weddingService"));
             assertTrue(context.containsBeanDefinition("veteranRewardsService"));
             assertEquals(RewardService.class, context.getType("rewardService"));
-            assertEquals(WeddingService.class, context.getType("weddingService"));
             assertEquals(VeteranRewardsService.class, context.getType("veteranRewardsService"));
             assertLazy(context.getBeanFactory(), "rewardService");
-            assertLazy(context.getBeanFactory(), "weddingService");
             assertLazy(context.getBeanFactory(), "veteranRewardsService");
-        }
-    }
-
-    @Test
-    void createsSpringManagedWeddingServiceInsteadOfLegacySingleton() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(WeddingService.getInstance(), context.getBean(WeddingService.class));
         }
     }
 

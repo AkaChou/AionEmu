@@ -1,31 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * AI 向玩家发起请求（如确认窗口）的回调抽象。
+ * Abstract callback for AI-initiated player requests (e.g. confirmation windows).
+ *
  * @author ATracer
  */
 public abstract class AI2Request {
 
+	/**
+	 * 玩家接受请求时调用。
+	 * Invoked when the player accepts the request.
+	 *
+	 * @param requester 请求发起者 / request initiator
+	 * responding player
+	 */
 	public abstract void acceptRequest(Creature requester, Player responder);
 
+	/**
+	 * 玩家拒绝请求时调用；默认空实现。
+	 * Invoked when the player denies the request; empty by default.
+	 *
+	 * @param requester 请求发起者 / request initiator
+	 * responding player
+	 */
 	public void denyRequest(Creature requester, Player responder) {
 	};
 }

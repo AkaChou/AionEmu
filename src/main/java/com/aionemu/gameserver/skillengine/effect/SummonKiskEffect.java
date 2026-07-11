@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -36,9 +20,17 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 
+/**
+ * 召唤 Kisk（复活之石）效果：生成可绑定的 Kisk 供队伍/个人使用。
+ * Summon Kisk effect: spawns a bindable Kisk for party or personal use.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonKiskEffect")
 public class SummonKiskEffect extends SummonEffect {
+	/**
+	 * 在玩家位置生成 Kisk，注册服务并处理绑定/对话框。
+	 * Spawns a Kisk at the player, registers it, and opens bind dialog or auto-binds.
+	 */
 	@Override
 	public void applyEffect(final Effect effect) {
 		Creature effected = effect.getEffected();

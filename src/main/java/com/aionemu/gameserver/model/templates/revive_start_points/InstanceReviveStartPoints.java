@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.revive_start_points;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,7 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Created by Wnkrz on 27/08/2017.
+ * 副本 ReviveStart 点模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,38 +31,47 @@ public class InstanceReviveStartPoints {
 	@XmlAttribute(name = "h")
 	protected byte h;
 
+	/** 返回 revive world / Returns the revive world */
 	public int getReviveWorld() {
 		return worldId;
 	}
 
+	/** 返回 x / Returns the x */
 	public float getX() {
 		return x;
 	}
 
+	/** 设置 x / Sets the x */
 	public void setX(float value) {
 		x = value;
 	}
 
+	/** 返回 y / Returns the y */
 	public float getY() {
 		return y;
 	}
 
+	/** 设置 y / Sets the y */
 	public void setY(float value) {
 		y = value;
 	}
 
+	/** 返回 z / Returns the z */
 	public float getZ() {
 		return z;
 	}
 
+	/** 设置 z / Sets the z */
 	public void setZ(float value) {
 		z = value;
 	}
 
+	/** 返回 h / Returns the h */
 	public byte getH() {
 		return h;
 	}
 
+	/** 设置 h / Sets the h */
 	public void setH(byte value) {
 		h = value;
 	}

@@ -8,6 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 潘德莫尼姆任务脚本：Delivering Supply Request（任务 ID 2953）。
+ * Pandaemonium quest script: Delivering Supply Request (quest ID 2953).
+ *
  * @author Altaress
  * @reworked vlog
  */

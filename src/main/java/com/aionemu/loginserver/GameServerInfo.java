@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver;
 
 import java.util.List;
@@ -27,265 +9,169 @@ import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsConnection.State;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 /**
- * This class represents GameServer at LoginServer side. It contain info about
- * id, ip etc.
+ * 登录服侧的游戏服信息（id、IP、在线账号等）。
+ * GameServer representation on LoginServer side (id, IP, online accounts, etc.).
  *
  * @author -Nemesiss-
  */
+@RequiredArgsConstructor
 public class GameServerInfo {
 
     /**
-     * Id of this GameServer
+     * 游戏服 ID。
+     * GameServer id.
      */
+    @Getter
     private final byte id;
     /**
-     * Allowed IP for this GameServer if gs will connect from another ip wont be
-     * registered.
+     * 允许接入的 IP；其他 IP 无法注册。
+     * Allowed IP; other IPs cannot register.
      */
+    @Getter
     private final String ip;
     /**
-     * Password
+     * 游戏服密码。
+     * GameServer password.
      */
+    @Getter
     private final String password;
     /**
-     * Default server address, usually internet address
+     * 默认地址，通常为公网地址。
+     * Default address, usually the public internet address.
      */
+    @Getter
+    @Setter
     private volatile byte[] defaultAddress;
     /**
-     * Mapping of ip ranges, usually used for local area connections
+     * IP 段映射，多用于局域网接入。
+     * IP range mappings, often used for LAN access.
      */
+    @Getter
+    @Setter
     private volatile List<IPRange> ipRanges;
     /**
-     * Port on with this GameServer is accepting clients.
+     * 客户端接入端口。
+     * Client accept port.
      */
+    @Getter
+    @Setter
     private volatile int port;
     /**
-     * gsConnection - if GameServer is connected to LoginServer.
+     * 与登录服的连接；下线时为 null。
+     * Connection to LoginServer; null when offline.
      */
-    private volatile GsConnection gscHandler;
+    @Getter
+    @Setter
+    private volatile GsConnection connection;
     /**
-     * Max players count that may play on this GameServer.
+     * 最大在线人数。
+     * Max allowed players.
      */
+    @Getter
+    @Setter
     private volatile int maxPlayers;
     /**
-     * Map<AccId,Account> of accounts logged in on this GameServer.
+ * 本服在线账号 Map&lt;账号 ID, Account&gt;。
+     * Online accounts Map&lt;accountId, Account&gt;.
      */
-    private final Map<Integer, Account> accountsOnGameServer = new ConcurrentHashMap<Integer, Account>();
+    private final Map<Integer, Account> accountsOnGameServer = new ConcurrentHashMap<>();
 
     /**
-     * Constructor.
+     * 判断游戏服是否在线。
+     * Check whether this GameServer is online.
      *
-     * @param id
-     * @param ip
-     * @param password
-     */
-    public GameServerInfo(byte id, String ip, String password) {
-        this.id = id;
-        this.ip = ip;
-        this.password = password;
-    }
-
-    /**
-     * Returns id of this GameServer.
-     *
-     * @return byte id
-     */
-    public byte getId() {
-        return id;
-    }
-
-    /**
-     * Returns Password of this GameServer.
-     *
-     * @return String password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Returns allowed IP for this GameServer.
-     *
-     * @return String ip
-     */
-    public String getIp() {
-        return ip;
-    }
-
-    /**
-     * Returns port of this GameServer.
-     *
-     * @return in port
-     */
-    public int getPort() {
-        return port;
-    }
-
-    /**
-     * Set port for this GameServer.
-     *
-     * @param port
-     */
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    /**
-     * Retunrs default server address, usually used as internet address
-     *
-     * @return default server address
-     */
-    public byte[] getDefaultAddress() {
-        return defaultAddress;
-    }
-
-    /**
-     * Sets default server address
-     *
-     * @param defaultAddress default server address
-     */
-    public void setDefaultAddress(byte[] defaultAddress) {
-        this.defaultAddress = defaultAddress;
-    }
-
-    /**
-     * Returns IP range mappings
-     *
-     * @return IPRange mappings
-     */
-    public List<IPRange> getIpRanges() {
-        return ipRanges;
-    }
-
-    /**
-     * Sets IPRange mappings
-     *
-     * @param ipRanges ipRangeMappings
-     */
-    public void setIpRanges(List<IPRange> ipRanges) {
-        this.ipRanges = ipRanges;
-    }
-
-    /**
-     * Returns active GsConnection for this GameServer or null if this
-     * GameServer is down.
-     *
-     * @return GsConnection
-     */
-    public final GsConnection getConnection() {
-        return gscHandler;
-    }
-
-    /**
-     * Set active GsConnection.
-     *
-     * @param gscHandler
-     */
-    public final void setConnection(GsConnection gscHandler) {
-        this.gscHandler = gscHandler;
-    }
-
-    /**
-     * Returns number of max allowed players for this GameServer.
-     *
-     * @return int maxPlayers
-     */
-    public final int getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    /**
-     * Set max allowed players for this GameServer.
-     *
-     * @param maxPlayers
-     */
-    public final void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
-
-    /**
-     * Check if GameServer is Online
-     *
-     * @return true if GameServer is Online.
+     * @return 已认证连接存在则为 true / true if an authenticated connection exists
      */
     public final boolean isOnline() {
-        return gscHandler != null && gscHandler.getState() == State.AUTHED;
+        return connection != null && connection.getState() == State.AUTHED;
     }
 
     /**
-     * Check if given account is already on This GameServer
+     * 判断账号是否已在本游戏服。
+     * Check whether the account is already on this GameServer.
      *
-     * @param accountId
-     * @return true if account is on this GameServer
+     * @param accountId 账号 ID / Account id
+     * @return 存在则为 true / true if present
      */
     public final boolean isAccountOnGameServer(int accountId) {
         return accountsOnGameServer.containsKey(accountId);
     }
 
     /**
-     * Remove account from this GameServer
+     * 从本游戏服移除账号。
+     * Remove account from this GameServer.
      *
-     * @param accountId
-     * @return removed account.
+     * @param accountId 账号 ID / Account id
+     * @return 被移除的账号 / Removed account
      */
     public final Account removeAccountFromGameServer(int accountId) {
         return accountsOnGameServer.remove(accountId);
     }
 
     /**
-     * Add account to this GameServer
+     * 将账号加入本游戏服。
+     * Add account to this GameServer.
      *
-     * @param acc
+     * @param acc 账号 / Account
      */
     public final void addAccountToGameServer(Account acc) {
         accountsOnGameServer.put(acc.getId(), acc);
     }
 
     /**
-     * Get Account object from account on GameServer list.
+     * 按账号 ID 取本服账号对象。
+     * Get account object by id on this GameServer.
      *
-     * @param accountId
-     * @return Account object if account is on this game server or null.
+     * @param accountId 账号 ID / Account id
+     * @return 账号对象；不存在则为 null / Account or null
      */
     public final Account getAccountFromGameServer(int accountId) {
         return accountsOnGameServer.get(accountId);
     }
 
     /**
-     * Clears all accounts on this gameServer
+     * 清空本服全部在线账号。
+     * Clear all accounts on this GameServer.
      */
     public void clearAccountsOnGameServer() {
         accountsOnGameServer.clear();
     }
 
     /**
-     * Return number of online players connected to this GameServer.
+     * 当前在线人数。
+     * Current online player count.
      *
-     * @return number of online players
+     * Online count
      */
     public int getCurrentPlayers() {
         return accountsOnGameServer.size();
     }
 
     /**
-     * Return true if server is full.
+     * 是否已满员。
+     * Whether the server is full.
      *
-     * @return true if full.
+     * @return 若 full 则为 true / true if full
      */
     public boolean isFull() {
         return getCurrentPlayers() >= getMaxPlayers();
     }
 
     /**
-     * Returns ip address that will be used as server ip for specific
-     * player.<br>
-     * The problem is that players can access server from various subnetworks so
-     * we need to send different ip adresses.<br>
-     * If gameserver is not online - it returns 127.0.0.1 as server address.
+     * 按玩家 IP 选择应下发的游戏服地址。
+     * Resolve the GameServer IP address valid for the given player IP.
+     * <p>
+     * 不同子网可能需要不同地址；离线时返回 127.0.0.1。
+     * Different subnets may need different addresses; returns 127.0.0.1 when offline.
      *
-     * @param playerIp Player address
-     * @return ip address that is valid for player
+     * Player IP
+     *
+     * @param playerIp @return 对该玩家有效的地址字节 / Address bytes valid for the player
      */
     public byte[] getIPAddressForPlayer(String playerIp) {
         if (!isOnline()) {

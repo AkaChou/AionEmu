@@ -1,45 +1,37 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
+/**
+ * 坠落伤害相关配置。
+ * Fall damage related configuration.
+ */
 public class FallDamageConfig {
 
 	/**
-	 * Percentage of damage per meter.
+	 * 每米坠落伤害百分比。
+	 * Percentage of damage per meter fallen.
 	 */
 	@Property(key = "gameserver.falldamage.percentage", defaultValue = "1.0")
 	public static float FALL_DAMAGE_PERCENTAGE;
 
 	/**
-	 * Minimum fall damage range
+	 * 产生坠落伤害的最小距离。
+	 * Minimum fall distance that causes damage.
 	 */
 	@Property(key = "gameserver.falldamage.distance.minimum", defaultValue = "10")
 	public static int MINIMUM_DISTANCE_DAMAGE;
 
 	/**
-	 * Maximum fall distance after which you will die after hitting the ground.
+	 * 落地必死的最大坠落距离。
+	 * Maximum fall distance after which landing is fatal.
 	 */
 	@Property(key = "gameserver.falldamage.distance.maximum", defaultValue = "50")
 	public static int MAXIMUM_DISTANCE_DAMAGE;
 
 	/**
-	 * Maximum fall distance after which you will die in mid air.
+	 * 空中必死的最大坠落距离。
+	 * Maximum fall distance after which death occurs mid-air.
 	 */
 	@Property(key = "gameserver.falldamage.distance.midair", defaultValue = "200")
 	public static int MAXIMUM_DISTANCE_MIDAIR;

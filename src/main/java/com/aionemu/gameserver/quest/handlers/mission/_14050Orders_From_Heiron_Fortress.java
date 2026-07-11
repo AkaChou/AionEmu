@@ -10,7 +10,11 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.zone.ZoneName;
-                              
+
+/**
+ * 主线任务脚本：Orders From Heiron Fortress（任务 ID 14050）。
+ * Campaign mission quest script: Orders From Heiron Fortress (quest ID 14050).
+ */
 public class _14050Orders_From_Heiron_Fortress extends QuestHandler {
 
     private final static int questId = 14050;

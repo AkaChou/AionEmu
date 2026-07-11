@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -31,8 +18,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_BOOST_EVENTS;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 增益活动服务，按活动配置向玩家下发增益包。
+ * Boost event service delivering configured boost packets to players.
+ *
  * @author Rinzler (Encom)
  */
+
 @Slf4j
 public class BoostEventService implements StatOwner {
 
@@ -42,6 +33,10 @@ public class BoostEventService implements StatOwner {
 
 	public Map<Integer, BoostEvents> data = new HashMap<Integer, BoostEvents>(1);
 
+	/**
+	 * 启动服务。
+	 * Starts the service.
+	 */
 	public void onStart() {
 		Map<Integer, BoostEvents> raw = DataManager.BOOST_EVENT_DATA.getAll();
 		if (raw.size() != 0) {
@@ -49,6 +44,12 @@ public class BoostEventService implements StatOwner {
 		}
 	}
 
+	/**
+	 * 发送数据包。
+	 * Sends a packet.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void sendPacket(Player player) {
 		Map<Integer, BoostEvents> boost = getCurrentBoost();
 		for (BoostEvents be : boost.values()) {
@@ -58,6 +59,11 @@ public class BoostEventService implements StatOwner {
 		}
 	}
 
+	/**
+	 * getCurrentBoost 方法。
+	 * getCurrentBoost method.
+	 * result
+	 */
 	public Map<Integer, BoostEvents> getCurrentBoost() {
 		Map<Integer, BoostEvents> boost = new HashMap<Integer, BoostEvents>();
 		ZonedDateTime now = ZonedDateTime.now();
@@ -69,6 +75,13 @@ public class BoostEventService implements StatOwner {
 		return boost;
 	}
 
+	/**
+	 * getBoostEvent 方法。
+	 * getBoostEvent method.
+	 *
+	 * @param id ID / id
+	 * @param be 战斗事件 / be
+	 */
 	public void getBoostEvent(int id, BoostEvents be) {
 		if (data.containsValue(id)) {
 			return;
@@ -76,14 +89,25 @@ public class BoostEventService implements StatOwner {
 		data.put(id, be);
 	}
 
+	/**
+	 * getBoostEvent 方法。
+	 * getBoostEvent method.
+	 *
+	 * BoostEvents
+	 */
 	public void getBoostEvent(Map<Integer, BoostEvents> raw) {
 		data.putAll(raw);
 		for (BoostEvents be : data.values()) {
 			getBoostEvent(be.getId(), be);
 		}
-		log.info("[BoostEventService] Loaded " + data.size() + " Event Boost");
+		log.info(I18n.get("log.91239132a81e", data.size()));
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static final BoostEventService getInstance() {
 		ObjectProvider<BoostEventService> provider = instanceProvider;
 		if (provider == null) {
@@ -92,6 +116,12 @@ public class BoostEventService implements StatOwner {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * @param instanceProvider 副本提供者 / instanceProvider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BoostEventService> instanceProvider) {
 		BoostEventService.instanceProvider = instanceProvider;
 	}

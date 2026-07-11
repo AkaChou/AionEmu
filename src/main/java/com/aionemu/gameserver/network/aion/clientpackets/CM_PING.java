@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.configs.main.SecurityConfig;
@@ -25,14 +9,17 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
+ * 客户端心跳包，用于保活并检测异常过快的 ping 间隔（加速外挂）。
+ * Client keep-alive ping packet; detects abnormally fast ping intervals (timer cheats).
+ *
  * @author -Nemesiss- modified by Undertrey
  */
 public class CM_PING extends AionClientPacket {
 
 	/**
-	 * Constructs new instance of <tt>CM_PING </tt> packet
-	 * 
-	 * @param opcode
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_PING(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -43,7 +30,7 @@ public class CM_PING extends AionClientPacket {
 	 */
 	@Override
 	protected void readImpl() {
-		readH(); // unk
+		readH(); // 未知 / unk
 	}
 
 	/**

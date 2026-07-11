@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver;
 
 import java.nio.ByteBuffer;
@@ -21,26 +5,29 @@ import java.nio.ByteBuffer;
 import com.aionemu.commons.network.packet.BaseServerPacket;
 
 /**
- * Base class for every GameServer -> Login Server Packet.
- * 
+ * 所有游戏服 → 登录服服务端封包的基类。
+ * Base class for every GameServer → LoginServer server packet.
+ *
  * @author -Nemesiss-
  */
 public abstract class LsServerPacket extends BaseServerPacket {
 
 	/**
-	 * constructs new server packet with specified opcode.
-	 * 
-	 * @param opcode packet id
+	 * 以指定 opcode 构造服务端封包。
+	 * Construct server packet with the given opcode.
+	 *
+	 * Packet opcode
 	 */
 	protected LsServerPacket(int opcode) {
 		super(opcode);
 	}
 
 	/**
-	 * Write this packet data for given connection, to given buffer.
-	 * 
-	 * @param con
-	 * @param buffer
+	 * 将本封包写入指定连接的缓冲区（含长度前缀与 opcode）。
+	 * Write this packet into the buffer for the given connection (including length prefix and opcode).
+	 *
+	 * @param con 目标登录服连接 / Target LoginServer connection
+	 * @param buffer 输出缓冲区 / Output buffer
 	 */
 	public final synchronized void write(LoginServerConnection con, ByteBuffer buffer) {
 		setBuf(buffer);
@@ -53,10 +40,10 @@ public abstract class LsServerPacket extends BaseServerPacket {
 	}
 
 	/**
-	 * Write data that this packet represents to given byte buffer.
-	 * 
-	 * @param con
-	 * @param buf
+	 * 将封包载荷写入缓冲区（子类实现）。
+	 * Write packet payload into the buffer (implemented by subclasses).
+	 *
+	 * @param con 目标登录服连接 / Target LoginServer connection
 	 */
 	protected abstract void writeImpl(LoginServerConnection con);
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 
 /**
+ * 交易添加物品包：通知己方/对方交易窗口新增物品及其完整信息。
+ * Exchange add-item packet: notifies self/other trade window of a new item with full blob.
+ *
  * @author Avol
  * @author ATracer
  */
@@ -33,6 +20,11 @@ public class SM_EXCHANGE_ADD_ITEM extends AionServerPacket {
 	private int action;
 	private Item item;
 
+	/**
+	 * 0=self, 1=other。 / 0=self, 1=other
+	 * @param item   放入的物品 / item added
+	 * @param player 所属玩家（用于写 ItemInfoBlob） / owner player for ItemInfoBlob
+	 */
 	public SM_EXCHANGE_ADD_ITEM(int action, Item item, Player player) {
 		this.player = player;
 		this.action = action;

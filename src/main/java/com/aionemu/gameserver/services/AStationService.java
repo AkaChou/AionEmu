@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,14 +15,23 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldType;
 
 /**
+ * A-Station（快速通道）跨服服务，处理授权、迁入迁出与账号占用校验。
+ * A-Station (fast-track) cross-server service handling auth, move-in/out, and account occupancy checks.
+ *
  * @author Ranastic
  */
 @Slf4j
-
 public class AStationService {
 	private static volatile ObjectProvider<AStationService> instanceProvider;
+	/** Accountscurrently 在 Stationmappedplayers / Accounts currently on A-Station mapped to players */
 	private ConcurrentMap<Integer, Player> accountsOnAStation = new ConcurrentHashMap<Integer, Player>(1);
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static AStationService getInstance() {
 		ObjectProvider<AStationService> provider = instanceProvider;
 		if (provider != null) {
@@ -47,6 +40,12 @@ public class AStationService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AStationService> provider) {
 		instanceProvider = provider;
 	}
@@ -55,6 +54,12 @@ public class AStationService {
 		private static final AStationService instance = new AStationService();
 	}
 
+	/**
+	 * 校验等级后向客户端下发 A-Station 服务器列表。
+	 * After level check, sends the A-Station server list to the client.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void checkAuthorizationRequest(Player player) {
 		int level = AStationConfig.A_STATION_MAX_LEVEL;
 		if (player.getLevel() > level) {
@@ -64,14 +69,34 @@ public class AStationService {
 				new SM_SERVER_IDS(new AStation(AStationConfig.A_STATION_SERVER_ID, true, 1, level)));
 	}
 
+	/**
+	 * 将玩家传送至 A-Station 服务器。
+	 * Teleports the player to the A-Station server.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void handleMoveThere(Player player) {
 		TeleportService2.moveAStation(player, AStationConfig.A_STATION_SERVER_ID, false);
 	}
 
+	/**
+	 * 将玩家从 A-Station 传回原服。
+	 * Teleports the player back from A-Station to the home server.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void handleMoveBack(Player player) {
 		TeleportService2.moveAStation(player, AStationConfig.A_STATION_SERVER_ID, true);
 	}
 
+	/**
+	 * 处理 A-Station 迁入/迁出后的账号占用与加成状态。
+	 * Handles account occupancy and bonus state after A-Station move-in/out.
+	 *
+	 * 玩家 / player
+	 * 账号 ID / account id
+	 * @param back 是否回原服 / whether returning home
+	 */
 	public void checkAStationMove(Player player, int accId, boolean back) {
 		if (back) {
 			accountsOnAStation.remove(accId);
@@ -99,13 +124,34 @@ public class AStationService {
 		}
 	}
 
+	/**
+	 * A-Station 进出时的加成钩子（当前为空实现）。
+	 * Bonus hook on A-Station enter/leave (currently a no-op).
+	 *
+	 * 玩家 / player
+	 * @param off 是否关闭加成 / whether turning bonus off
+	 */
 	public void aStationBonus(Player player, boolean off) {
 	}
 
+	/**
+	 * 判断是否为 PvP 类型地图。
+	 * Returns whether the world type is a PvP zone.
+	 *
+	 * @param wt 世界类型 / world type
+	 * whether PvP zone
+	 */
 	public boolean isPvPZone(WorldType wt) {
 		return wt == WorldType.BALAUREA || wt == WorldType.PANESTERRA || wt == WorldType.ABYSS;
 	}
 
+	/**
+	 * 判断是否为普通大陆地图。
+	 * Returns whether the world type is a normal continent zone.
+	 *
+	 * @param wt 世界类型 / world type
+	 * @return 是否普通区 / whether normal zone
+	 */
 	public boolean isNormalZone(WorldType wt) {
 		return wt == WorldType.ASMODAE || wt == WorldType.ELYSEA || wt == WorldType.NONE;
 	}

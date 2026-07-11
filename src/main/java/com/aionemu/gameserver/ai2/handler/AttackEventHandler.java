@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
@@ -29,13 +13,19 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 /**
+ * 攻击事件处理器，负责 NPC 进入战斗、强制攻击、攻击完成与结束攻击。
+ * Handles attack events: entering combat, forced attacks, attack completion, and finishing attacks.
+ *
  * @author ATracer
  */
 public class AttackEventHandler {
 
 	/**
-	 * @param npcAI
-	 * @param creature
+	 * 处理受到攻击：中断返回/行走，进入战斗并开始攻击目标。
+	 * Handles being attacked: aborts returning/walking, enters fight, and starts attacking the target.
+	 *
+	 * NPC AI instance
+	 * @param creature 攻击者生物 / attacking creature
 	 */
 	public static void onAttack(NpcAI2 npcAI, Creature creature) {
 		if (npcAI.isLogging()) {
@@ -44,7 +34,6 @@ public class AttackEventHandler {
 		if (creature == null || creature.getLifeStats().isAlreadyDead()) {
 			return;
 		}
-		// TODO lock or better switch
 		if (npcAI.isInState(AIState.RETURNING)) {
 			npcAI.getOwner().getMoveController().abortMove();
 			npcAI.setStateIfNot(AIState.IDLE);
@@ -58,8 +47,7 @@ public class AttackEventHandler {
 			WalkManager.stopWalking(npcAI);
 		}
 		npcAI.getOwner().getGameStats().renewLastAttackedTime();
-		if (!npcAI.isInState(AIState.FIGHT)) {
-			npcAI.setStateIfNot(AIState.FIGHT);
+		if (tryEnterFight(npcAI)) {
 			if (npcAI.isLogging()) {
 				AI2Logger.info(npcAI, "onAttack() -> startAttacking");
 			}
@@ -72,15 +60,25 @@ public class AttackEventHandler {
 		}
 	}
 
+	static boolean tryEnterFight(NpcAI2 npcAI) {
+		return npcAI.setStateIfNot(AIState.FIGHT);
+	}
+
 	/**
-	 * @param npcAI
+	 * 对当前目标强制发起攻击（复用 {@link #onAttack}）。
+	 * Forces an attack against the current target (delegates to {@link #onAttack}).
+	 *
+	 * NPC AI instance
 	 */
 	public static void onForcedAttack(NpcAI2 npcAI) {
 		onAttack(npcAI, (Creature) npcAI.getOwner().getTarget());
 	}
 
 	/**
-	 * @param npcAI
+	 * 单次攻击动作完成：刷新攻击时间并调度下一次攻击。
+	 * Completes a single attack action: renews attack time and schedules the next attack.
+	 *
+	 * NPC AI instance
 	 */
 	public static void onAttackComplete(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -91,7 +89,10 @@ public class AttackEventHandler {
 	}
 
 	/**
-	 * @param npcAI
+	 * 结束攻击流程：停止攻击表情、开始休息、清理仇恨与目标。
+	 * Finishes the attack sequence: stops attack emotes, starts resting, and clears aggro/target.
+	 *
+	 * NPC AI instance
 	 */
 	public static void onFinishAttack(NpcAI2 npcAI) {
 		if (!npcAI.canThink()) {

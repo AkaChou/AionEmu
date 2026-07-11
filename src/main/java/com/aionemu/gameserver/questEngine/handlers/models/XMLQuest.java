@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,23 +8,37 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.questEngine.QuestEngine;
 
+import lombok.Getter;
+
+/**
+ * 任务脚本 XML 数据模型的抽象基类；子类通过 {@link #register(QuestEngine)} 注册对应模板处理器。
+ * Abstract base for quest-script XML data models; subclasses register template handlers via {@link #register(QuestEngine)}.
+ */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestScriptData")
 @XmlSeeAlso({ ReportToData.class, RelicRewardsData.class, CraftingRewardsData.class, ReportToManyData.class, MonsterHuntData.class, ItemCollectingData.class, WorkOrdersData.class, XmlQuestData.class, MentorMonsterHuntData.class, ItemOrdersData.class, FountainRewardsData.class, SkillUseData.class })
 public abstract class XMLQuest {
+
+	/**
+	 * 任务 ID（对应 quests 数据中的 id）。
+	 * Quest id (matches the id in quest data).
+	 */
 	@XmlAttribute(name = "id", required = true)
 	protected int id;
 
+	/**
+	 * 接取/推进时可播放的过场电影 ID；0 表示无。
+	 * Cutscene movie id played on accept/progress; 0 means none.
+	 */
 	@XmlAttribute(name = "movie", required = false)
 	protected int questMovie;
 
-	public int getId() {
-		return id;
-	}
-
-	public int getQuestMovie() {
-		return questMovie;
-	}
-
+	/**
+	 * 将本 XML 配置注册为 {@link QuestEngine} 中的模板任务处理器。
+	 * Registers this XML configuration as a template quest handler in {@link QuestEngine}.
+	 *
+	 * @param questEngine 任务引擎实例 / Quest engine instance
+	 */
 	public abstract void register(QuestEngine questEngine);
 }

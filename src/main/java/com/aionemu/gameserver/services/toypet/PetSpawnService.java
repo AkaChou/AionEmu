@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.toypet;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -39,13 +23,20 @@ import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 宠物生成服务，管理宠物召唤与周期存盘。
+ * Pet spawn service managing pet summoning and periodic persistence.
+ *
  * @author ATracer
  */
 public class PetSpawnService {
 
 	/**
-	 * @param player
-	 * @param petId
+	 * 召唤宠物；若已有其他宠物则先解散。
+	 * Summon a pet; dismiss the current one if different.
+	 *
+	 * @param player 玩家 / Player
+	 * @param petId 宠物模板 ID / Pet template id
+	 * @param isManualSpawn 是否手动召唤 / Whether manually summoned
 	 */
 	public static final void summonPet(Player player, int petId, boolean isManualSpawn) {
 		PetCommonData lastPetCommonData;
@@ -63,22 +54,20 @@ public class PetSpawnService {
 		}
 
 		if (lastPetCommonData != null) {
-			// reset mood if other pet is spawned
+			// 若生成其他宠物则重置心情 / reset mood if other pet is spawned
 			if (petId != lastPetCommonData.getPetId()) {
 				lastPetCommonData.clearMoodStatistics();
 			}
 		}
-		player.getController().addTask(TaskId.PET_UPDATE,
-				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
-						PeriodicSaveConfig.PLAYER_PETS * 1000, PeriodicSaveConfig.PLAYER_PETS * 1000));
+		reschedulePeriodicSaveTask(player);
 
 		Pet pet = VisibleObjectSpawner.spawnPet(player, petId);
-		// It means serious error or cheater - why its just nothing say "null"?
+		// 这意味着严重错误或作弊——为何只显示“null”？ / It means serious error or cheater - why its just nothing say "null"?
 		if (pet != null) {
 			sendWhInfo(player, petId);
 
 			if (System.currentTimeMillis() - pet.getCommonData().getDespawnTime().getTime() > 10 * 60 * 1000) {
-				// reset mood if pet was despawned for longer than 10 mins.
+				// 若宠物取消生成超过 10 分钟则重置心情。 / reset mood if pet was despawned for longer than 10 mins.
 				player.getPet().getCommonData().clearMoodStatistics();
 			}
 			lastPetCommonData = pet.getCommonData();
@@ -87,8 +76,23 @@ public class PetSpawnService {
 	}
 
 	/**
-	 * @param player
-	 * @param petId
+	 * 重新调度宠物数据的周期存盘任务。
+	 * Reschedule the periodic pet data save task.
+	 *
+	 * @param player 玩家 / Player
+	 */
+	public static void reschedulePeriodicSaveTask(Player player) {
+		player.getController().addTask(TaskId.PET_UPDATE,
+				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
+						PeriodicSaveConfig.PLAYER_PETS * 1000, PeriodicSaveConfig.PLAYER_PETS * 1000));
+	}
+
+	/**
+	 * 若宠物具备仓库功能，向客户端发送仓库信息。
+	 * Send warehouse info to client when the pet has warehouse function.
+	 *
+	 * @param player 玩家 / Player
+	 * @param petId 宠物模板 ID / Pet template id
 	 */
 	private static void sendWhInfo(Player player, int petId) {
 		PetTemplate petTemplate = DataManager.PET_DATA.getPetTemplate(petId);
@@ -104,8 +108,11 @@ public class PetSpawnService {
 	}
 
 	/**
-	 * @param player
-	 * @param isManualDespawn
+	 * 解散当前宠物并保存喂养/增益/心情数据。
+	 * Dismiss the current pet and persist feed/doping/mood data.
+	 *
+	 * 玩家 / Player
+	 * @param isManualDespawn 是否手动解散 / Whether manually despawned
 	 */
 	public static final void dismissPet(Player player, boolean isManualDespawn) {
 		Pet toyPet = player.getPet();
@@ -123,7 +130,7 @@ public class PetSpawnService {
 			}
 			player.getController().cancelTask(TaskId.PET_UPDATE);
 
-			// TODO needs for pet teleportation
+			// 传送会暂时解散宠物，且不应启动手动再召唤冷却。 / Teleportation dismisses the pet temporarily and must not start the manual re-summon cooldown.
 			if (isManualDespawn) {
 				toyPet.getCommonData().setDespawnTime(new Timestamp(System.currentTimeMillis()));
 			}

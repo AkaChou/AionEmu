@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items;
 
 import java.util.Iterator;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.dataholders.loadingutils.adapters.NpcEquippedGearA
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
+ * NpcEquippedGear，用于物品相关逻辑。
+ * Npc Equipped Gear for items logic.
+ *
  * @author Luno
  */
 @XmlJavaTypeAdapter(NpcEquippedGearAdapter.class)
@@ -53,6 +40,7 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 		return mask;
 	}
 
+	/** 返回迭代器。 / Returns iterator. */
 	@Override
 	public Iterator<Entry<ItemSlot, ItemTemplate>> iterator() {
 		if (items == null) {
@@ -62,8 +50,7 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 	}
 
 	/**
-	 * Here NPC equipment mask is initialized. All NPC slot masks should be lower
-	 * than 65536
+	 * Here NPC equipment mask is initialized. All NPC slot masks should be lower than 65536
 	 */
 	public void init() {
 		synchronized (this) {

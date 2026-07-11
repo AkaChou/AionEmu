@@ -1,30 +1,31 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.chatserver;
 
 import java.nio.ByteBuffer;
 
 import com.aionemu.commons.network.packet.BaseServerPacket;
 
+/**
+ * 游戏服发往聊天服的服务端包基类。
+ * Base class for server packets sent from the game server to the chat server.
+ */
 public abstract class CsServerPacket extends BaseServerPacket {
+	/**
+	 * 使用指定操作码构造服务端包。
+	 * Constructs a server packet with the given opcode.
+	 *
+	 * packet opcode
+	 */
 	protected CsServerPacket(int opcode) {
 		super(opcode);
 	}
 
+	/**
+	 * 将本包写入给定连接的缓冲（含长度与操作码头）。
+	 * Writes this packet into the given connection buffer (including length and opcode header).
+	 *
+	 * @param con 目标连接 / target connection
+	 * write buffer
+	 */
 	public final synchronized void write(ChatServerConnection con, ByteBuffer buffer) {
 		setBuf(buffer);
 		buf.putShort((short) 0);
@@ -35,5 +36,11 @@ public abstract class CsServerPacket extends BaseServerPacket {
 		buf.position(0);
 	}
 
+	/**
+	 * 写出包体数据。
+	 * Writes the packet body.
+	 *
+	 * @param con 目标连接 / target connection
+	 */
 	protected abstract void writeImpl(ChatServerConnection con);
 }

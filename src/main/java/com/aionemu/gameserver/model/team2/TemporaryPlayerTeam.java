@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2;
 
 import java.util.Collection;
@@ -31,6 +15,9 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 /**
+ * Temporary 玩家团队，用于团队2相关逻辑。
+ * Temporary Player Team for team 2 logic.
+ *
  * @author ATracer
  */
 public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends GeneralTeam<Player, TM> {
@@ -51,26 +38,31 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 	 */
 	public abstract int getMaxExpPlayerLevel();
 
+	/** 获取种族。 / Returns the race. */
 	@Override
 	public Race getRace() {
 		return getLeader().getObject().getRace();
 	}
 
+	/** 发送数据包。 / Send packet. */
 	@Override
 	public void sendPacket(AionServerPacket packet) {
 		applyOnMembers(new TeamMessageSender(packet, Predicates.<Player>alwaysTrue()));
 	}
 
+	/** 发送数据包。 / Send packet. */
 	@Override
 	public void sendPacket(AionServerPacket packet, Predicate<Player> predicate) {
 		applyOnMembers(new TeamMessageSender(packet, predicate));
 	}
 
+	/** 在线成员 / online Members. */
 	@Override
 	public final int onlineMembers() {
 		return getOnlineMembers().size();
 	}
 
+	/** 返回 online members / Returns the online members */
 	@Override
 	public final Collection<Player> getOnlineMembers() {
 		return filterMembers(PlayerFilters.ONLINE);
@@ -80,10 +72,12 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 		setLeader(leader);
 	}
 
+	/** 返回 loot group rules / Returns the loot group rules */
 	public final LootGroupRules getLootGroupRules() {
 		return lootGroupRules;
 	}
 
+	/** 设置 loot group rules / Sets the loot group rules */
 	public void setLootGroupRules(LootGroupRules lootGroupRules) {
 		this.lootGroupRules = lootGroupRules;
 		if (lootGroupRules != null && lootGroupRules.getLootRule() == LootRuleType.FREEFORALL) {
@@ -102,6 +96,7 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 			this.predicate = predicate;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player player) {
 			if (predicate.apply(player)) {
@@ -123,6 +118,7 @@ public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends
 			this.predicate = predicate;
 		}
 
+		/** 应用。 / Apply. */
 		@Override
 		public boolean apply(Player player) {
 			if (predicate.apply(player)) {

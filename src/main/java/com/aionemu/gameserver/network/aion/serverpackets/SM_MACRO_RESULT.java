@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 宏创建/删除操作结果的服务端包。
+ * Server packet for macro create/delete operation results.
+ *
  * @author xavier
  */
 public class SM_MACRO_RESULT extends AionServerPacket {
@@ -28,6 +15,12 @@ public class SM_MACRO_RESULT extends AionServerPacket {
 	public static SM_MACRO_RESULT SM_MACRO_DELETED = new SM_MACRO_RESULT(0x01);
 	private int code;
 
+	/**
+	 * 构造宏操作结果包。
+	 * Builds a macro operation result packet.
+	 *
+	 * @param code 结果码（0 创建成功 / 1 删除成功） / result code (0 created / 1 deleted)
+	 */
 	public SM_MACRO_RESULT(int code) {
 		this.code = code;
 	}

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -29,10 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 查看或修改目标生物状态位的管理员命令。
+ * Admin command to show or change creature state bits on a target.
+ *
  * @author Rolandas
  */
 public class State extends AdminCommand {
 
+	/**
+	 * 构造 state 命令。
+	 * Creates the state command.
+	 */
 	public State() {
 		super("state");
 	}
@@ -47,6 +38,13 @@ public class State extends AdminCommand {
 			testStateLookup.put(t.id, t);
 	}
 
+	/**
+	 * 显示或设置/清除目标生物状态位（1–16）。
+	 * Shows or sets/unsets target creature state bits (1–16).
+	 *
+	 * 执行 GM / Admin player
+	 * show | set|unset &lt;bit&gt;。 / show | set|unset &lt;bit&gt;
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		VisibleObject target = admin.getTarget();
@@ -125,10 +123,24 @@ public class State extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "syntax //state <show | set | unset>");
 	}
 
+	/**
+	 * 参数错误时的回调（当前无操作）。
+	 * Failure callback (no-op).
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 	}
 
+	/**
+	 * 将状态位掩码格式化为可读描述。
+	 * Formats a state bitmask into a readable description.
+	 *
+	 * @param state 状态掩码 / State mask
+	 * Description text
+	 */
 	String getStateDescription(short state) {
 		StringBuilder binsb = new StringBuilder(Integer.toBinaryString(state));
 		StringBuilder bin = binsb.reverse();
@@ -159,6 +171,10 @@ public class State extends AdminCommand {
 		return sb.toString();
 	}
 
+	/**
+	 * 测试用状态位枚举（1–16 位）。
+	 * Test state bit enum (bits 1–16).
+	 */
 	public enum TestState {
 		BIT01(1 << 0, "bit 1"),
 		BIT02(1 << 1, "bit 2"),

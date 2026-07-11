@@ -1,35 +1,33 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team.legion;
 
 /**
+ * 军团 History 类型枚举。
+ * Legion History Type enumeration.
+ *
  * @author Simple
  */
 public enum LegionHistoryType {
+	/** 创建 / Create. */
 	CREATE(0), // No parameters
+	/** 加入 / Join. */
 	JOIN(1), // Parameter: name
+	/** 踢出 / Kick. */
 	KICK(2), // Parameter: name
+	/** 等级 / Level Up */
 	LEVEL_UP(3), // Parameter: legion level
+	/** 已任命 / Appointed. */
 	APPOINTED(4), // Parameter: legion level
+	/** Emblem 登记 / Emblem Register */
 	EMBLEM_REGISTER(5), // No parameters
+	/** Emblem Modified / Emblem Modified */
 	EMBLEM_MODIFIED(6), // No parameters
+	/** 物品存入 / Item Deposit*/
 	ITEM_DEPOSIT(15), // Parameter: name
+	/** 物品取出 / Item Withdraw */
 	ITEM_WITHDRAW(16), // Parameter: name
+	/** 基纳存入 / Kinah Deposit*/
 	KINAH_DEPOSIT(17), // Parameter: name
+	/** Kinah 取出 / Kinah Withdraw */
 	KINAH_WITHDRAW(18); // Parameter: name
 
 	private byte historyType;
@@ -39,8 +37,8 @@ public enum LegionHistoryType {
 	}
 
 	/**
-	 * Returns client-side id for this
-	 * 
+	 * 返回 client - sideid 用于此。 / Returns client-side id for this
+	 *
 	 * @return byte
 	 */
 	public byte getHistoryId() {

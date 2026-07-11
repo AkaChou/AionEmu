@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.event.conquestOffering;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -35,10 +19,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Conquest Offering 活动 NPC AI：Conquest Gelkmaros Boss（@AIName "conquest_gelkmaros"），继承 AggressiveNpcAI2。
+ * Conquest Offering event NPC AI: Conquest Gelkmaros Boss (@AIName "conquest_gelkmaros"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("conquest_gelkmaros")
 public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 {
@@ -75,7 +61,7 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 			public void run() {
 				despawnNpc(833021); //Secret Portal.
 			}
-		}, 300000); //5 Minutes.
+		}, 300000); //5 分钟。 / 5 Minutes.
     }
 	
     private void spawnQuestionablePortal() {
@@ -90,7 +76,7 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 			public void run() {
 				despawnNpc(833022); //Secret Portal.
 			}
-		}, 300000); //5 Minutes.
+		}, 300000); //5 分钟。 / 5 Minutes.
     }
 	
     private void spawnConquestNpcBuff() {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
@@ -24,6 +8,13 @@ import com.aionemu.gameserver.model.templates.housing.UseItemAction;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 房屋物件使用更新服务端包。
+ * Server packet that notifies the client of a house-object use update.
+ * <p>
+ * 按物件类型（邮箱、仓库、可使用道具）写入不同字段。
+ * Payload fields differ by object type (postbox, storage, usable item).
+ */
 public class SM_OBJECT_USE_UPDATE extends AionServerPacket {
 	private int usingPlayerId;
 	private int ownerPlayerId;
@@ -31,6 +22,15 @@ public class SM_OBJECT_USE_UPDATE extends AionServerPacket {
 	private UseItemAction action = null;
 	HouseObject<?> object;
 
+	/**
+	 * 构造房屋物件使用更新包。
+	 * Builds a house-object use-update packet.
+	 *
+	 * @param usingPlayerId 使用者玩家 ID / using player id
+	 * @param ownerPlayerId 所有者玩家 ID / owner player id
+	 * use count
+	 * house object being used
+	 */
 	public SM_OBJECT_USE_UPDATE(int usingPlayerId, int ownerPlayerId, int useCount, HouseObject<?> object) {
 		this.usingPlayerId = usingPlayerId;
 		this.ownerPlayerId = ownerPlayerId;

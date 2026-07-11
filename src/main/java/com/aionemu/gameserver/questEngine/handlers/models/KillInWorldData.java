@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import java.util.Iterator;
@@ -29,24 +13,55 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.KillInWorld;
 
+/**
+ * 指定世界内击杀类任务的 XML 数据模型，注册 {@link KillInWorld} 模板。
+ * XML data model for kill-in-world quests; registers the {@link KillInWorld} template.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "KillInWorldData")
 public class KillInWorldData extends XMLQuest {
+
+	/**
+	 * 接取任务的起始 NPC ID 列表（可选）。
+	 * Start NPC ids that offer the quest (optional).
+	 */
 	@XmlAttribute(name = "start_npc_ids")
 	protected List<Integer> startNpcIds;
 
+	/**
+	 * 交还任务的结束 NPC ID 列表。
+	 * End NPC ids for turn-in.
+	 */
 	@XmlAttribute(name = "end_npc_ids", required = true)
 	protected List<Integer> endNpcIds;
 
+	/**
+	 * 需要击杀的目标数量。
+	 * Required kill amount.
+	 */
 	@XmlAttribute(name = "amount")
 	protected int amount;
 
+	/**
+	 * 计入进度的世界地图 ID 列表；仅含 0 时展开为全部地图。
+	 * World map ids that count; a sole 0 expands to all maps.
+	 */
 	@XmlAttribute(name = "worlds", required = true)
 	protected List<Integer> worldIds;
 
+	/**
+	 * 入侵相关世界 ID（可选；0 表示无）。
+	 * Invasion-related world id (optional; 0 means none).
+	 */
 	@XmlAttribute(name = "invasion_world")
 	protected int invasionWorld;
 
+	/**
+	 * 注册 {@link KillInWorld} 模板；若 worlds 仅含 0 则展开为全部地图。
+	 * Registers the {@link KillInWorld} template; expands worlds containing only 0 to all maps.
+	 *
+	 * Quest engine
+	 */
 	@Override
 	public void register(QuestEngine questEngine) {
 		if (worldIds.size() == 1 && worldIds.contains(0)) {

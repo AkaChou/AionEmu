@@ -1,34 +1,22 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.collision;
 
 /**
- * Interface for collidable objects.
+ * 可碰撞对象接口，geoEngine 中所有参与碰撞检测的空间对象均实现此接口。
+ * Interface for collidable objects; all spatials that participate in collision
+ * detection in geoEngine implement this.
  *
  * @author Kirill
  */
 public interface Collidable {
 
 	/**
-	 * Check collision with another collidable
+	 * 与另一可碰撞对象做碰撞检测，结果写入 {@code results}。
+	 * Checks collision with another collidable and appends hits into {@code results}.
 	 *
-	 * @param other
-	 * @param results
-	 * @return how many collisions were found
+	 * @param other 另一可碰撞对象 / the other collidable
+	 * @param results 碰撞结果收集器 / collector for collision hits
+	 * @return 检测到的碰撞次数 / how many collisions were found
+	 * unsupported collidable pair。 / unsupported collidable pair.
 	 */
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException;
 }

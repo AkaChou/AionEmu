@@ -1,35 +1,34 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端转发小队自定义数据交换内容的服务端包。
+ * Server packet that forwards custom group data-exchange payloads to the client.
+ */
 public class SM_GROUP_DATA_EXCHANGE extends AionServerPacket {
 	private byte[] byteData;
 	private int action;
 	private int unk2;
 
+	/**
+	 * @param byteData 交换的二进制数据 / Binary payload to exchange
+	 * Action type
+	 * @param unk2 未知字段 / Unknown field
+	 */
 	public SM_GROUP_DATA_EXCHANGE(byte[] byteData, int action, int unk2) {
 		this.action = action;
 		this.byteData = byteData;
 		this.unk2 = unk2;
 	}
 
+	/**
+	 * 默认 action=1 的数据交换构造。
+	 * Data-exchange constructor with default action=1.
+	 *
+	 * @param byteData 交换的二进制数据 / Binary payload to exchange
+	 */
 	public SM_GROUP_DATA_EXCHANGE(byte[] byteData) {
 		this.action = 1;
 		this.byteData = byteData;
@@ -40,7 +39,7 @@ public class SM_GROUP_DATA_EXCHANGE extends AionServerPacket {
 		writeC(action); // action
 
 		if (action != 1) {
-			writeC(unk2); // unk
+			writeC(unk2); // 未知 / unk
 		}
 		writeD(byteData.length);
 		writeB(byteData);

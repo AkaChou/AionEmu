@@ -1,42 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.exceptions;
 
 /**
- * This Exception will be thrown when some object is referencing to World map
- * that do not exist. This Exception indicating serious error.
- * 
+ * 引用了不存在的世界地图时抛出，通常表示严重错误。
+ * Thrown when an object references a world map that does not exist; indicates a serious error.
+ *
  * @author -Nemesiss-
  */
 @SuppressWarnings("serial")
 public class WorldMapNotExistException extends RuntimeException {
 
 	/**
-	 * Constructs an <code>WorldMapNotExistException</code> with no detail message.
+	 * 构造无详细消息的异常。
+	 * Constructs a {@code WorldMapNotExistException} with no detail message.
 	 */
 	public WorldMapNotExistException() {
 		super();
 	}
 
 	/**
-	 * Constructs an <code>WorldMapNotExistException</code> with the specified
-	 * detail message.
-	 * 
-	 * @param s the detail message.
+	 * 使用指定详细消息构造异常。
+	 * Constructs a {@code WorldMapNotExistException} with the specified detail message.
+	 *
+	 * @param s 详细消息 / the detail message
 	 */
 	public WorldMapNotExistException(String s) {
 		super(s);

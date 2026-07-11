@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -40,10 +24,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encome)
-/****/
-
+/**
+ * Crucible Challenge 副本 NPC AI：Kaliga The Unjust（@AIName "kaliga_the_unjust"），继承 AggressiveNpcAI2。
+ * Crucible Challenge instance NPC AI: Kaliga The Unjust (@AIName "kaliga_the_unjust"), extends AggressiveNpcAI2.
+ *
+ * @author Encome
+ */
 @AIName("kaliga_the_unjust")
 public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 {
@@ -59,21 +45,21 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 25) {
 				if (startedEvent.compareAndSet(false, true)) {
 					GameEngineServices.skillEngine().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
-					//This is my first judgment!
+					// 这是我的第一次审判！ / This is my first judgment!
 				    sendMsg(1500171, getObjectId(), false, 3000);
-				    //This is my second judgment!
+				    // 这是我的第二次审判！ / This is my second judgment!
 				    sendMsg(1500172, getObjectId(), false, 6000);
-				    //Beg for forgiveness, before it's too late!
+				    // 趁还来得及，求饶吧！ / Beg for forgiveness, before it's too late!
 				    sendMsg(1500173, getObjectId(), false, 9000);
-					//This is precisely what those who seek to climb above themselves need!
+					// 这正是那些想要超越自我者所需！ / This is precisely what those who seek to climb above themselves need!
 				    sendMsg(1500162, getObjectId(), false, 12000);
-				    //You have grown powerful, Kromede. But still not enough to contend with me!
+				    // 你变强了，克罗梅德。但仍不足以与我抗衡！ / You have grown powerful, Kromede. But still not enough to contend with me!
 				    sendMsg(1500163, getObjectId(), false, 15000);
-				    //You still have a long way to go. I will summon an opponent who will suit you perfectly.
+				    // 你还有很长的路。我将召唤一个最适合你的对手。 / You still have a long way to go. I will summon an opponent who will suit you perfectly.
 				    sendMsg(1500166, getObjectId(), false, 18000);
-				    //So, shall we start again, then ?
+				    // 那么，我们重新开始？ / So, shall we start again, then ?
 				    sendMsg(1500168, getObjectId(), false, 21000);
-					//The real battle begins now.
+					// 真正的战斗现在开始。 / The real battle begins now.
 					sendMsg(1500169, getObjectId(), false, 24000);
 				}
 			}
@@ -84,9 +70,9 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			//You fool! This is my last judgment!
+			// 蠢货！这是我的最终审判！ / You fool! This is my last judgment!
 			sendMsg(1500174, getObjectId(), false, 0);
-			//You dare challenge me ? How exciting !
+			// 你敢挑战我？真令人兴奋！ / You dare challenge me ? How exciting !
 			sendMsg(1500170, getObjectId(), false, 4000);
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
@@ -111,7 +97,7 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					//Mmmmm.... Rumble....
+					// 嗯嗯……轰隆…… / Mmmmm.... Rumble....
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500175, getObjectId(), 0, 0);
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {

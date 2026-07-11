@@ -1,10 +1,10 @@
 package com.aionemu.commons.objects.filter;
 
 /**
- * AND条件对象过滤器
+ * AND 条件对象过滤器
  * AND Condition Object Filter
  * 
- * 实现了多条件AND过滤机制，只有当所有子过滤器都接受对象时，才返回true
+ * 实现了多条件 AND 过滤机制，只有当所有子过滤器都接受对象时，才返回 true
  * Implements a multi-condition AND filtering mechanism, returns true only when all sub-filters accept the object
  * 
  * @param <T> 需要过滤的对象类型 / The type of object to be filtered

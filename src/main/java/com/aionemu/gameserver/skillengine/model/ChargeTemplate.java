@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,9 +6,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 充能阶段模板：关联技能 ID 与充能时间。
+ * Charge stage template: linked skill id and charge time.
+ *
  * @author Dr.Nism
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "charge")
 public class ChargeTemplate {
@@ -36,14 +22,20 @@ public class ChargeTemplate {
 	private int time;
 
 	/**
-	 * @return the Id
+	 * 获取充能阶段技能 ID。
+	 * Gets charge-stage skill id.
+	 *
+	 * skill id
 	 */
 	public int getSkillId() {
 		return skill_id;
 	}
 
 	/**
-	 * @return the Time
+	 * 获取充能时间。
+	 * Gets charge time.
+	 *
+	 * time in millis
 	 */
 	public int getTime() {
 		return time;

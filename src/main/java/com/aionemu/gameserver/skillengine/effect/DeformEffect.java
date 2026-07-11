@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,19 +7,41 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 变形效果：变身并标记 DEFORM 异常（受变形抗性影响）。
+ * Deform effect: transforms the target and marks DEFORM (uses deform resistance).
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DeformEffect")
 public class DeformEffect extends TransformEffect {
+	/**
+	 * 按变形抗性计算是否命中。
+	 * Calculates hit using deform resistance.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.DEFORM_RESISTANCE, null);
 	}
 
+	/**
+	 * 启动变形并设置 DEFORM 异常。
+	 * Starts transform with the DEFORM abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		super.startEffect(effect, AbnormalState.DEFORM);
 	}
 
+	/**
+	 * 结束变形并清除 DEFORM 异常。
+	 * Ends transform and clears the DEFORM abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect, AbnormalState.DEFORM);

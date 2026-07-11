@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -70,6 +57,10 @@ import com.aionemu.gameserver.world.WorldMapType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+/**
+ * 房屋拍卖服务：按 cron 结算拍卖、管理竞拍条目、出价与登录时竞拍结果通知。
+ * Housing auction service: settles auctions on cron, manages bid entries, places bids, and notifies results on login.
+ */
 @Slf4j(topic = "HOUSE_AUCTION_LOG")
 
 public class HousingBidService extends AbstractCronTask {
@@ -88,10 +79,22 @@ public class HousingBidService extends AbstractCronTask {
 		bidsByIndex = new LinkedHashMap<>();
 	}
 
+	/**
+	 * 使用指定拍卖 cron 表达式初始化。
+	 * Initializes with the given auction cron expression.
+	 *
+	 * @param auctionTime 拍卖 cron 表达式 / auction cron expression
+	 */
 	public HousingBidService(String auctionTime) throws ParseException {
 		super(auctionTime);
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring 提供者）。
+	 * Returns the service singleton (preferring the Spring provider).
+	 *
+	 * service instance
+	 */
 	public static final HousingBidService getInstance() {
 		ObjectProvider<HousingBidService> provider = instanceProvider;
 		if (provider != null) {
@@ -100,6 +103,12 @@ public class HousingBidService extends AbstractCronTask {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Injects the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<HousingBidService> provider) {
 		instanceProvider = provider;
 	}
@@ -141,19 +150,27 @@ public class HousingBidService extends AbstractCronTask {
 		timeProlonged = dao.load("auctionProlonged");
 	}
 
+	/**
+	 * 使用房屋配置中的拍卖时间初始化。
+	 * Initializes using the auction time from housing config.
+	 */
 	public HousingBidService() throws ParseException {
 		super(HousingConfig.HOUSE_AUCTION_TIME);
 	}
 
+	/**
+	 * 启动服务：加载竞拍数据，并按配置自动填充拍卖房屋。
+	 * Starts the service: loads bid data and auto-fills auction houses when configured.
+	 */
 	public void start() {
-		log.info("Loading house bids...");
+		log.info(I18n.get("log.1abae9a9bb91"));
 		loadBidData();
 		if (HousingConfig.FILL_HOUSE_BIDS_AUTO) {
-			log.info("HousingBidService: auction auto filling enabled.");
+			log.info(I18n.get("log.fed09a339fc7"));
 			int added = fillBidData();
-			log.info("HousingBidService: added " + added + " new house bids.");
+			log.info(I18n.get("log.71c3da095c6a", added));
 		}
-		log.info("HousingBidService loaded. Minutes till start: " + getMinutesTillAuction());
+		log.info(I18n.get("log.fed01e43e8f9", getMinutesTillAuction()));
 		isDataLoaded = true;
 	}
 
@@ -169,6 +186,14 @@ public class HousingBidService extends AbstractCronTask {
 			if (!checkAutoFillingLimits(house.getPlayerRace(), house.getHouseType())) {
 				continue;
 			}
+	/**
+	 * 将房屋加入拍卖（可指定起拍价）。
+	 * Adds a house to the auction (optional initial price).
+	 *
+	 * house
+	 * initial price
+	 * whether successful
+	 */
 			addHouseToAuction(house, house.getDefaultAuctionPrice());
 			count++;
 		}
@@ -296,19 +321,27 @@ public class HousingBidService extends AbstractCronTask {
 			}
 		}
 		if (LoggingConfig.LOG_HOUSE_AUCTION) {
-			log.info("##### Houses sold by admins #####");
+			log.info(I18n.get("log.19cd043d5e48"));
 		}
 		for (Entry<HouseBidEntry, Integer> winData : winners.entrySet()) {
 			House wonHouse = GameHousingServices.housingService().getHouseByAddress(winData.getKey().getAddress());
 			if (getPlayerData(winData.getValue()) == null) {
-				log.warn("Missing Player with ID:" + winData.getValue() + " for Housebid on address:" + winData.getKey().getAddress());
+				log.warn(I18n.get("log.441ce3c83b43", winData.getValue(), winData.getKey().getAddress()));
 				continue;
 			}
+	/**
+	 * 完成房屋拍卖成交，处理赢家与房屋所有权。
+	 * Completes a house auction sale for the winner and transfers ownership.
+	 *
+	 * @param winner 赢家公共数据 / winner common data
+	 * obtained house
+	 * auction result
+	 */
 			completeHouseSell(getPlayerData(winData.getValue()), wonHouse);
 		}
 		long time = System.currentTimeMillis();
 		if (LoggingConfig.LOG_HOUSE_AUCTION) {
-			log.info("##### Houses auctioned by players #####");
+			log.info(I18n.get("log.cfe3329d9edf"));
 		}
 		for (Entry<HouseBidEntry, Integer> sellData : successSell.entrySet()) {
 			// 获取房屋对象 / Get house object
@@ -316,7 +349,7 @@ public class HousingBidService extends AbstractCronTask {
 			// 检查房屋对象是否为空 / Check if house object is null
 			if (soldHouse == null) {
 				// 记录警告日志，包含未找到的房屋地址 / Log warning with the address of the missing house
-				log.warn("House not found for address: " + sellData.getKey().getAddress());
+				log.warn(I18n.get("log.15485b0c4e93", sellData.getKey().getAddress()));
 				// 跳过当前循环 / Skip current iteration
 				continue;
 			}
@@ -345,6 +378,14 @@ public class HousingBidService extends AbstractCronTask {
 				MailFormatter.sendHouseAuctionMail(soldHouse, sellerPcd, AuctionResult.SUCCESS_SALE, time, returnKinah);
 				soldHouse.revokeOwner();
 			}
+	/**
+	 * 完成房屋拍卖成交，处理赢家与房屋所有权。
+	 * Completes a house auction sale for the winner and transfers ownership.
+	 *
+	 * @param winner 赢家公共数据 / winner common data
+	 * obtained house
+	 * auction result
+	 */
 			completeHouseSell(buyerPcd, soldHouse);
 		}
 		for (Entry<HouseBidEntry, Integer> notSoldData : failedSell.entrySet()) {
@@ -385,13 +426,21 @@ public class HousingBidService extends AbstractCronTask {
 		playerBids.clear();
 		bidsByIndex.clear();
 		if (LoggingConfig.LOG_HOUSE_AUCTION) {
-			log.info("##### Houses added back to auction #####");
+			log.info(I18n.get("log.f4db49f3f010"));
 		}
 		for (HouseBidEntry houseBid : copy) {
 			House house = GameHousingServices.housingService().getHouseByAddress(houseBid.getAddress());
 			DAOManager.getDAO(HouseBidsDAO.class).deleteHouseBids(house.getObjectId());
 			if (house.getOwnerId() == 0) {
 				house.setStatus(HouseStatus.NOSALE);
+	/**
+	 * 将房屋加入拍卖（可指定起拍价）。
+	 * Adds a house to the auction (optional initial price).
+	 *
+	 * house
+	 * initial price
+	 * whether successful
+	 */
 				addHouseToAuction(house);
 				house.save();
 			}
@@ -405,10 +454,22 @@ public class HousingBidService extends AbstractCronTask {
 		dao.store("auctionProlonged", timeProlonged);
 	}
 
+	/**
+	 * 获取本轮拍卖开始时间戳（毫秒）。
+	 * Returns this auction round start time in milliseconds.
+	 *
+	 * @return 开始时间毫秒 / start time millis
+	 */
 	public long getAuctionStartTime() {
 		return (long) (getRunTime() - 7 * 24 * 3600) * 1000;
 	}
 
+	/**
+	 * 距离拍卖结算剩余秒数。
+	 * Seconds remaining until auction settlement.
+	 *
+	 * seconds left
+	 */
 	public int getSecondsTillAuction() {
 		int left = (int) (getRunTime() - System.currentTimeMillis() / 1000);
 		left += timeProlonged * 60;
@@ -418,10 +479,22 @@ public class HousingBidService extends AbstractCronTask {
 		return left;
 	}
 
+	/**
+	 * 距离拍卖结算剩余分钟数。
+	 * Minutes remaining until auction settlement.
+	 *
+	 * minutes left
+	 */
 	public int getMinutesTillAuction() {
 		return (int) (getSecondsTillAuction() / 60);
 	}
 
+	/**
+	 * 当前是否允许出价。
+	 * Whether bidding is currently allowed.
+	 *
+	 * @return 是否允许出价 / whether bidding allowed
+	 */
 	public boolean isBiddingAllowed() {
 		ZonedDateTime now = ZonedDateTime.now();
 		ZonedDateTime auctionEnd = ZonedDateTime.ofInstant(Instant.ofEpochMilli(((long) getRunTime() + timeProlonged * 60) * 1000), java.time.ZoneId.systemDefault());
@@ -432,6 +505,12 @@ public class HousingBidService extends AbstractCronTask {
 		return true;
 	}
 
+	/**
+	 * 当前是否允许登记房屋上拍。
+	 * Whether registering houses for auction is currently allowed.
+	 *
+	 * @return 是否允许登记 / whether registering allowed
+	 */
 	public boolean isRegisteringAllowed() {
 		ZonedDateTime now = ZonedDateTime.now();
 		ZonedDateTime registerEnd = ZonedDateTime.ofInstant(registerDateExpr.getTimeAfter(java.util.Date.from(now.toInstant())).toInstant(), java.time.ZoneId.systemDefault());
@@ -451,6 +530,14 @@ public class HousingBidService extends AbstractCronTask {
 		return player.getCommonData();
 	}
 
+	/**
+	 * 完成房屋拍卖成交，处理赢家与房屋所有权。
+	 * Completes a house auction sale for the winner and transfers ownership.
+	 *
+	 * @param winner 赢家公共数据 / winner common data
+	 * obtained house
+	 * auction result
+	 */
 	public AuctionResult completeHouseSell(PlayerCommonData winner, House obtainedHouse) {
 		House winnerHouse = GameHousingServices.housingService().getPlayerStudio(winner.getPlayerObjId());
 		AuctionResult result = AuctionResult.WIN_BID;
@@ -492,10 +579,33 @@ public class HousingBidService extends AbstractCronTask {
 		return result;
 	}
 
+	/**
+	 * 将房屋以默认起拍价加入拍卖。
+	 * Adds a house to the auction at its default starting price.
+	 *
+	 * house
+	 * whether successful
+	 */
 	public boolean addHouseToAuction(House house) {
+	/**
+	 * 将房屋加入拍卖（可指定起拍价）。
+	 * Adds a house to the auction (optional initial price).
+	 *
+	 * house
+	 * initial price
+	 * whether successful
+	 */
 		return addHouseToAuction(house, house.getDefaultAuctionPrice());
 	}
 
+	/**
+	 * 将房屋加入拍卖（可指定起拍价）。
+	 * Adds a house to the auction (optional initial price).
+	 *
+	 * house
+	 * initial price
+	 * whether successful
+	 */
 	public boolean addHouseToAuction(House house, long initialPrice) {
 		if (house.getStatus() == HouseStatus.SELL_WAIT) {
 			return false;
@@ -523,6 +633,14 @@ public class HousingBidService extends AbstractCronTask {
 		return DAOManager.getDAO(HouseBidsDAO.class).addBid(0, house.getObjectId(), initialPrice, time);
 	}
 
+	/**
+	 * 将房屋从拍卖中移除。
+	 * Removes a house from the auction.
+	 *
+	 * house
+	 * @param noSale 是否流拍处理 / no-sale handling
+	 * whether successful
+	 */
 	public boolean removeHouseFromAuction(House house, boolean noSale) {
 		if (house.getStatus() != HouseStatus.SELL_WAIT) {
 			return false;
@@ -565,6 +683,14 @@ public class HousingBidService extends AbstractCronTask {
 		return true;
 	}
 
+	/**
+	 * 玩家对指定拍卖条目出价。
+	 * Places a player bid on the given auction entry.
+	 *
+	 * bidder
+	 * @param entryIndex 拍卖条目索引 / bid entry index
+	 * bid amount
+	 */
 	public synchronized void placeBid(Player player, int entryIndex, long bidOffer) {
 		if ((player.getBuildingOwnerStates() & PlayerHouseOwnerFlags.BIDDING_ALLOWED.getId()) == 0) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_OWN_NOT_COMPLETE_QUEST(player.getRace() == Race.ELYOS ? 18802 : 28802));
@@ -655,6 +781,12 @@ public class HousingBidService extends AbstractCronTask {
 		}
 	}
 
+	/**
+	 * 玩家登录时处理竞拍相关邮件/通知。
+	 * Handles auction-related mail/notifications when a player logs in.
+	 *
+	 * logging-in player
+	 */
 	public void onPlayerLogin(Player player) {
 		if (player.getMailbox() == null) {
 			return;
@@ -695,12 +827,27 @@ public class HousingBidService extends AbstractCronTask {
 		}
 	}
 
+	/**
+	 * 按房屋对象 ID 获取拍卖条目。
+	 * Gets a house bid entry by house object id.
+	 *
+	 * house object id
+	 * bid entry
+	 */
 	public HouseBidEntry getHouseBid(int houseObjectId) {
 		synchronized (houseBids) {
 			return houseBids.get(houseObjectId);
 		}
 	}
 
+	/**
+	 * 获取指定种族可见的拍卖条目列表。
+	 * Lists auction entries visible to the given race.
+	 *
+	 * player race
+	 *
+	 * @param playerRace @return 拍卖条目列表 / bid entry list
+	 */
 	public List<HouseBidEntry> getHouseBidEntries(Race playerRace) {
 		synchronized (houseBids) {
 			List<HouseBidEntry> bids = new ArrayList<HouseBidEntry>();
@@ -717,10 +864,24 @@ public class HousingBidService extends AbstractCronTask {
 		}
 	}
 
+	/**
+	 * 获取玩家最近一次出价条目。
+	 * Returns the player's last bid entry.
+	 *
+	 * player id
+	 * bid entry
+	 */
 	public HouseBidEntry getLastPlayerBid(int playerId) {
 		return playerBids.get(playerId);
 	}
 
+	/**
+	 * 按条目索引获取拍卖条目。
+	 * Gets a bid entry by its index.
+	 *
+	 * @param index 条目索引 / entry index
+	 * bid entry
+	 */
 	public HouseBidEntry getBidByEntryIndex(int index) {
 		synchronized (bidsByIndex) {
 			return bidsByIndex.get(index);
@@ -765,6 +926,16 @@ public class HousingBidService extends AbstractCronTask {
 		return saleOptions.getMinLevel();
 	}
 
+	/**
+	 * 判断玩家等级是否达到该地产最低竞拍要求。
+	 * Returns whether the player meets the minimum level to bid on the land.
+	 *
+	 * 玩家 / player
+	 * map id
+	 * land id
+	 *
+	 * @return 是否可竞拍 / whether can bid
+	 */
 	public static boolean canBidHouse(Player player, int mapId, int landId) {
 		return player.getLevel() >= getMinBidLevel(player, mapId, landId);
 	}

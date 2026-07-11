@@ -1,22 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.house;
 
 import java.sql.Timestamp;
+
+/**
+ * 玩家房屋 Bid，用于房屋相关逻辑。
+ * Player House Bid for house logic.
+ */
 
 public class PlayerHouseBid implements Comparable<PlayerHouseBid> {
 	private int playerId;
@@ -31,22 +20,27 @@ public class PlayerHouseBid implements Comparable<PlayerHouseBid> {
 		this.time = time;
 	}
 
+	/** 返回玩家 ID / Returns the player id */
 	public int getPlayerId() {
 		return playerId;
 	}
 
+	/** 返回 house id / Returns the house id */
 	public int getHouseId() {
 		return houseId;
 	}
 
+	/** 返回 bid offer / Returns the bid offer */
 	public long getBidOffer() {
 		return offer;
 	}
 
+	/** 返回时间 / Returns the time*/
 	public Timestamp getTime() {
 		return time;
 	}
 
+	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(PlayerHouseBid o) {
 		return (int) (time.getTime() - o.getTime().getTime());

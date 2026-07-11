@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.sequrity;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,51 +12,96 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 连接/请求洪泛管理器：按 key 统计 tick 内次数，给出接受/警告/拒绝。
+ * Connection/request flood manager: counts per-key ticks and returns accept/warn/reject.
+ *
  * @author NB4L1
  */
 @Slf4j
 public final class FloodManager {
+	/**
+	 * 错误模式分类（预留）。
+	 * Error mode categories (reserved).
+	 */
 	public static enum ErrorMode {
 		INVALID_OPCODE, BUFFER_UNDER_FLOW, BUFFER_OVER_FLOW, FAILED_READING, FAILED_RUNNING;
 	}
 
+	/**
+	 * 洪泛过滤阈值：警告上限、拒绝上限、统计 tick 数。
+	 * Flood filter thresholds: warn limit, reject limit, tick window.
+	 */
 	public static final class FloodFilter {
 		private final int _warnLimit;
 		private final int _rejectLimit;
 		private final int _tickLimit;
 
+		/**
+		 * 警告上限 / warn limit
+		 * 拒绝上限 / reject limit
+		 * 时间窗口 / tick window
+		 */
 		public FloodFilter(final int warnLimit, final int rejectLimit, final int tickLimit) {
 			_warnLimit = warnLimit;
 			_rejectLimit = rejectLimit;
 			_tickLimit = tickLimit;
 		}
 
+		/**
+		 * 拒绝上限 / reject limit
+		 */
 		public int getRejectLimit() {
 			return _rejectLimit;
 		}
 
+		/**
+		 * 时间窗口 / tick window
+		 */
 		public int getTickLimit() {
 			return _tickLimit;
 		}
 
+		/**
+		 * 警告上限 / warn limit
+		 */
 		public int getWarnLimit() {
 			return _warnLimit;
 		}
 	}
 
+	/**
+	 * 单个 key 的 tick 计数日志。
+	 * Per-key tick count log entry.
+	 */
 	private final class LogEntry {
 		private final short[] _ticks = new short[_tickAmount];
 
 		private int _lastTick = getCurrentTick();
 
+		/**
+		 * 当前 tick 索引 / current tick index
+		 */
 		public int getCurrentTick() {
 			return (int) ((System.currentTimeMillis() - ZERO) / _tickLength);
 		}
 
+		/**
+		 * 是否仍活跃（近期有活动）。
+		 * Whether still active (recent activity).
+		 *
+		 * @return 若 active 则为 true / true if active
+		 */
 		public boolean isActive() {
 			return getCurrentTick() - _lastTick < _tickAmount * 10;
 		}
 
+		/**
+		 * 判断当前是否洪泛，可选递增当前 tick 计数。
+		 * Whether currently flooding; optionally increments current tick count.
+		 *
+		 * whether to increment
+		 * result
+		 */
 		public Result isFlooding(final boolean increment) {
 			final int currentTick = getCurrentTick();
 
@@ -78,8 +109,8 @@ public final class FloodManager {
 				_lastTick = currentTick;
 				Arrays.fill(_ticks, (short) 0);
 			} else if (_lastTick > currentTick) {
-				log.warn("Current flood tick {} is smaller than last tick {}", currentTick, _lastTick,
-						new IllegalStateException());
+				log.warn(I18n.get("log.fa8be18a9ad5", currentTick, _lastTick,
+						new IllegalStateException()));
 				_lastTick = currentTick;
 			} else
 				while (currentTick != _lastTick) {
@@ -116,9 +147,21 @@ public final class FloodManager {
 		}
 	}
 
+	/**
+	 * 洪泛判定结果。
+	 * Flood evaluation result.
+	 */
 	public static enum Result {
 		ACCEPTED, WARNED, REJECTED;
 
+		/**
+		 * 取更严重的结果。
+		 * Returns the more severe of two results.
+		 *
+		 * @param r1 结果 1 / result 1
+		 * @param r2 结果 2 / result 2
+		 * more severe result
+		 */
 		public static Result max(final Result r1, final Result r2) {
 			if (r1.ordinal() > r2.ordinal()) {
 				return r1;
@@ -138,6 +181,13 @@ public final class FloodManager {
 
 	private final FloodFilter[] _filters;
 
+	/**
+	 * 构造洪泛管理器，并注册定时清理任务。
+	 * Constructs the flood manager and registers a periodic flush task.
+	 *
+	 * milliseconds per tick
+	 * @param filters 过滤器列表 / flood filters
+	 */
 	public FloodManager(final int msecPerTick, final FloodFilter... filters) {
 		_tickLength = msecPerTick;
 		_filters = filters;
@@ -157,6 +207,10 @@ public final class FloodManager {
 		}, 60000);
 	}
 
+	/**
+	 * 清理长期不活跃的日志条目。
+	 * Removes long-inactive log entries.
+	 */
 	private void flush() {
 		_lock.lock();
 		try {
@@ -171,6 +225,14 @@ public final class FloodManager {
 		}
 	}
 
+	/**
+	 * 判断指定 key 是否洪泛。
+	 * Whether the given key is flooding.
+	 *
+	 * @param key 统计键（如 IP） / key (e.g. IP)
+	 * @param increment 是否递增计数 / whether to increment
+	 * result
+	 */
 	public Result isFlooding(final String key, final boolean increment) {
 		if (key == null || key.isEmpty()) {
 			return Result.REJECTED;

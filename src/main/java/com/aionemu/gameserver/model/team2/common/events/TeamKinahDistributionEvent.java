@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.common.events;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 团队基纳 Distribution 活动，用于团队2相关逻辑。
+ * Team Kinah Distribution Event for team 2 logic.
+ *
  * @author ATracer
  */
 public class TeamKinahDistributionEvent<T extends TemporaryPlayerTeam<? extends TeamMember<Player>>>
@@ -37,30 +24,34 @@ public class TeamKinahDistributionEvent<T extends TemporaryPlayerTeam<? extends 
 		this.amount = amount;
 	}
 
+	/**
+	 * @return Check condition / Check condition
+	 */
 	@Override
 	public boolean checkCondition() {
 		return team.hasMember(eventPlayer.getObjectId());
 	}
 
+	/** 处理活动。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		if (eventPlayer.getInventory().getKinah() < amount) {
-			// TODO retail message ?
+			PacketSendUtility.sendPacket(eventPlayer, SM_SYSTEM_MESSAGE.STR_NOT_ENOUGH_MONEY);
 			return;
 		}
 
 		teamSize = team.onlineMembers();
-		if (teamSize <= amount) {
+		if (teamSize > 1 && teamSize <= amount && eventPlayer.getInventory().tryDecreaseKinah(amount)) {
 			rewardPerPlayer = amount / teamSize;
 			team.applyOnMembers(this);
 		}
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public boolean apply(Player member) {
 		if (member.isOnline()) {
 			if (member.equals(eventPlayer)) {
-				member.getInventory().decreaseKinah(amount);
 				member.getInventory().increaseKinah(rewardPerPlayer);
 				PacketSendUtility.sendPacket(eventPlayer,
 						new SM_SYSTEM_MESSAGE(1390247, amount, teamSize, rewardPerPlayer));

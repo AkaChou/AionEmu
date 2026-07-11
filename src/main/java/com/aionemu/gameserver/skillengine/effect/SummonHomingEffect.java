@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -37,6 +21,9 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 
 /**
+ * 召唤追踪弹/自导弹效果：生成若干次攻击次数受限的追踪单位。
+ * Summon homing effect: spawns homing units limited by attack count.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -50,6 +37,10 @@ public class SummonHomingEffect extends SummonEffect {
 	@XmlAttribute(name = "skill_id", required = false)
 	protected int skillId;
 
+	/**
+	 * 按 npc_count 生成 Homing，注册攻击次数观察者与超时删除，并切入攻击。
+	 * Spawns Homing units, attaches attack-count observers and despawn tasks, then starts attack AI.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Creature effector = effect.getEffector();
@@ -79,7 +70,7 @@ public class SummonHomingEffect extends SummonEffect {
 				homing.getObserveController().addObserver(observer);
 				effect.setActionObserver(observer, position);
 			}
-			// Schedule a despawn just in case
+			// 以防万一调度取消生成 / Schedule a despawn just in case
 			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override

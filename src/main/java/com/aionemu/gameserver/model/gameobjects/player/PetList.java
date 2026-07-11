@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
@@ -30,6 +14,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 宠物列表。
+ * Pet List game object.
+ *
  * @author ATracer
  */
 public class PetList {
@@ -44,6 +31,9 @@ public class PetList {
 		loadPets();
 	}
 
+	/**
+	 * 加载 pets/ 加载 pets。 / Load pets / Load pets
+	 */
 	public void loadPets() {
 		List<PetCommonData> playerPets = DAOManager.getDAO(PlayerPetsDAO.class).getPlayerPets(player);
 		PetCommonData lastUsedPet = null;
@@ -62,6 +52,7 @@ public class PetList {
 		}
 	}
 
+	/** 返回 pets / Returns the pets */
 	public Collection<PetCommonData> getPets() {
 		return pets.values();
 	}
@@ -74,10 +65,12 @@ public class PetList {
 		return pets.get(petId);
 	}
 
+	/** 返回 last used pet / Returns the last used pet */
 	public PetCommonData getLastUsedPet() {
 		return getPet(lastUsedPetId);
 	}
 
+	/** 设置 last used pet id / Sets the last used pet id */
 	public void setLastUsedPetId(int lastUsedPetId) {
 		this.lastUsedPetId = lastUsedPetId;
 	}
@@ -93,6 +86,7 @@ public class PetList {
 		return addPet(player, petId, decorationId, System.currentTimeMillis(), name, expireTime);
 	}
 
+	/** 添加宠物。 / Adds pet. */
 	public PetCommonData addPet(Player player, int petId, int decorationId, long birthday, String name,
 			int expireTime) {
 		PetCommonData petCommonData = new PetCommonData(petId, player.getObjectId(), expireTime);

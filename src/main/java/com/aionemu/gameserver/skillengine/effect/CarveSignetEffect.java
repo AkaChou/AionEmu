@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
+ * 雕刻印记效果：造成物理伤害并叠加/刷新目标印记层数。
+ * Carve-signet effect: deals physical damage and stacks/refreshes signet levels on the target.
+ *
  * @author ATracer
  * @Rework MATTY (ADev.Team)
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CarveSignetEffect")
 public class CarveSignetEffect extends DamageEffect {
@@ -52,6 +38,12 @@ public class CarveSignetEffect extends DamageEffect {
 
 	private int nextSignetLevel = 1;
 
+	/**
+	 * 应用伤害，并按概率叠加下一级印记技能。
+	 * Applies damage and, by chance, stacks the next signet skill level.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
@@ -83,6 +75,12 @@ public class CarveSignetEffect extends DamageEffect {
 		newEffect.applyEffect();
 	}
 
+	/**
+	 * 计算物理伤害是否命中。
+	 * Calculates whether the physical damage hits.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (!super.calculate(effect, DamageType.PHYSICAL)) {

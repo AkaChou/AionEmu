@@ -23,13 +23,31 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 /**
- * @author , Neon
+ * XML 解析、转换、schema 校验与 .xml 文件枚举工具。
+ * XML parse/transform, schema validation and .xml file listing helpers.
+ *
+ * @author Neon
  */
 public abstract class XmlUtil {
 
+	/**
+	 * 缓存的 DocumentBuilderFactory。
+	 * Cached DocumentBuilderFactory.
+	 */
 	private static volatile DocumentBuilderFactory dbf;
+	/**
+	 * 缓存的 TransformerFactory。
+	 * Cached TransformerFactory.
+	 */
 	private static volatile TransformerFactory tf;
 
+	/**
+	 * 将 XML 字符串解析为 Document。
+	 * Parse an XML string into a Document.
+	 *
+	 * XML source
+	 * @return Document
+	 */
 	public static Document getDocument(String xmlSource) {
 		try {
 			if (dbf == null)
@@ -43,6 +61,13 @@ public abstract class XmlUtil {
 		}
 	}
 
+	/**
+	 * 将 Document 转为 XML 字符串。
+	 * Convert a Document to an XML string.
+	 *
+	 * DOM document
+	 * XML string
+	 */
 	public static String getString(Document document) {
 		try {
 			if (tf == null)
@@ -59,20 +84,23 @@ public abstract class XmlUtil {
 	}
 
 	/**
-	 * @param schemaFile
-	 *          - Relative/absolute path to the schema file.
-	 * @return {@link Schema} object representing xml schema of xml files
+	 * 从 schema 文件路径创建 Schema。
+	 * Create a Schema from a schema file path.
+	 *
+	 * @param schemaFile 相对/绝对 schema 路径 / Relative/absolute schema path
+	 * Schema object
 	 */
 	public static Schema getSchema(String schemaFile) {
 		return getSchema(schemaFile, false);
 	}
 
 	/**
-	 * @param schemaFileOrSourceCode
-	 *          - Relative/absolute file path to the schema file, or schema source code.
-	 * @param isSourceCode
-	 *          - Whether schemaUrlOrSourceCode is a file path or schema source code.
-	 * @return {@link Schema} object representing xml schema of xml files
+	 * 从文件路径或源码创建 Schema。
+	 * Create a Schema from a file path or source code.
+	 *
+	 * @param schemaFileOrSourceCode 文件路径或 schema 源码 / File path or schema source
+	 * @param isSourceCode 是否为源码 / Whether the argument is source code
+	 * Schema object
 	 */
 	public static Schema getSchema(String schemaFileOrSourceCode, boolean isSourceCode) {
 		try {
@@ -86,6 +114,13 @@ public abstract class XmlUtil {
 		}
 	}
 
+	/**
+	 * 用给定 Schema 校验 Document。
+	 * Validate a Document against the given Schema.
+	 *
+	 * @param schema Schema
+	 * DOM document
+	 */
 	public static void validate(Schema schema, Document document) {
 		Validator validator = schema.newValidator();
 		try {
@@ -96,6 +131,12 @@ public abstract class XmlUtil {
 	}
 
 	/**
+	 * 枚举目录下的 .xml 文件。
+	 * List .xml files under a directory.
+	 *
+	 * Root path
+	 * Whether recursive
+	 * Collection of .xml files
 	 * @see #listFiles(File, boolean)
 	 */
 	public static Collection<File> listFiles(String root, boolean recursive) {
@@ -103,13 +144,12 @@ public abstract class XmlUtil {
 	}
 
 	/**
-	 * Searches for (non-hidden) .xml files and returns them in a list
-	 * 
-	 * @param root
-	 *          - Absolute/relative path to the base directory
-	 * @param recursive
-	 *          - If set to true, include all subdirectories of the root directory
-	 * @return List of .xml files inside the root directory.
+	 * 搜索（非隐藏）.xml 文件并返回列表。
+	 * Search for (non-hidden) .xml files and return them as a list.
+	 *
+	 * @param root 根目录（相对 / 绝对） / Root directory (relative/absolute)
+	 * @param recursive 为 true 时包含子目录 / If true, include subdirectories
+	 * @return 根目录下的 .xml 文件 / .xml files under root
 	 */
 	public static Collection<File> listFiles(File root, boolean recursive) {
 		try {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,13 +5,21 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+import lombok.Getter;
+
+/**
+ * 需先交互生成物再击杀的怪物目标配置（扩展 {@link Monster}）。
+ * Monster target that must be spawned via an object interaction before kill (extends {@link Monster}).
+ */
+@Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpawnedMonster")
 public class SpawnedMonster extends Monster {
+
+	/**
+	 * 用于召唤该怪物的场景物体 / 生成器 object ID。
+	 * spawner object id used to summon this monster. / spawner object id used to summon this monster.
+	 */
 	@XmlAttribute(name = "spawner_object", required = true)
 	protected int spawnerObject;
-
-	public int getSpawnerObject() {
-		return spawnerObject;
-	}
 }

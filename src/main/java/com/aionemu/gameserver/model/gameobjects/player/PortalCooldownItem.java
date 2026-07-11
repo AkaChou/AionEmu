@@ -1,20 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
+
+/**
+ * 传送门冷却物品游戏对象。
+ * Portal Cooldown Item game object.
+ */
 
 public class PortalCooldownItem {
 	private int worldId;
@@ -27,22 +16,27 @@ public class PortalCooldownItem {
 		this.cooldown = cooldown;
 	}
 
+	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return worldId;
 	}
 
+	/** 获取条目计数。 / Returns the entry count. */
 	public int getEntryCount() {
 		return entryCount;
 	}
 
+	/** 设置条目计数。 / Sets the entry count. */
 	public void setEntryCount(int entryCount) {
 		this.entryCount = entryCount;
 	}
 
+	/** 获取冷却。 / Returns the cooldown. */
 	public long getCooldown() {
 		return cooldown;
 	}
 
+	/** 设置冷却。 / Sets the cooldown. */
 	public void setCooldown(long cooldown) {
 		this.cooldown = cooldown;
 	}

@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.event;
 
 import java.time.ZonedDateTime;
@@ -30,6 +15,9 @@ import com.aionemu.gameserver.model.AttendType;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
+ * 艾特里亚 Passport 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Ghostfur (Aion-Unique)
  */
 @XmlRootElement(name = "atreian_passport")
@@ -61,34 +49,42 @@ public class AtreianPassport {
 
 	protected List<AtreianPassportRewards> atreian_passport_reward;
 
+	/** 返回当前 / Returns the active */
 	public int getActive() {
 		return active;
 	}
 
+	/** 获取签到类型。 / Returns the attend type. */
 	public AttendType getAttendType() {
 		return attendType;
 	}
 
+	/** 返回 attend num / Returns the attend num */
 	public int getAttendNum() {
 		return attendNum;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回 period start / Returns the period start */
 	public ZonedDateTime getPeriodStart() {
 		return DateTimeUtil.fromCalendar(pStart.toGregorianCalendar());
 	}
 
+	/** 返回 period end / Returns the period end */
 	public ZonedDateTime getPeriodEnd() {
 		return DateTimeUtil.fromCalendar(pEnd.toGregorianCalendar());
 	}
 
+	/** 返回 atreian passport rewards / Returns the atreian passport rewards */
 	public List<AtreianPassportRewards> getAtreianPassportRewards() {
 		if (atreian_passport_reward == null) {
 			atreian_passport_reward = new ArrayList<AtreianPassportRewards>();

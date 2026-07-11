@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.properties;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -27,13 +11,21 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 首要目标距离属性：校验施法者与首要目标的攻击距离与视线。
+ * First-target range property: validates attack range and line-of-sight to the first target.
+ *
  * @author ATracer
  */
 public class FirstTargetRangeProperty {
 
 	/**
-	 * @param skill
-	 * @param properties
+	 * 校验首要目标是否在允许距离与视线内。
+	 * Validates that the first target is within allowed range and line of sight.
+	 *
+	 * @param skill 技能上下文 / skill context
+	 * @param properties 目标筛选属性 / target filter properties
+	 * @param castState 施法阶段（开始 / 结束，结束阶段可加修订距离） / cast phase (start/end; end may add revision distance)
+	 * @return 距离与视线校验是否通过 / true if range and LoS checks pass
 	 */
 	public static boolean set(Skill skill, Properties properties, CastState castState) {
 		float firstTargetRange = properties.getFirstTargetRange();
@@ -48,12 +40,12 @@ public class FirstTargetRangeProperty {
 			return false;
 		}
 
-		// Add Weapon Range to distance
+		// 将武器射程加入距离 / Add Weapon Range to distance
 		if (properties.isAddWeaponRange()) {
 			firstTargetRange += (float) skill.getEffector().getGameStats().getAttackRange().getCurrent() / 1000f;
 		}
 
-		// on end cast check add revision distance value
+		// 施法结束检查时添加修正距离值 / on end cast check add revision distance value
 		if (!castState.isCastStart()) {
 			firstTargetRange += properties.getRevisionDistance();
 		}
@@ -69,8 +61,7 @@ public class FirstTargetRangeProperty {
 			return false;
 		}
 
-		// TODO check for all targets too
-		// Summon Group Member exception
+		// 召唤小队成员异常 / Summon Group Member exception
 		if (skill.getSkillTemplate().getSkillId() != 3777) { // 4.8
 			if (!GameWorldServices.geoService().canSee(effector, firstTarget)) {
 				if (effector instanceof Player) {

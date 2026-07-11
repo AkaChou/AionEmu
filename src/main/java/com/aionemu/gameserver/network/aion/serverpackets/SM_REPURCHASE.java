@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -29,6 +13,9 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 import com.aionemu.gameserver.services.RepurchaseService;
 
 /**
+ * 向客户端同步可回购物品列表（NPC 回购窗口）。
+ * Server packet synchronizing the repurchase item list for an NPC buyback window.
+ *
  * @author xTz, KID
  */
 public class SM_REPURCHASE extends AionServerPacket {
@@ -37,6 +24,13 @@ public class SM_REPURCHASE extends AionServerPacket {
 	private final int targetObjectId;
 	private final Collection<Item> items;
 
+	/**
+	 * 使用给定参数构造 SM_REPURCHASE 包。
+	 * Creates a SM_REPURCHASE packet with the given parameters.
+	 *
+	 * 玩家 / player
+	 * npc id
+	 */
 	public SM_REPURCHASE(Player player, int npcId) {
 		this.player = player;
 		this.targetObjectId = npcId;

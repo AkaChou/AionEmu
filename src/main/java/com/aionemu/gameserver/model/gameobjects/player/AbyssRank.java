@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.Calendar;
@@ -22,6 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+
+/**
+ * 欧比斯军阶游戏对象。
+ * Abyss Rank game object.
+ */
 
 @Slf4j
 public class AbyssRank {
@@ -98,14 +87,15 @@ public class AbyssRank {
 			this.id = id;
 		}
 
+		/** 值。 / Value. */
 		public int value() {
 			return id;
 		}
 	}
 
 	/**
-	 * Add AP to a player (current player AP + added AP)
-	 * 
+	 * 添加 AP 到玩家(当前玩家 AP + addedAP )。 / Add AP to a player (current player AP + added AP)
+	 *
 	 * @param additionalAp
 	 */
 	public void addAp(int additionalAp, Player player) {
@@ -132,8 +122,8 @@ public class AbyssRank {
 	}
 
 	/**
-	 * Add GP to a player (current player GP + added GP)
-	 * 
+	 * 添加 GP 到玩家(当前玩家 GP + addedGP )。 / Add GP to a player (current player GP + added GP)
+	 *
 	 * @param additionalGp
 	 */
 	public void addGp(int additionalGp) {
@@ -237,7 +227,7 @@ public class AbyssRank {
 	}
 
 	/**
-	 * Add one kill to a player
+	 * 添加一个 kill 到玩家。 / Add one kill to a player
 	 */
 	public void updateKillCounts() {
 		this.dailyKill += 1;
@@ -286,7 +276,7 @@ public class AbyssRank {
 	}
 
 	/**
-	 * Add one kill to a player
+	 * 添加一个 kill 到玩家。 / Add one kill to a player
 	 */
 	public void setAllKill() {
 		this.dailyKill += 1;
@@ -318,7 +308,7 @@ public class AbyssRank {
 	}
 
 	/**
-	 * Make an update for the daily/weekly/last kill & ap counts
+	 * 更新每日/每周/上次击杀与 AP 计数。 / Make an update for the daily/weekly/last kill & ap counts
 	 */
 	public void doUpdate() {
 		boolean needUpdate = false;
@@ -326,8 +316,8 @@ public class AbyssRank {
 		lastCal.setTimeInMillis(lastUpdate);
 		Calendar curCal = Calendar.getInstance();
 		curCal.setTimeInMillis(System.currentTimeMillis());
-		// Checking the day - month & year are checked to prevent if a player come back
-		// after 1 month, the same day
+		// 检查日——同时检查月年，防止玩家隔很久回来。 / Checking the day - month & year are checked to prevent if a player come back
+		// 1 个月后同一天 / after 1 month, the same day
 		if (lastCal.get(Calendar.DAY_OF_MONTH) != curCal.get(Calendar.DAY_OF_MONTH)
 				|| lastCal.get(Calendar.MONTH) != curCal.get(Calendar.MONTH)
 				|| lastCal.get(Calendar.YEAR) != curCal.get(Calendar.YEAR)) {
@@ -336,8 +326,8 @@ public class AbyssRank {
 			this.dailyKill = 0;
 			needUpdate = true;
 		}
-		// Checking the week - year is checked to prevent if a player come back after 1
-		// year, the same week
+		// 检查周——同时检查年，防止玩家隔很久回来。 / Checking the week - year is checked to prevent if a player come back after 1
+		// 年，同一周 / year, the same week
 		if (lastCal.get(Calendar.WEEK_OF_YEAR) != curCal.get(Calendar.WEEK_OF_YEAR)
 				|| lastCal.get(Calendar.YEAR) != curCal.get(Calendar.YEAR)) {
 			this.lastKill = this.weeklyKill;
@@ -348,12 +338,12 @@ public class AbyssRank {
 			this.weeklyGP = 0;
 			needUpdate = true;
 		}
-		// For offline changed ranks
+		// 离线变更的军阶 / For offline changed ranks
 		if (rank.getId() > maxRank) {
 			maxRank = rank.getId();
 			needUpdate = true;
 		}
-		// Finally, update the the last update
+		// 最后，更新上次更新时间 / Finally, update the the last update
 		this.lastUpdate = System.currentTimeMillis();
 		if (needUpdate) {
 			setPersistentState(PersistentState.UPDATE_REQUIRED);

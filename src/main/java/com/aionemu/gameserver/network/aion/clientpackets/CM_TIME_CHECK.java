@@ -1,42 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TIME_CHECK;
 
 /**
- * I dont know what this packet is doing - probably its ping/pong packet
- * 
+ * 客户端时间校验/心跳请求包，回传客户端时间戳用于同步。
+ * Client packet for time check (ping/pong); echoes the client timestamp for sync.
+ *
  * @author -Nemesiss-
  */
 public class CM_TIME_CHECK extends AionClientPacket {
 
 	/**
-	 * Nano time / 1000000
+	 * 纳秒时间 / 1000000 / Nano time / 1000000
 	 */
 	private int nanoTime;
 
 	/**
-	 * Constructs new instance of <tt>CM_VERSION_CHECK </tt> packet
-	 * 
-	 * @param opcode
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_TIME_CHECK(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -61,6 +48,6 @@ public class CM_TIME_CHECK extends AionClientPacket {
 		int diff = timeNow - nanoTime;
 		client.sendPacket(new SM_TIME_CHECK(nanoTime));
 
-		// log.info("CM_TIME_CHECK: " + nanoTime + " =?= " + timeNow + " dif: " + diff);
+		// log.info(I18n.get("log.432d248cd1f8", nanoTime, timeNow, diff));
 	}
 }

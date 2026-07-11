@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,6 +13,10 @@ import com.aionemu.gameserver.model.templates.item.ItemCustomSetTeamplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 物品自定义套装数据容器，按套装 ID 索引 {@link ItemCustomSetTeamplate}。
+ * Item custom-set data holder, indexing {@link ItemCustomSetTeamplate} by set id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "item_custom_sets")
 public class ItemCustomSetData {
@@ -38,10 +26,21 @@ public class ItemCustomSetData {
 	@XmlTransient
 	private IntObjectHashMap<ItemCustomSetTeamplate> custom = new IntObjectHashMap<ItemCustomSetTeamplate>();
 
+	/**
+	 * 按 ID 获取物品自定义套装模板。
+	 * Returns the item custom-set template for the given id.
+	 *
+	 * @param id 套装 ID / set id
+	 * @return 自定义套装模板或 null / custom-set template or null
+	 */
 	public ItemCustomSetTeamplate getCustomTemplate(int id) {
 		return custom.get(id);
 	}
 
+	/**
+	 * JAXB 反序列化完成后，按 ID 建立自定义套装索引。
+	 * After JAXB unmarshalling, indexes custom-set templates by id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ItemCustomSetTeamplate it : customTemplates) {
 			getCustomMap().put(it.getId(), it);
@@ -52,6 +51,12 @@ public class ItemCustomSetData {
 		return custom;
 	}
 
+	/**
+	 * 返回已加载的自定义套装数量。
+	 * Returns the number of loaded custom sets.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return custom.size();
 	}

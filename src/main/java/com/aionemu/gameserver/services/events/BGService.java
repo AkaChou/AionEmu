@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -27,8 +13,12 @@ import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 
 /**
+ * 战场定时注册服务，按计划开启战场匹配入口。
+ * Battleground schedule service that opens matchmaking windows on schedule.
+ *
  * @author Rinzler (Encom)
  */
+
 @Slf4j(topic = "com.aionemu.gameserver.services.EventService")
 public class BGService {
 	private static volatile ObjectProvider<BGService> instanceProvider;
@@ -37,9 +27,15 @@ public class BGService {
 
 	public BGService() {
 		register(DELAY);
-		log.info("[BGService] is initialized...");
+		log.info(I18n.get("log.e0322d9a5480"));
 	}
 
+	/**
+	 * 注册调度任务。
+	 * Registers scheduled tasks.
+	 *
+	 * @param delay 延迟毫秒 / delay
+	 */
 	public void register(int delay) {
 		if (futures.isEmpty()) {
 			BattlegroundEvent bgEvent = new BattlegroundEvent();
@@ -52,6 +48,11 @@ public class BGService {
 		protected static final BGService instance = new BGService();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static final BGService getInstance() {
 		ObjectProvider<BGService> provider = instanceProvider;
 		if (provider == null) {
@@ -60,6 +61,12 @@ public class BGService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * @param instanceProvider 副本提供者 / instanceProvider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BGService> instanceProvider) {
 		BGService.instanceProvider = instanceProvider;
 	}

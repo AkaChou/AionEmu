@@ -1,21 +1,7 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.database.DB;
@@ -36,6 +22,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * 书签管理命令（{@code //bk}）：添加、删除、传送与列表。
+ * Bookmark admin command ({@code //bk}): add, delete, teleport and list.
+ *
  * @author Mrakobes
  * @modified antness
  */
@@ -45,10 +34,21 @@ public class Bk extends AdminCommand {
 	ArrayList<Bookmark> bookmarks = new ArrayList<Bookmark>();
 	private String bookmark_name = "";
 
+	/**
+	 * 注册命令名为 {@code bk}。
+	 * Registers the command name {@code bk}.
+	 */
 	public Bk() {
 		super("bk");
 	}
 
+	/**
+	 * 执行书签操作：{@code add|del|tele|list}。
+	 * Executes bookmark actions: {@code add|del|tele|list}.
+	 *
+	 * admin
+	 * parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -155,7 +155,10 @@ public class Bk extends AdminCommand {
 	}
 
 	/**
-	 * Reload bookmark list from db
+	 * 从数据库重新加载书签列表。
+	 * Reloads the bookmark list from the database.
+	 *
+	 * @param objId 角色对象 ID / character object id
 	 */
 	public void updateInfo(final int objId) {
 		bookmarks.clear();
@@ -182,9 +185,11 @@ public class Bk extends AdminCommand {
 	}
 
 	/**
-	 * @param bk_name
-	 *          - bookmark name
-	 * @return Bookmark from bookmark name
+	 * 按名称查找书签。
+	 * Selects a bookmark by name.
+	 *
+	 * @param bk_name 书签名称 / bookmark name
+	 * @return 匹配的书签，不存在则为 null / matching bookmark, or null
 	 */
 	public Bookmark selectByName(String bk_name) {
 		for (Bookmark b : bookmarks)
@@ -194,9 +199,12 @@ public class Bk extends AdminCommand {
 	}
 
 	/**
-	 * @param bk_name
-	 *          - bookmark name
-	 * @return true if bookmark exists
+	 * 判断指定角色是否已存在同名书签。
+	 * Checks whether a bookmark name already exists for the character.
+	 *
+	 * @param bk_name 书签名称 / bookmark name
+	 * @param objId 角色对象 ID / character object id
+	 * @return 已存在则为 true / true if exists
 	 */
 	public boolean isBookmarkExists(final String bk_name, final int objId) {
 		Connection con = null;
@@ -214,7 +222,7 @@ public class Bk extends AdminCommand {
 			statement.close();
 		}
 		catch (Exception e) {
-			log.error("Error in reading db", e);
+			log.error(I18n.get("log.0de52ee75b14", e));
 		}
 		finally {
 			DatabaseFactory.close(con);
@@ -222,12 +230,23 @@ public class Bk extends AdminCommand {
 		return bkcount > 0;
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele|list>");
 	}
 }
 
+/**
+ * 书签坐标数据。
+ * Bookmark coordinate data.
+ */
 class Bookmark {
 
 	private String name;
@@ -236,6 +255,16 @@ class Bookmark {
 	private float z;
 	private int world_id;
 
+	/**
+	 * 构造书签。
+	 * Constructs a bookmark.
+	 *
+	 * @param x X 坐标 / X coordinate
+	 * @param y Y 坐标 / Y coordinate
+	 * @param z Z 坐标 / Z coordinate
+	 * @param world_id 世界地图 ID / world map id
+	 * @param name 书签名称 / bookmark name
+	 */
 	public Bookmark(float x, float y, float z, int world_id, String name) {
 		this.x = x;
 		this.y = y;
@@ -245,35 +274,50 @@ class Bookmark {
 	}
 
 	/**
-	 * @return the name
+	 * 获取书签名称。
+	 * Gets the bookmark name.
+	 *
+	 * name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @return the x
+	 * 获取 X 坐标。
+	 * Gets the X coordinate.
+	 *
+	 * X 坐标 / X coordinate
 	 */
 	public float getX() {
 		return x;
 	}
 
 	/**
-	 * @return the y
+	 * 获取 Y 坐标。
+	 * Gets the Y coordinate.
+	 *
+	 * Y 坐标 / Y coordinate
 	 */
 	public float getY() {
 		return y;
 	}
 
 	/**
-	 * @return the z
+	 * 获取 Z 坐标。
+	 * Gets the Z coordinate.
+	 *
+	 * Z 坐标 / Z coordinate
 	 */
 	public float getZ() {
 		return z;
 	}
 
 	/**
-	 * @return the world_id
+	 * 获取世界地图 ID。
+	 * Gets the world map id.
+	 *
+	 * 世界 ID / world id
 	 */
 	public int getWorld_id() {
 		return world_id;

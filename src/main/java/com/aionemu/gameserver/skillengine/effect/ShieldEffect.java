@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 护盾效果：注册攻击护盾观察者，按层数/数值吸收伤害。
+ * Shield effect: registers an attack-shield observer that absorbs damage by hit value.
+ *
  * @author ATracer modified by Wakizashi, Sippolo, kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,20 +33,32 @@ public class ShieldEffect extends EffectTemplate {
 	@XmlAttribute
 	protected Race condrace = null;
 
+	/**
+	 * 种族条件满足时将效果加入控制器。
+	 * Adds the effect when the race condition (if any) is met.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
-		// check for condition race, skillId: 10317,10318
+		// 检查条件种族，skillId: 10317,10318 / check for condition race, skillId: 10317,10318
 		if (condrace != null && effect.getEffected().getRace() != condrace) {
 			return;
 		}
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 直接标记本效果成功。
+	 * Always marks this effect successful.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
 	}
 
+	/**
+	 * 按技能等级计算护盾值，注册 AttackShieldObserver 并标记处于护盾中。
+	 * Computes shield values, attaches AttackShieldObserver, and marks under-shield.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		int skillLvl = effect.getSkillLevel();
@@ -74,6 +73,10 @@ public class ShieldEffect extends EffectTemplate {
 		effect.getEffected().getEffectController().setUnderShield(true);
 	}
 
+	/**
+	 * 移除护盾观察者并取消处于护盾标记。
+	 * Removes the shield observer and clears under-shield.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		AttackCalcObserver acObserver = effect.getAttackShieldObserver(position);
@@ -84,9 +87,8 @@ public class ShieldEffect extends EffectTemplate {
 	}
 
 	/**
-	 * shieldType 1:reflector 2: normal shield 8: protect
-	 * 
-	 * @return
+	 * 返回护盾类型：2 表示普通护盾（1 反射 / 8 保护）。
+	 * Returns shield type 2 (normal shield; 1=reflector, 8=protect).
 	 */
 	public int getType() {
 		return 2;

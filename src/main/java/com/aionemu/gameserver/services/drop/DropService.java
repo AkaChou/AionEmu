@@ -1,21 +1,7 @@
-/**
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.drop;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -68,6 +54,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 掉落服务，处理掉落列表展示、拾取与队伍分配。
+ * Drop service handling loot list display, pickup, and group distribution.
+ *
  * @author ATracer, xTz
  */
 @Slf4j
@@ -75,6 +64,12 @@ public class DropService {
 
 	private static volatile ObjectProvider<DropService> instanceProvider;
 
+	/**
+	 * 获取单例实例。
+	 * Returns the singleton instance.
+	 *
+	 * service instance
+	 */
 	public static DropService getInstance() {
 		ObjectProvider<DropService> provider = instanceProvider;
 		if (provider != null) {
@@ -83,12 +78,21 @@ public class DropService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<DropService> provider) {
 		instanceProvider = provider;
 	}
 
 	/**
-	 * @param npcUniqueId
+	 * 调度尸体进入自由拾取状态。
+	 * Schedules free-for-all looting on a corpse.
+	 *
+	 * NPC unique object id
 	 */
 	public void scheduleFreeForAll(final int npcUniqueId) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -115,10 +119,10 @@ public class DropService {
 	}
 
 	/**
-	 * After NPC respawns - drop should be unregistered //TODO more correct - on
-	 * despawn
-	 * 
-	 * @param npc
+	 * 注销 NPC 掉落登记（重生/消失时）。
+	 * Unregisters drop data for an NPC (on respawn/despawn).
+	 *
+	 * target NPC
 	 */
 	public void unregisterDrop(Npc npc) {
 		Integer npcObjId = npc.getObjectId();
@@ -131,10 +135,11 @@ public class DropService {
 	}
 
 	/**
-	 * When player clicks on dead NPC to request drop list
-	 * 
-	 * @param player
-	 * @param npcId
+	 * 玩家点击尸体时请求掉落列表。
+	 * Requests the drop list when a player clicks a corpse.
+	 *
+	 * requesting player
+	 * NPC object id
 	 */
 	public void requestDropList(Player player, int npcId) {
 		DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -150,16 +155,16 @@ public class DropService {
 		}
 		if (dropNpc.isBeingLooted()) {
 			if (!dropNpc.getLootingPlayer().isOnline()) {
-				log.warn("{} is offline but was still set as drop looter for {}", dropNpc.getLootingPlayer(),
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId));
+				log.warn(I18n.get("log.6b1e392aa106", dropNpc.getLootingPlayer(),
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId)));
 			} else {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_LOOT_FAIL_ONLOOTING);
 				return;
 			}
 		}
-		// Overburdened.
+		// 负重过重。 / Overburdened.
 		if (player.getInventory().isFull()) {
-			// You are too overburdened to pick up any more items.
+			// 你负重过重，无法再拾取物品。 / You are too overburdened to pick up any more items.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_TOO_HEAVY);
 			return;
 		}
@@ -189,10 +194,11 @@ public class DropService {
 	}
 
 	/**
-	 * This method will change looted corpse to not in use
-	 * 
-	 * @param player
-	 * @param npcId
+	 * 关闭掉落列表并释放尸体占用。
+	 * Closes the drop list and releases corpse looting lock.
+	 *
+	 * acting player
+	 * NPC object id
 	 */
 	public void closeDropList(Player player, int npcId) {
 		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -239,6 +245,15 @@ public class DropService {
 		}
 	}
 
+	/**
+	 * 判断物品是否可直接发放，或需进入掷骰/竞价流程。
+	 * Checks whether an item can be given directly or needs roll/bid.
+	 *
+	 * requesting player
+	 *
+	 * @param requestedItem 目标掉落物 / requested drop item
+	 * @param requestedItem @return 可直接发放时为 true / true if direct distribution is allowed
+	 */
 	public boolean canDistribute(Player player, DropItem requestedItem) {
 		int npcId = requestedItem.getNpcObj();
 		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -271,7 +286,7 @@ public class DropService {
 									new InRoll(npcId, itemId, requestedItem.getIndex(), dropNpc.getDistributionId()));
 							PacketSendUtility.sendPacket(finalPlayer, new SM_GROUP_LOOT(dropNpc.getLootingTeamId(),
 									0, itemId, npcId, dropNpc.getDistributionId(), 1, requestedItem.getIndex()));
-							log.info("SM_GROUP_LOOT sended ");
+							log.info(I18n.get("log.fb98ac5f31e8"));
 						}
 					}
 
@@ -280,7 +295,7 @@ public class DropService {
 
 					if (!containDropItem) {
 						lootGrouRules.addItemToBeDistributed(requestedItem);
-						log.info("requestedItem " + requestedItem);
+						log.info(I18n.get("log.3593d03e4458", requestedItem));
 					}
 					return false;
 				} else {
@@ -296,6 +311,15 @@ public class DropService {
 		return true;
 	}
 
+	/**
+	 * 判断是否允许自动拾取该掉落物。
+	 * Checks whether auto-loot is allowed for the drop item.
+	 *
+	 * requesting player
+	 *
+	 * @param requestedItem 目标掉落物 / requested drop item
+	 * @param requestedItem @return 可自动拾取时为 true / true if auto-loot is allowed
+	 */
 	public boolean canAutoLoot(Player player, DropItem requestedItem) {
 		int npcId = requestedItem.getNpcObj();
 		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -332,15 +356,32 @@ public class DropService {
 		return true;
 	}
 
+	/**
+	 * 请求拾取指定索引的掉落物（非自动拾取）。
+	 * Requests pickup of a drop item by index (non-auto loot).
+	 *
+	 * requesting player
+	 * NPC object id
+	 * drop index
+	 */
 	public void requestDropItem(Player player, int npcId, int itemIndex) {
 		requestDropItem(player, npcId, itemIndex, false);
 	}
 
+	/**
+	 * 请求拾取指定索引的掉落物。
+	 * Requests pickup of a drop item by index.
+	 *
+	 * requesting player
+	 * NPC object id
+	 * drop index
+	 * @param autoLoot 是否自动拾取 / whether auto-loot
+	 */
 	public void requestDropItem(Player player, int npcId, int itemIndex, boolean autoLoot) {
 		Set<DropItem> dropItems = dropRegistrationService().getCurrentDropMap().get(npcId);
 		DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 		DropItem requestedItem = null;
-		// drop was unregistered
+		// 掉落未登记 / drop was unregistered
 		if (dropItems == null || dropNpc == null) {
 			return;
 		}
@@ -357,7 +398,7 @@ public class DropService {
 			return;
 		}
 
-		// fix exploit
+		// 修复漏洞 / fix exploit
 		if (!requestedItem.isDistributeItem() && !dropNpc.isAllowedToLoot(player)) {
 			return;
 		}
@@ -442,7 +483,7 @@ public class DropService {
 			}
 		}
 
-		// handles distribution of item to correct player and messages accordingly
+		// 将物品分配给正确玩家并相应发送消息。 / handles distribution of item to correct player and messages accordingly
 		else if (!autoLoot && requestedItem.isDistributeItem()) {
 			if (player != requestedItem.getWinningPlayer() && requestedItem.isItemWonNotCollected()) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOT_ANOTHER_OWNER_ITEM);
@@ -585,6 +626,13 @@ public class DropService {
 		}
 	}
 
+	/**
+	 * 玩家看见尸体时同步掉落可用状态。
+	 * Syncs loot-available status when a player sees a corpse.
+	 *
+	 * observing player
+	 * corpse NPC
+	 */
 	public void see(final Player player, Npc owner) {
 		final int id = owner.getObjectId();
 		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(id);

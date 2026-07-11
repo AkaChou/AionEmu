@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,7 +13,11 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * @author ATracer modified by Sippolo
+ * 宠物释放奥义指令：命令召唤物使用超级技能，可选释放后解散。
+ * Pet ultra-skill order: commands the summon to use an ultra skill; optional release.
+ *
+ * @author ATracer
+ * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PetOrderUseUltraSkillEffect")
@@ -38,6 +26,10 @@ public class PetOrderUseUltraSkillEffect extends EffectTemplate {
 	@XmlAttribute
 	protected boolean release;
 
+	/**
+	 * 命令宠物使用奥义技能。
+	 * Orders the pet to use its ultra skill.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		Player effector = (Player) effect.getEffector();
@@ -54,7 +46,7 @@ public class PetOrderUseUltraSkillEffect extends EffectTemplate {
 		int petUseSkillId = DataManager.PET_SKILL_DATA.getPetOrderSkill(orderSkillId, npcId);
 		int targetId = effect.getEffected().getObjectId();
 
-		// Handle automatic release if skill expects so
+		// 若技能需要则处理自动释放 / Handle automatic release if skill expects so
 		if (release) {
 			SummonController controller = effector.getSummon().getController();
 			if ((controller instanceof SummonController)) {
@@ -64,6 +56,10 @@ public class PetOrderUseUltraSkillEffect extends EffectTemplate {
 		PacketSendUtility.sendPacket(effector, new SM_SUMMON_USESKILL(effectorId, petUseSkillId, 1, targetId));
 	}
 
+	/**
+	 * 校验宠物奥义指令是否可执行。
+	 * Validates whether the pet ultra-skill order can run.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffector() instanceof Player && effect.getEffected() != null) {

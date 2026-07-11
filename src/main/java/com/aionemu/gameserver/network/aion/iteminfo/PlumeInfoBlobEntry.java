@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.iteminfo;
 
 import java.nio.ByteBuffer;
@@ -23,14 +7,27 @@ import com.aionemu.gameserver.model.items.ItemSlot;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 
 /**
+ * 羽饰槽位信息 Blob。
+ * 写入羽饰可装备的槽位掩码。
+ * Blob for plume slot info.
+ * Writes slot masks the plume can be equipped to.
+ *
  * @author Ranastic (Encom)
  */
-
 public class PlumeInfoBlobEntry extends ItemBlobEntry {
+
+	/**
+	 * 构造羽饰信息 Blob 条目。
+	 * Constructs a plume-info blob entry.
+	 */
 	PlumeInfoBlobEntry() {
 		super(ItemBlobType.PLUME_INFO);
 	}
 
+	/**
+	 * 将本 Blob 的具体内容写入缓冲区。
+	 * Writes this blob's concrete payload into the buffer.
+	 */
 	@Override
 	public void writeThisBlob(ByteBuffer buf) {
 		Item item = ownerItem;
@@ -38,6 +35,10 @@ public class PlumeInfoBlobEntry extends ItemBlobEntry {
 		writeQ(buf, ItemSlot.getSlotFor(item.getItemTemplate().getItemSlot()).getSlotIdMask());
 	}
 
+	/**
+	 * 返回本 Blob 负载的字节长度。
+	 * Returns the payload size of this blob in bytes.
+	 */
 	@Override
 	public int getSize() {
 		return 16;

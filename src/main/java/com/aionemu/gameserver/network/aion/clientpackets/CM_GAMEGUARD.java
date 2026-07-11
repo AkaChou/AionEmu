@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -23,6 +9,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.antihack.AntiHackService;
 
 /**
+ * 反外挂校验数据的客户端包。 / 反外挂校验数据的客户端包。
+ * anti-hack validation data. / anti-hack validation data.
+ *
  * @author Alcapwnd
  */
 @Slf4j
@@ -31,9 +20,12 @@ public class CM_GAMEGUARD extends AionClientPacket {
 	private int size;
 
 	/**
-	 * @param opcode
-	 * @param state
-	 * @param restStates
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_GAMEGUARD(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -57,7 +49,7 @@ public class CM_GAMEGUARD extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		log.info("AION Bin size from client: " + size);
+		log.info(I18n.get("log.4ba720f2d8b1", size));
 		Player player = getConnection().getActivePlayer();
 		AntiHackService.checkAionBin(size, player);
 	}

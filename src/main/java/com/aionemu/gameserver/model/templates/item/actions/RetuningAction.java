@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -38,7 +22,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * @author Ranastic
- * @reworked 修复鉴定动画播放问题，使用固定动画ID让客户端正确显示动画
+ * @reworked 修复鉴定动画播放问题，使用固定动画 ID 让客户端正确显示动画
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -47,6 +31,9 @@ public class RetuningAction extends AbstractItemAction {
 	@XmlAttribute
 	UseTarget target;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (target.equals(UseTarget.WEAPON) && !targetItem.getItemTemplate().isWeapon()) {
@@ -59,16 +46,19 @@ public class RetuningAction extends AbstractItemAction {
 				&& !targetItem.isEquipped();
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
-		// 修复：使用固定的动画ID（166200022 神话装备鉴定卷轴）让客户端正确播放鉴定动画
-		final int parentItemId = 166200022;
+		// 修复：使用固定的动画 ID（166200022 神话装备鉴定卷轴）让客户端正确播放鉴定动画
+		final int animationItemId = 166200022;
+		final int parentItemId = parentItem.getItemId();
 		final int parntObjectId = parentItem.getObjectId();
 		final int nameId = parentItem.getNameId();
 		PacketSendUtility.broadcastPacket(player,
-				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, 3000, 0, 0),
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), animationItemId, 3000, 0, 0),
 				true);
 		final ItemUseObserver observer = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
@@ -76,17 +66,18 @@ public class RetuningAction extends AbstractItemAction {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(nameId)));
 				// 修复：取消时使用 endState = 3（取消）而不是 2（失败）
 				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, parentItemId, 0, 3, 0), true);
+						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, animationItemId, 0, 3, 0), true);
 				player.getObserveController().removeObserver(this);
 			}
 		};
 		player.getObserveController().attach(observer);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
 				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, parentItemId, 0, 1, 1), true);
+						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, animationItemId, 0, 1, 1), true);
 				if (!player.getInventory().decreaseByObjectId(parntObjectId, 1)) {
 					return;
 				}
@@ -101,7 +92,7 @@ public class RetuningAction extends AbstractItemAction {
 				targetItem.setRndBonus();
 				targetItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
 				PacketSendUtility.sendPacket(player,
-						new SM_TUNE_RESULT(player, targetItem.getObjectId(), parentItemId, targetItem.getItemId()));
+						new SM_TUNE_RESULT(player, targetItem, parentItemId));
 				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401639, new DescriptionId(nameId)));
 			}

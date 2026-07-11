@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dataholders;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -15,6 +16,10 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 静态数据总装入口：通过 {@link XmlDataLoader} 加载全部 XML 模板，并暴露全局静态访问点。
+ * Static-data facade that loads all XML templates via {@link XmlDataLoader} and exposes global accessors.
+ */
 @Slf4j
 public final class DataManager {
     private static volatile ObjectProvider<DataManager> instanceProvider;
@@ -153,11 +158,15 @@ public final class DataManager {
     public static ShugoSweepRewardData SHUGO_SWEEP_REWARD_DATA;
     public static SkillSkinData SKILL_SKIN_DATA;
 
-    // XmlDataLoader实例
-    // XmlDataLoader instance
+    /** XML 加载器实例 / XML data loader instance */
     private XmlDataLoader loader;
-    // 获取DataManager的唯一实例
-    // Get the singleton instance of DataManager
+
+    /**
+     * 获取 DataManager 单例（优先 Spring 提供的实例，否则懒加载内部单例）。
+     * Returns the DataManager singleton (Spring-provided if available, otherwise the internal holder).
+     *
+     * DataManager instance
+     */
     public static final DataManager getInstance() {
         ObjectProvider<DataManager> provider = instanceProvider;
         if (provider == null) {
@@ -166,32 +175,36 @@ public final class DataManager {
         return provider.getIfAvailable(() -> SingletonHolder.instance);
     }
 
+    /**
+     * 注入 Spring 侧实例提供者，供容器接管单例解析。
+     * Sets the Spring ObjectProvider used to resolve the singleton.
+     *
+     * @param instanceProvider 实例提供者 / instance provider
+     */
     public static void setInstanceProvider(ObjectProvider<DataManager> instanceProvider) {
         DataManager.instanceProvider = instanceProvider;
     }
 
-    // 私有构造函数，确保单例模式
-    // Private constructor to ensure singleton pattern
+    /**
+     * 构造并加载全部静态数据，分配到各公共静态字段。
+     * Constructs the manager, loads all static data, and assigns it to public static fields.
+     *
+     * on duplicate construction or load failure。 / on duplicate construction or load failure.
+     */
     public DataManager() {
         if (!CONSTRUCTED.compareAndSet(false, true)) {
             throw new IllegalStateException("Duplicate DataManager construction detected");
         }
         boolean loaded = false;
         try {
-            Util.printSection(" *** Static Data *** ");
-            log.info("##### Start Loading Static Data 5.8 #####");
+            Util.printSection(I18n.get("console.section.static_data"));
+            log.info(I18n.get("log.821c9082e891"));
         this.loader = GameStaticDataServices.xmlDataLoader();
         long start = System.currentTimeMillis();
-        // 加载静态数据
-        // Load static data
         LoadedStaticData loadedData = loadStaticData(loader);
         StaticData data = loadedData.staticData();
         ItemData itemData = loadedData.itemData();
-        // 启动异步任务加载各数据对象
-        // Start asynchronous task to load data objects
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-            // 分配加载的数据到静态字段
-            // Assign loaded data to static fields
             WORLD_MAPS_DATA = data.worldMapsData;
             PLAYER_EXPERIENCE_TABLE = data.playerExperienceTable;
             PLAYER_STATS_DATA = data.playerStatsData;
@@ -330,10 +343,8 @@ public final class DataManager {
         awaitStaticDataAssignment(future);
 
         long timeMillis = System.currentTimeMillis() - start;
-        // 使用TimeUnit进行时间转换
-        // Convert time using TimeUnit
-        log.info("##### End Loading Static Data #####");
-        log.info("##### [Loading Time: {} seconds] #####", TimeUnit.MILLISECONDS.toSeconds(timeMillis));
+        log.info(I18n.get("log.07c1c49f4c8b"));
+        log.info(I18n.get("log.c7dc526fc9f6", TimeUnit.MILLISECONDS.toSeconds(timeMillis)));
         loaded = true;
         } finally {
             if (!loaded) {
@@ -342,21 +353,35 @@ public final class DataManager {
         }
     }
 
+    /**
+     * 阻塞等待静态字段赋值任务完成。
+     * Blocks until the async static-field assignment completes.
+     *
+     * assignment future
+     *
+     * @param future @throws IllegalStateException 中断或执行失败 / if interrupted or the future fails
+     */
     static void awaitStaticDataAssignment(CompletableFuture<Void> future) {
         try {
-            // 等待异步任务完成
-            // Wait for async task to complete
             future.get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("Error loading data", e);
+            log.error(I18n.get("log.709022d3959f", e));
             throw new IllegalStateException("Static data loading was interrupted", e);
         } catch (ExecutionException e) {
-            log.error("Error loading data", e);
+            log.error(I18n.get("log.709022d3959f", e));
             throw new IllegalStateException("Failed to load static data", e.getCause() == null ? e : e.getCause());
         }
     }
 
+    /**
+     * 并行加载主静态数据与物品数据。
+     * Loads main static data and item data in parallel.
+     *
+     * XML data loader
+     *
+     * @param loader @return 已加载的静态数据与物品数据 / loaded static data and item data
+     */
     static LoadedStaticData loadStaticData(XmlDataLoader loader) {
         CompletableFuture<ItemData> itemDataFuture = CompletableFuture.supplyAsync(loader::loadItemData);
         try {
@@ -377,11 +402,20 @@ public final class DataManager {
         }
     }
 
+    /**
+     * 并行加载结果：主静态数据 + 物品数据。
+     * Parallel-load result holding main static data and item data.
+     */
     record LoadedStaticData(StaticData staticData, ItemData itemData) {
     }
 
+    /**
+     * 内部懒加载单例持有者。
+     * Lazy-init holder for the internal singleton.
+     */
     @SuppressWarnings("synthetic-access")
     private static class SingletonHolder {
         protected static final DataManager instance = new DataManager();
     }
 }
+

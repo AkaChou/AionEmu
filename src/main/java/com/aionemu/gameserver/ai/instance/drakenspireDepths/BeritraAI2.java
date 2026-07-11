@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -39,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Drakenspire Depths 副本 NPC AI：Beritra（@AIName "beritra"），继承 AggressiveNpcAI2。
+ * Drakenspire Depths instance NPC AI: Beritra (@AIName "beritra"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("beritra")
 public class BeritraAI2 extends AggressiveNpcAI2
 {
@@ -67,11 +53,11 @@ public class BeritraAI2 extends AggressiveNpcAI2
 				case 236244: //Beritra.
 				case 236245: //Enraged Beritra.
 				case 236246: //Crazed Beritra.
-					//Unless his Power is deactivated, Beritra cannot be vanquished.
+					// 若不解除其力量，无法击败贝里特拉。 / Unless his Power is deactivated, Beritra cannot be vanquished.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Vritra_Human_02, 60000);
-					//Beritra uses Immortal Vitality to recover his health completely.
+					// 贝里特拉使用不朽活力完全恢复生命。 / Beritra uses Immortal Vitality to recover his health completely.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Vritra_Human_03, 120000);
-					//The extraction of the Dragon Lord's Relic will soon be complete. Beritra will disappear when the relic is completely extracted.
+					// 龙主遗物提取即将完成。提取完毕后贝里特拉将消失。 / The extraction of the Dragon Lord's Relic will soon be complete. Beritra will disappear when the relic is completely extracted.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Vritra_Human_04, 240000);
 				break;
 			}
@@ -110,7 +96,7 @@ public class BeritraAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					//Beritra uses his Power.
+					// 贝里特拉使用其力量。 / Beritra uses his Power.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Vritra_Human_01, 0);
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {

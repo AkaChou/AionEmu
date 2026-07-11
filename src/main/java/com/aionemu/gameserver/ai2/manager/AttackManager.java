@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.manager;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
@@ -28,16 +12,19 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.utils.MathUtil;
 
 /**
- * NPC攻击管理器
- * 负责处理NPC的攻击调度和攻击逻辑
+ * NPC 攻击管理器：负责攻击调度、意图选择与追击/放弃目标判定。
+ * NPC attack manager: schedules attacks, chooses attack intention, and handles chase/give-up logic.
+ *
  * @author ATracer
  * @modified Yon (Aion Reconstruction Project) -- removed non-retail-like leash in {@link #checkGiveupDistance(NpcAI2)}.
  */
 public class AttackManager {
 
 	/**
-	 * 开始攻击目标
-	 * @param npcAI
+	 * 开始攻击目标：记录开战时间、播放攻击表情并调度下一次攻击。
+	 * Starts attacking the target: records fight start time, plays attack emote, and schedules the next attack.
+	 *
+	 * NPC AI instance
 	 */
 	public static void startAttacking(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -49,9 +36,10 @@ public class AttackManager {
 	}
 
 	/**
-	 * 安排下一次攻击
-	 * 修复：添加了重复调度检查，防止多次调度导致一次攻击多次伤害
-	 * @param npcAI
+	 * 安排下一次攻击；含重复调度检查，避免一次攻击多次伤害。
+	 * Schedules the next attack; includes a duplicate-schedule guard to avoid multi-hit from one attack.
+	 *
+	 * NPC AI instance
 	 */
 	public static void scheduleNextAttack(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -61,7 +49,7 @@ public class AttackManager {
 			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
 			return;
 		}
-		
+
 		// 检查是否已经调度了攻击，防止重复调度
 		if (npcAI.getOwner().getGameStats().isNextAttackScheduled()) {
 			if (npcAI.isLogging()) {
@@ -69,8 +57,8 @@ public class AttackManager {
 			}
 			return;
 		}
-		
-		// don't start attack while in casting substate
+
+		// 施法子状态中不开始攻击 / don't start attack while in casting substate
 		AISubState subState = npcAI.getSubState();
 		if (subState == AISubState.NONE) {
 			chooseAttack(npcAI, npcAI.getOwner().getGameStats().getNextAttackInterval());
@@ -82,9 +70,11 @@ public class AttackManager {
 	}
 
 	/**
-	 * 选择攻击类型
-	 * @param npcAI
-	 * @param delay 攻击延迟时间
+	 * 按攻击意图选择普通攻击、技能攻击或结束攻击。
+	 * Chooses simple attack, skill attack, or finish-attack based on attack intention.
+	 *
+	 * NPC AI instance
+	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
 	protected static void chooseAttack(NpcAI2 npcAI, int delay) {
 		AttackIntention attackIntention = npcAI.chooseAttackIntention();
@@ -113,8 +103,10 @@ public class AttackManager {
 	}
 
 	/**
-	 * 目标太远时的处理
-	 * @param npcAI
+	 * 目标过远时的处理：切换仇恨目标、丢失视野、放弃目标或追击移动。
+	 * Handles target-too-far: switch to most hated, vision loss, give up, or chase-move.
+	 *
+	 * NPC AI instance
 	 */
 	public static void targetTooFar(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
@@ -159,13 +151,16 @@ public class AttackManager {
 	}
 
 	/**
-	 * 检查是否应该放弃目标
-	 * @param npcAI
-	 * @return true表示应该放弃目标
+	 * 检查是否应因距离（追击目标/出生点）放弃目标。
+	 * Checks whether the target should be given up by chase-target or home distance.
+	 *
+	 * NPC AI instance
+	 *
+	 * @param npcAI @return 应放弃目标时为 {@code true} / {@code true} if the target should be given up
 	 */
 	private static boolean checkGiveupDistance(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
-		// if target run away too far
+		// 若目标跑得太远 / if target run away too far
 		VisibleObject target = npc.getTarget();
 		if (target != null) {
 			double distanceToTarget = MathUtil.getDistance(npc, target);
@@ -184,6 +179,16 @@ public class AttackManager {
 			npc.getGameStats().getLastAttackedTimeDelta());
 	}
 
+	/**
+	 * 按出生点距离与最近攻击/受击时间判定是否脱战放弃。
+	 * Decides give-up by home distance and last attack/attacked time deltas.
+	 *
+	 * @param distanceToHome 到出生点的距离 / distance to spawn location
+	 * @param chaseHome 追击出生点上限 / chase-home limit
+	 * @param lastAttackTimeDelta 距上次攻击的秒数 / seconds since last attack
+	 * @param lastAttackedTimeDelta 距上次受击的秒数 / seconds since last attacked
+	 * @return 应放弃时为 {@code true} / {@code true} if should give up
+	 */
 	static boolean shouldGiveUpByHomeDistance(double distanceToHome, int chaseHome, int lastAttackTimeDelta,
 			int lastAttackedTimeDelta) {
 		if (distanceToHome > chaseHome) {

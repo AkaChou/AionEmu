@@ -1,21 +1,6 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.*;
@@ -34,20 +19,34 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Iterator;
 
 /**
+ * 管理员 AI2 调试命令：开关日志、查看/设置目标 NPC 的 AI 状态与事件。
+ * Admin AI2 debug command: toggles logs and inspects/sets target NPC AI state and events.
+ *
  * @author ATracer
  */
 @Slf4j
 public class Ai2Command extends AdminCommand {
 
+	/**
+	 * 注册 {@code //ai2} 命令。
+	 * Registers the {@code //ai2} command.
+	 */
 	public Ai2Command() {
 		super("ai2");
 	}
 
+	/**
+	 * 执行 AI2 调试：支持全局日志开关与目标 NPC 的 info/log/set/event 等操作。
+	 * Executes AI2 debug: global log toggles and target-NPC info/log/set/event ops.
+	 *
+	 * admin
+	 * @param params 参数：子命令与附加参数 / subcommand and extra args
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		/**
-		 * Non target commands
-		 */
+	 * Non target commands
+	 */
 		String param0 = params[0];
 
 		if (param0.equals("createlog")) {
@@ -72,12 +71,12 @@ public class Ai2Command extends AdminCommand {
 		}
 
 		if (param0.equals("say")) {
-			log.info("[AI2] marker: " + params[1]);
+			log.info(I18n.get("log.f71e557037c3", params[1]));
 		}
 
 		/**
-		 * Target commands
-		 */
+	 * Target commands
+	 */
 		VisibleObject target = player.getTarget();
 
 		if (target == null || !(target instanceof Npc)) {
@@ -137,6 +136,13 @@ public class Ai2Command extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时输出 {@code //ai2} 用法。
+	 * Prints {@code //ai2} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //ai2 <set|event|event2|info|log|print|createlog|eventlog|movelog>");

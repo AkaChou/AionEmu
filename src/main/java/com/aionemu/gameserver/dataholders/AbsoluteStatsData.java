@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 绝对属性数据容器，按属性集 ID 索引修正模板。
+ * Absolute stats data holder, indexing modifier templates by stat-set id.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,6 +32,10 @@ public class AbsoluteStatsData {
 	@XmlTransient
 	private IntObjectHashMap<ModifiersTemplate> absoluteStatsData = new IntObjectHashMap<ModifiersTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，将属性集索引到修正模板映射并释放列表。
+	 * After JAXB unmarshalling, indexes modifiers by stat-set id and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AbsoluteStatsTemplate stats : absoluteStats) {
 			absoluteStatsData.put(stats.getId(), stats.getModifiers());
@@ -53,10 +44,24 @@ public class AbsoluteStatsData {
 		absoluteStats = null;
 	}
 
+	/**
+	 * 按属性集 ID 获取修正模板。
+	 * Returns the modifiers template for the given stat-set id.
+	 *
+	 * stat-set id
+	 *
+	 * @param statSetId @return 修正模板，不存在则为 null / modifiers template or null
+	 */
 	public ModifiersTemplate getTemplate(int statSetId) {
 		return absoluteStatsData.get(statSetId);
 	}
 
+	/**
+	 * 返回已加载的属性集数量。
+	 * Returns the number of loaded stat sets.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return absoluteStatsData.size();
 	}

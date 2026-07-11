@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.abyssalSplinter;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Abyssal Splinter 副本 NPC AI：Artifact Of Protection（@AIName "Artifact_Of_Protection"），继承 NpcAI2。
+ * Abyssal Splinter instance NPC AI: Artifact Of Protection (@AIName "Artifact_Of_Protection"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Artifact_Of_Protection")
 public class Artifact_Of_ProtectionAI2 extends NpcAI2
 {
@@ -80,7 +66,7 @@ public class Artifact_Of_ProtectionAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//An Artifact Protector has appeared!
+				// 出现了神器守护者！ / An Artifact Protector has appeared!
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdD_Wakeup);
 			}
 		});
@@ -89,7 +75,7 @@ public class Artifact_Of_ProtectionAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//A Ferocious Artifact Protector has appeared!
+				// 出现了凶猛的神器守护者！ / A Ferocious Artifact Protector has appeared!
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdDH_Wakeup);
 			}
 		});

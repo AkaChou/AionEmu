@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -51,41 +37,73 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 征服/供奉（Conquest/Offering）世界活动服务：稀有怪与限时副本开启通知。
+ * Service for Conquest/Offering world events: rare spawns and timed-instance open notices.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j(topic = "com.aionemu.gameserver.services.ZorshivDredgionService")
 public class ConquestService {
 	private static volatile ObjectProvider<ConquestService> instanceProvider;
 	private ConquestSchedule conquestSchedule;
+	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, ConquestLocation> conquest;
-	private static final int duration = CustomConfig.CONQUEST_DURATION;
 	private final ConcurrentMap<Integer, ConquestOffering<?>> activeConquest = new ConcurrentHashMap<Integer, ConquestOffering<?>>();
 
+	/**
+	 * 初始化征服活动地点：按配置加载并在和平状态刷怪。
+	 * Initialize conquest locations: load data and spawn peace-state NPCs when enabled.
+	 */
 	public void initConquestLocations() {
 		if (CustomConfig.CONQUEST_ENABLED) {
 			conquest = DataManager.CONQUEST_DATA.getConquestLocations();
 			for (ConquestLocation loc : getConquestLocations().values()) {
 				spawn(loc, ConquestStateType.PEACE);
 			}
-			log.info("[ConquestService] Loaded " + conquest.size() + " locations.");
+			log.info(I18n.get("log.cdddb02cbd65", conquest.size()));
 		} else {
-			log.info("[ConquestService] Conquest is disabled in config...");
+			log.info(I18n.get("log.0364874809b0"));
 			conquest = Collections.emptyMap();
 		}
 	}
 
+	/**
+	 * 初始化供奉活动并装载 cron 调度。
+	 * Initialize the offering event and load its cron schedule.
+	 */
 	public void initOffering() {
 		if (CustomConfig.CONQUEST_ENABLED) {
-			log.info("[ConquestService] is initialized...");
-			conquestSchedule = ConquestSchedule.load();
+			log.info(I18n.get("log.ba7e51410ef5"));
+		}
+		reloadSchedule();
+	}
+
+	/**
+	 * 重新加载征服/供奉时间表：取消旧任务并按新 cron 注册。
+	 * Reload the conquest/offering schedule: cancel old tasks and re-register from cron.
+	 */
+	public synchronized void reloadSchedule() {
+		ConquestSchedule newSchedule = CustomConfig.CONQUEST_ENABLED ? ConquestSchedule.load() : null;
+		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.clear();
+		conquestSchedule = newSchedule;
+		if (conquestSchedule != null) {
 			for (Conquest conquest : conquestSchedule.getConquestsList()) {
 				for (String offeringTime : conquest.getOfferingTimes()) {
-					GameCronServices.cronService().schedule(new ConquestStartRunnable(conquest.getId()), offeringTime);
+					Runnable task = new ConquestStartRunnable(conquest.getId());
+					scheduledTasks.add(task);
+					GameCronServices.cronService().schedule(task, offeringTime);
 				}
 			}
 		}
 	}
 
+	/**
+	 * 启动指定地点的征服/供奉活动，并在持续时长结束后自动停止。
+	 * Start the conquest/offering at the given location and auto-stop after the configured duration.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 */
 	public void startConquest(final int id) {
 		ConquestOffering<?> offering = new Offering(conquest.get(id));
 		if (activeConquest.putIfAbsent(id, offering) != null) {
@@ -97,9 +115,15 @@ public class ConquestService {
 			public void run() {
 				stopConquest(id);
 			}
-		}, duration * 3600 * 1000);
+		}, CustomConfig.CONQUEST_DURATION * 3600 * 1000);
 	}
 
+	/**
+	 * 停止指定地点的征服/供奉活动。
+	 * Stop the conquest/offering at the given location.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 */
 	public void stopConquest(int id) {
 		ConquestOffering<?> offering = activeConquest.remove(id);
 		if (offering == null || offering.isFinished()) {
@@ -108,6 +132,13 @@ public class ConquestService {
 		offering.stop();
 	}
 
+	/**
+	 * 按状态刷出征服活动相关 NPC。
+	 * Spawn conquest-event NPCs for the given location and state.
+	 *
+	 * @param loc 活动地点 / conquest location
+	 * spawn state
+	 */
 	public void spawn(ConquestLocation loc, ConquestStateType ostate) {
 		if (ostate.equals(ConquestStateType.CONQUEST)) {
 		}
@@ -122,6 +153,13 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 广播征服/供奉稀有怪出现消息。
+	 * Broadcast the conquest/offering rare-monster appearance message.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean conquestOfferingMsg(int id) {
 		switch (id) {
 		case 1:
@@ -138,6 +176,13 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 广播舒哥皇帝宝库开启消息。
+	 * Broadcast the Shugo Emperor's Vault open message.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean emperorVaultMsg(int id) {
 		switch (id) {
 		case 3:
@@ -153,6 +198,13 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 广播皇帝特里鲁纳克保险箱开启消息。
+	 * Broadcast Emperor Trillirunerk's Safe open message.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean trillirunerkSafeMsg(int id) {
 		switch (id) {
 		case 4:
@@ -168,6 +220,13 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 广播阴燃火神殿开启消息。
+	 * Broadcast the Smoldering Fire Temple open message.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean smolderingFireTempleMsg(int id) {
 		switch (id) {
 		case 5:
@@ -183,6 +242,13 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 广播库姆基洞窟开启消息。
+	 * Broadcast the Kumuki Cave open message.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean kumukiCaveMsg(int id) {
 		switch (id) {
 		case 6:
@@ -198,6 +264,13 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 广播 IDEvent Def UnderPath 开启消息。
+	 * Broadcast the IDEvent Def UnderPath open message.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean IDEventDefMsg(int id) {
 		switch (id) {
 		case 11:
@@ -213,6 +286,13 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 广播提亚玛兰塔之眼开启消息。
+	 * Broadcast the Tiamaranta's Eye open message.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * @return 是否已处理该 ID / whether the id was handled
+	 */
 	public boolean tiamarantaMsg(int id) {
 		switch (id) {
 		case 13:
@@ -228,6 +308,12 @@ public class ConquestService {
 		}
 	}
 
+	/**
+	 * 清除指定地点已刷出的征服活动 NPC。
+	 * Despawn conquest-event NPCs at the given location.
+	 *
+	 * @param loc 活动地点 / conquest location
+	 */
 	public void despawn(ConquestLocation loc) {
 		if (loc.getSpawned() == null) {
 			return;
@@ -243,26 +329,64 @@ public class ConquestService {
 		loc.getSpawned().clear();
 	}
 
+	/**
+	 * 判断指定地点是否正在进行征服/供奉。
+	 * Whether a conquest/offering is in progress at the given location.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * 若 in progress 则为 true / true if in progress
+	 */
 	public boolean isConquestInProgress(int id) {
 		return activeConquest.containsKey(id);
 	}
 
+	/**
+	 * 返回当前活跃的征服/供奉映射。
+	 * Return the map of currently active conquest/offering events.
+	 *
+	 * @return 地点 ID → 活动实例 / location id to event instance
+	 */
 	public Map<Integer, ConquestOffering<?>> getActiveConquest() {
 		return activeConquest;
 	}
 
+	/**
+	 * 返回征服/供奉持续时长（小时，来自配置）。
+	 * Return conquest/offering duration in hours (from config).
+	 *
+	 * @return 持续小时数 / duration hours
+	 */
 	public int getDuration() {
-		return duration;
+		return CustomConfig.CONQUEST_DURATION;
 	}
 
+	/**
+	 * 按 ID 获取征服活动地点。
+	 * Get a conquest location by id.
+	 *
+	 * @param id 活动地点 ID / conquest location id
+	 * conquest location
+	 */
 	public ConquestLocation getConquestLocation(int id) {
 		return conquest.get(id);
 	}
 
+	/**
+	 * 返回全部征服活动地点。
+	 * Return all conquest locations.
+	 *
+	 * location map
+	 */
 	public Map<Integer, ConquestLocation> getConquestLocations() {
 		return conquest;
 	}
 
+	/**
+	 * 获取 ConquestService 单例（Spring 提供者优先，否则 holder）。
+	 * Return the ConquestService singleton (Spring provider first, else holder).
+	 *
+	 * service instance
+	 */
 	public static ConquestService getInstance() {
 		ObjectProvider<ConquestService> provider = instanceProvider;
 		if (provider == null) {
@@ -271,6 +395,12 @@ public class ConquestService {
 		return provider.getIfAvailable(() -> ConquestServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 getInstance 使用。
+	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<ConquestService> instanceProvider) {
 		ConquestService.instanceProvider = instanceProvider;
 	}

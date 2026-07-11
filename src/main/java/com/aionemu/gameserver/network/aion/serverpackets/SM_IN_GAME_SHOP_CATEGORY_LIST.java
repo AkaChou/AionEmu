@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -25,11 +9,22 @@ import com.aionemu.gameserver.model.templates.ingameshop.IGSubCategory;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端发送商城分类或子分类列表的服务端包。
+ * Server packet that sends in-game shop category or subcategory lists to the client.
+ */
 public class SM_IN_GAME_SHOP_CATEGORY_LIST extends AionServerPacket {
 	private int type;
 	private int categoryId;
 	private InGameShopProperty ing;
 
+	/**
+	 * 构造商城分类列表包。
+	 * Creates an in-game shop category list packet.
+	 *
+	 * @param type 列表类型（0=主分类，2=子分类） / list type (0=categories, 2=subcategories)
+	 * @param category 主分类 ID（子分类列表时使用） / parent category id (used for subcategories)
+	 */
 	public SM_IN_GAME_SHOP_CATEGORY_LIST(int type, int category) {
 		this.type = type;
 		categoryId = category;

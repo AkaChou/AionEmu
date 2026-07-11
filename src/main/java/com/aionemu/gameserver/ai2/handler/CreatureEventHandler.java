@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -34,13 +18,19 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 
 /**
+ * 生物感知事件处理器，负责生物移动/可见时的仇恨检查与任务距离触发。
+ * Handles creature perception events: aggro checks and quest distance triggers on move/see.
+ *
  * @author ATracer
  */
 public class CreatureEventHandler {
 
 	/**
-	 * @param npcAI
-	 * @param creature
+	 * 生物在已知列表中移动时触发：检查仇恨，并对玩家触发距离任务。
+	 * Fired when a creature moves in the known list: checks aggro and triggers distance quests for players.
+	 *
+	 * NPC AI instance
+	 * @param creature 移动的生物 / moving creature
 	 */
 	public static void onCreatureMoved(NpcAI2 npcAI, Creature creature) {
 		checkAggro(npcAI, creature);
@@ -51,8 +41,11 @@ public class CreatureEventHandler {
 	}
 
 	/**
-	 * @param npcAI
-	 * @param creature
+	 * 生物进入视野时触发：恢复丢失目标、检查仇恨，并对玩家触发距离任务。
+	 * Fired when a creature enters sight: recovers lost target, checks aggro, and triggers distance quests for players.
+	 *
+	 * NPC AI instance
+	 * @param creature 进入视野的生物 / creature that became visible
 	 */
 	public static void onCreatureSee(NpcAI2 npcAI, Creature creature) {
 		if (npcAI.isInSubState(AISubState.TARGET_LOST) && creature.equals(npcAI.getTarget())) {
@@ -70,46 +63,48 @@ public class CreatureEventHandler {
 	}
 
 	/**
-	 * 检查生物是否触发仇恨
-	 * @param ai 非玩家角色的AI实例
-	 * @param creature 移动的生物对象
+	 * 检查生物是否触发仇恨（喊话范围、仇恨范围、敌对与视线）。
+	 * Checks whether the creature should trigger aggro (shout range, aggro range, hostility, and line of sight).
+	 *
+	 * NPC AI instance
+	 * @param creature 待检查的生物 / creature to evaluate
 	 */
 	protected static void checkAggro(NpcAI2 ai, Creature creature) {
-        Npc owner = ai.getOwner();
+		Npc owner = ai.getOwner();
 
-        if (ai.isInState(AIState.FIGHT)) {
-            return;
-        }
-        if (creature.getLifeStats().isAlreadyDead()) {
-            return;
-        }
-        if (!owner.canSee(creature)) {
-            return;
-        }
-        if (!owner.getActiveRegion().isMapRegionActive()) {
-            return;
-        }
-        
-        boolean isInAggroRange = false;
-        if (ai.poll(AIQuestion.CAN_SHOUT)) {
-            int shoutRange = owner.getObjectTemplate().getMinimumShoutRange();
-            double distance = MathUtil.getDistance(owner, creature);
-            if (distance <= shoutRange) {
-                ShoutEventHandler.onSee(ai, creature);
-                isInAggroRange = shoutRange <= owner.getObjectTemplate().getAggroRange();
-            }
-        }
-        
-        if (!ai.isInState(AIState.FIGHT) && (isInAggroRange 
-                || MathUtil.isIn3dRange(owner, creature, (float) (owner.getObjectTemplate().getAggroRange() * 1.6)))) { // 1.6 is for aggro range correction
-            if (owner.isAggressiveTo(creature) && GameWorldServices.geoService().canSee(owner, creature)) {
-                if (!ai.isInState(AIState.RETURNING)) {
-                    ai.getOwner().getMoveController().storeStep();
-                }
-                if (ai.canThink()) {
-                    ai.onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);
-                }
-            }
-        }
-    }
+		if (ai.isInState(AIState.FIGHT)) {
+			return;
+		}
+		if (creature.getLifeStats().isAlreadyDead()) {
+			return;
+		}
+		if (!owner.canSee(creature)) {
+			return;
+		}
+		if (!owner.getActiveRegion().isMapRegionActive()) {
+			return;
+		}
+
+		boolean isInAggroRange = false;
+		if (ai.poll(AIQuestion.CAN_SHOUT)) {
+			int shoutRange = owner.getObjectTemplate().getMinimumShoutRange();
+			double distance = MathUtil.getDistance(owner, creature);
+			if (distance <= shoutRange) {
+				ShoutEventHandler.onSee(ai, creature);
+				isInAggroRange = shoutRange <= owner.getObjectTemplate().getAggroRange();
+			}
+		}
+
+		if (!ai.isInState(AIState.FIGHT) && (isInAggroRange
+				|| MathUtil.isIn3dRange(owner, creature, (float) (owner.getObjectTemplate().getAggroRange() * 1.6)))) { // 1.6 is for aggro range correction
+			if (owner.isAggressiveTo(creature) && GameWorldServices.geoService().canSee(owner, creature)) {
+				if (!ai.isInState(AIState.RETURNING)) {
+					ai.getOwner().getMoveController().storeStep();
+				}
+				if (ai.canThink()) {
+					ai.onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);
+				}
+			}
+		}
+	}
 }

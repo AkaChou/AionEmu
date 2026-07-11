@@ -1,24 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network;
 
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
+ * 网络侧全局控制器，维护可见游戏服数量等共享状态。
+ * Network-side global controller holding shared state such as visible server count.
+ *
  * @author KID
  */
 public class NetworkController {
@@ -26,6 +13,12 @@ public class NetworkController {
 	private static NetworkController instance = new NetworkController();
 	private static volatile ObjectProvider<NetworkController> instanceProvider;
 
+	/**
+	 * 获取控制器单例（优先 Spring Provider）。
+	 * Returns the controller singleton (prefers Spring provider).
+	 *
+	 * @return 控制器实例 / controller instance
+	 */
 	public static NetworkController getInstance() {
 		ObjectProvider<NetworkController> provider = instanceProvider;
 		if (provider == null) {
@@ -34,16 +27,35 @@ public class NetworkController {
 		return provider.getIfAvailable(() -> instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
+	 * Injects Spring ObjectProvider to override the static singleton.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<NetworkController> instanceProvider) {
 		NetworkController.instanceProvider = instanceProvider;
 	}
 
+	/** 可见游戏服数量 / visible game-server count */
 	private byte serverCount = 1;
 
+	/**
+	 * 获取可见游戏服数量。
+	 * Returns visible game-server count.
+	 *
+	 * server count
+	 */
 	public final byte getServerCount() {
 		return this.serverCount;
 	}
 
+	/**
+	 * 设置可见游戏服数量。
+	 * Sets visible game-server count.
+	 *
+	 * server count
+	 */
 	public final void setServerCount(byte count) {
 		this.serverCount = count;
 	}

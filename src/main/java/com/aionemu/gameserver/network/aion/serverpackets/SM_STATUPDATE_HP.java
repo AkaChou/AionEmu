@@ -1,27 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * This packet is used to update current hp and max hp values.
- * 
+ * 向客户端更新当前/最大 HP 值。
+ * Server packet updating current and max HP values on the client.
+ *
  * @author Luno
  */
 public class SM_STATUPDATE_HP extends AionServerPacket {
@@ -30,8 +15,11 @@ public class SM_STATUPDATE_HP extends AionServerPacket {
 	private int maxHp;
 
 	/**
-	 * @param currentHp
-	 * @param maxHp
+	 * 使用给定参数构造 SM_STATUPDATE_HP 包。
+	 * Creates a SM_STATUPDATE_HP packet with the given parameters.
+	 *
+	 * current hp
+	 * max hp
 	 */
 	public SM_STATUPDATE_HP(int currentHp, int maxHp) {
 		this.currentHp = currentHp;

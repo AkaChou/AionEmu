@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Esoterrace 副本 NPC AI：Captain Murugan（@AIName "captain_murugan"），继承 AggressiveNpcAI2。
+ * Esoterrace instance NPC AI: Captain Murugan (@AIName "captain_murugan"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("captain_murugan")
 public class Captain_MuruganAI2 extends AggressiveNpcAI2
 {
@@ -64,7 +50,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelTask();
 				} else {
-					//I'll get rid of the cursed ones first!
+					// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
 					sendMsg(1500193, getObjectId(), false, 0);
 					GameEngineServices.skillEngine().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
 					if (getLifeStats().getHpPercentage() <= 50) {
@@ -72,7 +58,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
-									//I'll get rid of the cursed ones first!
+									// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
 									sendMsg(1500193, getObjectId(), false, 0);
 									VisibleObject target = getTarget();
 									if (target != null && target instanceof Player) {
@@ -132,9 +118,9 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		cancelTask();
 		cancelSpecialSkillTask();
-		//Power is... overflowing...
+		// 力量在……溢出…… / Power is... overflowing...
 		sendMsg(1500195, getObjectId(), false, 0);
-		//My lord Surama... I.. am... sorry.
+		// 苏拉玛大人……我……很……抱歉。 / My lord Surama... I.. am... sorry.
 		sendMsg(1500194, getObjectId(), false, 5000);
 		super.handleDied();
 	}

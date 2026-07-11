@@ -1,31 +1,18 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * @author Rolandas
+ * Building 类型枚举。
+ * Building Type enumeration.
  *
+ * @author Rolandas
  */
 @XmlType(name = "BuildingType")
 @XmlEnum
 public enum BuildingType {
+	/** Personal Field / Personal Field */
 	PERSONAL_FIELD(2), PERSONAL_INS(1);
 
 	private int id;
@@ -34,6 +21,7 @@ public enum BuildingType {
 		this.id = id;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 技能 Learn 动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -44,9 +31,12 @@ public class SkillLearnAction extends AbstractItemAction {
 	@XmlAttribute(name = "class")
 	protected PlayerClass playerClass;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
-		// 1. check player level
+		// 1. 检查玩家等级 / 1. check player level
 		if (player.getCommonData().getLevel() < level) {
 			return false;
 		}
@@ -56,21 +46,22 @@ public class SkillLearnAction extends AbstractItemAction {
 			return false;
 		}
 
-		// 4. check player race and Race.PC_ALL
+		// 4. 检查玩家种族与 Race.PC_ALL / 4. check player race and Race.PC_ALL
 		Race race = parentItem.getItemTemplate().getRace();
 		if (player.getRace() != race && race != Race.PC_ALL) {
 			return false;
 		}
-		// 5. check whether this skill is already learned
+		// 5. 检查该技能是否已学习 / 5. check whether this skill is already learned
 		if (player.getSkillList().isSkillPresent(skillid)) {
 			return false;
 		}
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
-		// item animation and message
+		// 物品动画与消息 / item animation and message
 		ItemTemplate itemTemplate = parentItem.getItemTemplate();
 		// PacketSendUtility.sendPacket(player,
 		// SM_SYSTEM_MESSAGE.USE_ITEM(itemTemplate.getDescription()));
@@ -78,21 +69,21 @@ public class SkillLearnAction extends AbstractItemAction {
 		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 				parentItem.getObjectId(), itemTemplate.getTemplateId()), true);
 
-		// add skill
+		// 添加技能 / add skill
 		SkillLearnService.learnSkillBook(player, skillid);
 
-		// remove book from inventory (assuming its not stackable)
+		// 从背包移除书本（假定不可堆叠） / remove book from inventory (assuming its not stackable)
 		Item item = player.getInventory().getItemByObjId(parentItem.getObjectId());
 		player.getInventory().delete(item);
 	}
 
 	private boolean validateClass(PlayerClass pc) {
 		boolean result = false;
-		// 2. check if current class is second class and book is for starting class
+		// 2. 检查当前职业是否为二转，且书本是否针对起始职业。 / 2. check if current class is second class and book is for starting class
 		if (!pc.isStartingClass() && PlayerClass.getStartingClassFor(pc).ordinal() == playerClass.ordinal()) {
 			result = true;
 		}
-		// 3. check player class and SkillClass.ALL
+		// 3. 检查玩家职业与 SkillClass.ALL / 3. check player class and SkillClass.ALL
 		if (pc == playerClass || playerClass == PlayerClass.ALL) {
 			result = true;
 		}

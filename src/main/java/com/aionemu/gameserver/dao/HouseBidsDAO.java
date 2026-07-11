@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.sql.Timestamp;
@@ -23,21 +7,61 @@ import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.house.PlayerHouseBid;
 
 /**
+ * 房屋竞拍数据访问对象。
+ * House bids data access object.
+ *
  * @author Rolandas
  */
 public abstract class HouseBidsDAO implements DAO {
 
+	/**
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier for this DAO.
+	 *
+	 * class name
+	 */
 	@Override
 	public final String getClassName() {
 		return HouseBidsDAO.class.getName();
 	}
 
+	/**
+	 * 加载全部房屋竞拍。
+	 * Loads all house bids.
+	 *
+	 * bid set
+	 */
 	public abstract Set<PlayerHouseBid> loadBids();
 
+	/**
+	 * 添加一条房屋竞拍。
+	 * Adds a house bid.
+	 *
+	 * player ID
+	 * house ID
+	 * bid offer
+	 * @param time 出价时间 / bid time
+	 * whether successful
+	 */
 	public abstract boolean addBid(int playerId, int houseId, long bidOffer, Timestamp time);
 
+	/**
+	 * 修改竞拍出价。
+	 * Changes a bid offer.
+	 *
+	 * player ID
+	 * house ID
+	 * new bid offer
+	 * @param time 出价时间 / bid time
+	 */
 	public abstract void changeBid(int playerId, int houseId, long newBidOffer, Timestamp time);
 
+	/**
+	 * 删除指定房屋的全部竞拍。
+	 * Deletes all bids for a house.
+	 *
+	 * house ID
+	 */
 	public abstract void deleteHouseBids(int houseId);
 
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -30,11 +14,12 @@ import com.aionemu.gameserver.model.templates.teleport.MultiReturnLocationList;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
-
+ * 多目标返回物品数据容器，按物品 ID 索引返回地点列表。
+ * Multi-return item data holder, indexing return location lists by item id.
+ *
+ * @author Rinzler (Encom)
+ */
 @XmlRootElement(name = "multi_returns")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MultiReturnItemData {
@@ -46,6 +31,10 @@ public class MultiReturnItemData {
 	@XmlTransient
 	private IntObjectHashMap<MultiReturn> itemsById = new IntObjectHashMap<>();
 
+	/**
+	 * JAXB 反序列化完成后，按物品 ID 建立返回地点与模板索引。
+	 * After JAXB unmarshalling, indexes return locations and templates by item id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		ItemLocationList.clear();
 		itemsById.clear();
@@ -55,14 +44,33 @@ public class MultiReturnItemData {
 		}
 	}
 
+	/**
+	 * 返回已加载的多目标返回物品数量。
+	 * Returns the number of loaded multi-return items.
+	 *
+	 * item count
+	 */
 	public int size() {
 		return ItemLocationList.size();
 	}
 
+	/**
+	 * 按物品 ID 获取多目标返回模板。
+	 * Returns the multi-return template for the given item id.
+	 *
+	 * @param id 物品 ID / item id
+	 * @return 多目标返回模板或 null / multi-return template or null
+	 */
 	public MultiReturn getMultiReturnById(int id) {
 		return itemsById.get(id);
 	}
 
+	/**
+	 * 返回全部多目标返回物品列表。
+	 * Returns the full multi-return item list.
+	 *
+	 * @return 多目标返回物品列表 / multi-return item list
+	 */
 	public List<MultiReturn> getMultiReturns() {
 		return ItemList;
 	}

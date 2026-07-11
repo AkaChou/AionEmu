@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.movement;
 
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
@@ -28,29 +12,55 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.aionemu.gameserver.world.World;
 
 /**
- * @author ATracer base class for summon & player move controller
+ * 可玩单位（玩家/召唤物）移动控制器基类，处理强制移动包、速度插值与恐惧控制。
+ * Base move controller for playable units (player/summon): forced move packets, speed interpolation, and fear control.
+ *
+ * @author ATracer
+ * @param <T> 生物所有者类型 / Creature owner type
  */
 public abstract class PlayableMoveController<T extends Creature> extends CreatureMoveController<T> {
 
+	/** 是否需要发送移动包 / Whether a move packet should be sent */
 	private boolean sendMovePacket = true;
+	/** 移动朝向档位 / Movement heading sector */
 	private int movementHeading = -1;
 
+	/** Vehicle X / Vehicle X */
 	public float vehicleX;
+	/** Vehicle Y / Vehicle Y */
 	public float vehicleY;
+	/** Vehicle Z / Vehicle Z */
 	public float vehicleZ;
+	/** 载具速度 / Vehicle speed */
 	public int vehicleSpeed;
 
+	/** Direction vector X / Direction vector X */
 	public float vectorX;
+	/** Direction vector Y / Direction vector Y */
 	public float vectorY;
+	/** Direction vector Z / Direction vector Z */
 	public float vectorZ;
+	/** 滑翔标志 / Glide flag */
 	public byte glideFlag;
+	/** 未知字段 1 / Unknown field 1 */
 	public int unk1;
+	/** 未知字段 2 / Unknown field 2 */
 	public int unk2;
 
+	/**
+	 * 使用指定所有者构造控制器。
+	 * Construct the controller for the given owner.
+	 *
+	 * Owner
+	 */
 	public PlayableMoveController(T owner) {
 		super(owner);
 	}
 
+	/**
+	 * 在可控状态下启动向目标点的移动并注册任务。
+	 * Start moving to the destination when controllable and register the move task.
+	 */
 	@Override
 	public void startMovingToDestination() {
 		updateLastMove();
@@ -63,15 +73,29 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		}
 	}
 
+	/**
+	 * 是否处于恐惧等强制控制状态。
+	 * Whether under forced control such as fear.
+	 *
+	 * @return 是否被控制 / Whether controlled
+	 */
 	private final boolean isControlled() {
-		return owner.getEffectController().isUnderFear();
+		return owner.getEffectController().isUnderFear() || owner.getEffectController().isConfused();
 	}
 
+	/**
+	 * 强制广播移动包。
+	 * Force-broadcast a move packet.
+	 */
 	private void sendForcedMovePacket() {
 		PacketSendUtility.broadcastPacketAndReceive(owner, new SM_MOVE(owner));
 		sendMovePacket = false;
 	}
 
+	/**
+	 * 按当前速度向目标点插值推进一帧。
+	 * Advance one interpolated step toward the destination using current speed.
+	 */
 	@Override
 	public void moveToDestination() {
 		if (!owner.canPerformMove()) {
@@ -117,6 +141,10 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		updateLastMove();
 	}
 
+	/**
+	 * 中止移动：移除任务、清目标并广播停止。
+	 * Abort movement: remove task, clear destination, and broadcast stop.
+	 */
 	@Override
 	public void abortMove() {
 		started.set(false);
@@ -127,6 +155,14 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		setAndSendStopMove(owner);
 	}
 
+	/**
+	 * 设置新目标点并在变化时标记需要发包；同步计算移动朝向档位。
+	 * Set a new destination, mark packet send when changed, and recompute movement heading sector.
+	 *
+	 * @param x 目标 X / Target X
+	 * @param y 目标 Y / Target Y
+	 * @param z 目标 Z / Target Z
+	 */
 	@Override
 	public void setNewDirection(float x, float y, float z) {
 		if (targetDestX != x || targetDestY != y || targetDestZ != z) {
@@ -148,6 +184,12 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		}
 	}
 
+	/**
+	 * 返回当前移动朝向档位；未移动时返回 -1。
+	 * Return the current movement heading sector; -1 when not moving.
+	 *
+	 * Heading sector
+	 */
 	public int getMovementHeading() {
 		if (!isInMove()) {
 			return -1;

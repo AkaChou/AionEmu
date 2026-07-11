@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,13 +17,14 @@ import com.aionemu.loginserver.dao.BannedIpDAO;
 import com.aionemu.loginserver.model.BannedIP;
 
 /**
- * MySQL8 BannedIP DAO implementation
- * 
+ * IP 封禁 DAO 的 MySQL 8 实现。
+ * MySQL 8 BannedIpDAO implementation.
+ *
  * @author Updated for MySQL 8
  */
 @Slf4j
 public class MySQL8BannedIpDAO extends BannedIpDAO {
-    
+
 
     @Override
     public BannedIP insert(String mask) {
@@ -33,27 +36,27 @@ public class MySQL8BannedIpDAO extends BannedIpDAO {
         BannedIP result = new BannedIP();
         result.setMask(mask);
         result.setTimeEnd(expireTime);
-        
+
         return insert(result) ? result : null;
     }
 
     @Override
     public boolean insert(final BannedIP bannedIP) {
         String query = "INSERT INTO banned_ip(mask, time_end) VALUES (?, ?)";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            
+
             st.setString(1, bannedIP.getMask());
-            
+
             if (bannedIP.getTimeEnd() == null) {
                 st.setNull(2, Types.TIMESTAMP);
             } else {
                 st.setTimestamp(2, bannedIP.getTimeEnd());
             }
-            
+
             int affected = st.executeUpdate();
-            
+
             if (affected > 0) {
                 try (ResultSet generatedKeys = st.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -63,51 +66,51 @@ public class MySQL8BannedIpDAO extends BannedIpDAO {
                 }
             }
         } catch (SQLException e) {
-            log.error("Can't insert banned IP: " + bannedIP.getMask(), e);
+            log.error(I18n.get("log.2317a7af1cc6", bannedIP.getMask(), e));
         }
-        
+
         return false;
     }
 
     @Override
     public boolean update(final BannedIP bannedIP) {
         String query = "UPDATE banned_ip SET mask = ?, time_end = ? WHERE id = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setString(1, bannedIP.getMask());
-            
+
             if (bannedIP.getTimeEnd() == null) {
                 st.setNull(2, Types.TIMESTAMP);
             } else {
                 st.setTimestamp(2, bannedIP.getTimeEnd());
             }
-            
+
             st.setInt(3, bannedIP.getId());
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't update banned IP: " + bannedIP.getId(), e);
+            log.error(I18n.get("log.e5c0c472a65c", bannedIP.getId(), e));
         }
-        
+
         return false;
     }
 
     @Override
     public boolean remove(final String mask) {
         String query = "DELETE FROM banned_ip WHERE mask = ?";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             st.setString(1, mask);
-            
+
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Can't remove banned IP: " + mask, e);
+            log.error(I18n.get("log.19986598786f", mask, e));
         }
-        
+
         return false;
     }
 
@@ -120,11 +123,11 @@ public class MySQL8BannedIpDAO extends BannedIpDAO {
     public Set<BannedIP> getAllBans() {
         String query = "SELECT * FROM banned_ip ORDER BY id";
         Set<BannedIP> result = new HashSet<>();
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query);
              ResultSet rs = st.executeQuery()) {
-            
+
             while (rs.next()) {
                 BannedIP ip = new BannedIP();
                 ip.setId(rs.getInt("id"));
@@ -133,25 +136,25 @@ public class MySQL8BannedIpDAO extends BannedIpDAO {
                 result.add(ip);
             }
         } catch (SQLException e) {
-            log.error("Can't get all banned IPs", e);
+            log.error(I18n.get("log.5a0812fa8b4c", e));
         }
-        
+
         return result;
     }
 
     @Override
     public void cleanExpiredBans() {
         String query = "DELETE FROM banned_ip WHERE time_end < CURRENT_TIMESTAMP AND time_end IS NOT NULL";
-        
+
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(query)) {
-            
+
             int deleted = st.executeUpdate();
             if (deleted > 0) {
-                log.info("Cleaned " + deleted + " expired IP bans");
+                log.info(I18n.get("log.351f92913e18", deleted));
             }
         } catch (SQLException e) {
-            log.error("Can't clean expired IP bans", e);
+            log.error(I18n.get("log.42ddf2573c66", e));
         }
     }
 

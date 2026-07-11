@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -26,22 +10,37 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 
 /**
+ * 沉默效果：禁止目标施放魔法技能，并打断当前魔法读条。
+ * Silence effect: blocks magical casts and cancels an in-progress magical skill.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SilenceEffect")
 public class SilenceEffect extends EffectTemplate {
 
+	/**
+	 * 将效果加入目标的效果控制器。
+	 * Adds this effect to the target effect controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 按沉默抗性结算是否命中。
+	 * Resolves hit chance against silence resistance.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.SILENCE_RESISTANCE, null);
 	}
 
+	/**
+	 * 施加 SILENCE 异常；若正在施放魔法则打断。
+	 * Applies SILENCE abnormal and cancels a magical cast in progress.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		final Creature effected = effect.getEffected();
@@ -53,6 +52,10 @@ public class SilenceEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 清除 SILENCE 异常。
+	 * Clears the SILENCE abnormal.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.getEffected().getEffectController().unsetAbnormal(AbnormalState.SILENCE.getId());

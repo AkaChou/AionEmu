@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.zone.handler;
 
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -31,17 +15,32 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 材质碰撞区域处理器：进入时挂载材质技能观察者，离开时卸载。
+ * Material-collision zone handler: attaches a material-skill observer on enter and removes it on leave.
+ *
  * @author Rolandas
  */
 public class MaterialZoneHandler implements ZoneHandler {
 
+	/** 当前区域内已观察的生物 / creatures currently observed inside the zone */
 	Map<Integer, IActor> observed = new ConcurrentHashMap<Integer, IActor>();
 
+	/** 材质几何体 / material geometry */
 	private Spatial geometry;
+	/** 材质模板 / material template */
 	private MaterialTemplate template;
+	/** 是否在进入时立即触发材质效果 / whether to act immediately on zone enter */
 	private boolean actOnEnter = false;
+	/** 所属阵营（同阵营不受影响）/ owner race (same race is immune) */
 	private Race ownerRace = Race.NONE;
 
+	/**
+	 * 创建材质区域处理器。
+	 * Create a material zone handler.
+	 *
+	 * geometry
+	 * material template
+	 */
 	public MaterialZoneHandler(Spatial geometry, MaterialTemplate template) {
 		this.geometry = geometry;
 		this.template = template;
@@ -54,6 +53,13 @@ public class MaterialZoneHandler implements ZoneHandler {
 		}
 	}
 
+	/**
+	 * 进入材质区：为匹配目标挂载碰撞材质观察者。
+	 * Enter material zone: attach a collision-material observer for matching targets.
+	 *
+	 * creature
+	 * @param zone     区域实例 / zone instance
+	 */
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (ownerRace == creature.getRace()) {
@@ -79,6 +85,13 @@ public class MaterialZoneHandler implements ZoneHandler {
 		actor.moved();
 	}
 
+	/**
+	 * 离开材质区：移除并中止材质观察者。
+	 * Leave material zone: remove and abort the material observer.
+	 *
+	 * creature
+	 * @param zone     区域实例 / zone instance
+	 */
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
 		IActor actor = observed.get(creature.getObjectId());

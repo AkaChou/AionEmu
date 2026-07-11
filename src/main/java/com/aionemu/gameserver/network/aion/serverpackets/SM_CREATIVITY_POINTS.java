@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
 import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 
 /**
+ * 创造点数（CP）同步包：下发总点数、等级上限与各槽位分配，登录时并应用属性变更。
+ * Creativity Points sync packet: total points, level cap and slot allocations; applies stat changes on login.
+ *
  * @author Falke_34, FrozenKiller
  * @Rework By Xnemonix
  */

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -29,33 +13,32 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
- * Client Sends this packet when /Select NAME is typed.<br>
- * I believe it's the same as mouse click on a character.<br>
- * If client want's to select target - d is object id.<br>
- * If client unselects target - d is 0;
- * 
+ * 客户端目标选择请求包（点击或 /Select；objectId 为 0 时取消选择）。
+ * Client packet for target selection (click or /Select; 0 unselects).
+ *
  * @author SoulKeeper, Sweetkr, KID
  */
 public class CM_TARGET_SELECT extends AionClientPacket {
 
 	/**
-	 * Target object id that client wants to select or 0 if wants to unselect
+	 * 目标物体 ID；0 表示取消选择。
+	 * Target object id that client wants to select or 0 if wants to unselect.
 	 */
 	private int targetObjectId;
 	private int type;
 
 	/**
-	 * Constructs new client packet instance.
-	 * 
-	 * @param opcode
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_TARGET_SELECT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
 
 	/**
-	 * Read packet.<br>
-	 * d - object id; c - selection type;
+	 * 读取包体：d - 物体 ID；c - 选择类型。
+	 * Read packet: d - object id; c - selection type.
 	 */
 	@Override
 	protected void readImpl() {
@@ -64,7 +47,8 @@ public class CM_TARGET_SELECT extends AionClientPacket {
 	}
 
 	/**
-	 * Do logging
+	 * 设置目标并广播更新；对不可见目标记录雷达作弊审计。
+	 * Set target and broadcast update; audit possible radar hacks on invisible targets.
 	 */
 	@Override
 	protected void runImpl() {

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -32,9 +16,11 @@ import com.aionemu.gameserver.model.templates.event.BoostEvents;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 增益活动数据容器，按 ID 索引增益活动模板。
+ * Boost-event data holder, indexing boost event templates by id.
+ *
  * Created by wanke on 02/03/2017.
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "boost_events")
 public class BoostEventdata {
@@ -47,6 +33,10 @@ public class BoostEventdata {
 	@XmlTransient
 	private Map<Integer, BoostEvents> templatesMap = new HashMap<Integer, BoostEvents>();
 
+	/**
+	 * JAXB 反序列化完成后，将列表写入双索引映射并释放列表。
+	 * After JAXB unmarshalling, populates both index maps and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (BoostEvents template : bonusServiceBonusattr) {
 			templates.put(template.getId(), template);
@@ -56,14 +46,34 @@ public class BoostEventdata {
 		bonusServiceBonusattr = null;
 	}
 
+	/**
+	 * 返回已加载的增益活动数量。
+	 * Returns the number of loaded boost events.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return templates.size();
 	}
 
+	/**
+	 * 按 ID 获取增益活动模板。
+	 * Returns the boost event template for the given id.
+	 *
+	 * event id
+	 *
+	 * @param buffId @return 模板，不存在则为 null / template or null
+	 */
 	public BoostEvents getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);
 	}
 
+	/**
+	 * 返回全部增益活动映射。
+	 * Returns the full boost event map.
+	 *
+	 * @return ID 到模板的映射 / map of id to template
+	 */
 	public Map<Integer, BoostEvents> getAll() {
 		return templatesMap;
 	}

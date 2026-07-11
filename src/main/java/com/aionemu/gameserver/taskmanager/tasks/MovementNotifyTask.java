@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.taskmanager.tasks;
 
 import java.util.ArrayList;
@@ -36,15 +20,49 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 import com.aionemu.gameserver.world.knownlist.VisitorWithOwner;
 
+/**
+ * 移动通知任务：对已知列表中的 NPC 广播生物移动事件，并统计广播次数。
+ * Movement-notify task: broadcasts creature-moved events to known NPCs and tracks broadcast counts.
+ */
 public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature> {
+
+	/**
+	 * Spring 可选实例提供者。
+	 * Optional Spring instance provider.
+	 */
 	private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
+
+	/**
+	 * 各地图移动广播峰值统计（[最大次数, Npc 模板 Id]）。
+	 * Per-map movement-broadcast peak stats ([max count, Npc template id]).
+	 */
 	private static final Map<Integer, int[]> moveBroadcastCounts = new HashMap<Integer, int[]>();
+
+	/**
+	 * 广播统计表是否已按世界地图模板初始化。
+	 * Whether broadcast stats were initialized from world-map templates.
+	 */
 	private static boolean moveBroadcastCountsInitialized;
 
+	/**
+	 * 静态单例持有者。
+	 * Static singleton holder.
+	 */
 	private static final class SingletonHolder {
+
+		/**
+		 * 默认单例实例。
+		 * Default singleton instance.
+		 */
 		private static final MovementNotifyTask INSTANCE = new MovementNotifyTask();
 	}
 
+	/**
+	 * 获取单例：优先 Spring 提供者，否则静态 holder。
+	 * Get the singleton: prefer Spring provider, otherwise the static holder.
+	 *
+	 * Task instance
+	 */
 	public static MovementNotifyTask getInstance() {
 		ObjectProvider<MovementNotifyTask> provider = instanceProvider;
 		if (provider != null) {
@@ -53,17 +71,37 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		return SingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * Provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<MovementNotifyTask> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 向已知 NPC 投递移动事件的访问器。
+	 * Visitor that delivers move events to known NPCs.
+	 */
 	private final MoveNotifier MOVE_NOTIFIER = new MoveNotifier();
 
+	/**
+	 * 以 500ms 周期构造移动通知任务。
+	 * Construct the movement-notify task with a 500ms period.
+	 */
 	public MovementNotifyTask() {
 		super(500);
 		ensureMoveBroadcastCountsInitialized();
 	}
 
+	/**
+	 * 对存活生物的已知 NPC 广播 {@link AIEventType#CREATURE_MOVED}（部分地图限流）。
+	 * Broadcast {@link AIEventType#CREATURE_MOVED} to known NPCs of a living creature (rate-limited on some maps).
+	 *
+	 * @param creature 移动中的生物 / Moving creature
+	 */
 	@Override
 	protected void callTask(Creature creature) {
 		if (creature.getLifeStats().isAlreadyDead()) {
@@ -87,6 +125,12 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		}
 	}
 
+	/**
+	 * 导出各地图移动广播峰值诊断行。
+	 * Dump diagnostic lines of per-map movement-broadcast peaks.
+	 *
+	 * @return 诊断文本行 / Diagnostic text lines
+	 */
 	public String[] dumpBroadcastStats() {
 		ensureMoveBroadcastCountsInitialized();
 		List<String> lines = new ArrayList<String>();
@@ -99,11 +143,24 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		return lines.toArray(new String[0]);
 	}
 
+	/**
+	 * 耗时统计方法名。
+	 * Method name for runtime stats.
+	 *
+	 * Method name
+	 */
 	@Override
 	protected String getCalledMethodName() {
 		return "notifyOnMove()";
 	}
 
+	/**
+	 * 获取或创建指定地图的广播统计槽位。
+	 * Get or create the broadcast-stats slot for a map.
+	 *
+	 * World map id
+	 * Stats array
+	 */
 	private static int[] moveBroadcastCounts(int worldId) {
 		synchronized (moveBroadcastCounts) {
 			ensureMoveBroadcastCountsInitialized();
@@ -111,6 +168,10 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		}
 	}
 
+	/**
+	 * 按世界地图模板惰性初始化广播统计表。
+	 * Lazily initialize broadcast stats from world-map templates.
+	 */
 	private static void ensureMoveBroadcastCountsInitialized() {
 		synchronized (moveBroadcastCounts) {
 			if (moveBroadcastCountsInitialized || DataManager.WORLD_MAPS_DATA == null) {
@@ -123,7 +184,19 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		}
 	}
 
+	/**
+	 * 已知列表访问器：向存活 NPC 的 AI 投递生物移动事件。
+	 * Known-list visitor: deliver creature-moved events to living NPC AIs.
+	 */
 	private class MoveNotifier implements VisitorWithOwner<Npc, VisibleObject> {
+
+		/**
+		 * 访问一个 NPC：若仍存活则触发 {@link AIEventType#CREATURE_MOVED}。
+		 * Visit one NPC: if still alive, fire {@link AIEventType#CREATURE_MOVED}.
+		 *
+		 * Target NPC
+		 * @param owner  移动源对象 / Moving owner object
+		 */
 		@Override
 		public void visit(Npc object, VisibleObject owner) {
 			if (object.getAi2().getState() == AIState.DIED || object.getLifeStats().isAlreadyDead()) {

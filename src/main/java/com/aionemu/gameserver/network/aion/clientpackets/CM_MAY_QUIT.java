@@ -1,31 +1,22 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 
 /**
- * @author xavier Packet sent by client when player may quit game in 10 seconds
+ * 客户端即将在约 10 秒后退出游戏的通知包。
+ * Client packet notifying that the player may quit the game in about 10 seconds.
+ *
+ * @author xavier
  */
 public class CM_MAY_QUIT extends AionClientPacket {
-
 	/**
-	 * @param opcode
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
 	 */
 	public CM_MAY_QUIT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -33,21 +24,21 @@ public class CM_MAY_QUIT extends AionClientPacket {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.aionemu.commons.network.packet.BaseClientPacket#readImpl()
 	 */
 	@Override
 	protected void readImpl() {
-		// empty
+		// 空 / empty
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.aionemu.commons.network.packet.BaseClientPacket#runImpl()
 	 */
 	@Override
 	protected void runImpl() {
-		// Nothing to do
+		// 无事可做 / Nothing to do
 	}
 }

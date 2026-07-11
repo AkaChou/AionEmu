@@ -10,28 +10,70 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 世界服务运行时桥：解析 Geo/Nav/Drop，并创建/激活 GameServer、标记玩家离线。
+ * World-services runtime bridge: resolves Geo/Nav/Drop, creates/activates GameServer, marks players offline.
+ */
 @Component
 public class GameWorldServicesRuntimeBridge {
 
+    /**
+     * GeoService 的可选提供者。
+     * Optional provider for GeoService.
+     */
     private ObjectProvider<GeoService> geoServiceProvider;
+
+    /**
+     * NavService 的可选提供者。
+     * Optional provider for NavService.
+     */
     private ObjectProvider<NavService> navServiceProvider;
+
+    /**
+     * DropRegistrationService 的可选提供者。
+     * Optional provider for DropRegistrationService.
+     */
     private ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider;
 
+    /**
+     * 注入 GeoService 提供者。
+     * Inject the GeoService provider.
+     *
+     * GeoService provider
+     */
     @Autowired(required = false)
     void setGeoServiceProvider(ObjectProvider<GeoService> geoServiceProvider) {
         this.geoServiceProvider = geoServiceProvider;
     }
 
+    /**
+     * 注入 NavService 提供者。
+     * Inject the NavService provider.
+     *
+     * NavService provider
+     */
     @Autowired(required = false)
     void setNavServiceProvider(ObjectProvider<NavService> navServiceProvider) {
         this.navServiceProvider = navServiceProvider;
     }
 
+    /**
+     * 注入 DropRegistrationService 提供者。
+     * Inject the DropRegistrationService provider.
+     *
+     * DropRegistrationService provider
+     */
     @Autowired(required = false)
     void setDropRegistrationServiceProvider(ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider) {
         this.dropRegistrationServiceProvider = dropRegistrationServiceProvider;
     }
 
+    /**
+     * 解析 GeoService：优先 Spring，否则回退。
+     * Resolve GeoService: prefer Spring, otherwise fallback.
+     *
+     * GeoService instance
+     */
     public GeoService geoService() {
         if (geoServiceProvider == null) {
             return GameWorldServiceFallbacks.geoService();
@@ -39,6 +81,12 @@ public class GameWorldServicesRuntimeBridge {
         return geoServiceProvider.getIfAvailable(GameWorldServiceFallbacks::geoService);
     }
 
+    /**
+     * 解析 NavService：优先 Spring，否则回退。
+     * Resolve NavService: prefer Spring, otherwise fallback.
+     *
+     * NavService instance
+     */
     public NavService navService() {
         if (navServiceProvider == null) {
             return GameWorldServiceFallbacks.navService();
@@ -46,6 +94,12 @@ public class GameWorldServicesRuntimeBridge {
         return navServiceProvider.getIfAvailable(GameWorldServiceFallbacks::navService);
     }
 
+    /**
+     * 解析 DropRegistrationService：优先 Spring，否则回退。
+     * Resolve DropRegistrationService: prefer Spring, otherwise fallback.
+     *
+     * DropRegistrationService instance
+     */
     public DropRegistrationService dropRegistrationService() {
         if (dropRegistrationServiceProvider == null) {
             return GameWorldServiceFallbacks.dropRegistrationService();
@@ -53,14 +107,30 @@ public class GameWorldServicesRuntimeBridge {
         return dropRegistrationServiceProvider.getIfAvailable(GameWorldServiceFallbacks::dropRegistrationService);
     }
 
+    /**
+     * 创建新的 GameServer 实例。
+     * Create a new GameServer instance.
+     *
+     * New GameServer
+     */
     public GameServer createGameServer() {
         return new GameServer();
     }
 
+    /**
+     * 激活给定的 GameServer。
+     * Activate the given GameServer.
+     *
+     * @param server 待激活的服务器 / Server to activate
+     */
     public void activateGameServer(GameServer server) {
         GameServer.activateServer(server);
     }
 
+    /**
+     * 将所有玩家标记为离线。
+     * Mark all players as offline.
+     */
     public void markPlayersOffline() {
         DAOManager.getDAO(PlayerDAO.class).setPlayersOffline(false);
     }

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.stigma_vision;
 
 import com.aionemu.gameserver.model.Race;
@@ -26,10 +10,13 @@ import com.aionemu.gameserver.services.*;
 import com.aionemu.gameserver.services.mail.*;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.zone.*;
-/****/
-/** Author Rinzler (Encom) correct DragonicK?
-/****/
 
+/**
+ * 污名幻象任务脚本：Stigma Stones May Break Your Bones（任务 ID 23831）。
+ * Stigma Vision quest script: Stigma Stones May Break Your Bones (quest ID 23831).
+ *
+ * @author Rinzler (Encom) correct DragonicK?
+ */
 public class _23831Stigma_Stones_May_Break_Your_Bones extends QuestHandler {
 
     private final static int questId = 23831;
@@ -98,8 +85,8 @@ public class _23831Stigma_Stones_May_Break_Your_Bones extends QuestHandler {
 					return sendQuestEndDialog(env);
 				}
 			}
-			else { // Bounty Quest made DragonicK?
-				// Selected item is not optional.
+			else { // 赏金任务（DragonicK？） / Bounty Quest made DragonicK?
+				// 所选物品不是可选的。 / Selected item is not optional.
 				env.setDialogId(QuestDialog.SELECTED_QUEST_REWARD1.id());
 				env.setExtendedRewardIndex(1);
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(204061, 0));

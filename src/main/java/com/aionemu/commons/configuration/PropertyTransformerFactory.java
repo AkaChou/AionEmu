@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * 属性转换器工厂类，用于创建不同类型的属性转换器实例
  * Property transformer factory class for creating different types of property transformer instances
  * <p>
- * 该类负责根据目标类型创建对应的属性转换器，支持基本数据类型、String、Enum、File、InetSocketAddress等类型的转换
+ * 该类负责根据目标类型创建对应的属性转换器，支持基本数据类型、String、Enum、File、InetSocketAddress 等类型的转换
  * This class is responsible for creating corresponding property transformers based on target types,
  * supporting conversion of primitive types, String, Enum, File, InetSocketAddress and other types
  */
@@ -34,9 +34,9 @@ public class PropertyTransformerFactory {
      * Create a new property transformer instance
      *
      * @param clazzToTransform 需要转换的目标类型 / Target class type to transform
-     * @param tc 指定的转换器类型，如果为null则根据目标类型自动选择 / Specified transformer class, if null will auto select based on target type
+     * Specifiedtransformerclass ,若空 willautoselectbased 在目标 type。 / Specified transformer class, if null will auto select based on target type
      * @return 对应的属性转换器实例 / Corresponding property transformer instance
-     * @throws TransformationException 当无法创建转换器时抛出 / Thrown when transformer cannot be created
+     * Thrown when transformer cannot be created。 / Thrown when transformer cannot be created.
      */
     public static PropertyTransformer newTransformer(Class clazzToTransform, Class<? extends PropertyTransformer> tc) throws TransformationException {
         if (tc == PropertyTransformer.class) {

@@ -1,28 +1,15 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.taskmanager.handler.implementations;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
+
 /**
+ * 清理长期未活跃账号的数据库任务处理器。
+ * DB task handler that deletes accounts inactive for a configured number of days.
  *
  * @author nrg
  */
@@ -31,19 +18,29 @@ public class CleanAccountsHandler extends TaskFromDBHandler {
 
     private int daysOfInactivity;
 
+    /**
+     * 校验参数：需要恰好一个表示不活跃天数的参数。
+     * Validates params: requires exactly one parameter (days of inactivity).
+     *
+     * @return 参数是否有效 / whether params are valid
+     */
     @Override
     public boolean isValid() {
         if (params.length != 1) {
-            log.warn("CleanAccountHandler has not exactly one parameter (daysOfInactivity) - handler is not registered");
+            log.warn(I18n.get("log.0c023861a7d8"));
             return false;
         }
         return true;
     }
 
+    /**
+     * 按配置天数删除不活跃账号。
+     * Deletes inactive accounts for the configured number of days.
+     */
     @Override
     public void trigger() {
         daysOfInactivity = Integer.parseInt(params[0]);
-        log.info("Deleting all accounts, older as " + daysOfInactivity + " days");
+        log.info(I18n.get("log.18943e91d563", daysOfInactivity));
         DAOManager.getDAO(AccountDAO.class).deleteInactiveAccounts(daysOfInactivity);
     }
 }

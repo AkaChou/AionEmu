@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.portal;
 
 import java.util.List;
@@ -27,6 +11,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.configs.main.GSConfig;
 
 /**
+ * 传送门 Req 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,7 +27,7 @@ public class PortalReq {
 	@XmlAttribute(name = "min_level")
 	protected int minLevel;
 	@XmlAttribute(name = "max_level")
-	protected int maxLevel = GSConfig.PLAYER_MAX_LEVEL;
+	protected Integer maxLevel;
 	@XmlAttribute(name = "kinah_req")
 	protected int kinahReq;
 	@XmlAttribute(name = "title_id")
@@ -48,42 +35,52 @@ public class PortalReq {
 	@XmlAttribute(name = "err_level")
 	protected int errLevel;
 
+	/** 返回 quest req / Returns the quest req */
 	public List<QuestReq> getQuestReq() {
 		return this.questReq;
 	}
 
+	/** 返回 item req / Returns the item req */
 	public List<ItemReq> getItemReq() {
 		return this.itemReq;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return minLevel;
 	}
 
+	/** 设置最小等级。 / Sets the min level. */
 	public void setMinLevel(int value) {
 		this.minLevel = value;
 	}
 
+	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
-		return maxLevel;
+		return maxLevel == null ? GSConfig.PLAYER_MAX_LEVEL : maxLevel;
 	}
 
+	/** 设置最大等级。 / Sets the max level. */
 	public void setMaxLevel(int value) {
 		this.maxLevel = value;
 	}
 
+	/** 返回 kinah req / Returns the kinah req */
 	public int getKinahReq() {
 		return kinahReq;
 	}
 
+	/** 设置 kinah req / Sets the kinah req */
 	public void setKinahReq(int value) {
 		this.kinahReq = value;
 	}
 
+	/** 返回标题 ID / Returns the title id */
 	public int getTitleId() {
 		return titleId;
 	}
 
+	/** 返回 err level / Returns the err level */
 	public int getErrLevel() {
 		return errLevel;
 	}

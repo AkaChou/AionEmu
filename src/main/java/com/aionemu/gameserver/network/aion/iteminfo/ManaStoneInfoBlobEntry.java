@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.iteminfo;
 
 import java.nio.ByteBuffer;
@@ -26,11 +10,31 @@ import com.aionemu.gameserver.model.items.ItemStone;
 import com.aionemu.gameserver.model.items.ManaStone;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
 
+/**
+ * 魔石孔位与附魔信息 Blob。
+ * 写入灵魂绑定、强化等级、皮肤、可选孔位、魔石、神石、染色、艾帝安、
+ * 羽饰加成、增幅、技能强化与月石重塑等数据。
+ * Blob for mana sockets and enchant-related info.
+ * Writes soul-bind, enchant level, skin, optional sockets, mana stones, god stone,
+ * dye, Idian, plume bonuses, amplification, skill boost, and Luna reskin data.
+ *
+ * @author -Nemesiss-
+ * @modified Rolandas
+ */
 public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
+
+	/**
+	 * 构造魔石孔位 Blob 条目。
+	 * Constructs a mana-socket blob entry.
+	 */
 	ManaStoneInfoBlobEntry() {
 		super(ItemBlobType.MANA_SOCKETS);
 	}
 
+	/**
+	 * 将本 Blob 的具体内容写入缓冲区。
+	 * Writes this blob's concrete payload into the buffer.
+	 */
 	@Override
 	public void writeThisBlob(ByteBuffer buf) {
 		Item item = ownerItem;
@@ -75,12 +79,20 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		writeC(buf, item.getReductionLevel());
 	}
 
+	/**
+	 * 写入增幅相关字段。
+	 * Writes amplification-related fields.
+	 */
 	private void writeAmplification(ByteBuffer buf) {
-		// The 5.8 client renders unresolved inherent item skill ids as "(null)".
+		// 5.8 客户端将未解析的固有物品技能 ID 显示为“(null)”。 / The 5.8 client renders unresolved inherent item skill ids as "(null)".
 		writeC(buf, 0);
 		writeD(buf, 0);
 	}
 
+	/**
+	 * 写入技能强化（Enhance）数据。
+	 * Writes skill-boost (enhance) data.
+	 */
 	private void writeSkillBoost(ByteBuffer buf) {
 		Item item = this.ownerItem;
 		boolean hasSkillBoost = item.isEnhance() && item.getEnhanceSkillId() > 0 && item.getEnhanceEnchantLevel() > 0;
@@ -88,6 +100,10 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		writeD(buf, hasSkillBoost ? item.getEnhanceEnchantLevel() : 0);
 	}
 
+	/**
+	 * 写入羽饰加成属性；非羽饰则填零。
+	 * Writes plume bonus stats; fills zeros for non-plume items.
+	 */
 	private void writePlumeBonusStat(ByteBuffer buf) {
 		Item item = ownerItem;
 		if (item.getItemTemplate().isPlume()) {
@@ -149,6 +165,10 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		}
 	}
 
+	/**
+	 * 写入物品镶嵌的魔石列表（古代石优先）。
+	 * Writes socketed mana stones (ancient stones first).
+	 */
 	private void writeItemStones(ByteBuffer buf) {
 		Item item = ownerItem;
 		int count = 0;
@@ -191,6 +211,10 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		}
 	}
 
+	/**
+	 * 返回本 Blob 负载的字节长度。
+	 * Returns the payload size of this blob in bytes.
+	 */
 	@Override
 	public int getSize() {
 		return 187;

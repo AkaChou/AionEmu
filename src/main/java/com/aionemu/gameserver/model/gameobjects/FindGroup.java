@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,8 +6,9 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 
 /**
- * Find Group
- * 
+ * 寻找队伍游戏对象。
+ * Find Group game object.
+ *
  * @author MrPoke
  */
 public class FindGroup {
@@ -39,26 +24,32 @@ public class FindGroup {
 		this.groupType = groupType;
 	}
 
+	/** 获取消息。 / Returns the message. */
 	public String getMessage() {
 		return message;
 	}
 
+	/** 获取队伍类型。 / Returns the group type. */
 	public int getGroupType() {
 		return groupType;
 	}
 
+	/** 返回对象 ID / Returns the object id */
 	public int getObjectId() {
 		return object.getObjectId();
 	}
 
+	/** 返回副本 ID / Returns the instance id */
 	public int getInstanceId() {
 		return instanceId;
 	}
 
+	/** 返回 min members / Returns the min members */
 	public int getMinMembers() {
 		return minMembers;
 	}
 
+	/** 返回职业 ID / Returns the class id */
 	public int getClassId() {
 		if (object instanceof Player) {
 			return ((Player) (object)).getPlayerClass().getClassId();
@@ -70,6 +61,7 @@ public class FindGroup {
 		return 0;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		if (object instanceof Player) {
 			return ((Player) (object)).getLevel();
@@ -90,6 +82,7 @@ public class FindGroup {
 		return 1;
 	}
 
+	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
 		if (object instanceof Player) {
 			return ((Player) (object)).getLevel();
@@ -110,6 +103,7 @@ public class FindGroup {
 		return 1;
 	}
 
+	/** 返回 unk / Returns the unk */
 	public int getUnk() {
 		if (object instanceof Player) {
 			return 65557;
@@ -139,6 +133,7 @@ public class FindGroup {
 		return "";
 	}
 
+	/** 返回大小 / Returns the size*/
 	public int getSize() {
 		if (object instanceof Player) {
 			return 1;
@@ -150,6 +145,7 @@ public class FindGroup {
 		return 1;
 	}
 
+	/** 设置消息。 / Sets the message. */
 	public void setMessage(String message) {
 		lastUpdate = (int) (System.currentTimeMillis() / 1000);
 		this.message = message;

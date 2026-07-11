@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.instance.InstanceCoolTimeType;
 import com.aionemu.gameserver.model.instance.InstanceType;
+
+/**
+ * 副本冷却时间模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "InstanceCooltime")
@@ -89,78 +78,97 @@ public class InstanceCooltime {
 	@XmlAttribute(required = true)
 	protected Race race;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return worldId;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回 cool time type / Returns the cool time type */
 	public InstanceCoolTimeType getCoolTimeType() {
 		return coolTimeType;
 	}
 
+	/** 获取类型值。 / Returns the type value. */
 	public String getTypeValue() {
 		return typeValue;
 	}
 
+	/** 获取类型副本。 / Returns the type instance. */
 	public InstanceType getTypeInstance() {
 		return indunType;
 	}
 
+	/** 返回 ent cool time / Returns the ent cool time */
 	public Integer getEntCoolTime() {
 		return entCoolTime;
 	}
 
+	/** 返回 max member light / Returns the max member light */
 	public Integer getMaxMemberLight() {
 		return maxMemberLight;
 	}
 
+	/** 返回 max member dark / Returns the max member dark */
 	public Integer getMaxMemberDark() {
 		return maxMemberDark;
 	}
 
+	/** 返回进入最小等级光 / Returns the enter min level light*/
 	public Integer getEnterMinLevelLight() {
 		return enterMinLevelLight;
 	}
 
+	/** 返回进入最大等级光 / Returns the enter max level light*/
 	public Integer getEnterMaxLevelLight() {
 		return enterMaxLevelLight;
 	}
 
+	/** 返回进入最小等级暗 / Returns the enter min level dark*/
 	public Integer getEnterMinLevelDark() {
 		return enterMinLevelDark;
 	}
 
+	/** 返回进入最大等级暗 / Returns the enter max level dark*/
 	public Integer getEnterMaxLevelDark() {
 		return enterMaxLevelDark;
 	}
 
+	/** 返回 alarm unit score / Returns the alarm unit score */
 	public Integer getAlarmUnitScore() {
 		return alarmUnitScore;
 	}
 
+	/** 返回 can enter mentor / Returns the can enter mentor */
 	public boolean getCanEnterMentor() {
 		return canEnterMentor;
 	}
 
+	/** 返回 enter guild / Returns the enter guild */
 	public boolean getEnterGuild() {
 		return enterGuild;
 	}
 
+	/** 返回 max entries count / Returns the max entries count */
 	public Integer getMaxEntriesCount() {
 		return max_count;
 	}
 
+	/** 返回数量 buildup / Returns the count build up */
 	public Integer getCountBuildUp() {
 		return countBuildUp;
 	}
 
+	/** 返回 count build up level / Returns the count build up level */
 	public Integer getCountBuildUpLevel() {
 		return countBuildUpLevel;
 	}

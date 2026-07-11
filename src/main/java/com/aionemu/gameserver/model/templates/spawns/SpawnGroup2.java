@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +54,11 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
+
+/**
+ * 刷新点队伍2模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 @Slf4j
 
 public class SpawnGroup2 extends AbstractLockManager {
@@ -355,50 +346,66 @@ public class SpawnGroup2 extends AbstractLockManager {
 		this.npcId = npcId;
 	}
 
+	/** 返回刷新模板 / Returns the spawn templates*/
 	public List<SpawnTemplate> getSpawnTemplates() {
 		return spots;
 	}
 
+	/** 添加刷新点模板。 / Adds spawn template. */
 	public void addSpawnTemplate(SpawnTemplate spawnTemplate) {
 		spots.add(spawnTemplate);
 	}
 
+	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return worldId;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** Ge Temporary Spawn / Ge Temporary Spawn */
 	public TemporarySpawn geTemporarySpawn() {
 		return temporarySpawn;
 	}
 
+	/** 返回 pool / Returns the pool */
 	public int getPool() {
 		return pool;
 	}
 
+	/**
+	 * @return 是否 pool / 是否 pool。 / Whether pool / Whether pool
+	 */
 	public boolean hasPool() {
 		return pool > 0;
 	}
 
+	/** 返回 respawn time / Returns the respawn time */
 	public int getRespawnTime() {
 		return respawnTime;
 	}
 
+	/** 设置 respawn time / Sets the respawn time */
 	public void setRespawnTime(int respawnTime) {
 		this.respawnTime = respawnTime;
 	}
 
+	/**
+	 * @return Whether temporary spawn / Whether temporary spawn
+	 */
 	public boolean isTemporarySpawn() {
 		return temporarySpawn != null;
 	}
 
+	/** 获取处理器类型。 / Returns the handler type. */
 	public SpawnHandlerType getHandlerType() {
 		return handlerType;
 	}
 
+	/** 返回 rnd template / Returns the rnd template */
 	public SpawnTemplate getRndTemplate(int instanceId) {
 		final List<SpawnTemplate> allTemplates = spots;
 		List<SpawnTemplate> templates = new ArrayList<SpawnTemplate>();
@@ -410,7 +417,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 				//}
 			}
 			if (templates.size() == 0) {
-				log.warn("Pool size more then spots, npcId: " + npcId + ", worldId: " + worldId);
+				log.warn(I18n.get("log.05d6e85f725b", npcId, worldId));
 				return null;
 			}
 		} finally {
@@ -421,6 +428,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		return spawnTemplate;
 	}
 
+	/** 设置模板使用 / Sets the template use*/
 	public void setTemplateUse(int instanceId, SpawnTemplate template, boolean isUsed) {
 		super.writeLock();
 		try {
@@ -435,6 +443,9 @@ public class SpawnGroup2 extends AbstractLockManager {
 		}
 	}
 
+	/**
+	 * @return Whether template used / Whether template used
+	 */
 	public boolean isTemplateUsed(int instanceId, SpawnTemplate template) {
 		super.readLock();
 		try {
@@ -450,6 +461,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		}
 	}
 
+	/** 重置模板 / Reset templates*/
 	public void resetTemplates(int instanceId) {
 		HashMap<SpawnTemplate, Boolean> states = poolUsedTemplates.get(instanceId);
 		if (states == null)
@@ -464,6 +476,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		}
 	}
 
+	/** 返回 difficult id / Returns the difficult id */
 	public byte getDifficultId() {
 		return difficultId;
 	}

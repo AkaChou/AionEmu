@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.instance.instancereward;
 
 import java.util.List;
@@ -28,7 +12,11 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
-import java.util.List;
+
+/**
+ * HarmonyArena 奖励，用于副本相关逻辑。
+ * Harmony Arena Reward for instance logic.
+ */
 
 public class HarmonyArenaReward extends PvPArenaReward {
 	private List<HarmonyGroupReward> groups = new ArrayList<HarmonyGroupReward>();
@@ -37,6 +25,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 		super(mapId, instanceId, instance);
 	}
 
+	/** 返回 harmony group reward / Returns the harmony group reward */
 	public HarmonyGroupReward getHarmonyGroupReward(Integer object) {
 		for (InstancePlayerReward reward : groups) {
 			HarmonyGroupReward harmonyReward = (HarmonyGroupReward) reward;
@@ -47,6 +36,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 		return null;
 	}
 
+	/** 返回 harmony group inside / Returns the harmony group inside */
 	public List<HarmonyGroupReward> getHarmonyGroupInside() {
 		List<HarmonyGroupReward> harmonyGroups = new ArrayList<HarmonyGroupReward>();
 		for (HarmonyGroupReward group : groups) {
@@ -60,6 +50,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 		return harmonyGroups;
 	}
 
+	/** 返回 players inside / Returns the players inside */
 	public List<Player> getPlayersInside(HarmonyGroupReward group) {
 		List<Player> players = new ArrayList<Player>();
 		for (Player playerInside : instance.getPlayersInside()) {
@@ -70,16 +61,20 @@ public class HarmonyArenaReward extends PvPArenaReward {
 		return players;
 	}
 
+	/** 添加 harmony group / Adds harmony group */
 	public void addHarmonyGroup(HarmonyGroupReward reward) {
 		groups.add(reward);
 	}
 
+	/** 返回组 / Returns the groups*/
 	public List<HarmonyGroupReward> getGroups() {
 		return groups;
 	}
 
+	/** 发送数据包。 / Send packet. */
 	public void sendPacket(final int type, final Integer object) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/** 访问 / visit. */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
@@ -88,6 +83,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 		});
 	}
 
+	/** 获取军阶。 / Returns the rank. */
 	@Override
 	public int getRank(int points) {
 		int rank = -1;
@@ -99,15 +95,18 @@ public class HarmonyArenaReward extends PvPArenaReward {
 		return rank;
 	}
 
+	/** 排序队伍点。 / Sort group points. */
 	public List<HarmonyGroupReward> sortGroupPoints() {
 		return RewardCollections.sortedByScoreDescending(groups, HarmonyGroupReward::getPoints);
 	}
 
+	/** 返回 total points / Returns the total points */
 	@Override
 	public int getTotalPoints() {
 		return RewardCollections.sum(groups, HarmonyGroupReward::getPoints);
 	}
 
+	/** 清空。 / Clear. */
 	@Override
 	public void clear() {
 		groups.clear();

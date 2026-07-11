@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.quest;
 
 import java.util.ArrayList;
@@ -24,6 +8,11 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 奖励模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Rewards", propOrder = { "selectableRewardItem", "rewardItem" })
@@ -67,6 +56,7 @@ public class Rewards {
 	@XmlAttribute(name = "extend_stigma")
 	protected Integer extendStigma;
 
+	/** 返回 selectable reward item / Returns the selectable reward item */
 	public List<QuestItems> getSelectableRewardItem() {
 		if (selectableRewardItem == null) {
 			selectableRewardItem = new ArrayList<QuestItems>();
@@ -74,6 +64,7 @@ public class Rewards {
 		return this.selectableRewardItem;
 	}
 
+	/** 获取奖励物品。 / Returns the reward item. */
 	public List<QuestItems> getRewardItem() {
 		if (rewardItem == null) {
 			rewardItem = new ArrayList<QuestItems>();
@@ -81,46 +72,57 @@ public class Rewards {
 		return this.rewardItem;
 	}
 
+	/** 返回基纳 / Returns the gold */
 	public Integer getGold() {
 		return gold;
 	}
 
+	/** 获取经验。 / Returns the exp. */
 	public Integer getExp() {
 		return exp;
 	}
 
+	/** 返回经验加速 / Returns the exp boost*/
 	public Integer getExpBoost() {
 		return expBoost;
 	}
 
+	/** 获取神圣能量。 / Returns the dp. */
 	public Integer getDp() {
 		return dp;
 	}
 
+	/** 获取欧比斯点数。 / Returns the ap. */
 	public Integer getAp() {
 		return ap;
 	}
 
+	/** 返回荣耀点 / Returns the gp */
 	public Integer getGp() {
 		return gp;
 	}
 
+	/** 获取创造点。 / Returns the cp. */
 	public Integer getCP() {
 		return cp;
 	}
 
+	/** 返回 abyss op / Returns the abyss op */
 	public Integer getAbyssOp() {
 		return abyssOp;
 	}
 
+	/** 获取称号。 / Returns the title. */
 	public Integer getTitle() {
 		return title;
 	}
 
+	/** 返回 extend inventory / Returns the extend inventory */
 	public Integer getExtendInventory() {
 		return extendInventory;
 	}
 
+	/** 返回 extend stigma / Returns the extend stigma */
 	public Integer getExtendStigma() {
 		return extendStigma;
 	}

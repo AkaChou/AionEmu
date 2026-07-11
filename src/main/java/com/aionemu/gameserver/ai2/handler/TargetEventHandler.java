@@ -1,16 +1,3 @@
-/* Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
@@ -25,12 +12,18 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 
 /**
+ * 目标事件处理器，负责到达目标、目标过远、放弃目标与切换目标。
+ * Handles target events: target reached, target too far, give-up, and target change.
+ *
  * @author ATracer
  */
 public class TargetEventHandler {
 
 	/**
-	 * @param npcAI
+	 * 到达目标位置：按当前 AI 状态调度攻击、归家、行走或停止移动。
+	 * On target reached: schedules attack, return-home, walking, or aborts move based on AI state.
+	 *
+	 * NPC AI instance
 	 */
 	public static void onTargetReached(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -56,7 +49,7 @@ public class TargetEventHandler {
 			case WALKING:
 				WalkManager.targetReached(npcAI);
 				checkAggro(npcAI);
-				break;	
+				break;
 			case FOLLOWING:
 				npcAI.getOwner().getMoveController().abortMove();
 				npcAI.getOwner().getMoveController().storeStep();
@@ -69,7 +62,10 @@ public class TargetEventHandler {
 	}
 
 	/**
-	 * @param npcAI
+	 * 目标过远：战斗时由攻击管理器处理，跟随时由跟随管理器处理。
+	 * Target too far: attack manager for fight, follow manager for following.
+	 *
+	 * NPC AI instance
 	 */
 	public static void onTargetTooFar(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -93,7 +89,10 @@ public class TargetEventHandler {
 	}
 
 	/**
-	 * @param npcAI
+	 * 放弃目标：停止仇恨、中止移动并重新思考。
+	 * Gives up the target: stops hating, aborts move, and re-thinks.
+	 *
+	 * NPC AI instance
 	 */
 	public static void onTargetGiveup(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
@@ -115,7 +114,11 @@ public class TargetEventHandler {
 	}
 
 	/**
-	 * @param npcAI
+	 * 战斗中切换目标并调度下一次攻击。
+	 * Changes target during fight and schedules the next attack.
+	 *
+	 * NPC AI instance
+	 * new target
 	 */
 	public static void onTargetChange(NpcAI2 npcAI, Creature creature) {
 		if (npcAI.isLogging()) {
@@ -126,7 +129,13 @@ public class TargetEventHandler {
 			AttackManager.scheduleNextAttack(npcAI);
 		}
 	}
-	
+
+	/**
+	 * 行走到达后，对已知列表中的生物重新检查仇恨。
+	 * After walking arrival, re-checks aggro against known creatures.
+	 *
+	 * NPC AI instance
+	 */
 	private static void checkAggro(NpcAI2 npcAI) {
 		for (VisibleObject obj : npcAI.getOwner().getKnownList().getKnownObjectsSnapshot()) {
 			if (obj instanceof Creature) {

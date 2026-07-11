@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 潘德莫尼姆任务脚本：A Tokenof Lost Love（任务 ID 2914）。
+ * Pandaemonium quest script: A Tokenof Lost Love (quest ID 2914).
  */
 public class _2914ATokenofLostLove extends QuestHandler {
 

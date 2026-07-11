@@ -24,20 +24,32 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * GM command to add a combined skill to a player.
+ * GM 指令：从 skills.xml 解析并为玩家添加组合技能。
+ * GM command handler that loads skills.xml and adds a combined skill to a player.
  *
- * @author ginho1 (original logic)
- * new adaptation for CmdGMHandler made by Dezalmado
+ * @author ginho1
+ * @modified Dezalmado
  */
 public final class CmdCombineSkill extends AbstractGMHandler {
 
 	private static final File SKILLS_XML_FILE = Config.dataFile("./data/scripts/system/handlers/consolecommands/skills.xml");
 
+	/**
+	 * 创建处理器并立即执行组合技能添加。
+	 * Creates the handler and immediately runs the combine-skill logic.
+	 *
+	 * @param admin 执行指令的管理员 / the admin executing the command
+	 * @param params 技能 ID/名称 [等级] [玩家名] / skill id/name [level] [player name]
+	 */
 	public CmdCombineSkill(Player admin, String params) {
 		super(admin, params);
 		run();
 	}
 
+	/**
+	 * 校验权限后从 skills.xml 查找技能并添加到目标玩家。
+	 * After access check, looks up the skill in skills.xml and adds it to the target player.
+	 */
 	public void run() {
 		if (admin.getAccessLevel() < AdminConfig.GM_LEVEL) {
 			PacketSendUtility.sendMessage(admin, "You do not have sufficient access level to use this command.");

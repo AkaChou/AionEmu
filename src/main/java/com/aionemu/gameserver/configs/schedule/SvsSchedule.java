@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs.schedule;
 
 import java.nio.charset.StandardCharsets;
@@ -30,23 +14,41 @@ import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
 
 /**
+ * SvS（服务器对战）活动时间表配置。
+ * SvS (Server vs Server) event schedule configuration.
+ *
  * @author Rinzler (Encom)
  */
-
 @XmlRootElement(name = "svs_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SvsSchedule {
+	/**
+	 * SvS 列表。
+	 * List of SvSs.
+	 */
 	@XmlElement(name = "svs", required = true)
 	private List<Svs> svssList;
 
+	/**
+	 * 获取 SvS 列表。
+	 * Returns the SvS list.
+	 */
 	public List<Svs> getSvssList() {
 		return svssList;
 	}
 
+	/**
+	 * 设置 SvS 列表。
+	 * Sets the SvS list.
+	 */
 	public void setSvssList(List<Svs> svsList) {
 		this.svssList = svsList;
 	}
 
+	/**
+	 * 从 XML 加载时间表。
+	 * Loads the schedule from XML.
+	 */
 	public static SvsSchedule load() {
 		SvsSchedule ss;
 		try {
@@ -58,27 +60,54 @@ public class SvsSchedule {
 		return ss;
 	}
 
+	/**
+	 * 单个 SvS 的时间表条目。
+	 * Schedule entry for a single SvS.
+	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "svs")
 	public static class Svs {
+		/**
+	 * SvS ID / SvS ID
+	 */
 		@XmlAttribute(required = true)
 		private int id;
 
+		/**
+		 * SvS 时间列表。
+		 * List of SvS times.
+		 */
 		@XmlElement(name = "svsTime", required = true)
 		private List<String> svsTimes;
 
+		/**
+		 * 获取 SvS ID。
+		 * Returns the SvS ID.
+		 */
 		public int getId() {
 			return id;
 		}
 
+		/**
+		 * 设置 SvS ID。
+		 * Sets the SvS ID.
+		 */
 		public void setId(int id) {
 			this.id = id;
 		}
 
+		/**
+		 * 获取 SvS 时间列表。
+		 * Returns the SvS times.
+		 */
 		public List<String> getSvsTimes() {
 			return svsTimes;
 		}
 
+		/**
+		 * 设置 SvS 时间列表。
+		 * Sets the SvS times.
+		 */
 		public void setSvsTimes(List<String> svsTimes) {
 			this.svsTimes = svsTimes;
 		}

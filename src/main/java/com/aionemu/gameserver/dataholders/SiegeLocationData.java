@@ -1,22 +1,8 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -30,9 +16,10 @@ import com.aionemu.gameserver.model.siege.FortressLocation;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeLocationTemplate;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+/**
+ * 攻城据点数据容器，按类型分索引要塞、神器与统一据点映射。
+ * Siege location data holder, indexing fortresses, artifacts and the unified location map by type.
+ */
 @XmlRootElement(name = "siege_locations")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SiegeLocationData {
@@ -46,6 +33,10 @@ public class SiegeLocationData {
 	@XmlTransient
 	private Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<Integer, SiegeLocation>();
 
+	/**
+	 * JAXB 反序列化完成后，按类型构建要塞/神器/统一据点索引。
+	 * After JAXB unmarshalling, builds fortress/artifact/unified location indexes by type.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		artifactLocations.clear();
 		fortressLocations.clear();
@@ -69,18 +60,42 @@ public class SiegeLocationData {
 		}
 	}
 
+	/**
+	 * 返回统一攻城据点数量。
+	 * Returns the number of unified siege locations.
+	 *
+	 * location count
+	 */
 	public int size() {
 		return siegeLocations.size();
 	}
 
+	/**
+	 * 返回神器据点映射。
+	 * Returns the artifact location map.
+	 *
+	 * @return ID 到神器的映射 / map of id to artifact
+	 */
 	public Map<Integer, ArtifactLocation> getArtifacts() {
 		return artifactLocations;
 	}
 
+	/**
+	 * 返回要塞据点映射。
+	 * Returns the fortress location map.
+	 *
+	 * @return ID 到要塞的映射 / map of id to fortress
+	 */
 	public Map<Integer, FortressLocation> getFortress() {
 		return fortressLocations;
 	}
 
+	/**
+	 * 返回全部攻城据点映射。
+	 * Returns the full siege location map.
+	 *
+	 * @return ID 到据点的映射 / map of id to location
+	 */
 	public Map<Integer, SiegeLocation> getSiegeLocations() {
 		return siegeLocations;
 	}

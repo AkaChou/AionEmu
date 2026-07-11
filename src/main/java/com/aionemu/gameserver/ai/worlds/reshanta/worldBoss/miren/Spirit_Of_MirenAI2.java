@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.miren;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -33,10 +17,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Reshanta 区域 NPC AI：Spirit Of Miren（@AIName "spirit_of_miren"），继承 AggressiveNpcAI2。
+ * Reshanta zone NPC AI: Spirit Of Miren (@AIName "spirit_of_miren"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("spirit_of_miren")
 public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 {
@@ -60,7 +46,7 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Spirit_Of_MirenAI2.this);
-						//The Miren Berserker Soul has disappeared..
+						// 米伦狂战士之魂已消失。 / The Miren Berserker Soul has disappeared..
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_lamiren);
 			        }
 				});
@@ -72,7 +58,7 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Miren Guardian Appears.
+				// 米伦守护者出现。 / Miren Guardian Appears.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn_In);
 			}
 		});
@@ -84,7 +70,7 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Miren Berserker Soul has been slain.
+				// 米伦狂战士之魂已被击杀。 / The Miren Berserker Soul has been slain.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_lamiren);
 			}
 		});

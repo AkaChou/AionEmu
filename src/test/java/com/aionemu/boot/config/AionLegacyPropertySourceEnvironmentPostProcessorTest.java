@@ -93,6 +93,24 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
         }
     }
 
+    @Test
+    void loadsDefaultConfigDirectoriesFromAionHome() throws Exception {
+        Path gameConfig = tempDir.resolve("aion/game/config/main");
+        Files.createDirectories(gameConfig);
+        Files.writeString(gameConfig.resolve("gameserver.properties"), "gameserver.country.code=5\n");
+
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource(
+            "commandLine",
+            Map.of("aion.home", tempDir.resolve("aion").toString())
+        ));
+
+        new AionLegacyPropertySourceEnvironmentPostProcessor()
+            .postProcessEnvironment(environment, new SpringApplication());
+
+        assertEquals("5", environment.getProperty("gameserver.country.code"));
+    }
+
     private LegacyGameProperties bindLegacyGameProperties(StandardEnvironment environment) {
         LegacyGameProperties properties = new LegacyGameProperties();
         Binder.get(environment).bind("aion.legacy.game", Bindable.ofInstance(properties));

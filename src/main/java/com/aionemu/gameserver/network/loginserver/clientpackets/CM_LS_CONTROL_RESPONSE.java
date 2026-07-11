@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -25,10 +9,19 @@ import com.aionemu.gameserver.utils.rates.Rates;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 登录服对账号权限/会员控制请求的响应包，同步本地账号并通知相关玩家。
+ * LoginServer response for account access/membership control; updates local account and notifies players.
+ *
  * @author Aionchs-Wylovech
  */
 public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
 
+	/**
+	 * 构造函数。
+	 * Constructor.
+	 *
+	 * @param opCode 操作码 opcode
+	 */
 	public CM_LS_CONTROL_RESPONSE(int opCode) {
 		super(opCode);
 	}
@@ -40,6 +33,10 @@ public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
 	private String adminName;
 	private int accountId;
 
+	/**
+	 * 读取控制类型、结果与相关玩家信息。
+	 * Reads control type, result, and related player info.
+	 */
 	@Override
 	public void readImpl() {
 		type = readC();
@@ -50,6 +47,10 @@ public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
 		accountId = readD();
 	}
 
+	/**
+	 * 更新本地账号并按类型向管理员/玩家发送提示。
+	 * Updates the local account and notifies admin/player by type.
+	 */
 	@Override
 	public void runImpl() {
 		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();

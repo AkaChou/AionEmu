@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,10 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 
+/**
+ * 技能学习模板：职业、种族、等级与是否自动/烙印学习。
+ * Skill learn template: class, race, level and auto/stigma learn flags.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "skill")
 public class SkillLearnTemplate {
@@ -55,38 +43,92 @@ public class SkillLearnTemplate {
 	@XmlAttribute
 	private boolean stigma = false;
 
+	/**
+	 * 获取职业。
+	 * Gets player class.
+	 *
+	 * class
+	 */
 	public PlayerClass getClassId() {
 		return classId;
 	}
 
+	/**
+	 * 获取技能 ID。
+	 * Gets skill id.
+	 *
+	 * skill id
+	 */
 	public int getSkillId() {
 		return skillId;
 	}
 
+	/**
+	 * 获取技能等级。
+	 * Gets skill level.
+	 *
+	 * level
+	 */
 	public int getSkillLevel() {
 		return skillLevel;
 	}
 
+	/**
+	 * 获取技能名称。
+	 * Gets skill name.
+	 *
+	 * name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * 获取最低学习等级。
+	 * Gets minimum learn level.
+	 *
+	 * min level
+	 */
 	public int getMinLevel() {
 		return minLevel;
 	}
 
+	/**
+	 * 获取种族限制。
+	 * Gets race restriction.
+	 *
+	 * @return 阵营 / race
+	 */
 	public Race getRace() {
 		return race;
 	}
 
+	/**
+	 * 获取技能分组。
+	 * Gets skill group.
+	 *
+	 * group
+	 */
 	public String getSkillGroup() {
 		return skill_group;
 	}
 
+	/**
+	 * 是否自动学习。
+	 * Whether auto-learned.
+	 *
+	 * auto learn
+	 */
 	public boolean isAutoLearn() {
 		return autoLearn;
 	}
 
+	/**
+	 * 是否烙印技能。
+	 * Whether this is a stigma skill.
+	 *
+	 * stigma flag
+	 */
 	public boolean isStigma() {
 		return stigma;
 	}

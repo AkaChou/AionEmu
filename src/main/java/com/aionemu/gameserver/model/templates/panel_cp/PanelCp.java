@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.panel_cp;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 面板创造点模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rinzler (Encom)
  */
 
@@ -57,58 +44,72 @@ public class PanelCp {
 	@XmlAttribute
 	protected int minLevel;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return this.id;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 获取面板创造点类型。 / Returns the panel cp type. */
 	public PanelCpType getPanelCpType() {
 		return panelCpType;
 	}
 
+	/** 返回 learn skill / Returns the learn skill */
 	public int getLearnSkill() {
 		return learnSkill;
 	}
 
+	/** 返回 additional skill / Returns the additional skill */
 	public int getAdditionalSkill() {
 		return additionalSkill;
 	}
 
+	/** 返回 stats id / Returns the stats id */
 	public int getStatsId() {
 		return statsId;
 	}
 
+	/** 返回技能 ID / Returns the skill id */
 	public int getSkillId() {
 		return skillId;
 	}
 
+	/** 获取属性值。 / Returns the stat value. */
 	public int getStatValue() {
 		return statValue;
 	}
 
+	/** 返回 cost / Returns the cost */
 	public int getCost() {
 		return cost;
 	}
 
+	/** 返回数量最大 / Returns the count max*/
 	public int getCountMax() {
 		return countMax;
 	}
 
+	/** 返回 cost adj / Returns the cost adj */
 	public int getCostAdj() {
 		return costAdj;
 	}
 
+	/** 返回 pre cond id / Returns the pre cond id */
 	public int getPreCondId() {
 		return preCondId;
 	}
 
+	/** 返回 pre enchant count / Returns the pre enchant count */
 	public int getPreEnchantCount() {
 		return preEnchantCount;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return minLevel;
 	}

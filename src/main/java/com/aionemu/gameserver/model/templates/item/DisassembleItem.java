@@ -5,6 +5,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Random;
 
 /**
+ * Disassemble 物品模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author BeckUp.Media
  */
 @XmlRootElement(name = "create")
@@ -18,16 +21,18 @@ public class DisassembleItem {
 
     private final Random random = new Random();
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItemId() {
 		return ItemId;
 	}
 
+    /** 获取计数。 / Returns the count. */
     public int getCount() {
         if (Count == null || Count.isEmpty()) {
             return 0;
         }
         try {
-            // Check if Count contains a range (min-max format)
+            // 检查 Count 是否包含范围（min-max 格式） / Check if Count contains a range (min-max format)
             if (Count.contains("-")) {
                 String[] parts = Count.split("-");
                 if (parts.length == 2) {
@@ -36,7 +41,7 @@ public class DisassembleItem {
                     return getRandomInRange(min, max);
                 }
             }
-            // If it's not a range, try to convert it to a number
+            // 若不是范围，尝试转换为数字 / If it's not a range, try to convert it to a number
             return Integer.parseInt(Count.trim());
         } catch (NumberFormatException e) {
             return 0; // In case of error, return 0
@@ -45,11 +50,12 @@ public class DisassembleItem {
 
 
     /**
-    * Returns a random number in the specified range (inclusive)
-    * @param min minimum value
-    * @param max maximum value
-    * @return random number in the range [min, max]
-    */
+	 * 返回 random 编号在 specifiedrange ( inclusive )。 / Returns a random number in the specified range (inclusive)
+	 *
+	 * @param min minimum value
+	 * @param max maximum value
+	 * @return random number in the range [min, max]
+	 */
     private int getRandomInRange(int min, int max) {
         if (min > max) {
             int temp = min;
@@ -59,6 +65,9 @@ public class DisassembleItem {
         return random.nextInt((max - min) + 1) + min;
     }
 
+	/**
+	 * @return Whether disuse / Whether disuse
+	 */
 	public boolean isDisuse() {
 		return disuse;
 	}

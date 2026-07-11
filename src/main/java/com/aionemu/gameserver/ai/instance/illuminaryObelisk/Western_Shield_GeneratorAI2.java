@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Illuminary Obelisk 副本 NPC AI：Western Shield Generator（@AIName "western_shield_generator"），继承 ActionItemNpcAI2。
+ * Illuminary Obelisk instance NPC AI: Western Shield Generator (@AIName "western_shield_generator"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("western_shield_generator")
 public class Western_Shield_GeneratorAI2 extends ActionItemNpcAI2
 {
@@ -54,7 +40,7 @@ public class Western_Shield_GeneratorAI2 extends ActionItemNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The western power shield generator is under attack.
+					// 西部护盾能量发生器遭受攻击。 / The western power shield generator is under attack.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_DEFENCE_02_ATTACKED);
 				}
 			}

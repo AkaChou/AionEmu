@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,12 +13,20 @@ import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
- * @author Sippolo modified by kecimis
+ * 保护效果：作为护盾类效果，代受/减免被保护者所受伤害。
+ * Protect effect: shield-like effect that absorbs/reduces damage for the protected.
+ *
+ * @author Sippolo
+ * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProtectEffect")
 public class ProtectEffect extends ShieldEffect {
 
+	/**
+	 * 启动保护：设置护盾观察与召唤/死亡联动。
+	 * Starts protect: shield observers and summon/death linkage.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 
@@ -64,6 +56,10 @@ public class ProtectEffect extends ShieldEffect {
 		}
 	}
 
+	/**
+	 * 结束保护并移除观察者。
+	 * Ends protect and removes observers.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		AttackCalcObserver acObserver = effect.getAttackShieldObserver(position);
@@ -77,9 +73,14 @@ public class ProtectEffect extends ShieldEffect {
 	}
 
 	/**
-	 * shieldType 1:reflector 2: normal shield 8: protec
-	 * 
+	 * 护盾类型：1 反射，2 普通护盾，8 保护。
+	 * shieldType 1:reflector 2: normal shield 8: protect
+	 *
 	 * @return
+	 */
+	/**
+	 * 返回保护效果类型标识。
+	 * Returns the protect effect type id.
 	 */
 	@Override
 	public int getType() {

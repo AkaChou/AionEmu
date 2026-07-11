@@ -1,55 +1,61 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.conquestservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.gameserver.ai2.AbstractAI;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.services.ConquestService;
 
 /**
+ * 征服/供奉活动抽象基类。
+ * Abstract base for Conquest/Offering world events.
+ *
+ * <p>管理启动/停止幂等、供奉 BOSS 定位与死亡监听。
+ * Manages idempotent start/stop, offering-boss location and death listeners.</p>
+ *
  * @author Rinzler (Encom)
+ * @param <CL> 征服地点类型 / conquest location type
  */
-
 public abstract class ConquestOffering<CL extends ConquestLocation> {
+
 	private boolean started;
 	private Npc conquestBoss;
 	private final CL conquestLocation;
 	private boolean conquestBossDestroyed;
-
-	protected abstract void stopConquest();
-
-	protected abstract void startConquest();
-
 	private final AtomicBoolean finished = new AtomicBoolean();
 	private final ConquestBossDestroyListener conquestBossDestroyListener = new ConquestBossDestroyListener(this);
 
+	/**
+	 * 停止活动的具体实现。
+	 * Concrete stop logic.
+	 */
+	protected abstract void stopConquest();
+
+	/**
+	 * 启动活动的具体实现。
+	 * Concrete start logic.
+	 */
+	protected abstract void startConquest();
+
+	/**
+	 * 绑定征服地点。
+	 * Binds the conquest location.
+	 *
+	 * location
+	 */
 	public ConquestOffering(CL conquestLocation) {
 		this.conquestLocation = conquestLocation;
 	}
 
+	/**
+	 * 启动活动（幂等）。
+	 * Starts the event (idempotent).
+	 */
 	public final void start() {
 		boolean doubleStart = false;
 		synchronized (this) {
@@ -65,21 +71,29 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 		startConquest();
 	}
 
+	/**
+	 * 停止活动（仅首次生效）。
+	 * Stops the event (first call only).
+	 */
 	public final void stop() {
 		if (finished.compareAndSet(false, true)) {
 			stopConquest();
 		}
 	}
 
+	/**
+	 * 在已刷出对象中定位供奉 BOSS 并注册死亡监听。
+	 * Locates the offering boss among spawned objects and registers its death listener.
+	 */
 	protected void initConquestBoss() {
 		Npc cb = null;
 		for (VisibleObject obj : new ArrayList<VisibleObject>(getConquestLocation().getSpawned())) {
 			int npcId = ((Npc) obj).getNpcId();
-			// Conquest/Offering Inggison.
+			// 征服/供奉 因格森。 / Conquest/Offering Inggison.
 			if ((npcId < 236530) || npcId > 236553) {
 				cb = (Npc) obj;
 			}
-			// Conquest/Offering Gelkmaros.
+			// 征服/供奉 吉尔克马罗斯。 / Conquest/Offering Gelkmaros.
 			else if ((npcId < 236586) || npcId > 236609) {
 				cb = (Npc) obj;
 			}
@@ -91,54 +105,120 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 		addConquestBossListeners();
 	}
 
+	/**
+	 * 按状态类型刷新刷怪。
+	 * Spawns entities by state type.
+	 *
+	 * @param type 状态类型 / state type
+	 */
 	protected void spawn(ConquestStateType type) {
 		GameLocationBootstrapServices.conquestService().spawn(getConquestLocation(), type);
 	}
 
+	/**
+	 * 清除该地点刷怪。
+	 * Despawns entities for this location.
+	 */
 	protected void despawn() {
 		GameLocationBootstrapServices.conquestService().despawn(getConquestLocation());
 	}
 
+	/**
+	 * 为供奉 BOSS AI 注册死亡回调。
+	 * Registers the death callback on the offering boss AI.
+	 */
 	protected void addConquestBossListeners() {
 		AbstractAI ai = (AbstractAI) getConquestBoss().getAi2();
 		EnhancedObject eo = (EnhancedObject) ai;
 		eo.addCallback(getConquestBossDestroyListener());
 	}
 
+	/**
+	 * 移除供奉 BOSS AI 上的死亡回调。
+	 * Removes the death callback from the offering boss AI.
+	 */
 	protected void rmvConquestBossListener() {
 		AbstractAI ai = (AbstractAI) getConquestBoss().getAi2();
 		EnhancedObject eo = (EnhancedObject) ai;
 		eo.removeCallback(getConquestBossDestroyListener());
 	}
 
+	/**
+	 * 供奉 BOSS 是否已被摧毁。
+	 * Whether the offering boss has been destroyed.
+	 *
+	 * @return 已摧毁则为 true / true if destroyed
+	 */
 	public boolean isConquestBossDestroyed() {
 		return conquestBossDestroyed;
 	}
 
+	/**
+	 * 设置供奉 BOSS 摧毁状态。
+	 * Sets the offering boss destroyed flag.
+	 *
+	 * state
+	 */
 	public void setConquestBossDestroyed(boolean state) {
 		this.conquestBossDestroyed = state;
 	}
 
+	/**
+	 * 获取供奉 BOSS NPC。
+	 * Returns the offering boss NPC.
+	 *
+	 * boss
+	 */
 	public Npc getConquestBoss() {
 		return conquestBoss;
 	}
 
+	/**
+	 * 设置供奉 BOSS NPC。
+	 * Sets the offering boss NPC.
+	 *
+	 * boss
+	 */
 	public void setConquestBoss(Npc conquestBoss) {
 		this.conquestBoss = conquestBoss;
 	}
 
+	/**
+	 * 获取 BOSS 死亡监听器。
+	 * Returns the boss destroy listener.
+	 *
+	 * listener
+	 */
 	public ConquestBossDestroyListener getConquestBossDestroyListener() {
 		return conquestBossDestroyListener;
 	}
 
+	/**
+	 * 是否已结束。
+	 * Whether the event has finished.
+	 *
+	 * @return 已结束则为 true / true if finished
+	 */
 	public boolean isFinished() {
 		return finished.get();
 	}
 
+	/**
+	 * 获取绑定地点。
+	 * Returns the bound location.
+	 *
+	 * location
+	 */
 	public CL getConquestLocation() {
 		return conquestLocation;
 	}
 
+	/**
+	 * 获取地点 ID。
+	 * Returns the location id.
+	 *
+	 * location id
+	 */
 	public int getConquestLocationId() {
 		return conquestLocation.getId();
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.util.Set;
@@ -22,22 +6,68 @@ import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.Petition;
 
 /**
+ * 玩家请愿/申诉数据访问对象。
+ * Player petition data access object.
+ *
  * @author zdead
  */
 public abstract class PetitionDAO implements DAO {
 
+	/**
+	 * 获取下一个可用的请愿 ID。
+	 * Returns the next available petition ID.
+	 *
+	 * next available id
+	 */
 	public abstract int getNextAvailableId();
 
+	/**
+	 * 插入一条请愿记录。
+	 * Inserts a petition record.
+	 *
+	 * @param p 请愿对象 / petition
+	 */
 	public abstract void insertPetition(Petition p);
 
+	/**
+	 * 按玩家对象 ID 删除请愿。
+	 * Deletes petitions by player object ID.
+	 *
+	 * player object id
+	 */
 	public abstract void deletePetition(int playerObjId);
 
+	/**
+	 * 获取全部请愿集合。
+	 * Returns the set of all petitions.
+	 *
+	 * set of petitions
+	 */
 	public abstract Set<Petition> getPetitions();
 
+	/**
+	 * 按请愿 ID 获取请愿。
+	 * Returns a petition by its ID.
+	 *
+	 * petition id
+	 * petition
+	 */
 	public abstract Petition getPetitionById(int petitionId);
 
+	/**
+	 * 将请愿标记为已回复。
+	 * Marks the petition as replied.
+	 *
+	 * petition id
+	 */
 	public abstract void setReplied(int petitionId);
 
+	/**
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
+	 */
 	@Override
 	public final String getClassName() {
 		return PetitionDAO.class.getName();

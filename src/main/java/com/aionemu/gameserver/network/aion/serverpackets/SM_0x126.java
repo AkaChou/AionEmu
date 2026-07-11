@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +5,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 未命名操作码 0x126 的服务端包，向客户端同步一个未知短整型值。
+ * Server packet for opcode 0x126 that synchronizes an unknown short value to the client.
+ *
  * @author Ranastic (Encom)
  */
 @Slf4j
@@ -29,6 +16,12 @@ public class SM_0x126 extends AionServerPacket {
 
 	private int unk;
 
+	/**
+	 * 使用给定的未知值构造包。
+	 * Creates the packet with the given unknown value.
+	 *
+	 * @param unk 写入客户端的未知短整型值 / unknown short value written to the client
+	 */
 	public SM_0x126(int unk) {
 		this.unk = unk;
 	}

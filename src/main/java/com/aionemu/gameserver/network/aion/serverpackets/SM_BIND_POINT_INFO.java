@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.Kisk;
@@ -21,8 +5,12 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-/*
- * @author sweetkr, Sarynth
+/**
+ * 同步玩家绑定点（回城点/Kisk）坐标与状态的服务端包。
+ * Kisk) coordinates and state. / Kisk) coordinates and state.
+ *
+ * @author sweetkr
+ * @author Sarynth
  */
 public class SM_BIND_POINT_INFO extends AionServerPacket {
 
@@ -32,6 +20,13 @@ public class SM_BIND_POINT_INFO extends AionServerPacket {
 	private final float z;
 	private final Kisk kisk;
 
+	/**
+	 * @param mapId 绑定地图 ID / bind map id
+	 * @param x 绑定坐标 X / bind coordinate X
+	 * @param y 绑定坐标 Y / bind coordinate Y
+	 * @param z 绑定坐标 Z / bind coordinate Z
+	 * @param player 用于读取当前 Kisk 的玩家 / player whose active Kisk is read
+	 */
 	public SM_BIND_POINT_INFO(int mapId, float x, float y, float z, Player player) {
 		this.mapId = mapId;
 		this.x = x;
@@ -45,10 +40,10 @@ public class SM_BIND_POINT_INFO extends AionServerPacket {
 	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
-		// Appears 0x04 if bound to a kisk. 0x00 if not.
+		// 绑定 Kisk 时为 0x04，否则为 0x00。 / Appears 0x04 if bound to a kisk. 0x00 if not.
 		writeC((kisk == null ? 0x00 : 0x04));
 
-		writeC(0x01);// unk
+		writeC(0x01);// 未知 / unk
 		writeD(mapId);// map id
 		writeF(x); // coordinate x
 		writeF(y); // coordinate y

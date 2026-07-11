@@ -1,19 +1,6 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -51,47 +38,57 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Just some part of map.
- * 
+ * 地图分区：可见对象存放、邻接激活与 Zone 校验。
+ * Map region: holds visible objects, neighbour activation and zone validation.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
 public class MapRegion {
 
-
 	/**
-	 * Region id of this map region [NOT WORLD ID!]
+	 * 区域 ID（非世界地图 ID）。
+	 * Region id (not the world map id).
 	 */
 	private final int regionId;
 	/**
-	 * WorldMapInstance witch is parent of this map region.
+	 * 所属地图实例。
+	 * Parent world-map instance.
 	 */
 	private final WorldMapInstance parent;
 	/**
-	 * Surrounding regions + self.
+	 * 邻接区域（含自身）。
+	 * Neighbour regions (includes self).
 	 */
 	private volatile MapRegion[] neighbours = new MapRegion[0];
 	/**
-	 * Objects on this map region.
+	 * 本区域内的可见对象。
+	 * Visible objects in this region.
 	 */
 	private final Map<Integer, VisibleObject> objects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
+	/** 区域内玩家计数 / player count in this region */
 	private final AtomicInteger playerCount = new AtomicInteger(0);
 
+	/** 区域是否激活 / whether the region is active */
 	private final AtomicBoolean regionActive = new AtomicBoolean(false);
 
+	/** 区域统计 / zone count */
 	private final int zoneCount;
 
 	/**
-	 * Zones in this region
+	 * 按类别分组的 Zone 集合。
+	 * Zones grouped by category.
 	 */
 	private Map<Integer, TreeSet<ZoneInstance>> zoneMap;
 
 	/**
-	 * Constructor.
-	 * 
-	 * @param id
-	 * @param parent
+	 * 构造地图区域。
+	 * Construct a map region.
+	 *
+	 * @param id 区域 ID / region id
+	 * @param parent 父地图实例 / parent map instance
+	 * @param zones 关联 Zone 数组 / related zone array
 	 */
 	MapRegion(int id, WorldMapInstance parent, ZoneInstance[] zones) {
 		this.regionId = id;
@@ -102,55 +99,73 @@ public class MapRegion {
 	}
 
 	/**
-	 * Return World map id.
-	 * 
-	 * @return world map id
+	 * 返回世界地图 ID。
+	 * Return the world map id.
+	 *
+	 * map id
 	 */
 	public Integer getMapId() {
 		return getParent().getMapId();
 	}
 
 	/**
-	 * Return an instance of {@link World}, which keeps map, to which belongs this
-	 * region
+	 * 返回所属世界。
+	 * Return the owning world.
+	 *
+	 * world
 	 */
 	public World getWorld() {
 		return getParent().getWorld();
 	}
 
 	/**
-	 * Returns region id of this map region. [NOT WORLD ID!]
-	 * 
-	 * @return region id.
+	 * 返回区域 ID（非世界地图 ID）。
+	 * Return the region id (not world map id).
+	 *
+	 * region id
 	 */
 	public int getRegionId() {
 		return regionId;
 	}
 
 	/**
-	 * Returns WorldMapInstance witch is parent of this instance
-	 * 
-	 * @return parent
+	 * 返回父地图实例。
+	 * Return the parent map instance.
+	 *
+	 * parent instance
 	 */
 	public WorldMapInstance getParent() {
 		return parent;
 	}
 
 	/**
-	 * Returns iterator over AionObjects on this region
-	 * 
-	 * @return objects iterator
+	 * 返回本区域对象表。
+	 * Return the object map of this region.
+	 *
+	 * object map
 	 */
 	public Map<Integer, VisibleObject> getObjects() {
 		return objects;
 	}
 
+	/**
+	 * 对象值快照。
+	 * Snapshot of object values.
+	 *
+	 * object list
+	 */
 	public List<VisibleObject> getObjectsSnapshot() {
 		synchronized (objects) {
 			return new ArrayList<>(objects.values());
 		}
 	}
 
+	/**
+	 * 本区域内的静态门。
+	 * Static doors in this region.
+	 *
+	 * @return entityId → door。 / entityId → door
+	 */
 	public Map<Integer, StaticDoor> getDoors() {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
 		for (VisibleObject obj : getObjectsSnapshot()) {
@@ -163,16 +178,20 @@ public class MapRegion {
 	}
 
 	/**
-	 * @return the neighbours
+	 * 返回邻接区域数组。
+	 * Return neighbour region array.
+	 *
+	 * neighbours
 	 */
 	public MapRegion[] getNeighbours() {
 		return neighbours;
 	}
 
 	/**
-	 * Add neighbour region to this region neighbours list.
-	 * 
-	 * @param neighbour
+	 * 添加邻接区域。
+	 * Add a neighbour region.
+	 *
+	 * neighbour region
 	 */
 	void addNeighbourRegion(MapRegion neighbour) {
 		neighbours = Arrays.copyOf(neighbours, neighbours.length + 1);
@@ -180,9 +199,10 @@ public class MapRegion {
 	}
 
 	/**
-	 * Add AionObject to this region objects list.
-	 * 
-	 * @param object
+	 * 将对象加入本区域；玩家增减触发激活检查。
+	 * Add an object to this region; player changes trigger activeness checks.
+	 *
+	 * visible object
 	 */
 	void add(VisibleObject object) {
 		if (objects.put(object.getObjectId(), object) == null) {
@@ -201,15 +221,16 @@ public class MapRegion {
 						}
 					}
 				}
-				log.warn("Outside any zones: id=" + object + " > X:" + object.getX() + ",Y:" + object.getY() + ",Z:" + object.getZ());
+				log.warn(I18n.get("log.55fd6cf19a88", object, object.getX(), object.getY(), object.getZ()));
 			}
 		}
 	}
 
 	/**
-	 * Remove AionObject from region objects list.
-	 * 
-	 * @param object
+	 * 从本区域移除对象。
+	 * Remove an object from this region.
+	 *
+	 * visible object
 	 */
 	void remove(VisibleObject object) {
 		if (objects.remove(object.getObjectId()) != null) {
@@ -219,6 +240,12 @@ public class MapRegion {
 		}
 	}
 
+	/**
+	 * 根据是否有玩家决定激活/去激活调度。
+	 * Schedule activation/deactivation based on player presence.
+	 *
+	 * @param active 是否应激活 / whether should be active
+	 */
 	public final void checkActiveness(boolean active) {
 		if (active && regionActive.compareAndSet(false, true)) {
 			startActivation();
@@ -227,6 +254,10 @@ public class MapRegion {
 		}
 	}
 
+	/**
+	 * 延迟激活自身与邻接区域的 AI。
+	 * Delayed activation of self and neighbour AI.
+	 */
 	final void startActivation() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
@@ -241,6 +272,10 @@ public class MapRegion {
 		}, 1000);
 	}
 
+	/**
+	 * 延迟检查邻接是否可去激活。
+	 * Delayed check whether neighbours can deactivate.
+	 */
 	final void startDeactivation() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
@@ -256,6 +291,10 @@ public class MapRegion {
 		}, 60000);
 	}
 
+	/**
+	 * 激活本区域对象 AI。
+	 * Activate AI of objects in this region.
+	 */
 	public void activate() {
 		if (regionActive.compareAndSet(false, true)) {
 			activateObjects();
@@ -263,7 +302,8 @@ public class MapRegion {
 	}
 
 	/**
-	 * Send ACTIVATE event to all objects with AI2
+	 * 向带 AI2 的生物发送 ACTIVATE 事件。
+	 * Send ACTIVATE event to creatures with AI2.
 	 */
 	private final void activateObjects() {
 		for (VisibleObject visObject : getObjectsSnapshot()) {
@@ -274,6 +314,10 @@ public class MapRegion {
 		}
 	}
 
+	/**
+	 * 去激活本区域对象 AI。
+	 * Deactivate AI of objects in this region.
+	 */
 	public void deactivate() {
 		if (regionActive.compareAndSet(true, false)) {
 			deactivateObjects();
@@ -281,14 +325,15 @@ public class MapRegion {
 	}
 
 	/**
-	 * Send DEACTIVATE event to all objects with AI2
+	 * 向带 AI2 的生物发送 DEACTIVATE 并停止行走。
+	 * Send DEACTIVATE to creatures with AI2 and stop walking.
 	 */
 	private void deactivateObjects() {
 		for (VisibleObject visObject : getObjectsSnapshot()) {
 			if (visObject instanceof Creature && !(SiegeConfig.BALAUR_AUTO_ASSAULT && visObject instanceof SiegeNpc || !(visObject instanceof BaseNpc))) { // Tweak
 				Creature creature = (Creature) visObject;
 				creature.getAi2().onGeneralEvent(AIEventType.DEACTIVATE);
-				
+
 				if (creature instanceof Npc) {
 					Npc npc = (Npc) creature;
 					if (npc.getAi2() instanceof NpcAI2) {
@@ -299,10 +344,22 @@ public class MapRegion {
 		}
 	}
 
+	/**
+	 * 区域是否处于激活追踪状态。
+	 * Whether the region is considered active (respects WORLD_ACTIVE_TRACE).
+	 *
+	 * @return 若 active 则为 true / true if active
+	 */
 	public boolean isMapRegionActive() {
 		return !WorldConfig.WORLD_ACTIVE_TRACE || regionActive.get();
 	}
 
+	/**
+	 * 邻接区域中是否有仍含玩家的激活区。
+	 * Whether any neighbour is active and still has players.
+	 *
+	 * @return 有活跃邻接返回 true / true if a neighbour is active with players
+	 */
 	boolean isNeighboursActive() {
 		for (int i = 0; i < neighbours.length; i++) {
 			MapRegion r = neighbours[i];
@@ -313,6 +370,12 @@ public class MapRegion {
 		return false;
 	}
 
+	/**
+	 * 重校验生物所在全部 Zone 的 enter/leave。
+	 * Revalidate enter/leave for all zones covering the creature.
+	 *
+	 * creature
+	 */
 	public void revalidateZones(Creature creature) {
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
 			boolean foundZone = false;
@@ -336,6 +399,13 @@ public class MapRegion {
 		}
 	}
 
+	/**
+	 * 返回包含该生物的 Zone 列表。
+	 * Return zones that contain the creature.
+	 *
+	 * creature
+	 * zone list
+	 */
 	public List<ZoneInstance> getZones(Creature creature) {
 		List<ZoneInstance> z = new ArrayList<ZoneInstance>();
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
@@ -349,6 +419,15 @@ public class MapRegion {
 		return z;
 	}
 
+	/**
+	 * 将死亡事件分发给包含目标的 Zone。
+	 * Dispatch death event to zones containing the target.
+	 *
+	 * attacker
+	 * target
+	 *
+	 * @return 任一 Zone 处理返回 true / true if any zone handled it
+	 */
 	public boolean onDie(Creature attacker, Creature target) {
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
 			TreeSet<ZoneInstance> zones = e.getValue();
@@ -363,6 +442,17 @@ public class MapRegion {
 		return false;
 	}
 
+	/**
+	 * 判断坐标是否在指定 Zone 内。
+	 * Whether coordinates lie inside the named zone.
+	 *
+	 * zone name
+	 *
+	 * @param x 坐标 X / X coordinate
+	 * @param y 坐标 Y / Y coordinate
+	 * @param z 坐标 Z / Z coordinate
+	 * @param z 若 inside 则为 true / true if inside
+	 */
 	public boolean isInsideZone(ZoneName zoneName, float x, float y, float z) {
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
 			TreeSet<ZoneInstance> zones = e.getValue();
@@ -376,6 +466,15 @@ public class MapRegion {
 		return false;
 	}
 
+	/**
+	 * 判断生物是否在指定 Zone 内。
+	 * Whether the creature is inside the named zone.
+	 *
+	 * zone name
+	 * creature
+	 *
+	 * @return 若 inside 则为 true / true if inside
+	 */
 	public boolean isInsideZone(ZoneName zoneName, Creature creature) {
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
 			TreeSet<ZoneInstance> zones = e.getValue();
@@ -390,12 +489,13 @@ public class MapRegion {
 	}
 
 	/**
-	 * Item use zones always have the same names instances, while we have unique
-	 * names; Thus, a special check for item use.
-	 * 
-	 * @param zoneName
-	 * @param creature
-	 * @return
+	 * 物品使用 Zone 校验（按 xml 名前缀匹配，因实例名不唯一）。
+	 * Item-use zone check (prefix-matches xml names because instance names are not unique).
+	 *
+	 * zone name
+	 * creature
+	 *
+	 * @return 若 inside 则为 true / true if inside
 	 */
 	public boolean isInsideItemUseZone(ZoneName zoneName, Creature creature) {
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
@@ -413,6 +513,12 @@ public class MapRegion {
 		return false;
 	}
 
+	/**
+	 * 按优先级/类型构建 Zone 分类表。
+	 * Build zone category map by priority/type.
+	 *
+	 * zone array
+	 */
 	private void createZoneMap(ZoneInstance[] zones) {
 		zoneMap = new LinkedHashMap<Integer, TreeSet<ZoneInstance>>();
 		for (int i = 0; i < zones.length; i++) {
@@ -430,6 +536,12 @@ public class MapRegion {
 		}
 	}
 
+	/**
+	 * 返回 Zone 数量。
+	 * Return zone count.
+	 *
+	 * zone count
+	 */
 	public int getZoneCount() {
 		return zoneCount;
 	}

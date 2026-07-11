@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.npcshout;
 
 import java.util.ArrayList;
@@ -26,29 +10,10 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * NPC 喊话列表模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
- */
-
-/**
- * <p>
- * Java class for ShoutList complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
- * <pre>
- * &lt;complexType name="ShoutList">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="shout" type="{}NpcShout" maxOccurs="unbounded"/>
- *       &lt;/sequence>
- *       &lt;attribute name="npc_ids" use="required" type="{}NpcList" />
- *       &lt;attribute name="restrict_world" type="{http://www.w3.org/2001/XMLSchema}int" default="0" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ShoutList", propOrder = { "npcShouts" })
@@ -64,20 +29,7 @@ public class ShoutList {
 	protected Integer restrictWorld;
 
 	/**
-	 * Gets the value of the npcShouts property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the npcShouts property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getNpcShouts().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link NpcShout }
+	 * 获取 npcShouts 属性值。 / Gets the value of the npcShouts property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the npcShouts property. <p> For example, to add a new item, do as follows: <pre> getNpcShouts().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link NpcShout }
 	 */
 	public List<NpcShout> getNpcShouts() {
 		if (npcShouts == null) {
@@ -87,20 +39,7 @@ public class ShoutList {
 	}
 
 	/**
-	 * Gets the value of the npcIds property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the npcIds property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getNpcIds().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link Integer }
+	 * 获取 npcIds 属性值。 / Gets the value of the npcIds property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the npcIds property. <p> For example, to add a new item, do as follows: <pre> getNpcIds().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link Integer }
 	 */
 	public List<Integer> getNpcIds() {
 		if (npcIds == null) {
@@ -109,11 +48,11 @@ public class ShoutList {
 		return this.npcIds;
 	}
 
-	/**
-	 * Gets the value of the restrictWorld property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 restrictWorld 属性值。
+	  * Gets the value of the restrictWorld property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getRestrictWorld() {
 		if (restrictWorld == null) {
 			return 0;
@@ -121,6 +60,7 @@ public class ShoutList {
 		return restrictWorld;
 	}
 
+	/** 置空 / make Null. */
 	public void makeNull() {
 		this.npcIds = null;
 		this.npcShouts = null;

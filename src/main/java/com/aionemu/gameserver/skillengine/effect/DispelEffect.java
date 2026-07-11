@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -28,6 +14,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 
 /**
+ * 通用驱散效果：按效果 ID、ID 范围、效果类型或槽位类型移除效果。
+ * Generic dispel effect: removes effects by effect id, id range, effect type, or slot type.
+ *
  * @author ATracer
  */
 @Slf4j
@@ -44,6 +33,12 @@ public class DispelEffect extends EffectTemplate {
 	@XmlAttribute
 	protected Integer value;
 
+	/**
+	 * 按配置的驱散类型移除目标效果。
+	 * Removes target effects according to the configured dispel type.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		if (effect.getEffected() == null || effect.getEffected().getEffectController() == null) {
@@ -83,7 +78,7 @@ public class DispelEffect extends EffectTemplate {
 				try {
 					temp = EffectType.valueOf(type);
 				} catch (Exception e) {
-					log.error("Wrong effect type in dispel effect: {}", type, e);
+					log.error(I18n.get("log.9cc59c110d11", type, e));
 				}
 				if (temp != null) {
 					effect.getEffected().getEffectController().removeEffectByEffectType(temp);

@@ -1,38 +1,41 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
+ * GS→LS：MAC 封禁/解封控制。
+ * GS→LS: MAC ban/unban control.
  *
  * @author KID
- *
  */
 public class CM_MACBAN_CONTROL extends GsClientPacket {
 
+    /**
+     * 操作类型：0=解封，1=封禁。
+     * Action type: 0 = unban, 1 = ban.
+     */
     private byte type;
+    /**
+     * MAC 地址。
+     * MAC address.
+     */
     private String address;
+    /**
+     * 备注/详情。
+     * Details/notes.
+     */
     private String details;
+    /**
+     * 封禁到期时间戳。
+     * Ban expiry timestamp.
+     */
     private long time;
 
+    /**
+     * 读取操作类型、地址、详情与时间。
+     * Reads action type, address, details, and time.
+     */
     @Override
     protected void readImpl() {
         type = (byte) readC();
@@ -41,6 +44,10 @@ public class CM_MACBAN_CONTROL extends GsClientPacket {
         time = readQ();
     }
 
+    /**
+     * 按类型执行 MAC 封禁或解封。
+     * Performs MAC ban or unban by type.
+     */
     @Override
     protected void runImpl() {
         switch (type) {

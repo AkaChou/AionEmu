@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,12 +7,21 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 增益晕眩效果：无抗性检定的晕眩，直接标记成功。
+ * Buff-stun effect: stun without resistance check; always succeeds.
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BuffStunEffect")
 public class BuffStunEffect extends StunEffect {
 
+	/**
+	 * 跳过抗性直接标记效果成功。
+	 * Marks the effect successful without a resistance check.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);

@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.network.aion.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 
@@ -32,6 +16,9 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.chatserver.service.BroadcastService;
 
 /**
+ * 客户端频道聊天消息包。
+ * Client packet for channel chat messages.
+ *
  * @author ATracer
  */
 @Slf4j(topic = "CHAT_LOG")
@@ -42,15 +29,22 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
     private BroadcastService broadcastService;
 
     /**
-     * @param packetReader
-     * @param gameChannelHandler
-     * @param broadcastService
+     * 构造频道消息客户端包。
+     * Constructs a channel message client packet.
+     *
+     * packet reader
+     * @param gameChannelHandler 客户端通道处理器 / client channel handler
+     * broadcast service
      */
     public CM_CHANNEL_MESSAGE(PacketReader packetReader, ClientChannelHandler gameChannelHandler, BroadcastService broadcastService) {
         super(packetReader, gameChannelHandler, 0x18);
         this.broadcastService = broadcastService;
     }
 
+    /**
+     * 读取频道 ID 与消息内容。
+     * Reads the channel id and message content.
+     */
     @Override
     protected void readImpl() {
         readH();
@@ -65,6 +59,10 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
         content = readB(lenght);
     }
 
+    /**
+     * 校验发言频率/禁言后广播消息，可选写聊天日志。
+     * Broadcasts after rate/gag checks; optionally writes chat logs.
+     */
     @Override
     protected void runImpl() {
         Channel channel = ChatChannels.getChannelById(channelId);
@@ -83,11 +81,17 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
         broadcastService.broadcastMessage(message);
 
         if (Config.LOG_CHAT) {
-            log.info("[MESSAGE] <{}>: [{}]> {}", message.getChannelString(), message.getSenderString(),
-                    message.getTextString());
+            log.info(I18n.get("log.da62952559a1", message.getChannelString(), message.getSenderString(),
+                    message.getTextString()));
         }
     }
 
+    /**
+     * 返回调试用字符串表示。
+     * Returns a debug string representation.
+     *
+     * @return 调试字符串 / debug string
+     */
     @Override
     public String toString() {
         return "CM_CHANNEL_MESSAGE [channelId=" + channelId + ", content=" + Arrays.toString(content) + "]";

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -27,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -73,50 +60,100 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 任务引擎单例：加载脚本处理器、维护事件注册表，并向已注册处理器分发各类游戏事件。
+ * Central quest-engine singleton that loads script handlers, maintains event
+ * registries, and dispatches game events to registered {@link QuestHandler}s.
+ *
  * @author MrPoke, Hilgert
  * @modified vlog
  */
 @Slf4j
 public class QuestEngine implements GameEngine {
 
+	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook */
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
+	/** 任务 ID → 处理器映射 / questId → handler map */
 	private static final Map<Integer, QuestHandler> questHandlers = new LinkedHashMap<Integer, QuestHandler>();
+	/** NPC 关联任务索引 / NPC-related quest index */
 	private IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<QuestNpc>();
+	/** 物品使用关联任务 / Item-use related quests */
 	private IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<IntArrayList>();
+	/** 房屋物品关联任务 / House-item related quests */
 	private IntObjectHashMap<IntArrayList> questHouseItems = new IntObjectHashMap<IntArrayList>();
+	/** 获得物品关联任务 / Item-obtain related quests */
 	private IntObjectHashMap<IntArrayList> questItems = new IntObjectHashMap<IntArrayList>();
+	/** 区域任务结束监听列表 / Zone-mission-end listeners */
 	private IntArrayList questOnEnterZoneMissionEnd = new IntArrayList();
+	/** 升级监听列表 / Level-up listeners */
 	private IntArrayList questOnLevelUp = new IntArrayList();
+	/** 死亡监听列表 / Death listeners */
 	private IntArrayList questOnDie = new IntArrayList();
+	/** 登出监听列表 / Logout listeners */
 	private IntArrayList questOnLogOut = new IntArrayList();
+	/** 进入世界监听列表 / Enter-world listeners */
 	private IntArrayList questOnEnterWorld = new IntArrayList();
+	/** 进入区域监听 / Enter-zone listeners */
 	private Map<ZoneName, IntArrayList> questOnEnterZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	/** 离开区域监听 / Leave-zone listeners */
 	private Map<ZoneName, IntArrayList> questOnLeaveZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	/** 穿过飞行环监听 / Pass-flying-ring listeners */
 	private Map<String, IntArrayList> questOnPassFlyingRings = new LinkedHashMap<String, IntArrayList>();
+	/** 动画结束监听 / Movie-end listeners */
 	private IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<IntArrayList>();
+	/** 计时器结束监听 / Timer-end listeners */
 	private List<Integer> questOnTimerEnd = new ArrayList<Integer>();
+	/** 隐形计时器结束监听 / Invisible-timer-end listeners */
 	private List<Integer> onInvisibleTimerEnd = new ArrayList<Integer>();
+	/** 击杀军衔玩家监听 / Kill-ranked listeners */
 	private Map<AbyssRankEnum, IntArrayList> questOnKillRanked = new LinkedHashMap<AbyssRankEnum, IntArrayList>();
+	/** 世界内击杀监听 / Kill-in-world listeners */
 	private Map<Integer, IntArrayList> questOnKillInWorld = new LinkedHashMap<Integer, IntArrayList>();
+	/** 使用技能监听 / Skill-use listeners */
 	private IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<IntArrayList>();
+	/** 对话框 ID → 枚举映射 / dialogId → enum map */
 	private Map<Integer, QuestDialog> dialogMap = new LinkedHashMap<>();
+	/** 制作失败监听 / Fail-craft listeners */
 	private Map<Integer, Integer> questOnFailCraft = new HashMap<Integer, Integer>();
+	/** 装备物品监听 / Equip-item listeners */
 	private Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
+	/** 每日/周任务提醒定时任务 / Daily/weekly reminder scheduled task */
+	private ScheduledFuture<?> messageSendingTask;
+	/** 可行动作监听 / Can-act listeners */
 	private IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
+	/** 挖掘号奖励监听 / Dredgion reward listeners */
 	private List<Integer> questOnDredgionReward = new ArrayList<Integer>();
+	/** 卡玛尔奖励监听 / Kamar reward listeners */
 	private List<Integer> questOnKamarReward = new ArrayList<Integer>();
+	/** 欧菲丹奖励监听 / Ophidan reward listeners */
 	private List<Integer> questOnOphidanReward = new ArrayList<Integer>();
+	/** 堡垒奖励监听 / Bastion reward listeners */
 	private List<Integer> questOnBastionReward = new ArrayList<Integer>();
+	/** 奖励加成监听 / Bonus-apply listeners */
 	private Map<BonusType, IntArrayList> questOnBonusApply = new LinkedHashMap<BonusType, IntArrayList>();
+	/** 跟随到达目标监听 / Reach-target listeners */
 	private IntArrayList reachTarget = new IntArrayList();
+	/** 跟随丢失目标监听 / Lost-target listeners */
 	private IntArrayList lostTarget = new IntArrayList();
+	/** 进入风道监听 / Enter-windstream listeners */
 	private IntArrayList questOnEnterWindStream = new IntArrayList();
+	/** 骑乘动作监听 / Ride-action listeners */
 	private IntArrayList questRideAction = new IntArrayList();
+	/** 创造力点数监听 / Creativity-point listeners */
 	private IntArrayList questOnCreativityPoint = new IntArrayList();
 
+	/**
+	 * 创建任务引擎实例。
+	 * Create a quest-engine instance.
+	 */
 	public QuestEngine() {
 	}
 
+	/**
+	 * 返回任务引擎单例（优先走 Spring ObjectProvider）。
+	 * Return the quest-engine singleton (prefer Spring ObjectProvider when set).
+	 *
+	 * Engine instance
+	 */
 	public static final QuestEngine getInstance() {
 		ObjectProvider<QuestEngine> provider = instanceProvider;
 		if (provider != null) {
@@ -125,10 +162,23 @@ public class QuestEngine implements GameEngine {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 设置 Spring ObjectProvider 覆盖点。
+	 * Install a Spring ObjectProvider override.
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<QuestEngine> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 分发 NPC 对话事件；questId 为 0 时按 NPC 上注册的谈话任务依次尝试。
+	 * Dispatch an NPC dialog event; when questId is 0, try talk-quests registered on the NPC.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 是否有处理器接管 / Whether a handler took over
+	 */
     public boolean onDialog(QuestEnv env) {
     Player player = env.getPlayer();
     try {
@@ -157,7 +207,7 @@ public class QuestEngine implements GameEngine {
             for (int questId : onTalkEvents) {
                 QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questId);
                 if (qt == null) {
-                    log.warn("Quest template not found for ID: {}", questId);
+                    log.warn(I18n.get("log.2e7b7247f488", questId));
                     continue;
                 }
                 QuestState qs = player.getQuestStateList().getQuestState(questId);
@@ -178,12 +228,19 @@ public class QuestEngine implements GameEngine {
             env.setQuestId(0);
         }
     } catch (Exception ex) {
-        log.error("QE: exception in onDialog", ex);
+        log.error(I18n.get("log.dd0b8ceead0c", ex));
         return false;
         }
        return false;
     }
 
+	/**
+	 * 分发击杀事件。
+	 * Dispatch a kill event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 是否处理成功（异常时 false） / Whether successful ({@code false} on error)
+	 */
 	public boolean onKill(QuestEnv env) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
@@ -195,12 +252,19 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			log.error("QE: exception in onKill", ex);
+			log.error(I18n.get("log.59f50c2b1e29", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发攻击事件。
+	 * Dispatch an attack event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onAttack(QuestEnv env) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
@@ -212,12 +276,18 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onAttack", ex);
+			// log.error(I18n.get("log.105680305f00", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发升级事件（仅对未完成任务调用处理器）。
+	 * Dispatch a level-up event (handlers only for incomplete quests).
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onLvlUp(QuestEnv env) {
 		try {
 			Player player = env.getPlayer();
@@ -233,10 +303,16 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onLvlUp", ex);
+			// log.error(I18n.get("log.b844c9346335", ex));
 		}
 	}
 
+	/**
+	 * 分发区域任务结束事件。
+	 * Dispatch a zone-mission-end event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onEnterZoneMissionEnd(QuestEnv env) {
 		try {
 			int result = questOnEnterZoneMissionEnd.indexOf(env.getQuestId());
@@ -249,10 +325,16 @@ public class QuestEngine implements GameEngine {
 				questHandler.onZoneMissionEndEvent(env);
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onLvlUp", ex);
+			// log.error(I18n.get("log.b844c9346335", ex));
 		}
 	}
 
+	/**
+	 * 分发玩家死亡事件。
+	 * Dispatch a player-death event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onDie(QuestEnv env) {
 		try {
 			for (int index = 0; index < questOnDie.size(); index++) {
@@ -263,10 +345,16 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onDie", ex);
+			// log.error(I18n.get("log.86c5c656aa98", ex));
 		}
 	}
 
+	/**
+	 * 分发玩家登出事件。
+	 * Dispatch a player-logout event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onLogOut(QuestEnv env) {
 		try {
 			for (int index = 0; index < questOnLogOut.size(); index++) {
@@ -277,10 +365,16 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onLogOut", ex);
+			// log.error(I18n.get("log.223296a535b7", ex));
 		}
 	}
 
+	/**
+	 * 分发跟随 NPC 到达目标事件。
+	 * Dispatch an escort NPC reach-target event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onNpcReachTarget(QuestEnv env) {
 		try {
 			for (int index = 0; index < reachTarget.size(); index++) {
@@ -291,10 +385,16 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onNpcReachTarget", ex);
+			// log.error(I18n.get("log.c805bdea58a2", ex));
 		}
 	}
 
+	/**
+	 * 分发跟随 NPC 丢失目标事件。
+	 * Dispatch an escort NPC lost-target event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onNpcLostTarget(QuestEnv env) {
 		try {
 			for (int index = 0; index < lostTarget.size(); index++) {
@@ -305,10 +405,17 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onNpcLostTarget", ex);
+			// log.error(I18n.get("log.9e0a2243c5b5", ex));
 		}
 	}
 
+	/**
+	 * 分发穿过飞行环事件。
+	 * Dispatch a pass-flying-ring event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @param FlyRing 飞行环标识 / Flying-ring key
+	 */
 	public void onPassFlyingRing(QuestEnv env, String FlyRing) {
 		try {
 			IntArrayList lists = getOnPassFlyingRingsQuests(FlyRing);
@@ -320,10 +427,16 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onFlyRingPassEvent", ex);
+			// log.error(I18n.get("log.3acccd87e595", ex));
 		}
 	}
 
+	/**
+	 * 分发进入世界事件。
+	 * Dispatch an enter-world event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onEnterWorld(QuestEnv env) {
 		try {
 			for (int index = 0; index < questOnEnterWorld.size(); index++) {
@@ -334,10 +447,18 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onEnterWorld", ex);
+			// log.error(I18n.get("log.d48896f83594", ex));
 		}
 	}
 
+	/**
+	 * 分发使用物品事件；首个非 UNKNOWN 结果即返回。
+	 * Dispatch an item-use event; return the first non-UNKNOWN result.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @param item 使用的物品 / Used item
+	 * Handler result
+	 */
 	public HandlerResult onItemUseEvent(QuestEnv env, Item item) {
 		try {
 			IntArrayList lists = getItemRelatedQuests(item.getItemTemplate().getTemplateId());
@@ -346,7 +467,7 @@ public class QuestEngine implements GameEngine {
 				if (questHandler != null) {
 					env.setQuestId(lists.get(index));
 					HandlerResult result = questHandler.onItemUseEvent(env, item);
-					// allow other quests to process, the same item can be used not in one quest
+					// 允许其他任务处理；同一物品可不只用于一个任务。 / allow other quests to process, the same item can be used not in one quest
 					if (result != HandlerResult.UNKNOWN) {
 						return result;
 					}
@@ -354,11 +475,19 @@ public class QuestEngine implements GameEngine {
 			}
 			return HandlerResult.UNKNOWN;
 		} catch (Exception ex) {
-			// log.error("QE: exception in onItemUseEvent", ex);
+			// log.error(I18n.get("log.882dbd53a6cc", ex));
 			return HandlerResult.FAILED;
 		}
 	}
 
+	/**
+	 * 分发使用房屋物品事件。
+	 * Dispatch a house-item use event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Item template id
+	 * Always {@code false}。 / Always {@code false}
+	 */
 	public boolean onHouseItemUseEvent(QuestEnv env, int itemId) {
 		IntArrayList lists = getHouseItemQuests(itemId);
 		for (int index = 0; index < lists.size(); index++) {
@@ -371,6 +500,13 @@ public class QuestEngine implements GameEngine {
 		return false;
 	}
 
+	/**
+	 * 分发获得物品事件。
+	 * Dispatch an item-obtained event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Item id
+	 */
 	public void onItemGet(QuestEnv env, int itemId) {
 		if (questItems.containsKey(itemId)) {
 			for (int i = 0; i < questItems.get(itemId).size(); i++) {
@@ -384,6 +520,14 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发击杀指定军衔玩家事件。
+	 * Dispatch a kill-ranked-player event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @param playerRank 被杀玩家军衔 / Victim rank
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onKillRanked(QuestEnv env, AbyssRankEnum playerRank) {
 		try {
 			if (playerRank != null) {
@@ -398,12 +542,21 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onKillRanked", ex);
+			// log.error(I18n.get("log.1227af0919fd", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发世界内击杀事件。
+	 * Dispatch a kill-in-world event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * 世界 ID / World id
+	 *
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onKillInWorld(QuestEnv env, int worldId) {
 		try {
 			if (questOnKillInWorld.containsKey(worldId)) {
@@ -417,12 +570,21 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onKillInWorld", ex);
+			// log.error(I18n.get("log.2fecf5cac390", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发进入区域事件。
+	 * Dispatch an enter-zone event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Zone name
+	 *
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onEnterZone(QuestEnv env, ZoneName zoneName) {
 		try {
 			IntArrayList lists = getOnEnterZoneQuests(zoneName);
@@ -434,12 +596,21 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onEnterZone", ex);
+			// log.error(I18n.get("log.ba0cd9d466bc", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发离开区域事件。
+	 * Dispatch a leave-zone event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Zone name
+	 *
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onLeaveZone(QuestEnv env, ZoneName zoneName) {
 		try {
 			if (questOnLeaveZone.containsKey(zoneName)) {
@@ -453,12 +624,21 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onLeaveZone", ex);
+			// log.error(I18n.get("log.43775bfcbccf", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发动画结束事件。
+	 * Dispatch a movie-end event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Movie id
+	 *
+	 * @return 是否有处理器接管 / Whether a handler took over
+	 */
 	public boolean onMovieEnd(QuestEnv env, int movieId) {
 		try {
 			IntArrayList onMovieEndQuests = getOnMovieEndQuests(movieId);
@@ -472,11 +652,17 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onMovieEnd", ex);
+			// log.error(I18n.get("log.e20bb13d3b6a", ex));
 		}
 		return false;
 	}
 
+	/**
+	 * 分发任务计时器结束事件。
+	 * Dispatch a quest-timer-end event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onQuestTimerEnd(QuestEnv env) {
 		for (int questId : questOnTimerEnd) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -487,6 +673,12 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发隐形计时器结束事件。
+	 * Dispatch an invisible-timer-end event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onInvisibleTimerEnd(QuestEnv env) {
 		for (int questId : onInvisibleTimerEnd) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -497,6 +689,15 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发使用技能事件。
+	 * Dispatch a skill-use event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Skill id
+	 *
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onUseSkill(QuestEnv env, int skillId) {
 		try {
 			if (questOnUseSkill.containsKey(skillId)) {
@@ -510,12 +711,19 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onUseSkill", ex);
+			// log.error(I18n.get("log.494055729bb4", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发制作失败事件（背包中该物品数量为 0 时触发）。
+	 * Dispatch a craft-fail event (fires when the inventory has zero of the item).
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Item id
+	 */
 	public void onFailCraft(QuestEnv env, int itemId) {
 		if (questOnFailCraft.containsKey(itemId)) {
 			int questId = questOnFailCraft.get(itemId);
@@ -529,6 +737,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发装备物品事件。
+	 * Dispatch an equip-item event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Item id
+	 */
 	public void onEquipItem(QuestEnv env, int itemId) {
 		if (questOnEquipItem.containsKey(itemId)) {
 			Set<Integer> questIds = questOnEquipItem.get(itemId);
@@ -542,6 +757,16 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 查询模板是否允许执行指定任务动作。
+	 * Whether any registered handler allows the given action on the template.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Template id
+	 * Action type
+	 * Extra arguments
+	 * Whether allowed
+	 */
 	public boolean onCanAct(final QuestEnv env, int templateId, final QuestActionType questActionType,
 			final Object... objects) {
 		if (questCanAct.containsKey(templateId)) {
@@ -563,6 +788,12 @@ public class QuestEngine implements GameEngine {
 		return false;
 	}
 
+	/**
+	 * 分发挖掘号奖励事件。
+	 * Dispatch a Dredgion reward event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onDredgionReward(QuestEnv env) {
 		for (int questId : questOnDredgionReward) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -573,6 +804,12 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发卡玛尔奖励事件。
+	 * Dispatch a Kamar reward event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onKamarReward(QuestEnv env) {
 		for (int questId : questOnKamarReward) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -583,6 +820,12 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发欧菲丹奖励事件。
+	 * Dispatch an Ophidan reward event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onOphidanReward(QuestEnv env) {
 		for (int questId : questOnOphidanReward) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -593,6 +836,12 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发堡垒奖励事件。
+	 * Dispatch a Bastion reward event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onBastionReward(QuestEnv env) {
 		for (int questId : questOnBastionReward) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(questId);
@@ -603,6 +852,15 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 分发奖励加成应用事件。
+	 * Dispatch a bonus-apply event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Bonus type
+	 * @param rewardItems 奖励物品列表 / Reward items
+	 * Handler result
+	 */
 	public HandlerResult onBonusApplyEvent(QuestEnv env, BonusType bonusType, List<QuestItems> rewardItems) {
 		try {
 			IntArrayList lists = this.getOnBonusApplyQuests(bonusType);
@@ -615,11 +873,18 @@ public class QuestEngine implements GameEngine {
 			}
 			return HandlerResult.UNKNOWN;
 		} catch (Exception ex) {
-			// log.error("QE: exception in onBonusApply", ex);
+			// log.error(I18n.get("log.fc7e13ab7975", ex));
 			return HandlerResult.FAILED;
 		}
 	}
 
+	/**
+	 * 分发被加入仇恨列表事件。
+	 * Dispatch an add-to-aggro-list event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onAddAggroList(QuestEnv env) {
 		try {
 			Npc npc = (Npc) env.getVisibleObject();
@@ -631,12 +896,19 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onAddAggroList", ex);
+			// log.error(I18n.get("log.5772cf372416", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发靠近目标距离事件（20 单位内）。
+	 * Dispatch an at-distance event (within 20 units).
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 是否处理成功 / Whether successful
+	 */
 	public boolean onAtDistance(QuestEnv env) {
 		QuestNpc questNpc = null;
 		Npc npc = (Npc) env.getVisibleObject();
@@ -660,12 +932,19 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onAtDistance", ex);
+			// log.error(I18n.get("log.873dcad16db3", ex));
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * 分发进入风道事件。
+	 * Dispatch an enter-windstream event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @param loc 位置 / 世界标识 / Location or world id
+	 */
 	public void onEnterWindStream(QuestEnv env, int loc) {
 		try {
 			for (int index = 0; index < questOnEnterWindStream.size(); index++) {
@@ -676,10 +955,17 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onWindStream", ex);
+			// log.error(I18n.get("log.2f404bb783fc", ex));
 		}
 	}
 
+	/**
+	 * 分发骑乘动作事件。
+	 * Dispatch a ride-action event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * Ride item id
+	 */
 	public void rideAction(QuestEnv env, int itemId) {
 		try {
 			for (int index = 0; index < questRideAction.size(); index++) {
@@ -690,10 +976,16 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in rideAction", ex);
+			// log.error(I18n.get("log.32f0e831856e", ex));
 		}
 	}
 
+	/**
+	 * 分发创造力点数事件。
+	 * Dispatch a creativity-point event.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 */
 	public void onCreativityPoint(QuestEnv env) {
 		try {
 			for (int index = 0; index < questOnCreativityPoint.size(); index++) {
@@ -704,10 +996,17 @@ public class QuestEngine implements GameEngine {
 				}
 			}
 		} catch (Exception ex) {
-			// log.error("QE: exception in onCreativityPoint", ex);
+			// log.error(I18n.get("log.18e75e1aea8d", ex));
 		}
 	}
 
+	/**
+	 * 注册（或获取）NPC 的任务关联对象。
+	 * Register (or obtain) the quest association for an NPC.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * QuestNpc association
+	 */
 	public QuestNpc registerQuestNpc(int npcId) {
 		if (!questNpcs.containsKey(npcId)) {
 			questNpcs.put(npcId, new QuestNpc(npcId));
@@ -715,6 +1014,13 @@ public class QuestEngine implements GameEngine {
 		return questNpcs.get(npcId);
 	}
 
+	/**
+	 * 注册物品使用关联任务。
+	 * Register a quest for item-use events.
+	 *
+	 * Item id
+	 * Quest id
+	 */
 	public void registerQuestItem(int itemId, int questId) {
 		if (!questItemRelated.containsKey(itemId)) {
 			IntArrayList itemRelatedQuests = new IntArrayList();
@@ -725,6 +1031,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册房屋物品关联任务。
+	 * Register a quest for house-item use events.
+	 *
+	 * Item id
+	 * Quest id
+	 */
 	public void registerQuestHouseItem(int itemId, int questId) {
 		if (!questHouseItems.containsKey(itemId)) {
 			IntArrayList itemRelatedQuests = new IntArrayList();
@@ -735,6 +1048,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册获得物品关联任务。
+	 * Register a quest for item-obtain events.
+	 *
+	 * Item id
+	 * Quest id
+	 */
 	public void registerGetingItem(int itemId, int questId) {
 		if (!questItems.containsKey(itemId)) {
 			IntArrayList questItemsToReg = new IntArrayList();
@@ -745,36 +1065,73 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册升级监听。
+	 * Register a level-up listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnLevelUp(int questId) {
 		if (!questOnLevelUp.contains(questId)) {
 			questOnLevelUp.add(questId);
 		}
 	}
 
+	/**
+	 * 注册区域任务结束监听。
+	 * Register a zone-mission-end listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnEnterZoneMissionEnd(int questId) {
 		if (!questOnEnterZoneMissionEnd.contains(questId)) {
 			questOnEnterZoneMissionEnd.add(questId);
 		}
 	}
 
+	/**
+	 * 注册进入世界监听。
+	 * Register an enter-world listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnEnterWorld(int questId) {
 		if (!questOnEnterWorld.contains(questId)) {
 			questOnEnterWorld.add(questId);
 		}
 	}
 
+	/**
+	 * 注册死亡监听。
+	 * Register a death listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnDie(int questId) {
 		if (!questOnDie.contains(questId)) {
 			questOnDie.add(questId);
 		}
 	}
 
+	/**
+	 * 注册登出监听。
+	 * Register a logout listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnLogOut(int questId) {
 		if (!questOnLogOut.contains(questId)) {
 			questOnLogOut.add(questId);
 		}
 	}
 
+	/**
+	 * 注册进入区域监听。
+	 * Register an enter-zone listener.
+	 *
+	 * Zone name
+	 * Quest id
+	 */
 	public void registerOnEnterZone(ZoneName zoneName, int questId) {
 		if (!questOnEnterZone.containsKey(zoneName)) {
 			IntArrayList onEnterZoneQuests = new IntArrayList();
@@ -785,6 +1142,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册离开区域监听。
+	 * Register a leave-zone listener.
+	 *
+	 * Zone name
+	 * Quest id
+	 */
 	public void registerOnLeaveZone(ZoneName zoneName, int questId) {
 		if (!questOnLeaveZone.containsKey(zoneName)) {
 			IntArrayList onLeaveZoneQuests = new IntArrayList();
@@ -795,6 +1159,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册击杀军衔玩家监听（覆盖自该军衔及以上）。
+	 * Register a kill-ranked listener (covers the given rank and above).
+	 *
+	 * Starting rank
+	 * Quest id
+	 */
 	public void registerOnKillRanked(AbyssRankEnum playerRank, int questId) {
 		for (int rank = playerRank.getId(); rank < 19; rank++) {
 			if (!questOnKillRanked.containsKey(AbyssRankEnum.getRankById(rank))) {
@@ -807,6 +1178,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册世界内击杀监听。
+	 * Register a kill-in-world listener.
+	 *
+	 * 世界 ID / World id
+	 * Quest id
+	 */
 	public void registerOnKillInWorld(int worldId, int questId) {
 		if (!questOnKillInWorld.containsKey(worldId)) {
 			IntArrayList killInWorldQuests = new IntArrayList();
@@ -817,6 +1195,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册穿过飞行环监听。
+	 * Register a pass-flying-ring listener.
+	 *
+	 * @param flyingRing 飞行环标识 / Flying-ring key
+	 * Quest id
+	 */
 	public void registerOnPassFlyingRings(String flyingRing, int questId) {
 		if (!questOnPassFlyingRings.containsKey(flyingRing)) {
 			IntArrayList onPassFlyingRingsQuests = new IntArrayList();
@@ -827,6 +1212,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册动画结束监听。
+	 * Register a movie-end listener.
+	 *
+	 * Movie id
+	 * Quest id
+	 */
 	public void registerOnMovieEndQuest(int moveId, int questId) {
 		if (!questOnMovieEnd.containsKey(moveId)) {
 			IntArrayList onMovieEndQuests = new IntArrayList();
@@ -837,18 +1229,37 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册计时器结束监听。
+	 * Register a quest-timer-end listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnQuestTimerEnd(int questId) {
 		if (!questOnTimerEnd.contains(questId)) {
 			questOnTimerEnd.add(questId);
 		}
 	}
 
+	/**
+	 * 注册隐形计时器结束监听。
+	 * Register an invisible-timer-end listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnInvisibleTimerEnd(int questId) {
 		if (!onInvisibleTimerEnd.contains(Integer.valueOf(questId))) {
 			onInvisibleTimerEnd.add(Integer.valueOf(questId));
 		}
 	}
 
+	/**
+	 * 注册使用技能监听。
+	 * Register a skill-use listener.
+	 *
+	 * Skill id
+	 * Quest id
+	 */
 	public void registerQuestSkill(int skillId, int questId) {
 		if (!questOnUseSkill.containsKey(skillId)) {
 			IntArrayList questSkills = new IntArrayList();
@@ -859,12 +1270,26 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册制作失败监听。
+	 * Register a craft-fail listener.
+	 *
+	 * Item id
+	 * Quest id
+	 */
 	public void registerOnFailCraft(int itemId, int questId) {
 		if (!questOnFailCraft.containsKey(itemId)) {
 			questOnFailCraft.put(itemId, questId);
 		}
 	}
 
+	/**
+	 * 注册装备物品监听。
+	 * Register an equip-item listener.
+	 *
+	 * Item id
+	 * Quest id
+	 */
 	public void registerOnEquipItem(int itemId, int questId) {
 		if (!questOnEquipItem.containsKey(itemId)) {
 			Set<Integer> questIds = new HashSet<Integer>();
@@ -875,6 +1300,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册可行动作监听。
+	 * Register a can-act listener for a template.
+	 *
+	 * Quest id
+	 * Template id
+	 */
 	public void registerCanAct(int questId, int templateId) {
 		if (!questCanAct.containsKey(templateId)) {
 			IntArrayList questSkills = new IntArrayList();
@@ -885,30 +1317,61 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 注册挖掘号奖励监听。
+	 * Register a Dredgion reward listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnDredgionReward(int questId) {
 		if (!questOnDredgionReward.contains(questId)) {
 			questOnDredgionReward.add(questId);
 		}
 	}
 
+	/**
+	 * 注册卡玛尔奖励监听。
+	 * Register a Kamar reward listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnKamarReward(int questId) {
 		if (!questOnKamarReward.contains(questId)) {
 			questOnKamarReward.add(questId);
 		}
 	}
 
+	/**
+	 * 注册欧菲丹奖励监听。
+	 * Register an Ophidan reward listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnOphidanReward(int questId) {
 		if (!questOnOphidanReward.contains(questId)) {
 			questOnOphidanReward.add(questId);
 		}
 	}
 
+	/**
+	 * 注册堡垒奖励监听。
+	 * Register a Bastion reward listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnBastionReward(int questId) {
 		if (!questOnBastionReward.contains(questId)) {
 			questOnBastionReward.add(questId);
 		}
 	}
 
+	/**
+	 * 注册奖励加成应用监听。
+	 * Register a bonus-apply listener.
+	 *
+	 * Quest id
+	 * Bonus type
+	 */
 	public void registerOnBonusApply(int questId, BonusType bonusType) {
 		if (!questOnBonusApply.containsKey(bonusType)) {
 			IntArrayList onBonusApplyQuests = new IntArrayList();
@@ -919,6 +1382,13 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 按加成类型查询已注册任务列表。
+	 * Look up quests registered for a bonus type.
+	 *
+	 * Bonus type
+	 * Quest id list
+	 */
 	private IntArrayList getOnBonusApplyQuests(BonusType bonusType) {
 		if (questOnBonusApply.containsKey(bonusType)) {
 			return questOnBonusApply.get(bonusType);
@@ -926,31 +1396,68 @@ public class QuestEngine implements GameEngine {
 		return new IntArrayList();
 	}
 
+	/**
+	 * 注册进入风道监听。
+	 * Register an enter-windstream listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnEnterWindStream(int questId) {
 		if (!questOnEnterWindStream.contains(questId))
 			questOnEnterWindStream.add(questId);
 	}
 
+	/**
+	 * 注册骑乘动作监听。
+	 * Register a ride-action listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnRide(int questId) {
 		if (!questRideAction.contains(questId))
 			questRideAction.add(questId);
 	}
 
+	/**
+	 * 注册创造力点数监听。
+	 * Register a creativity-point listener.
+	 *
+	 * Quest id
+	 */
 	public void registerOnCreativityPoint(int questId) {
 		if (!questOnCreativityPoint.contains(questId))
 			questOnCreativityPoint.add(questId);
 	}
 
+	/**
+	 * 注册跟随到达目标监听。
+	 * Register a reach-target listener.
+	 *
+	 * Quest id
+	 */
 	public void registerAddOnReachTargetEvent(int questId) {
 		if (!reachTarget.contains(questId))
 			reachTarget.add(questId);
 	}
 
+	/**
+	 * 注册跟随丢失目标监听。
+	 * Register a lost-target listener.
+	 *
+	 * Quest id
+	 */
 	public void registerAddOnLostTargetEvent(int questId) {
 		if (!lostTarget.contains(questId))
 			lostTarget.add(questId);
 	}
 
+	/**
+	 * 获取 NPC 的任务关联对象；未注册时返回空壳。
+	 * Return the quest association for an NPC, or an empty shell if unregistered.
+	 *
+	 * NPC 模板 ID / NPC template id
+	 * QuestNpc association
+	 */
 	public QuestNpc getQuestNpc(int npcId) {
 		if (questNpcs.containsKey(npcId)) {
 			return questNpcs.get(npcId);
@@ -958,6 +1465,14 @@ public class QuestEngine implements GameEngine {
 		return new QuestNpc(npcId);
 	}
 
+	/**
+	 * 按对话框 ID 查询枚举。
+	 * Look up a {@link QuestDialog} by dialog id.
+	 *
+	 * Dialog id
+	 *
+	 * @param dialogId @return 枚举值；不存在时 null / Enum value, or {@code null}
+	 */
 	public QuestDialog getDialog(int dialogId) {
 		if (dialogMap.containsKey(dialogId)) {
 			return dialogMap.get(dialogId);
@@ -965,6 +1480,13 @@ public class QuestEngine implements GameEngine {
 		return null;
 	}
 
+	/**
+	 * 查询物品使用关联任务。
+	 * Look up quests related to item use.
+	 *
+	 * Item id
+	 * Quest id list
+	 */
 	private IntArrayList getItemRelatedQuests(int itemId) {
 		if (questItemRelated.containsKey(itemId)) {
 			return questItemRelated.get(itemId);
@@ -972,6 +1494,13 @@ public class QuestEngine implements GameEngine {
 		return new IntArrayList();
 	}
 
+	/**
+	 * 查询房屋物品关联任务。
+	 * Look up quests related to house items.
+	 *
+	 * Item id
+	 * Quest id list
+	 */
 	private IntArrayList getHouseItemQuests(int itemId) {
 		if (questHouseItems.containsKey(itemId)) {
 			return (IntArrayList) questHouseItems.get(itemId);
@@ -979,6 +1508,13 @@ public class QuestEngine implements GameEngine {
 		return new IntArrayList();
 	}
 
+	/**
+	 * 查询进入区域关联任务。
+	 * Look up quests related to entering a zone.
+	 *
+	 * Zone name
+	 * Quest id list
+	 */
 	private IntArrayList getOnEnterZoneQuests(ZoneName zoneName) {
 		if (questOnEnterZone.containsKey(zoneName)) {
 			return questOnEnterZone.get(zoneName);
@@ -986,6 +1522,13 @@ public class QuestEngine implements GameEngine {
 		return new IntArrayList();
 	}
 
+	/**
+	 * 查询击杀军衔关联任务。
+	 * Look up quests related to killing a ranked player.
+	 *
+	 * Rank
+	 * Quest id list
+	 */
 	private IntArrayList getOnKillRankedQuests(AbyssRankEnum playerRank) {
 		if (questOnKillRanked.containsKey(playerRank)) {
 			return questOnKillRanked.get(playerRank);
@@ -993,6 +1536,13 @@ public class QuestEngine implements GameEngine {
 		return new IntArrayList();
 	}
 
+	/**
+	 * 查询穿过飞行环关联任务。
+	 * Look up quests related to passing a flying ring.
+	 *
+	 * @param flyingRing 飞行环标识 / Flying-ring key
+	 * Quest id list
+	 */
 	private IntArrayList getOnPassFlyingRingsQuests(String flyingRing) {
 		if (questOnPassFlyingRings.containsKey(flyingRing)) {
 			return questOnPassFlyingRings.get(flyingRing);
@@ -1000,6 +1550,13 @@ public class QuestEngine implements GameEngine {
 		return new IntArrayList();
 	}
 
+	/**
+	 * 查询动画结束关联任务。
+	 * Look up quests related to a movie end.
+	 *
+	 * Movie id
+	 * Quest id list
+	 */
 	private IntArrayList getOnMovieEndQuests(int moveId) {
 		if (questOnMovieEnd.containsKey(moveId)) {
 			return questOnMovieEnd.get(moveId);
@@ -1007,37 +1564,83 @@ public class QuestEngine implements GameEngine {
 		return new IntArrayList();
 	}
 
+	/**
+	 * 按任务 ID 获取处理器。
+	 * Look up a handler by quest id.
+	 *
+	 * Quest id
+	 *
+	 * @param questId @return 处理器；不存在时 null / Handler, or {@code null}
+	 */
 	private QuestHandler getQuestHandlerByQuestId(int questId) {
 		return questHandlers.get(questId);
 	}
 
+	/**
+	 * 是否已有该任务的处理器。
+	 * Whether a handler is registered for the quest.
+	 *
+	 * Quest id
+	 * Whether present
+	 */
 	public boolean isHaveHandler(int questId) {
 		return questHandlers.containsKey(questId);
 	}
 
+	/**
+	 * 注册处理器：调用其 {@link QuestHandler#register()} 并放入映射。
+	 * Register a handler: invoke {@link QuestHandler#register()} and store it.
+	 *
+	 * @param questHandler 任务处理器 / Quest handler
+	 */
 	public void addQuestHandler(QuestHandler questHandler) {
 		questHandler.register();
 		int questId = questHandler.getQuestId();
 		if (questHandlers.containsKey(questId)) {
-			log.warn("[Duplicate Quest]: " + questId);
+			log.warn(I18n.get("log.6928c2152c98", questId));
 		}
 		questHandlers.put(questId, questHandler);
 	}
 
-	/** Add handler side drop (if not already in xml) */
+	/**
+	 * 添加处理器侧掉落（XML 未声明时由脚本侧补充）。
+	 * Add a handler-side drop (supplemental when not declared in XML).
+	 *
+	 * Quest id
+	 * NPC id
+	 * Item id
+	 * Amount
+	 * Chance
+	 */
 	public void addHandlerSideQuestDrop(int questId, int npcId, int itemId, int amount, int chance) {
 		HandlerSideDrop hsd = new HandlerSideDrop(questId, npcId, itemId, amount, chance);
 		QuestService.addQuestDrop(hsd.getNpcId(), hsd);
 	}
 
+	/**
+	 * 添加带步骤条件的处理器侧掉落。
+	 * Add a handler-side drop gated by quest step.
+	 *
+	 * Quest id
+	 * NPC id
+	 * Item id
+	 * Amount
+	 * Chance
+	 * @param step 所需步骤 / Required step
+	 */
 	public void addHandlerSideQuestDrop(int questId, int npcId, int itemId, int amount, int chance, int step) {
 		HandlerSideDrop hsd = new HandlerSideDrop(questId, npcId, itemId, amount, chance, step);
 		QuestService.addQuestDrop(hsd.getNpcId(), hsd);
 	}
 
-	// Loading the QE on start up
+	/**
+	 * 启动时装载：注册掉落、加载脚本处理器与 XML 任务，并启动每日提醒。
+	 * Bootstrap load: register drops, load script handlers and XML quests, start daily reminders.
+	 *
+	 * @param progressLatch 进度闩锁（可空） / Progress latch (nullable)
+	 */
 	public void load(CountDownLatch progressLatch) {
-		log.info("Quest engine load started");
+		log.info(I18n.get("log.5359e35f8f99"));
 		QuestsData questData = DataManager.QUEST_DATA;
 		for (QuestTemplate data : questData.getQuestsData()) {
 			for (QuestDrop drop : data.getQuestDrop()) {
@@ -1056,7 +1659,7 @@ public class QuestEngine implements GameEngine {
 			for (XMLQuest xmlQuest : xmlQuests.getQuest()) {
 				xmlQuest.register(this);
 			}
-			log.info("Loaded " + questHandlers.size() + " Quest.");
+			log.info(I18n.get("log.490b5f534bb2", questHandlers.size()));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize quest handlers.", e);
 		} finally {
@@ -1070,6 +1673,10 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
+	/**
+	 * 安排每日 9:00 的可重复任务提醒广播。
+	 * Schedule the 09:00 daily broadcast for repeatable quest reminders.
+	 */
 	private void addMessageSendingTask() {
 		Calendar sendingDate = Calendar.getInstance();
 		sendingDate.set(Calendar.AM_PM, Calendar.AM);
@@ -1079,7 +1686,7 @@ public class QuestEngine implements GameEngine {
 		if (sendingDate.getTime().getTime() < System.currentTimeMillis()) {
 			sendingDate.add(Calendar.HOUR, 24);
 		}
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+		messageSendingTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {
@@ -1106,12 +1713,25 @@ public class QuestEngine implements GameEngine {
 		}, sendingDate.getTimeInMillis() - System.currentTimeMillis(), 1000 * 60 * 60 * 24);
 	}
 
+	/**
+	 * 关闭引擎：清空全部注册数据。
+	 * Shut down the engine: clear all registered data.
+	 */
 	public void shutdown() {
 		clear();
-		log.info("Quests are shutdown...");
+		log.info(I18n.get("log.dd61afc44888"));
 	}
 
+	/**
+	 * 清空所有事件注册表与处理器映射，取消定时任务。
+	 * Clear every event registry and handler map; cancel the reminder task.
+	 */
 	public void clear() {
+		if (messageSendingTask != null) {
+			messageSendingTask.cancel(false);
+			messageSendingTask = null;
+		}
+		QuestService.clearQuestDrops();
 		questNpcs.clear();
 		questItemRelated.clear();
 		questItems.clear();
@@ -1136,6 +1756,10 @@ public class QuestEngine implements GameEngine {
 		questHandlers.clear();
 	}
 
+	/**
+	 * 延迟初始化单例持有者。
+	 * Lazy singleton holder.
+	 */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 		protected static final QuestEngine instance = new QuestEngine();

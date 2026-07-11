@@ -18,15 +18,15 @@ import javassist.LoaderClassPath;
 import javassist.Modifier;
 import javassist.NotFoundException;
 /**
- * 全局回调增强器，用于处理@GlobalCallback方法增强
+ * 全局回调增强器，用于处理@GlobalCallback 方法增强
  * Global callback enhancer for methods annotated with @GlobalCallback
  *
- * 该类继承自CallbackClassFileTransformer，实现了全局回调的字节码增强功能
+ * 该类继承自 CallbackClassFileTransformer，实现了全局回调的字节码增强功能
  * This class extends CallbackClassFileTransformer to implement bytecode enhancement for global callbacks
  *
  * 主要功能:
  * Main features:
- * 1. 识别和处理带有@GlobalCallback注解的方法 / Identify and process methods with @GlobalCallback annotation
+ * 1. 识别和处理带有@GlobalCallback 注解的方法 / Identify and process methods with @GlobalCallback annotation
  * 2. 在方法前后插入回调逻辑 / Insert callback logic before and after methods
  * 3. 支持静态和非静态方法的回调处理 / Support callback handling for both static and non-static methods
  */
@@ -35,13 +35,14 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
     
 
     /**
-     * 执行类转换操作，增强带有@GlobalCallback注解的方法
+ * 执行类转换操作，增强带有@GlobalCallback 注解的方法
      * Perform class transformation to enhance methods with @GlobalCallback annotation
      *
-     * @param loader 类加载器 / Class loader
-     * @param clazzBytes 类字节码 / Class bytecode
-     * @return 转换后的字节码 / Transformed bytecode
-     * @throws Exception 转换过程中的异常 / Exception during transformation
+     * Class loader
+     * Class bytecode
+     *
+     * @param loader @return 转换后的字节码 / Transformed bytecode
+     * @param clazzBytes @throws Exception 转换过程中的异常 / Exception during transformation
      */
     protected byte[] transformClass(ClassLoader loader, byte[] clazzBytes) throws Exception {
         ClassPool cp = new ClassPool();
@@ -74,9 +75,9 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * Enhance a single method by adding callback-related code
      *
      * @param method 要增强的方法 / Method to enhance
-     * @throws CannotCompileException 编译异常 / Compilation exception
-     * @throws NotFoundException 类未找到异常 / Class not found exception
-     * @throws ClassNotFoundException 类加载异常 / Class loading exception
+     * Compilation exception
+     * Class not found exception。 / Class not found exception.
+     * Class loading exception。 / Class loading exception.
      */
     protected void enhanceMethod(CtMethod method) throws CannotCompileException, NotFoundException, ClassNotFoundException {
         ClassPool cp = method.getDeclaringClass().getClassPool();
@@ -101,11 +102,12 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * 生成方法执行前的回调代码
      * Generate callback code for before method execution
      *
-     * @param method 目标方法 / Target method
-     * @param paramLength 参数长度 / Parameter length
+     * Target method
+     * Parameter length
+     *
      * @param listenerFieldName 监听器字段名 / Listener field name
-     * @return 生成的代码 / Generated code
-     * @throws NotFoundException 类未找到异常 / Class not found exception
+     * @param paramLength @return 生成的代码 / Generated code
+     * @param listenerFieldName @throws NotFoundException 类未找到异常 / Class not found exception
      */
     protected String writeBeforeMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();
@@ -155,11 +157,12 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * 生成方法执行后的回调代码
      * Generate callback code for after method execution
      *
-     * @param method 目标方法 / Target method
-     * @param paramLength 参数长度 / Parameter length
+     * Target method
+     * Parameter length
+     *
      * @param listenerFieldName 监听器字段名 / Listener field name
-     * @return 生成的代码 / Generated code
-     * @throws NotFoundException 类未找到异常 / Class not found exception
+     * @param paramLength @return 生成的代码 / Generated code
+     * @param listenerFieldName @throws NotFoundException 类未找到异常 / Class not found exception
      */
     protected String writeAfterMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();

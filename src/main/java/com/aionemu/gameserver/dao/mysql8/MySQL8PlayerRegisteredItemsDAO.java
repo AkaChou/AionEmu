@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -23,27 +25,40 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * MySQL 8 implementation of PlayerRegisteredItemsDAO
- * Fixed connection leaks
+ * 玩家已注册房屋物品数据访问对象的 MySQL 8 实现。
+ * MySQL 8 implementation of PlayerRegisteredItemsDAO.
  */
 @Slf4j
 public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
-    
-    
+
+    /** 清理玩家全部注册物品 / Delete all registered items for a player */
     public static final String CLEAN_PLAYER_QUERY = "DELETE FROM `player_registered_items` WHERE `player_id` = ?";
-    
+
+    /** 加载玩家注册物品 / Select all registered items for a player */
     public static final String SELECT_QUERY = "SELECT * FROM `player_registered_items` WHERE `player_id` = ?";
-    
+
+    /** 插入注册物品 / Insert a house registered item or decoration */
     public static final String INSERT_QUERY = "INSERT INTO `player_registered_items` " + "(`expire_time`, `color`, `color_expires`, `owner_use_count`, `visitor_use_count`, " + "`x`, `y`, `z`, `h`, `area`, `floor`, `player_id`, `item_unique_id`, `item_id`) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+
+    /** 更新注册物品 / Update a house registered item or decoration */
     public static final String UPDATE_QUERY = "UPDATE `player_registered_items` SET " + "`expire_time` = ?, `color` = ?, `color_expires` = ?, `owner_use_count` = ?, " + "`visitor_use_count` = ?, `x` = ?, `y` = ?, `z` = ?, `h` = ?, `area` = ?, `floor` = ? " + "WHERE `player_id` = ? AND `item_unique_id` = ? AND `item_id` = ?";
-    
+
+    /** 按唯一 ID 删除注册物品 / Delete a registered item by unique id */
     public static final String DELETE_QUERY = "DELETE FROM `player_registered_items` WHERE `item_unique_id` = ?";
-    
+
+    /** 重置非装饰物品摆放位置 / Reset placement of non-decoration registered items */
     public static final String RESET_QUERY = "UPDATE `player_registered_items` SET x = 0, y = 0, z = 0, h = 0, area = 'NONE' " + "WHERE `player_id` = ? AND `area` != 'DECOR'";
-    
+
+    /** 查询已占用的唯一 ID / Select used item unique ids */
     public static final String SELECT_USED_IDS_QUERY = "SELECT item_unique_id FROM player_registered_items WHERE item_unique_id <> 0";
 
+    /**
+     * 获取已占用的物品唯一 ID 列表，供 ID 工厂回收/分配使用。
+     * Returns used item unique ids for ID factory allocation.
+     *
+     * 已占用 ID 数组；出错时返回空数组。
+     * used id array, or empty on error.
+     */
     @Override
     public int[] getUsedIDs() {
         List<Integer> ids = new ArrayList<>();
@@ -56,7 +71,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
                 ids.add(rs.getInt(1));
             }
         } catch (SQLException e) {
-            log.error("Can't get list of id's from player_registered_items table", e);
+            log.error(I18n.get("log.0bebcd82021c", e));
             return new int[0];
         }
         
@@ -67,6 +82,12 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         return result;
     }
     
+    /**
+     * 加载玩家房屋注册物品与装饰部件到房屋注册表。
+     * Loads the player's house registered items and decorations into the registry.
+     *
+     * player object id
+     */
     @Override
     public void loadRegistry(int playerId) {
         House house = GameHousingServices.housingService().getPlayerStudio(playerId);
@@ -76,7 +97,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         }
         
         if (house == null) {
-            log.warn("No house found for player: {}", playerId);
+            log.warn(I18n.get("log.17502383de83", playerId));
             return;
         }
         
@@ -138,7 +159,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
                 registry.setPersistentState(PersistentState.UPDATED);
             }
         } catch (Exception e) {
-            log.error("Could not restore house registry data for player: {}", playerId, e);
+            log.error(I18n.get("log.98d5b9d41325", playerId, e));
         }
     }
     
@@ -185,6 +206,15 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         return decor;
     }
     
+    /**
+     * 按持久化状态批量保存房屋注册表（增删改），事务提交后更新内存状态并释放已删 ID。
+     * Persists the house registry by persistent state (insert/update/delete), then updates in-memory state and releases deleted ids.
+     *
+     * @param registry 房屋注册表 / house registry
+     * player object id
+     *
+     * @return 是否保存成功 / whether store succeeded
+     */
     @Override
     public boolean store(HouseRegistry registry, int playerId) {
         List<HouseObject<?>> objects = registry.getObjects();
@@ -198,7 +228,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         Collection<HouseDecoration> partsToUpdate = new ArrayList<>();
         Collection<HouseDecoration> partsToDelete = new ArrayList<>();
         
-        // Filter objects
+        // 过滤对象 / Filter objects
         for (HouseObject<?> obj : objects) {
             if (obj != null) {
                 PersistentState state = obj.getPersistentState();
@@ -212,7 +242,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
             }
         }
         
-        // Filter decorations
+        // 过滤装饰 / Filter decorations
         for (HouseDecoration dec : decors) {
             if (dec != null) {
                 PersistentState state = dec.getPersistentState();
@@ -240,16 +270,16 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
             registry.setPersistentState(PersistentState.UPDATED);
             
         } catch (SQLException e) {
-            log.error("Can't save player registered items: {}", playerId, e);
+            log.error(I18n.get("log.7c25eacf0aac", playerId, e));
             try (Connection con = DatabaseFactory.getConnection()) {
                 con.rollback();
             } catch (SQLException rollbackEx) {
-                log.error("Failed to rollback registered items transaction for player {}", playerId, rollbackEx);
+                log.error(I18n.get("log.9b2f8fa3f28b", playerId, rollbackEx));
             }
             return false;
         }
         
-        // Update states
+        // 更新状态 / Update states
         for (HouseObject<?> obj : objects) {
             if (obj != null) {
                 if (obj.getPersistentState() == PersistentState.DELETED) {
@@ -270,7 +300,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
             }
         }
         
-        // Release IDs
+        // 释放 ID / Release IDs
         if (!objectsToDelete.isEmpty()) {
             for (HouseObject<?> obj : objectsToDelete) {
                 if (obj != null && obj.getObjectId() != 0) {
@@ -406,34 +436,57 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         }
     }
     
+    /**
+     * 删除指定玩家的全部房屋注册物品。
+     * Deletes all house registered items for the given player.
+     *
+     * player object id
+     *
+     * @param playerId @return 是否删除成功 / whether delete succeeded
+     */
     @Override
     public boolean deletePlayerItems(int playerId) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(CLEAN_PLAYER_QUERY)) {
             
-            log.info("Deleting player registered items for player: {}", playerId);
+            log.info(I18n.get("log.a62e9090f3a6", playerId));
             stmt.setInt(1, playerId);
             stmt.executeUpdate();
             return true;
         } catch (Exception e) {
-            log.error("Error deleting all player registered items. PlayerObjId: {}", playerId, e);
+            log.error(I18n.get("log.65741ede13d8", playerId, e));
             return false;
         }
     }
     
+    /**
+     * 重置玩家非装饰注册物品的摆放坐标与区域。
+     * Resets placement coordinates and area for the player's non-decoration registered items.
+     *
+     * player object id
+     */
     @Override
     public void resetRegistry(int playerId) {
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(RESET_QUERY)) {
             
-            log.info("Resetting player registered items for player: {}", playerId);
+            log.info(I18n.get("log.5c21c4ee04a7", playerId));
             stmt.setInt(1, playerId);
             stmt.executeUpdate();
         } catch (Exception e) {
-            log.error("Error resetting player registered items. PlayerObjId: {}", playerId, e);
+            log.error(I18n.get("log.7f671b6e18ee", playerId, e));
         }
     }
     
+    /**
+     * 判断当前数据库是否受本 DAO 支持（MySQL 8）。
+     * Checks whether the given database is supported by this DAO (MySQL 8).
+     *
+     * @param databaseName 数据库产品名 / database product name
+     * major version
+     * minor version
+     * whether supported
+     */
     @Override
     public boolean supports(String databaseName, int majorVersion, int minorVersion) {
         return MySQL8DAOUtils.supports(databaseName, majorVersion, minorVersion);

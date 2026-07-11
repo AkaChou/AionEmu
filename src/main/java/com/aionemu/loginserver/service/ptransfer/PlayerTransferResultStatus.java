@@ -1,38 +1,39 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.service.ptransfer;
 
 /**
+ * 玩家跨服转移结果状态码，用于登录服与游戏服之间的协议响应。
+ * Player cross-server transfer result status codes used in login-server ↔ game-server protocol responses.
+ *
  * @author KID
  */
 public enum PlayerTransferResultStatus {
 
+    /** 向目标服发送角色信息 / send character info to the target server */
     SEND_INFO(20),
+    /** 转移成功 / transfer succeeded */
     OK(21),
+    /** 转移失败 / transfer failed */
     ERROR(22),
+    /** 通知源服执行转移动作 / instruct the source server to perform the transfer action */
     PERFORM_ACTION(23);
     private int id;
 
+    /**
+     * 返回协议状态码数值。
+     * Return the protocol status code value.
+     *
+     * status id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * 以协议数值构造枚举常量。
+     * Construct the enum constant with its protocol numeric id.
+     *
+     * @param id 协议状态码 / protocol status id
+     */
     PlayerTransferResultStatus(int id) {
         this.id = id;
     }

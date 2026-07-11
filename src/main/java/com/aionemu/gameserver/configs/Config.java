@@ -1,21 +1,7 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.configs;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.io.File;
 import java.util.Properties;
 
@@ -50,6 +36,7 @@ import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.configs.main.InGameShopConfig;
+import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.configs.main.LegionConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
@@ -67,18 +54,55 @@ import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.configs.network.IPConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
+import com.aionemu.gameserver.services.instance.InstanceScaler;
+import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
+/**
+ * 游戏服配置加载与热更新入口，聚合 administration/main/network 等配置类。
+ * Gameserver config load/reload entry aggregating administration, main and network config classes.
+ */
 @Slf4j
 public class Config {
+	/**
+	 * 启动期属性覆盖。
+	 * Boot-time property overrides.
+	 */
 	private static volatile Properties bootOverrides = new Properties();
+	/**
+	 * 网络地址配置键。
+	 * Network address config key.
+	 */
 	private static final String NETWORK_ADDRESS_KEY = "gameserver.network.address";
+	/**
+	 * 登录服地址配置键。
+	 * Login server address config key.
+	 */
 	private static final String LOGIN_ADDRESS_KEY = "gameserver.network.login.address";
+	/**
+	 * IPConfig 默认配置键。
+	 * IPConfig default key.
+	 */
 	private static final String IPCONFIG_DEFAULT_KEY = "gameserver.network.ipconfig.default";
 
+	/**
+	 * 配置目录路径。
+	 * Config directory path.
+	 *
+	 * config directory
+	 */
 	private static String configDir() {
 		return System.getProperty("aion.game.config.dir", "./config");
 	}
@@ -201,14 +225,18 @@ public class Config {
 		return host + loginAddress.substring(portSeparator);
 	}
 
+	/**
+	 * 加载全部游戏服配置。
+	 * Loads all gameserver configuration.
+	 */
 	public static void load() {
 		try {
 			Properties myProps = null;
 			try {
-				log.info("Loading: mygs.properties");
+				log.info(I18n.get("log.5685ceb915cb"));
 				myProps = PropertiesUtils.load(configDir() + "/mygs.properties");
 			} catch (Exception e) {
-				log.info("No override properties found");
+				log.info(I18n.get("log.c453f21e95f6"));
 			}
 			String administration = configDir() + "/administration";
 			Properties[] adminProps = PropertiesUtils.loadAllFromDirectory(administration);
@@ -237,6 +265,8 @@ public class Config {
 			ConfigurableProcessor.process(HousingConfig.class, mainProps);
 			ConfigurableProcessor.process(HTMLConfig.class, mainProps);
 			ConfigurableProcessor.process(InGameShopConfig.class, mainProps);
+			ConfigurableProcessor.process(InstanceConfig.class, mainProps);
+			InstanceConfig.refresh();
 			ConfigurableProcessor.process(AbyssLandingConfig.class, mainProps);
 			ConfigurableProcessor.process(LegionConfig.class, mainProps);
 			ConfigurableProcessor.process(LoggingConfig.class, mainProps);
@@ -253,7 +283,6 @@ public class Config {
 			ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
 			ConfigurableProcessor.process(SiegeConfig.class, mainProps);
 			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
-			ConfigurableProcessor.process(WeddingsConfig.class, mainProps);
 			ConfigurableProcessor.process(WorldConfig.class, mainProps);
 			ConfigurableProcessor.process(AdvCustomConfig.class, mainProps);
 			ConfigurableProcessor.process(AutoGroupConfig.class, mainProps);
@@ -268,20 +297,34 @@ public class Config {
 			ConfigurableProcessor.process(DatabaseConfig.class, networkProps);
 			ConfigurableProcessor.process(NetworkConfig.class, networkProps);
 		} catch (Exception e) {
-			log.error("Can't load gameserver configuration: ", e);
+			log.error(I18n.get("log.07e02900f548", e));
 			throw new Error("Can't load gameserver configuration: ", e);
 		}
 		IPConfig.load();
 	}
 
+	/**
+	 * 重新加载配置并刷新依赖调度。
+	 * Reloads configuration and refreshes dependent schedules.
+	 */
 	public static void reload() {
+		int worldRegionSize = WorldConfig.WORLD_REGION_SIZE;
+		int baseThreadPoolSize = ThreadConfig.BASE_THREAD_POOL_SIZE;
+		int extraThreadsPerCore = ThreadConfig.EXTRA_THREAD_PER_CORE;
+		int threadPoolSize = ThreadConfig.THREAD_POOL_SIZE;
+		boolean useThreadPriorities = ThreadConfig.USE_PRIORITIES;
+		boolean geoEnabled = GeoDataConfig.GEO_ENABLE;
+		boolean navEnabled = GeoDataConfig.GEO_NAV_ENABLE;
+		String houseAuctionTime = HousingConfig.HOUSE_AUCTION_TIME;
+		String houseRegisterEnd = HousingConfig.HOUSE_REGISTER_END;
+		String houseMaintenanceTime = HousingConfig.HOUSE_MAINTENANCE_TIME;
 		try {
 			Properties myProps = null;
 			try {
-				log.info("Loading: mygs.properties");
+				log.info(I18n.get("log.5685ceb915cb"));
 				myProps = PropertiesUtils.load(configDir() + "/mygs.properties");
 			} catch (Exception e) {
-				log.info("No override properties found");
+				log.info(I18n.get("log.c453f21e95f6"));
 			}
 			String administration = configDir() + "/administration";
 			Properties[] adminProps = PropertiesUtils.loadAllFromDirectory(administration);
@@ -310,6 +353,11 @@ public class Config {
 			ConfigurableProcessor.process(HousingConfig.class, mainProps);
 			ConfigurableProcessor.process(HTMLConfig.class, mainProps);
 			ConfigurableProcessor.process(InGameShopConfig.class, mainProps);
+			ConfigurableProcessor.process(InstanceConfig.class, mainProps);
+			InstanceConfig.refresh();
+			InstanceScaler.reload();
+			InstanceService.reloadDestroyTasks();
+			InstanceService.load();
 			ConfigurableProcessor.process(AbyssLandingConfig.class, mainProps);
 			ConfigurableProcessor.process(LegionConfig.class, mainProps);
 			ConfigurableProcessor.process(LoggingConfig.class, mainProps);
@@ -326,7 +374,6 @@ public class Config {
 			ConfigurableProcessor.process(ShutdownConfig.class, mainProps);
 			ConfigurableProcessor.process(SiegeConfig.class, mainProps);
 			ConfigurableProcessor.process(ThreadConfig.class, mainProps);
-			ConfigurableProcessor.process(WeddingsConfig.class, mainProps);
 			ConfigurableProcessor.process(WorldConfig.class, mainProps);
 			ConfigurableProcessor.process(AdvCustomConfig.class, mainProps);
 			ConfigurableProcessor.process(AutoGroupConfig.class, mainProps);
@@ -334,8 +381,57 @@ public class Config {
 			ConfigurableProcessor.process(FFAConfig.class, mainProps);
 			ConfigurableProcessor.process(ArchDaevaConfig.class, mainProps);
 			ConfigurableProcessor.process(VeteranRewardConfig.class, mainProps);
+			WorldConfig.WORLD_REGION_SIZE = worldRegionSize;
+			ThreadConfig.BASE_THREAD_POOL_SIZE = baseThreadPoolSize;
+			ThreadConfig.EXTRA_THREAD_PER_CORE = extraThreadsPerCore;
+			ThreadConfig.THREAD_POOL_SIZE = threadPoolSize;
+			ThreadConfig.USE_PRIORITIES = useThreadPriorities;
+			GeoDataConfig.GEO_ENABLE = geoEnabled;
+			GeoDataConfig.GEO_NAV_ENABLE = navEnabled;
+			HousingConfig.HOUSE_AUCTION_TIME = houseAuctionTime;
+			HousingConfig.HOUSE_REGISTER_END = houseRegisterEnd;
+			HousingConfig.HOUSE_MAINTENANCE_TIME = houseMaintenanceTime;
+			GameServerNetworkServices.packetFloodFilter().reload();
+			GameRuntimeServices.periodicSaveService().reload();
+			GameRuntimeServices.brokerService().reload();
+			GameStaticDataServices.htmlCache().reload(true);
+			GameRuntimeServices.surveyService().reload();
+			GameRuntimeServices.inGameShopEn().reload();
+			GameRuntimeServices.playerTransferService().reload();
+			GameWorldServices.dropRegistrationService().reload();
+			DateTimeUtil.init();
+			GameFeatureServices.protectorConquerorService().initSystem();
+			GameEventServices.playerEventService().reload();
+			GameEventServices.abyssRankUpdateService().reload();
+			GameEventServices.crazyDaevaService().startTimer();
+			ShugoImperialTombSpawnManager.getInstance().start();
+			GameCronServices.cronService().reload();
+			GameLocationBootstrapServices.agentService().reloadSchedule();
+			GameLocationBootstrapServices.anohaService().reloadSchedule();
+			GameLocationBootstrapServices.beritraService().reloadSchedule();
+			GameLocationBootstrapServices.conquestService().reloadSchedule();
+			GameLocationBootstrapServices.instanceRiftService().reloadSchedule();
+			GameLocationBootstrapServices.moltenusService().reloadSchedule();
+			GameLocationBootstrapServices.nightmareCircusService().reloadSchedule();
+			GameLocationBootstrapServices.riftService().reloadSchedule();
+			GameLocationBootstrapServices.rvrService().reloadSchedule();
+			GameFeatureServices.siegeService().reloadSchedule();
+			GameLocationBootstrapServices.svsService().reloadSchedule();
+			GameLocationBootstrapServices.vortexService().reloadSchedule();
+			GameLocationBootstrapServices.zorshivDredgionService().reloadSchedule();
+			log.warn(I18n.get("log.41e3eaa3d3fb"));
 		} catch (Exception e) {
-			log.error("Can't reload configuration: ", e);
+			WorldConfig.WORLD_REGION_SIZE = worldRegionSize;
+			ThreadConfig.BASE_THREAD_POOL_SIZE = baseThreadPoolSize;
+			ThreadConfig.EXTRA_THREAD_PER_CORE = extraThreadsPerCore;
+			ThreadConfig.THREAD_POOL_SIZE = threadPoolSize;
+			ThreadConfig.USE_PRIORITIES = useThreadPriorities;
+			GeoDataConfig.GEO_ENABLE = geoEnabled;
+			GeoDataConfig.GEO_NAV_ENABLE = navEnabled;
+			HousingConfig.HOUSE_AUCTION_TIME = houseAuctionTime;
+			HousingConfig.HOUSE_REGISTER_END = houseRegisterEnd;
+			HousingConfig.HOUSE_MAINTENANCE_TIME = houseMaintenanceTime;
+			log.error(I18n.get("log.4566dc07cb76", e));
 			throw new Error("Can't reload configuration: ", e);
 		}
 	}

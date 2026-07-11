@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,17 +16,34 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 艾特利亚图鉴服务，记录击杀与升级进度。
+ * Atreian bestiary service tracking kill and level-up progress.
+ *
  * @author Ranastic
  */
+
 @Slf4j
 
 public class AtreianBestiaryService {
 	private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
 
+	/**
+	 * 玩家登录时同步状态。
+	 * Syncs state when a player logs in.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onLogin(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_ATREIAN_BESTIARY_LIST(player));
 	}
 
+	/**
+	 * 击杀时处理。
+	 * Handles a kill event.
+	 *
+	 * 玩家 / player
+	 * npcId
+	 */
 	public void onKill(Player player, int npcId) {
 		AtreianBestiaryTemplate template = DataManager.ATREIAN_BESTIARY.getAtreianBestiaryTemplateByNpcId(npcId);
 		if (template == null || template.getNpcIds() == null) {
@@ -71,6 +72,13 @@ public class AtreianBestiaryService {
 		}
 	}
 
+	/**
+	 * 升级时处理。
+	 * Handles level-up.
+	 *
+	 * @param player 玩家 / player
+	 * @param id ID / id
+	 */
 	public void onLvlUp(Player player, int id) {
 		AtreianBestiaryTemplate template = DataManager.ATREIAN_BESTIARY.getAtreianBestiaryTemplate(id);
 		if (template == null) {
@@ -92,6 +100,11 @@ public class AtreianBestiaryService {
 		player.getAtreianBestiary().add(player, id, killCount, currentLvl, isClaimReward);
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static AtreianBestiaryService getInstance() {
 		ObjectProvider<AtreianBestiaryService> provider = instanceProvider;
 		if (provider != null) {
@@ -100,6 +113,12 @@ public class AtreianBestiaryService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AtreianBestiaryService> provider) {
 		instanceProvider = provider;
 	}

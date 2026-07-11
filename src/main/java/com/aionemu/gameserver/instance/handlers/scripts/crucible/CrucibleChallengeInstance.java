@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -52,19 +36,33 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 熔炉挑战副本事件处理器。
+ * Instance event handler for Crucible Challenge.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300320000)
 public class CrucibleChallengeInstance extends CrucibleInstance
 {
-	private int dieCount;
-	private int spawnCount;
-	private int stage1Count;
-	private int rewardCount;
-	private Future<?> bonusTimer;
+	/** die 次数 / die count */
+		private int dieCount;
+	/** 刷新数量 / spawn count */
+		private int spawnCount;
+	/** stage1count / stage1count */
+		private int stage1Count;
+	/** 奖励统计 / reward count */
+		private int rewardCount;
+	/** bonus timer / bonus timer */
+		private Future<?> bonusTimer;
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -79,6 +77,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		storage.decreaseByItemId(186000134, storage.getItemCountByItemId(186000134)); //Worthiness Ticket.
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		super.onEnterInstance(player);
@@ -88,6 +92,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void sendPacket(final int nameId, final int points) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
@@ -102,6 +112,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void sendEventPacket() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
@@ -111,6 +127,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		});
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(final Npc npc) {
 		int points = 0;
@@ -191,7 +213,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				}
 				despawnNpc(npc);
 				if (getNpcs(npcId).isEmpty()) {
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					setEvent(StageType.START_STAGE_1_ROUND_2, 2000);
 					sp(217783, 337.82263f, 1662.9073f, 95.27217f, (byte) 0, 2000);
@@ -200,9 +222,9 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217783:
 				despawnNpc(npc);
 				setEvent(StageType.PASS_STAGE_1, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(217758, 347.24026f, 1660.2524f, 95.35922f, (byte) 0, 0); //Worthiness Ticket.
 				sp(205674, 345.52954f, 1662.6697f, 95.25f, (byte) 0, 0);
@@ -216,15 +238,19 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(217848, 1308.67419f, 1736.2063f, 316f, (byte) 0, 1000);
 				sp(217848, 1306.9414f, 1736.5365f, 316f, (byte) 0, 1000);
 				sp(217848, 1305.2534f, 1735.1603f, 315.94586f, (byte) 0, 1000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				setEvent(StageType.START_STAGE_3_ROUND_2, 2000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217847, 1307.2786f, 1734.3274f, 316f, (byte) 0, 2000);
-				//Stop Gomju from perpetrating a senseless massacre!
+				// 阻止戈姆朱进行无意义的屠杀！ / Stop Gomju from perpetrating a senseless massacre!
 				sendMsgByRace(1401086, Race.PC_ALL, 3000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						despawnNpcs(getNpcs(217848));
@@ -234,9 +260,9 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217847:
 				despawnNpc(npc);
 				setEvent(StageType.PASS_STAGE_3, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205676, 1307.6722f, 1732.9865f, 316.07373f, (byte) 6, 0);
 			break;
@@ -246,9 +272,9 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				despawnNpc(npc);
 				despawnNpcs(getNpcs(217786)); //Dukaki Guard.
 				setEvent(StageType.START_STAGE_4_ROUND_2, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217794, 1271f, 791.5752f, 436.63998f, (byte) 0, 2000);
 			break;
@@ -258,27 +284,27 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				despawnNpc(npc);
 				despawnNpcs(getNpcs(217787)); //Kaliga's Servant.
 				setEvent(StageType.START_STAGE_4_ROUND_2, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217795, 1258.8425f, 237.91522f, 405.3968f, (byte) 0, 2000);
 			break;
 			case 217794:
 				despawnNpc(npc);
 				sp(217820, 1266.9661f, 791.5348f, 436.64014f, (byte) 0, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				setEvent(StageType.START_BONUS_STAGE_4, 2000);
 			break;
 			case 217795:
 				despawnNpc(npc);
 				sp(217820, 1251.1598f, 237.97736f, 405.3968f, (byte) 0, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				setEvent(StageType.START_BONUS_STAGE_4, 2000);
 			break;
@@ -296,9 +322,9 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217814:
 				despawnNpc(npc);
 				setEvent(StageType.START_STAGE_5_ROUND_2, 2000);
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				switch (Rnd.get(1, 6)) {
 					case 1:
@@ -330,14 +356,18 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 218565:
 				despawnNpc(npc);
 				setEvent(StageType.PASS_STAGE_5, 0);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 2000);
-				//You have passed Stage %0!
+				//你已通过第 %0 阶段！ / You have passed Stage %0!
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205678, 346.64798f, 349.25586f, 96.090965f, (byte) 0, 0);
 			break;
 			case 217819:
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 						Player player = null;
@@ -356,9 +386,9 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 							}
 						}
 						setEvent(StageType.PASS_STAGE_6, 0);
-						//You have eliminated all enemies in Round %0.
+						//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 						sendMsgByRace(1400929, Race.PC_ALL, 2000);
-						//You have passed Stage %0!
+						//你已通过第 %0 阶段！ / You have passed Stage %0!
 						sendMsgByRace(1400930, Race.PC_ALL, 4000);
 						sp(205679, 1765.522f, 1282.1051f, 389.11743f, (byte) 0, 2000);
 					}
@@ -381,7 +411,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				despawnNpc(npc);
 				if (getNpcs(217800).isEmpty() &&
 				    getNpcs(217801).isEmpty()) {
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					startBonusStage2();
 				}
@@ -389,7 +419,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217802:
 				despawnNpc(npc);
 				despawnNpcs(getNpcs(217803));
-				//Poppy was captured by the Dukaki Cooks... and roasted whole!
+				// 波比被杜卡基厨师抓住……整只烤了！ / Poppy was captured by the Dukaki Cooks... and roasted whole!
 				sendMsgByRace(1401075, Race.PC_ALL, 0);
 				sp(218570, 1780.5371f, 307.3513f, 469.25f, (byte) 0, 0); //Whole Roast Poppy.
 				bonusTimer.cancel(false);
@@ -402,7 +432,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				if (getNpcs(217797).isEmpty() &&
 				    getNpcs(217798).isEmpty() &&
 					getNpcs(217799).isEmpty()) {
-					//You have eliminated all enemies in Round %0.
+					//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 					startBonusStage2();
 				}
@@ -411,19 +441,19 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				despawnNpc(npc);
 				dieCount++;
 				if (dieCount == 5) {
-					//There are 5 Dukaki Cooks remaining.
+					// 还剩 5 名杜卡基厨师。 / There are 5 Dukaki Cooks remaining.
 					sendMsgByRace(1401068, Race.PC_ALL, 0);
-					//Careful! Poppy's health is very low.
+					// 小心！波比生命值很低。 / Careful! Poppy's health is very low.
 					sendMsgByRace(1401069, Race.PC_ALL, 2000);
-					//Poppy has almost reached the refuge. Just a little bit further!
+					// 波比几乎到达避难处。再坚持一点！ / Poppy has almost reached the refuge. Just a little bit further!
 					sendMsgByRace(1401070, Race.PC_ALL, 4000);
 				} if (bonusTimer.isCancelled() && getNpcs(217803).isEmpty()) {
 					passStage2();
 					Npc poppy = getNpc(217802);
 					if (poppy != null) {
-						//Poppy has reached the refuge safely. A successful rescue!
+						// 波比安全到达避难处。救援成功！ / Poppy has reached the refuge safely. A successful rescue!
 						sendMsgByRace(1401071, Race.PC_ALL, 0);
-						//You have eliminated all of the Dukaki Cooks and successfully rescued Poppy!
+						// 你已消灭全部杜卡基厨师并成功救出波比！ / You have eliminated all of the Dukaki Cooks and successfully rescued Poppy!
 						sendMsgByRace(1401072, Race.PC_ALL, 3000);
 						sp(218571, poppy.getX(), poppy.getY(), poppy.getZ(), (byte) 0, 0); //Poppy's Present.
 						poppy.getController().onDelete();
@@ -436,9 +466,13 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				despawnNpc(npc);
 				if (getNpcs(fnpcId).size() == 2) {
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						/**
+						 * 处理 run。
+						 * Handle run.
+						 */
 						@Override
 						public void run() {
-							//You have eliminated all enemies in Round %0.
+							//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 							sendMsgByRace(1400929, Race.PC_ALL, 0);
 							startStage3Round1_1(fnpcId);
 						}
@@ -447,14 +481,14 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			break;
 			case 218192: //Rank 5, Elyos Soldier Odos.
 				despawnNpc(npc);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217833, 1765.1195f, 313.09018f, 469.25f, (byte) 119, 2000); //Box Bonus (Stage Bonus 6)
 				sp(730460, 1804.46f, 309.16406f, 469.25f, (byte) 63, 2000); //Crucible Rift Exit.
             break;
 			case 218200: //Rank 5, Asmodian Soldier Mediatec.
 				despawnNpc(npc);
-				//You have eliminated all enemies in Round %0.
+				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
 				sp(217833, 1765.1195f, 313.09018f, 469.25f, (byte) 119, 2000); //Box Bonus (Stage Bonus 6)
 				sp(730460, 1804.46f, 309.16406f, 469.25f, (byte) 63, 2000); //Crucible Rift Exit.
@@ -480,6 +514,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		despawnNpc(getNpc(217841));
 	}
 	
+	/**
+	 * 结算并发放奖励。
+	 * Settle and grant rewards.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void doReward(Player player) {
 		CruciblePlayerReward playerReward = getPlayerReward(player.getObjectId());
@@ -497,22 +537,34 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void startBonusStage2() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				setEvent(StageType.START_BONUS_STAGE_2, 2000);
 			}
 		}, 2000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Poppy is running from the Dukaki Cooks. Eliminate them and help Poppy to reach the refuge.
+				// 波比正逃离杜卡基厨师。消灭他们并帮助波比到达避难处。 / Poppy is running from the Dukaki Cooks. Eliminate them and help Poppy to reach the refuge.
 				sendMsgByRace(1401067, Race.PC_ALL, 1000);
 				startWalk((Npc) spawn(217802, 1780.5371f, 307.3513f, 469.25f, (byte) 0), "PoppyOnTheRun"); //Poppy.
 			}
 		}, 1000);
 		bonusTimer = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				spawnCount++;
@@ -526,6 +578,10 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void startWalk(final Npc npc, final String walkId) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -547,7 +603,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(217803, 1780.9126f, 315.63382f, 469.25f, (byte) 0, 0);
 			break;
 			case 3:
-				//The Dukaki Cooks attacked and wounded Poppy!
+				// 杜卡基厨师攻击并打伤了波比！ / The Dukaki Cooks attacked and wounded Poppy!
 				sendMsgByRace(1401082, Race.PC_ALL, 0);
 				sp(217803, 1784.4752f, 300.1912f, 469.25f, (byte) 0, 0);
 			break;
@@ -564,7 +620,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(217803, 1793.6469f, 301.40973f, 469.25f, (byte) 0, 0);
 			break;
 			case 8:
-				//Poppy was attacked by the Dukaki Cooks. They're planning to roast Poppy for dinner!
+				// 波比遭到杜卡基厨师攻击。他们打算把波比烤了当晚餐！ / Poppy was attacked by the Dukaki Cooks. They're planning to roast Poppy for dinner!
 				sendMsgByRace(1401083, Race.PC_ALL, 0);
 				sp(217803, 1797.4891f, 310.50418f, 469.25f, (byte) 0, 0);
 			break;
@@ -577,6 +633,10 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -588,13 +648,21 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void passStage2() {
 		setEvent(StageType.PASS_STAGE_2, 0);
-		//You have eliminated all enemies in Round %0.
+		//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 		sendMsgByRace(1400929, Race.PC_ALL, 2000);
-		//You have passed Stage %0!
+		//你已通过第 %0 阶段！ / You have passed Stage %0!
 		sendMsgByRace(1400930, Race.PC_ALL, 4000);
 		sp(205675, 1784.5883f, 306.98645f, 469.25f, (byte) 0, 0);
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * 玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * result
+	 */
 	@Override
 	public boolean onDie(final Player player, Creature lastAttacker) {
 		super.onDie(player, lastAttacker);
@@ -616,6 +684,10 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		}
 		getPlayerReward(player.getObjectId()).setSpawnPosition(place);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 onReviveEvent(player);
@@ -628,6 +700,13 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}
 	
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	@Override
 	public boolean onReviveEvent(Player player) {
 		super.onReviveEvent(player);
@@ -657,24 +736,48 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		return true;
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onExitInstance(Player player) {
 		removeItems(player);
 		InstanceService.destroyInstance(player.getPosition().getWorldMapInstance());
-		//"Player Name" dropped out of training and left the Crucible.
+		// “玩家名”退出训练并离开了试炼场。 / "Player Name" dropped out of training and left the Crucible.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400962, player.getName()));
 	}
 	
+	/**
+	 * 玩家登录到该副本时处理。
+	 * Handle a player logging into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogin(Player player) {
 		sendPacket(0, 0);
@@ -684,11 +787,23 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		}
 	}
 	
+	/**
+	 * 玩家停止训练时处理。
+	 * Handle a player stopping training.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onStopTraining(Player player) {
 		doReward(player);
 	}
 	
+	/**
+	 * 副本阶段变更时处理。
+	 * Handle instance stage change.
+	 *
+	 * @param type 阶段类型 / stage type
+	 */
 	@Override
 	public void onChangeStage(StageType type) {
 		setEvent(type, 2000);
@@ -698,7 +813,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			player = instance.getPlayersInside().get(0);
 		} switch (stageType) {
 			case START_STAGE_1_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
 				switch (Rnd.get(1, 2)) {
 					case 1:
@@ -713,7 +828,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(npcId, 350.63846f, 1663.84f, 95.385f, (byte) 0, 4000);
 			break;
 			case START_STAGE_2_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
 				switch (Rnd.get(1, 2)) {
 					case 1:
@@ -728,17 +843,17 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				}
 			break;
 			case START_STAGE_3_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
 				switch (Rnd.get(1, 2)) {
 					case 1:
-						//Smash the Meat Barrel to lure and destroy the Starved Karnifs.
+						// 砸碎肉桶以引诱并消灭饥饿的卡尼夫。 / Smash the Meat Barrel to lure and destroy the Starved Karnifs.
 						sendMsgByRace(1401084, Race.PC_ALL, 0);
 						npcId = 217842;
 						barrelId = 217840;
 					break;
 					case 2:
-						//Smash the Aether Barrel to lure and destroy the Thirsty Spirits.
+						// 砸碎以太桶以引诱并消灭干渴的精灵。 / Smash the Aether Barrel to lure and destroy the Thirsty Spirits.
 						sendMsgByRace(1401085, Race.PC_ALL, 0);
 						npcId = 217844;
 						barrelId = 218560;
@@ -752,7 +867,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(npcId, 1293.0376f, 1722.3871f, 316.93515f, (byte) 0, 2000);
 			break;
 			case START_HARAMEL_STAGE_4_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
 				switch (Rnd.get(1, 3)) {
 					case 1:
@@ -771,7 +886,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(npcId, 1253.5984f, 791.6149f, 436.64008f, (byte) 0, 8000);
 			break;
 			case START_KROMEDE_STAGE_4_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
 				switch (Rnd.get(1, 3)) {
 					case 1:
@@ -790,7 +905,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(npcId, 1242.3618f, 237.89081f, 405.3801f, (byte) 0, 8000);
 			break;
 			case START_STAGE_5_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
 				switch (Rnd.get(1, 8)) {
 					case 1:
@@ -821,7 +936,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(npcId, 335.7365f, 337.93097f, 96.0909f, (byte) 0, 2000);
 			break;
 			case START_STAGE_6_ROUND_1:
-				//Round %0 begins!
+				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
 				sp(217819, 1769.4579f, 1290.9342f, 389.11728f, (byte) 80, 2000);
 			break;
@@ -830,6 +945,10 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -842,6 +961,10 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	private void setEvent(StageType type, int time) {
 		this.stageType = type;
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sendEventPacket();
@@ -849,6 +972,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		}, time);
 	}
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -857,8 +986,8 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		Integer object = instance.getSoloPlayerObj();
 		switch (npcId) {
 		   /**
-			* Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness.
-			*/
+	 * 交给“熔炉仲裁者”以重新加入战斗并证明自身价值 / Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness
+	 */
 			case 217758: //Worthiness Ticket Box (Fin Stage 1)
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000124, 1)); //Worthiness Ticket.
 			break;
@@ -884,16 +1013,16 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				    break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
 					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
@@ -1003,12 +1132,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				} if (player != null) {
 					if (player.isInsideZone(ZoneName.get("TRAINING_ROOM_04B_300320000"))) {
 						setEvent(StageType.PASS_STAGE_4, 0);
-						//You have passed Stage %0!
+						//你已通过第 %0 阶段！ / You have passed Stage %0!
 						sendMsgByRace(1400930, Race.PC_ALL, 4000);
 						sp(205667, 1258.8464f, 237.85518f, 405.39673f, (byte) 0, 0);
 					} else if (player.isInsideZone(ZoneName.get("TRAINING_ROOM_04A_300320000"))) {
 						setEvent(StageType.PASS_STAGE_4, 0);
-						//You have passed Stage %0!
+						//你已通过第 %0 阶段！ / You have passed Stage %0!
 						sendMsgByRace(1400930, Race.PC_ALL, 4000);
 						sp(205677, 1271.5472f, 791.36145f, 436.64017f, (byte) 0, 0);
 					}

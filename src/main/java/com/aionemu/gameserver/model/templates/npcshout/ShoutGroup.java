@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.npcshout;
 
 import java.util.ArrayList;
@@ -26,28 +10,10 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * NPC 喊话分组模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
- */
-
-/**
- * <p>
- * Java class for ShoutGroup complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
- * 
- * <pre>
- * &lt;complexType name="ShoutGroup">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="shout_npcs" type="{}ShoutList" maxOccurs="unbounded"/>
- *       &lt;/sequence>
- *       &lt;attribute name="client_ai" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ShoutGroup", propOrder = { "shoutNpcs" })
@@ -60,20 +26,7 @@ public class ShoutGroup {
 	protected String clientAi;
 
 	/**
-	 * Gets the value of the shoutNpcs property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the shoutNpcs property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getShoutNpcs().add(newItem);
-	 * </pre>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link ShoutList }
+	 * 获取 shoutNpcs 属性值。 / Gets the value of the shoutNpcs property. <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the shoutNpcs property. <p> For example, to add a new item, do as follows: <pre> getShoutNpcs().add(newItem); </pre> <p> Objects of the following type(s) are allowed in the list {@link ShoutList }
 	 */
 	public List<ShoutList> getShoutNpcs() {
 		if (shoutNpcs == null) {
@@ -82,15 +35,16 @@ public class ShoutGroup {
 		return this.shoutNpcs;
 	}
 
-	/**
-	 * Gets the value of the clientAi property.
-	 * 
-	 * @return possible object is {@link String }
-	 */
+	 /**
+	  * 获取 clientAi 属性值。
+	  * Gets the value of the clientAi property
+	  * @return possible object is {@link String }
+	  */
 	public String getClientAi() {
 		return clientAi;
 	}
 
+	/** 置空 / make Null. */
 	public void makeNull() {
 		this.shoutNpcs = null;
 		this.clientAi = null;

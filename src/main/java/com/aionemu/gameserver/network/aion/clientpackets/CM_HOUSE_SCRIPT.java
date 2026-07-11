@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -25,6 +9,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_SCRIPTS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 上传/更新房屋脚本数据的客户端包。
+ * Client packet for uploading or updating house script data.
+ */
 public class CM_HOUSE_SCRIPT extends AionClientPacket {
 	int address;
 	int scriptIndex;
@@ -32,12 +20,22 @@ public class CM_HOUSE_SCRIPT extends AionClientPacket {
 	int compressedSize;
 	int uncompressedSize;
 	byte[] stream;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_HOUSE_SCRIPT(int opcode, State state, State... restStates) {
 
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 读取房屋脚本索引与压缩数据。
+	 * Reads house script index and compressed data.
+	 */
 	protected void readImpl() {
 		address = readD();
 		scriptIndex = readC();
@@ -50,7 +48,10 @@ public class CM_HOUSE_SCRIPT extends AionClientPacket {
 			}
 		}
 	}
-
+	/**
+	 * 保存或清空指定槽位的房屋脚本。
+	 * Saves or clears the house script for a given slot.
+	 */
 	protected void runImpl() {
 		Player player = this.getConnection().getActivePlayer();
 

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,9 +8,20 @@ import com.aionemu.gameserver.controllers.observer.AttackCalcObserver;
 import com.aionemu.gameserver.controllers.observer.AttackShieldObserver;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 反射效果：注册反射型攻击护盾观察者，将部分伤害反弹给攻击者。
+ * Reflector effect: registers a reflective attack-shield observer that returns damage.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ReflectorEffect")
 public class ReflectorEffect extends ShieldEffect {
+
+	/**
+	 * 按 hitvalue/hitdelta 注册反射护盾观察者。
+	 * Registers a reflective shield observer from hitvalue/hitdelta.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		int hit = hitvalue + hitdelta * effect.getSkillLevel();
@@ -36,6 +31,12 @@ public class ReflectorEffect extends ShieldEffect {
 		effect.setAttackShieldObserver(asObserver, position);
 	}
 
+	/**
+	 * 移除反射护盾观察者。
+	 * Removes the reflective shield observer.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		AttackCalcObserver acObserver = effect.getAttackShieldObserver(position);
@@ -44,6 +45,10 @@ public class ReflectorEffect extends ShieldEffect {
 		}
 	}
 
+	/**
+	 * 返回护盾类型标识（1 = 反射）。
+	 * Returns the shield type id (1 = reflector).
+	 */
 	@Override
 	public int getType() {
 		return 1;

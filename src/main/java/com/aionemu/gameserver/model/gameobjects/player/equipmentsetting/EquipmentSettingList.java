@@ -8,6 +8,11 @@ import java.util.Map;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
+/**
+ * 装备 Setting 列表。
+ * Equipment Setting List game object.
+ */
+
 public class EquipmentSettingList {
 
 	private final Map<Integer, EquipmentSetting> equipmentSetting = new HashMap<Integer, EquipmentSetting>();
@@ -17,6 +22,7 @@ public class EquipmentSettingList {
 		this.owner = owner;
 	}
 
+	/** 添加。 / Add. */
 	public EquipmentSetting add(int slot, int display, int mHand, int sHand, int helmet, int torso, int glove,
 			int boots, int earringsLeft, int earringsRight, int ringLeft, int ringRight, int necklace, int shoulder,
 			int pants, int powershardLeft, int powershardRight, int wings, int waist, int mOffHand, int sOffHand,
@@ -26,6 +32,7 @@ public class EquipmentSettingList {
 				powershardRight, wings, waist, mOffHand, sOffHand, plume, bracelet, isNew);
 	}
 
+	/** 添加。 / Add. */
 	public EquipmentSetting add(int slot, String name, int display, int mHand, int sHand, int helmet, int torso,
 			int glove, int boots, int earringsLeft, int earringsRight, int ringLeft, int ringRight, int necklace,
 			int shoulder, int pants, int powershardLeft, int powershardRight, int wings, int waist, int mOffHand,
@@ -38,14 +45,17 @@ public class EquipmentSettingList {
 		return setting;
 	}
 
+	/** 返回装备方案 / Returns the equipment setting*/
 	public Collection<EquipmentSetting> getEquipmentSetting() {
 		return Collections.unmodifiableCollection(equipmentSetting.values());
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	public Player getOwner() {
 		return owner;
 	}
 
+	/** 设置所有者 / Sets the owner*/
 	public void setOwner(Player owner) {
 		this.owner = owner;
 	}

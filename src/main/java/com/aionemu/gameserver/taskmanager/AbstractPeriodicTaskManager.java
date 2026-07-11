@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.taskmanager;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.AccessLevel;
@@ -26,29 +11,62 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.GameServer.StartupHook;
 
+import java.util.concurrent.Future;
+
 /**
- * @author lord_rex and MrPoke based on l2j-free engines. This can be used for
- *         periodic calls.
+ * 周期性任务管理器抽象基类：服务器启动后按固定间隔调度 {@link #run()}。
+ * Abstract base for periodic task managers: schedules {@link #run()} at a fixed interval after server startup.
+ *
+ * <p>基于 l2j-free 引擎思路。/ Based on l2j-free engines.</p>
+ *
+ * @author lord_rex, MrPoke
  */
 @Slf4j(access = AccessLevel.PROTECTED)
 public abstract class AbstractPeriodicTaskManager extends AbstractLockManager implements Runnable, StartupHook {
 
-	private final int period;
+	/**
+	 * 调度周期（毫秒）。
+	 * Scheduling period in milliseconds.
+	 */
+	private int period;
+	private Future<?> task;
 
+	/**
+	 * 以给定周期构造管理器，并注册到游戏服启动钩子。
+	 * Construct with the given period and register as a game-server startup hook.
+	 *
+	 * @param period 周期毫秒数 / Period in milliseconds
+	 */
 	public AbstractPeriodicTaskManager(int period) {
 		this.period = period;
 
 		GameServer.addStartupHook(this);
 
-		log.info("{} initialized", getClass().getSimpleName());
+		log.info(I18n.get("log.bbaa9ed5272c", getClass().getSimpleName()));
 	}
 
+	/**
+	 * 启动完成后以随机偏移安排固定周期执行。
+	 * After startup, schedule fixed-rate execution with a randomized offset.
+	 */
 	@Override
-	public final void onStartup() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this, 1000 + Rnd.get(period),
+	public final synchronized void onStartup() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this, 1000 + Rnd.get(period),
 				Rnd.get(period - 5, period + 5));
 	}
 
+	public final synchronized void reschedule(int period) {
+		if (task != null) {
+			task.cancel(false);
+		}
+		this.period = period;
+		onStartup();
+	}
+
+	/**
+	 * 每个调度周期执行一次的任务体，由子类实现。
+	 * Task body invoked once per schedule tick; implemented by subclasses.
+	 */
 	@Override
 	public abstract void run();
 }

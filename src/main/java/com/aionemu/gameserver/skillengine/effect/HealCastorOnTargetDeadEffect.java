@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -30,6 +14,9 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.utils.MathUtil;
 
 /**
+ * 目标死亡回施法者效果：目标死亡时治疗施法者（可选治疗小队）。
+ * Heal castor on target death: heals the caster (optionally party) when the target dies.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,11 +30,19 @@ public class HealCastorOnTargetDeadEffect extends EffectTemplate {
 	@XmlAttribute
 	protected boolean healparty;
 
+	/**
+	 * 将死亡回血效果加入控制器。
+	 * Attaches heal-on-death to the controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 计算目标死亡回施法者效果。
+	 * Calculates heal-castor-on-target-dead.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected() instanceof Player) {
@@ -55,6 +50,10 @@ public class HealCastorOnTargetDeadEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 注册死亡观察以治疗施法者。
+	 * Registers death observer to heal the caster.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
@@ -66,10 +65,10 @@ public class HealCastorOnTargetDeadEffect extends EffectTemplate {
 
 			@Override
 			public void died(Creature creature) {
-				// Heal Caster first
+				// 先治疗施法者 / Heal Caster first
 				if (MathUtil.isIn3dRange(effect.getEffected(), player, range))
 					player.getController().onRestore(HealType.HP, valueWithDelta);
-				// Then check for party if healparty parameter is set
+				// 若设置 healparty 参数则检查小队 / Then check for party if healparty parameter is set
 				if (healparty) {
 					if (player.getPlayerGroup2() != null) {
 						for (Player p : player.getPlayerGroup2().getMembers()) {
@@ -99,6 +98,10 @@ public class HealCastorOnTargetDeadEffect extends EffectTemplate {
 		effect.setActionObserver(observer, position);
 	}
 
+	/**
+	 * 移除死亡回血观察者。
+	 * Removes the heal-on-death observer.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);

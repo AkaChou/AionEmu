@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -31,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.ObjectProvider;
@@ -66,6 +53,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 经纪行（交易行）服务：上架、购买、结算、缓存与周期落库。
+ * Broker (auction house) service: listing, buying, settlement, player cache and periodic DB save.
+ *
  * @author kosyachok
  * @author ATracer
  * @author Antraxx
@@ -77,16 +67,17 @@ public class BrokerService {
 	private ConcurrentMap<Integer, BrokerItem> elyosSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
 	private ConcurrentMap<Integer, BrokerItem> asmodianBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
 	private ConcurrentMap<Integer, BrokerItem> asmodianSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private final int DELAY_BROKER_SAVE = (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000) >= 6000
-			? (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000)
-			: 6000;
-	private final int DELAY_BROKER_CHECK = (BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000) >= 60000
-			? (BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000)
-			: 60000;
 	private BrokerPeriodicTaskManager saveManager;
+	private Future<?> expiredItemsTask;
 	private ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<Integer, BrokerPlayerCache>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
 
+	/**
+	 * 获取 BrokerService 单例（Spring 提供者优先，否则 holder）。
+	 * Return the BrokerService singleton (Spring provider first, else holder).
+	 *
+	 * service instance
+	 */
 	public static final BrokerService getInstance() {
 		ObjectProvider<BrokerService> provider = instanceProvider;
 		if (provider == null) {
@@ -95,23 +86,54 @@ public class BrokerService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，供 getInstance 使用。
+	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
+	 * Spring provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<BrokerService> instanceProvider) {
 		BrokerService.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 构造经纪行服务并初始化周期任务管理器。
+	 * Construct the broker service and initialize its periodic task manager.
+	 */
 	public BrokerService() {
 		initBrokerService();
-		saveManager = new BrokerPeriodicTaskManager(DELAY_BROKER_SAVE);
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+		saveManager = new BrokerPeriodicTaskManager(brokerSaveDelay());
+		scheduleExpiredItemsTask();
+	}
+
+	/**
+	 * 从数据库重新加载经纪行在售与已结算物品。
+	 * Reload broker listed and settled items from the database.
+	 */
+	public synchronized void reload() {
+		saveManager.reschedule(brokerSaveDelay());
+		if (expiredItemsTask != null) {
+			expiredItemsTask.cancel(false);
+		}
+		scheduleExpiredItemsTask();
+	}
+
+	private void scheduleExpiredItemsTask() {
+		int delay = Math.max(BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000, 60000);
+		expiredItemsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				checkExpiredItems();
 			}
-		}, DELAY_BROKER_CHECK, DELAY_BROKER_CHECK);
+		}, delay, delay);
+	}
+
+	private int brokerSaveDelay() {
+		return Math.max(BrokerConfig.SAVE_MANAGER_INTERVAL * 1000, 6000);
 	}
 
 	private void initBrokerService() {
-		log.info("Loading broker...");
+		log.info(I18n.get("log.907fa7107b89"));
 		int loadedBrokerItemsCount = 0;
 		int loadedSettledItemsCount = 0;
 
@@ -136,16 +158,18 @@ public class BrokerService {
 				}
 			}
 		}
-		log.info("Broker loaded with " + loadedBrokerItemsCount + " broker items, " + loadedSettledItemsCount
-				+ " settled items.");
+		log.info(I18n.get("log.e177a3708142", loadedBrokerItemsCount, loadedSettledItemsCount));
 	}
 
-	/**
-	 * @param player
-	 * @param clientMask
-	 * @param sortType
-	 * @param startPage
-	 * @param itemList
+		/**
+	 * 按客户端筛选/排序条件向玩家展示经纪行物品列表。
+	 * Show broker items to the player using client filter/sort criteria.
+	 *
+	 * requesting player
+	 * @param clientMask 客户端筛选掩码 / client filter mask
+	 * sort type
+	 * start page
+	 * @param itemList 指定物品模板 ID 列表，可空 / optional item template id list
 	 */
 	public void showRequestedItems(Player player, int clientMask, int sortType, int startPage, List<Integer> itemList) {
 		BrokerItem[] searchItems = null;
@@ -241,10 +265,7 @@ public class BrokerService {
 	}
 
 	/**
-	 * Perform sorting according to sort type
-	 *
-	 * @param brokerItems
-	 * @param sortType
+	 * 按排序类型执行排序。 / Perform sorting according to sort type.
 	 */
 	private void sortBrokerItems(BrokerItem[] brokerItems, int sortType) {
 		Arrays.sort(brokerItems, BrokerItem.getComparatoryByType(sortType));
@@ -290,10 +311,13 @@ public class BrokerService {
 		return null;
 	}
 
-	/**
-	 * @param player
-	 * @param itemUniqueId
-	 * @param itemCount
+		/**
+	 * 购买经纪行物品（支持拆分售卖数量）。
+	 * Buy a broker item (supports split-sell quantities).
+	 *
+	 * 买家 / buyer
+	 * @param itemUniqueId 经纪行物品唯一 ID / broker item unique id
+	 * quantity to buy
 	 */
 	public void buyBrokerItem(Player player, int itemUniqueId, long itemCount) {
 		boolean isEmptyCache = getFilteredItems(player).length == 0;
@@ -317,15 +341,9 @@ public class BrokerService {
 						"Sorry, you can not buy items more than total count! are you hacking! you have been kicked from game due to malfunction data.");
 				player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 			}
-			log.info(
-					"[BROKER EXCHANGE] > Malfunction data is received from packet [CM_BUY_BROKER_ITEM]. Buy items count are more than total item count."
-							+ " [Player: " + player.getName() + "] bought [Item: " + buyingItem.getItemId() + "] "
-							+ "[Total Item Count: " + (buyingItem.getItemCount() + itemCount) + "] " + "[Buy Count: "
-							+ itemCount + "]"
-							+ (LoggingConfig.ENABLE_ADVANCED_LOGGING
+			log.info(I18n.get("log.bfe59bc3716e", player.getName(), buyingItem.getItemId(), (buyingItem.getItemCount() + itemCount), itemCount, (LoggingConfig.ENABLE_ADVANCED_LOGGING
 									? " [Item Name: " + buyingItem.getItem().getItemName()
-									: "]")
-							+ " from [Player: " + buyingItem.getSeller() + "] for [Price: " + TotalBuyPrice + "]");
+									: "]"), buyingItem.getSeller(), TotalBuyPrice));
 			return;
 		}
 		if ((buyingItem.isSold() || buyingItem.isSettled()) && (buyingItem.getItem() != null)) {
@@ -436,7 +454,7 @@ public class BrokerService {
 	}
 
 	/**
-	 * Copy some item values like item stones and enchant level
+	 * 复制部分物品值（如镶嵌石与强化等级）。 / Copy some item values like item stones and enchant level
 	 */
 	private static void copyItemInfo(Item sourceItem, Item newItem) {
 		newItem.setOptionalSocket(sourceItem.getOptionalSocket());
@@ -520,11 +538,15 @@ public class BrokerService {
 		return c;
 	}
 
-	/**
-	 * @param player
-	 * @param itemUniqueId
-	 * @param count
-	 * @param PricePerItem
+		/**
+	 * 将玩家背包物品上架到经纪行。
+	 * Register a player inventory item on the broker.
+	 *
+	 * 卖家 / seller
+	 * item object id
+	 * @param count 上架数量 / listed quantity
+	 * price per item
+	 * @param isSplitSell 是否允许拆分售卖 / whether split-sell is enabled
 	 */
 	public void registerItem(Player player, int itemUniqueId, long count, long PricePerItem, boolean isSplitSell) {
 		long TotalItemPrice = PricePerItem * count;
@@ -543,18 +565,18 @@ public class BrokerService {
 			return;
 		}
 
-		// check max price for 1 item in stack
+		// 检查堆叠中 1 件物品的最高价格 / check max price for 1 item in stack
 		if (PricePerItem > 999999999) {
 			return;
 		}
 
-		// check if item is not soulbound
+		// 检查物品是否未灵魂绑定 / check if item is not soulbound
 		if (itemToRegister.isSoulBound()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_VENDOR_REGISTER_USED_ITEM);
 			return;
 		}
 
-		// Check Trade Hack
+		// 检查交易漏洞 / Check Trade Hack
 		if (!itemToRegister.isTradeable(player)) {
 			return;
 		}
@@ -621,10 +643,14 @@ public class BrokerService {
 		PacketSendUtility.sendPacket(player, new SM_BROKER_SERVICE(newBrokerItem, 0, registeredItemsCount));
 	}
 
-	/**
-	 * @param player
-	 * @param sortType
-	 * @param itemUniqueId
+		/**
+	 * 计算指定物品在经纪行的均价/最低/最高价。
+	 * Compute average/low/high broker prices for the given item.
+	 *
+	 * requesting player
+	 * @param sortType 排序/查询类型 / sort or query type
+	 * item object id
+	 * price result
 	 */
 	public long GetItemAveLowHigh(Player player, int sortType, int itemUniqueId) {
 		BrokerItem[] searchItems = null;
@@ -675,9 +701,12 @@ public class BrokerService {
 		}
 	}
 
-	/**
-	 * @param player
-	 * @param itemUniqueId
+		/**
+	 * 计算并下发物品均价/最低/最高价窗口数据。
+	 * Calculate and send average/low/high price window data for an item.
+	 *
+	 * requesting player
+	 * item object id
 	 */
 	public void CalcItemAveLowHigh(Player player, int itemUniqueId) {
 
@@ -695,6 +724,13 @@ public class BrokerService {
 				new SM_BROKER_SERVICE(itemUniqueId, Ave7day, CurrentLow, CurrentHigh, IsLowHighSame));
 	}
 
+	/**
+	 * 打开经纪行上架确认窗口。
+	 * Open the broker add-item confirmation window.
+	 *
+	 * 玩家 / player
+	 * item object id
+	 */
 	public void showAddItemWindow(Player player, int itemObjectId) {
 		Map<Integer, BrokerItem> brokerItems = getRaceBrokerItems(player.getRace());
 		List<BrokerItem> items = new ArrayList<>();
@@ -713,6 +749,13 @@ public class BrokerService {
 		}
 	}
 
+	/**
+	 * 从物品列表计算均价、最高价、最低价。
+	 * Compute average, max and min prices from a list of broker items.
+	 *
+	 * @param items 经纪行物品列表 / broker item list
+	 * @return [均价, 最高, 最低] / [avg, max, min]
+	 */
 	public long[] getAvgMaxMinPrice(List<BrokerItem> items) {
 		long[] avgMaxMin = new long[] { 0, 0, 0 };
 		for (BrokerItem item : items) {
@@ -732,8 +775,11 @@ public class BrokerService {
 		return avgMaxMin;
 	}
 
-	/**
-	 * @param player
+		/**
+	 * 向玩家展示其已上架物品。
+	 * Show the player their currently registered broker items.
+	 *
+	 * @param player 玩家 / player
 	 */
 	public void showRegisteredItems(Player player) {
 		Map<Integer, BrokerItem> brokerItems = getRaceBrokerItems(player.getRace());
@@ -750,6 +796,13 @@ public class BrokerService {
 				new SM_BROKER_SERVICE(registeredItems.toArray(new BrokerItem[registeredItems.size()])));
 	}
 
+	/**
+	 * 判断玩家是否仍有上架中的物品。
+	 * Whether the player still has items registered on the broker.
+	 *
+	 * @param player 玩家 / player
+	 * @return 有上架物品为 true / true if registered items exist
+	 */
 	public boolean hasRegisteredItems(Player player) {
 		Map<Integer, BrokerItem> brokerItems = getRaceBrokerItems(player.getRace());
 		for (BrokerItem item : brokerItems.values()) {
@@ -760,9 +813,12 @@ public class BrokerService {
 		return false;
 	}
 
-	/**
-	 * @param player
-	 * @param brokerItemId
+		/**
+	 * 取消上架并退回物品。
+	 * Cancel a registered listing and return the item.
+	 *
+	 * @param player 玩家 / player
+	 * @param brokerItemId 经纪行物品 ID / broker item id
 	 */
 	public void cancelRegisteredItem(Player player, int brokerItemId) {
 		Map<Integer, BrokerItem> brokerItems = getRaceBrokerItems(player.getRace());
@@ -770,7 +826,7 @@ public class BrokerService {
 
 		if (brokerItem != null) {
 			if (!brokerItem.getSeller().equals(player.getName())) {
-				log.info("[AUDIT] Player: {} try get from broker not own item", player.getName());
+				log.info(I18n.get("log.8d39bb046866", player.getName()));
 				return;
 			}
 			if (player.getInventory().isFull(brokerItem.getItem().getItemTemplate().getExtraInventoryId())) {
@@ -788,8 +844,11 @@ public class BrokerService {
 		showRegisteredItems(player);
 	}
 
-	/**
-	 * @param player
+		/**
+	 * 向玩家展示已结算（可领取）物品/基纳。
+	 * Show the player settled items/kinah available for collection.
+	 *
+	 * 玩家 / player
 	 */
 	public void showSettledItems(Player player) {
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(player.getRace());
@@ -808,8 +867,12 @@ public class BrokerService {
 				new SM_BROKER_SERVICE(settledItems.toArray(new BrokerItem[settledItems.size()]), totalKinah));
 	}
 
-	/**
-	 * @param playerCommonData
+		/**
+	 * 统计玩家待领取的经纪行基纳总额。
+	 * Sum kinah waiting for collection for the given player common data.
+	 *
+	 * @param playerCommonData 玩家公共数据 / player common data
+	 * @return 待领取基纳 / kinah to collect
 	 */
 	public long getCollectedMoney(PlayerCommonData playerCommonData) {
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(playerCommonData.getRace());
@@ -838,8 +901,11 @@ public class BrokerService {
 		return totalKinah;
 	}
 
-	/**
-	 * @param player
+		/**
+	 * 结算账户：领取已售基纳与过期退回物品。
+	 * Settle the account: collect sold kinah and expired returned items.
+	 *
+	 * @param player 玩家 / player
 	 */
 	public void settleAccount(Player player) {
 		Race playerRace = player.getRace();
@@ -887,7 +953,7 @@ public class BrokerService {
 						itemsLeft = true;
 					}
 				} else {
-					log.warn("Broker settled item missed. ObjID: " + item.getItemUniqueId());
+					log.warn(I18n.get("log.8d30e44b916e", item.getItemUniqueId()));
 				}
 			}
 		}
@@ -933,8 +999,11 @@ public class BrokerService {
 		}
 	}
 
-	/**
-	 * @param player
+		/**
+	 * 玩家登录时通知是否有经纪行结算可领。
+	 * On login, notify the player if broker settlements are available.
+	 *
+	 * logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(player.getRace());
@@ -955,6 +1024,12 @@ public class BrokerService {
 		return playerBrokerCache.computeIfAbsent(player.getObjectId(), playerId -> new BrokerPlayerCache());
 	}
 
+	/**
+	 * 移除玩家经纪行查询缓存。
+	 * Remove the player broker query cache.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void removePlayerCache(Player player) {
 		playerBrokerCache.remove(player.getObjectId());
 	}
@@ -976,7 +1051,8 @@ public class BrokerService {
 	}
 
 	/**
-	 * Frequent running save task
+	 * 经纪行操作的 FIFO 周期落库任务管理器。
+	 * FIFO periodic task manager for frequent broker save operations.
 	 */
 	public static final class BrokerPeriodicTaskManager extends AbstractFIFOPeriodicTaskManager<BrokerOpSaveTask> {
 
@@ -984,6 +1060,12 @@ public class BrokerService {
 
 		/**
 		 * @param period
+		 */
+		/**
+		 * 构造周期任务管理器。
+		 * Construct the periodic task manager.
+		 *
+		 * @param period 执行周期（毫秒） / period in milliseconds
 		 */
 		public BrokerPeriodicTaskManager(int period) {
 			super(period);
@@ -1001,8 +1083,8 @@ public class BrokerService {
 	}
 
 	/**
-	 * This class is used for storing all items in one shot after any broker
-	 * operation
+	 * 经纪行操作后的批量落库任务（一次提交相关物品变更）。
+	 * Batch DB-save task used after any broker operation.
 	 */
 	public static final class BrokerOpSaveTask implements Runnable {
 
@@ -1027,13 +1109,19 @@ public class BrokerService {
 		/**
 		 * @param brokerItem
 		 */
+		/**
+		 * 构造针对单个经纪行物品的落库任务。
+		 * Construct a save task for a single broker item.
+		 *
+		 * @param brokerItem 经纪行物品 / broker item
+		 */
 		public BrokerOpSaveTask(BrokerItem brokerItem) {
 			this.brokerItem = brokerItem;
 		}
 
 		@Override
 		public void run() {
-			// first save item for FK consistency
+			// 先保存物品以保持外键一致性 / first save item for FK consistency
 			if (item != null) {
 				DAOManager.getDAO(InventoryDAO.class).store(item, playerId);
 			}
@@ -1049,6 +1137,10 @@ public class BrokerService {
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 
+	/**
+	 * 构造经纪行服务并初始化周期任务管理器。
+	 * Construct the broker service and initialize its periodic task manager.
+	 */
 		protected static final BrokerService instance = new BrokerService();
 	}
 }

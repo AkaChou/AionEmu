@@ -1,6 +1,11 @@
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.EmotionType;
@@ -14,10 +19,14 @@ import com.aionemu.gameserver.model.trade.TradeList;
 import com.aionemu.gameserver.model.trade.TradePSItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PRIVATE_STORE_NAME;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 个人商店服务，处理开店、上架、购买与关店逻辑。
+ * Private-store service handling open, list, buy, and close operations.
+ *
  * @author Simple
  */
 @Slf4j(topic = "EXCHANGE_LOG")
@@ -25,156 +34,184 @@ public class PrivateStoreService {
 
 
 	/**
-	 * This method will move the item to the new player and move kinah to item owner
+	 * 成交商店物品：校验双方、转移道具与基纳，售罄时自动关店。
+	 * Completes a store sale: validates parties, transfers items and kinah, and closes the store when empty.
+	 *
+	 * @param seller 卖家 / seller
+	 * @param buyer 买家 / buyer
+	 * @param tradeList 交易列表 / trade list
 	 */
 	public static void sellStoreItem(Player seller, Player buyer, TradeList tradeList) {
-		/**
-		 * 1. Check if we are busy with two valid participants
-		 */
-		if (!validateParticipants(seller, buyer))
+		if (seller == null) {
 			return;
-
-		/**
-		 * Define store to make life easier
-		 */
-		PrivateStore store = seller.getStore();
-
-		/**
-		 * 2. Load all item object id's and validate if seller really owns them
-		 */
-		tradeList = loadObjIds(seller, tradeList);
-		if (tradeList == null)
-			return; // Invalid items found or store was empty
-
-		/**
-		 * 3. Check free slots
-		 */
-		Storage inventory = buyer.getInventory();
-		int freeSlots = inventory.getLimit() - inventory.getItemsWithKinah().size() + 1;
-		if (freeSlots < tradeList.size()) {
-			return; // TODO message
 		}
-
-		/**
-		 * Create total price and items
-		 */
-		long price = getTotalPrice(store, tradeList);
-
-		// Kinah exploit fix
-		if (price < 0)
-			return;
-
-		/**
-		 * Check if player has enough kinah
-		 */
-		if (buyer.getInventory().getKinah() >= price) {
-			for (TradeItem tradeItem : tradeList.getTradeItems()) {
-				Item item = getItemByObjId(seller, tradeItem.getItemId());
-				if (item != null) {
-					TradePSItem storeItem = store.getTradeItemByObjId(tradeItem.getItemId());
-					// Fix "Private store stackable items dupe" by Asanka
-					if (item.getItemCount() < tradeItem.getCount()) {
-						PacketSendUtility.sendMessage(buyer, "You cannot buy more than player can sell.");
-						return;
-					}
-
-					// Decrease/remove item from store and add them to buyer
-					decreaseItemFromPlayer(seller, item, tradeItem);
-					ItemService.addItem(buyer, item.getItemId(), tradeItem.getCount(), item);
-					if (storeItem.getCount() == tradeItem.getCount()) {
-						store.removeItem(storeItem.getItemObjId());
-					}
-
-					// Log the trade
-					log.info("[PRIVATE STORE] > [Seller: " + seller.getName() + "] sold [Item: " + item.getItemId()
-							+ "][Amount: " + item.getItemCount() + "] to [Buyer: " + buyer.getName() + "] for [Price: "
-							+ price + "]");
-				}
-			}
-			// Decrease kinah for buyer and Increase kinah for seller
-			decreaseKinahAmount(buyer, price);
-			increaseKinahAmount(seller, price);
+		synchronized (seller) {
+			/**
+			 * 1. 校验双方参与者是否有效且可交易。
+			 * 1. Check if we are busy with two valid participants
+			 */
+			if (!validateParticipants(seller, buyer))
+				return;
 
 			/**
-			 * Remove item from store and check if last item
+	 * 定义商店变量以简化逻辑 / Define store to make life easier
+	 */
+			PrivateStore store = seller.getStore();
+			if (store == null) {
+				return;
+			}
+
+			/**
+			 * 2. 加载物品对象 ID 并校验卖家是否真正持有。
+			 * 2. Load all item object ids and validate if seller really owns them
 			 */
-			if (store.getSoldItems().size() == 0) {
-				closePrivateStore(seller);
-			}
-		}
-	}
+			tradeList = loadObjIds(seller, tradeList);
+			if (tradeList == null)
+				return; // Invalid items found or store was empty
 
-	/**
-	 * @param activePlayer
+			/**
+	 * 3. 检查空闲槽位 / 3. Check free slots
 	 */
-	public static void openPrivateStore(Player activePlayer, String name) {
-		final int senderRace = activePlayer.getRace().getRaceId();
-		final Player playerActive = activePlayer;
-		if (name != null) {
-			activePlayer.getStore().setStoreMessage(name);
-			if (CustomConfig.SPEAKING_BETWEEN_FACTIONS) {
-				PacketSendUtility.broadcastPacket(playerActive,
-						new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), name), true);
-			} else {
-				PacketSendUtility.broadcastPacket(playerActive,
-						new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), name), true, new ObjectFilter<Player>() {
-
-							@Override
-							public boolean acceptObject(Player object) {
-								return ((senderRace == object.getRace().getRaceId()
-										&& !object.getBlockList().contains(playerActive.getObjectId()))
-										|| object.isGM());
-							}
-						});
-				PacketSendUtility.broadcastPacket(playerActive,
-						new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), ""), false, new ObjectFilter<Player>() {
-
-							@Override
-							public boolean acceptObject(Player object) {
-								return senderRace != object.getRace().getRaceId()
-										&& !object.getBlockList().contains(playerActive.getObjectId())
-										&& !object.isGM();
-							}
-						});
+			Storage inventory = buyer.getInventory();
+			int freeSlots = inventory.getLimit() - inventory.getItemsWithKinah().size() + 1;
+			if (freeSlots < tradeList.size()) {
+				PacketSendUtility.sendPacket(buyer, SM_SYSTEM_MESSAGE.STR_MSG_DICE_INVEN_ERROR);
+				return;
 			}
-		} else {
-			PacketSendUtility.broadcastPacket(playerActive, new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), ""),
-					true);
-		}
-	}
 
-	/**
-	 * @param activePlayer
-	 * @param tradePSItems
+			/**
+	 * 创建 total 价格并物品。 / Create total price and items
 	 */
-	public static void addItems(Player activePlayer, TradePSItem[] tradePSItems) {
-		if (CreatureState.ACTIVE.getId() != activePlayer.getState()) {
-			return;
-		}
+			long price = getTotalPrice(store, tradeList);
 
-		/**
-		 * Check if player already has a store, if not create one
-		 */
-		// TODO synchronization
-		if (activePlayer.getStore() == null) {
-			createStore(activePlayer);
-		}
+			// 基纳漏洞修复 / Kinah exploit fix
+			if (price < 0)
+				return;
 
-		PrivateStore store = activePlayer.getStore();
+			/**
+	 * 检查是否玩家有足够基纳。 / Check if player has enough kinah
+	 */
+			if (buyer.getInventory().getKinah() >= price) {
+				for (TradeItem tradeItem : tradeList.getTradeItems()) {
+					Item item = getItemByObjId(seller, tradeItem.getItemId());
+					decreaseItemFromPlayer(seller, item, tradeItem);
+					ItemService.addItem(buyer, item.getItemId(), tradeItem.getCount(), item);
 
-		/**
-		 * Check if player owns itemObjId else don't add item
-		 */
-		for (int i = 0; i < tradePSItems.length; i++) {
-			Item item = getItemByObjId(activePlayer, tradePSItems[i].getItemObjId());
-			if (item != null && item.isTradeable(activePlayer)) {
-				if (validateItem(store, item, tradePSItems[i])) {
-					store.addItemToSell(tradePSItems[i].getItemObjId(), tradePSItems[i]);
+					// 记录交易 / Log the trade
+					log.info(I18n.get("log.d2e08279f4c2", seller.getName(), item.getItemId(), item.getItemCount(), buyer.getName(), price));
+				}
+				// 减少买家基纳，增加卖家基纳 / Decrease kinah for buyer and Increase kinah for seller
+				decreaseKinahAmount(buyer, price);
+				increaseKinahAmount(seller, price);
+
+				/**
+		 * 从商店移除物品，并检查是否为最后一件。
+		 * Remove item from store and check if last item
+				 */
+				if (store.getSoldItems().size() == 0) {
+					closePrivateStore(seller);
 				}
 			}
 		}
 	}
 
+	/**
+	 * 打开/更新个人商店店名广播；可按阵营过滤可见性。
+	 * Opens or updates the private-store name broadcast; may filter visibility by faction.
+	 *
+	 * store owner
+	 * @param name 店名；null 表示清空 / store name; null clears it
+	 */
+	public static void openPrivateStore(Player activePlayer, String name) {
+		synchronized (activePlayer) {
+			final int senderRace = activePlayer.getRace().getRaceId();
+			final Player playerActive = activePlayer;
+			if (name != null) {
+				PrivateStore store = activePlayer.getStore();
+				if (store == null) {
+					return;
+				}
+				store.setStoreMessage(name);
+				if (CustomConfig.SPEAKING_BETWEEN_FACTIONS) {
+					PacketSendUtility.broadcastPacket(playerActive,
+							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), name), true);
+				} else {
+					PacketSendUtility.broadcastPacket(playerActive,
+							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), name), true, new ObjectFilter<Player>() {
+
+								@Override
+								public boolean acceptObject(Player object) {
+									return ((senderRace == object.getRace().getRaceId()
+											&& !object.getBlockList().contains(playerActive.getObjectId()))
+											|| object.isGM());
+								}
+							});
+					PacketSendUtility.broadcastPacket(playerActive,
+							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), ""), false, new ObjectFilter<Player>() {
+
+								@Override
+								public boolean acceptObject(Player object) {
+									return senderRace != object.getRace().getRaceId()
+											&& !object.getBlockList().contains(playerActive.getObjectId())
+											&& !object.isGM();
+								}
+							});
+				}
+			} else {
+				PacketSendUtility.broadcastPacket(playerActive, new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), ""),
+						true);
+			}
+		}
+	}
+
+	/**
+	 * 将可交易道具加入玩家个人商店。
+	 * Adds tradeable items to the player's private store.
+	 *
+	 * store owner
+	 * items to list
+	 */
+	public static void addItems(Player activePlayer, TradePSItem[] tradePSItems) {
+		synchronized (activePlayer) {
+			if (CreatureState.ACTIVE.getId() != activePlayer.getState()) {
+				return;
+			}
+
+			/**
+	 * 检查是否玩家已经有商店,否则创建一个。 / Check if player already has a store, if not create one
+	 */
+			if (activePlayer.getStore() == null) {
+				createStore(activePlayer);
+			}
+
+			PrivateStore store = activePlayer.getStore();
+			if (store == null) {
+				return;
+			}
+
+			/**
+	 * 检查是否玩家拥有 itemObjId 否则不添加物品。 / Check if player owns itemObjId else don't add item
+	 */
+			for (int i = 0; i < tradePSItems.length; i++) {
+				Item item = getItemByObjId(activePlayer, tradePSItems[i].getItemObjId());
+				if (item != null && item.isTradeable(activePlayer)) {
+					if (validateItem(store, item, tradePSItems[i])) {
+						store.addItemToSell(tradePSItems[i].getItemObjId(), tradePSItems[i]);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 校验上架条目与背包道具是否匹配且未重复。
+	 * Validates that the listed entry matches the inventory item and is not already listed.
+	 *
+	 * store
+	 * @param item 背包道具 / inventory item
+	 * store listing entry
+	 * whether valid
+	 */
 	private static boolean validateItem(PrivateStore store, Item item, TradePSItem psItem) {
 		int itemId = psItem.getItemId();
 		long itemCount = psItem.getCount();
@@ -189,9 +226,10 @@ public class PrivateStoreService {
 	}
 
 	/**
-	 * This method will create the player's store
+	 * 创建玩家个人商店并广播开店表情。
+	 * Creates the player's private store and broadcasts the open-shop emotion.
 	 *
-	 * @param activePlayer
+	 * store owner
 	 */
 	private static void createStore(Player activePlayer) {
 		if (activePlayer.isInState(CreatureState.RESTING)) {
@@ -204,72 +242,90 @@ public class PrivateStoreService {
 	}
 
 	/**
-	 * This method will destroy the player's store
+	 * 关闭玩家个人商店并广播关店表情。
+	 * Closes the player's private store and broadcasts the close-shop emotion.
 	 *
-	 * @param activePlayer
+	 * store owner
 	 */
 	public static void closePrivateStore(Player activePlayer) {
-		activePlayer.setStore(null);
-		activePlayer.unsetState(CreatureState.PRIVATE_SHOP);
-		PacketSendUtility.broadcastPacket(activePlayer,
-				new SM_EMOTION(activePlayer, EmotionType.CLOSE_PRIVATESHOP, 0, 0), true);
+		synchronized (activePlayer) {
+			if (activePlayer.getStore() == null) {
+				return;
+			}
+			activePlayer.setStore(null);
+			activePlayer.unsetState(CreatureState.PRIVATE_SHOP);
+			PacketSendUtility.broadcastPacket(activePlayer,
+					new SM_EMOTION(activePlayer, EmotionType.CLOSE_PRIVATESHOP, 0, 0), true);
+		}
 	}
 
 	/**
-	 * Decrease item count and update inventory
+	 * 从卖家背包与商店条目中扣减道具数量。
+	 * Decreases item count from the seller inventory and store listing.
 	 *
-	 * @param seller
-	 * @param item
+	 * 卖家 / seller
+	 * item
+	 * trade item
 	 */
 	private static void decreaseItemFromPlayer(Player seller, Item item, TradeItem tradeItem) {
 		seller.getInventory().decreaseItemCount(item, tradeItem.getCount());
-		seller.getStore().getTradeItemByObjId(item.getObjectId()).decreaseCount(tradeItem.getCount());
+		seller.getStore().decreaseItemCount(item.getObjectId(), tradeItem.getCount());
 	}
 
 	/**
-	 * This method will increase the kinah amount of a player
+	 * 增加玩家基纳。
+	 * Increases the player's kinah.
 	 *
-	 * @param player
-	 * @param price
+	 * target player
+	 * amount
 	 */
 	private static void increaseKinahAmount(Player player, long price) {
 		player.getInventory().increaseKinah(price);
 	}
 
 	/**
-	 * This method will return the item in a inventory by object id
+	 * 按对象 ID 从背包取道具。
+	 * Returns an inventory item by object id.
 	 *
-	 * @param seller
-	 * @param itemObjId
-	 * @return
+	 * owner
+	 * object id
+	 * item
 	 */
 	private static Item getItemByObjId(Player seller, int itemObjId) {
 		return seller.getInventory().getItemByObjId(itemObjId);
 	}
 
 	/**
-	 * This method will return the total price of the tradelist
+	 * 计算交易列表总价。
+	 * Calculates the total price of the trade list.
 	 *
-	 * @param store
-	 * @param tradeList
-	 * @return
+	 * store
+	 * 交易列表 / trade list
+	 * total price
 	 */
-	private static long getTotalPrice(PrivateStore store, TradeList tradeList) {
+	static long getTotalPrice(PrivateStore store, TradeList tradeList) {
 		long totalprice = 0;
-		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			TradePSItem item = store.getTradeItemByObjId(tradeItem.getItemId());
-			if (item == null) {
-				continue;
+		try {
+			for (TradeItem tradeItem : tradeList.getTradeItems()) {
+				TradePSItem item = store.getTradeItemByObjId(tradeItem.getItemId());
+				if (item == null) {
+					return -1;
+				}
+				totalprice = Math.addExact(totalprice, Math.multiplyExact(item.getPrice(), tradeItem.getCount()));
 			}
-			totalprice += item.getPrice() * tradeItem.getCount();
+		} catch (ArithmeticException e) {
+			return -1;
 		}
 		return totalprice;
 	}
 
 	/**
-	 * @param seller
-	 * @param tradeList
-	 * @return
+	 * 将客户端交易索引解析为真实对象 ID 列表。
+	 * Resolves client trade indexes into a list of real item object ids.
+	 *
+	 * @param seller 卖家 / seller
+	 * @param tradeList 原始交易列表 / original trade list
+	 * @return 新交易列表；校验失败返回 null / new trade list; null if validation fails
 	 */
 	private static TradeList loadObjIds(Player seller, TradeList tradeList) {
 		PrivateStore store = seller.getStore();
@@ -284,10 +340,13 @@ public class PrivateStoreService {
 				i++;
 			}
 		}
+		if (newTradeList.size() != tradeList.size()) {
+			return null;
+		}
 
 		/**
-		 * Check if player still owns items
-		 */
+	 * 检查是否玩家仍然拥有物品。 / Check if player still owns items
+	 */
 		if (!validateBuyItems(seller, newTradeList)) {
 			return null;
 		}
@@ -296,8 +355,12 @@ public class PrivateStoreService {
 	}
 
 	/**
-	 * @param itemOwner
-	 * @param newOwner
+	 * 校验买卖双方是否在线且同阵营。
+	 * Validates that both parties are online and of the same race.
+	 *
+	 * 卖家 / seller
+	 * 买家 / buyer
+	 * whether valid
 	 */
 	private static boolean validateParticipants(Player itemOwner, Player newOwner) {
 		return itemOwner != null && newOwner != null && itemOwner.isOnline() && newOwner.isOnline()
@@ -305,14 +368,22 @@ public class PrivateStoreService {
 	}
 
 	/**
-	 * @param seller
+	 * 校验买家购买的道具仍由卖家持有。
+	 * Validates that purchased items are still owned by the seller.
+	 *
+	 * 卖家 / seller
+	 * 交易列表 / trade list
+	 * whether valid
 	 */
 	private static boolean validateBuyItems(Player seller, TradeList tradeList) {
+		PrivateStore store = seller.getStore();
+		Set<Integer> itemObjectIds = new HashSet<Integer>();
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
 			Item item = seller.getInventory().getItemByObjId(tradeItem.getItemId());
-
-			// 1) don't allow to sell fake items;
-			if (item == null) {
+			TradePSItem storeItem = store.getTradeItemByObjId(tradeItem.getItemId());
+			if (!itemObjectIds.add(tradeItem.getItemId()) || item == null || storeItem == null
+					|| tradeItem.getCount() < 1 || storeItem.getCount() < tradeItem.getCount()
+					|| item.getItemCount() < tradeItem.getCount()) {
 				return false;
 			}
 		}
@@ -320,10 +391,11 @@ public class PrivateStoreService {
 	}
 
 	/**
-	 * This method will decrease the kinah amount of a player
+	 * 扣减玩家基纳。
+	 * Decreases the player's kinah.
 	 *
-	 * @param player
-	 * @param price
+	 * target player
+	 * amount
 	 */
 	private static void decreaseKinahAmount(Player player, long price) {
 		player.getInventory().decreaseKinah(price);

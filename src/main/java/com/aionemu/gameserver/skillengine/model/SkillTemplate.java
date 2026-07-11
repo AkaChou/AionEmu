@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
 import java.util.HashMap;
@@ -41,6 +25,9 @@ import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.skillengine.properties.Properties;
 
 /**
+ * 技能静态模板：绑定属性、条件、效果、动作与冷却等配置。
+ * Skill static template: properties, conditions, effects, actions and cooldown.
+ *
  * @author ATracer modified by Wakizashi
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -113,7 +100,7 @@ public class SkillTemplate {
 	@XmlAttribute(name = "avatar")
 	protected boolean isDeityAvatar;
 	@XmlAttribute(name = "ground")
-	protected boolean isGroundSkill;// TODO remove!
+	protected boolean isGroundSkill;
 	@XmlAttribute(name = "unpottable")
 	protected boolean isUndispellableByPotions;
 	@XmlAttribute(name = "ammospeed")
@@ -126,6 +113,8 @@ public class SkillTemplate {
 	protected boolean noRemoveAtDie = false;
 	@XmlAttribute(name = "applymcrit")
 	protected boolean applyMcrit = true;
+	@XmlAttribute(name = "hostile_type")
+	protected HostileType hostileType = HostileType.DIRECT;
 	@XmlAttribute(name = "charge_set_name")
 	protected String charge_set_name;
 	@XmlAttribute(name = "stigma")
@@ -134,356 +123,560 @@ public class SkillTemplate {
 	protected HashMap<Integer, Integer> effectIds = null;
 	@XmlAttribute(name = "skill_group")
 	private String skill_group;
-
 	/**
-	 * @return the Properties
+	 * 获取技能属性（射程、目标等）。
+	 * Gets skill properties (range, target, etc.).
+	 *
+	 * properties
 	 */
 	public Properties getProperties() {
 		return properties;
 	}
-
 	/**
-	 * Gets the value of the startconditions property.
-	 * 
-	 * @return possible object is {@link Conditions }
+	 * 获取开始施法条件。
+	 * Gets start-cast conditions.
+	 *
+	 * conditions
 	 */
 	public Conditions getStartconditions() {
 		return startconditions;
 	}
-
 	/**
-	 * Gets the value of the useconditions property.
-	 * 
-	 * @return possible object is {@link Conditions }
+	 * 获取使用条件。
+	 * Gets use conditions.
+	 *
+	 * conditions
 	 */
 	public Conditions getUseconditions() {
 		return useconditions;
 	}
-
 	/**
-	 * Gets the value of the useequipmentconditions property.
-	 * 
-	 * @return possible object is {@link Conditions }
+	 * 获取装备使用条件。
+	 * Gets equipment use conditions.
+	 *
+	 * conditions
 	 */
 	public Conditions getUseEquipmentconditions() {
 		return useequipmentconditions;
 	}
-
 	/**
-	 * Gets the value of the effects property.
-	 * 
-	 * @return possible object is {@link Effects }
+	 * 获取效果集合。
+	 * Gets effect collection.
+	 *
+	 * effects
 	 */
 	public Effects getEffects() {
 		return effects;
 	}
-
 	/**
-	 * Gets the value of the actions property.
-	 * 
-	 * @return possible object is {@link Actions }
+	 * 获取动作集合（消耗等）。
+	 * Gets action collection (costs, etc.).
+	 *
+	 * actions
 	 */
 	public Actions getActions() {
 		return actions;
 	}
-
 	/**
-	 * Gets the value of the periodicActions property.
-	 * 
-	 * @return possible object is {@link PeriodicActions }
+	 * 获取周期动作。
+	 * Gets periodic actions.
+	 *
+	 * periodic actions
 	 */
 	public PeriodicActions getPeriodicActions() {
 		return periodicActions;
 	}
-
 	/**
-	 * Gets the value of the motion property.
-	 * 
-	 * @return possible object is {@link Motion }
+	 * 获取动作时间配置。
+	 * Gets motion timing config.
+	 *
+	 * motion
 	 */
 	public Motion getMotion() {
 		return motion;
 	}
-
 	/**
-	 * Gets the value of the skillId property.
+	 * 获取技能 ID。
+	 * Gets skill id.
+	 *
+	 * skill id
 	 */
 	public int getSkillId() {
 		return skillId;
 	}
-
 	/**
-	 * Gets the value of the name property.
-	 * 
-	 * @return possible object is {@link String }
+	 * 获取技能名称。
+	 * Gets skill name.
+	 *
+	 * name
 	 */
 	public String getName() {
 		return name;
 	}
-
 	/**
-	 * @return the nameId
+	 * 获取名称字符串 ID。
+	 * Gets name string id.
+	 *
+	 * name id
 	 */
 	public int getNameId() {
 		return nameId;
 	}
-
 	/**
-	 * @return the stack
+	 * 获取效果堆叠键。
+	 * Gets effect stack key.
+	 *
+	 * stack
 	 */
 	public String getStack() {
 		return stack;
 	}
-
 	/**
-	 * @return SkillGroup
+	 * 获取技能分组。
+	 * Gets skill group.
+	 *
+	 * group
 	 */
 	public String getSkillGroup() {
 		return skill_group;
 	}
-
 	/**
-	 * @return the group
+	 * 获取技能组显示名。
+	 * Gets skill group display name.
+	 *
+	 * group name
 	 */
 	public String getGroup() {
 		return skill_group_name;
 	}
-
 	/**
-	 * @return the lvl
+	 * 获取技能等级。
+	 * Gets skill level.
+	 *
+	 * level
 	 */
 	public int getLvl() {
 		return lvl;
 	}
-
 	/**
-	 * Gets the value of the type property.
-	 * 
-	 * @return possible object is {@link SkillType }
+	 * 获取技能类型（物理/魔法）。
+	 * Gets skill type (physical/magical).
+	 *
+	 * type
 	 */
 	public SkillType getType() {
 		return type;
 	}
-
 	/**
-	 * @return the subType
+	 * 获取技能子类型。
+	 * Gets skill sub type.
+	 *
+	 * sub type
 	 */
 	public SkillSubType getSubType() {
 		return subType;
 	}
-
 	/**
-	 * @return the targetSlot
+	 * 获取目标槽位。
+	 * Gets target slot.
+	 *
+	 * slot
 	 */
 	public SkillTargetSlot getTargetSlot() {
 		return targetSlot;
 	}
-
 	/**
-	 * @return the targetSlot Level
+	 * 获取目标槽位等级。
+	 * Gets target slot level.
+	 *
+	 * slot level
 	 */
 	public int getTargetSlotLevel() {
 		return targetSlotLevel;
 	}
-
 	/**
-	 * @return the dispelCategory
+	 * 获取驱散分类。
+	 * Gets dispel category.
+	 *
+	 * dispel category
 	 */
 	public DispelCategoryType getDispelCategory() {
 		return dispelCategory;
 	}
-
 	/**
-	 * @return the reqDispelLevel
+	 * 获取所需驱散等级。
+	 * Gets required dispel level.
+	 *
+	 * dispel level
 	 */
 	public int getReqDispelLevel() {
 		return reqDispelLevel;
 	}
-
 	/**
-	 * @return the duration
+	 * 获取效果持续时间。
+	 * Gets effect duration.
+	 *
+	 * duration
 	 */
 	public int getDuration() {
 		return duration;
 	}
 
+	/**
+	 * 获取切换型计时。
+	 * Gets toggle timer.
+	 *
+	 * toggle timer
+	 */
 	public int getToggleTimer() {
 		return toggleTimer;
 	}
 
+	/**
+	 * 获取烙印类型。
+	 * Gets stigma type.
+	 *
+	 * stigma type
+	 */
 	public StigmaType getStigmaType() {
 		return stigmaType;
 	}
-
 	/**
-	 * @return the activationAttribute
+	 * 获取激活属性。
+	 * Gets activation attribute.
+	 *
+	 * activation
 	 */
 	public ActivationAttribute getActivationAttribute() {
 		return activationAttribute;
 	}
 
+	/**
+	 * 是否被动技能。
+	 * Whether this is a passive skill.
+	 *
+	 * whether passive
+	 */
 	public boolean isPassive() {
 		return activationAttribute == ActivationAttribute.PASSIVE;
 	}
 
+	/**
+	 * 是否切换型技能。
+	 * Whether this is a toggle skill.
+	 *
+	 * whether toggle
+	 */
 	public boolean isToggle() {
 		return activationAttribute == ActivationAttribute.TOGGLE;
 	}
 
+	/**
+	 * 是否激怒/反击触发。
+	 * Whether this is a provoked skill.
+	 *
+	 * whether provoked
+	 */
 	public boolean isProvoked() {
 		return activationAttribute == ActivationAttribute.PROVOKED;
 	}
 
+	/**
+	 * 是否维持型技能。
+	 * Whether this is a maintain skill.
+	 *
+	 * whether maintain
+	 */
 	public boolean isMaintain() {
 		return activationAttribute == ActivationAttribute.MAINTAIN;
 	}
 
+	/**
+	 * 是否主动技能。
+	 * Whether this is an active skill.
+	 *
+	 * whether active
+	 */
 	public boolean isActive() {
 		return activationAttribute == ActivationAttribute.ACTIVE;
 	}
-
 	/**
-	 * @param position
-	 * @return EffectTemplate
+	 * 按位置获取效果模板（1-based）。
+	 * Gets effect template by 1-based position.
+	 *
+	 * 1-based position
+	 *
+	 * @param position @return 效果模板，无则 null / effect template or null
 	 */
 	public EffectTemplate getEffectTemplate(int position) {
 		return effects != null && effects.getEffects().size() >= position ? effects.getEffects().get(position - 1)
 				: null;
 
 	}
-
 	/**
-	 * @return the cooldown
+	 * 获取冷却时间。
+	 * Gets cooldown.
+	 *
+	 * cooldown
 	 */
 	public int getCooldown() {
 		return cooldown;
 	}
-
 	/**
-	 * @return the penaltySkillId
+	 * 获取惩罚技能 ID。
+	 * Gets penalty skill id.
+	 *
+	 * penalty skill id
 	 */
 	public int getPenaltySkillId() {
 		return penaltySkillId;
 	}
-
 	/**
-	 * @return the pvpDamage
+	 * 获取 PvP 伤害系数。
+	 * Gets PvP damage factor.
+	 *
+	 * pvp damage
 	 */
 	public int getPvpDamage() {
 		return pvpDamage;
 	}
-
 	/**
-	 * @return the pvpDuration
+	 * 获取 PvP 持续时间。
+	 * Gets PvP duration.
+	 *
+	 * pvp duration
 	 */
 	public int getPvpDuration() {
 		return pvpDuration;
 	}
-
 	/**
-	 * @return chainSkillProb
+	 * 获取连锁技能概率。
+	 * Gets chain skill probability.
+	 *
+	 * chain probability
 	 */
 	public int getChainSkillProb() {
 		return chainSkillProb;
 	}
-
 	/**
-	 * @return cancelRate
+	 * 获取施法被打断概率。
+	 * Gets cast cancel rate.
+	 *
+	 * cancel rate
 	 */
 	public int getCancelRate() {
 		return cancelRate;
 	}
-
 	/**
-	 * @return stance
+	 * 是否姿态技能。
+	 * Whether this is a stance skill.
+	 *
+	 * whether stance
 	 */
 	public boolean isStance() {
 		return stance;
 	}
-
 	/**
-	 * @return skillSetException
+	 * 获取技能组例外标识。
+	 * Gets skill-set exception id.
+	 *
+	 * exception id
 	 */
 	public int getSkillSetException() {
 		return skillSetException;
 	}
-
 	/**
-	 * @return skillSetMaxOccur
+	 * 获取技能组最大共存数。
+	 * Gets skill-set max occurrence.
+	 *
+	 * max occur
 	 */
 	public int getSkillSetMaxOccur() {
 		return skillSetMaxOccur;
 	}
 
+	/**
+	 * 是否含复活效果。
+	 * Whether has resurrect effect.
+	 *
+	 * has resurrect
+	 */
 	public boolean hasResurrectEffect() {
 		return getEffects() != null && getEffects().isResurrect();
 	}
 
+	/**
+	 * 是否含物品飞行值治疗。
+	 * Whether has item FP heal effect.
+	 *
+	 * has FP heal
+	 */
 	public boolean hasItemHealFpEffect() {
 		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.PROCFPHEALINSTANT);
 	}
 
+	/**
+	 * 是否含闪避效果。
+	 * Whether has evade effect.
+	 *
+	 * has evade
+	 */
 	public boolean hasEvadeEffect() {
 		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.EVADE);
 	}
 
+	/**
+	 * 是否含瞬时召回。
+	 * Whether has recall instant effect.
+	 *
+	 * has recall
+	 */
 	public boolean hasRecallInstant() {
 		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.RECALLINSTANT);
 	}
 
+	/**
+	 * 是否应用魔法暴击。
+	 * Whether magical crit is applied.
+	 *
+	 * @return 是否魔法暴击 / mcrit applied
+	 */
 	public boolean isMcritApplied() {
 		return applyMcrit;
 	}
 
+	public HostileType getHostileType() {
+		return hostileType;
+	}
+
+	/**
+	 * 是否含治疗效果。
+	 * Whether has heal effect.
+	 *
+	 * has heal
+	 */
 	public boolean hasHealEffect() {
 		return getEffects() != null && (getEffects().isEffectTypePresent(EffectType.HEAL)
 				|| getEffects().isEffectTypePresent(EffectType.HEALINSTANT));
 	}
 
+	/**
+	 * 是否含随机位移效果。
+	 * Whether has random move effect.
+	 *
+	 * @return 是否随机位移 / has random move
+	 */
 	public boolean hasRandomMoveEffect() {
 		return getEffects() != null && (getEffects().isEffectTypePresent(EffectType.RANDOMMOVELOC));
 	}
 
+	/**
+	 * 获取冷却延迟 ID（无则用 skillId）。
+	 * Gets delay/cooldown id (falls back to skillId).
+	 *
+	 * delay id
+	 */
 	public int getDelayId() {
 		return (delayId > 0) ? delayId : skillId;
 	}
 
+	/**
+	 * 是否神性化身技能。
+	 * Whether deity avatar skill.
+	 *
+	 * deity avatar
+	 */
 	public boolean isDeityAvatar() {
 		return isDeityAvatar;
 	}
 
+	/**
+	 * 是否地面技能。
+	 * Whether ground skill.
+	 *
+	 * ground skill
+	 */
 	public boolean isGroundSkill() {
 		return isGroundSkill;
 	}
 
+	/**
+	 * 获取反击所需攻击状态。
+	 * Gets counter-skill attack status.
+	 *
+	 * attack status
+	 */
 	public AttackStatus getCounterSkill() {
 		return counterSkill;
 	}
 
+	/**
+	 * 是否不可被药水驱散。
+	 * Whether undispellable by potions.
+	 *
+	 * @return 是否不可药水驱散 / undispellable by potions
+	 */
 	public boolean isUndispellableByPotions() {
 		return isUndispellableByPotions;
 	}
 
+	/**
+	 * 获取弹药速度。
+	 * Gets ammo speed.
+	 *
+	 * ammo speed
+	 */
 	public int getAmmoSpeed() {
 		return ammoSpeed;
 	}
 
+	/**
+	 * 获取冲突 ID。
+	 * Gets conflict id.
+	 *
+	 * conflict id
+	 */
 	public int getConflictId() {
 		return conflictId;
 	}
 
+	/**
+	 * 获取名称描述键。
+	 * Gets name description key.
+	 *
+	 * name desc
+	 */
 	public String getNamedesc() {
 		return namedesc;
 	}
 
+	/**
+	 * 死亡时是否不移除。
+	 * Whether not removed on death.
+	 *
+	 * @return 死亡不移除 / no remove at die
+	 */
 	public boolean isNoRemoveAtDie() {
 		return noRemoveAtDie;
 	}
 
+	/**
+	 * 获取充能集合名。
+	 * Gets charge set name.
+	 *
+	 * charge set
+	 */
 	public String getChargeSetName() {
 		return charge_set_name;
 	}
 
+	/**
+	 * 按技能等级计算效果总时长。
+	 * Computes effects duration for skill level.
+	 *
+	 * skill level
+	 * duration
+	 */
 	public int getEffectsDuration(int skillLevel) {
 		int duration = 0;
 		Iterator<EffectTemplate> itr = getEffects().getEffects().iterator();
@@ -498,6 +691,12 @@ public class SkillTemplate {
 		return duration;
 	}
 
+	/**
+	 * 从开始条件中提取连锁条件。
+	 * Extracts chain condition from start conditions.
+	 *
+	 * @return 连锁条件，无则 null / chain condition or null
+	 */
 	public ChainCondition getChainCondition() {
 		if (startconditions != null) {
 			for (Condition cond : startconditions.getConditions()) {
@@ -509,6 +708,12 @@ public class SkillTemplate {
 		return null;
 	}
 
+	/**
+	 * 获取效果 ID→基础等级映射。
+	 * Gets effect-id to basic-level map.
+	 *
+	 * map
+	 */
 	public HashMap<Integer, Integer> getEffectIds() {
 		return this.effectIds;
 	}
@@ -525,9 +730,11 @@ public class SkillTemplate {
 			}
 		}
 	}
-
 	/**
-	 * @return
+	 * 从开始条件中提取 HP 条件。
+	 * Extracts HP condition from start conditions.
+	 *
+	 * HP condition or null
 	 */
 	public HpCondition getHpCondition() {
 		if (startconditions != null) {

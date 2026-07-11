@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -24,15 +8,24 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
- * Created by Wnkrz on 05/08/2017.
+ * 管理员邮件奖励命令：按模板 ID 向执行者发送系统奖励邮件。
+ * Admin mail-reward command: send a system reward mail by template id to the invoker.
+ *
+ * @author Wnkrz
  */
-
 public class MailReward extends AdminCommand
 {
     public MailReward() {
         super("mailreward");
     }
-	
+
+    /**
+     * 按模板 ID 向管理员发送奖励邮件。
+     * Send a reward mail to the admin by template id.
+     *
+     * @param admin 执行命令的管理员 / Admin executing the command
+     * Mail template id
+     */
     @Override
     public void execute(Player admin, String... params) {
         int param = 0;
@@ -47,7 +40,14 @@ public class MailReward extends AdminCommand
         }
         GameFeatureServices.systemMailService().sendTemplateRewardMail(param, admin.getCommonData());
     }
-	
+
+    /**
+     * 失败回调（本命令无额外语法提示）。
+     * Failure callback (no extra syntax for this command).
+     *
+     * @param player 接收提示的玩家 / Player receiving the hint
+     * Failure message
+     */
     @Override
     public void onFail(Player player, String message) {
     }

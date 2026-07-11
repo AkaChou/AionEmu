@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.event;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlValue;
 import com.aionemu.gameserver.model.Race;
 
 /**
+ * 背包掉落模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 
@@ -55,34 +42,42 @@ public class InventoryDrop {
 	@XmlAttribute
 	private Race race = Race.PC_ALL;
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 获取掉落物品。 / Returns the drop item. */
 	public int getDropItem() {
 		return dropItem;
 	}
 
+	/** 返回开始等级 / Returns the start level*/
 	public int getStartLevel() {
 		return startLevel;
 	}
 
+	/** 返回结束等级 / Returns the end level*/
 	public int getEndLevel() {
 		return endLevel;
 	}
 
+	/** 返回间隔 / Returns the interval*/
 	public int getInterval() {
 		return interval;
 	}
 
+	/** 获取计数。 / Returns the count. */
 	public long getCount() {
 		return count;
 	}
 
+	/** 返回 max count of day / Returns the max count of day */
 	public int getMaxCountOfDay() {
 		return maxCountOfDay;
 	}
 
+	/** 返回 clean time / Returns the clean time */
 	public int getCleanTime() {
 		return cleanTime;
 	}

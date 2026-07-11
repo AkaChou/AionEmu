@@ -1,5 +1,7 @@
 package com.aionemu.commons.database;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.configs.DatabaseConfig;
 import java.io.BufferedReader;
@@ -16,6 +18,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * 数据库 schema 初始化器，在空库时导入内置基线 SQL
+ * Database schema initializer that imports bundled baseline SQL for empty databases
+ */
 @Slf4j
 final class DatabaseSchemaInitializer {
 
@@ -27,10 +34,22 @@ final class DatabaseSchemaInitializer {
     private DatabaseSchemaInitializer() {
     }
 
+    /**
+     * 使用当前 DatabaseConfig 在缺失表时初始化 schema
+     * Initialize schema when tables are missing using the current DatabaseConfig
+     */
     static void initializeIfMissing() {
         initializeIfMissing(DatabaseConfig.DATABASE_URL, DatabaseConfig.DATABASE_USER, DatabaseConfig.DATABASE_PASSWORD);
     }
 
+    /**
+     * 使用指定 JDBC 连接信息在缺失表时初始化 schema
+     * Initialize schema when tables are missing using the given JDBC settings
+     *
+     * JDBC URL
+     * Username
+     * Password
+     */
     static void initializeIfMissing(String jdbcUrl, String user, String password) {
         JdbcTarget target = JdbcTarget.from(jdbcUrl);
         String schemaResource = schemaResource(target.database());
@@ -45,17 +64,35 @@ final class DatabaseSchemaInitializer {
                 return;
             }
 
-            log.info("Database {} has no tables; initializing schema from {}.", target.database(), schemaResource);
+            log.info(I18n.get("log.fe7ca44cd941", target.database(), schemaResource));
             executeScript(connection, schemaResource);
         } catch (SQLException | IOException e) {
             throw new IllegalStateException("Failed to initialize database schema for " + target.database(), e);
         }
     }
 
+    /**
+     * 根据库名解析内置基线 schema 资源路径
+     * Resolve the bundled baseline schema resource path by database name
+     *
+     * Database name
+     *
+     * @param database @return 资源路径，未配置时返回 null / Resource path, or null when not configured
+     */
     static String schemaResource(String database) {
         return BASELINE_SCHEMAS.get(database);
     }
 
+    /**
+     * 判断指定 schema 是否已有表
+     * Check whether the given schema already contains tables
+     *
+     * @param connection 服务器级连接 / Server-level connection
+     * Database name
+     *
+     * @param connection @return 已有表返回 true / True when tables exist
+     * @param database @throws SQLException 查询失败时 / When the query fails
+     */
     private static boolean hasTables(Connection connection, String database) throws SQLException {
         String sql = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -67,6 +104,16 @@ final class DatabaseSchemaInitializer {
         }
     }
 
+    /**
+     * 执行资源中的 SQL 脚本
+     * Execute the SQL script from a classpath resource
+     *
+     * @param connection 数据库连接 / Database connection
+     * Schema resource path
+     *
+     * @param connection @throws SQLException 执行 SQL 失败时 / When SQL execution fails
+     * @param schemaResource @throws IOException 读取资源失败时 / When reading the resource fails
+     */
     private static void executeScript(Connection connection, String schemaResource) throws SQLException, IOException {
         for (String statementSql : splitStatements(readResource(schemaResource))) {
             try (Statement statement = connection.createStatement()) {
@@ -75,6 +122,15 @@ final class DatabaseSchemaInitializer {
         }
     }
 
+    /**
+     * 读取 classpath 中的 schema 资源文本
+     * Read schema resource text from the classpath
+     *
+     * Resource path
+     * Script text
+     *
+     * @param schemaResource @throws IOException 资源缺失或读取失败时 / When the resource is missing or unreadable
+     */
     private static String readResource(String schemaResource) throws IOException {
         ClassLoader classLoader = DatabaseSchemaInitializer.class.getClassLoader();
         try (InputStream inputStream = classLoader.getResourceAsStream(schemaResource)) {
@@ -95,6 +151,13 @@ final class DatabaseSchemaInitializer {
         }
     }
 
+    /**
+     * 按分号拆分 SQL 脚本，忽略引号内的分号
+     * Split a SQL script by semicolons while ignoring semicolons inside quotes
+     *
+     * Script text
+     * Statement list
+     */
     static List<String> splitStatements(String script) {
         List<String> statements = new ArrayList<>();
         StringBuilder current = new StringBuilder();
@@ -136,6 +199,13 @@ final class DatabaseSchemaInitializer {
         return statements;
     }
 
+    /**
+     * 将非空语句追加到列表
+     * Append a non-empty statement to the list
+     *
+     * Statement list
+     * @param current 当前缓冲区 / Current buffer
+     */
     private static void addStatement(List<String> statements, StringBuilder current) {
         String statement = current.toString().trim();
         if (!statement.isEmpty()) {
@@ -143,10 +213,24 @@ final class DatabaseSchemaInitializer {
         }
     }
 
+    /**
+     * JDBC URL 解析结果：服务器 URL 与数据库名
+     * Parsed JDBC URL target: server URL and database name
+     *
+     * @param serverUrl 不含库名的服务器 URL / Server URL without database name
+     * Database name
+     */
     record JdbcTarget(String serverUrl, String database) {
 
         private static final String MYSQL_PREFIX = "jdbc:mysql://";
 
+        /**
+         * 从 MySQL JDBC URL 解析服务器地址与库名
+         * Parse server URL and database name from a MySQL JDBC URL
+         *
+         * JDBC URL
+         * Parsed target
+         */
         static JdbcTarget from(String jdbcUrl) {
             if (jdbcUrl == null || !jdbcUrl.startsWith(MYSQL_PREFIX)) {
                 throw new IllegalArgumentException("Only MySQL JDBC URLs are supported for schema initialization: " + jdbcUrl);

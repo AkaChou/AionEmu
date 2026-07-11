@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 随从（Minion）养成与操作的客户端包。
+ * Client packet for minion management and actions.
+ *
  * @author Falke_34, FrozenKiller Reworked by G-Robson26
  */
 @Slf4j
@@ -40,24 +27,30 @@ public class CM_MINIONS extends AionClientPacket {
 	private String minionName;
 	private int objectId;
 	private int itemObjectId;
-	@SuppressWarnings("unused")
-	private boolean isSpawned; // Should be in DB (TODO)
 	private int charge;
 	private int autoCharge;
 	private int functId;
 	private int subSwitch;
 	private int minionObjectId;
-	private int dopingItemId;
-	private int targetSlot;
-	private int destinationSlot;
-	private int unk;
+	private int functionParam1;
+	private int functionParam2;
 	private ArrayList<Integer> MaterialObjIds = new ArrayList<Integer>();
 	private int lock = 0;
-
+	/**
+	 * 构造该客户端包。
+	 * Constructs this client packet.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余合法状态 / additional valid states
+	 */
 	public CM_MINIONS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
-
+	/**
+	 * 按动作 ID 读取随从操作参数。
+	 * Reads minion action parameters by action id.
+	 */
 	@Override
 	protected void readImpl() {
 		actionId = readH();
@@ -74,7 +67,7 @@ public class CM_MINIONS extends AionClientPacket {
 			break;
 		case 3: // locked
 			objectId = readD(); // Minion Unique ID
-			lock = readC(); // lock/unlock Todo
+			lock = readC(); // lock/unlock
 			break;
 		case 4: // summon
 		case 5: // unsummon
@@ -96,65 +89,18 @@ public class CM_MINIONS extends AionClientPacket {
 				MaterialObjIds.add(readD());
 			}
 			break;
-		case 9: // TODO (MinionFunction Scrolls etc)
-			subSwitch = readD(); // 0, 1
-			log.debug("CM_MINIONS function subSwitch={}", subSwitch);
-			switch (subSwitch) {
-			case 0: {
-				functId = readD();
-				switch (functId) {
-				case 0: {// add item
-					minionObjectId = readD();
-					dopingItemId = readD();
-					targetSlot = readD();
-					log.debug("CM_MINIONS add item. subSwitch={} functionId={} minionObjectId={} itemId={} targetSlot={}",
-							subSwitch, functId, minionObjectId, dopingItemId, targetSlot);
-					break;
-				}
-				case 1: {
-					minionObjectId = readD();
-					targetSlot = readD();
-					unk = readD();
-					log.debug("CM_MINIONS function. subSwitch={} functionId={} minionObjectId={} targetSlot={} unk={}",
-							subSwitch, functId, minionObjectId, targetSlot, unk);
-					break;
-				}
-				case 2: {
-					minionObjectId = readD();
-					targetSlot = readD();
-					destinationSlot = readD();
-					log.debug("CM_MINIONS move item. subSwitch={} functionId={} minionObjectId={} targetSlot={} destinationSlot={}",
-							subSwitch, functId, minionObjectId, targetSlot, destinationSlot);
-					break;
-				}
-				case 3: {// BUFF ON
-					minionObjectId = readD();
-					dopingItemId = readD();
-					targetSlot = readD();
-					log.debug("CM_MINIONS buff. subSwitch={} functionId={} minionObjectId={} itemId={} targetSlot={}",
-							subSwitch, functId, minionObjectId, dopingItemId, targetSlot);
-					break;
-				}
-				case 4: {
-					minionObjectId = readD();
-					log.debug("CM_MINIONS function. subSwitch={} functionId={} minionObjectId={}", subSwitch, functId,
-							minionObjectId);
-					break;
-				}
-				}
-				break;
-			}
-			case 1: {// Auto Loot
-				minionObjectId = readD();
-				break;
-			}
-			}
+		case 9: // Minion function: sub-switch followed by four fixed-width parameters
+			subSwitch = readD();
+			functId = readD();
+			minionObjectId = readD();
+			functionParam1 = readD();
+			functionParam2 = readD();
 			break;
 		case 10: // Nothing to read (Falke Log 5.6_Minion_Function)
 			break;
 		case 11: // charge
 			charge = readC(); // Charge 1 = true / 0 = false ?
-			autoCharge = readC(); // Auto Recharge on/off Todo
+			autoCharge = readC(); // Auto recharge on/off
 			break;
 		case 12:
 			readC(); // Auto Function on/off
@@ -173,7 +119,10 @@ public class CM_MINIONS extends AionClientPacket {
 			break;
 		}
 	}
-
+	/**
+	 * 执行随从添加、删除、召唤、充能等动作。
+	 * Executes minion add, delete, spawn, charge, and related actions.
+	 */
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
@@ -215,35 +164,40 @@ public class CM_MINIONS extends AionClientPacket {
 		case 8:
 			GameEventBootstrapServices.minionService().CombinationMinion(player, MaterialObjIds);
 			break;
-		case 9: // TODO
+		case 9:
 			switch (subSwitch) {
 			case 0: {
 				switch (functId) {
 				case 0: { // Add Item
 					log.debug("CM_MINIONS handle add item. playerId={} minionObjectId={} itemId={} targetSlot={}",
-							player.getObjectId(), minionObjectId, dopingItemId, targetSlot);
-					GameEventBootstrapServices.minionService().addMinionFunctionItems(player, functId, minionObjectId, dopingItemId,
-							targetSlot, destinationSlot); // Scrolls etc
+							player.getObjectId(), minionObjectId, functionParam1, functionParam2);
+					GameEventBootstrapServices.minionService().addMinionFunctionItem(player, minionObjectId, functionParam1,
+							functionParam2);
+					break;
+				}
+				case 1: {
+					GameEventBootstrapServices.minionService().removeMinionFunctionItem(player, minionObjectId, functionParam1);
 					break;
 				}
 				case 2: {
 					log.debug("CM_MINIONS relocate doping. playerId={} minionObjectId={} targetSlot={} destinationSlot={}",
-							player.getObjectId(), minionObjectId, targetSlot, destinationSlot);
-					GameEventBootstrapServices.minionService().relocateDoping(player, minionObjectId, targetSlot, destinationSlot);
+							player.getObjectId(), minionObjectId, functionParam1, functionParam2);
+					GameEventBootstrapServices.minionService().relocateDoping(player, minionObjectId, functionParam1, functionParam2);
 					break;
 				}
 				case 3: {
 					log.debug("CM_MINIONS buff on. playerId={} minionObjectId={} itemId={} targetSlot={}",
-							player.getObjectId(), minionObjectId, dopingItemId, targetSlot);
-					GameEventBootstrapServices.minionService().buffPlayer(player, minionObjectId, dopingItemId, targetSlot); // Buff
+							player.getObjectId(), minionObjectId, functionParam1, functionParam2);
+					GameEventBootstrapServices.minionService().buffPlayer(player, minionObjectId, functionParam1, functionParam2);
 					break;
 				}
 				}
 				break;
 			}
 			case 1: {
-				log.debug("CM_MINIONS autoloot toggle. playerId={} minionObjectId={}", player.getObjectId(), minionObjectId);
-				GameEventBootstrapServices.minionService().activateLoot(player, true);
+				log.debug("CM_MINIONS autoloot. playerId={} minionObjectId={} activate={}", player.getObjectId(), functId,
+						minionObjectId != 0);
+				GameEventBootstrapServices.minionService().activateLoot(player, functId, minionObjectId != 0);
 				break;
 			}
 			}
@@ -252,10 +206,7 @@ public class CM_MINIONS extends AionClientPacket {
 			GameEventBootstrapServices.minionService().activateMinionFunction(player);
 			break;
 		case 11:
-			GameEventBootstrapServices.minionService().addMinionSkillPoints(player, charge == 1 ? true : false,
-					autoCharge == 1 ? true : false);
-			// TODO
-			// GameEventBootstrapServices.minionService().chargeMinion(player, todo2 == 1 ? true : false);
+			GameEventBootstrapServices.minionService().addMinionSkillPoints(player, charge == 1, autoCharge == 1);
 			break;
 		case 12:
 			break;

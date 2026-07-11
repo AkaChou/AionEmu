@@ -3,6 +3,7 @@ package com.aionemu.commons.logging.slf4j.filters;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
+import com.aionemu.commons.logging.LogTags;
 
 /**
  * 聊天日志过滤器
@@ -18,11 +19,11 @@ public class ChatLogFilter extends Filter<ILoggingEvent> {
      * Decide whether to accept or deny the logging event
      *
      * @param loggingEvent 日志事件对象 / The logging event object
-     * @return FilterReply.ACCEPT 如果消息以[MESSAGE]开头，否则返回FilterReply.DENY
+ * @return FilterReply.ACCEPT 如果消息以[MESSAGE]开头，否则返回 FilterReply.DENY
      *         FilterReply.ACCEPT if message starts with [MESSAGE], otherwise FilterReply.DENY
      */
     public FilterReply decide(ILoggingEvent loggingEvent) {
-        Object message = loggingEvent.getMessage();
-        return ((String)message).startsWith("[MESSAGE]") ? FilterReply.ACCEPT : FilterReply.DENY;
+        String message = loggingEvent.getMessage();
+        return message.startsWith(LogTags.MESSAGE) ? FilterReply.ACCEPT : FilterReply.DENY;
     }
 }

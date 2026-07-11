@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.siege;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -22,10 +6,12 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 攻城战相关 NPC AI：Ab1 1011 Sim Weak Seller Da（@AIName "Ab1_1011_Sim_Weak_Seller_Da"），继承 NpcAI2。
+ * Siege-related NPC AI: Ab1 1011 Sim Weak Seller Da (@AIName "Ab1_1011_Sim_Weak_Seller_Da"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Ab1_1011_Sim_Weak_Seller_Da")
 public class Ab1_1011_Sim_Weak_Seller_DaAI2 extends NpcAI2
 {

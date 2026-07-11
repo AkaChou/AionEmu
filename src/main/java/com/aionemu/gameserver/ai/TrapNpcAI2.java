@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 陷阱 AI：生成后按规则对进入范围的目标生效。
+ * Trap AI that applies effects to targets entering its range after spawn.
+ *
+ * @author Encom
+ */
 @AIName("trap")
 public class TrapNpcAI2 extends NpcAI2
 {
@@ -41,12 +27,24 @@ public class TrapNpcAI2 extends NpcAI2
 	private Future<?> despawnTask;
 	public static int EVENT_SET_TRAP_RANGE = 1;
 	
+	/**
+	 * 处理看见生物事件。
+	 * Handle seeing a creature.
+	 *
+	 * creature
+	 */
 	@Override
 	protected void handleCreatureSee(Creature creature) {
 		super.handleCreatureSee(creature);
 		tryActivateTrap(creature);
 	}
 	
+	/**
+	 * 处理生物移动事件。
+	 * Handle creature-moved.
+	 *
+	 * creature
+	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		super.handleCreatureMoved(creature);
@@ -66,6 +64,13 @@ public class TrapNpcAI2 extends NpcAI2
 		}
 	}
 	
+	/**
+	 * 处理自定义事件。
+	 * Handle custom event.
+	 *
+	 * event id
+	 * @param args 附加参数 / extra args
+	 */
 	@Override
 	protected void handleCustomEvent(int eventId, Object... args) {
 		if (eventId == EVENT_SET_TRAP_RANGE) {
@@ -133,6 +138,10 @@ public class TrapNpcAI2 extends NpcAI2
 		}
 	}
 	
+	/**
+	 * 是否支持移动。
+	 * Whether movement is supported.
+	 */
 	@Override
 	public boolean isMoveSupported() {
 		return false;

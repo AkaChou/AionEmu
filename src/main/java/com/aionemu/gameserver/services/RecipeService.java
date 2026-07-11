@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -23,7 +7,21 @@ import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 配方服务，校验并学习制造/制作配方。
+ * Recipe service that validates and learns crafting recipes.
+ */
 public class RecipeService {
+
+	/**
+	 * 校验玩家是否可学习指定配方。
+	 * Validates whether the player can learn the given recipe.
+	 *
+	 * 玩家 / player
+	 * recipe id
+	 *
+	 * @return 合法时返回配方模板，否则返回 null / recipe template if valid, otherwise null
+	 */
 	public static RecipeTemplate validateNewRecipe(Player player, int recipeId) {
 		if (player.getRecipeList().size() >= 1600) {
 			PacketSendUtility.sendMessage(player, "You are unable to have more than 1600 recipes at the same time.");
@@ -56,6 +54,15 @@ public class RecipeService {
 		return template;
 	}
 
+	/**
+	 * 为玩家添加配方，可选择是否先做校验。
+	 * Adds a recipe for the player, optionally with validation.
+	 *
+	 * 玩家 / player
+	 * recipe id
+	 * @param useValidation 是否执行校验 / whether to run validation
+	 * @return 添加成功返回 true / true if the recipe was added
+	 */
 	public static boolean addRecipe(Player player, int recipeId, boolean useValidation) {
 		RecipeTemplate template = null;
 		if (useValidation) {

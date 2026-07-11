@@ -1,26 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- * Aion-Lightning is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * Aion-Lightning is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. *
- *
- * You should have received a copy of the GNU General Public License along with Aion-Lightning. If not, see <http://www.gnu.org/licenses/>.
- *
- *
- * Credits goes to all Open Source Core Developer Groups listed below Please do not change here something, ragarding the developer credits, except the
- * "developed by XXXX". Even if you edit a lot of files in this source, you still have no rights to call it as "your Core". Everybody knows that this
- * Emulator Core was developed by Aion Lightning
- * 
- * @-Aion-Unique-
- * @-Aion-Lightning
- * @Aion-Engine
- * @Aion-Extreme
- * @Aion-NextGen
- * @Aion-Core Dev.
- */
 package com.aionemu.commons.utils.i18n;
 
 import java.io.IOException;
@@ -32,85 +9,70 @@ import java.net.URLConnection;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This class allows us to read ResourceBundles with custom encodings, so we don't have write \\uxxxx symbols and use utilities like native2ascii to
- * convert files.
- * <p/>
- * <br>
- * Usage: For instance we want to load resource bundle "test" from current deirectory and use english locale. If locale not found, we will use default
- * file (and ignore default locale).
- * <p/>
- * < pre> URLClassLoader loader = new URLClassLoader(new URL[] { new File(&quot;.&quot;).toURI().toURL() });
- * <p/>
- * ResourceBundle rb = ResourceBundle.getBundle(&quot;test&quot;, Locale.ENGLISH, loader, new ResourceBundleControl(&quot;UTF-8&quot;));
- * <p/>
- * // English locale not found, use default if (!rb.getLocale().equals(Locale.ENGLISH)) { rb = ResourceBundle.getBundle(&quot;test&quot;, Locale.ROOT,
- * loader, new ResourceBundleControl(&quot;UTF-8&quot;)); }
- * <p/>
- * System.out.println(rb.getString(&quot;test&quot;));
- * </pre>
+ * 自定义 ResourceBundle 控制：按指定编码加载 .properties。
+ * Custom ResourceBundle control that loads .properties with a chosen encoding.
+ * <p>
+ * 支持指定字符编码读取 .properties，避免默认 ISO-8859-1 限制。
+ * Supports reading .properties with a specified encoding to overcome ISO-8859-1 limits.
  *
  * @author SoulKeeper
  */
-/**
- * 自定义资源包加载控制类 (Custom ResourceBundle Control)
- * 支持指定字符编码读取.properties文件，解决默认ISO-8859-1编码限制
- * Supports reading .properties files with specified encoding to overcome default ISO-8859-1 limitation
- * 
- * @author SoulKeeper
- */
 public class ResourceBundleControl extends ResourceBundle.Control {
-    
+
     /**
-     * 资源文件编码格式 (Resource file encoding format)
-     * 默认使用UTF-8编码 (Default to UTF-8 encoding)
+     * 资源文件编码，默认 UTF-8。
+     * Resource file encoding, default UTF-8.
      */
     @Getter
     @Setter
     private String encoding = "UTF-8";
 
     /**
-     * 默认构造函数 (Default constructor)
+     * 默认构造（UTF-8）。
+     * Default constructor (UTF-8).
      */
     public ResourceBundleControl() {}
 
     /**
-     * 带编码参数的构造函数 (Constructor with encoding parameter)
-     * @param encoding 字符编码格式，如UTF-8/GBK等 (Character encoding format, e.g. UTF-8/GBK)
+     * 使用指定编码构造。
+     * Construct with the given encoding.
+     *
+     * Character encoding
      */
     public ResourceBundleControl(String encoding) {
         this.encoding = encoding;
     }
 
     /**
-     * 创建新的ResourceBundle实例 (Create new ResourceBundle instance)
-     * 重写方法以支持自定义编码 (Override to support custom encoding)
-     * 
-     * @param baseName 资源文件基础名称 (Base name of the resource bundle)
-     * @param locale 目标区域设置 (Target locale)
-     * @param format 资源格式（只处理.properties类型）(Resource format, only handle .properties)
-     * @param loader 类加载器 (Class loader)
-     * @param reload 是否重新加载 (Whether to reload)
-     * @return 加载后的ResourceBundle实例 (Loaded ResourceBundle instance)
+     * 创建 ResourceBundle 实例（支持自定义编码的 properties）。
+     * Create a ResourceBundle instance (properties with custom encoding).
+     *
+     * Base name
+     * Locale
+     * Format
+     * Class loader
+     * Whether to reload
+     * Resource bundle
+     * On I/O failure
+     * On access failure
+     * On instantiation failure。 / On instantiation failure.
      */
     @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, 
-            ClassLoader loader, boolean reload) throws IOException, IllegalAccessException, 
+    public ResourceBundle newBundle(String baseName, Locale locale, String format,
+            ClassLoader loader, boolean reload) throws IOException, IllegalAccessException,
             InstantiationException {
-                
+
         String bundleName = toBundleName(baseName, locale);
         ResourceBundle bundle = null;
         if (format.equals("java.class")) {
             try {
                 @SuppressWarnings({"unchecked"})
                 Class<? extends ResourceBundle> bundleClass = (Class<? extends ResourceBundle>) loader.loadClass(bundleName);
-                
-                // If the class isn't a ResourceBundle subclass, throw a
-                // ClassCastException.
+
                 if (ResourceBundle.class.isAssignableFrom(bundleClass)) {
                     bundle = newResourceBundle(bundleClass);
                 } else {
@@ -126,7 +88,6 @@ public class ResourceBundleControl extends ResourceBundle.Control {
                 if (url != null) {
                     URLConnection connection = url.openConnection();
                     if (connection != null) {
-                        // Disable caches to get fresh data for reloading.
                         connection.setUseCaches(false);
                         stream = connection.getInputStream();
                     } else {
@@ -139,12 +100,8 @@ public class ResourceBundleControl extends ResourceBundle.Control {
                 stream = loader.getResourceAsStream(resourceName);
             }
 
-            /* 字符编码处理关键段 (Critical section for encoding handling)
-             * 使用指定编码的InputStreamReader替代默认实现
-             * Using InputStreamReader with specified encoding instead of default
-             */
             if (stream != null) {
-                isr = new InputStreamReader(stream, encoding); // 应用自定义编码 Apply custom encoding
+                isr = new InputStreamReader(stream, encoding);
             }
             if (isr != null) {
                 try {
@@ -159,6 +116,16 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         return bundle;
     }
 
+    /**
+     * 通过无参构造实例化 ResourceBundle 子类。
+     * Instantiate a ResourceBundle subclass via its default constructor.
+     *
+     * Bundle class
+     * Instance
+     * On access failure
+     *
+     * @param bundleClass @throws InstantiationException 实例化失败 / On instantiation failure
+     */
     private ResourceBundle newResourceBundle(Class<? extends ResourceBundle> bundleClass)
             throws IllegalAccessException, InstantiationException {
         try {
@@ -180,5 +147,4 @@ public class ResourceBundleControl extends ResourceBundle.Control {
             throw ex;
         }
     }
-
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Set;
@@ -22,6 +6,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步玩家已学习的配方列表。
+ * Server packet synchronizing the player's learned recipe list to the client.
+ *
  * @author lord_rex
  */
 public class SM_RECIPE_LIST extends AionServerPacket {
@@ -29,6 +16,12 @@ public class SM_RECIPE_LIST extends AionServerPacket {
 	private Integer[] recipeIds;
 	private int count;
 
+	/**
+	 * 使用给定参数构造 SM_RECIPE_LIST 包。
+	 * Creates a SM_RECIPE_LIST packet with the given parameters.
+	 *
+	 * recipe id set
+	 */
 	public SM_RECIPE_LIST(Set<Integer> recipeIds) {
 		this.recipeIds = recipeIds.toArray(new Integer[recipeIds.size()]);
 		this.count = recipeIds.size();

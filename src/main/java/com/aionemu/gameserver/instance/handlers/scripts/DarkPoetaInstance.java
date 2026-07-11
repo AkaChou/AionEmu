@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -43,29 +27,49 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: http://aion.power.plaync.com/wiki/%EC%95%94%ED%9D%91%EC%9D%98+%ED%8F%AC%EC%97%90%ED%83%80+-+%EB%A7%88%EC%8A%A4%ED%84%B0+%EB%B3%B4%EC%8A%A4
-/****/
+/**
+ * 黑暗波埃塔副本事件处理器。
+ * Instance event handler for Dark Poeta.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300040000)
 public class DarkPoetaInstance extends GeneralInstanceHandler
 {
-	//**Npc 4.9**//
+	//** NPC 4.9 / NPC 4.9 *//
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
+	/** 开始时间 / start time */
 	private long startTime;
-	private int powerGenerator;
-	private Future<?> timerPrepare;
-	private Future<?> timerInstance;
+	/** 能量发生器 / power generator */
+		private int powerGenerator;
+	/** 准备计时器 / timer prepare */
+		private Future<?> timerPrepare;
+	/** 副本计时器 / timer instance */
+		private Future<?> timerInstance;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 副本奖励对象 / instance reward object */
 	private DarkPoetaReward instanceReward;
-	//Preparation Time.
-	private int prepareTimerSeconds = 120000; //...2Min
-	//Duration Instance Time.
-	private int instanceTimerSeconds = 14400000; //...4Hrs
+	// 准备时间。 / Preparation Time.
+	/** 准备计时秒数 / prepare timer seconds */
+		private int prepareTimerSeconds = 120000; //...2Min
+	// 副本持续计时。 / Duration Instance Time.
+	/** 副本计时秒数 / instance timer seconds */
+		private int instanceTimerSeconds = 14400000; //...4Hrs
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> darkPoetaTask = new ArrayList<Future<?>>();
+	/** darkpoeta 任务 / dark poeta task */
+		private final List<Future<?>> darkPoetaTask = new ArrayList<Future<?>>();
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -76,7 +80,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 				    }
 				}
 			break;
@@ -106,7 +110,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 214904: //Brigade General Anuhart.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						switch (Rnd.get(1, 2)) {
 				            case 1:
 				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000929, 1)); //Brigade General Anuhart's Leather Belt.
@@ -152,7 +156,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
 				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170490001, 1)); //[Souvenir] Tahabata Statue.
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020175, 1)); //Tahabata Egg.
 				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 						switch (Rnd.get(1, 6)) {
@@ -182,7 +186,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 237373: //Inferno Demon.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 						switch (Rnd.get(1, 3)) {
 				            case 1:
@@ -198,15 +202,21 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 					}
 				}
 			break;
-			case 702658: //Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+			case 702658: //修道院箱子。 / Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
-			case 702659: //Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+			case 702659: //高级修道院箱子。 / Noble Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 		}
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		int points = 0;
@@ -429,7 +439,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 					spawn(214904, 275.34537f, 323.02072f, 130.9302f, (byte) 52); //Brigade General Anuhart.
 				}
 			break;
-			//**[Ver.] 4.9**//
+			//** [Ver.] 4.9 / [Ver.] 4.9* *//
 			case 857435: //Tahabata's Heart.
 			    despawnNpc(npc);
 				spawn(237372, 1176f, 1227f, 145f, (byte) 14); //Enraged Inferno Demon.
@@ -442,10 +452,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 				spawn(857435, 1176.877f, 1230.9423f, 144.3876f, (byte) 19); //Tahabata's Heart.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 1180.83f, 1228.874f, 144.45352f, (byte) 23); //Abbey Box.
+				        spawn(702658, 1180.83f, 1228.874f, 144.45352f, (byte) 23); //修道院箱子。 / Abbey Box.
 					break;
 					case 2:
-					    spawn(702659, 1180.83f, 1228.874f, 144.45352f, (byte) 23); //Noble Abbey Box.
+					    spawn(702659, 1180.83f, 1228.874f, 144.45352f, (byte) 23); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
 				spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
@@ -461,9 +471,19 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			break;
 			case 214904: //Brigade General Anuhart.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
+						    /**
+						     * 处理 visit。
+						     * Handle visit.
+						     *
+						     * @param player 玩家 / player
+						     */
 						    @Override
 						    public void visit(Player player) {
 							    stopInstance(player);
@@ -482,6 +502,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (nameId != 0) {
@@ -495,19 +521,19 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	private int checkRank(int totalPoints) {
 		int rank = 0;
 		if (totalPoints >= 19643) { //Rank S.
-			//You may only battle Tahabata Pyrelord within the given time limit.
+			// 仅可在限定时间内与塔哈巴塔炎主交战。 / You may only battle Tahabata Pyrelord within the given time limit.
 			sendMsgByRace(1400257, Race.PC_ALL, 3000);
 			spawn(215280, 1176f, 1227f, 145f, (byte) 14); //Tahabata Pyrelord.
 			rank = 1;
 		} else if (totalPoints >= 17046) { //Rank A.
-			//Tahabata Pyrelord has left the battle.
+			// 塔哈巴塔炎主已离开战斗。 / Tahabata Pyrelord has left the battle.
 			sendMsgByRace(1400258, Race.PC_ALL, 3000);
-			//You may only battle Calindi Flamelord within the given time limit.
+			// 仅可在限定时间内与卡林迪炎主交战。 / You may only battle Calindi Flamelord within the given time limit.
 			sendMsgByRace(1400259, Race.PC_ALL, 6000);
 			spawn(215281, 1176f, 1227f, 145f, (byte) 14); //Calindi Flamelord.
 			rank = 2;
 		} else if (totalPoints >= 13055) { //Rank B.
-			//Calindi Flamelord has left the battle.
+			// 卡林迪炎主已离开战斗。 / Calindi Flamelord has left the battle.
 			sendMsgByRace(1400260, Race.PC_ALL, 3000);
 			spawn(215282, 1176f, 1227f, 145f, (byte) 14); //Vanuka Infernus.
 			rank = 3;
@@ -525,12 +551,26 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		spawn(700478, 297.40482f, 316.69537f, 133.12941f, (byte) 56); //Tahabata Abyss Gate.
 		return rank;
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
 	protected void startInstanceTask() {
 		darkPoetaTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+				    /**
+				     * 处理 visit。
+				     * Handle visit.
+				     *
+				     * @param player 玩家 / player
+				     */
 				    @Override
 				    public void visit(Player player) {
 					    stopInstance(player);
@@ -540,21 +580,34 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
         }, 14400000));
     }
 	
+	/**
+	 * 玩家打开门时处理。
+	 * Handle a player opening a door.
+	 *
+	 * 玩家 / player
+	 * doorId
+	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {
 		if (doorId == 33) {
 			startInstanceTask();
 			doors.get(33).setOpen(true);
-			//The member recruitment window has passed. You cannot recruit any more members.
+			// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 			sendMsgByRace(1401181, Race.PC_ALL, 5000);
-			//The player has 1 min to prepare !!! [Timer Red]
+			// 玩家有 1 分钟准备！！！【红色计时】 / The player has 1 min to prepare !!! [Timer Red]
 			if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
-				//Start the instance time !!! [Timer White]
+				// 开始副本计时！！！【白色计时】 / Start the instance time !!! [Timer White]
 				startMainInstanceTimer();
 			}
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		startPrepareTimer();
@@ -571,6 +624,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -578,6 +635,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			}, prepareTimerSeconds);
 		}
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(prepareTimerSeconds, instanceReward, null));
@@ -593,21 +656,39 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendPacket(0, 0);
 	}
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	protected void stopInstance(Player player) {
         stopInstanceTask();
         instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-		//sendMsg("[SUCCES]: You have finished <Dark Poeta>");
+		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Dark Poeta>");
 		sendPacket(0, 0);
 	}
+	/**
+	 * 移除指定 NPC。
+	 * Despawn the given NPC.
+	 *
+	 * npc
+	 */
 	
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
+	/**
+	 * 处理 despawnNpcs。
+	 * Handle despawnNpcs.
+	 *
+	 * npcs
+	 */
 	
 	protected void despawnNpcs(List<Npc> npcs) {
         for (Npc npc: npcs) {
@@ -623,6 +704,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		if (timerInstance != null) {
@@ -636,6 +721,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		movies.clear();
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -659,6 +750,13 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家采集完成时处理。
+	 * Handle player gathering completion.
+	 *
+	 * 玩家 / player
+	 * gatherable
+	 */
 	@Override
 	public void onGather(Player player, Gatherable gatherable) {
 		int points = 0;
@@ -676,6 +774,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	
 	private void toScheduleMarbataController(final int npcId) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				Npc boss = null;
@@ -735,15 +837,27 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 		if (player.isInGroup2()) {
             PlayerGroupService.removePlayer(player);
         }
 	}
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onExitInstance(Player player) {
 		InstanceService.destroyInstance(player.getPosition().getWorldMapInstance());
@@ -761,18 +875,42 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

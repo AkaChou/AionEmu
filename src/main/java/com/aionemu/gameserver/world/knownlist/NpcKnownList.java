@@ -1,33 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.knownlist;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.world.MapRegion;
 
 /**
+ * NPC 使用的已知列表：区域不活跃时清空，活跃时再刷新。
+ * NPC known list: clears when the region is inactive, refreshes while active.
+ *
  * @author ATracer
  */
 public class NpcKnownList extends CreatureAwareKnownList {
 
+	/**
+	 * 创建 NPC 已知列表。
+	 * Creates an NPC known list.
+	 *
+	 * @param owner 列表所有者 / list owner
+	 */
 	public NpcKnownList(VisibleObject owner) {
 		super(owner);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * 仅当所属地图区域处于活跃状态时执行更新；否则清空列表。
+	 * Updates only while the active map region is live; otherwise clears the list.
+	 */
 	@Override
 	public void doUpdate() {
 		MapRegion activeRegion = owner.getActiveRegion();

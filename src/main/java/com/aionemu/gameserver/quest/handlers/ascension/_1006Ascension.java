@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.ascension;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -47,6 +31,10 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 飞升任务脚本：Ascension（任务 ID 1006）。
+ * Ascension quest script: Ascension (quest ID 1006).
+ */
 public class _1006Ascension extends QuestHandler {
 
 	private final static int questId = 1006;

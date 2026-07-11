@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.bonus_service;
 
 import java.util.ArrayList;
@@ -26,7 +10,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
- * Created by wanke on 12/02/2017.
+ * F2p 加成 Attr 模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,6 +23,7 @@ public class F2pBonusAttr {
 	@XmlAttribute(name = "buff_id", required = true)
 	protected int buffId;
 
+	/** 返回 penalty attr / Returns the penalty attr */
 	public List<F2pPenalityAttr> getPenaltyAttr() {
 		if (bonusAttr == null) {
 			bonusAttr = new ArrayList<F2pPenalityAttr>();
@@ -45,10 +31,12 @@ public class F2pBonusAttr {
 		return bonusAttr;
 	}
 
+	/** 返回增益 ID / Returns the buff id */
 	public int getBuffId() {
 		return buffId;
 	}
 
+	/** 设置 buff id / Sets the buff id */
 	public void setBuffId(int value) {
 		buffId = value;
 	}

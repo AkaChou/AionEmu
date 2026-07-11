@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.archivesOfEternity;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Archives Of Eternity 副本 NPC AI：Viola（@AIName "weatha"），继承 GeneralNpcAI2。
+ * Archives Of Eternity instance NPC AI: Viola (@AIName "weatha"), extends GeneralNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("weatha")
 public class ViolaAI2 extends GeneralNpcAI2
 {
@@ -60,17 +46,17 @@ public class ViolaAI2 extends GeneralNpcAI2
 				    switch (Rnd.get(1, 3)) {
 					    case 1:
 						    getPosition().getWorldMapInstance().getDoors().get(349).setOpen(true);
-							//The door to the Archives of Eternity has opened.
+							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
 						break;
 						case 2:
 						    getPosition().getWorldMapInstance().getDoors().get(352).setOpen(true);
-							//The door to the Archives of Eternity has opened.
+							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
 						break;
 						case 3:
 						    getPosition().getWorldMapInstance().getDoors().get(359).setOpen(true);
-							//The door to the Archives of Eternity has opened.
+							// 通往永恒档案的门已打开。 / The door to the Archives of Eternity has opened.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_01_Road_Set, 0);
 						break;
 					}

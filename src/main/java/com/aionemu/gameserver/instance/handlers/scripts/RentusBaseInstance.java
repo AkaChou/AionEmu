@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -48,37 +32,50 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 伦图斯基地副本事件处理器。
+ * Instance event handler for Rentus Base.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300280000)
 public class RentusBaseInstance extends GeneralInstanceHandler
 {
+	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
-			case 702658: //Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+			case 702658: //修道院箱子。 / Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
-			case 702659: //Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+			case 702659: //高级修道院箱子。 / Noble Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 			case 217313: //Brigade General Vasharti.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000228, 1)); //Rentus Supplies Storage Box Key.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					   dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+					   dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 					   dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 170170033, 1)); //[Souvenir] Vasharti Legion Weapon Statue.
 					   dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 170030052, 1)); //[Souvenir] Vasharti's Gloves Wall Decoration.
-					   dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+					   dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 				    }
 				}
 			break;
@@ -136,6 +133,12 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
@@ -145,6 +148,12 @@ public class RentusBaseInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -152,6 +161,12 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 		doors.get(54).setOpen(true);
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(final Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -161,16 +176,16 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			case 217313: //Brigade General Vasharti.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 184.69116f, 414.00864f, 260.75488f, (byte) 59); //Abbey Box.
+				        spawn(702658, 184.69116f, 414.00864f, 260.75488f, (byte) 59); //修道院箱子。 / Abbey Box.
 					break;
 					case 2:
-					    spawn(702659, 184.69116f, 414.00864f, 260.75488f, (byte) 59); //Noble Abbey Box.
+					    spawn(702659, 184.69116f, 414.00864f, 260.75488f, (byte) 59); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
 				boostMorale();
 				reianSecureBridge();
 				sendMovie(player, 481);
-				//sendMsg("[SUCCES]: You have finished <Rentus Base>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Rentus Base>");
 				spawn(730520, 193.6f, 436.5f, 262f, (byte) 86); //Rentus Base Exit.
 			break;
 			case 217315: //Umatha The Crazed.
@@ -199,6 +214,10 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			    final float z1 = npc.getZ();
 			    final byte h1 = npc.getHeading();
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 					    if (!isInstanceDestroyed) {
@@ -209,6 +228,10 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 				    }
 			    }, 2000);
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 					    despawnNpc(npc);
@@ -221,6 +244,10 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			    final float z2 = npc.getZ();
 			    final byte h2 = npc.getHeading();
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 					    if (!isInstanceDestroyed) {
@@ -231,6 +258,10 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 				    }
 			    }, 2000);
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 				    public void run() {
 					    despawnNpc(npc);
@@ -274,24 +305,31 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 		PlayerEffectController effectController = player.getEffectController();
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
-			case 702677: //Rentus Siege Weapon.
-			case 702678: //Rentus Siege Weapon.
-			case 702679: //Rentus Siege Weapon.
-			case 702680: //Rentus Siege Weapon.
-			case 702681: //Rentus Siege Weapon.
-			case 702682: //Rentus Siege Weapon.
+			case 702677: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702678: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702679: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702680: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702681: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702682: //伦图斯攻城武器。 / Rentus Siege Weapon.
 			    despawnNpc(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21806, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
 			break;
-			case 702683: //Rentus Siege Weapon.
-			case 702684: //Rentus Siege Weapon.
-			case 702685: //Rentus Siege Weapon.
-			case 702686: //Rentus Siege Weapon.
-			case 702687: //Rentus Siege Weapon.
-			case 702688: //Rentus Siege Weapon.
+			case 702683: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702684: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702685: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702686: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702687: //伦图斯攻城武器。 / Rentus Siege Weapon.
+			case 702688: //伦图斯攻城武器。 / Rentus Siege Weapon.
 			    despawnNpc(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21805, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
 			break;
@@ -319,11 +357,23 @@ public class RentusBaseInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
@@ -343,18 +393,42 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

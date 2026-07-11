@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.siege;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 /**
+ * Artifact 位置，用于要塞相关逻辑。
+ * Artifact Location for siege logic.
+ *
  * @author Source
  */
 public class ArtifactLocation extends SiegeLocation {
@@ -38,23 +25,27 @@ public class ArtifactLocation extends SiegeLocation {
 
 	public ArtifactLocation(SiegeLocationTemplate template) {
 		super(template);
-		// Artifacts Always Vulnerable
+		// 神器始终可攻击 / Artifacts Always Vulnerable
 		setVulnerable(true);
 	}
 
+	/** 返回 next state / Returns the next state */
 	@Override
 	public int getNextState() {
 		return STATE_VULNERABLE;
 	}
 
+	/** 返回 last activation / Returns the last activation */
 	public long getLastActivation() {
 		return this.lastArtifactActivation;
 	}
 
+	/** 设置 last activation / Sets the last activation */
 	public void setLastActivation(long paramLong) {
 		this.lastArtifactActivation = paramLong;
 	}
 
+	/** 返回 cool down / Returns the cool down */
 	public int getCoolDown() {
 		long i = this.template.getActivation().getCd();
 		long l = System.currentTimeMillis() - this.lastArtifactActivation;
@@ -66,22 +57,26 @@ public class ArtifactLocation extends SiegeLocation {
 	}
 
 	/**
-	 * Returns DescriptionId that describes name of this artifact.<br>
+	 * 返回 DescriptionIddescribes 名称的此 artifact.<br>。 / Returns DescriptionId that describes name of this artifact.<br>
 	 *
 	 * @return DescriptionId with name
 	 */
 	public DescriptionId getNameAsDescriptionId() {
-		// Get Skill id, item, count and target defined for each artifact.
+		// 获取每个神器定义的技能 ID、物品、数量与目标。 / Get Skill id, item, count and target defined for each artifact.
 		ArtifactActivation activation = getTemplate().getActivation();
 		int skillId = activation.getSkillId();
 		SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		return new DescriptionId(skillTemplate.getNameId());
 	}
 
+	/**
+	 * @return Whether stand alone / Whether stand alone
+	 */
 	public boolean isStandAlone() {
 		return !GameFeatureServices.siegeService().getFortresses().containsKey(getLocationId());
 	}
 
+	/** 返回 owning fortress / Returns the owning fortress */
 	public FortressLocation getOwningFortress() {
 		return GameFeatureServices.siegeService().getFortress(getLocationId());
 	}

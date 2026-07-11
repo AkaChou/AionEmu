@@ -1,49 +1,55 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
+ * AI2 调试日志工具，仅在 AI 开启日志或移动调试开关时输出。
+ * AI2 debug logging helper that writes only when AI logging or move debug is enabled.
+ *
  * @author ATracer
  */
 @Slf4j
 public class AI2Logger {
 
 
+	/**
+	 * 输出 AI 信息日志（受 {@link AbstractAI#isLogging()} 控制）。
+	 * Logs an AI info message (gated by {@link AbstractAI#isLogging()}).
+	 *
+	 * @param ai AI 实例 / AI instance
+	 * log message
+	 */
 	public static final void info(AbstractAI ai, String message) {
 		if (ai.isLogging()) {
-			log.info("[AI2] " + ai.getOwner().getObjectId() + " - " + message);
+			log.info(I18n.get("log.25ad741e4183", ai.getOwner().getObjectId(), message));
 		}
 	}
 
+	/**
+	 * 输出 AI 信息日志（将 {@link AI2} 转为 {@link AbstractAI}）。
+	 * Logs an AI info message (casts {@link AI2} to {@link AbstractAI}).
+	 *
+	 * @param ai AI 实例 / AI instance
+	 * log message
+	 */
 	public static final void info(AI2 ai, String message) {
 		info((AbstractAI) ai, message);
 	}
 
 	/**
-	 * @param owner
-	 * @param message
+	 * 输出移动相关调试信息（受 {@link AIConfig#MOVE_DEBUG} 与 AI 日志开关控制）。
+	 * Logs movement-related debug info (gated by {@link AIConfig#MOVE_DEBUG} and AI logging).
+	 *
+	 * @param owner 生物所有者 / creature owner
+	 * log message
 	 */
 	public static void moveinfo(Creature owner, String message) {
 		if (AIConfig.MOVE_DEBUG && owner.getAi2().isLogging()) {
-			log.info("[AI2] " + owner.getObjectId() + " - " + message);
+			log.info(I18n.get("log.25ad741e4183", owner.getObjectId(), message));
 		}
 	}
 }

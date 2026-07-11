@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.antihack;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.controllers.movement.MovementMask;
@@ -31,10 +17,26 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.World;
-@Slf4j
 
+/**
+ * 反作弊服务，检测异常移动与加速外挂。
+ * Anti-hack service detecting illegal movement and speed hacks.
+ */
+@Slf4j
 public class AntiHackService {
 
+	/**
+	 * 校验玩家本次移动是否合法（异常状态、加速、瞬移）。
+	 * Validates whether the player's current move is legal (abnormal state, speed, teleport).
+	 *
+	 * @param player 玩家 / Player
+	 * @param x 目标 X / Target X
+	 * @param y 目标 Y / Target Y
+	 * @param z 目标 Z / Target Z
+	 * @param speed 上报速度 / Reported speed
+	 * @param type 移动掩码类型 / Movement mask type
+	 * @return {@code true} if move is allowed。 / {@code true} if move is allowed
+	 */
 	public static boolean canMove(Player player, float x, float y, float z, float speed, byte type) {
 
 		AionServerPacket forcedMove = new SM_FORCED_MOVE(player, player.getObjectId(), x, y, z);
@@ -59,10 +61,10 @@ public class AntiHackService {
 		if (SecurityConfig.SPEEDHACK) {
 			if (type != 0) {
 				if (speed > 16000 && player.isFlying()) {
-					log.info("Fly speed is more than 16 debug player: " + player.getName());
+					log.info(I18n.get("log.ecde33de7e39", player.getName()));
 				} else {
 					if (speed > 12000) {
-						log.info("Run speed is more than 12 debug player: " + player.getName());
+						log.info(I18n.get("log.36baab1646bf", player.getName()));
 					}
 				}
 
@@ -156,6 +158,19 @@ public class AntiHackService {
 		return true;
 	}
 
+	/**
+	 * 按配置对作弊行为执行处罚（回退、踢线等）。
+	 * Applies configured punishment for hack behavior (rollback, kick, etc.).
+	 *
+	 * 玩家 / Player
+	 * @param x 坐标 X / X
+	 * @param y 坐标 Y / Y
+	 * @param type 移动类型 / Move type
+	 * Rollback packet
+	 * Audit message
+	 *
+	 * @return 是否仍允许移动 / Whether move is still allowed
+	 */
 	protected static boolean punish(Player player, float x, float y, byte type, AionServerPacket pkt, String message) {
 		if (player.getAccessLevel() > 3) {
 			return true;
@@ -183,6 +198,16 @@ public class AntiHackService {
 		}
 	}
 
+	/**
+	 * 强制将玩家位置回退并同步客户端。
+	 * Forces player position rollback and syncs the client.
+	 *
+	 * 玩家 / Player
+	 * @param x 坐标 X / X
+	 * @param y 坐标 Y / Y
+	 * @param type 移动类型 / Move type
+	 * Sync packet
+	 */
 	protected static void moveBack(Player player, float x, float y, byte type, AionServerPacket pkt) {
 		PacketSendUtility.broadcastPacketAndReceive(player, pkt);
 		player.getMoveController().updateLastMove();
@@ -192,6 +217,13 @@ public class AntiHackService {
 		}
 	}
 
+	/**
+	 * 校验客户端 aion.bin 完整性；异常则踢线。
+	 * Validates client aion.bin integrity; kicks on mismatch.
+	 *
+	 * @param size 上报文件大小 / Reported file size
+	 * @param player 玩家 / Player
+	 */
 	public static void checkAionBin(int size, Player player) {
 		int legitSize = 213;
 

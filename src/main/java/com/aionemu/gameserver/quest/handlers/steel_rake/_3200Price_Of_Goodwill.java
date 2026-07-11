@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modif (y
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.steel_rake;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -29,9 +13,12 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
+/**
+ * 钢耙号任务脚本：Price Of Goodwill（任务 ID 3200）。
+ * Steel Rake quest script: Price Of Goodwill (quest ID 3200).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _3200Price_Of_Goodwill extends QuestHandler {
 
 	private final static int questId = 3200;

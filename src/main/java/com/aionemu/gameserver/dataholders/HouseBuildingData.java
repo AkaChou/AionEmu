@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -30,6 +14,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.housing.Building;
 
 /**
+ * 房屋建筑配置数据容器，按建筑 ID 索引建筑模板。
+ * House building configuration data holder, indexed by building id.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,6 +29,10 @@ public class HouseBuildingData {
 	@XmlTransient
 	Map<Integer, Building> buildingById = new HashMap<Integer, Building>();
 
+	/**
+	 * JAXB 反序列化完成后，按建筑 ID 建立索引并释放原始列表。
+	 * After JAXB unmarshalling, indexes buildings by id and releases the raw list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (buildings == null) {
 			return;
@@ -53,10 +44,24 @@ public class HouseBuildingData {
 		buildings = null;
 	}
 
+	/**
+	 * 按建筑 ID 获取建筑模板。
+	 * Returns the building template for the given building id.
+	 *
+	 * building id
+	 *
+	 * @param buildingId @return 建筑模板，不存在则为 null / building template, or null if absent
+	 */
 	public Building getBuilding(int buildingId) {
 		return buildingById.get(buildingId);
 	}
 
+	/**
+	 * 返回建筑模板数量。
+	 * Returns the number of building templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return buildingById.size();
 	}

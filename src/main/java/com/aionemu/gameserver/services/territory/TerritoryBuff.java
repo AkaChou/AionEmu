@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.territory;
 
 import java.util.ArrayList;
@@ -25,9 +9,19 @@ import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
+/**
+ * 军团领地增益，为进入领地的玩家提供 PvP 防御加成。
+ * Legion territory buff applying PvP defense bonus to players inside territory.
+ */
 public class TerritoryBuff implements StatOwner {
 	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
 
+	/**
+	 * 对玩家施加领地增益效果。
+	 * Applies the territory buff effect to the player.
+	 *
+	 * target player
+	 */
 	public void applyEffect(Player player) {
 		int addvalue = 60;
 		if (hasBuff()) {
@@ -37,10 +31,22 @@ public class TerritoryBuff implements StatOwner {
 		player.getGameStats().addEffect(this, functions);
 	}
 
+	/**
+	 * 是否已存在生效中的增益。
+	 * Whether an active buff is currently applied.
+	 *
+	 * @return 有增益时为 true / true if buff functions exist
+	 */
 	public boolean hasBuff() {
 		return !functions.isEmpty();
 	}
 
+	/**
+	 * 结束并移除玩家身上的领地增益。
+	 * Ends and removes the territory buff from the player.
+	 *
+	 * target player
+	 */
 	public void endEffect(Player player) {
 		functions.clear();
 		player.getGameStats().endEffect(this);

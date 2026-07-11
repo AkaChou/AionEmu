@@ -24,7 +24,6 @@ class GameRewardServicesLifecycleTest {
     @Test
     void rewardGatewayBridgesLegacyServicesThroughSpringProviders() {
         assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "rewardServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "weddingServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "veteranRewardsServiceProvider"));
     }
 
@@ -36,7 +35,7 @@ class GameRewardServicesLifecycleTest {
     @Test
     void startRunsEnabledInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameRewardServicesLifecycle lifecycle = newLifecycle(events, true, false, true);
+        GameRewardServicesLifecycle lifecycle = newLifecycle(events, true, true);
 
         lifecycle.start();
         lifecycle.start();
@@ -51,7 +50,6 @@ class GameRewardServicesLifecycleTest {
     void startReadsEachConditionIndependently() {
         List<String> events = new ArrayList<>();
         AtomicInteger rewardReads = new AtomicInteger();
-        AtomicInteger weddingReads = new AtomicInteger();
         AtomicInteger veteranReads = new AtomicInteger();
         GameRewardServicesLifecycle lifecycle = new GameRewardServicesLifecycle(
             new RecordingGameRewardServicesGateway(
@@ -59,10 +57,6 @@ class GameRewardServicesLifecycleTest {
                 () -> {
                     rewardReads.incrementAndGet();
                     return false;
-                },
-                () -> {
-                    weddingReads.incrementAndGet();
-                    return true;
                 },
                 () -> {
                     veteranReads.incrementAndGet();
@@ -76,9 +70,8 @@ class GameRewardServicesLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(1, rewardReads.get());
-        assertEquals(1, weddingReads.get());
         assertEquals(1, veteranReads.get());
-        assertEquals(List.of("wedding"), events);
+        assertEquals(List.of(), events);
     }
 
     @Test
@@ -88,7 +81,6 @@ class GameRewardServicesLifecycleTest {
         GameRewardServicesLifecycle lifecycle = new GameRewardServicesLifecycle(
             new RecordingGameRewardServicesGateway(
                 events,
-                () -> true,
                 () -> true,
                 () -> true,
                 failure
@@ -104,21 +96,19 @@ class GameRewardServicesLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("reward", "wedding", "reward", "wedding", "veteranRewards"), events);
+        assertEquals(List.of("reward", "reward", "veteranRewards"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 
     private static GameRewardServicesLifecycle newLifecycle(
         List<String> events,
         boolean rewardEnabled,
-        boolean weddingEnabled,
         boolean veteranRewardsEnabled
     ) {
         return new GameRewardServicesLifecycle(
             new RecordingGameRewardServicesGateway(
                 events,
                 () -> rewardEnabled,
-                () -> weddingEnabled,
                 () -> veteranRewardsEnabled,
                 null
             )
@@ -142,20 +132,17 @@ class GameRewardServicesLifecycleTest {
 
         private final List<String> events;
         private final BooleanSupplier rewardEnabled;
-        private final BooleanSupplier weddingEnabled;
         private final BooleanSupplier veteranRewardsEnabled;
         private final RuntimeException firstFailure;
 
         private RecordingGameRewardServicesGateway(
             List<String> events,
             BooleanSupplier rewardEnabled,
-            BooleanSupplier weddingEnabled,
             BooleanSupplier veteranRewardsEnabled,
             RuntimeException firstFailure
         ) {
             this.events = events;
             this.rewardEnabled = rewardEnabled;
-            this.weddingEnabled = weddingEnabled;
             this.veteranRewardsEnabled = veteranRewardsEnabled;
             this.firstFailure = firstFailure;
         }
@@ -164,10 +151,7 @@ class GameRewardServicesLifecycleTest {
         public void start() {
             if (rewardEnabled.getAsBoolean()) {
                 events.add("reward");
-            }
-            if (weddingEnabled.getAsBoolean()) {
-                events.add("wedding");
-                if (events.size() == 2 && firstFailure != null) {
+                if (events.size() == 1 && firstFailure != null) {
                     throw firstFailure;
                 }
             }

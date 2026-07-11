@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,6 +7,11 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+
+/**
+ * 物品 Enchant 加成模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemEnchantBouns")
@@ -35,10 +24,12 @@ public class ItemEnchantBonus {
 	public ItemEnchantBonus() {
 	}
 
+	/** 获取修正器。 / Returns the modifiers. */
 	public ModifiersTemplate getModifiers() {
 		return modifiers;
 	}
 
+	/** 获取等级。 / Returns the level. */
 	public int getLevel() {
 		return level;
 	}

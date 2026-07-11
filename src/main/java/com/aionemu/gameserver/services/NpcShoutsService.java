@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
@@ -43,8 +29,9 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
- * This class is handling NPC shouts
- * 
+ * NPC 喊话服务，处理 IDLE 轮询喊话、事件喊话与系统消息下发。
+ * NPC shout service handling IDLE poll shouts, event shouts, and system message delivery.
+ *
  * @author Rolandas
  */
 @Slf4j
@@ -54,6 +41,10 @@ public class NpcShoutsService {
 
 	NpcShoutData shoutsCache = DataManager.NPC_SHOUT_DATA;
 
+	/**
+	 * 初始化：为带 IDLE 喊话的 NPC 注册固定频率轮询任务。
+	 * Initializes fixed-rate poll tasks for NPCs that have IDLE shouts.
+	 */
 	public NpcShoutsService() {
 		for (Npc npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 			final int npcId = npc.getNpcId();
@@ -80,7 +71,7 @@ public class NpcShoutsService {
 					AionObject npcObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 					if (npcObj != null && npcObj instanceof Npc) {
 						Npc npc2 = (Npc) npcObj;
-						// check if AI overrides
+						// 检查 AI 是否覆盖 / check if AI overrides
 						if (!npc2.getAi2().poll(AIQuestion.CAN_SHOUT)) {
 							return;
 						}
@@ -104,6 +95,16 @@ public class NpcShoutsService {
 		}
 	}
 
+	/**
+	 * 对目标播放一组喊话（顺序或随机）。
+	 * Plays a list of shouts to the target (sequential or random).
+	 *
+	 * shouting NPC
+	 * target creature
+	 * shout list
+	 * delay in seconds
+	 * @param isSequence 是否顺序播放 / whether sequential
+	 */
 	public void shout(Npc owner, Creature target, List<NpcShout> shouts, int delaySeconds, boolean isSequence) {
 		if (owner == null || shouts == null) {
 			return;
@@ -128,6 +129,15 @@ public class NpcShoutsService {
 			shout(owner, target, shouts.get(0), delaySeconds);
 	}
 
+	/**
+	 * 对目标播放单条喊话，并解析 username 等参数。
+	 * Plays a single shout to the target, resolving params such as username.
+	 *
+	 * shouting NPC
+	 * target creature
+	 * @param shout 喊话模板 / shout template
+	 * delay in seconds
+	 */
 	public void shout(Npc owner, Creature target, NpcShout shout, int delaySeconds) {
 		if (owner == null || shout == null) {
 			return;
@@ -141,7 +151,7 @@ public class NpcShoutsService {
 			} else if ("userclass".equals(param)) {
 				param = (240000 + player.getCommonData().getPlayerClass().getClassId()) * 2 + 1;
 			} else if ("usernation".equals(param)) {
-				log.warn("Shout with param 'usernation' is not supported");
+				log.warn(I18n.get("log.cc7b7027e30e"));
 				return;
 			} else if ("usergender".equals(param)) {
 				param = (902012 + player.getCommonData().getGender().getGenderId()) * 2 + 1;
@@ -163,30 +173,97 @@ public class NpcShoutsService {
 		owner.shout(shout, target, param, delaySeconds);
 	}
 
+	/**
+	 * 向 NPC 知会范围内玩家发送系统消息（默认非喊话、颜色 25）。
+	 * Sends a system message to players knowing the NPC (default non-shout, color 25).
+	 *
+	 * source NPC
+	 * message id
+	 * @param Obj 对象参数 / object parameter
+	 * color
+	 * @param delay 延迟毫秒 / delay ms
+	 */
 	public void sendMsg(Npc npc, int msg, int Obj, int color, int delay) {
 		sendMsg(npc, null, msg, Obj, false, color, delay);
 	}
 
+	/**
+	 * 向 NPC 知会范围内玩家发送系统消息。
+	 * Sends a system message to players knowing the NPC.
+	 *
+	 * source NPC
+	 * message id
+	 * @param Obj 对象参数 / object parameter
+	 * @param isShout 是否喊话样式 / whether shout style
+	 * color
+	 * @param delay 延迟毫秒 / delay ms
+	 */
 	public void sendMsg(Npc npc, int msg, int Obj, boolean isShout, int color, int delay) {
 		sendMsg(npc, null, msg, Obj, isShout, color, delay);
 	}
 
+	/**
+	 * 向 NPC 知会范围内玩家发送系统消息（简化参数）。
+	 * Sends a system message to players knowing the NPC (simplified args).
+	 *
+	 * source NPC
+	 * message id
+	 * @param delay 延迟毫秒 / delay ms
+	 */
 	public void sendMsg(Npc npc, int msg, int delay) {
 		sendMsg(npc, null, msg, 0, false, 25, delay);
 	}
 
+	/**
+	 * 立即向 NPC 知会范围内玩家发送系统消息。
+	 * Immediately sends a system message to players knowing the NPC.
+	 *
+	 * source NPC
+	 * message id
+	 */
 	public void sendMsg(Npc npc, int msg) {
 		sendMsg(npc, null, msg, 0, false, 25, 0);
 	}
 
+	/**
+	 * 向副本内全部玩家发送系统消息。
+	 * Sends a system message to all players in the map instance.
+	 *
+	 * map instance
+	 * message id
+	 * @param Obj 对象参数 / object parameter
+	 * @param isShout 是否喊话样式 / whether shout style
+	 * color
+	 * @param delay 延迟毫秒 / delay ms
+	 */
 	public void sendMsg(WorldMapInstance instance, int msg, int Obj, boolean isShout, int color, int delay) {
 		sendMsg(null, instance, msg, Obj, isShout, color, delay);
 	}
 
+	/**
+	 * 向副本内全部玩家发送系统消息（简化参数）。
+	 * Sends a system message to all players in the map instance (simplified args).
+	 *
+	 * map instance
+	 * message id
+	 * @param delay 延迟毫秒 / delay ms
+	 */
 	public void sendMsg(WorldMapInstance instance, int msg, int delay) {
 		sendMsg(null, instance, msg, 0, false, 25, delay);
 	}
 
+	/**
+	 * 延迟后向 NPC 知会玩家或副本内玩家广播系统消息。
+	 * After delay, broadcasts a system message to NPC known players or instance players.
+	 *
+	 * @param npc 来源 NPC，可为 null / source NPC, may be null
+	 * @param instance 地图实例，可为 null / map instance, may be null
+	 * message id
+	 * @param Obj 对象参数 / object parameter
+	 * @param isShout 是否喊话样式 / whether shout style
+	 * color
+	 * @param delay 延迟毫秒 / delay ms
+	 */
 	public void sendMsg(final Npc npc, final WorldMapInstance instance, final int msg, final int Obj,
 			final boolean isShout, final int color, int delay) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -212,6 +289,12 @@ public class NpcShoutsService {
 		}, delay);
 	}
 
+	/**
+	 * 获取 NPC 喊话服务单例（优先 Spring ObjectProvider）。
+	 * Returns the NPC shouts service singleton (preferring Spring ObjectProvider).
+	 *
+	 * service instance
+	 */
 	public static final NpcShoutsService getInstance() {
 		ObjectProvider<NpcShoutsService> provider = instanceProvider;
 		if (provider == null) {
@@ -220,6 +303,12 @@ public class NpcShoutsService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Injects the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<NpcShoutsService> instanceProvider) {
 		NpcShoutsService.instanceProvider = instanceProvider;
 	}

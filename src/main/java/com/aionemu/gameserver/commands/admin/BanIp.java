@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -22,14 +6,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员 IP 封禁命令：按 IP 掩码封禁并通知登录服。
+ * Admin IP-ban command: bans an IP mask and notifies the login server.
+ *
  * @author Watson
  */
 public class BanIp extends AdminCommand {
 
+	/**
+	 * 注册 {@code //banip} 命令。
+	 * Registers the {@code //banip} command.
+	 */
 	public BanIp() {
 		super("banip");
 	}
 
+	/**
+	 * 执行 IP 封禁：解析掩码与时长后发送封禁包。
+	 * Executes IP ban: parses mask and duration, then sends the ban packet.
+	 *
+	 * admin
+	 * @param params 参数：IP 掩码、时长（分钟） / ip mask, duration in minutes
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params == null || params.length < 1) {
@@ -53,6 +51,13 @@ public class BanIp extends AdminCommand {
 		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, 0, mask, time, player.getObjectId());
 	}
 
+	/**
+	 * 参数错误时输出 {@code //banip} 用法。
+	 * Prints {@code //banip} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax: //banip <mask> [time in minutes]");

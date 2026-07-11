@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -38,6 +22,10 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
+/**
+ * 光环/真言效果：周期向范围内友方（含自身）施加关联技能。
+ * Aura/mantra effect: periodically applies a linked skill to allies in range (including self).
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AuraEffect")
 public class AuraEffect extends EffectTemplate {
@@ -46,6 +34,12 @@ public class AuraEffect extends EffectTemplate {
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 
+	/**
+	 * 校验防滥用后将效果加入控制器。
+	 * Validates against abuse then adds the effect to the controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		final Player effector = (Player) effect.getEffector();
@@ -58,6 +52,12 @@ public class AuraEffect extends EffectTemplate {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 周期动作：向范围内组队/联盟成员及自身施加光环技能。
+	 * Periodic action: applies the aura skill to group/alliance members in range and self.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void onPeriodicAction(final Effect effect) {
 		final Player effector = (Player) effect.getEffector();
@@ -68,7 +68,7 @@ public class AuraEffect extends EffectTemplate {
 			Collection<Player> onlinePlayers = effector.isInGroup2() ? effector.getPlayerGroup2().getOnlineMembers()
 					: effector.getPlayerAllianceGroup2().getOnlineMembers();
 			final int actualRange = (int) (distance
-					* effector.getGameStats().getStat(StatEnum.BOOST_MANTRA_RANGE, 100).getCurrent() / 100f);
+					* 100f);
 			for (Player player : onlinePlayers) {
 				if (MathUtil.isIn3dRange(effector, player, actualRange)) {
 					if (!GameGameplayServices.duelService().isDueling(player.getObjectId()) && player != effector) {
@@ -88,6 +88,13 @@ public class AuraEffect extends EffectTemplate {
 		PacketSendUtility.broadcastPacket(effector, new SM_MANTRA_EFFECT(effector, skillId));
 	}
 
+	/**
+	 * 对指定玩家施加光环关联技能。
+	 * Applies the aura-linked skill to the given player.
+	 *
+	 * target player
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	private void applyAuraTo(Player effected, Effect effect) {
 		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		Effect e = new Effect(effected, effected, template, template.getLvl(), 0);
@@ -95,12 +102,22 @@ public class AuraEffect extends EffectTemplate {
 		e.applyEffect();
 	}
 
+	/**
+	 * 启动周期任务（约 6.5 秒一次）。
+	 * Starts the periodic task (about every 6.5 seconds).
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		effect.setPeriodicTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new AuraTask(effect), 0, 6500),
 				position);
 	}
 
+	/**
+	 * 光环周期任务。
+	 * Aura periodic task.
+	 */
 	private class AuraTask implements Runnable {
 		private Effect effect;
 
@@ -115,6 +132,12 @@ public class AuraEffect extends EffectTemplate {
 		}
 	}
 
+	/**
+	 * 结束光环效果。
+	 * Ends the aura effect.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 	}

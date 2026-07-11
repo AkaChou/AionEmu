@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.pet;
 
 import java.util.ArrayList;
@@ -26,6 +10,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * 宠物奖励模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,6 +28,7 @@ public class PetRewards {
 	@XmlAttribute
 	protected boolean loved = false;
 
+	/** 返回 results / Returns the results */
 	public List<PetFeedResult> getResults() {
 		if (results == null) {
 			results = new ArrayList<PetFeedResult>();
@@ -48,10 +36,14 @@ public class PetRewards {
 		return this.results;
 	}
 
+	/** 获取类型。 / Returns the type. */
 	public FoodType getType() {
 		return type;
 	}
 
+	/**
+	 * @return 是否 loved / 是否 loved。 / Whether loved / Whether loved
+	 */
 	public boolean isLoved() {
 		return loved;
 	}

@@ -1,19 +1,7 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -61,24 +49,48 @@ import com.aionemu.gameserver.utils.RndArray;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
+ * 附魔服务：装备强化、拆解、魔力石镶嵌、手镯/装备词条应用，以及相关套装与技能判定。
+ * Enchant service: equipment enchanting, dismantling, manastone socketing, bracelet/item modifier application, and related set/skill checks.
+ *
  * @author Ranastic (Encom)
  */
 @Slf4j
 
 public class EnchantService {
 
+	/**
+	 * 获取装备最大强化等级（配置优先，默认 30）。
+	 * Returns max equipment enchant level (config first, default 30).
+	 *
+	 * @return 最大强化等级 / max enchant level
+	 */
 	public static int getMaxEquipmentEnchantLevel() {
 		return EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL > 0 ? EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL : 30;
 	}
 
+	/**
+	 * 将强化等级限制在最大允许值内。
+	 * Caps an enchant level to the maximum allowed value.
+	 *
+	 * @param enchantLevel 原始强化等级 / raw enchant level
+	 * @return 限制后的等级 / capped level
+	 */
 	public static int capEquipmentEnchantLevel(int enchantLevel) {
 		return Math.min(enchantLevel, getMaxEquipmentEnchantLevel());
 	}
 
+	/**
+	 * 拆解物品为强化石粉末等材料。
+	 * Breaks an item into materials such as enchantment stone dust.
+	 *
+	 * 玩家 / player
+	 * target item
+	 * whether successful
+	 */
 	public static boolean breakItem(Player player, Item targetItem) {
 		Storage inventory = player.getInventory();
 		int kinah = 22600;
-		int stone = 188100335; // Enchantment Stone Dust.
+		int stone = 188100335; // 强化石粉末。 / Enchantment Stone Dust.
 		if (inventory.getItemByObjId(targetItem.getObjectId()) == null) {
 			return false;
 		}
@@ -129,8 +141,8 @@ public class EnchantService {
 			number = Rnd.get(880, 1000);
 			break;
 		}
-		// Extracting Archdaeva equipment will give Enchantment Stone Dust and Archdaeva crafting materials.
-		// add custom for Disable Enchantment Stone Broke Item
+		// 提取高阶守护者装备将获得强化石粉末与高阶守护者制作材料。 / Extracting Archdaeva equipment will give Enchantment Stone Dust and Archdaeva crafting materials.
+		// 添加禁用强化石损坏物品的自定义 / add custom for Disable Enchantment Stone Broke Item
 		if (targetItem.isArchDaevaItem() && EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
 			ItemService.addItem(player, RndArray.get(archDaevaStoneItems), 1);
 		}
@@ -143,10 +155,25 @@ public class EnchantService {
 		return true;
 	}
 
+	/**
+	 * 拆解所需基纳。
+	 * Kinah cost for breaking an item.
+	 *
+	 * item
+	 * kinah amount
+	 */
 	public static int BreakKinah(Item item) {
 		return 22600;
 	}
 
+	/**
+	 * 执行 Estima 附魔流程。
+	 * Runs the Estima enchant flow.
+	 *
+	 * 玩家 / player
+	 * parent item
+	 * target item
+	 */
 	public static void estimaEnchant(final Player player, final Item parentItem, final Item targetItem) {
 		int estimaKinah = 34323;
 		int chance = 100 - targetItem.getEnchantLevel();
@@ -202,6 +229,16 @@ public class EnchantService {
 		}, 5000));
 	}
 
+	/**
+	 * 尝试对装备进行强化，计算成功率。
+	 * Attempts to enchant equipment and computes success chance.
+	 *
+	 * 玩家 / player
+	 * enchant stone
+	 * target item
+	 * supplement
+	 * whether successful
+	 */
 	public static boolean enchantItem(Player player, Item parentItem, Item targetItem, Item supplementItem) {
 		ItemTemplate enchantStone = parentItem.getItemTemplate();
 		int enchantStoneLevel = enchantStone.getLevel();
@@ -209,8 +246,8 @@ public class EnchantService {
 		int enchantItemLevel = targetItem.getEnchantLevel() + 1;
 		int qualityCap = 0;
 		float success = EnchantsConfig.ENCHANT_ITEM;
-		// Enhances the basic attributes of armor or weapons.
-		// Activate by double-clicking and selecting an item to enchant.
+		// 增强防具或武器的基础属性。 / Enhances the basic attributes of armor or weapons.
+		// 双击并选择要强化的物品以激活。 / Activate by double-clicking and selecting an item to enchant.
 		switch (parentItem.getItemId()) {
 		case 166000196: // Enchantment Stone.
 		case 166000197: // Enchantment Stone.
@@ -220,14 +257,14 @@ public class EnchantService {
 		case 166010001: // Shining Enchantment Stone.
 			enchantStoneLevel = Rnd.get(135, 220);
 			break;
-		case 166020000: // Omega Enchantment Stone.
+		case 166020000: // 欧米伽强化石。 / Omega Enchantment Stone.
 		case 166020001: // [Event] Omega Enchantment Stone (10 Min)
 		case 166020002: // [Event] Omega Enchantment Stone (3 Days)
 		case 166020003: // [Event] Omega Enchantment Stone.
 		case 166020004: // [Event] Empyrean Lord's Enchantment Stone (7 Days)
 		case 166020005: // [Event] Enchantment Stone Of The Empyrean Lord.
-		case 166022003: // Omega Enchantment Stone.
-		case 166022007: // Omega Enchantment Stone.
+		case 166022003: // 欧米伽强化石。 / Omega Enchantment Stone.
+		case 166022007: // 欧米伽强化石。 / Omega Enchantment Stone.
 			enchantStoneLevel = Rnd.get(165, 220);
 			break;
 		case 166022000: // Shining Omega Enchant Stone
@@ -281,7 +318,7 @@ public class EnchantService {
 		if (targetItem.isArchDaevaItem()) {
 			success = 85;
 		}
-		// Admin enchant "Fail" Never.
+		// 管理员强化“失败”永不。 / Admin enchant "Fail" Never.
 		if (player.isGM()) {
 			success = 100;
 		}
@@ -296,6 +333,17 @@ public class EnchantService {
 		return result;
 	}
 
+	/**
+	 * 应用强化结果（成功加等级或失败处理）。
+	 * Applies enchant result (level-up on success or failure handling).
+	 *
+	 * 玩家 / player
+	 * enchant stone
+	 * target item
+	 * supplement
+	 * @param currentEnchant 当前强化等级 / current enchant
+	 * success flag
+	 */
 	public static void enchantItemAct(Player player, Item parentItem, Item targetItem, Item supplementItem, int currentEnchant, boolean result) {
         int oldEnchant = currentEnchant; 
 		int addLevel = Rnd.get(1, 2);
@@ -303,14 +351,14 @@ public class EnchantService {
 		int EnchantKinah = EnchantService.EnchantKinah(targetItem);
 		int rnd = Rnd.get(100);
 		switch (parentItem.getItemId()) {
-		case 166020000: // Omega Enchantment Stone.
+		case 166020000: // 欧米伽强化石。 / Omega Enchantment Stone.
 		case 166020001: // [Event] Omega Enchantment Stone (10 Min)
 		case 166020002: // [Event] Omega Enchantment Stone (3 Days)
 		case 166020003: // [Event] Omega Enchantment Stone.
 		case 166020004: // [Event] Empyrean Lord's Enchantment Stone (7 Days)
 		case 166020005: // [Event] Enchantment Stone Of The Empyrean Lord.
-		case 166022003: // Omega Enchantment Stone.
-		case 166022007: // Omega Enchantment Stone.
+		case 166022003: // 欧米伽强化石。 / Omega Enchantment Stone.
+		case 166022007: // 欧米伽强化石。 / Omega Enchantment Stone.
 			if (rnd < 10) {
 				addLevel = 3;
 			} else if (rnd < 35) {
@@ -343,7 +391,7 @@ public class EnchantService {
 			AuditLogger.info(player, "Possible enchant hack, do not remove enchant stone.");
 			return;
 		}
-		// Enchant Kinah if item is not amplified !!!
+		// 若物品未增幅则强化基纳！！！ / Enchant Kinah if item is not amplified !!!
 		if (!targetItem.isAmplified() && player.getInventory().getKinah() >= EnchantKinah) {
 			player.getInventory().decreaseKinah(EnchantKinah);
 		}
@@ -351,7 +399,7 @@ public class EnchantService {
 			AuditLogger.info(player, "Possible enchant hack, Not depleted");
 			return;
 		}
-		// Enchant Kinah if item is amplified !!!
+		// 若物品已增幅则强化基纳！！！ / Enchant Kinah if item is amplified !!!
 		if (targetItem.isAmplified() && player.getInventory().getKinah() >= EnchantKinah) {
 			player.getInventory().decreaseKinah(EnchantKinah);
 		} else if (targetItem.isAmplified() && player.getInventory().getKinah() < EnchantKinah) {
@@ -404,8 +452,8 @@ public class EnchantService {
 		targetItem.setEnchantLevel(currentEnchant);
 
 		/**
-		 * New Amplified Start MaxEnchant Auto Amplified True
-		 */
+	 * 新注能开始最大强化，自动注能为真 / New Amplified Start MaxEnchant Auto Amplified True
+	 */
 		if (!targetItem.isAmplified() && targetItem.getEnchantLevel() == targetItem.getItemTemplate().getMaxEnchantLevel()) {
 			targetItem.setAmplification(true);
 		}
@@ -418,15 +466,15 @@ public class EnchantService {
 		} else {
 			player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
 		}
-		// Strengthen Topped Item 4.7.5 http://aionpowerbook.com/powerbook/5.5_-_Enchanting_System
+		// 强化置顶物品 4.7.5 / Strengthen Topped Item 4.7.5 http://aionpowerbook.com/powerbook/5.5_-_Enchanting_System
 		if (targetItem.isAmplified() && targetItem.getEnchantLevel() == 20) {
 			targetItem.setAmplificationSkill(getRndSkills(targetItem));
 			targetItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_SKILL_ENCHANT(new DescriptionId(targetItem.getNameId()), targetItem.getEnchantLevel(), getRndSkills(targetItem)));
 			/**
-			 * after we have recived amplification skill we need to add stats to passive skills4Glove same as just to not re equip item - add skill to skill list but iteam must be equiped
-			 */
+	 * 获得注能技能后，将属性加到被动技能（手套），无需重新装备。 / after we have recived amplification skill we need to add stats to passive skills4Glove same as just to not re equip item - add skill to skill list but iteam must be equiped
+	 */
 			if (targetItem.isEquipped()) {
 				player.getSkillList().addSkill(player, targetItem.getAmplificationSkill(), 1);
 				player.getController().updatePassiveStats();
@@ -456,19 +504,19 @@ public class EnchantService {
 					player.getEquipment().unEquipItem(targetItem.getObjectId(), targetItem.getEquipmentSlot());
 
 				if (targetItem.hasGodStone() && EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
-					// If the enchant fails, there is a chance that the player will receive their "Manastones & Godstones" back.
+					// 强化失败时，玩家有几率取回魔石与神石。 / If the enchant fails, there is a chance that the player will receive their "Manastones & Godstones" back.
 					ItemService.addItem(player, targetItem.getGodStone().getItemId(), 1);
 					for (ManaStone manaStone : targetItem.getItemStones()) {
 						ItemService.addItem(player, manaStone.getItemId(), 1);
 					}
-					ItemService.addItem(player, 188100335, 500); // Enchantment Stone Dust.
+					ItemService.addItem(player, 188100335, 500); // 强化石粉末。 / Enchantment Stone Dust.
 					ItemService.addItem(player, RndArray.get(archDaevaStoneItems), 1);
 				}
 
-				// If the enchant fails, the player will receive "Enchantment Stone Dust" && "Archdaeva Crafting Materials"
+				// 强化失败时，玩家将获得强化石粉末与高阶守护者制作材料。 / If the enchant fails, the player will receive "Enchantment Stone Dust" && "Archdaeva Crafting Materials"
 				else {
 					if (EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
-						ItemService.addItem(player, 188100335, 500); // Enchantment Stone Dust.
+						ItemService.addItem(player, 188100335, 500); // 强化石粉末。 / Enchantment Stone Dust.
 						ItemService.addItem(player, RndArray.get(archDaevaStoneItems), 1);
 					}
 				}
@@ -485,8 +533,8 @@ public class EnchantService {
 					player.getGameStats().updateStatsVisually();
 				}
 			}
-			// If a player enchant a archdaeva equipment in inventory, archdaeva equipment will be destroyed.
-			// The player receive any "Enchantment Stone Dust" & "Archdaeva Crafting Materials"
+			// 若玩家在背包中强化高阶守护者装备，该装备将被摧毁。 / If a player enchant a archdaeva equipment in inventory, archdaeva equipment will be destroyed.
+			// 玩家可获得“强化石粉末”与“高阶守护者制作材料” / The player receive any "Enchantment Stone Dust" & "Archdaeva Crafting Materials"
 			else if (targetItem.isArchDaevaItem() && EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ENCHANT_TYPE1_ENCHANT_FAIL(new DescriptionId(targetItem.getNameId())));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_FAILED(new DescriptionId(targetItem.getNameId())));
@@ -528,6 +576,13 @@ public class EnchantService {
 			13026, 13027, 13028, 13029, 13030, 13031, 13032, 13033, 13034, 13035, 13036, 13037, 13228, 13229, 13230,
 			13231, 13232, 13233, 13234 };
 
+	/**
+	 * 按物品类型随机获取技能 ID。
+	 * Picks a random skill id for the item type.
+	 *
+	 * item
+	 * skill id
+	 */
 	public static int getRndSkills(Item item) {
 		if (item.getItemTemplate().getArmorType() == ArmorType.WING) {
 			return RndArray.get(skills4Wing);
@@ -563,11 +618,18 @@ public class EnchantService {
 		}
 	}
 
+	/**
+	 * 强化所需基纳。
+	 * Kinah cost for enchanting.
+	 *
+	 * item
+	 * kinah amount
+	 */
 	public static int EnchantKinah(Item item) {
 		if (EnchantsConfig.ENCHANT_ITEM_KINAH >= 0) {
 			return EnchantsConfig.ENCHANT_ITEM_KINAH;
 		}
-		// Price Ver 5.6
+		// 价格版本 5.6 / Price Ver 5.6
 		if (item.getItemTemplate().getItemQuality() == ItemQuality.EPIC) {
 			switch (item.getEnchantLevel()) {
 			case 0:
@@ -659,6 +721,17 @@ public class EnchantService {
 		}
 	}
 
+	/**
+	 * 尝试镶嵌魔力石并计算成功率。
+	 * Attempts manastone socketing and computes success chance.
+	 *
+	 * 玩家 / player
+	 * manastone
+	 * target item
+	 * supplement
+	 * @param targetWeapon 目标武器槽位标识 / target weapon flag
+	 * whether successful
+	 */
 	public static boolean socketManastone(Player player, Item parentItem, Item targetItem, Item supplementItem, int targetWeapon) {
 		int targetItemLevel = 1;
 		if (targetWeapon == 1) {
@@ -745,6 +818,17 @@ public class EnchantService {
 		return result;
 	}
 
+	/**
+	 * 应用魔力石镶嵌结果。
+	 * Applies the manastone socketing result.
+	 *
+	 * 玩家 / player
+	 * manastone
+	 * target item
+	 * supplement
+	 * @param targetWeapon 目标武器槽位标识 / target weapon flag
+	 * success flag
+	 */
 	public static void socketManastoneAct(Player player, Item parentItem, Item targetItem, Item supplementItem, int targetWeapon, boolean result) {
 		player.updateSupplements();
 		int manastoneKinah = 17161;
@@ -776,6 +860,14 @@ public class EnchantService {
 		ItemPacketService.updateItemAfterInfoChange(player, targetItem);
 	}
 
+	/**
+	 * 手镯穿戴/卸下时应用或移除相关属性。
+	 * Applies or removes bracelet modifiers on equip/unequip.
+	 *
+	 * 玩家 / player
+	 * bracelet
+	 * equipped flag
+	 */
 	public static void onBraceletEquip(Player player, Item item, boolean isEquipped) {
 		List<IStatFunction> modifiers = new ArrayList<IStatFunction>();
 		int braceletTableId = item.getItemTemplate().getTemperingTableId();
@@ -880,6 +972,13 @@ public class EnchantService {
 		}
 	}
 
+	/**
+	 * 装备穿戴时应用强化相关属性修正。
+	 * Applies enchant-related stat modifiers when an item is equipped.
+	 *
+	 * 玩家 / player
+	 * item
+	 */
 	public static void onItemEquip(Player player, Item item) {
 		List<IStatFunction> modifiers = new ArrayList<IStatFunction>();
 		try {
@@ -925,8 +1024,8 @@ public class EnchantService {
 					modifiers.add(new StatEnchantFunction(item, StatEnum.MAGIC_SKILL_BOOST_RESIST, 0));
 				}
 				/**
-				 * 5.0 Wings Enchant
-				 */
+	 * 5.0 翅膀强化 / 5.0 Wings Enchant
+	 */
 				else if (item.getItemTemplate().getItemSlot() == 32768) {
 					modifiers.add(new StatEnchantFunction(item, StatEnum.PHYSICAL_ATTACK, 0));
 					modifiers.add(new StatEnchantFunction(item, StatEnum.BOOST_MAGICAL_SKILL, 0));
@@ -946,7 +1045,7 @@ public class EnchantService {
 						modifiers.add(new StatEnchantFunction(item, StatEnum.BOOST_MAGICAL_SKILL, 0));
 						modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
 						break;
-					// Plume 4.9
+					// 羽饰 4.9 / Plume 4.9
 					case 10056:
 						modifiers.add(new StatEnchantFunction(item, StatEnum.PHYSICAL_CRITICAL, 0));
 						modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
@@ -971,7 +1070,7 @@ public class EnchantService {
 						modifiers.add(new StatEnchantFunction(item, StatEnum.MAGICAL_ACCURACY, 0));
 						modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
 						break;
-					// Plume 5.1
+					// 羽饰 5.1 / Plume 5.1
 					case 10103:
 						modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
 						modifiers.add(new StatEnchantFunction(item, StatEnum.PHYSICAL_ACCURACY, 0));
@@ -985,7 +1084,7 @@ public class EnchantService {
 						modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
 						modifiers.add(new StatEnchantFunction(item, StatEnum.PHYSICAL_ACCURACY, 0));
 						break;
-					// Pure Plume 5.1
+					// 纯净羽饰 5.1 / Pure Plume 5.1
 					case 10106:
 						modifiers.add(new StatEnchantFunction(item, StatEnum.BOOST_MAGICAL_SKILL, 0));
 						modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
@@ -1027,7 +1126,7 @@ public class EnchantService {
 						try {
 							modifiers.addAll(ie.getStats(item.getAuthorize()));
 						} catch (Exception localException2) {
-							log.error("Cant add tempering modifiers for item: " + item.getItemId() + " , " + ie.getStats(item.getAuthorize()));
+							log.error(I18n.get("log.ee17dabb4951", item.getItemId(), ie.getStats(item.getAuthorize())));
 						}
 					}
 				} else {
@@ -1054,10 +1153,17 @@ public class EnchantService {
 				player.getGameStats().addEffect(item, modifiers);
 			}
 		} catch (Exception ex) {
-			log.error("Error on item equip.", ex);
+			log.error(I18n.get("log.d3559bc2bf1a", ex));
 		}
 	}
 
+	/**
+	 * 计算强化相关等级系数。
+	 * Computes an enchant-related level factor.
+	 *
+	 * item
+	 * level factor
+	 */
 	public static int EnchantLevel(Item item) {
 		if (item.getItemTemplate().isWeapon() || item.getItemTemplate().getArmorType() == ArmorType.SHIELD) {
 			if (item.getEnchantLevel() >= item.getItemTemplate().getMaxEnchantLevel() && item.getEnchantLevel() < 16 || item.getItemTemplate().getMaxEnchantLevel() == 0) {
@@ -1088,8 +1194,7 @@ public class EnchantService {
 	}
 
 	/**
-	 * - If Enchanting fails, the item is not destroyed and following rules apply. - 0~10: -1 Enchanting level - 11~14: Enchanting level drops to +10 - 15~19:
-	 * Enchanting level drops to +15 - 20 and higher: Enchanting level drops to +20 - https://aionpowerbook.com/powerbook/KR_-_Update_September_20th_2017
+	 * 强化失败时物品不销毁，规则：0~10 降 1 级；11~14 降至 +10；15~19 降至 +15。 / - If Enchanting fails, the item is not destroyed and following rules apply. - 0~10: -1 Enchanting level - 11~14: Enchanting level drops to +10 - 15~19: Enchanting level drops to +15 - 20 and higher: Enchanting level drops to +20 - https://aionpowerbook.com/powerbook/KR_-_Update_September_20th_2017
 	 */
 	public static boolean isEnhancedAncientFallusha(Item targetItem) {
 		switch (targetItem.getItemId()) {
@@ -1216,9 +1321,7 @@ public class EnchantService {
 	}
 
 	/**
-	 * - Gray Wolf Accessories will not be destroyed when the upgrading process fails and will reset to +0. - Gray Wolf Accessories cannot be traded and can
-	 * only be wrapped once when the Upgrade level reaches +10. - Upgrading Gray
-	 * Wolf Accessories increases PvE abilities. - https://aionpowerbook.com/powerbook/KR_-_Update_September_20th_2017
+	 * 灰狼饰品强化失败不销毁，重置为 +0；不可交易，仅可包装一次。 / - Gray Wolf Accessories will not be destroyed when the upgrading process fails and will reset to +0. - Gray Wolf Accessories cannot be traded and can only be wrapped once when the Upgrade level reaches +10. - Upgrading Gray Wolf Accessories increases PvE abilities. - https://aionpowerbook.com/powerbook/KR_-_Update_September_20th_2017
 	 */
 	public static boolean isGrayWolfAccessories(Item targetItem) {
 		switch (targetItem.getItemId()) {
@@ -1245,7 +1348,7 @@ public class EnchantService {
 	}
 
 	/**
-	 * - Archdaeva's Reformed Danuar - Archdaeva's Remodeled Danuar - Archdaeva's Restructured Danuar - Destroy Enchant: NEVER!!!
+	 * 高阶守护者达努亚改型/重塑装备说明：强化销毁永不。 / - Archdaeva's Reformed Danuar - Archdaeva's Remodeled Danuar - Archdaeva's Restructured Danuar - Destroy Enchant: NEVER!!!
 	 */
 	public static boolean isArchdaevaReformedDanuar(Item targetItem) {
 		switch (targetItem.getItemId()) {
@@ -1260,6 +1363,13 @@ public class EnchantService {
 		return false;
 	}
 
+	/**
+	 * 是否为执政官改装达努亚系列。
+	 * Whether the item is Archdaeva remodeled Danuar gear.
+	 *
+	 * target item
+	 * whether matched
+	 */
 	public static boolean isArchdaevaRemodeledDanuar(Item targetItem) {
 		switch (targetItem.getItemId()) {
 		case 100002007:
@@ -1304,6 +1414,13 @@ public class EnchantService {
 		return false;
 	}
 
+	/**
+	 * 是否为执政官重构达努亚系列。
+	 * Whether the item is Archdaeva restructured Danuar gear.
+	 *
+	 * target item
+	 * whether matched
+	 */
 	public static boolean isArchdaevaRestructuredDanuar(Item targetItem) {
 		switch (targetItem.getItemId()) {
 		case 100002008:
@@ -1351,9 +1468,7 @@ public class EnchantService {
 	}
 
 	/**
-	 * http://aionpowerbook.com/powerbook/Glory:_Shield
-	 * 
-	 * @param player http://aionpowerbook.com/powerbook/5.5_-_Enchanting_System
+	 * 荣耀：护盾。 / 5.5 强化系统相关说明。 / http://aionpowerbook.com/powerbook/Glory:_Shield.
 	 */
 	public static void GloryShieldSkill(Player player) {
 		int Enchant = 0;
@@ -1385,10 +1500,21 @@ public class EnchantService {
 		}
 	}
 
+	/**
+	 * 应用物品推荐等级削减结果。
+	 * Applies recommended-level reduction result on an item.
+	 *
+	 * 玩家 / player
+	 * parent item
+	 * target item
+	 * @param currentReduction 当前削减值 / current reduction
+	 * success flag
+	 * count
+	 */
 	public static void reductItemAct(Player player, Item parentItem, Item targetItem, int currentReduction, boolean result, int count) {
 		if (!result) {
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), player.getObjectId().intValue(), parentItem.getObjectId().intValue(), parentItem.getItemId(), 0, 2, 0));
-			// The reduction of %0‘s recommended level failed.
+			// %0 推荐等级的降低失败。 / The reduction of %0‘s recommended level failed.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_FAIL(targetItem.getNameId()));
 		} else {
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), player.getObjectId().intValue(), parentItem.getObjectId().intValue(), parentItem.getItemId(), 0, 1, 0));
@@ -1399,7 +1525,7 @@ public class EnchantService {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_SUCCEED(targetItem.getNameId(), count));
 			}
 			if (targetItem.getReductionLevel() == 5) {
-				// The max. recommended level reduction for %0 has been reached.
+				// %0 的推荐等级降低已达上限。 / The max. recommended level reduction for %0 has been reached.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_SUCCEED_MAX(targetItem.getNameId()));
 			}
 		}

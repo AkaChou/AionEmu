@@ -72,6 +72,27 @@ class CronServiceTest {
         }
     }
 
+    @Test
+    void reloadsSupplierBackedTasksAndCancelsByOriginalRunnable() {
+        String context = "cron-reload-test-" + System.nanoTime();
+
+        try (ServiceContext.Scope ignored = ServiceContext.use(context)) {
+            CronService cronService = CronService.initSingleton(TestRunnableRunner.class);
+            Runnable task = () -> { };
+            String[] expression = { "0 0 0 1 1 ? 2099" };
+            cronService.schedule(task, () -> expression[0]);
+
+            assertTrue(cronService.getRunnables().containsKey(task));
+            expression[0] = "0 0 0 2 1 ? 2099";
+            cronService.reload();
+            assertTrue(cronService.getRunnables().containsKey(task));
+
+            cronService.cancel(task);
+            assertFalse(cronService.getRunnables().containsKey(task));
+            cronService.shutdown();
+        }
+    }
+
     public static final class TestRunnableRunner extends RunnableRunner {
         @Override
         public void executeRunnable(Runnable r) {

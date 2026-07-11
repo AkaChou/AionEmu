@@ -1,19 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- * Aion-Lightning is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Aion-Lightning is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Aion-Lightning. If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.commons.utils.xml;
 
 import java.io.Reader;
@@ -31,33 +15,33 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import lombok.experimental.UtilityClass;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 /**
- * XML工具类，提供XML文档处理的通用方法
- * XML Utilities class providing common methods for XML document processing
+ * XML 文档解析、转换与 Schema 校验工具。
+ * XML document parse, transform and schema validation helpers.
  */
-public abstract class XmlUtils {
+@UtilityClass
+public class XmlUtils {
+
     private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     private static final TransformerFactory tf = TransformerFactory.newInstance();
 
-   /**
-    * 将XML字符串转换为Document对象
-    * Converts XML string to Document object
-    * 
-    * @param xmlSource XML字符串内容 (XML string content)
-    * @return 解析后的Document对象，如果输入为null则返回null (Parsed Document object, returns null if input is null)
-    */
+    static {
+        dbf.setNamespaceAware(true);
+    }
+
     /**
-     * 将XML字符串转换为Document对象
-     * Converts XML string to Document object
-     * 
-     * @param xmlSource XML字符串内容 (XML string content)
-     * @return 解析后的Document对象，如果输入为null则返回null (Parsed Document object, returns null if input is null)
-     * @throws RuntimeException 解析失败时抛出异常 (Thrown when parsing fails)
+     * 将 XML 字符串解析为 Document。
+     * Parse an XML string into a Document.
+     *
+     * XML string
+     * @return Document，输入为 null 时返回 null / Document, or null when input is null
+     * On parse failure
      */
-    public static Document getDocument(String xmlSource) {
+    public Document getDocument(String xmlSource) {
         synchronized (XmlUtils.class) {
             Document document = null;
             if (xmlSource != null) {
@@ -73,14 +57,14 @@ public abstract class XmlUtils {
     }
 
     /**
-     * 将Document对象转换为XML字符串
-     * Converts Document object to XML string
-     * 
-     * @param document 需要转换的Document对象 (Document object to convert)
-     * @return 转换后的XML字符串 (Converted XML string)
-     * @throws RuntimeException 转换失败时抛出异常 (Thrown when transformation fails)
+     * 将 Document 转为 XML 字符串。
+     * Convert a Document to an XML string.
+     *
+     * document
+     * XML string
+     * On transform failure
      */
-    public static String getString(Document document) {
+    public String getString(Document document) {
         synchronized (XmlUtils.class) {
             try {
                 DOMSource domSource = new DOMSource(document);
@@ -95,14 +79,14 @@ public abstract class XmlUtils {
     }
 
     /**
-     * 从XML Schema字符串创建Schema对象
-     * Creates Schema object from XML Schema string
-     * 
-     * @param schemaString XML Schema字符串 (XML Schema string)
-     * @return 创建的Schema对象 (Created Schema object)
-     * @throws RuntimeException 创建失败时抛出异常 (Thrown when schema creation fails)
+     * 从 Schema 字符串创建 Schema。
+     * Create a Schema from a schema string.
+     *
+     * Schema definition
+     * @return Schema，输入为 null 时返回 null / Schema, or null when input is null
+     * On creation failure
      */
-    public static Schema getSchema(String schemaString) {
+    public Schema getSchema(String schemaString) {
         try {
             if (schemaString == null) {
                 return null;
@@ -115,14 +99,14 @@ public abstract class XmlUtils {
     }
 
     /**
-     * 从URL创建Schema对象
-     * Creates Schema object from URL
-     * 
-     * @param schemaURL Schema文件URL (Schema file URL)
-     * @return 创建的Schema对象 (Created Schema object)
-     * @throws RuntimeException 创建失败时抛出异常 (Thrown when schema creation fails)
+     * 从 URL 创建 Schema。
+     * Create a Schema from a URL.
+     *
+     * Schema file URL
+     * @return Schema，输入为 null 时返回 null / Schema, or null when input is null
+     * On creation failure
      */
-    public static Schema getSchema(URL schemaURL) {
+    public Schema getSchema(URL schemaURL) {
         try {
             if (schemaURL == null) {
                 return null;
@@ -134,17 +118,21 @@ public abstract class XmlUtils {
         }
     }
 
-   public static void validate(Schema schema, Document document) {
-      Validator validator = schema.newValidator();
+    /**
+     * 使用 Schema 校验 Document。
+     * Validate a Document against a Schema.
+     *
+     * schema
+     * document
+     * On validation failure
+     */
+    public void validate(Schema schema, Document document) {
+        Validator validator = schema.newValidator();
 
-      try {
-         validator.validate(new DOMSource(document));
-      } catch (Exception var4) {
-         throw new RuntimeException("Failed to validate document", var4);
-      }
-   }
-
-   static {
-      dbf.setNamespaceAware(true);
-   }
+        try {
+            validator.validate(new DOMSource(document));
+        } catch (Exception var4) {
+            throw new RuntimeException("Failed to validate document", var4);
+        }
+    }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import jakarta.xml.bind.JAXBContext;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 
@@ -48,6 +49,23 @@ class SpawnsData2IndexTest {
 		assertFalse(afterUnmarshal.contains("allSpawnMaps.get(mapId)"));
 		assertFalse(afterUnmarshal.contains(".containsKey(id)"));
 		assertFalse(afterUnmarshal.contains(".get(id).add(spawnGroup)"));
+	}
+
+	@Test
+	void reloadsSpawnFilesFromNestedDirectories(@TempDir Path directory) throws Exception {
+		Files.writeString(directory.resolve("first.xml"), """
+			<spawns><spawn_map map_id="100"><spawn npc_id="101"/></spawn_map></spawns>
+			""");
+		Path nested = Files.createDirectory(directory.resolve("nested"));
+		Files.writeString(nested.resolve("second.xml"), """
+			<spawns><spawn_map map_id="200"><spawn npc_id="202"/></spawn_map></spawns>
+			""");
+		Files.writeString(nested.resolve("new_ignored.xml"), "<invalid/>");
+
+		SpawnsData2 data = SpawnsData2.load(directory.toFile(), null);
+
+		assertEquals(101, data.getSpawnsByWorldId(100).getFirst().getNpcId());
+		assertEquals(202, data.getSpawnsByWorldId(200).getFirst().getNpcId());
 	}
 
 	private static SpawnsData2 unmarshal(String xml) throws Exception {

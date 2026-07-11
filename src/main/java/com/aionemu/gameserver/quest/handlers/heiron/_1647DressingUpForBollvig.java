@@ -1,19 +1,3 @@
-/*
- * This file is part of aion-unique <aion-unique.org>.
- *
- * aion-unique is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aion-unique is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aion-unique.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.heiron;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 希隆任务脚本：Dressing Up For Bollvig（任务 ID 1647）。
+ * Heiron quest script: Dressing Up For Bollvig (quest ID 1647).
+ *
  * @author Balthazar
  * @reworked vlog
  */
@@ -62,9 +49,9 @@ public class _1647DressingUpForBollvig extends QuestHandler {
 		else if (qs.getStatus() == QuestStatus.START) {
 			if (targetId == 700272) { // Suspicious Stone Statue
 				if (dialog == QuestDialog.USE_OBJECT) {
-					// Wearing Stenon Blouse and Stenon Skirt
+					// 穿着斯泰农上衣与斯泰农短裙 / Wearing Stenon Blouse and Stenon Skirt
 					if (!player.getEquipment().getEquippedItemsByItemId(110100150).isEmpty() && !player.getEquipment().getEquippedItemsByItemId(113100144).isEmpty()) {
-						// Having Myanee's Flute
+						// 持有米亚妮的笛子 / Having Myanee's Flute
 						if (player.getInventory().getItemCountByItemId(182201783) > 0) {
 							return useQuestObject(env, 0, 0, true, false); // reward
 						}

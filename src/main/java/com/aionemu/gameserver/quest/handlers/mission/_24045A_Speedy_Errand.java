@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.mission;
 
 import com.aionemu.gameserver.model.EmotionType;
@@ -24,10 +12,12 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 主线任务脚本：A Speedy Errand（任务 ID 24045）。
+ * Campaign mission quest script: A Speedy Errand (quest ID 24045).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _24045A_Speedy_Errand extends QuestHandler {
 
     private final static int questId = 24045;
@@ -101,7 +91,7 @@ public class _24045A_Speedy_Errand extends QuestHandler {
                     break;
 				} case STEP_TO_2: {
                     if (var == 1) {
-                        //Tigraki Island.
+                        // 蒂格拉基岛。 / Tigraki Island.
 						TeleportService2.teleportTo(player, 400010000, 136.4838f, 790.4456f, 2836.5127f, (byte) 48);
 						changeQuestStep(env, 1, 2, false);
 						return closeDialogWindow(env);
@@ -130,7 +120,7 @@ public class _24045A_Speedy_Errand extends QuestHandler {
                     if (var == 4) {
                         qs.setStatus(QuestStatus.REWARD);
 						updateQuestStatus(env);
-						//Primum Fortress.
+						// 普里姆要塞。 / Primum Fortress.
 						TeleportService2.teleportTo(player, 400010000, 577.0000f, 2541.0000f, 1636.0000f, (byte) 0);
 						return closeDialogWindow(env);
                     }

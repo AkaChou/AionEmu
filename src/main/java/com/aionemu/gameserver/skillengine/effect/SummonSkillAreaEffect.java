@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,9 +14,17 @@ import com.aionemu.gameserver.model.gameobjects.NpcObjectType;
 import com.aionemu.gameserver.model.gameobjects.Servant;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
+/**
+ * 召唤技能区域效果：在落点生成区域侍从，周期性释放技能。
+ * Summon skill-area effect: spawns an area servant that periodically uses a skill.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonSkillAreaEffect")
 public class SummonSkillAreaEffect extends SummonServantEffect {
+	/**
+	 * 在目标/落点生成 SKILLAREA 侍从，并按技能 ID 覆盖存活时间后周期施法。
+	 * Spawns a SKILLAREA servant at the landing point, overrides duration for known skills, and ticks skill use.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		if (effect.getEffector().getTarget() == null) {
@@ -49,7 +41,7 @@ public class SummonSkillAreaEffect extends SummonServantEffect {
 		}
 		int useTime = time;
 		switch (effect.getSkillId()) {
-		// Ice Sheet 4.8
+		// 冰面 4.8 / Ice Sheet 4.8
 		case 1308:
 		case 1309:
 		case 1310:
@@ -68,12 +60,12 @@ public class SummonSkillAreaEffect extends SummonServantEffect {
 		case 1323:
 			useTime = 15;
 			break;
-		// Mounting Explosion 4.8
+		// 骑乘爆炸 4.8 / Mounting Explosion 4.8
 		case 1431:
 		case 1432:
 			useTime = 30;
 			break;
-		// Manifest Tornado 4.8
+		// 显现龙卷 4.8 / Manifest Tornado 4.8
 		case 1460:
 		case 1461:
 		case 1462:
@@ -92,12 +84,12 @@ public class SummonSkillAreaEffect extends SummonServantEffect {
 		case 1475:
 			useTime = 3;
 			break;
-		// Battle Call 4.8
+		// 战斗召唤 4.8 / Battle Call 4.8
 		case 3036:
 		case 3037:
 			useTime = 11;
 			break;
-		// Field Of Lightning 5.1
+		// 闪电原野 5.1 / Field Of Lightning 5.1
 		case 4770:
 		case 4771:
 		case 4826:

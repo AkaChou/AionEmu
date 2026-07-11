@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 寻找队伍/实例组列表包：按动作类型同步招募条目的增删改查。
+ * instance-group list packet: CRUD of recruitment entries by action type. / instance-group list packet: CRUD of recruitment entries by action type.
+ *
  * @author cura, MrPoke
  */
 public class SM_FIND_GROUP extends AionServerPacket {
@@ -34,6 +21,10 @@ public class SM_FIND_GROUP extends AionServerPacket {
 	private int unk;
 	private int instanceId;
 
+	/**
+	 * 列表类动作：写入招募条目集合。
+	 * List-style action: writes a collection of recruitment entries.
+	 */
 	public SM_FIND_GROUP(int action, int lastUpdate, Collection<FindGroup> findGroups) {
 		this.lastUpdate = lastUpdate;
 		this.action = action;
@@ -41,12 +32,20 @@ public class SM_FIND_GROUP extends AionServerPacket {
 		this.groupSize = findGroups.size();
 	}
 
+	/**
+	 * 单条更新/删除类动作。
+	 * Single-entry update/delete style action.
+	 */
 	public SM_FIND_GROUP(int action, int lastUpdate, int unk) {
 		this.action = action;
 		this.lastUpdate = lastUpdate;
 		this.unk = unk;
 	}
 
+	/**
+	 * 实例相关动作。
+	 * Instance-related action.
+	 */
 	public SM_FIND_GROUP(int action, int instanceId) {
 		this.action = action;
 		this.instanceId = instanceId;
@@ -103,18 +102,18 @@ public class SM_FIND_GROUP extends AionServerPacket {
 			for (FindGroup findGroup : findGroups) {
 				writeD(0);// groupregisteredId
 				writeD(findGroup.getInstanceId());// instanceId
-				writeD(1);// unk
+				writeD(1);// 未知 / unk
 				writeC(findGroup.getSize());// currentMembers
 				writeC(findGroup.getMinMembers());// minMembers
 				writeH(0);// unk maybe spacer
 				writeD(findGroup.getObjectId());// playerObjId
-				writeD(1);// unk
-				writeD(0);// unk
+				writeD(1);// 未知 / unk
+				writeD(0);// 未知 / unk
 				writeC(findGroup.getMinLevel());// playerLevel
 				writeC(findGroup.getMaxLevel());// playerLevel
 				writeH(0);// unk maybe spacer?
 				writeD(findGroup.getLastUpdate());// lastUpdate
-				writeD(0);// unk
+				writeD(0);// 未知 / unk
 				writeS(findGroup.getName());// writerName
 				writeS(findGroup.getMessage());// Message
 			}
@@ -129,15 +128,15 @@ public class SM_FIND_GROUP extends AionServerPacket {
 				writeC(findGroup.getMinMembers());// min members to enter Instance(writer choose it)
 				writeH(0);// unk maybe spacer
 				writeD(findGroup.getObjectId());// playerObjId leader ID?
-				writeC(1);// unk
+				writeC(1);// 未知 / unk
 				writeC(0);// unkGroupType?
-				writeD(1);// unk
-				writeH(0);// unk
+				writeD(1);// 未知 / unk
+				writeH(0);// 未知 / unk
 				writeC(findGroup.getMinLevel());// player level
 				writeC(findGroup.getMaxLevel());// player level
-				writeH(0);// unk
+				writeH(0);// 未知 / unk
 				writeD(findGroup.getLastUpdate());// timestamp
-				writeD(0);// unk
+				writeD(0);// 未知 / unk
 				writeS(findGroup.getName());// writer name
 				writeS(findGroup.getMessage());// register message
 			}
@@ -151,8 +150,8 @@ public class SM_FIND_GROUP extends AionServerPacket {
 				writeD(findGroup.getInstanceId());// instanceId
 				writeD(findGroup.getObjectId());// playerObjId
 				writeD(findGroup.getMinLevel());// playerLevel
-				writeD(1);// unk
-				writeH(1);// unk
+				writeD(1);// 未知 / unk
+				writeH(1);// 未知 / unk
 				writeC(findGroup.getGroupType());// groupType?
 				writeC(findGroup.getClassId());// classId?
 				writeS(findGroup.getName());// writerName
@@ -170,15 +169,15 @@ public class SM_FIND_GROUP extends AionServerPacket {
 				writeD(findGroup.getInstanceId());// instanceId
 				writeD(findGroup.getObjectId());// playerObjId
 				writeD(findGroup.getMinLevel());// playerLevel
-				writeD(1);// unk
-				writeH(1);// unk
+				writeD(1);// 未知 / unk
+				writeH(1);// 未知 / unk
 				writeC(findGroup.getGroupType());// groupType?
 				writeC(findGroup.getClassId());// classId?
 				writeS(findGroup.getName());// writerName
 			}
 			break;
 		case 0x1A:
-			writeH(1);// unk
+			writeH(1);// 未知 / unk
 			writeD(instanceId);
 			break;
 		}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,9 +13,20 @@ import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 触发即时攻击效果：按魔法伤害结算，并向施法者发送触发提示。
+ * Proc instant attack effect: resolves magical damage and notifies the effector of the proc.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProcAtkInstantEffect")
 public class ProcAtkInstantEffect extends DamageEffect {
+
+	/**
+	 * 对目标结算 PROCATKINSTANT 伤害，并在需要时通知施法者。
+	 * Applies PROCATKINSTANT damage and optionally notifies the effector.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		if (effect.getEffected() != effect.getEffector() && effect.getEffector() instanceof Player) {
@@ -42,6 +37,12 @@ public class ProcAtkInstantEffect extends DamageEffect {
 				effect.getReserved1(), false, LOG.PROCATKINSTANT);
 	}
 
+	/**
+	 * 以魔法伤害类型计算触发攻击。
+	 * Calculates the proc attack as magical damage.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, DamageType.MAGICAL);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.ranking.Arena6V6Ranking;
@@ -24,7 +8,14 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Created by Wnkrz on 24/07/2017.
+ * 玩家竞技/排行历史服务端包。
+ * ranking history to the client. / ranking history to the client.
+ * <p>
+ * 按 tableId 区分排行榜类型：1=坚韧殿堂、2=试炼之塔、3=大竞技训练营、541=孤独竞技场。
+ * tableId selects ranking type: 1=Hall of Tenacity, 2=Crucible Spire,
+ * 3=Grand Arena Training Camp, 541=Arena of Discipline.
+ *
+ * @author Wnkrz
  */
 public class SM_MY_HISTORY extends AionServerPacket {
 
@@ -34,21 +25,49 @@ public class SM_MY_HISTORY extends AionServerPacket {
 	private Arena6V6Ranking arena6v6;
 	private ArenaOfTenacityRank arenaOfTenacity;
 
+	/**
+	 * 构造黄金竞技场（坚韧殿堂）历史包。
+	 * Builds a Gold Arena (Hall of Tenacity) history packet.
+	 *
+	 * ranking table id
+	 * @param ranking 黄金竞技场排名数据 / gold arena rank data
+	 */
 	public SM_MY_HISTORY(int tableId, GoldArenaRank ranking) {
 		this.tableId = tableId;
 		this.gold = ranking;
 	}
 
+	/**
+	 * 构造试炼之塔历史包。
+	 * Builds a Tower of Challenge (Crucible Spire) history packet.
+	 *
+	 * ranking table id
+	 * @param ranking 试炼之塔排名数据 / tower rank data
+	 */
 	public SM_MY_HISTORY(int tableId, TowerOfChallengeRank ranking) {
 		this.tableId = tableId;
 		this.tower = ranking;
 	}
 
+	/**
+	 * 构造 6v6 竞技场历史包。
+	 * Builds an Arena 6v6 history packet.
+	 *
+	 * ranking table id
+	 * 6v6 rank data
+	 */
 	public SM_MY_HISTORY(int tableId, Arena6V6Ranking ranking) {
 		this.tableId = tableId;
 		this.arena6v6 = ranking;
 	}
 
+	/**
+	 * 构造孤独竞技场（Arena of Tenacity）历史包。
+	 * Builds an Arena of Tenacity history packet.
+	 *
+	 * ranking table id
+	 * @param ranking 孤独竞技场排名数据 / arena of tenacity rank data
+	 */
 	public SM_MY_HISTORY(int tableId, ArenaOfTenacityRank ranking) {
 		this.tableId = tableId;
 		this.arenaOfTenacity = ranking;

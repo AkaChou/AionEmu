@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns.vortexspawns;
 
 import java.util.List;
@@ -27,12 +11,18 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 
+/**
+ * 漩涡刷新点模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "VortexSpawn")
 public class VortexSpawn {
 	@XmlAttribute(name = "id")
 	private int id;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
@@ -40,6 +30,7 @@ public class VortexSpawn {
 	@XmlElement(name = "state_type")
 	private List<VortexSpawn.VortexStateTemplate> VortexStateTemplate;
 
+	/** 返回 siege mod templates / Returns the siege mod templates */
 	public List<VortexStateTemplate> getSiegeModTemplates() {
 		return VortexStateTemplate;
 	}
@@ -54,10 +45,12 @@ public class VortexSpawn {
 		@XmlAttribute(name = "state")
 		private VortexStateType stateType;
 
+		/** 获取刷新。 / Returns the spawns. */
 		public List<Spawn> getSpawns() {
 			return spawns;
 		}
 
+		/** 获取状态类型。 / Returns the state type. */
 		public VortexStateType getStateType() {
 			return stateType;
 		}

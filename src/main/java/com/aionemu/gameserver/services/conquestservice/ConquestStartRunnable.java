@@ -1,54 +1,52 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.conquestservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import java.util.Map;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
-import com.aionemu.gameserver.services.ConquestService;
 
 /**
+ * 征服/供奉活动启动定时任务。
+ * Start runnable for Conquest/Offering events.
+ *
+ * <p>广播各开放副本与稀有怪出现消息，并启动对应地点。
+ * Broadcasts open-instance and rare-spawn messages, then starts the matching location.</p>
+ *
  * @author Rinzler (Encom)
  */
-
 public class ConquestStartRunnable implements Runnable {
+
 	private final int id;
 
+	/**
+	 * 绑定目标地点 ID。
+	 * Binds the target location id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public ConquestStartRunnable(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * 广播消息并启动对应地点。
+	 * Broadcasts messages and starts the matching location.
+	 */
 	@Override
 	public void run() {
-		// Shugo Emperor's Vault 4.7.5 is now open !!!
+		// 术古皇帝宝库 4.7.5 现已开放！！！ / Shugo Emperor's Vault 4.7.5 is now open !!!
 		GameLocationBootstrapServices.conquestService().emperorVaultMsg(id);
-		// Emperor Trillirunerk's Safe 4.9.1 is now open !!!
+		// 皇帝特里利伦克保险箱 4.9.1 现已开放！！！ / Emperor Trillirunerk's Safe 4.9.1 is now open !!!
 		GameLocationBootstrapServices.conquestService().trillirunerkSafeMsg(id);
-		// Smoldering Fire Temple 5.1 is now open !!!
+		// 闷燃火神殿 5.1 现已开放！！！ / Smoldering Fire Temple 5.1 is now open !!!
 		GameLocationBootstrapServices.conquestService().smolderingFireTempleMsg(id);
-		// Kumuki Cave 5.3 is now open !!!
+		// 库穆基洞穴 5.3 现已开放！！！ / Kumuki Cave 5.3 is now open !!!
 		GameLocationBootstrapServices.conquestService().kumukiCaveMsg(id);
-		// IDEventDefMsg 5.6 is now open !!!
+		// IDEventDefMsg 5.6 is now open !!!。 / IDEventDefMsg 5.6 is now open !!!
 		GameLocationBootstrapServices.conquestService().IDEventDefMsg(id);
-		// Tiamaranta's Eye is now open !!!
+		// 提亚玛兰塔之眼现已开放！！！ / Tiamaranta's Eye is now open !!!
 		GameLocationBootstrapServices.conquestService().tiamarantaMsg(id);
-		// Conquest/Offering a rare monster appeared !!!
+		// 征服/供奉：稀有怪物出现了！！！ / Conquest/Offering a rare monster appeared !!!
 		GameLocationBootstrapServices.conquestService().conquestOfferingMsg(id);
 		Map<Integer, ConquestLocation> locations = GameLocationBootstrapServices.conquestService().getConquestLocations();
 		for (final ConquestLocation loc : locations.values()) {

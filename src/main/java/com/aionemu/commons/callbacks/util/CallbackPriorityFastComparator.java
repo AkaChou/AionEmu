@@ -7,7 +7,7 @@ import java.util.Comparator;
  * 快速回调优先级比较器，保留旧类名以兼容现有回调排序代码
  * Fast callback priority comparator that keeps the legacy class name for existing callback ordering code
  *
- * 该类使用CallbackPriorityComparator来实现实际的优先级比较逻辑
+ * 该类使用 CallbackPriorityComparator 来实现实际的优先级比较逻辑
  * This class uses CallbackPriorityComparator to implement the actual priority comparison logic
  */
 public class CallbackPriorityFastComparator implements Comparator<Callback<?>> {
@@ -35,7 +35,7 @@ public class CallbackPriorityFastComparator implements Comparator<Callback<?>> {
      *
      * @param o1 第一个回调对象 / First callback object
      * @param o2 第二个回调对象 / Second callback object
-     * @return 如果两个对象优先级相等则返回true，否则返回false
+ * @return 如果两个对象优先级相等则返回 true，否则返回 false
      *         Returns true if the priorities are equal, false otherwise
      */
     public boolean areEqual(Callback<?> o1, Callback<?> o2) {

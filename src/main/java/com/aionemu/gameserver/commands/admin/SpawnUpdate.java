@@ -1,21 +1,6 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -34,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 刷怪点坐标更新指令；修改选中 NPC 的 x/y/z/h/walker 或整体坐标并保存。
+ * Admin command that updates a targeted NPC spawn's x/y/z/h/walker or full coordinates and saves them.
+ *
  * @author KID
  * @modified Rolandas
  */
@@ -44,6 +32,13 @@ public class SpawnUpdate extends AdminCommand {
 		super("spawnu");
 	}
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params[0].equalsIgnoreCase("set")) {
@@ -72,7 +67,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error("Could not save x update for spawn {}", npc.getObjectId(), e);
+					log.error(I18n.get("log.9c4062a74204", npc.getObjectId(), e));
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -92,7 +87,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error("Could not save y update for spawn {}", npc.getObjectId(), e);
+					log.error(I18n.get("log.d90b26fbea8f", npc.getObjectId(), e));
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -112,7 +107,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error("Could not save z update for spawn {}", npc.getObjectId(), e);
+					log.error(I18n.get("log.e620e6fd8ff4", npc.getObjectId(), e));
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -138,7 +133,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error("Could not save heading update for spawn {}", npc.getObjectId(), e);
+					log.error(I18n.get("log.8c96d7fce14b", npc.getObjectId(), e));
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -159,7 +154,7 @@ public class SpawnUpdate extends AdminCommand {
 					PacketSendUtility.sendMessage(admin, "updated npcs coordinates to " + admin.getX() + ", " + admin.getY() + ", " + admin.getZ() + ".");
 				}
 				catch (IOException e) {
-					log.error("Could not save coordinate update for spawn {}", npc.getObjectId(), e);
+					log.error(I18n.get("log.0301bbdb1f5a", npc.getObjectId(), e));
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -200,13 +195,20 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					log.error("Could not save walker update for spawn {}", npc.getObjectId(), e);
+					log.error(I18n.get("log.9398ae5c1ffd", npc.getObjectId(), e));
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 			}
 		}
 	}
 
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "<usage //spawnu set (x | y | z | h | w | xyz)");

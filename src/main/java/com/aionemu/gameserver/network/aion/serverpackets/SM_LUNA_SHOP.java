@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.HashMap;
@@ -27,6 +11,10 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 月之商城（Luna Shop）操作结果的服务端包。
+ * Server packet for Luna shop operation results.
+ */
 public class SM_LUNA_SHOP extends AionServerPacket {
 
 	private int actionId;
@@ -34,12 +22,12 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	private int slotSize;
 	private int fail;
 	private ItemTemplate item;
-	// Karunerk's Workshop
+	// 卡鲁内克的工坊 / Karunerk's Workshop
 	private int craftItemId;
 	private int craftItemCount;
-	// Taki's Adventure
+	// 塔基的冒险 / Taki's Adventure
 	private int indun_id;
-	// Munirunerk's Treasure
+	// 穆尼伦克的宝藏 / Munirunerk's Treasure
 	private HashMap<Integer, Long> munirunerk_treasure;
 
 	private int isApply;
@@ -49,11 +37,25 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	private boolean success;
 	private long itemCount;
 
+	/**
+	 * 通用动作构造，仅指定 actionId。
+	 * Generic action constructor with action id only.
+	 *
+	 * action type
+	 */
 	public SM_LUNA_SHOP(int actionId) {
 		this.actionId = actionId;
 	}
 
-	// Karunerk's Workshop
+	/**
+	 * 卡鲁内克工坊（Karunerk's Workshop）制作结果。
+	 * Karunerk's Workshop craft result.
+	 *
+	 * action type
+	 * crafted item id
+	 * crafted item count
+	 * whether craft succeeded
+	 */
 	public SM_LUNA_SHOP(int actionId, int craftItemId, int craftItemCount, boolean success) {
 		this.actionId = actionId;
 		this.craftItemId = craftItemId;
@@ -61,19 +63,39 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 		this.success = success;
 	}
 
-	// Taki's Adventure
+	/**
+	 * 塔基冒险（Taki's Adventure）副本相关。
+	 * Taki's Adventure instance-related payload.
+	 *
+	 * action type
+	 * @param indun_id 副本/实例 ID / instance id
+	 */
 	public SM_LUNA_SHOP(int actionId, int indun_id) {
 		this.actionId = actionId;
 		this.indun_id = indun_id;
 	}
 
-	// Munirunerk's Treasure
+	/**
+	 * 穆尼鲁内克宝藏箱开启结果。
+	 * Munirunerk's Treasure chest open result.
+	 *
+	 * @param munirunerk_treasure 奖励物品映射（物品 ID → 数量） / reward map (item id → count)
+	 */
 	public SM_LUNA_SHOP(HashMap<Integer, Long> munirunerk_treasure) {
 		this.actionId = 12;
 		this.munirunerk_treasure = munirunerk_treasure;
 	}
 
-	// Dorinerk's Wardrobe
+	/**
+	 * 多里内克衣柜（Dorinerk's Wardrobe）外观应用。
+	 * Dorinerk's Wardrobe appearance apply.
+	 *
+	 * action type
+	 * whether applied
+	 * apply slot
+	 * item id
+	 * @param unk1 未知字段 / unknown field
+	 */
 	public SM_LUNA_SHOP(int actionId, int isApply, int applySlot, int itemId, int unk1) {
 		this.actionId = actionId;
 		this.isApply = isApply;
@@ -82,18 +104,42 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 		this.unk1 = unk1;
 	}
 
+	/**
+	 * 衣柜槽位/物品数量同步。
+	 * Wardrobe slot and item size sync.
+	 *
+	 * action type
+	 * slot size
+	 * item size
+	 */
 	public SM_LUNA_SHOP(int actionId, int slotSize, int itemSize) {
 		this.actionId = actionId;
 		this.slotSize = slotSize;
 		this.itemSize = itemSize;
 	}
 
+	/**
+	 * 物品相关操作结果（含成功/失败标志）。
+	 * Item-related operation result with success/fail flag.
+	 *
+	 * action type
+	 * @param item 物品模板 / item template
+	 * @param fail 失败标志（0 成功 / 1 失败） / fail flag (0 success / 1 fail)
+	 */
 	public SM_LUNA_SHOP(int actionId, ItemTemplate item, int fail) {
 		this.actionId = actionId;
 		this.item = item;
 		this.fail = fail;
 	}
 
+	/**
+	 * 物品奖励/展示（含数量）。
+	 * Item reward/display payload with count.
+	 *
+	 * action type
+	 * item id
+	 * item count
+	 */
 	public SM_LUNA_SHOP(int actionId, int itemId, long itemCount) {
 		this.actionId = actionId;
 		this.itemId = itemId;
@@ -142,7 +188,7 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 		case 7:
 			writeD(55);
 			break;
-		case 8:// dorinerk's wardrobe
+		case 8:// dorinerk'swardrobe
 			writeC(0x00);
 			writeC(slotSize);
 			writeH(itemSize);
@@ -171,7 +217,7 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			writeD(0x01);
 			break;
 		case 12:// open chest
-			writeC(0);// unk
+			writeC(0);// 未知 / unk
 			writeH(3);// size always 3
 			for (Map.Entry<Integer, Long> e : munirunerk_treasure.entrySet()) {
 				writeD(e.getKey());
@@ -182,14 +228,13 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			writeC(1); // free enter = 1
 			writeD(indun_id);
 			break;
-		case 15: // TODO Golden Dice
+		case 15:
 			int dice = player.getLunaDiceGame();
 			writeC(0);
-			writeC(dice);
-			writeC(0);
+			writeH(dice);
 			writeC(0);
 			break;
-		case 16: // TODO Display Bug
+		case 16:
 			writeC(0);
 			writeH(1);
 			writeD(itemId); // ItemId

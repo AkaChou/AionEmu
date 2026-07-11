@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,13 +16,19 @@ import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
+import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
+import com.aionemu.gameserver.services.toypet.PetSpawnService;
 
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 定期持久化服务，调度军团仓库等数据的周期保存。
+ * Periodic save service scheduling periodic persistence of legion warehouse data, etc.
+ *
  * @author ATracer
  */
 @Slf4j
@@ -46,6 +38,12 @@ public class PeriodicSaveService {
 
 	private Future<?> legionWhUpdateTask;
 
+	/**
+	 * 获取服务单例（优先 Spring Provider）。
+	 * Returns the service singleton (prefers Spring provider).
+	 *
+	 * service instance
+	 */
 	public static final PeriodicSaveService getInstance() {
 		ObjectProvider<PeriodicSaveService> provider = instanceProvider;
 		if (provider == null) {
@@ -54,23 +52,49 @@ public class PeriodicSaveService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<PeriodicSaveService> instanceProvider) {
 		PeriodicSaveService.instanceProvider = instanceProvider;
 	}
 
+	/**
+	 * 构造并启动军团仓库周期保存任务。
+	 * Constructs and starts the legion warehouse periodic save task.
+	 */
 	public PeriodicSaveService() {
+		rescheduleLegionTask();
+	}
 
-		int DELAY_LEGION_ITEM = PeriodicSaveConfig.LEGION_ITEMS * 1000;
+	/**
+	 * 重载周期保存配置并重置在线玩家相关任务。
+	 * Reloads periodic-save config and reschedules online player-related tasks.
+	 */
+	public synchronized void reload() {
+		legionWhUpdateTask.cancel(false);
+		rescheduleLegionTask();
+		for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+			PlayerEnterWorldService.reschedulePeriodicSaveTasks(player);
+			if (player.getPet() != null) {
+				PetSpawnService.reschedulePeriodicSaveTask(player);
+			}
+		}
+	}
 
-		legionWhUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new LegionWhUpdateTask(),
-				DELAY_LEGION_ITEM, DELAY_LEGION_ITEM);
+	private void rescheduleLegionTask() {
+		int delay = PeriodicSaveConfig.LEGION_ITEMS * 1000;
+		legionWhUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new LegionWhUpdateTask(), delay, delay);
 	}
 
 	private class LegionWhUpdateTask implements Runnable {
 
 		@Override
 		public void run() {
-			log.info("Legion WH update task started.");
+			log.info(I18n.get("log.cda6066cb95d"));
 			long startTime = System.currentTimeMillis();
 			Iterator<Legion> legionsIterator = GameCoreGameplayServices.legionService().getCachedLegionIterator();
 			int legionWhUpdated = 0;
@@ -80,33 +104,34 @@ public class PeriodicSaveService {
 				allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 				try {
 					/**
-					 * 1. save items first
-					 */
+	 * 1. 先保存物品 / 1. save items first
+	 */
 					DAOManager.getDAO(InventoryDAO.class).store(allItems, null, null, legion.getLegionId());
 
 					/**
-					 * 2. save item stones
-					 */
+	 * 2. 保存物品镶嵌石 / 2. save item stones
+	 */
 					DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
 				} catch (Exception ex) {
-					log.error("Exception during periodic saving of legion WH", ex);
+					log.error(I18n.get("log.ea0f9e89569d", ex));
 				}
 				legionWhUpdated++;
 			}
 			long workTime = System.currentTimeMillis() - startTime;
-			log.info("Legion WH update: " + workTime + " ms, legions: " + legionWhUpdated + ".");
+			log.info(I18n.get("log.b1fef96f6a2c", workTime, legionWhUpdated));
 		}
 	}
 
-	/**
-	 * Save data on shutdown
+		/**
+	 * 关闭时立即保存待写数据。
+	 * Saves pending data immediately on shutdown.
 	 */
 	public void onShutdown() {
-		log.info("Starting data save on shutdown.");
-		// save legion warehouse
+		log.info(I18n.get("log.dd47b038ccfb"));
+		// 保存军团仓库 / save legion warehouse
 		legionWhUpdateTask.cancel(false);
 		new LegionWhUpdateTask().run();
-		log.info("Data successfully saved.");
+		log.info(I18n.get("log.179f3826e123"));
 	}
 
 	@SuppressWarnings("synthetic-access")

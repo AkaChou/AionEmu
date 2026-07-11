@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -65,23 +49,43 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Author (Encom)
- * @rework MATTY
-**/
+ * 钱特拉无渊号副本事件处理器。
+ * Instance event handler for Chantra Dredgion.
+ *
+ * @author Encom
+ * @author MATTY
+ */
 
 @InstanceID(300210000)
 public class ChantraDredgionInstance extends GeneralInstanceHandler
 {
-	private int bulkhead;
-	private int secretCache;
-	private int surkanaKills;
-	private long instanceTime;
+	/** 隔板 / bulkhead */
+		private int bulkhead;
+	/** 秘密缓存 / secret cache */
+		private int secretCache;
+	/** 苏卡纳击杀 / surkana kills */
+		private int surkanaKills;
+	/** 副本时间戳 / instance timestamp */
+		private long instanceTime;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	protected DredgionReward dredgionReward;
-	private float loosingGroupMultiplier = 1;
+	/** 无畏舰奖励 / dredgion reward */
+		protected DredgionReward dredgionReward;
+	/** 败方倍率 / losing-group multiplier */
+		private float loosingGroupMultiplier = 1;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
-	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	private final List<Future<?>> chantraTask = new ArrayList<Future<?>>();
+	/** 副本是否已开始 / whether the instance started */
+		protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+	/** chantra 任务 / chantra task */
+		private final List<Future<?>> chantraTask = new ArrayList<Future<?>>();
+	/**
+	 * 返回玩家奖励记录。
+	 * Return the player's reward record.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
@@ -90,6 +94,13 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		}
 		return (DredgionPlayerReward) dredgionReward.getPlayerReward(object);
 	}
+	/**
+	 * 处理 captureRoom。
+	 * Handle captureRoom.
+	 *
+	 * 阵营 / race
+	 * roomId
+	 */
 	
 	protected void captureRoom(Race race, int roomId) {
 		dredgionReward.getDredgionRoomById(roomId).captureRoom(race);
@@ -102,6 +113,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	private boolean containPlayer(Integer object) {
 		return dredgionReward.containPlayer(object);
 	}
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -112,8 +129,8 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 			break;
@@ -132,16 +149,16 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216888: //Quartermaster Bhati.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 			break;
 			case 216889: //Rajaya The Inquisitor.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						switch (Rnd.get(1, 4)) {
 							case 1:
 							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001097, 1)); //Rajaya's Belt.
@@ -162,8 +179,8 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216890: //Windfinder Kumar.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						switch (Rnd.get(1, 4)) {
 							case 1:
 							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001096, 1)); //Kumar's Belt.
@@ -182,16 +199,15 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				}
 			break;
 		   /**
-			* Obtain the Captain’s Key by killing Gatekeeper Sarta.
-			* The Captain’s Key opens the door to the Captain’s Cabin.
-			*/
+	 * 击杀守门人萨尔塔获得船长钥匙，可打开船长室门。 / Obtain the Captain’s Key by killing Gatekeeper Sarta. The Captain’s Key opens the door to the Captain’s Cabin
+	 */
 			case 217037: //Gatekeeper Sarta.
 				for (Player player: instance.getPlayersInside()) {
 				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000105, 1)); //Captain's Cabin Passage Key.
 				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
 					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 			break;
@@ -204,7 +220,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		for (Player player: instance.getPlayersInside()) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400199, new DescriptionId(race.equals(Race.ASMODIANS) ? 1800483 : 1800481), new DescriptionId(npc.getObjectTemplate().getNameId() * 2 + 1)));
 		} if (++surkanaKills == 5) {
-            //Captain Zanata has appeared in the Captain's Cabin.
+            // 扎纳塔船长已出现在船长室。 / Captain Zanata has appeared in the Captain's Cabin.
 			sendMsgByRace(1400632, Race.PC_ALL, 0);
 			spawn(216886, 485.47916f, 812.4957f, 416.68475f, (byte) 31); //Captain Zanata.
         }
@@ -212,16 +228,24 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		updateScore(mostPlayerDamage, npc, points, false);
 		npc.getController().onDelete();
 	}
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 	
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				openFirstDoors();
-				//The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
+				// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
 				sendMsgByRace(1400604, Race.PC_ALL, 5000);
-				//The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
+				// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
 				sendMsgByRace(1400605, Race.PC_ALL, 10000);
 				dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 				sendPacket();
@@ -243,35 +267,41 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			}
 		}, 60000));
 	   /**
-		* Chantra Dredgion Teleportation Devices:
-		* There are numerous teleportation devices located inside the Chantra Dredgion.
-		* These teleportation devices allow players to teleport to different areas of the Dredgion with ease.
-		* Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun.
-		*/
+	 * 钱特拉战舰内有多处传送装置。 / Chantra Dredgion Teleportation Devices: There are numerous teleportation devices located inside the Chantra Dredgion. These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
+	 */
 		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//A teleport device has been activated in the Emergency Exit.
+				// 紧急出口传送装置已激活。 / A teleport device has been activated in the Emergency Exit.
 				sendMsgByRace(1401424, Race.PC_ALL, 0);
 				spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Portside Central Teleporter.
 				spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Central Teleporter.
 			}
 		}, 600000));
 	   /**
-		* Officer Kamanya:
-		* Location: Gravity Control
-		* Time Elapsed: 15 Minutes
-		* Valor: 1,000 Points
-		*/
+	 * 军官卡曼亚：位置重力控制室；经过 15 分钟；勇气 1000 点。 / Officer Kamanya: Location: Gravity Control Time Elapsed: 15 Minutes Valor: 1,000 Points
+	 */
 		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//Officer Kamanya has appeared in Gravity Control.
+				// 军官卡曼亚已出现在重力控制室。 / Officer Kamanya has appeared in Gravity Control.
 				sendMsgByRace(1400633, Race.PC_ALL, 0);
 				spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Officer Kamanya.
 			}
 		}, 900000));
 		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!dredgionReward.isRewarded()) {
@@ -282,6 +312,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		}, 3600000));
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		int point = 0;
@@ -292,20 +328,15 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		Race race = mostPlayerDamage.getRace();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 		   /**
-			* There are six weapon chests located near the Chantra Dredgion entrance, and each chest awards 100 points if destroyed. 
-			* These chests are also related to Quests for both Elyos and Asmodians. 
-			*/
+	 * 钱特拉战舰入口附近有 6 个武器箱，摧毁各得 100 分。 / There are six weapon chests located near the Chantra Dredgion entrance, and each chest awards 100 points if destroyed. These chests are also related to Quests for both Elyos and Asmodians
+	 */
 		    case 700836: //Weapon Chest.
                 point = 100;
 				despawnNpc(npc);
             break;
 		   /**
-			* The Surkana:
-			* Destroy Surkana in each room can obtain a higher score.
-			* 2. When you add monsters to attack Surkana is around 20m range. First, it is safe to be cleaned up monsters.
-			* 3. When you destroy a race that destroyed Surkana is displayed on the map. It is through you can guess the path of the opposing faction.
-			* 4. Captain Room Teleport appeared to be destroyed 5 Surkana.
-			*/
+	 * 苏卡纳：摧毁各房间苏卡纳可获得更高分数。 / The Surkana: Destroy Surkana in each room can obtain a higher score. 2. When you add monsters to attack Surkana is around 20m range. First, it is safe to be cleaned up monsters. 3. When you destroy a race that destroyed Surkana is displayed on the map. It is through you can guess the path of the opposing faction. 4. Captain Room Teleport appeared to be destroyed 5 Surkana
+	 */
 			case 700838: //Armory Maintenance Surkana.
 			case 700839: //Armory Maintenance Surkana.
 			    despawnNpc(npc);
@@ -348,75 +379,57 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				onDieSurkan(npc, mostPlayerDamage, 1100);
 			break;
 		   /**
-			* Captain’s Cabin Passage:
-			* There are paths to the left and right of the Captain’s Cabin’s on the second floor, but the doors are blocked.
-			* These doors cannot be demolished, and can only be opened with a key dropped by a specific Named Monster.
-			* Groups desiring the Captain’s Cabin Passage Key will need to defeat "Sahadena The Abettor" in the center of the Dredgion.
-			* Only one Group can loot the key.
-			* The Captain’s Cabin Teleport Device is located just beyond the Barracks, and can make reaching Captain Zanata much easier.
-			*/
+	 * 船长室通道：二楼船长室左右有路但门被封，需特殊方式开启。 / Captain’s Cabin Passage: There are paths to the left and right of the Captain’s Cabin’s on the second floor, but the doors are blocked. These doors cannot be demolished, and can only be opened with a key dropped by a specific Named Monster. Groups desiring the Captain’s Cabin Passage Key will need to defeat "Sahadena The Abettor" in the center of the Dredgion. Only one Group can loot the key. The Captain’s Cabin Teleport Device is located just beyond the Barracks, and can make reaching Captain Zanata much easier
+	 */
 			case 216882: //Sahadena The Abettor.
 				if (race.equals(Race.ELYOS)) {
-				   //Captain's Cabin teleport device has been created at the end of the Atrium.
+				   // 船长室传送装置已在中庭尽头生成。 / Captain's Cabin teleport device has been created at the end of the Atrium.
 				   sendMsgByRace(1400652, Race.ELYOS, 0);
 				   spawn(730357, 473.62231f, 761.99506f, 388.66f, (byte) 0, 33); //Elyos Captain's Cabin Teleporter.
 				} else if (race.equals(Race.ASMODIANS)) {
-				   //Captain's Cabin teleport device has been created at the end of the Atrium.
+				   // 船长室传送装置已在中庭尽头生成。 / Captain's Cabin teleport device has been created at the end of the Atrium.
 				   sendMsgByRace(1400652, Race.ASMODIANS, 0);
 				   spawn(730358, 496.52225f, 761.99506f, 388.66f, (byte) 0, 186); //Asmodian Captain's Cabin Teleporter.
 				}
 				point = 1000;
             break;
 		   /**
-			* Supply Room Teleporter:
-			* This teleporter activates after the destruction of the Teleporter Generator in the Barracks.
-			*/
+	 * 补给室传送器：兵营中传送发生器被摧毁后激活 / Supply Room Teleporter: This teleporter activates after the destruction of the Teleporter Generator in the Barracks
+	 */
 			case 730349: //Portside Teleporter Generator.
                 despawnNpc(npc);
-				//Supplies Storage teleport device has been created at Escape Hatch.
+				// 物资仓库传送装置已在副逃生舱口生成。 / Supplies Storage teleport device has been created at Escape Hatch.
 				sendMsgByRace(1400631, Race.PC_ALL, 0);
 				spawn(730314, 397.11661f, 184.29782f, 432.8032f, (byte) 0, 42); //Port Supply Room Teleporter.
             break;
 			case 730350: //Starboard Teleporter Generator.
                 despawnNpc(npc);
-				//Supplies Storage teleport device has been created at the Secondary Escape Hatch.
+				// 物资仓库传送装置已在副逃生舱口生成。 / Supplies Storage teleport device has been created at the Secondary Escape Hatch.
 				sendMsgByRace(1400641, Race.PC_ALL, 0);
 				spawn(730315, 572.10443f, 185.23933f, 432.56024f, (byte) 0, 10); //Starboard Supply Room Teleporter.
             break;
 		   /**
-			* Defense Shield Generator:
-			* When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2.
-			* This shield blocks access to the center of the Chantra Dredgion.
-			* The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area.
-			* Different tactics can be used in this area to maximize the Group’s accumulation of points.
-			* For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion.
-			* In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points.
-			*/
+	 * 每台护盾发生器需要 3 个理念物品，共 12 个 / Defense Shield Generator: When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2. This shield blocks access to the center of the Chantra Dredgion. The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area. Different tactics can be used in this area to maximize the Group’s accumulation of points. For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion. In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points
+	 */
 			case 730345: //Portside Defense Shield.
 			case 730346: //Starboard Defense Shield.
 				despawnNpc(npc);
 			break;
 			case 730351: //Portside Defense Shield Generator.
 				despawnNpc(npc);
-				//The Portside Defense Shield has been generated in Ready Room 1.
+				// 左舷防御护盾已在准备室 1 生成。 / The Portside Defense Shield has been generated in Ready Room 1.
 				sendMsgByRace(1400226, Race.PC_ALL, 0);
 				spawn(730345, 448.39151f, 493.64182f, 394.13174f, (byte) 0, 12);  // spawn barier
 			break;
 			case 730352: //Starboard Defense Shield Generator.
 				despawnNpc(npc);
-				//The Starboard Defense Shield has been generated in Ready Room 2.
+				// 右舷防御护盾已在准备室 2 生成。 / The Starboard Defense Shield has been generated in Ready Room 2.
 				sendMsgByRace(1400227, Race.PC_ALL, 0);
 				spawn(730346, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 133);  // spawn barier
 			break;
 		   /**
-			* The Bulkhead:
-			* These shields are activated by the Chantra Sentinel when first encountered at the beginning of the battle.
-			* These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health.
-			* Groups often opt to move around the shields instead of demolishing them.
-			* It’s worth noting that after a certain amount of time has passed, Officer Kamanya spawns in the Gravity Control room, and gives 1,000 points when defeated.
-			* There is also a chance that Rajaya the Inquisitor, a Hero grade Named Monster, will spawn.
-			* Rajaya the Inquisitor has a chance to drop Fabled and Heroic accessories. 
-			*/
+	 * 舱壁：钱特拉哨兵开战时激活护盾，阻挡入口。 / The Bulkhead: These shields are activated by the Chantra Sentinel when first encountered at the beginning of the battle. These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health. Groups often opt to move around the shields instead of demolishing them. It’s worth noting that after a certain amount of time has passed, Officer Kamanya spawns in the Gravity Control room, and gives 1,000 points when defeated. There is also a chance that Rajaya the Inquisitor, a Hero grade Named Monster, will spawn. Rajaya the Inquisitor has a chance to drop Fabled and Heroic accessories
+	 */
 			case 730353: //Port Bulkhead.
 			case 730354: //Starboard Bulkhead.
 				bulkhead++;
@@ -444,7 +457,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 217037: //Gatekeeper Sarta.
 			    secretCache++;
 				if (secretCache == 6) {
-				    //A Dredgion Treasure Chest has appeared in the Drop Zone!
+				    // 战舰宝箱已出现在投放区！ / A Dredgion Treasure Chest has appeared in the Drop Zone!
 					sendMsgByRace(1401421, Race.PC_ALL, 0);
 					spawn(701455, 482.82455f, 496.16556f, 397.28323f, (byte) 92); //Dredgion Opportunity Bundle.
 				}
@@ -463,6 +476,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216886: //Captain Zanata.
 				point = 1000;
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				    /**
+				     * 处理 run。
+				     * Handle run.
+				     */
 				    @Override
 					public void run() {
 						if (!dredgionReward.isRewarded()) {
@@ -481,12 +498,22 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 	}
+	/**
+	 * 处理 openFirstDoors。
+	 * Handle openFirstDoors.
+	 */
 	
 	protected void openFirstDoors() {
 		openDoor(4);
 		openDoor(173);
 	}
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		if (!containPlayer(player.getObjectId())) {
@@ -495,6 +522,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		sendPacket();
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -503,6 +536,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		doors = instance.getDoors();
 		startInstanceTask();
 	}
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param race 阵营 / race
+	 */
 	
 	protected void stopInstance(Race race) {
 		stopInstanceTask();
@@ -511,6 +550,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		doReward();
 		sendPacket();
 	}
+	/**
+	 * 结算并发放奖励。
+	 * Settle and grant rewards.
+	 */
 	
 	public void doReward() {
 		for (Player player : instance.getPlayersInside()) {
@@ -529,6 +572,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -554,6 +601,13 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		return 0;
 	}
 	
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * 玩家 / player
+	 * result
+	 */
 	@Override
     public boolean onReviveEvent(Player player) {
 		player.getGameStats().updateStatsAndSpeedVisually();
@@ -564,6 +618,14 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		return true;
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * 玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * result
+	 */
 	@Override
 	public boolean onDie(Player player, Creature lastAttacker) {
 		int points = 60;
@@ -603,6 +665,15 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	private void addBalaurKillToPlayer(Player player) {
 		getPlayerReward(player).addMonsterKillToPlayer();
 	}
+	/**
+	 * 处理 updateScore。
+	 * Handle updateScore.
+	 *
+	 * 玩家 / player
+	 * target
+	 * points
+	 * pvpKill
+	 */
 	
 	protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
 		if (points == 0) {
@@ -646,6 +717,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		sendPacket();
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -653,6 +728,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		stopInstanceTask();
 		doors.clear();
 	}
+	/**
+	 * 打开指定门。
+	 * Open the given door.
+	 *
+	 * doorId
+	 */
 	
 	protected void openDoor(int doorId) {
 		StaticDoor door = doors.get(doorId);
@@ -663,23 +744,71 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	
 	private void sendPacket() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), dredgionReward, instance.getPlayersInside()));
 			}
 		});
 	}
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 */
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * entity id
+	 * time
+	 * message
+	 * 阵营 / race
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -691,9 +820,25 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * NPC
+	 * @param x X 坐标 / X
+	 * @param y Y 坐标 / Y
+	 * @param z Z 坐标 / Z
+	 * @param h 朝向 / h
+	 * time
+	 * walkerId
+	 */
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -704,12 +849,30 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
             }
         }, time));
     }
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -723,6 +886,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -738,20 +907,38 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * result
+	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return dredgionReward;
 	}
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onLeaveInstance(Player player) {
         stopInstanceTask();
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
         if (player.isInGroup2()) {
             PlayerGroupService.removePlayer(player);

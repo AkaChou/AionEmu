@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.drop;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,6 +24,11 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+
+/**
+ * 掉落 Lists 模型。
+ * Drop Lists model.
+ */
 @Slf4j
 
 public class DropLists {
@@ -47,6 +38,7 @@ public class DropLists {
 	private static List<Element> allnpcs = new ArrayList<Element>();
 	private static List<Integer> npcids = new ArrayList<Integer>();
 
+	/** XML 主入口 / Xmlmian. */
 	public static void Xmlmian(int min, int max) {
 
 		try {
@@ -128,7 +120,7 @@ public class DropLists {
 					listgroups.add(dropGroups);
 					npcids.add(npc.getTemplateId());
 				}
-				log.info("All drops for NpcId " + npc.getTemplateId() + " loaded completely!");
+				log.info(I18n.get("log.73c97a51197c", npc.getTemplateId()));
 				root.appendChild(npcdrops);
 				allnpcs.add(npcdrops);
 			}
@@ -146,9 +138,9 @@ public class DropLists {
 			FileOutputStream out = new FileOutputStream(file);
 			StreamResult xmlResult = new StreamResult(out);
 			transFormer.transform(domSource, xmlResult);
-			log.info("Wrote drop list XML to {}", file.getAbsolutePath());
+			log.info(I18n.get("log.88c280779a61", file.getAbsolutePath()));
 		} catch (Exception e) {
-			log.error("Failed to write drop list XML", e);
+			log.error(I18n.get("log.d81d6a6f69bf", e));
 		} finally {
 		}
 	}

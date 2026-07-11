@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.ranking;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,31 +17,52 @@ import com.aionemu.gameserver.model.ranking.SeasonRankingResult;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
 
 /**
- * Created by Wnkrz on 24/07/2017.
+ * 赛季排行榜刷新服务，启动时预加载各榜单缓存包供客户端拉取。
+ * Season ranking refresh service that preloads cached ranking packets for client requests on startup.
+ *
+ * @author Wnkrz
  */
-
 @Slf4j(topic = "com.aionemu.gameserver.services.ranking.SeasonRankingService")
 public class SeasonRankingUpdateService {
 	private static volatile ObjectProvider<SeasonRankingUpdateService> instanceProvider;
 	private int lastUpdate;
 	private final Map<Integer, List<SM_SEASON_RANKING>> players = new HashMap<>();
 
+	/**
+	 * 服务启动时刷新全部赛季榜单缓存。
+	 * Refresh all season ranking caches when the service starts.
+	 */
 	public void onStart() {
-		renewPlayerRanking(SeasonRankingEnum.HALL_OF_TENACITY.getId());
-		renewPlayerRanking(SeasonRankingEnum.ARENA_OF_TENACITY.getId());
-		renewPlayerRanking(SeasonRankingEnum.TOWER_OF_CHALLENGE.getId());
-		renewPlayerRanking(SeasonRankingEnum.ARENA_6V6.getId());
-		log.info("Season Ranking Loaded");
+		renewPlayerRanking(SeasonRankingEnum.HALL_OF_TENACITY.getId(), I18n.get("ranking.hall_of_tenacity"));
+		renewPlayerRanking(SeasonRankingEnum.ARENA_OF_TENACITY.getId(), I18n.get("ranking.arena_of_tenacity"));
+		renewPlayerRanking(SeasonRankingEnum.TOWER_OF_CHALLENGE.getId(), I18n.get("ranking.tower_of_challenge"));
+		renewPlayerRanking(SeasonRankingEnum.ARENA_6V6.getId(), I18n.get("ranking.arena_6v6"));
+		log.info(I18n.get("log.7b171ec16882"));
 	}
 
-	private void renewPlayerRanking(int tableId) {
+	/**
+	 * 重新计算指定榜单并替换内存缓存。
+	 * Recalculate the given ranking table and replace the in-memory cache.
+	 *
+	 * Ranking table ID
+	 * Ranking name
+	 */
+	private void renewPlayerRanking(int tableId, String rankingName) {
 		List<SM_SEASON_RANKING> newlyCalculated;
 		newlyCalculated = loadRankPacket(tableId);
 		players.remove(tableId);
 		players.put(tableId, newlyCalculated);
-		log.info("Season Ranking Updated");
+		log.info(I18n.get("log.34194b33f70d", rankingName));
 	}
 
+	/**
+	 * 从 DAO 读取竞争排名并按 94 条分页组装下发包。
+	 * Load competition ranking from DAO and build dispatch packets in pages of 94 entries.
+	 *
+	 * Ranking table ID
+	 *
+	 * @param tableid @return 排行下发包列表 / Ranking dispatch packets
+	 */
 	private List<SM_SEASON_RANKING> loadRankPacket(int tableid) {
 		ArrayList<SeasonRankingResult> list = getDAO().getCompetitionRankingPlayers(tableid);
 		List<SM_SEASON_RANKING> playerPackets = new ArrayList<SM_SEASON_RANKING>();
@@ -71,6 +78,14 @@ public class SeasonRankingUpdateService {
 		return playerPackets;
 	}
 
+	/**
+	 * 获取指定榜单的缓存下发包列表。
+	 * Get the cached dispatch packets for a ranking table.
+	 *
+	 * Ranking table ID
+	 *
+	 * @param tableId @return 下发包列表 / Dispatch packets
+	 */
 	public List<SM_SEASON_RANKING> getPlayers(int tableId) {
 		return players.get(tableId);
 	}
@@ -79,6 +94,12 @@ public class SeasonRankingUpdateService {
 		return DAOManager.getDAO(SeasonRankingDAO.class);
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地单例）。
+	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local holder).
+	 *
+	 * Service instance
+	 */
 	public static final SeasonRankingUpdateService getInstance() {
 		ObjectProvider<SeasonRankingUpdateService> provider = instanceProvider;
 		if (provider == null) {
@@ -87,6 +108,12 @@ public class SeasonRankingUpdateService {
 		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<SeasonRankingUpdateService> instanceProvider) {
 		SeasonRankingUpdateService.instanceProvider = instanceProvider;
 	}

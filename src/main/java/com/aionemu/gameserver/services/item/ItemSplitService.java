@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -34,8 +19,12 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 物品拆分服务，处理堆叠拆分与合并。
+ * Item split service handling stack split and merge.
+ *
  * @author ATracer
  */
+
 @Slf4j
 public class ItemSplitService {
 
@@ -49,7 +38,7 @@ public class ItemSplitService {
 			return;
 		}
 		if (player.isTrading()) {
-			// You cannot split items in the inventory during a trade.
+			// 交易中无法在背包内拆分物品。 / You cannot split items in the inventory during a trade.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300713));
 			return;
 		}
@@ -57,8 +46,7 @@ public class ItemSplitService {
 		IStorage sourceStorage = player.getStorage(sourceStorageType);
 		IStorage destStorage = player.getStorage(destinationStorageType);
 		if (sourceStorage == null || destStorage == null) {
-			log.warn(String.format("storage null playerName sourceStorage destStorage %s %d %d", player.getName(),
-					sourceStorageType, destinationStorageType));
+			log.warn(I18n.get("log.cd5d725c3251", player.getName(), sourceStorageType, destinationStorageType));
 			return;
 		}
 		Item sourceItem = sourceStorage.getItemByObjId(itemObjId);
@@ -67,8 +55,7 @@ public class ItemSplitService {
 		if (sourceItem == null) {
 			sourceItem = sourceStorage.getKinahItem();
 			if (sourceItem == null || sourceItem.getObjectId() != itemObjId) {
-				log.warn(String.format("CHECKPOINT: attempt to split null item %d %d %d", itemObjId, splitAmount,
-						slotNum));
+			log.warn(I18n.get("log.44a3d6f1e0aa", itemObjId, splitAmount, slotNum));
 				return;
 			}
 		}
@@ -80,8 +67,8 @@ public class ItemSplitService {
 			return;
 		}
 
-		// To move kinah from inventory to warehouse and vice versa client using split
-		// item packet
+		// 在背包与仓库之间转移基纳时客户端使用拆分。 / To move kinah from inventory to warehouse and vice versa client using split
+		// 物品数据包 / item packet
 		if (sourceItem.getItemTemplate().isKinah()) {
 			moveKinah(player, sourceStorage, splitAmount);
 			return;
@@ -104,7 +91,7 @@ public class ItemSplitService {
 							: ItemUpdateType.DEC_ITEM_SPLIT_MOVE);
 			PacketSendUtility.sendPacket(player, SM_CUBE_UPDATE.cubeSize(sourceStorage.getStorageType(), player));
 			if (destStorage.add(newItem) == null) {
-				// if item was not added - we can release its id
+				// 若物品未添加——可释放其 ID / if item was not added - we can release its id
 				ItemService.releaseItemId(newItem);
 			}
 		} else if (targetItem.getItemId() == sourceItem.getItemId()) {

@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
  * 抽象锁管理器类，提供基础的读写锁控制功能
  * Abstract Lock Manager class that provides basic read-write lock control functionality
  * 
- * 该类使用ReentrantReadWriteLock实现线程安全的读写操作
+ * 该类使用 ReentrantReadWriteLock 实现线程安全的读写操作
  * This class uses ReentrantReadWriteLock to implement thread-safe read and write operations
  */
 public abstract class AbstractLockManager {

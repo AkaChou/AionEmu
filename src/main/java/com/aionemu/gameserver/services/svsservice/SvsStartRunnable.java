@@ -1,49 +1,46 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.svsservice;
-
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.svs.SvsLocation;
-import com.aionemu.gameserver.services.SvsService;
 
 /**
+ * 帕内斯特拉（SVS）活动启动定时任务。
+ * Start runnable for Panesterra (SVS) events.
+ *
+ * <p>广播前进走廊消息、延迟刷出走廊刷怪并启动对应地点。
+ * Broadcasts advance-corridor messages, delayed corridor spawns, then starts the matching location.</p>
+ *
  * @author Rinzler (Encom)
  */
-
 public class SvsStartRunnable implements Runnable {
+
 	private final int id;
 
+	/**
+	 * 绑定目标地点 ID。
+	 * Binds the target location id.
+	 *
+	 * @param id 地点 ID / location id
+	 */
 	public SvsStartRunnable(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * 执行启动流程。
+	 * Runs the start sequence.
+	 */
 	@Override
 	public void run() {
-		// Advance Corridor [Transidium Annex].
+		// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
 		GameLocationBootstrapServices.svsService().transidiumAnnexMsg(id);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				// Advance Corridor [Transidium Annex].
+				// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
 				GameLocationBootstrapServices.svsService().advanceCorridorSP(id);
 			}
 		}, 480000);

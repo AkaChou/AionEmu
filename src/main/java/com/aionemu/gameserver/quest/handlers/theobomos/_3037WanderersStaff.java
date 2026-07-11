@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 西奥博莫斯任务脚本：Wanderers Staff（任务 ID 3037）。
+ * Theobomos quest script: Wanderers Staff (quest ID 3037).
  */
 public class _3037WanderersStaff extends QuestHandler {
 

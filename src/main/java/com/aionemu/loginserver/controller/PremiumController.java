@@ -1,22 +1,6 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.aionemu.loginserver.controller;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.GameServerInfo;
@@ -25,34 +9,77 @@ import com.aionemu.loginserver.dao.PremiumDAO;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PREMIUM_RESPONSE;
 
 /**
+ * 高级点数（Toll）消费与充值控制。
+ * Premium points (toll) spend and credit controller.
+ *
  * @author KID
  */
 @Slf4j(topic = "PREMIUM_CTRL")
 public class PremiumController {
 
+    /**
+     * 操作失败。
+     * Operation failed.
+     */
+    public static byte RESULT_FAIL = 1;
 
+    /**
+     * 点数不足。
+     * Insufficient points.
+     */
+    public static byte RESULT_LOW_POINTS = 2;
+
+    /**
+     * 操作成功。
+     * Operation succeeded.
+     */
+    public static byte RESULT_OK = 3;
+
+    /**
+     * 点数增加。
+     * Points added.
+     */
+    public static byte RESULT_ADD = 4;
+
+    private PremiumDAO dao;
+
+    /**
+     * 获取单例（遗留入口，启动迁移后弃用）。
+     * Returns singleton (legacy entry, deprecated after boot migration).
+     *
+     * @return 控制器实例 / Controller instance
+     * Prefer injection
+     */
     @Deprecated(since = "boot-migration")
     public static PremiumController getController() {
         return SingletonHolder.CONTROLLER;
     }
-    public static byte RESULT_FAIL = 1;
-    public static byte RESULT_LOW_POINTS = 2;
-    public static byte RESULT_OK = 3;
-    public static byte RESULT_ADD = 4;
-    private PremiumDAO dao;
 
+    /**
+     * 构造并初始化 Premium DAO。
+     * Constructs controller and initializes Premium DAO.
+     */
     public PremiumController() {
         dao = DAOManager.getDAO(PremiumDAO.class);
-        log.info("PremiumController is ready for requests.");
+        log.info(I18n.get("log.f446666082da"));
     }
 
+    /**
+     * 处理游戏服发起的点数消费/增加请求。
+     * Handles spend/credit request from a gameserver.
+     *
+     * 账号 ID / Account id
+     * Request id
+     * @param cost 消耗点数；负数表示增加 / Cost; negative means add
+     * GameServer id
+     */
     public void requestBuy(int accountId, int requestId, long cost, byte serverId) {
         long points = this.dao.getPoints(accountId);
         long luna = this.dao.getLuna(accountId);
 
         GameServerInfo server = GameServerTable.getGameServerInfo(serverId);
         if (server == null || server.getConnection() == null || !server.isAccountOnGameServer(accountId)) {
-            log.error("Account " + accountId + " requested " + requestId + " from gs #" + serverId + " and server is down.");
+            log.error(I18n.get("log.d07fbea7e8f2", accountId, requestId, serverId));
             return;
         }
 
@@ -71,10 +98,10 @@ public class PremiumController {
         if (dao.updatePoints(accountId, points, cost)) {
             points -= cost;
             server.getConnection().sendPacket(new SM_PREMIUM_RESPONSE(requestId, RESULT_OK, points, luna));
-            log.info("Account " + accountId + " succeeded in purchasing lot #" + requestId + " for " + cost + " from server #" + serverId);
+            log.info(I18n.get("log.8a35da9adb14", accountId, requestId, cost, serverId));
         } else {
             server.getConnection().sendPacket(new SM_PREMIUM_RESPONSE(requestId, RESULT_FAIL, points, luna));
-            log.info("Account " + accountId + " failed in purchasing lot #" + requestId + " for " + cost + " from server #" + serverId + ". !updatePoints");
+            log.info(I18n.get("log.50f36dc349ef", accountId, requestId, cost, serverId));
         }
     }
 

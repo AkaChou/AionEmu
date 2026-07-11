@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -34,14 +18,26 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * 简易击退/定身效果：将目标小幅击退并施加击退异常。
+ * Simple root/knockback effect: short knockback with KNOCKBACK abnormal.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SimpleRootEffect")
 public class SimpleRootEffect extends EffectTemplate {
+	/**
+	 * 将效果加入目标的效果控制器。
+	 * Adds this effect to the target effect controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 目标已有特定异常时失败，否则按踉跄抗性结算。
+	 * Fails if certain abnormals are present; otherwise uses stagger resistance.
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		if (effect.getEffected().getEffectController().hasAbnormalEffect(8224)
@@ -51,6 +47,10 @@ public class SimpleRootEffect extends EffectTemplate {
 		super.calculate(effect, StatEnum.STAGGER_RESISTANCE, null);
 	}
 
+	/**
+	 * 计算击退落点，更新位置并广播强制移动。
+	 * Computes knockback landing, updates position, and broadcasts forced move.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		final Creature effected = effect.getEffected();
@@ -75,6 +75,10 @@ public class SimpleRootEffect extends EffectTemplate {
 				new SM_FORCED_MOVE(effect.getEffector(), effected.getObjectId(), x1, y1, z));
 	}
 
+	/**
+	 * 清除 KNOCKBACK 异常。
+	 * Clears the KNOCKBACK abnormal.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		effect.getEffected().getEffectController().unsetAbnormal(AbnormalState.KNOCKBACK.getId());

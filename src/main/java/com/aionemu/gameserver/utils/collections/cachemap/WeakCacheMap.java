@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils.collections.cachemap;
 
 import java.lang.ref.Reference;
@@ -23,40 +7,72 @@ import java.lang.ref.WeakReference;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This class is a simple map implementation for cache usage.<br>
- * <br>
- * Values from the map will be removed after the first garbage collector run if
- * there isn't any strong reference to the value object.
- * 
+ * 基于弱引用的简单缓存映射。
+ * Simple cache map backed by weak references.
+ * <p>
+ * 若值对象无强引用，首次 GC 后条目会被移除。
+ * Entries are removed after the first GC run when no strong reference to the value remains.
+ *
+ * @param <K> 键类型 / Key type
+ * @param <V> 值类型 / Value type
  * @author Luno
  */
 @Slf4j
 class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V> {
 
 	/**
-	 * This class is a {@link WeakReference} with additional responsibility of
-	 * holding key object
-	 * 
+	 * 带键信息的 {@link WeakReference}。
+	 * {@link WeakReference} that also holds the key.
+	 *
 	 * @author Luno
 	 */
 	private class Entry extends WeakReference<V> {
 
+		/**
+		 * 关联键。
+		 * Associated key.
+		 */
 		private K key;
 
+		/**
+		 * 使用键、引用对象与队列构造。
+		 * Construct with key, referent and queue.
+		 *
+		 * Key
+		 * Referent
+		 * @param q 引用队列 / Reference queue
+		 */
 		Entry(K key, V referent, ReferenceQueue<? super V> q) {
 			super(referent, q);
 			this.key = key;
 		}
 
+		/**
+		 * 返回关联键。
+		 * Return the associated key.
+		 *
+		 * Key
+		 */
 		K getKey() {
 			return key;
 		}
 	}
 
+	/**
+	 * 使用缓存名与值名构造。
+	 * Construct with cache name and value name.
+	 *
+	 * Cache name
+	 * Value name
+	 */
 	WeakCacheMap(String cacheName, String valueName) {
 		super(cacheName, valueName);
 	}
 
+	/**
+	 * 从引用队列清理已被 GC 回收的弱引用条目。
+	 * Clean weak-reference entries reclaimed by the GC from the queue.
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	protected synchronized void cleanQueue() {
@@ -70,6 +86,15 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		}
 	}
 
+	/**
+	 * 创建带键的弱引用。
+	 * Create a weak reference holding the key.
+	 *
+	 * Key
+	 * Value
+	 * Reference queue
+	 * Weak reference
+	 */
 	@Override
 	protected Reference<V> newReference(K key, V value, ReferenceQueue<V> vReferenceQueue) {
 		return new Entry(key, value, vReferenceQueue);

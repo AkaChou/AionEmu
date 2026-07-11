@@ -1,30 +1,30 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+/**
+ * 玩家可视状态服务，校验隐身与可见性。
+ * Player visual state service validating hide and see conditions.
+ */
 public class PlayerVisualStateService {
 
+	/**
+	 * 校验隐身可见性。
+	 * Validates hide visibility.
+	 *
+	 * @param hiden 是否隐藏 / hiden
+	 */
 	public static void hideValidate(final Player hiden) {
 		hiden.getKnownList().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * observer
+			 */
 			public void visit(Player observer) {
 				boolean canSee = observer.canSee(hiden);
 				boolean isSee = observer.isSeePlayer(hiden);
@@ -38,10 +38,22 @@ public class PlayerVisualStateService {
 		});
 	}
 
+	/**
+	 * 校验看见条件。
+	 * Validates see conditions.
+	 *
+	 * search
+	 */
 	public static void seeValidate(final Player search) {
 		search.getKnownList().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
+			/**
+			 * visit 方法。
+			 * visit method.
+			 *
+			 * hide
+			 */
 			public void visit(Player hide) {
 				boolean canSee = search.canSee(hide);
 				boolean isSee = search.isSeePlayer(hide);

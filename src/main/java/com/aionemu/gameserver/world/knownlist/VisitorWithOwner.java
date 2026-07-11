@@ -1,25 +1,21 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.knownlist;
 
 /**
+ * 携带所有者上下文的已知列表遍历回调。
+ * Known-list visitor callback that also receives the owner context.
+ *
+ * @param <T> 被访问对象类型 / visited object type
+ * @param <V> 所有者类型 / owner type
  * @author ATracer
  */
 public interface VisitorWithOwner<T, V> {
 
+	/**
+	 * 访问单个对象及其所有者。
+	 * Visits a single object together with its owner.
+	 *
+	 * @param object 被访问对象 / visited object
+	 * owner
+	 */
 	void visit(T object, V owner);
 }

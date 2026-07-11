@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * Improvement 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Improvement")
@@ -73,10 +62,12 @@ public class Improvement {
 		return price2;
 	}
 
+	/** 返回 burn attack / Returns the burn attack */
 	public int getBurnAttack() {
 		return burnAttack;
 	}
 
+	/** 返回 burn defend / Returns the burn defend */
 	public int getBurnDefend() {
 		return burnDefend;
 	}
@@ -88,6 +79,7 @@ public class Improvement {
 		return recommend_rank;
 	}
 
+	/** Verify Recomend Rank / Verify Recomend Rank */
 	public boolean verifyRecomendRank(int rank) {
 		return recommend_rank <= rank;
 	}

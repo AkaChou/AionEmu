@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,11 +14,19 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.Future;
 
+/**
+ * 旗帜 AI：战场/据点旗帜交互逻辑。
+ * Flag AI for battlefield or base flag interaction.
+ */
 @AIName("flag")
 public class FlagAI2 extends NoActionAI2
 {
     private Future<?> sendPacketTask;
 	
+    /**
+     * 处理生成完成事件。
+     * Handle post-spawn.
+     */
     @Override
     public void handleSpawned() {
         super.handleSpawned();
@@ -55,6 +47,10 @@ public class FlagAI2 extends NoActionAI2
         });
     }
 	
+    /**
+     * 处理消失事件。
+     * Handle despawn.
+     */
     @Override
     protected void handleDespawned() {
         super.handleDespawned();

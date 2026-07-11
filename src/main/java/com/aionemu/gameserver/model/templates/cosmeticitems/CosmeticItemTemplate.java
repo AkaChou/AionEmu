@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.cosmeticitems;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Race;
 
 /**
+ * 外观物品模板（静态数据/XML）。
+ * XML template. / XML template.
  *
  * @author xTz
  */
@@ -45,26 +31,32 @@ public class CosmeticItemTemplate {
 	@XmlElement(name = "preset")
 	private Preset preset;
 
+	/** 获取类型。 / Returns the type. */
 	public String getType() {
 		return type;
 	}
 
+	/** 获取外观名称。 / Returns the cosmetic name. */
 	public String getCosmeticName() {
 		return cosmeticName;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回 gender permitted / Returns the gender permitted */
 	public String getGenderPermitted() {
 		return genderPermitted;
 	}
 
+	/** 返回 preset / Returns the preset */
 	public Preset getPreset() {
 		return preset;
 	}
@@ -87,30 +79,37 @@ public class CosmeticItemTemplate {
 		@XmlElement(name = "skin_color")
 		private int skinColor;
 
+		/** 返回 scale / Returns the scale */
 		public float getScale() {
 			return scale;
 		}
 
+		/** 返回 hair type / Returns the hair type */
 		public int getHairType() {
 			return hairType;
 		}
 
+		/** 返回 face type / Returns the face type */
 		public int getFaceType() {
 			return faceType;
 		}
 
+		/** 返回 hair color / Returns the hair color */
 		public int getHairColor() {
 			return hairColor;
 		}
 
+		/** 返回 lip color / Returns the lip color */
 		public int getLipColor() {
 			return lipColor;
 		}
 
+		/** 返回 eye color / Returns the eye color */
 		public int getEyeColor() {
 			return eyeColor;
 		}
 
+		/** 返回 skin color / Returns the skin color */
 		public int getSkinColor() {
 			return skinColor;
 		}

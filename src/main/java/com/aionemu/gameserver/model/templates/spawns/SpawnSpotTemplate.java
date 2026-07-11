@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.spawns;
 
 import jakarta.xml.bind.Marshaller;
@@ -22,6 +6,11 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 刷新点 Spot 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpawnSpotTemplate")
@@ -267,38 +256,47 @@ public class SpawnSpotTemplate {
 		this.walkerIdx = walkerIndex;
 	}
 
+	/** 返回 x / Returns the x */
 	public float getX() {
 		return x;
 	}
 
+	/** 返回 y / Returns the y */
 	public float getY() {
 		return y;
 	}
 
+	/** 返回 z / Returns the z */
 	public float getZ() {
 		return z;
 	}
 
+	/** 返回 heading / Returns the heading */
 	public byte getHeading() {
 		return h;
 	}
 
+	/** 返回 entity id / Returns the entity id */
 	public int getEntityId() {
 		return entityId;
 	}
 
+	/** 设置 entity id / Sets the entity id */
 	public void setEntityId(int entityId) {
 		this.entityId = entityId;
 	}
 
+	/** 返回 walker id / Returns the walker id */
 	public String getWalkerId() {
 		return walkerId;
 	}
 
+	/** 设置 walker id / Sets the walker id */
 	public void setWalkerId(String walkerId) {
 		this.walkerId = walkerId;
 	}
 
+	/** 返回 walker index / Returns the walker index */
 	public int getWalkerIndex() {
 		if (walkerIdx == null) {
 			return 0;
@@ -306,22 +304,27 @@ public class SpawnSpotTemplate {
 		return walkerIdx;
 	}
 
+	/** 返回 random walk / Returns the random walk */
 	public int getRandomWalk() {
 		return randomWalk;
 	}
 
+	/** 获取飞行。 / Returns the fly. */
 	public int getFly() {
 		return fly;
 	}
 
+	/** 返回 anchor / Returns the anchor */
 	public String getAnchor() {
 		return anchor;
 	}
 
+	/** 返回 model / Returns the model */
 	public SpawnModel getModel() {
 		return model;
 	}
 
+	/** 获取状态。 / Returns the state. */
 	public int getState() {
 		if (state == null) {
 			return 0;
@@ -329,6 +332,7 @@ public class SpawnSpotTemplate {
 		return state;
 	}
 
+	/** 返回状态 / Returns the a state */
 	public int getAState() {
 		if (astate == null) {
 			return 0;
@@ -336,6 +340,7 @@ public class SpawnSpotTemplate {
 		return astate;
 	}
 
+	/** 返回 b state / Returns the b state */
 	public int getBState() {
 		if (bstate == null) {
 			return 0;
@@ -343,6 +348,7 @@ public class SpawnSpotTemplate {
 		return bstate;
 	}
 
+	/** 返回 c state / Returns the c state */
 	public int getCState() {
 		if (cstate == null) {
 			return 0;
@@ -350,6 +356,7 @@ public class SpawnSpotTemplate {
 		return cstate;
 	}
 
+	/** 返回 d state / Returns the d state */
 	public int getDState() {
 		if (dstate == null) {
 			return 0;
@@ -357,6 +364,7 @@ public class SpawnSpotTemplate {
 		return dstate;
 	}
 
+	/** 返回 e state / Returns the e state */
 	public int getEState() {
 		if (estate == null) {
 			return 0;
@@ -364,6 +372,7 @@ public class SpawnSpotTemplate {
 		return estate;
 	}
 
+	/** 返回 f state / Returns the f state */
 	public int getFState() {
 		if (fstate == null) {
 			return 0;
@@ -371,6 +380,7 @@ public class SpawnSpotTemplate {
 		return fstate;
 	}
 
+	/** 返回 i state / Returns the i state */
 	public int getIState() {
 		if (istate == null) {
 			return 0;
@@ -378,6 +388,7 @@ public class SpawnSpotTemplate {
 		return istate;
 	}
 
+	/** 返回 m state / Returns the m state */
 	public int getMState() {
 		if (mstate == null) {
 			return 0;
@@ -385,6 +396,7 @@ public class SpawnSpotTemplate {
 		return mstate;
 	}
 
+	/** 返回 n state / Returns the n state */
 	public int getNState() {
 		if (nstate == null) {
 			return 0;
@@ -392,6 +404,7 @@ public class SpawnSpotTemplate {
 		return nstate;
 	}
 
+	/** 返回 o state / Returns the o state */
 	public int getOState() {
 		if (ostate == null) {
 			return 0;
@@ -399,6 +412,7 @@ public class SpawnSpotTemplate {
 		return ostate;
 	}
 
+	/** 返回 p state / Returns the p state */
 	public int getPState() {
 		if (pstate == null) {
 			return 0;
@@ -406,6 +420,7 @@ public class SpawnSpotTemplate {
 		return pstate;
 	}
 
+	/** 返回 r state / Returns the r state */
 	public int getRState() {
 		if (rstate == null) {
 			return 0;
@@ -413,6 +428,7 @@ public class SpawnSpotTemplate {
 		return rstate;
 	}
 
+	/** 返回 t state / Returns the t state */
 	public int getTState() {
 		if (tstate == null) {
 			return 0;
@@ -420,6 +436,7 @@ public class SpawnSpotTemplate {
 		return tstate;
 	}
 
+	/** 返回 z state / Returns the z state */
 	public int getZState() {
 		if (zstate == null) {
 			return 0;
@@ -427,6 +444,7 @@ public class SpawnSpotTemplate {
 		return zstate;
 	}
 
+	/** 返回 iu state / Returns the iu state */
 	public int getIUState() {
 		if (iustate == null) {
 			return 0;
@@ -434,6 +452,7 @@ public class SpawnSpotTemplate {
 		return iustate;
 	}
 
+	/** 返回 op state / Returns the op state */
 	public int getOPState() {
 		if (opstate == null) {
 			return 0;
@@ -441,14 +460,17 @@ public class SpawnSpotTemplate {
 		return opstate;
 	}
 	
+	/** 返回 alternate ids / Returns the alternate ids */
 	public String getAlternateIds() {
 		return alternateIdValues;
 	}
 	
+	/** 返回 select probs / Returns the select probs */
 	public String getSelectProbs() {
 		return selectprobValues;
 	}
 
+	/** 返回临时刷新 / Returns the temporary spawn*/
 	public TemporarySpawn getTemporarySpawn() {
 		return temporaySpawn;
 	}

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.abyss;
 
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
@@ -21,12 +5,18 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 /**
+ * 欧比斯军阶技能服务：按种族与军阶刷新玩家欧比斯技能。
+ * Abyss-rank skill service: refreshes a player's abyss skills by race and rank.
+ *
  * @author ATracer
  */
 public class AbyssSkillService {
 
 	/**
-	 * @param player
+	 * 移除同种族全部欧比斯技能后，在 5 星军官及以上重新授予对应技能。
+	 * Strip all same-race abyss skills, then re-grant skills for STAR5_OFFICER and above.
+	 *
+	 * Target player
 	 */
 	public static final void updateSkills(Player player) {
 		AbyssRank abyssRank = player.getAbyssRank();
@@ -34,7 +24,7 @@ public class AbyssSkillService {
 			return;
 		}
 		AbyssRankEnum rankEnum = abyssRank.getRank();
-		// remove all abyss skills first
+		// 先移除全部欧比斯技能 / remove all abyss skills first
 		for (AbyssSkills abyssSkill : AbyssSkills.values()) {
 			if (abyssSkill.getRace() == player.getRace()) {
 				for (int skillId : abyssSkill.getSkills()) {
@@ -42,7 +32,7 @@ public class AbyssSkillService {
 				}
 			}
 		}
-		// add new skills
+		// 添加新技能。 / add new skills
 		if (abyssRank.getRank().getId() >= AbyssRankEnum.STAR5_OFFICER.getId()) {
 			for (int skillId : AbyssSkills.getSkills(player.getRace(), rankEnum)) {
 				player.getSkillList().addAbyssSkill(player, skillId, 1);
@@ -51,7 +41,10 @@ public class AbyssSkillService {
 	}
 
 	/**
-	 * @param player
+	 * 玩家进世界时同步欧比斯技能。
+	 * Sync abyss skills when the player enters the world.
+	 *
+	 * Target player
 	 */
 	public static final void onEnterWorld(Player player) {
 		updateSkills(player);

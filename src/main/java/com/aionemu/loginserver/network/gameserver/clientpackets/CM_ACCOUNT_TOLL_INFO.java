@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -25,15 +7,31 @@ import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 
 /**
+ * GS→LS：同步账号 toll / luna 点数。
+ * luna points. / luna points.
+ *
  * @author xTz
  */
 public class CM_ACCOUNT_TOLL_INFO extends GsClientPacket {
+    /**
+     * Toll 点数。
+     * Toll points.
+     */
     private long toll;
+    /**
+     * Luna 点数。
+     * Luna points.
+     */
     private long luna;
+    /**
+     * 账号名。
+     * Account name.
+     */
     private String accountName;
 
     /**
-     * {@inheritDoc}
+     * 读取 toll、luna 与账号名。
+     * Reads toll, luna, and account name.
      */
     @Override
     protected void readImpl() {
@@ -43,7 +41,8 @@ public class CM_ACCOUNT_TOLL_INFO extends GsClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 按账号名更新 Premium 点数。
+     * Updates premium points by account name.
      */
     @Override
     protected void runImpl() {

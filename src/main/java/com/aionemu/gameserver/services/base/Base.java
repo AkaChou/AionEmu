@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.base;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -50,9 +34,11 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 据点运行时实例，管理占领、首领、袭击与相关广播。
+ * Base runtime instance managing ownership, boss, assaults, and broadcasts.
+ *
  * @author Rinzler
  */
-
 public class Base<BL extends BaseLocation> {
 	private Npc boss, flag;
 	private boolean started;
@@ -64,6 +50,12 @@ public class Base<BL extends BaseLocation> {
 	private final AtomicBoolean finished = new AtomicBoolean();
 	private final BaseBossDeathListener baseBossDeathListener = new BaseBossDeathListener(this);
 
+	/**
+	 * 以据点位置模板创建运行时实例。
+	 * Creates a runtime instance from a base location template.
+	 *
+	 * base location
+	 */
 	public Base(BL baseLocation) {
 		list.add(Race.ASMODIANS);
 		list.add(Race.ELYOS);
@@ -71,6 +63,10 @@ public class Base<BL extends BaseLocation> {
 		this.baseLocation = baseLocation;
 	}
 
+	/**
+	 * 启动据点并刷新归属阵营单位。
+	 * Starts the base and spawns owning-race units.
+	 */
 	public final void start() {
 		boolean doubleStart = false;
 		synchronized (this) {
@@ -86,6 +82,10 @@ public class Base<BL extends BaseLocation> {
 		spawn();
 	}
 
+	/**
+	 * 停止据点并清理监听与刷新单位。
+	 * Stops the base and cleans listeners and spawned units.
+	 */
 	public final void stop() {
 		if (finished.compareAndSet(false, true)) {
 			if (getBoss() != null) {
@@ -132,6 +132,13 @@ public class Base<BL extends BaseLocation> {
 		}, Rnd.get(120, 180) * 60000);
 	}
 
+	/**
+	 * 按据点 ID 广播袭击/术古相关系统消息。
+	 * Broadcasts assault/Shugo system messages by base id.
+	 *
+	 * @param id 据点 ID / base id
+	 * @return 是否匹配并发送消息 / whether a message was sent
+	 */
 	public boolean sendMsgKiller(int id) {
 		switch (id) {
 		case 90:
@@ -238,33 +245,33 @@ public class Base<BL extends BaseLocation> {
 				}
 			});
 			return true;
-		// Shugo Negotiator 5.3
+		// 术古谈判者 5.3 / Shugo Negotiator 5.3
 		case 105: // Oharung At The Sulfur Archipelago.
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
-						// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
-						// Fortress.
+						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
+						// 要塞。 / Fortress.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_01);
-						// The Asmodians have rescued the Oharung at the Sulfur Tree Archipelago. As a
-						// reward, the ship supports the Asmodians.
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Oharung at the Sulfur Tree Archipelago. As a
+						// 奖励，船只支援魔族。 / reward, the ship supports the Asmodians.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_01,
 								5000);
-						// The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
-						// Tree Fortress.
+						// 奥哈隆雇佣的钢玫瑰佣兵已派往硫磺 / The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
+						// 树要塞。 / Tree Fortress.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_01,
 								10000);
 					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						// The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
-						// Fortress.
+						// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
+						// 要塞。 / Fortress.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_01);
-						// The Elyos have rescued the Oharung at the Sulfur Tree Archipelago. As a
-						// reward, the ship supports the Elyos.
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Oharung at the Sulfur Tree Archipelago. As a
+						// 奖励，船只支援天族。 / reward, the ship supports the Elyos.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_01,
 								5000);
-						// The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
-						// Tree Fortress.
+						// 奥哈隆雇佣的钢玫瑰佣兵已派往硫磺 / The Steel Rose Mercenaries hired by the Oharung were dispatched to the Sulfur
+						// 树要塞。 / Tree Fortress.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_01,
 								10000);
 					}
@@ -276,19 +283,19 @@ public class Base<BL extends BaseLocation> {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
-						// The Asmodians have rescued the Joarin at Zephyr Island. As a reward, the ship
-						// supports the Asmodians.
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Joarin at Zephyr Island. As a reward, the ship
+						// 支援魔族。 / supports the Asmodians.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_02);
-						// With the support of the Joarin, your attacks against the Balaur have been
-						// bolstered.
+						// 在乔阿林支援下，你对龙族的攻击已 / With the support of the Joarin, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_02,
 								5000);
 					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						// The Elyos have rescued the Joarin at Zephyr Island. As reward, the ship
-						// supports the Elyos.
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Joarin at Zephyr Island. As reward, the ship
+						// 支援天族。 / supports the Elyos.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_02);
-						// With the support of the Joarin, your attacks against the Balaur have been
-						// bolstered.
+						// 在乔阿林支援下，你对龙族的攻击已 / With the support of the Joarin, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_02,
 								5000);
 					}
@@ -300,19 +307,19 @@ public class Base<BL extends BaseLocation> {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
-						// The Asmodians have rescued the Temirun at Leibo Island. As a reward, the ship
-						// supports the Asmodians.
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Temirun at Leibo Island. As a reward, the ship
+						// 支援魔族。 / supports the Asmodians.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_03);
-						// With the support of the Temirun, your attacks against the Balaur have been
-						// bolstered.
+						// 在特米伦支援下，你对龙族的攻击已 / With the support of the Temirun, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_03,
 								5000);
 					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						// The Elyos have rescued the Temirun at Leibo Island. As reward, the ship
-						// supports the Elyos.
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Temirun at Leibo Island. As reward, the ship
+						// 支援天族。 / supports the Elyos.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_03);
-						// With the support of the Temirun, your attacks against the Balaur have been
-						// bolstered.
+						// 在特米伦支援下，你对龙族的攻击已 / With the support of the Temirun, your attacks against the Balaur have been
+						// 已增强。 / bolstered.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_03,
 								5000);
 					}
@@ -324,12 +331,12 @@ public class Base<BL extends BaseLocation> {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
-						// The Asmodians have rescued the Shairing at Storm Island. As a reward, the
-						// ship supports the Asmodians.
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Shairing at Storm Island. As a reward, the
+						// 船只支援魔族。 / ship supports the Asmodians.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_04);
 					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						// The Elyos have rescued the Shairing at Storm Island. As reward, the ship will
-						// support the Elyos.
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Shairing at Storm Island. As reward, the ship will
+						// 支援天族。 / support the Elyos.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_04);
 					}
 				}
@@ -340,27 +347,27 @@ public class Base<BL extends BaseLocation> {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
-						// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
-						// Western Fortress.
+						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
+						// 西部要塞。 / Western Fortress.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_02);
-						// The Asmodians have rescued the Bomishung at the Siel's Left Wing. As a
-						// reward, the ship supports the Asmodians.
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Bomishung at the Siel's Left Wing. As a
+						// 奖励，船只支援魔族。 / reward, the ship supports the Asmodians.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_05,
 								5000);
-						// The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
-						// Western Fortress.
+						// 博米雄雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
+						// 西部要塞。 / Western Fortress.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_05,
 								10000);
 					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						// The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
-						// Western Fortress.
+						// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
+						// 西部要塞。 / Western Fortress.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_02);
-						// The Elyos have rescued the Bomishung at the Siel's Left Wing. As a reward,
-						// the ship supports the Elyos.
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Bomishung at the Siel's Left Wing. As a reward,
+						// 船只支援天族。 / the ship supports the Elyos.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_05,
 								5000);
-						// The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
-						// Western Fortress.
+						// 博米雄雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Bomishung were dispatched to Siel's
+						// 西部要塞。 / Western Fortress.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_05,
 								10000);
 					}
@@ -372,27 +379,27 @@ public class Base<BL extends BaseLocation> {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
-						// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
-						// Eastern Fortress.
+						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
+						// 东部要塞。 / Eastern Fortress.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_D_03);
-						// The Asmodians have rescued the Sasming at the Siel's Right Wing. As a reward,
-						// the ship supports the Asmodians.
+						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Sasming at the Siel's Right Wing. As a reward,
+						// 船只支援魔族。 / the ship supports the Asmodians.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuD_06,
 								5000);
-						// The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
-						// Eastern Fortress.
+						// 萨斯明雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
+						// 东部要塞。 / Eastern Fortress.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_06,
 								10000);
 					} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						// The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
-						// Eastern Fortress.
+						// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
+						// 东部要塞。 / Eastern Fortress.
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoSoldier_L_03);
-						// The Elyos have rescued the Sasming at the Siel's Right Wing. As a reward, the
-						// ship supports the Elyos.
+						// 天族已救出……作为奖励，船只 / The Elyos have rescued the Sasming at the Siel's Right Wing. As a reward, the
+						// 船只支援天族。 / ship supports the Elyos.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuL_06,
 								5000);
-						// The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
-						// Eastern Fortress.
+						// 萨斯明雇佣的钢玫瑰佣兵已派往希尔的 / The Steel Rose Mercenaries hired by the Sasming were dispatched to Siel's
+						// 东部要塞。 / Eastern Fortress.
 						PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_Buff_06,
 								10000);
 					}
@@ -440,7 +447,7 @@ public class Base<BL extends BaseLocation> {
 				}
 				spawnAttackers(race);
 				if (baseLocation.getWorldId() == 400010000) {
-					// Rattlefrost Outpost.
+					// 霜响前哨。 / Rattlefrost Outpost.
 					if (getBaseLocation().getId() == 53) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -454,7 +461,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Sliversleet Outpost.
+					// 碎雪前哨。 / Sliversleet Outpost.
 					if (getBaseLocation().getId() == 54) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -468,7 +475,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Coldforge Outpost.
+					// 寒锻前哨。 / Coldforge Outpost.
 					if (getBaseLocation().getId() == 55) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -482,7 +489,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Shimmerfrost Outpost.
+					// 微光霜前哨。 / Shimmerfrost Outpost.
 					if (getBaseLocation().getId() == 56) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -496,7 +503,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Icehowl Outpost.
+					// 冰嚎前哨。 / Icehowl Outpost.
 					if (getBaseLocation().getId() == 57) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -510,7 +517,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Chillhaunt Outpost.
+					// 寒魂前哨。 / Chillhaunt Outpost.
 					if (getBaseLocation().getId() == 58) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -524,7 +531,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Sootguzzle Outpost.
+					// 吞烟前哨。 / Sootguzzle Outpost.
 					if (getBaseLocation().getId() == 59) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -538,7 +545,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Flameruin Outpost.
+					// 焰毁前哨。 / Flameruin Outpost.
 					if (getBaseLocation().getId() == 60) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -552,7 +559,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Stokebellow Outpost.
+					// 炉风前哨。 / Stokebellow Outpost.
 					if (getBaseLocation().getId() == 61) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -566,7 +573,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Blazerack Outpost.
+					// 焰架前哨。 / Blazerack Outpost.
 					if (getBaseLocation().getId() == 62) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -580,7 +587,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Smoldergeist Outpost.
+					// 闷燃幽灵前哨。 / Smoldergeist Outpost.
 					if (getBaseLocation().getId() == 63) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -594,7 +601,7 @@ public class Base<BL extends BaseLocation> {
 									false);
 						}
 					}
-					// Moltenspike Outpost.
+					// 熔刺前哨。 / Moltenspike Outpost.
 					if (getBaseLocation().getId() == 64) {
 						if (race == Race.ASMODIANS) {
 							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
@@ -614,6 +621,12 @@ public class Base<BL extends BaseLocation> {
 		}
 	}
 
+	/**
+	 * 按指定阵营刷新袭击单位。
+	 * Spawns assault attackers for the given race.
+	 *
+	 * @param race 袭击阵营 / attacking race
+	 */
 	public void spawnAttackers(Race race) {
 		if (getFlag() == null) {
 		} else if (!getFlag().getPosition().getMapRegion().isMapRegionActive()) {
@@ -651,6 +664,12 @@ public class Base<BL extends BaseLocation> {
 		}
 	}
 
+	/**
+	 * 是否仍有存活的袭击单位。
+	 * Whether any assault attackers are still alive.
+	 *
+	 * @return 被袭击中为 true / true if under attack
+	 */
 	public boolean isAttacked() {
 		for (Npc attacker : getAttackers()) {
 			if (!attacker.getLifeStats().isAlreadyDead()) {
@@ -694,50 +713,122 @@ public class Base<BL extends BaseLocation> {
 		eo.removeCallback(getBaseBossDeathListener());
 	}
 
+	/**
+	 * 获取据点旗帜 NPC。
+	 * Returns the base flag NPC.
+	 *
+	 * flag NPC
+	 */
 	public Npc getFlag() {
 		return flag;
 	}
 
+	/**
+	 * 设置据点旗帜 NPC。
+	 * Sets the base flag NPC.
+	 *
+	 * flag NPC
+	 */
 	public void setFlag(Npc flag) {
 		this.flag = flag;
 	}
 
+	/**
+	 * 获取据点首领 NPC。
+	 * Returns the base boss NPC.
+	 *
+	 * boss NPC
+	 */
 	public Npc getBoss() {
 		return boss;
 	}
 
+	/**
+	 * 设置据点首领 NPC。
+	 * Sets the base boss NPC.
+	 *
+	 * boss NPC
+	 */
 	public void setBoss(Npc boss) {
 		this.boss = boss;
 	}
 
+	/**
+	 * 获取首领死亡监听器。
+	 * Returns the boss death listener.
+	 *
+	 * @return 死亡监听器 / death listener
+	 */
 	public BaseBossDeathListener getBaseBossDeathListener() {
 		return baseBossDeathListener;
 	}
 
+	/**
+	 * 据点是否已结束。
+	 * Whether the base instance is finished.
+	 *
+	 * @return 若 finished 则为 true / true if finished
+	 */
 	public boolean isFinished() {
 		return finished.get();
 	}
 
+	/**
+	 * 获取据点位置模板。
+	 * Returns the base location template.
+	 *
+	 * base location
+	 */
 	public BL getBaseLocation() {
 		return baseLocation;
 	}
 
+	/**
+	 * 获取据点 ID。
+	 * Returns the base id.
+	 *
+	 * base id
+	 */
 	public int getId() {
 		return baseLocation.getId();
 	}
 
+	/**
+	 * 获取当前占领阵营。
+	 * Returns the current owning race.
+	 *
+	 * owning race
+	 */
 	public Race getRace() {
 		return baseLocation.getRace();
 	}
 
+	/**
+	 * 设置当前占领阵营。
+	 * Sets the current owning race.
+	 *
+	 * @param race 占领阵营 / owning race
+	 */
 	public void setRace(Race race) {
 		baseLocation.setRace(race);
 	}
 
+	/**
+	 * 获取当前袭击单位列表。
+	 * Returns the current attacker list.
+	 *
+	 * attackers
+	 */
 	public List<Npc> getAttackers() {
 		return attackers;
 	}
 
+	/**
+	 * 获取已刷新单位列表。
+	 * Returns the spawned unit list.
+	 *
+	 * @return 已刷新单位 / spawned units
+	 */
 	public List<Npc> getSpawned() {
 		return spawned;
 	}

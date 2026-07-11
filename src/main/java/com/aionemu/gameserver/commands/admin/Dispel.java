@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -22,14 +6,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 驱散目标玩家全部增益/减益效果的管理命令（{@code //dispel}）。
+ * Admin command that removes all buff/debuff effects from the targeted player ({@code //dispel}).
+ *
  * @author Hilgert
  */
 public class Dispel extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code dispel}。
+	 * Registers the command name {@code dispel}.
+	 */
 	public Dispel() {
 		super("dispel");
 	}
 
+	/**
+	 * 移除目标玩家的全部效果。
+	 * Removes all effects from the targeted player.
+	 *
+	 * admin
+	 * unused
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		Player target = null;
@@ -47,8 +45,4 @@ public class Dispel extends AdminCommand {
 		}
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

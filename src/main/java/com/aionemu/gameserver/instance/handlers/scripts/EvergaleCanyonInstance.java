@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -58,22 +42,32 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import java.util.*;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: https://aionpowerbook.com/powerbook/Windy_Gorge
-/****/
+/**
+ * 永风峡谷副本事件处理器。
+ * Instance event handler for Evergale Canyon.
+ *
+ * @author Encom
+ */
 
 @InstanceID(302350000)
 public class EvergaleCanyonInstance extends GeneralInstanceHandler
 {
+	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	private Race RaceKilledCommander = null;
-	private float loosingGroupMultiplier = 1;
-	protected EvergaleCanyonReward evergaleCanyonReward;
+	/** 种族 killedcommander / race killed commander */
+		private Race RaceKilledCommander = null;
+	/** 败方倍率 / losing-group multiplier */
+		private float loosingGroupMultiplier = 1;
+	/** evergale canyon reward / evergale canyon reward */
+		protected EvergaleCanyonReward evergaleCanyonReward;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
+	/** evergalecanyon 任务 / evergale canyon task */
+		private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
 	
 	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
         evergaleCanyonReward.regPlayerReward(player);
@@ -84,6 +78,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         return evergaleCanyonReward.containPlayer(object);
     }
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -102,42 +102,50 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 		instanceTime = System.currentTimeMillis();
         evergaleCanyonReward.setInstanceStartTime();
 		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!evergaleCanyonReward.isRewarded()) {
 				    openFirstDoors();
-				    //The member recruitment window has passed. You cannot recruit any more members.
+				    // 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 				    sendMsgByRace(1401181, Race.PC_ALL, 5000);
                     evergaleCanyonReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
                     startInstancePacket();
                     evergaleCanyonReward.sendPacket(4, null);
-					//Teleport Statue.
+					// 传送雕像。 / Teleport Statue.
 				    sp(835273, 446.27618f, 752.14069f, 334.35410f, (byte) 0, 198, 0, 0, null);
-					//Teleport Statue.
+					// 传送雕像。 / Teleport Statue.
 				    sp(835286, 1050.0051f, 752.30511f, 334.31192f, (byte) 0, 236, 0, 0, null);
-					//Teleport Statue.
+					// 传送雕像。 / Teleport Statue.
 				    sp(835411, 719.26935f, 396.20844f, 305.75839f, (byte) 0, 253, 0, 0, null);
-				    //Teleport Statue.
+				    // 传送雕像。 / Teleport Statue.
 				    sp(835412, 746.86560f, 850.73126f, 347.88959f, (byte) 0, 65, 10000, 0, null);
-				    //Teleport Statue.
+				    // 传送雕像。 / Teleport Statue.
 				    sp(835413, 451.62146f, 1079.1924f, 347.28760f, (byte) 0, 55, 15000, 0, null);
-				    //Teleport Statue.
+				    // 传送雕像。 / Teleport Statue.
 				    sp(835414, 1035.4257f, 1065.4717f, 350.22650f, (byte) 0, 117, 20000, 0, null);
 				}
             }
         }, 90000));
 		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//An element of the 2nd stage was added.
+				// 添加了第 2 阶段的元素。 / An element of the 2nd stage was added.
 				sendMsgByRace(1404174, Race.PC_ALL, 0);
-				//Mahot has appeared at the Eon Anvil.
+				// 马霍特已出现在永恒铁砧。 / Mahot has appeared at the Eon Anvil.
 				sendMsgByRace(1404254, Race.PC_ALL, 5000);
-				//Daglon has appeared at the Eternal Anvil.
+				// 达格隆已出现在永恒铁砧。 / Daglon has appeared at the Eternal Anvil.
 				sendMsgByRace(1404255, Race.PC_ALL, 10000);
-				//Furtive Kaisan has appeared at the remaining altar.
+				// 隐秘的凯桑已出现在剩余祭坛。 / Furtive Kaisan has appeared at the remaining altar.
 				sendMsgByRace(1404275, Race.PC_ALL, 15000);
-				//Corrupt Bagatur has appeared at the Jotun Garden.
+				// 腐化的巴加图尔已出现在尤顿花园。 / Corrupt Bagatur has appeared at the Jotun Garden.
 				sendMsgByRace(1404276, Race.PC_ALL, 20000);
 				sp(246701, 330.9594f, 957.66223f, 353.8341f, (byte) 82, 5000);
 				sp(246702, 1185.338f, 957.84283f, 368.1132f, (byte) 111, 10000);
@@ -145,14 +153,22 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             }
         }, 120000));
 		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//Corrupt Bagatur has appeared at the Jotun Garden.
+				// 腐化的巴加图尔已出现在尤顿花园。 / Corrupt Bagatur has appeared at the Jotun Garden.
 				sendMsgByRace(1404173, Race.PC_ALL, 0);
             	sp(246704, 747.3699f, 1029.9686f, 334.3001f, (byte) 90, 0);
             }
         }, 480000));
 		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
             	if (!evergaleCanyonReward.isRewarded()) {
@@ -171,6 +187,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         evergaleCanyonReward.sendPacket(5, null);
     }
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(final Player player) {
         if (!containPlayer(player.getObjectId())) {
@@ -181,6 +203,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	
 	private void sendEnterPacket(final Player player) {
     	instance.doOnAllPlayers(new Visitor<Player>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * opponent
+             */
             @Override
             public void visit(Player opponent) {
                 if (player.getRace() != opponent.getRace()) {
@@ -202,6 +230,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	
 	private void startInstancePacket() {
     	instance.doOnAllPlayers(new Visitor<Player>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * @param player 玩家 / player
+             */
             @Override
             public void visit(Player player) {
             	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
@@ -215,6 +249,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
     		instance.doOnAllPlayers(new Visitor<Player>() {
+                /**
+                 * 处理 visit。
+                 * Handle visit.
+                 *
+                 * @param player 玩家 / player
+                 */
                 @Override
                 public void visit(Player player) {
                 	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
@@ -222,6 +262,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             });
     	} else {
     		instance.doOnAllPlayers(new Visitor<Player>() {
+                /**
+                 * 处理 visit。
+                 * Handle visit.
+                 *
+                 * @param player 玩家 / player
+                 */
                 @Override
                 public void visit(Player player) {
                 	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
@@ -230,6 +276,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     	}
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -300,6 +352,10 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -322,6 +378,13 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         return 0;
     }
 	
+    /**
+     * 处理玩家复活事件。
+     * Handle a player revive event.
+     *
+     * 玩家 / player
+     * result
+     */
     @Override
     public boolean onReviveEvent(Player player) {
         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
@@ -331,6 +394,14 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         return true;
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * 玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * result
+	 */
 	@Override
     public boolean onDie(Player player, Creature lastAttacker) {
 		EvergaleCanyonPlayerReward ownerReward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
@@ -345,7 +416,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
                 } else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
                     points = 0;
                 }
-				ItemService.addItem(player, 186000470, 10); //War Points.
+				ItemService.addItem(player, 186000470, 10); //战争点数。 / War Points.
                 updateScore((Player) lastAttacker, player, points, true);
             }
         }
@@ -424,6 +495,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         evergaleCanyonReward.sendPacket(11, player.getObjectId());
     }
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		int point = 0;
@@ -435,19 +512,23 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 246701: //Mahot.
 				if (race.equals(Race.ELYOS)) {
-				   //The Asmodians eliminated Mahot.
+				   // 魔族消灭了马霍特。 / The Asmodians eliminated Mahot.
 				   sendMsgByRace(1404186, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				} else if (race.equals(Race.ASMODIANS)) {
-				   //The Elyos eliminated Mahot.
+				   // 天族消灭了马霍特。 / The Elyos eliminated Mahot.
 				   sendMsgByRace(1404185, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
-				//"Mahot" appears every 3min after being killed.
+				// “马霍特”被击杀后每 3 分钟再出现。 / "Mahot" appears every 3min after being killed.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
-				        //"Mahot" has appeared at the remaining altar.
+				        // “马霍特”已出现在剩余祭坛。 / "Mahot" has appeared at the remaining altar.
 						sendMsgByRace(1404413, Race.PC_ALL, 0);
 						spawn(246701, 330.9594f, 957.66223f, 353.8341f, (byte) 82); //Mahot.
 					}
@@ -455,19 +536,23 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			break;
 			case 246702: //Daglon.
 				if (race.equals(Race.ELYOS)) {
-				   //The Asmodians eliminated Daglon.
+				   // 魔族消灭了达格隆。 / The Asmodians eliminated Daglon.
 				   sendMsgByRace(1404188, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				} else if (race.equals(Race.ASMODIANS)) {
-				   //The Elyos eliminated Daglon.
+				   // 天族消灭了达格隆。 / The Elyos eliminated Daglon.
 				   sendMsgByRace(1404187, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
-				//"Daglon" appears every 3min after being killed.
+				// “达格隆”被击杀后每 3 分钟再出现。 / "Daglon" appears every 3min after being killed.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
-						//"Daglon" has appeared at the remaining altar.
+						// “达格隆”已出现在剩余祭坛。 / "Daglon" has appeared at the remaining altar.
 						sendMsgByRace(1404414, Race.PC_ALL, 0);
 						spawn(246702, 1185.338f, 957.84283f, 368.1132f, (byte) 111); //Daglon.
 					}
@@ -475,19 +560,23 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			break;
 			case 246703: //Furtive Kaisan.
 				if (race.equals(Race.ELYOS)) {
-				   //The Asmodians eliminated Furtive Kaisan.
+				   // 魔族消灭了隐秘的凯桑。 / The Asmodians eliminated Furtive Kaisan.
 				   sendMsgByRace(1404190, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				} else if (race.equals(Race.ASMODIANS)) {
-				   //The Elyos eliminated Furtive Kaisan.
+				   // 天族消灭了隐秘的凯桑。 / The Elyos eliminated Furtive Kaisan.
 				   sendMsgByRace(1404189, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
-				//"Furtive Kaisan" appears every 3min after being killed.
+				// “隐秘的凯桑”被击杀后每 3 分钟再出现。 / "Furtive Kaisan" appears every 3min after being killed.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
-						//"Furtive Kaisan" has appeared at the remaining altar.
+						// “隐秘的凯桑”已出现在剩余祭坛。 / "Furtive Kaisan" has appeared at the remaining altar.
 						sendMsgByRace(1404172, Race.PC_ALL, 0);
 						spawn(246703, 743.7306f, 487.89166f, 305.3329f, (byte) 23); //Furtive Kaisan.
 					}
@@ -495,19 +584,23 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			break;
 			case 246704: //Corrupt Bagatur.
 				if (race.equals(Race.ELYOS)) {
-				   //The Asmodians eliminated Corrupt Kaisan.
+				   // 魔族消灭了腐化的凯桑。 / The Asmodians eliminated Corrupt Kaisan.
 				   sendMsgByRace(1404192, Race.ELYOS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				} else if (race.equals(Race.ASMODIANS)) {
-				   //The Elyos eliminated Corrupt Kaisan.
+				   // 天族消灭了腐化的凯桑。 / The Elyos eliminated Corrupt Kaisan.
 				   sendMsgByRace(1404191, Race.ASMODIANS, 0);
-				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
+				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
-				//"Corrupt Bagatur" appears every 8min after being killed.
+				// “腐化的巴加图尔”被击杀后每 8 分钟再出现。 / "Corrupt Bagatur" appears every 8min after being killed.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
 					@Override
 					public void run() {
-						//"Corrupt Bagatur" has appeared at the Jotun Garden.
+						// “腐化的巴加图尔”已出现在尤顿花园。 / "Corrupt Bagatur" has appeared at the Jotun Garden.
 						sendMsgByRace(1404173, Race.PC_ALL, 0);
 						spawn(246704, 747.3699f, 1029.9686f, 334.3001f, (byte) 90); //Corrupt Bagatur.
 					}
@@ -515,39 +608,46 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			break;
 			case 246709: //Archon Detachment Captain.
 				point = 2000;
-				//The Elyos have eliminated the Archon Detachment Captain.
+				// 天族消灭了执政官分遣队队长。 / The Elyos have eliminated the Archon Detachment Captain.
 				sendMsgByRace(1404209, Race.ASMODIANS, 0);
-				//The Elyos have eliminated the Archon Detachment Captain.
+				// 天族消灭了执政官分遣队队长。 / The Elyos have eliminated the Archon Detachment Captain.
 				sendMsgByRace(1404365, Race.ASMODIANS, 10000);
 				RaceKilledCommander = mostPlayerDamage.getRace();
-				ItemService.addItem(mostPlayerDamage, 186000470, 500); //War Points.
+				ItemService.addItem(mostPlayerDamage, 186000470, 500); //战争点数。 / War Points.
 			break;
 			case 246714: //Guardian Detachment Captain.
 				point = 2000;
-				//The Asmodians have eliminated the Guardian Detachment Captain.
+				// 魔族消灭了守护者分遣队队长。 / The Asmodians have eliminated the Guardian Detachment Captain.
 				sendMsgByRace(1404210, Race.ELYOS, 0);
-				//The Asmodians have eliminated the Guardian Detachment Captain.
+				// 魔族消灭了守护者分遣队队长。 / The Asmodians have eliminated the Guardian Detachment Captain.
 				sendMsgByRace(1404366, Race.ELYOS, 10000);
 				RaceKilledCommander = mostPlayerDamage.getRace();
-				ItemService.addItem(mostPlayerDamage, 186000470, 500); //War Points.
+				ItemService.addItem(mostPlayerDamage, 186000470, 500); //战争点数。 / War Points.
 			break;
         }
 		updateScore(mostPlayerDamage, npc, point, false);
     }
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
 		int point = 0;
 		switch (npc.getNpcId()) {
 		   /**
-			* Pure Neutral
-			*/
+	 * Pure Neutral
+	 */
 			case 835210: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
 					case ELYOS:
 					    point = 200;
-					    //The Elyos took possession of the fragment at the Temple of Origin.
+					    // 天族在起源神殿占据了碎片。 / The Elyos took possession of the fragment at the Temple of Origin.
 						sendMsgByRace(1404179, Race.PC_ALL, 2000);
 					    sp(835304, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
 						sp(835455, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag]
@@ -555,7 +655,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 					case ASMODIANS:
 					    point = 200;
-					    //The Asmodians took possession of the fragment at the Temple of Origin.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Temple of Origin.
 						sendMsgByRace(1404180, Race.PC_ALL, 2000);
 					    sp(835309, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
 						sp(835456, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag]
@@ -568,11 +668,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				switch (player.getRace()) {
 					case ELYOS:
 					    point = 200;
-					    //The Elyos took possession of the fragment at the Northern Cave.
+					    // 天族在北洞占据了碎片。 / The Elyos took possession of the fragment at the Northern Cave.
 						sendMsgByRace(1404181, Race.PC_ALL, 2000);
-					    //The fairy Elb is requesting help from inside the cave.
+					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246750, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
 						sp(246750, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
 						sp(246750, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
@@ -584,11 +684,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 					case ASMODIANS:
 					    point = 200;
-					    //The Asmodians took possession of the fragment at the Northern Cave.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Northern Cave.
 						sendMsgByRace(1404182, Race.PC_ALL, 2000);
-					    //The fairy Elb is requesting help from inside the cave.
+					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246751, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
 						sp(246751, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
 						sp(246751, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
@@ -605,7 +705,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				switch (player.getRace()) {
 					case ELYOS:
 					    point = 200;
-					    //The Elyos took possession of the fragment at the Wall Ruins.
+					    // 天族在城墙遗迹占据了碎片。 / The Elyos took possession of the fragment at the Wall Ruins.
 						sendMsgByRace(1404175, Race.PC_ALL, 2000);
 					    sp(835306, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
 						sp(835455, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
@@ -613,7 +713,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 					case ASMODIANS:
 					    point = 200;
-					    //The Asmodians took possession of the fragment at the Wall Ruins.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Wall Ruins.
 						sendMsgByRace(1404176, Race.PC_ALL, 2000);
 					    sp(835311, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
 						sp(835456, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
@@ -626,7 +726,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				switch (player.getRace()) {
 					case ELYOS:
 					    point = 200;
-					    //The Elyos took possession of the fragment at the Collapsed Wall.
+					    // 天族在崩塌之墙占据了碎片。 / The Elyos took possession of the fragment at the Collapsed Wall.
 						sendMsgByRace(1404177, Race.PC_ALL, 2000);
 					    sp(835307, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
 						sp(835455, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's. [Flag]
@@ -634,7 +734,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 					case ASMODIANS:
 					    point = 200;
-					    //The Asmodians took possession of the fragment at the Collapsed Wall.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Collapsed Wall.
 						sendMsgByRace(1404178, Race.PC_ALL, 2000);
 					    sp(835312, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
 						sp(835456, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's. [Flag]
@@ -647,11 +747,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				switch (player.getRace()) {
 					case ELYOS:
 					    point = 200;
-					    //The Elyos took possession of the fragment at the Southern Cave.
+					    // 天族在南洞占据了碎片。 / The Elyos took possession of the fragment at the Southern Cave.
 						sendMsgByRace(1404183, Race.PC_ALL, 2000);
-					    //The fairy Elb is requesting help from inside the cave.
+					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246752, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
 						sp(246752, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
 						sp(246752, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
@@ -664,11 +764,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 					case ASMODIANS:
 					    point = 200;
-					    //The Asmodians took possession of the fragment at the Southern Cave.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Southern Cave.
 						sendMsgByRace(1404184, Race.PC_ALL, 2000);
-					    //The fairy Elb is requesting help from inside the cave.
+					    // 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246753, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
 						sp(246753, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
 						sp(246753, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
@@ -682,15 +782,15 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				}
 			break;
 		   /**
-			* Pure Light
-			*/
+	 * Pure Light
+	 */
 			case 835304: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Temple of Origin.
+					    // 天族在起源神殿占据了碎片。 / The Elyos took possession of the fragment at the Temple of Origin.
 						sendMsgByRace(1404179, Race.PC_ALL, 2000);
 					    sp(835304, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
 						sp(835455, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
@@ -699,7 +799,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Temple of Origin.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Temple of Origin.
 						sendMsgByRace(1404180, Race.PC_ALL, 2000);
 					    sp(835309, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
 						sp(835456, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
@@ -713,11 +813,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Northern Cave.
+					    // 天族在北洞占据了碎片。 / The Elyos took possession of the fragment at the Northern Cave.
 						sendMsgByRace(1404181, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246750, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
 						sp(246750, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
 						sp(246750, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
@@ -730,11 +830,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Northern Cave.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Northern Cave.
 						sendMsgByRace(1404182, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246751, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
 						sp(246751, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
 						sp(246751, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
@@ -752,7 +852,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Wall Ruins.
+					    // 天族在城墙遗迹占据了碎片。 / The Elyos took possession of the fragment at the Wall Ruins.
 						sendMsgByRace(1404175, Race.PC_ALL, 2000);
 					    sp(835306, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
 						sp(835455, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
@@ -761,7 +861,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Wall Ruins.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Wall Ruins.
 						sendMsgByRace(1404176, Race.PC_ALL, 2000);
 					    sp(835311, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's.
 						sp(835456, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's. [Flag]
@@ -775,7 +875,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Collapsed Wall.
+					    // 天族在崩塌之墙占据了碎片。 / The Elyos took possession of the fragment at the Collapsed Wall.
 						sendMsgByRace(1404177, Race.PC_ALL, 2000);
 					    sp(835307, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
 						sp(835455, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
@@ -784,7 +884,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Collapsed Wall.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Collapsed Wall.
 						sendMsgByRace(1404178, Race.PC_ALL, 2000);
 					    sp(835312, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
 						sp(835456, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
@@ -798,11 +898,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Southern Cave.
+					    // 天族在南洞占据了碎片。 / The Elyos took possession of the fragment at the Southern Cave.
 						sendMsgByRace(1404183, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246752, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
 						sp(246752, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
 						sp(246752, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
@@ -816,11 +916,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Southern Cave.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Southern Cave.
 						sendMsgByRace(1404184, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246753, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
 						sp(246753, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
 						sp(246753, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
@@ -834,15 +934,15 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				}
 			break;
 		   /**
-			* Pure Dark
-			*/
+	 * Pure Dark
+	 */
 			case 835309: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Temple of Origin.
+					    // 天族在起源神殿占据了碎片。 / The Elyos took possession of the fragment at the Temple of Origin.
 						sendMsgByRace(1404179, Race.PC_ALL, 2000);
 					    sp(835304, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
 						sp(835455, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
@@ -851,7 +951,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Temple of Origin.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Temple of Origin.
 						sendMsgByRace(1404180, Race.PC_ALL, 2000);
 					    sp(835309, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 6, 2000, 0, null); //Temple Of Origin.
 						sp(835456, 744.87201f, 756.45233f, 338.42093f, (byte) 0, 0, 2000, 0, null); //Temple Of Origin [Flag].
@@ -865,11 +965,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Northern Cave.
+					    // 天族在北洞占据了碎片。 / The Elyos took possession of the fragment at the Northern Cave.
 						sendMsgByRace(1404181, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246750, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
 						sp(246750, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
 						sp(246750, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
@@ -882,11 +982,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Northern Cave.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Northern Cave.
 						sendMsgByRace(1404182, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246751, 206.65828f, 450.01440f, 295.48935f, (byte) 0, 3000);
 						sp(246751, 193.34024f, 436.78748f, 302.56314f, (byte) 0, 5000);
 						sp(246751, 219.44083f, 452.26108f, 295.20300f, (byte) 0, 7000);
@@ -904,7 +1004,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Wall Ruins.
+					    // 天族在城墙遗迹占据了碎片。 / The Elyos took possession of the fragment at the Wall Ruins.
 						sendMsgByRace(1404175, Race.PC_ALL, 2000);
 					    sp(835306, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's
 						sp(835455, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's [Flag]
@@ -913,7 +1013,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Wall Ruins.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Wall Ruins.
 						sendMsgByRace(1404176, Race.PC_ALL, 2000);
 					    sp(835311, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 12, 2000, 0, null); //Wall Ruins's
 						sp(835456, 592.07892f, 640.55408f, 324.73904f, (byte) 0, 0, 2000, 0, null); //Wall Ruins's [Flag]
@@ -927,7 +1027,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Collapsed Wall.
+					    // 天族在崩塌之墙占据了碎片。 / The Elyos took possession of the fragment at the Collapsed Wall.
 						sendMsgByRace(1404177, Race.PC_ALL, 2000);
 					    sp(835307, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
 						sp(835455, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
@@ -936,7 +1036,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Collapsed Wall.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Collapsed Wall.
 						sendMsgByRace(1404178, Race.PC_ALL, 2000);
 					    sp(835312, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 41, 2000, 0, null); //Collapsed Wall's.
 						sp(835456, 900.56952f, 637.95612f, 325.18738f, (byte) 0, 0, 2000, 0, null); //Collapsed Wall's [Flag]
@@ -950,11 +1050,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ELYOS:
 					    point = 200;
 					    deleteNpc(835456);
-					    //The Elyos took possession of the fragment at the Southern Cave.
+					    // 天族在南洞占据了碎片。 / The Elyos took possession of the fragment at the Southern Cave.
 						sendMsgByRace(1404183, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246752, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
 						sp(246752, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
 						sp(246752, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
@@ -968,11 +1068,11 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					case ASMODIANS:
 					    point = 200;
 					    deleteNpc(835455);
-					    //The Asmodians took possession of the fragment at the Southern Cave.
+					    // 魔族在起源神殿占据了碎片。 / The Asmodians took possession of the fragment at the Southern Cave.
 						sendMsgByRace(1404184, Race.PC_ALL, 2000);
-						//The fairy Elb is requesting help from inside the cave.
+						// 精灵艾尔布在洞穴内请求帮助。 / The fairy Elb is requesting help from inside the cave.
 						sendMsgByRace(1404246, Race.PC_ALL, 11000);
-						//Elb: <Canyon Fairy>
+						// 艾尔布：<峡谷精灵> / Elb: <Canyon Fairy>
 						sp(246753, 1246.7339f, 405.43893f, 312.49734f, (byte) 0, 3000);
 						sp(246753, 1235.1982f, 381.30444f, 312.49734f, (byte) 0, 5000);
 						sp(246753, 1240.6429f, 393.54608f, 312.49734f, (byte) 0, 7000);
@@ -1001,6 +1101,10 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
         isInstanceDestroyed = true;
@@ -1031,6 +1135,10 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1045,6 +1153,10 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1058,9 +1170,19 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -1074,6 +1196,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -1089,19 +1217,37 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * result
+	 */
 	@Override
     public InstanceReward<?> getInstanceReward() {
         return evergaleCanyonReward;
     }
 	
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onExitInstance(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onLeaveInstance(Player player) {
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 		EvergaleCanyonPlayerReward playerReward = evergaleCanyonReward.getPlayerReward(player.getObjectId());
 		playerReward.endBoostMoraleEffect(player);
@@ -1114,6 +1260,12 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家登录到该副本时处理。
+	 * Handle a player logging into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onPlayerLogin(Player player) {
         evergaleCanyonReward.sendPacket(10, player.getObjectId());

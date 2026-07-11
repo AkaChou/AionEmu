@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +8,10 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Made by Rinzler (Encom)
+ * 月之商城列表/点数等状态同步的服务端包。
+ * Server packet that synchronizes Luna shop list and related point/state data.
+ *
+ * @author Made by Rinzler (Encom)
  */
 @Slf4j
 public class SM_LUNA_SHOP_LIST extends AionServerPacket {
@@ -38,32 +25,74 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	private List<Integer> idList;
 	private List<Integer> randomDailyCraft;
 
+	/**
+	 * 通用动作构造，仅指定 actionId。
+	 * Generic action constructor with action id only.
+	 *
+	 * action type
+	 */
 	public SM_LUNA_SHOP_LIST(int actionId) {
 		this.actionId = actionId;
 	}
 
+	/**
+	 * 同步月之点数。
+	 * Syncs Luna points.
+	 *
+	 * action type
+	 * Luna points
+	 */
 	public SM_LUNA_SHOP_LIST(int actionId, long points) {
 		this.actionId = actionId;
 		this.points = points;
 	}
 
+	/**
+	 * 同步钥匙数量。
+	 * Syncs key count.
+	 *
+	 * action type
+	 * @param keys 钥匙数量 / key count
+	 */
 	public SM_LUNA_SHOP_LIST(int actionId, int keys) {
 		this.actionId = actionId;
 		this.keys = keys;
 	}
 
+	/**
+	 * 下发配方 ID 列表（tableId = 0）。
+	 * Delivers recipe id list (tableId = 0).
+	 *
+	 * @param actionId 动作类型（构造内固定为 2） / action type (forced to 2 inside)
+	 * @param tableId 表 ID（构造内固定为 0） / table id (forced to 0 inside)
+	 * recipe id list
+	 */
 	public SM_LUNA_SHOP_LIST(int actionId, int tableId, List<Integer> idList) {
 		this.actionId = 2;
 		this.tableId = 0;
 		this.idList = idList;
 	}
 
+	/**
+	 * 下发每日随机制作配方列表（tableId = 1）。
+	 * Delivers random daily craft recipe list (tableId = 1).
+	 *
+	 * @param randomDailyCraft 每日随机配方 ID 列表 / random daily craft recipe ids
+	 */
 	public SM_LUNA_SHOP_LIST(List<Integer> randomDailyCraft) {
 		this.actionId = 2;
 		this.tableId = 1;
 		this.randomDailyCraft = randomDailyCraft;
 	}
 
+	/**
+	 * 同步指定表的消耗/费用 ID。
+	 * Syncs cost id for a given table.
+	 *
+	 * action type
+	 * table id
+	 * cost id
+	 */
 	public SM_LUNA_SHOP_LIST(int actionId, int tableId, int costId) {
 		this.actionId = actionId;
 		this.tableId = tableId;

@@ -1,35 +1,44 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world;
 
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
+ * 二维世界地图实例：按 X/Y 划分区域，可绑定个人所有者。
+ * Two-dimensional world-map instance: partitions by X/Y, optionally personal-owned.
+ *
  * @author ATracer
  */
 public class WorldMap2DInstance extends WorldMapInstance {
 
+	/** 个人实例所有者 ID，0 表示公共 / personal-instance owner id, 0 if public */
+	@Getter
+	@Setter
 	private int ownerId;
 
+	/**
+	 * 构造 2D 地图实例。
+	 * Construct a 2D map instance.
+	 *
+	 * @param parent 父级世界地图 / parent world map
+	 * instance id
+	 * @param ownerId 个人所有者 ID / personal owner id
+	 */
 	public WorldMap2DInstance(WorldMap parent, int instanceId, int ownerId) {
 		super(parent, instanceId);
 		this.ownerId = ownerId;
 	}
 
+	/**
+	 * 按 2D 区域 ID 创建地图区域及关联 Zone。
+	 * Create a map region and related zones for a 2D region id.
+	 *
+	 * region id
+	 *
+	 * @param regionId @return 新建的地图区域 / newly created map region
+	 */
 	@Override
 	protected MapRegion createMapRegion(int regionId) {
 		float startX = RegionUtil.getXFrom2dRegionId(regionId);
@@ -40,6 +49,10 @@ public class WorldMap2DInstance extends WorldMapInstance {
 		return new MapRegion(regionId, this, zones);
 	}
 
+	/**
+	 * 初始化全部 2D 区域并建立邻接关系。
+	 * Initialize all 2D regions and wire neighbour links.
+	 */
 	protected void initMapRegions() {
 		int size = this.getParent().getWorldSize();
 		// Create all mapRegion
@@ -50,7 +63,7 @@ public class WorldMap2DInstance extends WorldMapInstance {
 			}
 		}
 
-		// Add Neighbour
+		// 添加邻居 / Add Neighbour
 		for (int x = 0; x <= size; x = x + regionSize) {
 			for (int y = 0; y <= size; y = y + regionSize) {
 				int regionId = RegionUtil.get2dRegionId(x, y);
@@ -71,6 +84,15 @@ public class WorldMap2DInstance extends WorldMapInstance {
 		}
 	}
 
+	/**
+	 * 按 X/Y 坐标取得 2D 地图区域（Z 忽略）。
+	 * Resolve the 2D map region for X/Y (Z ignored).
+	 *
+	 * @param x 坐标 X / X coordinate
+	 * @param y 坐标 Y / Y coordinate
+	 * @param z 坐标 Z（未使用） / Z coordinate (unused)
+	 * map region
+	 */
 	@Override
 	public MapRegion getRegion(float x, float y, float z) {
 		int regionId = RegionUtil.get2dRegionId(x, y);
@@ -78,19 +100,11 @@ public class WorldMap2DInstance extends WorldMapInstance {
 	}
 
 	/**
-	 * @return the ownerId
+	 * 是否为个人实例。
+	 * Whether this is a personal instance.
+	 *
+	 * true when ownerId is non-zero
 	 */
-	public int getOwnerId() {
-		return ownerId;
-	}
-
-	/**
-	 * @param ownerId the ownerId to set
-	 */
-	public void setOwnerId(int ownerId) {
-		this.ownerId = ownerId;
-	}
-
 	@Override
 	public boolean isPersonal() {
 		return ownerId != 0;

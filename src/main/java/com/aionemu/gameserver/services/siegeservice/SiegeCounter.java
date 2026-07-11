@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
 import java.util.Collections;
@@ -27,6 +11,10 @@ import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+/**
+ * 攻城计数器，汇总伤害与欧比斯点数。
+ * Siege counter aggregating damage and abyss points.
+ */
 public class SiegeCounter {
 	private final Map<SiegeRace, SiegeRaceCounter> siegeRaceCounters = Maps.newHashMap();
 
@@ -36,6 +24,13 @@ public class SiegeCounter {
 		siegeRaceCounters.put(SiegeRace.BALAUR, new SiegeRaceCounter(SiegeRace.BALAUR));
 	}
 
+	/**
+	 * 累计伤害。
+	 * Adds damage.
+	 *
+	 * creature
+	 * damage
+	 */
 	public void addDamage(Creature creature, int damage) {
 		SiegeRace siegeRace;
 		if (creature instanceof Player) {
@@ -48,19 +43,45 @@ public class SiegeCounter {
 		siegeRaceCounters.get(siegeRace).addPoints(creature, damage);
 	}
 
+	/**
+	 * 累计欧比斯点数。
+	 * Adds abyss points.
+	 *
+	 * @param player 玩家 / player
+	 * @param ap 欧比斯点 / ap
+	 */
 	public void addAbyssPoints(Player player, int ap) {
 		SiegeRace sr = SiegeRace.getByRace(player.getRace());
 		siegeRaceCounters.get(sr).addAbyssPoints(player, ap);
 	}
 
+	/**
+	 * getRaceCounter 方法。
+	 * getRaceCounter method.
+	 *
+	 * 阵营 / race
+	 * result
+	 */
 	public SiegeRaceCounter getRaceCounter(SiegeRace race) {
 		return siegeRaceCounters.get(race);
 	}
 
+	/**
+	 * 累计种族伤害。
+	 * Adds race damage.
+	 *
+	 * 阵营 / race
+	 * damage
+	 */
 	public void addRaceDamage(SiegeRace race, int damage) {
 		getRaceCounter(race).addTotalDamage(damage);
 	}
 
+	/**
+	 * getWinnerRaceCounter 方法。
+	 * getWinnerRaceCounter method.
+	 * result
+	 */
 	public SiegeRaceCounter getWinnerRaceCounter() {
 		List<SiegeRaceCounter> list = Lists.newArrayList(siegeRaceCounters.values());
 		Collections.sort(list);

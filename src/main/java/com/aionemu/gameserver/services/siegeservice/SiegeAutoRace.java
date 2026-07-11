@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,15 +21,29 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+/**
+ * 攻城自动种族切换，按计划自动变更要塞归属。
+ * Siege auto-race switch automatically changing fortress ownership on schedule.
+ */
 @Slf4j(topic = "SIEGE_LOG")
 
 public class SiegeAutoRace {
 	private static String[] siegeIds = SiegeConfig.SIEGE_AUTO_LOCID.split(";");
 
+	/**
+	 * 执行自动种族切换。
+	 * Runs auto race switch.
+	 *
+	 * locid
+	 */
 	public static void AutoSiegeRace(final int locid) {
 		final SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(locid);
 		if (!loc.getRace().equals(SiegeRace.ASMODIANS) || !loc.getRace().equals(SiegeRace.ELYOS)) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */
 				public void run() {
 					GameFeatureServices.siegeService().startSiege(locid);
 				}
@@ -64,12 +62,18 @@ public class SiegeAutoRace {
 			}
 			loc.setLegionId(0);
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+				/**
+				 * visit 方法。
+				 * visit method.
+				 *
+				 * @param player 玩家 / player
+				 */
 				public void visit(Player player) {
 					if (legionId != 0 && player.getRace().getRaceId() == oldOwnerRaceId) {
-						// %0 has conquered %1.
+						// %0 征服了 %1。 / %0 has conquered %1.
 						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301038, legionName, NameId));
 					}
-					// %0 succeeded in conquering %1.
+					// %0 成功征服了 %1。 / %0 succeeded in conquering %1.
 					PacketSendUtility.sendPacket(player,
 							new SM_SYSTEM_MESSAGE(1404542, loc.getRace().getDescriptionId(), NameId));
 					PacketSendUtility.sendPacket(player, new SM_SIEGE_LOCATION_INFO(loc));
@@ -85,10 +89,24 @@ public class SiegeAutoRace {
 		GameFeatureServices.siegeService().broadcastUpdate(loc);
 	}
 
+	/**
+	 * isAutoSiege 方法。
+	 * isAutoSiege method.
+	 *
+	 * locId
+	 * result
+	 */
 	public static boolean isAutoSiege(int locId) {
 		return ElyosAutoSiege(locId) || AsmoAutoSiege(locId);
 	}
 
+	/**
+	 * 光之部自动归属。
+	 * Elyos auto ownership.
+	 *
+	 * locId
+	 * result
+	 */
 	public static boolean ElyosAutoSiege(int locId) {
 		for (String id : siegeIds[0].split(",")) {
 			if (locId == Integer.parseInt(id)) {
@@ -98,6 +116,13 @@ public class SiegeAutoRace {
 		return false;
 	}
 
+	/**
+	 * 暗之部自动归属。
+	 * Asmodian auto ownership.
+	 *
+	 * locId
+	 * result
+	 */
 	public static boolean AsmoAutoSiege(int locId) {
 		for (String id : siegeIds[1].split(",")) {
 			if (locId == Integer.parseInt(id)) {

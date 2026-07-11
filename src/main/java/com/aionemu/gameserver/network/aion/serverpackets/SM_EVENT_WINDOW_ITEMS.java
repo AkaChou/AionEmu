@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -26,8 +13,12 @@ import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.model.templates.event.EventsWindow;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-@Slf4j
 
+/**
+ * 活动窗口条目列表包：下发各活动奖励物品、剩余时间、等级与周期。
+ * Event-window items list: rewards, remaining time, level range and period per event.
+ */
+@Slf4j
 public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 
 	private Collection<EventsWindow> active_events_packet;
@@ -40,31 +31,31 @@ public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 	protected void writeImpl(AionConnection aionConnection) {
 		int playerAccountId = aionConnection.getActivePlayer().getPlayerAccount().getId();
 		PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
-		writeC(1); // Do not Change !!!
+		writeC(1); // 请勿修改！！！ / Do not Change !!!
 		writeH(active_events_packet.size());
 		for (EventsWindow eventsWindow : active_events_packet) {
 			int dbRecivedCount = playerEventsWindowDAO.getRewardRecivedCount(playerAccountId, eventsWindow.getId());
 			int elapsed = playerEventsWindowDAO.getElapsed(playerAccountId, eventsWindow.getId());
 			int displayTime = (eventsWindow.getRemainingTime() - elapsed);
-			
+
 			long periodStartMillis = eventsWindow.getPeriodStart().toInstant().toEpochMilli();
 			long periodEndMillis = eventsWindow.getPeriodEnd().toInstant().toEpochMilli();
-			
-			log.info("event id " + eventsWindow.getId() + " remain " + eventsWindow.getRemainingTime() + " start-time " + new Timestamp(periodStartMillis).getTime() / 1000 + " end-time " + new Timestamp(periodEndMillis).getTime() / 1000 + " total size " + active_events_packet.size());
-					
+
+			log.info(I18n.get("log.860897574830", eventsWindow.getId(), eventsWindow.getRemainingTime(), new Timestamp(periodStartMillis).getTime() / 1000, new Timestamp(periodEndMillis).getTime() / 1000, active_events_packet.size()));
+
 			writeD(eventsWindow.getId()); // Id
 			writeD(dbRecivedCount); // reward recived count
 			writeD(displayTime * 60); // Displayed Remaining Time
-			writeD(0); // Do not Change !!!
+			writeD(0); // 请勿修改！！！ / Do not Change !!!
 			writeD(eventsWindow.getMaxCountOfDay());// This is Max Count of Day
 			writeD((int) (System.currentTimeMillis() / 1000)); // PlayerLoginTime
-			writeC(1); // Do not Change !!!
-			writeD(5); // Do not Change !!!
-			writeD(1); // Do not Change !!!
-			writeC(-104); // Do not Change !!!
-			writeC(98); // Do not Change !!!
-			writeC(21); // Do not Change !!!
-			writeC(0); // Do not Change !!!
+			writeC(1); // 请勿修改！！！ / Do not Change !!!
+			writeD(5); // 请勿修改！！！ / Do not Change !!!
+			writeD(1); // 请勿修改！！！ / Do not Change !!!
+			writeC(-104); // 请勿修改！！！ / Do not Change !!!
+			writeC(98); // 请勿修改！！！ / Do not Change !!!
+			writeC(21); // 请勿修改！！！ / Do not Change !!!
+			writeC(0); // 请勿修改！！！ / Do not Change !!!
 			writeD(displayTime * 60); // Remaining Time
 			writeD(eventsWindow.getItemId()); // ItemId
 			writeQ(eventsWindow.getCount()); // ItemCount
@@ -75,17 +66,17 @@ public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 			writeD(0);
 			writeD(0);// Does something
 			writeD(0); // If player has this Item already in inventory it's ItemId
-			writeD(1090157056); // Do not Change !!!
+			writeD(1090157056); // 请勿修改！！！ / Do not Change !!!
 			writeD(eventsWindow.getMinLevel()); // StartLevel
 			writeD(eventsWindow.getMaxLevel()); // EndLevel
-			writeD(-1);// Do not Change !!!
-			writeB(new byte[84]); // Do not Change !!!
-			writeD(-1);// Do not Change !!!
+			writeD(-1);// 请勿修改！！！ / Do not Change !!!
+			writeB(new byte[84]); // 请勿修改！！！ / Do not Change !!!
+			writeD(-1);// 请勿修改！！！ / Do not Change !!!
 			writeB(new byte[16]);
-			writeD(2147483647);// Do not Change !!!
-			writeB(new byte[7]);// Do not Change !!!
-			writeD(-1);// Do not Change !!!
-			writeD(0);// Do not Change !!!
+			writeD(2147483647);// 请勿修改！！！ / Do not Change !!!
+			writeB(new byte[7]);// 请勿修改！！！ / Do not Change !!!
+			writeD(-1);// 请勿修改！！！ / Do not Change !!!
+			writeD(0);// 请勿修改！！！ / Do not Change !!!
 		}
 	}
 }

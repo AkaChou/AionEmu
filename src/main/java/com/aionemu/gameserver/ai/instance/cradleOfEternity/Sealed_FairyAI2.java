@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cradle Of Eternity 副本 NPC AI：Sealed Fairy（@AIName "Sealed_Fairy"），继承 NpcAI2。
+ * Cradle Of Eternity instance NPC AI: Sealed Fairy (@AIName "Sealed_Fairy"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Sealed_Fairy")
 public class Sealed_FairyAI2 extends NpcAI2
 {
@@ -47,7 +33,7 @@ public class Sealed_FairyAI2 extends NpcAI2
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
 			    case 834009: //Sealed Fairy.
-				    //Once you leave the garden, the Sylfae Queen’s power will disappear.
+				    // 离开花园后，希尔法女王的力量将消失。 / Once you leave the garden, the Sylfae Queen’s power will disappear.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_41, 5000);
 					GameEngineServices.skillEngine().applyEffectDirectly(21340, player, player, 3600000 * 1); //Sealed Fairy.
 					GameEngineServices.skillEngine().applyEffectDirectly(21344, player, player, 3600000 * 1); //Beguiling Visions.

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.mail;
 
 import java.util.HashMap;
@@ -32,6 +16,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.Race;
+
+/**
+ * 邮件模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MailTemplate")
@@ -59,38 +48,47 @@ public class MailTemplate {
 		mailParts = null;
 	}
 
+	/** 返回 sender / Returns the sender */
 	public MailPart getSender() {
 		return mailPartsMap.get(MailPartType.SENDER);
 	}
 
+	/** 获取称号。 / Returns the title. */
 	public MailPart getTitle() {
 		return mailPartsMap.get(MailPartType.TITLE);
 	}
 
+	/** 返回头 / Returns the header*/
 	public MailPart getHeader() {
 		return mailPartsMap.get(MailPartType.HEADER);
 	}
 
+	/** 返回 body / Returns the body */
 	public MailPart getBody() {
 		return mailPartsMap.get(MailPartType.BODY);
 	}
 
+	/** 返回 tail / Returns the tail */
 	public MailPart getTail() {
 		return mailPartsMap.get(MailPartType.TAIL);
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回 formatted title / Returns the formatted title */
 	public String getFormattedTitle(IMailFormatter customFormatter) {
 		return getTitle().getFormattedString(customFormatter);
 	}
 
+	/** 返回 formatted message / Returns the formatted message */
 	public String getFormattedMessage(IMailFormatter customFormatter) {
 		String headerStr = getHeader().getFormattedString(customFormatter);
 		String bodyStr = getBody().getFormattedString(customFormatter);

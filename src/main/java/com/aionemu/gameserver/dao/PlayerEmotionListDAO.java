@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -21,14 +5,18 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.emotion.Emotion;
 
 /**
+ * 玩家表情列表数据访问对象。
+ * Player emotion list data access object.
+ *
  * @author Mr. Poke
  */
 public abstract class PlayerEmotionListDAO implements DAO {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.aionemu.commons.database.dao.DAO#getClassName()
+	/**
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
 	 */
 	@Override
 	public String getClassName() {
@@ -36,14 +24,28 @@ public abstract class PlayerEmotionListDAO implements DAO {
 	}
 
 	/**
-	 * @param player
+	 * 加载玩家表情列表。
+	 * Loads the player's emotion list.
+	 *
+	 * 玩家 / player
 	 */
 	public abstract void loadEmotions(Player player);
 
 	/**
-	 * @param player
+	 * 为玩家插入一条表情。
+	 * Inserts an emotion for the player.
+	 *
+	 * 玩家 / player
+	 * emotion
 	 */
 	public abstract void insertEmotion(Player player, Emotion emotion);
 
+	/**
+	 * 删除玩家的指定表情。
+	 * Deletes the given emotion for the player.
+	 *
+	 * player id
+	 * emotion id
+	 */
 	public abstract void deleteEmotion(int playerId, int emotionId);
 }

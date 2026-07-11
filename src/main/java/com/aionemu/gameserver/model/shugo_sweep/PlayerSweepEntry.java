@@ -1,25 +1,10 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.shugo_sweep;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 /**
- * Created by Wnkrz on 24/10/2017.
+ * 玩家清扫条目，用于术古清扫相关逻辑。
+ * Player Sweep Entry for shugo sweep logic.
  */
 
 public class PlayerSweepEntry extends SweepEntry {
@@ -30,10 +15,12 @@ public class PlayerSweepEntry extends SweepEntry {
 		super(id, isReward);
 	}
 
+	/** 获取持久化状态。 / Returns the persistent state. */
 	public PersistentState getPersistentState() {
 		return persistentState;
 	}
 
+	/** 设置持久化状态。 / Sets the persistent state. */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {
 		case DELETED:

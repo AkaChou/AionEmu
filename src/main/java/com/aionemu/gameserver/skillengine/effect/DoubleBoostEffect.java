@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -35,11 +19,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
-
+ * 双重推进位移效果：按方向/距离计算冲刺落点并更新施法者位置。
+ * Double-boost dash effect: computes a directional dash landing and updates effector position.
+ *
+ * @author Rinzler (Encom)
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DoubleBoostEffect")
 public class DoubleBoostEffect extends EffectTemplate {
@@ -48,6 +33,12 @@ public class DoubleBoostEffect extends EffectTemplate {
 	@XmlAttribute(name = "direction")
 	private float direction;
 
+	/**
+	 * 同步目标更新包并将施法者移动到技能坐标。
+	 * Sends target-update and moves the effector to the skill position.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		final Player effector = (Player) effect.getEffector();
@@ -56,6 +47,12 @@ public class DoubleBoostEffect extends EffectTemplate {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
+	/**
+	 * 标记冲刺成功并按朝向/距离/碰撞计算落点。
+	 * Marks dash success and computes landing by heading, distance, and collision.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);

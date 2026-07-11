@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -26,12 +10,24 @@ import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 向客户端下发军团成员列表（含在线状态与房屋信息）的服务端包。
+ * Server packet delivering the legion member list (including online status and housing info) to the client.
+ */
 public class SM_LEGION_MEMBERLIST extends AionServerPacket {
 	private static final int OFFLINE = 0x00, ONLINE = 0x01;
 	private boolean isFirst;
 	private boolean result;
 	private List<LegionMemberEx> legionMembers;
 
+	/**
+	 * 构造军团成员列表包。
+	 * Creates a legion member list packet.
+	 *
+	 * @param legionMembers 成员扩展信息列表 / extended legion member list
+	 * @param result 结果标记（影响写入的成员数量符号） / result flag (affects signed member count written)
+	 * @param isFirst 是否为列表首包 / whether this is the first packet of the list
+	 */
 	public SM_LEGION_MEMBERLIST(List<LegionMemberEx> legionMembers, boolean result, boolean isFirst) {
 		this.legionMembers = legionMembers;
 		this.result = result;

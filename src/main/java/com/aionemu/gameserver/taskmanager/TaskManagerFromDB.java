@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.taskmanager;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -33,29 +18,52 @@ import com.aionemu.gameserver.taskmanager.tasks.ShutdownTask;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author Divinity Based on L2J Emulator Global Tasks System
- * @author From L2J : Layane
+ * 从数据库加载并注册的全局定时任务管理器。
+ * Global scheduled-task manager loaded and registered from the database.
+ *
+ * <p>基于 L2J Emulator Global Tasks System。/ Based on L2J Emulator Global Tasks System.</p>
+ *
+ * @author Divinity
+ * @author Layane
  */
 @Slf4j
 public class TaskManagerFromDB {
 
+	/**
+	 * Spring 可选实例提供者。
+	 * Optional Spring instance provider.
+	 */
 	private static volatile ObjectProvider<TaskManagerFromDB> instanceProvider;
 
+	/**
+	 * 数据库任务列表。
+	 * Tasks loaded from the database.
+	 */
 	private ArrayList<TaskFromDB> tasksList;
+
+	/**
+	 * 任务名到处理器模板的映射。
+	 * Map of task name to handler template.
+	 */
 	private HashMap<String, TaskFromDBHandler> handlers;
 
+	/**
+	 * 加载 DB 任务、注册内置处理器并安排调度。
+	 * Load DB tasks, register built-in handlers, and schedule them.
+	 */
 	public TaskManagerFromDB() {
 		this.handlers = new HashMap<String, TaskFromDBHandler>();
 
 		tasksList = getDAO().getAllTasks();
-		log.info("Loaded " + tasksList.size() + " task" + (tasksList.size() > 1 ? "s" : "") + " from the database");
+		log.info(I18n.get("log.8fed1ca907ff", tasksList.size(), (tasksList.size() > 1 ? "s" : "")));
 
 		registerHandlers();
 		registerTasks();
 	}
 
 	/**
-	 * Allow to register all tasks to the handler
+	 * 注册全部内置任务处理器。
+	 * Register all built-in task handlers.
 	 */
 	private void registerHandlers() {
 		registerNewTask(new ShutdownTask());
@@ -63,57 +71,61 @@ public class TaskManagerFromDB {
 	}
 
 	/**
-	 * Allow to register one task and check if already exists
-	 * 
-	 * @param task
+	 * 注册一个任务处理器；若同名已存在则打错误日志。
+	 * Register one task handler; log an error if the name already exists.
+	 *
+	 * @param task 处理器模板 / Handler template
 	 */
 	private void registerNewTask(TaskFromDBHandler task) {
 		if (handlers.get(task.getTaskName()) != null) {
-			log.error("Can't override a task with name : " + task.getTaskName());
+			log.error(I18n.get("log.6fd925a0ac25", task.getTaskName()));
 		}
 		handlers.put(task.getTaskName(), task);
 	}
 
 	/**
-	 * Launching & checking task process
+	 * 遍历 DB 任务，实例化对应处理器并按类型调度。
+	 * Walk DB tasks, instantiate matching handlers, and schedule by type.
 	 */
 	private void registerTasks() {
-		// For all tasks from DB
+		// 用于所有来自 DB 的任务 / For all tasks from DB
 		for (TaskFromDB task : tasksList) {
-			// If the task name exist
+			// 若任务名存在 / If the task name exist
 			if (handlers.get(task.getName()) != null) {
 				Class<? extends TaskFromDBHandler> tmpClass = handlers.get(task.getName()).getClass();
 				TaskFromDBHandler currentTask = null;
 
 				try {
-					// Create new instance of the task
+					// 创建任务新实例。 / Create new instance of the task
 					currentTask = tmpClass.getDeclaredConstructor().newInstance();
 				} catch (ReflectiveOperationException e) {
 					log.error(e.getMessage(), e);
 				}
 
-				// Set informations for the task
+				// 设置任务信息 / Set informations for the task
 				currentTask.setId(task.getId());
 				currentTask.setParam(task.getParams());
 
 				if (!currentTask.isValid()) {
-					log.error("Invalid parameter for task ID: " + task.getId());
+					log.error(I18n.get("log.290fb6fb05a9", task.getId()));
 					continue;
 				}
 
 				if (task.getType().equals("FIXED_IN_TIME")) {
 					runFixedInTimeTask(currentTask, task);
 				} else
-					log.error("Unknow task's type for " + task.getType());
+					log.error(I18n.get("log.a722bb89732c", task.getType()));
 			} else
-				log.error("Unknow task's name with ID : " + task.getName());
+				log.error(I18n.get("log.a61c4a8afc0f", task.getName()));
 		}
 	}
 
 	/**
-	 * Run a fixed in the time (HH:MM:SS) task
-	 * 
-	 * @param handler
+	 * 按每天固定时刻（HH:MM:SS）循环执行任务。
+	 * Run a task every day at a fixed time (HH:MM:SS).
+	 *
+	 * @param handler 处理器实例 / Handler instance
+	 * @param dbTask 数据库任务配置 / DB task configuration
 	 */
 	private void runFixedInTimeTask(TaskFromDBHandler handler, TaskFromDB dbTask) {
 		String time[] = dbTask.getStartTime().split(":");
@@ -135,18 +147,20 @@ public class TaskManagerFromDB {
 	}
 
 	/**
-	 * Retuns {@link com.aionemu.gameserver.dao.TaskFromDBDAO} , just a shortcut
-	 * 
-	 * @return {@link com.aionemu.gameserver.dao.TaskFromDBDAO}
+	 * 获取 {@link TaskFromDBDAO} 快捷方法。
+	 * Shortcut to obtain {@link TaskFromDBDAO}.
+	 *
+	 * DAO instance
 	 */
 	private static TaskFromDBDAO getDAO() {
 		return DAOManager.getDAO(TaskFromDBDAO.class);
 	}
 
 	/**
-	 * Get the instance
-	 * 
-	 * @return
+	 * 获取单例：优先 Spring 提供者，否则回退静态 holder。
+	 * Get the singleton: prefer Spring provider, otherwise the static holder.
+	 *
+	 * @return 管理器实例 / Manager instance
 	 */
 	public static final TaskManagerFromDB getInstance() {
 		ObjectProvider<TaskManagerFromDB> provider = instanceProvider;
@@ -156,15 +170,26 @@ public class TaskManagerFromDB {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * Provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<TaskManagerFromDB> instanceProvider) {
 		TaskManagerFromDB.instanceProvider = instanceProvider;
 	}
 
 	/**
-	 * SingletonHolder
+	 * 静态单例持有者。
+	 * Static singleton holder.
 	 */
 	private static class SingletonHolder {
 
+		/**
+		 * 默认单例实例。
+		 * Default singleton instance.
+		 */
 		protected static final TaskManagerFromDB instance = new TaskManagerFromDB();
 	}
 }

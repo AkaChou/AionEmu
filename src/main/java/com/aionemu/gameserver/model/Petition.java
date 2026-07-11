@@ -1,22 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
 /**
+ * 请愿模型。
+ * Petition model.
+ *
  * @author zdead
  */
 public class Petition {
@@ -88,30 +75,37 @@ public class Petition {
 		}
 	}
 
+	/** 返回玩家对象 ID / Returns the player obj id */
 	public int getPlayerObjId() {
 		return playerObjId;
 	}
 
+	/** 返回请愿 ID / Returns the petition id */
 	public int getPetitionId() {
 		return petitionId;
 	}
 
+	/** 获取请愿类型。 / Returns the petition type. */
 	public PetitionType getPetitionType() {
 		return type;
 	}
 
+	/** 获取称号。 / Returns the title. */
 	public String getTitle() {
 		return title;
 	}
 
+	/** 返回正文 / Returns the content text */
 	public String getContentText() {
 		return contentText;
 	}
 
+	/** 返回附加数据 / Returns the additional data*/
 	public String getAdditionalData() {
 		return additionalData;
 	}
 
+	/** 获取状态。 / Returns the status. */
 	public PetitionStatus getStatus() {
 		return status;
 	}

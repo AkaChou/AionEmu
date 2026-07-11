@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.List;
@@ -25,6 +9,10 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
+/**
+ * 同步技能施放结果（命中效果、冷却、连锁、冲刺状态等）的服务端包。
+ * Server packet synchronizing skill cast results (hit effects, cooldown, chain, dash status, etc.).
+ */
 public class SM_CASTSPELL_RESULT extends AionServerPacket {
 	private Creature effector;
 	private Creature target;
@@ -38,6 +26,18 @@ public class SM_CASTSPELL_RESULT extends AionServerPacket {
 	private boolean chainSuccess;
 	private int skinId;
 
+	/**
+	 * 构造技能施放结果包（默认目标类型 0）。
+	 * Builds a cast-result packet (default target type 0).
+	 *
+	 * @param skill 已施放技能 / cast skill
+	 * @param effects 生效效果列表 / applied effects
+	 * hit time
+	 * @param chainSuccess 连锁是否成功 / whether chain succeeded
+	 * @param spellStatus 法术状态码 / spell status code
+	 * @param dashStatus 冲刺/位移状态 / dash status
+	 * skill skin id
+	 */
 	public SM_CASTSPELL_RESULT(Skill skill, List<Effect> effects, int hitTime, boolean chainSuccess, int spellStatus,
 			int dashStatus, int skinId) {
 		this.skill = skill;
@@ -53,6 +53,19 @@ public class SM_CASTSPELL_RESULT extends AionServerPacket {
 		this.skinId = skinId;
 	}
 
+	/**
+	 * 构造技能施放结果包，并指定目标类型。
+	 * Builds a cast-result packet with an explicit target type.
+	 *
+	 * @param skill 已施放技能 / cast skill
+	 * @param effects 生效效果列表 / applied effects
+	 * hit time
+	 * @param chainSuccess 连锁是否成功 / whether chain succeeded
+	 * @param spellStatus 法术状态码 / spell status code
+	 * @param dashStatus 冲刺/位移状态 / dash status
+	 * target type
+	 * skill skin id
+	 */
 	public SM_CASTSPELL_RESULT(Skill skill, List<Effect> effects, int hitTime, boolean chainSuccess, int spellStatus,
 			int dashStatus, int targetType, int skinId) {
 		this(skill, effects, hitTime, chainSuccess, spellStatus, dashStatus, skinId);
@@ -135,9 +148,8 @@ public class SM_CASTSPELL_RESULT extends AionServerPacket {
 			writeC((int) (100f * effector.getLifeStats().getCurrentHp() / effector.getLifeStats().getMaxHp()));
 
 			/**
-			 * Spell Status 1 : stumble 2 : knockback 4 : open aerial 8 : close aerial 16 :
-			 * spin 32 : block 64 : parry 128 :dodge 256 : resist
-			 */
+	 * 法术状态：1 踉跄；2 击退；4 开空；8 闭空；16 旋转；32 格挡；64 招架；128 闪避；256 抵抗 / Spell Status 1 : stumble 2 : knockback 4 : open aerial 8 : close aerial 16 : spin 32 : block 64 : parry 128 :dodge 256 : resist
+	 */
 			writeC(this.spellStatus);
 			writeC(effect.getSkillMoveType().getId());
 			writeH(0);

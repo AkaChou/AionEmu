@@ -1,20 +1,3 @@
-/*
- * This file is part of aion-lightning <aion-lightning.com>.
- *
- *  aion-lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  aion-lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with aion-lightning.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.aionemu.gameserver.quest.handlers.verteron;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -25,9 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
- * Quest starter: Nemia (203132). Give the Odella (182200526) (1) to Eradis (203130) and ask him to cook it. Buy some
- * Verteron Pepper (169400112) for Eradis.
- * 
+ * 沃特伦任务脚本：Odella Recipe（任务 ID 1152）。
+ * Verteron quest script: Odella Recipe (quest ID 1152). Quest starter: Nemia (203132). Give the Odella (182200526) (1) to Eradis (203130) and ask him to cook it. Buy some Verteron Pepper (169400112) for Eradis.
+ *
  * @author vlog
  */
 public class _1152OdellaRecipe extends QuestHandler {

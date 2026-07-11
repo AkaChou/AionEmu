@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.kamarBattlefield;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -26,10 +10,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Kamar Battlefield 副本 NPC AI：Kamar General（@AIName "kamar_general"），继承 AggressiveNpcAI2。
+ * Kamar Battlefield instance NPC AI: Kamar General (@AIName "kamar_general"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("kamar_general")
 public class KamarGeneralAI2 extends AggressiveNpcAI2
 {
@@ -62,7 +48,7 @@ public class KamarGeneralAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Acting Commander Crispin is under attack.
+					// 代理指挥官克里斯平遭受攻击。 / Acting Commander Crispin is under attack.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_LightGeneral_Hit);
 				}
 			}
@@ -73,7 +59,7 @@ public class KamarGeneralAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Acting Commander Tepes is under attack.
+					// 代理指挥官特佩斯遭受攻击。 / Acting Commander Tepes is under attack.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_DarkGeneral_Hit);
 				}
 			}
@@ -84,7 +70,7 @@ public class KamarGeneralAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Commander Varga is under attack.
+					// 瓦尔加指挥官遭受攻击。 / Commander Varga is under attack.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_DrakanGeneral_Hit);
 				}
 			}

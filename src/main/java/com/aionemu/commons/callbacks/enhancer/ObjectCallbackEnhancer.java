@@ -1,26 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- * Aion-Lightning is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * Aion-Lightning is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. *
- *
- * You should have received a copy of the GNU General Public License along with Aion-Lightning. If not, see <http://www.gnu.org/licenses/>.
- *
- *
- * Credits goes to all Open Source Core Developer Groups listed below Please do not change here something, ragarding the developer credits, except the
- * "developed by XXXX". Even if you edit a lot of files in this source, you still have no rights to call it as "your Core". Everybody knows that this
- * Emulator Core was developed by Aion Lightning
- * 
- * @-Aion-Unique-
- * @-Aion-Lightning
- * @Aion-Engine
- * @Aion-Extreme
- * @Aion-NextGen
- * @Aion-Core Dev.
- */
 package com.aionemu.commons.callbacks.enhancer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,12 +56,14 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     public static final String FIELD_NAME_CALLBACKS_LOCK = "$$$callbackLock";
 
     /**
-     * Does actual transformation
+     * 执行实际的类字节码转换与对象回调增强
+     * Perform the actual class bytecode transformation and object-callback enhancement
      *
-     * @param loader class loader
-     * @param clazzBytes class bytecode
-     * @return transformed class bytecode
-     * @throws Exception is something went wrong
+     * Class loader
+     * Class bytecode
+     *
+     * @param loader @return 增强后的字节码；无需增强时返回 null / Enhanced bytecode, or null when no enhancement is needed
+     * @param clazzBytes @throws Exception 增强失败时 / When enhancement fails
      */
     protected byte[] transformClass(ClassLoader loader, byte[] clazzBytes) throws Exception {
         ClassPool cp = new ClassPool();
@@ -125,12 +104,13 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     }
     
     /**
-     * Responsible for method enhancing, writing service calls to method.
+     * 增强方法，写入前后置回调调用代码
+     * Enhance a method by writing pre/post callback invocation code
      *
-     * @param method Method that has to be edited
-     * @throws javassist.CannotCompileException if something went wrong
-     * @throws javassist.NotFoundException if something went wrong
-     * @throws ClassNotFoundException if something went wrong
+     * @param method 需要编辑的方法 / Method that has to be edited
+     * When code compilation fails。 / When code compilation fails.
+     * When a type is not found。 / When a type is not found.
+     * When an annotation class cannot be loaded。 / When an annotation class cannot be loaded.
      */
     protected void enhanceMethod(CtMethod method) throws CannotCompileException, NotFoundException, ClassNotFoundException {
         ClassPool cp = method.getDeclaringClass().getClassPool();
@@ -155,14 +135,15 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     }
     
     /**
-     * Code that is added in the begining of the method
+     * 生成插入方法开头的前置回调代码
+     * Generate code inserted at the beginning of the method for before-callbacks
      *
-     * @param method method that should be edited
-     * @param paramLength Lenght of methods parameters
-     * @param listenerFieldName Listener class that is used for method
-     * @return code that will be inserted before method
-     * @throws NotFoundException if something went wrong
-     * @throws CannotCompileException
+     * @param method 需要编辑的方法 / Method that should be edited
+     * @param paramLength 方法参数个数 / Number of method parameters
+     * @param listenerFieldName 监听器类字段名 / Listener class field name used for the method
+     * @return 插入方法前的代码 / Code that will be inserted before the method body
+     * When a type is not found。 / When a type is not found.
+     * When code generation fails。 / When code generation fails.
      */
     protected String writeBeforeMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException, CannotCompileException {
         StringBuilder sb = new StringBuilder();
@@ -189,7 +170,7 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
         
         sb.append("if(___cbr.isBlockingCaller()){");
         
-        // Fake return due to javassist bug
+        // 因 javassist 缺陷的假返回。 / Fake return due to javassist bug
         // $r is not available in "insertBefore"
         CtClass returnType = method.getReturnType();
         if (returnType.equals(CtClass.voidType)) {
@@ -208,19 +189,20 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     }
     
     /**
-     * Writes code that will be inserted after method
+     * 生成插入方法结尾的后置回调代码
+     * Generate code inserted after the method for after-callbacks
      *
-     * @param method method to edit
-     * @param paramLength lenght of method paramenters
-     * @param listenerFieldName method listener
-     * @return actual code that should be inserted
-     * @throws NotFoundException if something went wrong
+     * @param method 需要编辑的方法 / Method to edit
+     * @param paramLength 方法参数个数 / Number of method parameters
+     * @param listenerFieldName 监听器类字段名 / Method listener field name
+     * @return 实际插入的代码 / Actual code that should be inserted
+     * When a type is not found。 / When a type is not found.
      */
     protected String writeAfterMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();
         sb.append('{');
         
-        // workaround for javassist bug, $r is not available in "insertBefore"
+        // 规避 javassist 缺陷：insertBefore 中 $r 不可用 / workaround for javassist bug, $r is not available in "insertBefore"
         if (!method.getReturnType().equals(CtClass.voidType)) {
             sb.append("if(___cbr.isBlockingCaller()){");
             sb.append("$_ = ($r)($w)___cbr.getResult();");
@@ -256,11 +238,12 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     }
     
     /**
-     * Implements {@link EnhancedObject on class}
+     * 为实现 {@link EnhancedObject} 写入字段与方法
+     * Write fields and methods that implement {@link EnhancedObject}
      *
-     * @param clazz class to edit
-     * @throws NotFoundException if something went wrong
-     * @throws CannotCompileException if something went wrong
+     * @param clazz 需要编辑的类 / Class to edit
+     * When a type is not found。 / When a type is not found.
+     * When code compilation fails。 / When code compilation fails.
      */
     protected void writeEnhancedObjectImpl(CtClass clazz) throws NotFoundException, CannotCompileException {
         ClassPool cp = clazz.getClassPool();
@@ -270,32 +253,34 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     }
     
     /**
-     * Implements {@link EnhancedObject} fields
+     * 为实现 {@link EnhancedObject} 添加字段
+     * Add fields required by {@link EnhancedObject}
      *
-     * @param clazz Class to add fields
-     * @throws CannotCompileException if something went wrong
-     * @throws NotFoundException if something went wrong
+     * @param clazz 需要添加字段的类 / Class to add fields to
+     * When field generation fails。 / When field generation fails.
+     * When a type is not found。 / When a type is not found.
      */
     private void writeEnhancedOBjectFields(CtClass clazz) throws CannotCompileException, NotFoundException {
         ClassPool cp = clazz.getClassPool();
         
-        // add map that holds callbacks
+        // 添加保存回调的映射 / add map that holds callbacks
         CtField cbField = new CtField(cp.get(Map.class.getName()), FIELD_NAME_CALLBACKS, clazz);
         cbField.setModifiers(java.lang.reflect.Modifier.PRIVATE);
         clazz.addField(cbField, CtField.Initializer.byExpr("null;"));
         
-        // add reetrantReadWriteLock
+        // 添加可重入读写锁 / add reetrantReadWriteLock
         CtField cblField = new CtField(cp.get(ReentrantReadWriteLock.class.getName()), FIELD_NAME_CALLBACKS_LOCK, clazz);
         cblField.setModifiers(java.lang.reflect.Modifier.PRIVATE);
         clazz.addField(cblField, CtField.Initializer.byExpr("new " + ReentrantReadWriteLock.class.getName() + "();"));
     }
     
     /**
-     * Implements {@link EnhancedObject methods}
+     * 为实现 {@link EnhancedObject} 添加方法
+     * Add methods required by {@link EnhancedObject}
      *
-     * @param clazz Class to add methods
-     * @throws NotFoundException if something went wrong
-     * @throws CannotCompileException if something went wrong
+     * @param clazz 需要添加方法的类 / Class to add methods to
+     * When a type is not found。 / When a type is not found.
+     * When method generation fails。 / When method generation fails.
      */
     private void writeEnhancedObjectMethods(CtClass clazz) throws NotFoundException, CannotCompileException {
         
@@ -332,11 +317,11 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
     }
     
     /**
-     * Checks if method is enhanceable. It should be marked with {@link com.aionemu.commons.callbacks.metadata.ObjectCallback} annotation, be not
-     * native and not abstract
+     * 判断方法是否可增强：需带 {@link com.aionemu.commons.callbacks.metadata.ObjectCallback}，且非 native/abstract/static
+     * Check whether a method is enhanceable: must have {@link com.aionemu.commons.callbacks.metadata.ObjectCallback} and not be native/abstract/static
      *
-     * @param method method to check
-     * @return check result
+     * @param method 待检查方法 / Method to check
+     * @return 可增强返回 true / True if enhanceable
      */
     protected boolean isEnhanceable(CtMethod method) {
         int modifiers = method.getModifiers();

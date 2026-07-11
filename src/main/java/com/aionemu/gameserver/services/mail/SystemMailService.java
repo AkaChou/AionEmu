@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.mail;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -46,11 +32,23 @@ import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-@Slf4j(topic = "SYSMAIL_LOG")
 
+/**
+ * 系统邮件服务，向在线/离线玩家投递系统信件与模板奖励。
+ * System mail service that delivers system letters and template rewards to online/offline players.
+ */
+@Slf4j(topic = "SYSMAIL_LOG")
 public class SystemMailService {
+
+	/** Spring provider used to override the default singleton / Spring provider used to override the default singleton */
 	private static volatile ObjectProvider<SystemMailService> instanceProvider;
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static final SystemMailService getInstance() {
 		ObjectProvider<SystemMailService> provider = instanceProvider;
 		if (provider != null) {
@@ -59,23 +57,47 @@ public class SystemMailService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<SystemMailService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 构造服务并输出初始化日志。
+	 * Constructs the service and writes the init log.
+	 */
 	public SystemMailService() {
-		log.info("SystemMailService: Initialized.");
+		log.info(I18n.get("log.156ce5bf14eb"));
 	}
 
+	/**
+	 * 发送系统邮件，可附带物品、基纳与欧比斯点数。
+	 * Sends a system mail with optional attached item, kinah, and abyss points.
+	 *
+	 * @param sender 发件人名称 / sender name
+	 * @param recipientName 收件人名称 / recipient name
+	 * @param title 邮件标题 / mail title
+	 * mail body
+	 * @param attachedItemObjId 附件物品模板 ID / attached item template id
+	 * @param attachedItemCount 附件物品数量 / attached item count
+	 * @param attachedKinahCount 附件基纳数量 / attached kinah count
+	 * @param attachedAPCount 附件欧比斯点数 / attached abyss points
+	 * letter type
+	 *
+	 * @return 是否发送成功 / whether the mail was sent successfully
+	 */
 	public boolean sendMail(String sender, String recipientName, String title, String message, int attachedItemObjId,
 			long attachedItemCount, long attachedKinahCount, long attachedAPCount, LetterType letterType) {
 		if (attachedItemObjId != 0) {
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(attachedItemObjId);
 			if (itemTemplate == null) {
-				// log.info("[SYSMAILSERVICE] > [SenderName: " + sender + "] [RecipientName: " +
-				// recipientName + "] RETURN ITEM ID:" + itemTemplate
-				// + " ITEM COUNT " + attachedItemCount + " KINAH COUNT " + attachedKinahCount +
-				// " ITEM TEMPLATE IS MISSING ");
+				// log.info(I18n.get("log.6645e35c12ff", sender, // recipientName, itemTemplate
+				//, attachedItemCount, attachedKinahCount, // " ITEM TEMPLATE IS MISSING "));
 				return false;
 			}
 		}
@@ -83,17 +105,13 @@ public class SystemMailService {
 			return false;
 		}
 		if (recipientName.length() > 16) {
-			// log.info("[SYSMAILSERVICE] > [SenderName: " + sender + "] [RecipientName: " +
-			// recipientName + "] ITEM RETURN" + attachedItemObjId
-			// + " ITEM COUNT " + attachedItemCount + " KINAH COUNT " + attachedKinahCount +
-			// " RECIPIENT NAME LENGTH > 16 ");
+			// log.info(I18n.get("log.44191d66a7b1", sender, // recipientName, attachedItemObjId
+			//, attachedItemCount, attachedKinahCount, // " RECIPIENT NAME LENGTH > 16 "));
 			return false;
 		}
 		if (!sender.startsWith("$$") && sender.length() > 50) {
-			// log.info("[SYSMAILSERVICE] > [SenderName: " + sender + "] [RecipientName: " +
-			// recipientName + "] ITEM RETURN" + attachedItemObjId
-			// + " ITEM COUNT " + attachedItemCount + " KINAH COUNT " + attachedKinahCount +
-			// " SENDER NAME LENGTH > 16 ");
+			// log.info(I18n.get("log.44191d66a7b1", sender, // recipientName, attachedItemObjId
+			//, attachedItemCount, attachedKinahCount, // " SENDER NAME LENGTH > 16 "));
 			return false;
 		}
 		if (title.length() > 20) {
@@ -105,8 +123,7 @@ public class SystemMailService {
 		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class)
 				.loadPlayerCommonDataByName(recipientName);
 		if (recipientCommonData == null) {
-			// log.info("[SYSMAILSERVICE] > [RecipientName: " + recipientName + "] NO SUCH
-			// CHARACTER NAME.");
+			// log.info(I18n.get("log.2ca8b1e5c461", recipientName));
 			return false;
 		}
 		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
@@ -159,7 +176,7 @@ public class SystemMailService {
 						new SM_MAIL_SERVICE(recipient, recipientMailbox.getLetters(), isPostman));
 			}
 			if (letterType == LetterType.EXPRESS) {
-				// Express mail has arrived.
+				// 快递邮件已到达。 / Express mail has arrived.
 				PacketSendUtility.sendPacket(recipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
 			}
 		}
@@ -169,6 +186,20 @@ public class SystemMailService {
 		return true;
 	}
 
+	/**
+	 * 发送已构造附件物品的系统邮件。
+	 * Sends a system mail using a prebuilt attached item instance.
+	 *
+	 * @param sender 发件人名称 / sender name
+	 * mail title
+	 * mail body
+	 * @param recipientName 收件人名称 / recipient name
+	 * @param item 附件物品实例 / attached item instance
+	 * @param attachedKinahCount 附件基纳数量 / attached kinah count
+	 * @param attachedApCount 附件欧比斯点数 / attached abyss points
+	 * @param type 信件类型 / letter type
+	 * @return 是否发送成功 / whether the mail was sent successfully
+	 */
 	public boolean sendSystemMail(String sender, String sysTitle, String sysMessage, String recipientName, Item item,
 			long attachedKinahCount, long attachedApCount, LetterType type) {
 		String title = sysTitle;
@@ -217,7 +248,7 @@ public class SystemMailService {
 			PacketSendUtility.sendPacket(onlineRecipient,
 					new SM_MAIL_SERVICE(onlineRecipient, recipientMailbox.getLetters()));
 			PacketSendUtility.sendPacket(onlineRecipient, new SM_MAIL_SERVICE(recipientMailbox));
-			// Express mail has arrived.
+			// 快递邮件已到达。 / Express mail has arrived.
 			if (type == LetterType.EXPRESS || type == LetterType.BLACKCLOUD) {
 				PacketSendUtility.sendPacket(onlineRecipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
 			}
@@ -228,14 +259,38 @@ public class SystemMailService {
 		return true;
 	}
 
+	/**
+	 * 获取玩家已加载的邮箱实例。
+	 * Returns the player's already loaded mailbox instance.
+	 *
+	 * 玩家 / player
+	 * mailbox or null
+	 */
 	private Mailbox getLoadedMailbox(Player recipient) {
 		return recipient == null ? null : recipient.getMailbox();
 	}
 
+	/**
+	 * 判断邮箱是否已达上限。
+	 * Checks whether the mailbox has reached the given letter limit.
+	 *
+	 * @param recipientMailbox 已加载邮箱 / loaded mailbox
+	 * @param recipientCommonData 玩家公共数据 / player common data
+	 * @param limit 信件上限 / letter limit
+	 * whether the mailbox is full
+	 */
 	private boolean isMailboxFull(Mailbox recipientMailbox, PlayerCommonData recipientCommonData, int limit) {
 		return recipientMailbox != null ? recipientMailbox.size() >= limit : recipientCommonData.getMailboxLetters() >= limit;
 	}
 
+	/**
+	 * 更新离线玩家邮箱信件计数并写库。
+	 * Updates the offline mailbox letter counter and persists it.
+	 *
+	 * @param recipientCommonData 收件人公共数据 / recipient common data
+	 * @param recipient 在线玩家实例 / online player instance
+	 * @param recipientMailbox 已加载邮箱 / loaded mailbox
+	 */
 	private void updateMailboxCounter(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox) {
 		PlayerCommonData counterData = recipientMailbox == null && recipient != null && recipient.getCommonData() != null
 				? recipient.getCommonData() : recipientCommonData;
@@ -246,6 +301,13 @@ public class SystemMailService {
 		}
 	}
 
+	/**
+	 * 按奖励模板向玩家发送系统邮件。
+	 * Sends a system mail reward defined by the given template id.
+	 *
+	 * reward template id
+	 * @param playerData 玩家公共数据 / player common data
+	 */
 	public static void sendTemplateRewardMail(final int templateId, final PlayerCommonData playerData) {
 		final MailRewardTemplate reward = DataManager.MAIL_REWARD.getMailReward(templateId);
 		GameFeatureServices.systemMailService().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
@@ -253,6 +315,10 @@ public class SystemMailService {
 				reward.getKinahCount(), reward.getApCount(), LetterType.NORMAL);
 	}
 
+	/**
+	 * 默认单例持有者。
+	 * Default singleton holder.
+	 */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 		protected static final SystemMailService instance = new SystemMailService();

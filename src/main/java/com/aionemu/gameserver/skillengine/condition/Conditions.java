@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import java.util.ArrayList;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 条件容器：聚合技能模板中声明的全部条件，并在技能/属性/效果路径上逐条校验。
+ * Conditions container: aggregates all conditions declared in a skill template and validates them on skill/stat/effect paths.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -59,18 +46,10 @@ public class Conditions {
 	protected List<Condition> conditions;
 
 	/**
-	 * Gets the value of the conditions property.
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot.
-	 * Therefore any modification you make to the returned list will be present
-	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
-	 * for the conditions property.
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * 
-	 * <pre>
-	 * getConditions().add(newItem);
-	 * </pre>
+	 * 获取条件列表（实时引用，修改会反映到 JAXB 对象中）。
+	 * Gets the conditions list (live reference; modifications are present inside the JAXB object).
+	 *
+	 * conditions list
 	 */
 	public List<Condition> getConditions() {
 		if (conditions == null) {
@@ -79,6 +58,13 @@ public class Conditions {
 		return this.conditions;
 	}
 
+	/**
+	 * 在技能施放路径上逐条校验全部条件。
+	 * Validates all conditions on the skill cast path.
+	 *
+	 * @param skill 技能环境 / skill environment
+	 * @return 全部通过则为 true / true if all pass
+	 */
 	public boolean validate(Skill skill) {
 		if (conditions != null) {
 			for (Condition condition : getConditions()) {
@@ -90,6 +76,15 @@ public class Conditions {
 		return true;
 	}
 
+	/**
+	 * 在属性计算路径上逐条校验全部条件。
+	 * Validates all conditions on the stat calculation path.
+	 *
+	 * @param stat 属性对象 / stat object
+	 * stat function
+	 *
+	 * @return 全部通过则为 true / true if all pass
+	 */
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
 		if (conditions != null) {
 			for (Condition condition : getConditions()) {
@@ -101,6 +96,14 @@ public class Conditions {
 		return true;
 	}
 
+	/**
+	 * 在效果应用路径上逐条校验全部条件。
+	 * Validates all conditions on the effect application path.
+	 *
+	 * effect environment
+	 *
+	 * @param effect @return 全部通过则为 true / true if all pass
+	 */
 	public boolean validate(Effect effect) {
 		if (conditions != null) {
 			for (Condition condition : getConditions()) {

@@ -3,13 +3,14 @@ package com.aionemu.commons.logging.slf4j.filters;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
+import com.aionemu.commons.logging.LogTags;
 
 /**
  * 控制台日志过滤器
  * Console log filter that filters out specific message types from console output
  */
 public class ConsoleFilter extends Filter<ILoggingEvent> {
-    
+
     /**
      * 决定是否接受或拒绝日志事件
      * Decides whether to accept or deny a logging event
@@ -19,11 +20,12 @@ public class ConsoleFilter extends Filter<ILoggingEvent> {
      *         (FilterReply.ACCEPT if message doesn't start with specified prefixes; FilterReply.DENY if it does)
      */
     public FilterReply decide(ILoggingEvent event) {
-        return !event.getMessage().startsWith("[MESSAGE]") 
-            && !event.getMessage().startsWith("[ITEM]") 
-            && !event.getMessage().startsWith("[ADMIN COMMAND]") 
-            && !event.getMessage().startsWith("[AUDIT]") 
-                ? FilterReply.ACCEPT 
+        String message = event.getMessage();
+        return !message.startsWith(LogTags.MESSAGE)
+            && !message.startsWith(LogTags.ITEM)
+            && !message.startsWith(LogTags.ADMIN)
+            && !message.startsWith(LogTags.AUDIT)
+                ? FilterReply.ACCEPT
                 : FilterReply.DENY;
     }
 }

@@ -9,9 +9,11 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 艾特南任务脚本：An Orderfor Gojirunerk（任务 ID 3319）。
+ * Eltnen quest script: An Orderfor Gojirunerk (quest ID 3319).
+ *
  * @author Balthazar
  */
-
 public class _3319AnOrderforGojirunerk extends QuestHandler {
 
 	private final static int questId = 3319;

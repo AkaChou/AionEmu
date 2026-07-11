@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -31,6 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * AI 模板数据容器，持有并索引全部 NPC AI 配置。
+ * Container holding and indexing all NPC AI templates.
+ *
  * @author xTz
  */
 @XmlRootElement(name = "ai_templates")
@@ -41,6 +28,10 @@ public class AIData {
 	private List<Ai> templates;
 	private Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<Integer, AITemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，将列表转为按 NPC ID 索引的 AI 模板映射。
+	 * After JAXB unmarshalling, builds the NPC-id-indexed AI template map.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		aiTemplate.clear();
 		for (Ai template : templates) {
@@ -48,10 +39,22 @@ public class AIData {
 		}
 	}
 
+	/**
+	 * 返回已加载的 AI 模板数量。
+	 * Returns the number of loaded AI templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return aiTemplate.size();
 	}
 
+	/**
+	 * 返回全部 AI 模板映射。
+	 * Returns the full AI template map.
+	 *
+	 * @return NPC ID 到 AI 模板的映射 / map of NPC id to AI template
+	 */
 	public Map<Integer, AITemplate> getAiTemplate() {
 		return aiTemplate;
 	}

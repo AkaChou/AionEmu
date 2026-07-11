@@ -1,23 +1,10 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -37,8 +24,12 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 艾特利亚护照服务，处理登录签到与护照奖励。
+ * Atreian passport service handling login stamps and passport rewards.
+ *
  * @author Rinzler (Encom)
  */
+
 @Slf4j
 public class AtreianPassportService {
 
@@ -47,6 +38,13 @@ public class AtreianPassportService {
 	private Map<Integer, AtreianPassport> anny = new HashMap<Integer, AtreianPassport>(1);
 	public Map<Integer, AtreianPassport> data = new HashMap<Integer, AtreianPassport>(1);
 
+	/**
+	 * getPlayerPassports 方法。
+	 * getPlayerPassports method.
+	 *
+	 * accountId
+	 * result
+	 */
 	public Map<Integer, AtreianPassport> getPlayerPassports(int accountId) {
 		Map<Integer, AtreianPassport> passports = new HashMap<Integer, AtreianPassport>();
 		List<Integer> ids = DAOManager.getDAO(PlayerPassportsDAO.class).getPassports(accountId);
@@ -56,6 +54,12 @@ public class AtreianPassportService {
 		return passports;
 	}
 
+	/**
+	 * 玩家登录时同步状态。
+	 * Syncs state when a player logs in.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onLogin(Player player) {
 		if (player == null) {
 			return;
@@ -65,20 +69,21 @@ public class AtreianPassportService {
 		PlayerPassportsDAO dao = DAOManager.getDAO(PlayerPassportsDAO.class);
 		Map<Integer, AtreianPassport> playerPassports = getPlayerPassports(accountId);
 
-		// Added reset if all Stamps are received
+		// 若全部印章已领取则添加重置 / Added reset if all Stamps are received
 		if (dao.getStamps(accountId, atreianId) == 28) {
 			dao.updatePassport(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
 		}
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(player.getCreationDate());
+		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int month = cal.get(Calendar.MONTH);
 		int year = cal.get(Calendar.YEAR);
 
 		if (!playerPassports.containsKey(atreianId)) {
 			final Timestamp now = new Timestamp(System.currentTimeMillis() - 86400000L);
 			dao.insertPassport(accountId, atreianId, 0, now);
-			PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId, 0, 1, false, month + 1, year)); // NEW
+			PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId, 0, 1, false, day, month + 1, year));
 		} else {
 			int stamps = dao.getStamps(accountId, atreianId);
 			Timestamp now2 = new Timestamp(System.currentTimeMillis());
@@ -87,23 +92,27 @@ public class AtreianPassportService {
 				DAOManager.getDAO(PlayerPassportsDAO.class).updatePassport(accountId, atreianId, stamps, false,
 						lastStamp);
 				PacketSendUtility.sendPacket(player,
-						new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, false, month + 1, year));
+						new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, false, day, month + 1, year));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NEW_PASSPORT_AVAIBLE);
 			} else {
 				PacketSendUtility.sendPacket(player,
-						new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, true, month + 1, year));
+						new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, true, day, month + 1, year));
 			}
 		}
 	}
 
+	/**
+	 * 启动服务。
+	 * Starts the service.
+	 */
 	public void onStart() {
 		Map<Integer, AtreianPassport> raw = DataManager.ATREIAN_PASSPORT_DATA.getAll();
 		if (raw.size() != 0) {
 			getPassports(raw);
 		} else {
-			log.warn("[AtreianPassportService] passports from static data = 0");
+			log.warn(I18n.get("log.2ea564e44e72"));
 		}
-		log.info("[AtreianPassportService] is initialized...");
+		log.info(I18n.get("log.9ae8def154d9"));
 	}
 
 	/**
@@ -112,10 +121,19 @@ public class AtreianPassportService {
 	 */
 	public void getReward(Player player, int atreianId) {
 		AtreianPassport loginRewardTemplate = DataManager.ATREIAN_PASSPORT_DATA.getAtreianPassportId(atreianId);
+		ZonedDateTime currentTime = ZonedDateTime.now();
+		if (loginRewardTemplate == null || loginRewardTemplate.getActive() != 1
+				|| currentTime.isBefore(loginRewardTemplate.getPeriodStart()) || currentTime.isAfter(loginRewardTemplate.getPeriodEnd())) {
+			return;
+		}
 		int accountId = player.getPlayerAccount().getId();
 		PlayerPassportsDAO dao = DAOManager.getDAO(PlayerPassportsDAO.class);
+		if (!dao.getPassports(accountId).contains(atreianId)) {
+			return;
+		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(player.getCreationDate());
+		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int month = cal.get(Calendar.MONTH);
 		int year = cal.get(Calendar.YEAR);
 		int stamps = dao.getStamps(accountId, atreianId);
@@ -126,9 +144,9 @@ public class AtreianPassportService {
 				if (component.getRewardItemNum() == stamps + 1) {
 					ItemService.addItem(player, component.getRewardItem(), component.getRewardItemCount());
 					// PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId,
-					// stamps + 1, (int) now.getTime(), true, month + 1, year)); //OLD
+					// OLD
 					PacketSendUtility.sendPacket(player,
-							new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, 1, true, month + 1, year)); // NEW
+							new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, 1, true, day, month + 1, year));
 					DAOManager.getDAO(PlayerPassportsDAO.class).updatePassport(accountId, atreianId, stamps + 1, true,
 							now);
 				}
@@ -136,6 +154,12 @@ public class AtreianPassportService {
 		}
 	}
 
+	/**
+	 * getPassports 方法。
+	 * getPassports method.
+	 *
+	 * @param AtreianPassport 阿特雷亚通行证 / AtreianPassport
+	 */
 	public void getPassports(Map<Integer, AtreianPassport> raw) {
 		data.putAll(raw);
 		for (AtreianPassport atp : data.values()) {
@@ -150,10 +174,17 @@ public class AtreianPassportService {
 				break;
 			}
 		}
-		log.info("[AtreianPassportService] Loaded " + basic.size() + " basic passports");
-		log.info("[AtreianPassportService] Loaded " + anny.size() + " anniversary passports");
+		log.info(I18n.get("log.a141967cbb98", basic.size()));
+		log.info(I18n.get("log.7ada0c3d82d6", anny.size()));
 	}
 
+	/**
+	 * getPassports 方法。
+	 * getPassports method.
+	 *
+	 * @param id ID / id
+	 * atp
+	 */
 	public void getPassports(int id, AtreianPassport atp) {
 		if (data.containsValue(id)) {
 			return;
@@ -161,6 +192,13 @@ public class AtreianPassportService {
 		data.put(id, atp);
 	}
 
+	/**
+	 * getBasicPassports 方法。
+	 * getBasicPassports method.
+	 *
+	 * @param id ID / id
+	 * atp
+	 */
 	public void getBasicPassports(int id, AtreianPassport atp) {
 		if (basic.containsValue(id)) {
 			return;
@@ -168,6 +206,13 @@ public class AtreianPassportService {
 		basic.put(id, atp);
 	}
 
+	/**
+	 * getAnniversaryPassports 方法。
+	 * getAnniversaryPassports method.
+	 *
+	 * @param id ID / id
+	 * atp
+	 */
 	public void getAnniversaryPassports(int id, AtreianPassport atp) {
 		if (anny.containsValue(id)) {
 			return;
@@ -181,6 +226,11 @@ public class AtreianPassportService {
 		protected static final AtreianPassportService instance = new AtreianPassportService();
 	}
 
+	/**
+	 * 获取服务单例。
+	 * Returns the service singleton.
+	 * result
+	 */
 	public static AtreianPassportService getInstance() {
 		ObjectProvider<AtreianPassportService> provider = instanceProvider;
 		if (provider != null) {
@@ -189,6 +239,12 @@ public class AtreianPassportService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * setInstanceProvider 方法。
+	 * setInstanceProvider method.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AtreianPassportService> provider) {
 		instanceProvider = provider;
 	}

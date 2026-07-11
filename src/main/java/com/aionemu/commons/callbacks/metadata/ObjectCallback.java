@@ -28,8 +28,7 @@ public @interface ObjectCallback {
      * 获取回调处理器类
      * Get the callback handler class
      *
-     * @return 继承自Callback的回调处理器类
-     *         The callback handler class that extends Callback
+     * @return 继承自 Callback 的回调处理器类 / Callback handler class that extends Callback
      */
     Class<? extends Callback> value();
 }

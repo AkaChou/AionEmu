@@ -1,26 +1,11 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
-
 package com.aionemu.chatserver.model;
 
+/**
+ * 聊天服世界地图类型枚举（地图 ID 列表）。
+ * Chat-server world map type enum (map id list).
+ */
 public enum WorldMapType {
-    // Asmodea
+    // 阿斯摩德 / Asmodea
 
     PANDAEMONIUM(120010000),
     MARCHUTAN(120020000),
@@ -29,7 +14,7 @@ public enum WorldMapType {
     ALTGARD(220030000),
     BELUSLAN(220040000),
     BRUSTHONIN(220050000),
-    // Elysia
+    // 艾利西亚 / Elysia
     SANCTUM(110010000),
     KAISINEL(110020000),
     POETA(210010000),
@@ -37,16 +22,16 @@ public enum WorldMapType {
     VERTERON(210030000),
     HEIRON(210040000),
     THEOBOMOS(210060000),
-    // Balaurea
+    // 巴劳雷亚 / Balaurea
     INGGISON(210050000),
     GELKMAROS(220070000),
     SILENTERA_CANYON(600010000),
-    // Prison
+    // 监狱 / Prison
     DE_PRISON(510010000), // For ELYOS
     DF_PRISON(520010000), // For ASMODIANS
 
     RESHANTA(400010000),
-    // Instances
+    // 副本 / Instances
     NO_ZONE_NAME(300010000),
     ID_TEST_DUNGEON(300020000),
     NOCHSANA_TRAINING_CAMP(300030000),
@@ -95,29 +80,29 @@ public enum WorldMapType {
     SHADOW_COURT_DUNGEON(320120000),
     ADMA_STRONGHOLD(320130000),
     IDAB_PRO_D3(320140000),
-    // Maps 2.5
+    // 地图 2.5 / Maps 2.5
     KAISINEL_ACADEMY(110070000),
     MARCHUTAN_PRIORY(120080000),
     ESOTERRACE(300250000),
     EMPYREAN_CRUCIBLE(300300000),
-    // Map 2.6
+    // 地图 2.6 / Map 2.6
     CRUCIBLE_CHALLENGE(300320000),
-    // Maps 2.7
+    // 地图 2.7 / Maps 2.7
     ARENA_OF_CHAOS(300350000),
     ARENA_OF_DISCIPLINE(300360000),
     CHAOS_TRAINING_GROUNDS(300420000),
     DISCIPLINE_TRAINING_GROUNDS(300430000),
     PADMARASHKA_CAVE(320150000),
-    // Test Map
+    // 测试地图 / Test Map
     TEST_BASIC(900020000),
     TEST_SERVER(900030000),
     TEST_GIANTMONSTER(900100000),
     HOUSING_BARRACK(900110000),
     Region_housing(900130000),
     Advanced_Personal_Housing(900140000),
-    // Maps 3.0
+    // 地图 3.0 / Maps 3.0
 
-    // Instances
+    // 副本 / Instances
     RAKSANG(300310000),
     RENTUS_BASE(300280000),
     ATURAN_SKY_FORTRESS(300240000),
@@ -127,24 +112,24 @@ public enum WorldMapType {
     STEEL_RAKE_CABIN(300460000),
     TERATH_DREDGION(300440000),
     SATRA_TREASURE_HOARD(300470000),
-    // Housing
+    // 房屋 / Housing
     ORIEL(700010000),
     PERNON(710010000),
-    // Maps
+    // 地图 / Maps
     SARPAN(600020000),
     SARPAN_SKY(300410000),
     TIAMARANTA(600030000),
     TIAMARANTA_EYE(300400000),
     TIAMARANTA_EYE_2(600040000),
-    // Others
+    // 其他 / Others
     PROTECTOR_REALM(300330000),
     ISRAPHEL_TRACT(300390000),
-    // Maps Tests 3.0
+    // 地图测试 3.0 / Maps Tests 3.0
     Housing_LC_legion(700020000),
     Housing_DC_legion(710020000),
     housing_idlf_personal(720010000),
     housing_iddf_personal(730010000),
-    // Map 3.5
+    // 地图 3.5 / Map 3.5
     ARENA_OF_HARMONY(300450000),
     IDTiamat_Solo(300490000),
     IDTiamat_Israphel(300500000), //Israphel's Space
@@ -155,7 +140,7 @@ public enum WorldMapType {
     IDArena_Team01_T(300570000),
     UNSTABLE_SPLINTER(300600000), //Unstable Abyssal Splinter
     HEXWAY(300700000),
-    // Instances 4.3 NA
+    // 副本 4.3 北美 / Instances 4.3 NA
     IDLDF5Re_02(300530000),
     IDLDF5b_TD(300540000),
     IDLDF5Re_03(300580000),
@@ -177,7 +162,7 @@ public enum WorldMapType {
     IDLDF5RE_03_L(301180000),
     IDLDF5RE_Solo_L(301190000),
     IDAsteria_IU_World(301200000),
-    // Maps 4.3 NA
+    // 地图 4.3 北美 / Maps 4.3 NA
     NORHTERN_KATALAM(600050000),
     SOUTHERN_KATALAM(600060000),
     UNDERGROUND_KATALAM(600070000),

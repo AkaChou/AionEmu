@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import java.util.List;
@@ -26,28 +10,62 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.RelicRewards;
 
+/**
+ * 遗物兑换奖励类任务的 XML 数据模型，注册 {@link RelicRewards} 模板。
+ * XML data model for relic-exchange reward quests; registers the {@link RelicRewards} template.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RelicRewardsData")
-
 public class RelicRewardsData extends XMLQuest {
+
+	/**
+	 * 接取/兑换的起始 NPC ID 列表。
+	 * Start NPC ids for accept/exchange.
+	 */
 	@XmlAttribute(name = "start_npc_ids", required = true)
 	protected List<Integer> startNpcIds;
 
+	/**
+	 * 遗物变量 1（对应某种遗物物品 ID）。
+	 * Relic variable 1 (maps to a relic item id).
+	 */
 	@XmlAttribute(name = "relic_var1")
 	protected int relicVar1;
 
+	/**
+	 * 遗物变量 2。
+	 * Relic variable 2.
+	 */
 	@XmlAttribute(name = "relic_var2")
 	protected int relicVar2;
 
+	/**
+	 * 遗物变量 3。
+	 * Relic variable 3.
+	 */
 	@XmlAttribute(name = "relic_var3")
 	protected int relicVar3;
 
+	/**
+	 * 遗物变量 4。
+	 * Relic variable 4.
+	 */
 	@XmlAttribute(name = "relic_var4")
 	protected int relicVar4;
 
+	/**
+	 * 每次兑换所需遗物数量。
+	 * Relic count required per exchange.
+	 */
 	@XmlAttribute(name = "relic_count")
 	protected int relicCount;
 
+	/**
+	 * 注册 {@link RelicRewards} 模板处理器。
+	 * Registers the {@link RelicRewards} template handler.
+	 *
+	 * Quest engine
+	 */
 	@Override
 	public void register(QuestEngine questEngine) {
 		RelicRewards template = new RelicRewards(id, startNpcIds, relicVar1, relicVar2, relicVar3, relicVar4,

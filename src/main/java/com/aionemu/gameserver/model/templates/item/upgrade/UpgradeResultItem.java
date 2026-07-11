@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.upgrade;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * 升级结果物品模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author Ranastic (Encom)
  */
 
@@ -43,26 +30,32 @@ public class UpgradeResultItem {
 
 	private NeedKinah need_kinah;
 
+	/** 返回检查强化数量 / Returns the check enchant count*/
 	public int getCheck_enchant_count() {
 		return check_enchant_count;
 	}
 
+	/** 返回 check authorize count / Returns the check authorize count */
 	public int getCheck_authorize_count() {
 		return check_authorize_count;
 	}
 
+	/** 返回物品 ID / Returns the item id */
 	public int getItem_id() {
 		return item_id;
 	}
 
+	/** 获取升级材料。 / Returns the upgrade 材料. */
 	public UpgradeMaterials getUpgrade_materials() {
 		return upgrade_materials;
 	}
 
+	/** 返回 need abyss point / Returns the need abyss point */
 	public NeedAbyssPoint getNeed_abyss_point() {
 		return need_abyss_point;
 	}
 
+	/** 返回 need kinah / Returns the need kinah */
 	public NeedKinah getNeed_kinah() {
 		return need_kinah;
 	}

@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Iterator;
@@ -28,8 +14,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_NOTIFY;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_UPDATE;
 
 /**
- * Represents a player's Friend list
- * 
+ * Friend 列表。
+ * Friend List game object.
+ *
  * @author Ben
  */
 @Slf4j
@@ -43,19 +30,14 @@ public class FriendList implements Iterable<Friend> {
 	private Player player;
 
 	/**
-	 * Constructs an empty friend list for the given player
-	 * 
-	 * @param player Player who has this friendlist
+	 * 为指定玩家构造空好友列表。 / Constructs an empty friend list for the given player.
 	 */
 	public FriendList(Player player) {
 		this(player, new ConcurrentLinkedQueue<Friend>());
 	}
 
 	/**
-	 * Constructs a friend list for the given player, with the given friends
-	 * 
-	 * @param owner  Player who has this friend list
-	 * @param newFriends Friends on the list
+	 * 为指定玩家构造含初始好友的好友列表。 / Constructs a friend list for the given player, with the given friends.
 	 */
 	public FriendList(Player owner, Collection<Friend> newFriends) {
 		this.friends = new ConcurrentLinkedQueue<Friend>(newFriends);
@@ -63,9 +45,8 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * Gets the friend with this objId<br />
-	 * Returns null if it is not our friend
-	 * 
+	 * 获取 friend 带此 objId<br/> 返回空若其为 not 我们的 friend。 / Gets the friend with this objId<br /> Returns null if it is not our friend
+	 *
 	 * @param objId objId of friend
 	 * @return Friend
 	 */
@@ -79,8 +60,8 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * Returns number of friends in list
-	 * 
+	 * 返回编号的 friends 在列表。 / Returns number of friends in list
+	 *
 	 * @return Num Friends in list
 	 */
 	public int getSize() {
@@ -88,9 +69,8 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * Adds the given friend to the list<br />
-	 * To add a friend in the database, see <tt>PlayerService</tt>
-	 * 
+	 * 添加给定 friend 到列表 <br/> 到添加 friend 在数据库, see<tt>PlayerService</tt>。 / Adds the given friend to the list<br /> To add a friend in the database, see <tt>PlayerService</tt>
+	 *
 	 * @param friend
 	 */
 	public void addFriend(Friend friend) {
@@ -98,8 +78,8 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * Gets the Friend by this name
-	 * 
+	 * 获取 Friend 按此名称。 / Gets the Friend by this name
+	 *
 	 * @param name Name of friend
 	 * @return Friend matching name
 	 */
@@ -113,14 +93,7 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * Deletes given friend from this friends list<br />
-	 * <ul>
-	 * <li>Note: This will only affect this player, not the friend.</li>
-	 * <li>Note: Sends the packet to update the client automatically</li>
-	 * <li>Note: You should use requestDel to delete from both lists</li>
-	 * </ul>
-	 * 
-	 * @param friendOid
+	 * 从好友列表删除指定好友（仅影响本玩家）。 / Deletes given friend from this friends list<br /> <ul> <li>Note: This will only affect this player, not the friend.</li> <li>Note: Sends the packet to update the client automatically</li> <li>Note: You should use requestDel to delete from both lists</li> </ul>.
 	 */
 	public void delFriend(int friendOid) {
 		Iterator<Friend> it = iterator();
@@ -131,6 +104,7 @@ public class FriendList implements Iterable<Friend> {
 		}
 	}
 
+	/** 是否已满。 / Whether Full. */
 	public boolean isFull() {
 		int MAX_FRIENDS = player.havePermission(MembershipConfig.ADVANCED_FRIENDLIST_ENABLE)
 				? MembershipConfig.ADVANCED_FRIENDLIST_SIZE
@@ -139,8 +113,9 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
+	 * 获取 players 状态。
 	 * Gets players status
-	 * 
+	 *
 	 * @return Status
 	 */
 	public Status getStatus() {
@@ -148,11 +123,8 @@ public class FriendList implements Iterable<Friend> {
 	}
 
 	/**
-	 * Sets the status of the player<br />
-	 * <ul>
-	 * <li>Note: Does not update friends</li>
-	 * </ul>
-	 * 
+	 * 设置 status 的玩家 <br/><ul><li>Note : Doesnot 更新 friends</li></ul>。 / Sets the status of the player<br /> <ul> <li>Note: Does not update friends</li> </ul>
+	 *
 	 * @param status
 	 */
 	public void setStatus(Status status, PlayerCommonData pcd) {
@@ -168,18 +140,18 @@ public class FriendList implements Iterable<Friend> {
 					continue;
 				}
 				if (friendPlayer.getClientConnection() == null) {
-					log.warn("[AT] friendlist connection is null");
+					log.warn(I18n.get("log.58a385963397"));
 					continue;
 				}
 				friendPlayer.getFriendList().getFriend(pcd.getPlayerObjId()).setPCD(pcd);
 				friendPlayer.getClientConnection().sendPacket(new SM_FRIEND_UPDATE(player.getObjectId()));
 
 				if (previousStatus == Status.OFFLINE) {
-					// Show LOGIN message
+					// 显示登录消息 / Show LOGIN message
 					friendPlayer.getClientConnection()
 							.sendPacket(new SM_FRIEND_NOTIFY(SM_FRIEND_NOTIFY.LOGIN, player.getName()));
 				} else if (status == Status.OFFLINE) {
-					// Show LOGOUT message
+					// 显示登出消息 / Show LOGOUT message
 					friendPlayer.getClientConnection()
 							.sendPacket(new SM_FRIEND_NOTIFY(SM_FRIEND_NOTIFY.LOGOUT, player.getName()));
 				}
@@ -195,26 +167,28 @@ public class FriendList implements Iterable<Friend> {
 		return friends.iterator();
 	}
 
+	/** 返回 is friend list sent / Returns the is friend list sent */
 	public boolean getIsFriendListSent() {
 		return friendListSent == 1;
 	}
 
+	/** 设置 is friend list sent / Sets the is friend list sent */
 	public void setIsFriendListSent(boolean value) {
 		this.friendListSent = (byte) (value ? 1 : 0);
 	}
 
 	public enum Status {
 		/**
-		 * User is offline or invisible
-		 */
+	 * User is offline or invisible
+	 */
 		OFFLINE((byte) 0),
 		/**
-		 * User is online
-		 */
+	 * User is online
+	 */
 		ONLINE((byte) 1),
 		/**
-		 * User is away or busy
-		 */
+	 * User is away or busy
+	 */
 		AWAY((byte) 3);
 
 		byte value;
@@ -223,17 +197,17 @@ public class FriendList implements Iterable<Friend> {
 			this.value = value;
 		}
 
+		/** 返回 ID / Returns the id */
 		public byte getId() {
 			return value;
 		}
 
 		/**
-		 * Gets the Status from its int value<br />
-		 * Returns null if out of range
-		 * 
-		 * @param value range 0-3
-		 * @return Status
-		 */
+	 * 获取 Status 从其 intvalue<br/> 返回空若 out 的 range。 / Gets the Status from its int value<br /> Returns null if out of range
+	 *
+	 * @param value range 0-3
+	 * @return Status
+	 */
 		public static Status getByValue(byte value) {
 			for (Status stat : values()) {
 				if (stat.getId() == value) {

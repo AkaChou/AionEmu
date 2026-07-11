@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
 import java.util.ArrayList;
@@ -32,6 +16,9 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.condition.Conditions;
 
 /**
+ * 属性函数模型。
+ * Stat Function model.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -58,6 +45,7 @@ public class StatFunction implements IStatFunction {
 		this.bonus = bonus;
 	}
 
+	/** 比较。 / Compares to another instance. */
 	@Override
 	public int compareTo(IStatFunction o) {
 		int result = getPriority() - o.getPriority();
@@ -67,62 +55,75 @@ public class StatFunction implements IStatFunction {
 		return result;
 	}
 
+	/** 获取职业类型。 / Returns the class type. */
 	public String getClassType() {
 		return classType;
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	@Override
 	public StatOwner getOwner() {
 		return null;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	@Override
 	public final StatEnum getName() {
 		return stat;
 	}
 
+	/** 是否加成。 / Whether Bonus. */
 	@Override
 	public final boolean isBonus() {
 		return bonus;
 	}
 
+	/** 返回 priority / Returns the priority */
 	@Override
 	public int getPriority() {
 		return 0x10;
 	}
 
+	/** 获取值。 / Returns the value. */
 	@Override
 	public int getValue() {
 		return value;
 	}
 
+	/** 校验。 / Validate. */
 	@Override
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
 		return conditions != null ? conditions.validate(stat, statFunction) : true;
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat) {
 	}
 
+	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {
 		return this.getClass().getName() + " [stat=" + stat + ", bonus=" + bonus + ", value=" + value + ", priority="
 				+ getPriority() + "]";
 	}
 
+	/** 带条件 / with Conditions. */
 	public StatFunction withConditions(Conditions conditions) {
 		this.conditions = conditions;
 		return this;
 	}
 
+	/**
+	 * @return Whether conditions / Whether conditions
+	 */
 	public boolean hasConditions() {
 		return conditions != null;
 	}
 
 	/**
-	 * Creates a final list of modifiers combining bonuses with random bonuses
-	 * 
+	 * 创建 final 列表的 modifierscombiningbonuses 带 randombonuses。 / Creates a final list of modifiers combining bonuses with random bonuses
+	 *
 	 * @param modifiers  - can be null if do not exist
 	 * @param rndBonuses - can be null if do not exist
 	 * @return a list of modifiers, empty if none
@@ -140,7 +141,7 @@ public class StatFunction implements IStatFunction {
 		for (IStatFunction func : rndBonuses) {
 			rndNames.add(func.getName());
 		}
-		// add values to original stats
+		// 将值加入原始属性 / add values to original stats
 		for (StatFunction modifier : modifiers) {
 			if (!rndNames.contains(modifier.getName()) || !modifier.isBonus() || modifier.hasConditions()) {
 				allModifiers.add(modifier);
@@ -171,7 +172,7 @@ public class StatFunction implements IStatFunction {
 			}
 		}
 
-		// add new stat values
+		// 添加新属性值。 / add new stat values
 		for (StatFunction modifier : rndBonuses) {
 			if (rndNames.contains(modifier.getName())) {
 				allModifiers.add(modifier);

@@ -1,19 +1,3 @@
-/*
- * This file is part of aion-lightning <aion-lightning.com>.
- *
- *  aion-lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  aion-lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with aion-lightning.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.steel_rake;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -29,9 +13,12 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
+/**
+ * 钢耙号任务脚本：A Suspicious Call（任务 ID 4200）。
+ * Steel Rake quest script: A Suspicious Call (quest ID 4200).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _4200A_Suspicious_Call extends QuestHandler {
 
 	private final static int questId = 4200;

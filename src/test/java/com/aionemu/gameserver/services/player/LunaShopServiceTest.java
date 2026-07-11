@@ -23,5 +23,7 @@ class LunaShopServiceTest {
 		assertTrue(LunaShopService.canSpendLuna(2, 2));
 		assertFalse(LunaShopService.canSpendLuna(1, 2));
 		assertFalse(LunaShopService.canSpendLuna(10, -1));
+		assertFalse(LunaShopService.canClaimDiceReward(0));
+		assertTrue(LunaShopService.canClaimDiceReward(1));
 	}
 }

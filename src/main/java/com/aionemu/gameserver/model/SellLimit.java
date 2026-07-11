@@ -1,24 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model;
 
 import java.util.NoSuchElementException;
 
+/**
+ * 出售上限枚举。
+ * Sell Limit enumeration.
+ */
+
 public enum SellLimit {
+	/** Limit 1 65 / Limit 1 65 */
 	LIMIT_1_65(1, 65, 292000047L), LIMIT_66_83(66, 83, 392000047L);
 
 	private int playerMinLevel;
@@ -31,6 +21,7 @@ public enum SellLimit {
 		this.limit = limit;
 	}
 
+	/** 获取出售上限。 / Returns the sell limit. */
 	public static long getSellLimit(int playerLevel) {
 		for (SellLimit sellLimit : values()) {
 			if (sellLimit.playerMinLevel <= playerLevel && sellLimit.playerMaxLevel >= playerLevel) {

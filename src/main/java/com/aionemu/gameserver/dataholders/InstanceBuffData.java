@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -31,6 +15,9 @@ import com.aionemu.gameserver.model.templates.instance_bonusatrr.InstanceBonusAt
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
+ * 副本增益属性数据容器，按 Buff ID 索引 {@link InstanceBonusAttr}。
+ * Instance bonus attribute data holder, indexing {@link InstanceBonusAttr} by buff id.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,6 +30,10 @@ public class InstanceBuffData {
 	@XmlTransient
 	private IntObjectHashMap<InstanceBonusAttr> templates = new IntObjectHashMap<InstanceBonusAttr>();
 
+	/**
+	 * JAXB 反序列化完成后，按 Buff ID 建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes templates by buff id and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (InstanceBonusAttr template : instanceBonusattr) {
 			templates.put(template.getBuffId(), template);
@@ -51,10 +42,24 @@ public class InstanceBuffData {
 		instanceBonusattr = null;
 	}
 
+	/**
+	 * 返回已加载的副本增益模板数量。
+	 * Returns the number of loaded instance bonus templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return templates.size();
 	}
 
+	/**
+	 * 按 Buff ID 获取副本增益属性模板。
+	 * Returns the instance bonus attribute template for the given buff id.
+	 *
+	 * buff id
+	 *
+	 * @param buffId @return 增益属性模板或 null / bonus attribute template or null
+	 */
 	public InstanceBonusAttr getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);
 	}

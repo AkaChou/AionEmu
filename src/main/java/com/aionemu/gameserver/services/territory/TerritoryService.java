@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.territory;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -40,6 +24,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
+/**
+ * 领地服务，管理军团领地占领、增益与传送。
+ * Territory service managing legion territory conquest, buffs and teleports.
+ */
 public class TerritoryService {
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private TerritoryBuff territoryBuff;
@@ -47,6 +35,10 @@ public class TerritoryService {
 	private TreeMap<Integer, LegionTerritory> territories = new TreeMap<Integer, LegionTerritory>();
 	private TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<Integer, TreeMap<Integer, WorldPosition>>();
 
+	/**
+	 * 初始化全部领地槽位并从数据库加载军团占领状态。
+	 * Initializes all territory slots and loads legion ownership from DB.
+	 */
 	public void initTerritory() {
 		LegionService ls = GameCoreGameplayServices.legionService();
 		Collection<Legion> legions = new ArrayList<Legion>();
@@ -65,6 +57,13 @@ public class TerritoryService {
 		}
 	}
 
+	/**
+	 * 通过领地 NPC 将玩家传送到对应领地坐标。
+	 * Teleports a player via territory NPC to the mapped position.
+	 *
+	 * 玩家 / Player
+	 * Teleporter NPC id
+	 */
 	public void onTeleport(Player player, int npcid) {
 		if (player.getLegion() == null || player.getLegion().getTerritory().getId() == 0) {
 			return;
@@ -80,15 +79,33 @@ public class TerritoryService {
 		}
 	}
 
+	/**
+	 * 玩家进世界时下发领地列表。
+	 * Sends territory list when a player enters the world.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void onEnterWorld(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_TERRITORY_LIST(territories.values()));
 	}
 
+	/**
+	 * 发送石矛攻城相关包（当前实现为空）。
+	 * Sends Stonespear siege packet (currently no-op).
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void sendStoneSpearPacket(Player player) {
 		// PacketSendUtility.sendPacket(player, new
 		// SM_STONESPEAR_SIEGE(player.getLegion(), 0));
 	}
 
+	/**
+	 * 玩家进入所属领地时施加领地增益。
+	 * Applies territory buff when a player enters owned territory.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void onEnterTerritory(Player player) {
 		if (player.getLegion() == null || player.getLegion().getTerritory().getId() == 0) {
 			return;
@@ -98,6 +115,12 @@ public class TerritoryService {
 		buffs.put(player.getObjectId(), territoryBuff);
 	}
 
+	/**
+	 * 玩家离开领地时移除增益。
+	 * Removes territory buff when a player leaves.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void onLeaveTerritory(Player player) {
 		if (player.getLegion() == null || player.getLegion().getTerritory().getId() == 0) {
 			return;
@@ -108,6 +131,12 @@ public class TerritoryService {
 		}
 	}
 
+	/**
+	 * 扫描同图敌对种族玩家（入侵者探测）。
+	 * Scans same-map enemy-race players (intruder detection).
+	 *
+	 * @param player 发起扫描的玩家 / Scanning player
+	 */
 	public void scanForIntruders(Player player) {
 		Collection<Player> players = new ArrayList<Player>();
 		Iterator<Player> playerIt = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
@@ -120,6 +149,13 @@ public class TerritoryService {
 		// PacketSendUtility.sendPacket(player, new SM_SERIAL_KILLER(players, false));
 	}
 
+	/**
+	 * 军团征服指定领地并广播结果。
+	 * Assigns a territory to a legion and broadcasts the result.
+	 *
+	 * Legion
+	 * @param id 领地 ID / Territory id
+	 */
 	public void onConquerTerritory(Legion legion, int id) {
 		if (legion.ownsTerretory()) {
 			onLooseTerritory(legion);
@@ -134,11 +170,23 @@ public class TerritoryService {
 		broadcastToLegion(legion);
 	}
 
+	/**
+	 * 向军团成员广播领地/石矛信息。
+	 * Broadcasts territory/Stonespear info to legion members.
+	 *
+	 * Legion
+	 */
 	private void broadcastToLegion(Legion legion) {
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_INFO(legion));
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_STONESPEAR_SIEGE(legion, 0));
 	}
 
+	/**
+	 * 军团失去领地并广播空置状态。
+	 * Clears a legion's territory and broadcasts the vacant state.
+	 *
+	 * Legion
+	 */
 	public void onLooseTerritory(Legion legion) {
 		int oldTerritoryId = legion.getTerritory().getId();
 		legion.clearTerritory();
@@ -153,6 +201,12 @@ public class TerritoryService {
 		broadcastToLegion(legion);
 	}
 
+	/**
+	 * 向在线玩家广播领地列表。
+	 * Broadcasts territory list to online players.
+	 *
+	 * @param terr 领地映射 / Territory map
+	 */
 	public void broadcastTerritoryList(TreeMap<Integer, LegionTerritory> terr) {
 		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
 		for (Player player : players) {
@@ -163,10 +217,22 @@ public class TerritoryService {
 		}
 	}
 
+	/**
+	 * 获取全部领地集合。
+	 * Returns all territories.
+	 *
+	 * Territory collection
+	 */
 	public Collection<LegionTerritory> getTerritories() {
 		return territories.values();
 	}
 
+	/**
+	 * 获取服务单例（支持 Spring 注入回退）。
+	 * Returns the service singleton (Spring provider with fallback).
+	 *
+	 * Service instance
+	 */
 	public static TerritoryService getInstance() {
 		ObjectProvider<TerritoryService> provider = instanceProvider;
 		if (provider == null) {
@@ -175,6 +241,12 @@ public class TerritoryService {
 		return provider.getIfAvailable(() -> TerritoryService.SingletonHolder.instance);
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<TerritoryService> instanceProvider) {
 		TerritoryService.instanceProvider = instanceProvider;
 	}

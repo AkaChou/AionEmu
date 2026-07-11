@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -18,13 +15,26 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 
+/**
+ * 数学区域对象观察者：进入范围后周期施放技能。
+ * Math-object observer: periodically applies skills while inside range.
+ */
 public class MathObjectObserver extends ActionObserver {
+	/** 被观察生物 / Observed creature */
 	private final Creature creature;
+	/** 数学区域对象 / Math object */
 	private final MathObject mathObject;
+	/** 对象行为类型 / Math object action type */
 	private final MathObjectType type;
+	/** 周期任务 / Periodic schedule */
 	private ScheduledFuture<?> shedules;
+	/** 技能模板 / Skill template */
 	private SkillTemplate template;
 
+	/**
+	 * 空构造（字段为 null/默认）。
+	 * Empty constructor (fields null/default).
+	 */
 	public MathObjectObserver() {
 		super(ObserverType.MOVE);
 		this.creature = null;
@@ -32,6 +42,11 @@ public class MathObjectObserver extends ActionObserver {
 		this.type = MathObjectType.SKILL_USE;
 	}
 
+	/**
+	 * math object
+	 * creature
+	 * @param type 行为类型 / action type
+	 */
 	public MathObjectObserver(MathObject mathObject, Creature creature, MathObjectType type) {
 		super(ObserverType.MOVE);
 		this.creature = creature;
@@ -74,6 +89,10 @@ public class MathObjectObserver extends ActionObserver {
 		}
 	}
 
+	/**
+	 * 按技能/对象持续时间启动周期触发任务。
+	 * Start a fixed-rate task based on skill/object duration.
+	 */
 	private void shedulesEvent() {
 		int delay = this.template != null && this.template.getDuration() >= 1000 ? this.template.getDuration()
 				: (this.mathObject.getDuration() >= 1000 ? this.mathObject.getDuration() : 1000);
@@ -91,6 +110,10 @@ public class MathObjectObserver extends ActionObserver {
 		}, delay, delay);
 	}
 
+	/**
+	 * 按类型执行一次动作（如直接施加技能）。
+	 * Execute one action by type (e.g. apply skill directly).
+	 */
 	private void onActionEvent() {
 		switch (this.type) {
 		case SKILL_USE: {
@@ -108,6 +131,10 @@ public class MathObjectObserver extends ActionObserver {
 		}
 	}
 
+	/**
+	 * 取消并清空周期任务。
+	 * Cancel and clear the periodic schedule.
+	 */
 	public void clearShedules() {
 		if (this.shedules != null) {
 			this.shedules.cancel(true);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -29,7 +13,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SHUGO_SWEEP;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * Created by Wnkrz on 24/10/2017.
+ * 术古清扫动作模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,6 +26,9 @@ public class ShugoSweepAction extends AbstractItemAction {
 	@XmlAttribute(name = "count")
 	protected int count;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (type == 1) {
@@ -52,6 +40,7 @@ public class ShugoSweepAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
 		if (player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1)) {
@@ -78,10 +67,12 @@ public class ShugoSweepAction extends AbstractItemAction {
 		return count > 0 ? count : 1;
 	}
 
+	/** 获取公共数据。 / Returns the common data. */
 	public PlayerCommonData getCommonData(Player player) {
 		return player.getCommonData();
 	}
 
+	/** 获取玩家清扫。 / Returns the player sweep. */
 	public PlayerSweep getPlayerSweep(Player player) {
 		return player.getPlayerShugoSweep();
 	}

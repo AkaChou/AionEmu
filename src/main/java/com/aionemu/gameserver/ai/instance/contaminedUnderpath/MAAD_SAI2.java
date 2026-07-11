@@ -7,10 +7,12 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.world.WorldPosition;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Contamined Underpath 副本 NPC AI：MAAD S（@AIName "maad_s"），继承 AggressiveNpcAI2。
+ * Contamined Underpath instance NPC AI: MAAD S (@AIName "maad_s"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("maad_s")
 public class MAAD_SAI2 extends AggressiveNpcAI2
 {

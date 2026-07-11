@@ -1,25 +1,12 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端发送军团自定义徽章二进制数据块的服务端包。
+ * Server packet that sends a binary data chunk of a custom legion emblem to the client.
+ *
  * @author cura
  */
 public class SM_LEGION_SEND_EMBLEM_DATA extends AionServerPacket {
@@ -27,6 +14,13 @@ public class SM_LEGION_SEND_EMBLEM_DATA extends AionServerPacket {
 	private int size;
 	private byte[] data;
 
+	/**
+	 * 使用数据大小与字节数组构造徽章数据块包。
+	 * Creates an emblem data-chunk packet from size and raw bytes.
+	 *
+	 * @param size 数据大小 / data size
+	 * @param data 徽章二进制数据 / emblem binary data
+	 */
 	public SM_LEGION_SEND_EMBLEM_DATA(int size, byte[] data) {
 		this.size = size;
 		this.data = data;

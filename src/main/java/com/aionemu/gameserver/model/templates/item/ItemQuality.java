@@ -1,33 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
 
+/**
+ * 物品 Quality 枚举。
+ * Item Quality enumeration.
+ */
+
 @XmlType(name = "quality")
 @XmlEnum
 public enum ItemQuality {
+	/** 垃圾 / Junk. */
 	JUNK(0), // Junk - Grey
+	/** 公共。 / Common. */
 	COMMON(1), // Common - White
+	/** 稀有 / Rare. */
 	RARE(2), // Superior - Green
+	/** 传颂 / Legend. */
 	LEGEND(3), // Heroic - Blue
+	/** 唯一 / Unique. */
 	UNIQUE(4), // Fabled - Yellow
+	/** 史诗 / Epic. */
 	EPIC(5), // Eternal - Orange
+	/** 神话 / Mythic. */
 	MYTHIC(6); // Mythic - Purple
 
 	private int qualityId;
@@ -36,6 +32,7 @@ public enum ItemQuality {
 		this.qualityId = qualityId;
 	}
 
+	/** 返回 quality id / Returns the quality id */
 	public int getQualityId() {
 		return qualityId;
 	}

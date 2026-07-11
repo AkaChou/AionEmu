@@ -1,24 +1,4 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.aion.clientpackets;
-
-import java.nio.ByteBuffer;
 
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
@@ -29,31 +9,46 @@ import com.aionemu.loginserver.network.aion.SessionKey;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_FAIL;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_PLAY_FAIL;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_PLAY_OK;
+import java.nio.ByteBuffer;
 
 /**
+ * 客户端选服进入游戏请求：校验会话并回 SM_PLAY_OK / FAIL。
+ * FAIL. / FAIL.
+ *
  * @author -Nemesiss-
  */
 public class CM_PLAY extends AionClientPacket {
 
     /**
-     * accountId is part of session key - its used for security purposes
+     * 会话密钥中的 accountId，用于安全校验。
+     * accountId part of session key for security checks.
      */
     private int accountId;
     /**
-     * loginOk is part of session key - its used for security purposes
+     * 会话密钥中的 loginOk，用于安全校验。
+     * loginOk part of session key for security checks.
      */
     private int loginOk;
     /**
-     * Id of game server that this client is trying to play on.
+     * 目标游戏服 ID。
+     * Target game server id.
      */
     private byte servId;
 
+    /**
+     * 构造 CM_PLAY 包。
+     * Construct CM_PLAY packet.
+     *
+     * @param buf 包体数据 / Packet data
+     * Login connection
+     */
     public CM_PLAY(ByteBuffer buf, LoginConnection client) {
         super(buf, client, 0x02);
     }
 
     /**
-     * {@inheritDoc}
+     * 读取 accountId、loginOk 与服务器 ID。
+     * Read accountId, loginOk and server id.
      */
     @Override
     protected void readImpl() {
@@ -63,7 +58,8 @@ public class CM_PLAY extends AionClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 校验会话；按服务器在线/满员状态回包。
+     * Validate session; reply by server online/full status.
      */
     @Override
     protected void runImpl() {

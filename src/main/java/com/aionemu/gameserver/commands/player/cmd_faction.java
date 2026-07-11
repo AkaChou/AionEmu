@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +16,11 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
- * @author Shepper, modified: bobobear
+ * 玩家命令：阵营（种族）聊天频道发言。
+ * Player command: posts a message on the faction (race) chat channel.
+ *
+ * @author Shepper
+ * @author bobobear
  */
 public class cmd_faction extends PlayerCommand {
 
@@ -40,6 +28,13 @@ public class cmd_faction extends PlayerCommand {
 		super("faction");
 	}
 
+	/**
+	 * 校验冷却/费用后向同阵营玩家发送消息。
+	 * Sends a message to same-faction players after cooldown/fee checks.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * command parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		Storage sender = player.getInventory();
@@ -109,8 +104,4 @@ public class cmd_faction extends PlayerCommand {
 		}
 	}
 
-	@Override
-	public void onFail(Player player, String message) {
-		// TODO Auto-generated method stub
-	}
 }

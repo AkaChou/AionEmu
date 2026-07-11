@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -32,10 +16,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cradle Of Eternity 副本 NPC AI：Altar Of Emptiness（@AIName "Altar_Of_Emptiness"），继承 NpcAI2。
+ * Cradle Of Eternity instance NPC AI: Altar Of Emptiness (@AIName "Altar_Of_Emptiness"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Altar_Of_Emptiness")
 public class Altar_Of_EmptinessAI2 extends NpcAI2
 {
@@ -48,7 +34,7 @@ public class Altar_Of_EmptinessAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         } else {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
-			//You don’t have a set of Completed Records of Life.
+			// 你没有一套完整的生命记录。 / You don’t have a set of Completed Records of Life.
             PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403446));
         }
     }
@@ -59,7 +45,7 @@ public class Altar_Of_EmptinessAI2 extends NpcAI2
             switch (getNpcId()) {
                 case 833999: //Altar Of Emptiness.
                     handleUseItemStart(player);
-					//The Altar of Emptiness is moving.
+					// 空虚祭坛正在移动。 / The Altar of Emptiness is moving.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403506));
                 break;
             }

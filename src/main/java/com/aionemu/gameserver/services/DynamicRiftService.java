@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -49,6 +35,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 动态裂隙服务：按 cron 开启龙/因德拉图/术古商队等动态裂隙，管理刷怪与生命周期。
+ * Dynamic Rift service: cron-opens Dragon/Indratoo/Shugo portals and manages spawn lifecycle.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -56,16 +45,19 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class DynamicRiftService {
 	private static volatile ObjectProvider<DynamicRiftService> instanceProvider;
 	private Map<Integer, DynamicRiftLocation> dynamicRift;
-	private static final int duration = CustomConfig.DYNAMIC_RIFT_DURATION;
 	private final ConcurrentMap<Integer, DynamicRift<?>> activeDynamicRift = new ConcurrentHashMap<Integer, DynamicRift<?>>();
 
+	/**
+	 * 加载动态裂隙地点、刷关闭态 NPC，并注册各类型开启 cron。
+	 * Loads dynamic-rift locations, spawns closed-state NPCs, and registers open crons.
+	 */
 	public void initDynamicRiftLocations() {
 		if (CustomConfig.DYNAMIC_RIFT_ENABLED) {
 			dynamicRift = DataManager.DYNAMIC_RIFT_DATA.getDynamicRiftLocations();
 			for (DynamicRiftLocation loc : getDynamicRiftLocations().values()) {
 				spawn(loc, DynamicRiftStateType.CLOSED);
 			}
-			log.info("[DynamicRiftService] Loaded " + dynamicRift.size() + " locations.");
+			log.info(I18n.get("log.69fd598b3b65", dynamicRift.size()));
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
@@ -79,7 +71,7 @@ public class DynamicRiftService {
 						}
 					});
 				}
-			}, CustomConfig.DYNAMIC_RIFT_DRAGON_SCHEDULE);
+			}, () -> CustomConfig.DYNAMIC_RIFT_DRAGON_SCHEDULE);
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
@@ -93,8 +85,8 @@ public class DynamicRiftService {
 						}
 					});
 				}
-			}, CustomConfig.DYNAMIC_RIFT_INDRATOO_SCHEDULE);
-			// Shugo Merchant League
+			}, () -> CustomConfig.DYNAMIC_RIFT_INDRATOO_SCHEDULE);
+			// 术古商人联盟 / Shugo Merchant League
 			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
@@ -103,25 +95,35 @@ public class DynamicRiftService {
 					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
-							// The Shugo Merchant League has arrived.
+							// 术古商人联盟已到达。 / The Shugo Merchant League has arrived.
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_ShugoCaravanAppear);
 						}
 					});
 				}
-			}, CustomConfig.SHUGO_MERCHANT_LEAGUE_SCHEDULE);
+			}, () -> CustomConfig.SHUGO_MERCHANT_LEAGUE_SCHEDULE);
 		} else {
 			dynamicRift = Collections.emptyMap();
 		}
 	}
 
+	/**
+	 * 记录动态裂隙功能启用/禁用日志。
+	 * Logs whether Dynamic Rift is enabled or disabled.
+	 */
 	public void initDynamicRift() {
 		if (CustomConfig.DYNAMIC_RIFT_ENABLED) {
-			log.info("[DynamicRiftService] is initialized...");
+			log.info(I18n.get("log.8d47511e47ac"));
 		} else {
-			log.info("[DynamicRiftService] DynamicRift is disabled in config...");
+			log.info(I18n.get("log.f7a5bb06c320"));
 		}
 	}
 
+	/**
+	 * 启动指定 ID 的动态裂隙，并在持续时长后自动关闭。
+	 * Starts the dynamic rift for the given id and auto-stops after configured duration.
+	 *
+	 * @param id 裂隙地点 ID / rift location id
+	 */
 	public void startDynamicRift(final int id) {
 		DynamicRift<?> portal = new Portal(dynamicRift.get(id));
 		if (activeDynamicRift.putIfAbsent(id, portal) != null) {
@@ -133,9 +135,15 @@ public class DynamicRiftService {
 			public void run() {
 				stopDynamicRift(id);
 			}
-		}, duration * 3600 * 1000);
+		}, CustomConfig.DYNAMIC_RIFT_DURATION * 3600 * 1000);
 	}
 
+	/**
+	 * 停止指定 ID 的动态裂隙。
+	 * Stops the dynamic rift for the given id.
+	 *
+	 * @param id 裂隙地点 ID / rift location id
+	 */
 	public void stopDynamicRift(int id) {
 		DynamicRift<?> portal = activeDynamicRift.remove(id);
 		if (portal == null || portal.isClosed()) {
@@ -144,6 +152,13 @@ public class DynamicRiftService {
 		portal.stop();
 	}
 
+	/**
+	 * 按状态类型在地点刷出对应模板 NPC。
+	 * Spawns NPCs for the location matching the given state type.
+	 *
+	 * @param loc 裂隙地点 / rift location
+	 * state type
+	 */
 	public void spawn(DynamicRiftLocation loc, DynamicRiftStateType dstate) {
 		if (dstate.equals(DynamicRiftStateType.OPEN)) {
 		}
@@ -158,6 +173,12 @@ public class DynamicRiftService {
 		}
 	}
 
+	/**
+	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
+	 * Clears spawned objects at the location (deletes immediately when no aggro).
+	 *
+	 * @param loc 裂隙地点 / rift location
+	 */
 	public void despawn(DynamicRiftLocation loc) {
 		if (loc.getSpawned() == null) {
 			return;
@@ -173,26 +194,64 @@ public class DynamicRiftService {
 		loc.getSpawned().clear();
 	}
 
+	/**
+	 * 指定裂隙是否正在进行中。
+	 * Whether the given dynamic rift is in progress.
+	 *
+	 * @param id 裂隙地点 ID / rift location id
+	 * @return 若 active 则为 true / true if active
+	 */
 	public boolean isDynamicRiftInProgress(int id) {
 		return activeDynamicRift.containsKey(id);
 	}
 
+	/**
+	 * 获取当前激活的动态裂隙映射。
+	 * Returns the map of active dynamic rifts.
+	 *
+	 * active rifts
+	 */
 	public Map<Integer, DynamicRift<?>> getActiveDynamicRift() {
 		return activeDynamicRift;
 	}
 
+	/**
+	 * 返回配置的动态裂隙持续时长（小时）。
+	 * Returns configured dynamic-rift duration in hours.
+	 *
+	 * @return 持续小时数 / duration hours
+	 */
 	public int getDuration() {
-		return duration;
+		return CustomConfig.DYNAMIC_RIFT_DURATION;
 	}
 
+	/**
+	 * 按 ID 获取动态裂隙地点。
+	 * Returns the dynamic-rift location by id.
+	 *
+	 * @param id 地点 ID / location id
+	 * location
+	 */
 	public DynamicRiftLocation getDynamicRiftLocation(int id) {
 		return dynamicRift.get(id);
 	}
 
+	/**
+	 * 获取全部动态裂隙地点。
+	 * Returns all dynamic-rift locations.
+	 *
+	 * location map
+	 */
 	public Map<Integer, DynamicRiftLocation> getDynamicRiftLocations() {
 		return dynamicRift;
 	}
 
+	/**
+	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
+	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
+	 *
+	 * service instance
+	 */
 	public static DynamicRiftService getInstance() {
 		ObjectProvider<DynamicRiftService> provider = instanceProvider;
 		if (provider == null) {
@@ -201,6 +260,12 @@ public class DynamicRiftService {
 		return provider.getIfAvailable(() -> DynamicRiftServiceHolder.INSTANCE);
 	}
 
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<DynamicRiftService> instanceProvider) {
 		DynamicRiftService.instanceProvider = instanceProvider;
 	}

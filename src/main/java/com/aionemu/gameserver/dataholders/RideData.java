@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -30,6 +14,10 @@ import com.aionemu.gameserver.model.templates.ride.RideInfo;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
+/**
+ * 坐骑数据容器，按 NPC ID 索引 RideInfo。
+ * Ride data holder, indexing RideInfo by NPC id.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "rides" })
 @XmlRootElement(name = "rides")
@@ -41,6 +29,10 @@ public class RideData {
 	@XmlTransient
 	private IntObjectHashMap<RideInfo> rideInfos;
 
+	/**
+	 * JAXB 反序列化完成后，将坐骑信息写入 NPC ID 索引并释放列表。
+	 * After JAXB unmarshalling, indexes ride info by NPC id and releases the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		rideInfos = new IntObjectHashMap<RideInfo>();
 
@@ -51,10 +43,24 @@ public class RideData {
 		rides = null;
 	}
 
+	/**
+	 * 按 NPC ID 获取坐骑信息。
+	 * Returns the ride info for the given NPC id.
+	 *
+	 * npc id
+	 *
+	 * @param npcId @return 坐骑信息，不存在则为 null / ride info or null
+	 */
 	public RideInfo getRideInfo(int npcId) {
 		return (RideInfo) rideInfos.get(npcId);
 	}
 
+	/**
+	 * 返回已加载的坐骑数量。
+	 * Returns the number of loaded rides.
+	 *
+	 * ride count
+	 */
 	public int size() {
 		return rideInfos.size();
 	}

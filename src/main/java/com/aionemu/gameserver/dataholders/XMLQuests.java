@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -27,6 +11,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 
 /**
+ * 任务脚本 XML 数据容器，按元素名多态绑定各类任务处理器模型。
+ * Quest-script XML data holder, polymorphically binding quest-handler models by element name.
+ *
  * @author MrPoke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -51,14 +38,20 @@ public class XMLQuests {
 	protected List<XMLQuest> data;
 
 	/**
-	 * @return the data
+	 * 返回已加载的任务脚本列表。
+	 * Returns the loaded quest-script list.
+	 *
+	 * @return 任务脚本列表 / quest-script list
 	 */
 	public List<XMLQuest> getQuest() {
 		return data;
 	}
 
 	/**
-	 * @param data the data to set
+	 * 设置任务脚本列表。
+	 * Sets the quest-script list.
+	 *
+	 * @param data 任务脚本列表 / quest-script list
 	 */
 	public void setData(List<XMLQuest> data) {
 		this.data = data;

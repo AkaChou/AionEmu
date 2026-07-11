@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -24,6 +9,9 @@ import java.util.Map;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 
 /**
+ * 登录服客户端封包处理器：按连接状态与 opcode 分发原型并克隆实例。
+ * LoginServer client-packet handler: dispatches prototypes by connection state and opcode, then clones instances.
+ *
  * @author -Nemesiss-
  * @author Luno
  */
@@ -31,14 +19,19 @@ import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 public class LsPacketHandler {
 
 
+	/**
+	 * 按连接状态索引的 opcode → 封包原型表。
+	 * Map of connection state to (opcode → packet prototype).
+	 */
 	private static Map<State, Map<Integer, LsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, LsClientPacket>>();
 
 	/**
-	 * Reads one packet from given ByteBuffer
-	 * 
-	 * @param data
-	 * @param client
-	 * @return GsClientPacket object from binary data
+	 * 从给定 ByteBuffer 读取并构造一个客户端封包。
+	 * Read one client packet from the given ByteBuffer.
+	 *
+	 * @param data 封包数据 / Packet data
+	 * @param client 登录服连接 / LoginServer connection
+	 * @return 解析得到的 LsClientPacket；未知 opcode 时返回 null / Parsed LsClientPacket, or null for unknown opcode
 	 */
 	public LsClientPacket handle(ByteBuffer data, LoginServerConnection client) {
 		State state = client.getState();
@@ -47,6 +40,13 @@ public class LsPacketHandler {
 		return getPacket(state, id, data, client);
 	}
 
+	/**
+	 * 为指定连接状态注册封包原型。
+	 * Register a packet prototype for the given connection states.
+	 *
+	 * Packet prototype
+	 * @param states 适用的连接状态 / Applicable connection states
+	 */
 	public void addPacketPrototype(LsClientPacket packetPrototype, State... states) {
 		for (State state : states) {
 			Map<Integer, LsClientPacket> pm = packetPrototypes.get(state);
@@ -58,6 +58,16 @@ public class LsPacketHandler {
 		}
 	}
 
+	/**
+	 * 按状态与 opcode 查找原型，克隆并绑定 buffer/connection。
+	 * Look up prototype by state and opcode, clone it, and bind buffer/connection.
+	 *
+	 * @param state 连接状态 / Connection state
+	 * Packet opcode
+	 * @param buf 数据缓冲区 / Data buffer
+	 * @param con 登录服连接 / LoginServer connection
+	 * @return 就绪的封包实例；未知时返回 null / Ready packet instance, or null if unknown
+	 */
 	private LsClientPacket getPacket(State state, int id, ByteBuffer buf, LoginServerConnection con) {
 		LsClientPacket prototype = null;
 
@@ -79,12 +89,13 @@ public class LsPacketHandler {
 	}
 
 	/**
-	 * Logs unknown packet.
-	 * 
-	 * @param state
-	 * @param id
+	 * 记录未知封包日志。
+	 * Log an unknown packet.
+	 *
+	 * @param state 连接状态 / Connection state
+	 * Packet opcode
 	 */
 	private void unknownPacket(State state, int id) {
-		log.warn(String.format("Unknown packet recived from Login Server: 0x%02X state=%s", id, state.toString()));
+			log.warn(I18n.get("log.16bfb32106d1", String.format("%02X", id), state));
 	}
 }

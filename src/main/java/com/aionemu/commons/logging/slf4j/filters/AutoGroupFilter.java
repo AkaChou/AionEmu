@@ -18,7 +18,7 @@ public class AutoGroupFilter extends Filter<ILoggingEvent> {
      * Decide whether to accept the logging event
      *
      * @param loggingEvent 日志事件 (The logging event)
-     * @return FilterReply.ACCEPT 如果消息以[AUTOGROUPSERVICE]开头，否则返回FilterReply.DENY
+ * @return FilterReply.ACCEPT 如果消息以[AUTOGROUPSERVICE]开头，否则返回 FilterReply.DENY
      *         (FilterReply.ACCEPT if message starts with [AUTOGROUPSERVICE], otherwise FilterReply.DENY)
      */
     public FilterReply decide(ILoggingEvent loggingEvent) {

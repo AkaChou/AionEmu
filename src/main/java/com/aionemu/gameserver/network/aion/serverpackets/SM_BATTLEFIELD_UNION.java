@@ -1,28 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * Created by wanke
+ * 同步战场联盟（要塞战联合队列）可用性与人数的服务端包。
+ * Server packet synchronizing Battlefield Union (fortress-war joint queue) availability and member counts.
+ *
+ * @author wanke
  */
-
 public class SM_BATTLEFIELD_UNION extends AionServerPacket {
 	int fortressId;
 	boolean isAvailable;
@@ -30,6 +16,12 @@ public class SM_BATTLEFIELD_UNION extends AionServerPacket {
 	int memberSize;
 	int maxSize;
 
+	/**
+	 * fortress id
+	 * @param isAvailable 是否开放报名 / whether registration is open
+	 * @param memberSize 当前报名人数 / current registered member count
+	 * maximum capacity
+	 */
 	public SM_BATTLEFIELD_UNION(int fortressId, boolean isAvailable, int memberSize, int maxSize) {
 		this.fortressId = fortressId;
 		this.isAvailable = isAvailable;

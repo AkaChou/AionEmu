@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.craft;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,14 +30,27 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 制作技能升级服务：维护 NPC 可学技能映射、升级费用，并处理学习/晋级逻辑。
+ * Craft skill update service: maintains NPC-to-skill mapping, upgrade costs, and learn/promotion logic.
+ */
 @Slf4j
 public class CraftSkillUpdateService {
 	private static volatile ObjectProvider<CraftSkillUpdateService> instanceProvider;
 
+	/** NPC → 可学制作技能模板映射 / NPC to craft-learn template mapping */
 	protected static final Map<Integer, CraftLearnTemplate> npcBySkill = new HashMap<Integer, CraftLearnTemplate>();
+	/** 技能等级 → 升级基纳费用 / Skill level to upgrade kinah cost */
 	private static final Map<Integer, Integer> cost = new HashMap<Integer, Integer>();
+	/** 可计为专家/大师名额的制作技能 ID 列表 / Craft skill ids counted for expert/master slots */
 	private static final List<Integer> craftingSkillIds = new ArrayList<Integer>();
 
+	/**
+	 * 获取服务单例（优先 Spring ObjectProvider）。
+	 * Get the service singleton (prefer Spring ObjectProvider when available).
+	 *
+	 * Service instance
+	 */
 	public static final CraftSkillUpdateService getInstance() {
 		ObjectProvider<CraftSkillUpdateService> provider = instanceProvider;
 		if (provider != null) {
@@ -60,12 +59,22 @@ public class CraftSkillUpdateService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider，用于容器管理的实例解析。
+	 * Inject Spring ObjectProvider for container-managed instance resolution.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CraftSkillUpdateService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 构造服务：初始化魔/天族 NPC 技能映射、升级费用与制作技能 ID 列表。
+	 * Construct service: initialize Asmodian/Elyos NPC skill maps, upgrade costs and craft skill id list.
+	 */
 	public CraftSkillUpdateService() {
-		// CRAFT ASMODIANS.
+		// 魔族制作。 / CRAFT ASMODIANS.
 		npcBySkill.put(204096, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
 
 		npcBySkill.put(830158, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
@@ -102,7 +111,7 @@ public class CraftSkillUpdateService {
 
 		npcBySkill.put(798456, new CraftLearnTemplate(40010, true, "Construction")); // Construction Asmodians Pernon.
 
-		// CRAFT ELYOS.
+		// 天族制作。 / CRAFT ELYOS.
 		npcBySkill.put(203780, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
 
 		npcBySkill.put(830066, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
@@ -139,7 +148,7 @@ public class CraftSkillUpdateService {
 
 		npcBySkill.put(798454, new CraftLearnTemplate(40010, true, "Construction")); // Construction Elyos Oriel.
 
-		// PRICE CRAFT KINAH.
+		// 制作价格 基纳。 / PRICE CRAFT KINAH.
 		cost.put(0, 3500);
 		cost.put(99, 17000);
 		cost.put(199, 115000);
@@ -155,9 +164,15 @@ public class CraftSkillUpdateService {
 		craftingSkillIds.add(40007);
 		craftingSkillIds.add(40008);
 		craftingSkillIds.add(40010);
-		log.info("Craft System: Initialized.");
+		log.info(I18n.get("log.b14c519beaba"));
 	}
 
+	/**
+	 * 玩家 10 级时按种族授予基础变形配方。
+	 * Grant basic morph recipes by race when the player reaches level 10.
+	 *
+	 * @param player 玩家 / Player
+	 */
 	public void setMorphRecipe(Player player) {
 		int object = player.getObjectId();
 		Race race = player.getCommonData().getRace();
@@ -194,6 +209,13 @@ public class CraftSkillUpdateService {
 		}
 	}
 
+	/**
+	 * 向指定 NPC 学习/升级制作技能，校验等级、任务、名额与费用后弹窗确认。
+	 * Learn or upgrade a craft skill from the given NPC after level, quest, slot and cost checks.
+	 *
+	 * @param player 玩家 / Player
+	 * @param npc 技能导师 NPC / Skill mentor NPC
+	 */
 	public void learnSkill(Player player, Npc npc) {
 		if (player.getLevel() < 10) {
 			return;
@@ -212,7 +234,7 @@ public class CraftSkillUpdateService {
 			skillLvl = skillList.getSkillLevel(skillId);
 		}
 		if (!cost.containsKey(skillLvl)) {
-			// You cannot be promoted as your skill level is too low.
+			// 技能等级过低，无法晋升。 / You cannot be promoted as your skill level is too low.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390233));
 			return;
 		}
@@ -230,20 +252,20 @@ public class CraftSkillUpdateService {
 			return;
 		}
 
-		// ESSENCETAPPING
+		// 精华采集 / ESSENCETAPPING
 		if (skillLvl == 399 && ((skillId == 30002 && (!player.isCompleteQuest(19001) || !player.isCompleteQuest(29001))))) { // Essencetapping [Journeyman]
-			// You must pass the Expert test in order to be promoted.
+			// 须通过专家试炼才能晋升。 / You must pass the Expert test in order to be promoted.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400284));
 			return;
 		}
 		if (skillLvl == 499 && (skillId == 30002)) { // Essencetapping [Artisan]
-			// You cannot be promoted any more.
+			// 你无法再晋升。 / You cannot be promoted any more.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330069));
 			return;
 		}
-		// AETHERTAPPING
-		if (skillLvl == 399 && ((skillId == 30003 && (!player.isCompleteQuest(19003) || !player.isCompleteQuest(29003))))) { // [Journeyman] 
-			// You must pass the Expert test in order to be promoted.
+		// 以太采集 / AETHERTAPPING
+		if (skillLvl == 399 && ((skillId == 30003 && (!player.isCompleteQuest(19003) || !player.isCompleteQuest(29003))))) { // [Journeyman]
+			// 须通过专家试炼才能晋升。 / You must pass the Expert test in order to be promoted.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400284));
 			return;
 		}
@@ -252,18 +274,18 @@ public class CraftSkillUpdateService {
 			return;
 		}
 		if (skillLvl == 499 && (skillId == 30003)) { // Aethertapping [Artisan]
-			// You cannot be promoted any more.
+			// 你无法再晋升。 / You cannot be promoted any more.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330069));
 			return;
 		}
-		//CRAFTING
-		// You must do quest before being able to buy master update (499 to 500)
+		// 制作 / CRAFTING
+		// 须先完成任务才能购买大师更新（499 到 500）。 / You must do quest before being able to buy master update (499 to 500)
 		if (skillLvl == 499 && ((skillId == 40001 && (!player.isCompleteQuest(29039) || !player.isCompleteQuest(19039))) || (skillId == 40002 && (!player.isCompleteQuest(29009) || !player.isCompleteQuest(19009))) || (skillId == 40003 && (!player.isCompleteQuest(29015) || !player.isCompleteQuest(19015))) || (skillId == 40004 && (!player.isCompleteQuest(29021) || !player.isCompleteQuest(19021))) || (skillId == 40007 && (!player.isCompleteQuest(29033) || !player.isCompleteQuest(19033))) || (skillId == 40008 && (!player.isCompleteQuest(29027) || !player.isCompleteQuest(19027))) || (skillId == 40010 && (!player.isCompleteQuest(29058) || !player.isCompleteQuest(19058))))) { //[Artisan]
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400286));
 			return;
 		}
 		if (skillLvl == 549) { // [Master]
-			// You cannot be promoted any more.
+			// 你无法再晋升。 / You cannot be promoted any more.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330069));
 			return;
 		}
@@ -277,10 +299,10 @@ public class CraftSkillUpdateService {
 					PlayerSkillList skillList = responder.getSkillList();
 					skillList.addSkill(responder, skillId, skillLevel + 1);
 					responder.getRecipeList().autoLearnRecipe(responder, skillId, skillLevel + 1);
-					// You have learned the %0 skill.
+					// 你学会了 %0 技能。 / You have learned the %0 skill.
 					PacketSendUtility.sendPacket(responder, new SM_SKILL_LIST(skillList.getSkillEntry(skillId), 1330004, false));
 				} else {
-					// You do not have enough Kinah.
+					// 你的基纳不足。 / You do not have enough Kinah.
 					PacketSendUtility.sendPacket(responder, new SM_SYSTEM_MESSAGE(1300388));
 				}
 			}
@@ -295,6 +317,14 @@ public class CraftSkillUpdateService {
 		}
 	}
 
+	/**
+	 * 判断技能 ID 是否为可计名额的制作技能。
+	 * Check whether the skill id is a craft skill counted for expert/master slots.
+	 *
+	 * Skill id
+	 *
+	 * @param skillId @return 是否为制作技能 / Whether it is a craft skill
+	 */
 	public static boolean isCraftingSkill(int skillId) {
 		Iterator<Integer> it = craftingSkillIds.iterator();
 		while (it.hasNext()) {
@@ -305,6 +335,13 @@ public class CraftSkillUpdateService {
 		return false;
 	}
 
+	/**
+	 * 统计玩家当前专家级制作技能数量（等级 400–499）。
+	 * Count the player's expert craft skills (level 400–499).
+	 *
+	 * @param player 玩家 / Player
+	 * @return 专家技能数量 / Expert skill count
+	 */
 	static int getTotalExpertCraftingSkills(Player player) {
 		int mastered = 0;
 		Iterator<Integer> it = craftingSkillIds.iterator();
@@ -321,6 +358,13 @@ public class CraftSkillUpdateService {
 		return mastered;
 	}
 
+	/**
+	 * 统计玩家当前大师级制作技能数量（等级 &gt; 499）。
+	 * Count the player's master craft skills (level &gt; 499).
+	 *
+	 * @param player 玩家 / Player
+	 * @return 大师技能数量 / Master skill count
+	 */
 	static int getTotalMasterCraftingSkills(Player player) {
 		int mastered = 0;
 		Iterator<Integer> it = craftingSkillIds.iterator();
@@ -337,6 +381,13 @@ public class CraftSkillUpdateService {
 		return mastered;
 	}
 
+	/**
+	 * 判断玩家是否还能再学一个专家制作技能。
+	 * Check whether the player can still learn another expert craft skill.
+	 *
+	 * @param player 玩家 / Player
+	 * @return 是否可继续学习专家 / Whether another expert skill can be learned
+	 */
 	public static boolean canLearnMoreExpertCraftingSkill(Player player) {
 		if (getTotalExpertCraftingSkills(player) + getTotalMasterCraftingSkills(player) < CraftConfig.MAX_EXPERT_CRAFTING_SKILLS) {
 			return true;
@@ -345,6 +396,13 @@ public class CraftSkillUpdateService {
 		}
 	}
 
+	/**
+	 * 判断玩家是否还能再学一个大师制作技能。
+	 * Check whether the player can still learn another master craft skill.
+	 *
+	 * @param player 玩家 / Player
+	 * @return 是否可继续学习大师 / Whether another master skill can be learned
+	 */
 	public static boolean canLearnMoreMasterCraftingSkill(Player player) {
 		if (getTotalMasterCraftingSkills(player) < CraftConfig.MAX_MASTER_CRAFTING_SKILLS) {
 			return true;
@@ -353,6 +411,10 @@ public class CraftSkillUpdateService {
 		}
 	}
 
+	/**
+	 * 单例持有者。
+	 * Singleton holder.
+	 */
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 		protected static final CraftSkillUpdateService instance = new CraftSkillUpdateService();

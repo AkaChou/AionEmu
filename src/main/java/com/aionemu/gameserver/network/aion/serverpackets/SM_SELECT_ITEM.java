@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +8,23 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+/**
+ * 向客户端展示可选物品列表（分解/选择奖励窗口）。
+ * Server packet presenting a selectable item list (disassemble/reward picker) to the client.
+ */
 @Slf4j
 
 public class SM_SELECT_ITEM extends AionServerPacket {
 	private int uniqueItemId;
 	private List<DisassembleItem> selsetitems;
 
+	/**
+	 * 使用给定参数构造 SM_SELECT_ITEM 包。
+	 * Creates a SM_SELECT_ITEM packet with the given parameters.
+	 *
+	 * @param selsetitem 可选物品列表 / selectable items
+	 * unique item id
+	 */
 	public SM_SELECT_ITEM(List<DisassembleItem> selsetitem, int uniqueItemId) {
 		this.uniqueItemId = uniqueItemId;
 		this.selsetitems = selsetitem;

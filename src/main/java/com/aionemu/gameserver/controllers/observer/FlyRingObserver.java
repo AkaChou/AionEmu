@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -31,12 +15,24 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 
+/**
+ * 飞行环观察者：穿过飞行环时加速并触发任务/副本事件。
+ * Fly-ring observer: speeds up and fires quest/instance events when passing a fly ring.
+ */
 public class FlyRingObserver extends ActionObserver {
+	/** 被观察玩家 / Observed player */
 	private Player player;
+	/** 飞行环 / Fly ring */
 	private FlyRing ring;
+	/** 上一位置 / Previous position */
 	private Point3D oldPosition;
+	/** 以太之翼技能模板 / Wings Of Aether skill template */
 	SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(260); // Wings Of Aether 4.8
 
+	/**
+	 * 空构造（字段为 null）。
+	 * Empty constructor (fields null).
+	 */
 	public FlyRingObserver() {
 		super(ObserverType.MOVE);
 		this.player = null;
@@ -44,6 +40,10 @@ public class FlyRingObserver extends ActionObserver {
 		this.oldPosition = null;
 	}
 
+	/**
+	 * fly ring
+	 * 玩家 / player
+	 */
 	public FlyRingObserver(FlyRing ring, Player player) {
 		super(ObserverType.MOVE);
 		this.player = player;
@@ -82,10 +82,22 @@ public class FlyRingObserver extends ActionObserver {
 		oldPosition = newPosition;
 	}
 
+	/**
+	 * 副本处理器是否激活本飞行环。
+	 * Whether the instance handler activates this fly ring.
+	 *
+	 * whether active
+	 */
 	private boolean isInstanceActive() {
 		return ring.getPosition().getWorldMapInstance().getInstanceHandler().onPassFlyingRing(player, ring.getName());
 	}
 
+	/**
+	 * 相关飞行任务是否处于可触发阶段。
+	 * Whether the related flight quest is in a triggerable stage.
+	 *
+	 * @return 任务是否激活 / whether quest is active
+	 */
 	private boolean isQuestActive() {
 		int questId = player.getRace() == Race.ASMODIANS ? 2042 : 1044;
 		QuestState qs = player.getQuestStateList().getQuestState(questId);

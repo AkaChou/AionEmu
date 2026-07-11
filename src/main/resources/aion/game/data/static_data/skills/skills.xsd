@@ -59,6 +59,7 @@
 		<xs:attribute name="remove_flyend" type="xs:boolean"/>
 		<xs:attribute name="noremoveatdie" type="xs:boolean"/>
 		<xs:attribute name="applymcrit" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="hostile_type" type="HostileType" use="optional" default="DIRECT"/>
 		<xs:attribute name="charge_set_name" type="xs:string"/>
 		<xs:attribute name="minion_energy" type="xs:int" use="optional" default="0"/>
 	</xs:complexType>
@@ -1714,6 +1715,13 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="DAMAGE"/>
 			<xs:enumeration value="SKILLLV"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HostileType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DIRECT"/>
+			<xs:enumeration value="INDIRECT"/>
+			<xs:enumeration value="NONE"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="HitType">

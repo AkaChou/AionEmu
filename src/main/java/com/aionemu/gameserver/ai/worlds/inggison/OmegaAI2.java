@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.inggison;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -39,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Inggison 区域 NPC AI：Omega（@AIName "omega"），继承 AggressiveNpcAI2。
+ * Inggison zone NPC AI: Omega (@AIName "omega"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("omega")
 public class OmegaAI2 extends AggressiveNpcAI2
 {
@@ -115,27 +101,27 @@ public class OmegaAI2 extends AggressiveNpcAI2
 					if (!isAlreadyDead()) {
 						switch (Rnd.get(1, 5)) {
 						    case 1:
-							    //Omega summons a creature.
+							    // 欧米伽召唤生物。 / Omega summons a creature.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400606, 0);
 								spawn(281945, x, y, z, (byte) 0); //Clone Of Power.
 							break;
 							case 2:
-							    //Omega summons a powerful creature.
+							    // 欧米伽召唤强大生物。 / Omega summons a powerful creature.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400607, 0);
 							    spawn(281946, x, y, z, (byte) 0); //Clone Of Explosion.
 							break;
 							case 3:
-							    //Omega summons a healing creature.
+							    // 欧米伽召唤治疗生物。 / Omega summons a healing creature.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400608, 0);
 							    spawn(281947, x, y, z, (byte) 0); //Clone Of Healing.
 							break;
 							case 4:
-							    //Omega summons a creature that creates barriers.
+							    // 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
 							    spawn(281948, x, y, z, (byte) 0); //Clone Of Physical Barrier.
 							break;
 							case 5:
-							    //Omega summons a creature that creates barriers.
+							    // 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
 								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
 							    spawn(281949, x, y, z, (byte) 0); //Clone Of Magical Barrier.
 							break;

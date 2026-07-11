@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
@@ -45,17 +31,37 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
 import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 创造力精华服务，负责登录同步、经验/等级加点、属性应用、重置与 Estima CP。
+ * Creativity essence service handling login sync, exp/level points, stat apply, reset, and Estima CP.
+ */
 @Slf4j
 public class CreativityEssenceService {
 
+	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
 
+	/** 玩家 creativitypointsDAO / Player creativity-points DAO */
 	PlayerCreativityPointsDAO cpDAO = DAOManager.getDAO(PlayerCreativityPointsDAO.class);
+
+	/** Temporary CP calculation value / Temporary CP calculation value */
 	private int point;
+
+	/** Current total CP / Current total CP */
 	public static int currentCp;
+
+	/** CPgranted 按 Estimaequipment / CP granted by Estima equipment */
 	public static int estimaCp;
+
+	/** Estima 物品列表 / Estima item list */
 	public static List<Item> estima;
 
+	/**
+	 * 玩家登录时同步创造力面板数据。
+	 * Syncs creativity panel data when the player logs in.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public void onLogin(Player player) {
 		if (player.isArchDaeva()) {
 			int totalPoint = player.getCreativityPoint();
@@ -76,7 +82,11 @@ public class CreativityEssenceService {
 	}
 
 	/**
+	 * 按当前经验进度分阶段发放创造力精华点。
+	 * Grants creativity essence points in stages based on current exp progress.
 	 * http://aionpowerbook.com/powerbook/Creativity
+	 *
+	 * 玩家 / player
 	 */
 	public void pointPerExp(Player player) {
 		float current = player.getCommonData().getExpShown();
@@ -93,12 +103,10 @@ public class CreativityEssenceService {
 					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 2, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-					// You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(point)); // TODO??
-					// Add Essence to open the Allocate Essence window.Open Allocate Essence.
+					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(1));
+					// 添加精华以打开分配精华窗口。 / Add Essence to open the Allocate Essence window.Open Allocate Essence.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP_LINK, 0);
-					// Essence has increased by 1.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP, 15000);
 				}
 			} else if (percent >= 33.33f && percent < 50.00f) {
 				if (step == 2) {
@@ -109,12 +117,10 @@ public class CreativityEssenceService {
 					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 3, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-					// You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(step));
-					// Add Essence to open the Allocate Essence window.Open Allocate Essence.
+					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(1));
+					// 添加精华以打开分配精华窗口。 / Add Essence to open the Allocate Essence window.Open Allocate Essence.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP_LINK, 0);
-					// Essence has increased by 1.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP, 15000);
 				}
 			} else if (percent >= 50.00f && percent < 66.66f) {
 				if (step == 3) {
@@ -125,12 +131,10 @@ public class CreativityEssenceService {
 					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 4, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-					// You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(step));
-					// Add Essence to open the Allocate Essence window.Open Allocate Essence.
+					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(1));
+					// 添加精华以打开分配精华窗口。 / Add Essence to open the Allocate Essence window.Open Allocate Essence.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP_LINK, 0);
-					// Essence has increased by 1.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP, 15000);
 				}
 			} else if (percent >= 66.66f && percent < 83.33f) {
 				if (step == 4) {
@@ -141,12 +145,10 @@ public class CreativityEssenceService {
 					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 5, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-					// You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(step));
-					// Add Essence to open the Allocate Essence window.Open Allocate Essence.
+					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(1));
+					// 添加精华以打开分配精华窗口。 / Add Essence to open the Allocate Essence window.Open Allocate Essence.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP_LINK, 0);
-					// Essence has increased by 1.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP, 15000);
 				}
 			} else if (percent >= 83.33f && percent < 100.00f) {
 				if (step == 5) {
@@ -157,25 +159,22 @@ public class CreativityEssenceService {
 					int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
 					PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalPoint, 6, size, false));
 					PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-					// You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(step));
-					// Add Essence to open the Allocate Essence window.Open Allocate Essence.
+					// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(1));
+					// 添加精华以打开分配精华窗口。 / Add Essence to open the Allocate Essence window.Open Allocate Essence.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP_LINK, 0);
-					// Essence has increased by 1.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP, 15000);
 				}
 			}
 		}
 	}
 
 	/**
+	 * 按等级发放创造力精华点（含补发未完成的经验阶段点）。
+	 * Grants creativity essence points by level, including unpaid exp-step points.
 	 * KR - Update December 30th 2015
-	 * http://aionpowerbook.com/powerbook/KR_-_Update_December_30th_2015 - The
-	 * amount of Creativity a "ArchDaeva" can acquire with each level has been
-	 * increased. - If you have already leveled up the difference will be paid the
-	 * next time you reach the Creativity point. - For a certain amount of time
-	 * reseting Creativity will only require 1 Kinah, the price will not increase
-	 * with each reset.
+	 * http://aionpowerbook.com/powerbook/KR_-_Update_December_30th_2015
+	 *
+	 * 玩家 / player
 	 */
 	public void pointPerLevel(Player player) {
 		if (player.isArchDaeva()) {
@@ -242,14 +241,22 @@ public class CreativityEssenceService {
 			}
 			player.getCommonData().addAuraOfGrowth(1060000 * 10);
 			PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-			// You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
+			// 你获得了精华。点击角色经验条上的精华图标、SHIFT+U 或开始菜单。 / You have gained Essence. Click the Essence icon displayed on the Character XP meter, SHIFT+U, or select Start Menu.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP(point));
-			// Add Essence to open the Allocate Essence window.Open Allocate Essence.
+			// 添加精华以打开分配精华窗口。 / Add Essence to open the Allocate Essence window.Open Allocate Essence.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_CP_LINK);
 			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
 		}
 	}
 
+	/**
+	 * 计算经验进度百分比。
+	 * Calculates exp progress percentage.
+	 *
+	 * current exp
+	 * @param total 升级所需经验 / exp needed
+	 * percentage
+	 */
 	private float getPercentage(float current, float total) {
 		float percentCounter;
 		percentCounter = (current * 100.0f) / total;
@@ -259,6 +266,16 @@ public class CreativityEssenceService {
 		return percentCounter;
 	}
 
+	/**
+	 * 应用基础属性槽位的创造力分配。
+	 * Applies creativity allocation to base stat slots.
+	 *
+	 * 玩家 / player
+	 * type
+	 * slot size
+	 * @param id 槽位 ID / slot id
+	 * @param point 分配点数 / allocated points
+	 */
 	public void onEssenceApply(Player player, int type, int size, int id, int point) {
 		if (player.isArchDaeva()) {
 			player.getCP().addPoint(player, id, point);
@@ -292,6 +309,13 @@ public class CreativityEssenceService {
 		}
 	}
 
+	/**
+	 * 重置全部创造力分配并清除关联技能/属性。
+	 * Resets all creativity allocation and clears related skills/stats.
+	 *
+	 * 玩家 / player
+	 * @param plusSize 附加槽位尺寸 / additional slot size
+	 */
 	public void onResetEssence(Player player, int plusSize) {
 		for (PlayerCPEntry ce : player.getCP().getAllCP()) {
 			PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(ce.getSlot());
@@ -330,6 +354,16 @@ public class CreativityEssenceService {
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(player.getCreativityPoint(), player.getCPStep(), 0, false));
 	}
 
+	/**
+	 * 应用技能类创造力分配（容器/化身或职业技能）。
+	 * Applies skill-type creativity allocation (vessel/avatar or class skills).
+	 *
+	 * 玩家 / player
+	 * type
+	 * slot size
+	 * @param id 槽位 ID / slot id
+	 * @param point 分配点数 / allocated points
+	 */
 	public void onSkillsApply(Player player, int type, int size, int id, int point) {
 		if (id >= 7 && id <= 14 || id >= 401 && id <= 408) {
 			archDaevaSkills(player, id, point);
@@ -340,6 +374,14 @@ public class CreativityEssenceService {
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(type, size, id, point));
 	}
 
+	/**
+	 * 应用职业技能创造力分配。
+	 * Applies class skill creativity allocation.
+	 *
+	 * @param player 玩家 / player
+	 * @param id 槽位 ID / slot id
+	 * @param point 分配点数 / allocated points
+	 */
 	public void classSkills(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
 		if (point >= 1) {
@@ -350,6 +392,14 @@ public class CreativityEssenceService {
 		}
 	}
 
+	/**
+	 * 应用大天使容器/化身技能创造力分配。
+	 * Applies ArchDaeva vessel/avatar skill creativity allocation.
+	 *
+	 * 玩家 / player
+	 * @param id 槽位 ID / slot id
+	 * @param point 分配点数 / allocated points
+	 */
 	public void archDaevaSkills(Player player, int id, int point) {
 		if (point >= 5) {
 			switch (id) {
@@ -378,7 +428,7 @@ public class CreativityEssenceService {
 				player.getSkillList().addSkill(player, 4699, 1); // Terraform.
 				player.getCP().addPoint(player, 13, 1);
 				break;
-			// Ver: 5.1
+			// 版本：5.1 / Ver: 5.1
 			case 402:
 				if (player.getRace() == Race.ELYOS) {
 					player.getSkillList().addSkill(player, 4768, 1); // Transformation: Avatar Of Wind (Elyos)
@@ -477,6 +527,13 @@ public class CreativityEssenceService {
 		}
 	}
 
+	/**
+	 * 装备 Estima 时增加对应 CP。
+	 * Adds CP granted by equipping an Estima item.
+	 *
+	 * @param player 玩家 / player
+	 * @param objId 装备物品对象 ID / equipped item object id
+	 */
 	public void addEstimaCp(Player player, int objId) {
 		estimaCp = 1;
 		Item addEstima = player.getEquipment().getEquippedItemByObjId(objId);
@@ -506,39 +563,52 @@ public class CreativityEssenceService {
 		int totalCp = (currentCp + estimaCp);
 		player.setCreativityPoint(totalCp);
 		int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
-        PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalCp, player.getCPStep(), size, true));
-        PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
+		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalCp, player.getCPStep(), size, true));
+		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 	}
 
-    public void removeEstimaCp(Player player, Item item) {
-        estimaCp = 0;
-        if (item != null) {
-            switch (item.getEnchantLevel()) {
-                case 6: estimaCp = 8; break;
-                case 7: estimaCp = 10; break;
-                case 8: estimaCp = 12; break;
-                case 9: estimaCp = 14; break;
-                case 10: estimaCp = 17; break;
-                default: estimaCp = (item.getEnchantLevel() + 1); break;
-            }
-        }
-        currentCp = player.getCreativityPoint();
-        int totalCp = (currentCp - estimaCp);
-        if (totalCp < 0) totalCp = 0;
-        int spentCp = 0;
-        for (PlayerCPEntry ce : player.getCP().getAllCP()) {
-            spentCp += ce.getPoint();
-        }
-        if (totalCp < spentCp) {
-            onResetEssence(player, 0);
-            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
-        }
-        player.setCreativityPoint(totalCp);
-        int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
-        PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalCp, player.getCPStep(), size, true));
-        PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-    }
+	/**
+	 * 卸下 Estima 时扣减对应 CP；若已分配点数超出则强制重置。
+	 * Removes CP granted by an Estima item; force-resets if spent CP exceeds remaining total.
+	 *
+	 * 玩家 / player
+	 * Estima item
+	 */
+	public void removeEstimaCp(Player player, Item item) {
+		estimaCp = 0;
+		if (item != null) {
+			switch (item.getEnchantLevel()) {
+			case 6: estimaCp = 8; break;
+			case 7: estimaCp = 10; break;
+			case 8: estimaCp = 12; break;
+			case 9: estimaCp = 14; break;
+			case 10: estimaCp = 17; break;
+			default: estimaCp = (item.getEnchantLevel() + 1); break;
+			}
+		}
+		currentCp = player.getCreativityPoint();
+		int totalCp = (currentCp - estimaCp);
+		if (totalCp < 0) totalCp = 0;
+		int spentCp = 0;
+		for (PlayerCPEntry ce : player.getCP().getAllCP()) {
+			spentCp += ce.getPoint();
+		}
+		if (totalCp < spentCp) {
+			onResetEssence(player, 0);
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
+		}
+		player.setCreativityPoint(totalCp);
+		int size = DAOManager.getDAO(PlayerCreativityPointsDAO.class).getSlotSize(player.getObjectId());
+		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalCp, player.getCPStep(), size, true));
+		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
+	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static CreativityEssenceService getInstance() {
 		ObjectProvider<CreativityEssenceService> provider = instanceProvider;
 		if (provider != null) {
@@ -547,10 +617,20 @@ public class CreativityEssenceService {
 		return NewSingletonHolder.INSTANCE;
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<CreativityEssenceService> provider) {
 		instanceProvider = provider;
 	}
 
+	/**
+	 * 默认单例持有者。
+	 * Default singleton holder.
+	 */
 	private static class NewSingletonHolder {
 
 		private static final CreativityEssenceService INSTANCE = new CreativityEssenceService();

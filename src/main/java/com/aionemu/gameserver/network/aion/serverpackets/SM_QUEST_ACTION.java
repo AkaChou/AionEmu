@@ -1,25 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
+/**
+ * 向客户端同步任务状态、步骤、计时或共享等任务动作。
+ * Server packet synchronizing quest status, step, timer, or share actions to the client.
+ */
 public class SM_QUEST_ACTION extends AionServerPacket {
 	protected int questId;
 	private int status;
@@ -34,6 +22,14 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 
 	}
 
+	/**
+	 * 使用给定参数构造 SM_QUEST_ACTION 包。
+	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 *
+	 * quest id
+	 * quest status
+	 * @param step 任务步骤 / quest step
+	 */
 	public SM_QUEST_ACTION(int questId, int status, int step) {
 		this.action = 1;
 		this.questId = questId;
@@ -41,6 +37,14 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 		this.step = step;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_QUEST_ACTION 包。
+	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 *
+	 * quest id
+	 * quest status
+	 * @param step 任务步骤 / quest step
+	 */
 	public SM_QUEST_ACTION(int questId, QuestStatus status, int step) {
 		this.action = 2;
 		this.questId = questId;
@@ -48,11 +52,24 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 		this.step = step;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_QUEST_ACTION 包。
+	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 *
+	 * quest id
+	 */
 	public SM_QUEST_ACTION(int questId) {
 		this.action = 3;
 		this.questId = questId;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_QUEST_ACTION 包。
+	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 *
+	 * quest id
+	 * @param timer 计时秒数 / timer seconds
+	 */
 	public SM_QUEST_ACTION(int questId, int timer) {
 		this.action = 4;
 		this.questId = questId;
@@ -60,6 +77,14 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 		this.step = 0;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_QUEST_ACTION 包。
+	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 *
+	 * quest id
+	 * sharer id
+	 * @param unk 未知字段 / unknown field
+	 */
 	public SM_QUEST_ACTION(int questId, int sharerId, boolean unk) {
 		this.action = 5;
 		this.questId = questId;
@@ -67,6 +92,13 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 		this.unk = unk;
 	}
 
+	/**
+	 * 使用给定参数构造 SM_QUEST_ACTION 包。
+	 * Creates a SM_QUEST_ACTION packet with the given parameters.
+	 *
+	 * quest id
+	 * @param fake 是否伪造 / whether fake
+	 */
 	public SM_QUEST_ACTION(int questId, boolean fake) {
 		this.action = 6;
 		this.questId = questId;

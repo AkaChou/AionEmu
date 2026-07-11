@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.rift;
 
 import java.util.ArrayList;
@@ -23,6 +7,9 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.rift.RiftTemplate;
 
 /**
+ * 裂隙位置模型。
+ * Rift Location model.
+ *
  * @author Source
  */
 public class RiftLocation {
@@ -38,22 +25,29 @@ public class RiftLocation {
 		this.template = template;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return template.getId();
 	}
 
+	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
 		return template.getWorldId();
 	}
 
+	/**
+	 * @return Whether opened / Whether opened
+	 */
 	public boolean isOpened() {
 		return opened;
 	}
 
+	/** 设置 opened / Sets the opened */
 	public void setOpened(boolean state) {
 		opened = state;
 	}
 
+	/** 返回是否已刷新 / Returns the spawned */
 	public List<VisibleObject> getSpawned() {
 		return spawned;
 	}

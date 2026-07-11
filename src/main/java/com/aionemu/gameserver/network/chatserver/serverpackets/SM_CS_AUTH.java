@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.chatserver.serverpackets;
 
 import com.aionemu.gameserver.configs.network.IPConfig;
@@ -21,11 +5,25 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.chatserver.ChatServerConnection;
 import com.aionemu.gameserver.network.chatserver.CsServerPacket;
 
+/**
+ * 游戏服向聊天服发起认证的服务端包。
+ * Server packet used by the game server to authenticate with the chat server.
+ */
 public class SM_CS_AUTH extends CsServerPacket {
+	/**
+	 * 构造认证包（操作码 0x00）。
+	 * Constructs the auth packet (opcode 0x00).
+	 */
 	public SM_CS_AUTH() {
 		super(0x00);
 	}
 
+	/**
+	 * 写出游戏服 ID、默认地址与聊天密码。
+	 * Writes game-server id, default address, and chat password.
+	 *
+	 * @param con 目标连接 / target connection
+	 */
 	@Override
 	protected void writeImpl(ChatServerConnection con) {
 		writeC(NetworkConfig.GAMESERVER_ID);

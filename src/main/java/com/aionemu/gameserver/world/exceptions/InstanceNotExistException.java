@@ -1,42 +1,27 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.exceptions;
 
 /**
- * This Exception will be thrown when some object is referencing to Instance
- * that do not exist now.
- * 
+ * 引用了当前不存在的副本实例时抛出。
+ * Thrown when an object references an instance that does not currently exist.
+ *
  * @author -Nemesiss-
  */
 @SuppressWarnings("serial")
 public class InstanceNotExistException extends RuntimeException {
 
 	/**
-	 * Constructs an <code>InstanceNotExistException</code> with no detail message.
+	 * 构造无详细消息的异常。
+	 * Constructs an {@code InstanceNotExistException} with no detail message.
 	 */
 	public InstanceNotExistException() {
 		super();
 	}
 
 	/**
-	 * Constructs an <code>InstanceNotExistException</code> with the specified
-	 * detail message.
-	 * 
-	 * @param s the detail message.
+	 * 使用指定详细消息构造异常。
+	 * Constructs an {@code InstanceNotExistException} with the specified detail message.
+	 *
+	 * @param s 详细消息 / the detail message
 	 */
 	public InstanceNotExistException(String s) {
 		super(s);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
 import java.util.List;
@@ -25,16 +9,25 @@ import com.aionemu.gameserver.network.loginserver.LoginServerConnection;
 import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 
 /**
- * This is authentication packet that gs will send to login server for
- * registration.
- * 
+ * 游戏服向登录服注册自身的认证服务端包。
+ * Authentication packet that the game server sends to the login server for registration.
+ *
  * @author -Nemesiss-
  */
 public class SM_GS_AUTH extends LsServerPacket {
+
+	/**
+	 * 构造游戏服认证注册包。
+	 * Constructs a game-server auth registration packet.
+	 */
 	public SM_GS_AUTH() {
 		super(0x00);
 	}
 
+	/**
+	 * 写入游戏服 ID、默认地址、IP 区间、端口、最大在线与登录密码。
+	 * Writes game-server id, default address, IP ranges, port, max online players and login password.
+	 */
 	@Override
 	protected void writeImpl(LoginServerConnection con) {
 		writeC(NetworkConfig.GAMESERVER_ID);

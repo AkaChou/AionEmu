@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.utils;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -34,8 +20,8 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <code>BufferUtils</code> is a helper class for generating nio buffers from
- * jME data classes such as Vectors and ColorRGBA.
+ * NIO 缓冲工具，从向量等 jME 数据类型生成缓冲。
+ * Helper for generating nio buffers from jME data classes such as Vectors and ColorRGBA.
  *
  * @author Joshua Slack
  * @version $Id: BufferUtils.java,v 1.16 2007/10/29 16:56:18 nca Exp $
@@ -43,16 +29,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class BufferUtils {
 
-	//// -- TEMP DATA OBJECTS -- ////
+	//// -- 临时数据对象 / TEMP DATA OBJECTS -- ////
 	// private static final Vector2f _tempVec2 = new Vector2f();
 	// private static final Vector3f _tempVec3 = new Vector3f();
 	// private static final ColorRGBA _tempColor = new ColorRGBA();
-	//// -- TRACKER HASH -- ////
+	//// -- 追踪哈希 / TRACKER HASH -- ////
+	/** 直接内存缓冲弱引用追踪表。 / Weak-reference tracker for direct memory buffers. */
 	private static final Map<Buffer, Object> trackingHash = new ConcurrentHashMap<>(new WeakHashMap<Buffer, Object>());
+	/** 追踪表占位引用对象。 / Sentinel reference object stored in the tracking map. */
 	private static final Object ref = new Object();
+	/** 是否启用直接内存追踪。 / Whether direct-memory tracking is enabled. */
 	private static final boolean trackDirectMemory = false;
 
-	//// -- GENERIC CLONE -- ////
+	//// -- 通用克隆 / GENERIC CLONE -- ////
+
+	/**
+	 * 按具体缓冲类型分派并克隆缓冲。
+	 * Clone a buffer by dispatching to the matching typed clone method.
+	 *
+	 * @param buf 待克隆的缓冲 / buffer to clone
+	 * @return 克隆后的缓冲 / cloned buffer
+	 * unsupported buffer type。 / unsupported buffer type.
+	 */
 	public static Buffer clone(Buffer buf) {
 		if (buf instanceof FloatBuffer) {
 			return clone((FloatBuffer) buf);
@@ -69,14 +67,14 @@ public final class BufferUtils {
 		}
 	}
 
-	//// -- VECTOR3F METHODS -- ////
+	//VECTOR3F METHODS -- ////
 
 	/**
-	 * Generate a new FloatBuffer using the given array of Vector3f objects. The
-	 * FloatBuffer will be 3 * data.length long and contain the vector data as
-	 * data[0].x, data[0].y, data[0].z, data[1].x... etc.
+	 * 用 Vector3f 数组生成 FloatBuffer，长度为 3 * data.length，顺序为 x,y,z。
+	 * Generate a FloatBuffer from Vector3f objects; length is 3 * data.length as x,y,z.
 	 *
-	 * @param data array of Vector3f objects to place into a new FloatBuffer
+	 * @param data 要写入的 Vector3f 数组 / array of Vector3f objects to place into a new FloatBuffer
+	 * @return 新的 FloatBuffer，data 为 null 时返回 null / new FloatBuffer, or null if data is null
 	 */
 	public static FloatBuffer createFloatBuffer(Vector3f... data) {
 		if (data == null) {
@@ -95,9 +93,11 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Generate a new FloatBuffer using the given array of float primitives.
+	 * 用 float 数组生成 FloatBuffer。
+	 * Generate a FloatBuffer from float primitives.
 	 *
-	 * @param data array of float primitives to place into a new FloatBuffer
+	 * @param data 要写入的 float 数组 / array of float primitives to place into a new FloatBuffer
+	 * @return 新的 FloatBuffer，data 为 null 时返回 null / new FloatBuffer, or null if data is null
 	 */
 	public static FloatBuffer createFloatBuffer(float... data) {
 		if (data == null) {
@@ -111,12 +111,11 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new FloatBuffer of an appropriate size to hold the specified number
-	 * of Vector3f object data.
+	 * 创建可容纳指定数量 Vector3f 的 FloatBuffer。
+	 * Create a FloatBuffer sized to hold the specified number of Vector3f entries.
 	 *
-	 * @param vertices number of vertices that need to be held by the newly created
-	 *                 buffer
-	 * @return the requested new FloatBuffer
+	 * @param vertices 需要容纳的顶点数量 / number of vertices to hold
+	 * the requested new FloatBuffer
 	 */
 	public static FloatBuffer createVector3Buffer(int vertices) {
 		FloatBuffer vBuff = createFloatBuffer(3 * vertices);
@@ -124,14 +123,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new FloatBuffer of an appropriate size to hold the specified number
-	 * of Vector3f object data only if the given buffer if not already the right
-	 * size.
+	 * 若已有缓冲大小合适则回绕复用，否则新建可容纳指定数量 Vector3f 的 FloatBuffer。
+	 * Reuse the given buffer if it already has the right size; otherwise create a new one.
 	 *
-	 * @param buf      the buffer to first check and rewind
-	 * @param vertices number of vertices that need to be held by the newly created
-	 *                 buffer
-	 * @return the requested new FloatBuffer
+	 * @param buf 先检查并回绕的缓冲 / buffer to first check and rewind
+	 * @param vertices 需要容纳的顶点数量 / number of vertices to hold
+	 * @return 合适大小的 FloatBuffer / the requested FloatBuffer
 	 */
 	public static FloatBuffer createVector3Buffer(FloatBuffer buf, int vertices) {
 		if (buf != null && buf.limit() == 3 * vertices) {
@@ -142,12 +139,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Sets the data contained in the given color into the FloatBuffer at the
-	 * specified index.
+	 * 将给定颜色数据写入 FloatBuffer 指定索引处。
+	 * Sets the data contained in the given color into the FloatBuffer at the specified index.
 	 *
-	 * @param color the data to insert
-	 * @param buf   the buffer to insert into
-	 * @param index the postion to place the data; in terms of colors not floats
+	 * @param color 要插入的数据 / the data to insert
+	 * @param buf 目标缓冲 / the buffer to insert into
+	 * @param index 写入位置（按颜色计，非 float） / position in terms of colors not floats
 	 */
 	/*
 	 * public static void setInBuffer(ColorRGBA color, FloatBuffer buf, int index) {
@@ -156,12 +153,12 @@ public final class BufferUtils {
 	 */
 
 	/**
-	 * Sets the data contained in the given Vector3F into the FloatBuffer at the
-	 * specified index.
+	 * 将 Vector3f 数据写入 FloatBuffer 指定索引处。
+	 * Sets the Vector3f data into the FloatBuffer at the specified index.
 	 *
-	 * @param vector the data to insert
-	 * @param buf    the buffer to insert into
-	 * @param index  the postion to place the data; in terms of vectors not floats
+	 * @param vector 要插入的向量 / the data to insert
+	 * @param buf 目标缓冲 / the buffer to insert into
+	 * @param index 写入位置（按向量计，非 float） / position in terms of vectors not floats
 	 */
 	public static void setInBuffer(Vector3f vector, FloatBuffer buf, int index) {
 		if (buf == null) {
@@ -179,13 +176,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Updates the values of the given vector from the specified buffer at the index
-	 * provided.
+	 * 从缓冲指定索引读取数据填充到向量。
+	 * Updates the given vector from the buffer at the provided index.
 	 *
-	 * @param vector the vector to set data on
-	 * @param buf    the buffer to read from
-	 * @param index  the position (in terms of vectors, not floats) to read from the
-	 *               buf
+	 * @param vector 要写入数据的向量 / the vector to set data on
+	 * @param buf 读取来源缓冲 / the buffer to read from
+	 * @param index 读取位置（按向量计，非 float） / position in terms of vectors not floats
 	 */
 	public static void populateFromBuffer(Vector3f vector, FloatBuffer buf, int index) {
 		vector.x = buf.get(index * 3);
@@ -194,10 +190,11 @@ public final class BufferUtils {
 	}
 
 	/**
+	 * 从 FloatBuffer 生成 Vector3f 数组。
 	 * Generates a Vector3f array from the given FloatBuffer.
 	 *
-	 * @param buff the FloatBuffer to read from
-	 * @return a newly generated array of Vector3f objects
+	 * @param buff 读取来源的 FloatBuffer / the FloatBuffer to read from
+	 * @return 新生成的 Vector3f 数组 / a newly generated array of Vector3f objects
 	 */
 	public static Vector3f[] getVector3Array(FloatBuffer buff) {
 		buff.clear();
@@ -210,24 +207,23 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Copies a Vector3f from one position in the buffer to another. The index
-	 * values are in terms of vector number (eg, vector number 0 is postions 0-2 in
-	 * the FloatBuffer.)
+	 * 在同一缓冲内复制一个 Vector3f 到另一位置（索引按向量计）。
+	 * Copies a Vector3f from one position in the buffer to another (indices in vector units).
 	 *
-	 * @param buf     the buffer to copy from/to
-	 * @param fromPos the index of the vector to copy
-	 * @param toPos   the index to copy the vector to
+	 * @param buf 源 / 目标缓冲 / the buffer to copy from/to
+	 * @param fromPos 源向量索引 / the index of the vector to copy
+	 * @param toPos 目标向量索引 / the index to copy the vector to
 	 */
 	public static void copyInternalVector3(FloatBuffer buf, int fromPos, int toPos) {
 		copyInternal(buf, fromPos * 3, toPos * 3, 3);
 	}
 
 	/**
+	 * 原地归一化缓冲中指定位置的 Vector3f。
 	 * Normalize a Vector3f in-buffer.
 	 *
-	 * @param buf   the buffer to find the Vector3f within
-	 * @param index the position (in terms of vectors, not floats) of the vector to
-	 *              normalize
+	 * @param buf 含向量的缓冲 / the buffer containing the Vector3f
+	 * @param index 向量位置（按向量计，非 float） / position in terms of vectors not floats
 	 */
 	public static void normalizeVector3(FloatBuffer buf, int index) {
 		Vector3f tempVec3 = Vector3f.newInstance();
@@ -238,12 +234,12 @@ public final class BufferUtils {
 	}
 
 	/**
+	 * 将向量加到缓冲中指定位置的 Vector3f 上。
 	 * Add to a Vector3f in-buffer.
 	 *
-	 * @param toAdd the vector to add from
-	 * @param buf   the buffer to find the Vector3f within
-	 * @param index the position (in terms of vectors, not floats) of the vector to
-	 *              add to
+	 * @param toAdd 要累加的向量 / the vector to add from
+	 * @param buf 含向量的缓冲 / the buffer containing the Vector3f
+	 * @param index 目标向量位置（按向量计，非 float） / position in terms of vectors not floats
 	 */
 	public static void addInBuffer(Vector3f toAdd, FloatBuffer buf, int index) {
 		Vector3f tempVec3 = Vector3f.newInstance();
@@ -254,12 +250,12 @@ public final class BufferUtils {
 	}
 
 	/**
+	 * 将缓冲中指定位置的 Vector3f 与给定向量分量相乘并写回。
 	 * Multiply and store a Vector3f in-buffer.
 	 *
-	 * @param toMult the vector to multiply against
-	 * @param buf    the buffer to find the Vector3f within
-	 * @param index  the position (in terms of vectors, not floats) of the vector to
-	 *               multiply
+	 * the vector to multiply against
+	 * @param buf 含向量的缓冲 / the buffer containing the Vector3f
+	 * @param index 目标向量位置（按向量计，非 float） / position in terms of vectors not floats
 	 */
 	public static void multInBuffer(Vector3f toMult, FloatBuffer buf, int index) {
 		Vector3f tempVec3 = Vector3f.newInstance();
@@ -270,14 +266,13 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Checks to see if the given Vector3f is equals to the data stored in the
-	 * buffer at the given data index.
+	 * 判断给定 Vector3f 是否与缓冲指定索引处的数据相等。
+	 * Checks whether the given Vector3f equals the data stored in the buffer at the index.
 	 *
-	 * @param check the vector to check against - null will return false.
-	 * @param buf   the buffer to compare data with
-	 * @param index the position (in terms of vectors, not floats) of the vector in
-	 *              the buffer to check against
-	 * @return
+	 * @param check 用于比较的向量，null 返回 false / vector to check against; null returns false
+	 * @param buf 比较用缓冲 / the buffer to compare data with
+	 * @param index 缓冲中向量位置（按向量计，非 float） / position in terms of vectors not floats
+	 * @return 若 equal 则为 true / true if equal
 	 */
 	public static boolean equals(Vector3f check, FloatBuffer buf, int index) {
 		Vector3f tempVec3 = Vector3f.newInstance();
@@ -287,14 +282,14 @@ public final class BufferUtils {
 		return eq;
 	}
 
-	// // -- VECTOR2F METHODS -- ////
+	// VECTOR2F METHODS -- ////
 
 	/**
-	 * Generate a new FloatBuffer using the given array of Vector2f objects. The
-	 * FloatBuffer will be 2 * data.length long and contain the vector data as
-	 * data[0].x, data[0].y, data[1].x... etc.
+	 * 用 Vector2f 数组生成 FloatBuffer，长度为 2 * data.length，顺序为 x,y。
+	 * Generate a FloatBuffer from Vector2f objects; length is 2 * data.length as x,y.
 	 *
-	 * @param data array of Vector2f objects to place into a new FloatBuffer
+	 * @param data 要写入的 Vector2f 数组 / array of Vector2f objects to place into a new FloatBuffer
+	 * @return 新的 FloatBuffer，data 为 null 时返回 null / new FloatBuffer, or null if data is null
 	 */
 	public static FloatBuffer createFloatBuffer(Vector2f... data) {
 		if (data == null) {
@@ -313,12 +308,11 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new FloatBuffer of an appropriate size to hold the specified number
-	 * of Vector2f object data.
+	 * 创建可容纳指定数量 Vector2f 的 FloatBuffer。
+	 * Create a FloatBuffer sized to hold the specified number of Vector2f entries.
 	 *
-	 * @param vertices number of vertices that need to be held by the newly created
-	 *                 buffer
-	 * @return the requested new FloatBuffer
+	 * @param vertices 需要容纳的顶点数量 / number of vertices to hold
+	 * the requested new FloatBuffer
 	 */
 	public static FloatBuffer createVector2Buffer(int vertices) {
 		FloatBuffer vBuff = createFloatBuffer(2 * vertices);
@@ -326,14 +320,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new FloatBuffer of an appropriate size to hold the specified number
-	 * of Vector2f object data only if the given buffer if not already the right
-	 * size.
+	 * 若已有缓冲大小合适则回绕复用，否则新建可容纳指定数量 Vector2f 的 FloatBuffer。
+	 * Reuse the given buffer if it already has the right size; otherwise create a new one.
 	 *
-	 * @param buf      the buffer to first check and rewind
-	 * @param vertices number of vertices that need to be held by the newly created
-	 *                 buffer
-	 * @return the requested new FloatBuffer
+	 * @param buf 先检查并回绕的缓冲 / buffer to first check and rewind
+	 * @param vertices 需要容纳的顶点数量 / number of vertices to hold
+	 * @return 合适大小的 FloatBuffer / the requested FloatBuffer
 	 */
 	public static FloatBuffer createVector2Buffer(FloatBuffer buf, int vertices) {
 		if (buf != null && buf.limit() == 2 * vertices) {
@@ -344,13 +336,14 @@ public final class BufferUtils {
 		return createFloatBuffer(2 * vertices);
 	}
 
-	//// -- INT METHODS -- ////
+	//// -- INT 方法 / INT METHODS -- ////
 
 	/**
-	 * Generate a new IntBuffer using the given array of ints. The IntBuffer will be
-	 * data.length long and contain the int data as data[0], data[1]... etc.
+	 * 用 int 数组生成 IntBuffer。
+	 * Generate an IntBuffer from the given int array.
 	 *
-	 * @param data array of ints to place into a new IntBuffer
+	 * @param data 要写入的 int 数组 / array of ints to place into a new IntBuffer
+	 * @return 新的 IntBuffer，data 为 null 时返回 null / new IntBuffer, or null if data is null
 	 */
 	public static IntBuffer createIntBuffer(int... data) {
 		if (data == null) {
@@ -364,10 +357,11 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new int[] array and populate it with the given IntBuffer's contents.
+	 * 从 IntBuffer 内容生成 int 数组。
+	 * Create a new int[] populated with the given IntBuffer's contents.
 	 *
-	 * @param buff the IntBuffer to read from
-	 * @return a new int array populated from the IntBuffer
+	 * @param buff 读取来源的 IntBuffer / the IntBuffer to read from
+	 * @return 新的 int 数组，buff 为 null 时返回 null / new int array, or null if buff is null
 	 */
 	public static int[] getIntArray(IntBuffer buff) {
 		if (buff == null) {
@@ -382,11 +376,11 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new float[] array and populate it with the given FloatBuffer's
-	 * contents.
+	 * 从 FloatBuffer 内容生成 float 数组。
+	 * Create a new float[] populated with the given FloatBuffer's contents.
 	 *
-	 * @param buff the FloatBuffer to read from
-	 * @return a new float array populated from the FloatBuffer
+	 * @param buff 读取来源的 FloatBuffer / the FloatBuffer to read from
+	 * @return 新的 float 数组，buff 为 null 时返回 null / new float array, or null if buff is null
 	 */
 	public static float[] getFloatArray(FloatBuffer buff) {
 		if (buff == null) {
@@ -400,13 +394,14 @@ public final class BufferUtils {
 		return inds;
 	}
 
-	//// -- GENERAL DOUBLE ROUTINES -- ////
+	//GENERAL DOUBLE ROUTINES -- ////
 
 	/**
-	 * Create a new DoubleBuffer of the specified size.
+	 * 创建指定容量的直接 DoubleBuffer（本地字节序）。
+	 * Create a direct DoubleBuffer of the specified size (native byte order).
 	 *
-	 * @param size required number of double to store.
-	 * @return the new DoubleBuffer
+	 * @param size 需要存储的 double 数量 / required number of doubles to store
+	 * the new DoubleBuffer
 	 */
 	public static DoubleBuffer createDoubleBuffer(int size) {
 		DoubleBuffer buf = ByteBuffer.allocateDirect(8 * size).order(ByteOrder.nativeOrder()).asDoubleBuffer();
@@ -418,13 +413,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new DoubleBuffer of an appropriate size to hold the specified number
-	 * of doubles only if the given buffer if not already the right size.
+	 * 若已有缓冲大小合适则回绕复用，否则新建指定容量的 DoubleBuffer。
+	 * Reuse the given DoubleBuffer if sized correctly; otherwise create a new one.
 	 *
-	 * @param buf  the buffer to first check and rewind
-	 * @param size number of doubles that need to be held by the newly created
-	 *             buffer
-	 * @return the requested new DoubleBuffer
+	 * @param buf 先检查并回绕的缓冲 / buffer to first check and rewind
+	 * @param size 需要容纳的 double 数量 / number of doubles to hold
+	 * @return 合适大小的 DoubleBuffer / the requested DoubleBuffer
 	 */
 	public static DoubleBuffer createDoubleBuffer(DoubleBuffer buf, int size) {
 		if (buf != null && buf.limit() == size) {
@@ -436,13 +430,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Creates a new DoubleBuffer with the same contents as the given DoubleBuffer.
-	 * The new DoubleBuffer is seperate from the old one and changes are not
-	 * reflected across. If you want to reflect changes, consider using
-	 * Buffer.duplicate().
+	 * 深拷贝 DoubleBuffer 内容（独立副本，变更不互相反映）。
+	 * Creates a separate DoubleBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * @param buf the DoubleBuffer to copy
-	 * @return the copy
+	 * the DoubleBuffer to copy
+	 *
+	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static DoubleBuffer clone(DoubleBuffer buf) {
 		if (buf == null) {
@@ -460,13 +453,14 @@ public final class BufferUtils {
 		return copy;
 	}
 
-	//// -- GENERAL FLOAT ROUTINES -- ////
+	//// -- 通用 FLOAT 例程 / GENERAL FLOAT ROUTINES -- ////
 
 	/**
-	 * Create a new FloatBuffer of the specified size.
+	 * 创建指定容量的直接 FloatBuffer（本地字节序）。
+	 * Create a direct FloatBuffer of the specified size (native byte order).
 	 *
-	 * @param size required number of floats to store.
-	 * @return the new FloatBuffer
+	 * @param size 需要存储的 float 数量 / required number of floats to store
+	 * the new FloatBuffer
 	 */
 	public static FloatBuffer createFloatBuffer(int size) {
 		FloatBuffer buf = ByteBuffer.allocateDirect(4 * size).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -478,12 +472,13 @@ public final class BufferUtils {
 	}
 
 	/**
+	 * 在同一 FloatBuffer 内将一段 float 从 fromPos 复制到 toPos。
 	 * Copies floats from one position in the buffer to another.
 	 *
-	 * @param buf     the buffer to copy from/to
-	 * @param fromPos the starting point to copy from
-	 * @param toPos   the starting point to copy to
-	 * @param length  the number of floats to copy
+	 * @param buf 源 / 目标缓冲 / the buffer to copy from/to
+	 * @param fromPos 源起始位置 / the starting point to copy from
+	 * @param toPos 目标起始位置 / the starting point to copy to
+	 * @param length 复制的 float 数量 / the number of floats to copy
 	 */
 	public static void copyInternal(FloatBuffer buf, int fromPos, int toPos, int length) {
 		float[] data = new float[length];
@@ -494,13 +489,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Creates a new FloatBuffer with the same contents as the given FloatBuffer.
-	 * The new FloatBuffer is seperate from the old one and changes are not
-	 * reflected across. If you want to reflect changes, consider using
-	 * Buffer.duplicate().
+	 * 深拷贝 FloatBuffer 内容（独立副本，变更不互相反映）。
+	 * Creates a separate FloatBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * @param buf the FloatBuffer to copy
-	 * @return the copy
+	 * the FloatBuffer to copy
+	 *
+	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static FloatBuffer clone(FloatBuffer buf) {
 		if (buf == null) {
@@ -519,13 +513,14 @@ public final class BufferUtils {
 		return copy;
 	}
 
-	//// -- GENERAL INT ROUTINES -- ////
+	//// -- 通用 INT 例程 / GENERAL INT ROUTINES -- ////
 
 	/**
-	 * Create a new IntBuffer of the specified size.
+	 * 创建指定容量的直接 IntBuffer（本地字节序）。
+	 * Create a direct IntBuffer of the specified size (native byte order).
 	 *
-	 * @param size required number of ints to store.
-	 * @return the new IntBuffer
+	 * @param size 需要存储的 int 数量 / required number of ints to store
+	 * the new IntBuffer
 	 */
 	public static IntBuffer createIntBuffer(int size) {
 		IntBuffer buf = ByteBuffer.allocateDirect(4 * size).order(ByteOrder.nativeOrder()).asIntBuffer();
@@ -537,12 +532,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new IntBuffer of an appropriate size to hold the specified number of
-	 * ints only if the given buffer if not already the right size.
+	 * 若已有缓冲大小合适则回绕复用，否则新建指定容量的 IntBuffer。
+	 * Reuse the given IntBuffer if sized correctly; otherwise create a new one.
 	 *
-	 * @param buf  the buffer to first check and rewind
-	 * @param size number of ints that need to be held by the newly created buffer
-	 * @return the requested new IntBuffer
+	 * @param buf 先检查并回绕的缓冲 / buffer to first check and rewind
+	 * @param size 需要容纳的 int 数量 / number of ints to hold
+	 * @return 合适大小的 IntBuffer / the requested IntBuffer
 	 */
 	public static IntBuffer createIntBuffer(IntBuffer buf, int size) {
 		if (buf != null && buf.limit() == size) {
@@ -554,12 +549,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Creates a new IntBuffer with the same contents as the given IntBuffer. The
-	 * new IntBuffer is seperate from the old one and changes are not reflected
-	 * across. If you want to reflect changes, consider using Buffer.duplicate().
+	 * 深拷贝 IntBuffer 内容（独立副本，变更不互相反映）。
+	 * Creates a separate IntBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * @param buf the IntBuffer to copy
-	 * @return the copy
+	 * the IntBuffer to copy
+	 *
+	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static IntBuffer clone(IntBuffer buf) {
 		if (buf == null) {
@@ -577,13 +572,14 @@ public final class BufferUtils {
 		return copy;
 	}
 
-	//// -- GENERAL BYTE ROUTINES -- ////
+	//// -- 通用 BYTE 例程 / GENERAL BYTE ROUTINES -- ////
 
 	/**
-	 * Create a new ByteBuffer of the specified size.
+	 * 创建指定容量的直接 ByteBuffer（本地字节序）。
+	 * Create a direct ByteBuffer of the specified size (native byte order).
 	 *
-	 * @param size required number of ints to store.
-	 * @return the new IntBuffer
+	 * @param size 需要存储的字节数 / required number of bytes to store
+	 * the new ByteBuffer
 	 */
 	public static ByteBuffer createByteBuffer(int size) {
 		ByteBuffer buf = ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder());
@@ -595,12 +591,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new ByteBuffer of an appropriate size to hold the specified number
-	 * of ints only if the given buffer if not already the right size.
+	 * 若已有缓冲大小合适则回绕复用，否则新建指定容量的 ByteBuffer。
+	 * Reuse the given ByteBuffer if sized correctly; otherwise create a new one.
 	 *
-	 * @param buf  the buffer to first check and rewind
-	 * @param size number of bytes that need to be held by the newly created buffer
-	 * @return the requested new IntBuffer
+	 * @param buf 先检查并回绕的缓冲 / buffer to first check and rewind
+	 * @param size 需要容纳的字节数 / number of bytes to hold
+	 * @return 合适大小的 ByteBuffer / the requested ByteBuffer
 	 */
 	public static ByteBuffer createByteBuffer(ByteBuffer buf, int size) {
 		if (buf != null && buf.limit() == size) {
@@ -611,6 +607,13 @@ public final class BufferUtils {
 		return buf;
 	}
 
+	/**
+	 * 用 byte 数组生成 ByteBuffer。
+	 * Generate a ByteBuffer from the given byte array.
+	 *
+	 * @param data 要写入的字节数据 / byte data to place into a new ByteBuffer
+	 * the new ByteBuffer
+	 */
 	public static ByteBuffer createByteBuffer(byte... data) {
 		ByteBuffer bb = createByteBuffer(data.length);
 		bb.put(data);
@@ -618,6 +621,13 @@ public final class BufferUtils {
 		return bb;
 	}
 
+	/**
+	 * 用字符串默认编码字节生成 ByteBuffer。
+	 * Generate a ByteBuffer from the string's default-charset bytes.
+	 *
+	 * @param data 源字符串 / source string
+	 * the new ByteBuffer
+	 */
 	public static ByteBuffer createByteBuffer(String data) {
 		byte[] bytes = data.getBytes();
 		ByteBuffer bb = createByteBuffer(bytes.length);
@@ -627,12 +637,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Creates a new ByteBuffer with the same contents as the given ByteBuffer. The
-	 * new ByteBuffer is seperate from the old one and changes are not reflected
-	 * across. If you want to reflect changes, consider using Buffer.duplicate().
+	 * 深拷贝 ByteBuffer 内容（独立副本，变更不互相反映）。
+	 * Creates a separate ByteBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * @param buf the ByteBuffer to copy
-	 * @return the copy
+	 * the ByteBuffer to copy
+	 *
+	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static ByteBuffer clone(ByteBuffer buf) {
 		if (buf == null) {
@@ -650,13 +660,14 @@ public final class BufferUtils {
 		return copy;
 	}
 
-	//// -- GENERAL SHORT ROUTINES -- ////
+	//// -- 通用 SHORT 例程 / GENERAL SHORT ROUTINES -- ////
 
 	/**
-	 * Create a new ShortBuffer of the specified size.
+	 * 创建指定容量的直接 ShortBuffer（本地字节序）。
+	 * Create a direct ShortBuffer of the specified size (native byte order).
 	 *
-	 * @param size required number of shorts to store.
-	 * @return the new ShortBuffer
+	 * @param size 需要存储的 short 数量 / required number of shorts to store
+	 * the new ShortBuffer
 	 */
 	public static ShortBuffer createShortBuffer(int size) {
 		ShortBuffer buf = ByteBuffer.allocateDirect(2 * size).order(ByteOrder.nativeOrder()).asShortBuffer();
@@ -668,12 +679,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Create a new ShortBuffer of an appropriate size to hold the specified number
-	 * of shorts only if the given buffer if not already the right size.
+	 * 若已有缓冲大小合适则回绕复用，否则新建指定容量的 ShortBuffer。
+	 * Reuse the given ShortBuffer if sized correctly; otherwise create a new one.
 	 *
-	 * @param buf  the buffer to first check and rewind
-	 * @param size number of shorts that need to be held by the newly created buffer
-	 * @return the requested new ShortBuffer
+	 * @param buf 先检查并回绕的缓冲 / buffer to first check and rewind
+	 * @param size 需要容纳的 short 数量 / number of shorts to hold
+	 * @return 合适大小的 ShortBuffer / the requested ShortBuffer
 	 */
 	public static ShortBuffer createShortBuffer(ShortBuffer buf, int size) {
 		if (buf != null && buf.limit() == size) {
@@ -684,6 +695,13 @@ public final class BufferUtils {
 		return buf;
 	}
 
+	/**
+	 * 用 short 数组生成 ShortBuffer。
+	 * Generate a ShortBuffer from the given short array.
+	 *
+	 * @param data 要写入的 short 数组 / array of shorts to place into a new ShortBuffer
+	 * @return 新的 ShortBuffer，data 为 null 时返回 null / new ShortBuffer, or null if data is null
+	 */
 	public static ShortBuffer createShortBuffer(short... data) {
 		if (data == null) {
 			return null;
@@ -696,13 +714,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Creates a new ShortBuffer with the same contents as the given ShortBuffer.
-	 * The new ShortBuffer is seperate from the old one and changes are not
-	 * reflected across. If you want to reflect changes, consider using
-	 * Buffer.duplicate().
+	 * 深拷贝 ShortBuffer 内容（独立副本，变更不互相反映）。
+	 * Creates a separate ShortBuffer with the same contents; use Buffer.duplicate() to share changes.
 	 *
-	 * @param buf the ShortBuffer to copy
-	 * @return the copy
+	 * the ShortBuffer to copy
+	 *
+	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static ShortBuffer clone(ShortBuffer buf) {
 		if (buf == null) {
@@ -721,16 +738,12 @@ public final class BufferUtils {
 	}
 
 	/**
-	 * Ensures there is at least the <code>required</code> number of entries left
-	 * after the current position of the buffer. If the buffer is too small a larger
-	 * one is created and the old one copied to the new buffer.
+	 * 确保 FloatBuffer 当前位置之后至少还有 required 个空位，不足则扩容并拷贝。
+	 * Ensures at least the required number of entries remain after the current position; grows if needed.
 	 *
-	 * @param buffer   buffer that should be checked/copied (may be null)
-	 * @param required minimum number of elements that should be remaining in the
-	 *                 returned buffer
-	 * @return a buffer large enough to receive at least * * the
-	 *         <code>required</code> number of entries, same position as the input
-	 *         buffer, not null
+	 * @param buffer 待检查 / 拷贝的缓冲，可为 null / buffer that should be checked/copied (may be null)
+	 * @param required 返回缓冲中至少应剩余的元素数 / minimum remaining elements required
+	 * @return 足够大的缓冲，位置与输入一致，非 null / buffer large enough with same position, never null
 	 */
 	public static FloatBuffer ensureLargeEnough(FloatBuffer buffer, int required) {
 		if (buffer == null || (buffer.remaining() < required)) {
@@ -746,6 +759,14 @@ public final class BufferUtils {
 		return buffer;
 	}
 
+	/**
+	 * 确保 ShortBuffer 当前位置之后至少还有 required 个空位，不足则扩容并拷贝。
+	 * Ensures at least the required number of entries remain after the current position; grows if needed.
+	 *
+	 * @param buffer 待检查 / 拷贝的缓冲，可为 null / buffer that should be checked/copied (may be null)
+	 * @param required 返回缓冲中至少应剩余的元素数 / minimum remaining elements required
+	 * @return 足够大的缓冲，位置与输入一致，非 null / buffer large enough with same position, never null
+	 */
 	public static ShortBuffer ensureLargeEnough(ShortBuffer buffer, int required) {
 		if (buffer == null || (buffer.remaining() < required)) {
 			int position = (buffer != null ? buffer.position() : 0);
@@ -760,6 +781,14 @@ public final class BufferUtils {
 		return buffer;
 	}
 
+	/**
+	 * 确保 ByteBuffer 当前位置之后至少还有 required 个空位，不足则扩容并拷贝。
+	 * Ensures at least the required number of entries remain after the current position; grows if needed.
+	 *
+	 * @param buffer 待检查 / 拷贝的缓冲，可为 null / buffer that should be checked/copied (may be null)
+	 * @param required 返回缓冲中至少应剩余的元素数 / minimum remaining elements required
+	 * @return 足够大的缓冲，位置与输入一致，非 null / buffer large enough with same position, never null
+	 */
 	public static ByteBuffer ensureLargeEnough(ByteBuffer buffer, int required) {
 		if (buffer == null || (buffer.remaining() < required)) {
 			int position = (buffer != null ? buffer.position() : 0);
@@ -774,9 +803,15 @@ public final class BufferUtils {
 		return buffer;
 	}
 
+	/**
+	 * 统计并输出当前直接内存与堆内存占用情况。
+	 * Summarizes and reports current direct-memory and heap usage of tracked buffers.
+	 *
+	 * @param store 结果写入的 StringBuilder；为 null 时新建并经 log 输出 / StringBuilder to append into; if null, builds one and logs it
+	 */
 	public static void printCurrentDirectMemory(StringBuilder store) {
 		long totalHeld = 0;
-		// make a new set to hold the keys to prevent concurrency issues.
+		// 新建集合保存键，避免并发问题。 / make a new set to hold the keys to prevent concurrency issues.
 		ArrayList<Buffer> bufs = new ArrayList<Buffer>(trackingHash.keySet());
 		int fBufs = 0, bBufs = 0, iBufs = 0, sBufs = 0, dBufs = 0;
 		int fBufsM = 0, bBufsM = 0, iBufsM = 0, sBufsM = 0, dBufsM = 0;
@@ -818,7 +853,7 @@ public final class BufferUtils {
 				.append(iBufsM / 1024).append("kb  s: ").append(sBufsM / 1024).append("kb  d: ").append(dBufsM / 1024)
 				.append("kb)").append("\n");
 		if (printStout) {
-			log.info("{}", store);
+			log.info(I18n.get("log.bf21a9e8fbc5", store));
 		}
 	}
 }

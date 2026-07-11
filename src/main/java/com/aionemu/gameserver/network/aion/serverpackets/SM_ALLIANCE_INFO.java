@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
@@ -23,11 +7,15 @@ import org.apache.commons.lang3.StringUtils;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
+import com.aionemu.gameserver.model.team2.league.League;
 import com.aionemu.gameserver.model.team2.league.LeagueMember;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步联盟（Alliance）完整信息（队长、副队长、拾取规则与军团联盟）的服务端包。
+ * Server packet synchronizing full alliance info (leader, vice-captains, loot rules, and league) to the client.
+ *
  * @author Sarynth, xTz
  */
 public class SM_ALLIANCE_INFO extends AionServerPacket {
@@ -45,10 +33,24 @@ public class SM_ALLIANCE_INFO extends AionServerPacket {
 	public static final int UNION_BAN_HIM = 1400574;
 	public static final int UNION_BAN_ME = 1400576;
 
+	/**
+	 * 构造无系统消息的联盟信息包。
+	 * Creates an alliance info packet without a system message.
+	 *
+	 * player alliance
+	 */
 	public SM_ALLIANCE_INFO(PlayerAlliance alliance) {
 		this(alliance, 0, StringUtils.EMPTY);
 	}
 
+	/**
+	 * 构造带系统消息 ID/文本的联盟信息包。
+	 * Creates an alliance info packet with an optional system message id and text.
+	 *
+	 * player alliance
+	 * @param messageId 系统消息 ID（0 表示无消息） / system message id (0 = none)
+	 * @param message 系统消息文本 / system message text
+	 */
 	public SM_ALLIANCE_INFO(PlayerAlliance alliance, int messageId, String message) {
 		this.alliance = alliance;
 		groupid = alliance.getObjectId();
@@ -92,9 +94,9 @@ public class SM_ALLIANCE_INFO extends AionServerPacket {
 		writeD(messageId); // System message ID
 		writeS(messageId != 0 ? message : StringUtils.EMPTY); // System message
 		if (alliance.isInLeague()) {
-			// TODO LootRules !!
-			lootRules = alliance.getLeague().getLootGroupRules();
-			writeH(alliance.getLeague().size());
+			League league = alliance.getLeague();
+			lootRules = league.getLootGroupRules();
+			writeH(league.size());
 			writeD(lootRules.getLootRule().getId()); // loot rule type - 0 freeforall, 1 roundrobin, 2 leader
 			writeD(lootRules.getAutodistribution().getId()); // autoDistribution - 0 or 1
 			writeD(lootRules.getCommonItemAbove()); // this.common_item_above); - 0 normal 2 roll 3 bid
@@ -104,18 +106,21 @@ public class SM_ALLIANCE_INFO extends AionServerPacket {
 			writeD(lootRules.getEthernalItemAbove()); // this.ethernal_item_above); - 0 normal 2 roll 3 bid
 			writeD(2); // this.over_ethernal); - 0 normal 2 roll 3 bid
 			writeD(2); // this.over_over_ethernal); - 0 normal 2 roll 3 bid
-			writeD(226); // Todo check if it is always 226
-			writeD(4);
-			writeC(0);
-			for (LeagueMember leagueMember : alliance.getLeague().getSortedMembers()) {
+			writeLeagueHeader(league);
+			for (LeagueMember leagueMember : league.getSortedMembers()) {
 				writeD(leagueMember.getLeaguePosition());
 				writeD(leagueMember.getObjectId());
 				writeD(leagueMember.getObject().size());
 				writeS(leagueMember.getObject().getLeaderObject().getName());
-				writeD(leagueMember.getObject().getLeaderObject().getWorldId()); // TODO Looks like some ObjId and not
-																					// mapId
-				writeD(leagueMember.getObject().getObjectId());
+				writeD(leagueMember.getObject().getLeaderObject().getWorldId());
+				writeD(leagueMember.getObject().getLeaderObject().getObjectId());
 			}
 		}
+	}
+
+	void writeLeagueHeader(League league) {
+		writeD(226);
+		writeC(league.size());
+		writeD(league.getLeader().getObjectId());
 	}
 }

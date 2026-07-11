@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -26,14 +10,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 对当前目标造成伤害的管理命令（{@code //damage}）。
+ * Admin command that deals damage to the current target ({@code //damage}).
+ *
  * @author Source
  */
 public class Damage extends AdminCommand {
 
+	/**
+	 * 注册命令名为 {@code damage}。
+	 * Registers the command name {@code damage}.
+	 */
 	public Damage() {
 		super("damage");
 	}
 
+	/**
+	 * 对目标生物造成固定或百分比伤害。
+	 * Deals absolute or percentage damage to the targeted creature.
+	 *
+	 * admin
+	 * @param params 伤害值或百分比（如 50%） / damage amount or percent (e.g. 50%)
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length > 1)
@@ -67,6 +65,13 @@ public class Damage extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 执行失败时的语法提示。
+	 * Syntax hint on failure.
+	 *
+	 * admin
+	 * error message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //damage <dmg | dmg%>" + "\n<dmg> must be a number.");

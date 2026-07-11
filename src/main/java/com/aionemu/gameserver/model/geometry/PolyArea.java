@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.geometry;
 
 import java.util.Collection;
@@ -24,20 +8,21 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
- * Area of free form
- * 
+ * Poly 区域，用于几何相关逻辑。
+ * Poly Area for geometry logic.
+ *
  * @author SoulKeeper
  */
 public class PolyArea extends AbstractArea {
 
 	/**
-	 * Polygon used to calculate isInside()
+	 * 用于计算 isInside() 的多边形。 / Polygon used to calculate isInside()
 	 */
 	private final Polygon2D poly;
 
 	/**
-	 * Creates new area from given points
-	 * 
+	 * 创建新 area 从给定 points。 / Creates new area from given points
+	 *
 	 * @param zoneName list of points
 	 * @param worldId   minimal z
 	 * @param points   maximal z
@@ -47,8 +32,8 @@ public class PolyArea extends AbstractArea {
 	}
 
 	/**
-	 * Creates new area from given points
-	 * 
+	 * 创建新 area 从给定 points。 / Creates new area from given points
+	 *
 	 * @param zoneName list of points
 	 * @param worldId   minimal z
 	 * @param points   maximal z
@@ -142,6 +127,7 @@ public class PolyArea extends AbstractArea {
 		return closestPoint;
 	}
 
+	/** 矩形相交 / intersects Rectangle. */
 	@Override
 	public boolean intersectsRectangle(RectangleArea area) {
 		if (area.getMinZ() > getMaxZ() || area.getMaxZ() < getMinZ())

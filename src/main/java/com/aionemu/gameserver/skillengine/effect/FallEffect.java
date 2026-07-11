@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,25 +8,40 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 强制落地效果：仅对玩家生效，立即结束飞行状态。
+ * Forced fall effect: applies to players only and immediately ends flight.
+ *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FallEffect")
 public class FallEffect extends EffectTemplate {
 
+	/**
+	 * 仅对玩家计算强制落地。
+	 * Calculates forced fall for players only.
+	 */
 	@Override
 	public void calculate(Effect effect) {
-		// Affects only players (for now as we dont have flying Npc's)
+		// 目前仅影响玩家（尚无飞行 NPC）。 / Affects only players (for now as we dont have flying Npc's)
 		if (effect.getEffected() instanceof Player) {
 			super.calculate(effect, null, null);
 		}
 	}
 
+	/**
+	 * 将效果应用到目标（加入控制器或立即结算）。
+	 * Applies the effect to the target (controller attach or immediate settlement).
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 立即结束目标飞行状态。
+	 * Immediately ends the target's flight state.
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		((Player) effect.getEffected()).getFlyController().endFly(true);

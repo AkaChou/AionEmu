@@ -1,21 +1,6 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -28,6 +13,9 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.io.IOException;
 
 /**
+ * NPC 生成指令；在管理员位置按模板 ID 生成单位，并可持久化到刷怪数据。
+ * Admin command that spawns a template at the admin position and optionally persists the spawn.
+ *
  * @author Luno
  */
 @Slf4j
@@ -37,6 +25,13 @@ public class SpawnNpc extends AdminCommand {
 		super("spawn");
 	}
 
+	/**
+	 * 执行该管理指令。
+	 * Executes this admin command.
+	 *
+	 * @param admin 执行指令的管理员 / admin executing the command
+	 * command arguments
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params.length < 1) {
@@ -74,7 +69,7 @@ public class SpawnNpc extends AdminCommand {
 				DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
 			}
 			catch (IOException e) {
-				log.error("Could not save spawn {}", visibleObject.getObjectId(), e);
+				log.error(I18n.get("log.b9f71a8a3b96", visibleObject.getObjectId(), e));
 				PacketSendUtility.sendMessage(admin, "Could not save spawn");
 			}
 		}
@@ -83,6 +78,13 @@ public class SpawnNpc extends AdminCommand {
 		PacketSendUtility.sendMessage(admin, objectName + " spawned");
 	}
 
+	/**
+	 * 参数错误时输出用法。
+	 * Prints usage when arguments are invalid.
+	 *
+	 * @param player 接收提示的玩家 / player receiving the message
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //spawn <template_id> <respawn_time> (0 for temp)");

@@ -8,8 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
- * author : Altaress
+/**
+ * 贝勒斯兰任务脚本：A Polite Request（任务 ID 2583）。
+ * Beluslan quest script: A Polite Request (quest ID 2583).
  */
 public class _2583APoliteRequest extends QuestHandler {
 

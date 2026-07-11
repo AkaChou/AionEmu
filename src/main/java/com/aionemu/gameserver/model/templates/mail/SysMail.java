@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.mail;
 
 import java.util.ArrayList;
@@ -30,6 +14,11 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
+
+/**
+ * Sys 邮件模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SysMail", propOrder = { "templates" })
@@ -58,6 +47,7 @@ public class SysMail {
 		templates = null;
 	}
 
+	/** 获取模板。 / Returns the template. */
 	public MailTemplate getTemplate(String eventName, Race playerRace) {
 		List<MailTemplate> sysTemplates = mailCaseTemplates.get(eventName.toLowerCase());
 		if (sysTemplates == null) {
@@ -71,6 +61,7 @@ public class SysMail {
 		return null;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}

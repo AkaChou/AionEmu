@@ -1,18 +1,3 @@
-/* This file is part of aion-lightning <aion-lightning.com>.
- *
- * aion-unique is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aion-unique is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aion-unique.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
 import com.aionemu.gameserver.lifecycle.GameEventServices;
@@ -33,9 +18,11 @@ import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
+ * 活动任务脚本：Event Averting The Gaze（任务 ID 80033）。
+ * Event quest script: Event Averting The Gaze (quest ID 80033).
+ *
  * @author Rolandas
  */
-
 public class _80033EventAvertingTheGaze extends QuestHandler {
 
 	private final static int questId = 80033;
@@ -87,14 +74,14 @@ public class _80033EventAvertingTheGaze extends QuestHandler {
 
 	@Override
 	public HandlerResult onItemUseEvent(final QuestEnv env, Item item) {
-		// check if the parent quest is active (you get Charm Cards)
+		// 检查父任务是否进行中（可获护符卡）。 / check if the parent quest is active (you get Charm Cards)
 		if (!GameEventServices.eventService().checkQuestIsActive(80032))
 			return HandlerResult.FAILED;
 
 		final Player player = env.getPlayer();
 
-		// the same item registered for elyos quests, return UNKNOWN for them
-		// to not start asmodians quests
+		// 与天族任务注册的同一物品，对它们返回 UNKNOWN。 / the same item registered for elyos quests, return UNKNOWN for them
+		// 不启动魔族任务 / to not start asmodians quests
 		if (item.getItemId() == 188051133 && player.getCommonData().getRace().equals(Race.ASMODIANS)) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
@@ -105,7 +92,7 @@ public class _80033EventAvertingTheGaze extends QuestHandler {
 
 					if (storage.getItemCountByItemId(164002015) > 0) {
 						status = getQuestUpdateStatus(player, questId);
-						// got a Beritra's Gaze, then start me
+						// 获得贝里特拉之视后启动我 / got a Beritra's Gaze, then start me
 						QuestService.startEventQuest(new QuestEnv(null, player, questId, 0), status);
 					}
 					if (storage.getItemCountByItemId(164002016) > 9) // Israphel's Glory

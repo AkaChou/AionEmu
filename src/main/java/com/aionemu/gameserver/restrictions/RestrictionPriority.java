@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.restrictions;
 
 import java.lang.annotation.ElementType;
@@ -23,6 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 限制优先级；数值越大越先执行。
+ * Restriction priority; higher values run first.
+ *
  * @author NB4L1
  */
 @Inherited
@@ -30,7 +17,17 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface RestrictionPriority {
 
+	/**
+	 * 默认优先级。
+	 * Default priority.
+	 */
 	public static final double DEFAULT_PRIORITY = 0.0;
 
+	/**
+	 * 优先级值。
+	 * Priority value.
+	 *
+	 * priority
+	 */
 	double value() default DEFAULT_PRIORITY;
 }

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.tradelist;
 
 import java.util.ArrayList;
@@ -25,6 +9,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+
+/**
+ * 交易列表模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "tradelist_template")
@@ -56,6 +45,7 @@ public class TradeListTemplate {
 		apSellPriceRate = 100;
 	}
 
+	/** 返回 trade tablist / Returns the trade tablist */
 	public List<TradeTab> getTradeTablist() {
 		if (tradeTablist == null) {
 			tradeTablist = new ArrayList<TradeTab>();
@@ -63,30 +53,37 @@ public class TradeListTemplate {
 		return this.tradeTablist;
 	}
 
+	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;
 	}
 
+	/** 获取计数。 / Returns the count. */
 	public int getCount() {
 		return tradeTablist.size();
 	}
 
+	/** 返回 trade npc type / Returns the trade npc type */
 	public TradeNpcType getTradeNpcType() {
 		return tradeNpcType;
 	}
 
+	/** 获取卖出价格比率。 / Returns the sell price rate. */
 	public int getSellPriceRate() {
 		return sellPriceRate;
 	}
 
+	/** 获取买入价格比率。 / Returns the buy price rate. */
 	public int getBuyPriceRate() {
 		return buyPriceRate;
 	}
 
+	/** 返回 ap buy price rate / Returns the ap buy price rate */
 	public int getApBuyPriceRate() {
-		return apBuyPriceRate;
+		return apBuyPriceRate != 0 ? apBuyPriceRate : buyPriceRate;
 	}
 
+	/** 返回 ap sell price rate / Returns the ap sell price rate */
 	public int getApSellPriceRate() {
 		return apSellPriceRate;
 	}
@@ -97,6 +94,7 @@ public class TradeListTemplate {
 		@XmlAttribute
 		protected int id;
 
+		/** 返回 ID / Returns the id */
 		public int getId() {
 			return id;
 		}

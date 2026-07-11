@@ -1,21 +1,7 @@
-/**
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -74,6 +60,7 @@ import com.aionemu.gameserver.services.RespawnService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.drop.DropService;
+import com.aionemu.gameserver.services.instance.InstanceScaler;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -82,10 +69,23 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+/**
+ * NPC 控制器，管理视野、生成/消失、死亡奖励、对话与区域事件。
+ * NPC controller managing sight, spawn/despawn, death rewards, dialogs and zone events.
+ *
+ * @author ATracer
+ */
 @Slf4j
 
 public class NpcController extends CreatureController<Npc> {
 
+	/**
+	 * 对象离开 NPC 视野时回调。
+	 * Callback when an object leaves the NPC's sight.
+	 *
+	 * @param object 离开视野的对象 / the object leaving sight
+	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
+	 */
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		if (object instanceof Creature) {
@@ -98,6 +98,12 @@ public class NpcController extends CreatureController<Npc> {
 		}
 	}
 
+	/**
+	 * 对象进入 NPC 视野时回调。
+	 * Callback when an object enters the NPC's sight.
+	 *
+	 * @param object 进入视野的对象 / the object entering sight
+	 */
 	@Override
 	public void see(VisibleObject object) {
 		super.see(object);
@@ -125,18 +131,20 @@ public class NpcController extends CreatureController<Npc> {
 					}
 				}, 100);
 			}
-			// TODO see player ai event
-		} else if (object instanceof Summon) {
-			// TODO see summon ai event
 		}
 	}
 
+	/**
+	 * 生成前初始化。
+	 * Initialization before spawn.
+	 *
+	 */
 	@Override
 	public void onBeforeSpawn() {
 		super.onBeforeSpawn();
 		Npc owner = getOwner();
 
-		// set state from npc templates
+		// 从 NPC 模板设置状态 / set state from npc templates
 		if (owner.getObjectTemplate().getState() != 0) {
 			owner.setState(owner.getObjectTemplate().getState());
 		} else {
@@ -145,6 +153,7 @@ public class NpcController extends CreatureController<Npc> {
 		
 		owner.getLifeStats().setCurrentHpPercent(100);
 		owner.getLifeStats().setCurrentMpPercent(100);
+		InstanceScaler.onBeforeSpawn(owner);
 		owner.getAi2().onGeneralEvent(AIEventType.RESPAWNED);
 		
 		if (owner.getSpawn().canFly()) {
@@ -157,12 +166,22 @@ public class NpcController extends CreatureController<Npc> {
 		
 	}
 
+	/**
+	 * 生成后处理。
+	 * Processing after spawn.
+	 *
+	 */
 	@Override
 	public void onAfterSpawn() {
 		super.onAfterSpawn();
 		getOwner().getAi2().onGeneralEvent(AIEventType.SPAWNED);
 	}
 
+	/**
+	 * 消失时处理。
+	 * Processing on despawn.
+	 *
+	 */
 	@Override
 	public void onDespawn() {
 		Npc owner = getOwner();
@@ -171,6 +190,12 @@ public class NpcController extends CreatureController<Npc> {
 		super.onDespawn();
 	}
 
+	/**
+	 * 发送击败命名 NPC 的系统消息。
+	 * Sends the system message for defeating a named NPC.
+	 *
+	 * killing player
+	 */
 	public void defeatNamedMsg(final Player player) {
 		Npc owner = getOwner();
 		final int npcNameId = owner.getObjectTemplate().getNameId();
@@ -179,13 +204,19 @@ public class NpcController extends CreatureController<Npc> {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
-					// "Player Name" has killed "Named Monster"
+					// “玩家名”击杀了“命名怪” / "Player Name" has killed "Named Monster"
 					PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1400021, player.getName(), new DescriptionId(npcNameId * 2 + 1)));
 				}
 			});
 		}
 	}
 
+	/**
+	 * NPC 死亡处理：掉落、奖励与重生调度。
+	 * NPC death handling: drops, rewards and respawn scheduling.
+	 *
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 */
 	@Override
 	public void onDie(Creature lastAttacker) {
 		Npc owner = getOwner();
@@ -227,6 +258,11 @@ public class NpcController extends CreatureController<Npc> {
 		super.onDie(lastAttacker);
 	}
 
+	/**
+	 * 分发击杀经验与欧比斯点等奖励。
+	 * Distributes kill exp, abyss points and related rewards.
+	 *
+	 */
 	@Override
 	public void doReward() {
 		super.doReward();
@@ -255,7 +291,7 @@ public class NpcController extends CreatureController<Npc> {
 
 		for (AggroInfo info : finalList) {
 			AionObject attacker = info.getAttacker();
-			// PvE Toll Reward
+			// PvE 通行奖励 / PvE Toll Reward
 			if (attacker instanceof Player) {
 				if (CustomConfig.ENABLE_PVE_TOLL_REWARD) {
 					if (Rnd.get(0, 100) > CustomConfig.TOLL_PVE_CHANCE) {
@@ -271,7 +307,7 @@ public class NpcController extends CreatureController<Npc> {
 				}
 			}
 
-			// We are not reward Npc's
+			// 我们不是奖励 NPC / We are not reward Npc's
 			if (attacker instanceof Npc) {
 				continue;
 			}
@@ -293,9 +329,9 @@ public class NpcController extends CreatureController<Npc> {
 					rewardDp *= percentage;
 					rewardAp *= percentage;
 					GameEngineServices.questEngine().onKill(new QuestEnv(getOwner(), player, 0, 0));
-					// When a player defeat a "Boss" all ppls on server see!!!
+					// 玩家击败“Boss”时全服可见！！！ / When a player defeat a "Boss" all ppls on server see!!!
 					defeatNamedMsg(player);
-					// Reward XP Solo (New system, Exp Retail NA)
+					// 单人经验奖励（新系统，正式服北美经验） / Reward XP Solo (New system, Exp Retail NA)
 					switch (player.getWorldId()) {
 					case 301720000: // Mirash Sanctuary.
 					case 302100000: // Fissure Of Oblivion.
@@ -323,7 +359,7 @@ public class NpcController extends CreatureController<Npc> {
 					if (attacker.equals(winner)) {
 						GameWorldServices.dropRegistrationService().registerDrop(getOwner(), player, player.getLevel(), null);
 					}
-					// Auto Drop Kinah.
+					// 自动掉落基纳。 / Auto Drop Kinah.
 					if (CustomConfig.AUTO_KINAH_ENABLED) {
 						switch (player.getWorldId()) {
 						case 210010000: // Poeta.
@@ -429,19 +465,19 @@ public class NpcController extends CreatureController<Npc> {
 						}
 						player.getInventory().increaseKinah(kinahCount);
 					}
-					// Berdin's Star.
+					// 伯丁之星。 / Berdin's Star.
 					if (getOwner().getLevel() >= 10) {
 						player.getCommonData().addBerdinStar(1575000); // 0.14%
 						PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 					}
-					// Aura Of Growth.
+					// 成长光环。 / Aura Of Growth.
 					if (getOwner().getLevel() >= 66) {
 						if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
 							GameFeatureServices.growthEnergy().addGrowthEnergy(player);
 							PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 						}
 					}
-					// Atreian Bestiary.
+					// 阿特雷亚图鉴。 / Atreian Bestiary.
 					if (getOwner().getLevel() >= 66) {
 						GameFeatureServices.atreianBestiaryService().onKill(player, getOwner().getNpcId());
 					}
@@ -450,14 +486,26 @@ public class NpcController extends CreatureController<Npc> {
 		}
 	}
 
+	/**
+	 * 获取所有者 NPC。
+	 * Gets the owner NPC.
+	 *
+	 * @return owner NPC / 所有者 NPC / owner NPC。 / owner NPC / 所有者 NPC / owner NPC
+	 */
 	@Override
 	public Npc getOwner() {
 		return (Npc) super.getOwner();
 	}
 
+	/**
+	 * 处理玩家对 NPC 的对话请求。
+	 * Handles a player dialog request to the NPC.
+	 *
+	 * requesting player
+	 */
 	@Override
 	public void onDialogRequest(Player player) {
-		// notify npc dialog request observer
+		// 通知 NPC 对话请求观察者 / notify npc dialog request observer
 		if (!getOwner().getObjectTemplate().canInteract()) {
 			return;
 		}
@@ -465,8 +513,18 @@ public class NpcController extends CreatureController<Npc> {
 		getOwner().getAi2().onCreatureEvent(AIEventType.DIALOG_START, player);
 	}
 
+	/**
+	 * 处理 NPC 对话选项选择。
+	 * Handles NPC dialog option selection.
+	 *
+	 * dialog id
+	 * 玩家 / player
+	 * quest id
+	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
+	 * @param unk 未知参数 / unknown parameter
+	 */
 	@Override
-	public void onDialogSelect(int dialogId, final Player player, int questId, int extendedRewardIndex, int unk) {// TODO unk need to be figure out
+	public void onDialogSelect(int dialogId, final Player player, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2) && !GameEngineServices.questEngine().onDialog(env)) {
 			return;
@@ -476,6 +534,17 @@ public class NpcController extends CreatureController<Npc> {
 		}
 	}
 
+	/**
+	 * NPC 受到攻击时的处理。
+	 * Handles the NPC being attacked.
+	 *
+	 * attacker
+	 * skill id
+	 * @param type 伤害类型 / damage type
+	 * damage
+	 * @param notifyAttack 是否通知攻击 / whether to notify attack
+	 * @param log 日志类型 / log type
+	 */
 	@Override
 	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log) {
 		if (getOwner().getLifeStats().isAlreadyDead()) {
@@ -483,7 +552,7 @@ public class NpcController extends CreatureController<Npc> {
 		}
 		final Creature actingCreature;
 
-		// summon should gain its own aggro
+		// 召唤物应获得自身仇恨 / summon should gain its own aggro
 		if (creature instanceof Summon) {
 			actingCreature = creature;
 		}
@@ -502,18 +571,33 @@ public class NpcController extends CreatureController<Npc> {
 		PacketSendUtility.broadcastPacket(npc, new SM_ATTACK_STATUS(npc, actingCreature, type, skillId, damage, log));
 	}
 
+	/**
+	 * 停止移动时回调。
+	 * Callback when movement stops.
+	 *
+	 */
 	@Override
 	public void onStopMove() {
 		getOwner().getMoveController().setInMove(false);
 		super.onStopMove();
 	}
 
+	/**
+	 * 开始移动时回调。
+	 * Callback when movement starts.
+	 *
+	 */
 	@Override
 	public void onStartMove() {
 		getOwner().getMoveController().setInMove(true);
 		super.onStartMove();
 	}
 
+	/**
+	 * 返回出生点时回调。
+	 * Callback when returning home.
+	 *
+	 */
 	@Override
 	public void onReturnHome() {
 		if (getOwner().isDeleteDelayed()) {
@@ -522,10 +606,16 @@ public class NpcController extends CreatureController<Npc> {
 		super.onReturnHome();
 	}
 
+	/**
+	 * 进入区域时回调。
+	 * Callback when entering a zone.
+	 *
+	 * zone instance
+	 */
 	@Override
 	public void onEnterZone(ZoneInstance zoneInstance) {
 		if (zoneInstance.getAreaTemplate().getZoneName() == null) {
-			log.error("No name found for a Zone in the map " + zoneInstance.getAreaTemplate().getWorldId());
+			log.error(I18n.get("log.f297922b6249", zoneInstance.getAreaTemplate().getWorldId()));
 		}
 	}
 
@@ -582,7 +672,10 @@ public class NpcController extends CreatureController<Npc> {
 	}
 
 	/**
-	 * Schedule respawn of npc In instances - no npc respawn
+	 * 调度 NPC 重生。
+	 * Schedules NPC respawn.
+	 *
+	 * @return respawn task Future / 重生任务 Future / respawn task Future。 / respawn task Future / 重生任务 Future / respawn task Future
 	 */
 	public Future<?> scheduleRespawn() {
 		if (!getOwner().getSpawn().isNoRespawn()) {
@@ -591,10 +684,25 @@ public class NpcController extends CreatureController<Npc> {
 		return null;
 	}
 
+	/**
+	 * 获取与当前目标的攻击距离。
+	 * Gets the attack distance to the current target.
+	 *
+	 * @return attack distance / 攻击距离 / attack distance。 / attack distance / 攻击距离 / attack distance
+	 */
 	public final float getAttackDistanceToTarget() {
 		return getOwner().getGameStats().getAttackRange().getCurrent() / 1000f;
 	}
 
+	/**
+	 * 使用指定等级的技能。
+	 * Uses a skill at the given level.
+	 *
+	 * skill id
+	 * skill level
+	 *
+	 * @return whether successful / 是否成功 / whether successful。 / whether successful / 是否成功 / whether successful
+	 */
 	@Override
 	public boolean useSkill(int skillId, int skillLevel) {
 		SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillId);

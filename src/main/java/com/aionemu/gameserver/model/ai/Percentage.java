@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.ai;
 
 import java.util.List;
@@ -25,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * Percentage，用于 ai 相关逻辑。
+ * Percentage for ai logic.
+ *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,18 +27,24 @@ public class Percentage {
 	@XmlElement(name = "summonGroup")
 	protected List<SummonGroup> summons;
 
+	/** 返回 summons / Returns the summons */
 	public List<SummonGroup> getSummons() {
 		return summons;
 	}
 
+	/** 返回 percent / Returns the percent */
 	public int getPercent() {
 		return percent;
 	}
 
+	/** 返回技能 ID / Returns the skill id */
 	public int getSkillId() {
 		return skillId;
 	}
 
+	/**
+	 * @return Whether individual / Whether individual
+	 */
 	public boolean isIndividual() {
 		return isIndividual;
 	}

@@ -1,34 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.observer;
 
 /**
+ * 监听施法者是否开始移动，用于打断需静止的技能。
+ * Listens whether the effector started moving; used to interrupt skills that require stillness.
+ *
  * @author ATracer
  */
 public class StartMovingListener extends ActionObserver {
 
+	/** 施法者是否已移动 / Whether the effector has moved */
 	private boolean effectorMoved = false;
 
+	/**
+	 * 创建移动开始监听器。
+	 * Create a start-moving listener.
+	 */
 	public StartMovingListener() {
 		super(ObserverType.MOVE);
 	}
 
 	/**
-	 * @return the effectorMoved
+	 * 施法者是否已移动。
+	 * Whether the effector has moved.
+	 *
+	 * @return 是否已移动 / whether moved
 	 */
 	public boolean isEffectorMoved() {
 		return effectorMoved;

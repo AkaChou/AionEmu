@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -26,11 +11,13 @@ import com.aionemu.gameserver.services.SocialService;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 将玩家加入黑名单的客户端包。
+ * Client packet to add a player to the block list.
+ *
  * @author Ben
  */
 @Slf4j
 public class CM_BLOCK_ADD extends AionClientPacket {
-
 
 	private String targetName;
 	private String reason;
@@ -58,35 +45,34 @@ public class CM_BLOCK_ADD extends AionClientPacket {
 
 		Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
 
-		// Trying to block self
+		// 试图屏蔽自己 / Trying to block self
 		if (activePlayer.getName().equalsIgnoreCase(targetName)) {
 			sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.CANT_BLOCK_SELF, targetName));
 		}
 
-		// List full
+		// 列表已满 / List full
 		else if (activePlayer.getBlockList().isFull()) {
 			sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.LIST_FULL, targetName));
 		}
 
-		// Player offline
+		// 玩家离线 / Player offline
 		else if (targetPlayer == null) {
 			sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.TARGET_NOT_FOUND, targetName));
 		}
 
-		// Player is your friend
+		// 玩家是你的好友 / Player is your friend
 		else if (activePlayer.getFriendList().getFriend(targetPlayer.getObjectId()) != null) {
 			sendPacket(SM_SYSTEM_MESSAGE.STR_BLOCKLIST_NO_BUDDY);
 		}
 
-		// Player already blocked
+		// 玩家已被屏蔽 / Player already blocked
 		else if (activePlayer.getBlockList().contains(targetPlayer.getObjectId())) {
 			sendPacket(SM_SYSTEM_MESSAGE.STR_BLOCKLIST_ALREADY_BLOCKED);
 		}
 
-		// Try and block player
+		// 尝试屏蔽玩家 / Try and block player
 		else if (!SocialService.addBlockedUser(activePlayer, targetPlayer, reason)) {
-			log.error("Failed to add " + targetPlayer.getName() + " to the block list for " + activePlayer.getName()
-					+ " - check database setup.");
+			log.error(I18n.get("log.2e06b4e4b5e0", targetPlayer.getName(), activePlayer.getName()));
 		}
 	}
 }

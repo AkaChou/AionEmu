@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.walkers;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -24,10 +8,12 @@ import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.utils.MathUtil;
 import org.apache.commons.lang3.ArrayUtils;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 巡逻行走 NPC AI：Polor Serin（@AIName "polorserin"），继承 WalkGeneralRunnerAI2。
+ * Walker patrol NPC AI: Polor Serin (@AIName "polorserin"), extends WalkGeneralRunnerAI2.
+ *
+ * @author Encom
+ */
 @AIName("polorserin")
 public class PolorSerinAI2 extends WalkGeneralRunnerAI2
 {

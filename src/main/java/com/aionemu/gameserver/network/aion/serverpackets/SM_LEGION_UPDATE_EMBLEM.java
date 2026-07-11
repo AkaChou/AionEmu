@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
@@ -21,11 +5,14 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端同步军团徽章更新结果的服务端包。
+ * Server packet that synchronizes an updated legion emblem to the client.
+ *
  * @author Simple modified cura
  */
 public class SM_LEGION_UPDATE_EMBLEM extends AionServerPacket {
 
-	/** Legion emblem information **/
+	/** Legion emblem information  / Legion emblem information * */
 	private int legionId;
 	private int emblemId;
 	private int color_r;
@@ -34,14 +21,15 @@ public class SM_LEGION_UPDATE_EMBLEM extends AionServerPacket {
 	private LegionEmblemType emblemType;
 
 	/**
-	 * This constructor will handle legion emblem info
-	 * 
-	 * @param legionId
-	 * @param emblemId
-	 * @param color_r
-	 * @param color_g
-	 * @param color_b
-	 * @param emblemType
+	 * 使用更新后的徽章信息构造同步包。
+	 * Creates a sync packet from the updated emblem information.
+	 *
+	 * legion id
+	 * emblem id
+	 * @param color_r 红色分量 / red channel
+	 * @param color_g 绿色分量 / green channel
+	 * @param color_b 蓝色分量 / blue channel
+	 * emblem type
 	 */
 	public SM_LEGION_UPDATE_EMBLEM(int legionId, int emblemId, int color_r, int color_g, int color_b,
 			LegionEmblemType emblemType) {

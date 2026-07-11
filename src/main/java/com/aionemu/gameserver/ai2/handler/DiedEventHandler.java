@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
@@ -24,10 +8,19 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 /**
+ * 死亡事件处理器，负责 NPC 死亡时的喊话、状态切换与仇恨清理。
+ * Handles death events: shout on death, state transition, and aggro cleanup.
+ *
  * @author ATracer
  */
 public class DiedEventHandler {
 
+	/**
+	 * 处理完整死亡流程：执行简化死亡逻辑并清空目标。
+	 * Handles full death flow: runs simple death logic and clears the target.
+	 *
+	 * NPC AI instance
+	 */
 	public static void onDie(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "onDie");
@@ -38,6 +31,12 @@ public class DiedEventHandler {
 		owner.setTarget(null);
 	}
 
+	/**
+	 * 处理简化死亡：可选喊话，切换到 DIED 状态并清空仇恨。
+	 * Handles simple death: optional shout, switches to DIED state, and clears aggro.
+	 *
+	 * NPC AI instance
+	 */
 	public static void onSimpleDie(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "onSimpleDie");

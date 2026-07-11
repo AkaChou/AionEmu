@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.HashMap;
@@ -32,9 +16,11 @@ import com.aionemu.gameserver.model.templates.tower_reward.TowerStageRewardTempl
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * Created by Wnkrz on 17/10/2017.
+ * 永恒之塔阶段奖励数据容器，按楼层索引奖励模板。
+ * Tower stage-reward data holder, indexing reward templates by floor.
+ *
+ * @author Wnkrz
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "tower_reward_templates")
 public class TowerRewardData {
@@ -47,6 +33,10 @@ public class TowerRewardData {
 	@XmlTransient
 	private Map<Integer, TowerStageRewardTemplate> templatesMap = new HashMap<Integer, TowerStageRewardTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，将奖励模板按楼层索引并释放列表。
+	 * After JAXB unmarshalling, indexes reward templates by floor and clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TowerStageRewardTemplate template : TowerReward) {
 			templates.put(template.getFloor(), template);
@@ -56,14 +46,34 @@ public class TowerRewardData {
 		TowerReward = null;
 	}
 
+	/**
+	 * 返回已加载的奖励模板数量。
+	 * Returns the number of loaded reward templates.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return templates.size();
 	}
 
+	/**
+	 * 按楼层获取塔奖励模板。
+	 * Returns the tower reward template for the given floor id.
+	 *
+	 * floor id
+	 *
+	 * @param towerId @return 奖励模板，不存在则为 null / reward template or null
+	 */
 	public TowerStageRewardTemplate getTowerReward(int towerId) {
 		return templates.get(towerId);
 	}
 
+	/**
+	 * 返回全部塔奖励模板映射。
+	 * Returns the full map of tower reward templates.
+	 *
+	 * @return 奖励模板映射 / reward template map
+	 */
 	public Map<Integer, TowerStageRewardTemplate> getAll() {
 		return templatesMap;
 	}

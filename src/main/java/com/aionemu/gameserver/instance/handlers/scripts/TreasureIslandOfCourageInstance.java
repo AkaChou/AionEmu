@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -41,23 +25,43 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
+ * 勇气宝藏岛副本事件处理器。
+ * Instance event handler for Treasure Island Of Courage.
+ *
  * @author (Encom)
  */
+
 @InstanceID(301700000)
 public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 
+    /** 开始时间 / start time */
     @SuppressWarnings("unused")
 	private long startTime;
+    /** 门映射 / door map */
     private Map<Integer, StaticDoor> doors;
-    private Future<?> instanceTimer;
+    /** 副本计时器 / instance timer */
+        private Future<?> instanceTimer;
+    /** 副本是否已销毁 / whether the instance is destroyed */
     protected boolean isInstanceDestroyed = false;
 
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		doors = instance.getDoors();
 	}
 
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(final Player player) {
 		super.onInstanceCreate(instance);
@@ -65,6 +69,10 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 			startTime = System.currentTimeMillis();
 			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
+				/**
+				 * 处理 run。
+				 * Handle run.
+				 */
 				@Override
 				public void run() {
 					openFirstDoors();
@@ -72,11 +80,21 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 			}, 60000);
 		}
 	}
+/**
+ * 处理 openFirstDoors。
+ * Handle openFirstDoors.
+ */
 
 	protected void openFirstDoors() {
 		openDoor(8);
 		openDoor(93);
 	}
+/**
+ * 打开指定门。
+ * Open the given door.
+ *
+ * doorId
+ */
 
 	protected void openDoor(int doorId) {
 		StaticDoor door = doors.get(doorId);
@@ -85,6 +103,13 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		}
 	}
 
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -131,6 +156,10 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		}
 	}
 
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -138,18 +167,38 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		stopInstanceTask();
 	}
 
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onExitInstance(Player player) {
 		removeItems(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
 
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
 
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * 玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * result
+	 */
 	@Override
 	public boolean onDie(final Player player, Creature lastAttacker) {
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.DIE, 0, player.equals(lastAttacker) ? 0 : lastAttacker.getObjectId()), true);

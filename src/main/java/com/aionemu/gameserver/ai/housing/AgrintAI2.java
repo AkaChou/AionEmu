@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.housing;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -28,10 +12,12 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 房屋相关 NPC AI：Agrint（@AIName "agrint"），继承 AggressiveNpcAI2。
+ * Housing-related NPC AI: Agrint (@AIName "agrint"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("agrint")
 public class AgrintAI2 extends AggressiveNpcAI2
 {
@@ -69,7 +55,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			//AGRINT ORIEL.
+			// 阿格林特 奥利尔。 / AGRINT ORIEL.
 			case 218850: //Spring Agrint.
 				spawnUmbronite(218866); //Vernal Umbronite.
 				spawnUmbronite(218867); //Sprout Umbronite.
@@ -86,7 +72,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 				spawnUmbronite(218872); //Ice Umbronite.
 				spawnUmbronite(218873); //Snowflower Umbronite.
 			break;
-			//AGRINT PERNON.
+			// 阿格林特 佩尔农。 / AGRINT PERNON.
 			case 218862: //Spring Agrint.
 				spawnUmbronite(218882); //Vernal Umbronite.
 				spawnUmbronite(218883); //Sprout Umbronite.

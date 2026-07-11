@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -21,51 +5,59 @@ import com.aionemu.gameserver.model.gameobjects.player.BlockList;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
- * Responsible for saving and loading data on players' block lists
- * 
+ * 负责保存与加载玩家黑名单数据。
+ * Responsible for saving and loading data on players' block lists.
+ *
  * @author Ben
  */
 public abstract class BlockListDAO implements DAO {
 
 	/**
-	 * Loads the blocklist for the player given
-	 * 
-	 * @param player
-	 * @return BlockList
+	 * 加载指定玩家的黑名单。
+	 * Loads the blocklist for the given player.
+	 *
+	 * 玩家 / player
+	 * block list
 	 */
 	public abstract BlockList load(Player player);
 
 	/**
-	 * Adds the given object id to the list of blocked players for the given player
-	 * 
-	 * @param playerObjId  ID of player to edit the blocklist of
-	 * @param objIdToBlock ID of player to add to the blocklist
-	 * @return Success
+	 * 将目标对象 ID 加入指定玩家的黑名单。
+	 * Adds the given object ID to the list of blocked players for the given player.
+	 *
+	 * @param playerObjId 被编辑黑名单的玩家 ID / ID of player whose blocklist is edited
+	 * @param objIdToBlock 要加入黑名单的玩家 ID / ID of player to add to the blocklist
+	 * block reason
+	 * whether successful
 	 */
 	public abstract boolean addBlockedUser(int playerObjId, int objIdToBlock, String reason);
 
 	/**
-	 * Deletes the given object id from the list of blocked players for the given
-	 * player
-	 * 
-	 * @param playerObjId   ID of player to edit the blocklist of
-	 * @param objIdToDelete ID of player to remove from the blocklist
-	 * @return Success
+	 * 从指定玩家的黑名单中删除目标对象 ID。
+	 * Deletes the given object ID from the list of blocked players for the given player.
+	 *
+	 * @param playerObjId 被编辑黑名单的玩家 ID / ID of player whose blocklist is edited
+	 * @param objIdToDelete 要从黑名单移除的玩家 ID / ID of player to remove from the blocklist
+	 * whether successful
 	 */
 	public abstract boolean delBlockedUser(int playerObjId, int objIdToDelete);
 
 	/**
-	 * Sets the reason for blocking a player
-	 * 
-	 * @param playerObjId  Object ID of the player whos list is being edited
-	 * @param blockedObjId Object ID of the player whos reason is being edited
-	 * @param reason       The reason to be set
-	 * @return true or false
+	 * 设置屏蔽某玩家的原因。
+	 * Sets the reason for blocking a player.
+	 *
+	 * @param playerObjId 被编辑黑名单的玩家对象 ID / object ID of the player whose list is being edited
+	 * @param blockedObjId 被屏蔽玩家的对象 ID / object ID of the player whose reason is being edited
+	 * @param reason 要设置的原因 / the reason to be set
+	 * whether successful
 	 */
 	public abstract boolean setReason(int playerObjId, int blockedObjId, String reason);
 
 	/**
-	 * {@inheritDoc}
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier for this DAO.
+	 *
+	 * class name
 	 */
 	@Override
 	public String getClassName() {

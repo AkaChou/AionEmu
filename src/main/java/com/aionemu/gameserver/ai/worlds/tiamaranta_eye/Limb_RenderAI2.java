@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Tiamaranta eye 区域 NPC AI：Limb Render（@AIName "Limb_Render"），继承 NpcAI2。
+ * Tiamaranta eye zone NPC AI: Limb Render (@AIName "Limb_Render"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Limb_Render")
 public class Limb_RenderAI2 extends NpcAI2
 {
@@ -40,14 +26,14 @@ public class Limb_RenderAI2 extends NpcAI2
 	@Override
     public void handleAttack(Creature creature) {
 		if (isAggred.compareAndSet(false, true)) {
-			//A Limb Render is under attack. Defeat the player attacking the crystal.
+			// 肢体撕裂者遭受攻击。击败攻击水晶的玩家。 / A Limb Render is under attack. Defeat the player attacking the crystal.
 			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401462);
 		}
         attackCount++;
         if (attackCount == 195) {
             attackCount = 0;
 			AI2Actions.useSkill(this, 20655); //Crystal Frgament.
-			//A Limb Render has exploded.
+			// 肢体撕裂者已爆炸。 / A Limb Render has exploded.
             GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401463);
         }
 		super.handleAttack(creature);
@@ -56,10 +42,10 @@ public class Limb_RenderAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
   		switch (getNpcId()) {
-			//Limb Render.
+			// 肢体撕裂者。 / Limb Render.
 			case 283072:
 			case 858016:
-			    //A Limb Render has appeared. It explodes when destroyed, inflicting serious damage to those nearby.
+			    // 肢体撕裂者已出现。摧毁时会爆炸并对附近造成严重伤害。 / A Limb Render has appeared. It explodes when destroyed, inflicting serious damage to those nearby.
 				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401461);
 			break;
 		}

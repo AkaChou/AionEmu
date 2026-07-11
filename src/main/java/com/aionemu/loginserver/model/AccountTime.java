@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.model;
 
 import java.sql.Timestamp;
@@ -24,8 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Class for storing account time data (last login time, last session duration
- * time, accumulated online time today, accumulated rest time today)
+ * 账号时间数据：上次登录、会话时长、当日累计在线/休息时间等。
+ * Account time data: last login, session duration, accumulated online/rest time today.
  *
  * @author EvilSpirit
  */
@@ -34,32 +16,44 @@ import lombok.Setter;
 public class AccountTime {
 
     /**
-     * Time the account has last logged in
+     * 上次登录时间。
+     * Last login time.
      */
     private Timestamp lastLoginTime;
+
     /**
-     * Time after the account will expired
+     * 账号过期时间。
+     * Account expiration time.
      */
     private Timestamp expirationTime;
+
     /**
-     * Time when the penalty will end
+     * 处罚结束时间。
+     * Penalty end time.
      */
     private Timestamp penaltyEnd;
+
     /**
-     * The duration of the session
+     * 当前会话时长（毫秒）。
+     * Current session duration in milliseconds.
      */
     private long sessionDuration;
+
     /**
-     * Accumulated Online Time
+     * 累计在线时间（毫秒）。
+     * Accumulated online time in milliseconds.
      */
     private long accumulatedOnlineTime;
+
     /**
-     * Accumulated Rest Time
+     * 累计休息时间（毫秒）。
+     * Accumulated rest time in milliseconds.
      */
     private long accumulatedRestTime;
 
     /**
-     * Default constructor. Set the lastLoginTime to current time
+     * 默认构造：将 lastLoginTime 设为当前时间。
+     * Default constructor: sets lastLoginTime to now.
      */
     public AccountTime() {
         this.lastLoginTime = new Timestamp(System.currentTimeMillis());

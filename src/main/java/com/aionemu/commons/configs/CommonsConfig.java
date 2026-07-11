@@ -3,20 +3,21 @@ package com.aionemu.commons.configs;
 import com.aionemu.commons.configuration.Property;
 
 /**
- * Commons Configuration Class
  * 通用配置类
+ * Commons configuration class
  * <p>
- * This class manages common configuration settings for the application.
- * 该类管理应用程序的通用配置设置。
+ * 管理应用程序公共配置项
+ * Manages common configuration settings for the application
  * </p>
  */
 public class CommonsConfig {
+
     /**
-     * Enable/disable runnable statistics collection
-     * 启用/禁用可运行统计信息收集
+     * 是否启用 Runnable 执行统计
+     * Enable/disable runnable execution statistics collection
      * <p>
-     * When enabled, the system will collect execution statistics for runnable tasks.
-     * 启用后，系统将收集可运行任务的执行统计信息。
+     * 启用后系统会收集可运行任务的执行统计信息
+     * When enabled, the system collects execution statistics for runnable tasks
      * </p>
      */
     @Property(

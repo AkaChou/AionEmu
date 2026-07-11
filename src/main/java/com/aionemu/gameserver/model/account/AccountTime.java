@@ -1,24 +1,9 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.account;
 
 /**
- * Class for storing account's online and rest time
- * 
+ * 账号时间模型。
+ * Account Time model.
+ *
  * @author EvilSpirit
  */
 public class AccountTime {
@@ -29,13 +14,14 @@ public class AccountTime {
 	private long accumulatedOnlineTime;
 
 	/**
-	 * Accumulated rest(offline) time in millis
+	 * 累计休息（离线）时间（毫秒）。 / Accumulated rest(offline) time in millis
 	 */
 	private long accumulatedRestTime;
 
 	/**
+	 * 获取 dailyaccumulatedonline 时间 millis。
 	 * get daily accumulated online time in millis
-	 * 
+	 *
 	 * @return time in millis
 	 */
 	public long getAccumulatedOnlineTime() {
@@ -43,8 +29,9 @@ public class AccountTime {
 	}
 
 	/**
+	 * 获取 dailyaccumulatedonline 时间 millis。
 	 * get daily accumulated online time in millis
-	 * 
+	 *
 	 * @param accumulatedOnlineTime time in millis
 	 */
 	public void setAccumulatedOnlineTime(long accumulatedOnlineTime) {
@@ -52,8 +39,9 @@ public class AccountTime {
 	}
 
 	/**
+	 * 获取 dailyaccumulatedrestoffline 时间 sincelogin。
 	 * get daily accumulated rest (offline) time since first login
-	 * 
+	 *
 	 * @return time in millis
 	 */
 	public long getAccumulatedRestTime() {
@@ -61,8 +49,9 @@ public class AccountTime {
 	}
 
 	/**
+	 * 获取 dailyaccumulatedrestoffline 时间 sincelogin。
 	 * get daily accumulated rest (offline) time since first login
-	 * 
+	 *
 	 * @param accumulatedRestTime time in millis
 	 */
 	public void setAccumulatedRestTime(long accumulatedRestTime) {
@@ -70,9 +59,8 @@ public class AccountTime {
 	}
 
 	/**
-	 * Returns hour part rounded down.<br>
-	 * For instance if time is 1 hr 32 min - it will return 1 hr
-	 * 
+	 * 返回 hourpartroundeddown.<br> 用于 instance 若 time 为 1hr32min -其 will 返回 1hr。 / Returns hour part rounded down.<br> For instance if time is 1 hr 32 min - it will return 1 hr
+	 *
 	 * @return hours part of accumulated online time
 	 */
 	public int getAccumulatedOnlineHours() {
@@ -80,9 +68,8 @@ public class AccountTime {
 	}
 
 	/**
-	 * Returns minutes part.<br>
-	 * For instance: if time is 1 hr 32 min - it will return 32 min
-	 * 
+	 * 返回 minutespart.<br> 用于 instance :若 time 为 1hr32min -其 will 返回 32min。 / Returns minutes part.<br> For instance: if time is 1 hr 32 min - it will return 32 min
+	 *
 	 * @return minutes part of accumulated online time
 	 */
 	public int getAccumulatedOnlineMinutes() {
@@ -90,9 +77,8 @@ public class AccountTime {
 	}
 
 	/**
-	 * Returns hour part rounded down.<br>
-	 * For instance if time is 1 hr 32 min - it will return 1 hr
-	 * 
+	 * 返回 hourpartroundeddown.<br> 用于 instance 若 time 为 1hr32min -其 will 返回 1hr。 / Returns hour part rounded down.<br> For instance if time is 1 hr 32 min - it will return 1 hr
+	 *
 	 * @return hours part of accumulated rest time
 	 */
 	public int getAccumulatedRestHours() {
@@ -100,9 +86,8 @@ public class AccountTime {
 	}
 
 	/**
-	 * Returns minutes part.<br>
-	 * For instance: if time is 1 hr 32 min - it will return 32 min
-	 * 
+	 * 返回 minutespart.<br> 用于 instance :若 time 为 1hr32min -其 will 返回 32min。 / Returns minutes part.<br> For instance: if time is 1 hr 32 min - it will return 32 min
+	 *
 	 * @return minutes part of accumulated rest time
 	 */
 	public int getAccumulatedRestMinutes() {
@@ -110,22 +95,14 @@ public class AccountTime {
 	}
 
 	/**
-	 * Converts milliseconds to hours.<br>
-	 * For instance if millis = 1 hr 32 min, 1 hour will be returned
-	 * 
-	 * @param millis milliseconds
-	 * @return hours
+	 * 将毫秒转换为小时。 / Converts milliseconds to hours.<br> For instance if millis = 1 hr 32 min, 1 hour will be returned.
 	 */
 	private static int toHours(long millis) {
 		return (int) (millis / 1000) / 3600;
 	}
 
 	/**
-	 * Converts milliseconds to minutes.<br>
-	 * For instance if millis = 1 hr 32 min, 32 min will be returned
-	 * 
-	 * @param millis milliseconds
-	 * @return minutes
+	 * 将毫秒转换为分钟。 / Converts milliseconds to minutes.<br> For instance if millis = 1 hr 32 min, 32 min will be returned.
 	 */
 	private static int toMinutes(long millis) {
 		return (int) ((millis / 1000) % 3600) / 60;

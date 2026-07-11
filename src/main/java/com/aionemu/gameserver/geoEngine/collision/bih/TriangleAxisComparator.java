@@ -1,33 +1,37 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.collision.bih;
 
 import java.util.Comparator;
 
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
+/**
+ * 按指定轴上三角形质心分量比较的比较器，用于 BIH 建树时的三角形排序。
+ * Comparator of {@link BIHTriangle}s by centroid component on a chosen axis,
+ * used when sorting triangles during BIH construction.
+ */
 public class TriangleAxisComparator implements Comparator<BIHTriangle> {
 
+	/** 比较轴 0/1/2 对应 x/y/z。 / Comparison axis 0/1/2 for x/y/z. */
 	private final int axis;
 
+	/**
+	 * 以比较轴构造。
+	 * Constructs with the comparison axis.
+	 *
+	 * axis index
+	 */
 	public TriangleAxisComparator(int axis) {
 		this.axis = axis;
 	}
 
+	/**
+	 * 按质心在指定轴上的分量比较两三角形。
+	 * Compares two triangles by their centroid component on the configured axis.
+	 *
+	 * @param o1 三角形 1 / triangle 1
+	 * @param o2 三角形 2 / triangle 2
+	 * @return negative / zero/positive
+	 */
 	@Override
 	public int compare(BIHTriangle o1, BIHTriangle o2) {
 		float v1, v2;

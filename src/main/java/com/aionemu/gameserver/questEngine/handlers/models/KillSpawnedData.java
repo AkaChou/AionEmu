@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
 import java.util.List;
@@ -29,12 +13,27 @@ import com.aionemu.gameserver.questEngine.handlers.template.KillSpawned;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 击杀召唤物类任务的 XML 数据模型，注册 {@link KillSpawned} 模板。
+ * XML data model for kill-spawned-monster quests; registers the {@link KillSpawned} template.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "KillSpawnedData")
 public class KillSpawnedData extends MonsterHuntData {
+
+	/**
+	 * 需先交互生成再击杀的怪物目标列表。
+	 * Spawned-monster targets that must be summoned before kill.
+	 */
 	@XmlElement(name = "spawned_monster", required = true)
 	protected List<SpawnedMonster> spawnedMonster;
 
+	/**
+	 * 注册 {@link KillSpawned} 模板处理器。
+	 * Registers the {@link KillSpawned} template handler.
+	 *
+	 * Quest engine
+	 */
 	@Override
 	public void register(QuestEngine questEngine) {
 		Map<List<Integer>, SpawnedMonster> spawnedMonsters = new LinkedHashMap<List<Integer>, SpawnedMonster>();

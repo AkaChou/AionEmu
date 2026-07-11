@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import java.util.ArrayList;
@@ -32,6 +16,10 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatDualWeaponMasteryFu
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
+/**
+ * 双持武器效果：设置双持效率/伤害参数，并应用双持专精属性修正。
+ * Dual-wield weapon effect: sets dual efficiency/damage params and applies dual mastery modifiers.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeaponDualEffect")
 public class WeaponDualEffect extends BuffEffect {
@@ -78,6 +66,13 @@ public class WeaponDualEffect extends BuffEffect {
 		super.endEffect(effect);
 	}
 
+	/**
+	 * 判断玩家是否拥有双持效果（未登场时扫描技能，否则看效率值）。
+	 * Checks whether the player has dual-wield effect (scan skills if not spawned, else efficiency).
+	 *
+	 * @param player 玩家 / player
+	 * @return 是否有双持效果 / true if dual-wield is active
+	 */
 	public static boolean hasDualWieldEffect(Player player) {
 		if (!player.isSpawned()) {
 			for (PlayerSkillEntry skillEntry : player.getSkillList().getAllSkills()) {

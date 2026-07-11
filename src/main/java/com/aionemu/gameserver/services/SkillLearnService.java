@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.configs.main.MembershipConfig;
@@ -29,7 +13,17 @@ import com.aionemu.gameserver.skillengine.model.SkillLearnTemplate;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 技能学习服务，处理升级学技、补技、技能书与移除。
+ * Skill learn service handling level-up skills, missing skills, skill books, and removal.
+ */
 public class SkillLearnService {
+	/**
+	 * 玩家升级时学习当前等级新技能（含 10 级制作技能迁移）。
+	 * Learns new skills for the player's current level (including level-10 craft skill migration).
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void addNewSkills(Player player) {
 		int level = player.getCommonData().getLevel();
 		PlayerClass playerClass = player.getCommonData().getPlayerClass();
@@ -40,13 +34,19 @@ public class SkillLearnService {
 			int skillLevel = player.getSkillList().getSkillLevel(30001);
 			removeSkill(player, 30001);
 			PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
-			// Why adding after the packet ?
+			// 为何在数据包之后添加？ / Why adding after the packet ?
 			player.getSkillList().addSkill(player, 30002, skillLevel);
 		}
 
 		addSkills(player, level, playerClass, playerRace);
 	}
 
+	/**
+	 * 补全玩家当前等级及转职前应掌握的全部技能。
+	 * Fills in all skills the player should know for current level and starting class.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void addMissingSkills(Player player) {
 		int level = player.getCommonData().getLevel();
 		PlayerClass playerClass = player.getCommonData().getPlayerClass();
@@ -66,6 +66,12 @@ public class SkillLearnService {
 		}
 	}
 
+	/**
+	 * 4P 场景下补全玩家缺失技能（逻辑与 {@link #addMissingSkills} 相同）。
+	 * Fills missing skills in the 4P path (same logic as {@link #addMissingSkills}).
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void addMissingSkills4P(Player player) {
 		int level = player.getCommonData().getLevel();
 		PlayerClass playerClass = player.getCommonData().getPlayerClass();
@@ -85,6 +91,15 @@ public class SkillLearnService {
 		}
 	}
 
+	/**
+	 * 按职业/等级/种族模板向玩家添加可学技能。
+	 * Adds learnable skills to the player from class/level/race templates.
+	 *
+	 * 玩家 / player
+	 * level
+	 * player class
+	 * player race
+	 */
 	public static void addSkills(Player player, int level, PlayerClass playerClass, Race playerRace) {
 		SkillLearnTemplate[] skillTemplates = DataManager.SKILL_TREE_DATA.getTemplatesFor(playerClass, level, playerRace);
 		PlayerSkillList playerSkillList = player.getSkillList();
@@ -103,6 +118,15 @@ public class SkillLearnService {
 		}
 	}
 
+	/**
+	 * 判断模板技能是否允许学习（含自动学习与会员自动印记）。
+	 * Checks whether the template skill may be learned (auto-learn and membership stigma).
+	 *
+	 * 玩家 / player
+	 * skill list
+	 * learn template
+	 * whether learnable
+	 */
 	private static boolean checkLearnIsPossible(Player player, PlayerSkillList playerSkillList, SkillLearnTemplate template) {
 		if (playerSkillList.isSkillPresent(template.getSkillId())) {
 			return true;
@@ -119,6 +143,13 @@ public class SkillLearnService {
 		return false;
 	}
 
+	/**
+	 * 通过技能书学习技能至玩家当前可达最高等级。
+	 * Learns a skill from a skill book up to the max level available for the player.
+	 *
+	 * 玩家 / player
+	 * skill id
+	 */
 	public static void learnSkillBook(Player player, int skillId) {
 		SkillLearnTemplate[] skillTemplates = null;
 		int maxLevel = 0;
@@ -139,6 +170,13 @@ public class SkillLearnService {
 		}
 	}
 
+	/**
+	 * 移除玩家技能并同步客户端（含异常效果清理）。
+	 * Removes a player skill and syncs the client (including abnormal effect cleanup).
+	 *
+	 * 玩家 / player
+	 * skill id
+	 */
 	public static void removeSkill(Player player, int skillId) {
 		if (player.getSkillList().isSkillPresent(skillId)) {
 			Integer skillLevel = player.getSkillList().getSkillLevel(skillId);
@@ -153,6 +191,13 @@ public class SkillLearnService {
 		}
 	}
 
+	/**
+	 * 移除玩家链接技能并清空 linkedSkill 标记。
+	 * Removes a linked skill and clears the linkedSkill flag.
+	 *
+	 * 玩家 / player
+	 * skill id
+	 */
 	public static void removeLinkedSkill(Player player, int skillId) {
 		if (player.getSkillList().isSkillPresent(skillId)) {
 			Integer skillLevel = player.getSkillList().getSkillLevel(skillId);
@@ -168,6 +213,15 @@ public class SkillLearnService {
 		}
 	}
 
+	/**
+	 * 按玩家等级与目标技能等级计算实际可学技能等级。
+	 * Computes the actual skill level learnable for the player level and wanted level.
+	 *
+	 * skill id
+	 * player level
+	 * @param wantedSkillLevel 期望技能等级 / wanted skill level
+	 * @return 实际技能等级 / actual skill level
+	 */
 	public static int getSkillLearnLevel(int skillId, int playerLevel, int wantedSkillLevel) {
 		SkillLearnTemplate[] skillTemplates = DataManager.SKILL_TREE_DATA.getTemplatesForSkill(skillId);
 		int learnFinishes = 0;
@@ -187,6 +241,15 @@ public class SkillLearnService {
 		return Math.max(wantedSkillLevel, Math.min(playerLevel - (learnFinishes - maxLevel) + 1, maxLevel));
 	}
 
+	/**
+	 * 获取学习指定技能等级所需的最低玩家等级。
+	 * Returns the minimum player level required to learn the wanted skill level.
+	 *
+	 * skill id
+	 * player level
+	 * @param wantedSkillLevel 期望技能等级 / wanted skill level
+	 * @return 最低玩家等级 / minimum player level
+	 */
 	public static int getSkillMinLevel(int skillId, int playerLevel, int wantedSkillLevel) {
 		SkillLearnTemplate[] skillTemplates = DataManager.SKILL_TREE_DATA.getTemplatesForSkill(skillId);
 		SkillLearnTemplate foundTemplate = null;

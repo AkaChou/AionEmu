@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,16 +8,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
- * @author Kamui
+ * 管理员扩展魔立方命令：为指定在线玩家增加一档背包格子。
+ * Admin cube-expand command: expands inventory slots for a target online player.
  *
+ * @author Kamui
  */
 public class AddCube extends AdminCommand {
 
-
+	/**
+	 * 注册 {@code //addcube} 命令。
+	 * Registers the {@code //addcube} command.
+	 */
 	public AddCube() {
 		super("addcube");
 	}
 
+	/**
+	 * 执行魔立方扩展：定位在线玩家并调用扩展服务。
+	 * Executes cube expand: finds the online player and calls the expand service.
+	 *
+	 * admin
+	 * @param params 参数：玩家名 / player name
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 
@@ -64,6 +60,13 @@ public class AddCube extends AdminCommand {
 		}
 	}
 	
+	/**
+	 * 参数错误时输出 {@code //addcube} 用法。
+	 * Prints {@code //addcube} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player admin, String message) {
 		PacketSendUtility.sendMessage(admin, "Syntax: //addcube <player name>");

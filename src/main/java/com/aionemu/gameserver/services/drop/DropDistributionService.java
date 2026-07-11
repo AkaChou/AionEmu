@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.drop;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +19,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 掉落分配服务，处理队伍掷骰与竞价分配。
+ * Drop distribution service handling group roll and bid allocation.
+ *
  * @author xTz
  */
 @Slf4j
@@ -42,6 +29,12 @@ public class DropDistributionService {
 
 	private static volatile ObjectProvider<DropDistributionService> instanceProvider;
 
+	/**
+	 * 获取单例实例。
+	 * Returns the singleton instance.
+	 *
+	 * service instance
+	 */
 	public static DropDistributionService getInstance() {
 		ObjectProvider<DropDistributionService> provider = instanceProvider;
 		if (provider != null) {
@@ -50,12 +43,25 @@ public class DropDistributionService {
 		return SingletonHolder.instance;
 	}
 
+	/**
+	 * 设置 Spring 实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<DropDistributionService> provider) {
 		instanceProvider = provider;
 	}
 
 	/**
-	 * @param player from CM_GROUP_LOOT to handle rolls
+	 * 处理玩家掷骰结果（来自 CM_GROUP_LOOT）。
+	 * Handles a player roll result (from CM_GROUP_LOOT).
+	 *
+	 * rolling player
+	 * @param roll 掷骰值，0 表示放弃 / roll value, 0 means pass
+	 * item id
+	 * npc object id
+	 * @param index 掉落索引 / drop index
 	 */
 	public void handleRoll(Player player, int roll, int itemId, int npcId, int index) {
 		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -91,7 +97,14 @@ public class DropDistributionService {
 	}
 
 	/**
-	 * @param player from CM_GROUP_LOOT to handle bids
+	 * 处理玩家竞价结果（来自 CM_GROUP_LOOT）。
+	 * Handles a player bid result (from CM_GROUP_LOOT).
+	 *
+	 * bidding player
+	 * @param bid 出价金额，0 表示放弃 / bid amount, 0 means pass
+	 * item id
+	 * npc object id
+	 * @param index 掉落索引 / drop index
 	 */
 	public void handleBid(Player player, long bid, int itemId, int npcId, int index) {
 		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -149,7 +162,7 @@ public class DropDistributionService {
 	 */
 	private void distributeLoot(Player player, long luckyPlayer, int itemId, DropItem requestedItem, DropNpc dropNpc) {
 		player.unsetPlayerMode(PlayerMode.IN_ROLL);
-		// Removes player from ARRAY once they have rolled or bid
+		// 玩家掷骰或竞价后从数组移除 / Removes player from ARRAY once they have rolled or bid
 		if (dropNpc.containsPlayerStatus(player)) {
 			dropNpc.delPlayerStatus(player);
 		}
@@ -177,8 +190,8 @@ public class DropDistributionService {
 		if (lgr != null) {
 			lgr.removeItemToBeDistributed(requestedItem);
 		}
-		// Check if there is a Winning Player registered if not all members must have
-		// passed...
+		// 检查是否登记了获胜玩家；否则所有成员必须 / Check if there is a Winning Player registered if not all members must have
+		// 已通过…… / passed...
 		if (requestedItem.getWinningPlayer() == null) {
 			requestedItem.isFreeForAll(true);
 			if (lgr != null && !lgr.getItemsToBeDistributed().isEmpty()) {

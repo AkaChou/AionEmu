@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.mail;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -27,7 +11,20 @@ import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.templates.mail.MailPart;
 import com.aionemu.gameserver.model.templates.mail.MailTemplate;
 
+/**
+ * 系统邮件模板格式化器，负责黑云、房屋维护/拍卖及欧比斯/露娜奖励邮件。
+ * System mail template formatter for black-cloud, house maintenance/auction, and abyss/luna reward mails.
+ */
 public final class MailFormatter {
+
+	/**
+	 * 发送黑云商城购买邮件。
+	 * Sends a black-cloud cash purchase mail.
+	 *
+	 * @param recipientName 收件人名称 / recipient name
+	 * item template id
+	 * item count
+	 */
 	public static void sendBlackCloudMail(String recipientName, final int itemObjectId, final int itemCount) {
 		final MailTemplate template = DataManager.SYSTEM_MAIL_TEMPLATES.getMailTemplate("$$CASH_ITEM_MAIL", "",
 				Race.PC_ALL);
@@ -52,6 +49,14 @@ public final class MailFormatter {
 				itemCount, 0, 0, LetterType.BLACKCLOUD);
 	}
 
+	/**
+	 * 发送房屋维护逾期警告邮件。
+	 * Sends a house maintenance overdue warning mail.
+	 *
+	 * owned house
+	 * warning count (1-3)
+	 * @param impoundTime 扣押时间戳（毫秒） / impound timestamp in ms
+	 */
 	public static void sendHouseMaintenanceMail(final House ownedHouse, int warnCount, final long impoundTime) {
 		String templateName = "";
 		switch (warnCount) {
@@ -86,6 +91,16 @@ public final class MailFormatter {
 				0, 0, 0, 0, LetterType.NORMAL);
 	}
 
+	/**
+	 * 发送房屋拍卖结果邮件。
+	 * Sends a house auction result mail.
+	 *
+	 * owned house
+	 * @param playerData 玩家公共数据 / player common data
+	 * auction result
+	 * @param time 结果时间戳（毫秒） / result timestamp in ms
+	 * @param returnKinah 退还基纳数量 / returned kinah amount
+	 */
 	public static void sendHouseAuctionMail(final House ownedHouse, final PlayerCommonData playerData,
 			final AuctionResult result, final long time, long returnKinah) {
 		final MailTemplate template = DataManager.SYSTEM_MAIL_TEMPLATES.getMailTemplate("$$HS_AUCTION_MAIL", "",
@@ -114,6 +129,19 @@ public final class MailFormatter {
 				returnKinah, 0, LetterType.NORMAL);
 	}
 
+	/**
+	 * 发送欧比斯攻城奖励邮件（附基纳）。
+	 * Sends an abyss siege reward mail with attached kinah.
+	 *
+	 * siege location
+	 * @param playerData 玩家公共数据 / player common data
+	 * @param level 欧比斯攻城等级 / abyss siege level
+	 * siege result
+	 * @param time 结果时间戳（毫秒） / result timestamp in ms
+	 * attached item id
+	 * @param attachedItemCount 附件物品数量 / attached item count
+	 * @param attachedKinahCount 附件基纳数量 / attached kinah count
+	 */
 	public static void sendAbyssRewardMail(final SiegeLocation siegeLocation, final PlayerCommonData playerData,
 			final AbyssSiegeLevel level, final SiegeResult result, final long time, int attachedItemObjId,
 			long attachedItemCount, long attachedKinahCount) {
@@ -142,6 +170,19 @@ public final class MailFormatter {
 				attachedItemObjId, attachedItemCount, attachedKinahCount, 0, LetterType.NORMAL);
 	}
 
+	/**
+	 * 发送欧比斯攻城奖励邮件（附欧比斯点数）。
+	 * Sends an abyss siege reward mail with attached abyss points.
+	 *
+	 * siege location
+	 * @param playerData 玩家公共数据 / player common data
+	 * @param level 欧比斯攻城等级 / abyss siege level
+	 * siege result
+	 * @param time 结果时间戳（毫秒） / result timestamp in ms
+	 * attached item id
+	 * @param attachedItemCount 附件物品数量 / attached item count
+	 * @param attachedApCount 附件欧比斯点数 / attached abyss points
+	 */
 	public static void sendAbyssPointRewardMail(final SiegeLocation siegeLocation, final PlayerCommonData playerData,
 			final AbyssSiegeLevel level, final SiegeResult result, final long time, int attachedItemObjId,
 			long attachedItemCount, long attachedApCount) {
@@ -170,6 +211,19 @@ public final class MailFormatter {
 				attachedItemObjId, attachedItemCount, 0, attachedApCount, LetterType.NORMAL);
 	}
 
+	/**
+	 * 发送露娜奖励邮件。
+	 * Sends a luna reward mail.
+	 *
+	 * siege location
+	 * @param playerData 玩家公共数据 / player common data
+	 * @param level 欧比斯攻城等级 / abyss siege level
+	 * siege result
+	 * @param time 结果时间戳（毫秒） / result timestamp in ms
+	 * attached item id
+	 * @param attachedItemCount 附件物品数量 / attached item count
+	 * @param attachedKinahCount 附件基纳数量 / attached kinah count
+	 */
 	public static void sendLunaRewardMail(final SiegeLocation siegeLocation, final PlayerCommonData playerData,
 			final AbyssSiegeLevel level, final SiegeResult result, final long time, int attachedItemObjId,
 			long attachedItemCount, long attachedKinahCount) {

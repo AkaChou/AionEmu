@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,18 +9,21 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PositionUtil;
 
 /**
+ * 背刺方位条件：校验施法者是否位于目标背后。
+ * Back position condition: validates the effector is behind the target.
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BackCondition")
 public class BackCondition extends Condition {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.aionemu.gameserver.skillengine.condition.Condition#validate(com.aionemu.
-	 * gameserver.skillengine.model.Skill)
+	/**
+	 * 校验技能环境是否满足本条件。
+	 * Validates whether the skill environment satisfies this condition.
+	 *
+	 * @param env 技能环境 / skill environment
+	 * whether valid
 	 */
 	@Override
 	public boolean validate(Skill env) {
@@ -46,6 +33,13 @@ public class BackCondition extends Condition {
 		return PositionUtil.isBehindTarget(env.getEffector(), env.getFirstTarget());
 	}
 
+	/**
+	 * 校验效果环境是否满足本条件。
+	 * Validates whether the effect environment satisfies this condition.
+	 *
+	 * effect environment
+	 * whether valid
+	 */
 	@Override
 	public boolean validate(Effect effect) {
 		if (effect.getEffected() == null || effect.getEffector() == null) {

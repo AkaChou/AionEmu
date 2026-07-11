@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -30,14 +14,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
+ * 玩家命令：消耗材料将已装备同类部位改模为指定外观。
+ * Player command: spends material to remodel an equipped same-slot item to a given look.
+ *
  * @author Kashim
  */
 public class cmd_remodel extends PlayerCommand {
 
+	/**
+	 * 注册命令别名 {@code remodel}。
+	 * Registers the command alias {@code remodel}.
+	 */
 	public cmd_remodel() {
 		super("remodel");
 	}
 
+	/**
+	 * 扣除改模材料并对匹配装备执行系统改模。
+	 * Consumes remodel material and applies system remodel on a matching equipped item.
+	 *
+	 * @param admin 执行命令的玩家 / invoking player
+	 * @param params 目标外观物品 ID / target appearance item id
+	 */
 	public void executeCommand(Player admin, String[] params) {
 
 		if (params.length < 1) {
@@ -94,6 +92,13 @@ public class cmd_remodel extends PlayerCommand {
 		return false;
 	}
 
+	/**
+	 * 将可变参数转发到 {@link #executeCommand(Player, String[])}。
+	 * Forwards varargs to {@link #executeCommand(Player, String[])}.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * command parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		executeCommand(player, params);

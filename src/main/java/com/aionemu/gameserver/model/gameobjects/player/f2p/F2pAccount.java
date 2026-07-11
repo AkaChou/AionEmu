@@ -1,29 +1,13 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects.player.f2p;
 
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
 /**
- * Author Ranastic (Encom) /
- ****/
+ * F2p 账号游戏对象。
+ * F 2 p Account game object.
+ */
 
 public class F2pAccount implements IExpirable {
 	private int deleteTime = 0;
@@ -33,6 +17,7 @@ public class F2pAccount implements IExpirable {
 		deleteTime = deletionTime;
 	}
 
+	/** 返回剩余时间 / Returns the remaining time */
 	public int getRemainingTime() {
 		if (deleteTime == 0) {
 			return 0;
@@ -40,28 +25,34 @@ public class F2pAccount implements IExpirable {
 		return deleteTime - (int) (System.currentTimeMillis() / 1000L);
 	}
 
+	/** 获取过期时间。 / Returns the expire time. */
 	public int getExpireTime() {
 		return deleteTime;
 	}
 
+	/** 返回当前 / Returns the active */
 	public boolean getActive() {
 		return active;
 	}
 
+	/** 设置 active / Sets the active */
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
+	/** 到期结束 / Expire End */
 	public void expireEnd(Player player) {
 		setActive(false);
 		player.getF2p().remove();
 		PacketSendUtility.sendBrightYellowMessageOnCenter(player, "<F2p Pack> is expired!!!");
 	}
 
+	/** 是否立即过期 / Whether expire now */
 	public boolean canExpireNow() {
 		return true;
 	}
 
+	/** 过期消息。 / Expire Message. */
 	public void expireMessage(Player player, int time) {
 		PacketSendUtility.sendBrightYellowMessageOnCenter(player, "<F2p Pack> end!!!");
 	}

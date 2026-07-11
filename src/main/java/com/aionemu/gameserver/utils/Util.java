@@ -1,83 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.utils;
 
 import java.nio.ByteBuffer;
 
+import com.aionemu.commons.utils.PrintUtils;
 import com.aionemu.gameserver.configs.main.NameConfig;
 
+/**
+ * 通用工具方法集合（十六进制转储、名称规范化等）。
+ * General utility methods (hex dumps, name normalization, etc.).
+ */
 public class Util {
 
 	/**
-	 * @param s
+	 * 打印带分隔线的章节标题。
+	 * Prints a section title with separator lines.
+	 *
+	 * @param s 章节标题 / Section title
 	 */
 	public static void printSection(String s) {
-		if (!s.isEmpty()) {
-			s = "[ " + s + " ]";
-		}
-		while (s.length() < 79) {
-			s = "=" + s + "=";
-		}
-		System.out.println("");
-		System.out.println(s);
-		System.out.println("");
-	}
-
-	public static void printSsSection(String s) {
-		s = "( " + s + " )";
-
-		while (s.length() < 79) {
-			s = "-" + s + "-";
-		}
-		System.out.println("");
-		System.out.println(s);
-		System.out.println("");
-	}
-
-	public static void printProgressBarHeader(int size) {
-		StringBuilder header = new StringBuilder("0%[");
-		for (int i = 0; i < size; i++) {
-			header.append("-");
-		}
-		header.append("]100%");
-		System.out.println(header);
-		System.out.print("   ");
-	}
-
-	public static void printCurrentProgress() {
-		System.out.print("+");
-	}
-
-	public static void printEndProgress() {
-		System.out.print(" Done. \n");
-	}
-
-	public static void printRotatingBarHeader(int dataSize) {
-		String anim = "|/-\\";
-		System.out.print("\r" + anim.charAt(Math.round(dataSize / 50) % anim.length()) + " Processing data : "
-				+ dataSize + " data" + (dataSize <= 1 ? "." : "s.  "));
-		System.out.print("\r");
+		PrintUtils.printSection(s);
 	}
 
 	/**
-	 * Convert data from given ByteBuffer to hex
+	 * 将 ByteBuffer 中的数据转为十六进制转储（含偏移与 ASCII 侧栏）。
+	 * Converts data from the given ByteBuffer into a hex dump with offsets and ASCII sidebar.
 	 *
-	 * @param data
-	 * @return hex
+	 * @param data 字节缓冲 / Byte buffer
+	 * @return 十六进制转储字符串 / Hex dump string
 	 */
 	public static String toHex(ByteBuffer data) {
 		StringBuilder result = new StringBuilder();
@@ -108,10 +57,11 @@ public class Util {
 	}
 
 	/**
-	 * Convert data from given ByteBuffer to hex
+	 * 将 ByteBuffer 中的数据转为纯十六进制流（无偏移与 ASCII）。
+	 * Converts data from the given ByteBuffer into a plain hex stream (no offsets or ASCII).
 	 *
-	 * @param data
-	 * @return hex
+	 * @param data 字节缓冲 / Byte buffer
+	 * @return 十六进制流字符串 / Hex stream string
 	 */
 	public static String toHexStream(ByteBuffer data) {
 		StringBuilder result = new StringBuilder();
@@ -130,17 +80,12 @@ public class Util {
 	}
 
 	/**
-	 * Gets last <tt>cnt</tt> read bytes from the <tt>data</tt> buffer and puts into
-	 * <tt>result</tt> buffer in special format:
-	 * <ul>
-	 * <li>if byte represents char from partition 0x1F to 0x80 (which are normal
-	 * ascii chars) then it's put into buffer as it is</li>
-	 * <li>otherwise dot is put into buffer</li>
-	 * </ul>
+	 * 将最近读取的字节转为 ASCII 侧栏文本：可打印字符原样输出，其余输出点号。
+	 * Appends the last read bytes as ASCII sidebar text: printable chars as-is, others as dots.
 	 *
-	 * @param data
-	 * @param result
-	 * @param cnt
+	 * @param data 字节缓冲 / Byte buffer
+	 * @param result 结果构建器 / Result builder
+	 * @param cnt 字节数量 / Byte count
 	 */
 	private static void toText(ByteBuffer data, StringBuilder result, int cnt) {
 		int charPos = data.position() - cnt;
@@ -155,10 +100,11 @@ public class Util {
 	}
 
 	/**
-	 * Converts name to valid pattern For example : "atracer" -> "Atracer"
+	 * 将角色名规范化为首字母大写、其余小写；若允许自定义名称则原样返回。
+	 * Normalizes a character name to title case; returns as-is when custom names are allowed.
 	 *
-	 * @param name
-	 * @return String
+	 * @param name 原始名称 / Original name
+	 * @return 规范化后的名称 / Normalized name
 	 */
 	public static String convertName(String name) {
 		if (!name.isEmpty()) {

@@ -1,43 +1,41 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 同步阿特雷亚护照（月签到）状态的服务端包。
+ * Server packet synchronizing Atreian Passport (monthly stamp) status to the client.
+ *
  * @author Rinzler (Encom)
  */
 public class SM_ATREIAN_PASSPORT extends AionServerPacket {
 
 	private int month;
 	private int year;
+	private int day;
 	private int passportId;
 	private int countCollected;
-	private int lastStampRecived;
+	private int attendType;
 	private boolean hasCollected;
 
-	public SM_ATREIAN_PASSPORT(int passportId, int countCollected, int lastStampRecived, boolean hasCollected,
-			int month, int year) {
+	/**
+	 * passport template id
+	 * @param countCollected 已收集印花数 / number of stamps collected
+	 * attendance type
+	 * @param hasCollected 今日是否已领取 / whether today's stamp was already collected
+	 * day
+	 * month
+	 * year
+	 */
+	public SM_ATREIAN_PASSPORT(int passportId, int countCollected, int attendType, boolean hasCollected,
+			int day, int month, int year) {
 		this.month = month;
 		this.year = year;
+		this.day = day;
 		this.passportId = passportId;
 		this.countCollected = countCollected;
-		this.lastStampRecived = lastStampRecived;
+		this.attendType = attendType;
 		this.hasCollected = hasCollected;
 	}
 
@@ -45,18 +43,11 @@ public class SM_ATREIAN_PASSPORT extends AionServerPacket {
 	protected void writeImpl(AionConnection con) {
 		writeH(year);
 		writeH(month);
-		writeH(8);// can be variable
-		// TODO
-		writeH(2); // TODO PassportCount
-		// TODO
+		writeH(day);
+		writeH(1);
 		writeD(passportId);
-		writeD(lastStampRecived);
+		writeD(attendType);
 		writeD(countCollected);
 		writeC(hasCollected ? 0 : 1);
-		// TODO Aniversity (9 0 0 1 = Get Aniversity)
-		writeD(9);
-		writeD(0);
-		writeD(0);
-		writeC(0);
 	}
 }

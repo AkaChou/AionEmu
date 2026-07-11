@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import java.util.ArrayList;
@@ -28,6 +13,10 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.BrokerService;
 
+/**
+ * 按条件搜索交易行物品的客户端包。
+ * Client packet to search broker items by filters.
+ */
 @Slf4j
 public class CM_BROKER_SEARCH extends AionClientPacket {
 
@@ -78,9 +67,6 @@ public class CM_BROKER_SEARCH extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		GameRuntimeServices.brokerService().showRequestedItems(player, mask, sortType, page, itemList);
-		// log.info("CM_BROKER_SEARCH brokerId:"+brokerId+" sortType:"+sortType+"
-		// page:"+page+" unk1:"+unk1+" unk2:"+unk2+" mask:"+mask+" unk3:"+unk3+"
-		// minLvl:"+minLvl+" maxLvl:"+maxLvl+" minUnk:"+minUnk+" maxUnk:"+maxUnk+"
-		// unk4:"+unk4+" itemCount:"+itemCount+"");
+		// log.info(I18n.get("log.922e1d1969ac", brokerId, sortType, page, unk1, unk2, mask, unk3, minLvl, maxLvl, minUnk, maxUnk, unk4, itemCount));
 	}
 }

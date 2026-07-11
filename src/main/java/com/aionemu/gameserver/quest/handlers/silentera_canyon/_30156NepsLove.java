@@ -12,8 +12,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
- * @author Ritsu
+ * 寂静峡谷任务脚本：Neps Love（任务 ID 30156）。
+ * Silentera Canyon quest script: Neps Love (quest ID 30156).
  *
+ * @author Ritsu
  */
 public class _30156NepsLove extends QuestHandler {
 

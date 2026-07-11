@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill;
 
 import java.sql.Timestamp;
@@ -24,6 +8,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
 /**
+ * 玩家技能条目，用于技能相关逻辑。
+ * Player Skill Entry for skill logic.
+ *
  * @author ATracer
  */
 public class PlayerSkillEntry extends SkillEntry {
@@ -53,24 +40,31 @@ public class PlayerSkillEntry extends SkillEntry {
 		return this.isStigma;
 	}
 
+	/**
+	 * @return Whether linked / Whether linked
+	 */
 	public boolean isLinked() {
 		return this.isLinked;
 	}
 
+	/** 设置技能等级 / Sets the skill lvl */
 	public void setSkillLvl(int skillLevel) {
 		super.setSkillLvl(skillLevel);
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/** 设置 skin id / Sets the skin id */
 	public void setSkinId(int skinId) {
 		super.setSkinId(skinId);
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
+	/** 设置 skin active time / Sets the skin active time */
 	public void setSkinActiveTime(Timestamp creationDate) {
 		super.setSkinActiveTime(creationDate);
 	}
 
+	/** 设置 skin expire time / Sets the skin expire time */
 	public void setSkinExpireTime(int minutes) {
 		super.setSkinExpireTime(minutes);
 	}

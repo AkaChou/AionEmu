@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import java.util.Map;
@@ -21,17 +5,51 @@ import java.util.Map;
 import com.aionemu.commons.database.dao.DAO;
 
 /**
+ * 玩家自定义变量数据访问抽象层。
+ * DAO for player custom key-value variables persistence.
+ *
  * @author KID
  */
 public abstract class PlayerVarsDAO implements DAO {
+
+	/**
+	 * 返回实现唯一类名标识。
+	 * Returns unique class name for all implementations.
+	 *
+	 * fully qualified class name
+	 */
 	@Override
 	public String getClassName() {
 		return PlayerVarsDAO.class.getName();
 	}
 
+	/**
+	 * 加载玩家全部自定义变量。
+	 * Loads all custom variables for the player.
+	 *
+	 * player object id
+	 * @return 键值变量映射 / key-value variable map
+	 */
 	public abstract Map<String, Object> load(final int playerId);
 
+	/**
+	 * 设置玩家自定义变量。
+	 * Sets a custom variable for the player.
+	 *
+	 * player object id
+	 * variable key
+	 * variable value
+	 * @return 是否设置成功 / true if set
+	 */
 	public abstract boolean set(final int playerId, final String key, final Object value);
 
+	/**
+	 * 移除玩家自定义变量。
+	 * Removes a custom variable for the player.
+	 *
+	 * player object id
+	 * variable key
+	 * @return 是否移除成功 / true if removed
+	 */
 	public abstract boolean remove(final int playerId, final String key);
 }

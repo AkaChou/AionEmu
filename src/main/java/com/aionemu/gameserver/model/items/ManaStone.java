@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.items;
 
 import java.util.List;
@@ -23,6 +7,11 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import lombok.Getter;
+
+/**
+ * ManaStone，用于物品相关逻辑。
+ * Mana Stone for items logic.
+ */
 
 public class ManaStone extends ItemStone {
 	@Getter
@@ -36,14 +25,19 @@ public class ManaStone extends ItemStone {
 		}
 	}
 
+	/** 返回 first modifier / Returns the first modifier */
 	public StatFunction getFirstModifier() {
 		return (modifiers != null && modifiers.size() > 0) ? modifiers.get(0) : null;
 	}
 
+	/** 是否基础 / Whether basic */
 	public boolean isBasic() {
 		return !isAncient();
 	}
 
+	/**
+	 * @return Whether ancient / Whether ancient
+	 */
 	public boolean isAncient() {
 		return getItemId() >= 167020006 && // Ancient Manastone: HP +105
 				getItemId() <= 167020112; // [Event] Ancient Manastone: Healing Boost +5

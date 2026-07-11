@@ -1,17 +1,3 @@
-/*
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -40,6 +26,11 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
+/**
+ * Enchant 物品动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EnchantItemAction")
 public class EnchantItemAction extends AbstractItemAction {
@@ -59,6 +50,9 @@ public class EnchantItemAction extends AbstractItemAction {
 	@XmlAttribute(name = "chance")
 	private float chance;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		int EnchantKinah = EnchantService.EnchantKinah(targetItem);
@@ -66,12 +60,12 @@ public class EnchantItemAction extends AbstractItemAction {
 			return false;
 		}
 		if (targetItem.getItemTemplate().isEstima() && targetItem.getEnchantLevel() >= 10) {
-			// You cannot add Essence.
+			// 你无法添加精华。 / You cannot add Essence.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
 			return false;
 		}
 		if (parentItem == null || targetItem == null) {
-			// The item cannot be found.
+			// 找不到该物品。 / The item cannot be found.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
@@ -84,7 +78,7 @@ public class EnchantItemAction extends AbstractItemAction {
 			return false;
 		}
 		if (targetItem.getEnchantLevel() >= EnchantService.getMaxEquipmentEnchantLevel() && !parentItem.getItemTemplate().isManaStone()) {
-			// You cannot enchant %0 any further.
+			// 你无法再强化 %0。 / You cannot enchant %0 any further.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_IT_CAN_NOT_BE_ENCHANTED_MORE_TIME(targetItem.getNameId()));
 			return false;
 		}
@@ -97,11 +91,13 @@ public class EnchantItemAction extends AbstractItemAction {
 		return true;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		act(player, parentItem, targetItem, null, 1);
 	}
 
+	/** 执行 / act. */
 	public void act(final Player player, final Item parentItem, final Item targetItem, final Item supplementItem, final int targetWeapon) {
 		if ((supplementItem != null) && (!checkSupplementLevel(player, supplementItem.getItemTemplate(), targetItem.getItemTemplate()))) {
 			return;
@@ -120,18 +116,20 @@ public class EnchantItemAction extends AbstractItemAction {
 		final boolean isSuccess = isSuccess(player, parentItem, targetItem, supplementItem, targetWeapon);
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), enchantCast, 0, 0));
 		final ItemUseObserver Enchant = new ItemUseObserver() {
+			/** 中止 / abort. */
 			@Override
 			public void abort() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
 				player.getObserveController().removeObserver(this);
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), targetItem.getObjectId().intValue(), targetItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
-				// You have cancelled the enchanting of %0.
+				// 你已取消 %0 的强化。 / You have cancelled the enchanting of %0.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_CANCELED(targetItem.getItemTemplate().getNameId()));
 			}
 		};
 		player.getObserveController().attach(Enchant);
 		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/** 运行 / run. */
 			@Override
 			public void run() {
 				player.getController().cancelTask(TaskId.ITEM_USE);
@@ -152,13 +150,13 @@ public class EnchantItemAction extends AbstractItemAction {
 							Player player2 = iter.next();
 							if (targetItem.getEnchantLevel() == 15 && isSuccess) {
 								if (player2.getRace() == player.getRace()) {
-									// %0 has succeeded in enchanting %1 to Level 15.
+									// %0 成功将 %1 强化至 15 级。 / %0 has succeeded in enchanting %1 to Level 15.
 									PacketSendUtility.sendPacket(player2, SM_SYSTEM_MESSAGE.STR_MSG_ENCHANT_ITEM_SUCCEEDED_15(player.getName(), targetItem.getItemTemplate().getNameId()));
 								}
 							}
 							if (targetItem.getEnchantLevel() == 20 && isSuccess) {
 								if (player2.getRace() == player.getRace()) {
-									// %0 has succeeded in enchanting %1 to Level 20.
+									// %0 成功将 %1 强化至 20 级。 / %0 has succeeded in enchanting %1 to Level 20.
 									PacketSendUtility.sendPacket(player2, SM_SYSTEM_MESSAGE.STR_MSG_ENCHANT_ITEM_SUCCEEDED_20(player.getName(), targetItem.getItemTemplate().getNameId()));
 								}
 							}
@@ -180,22 +178,29 @@ public class EnchantItemAction extends AbstractItemAction {
 		return false;
 	}
 
+	/** 获取计数。 / Returns the count. */
 	public int getCount() {
 		return count;
 	}
 
+	/** 获取最大等级。 / Returns the max level. */
 	public int getMaxLevel() {
 		return max_level != null ? max_level : 0;
 	}
 
+	/** 获取最小等级。 / Returns the min level. */
 	public int getMinLevel() {
 		return min_level != null ? min_level : 0;
 	}
 
+	/**
+	 * 是否 manastone 仅。 / Whether manastone only / Whether manastone only。 / 是否 manastone 仅。 / Whether manastone only / Whether manastone only
+	 */
 	public boolean isManastoneOnly() {
 		return manastone_only;
 	}
 
+	/** 返回概率 / Returns the chance*/
 	public float getChance() {
 		return chance;
 	}
@@ -220,7 +225,7 @@ public class EnchantItemAction extends AbstractItemAction {
 			if (minEnchantLevel <= targetItemTemplate.getLevel() && maxEnchantLevel >= targetItemTemplate.getLevel()) {
 				return true;
 			}
-			// You cannot use those Supplements.
+			// 你无法使用那些补充剂。 / You cannot use those Supplements.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_ENCHANT_ASSISTANT_NO_RIGHT_ITEM);
 			return false;
 		}

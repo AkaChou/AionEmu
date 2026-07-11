@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.siegeservice;
 
 import java.util.concurrent.Future;
@@ -22,6 +6,10 @@ import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 
+/**
+ * 攻城突击基类，定义突击开始/结束流程。
+ * Siege assault base class defining assault start/finish flow.
+ */
 public abstract class Assault<siege extends Siege<?>> {
 
 	protected final SiegeLocation siegeLocation;
@@ -38,14 +26,31 @@ public abstract class Assault<siege extends Siege<?>> {
 		this.worldId = siege.getSiegeLocation().getWorldId();
 	}
 
+	/**
+	 * getWorldId 方法。
+	 * getWorldId method.
+	 * result
+	 */
 	public int getWorldId() {
 		return worldId;
 	}
 
+	/**
+	 * 开始突击。
+	 * Starts the assault.
+	 *
+	 * @param delay 延迟毫秒 / delay
+	 */
 	public void startAssault(int delay) {
 		scheduleAssault(delay);
 	}
 
+	/**
+	 * 结束突击。
+	 * Finishes the assault.
+	 *
+	 * captured
+	 */
 	public void finishAssault(boolean captured) {
 		if (dredgionTask != null && !dredgionTask.isDone()) {
 			dredgionTask.cancel(true);

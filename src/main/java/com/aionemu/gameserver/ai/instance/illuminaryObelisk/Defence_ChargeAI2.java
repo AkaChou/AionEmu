@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -25,10 +9,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Illuminary Obelisk 副本 NPC AI：Defence Charge（@AIName "Defence_Charge"），继承 NpcAI2。
+ * Illuminary Obelisk instance NPC AI: Defence Charge (@AIName "Defence_Charge"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Defence_Charge")
 public class Defence_ChargeAI2 extends NpcAI2
 {
@@ -76,13 +62,13 @@ public class Defence_ChargeAI2 extends NpcAI2
     }
 	
    /**
-	* Eastern Shield.
-	*/
+	 * Eastern Shield
+	 */
 	private void announceEasternCharging() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The eastern shield power generator is charging.
+				// 东部护盾能量发生器正在充能。 / The eastern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_01);
 			}
 		});
@@ -91,9 +77,9 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The eastern shield power generator is charging.
+				// 东部护盾能量发生器正在充能。 / The eastern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_01);
-				//The eastern shield power generator will finish charging in 30 seconds.
+				// 东部护盾能量发生器将在 30 秒后充能完毕。 / The eastern shield power generator will finish charging in 30 seconds.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_FINAL_CHARGE_01, 198000);
 			}
 		});
@@ -102,22 +88,22 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The eastern shield power generator is charging.
+				// 东部护盾能量发生器正在充能。 / The eastern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_01);
-				//This power generator is fully charged. It cannot be charged any further.
+				// 该能量发生器已充满，无法再充能。 / This power generator is fully charged. It cannot be charged any further.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_END, 5000);
 			}
 		});
 	}
 	
    /**
-	* Western Shield.
-	*/
+	 * Western Shield
+	 */
 	private void announceWesternCharging() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The western shield power generator is charging.
+				// 西部护盾能量发生器正在充能。 / The western shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_02);
 			}
 		});
@@ -126,9 +112,9 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The western shield power generator is charging.
+				// 西部护盾能量发生器正在充能。 / The western shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_02);
-				//The western shield power generator will finish charging in 30 seconds.
+				// 西部护盾能量发生器将在 30 秒后充能完毕。 / The western shield power generator will finish charging in 30 seconds.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_FINAL_CHARGE_02, 198000);
 			}
 		});
@@ -137,22 +123,22 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The western shield power generator is charging.
+				// 西部护盾能量发生器正在充能。 / The western shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_02);
-				//This power generator is fully charged. It cannot be charged any further.
+				// 该能量发生器已充满，无法再充能。 / This power generator is fully charged. It cannot be charged any further.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_END, 5000);
 			}
 		});
 	}
 	
    /**
-	* Southern Shield.
-	*/
+	 * Southern Shield
+	 */
 	private void announceSouthernCharging() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The southern shield power generator is charging.
+				// 南部护盾能量发生器正在充能。 / The southern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_03);
 			}
 		});
@@ -161,9 +147,9 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The southern shield power generator is charging.
+				// 南部护盾能量发生器正在充能。 / The southern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_03);
-				//The southern shield power generator will finish charging in 30 seconds.
+				// 南部护盾能量发生器将在 30 秒后充能完毕。 / The southern shield power generator will finish charging in 30 seconds.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_FINAL_CHARGE_03, 198000);
 			}
 		});
@@ -172,22 +158,22 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The southern shield power generator is charging.
+				// 南部护盾能量发生器正在充能。 / The southern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_03);
-				//This power generator is fully charged. It cannot be charged any further.
+				// 该能量发生器已充满，无法再充能。 / This power generator is fully charged. It cannot be charged any further.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_END, 5000);
 			}
 		});
 	}
 	
    /**
-	* Northern Shield.
-	*/
+	 * Northern Shield
+	 */
 	private void announceNorthernCharging() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The northern shield power generator is charging.
+				// 北部护盾能量发生器正在充能。 / The northern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_04);
 			}
 		});
@@ -196,9 +182,9 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The northern shield power generator is charging.
+				// 北部护盾能量发生器正在充能。 / The northern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_04);
-				//The northern shield power generator will finish charging in 30 seconds.
+				// 北部护盾能量发生器将在 30 秒后充能完毕。 / The northern shield power generator will finish charging in 30 seconds.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_FINAL_CHARGE_04, 198000);
 			}
 		});
@@ -207,9 +193,9 @@ public class Defence_ChargeAI2 extends NpcAI2
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The northern shield power generator is charging.
+				// 北部护盾能量发生器正在充能。 / The northern shield power generator is charging.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_04);
-				//This power generator is fully charged. It cannot be charged any further.
+				// 该能量发生器已充满，无法再充能。 / This power generator is fully charged. It cannot be charged any further.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_OBJ_CHARGE_END, 5000);
 			}
 		});

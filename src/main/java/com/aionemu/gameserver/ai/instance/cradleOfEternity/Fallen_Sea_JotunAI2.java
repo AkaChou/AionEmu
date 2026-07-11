@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -39,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Cradle Of Eternity 副本 NPC AI：Fallen Sea Jotun（@AIName "Fallen_Sea_Jotun"），继承 AggressiveNpcAI2。
+ * Cradle Of Eternity instance NPC AI: Fallen Sea Jotun (@AIName "Fallen_Sea_Jotun"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Fallen_Sea_Jotun")
 public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 {
@@ -90,9 +76,9 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					//Jotun’s combatants started to gather to support the Water Jotun.
+					// 尤顿战斗人员开始集结支援水尤顿。 / Jotun’s combatants started to gather to support the Water Jotun.
 				    PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_01, 0);
-					//The support of the Jotun combatants has started again.
+					// 尤顿战斗人员的支援再次开始。 / The support of the Jotun combatants has started again.
 				    PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_03, 10000);
 					GameEngineServices.skillEngine().getSkill(getOwner(), 23008, 60, getOwner()).useNoAnimationSkill(); //Steaming Geyser.
 					List<Player> players = getLifedPlayers();

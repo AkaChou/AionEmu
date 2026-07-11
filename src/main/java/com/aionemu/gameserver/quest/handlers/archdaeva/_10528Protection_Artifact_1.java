@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -31,10 +15,13 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/**  @author Phantom_KNA
-/****/
+/**
+ * 大天使任务脚本：Protection Artifact 1（任务 ID 10528）。
+ * Archdaeva quest script: Protection Artifact 1 (quest ID 10528).
+ *
+ * @author Encom
+ * @author Phantom_KNA
+ */
 public class _10528Protection_Artifact_1 extends QuestHandler {
 
     public static final int questId = 10528;
@@ -155,7 +142,7 @@ public class _10528Protection_Artifact_1 extends QuestHandler {
 					}
 				}
                 break;
-				case 731708: { // Teleport
+				case 731708: { // 传送 / Teleport
 					switch (env.getDialog()) {
 						case USE_OBJECT:
 							if (var == 6) {

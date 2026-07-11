@@ -1,35 +1,29 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.task;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.utils.MathUtil;
 
+/**
+ * 坐标目的地检查器：跟随生物进入指定 XYZ 附近（半径 10）即判定到达。
+ * Coordinate destination checker: success when the follower is within range 10 of the given XYZ.
+ */
 final class CoordinateDestinationChecker extends DestinationChecker {
 
+	/** 目标 X。 Target X. */
 	private final float x;
+	/** 目标 Y。 Target Y. */
 	private final float y;
+	/** 目标 Z。 Target Z. */
 	private final float z;
 
 	/**
-	 * @param follower
-	 * @param x
-	 * @param y
-	 * @param z
+	 * 构造坐标目的地检查器。
+	 * Constructs a coordinate destination checker.
+	 *
+	 * Follower creature
+	 * @param x 目标 X / Target X
+	 * @param y 目标 Y / Target Y
+	 * @param z 目标 Z / Target Z
 	 */
 	CoordinateDestinationChecker(Creature follower, float x, float y, float z) {
 		this.follower = follower;
@@ -38,6 +32,12 @@ final class CoordinateDestinationChecker extends DestinationChecker {
 		this.z = z;
 	}
 
+	/**
+	 * 判断跟随者是否接近目标坐标。
+	 * Returns whether the follower is near the target coordinates.
+	 *
+	 * @return true 表示在半径 10 内 / true if within range 10
+	 */
 	@Override
 	boolean check() {
 		return MathUtil.isNearCoordinates(follower, x, y, z, 10);

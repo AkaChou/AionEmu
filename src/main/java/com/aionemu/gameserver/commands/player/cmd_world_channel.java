@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -26,6 +10,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 玩家命令：向全服世界频道发送付费消息。
+ * Player command: sends a paid message on the global world channel.
+ *
  * @author Maestross
  */
 public class cmd_world_channel extends PlayerCommand {
@@ -34,6 +21,13 @@ public class cmd_world_channel extends PlayerCommand {
 		super("world");
 	}
 
+	/**
+	 * 向在线玩家广播世界频道消息并扣费。
+	 * Broadcasts a world-channel message to online players and charges a fee.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * command parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		int i = 1;
@@ -114,6 +108,13 @@ public class cmd_world_channel extends PlayerCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时提示用法。
+	 * Shows usage when arguments are invalid.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax : .world <message>");

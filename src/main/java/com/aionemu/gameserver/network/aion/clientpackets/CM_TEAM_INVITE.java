@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.DeniedStatus;
@@ -30,6 +14,9 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 客户端队伍/联盟/军团同盟邀请请求包。
+ * Client packet for inviting a player to group, alliance, or league.
+ *
  * @author Lyahim, ATracer Modified by Simple
  */
 public class CM_TEAM_INVITE extends AionClientPacket {
@@ -37,6 +24,11 @@ public class CM_TEAM_INVITE extends AionClientPacket {
 	private String name;
 	private int inviteType;
 
+	/**
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
+	 */
 	public CM_TEAM_INVITE(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -63,7 +55,7 @@ public class CM_TEAM_INVITE extends AionClientPacket {
 
 		final Player inviter = getConnection().getActivePlayer();
 		if (inviter.getLifeStats().isAlreadyDead()) {
-			// You cannot issue an invitation while you are dead.
+			// 死亡时无法发出邀请。 / You cannot issue an invitation while you are dead.
 			PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1300163));
 			return;
 		}

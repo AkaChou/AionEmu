@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.event;
 
 import java.time.ZonedDateTime;
@@ -27,7 +12,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
- * Created by wanke on 02/03/2017.
+ * BoostEvents 模板（静态数据/XML）。
+ * XML template. / XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -54,35 +40,45 @@ public class BoostEvents {
 	@XmlSchemaType(name = "dateTime")
 	protected XMLGregorianCalendar endDate;
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}
 
+	/** 获取名称。 / Returns the name. */
 	public String getName() {
 		return name;
 	}
 
+	/** 返回增益 ID / Returns the buff id */
 	public int getBuffId() {
 		return buffId;
 	}
 
+	/** 返回增益值 / Returns the buff value*/
 	public int getBuffValue() {
 		return buffValue;
 	}
 
+	/** 返回开始日期 / Returns the start date*/
 	public ZonedDateTime getStartDate() {
 		return DateTimeUtil.fromCalendar(startDate.toGregorianCalendar());
 	}
 
+	/** 返回结束日期 / Returns the end date*/
 	public ZonedDateTime getEndDate() {
 		return DateTimeUtil.fromCalendar(endDate.toGregorianCalendar());
 	}
 
+	/** 是否激活。 / Whether Active. */
 	public boolean isActive() {
 		ZonedDateTime now = DateTimeUtil.now();
 		return getStartDate().isBefore(now) && getEndDate().isAfter(now);
 	}
 
+	/**
+	 * @return Whether expired / Whether expired
+	 */
 	public boolean isExpired() {
 		return !isActive();
 	}

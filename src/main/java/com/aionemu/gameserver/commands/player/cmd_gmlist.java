@@ -1,19 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -27,14 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 玩家命令：列出当前在线的 GM/团队成员。
+ * Player command: lists currently online GMs/team members.
+ *
  * @author Eloann
  */
 public class cmd_gmlist extends PlayerCommand {
 
+	/**
+	 * 注册命令别名 {@code gmlist}。
+	 * Registers the command alias {@code gmlist}.
+	 */
     public cmd_gmlist() {
         super("gmlist");
     }
 
+	/**
+	 * 收集非离线的管理权限玩家并输出名单。
+	 * Collects non-offline staff players and prints their names/tags.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param params 未使用的参数 / unused parameters
+	 */
     @Override
     public void execute(Player player, String... params) {
         final List<Player> admins = new ArrayList<Player>();

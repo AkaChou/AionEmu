@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.model.channel;
 
 import com.aionemu.chatserver.model.ChannelType;
@@ -23,17 +5,27 @@ import com.aionemu.chatserver.model.Race;
 import lombok.Getter;
 
 /**
+ * 按地图区域划分的公共聊天频道。
+ * Public chat channel scoped by world map region.
+ *
  * @author ATracer
  */
 public class RegionChannel extends RaceChannel {
 
+    /**
+     * 地图 ID。
+     * Map id.
+     */
     @Getter
     protected int mapId;
 
     /**
-     * @param mapId
-     * @param race
-     * @param identifier
+     * 创建区域公共频道。
+     * Creates a region public channel.
+     *
+     * map id
+     * 阵营 / race
+     * @param identifier 字符串标识 / string identifier
      */
     public RegionChannel(int mapId, Race race, String identifier) {
         super(ChannelType.PUBLIC, race, identifier);

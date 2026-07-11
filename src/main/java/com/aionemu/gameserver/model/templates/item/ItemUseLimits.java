@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
+
+/**
+ * 物品 UseLimits 模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "UseLimits")
@@ -53,22 +42,27 @@ public class ItemUseLimits {
 	@XmlAttribute(name = "rank_max")
 	private int maxRank = AbyssRankEnum.SUPREME_COMMANDER.getId();
 
+	/** 返回 delay id / Returns the delay id */
 	public int getDelayId() {
 		return useDelayId;
 	}
 
+	/** 设置 delay id / Sets the delay id */
 	public void setDelayId(int delayId) {
 		useDelayId = delayId;
 	}
 
+	/** 返回延迟时间 / Returns the delay time*/
 	public int getDelayTime() {
 		return useDelay;
 	}
 
+	/** 设置 delay time / Sets the delay time */
 	public void setDelayTime(int useDelay) {
 		this.useDelay = useDelay;
 	}
 
+	/** 返回 use area / Returns the use area */
 	public ZoneName getUseArea() {
 		if (usearea == null)
 			return null;
@@ -79,14 +73,19 @@ public class ItemUseLimits {
 		return null;
 	}
 
+	/** 返回 ownership world / Returns the ownership world */
 	public int getOwnershipWorld() {
 		return ownershipWorldId;
 	}
 
+	/** 返回 gender permitted / Returns the gender permitted */
 	public Gender getGenderPermitted() {
 		return genderPermitted;
 	}
 
+	/**
+	 * @return Whether ride usable / Whether ride usable
+	 */
 	public boolean isRideUsable() {
 		if (rideUsable == null) {
 			return false;
@@ -94,14 +93,17 @@ public class ItemUseLimits {
 		return rideUsable;
 	}
 
+	/** 返回最小军阶 / Returns the min rank*/
 	public int getMinRank() {
 		return minRank;
 	}
 
+	/** 返回最大军阶 / Returns the max rank*/
 	public int getMaxRank() {
 		return maxRank;
 	}
 
+	/** 校验军阶 / Verify Rank */
 	public boolean verifyRank(int rank) {
 		return (minRank <= rank && maxRank >= rank) || rank >= minRank;
 	}

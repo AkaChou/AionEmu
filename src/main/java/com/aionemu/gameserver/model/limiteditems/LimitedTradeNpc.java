@@ -1,25 +1,11 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.limiteditems;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 限定交易 NPC，用于 limiteditems 相关逻辑。
+ * Limited Trade Npc for limiteditems logic.
  *
  * @author xTz
  */
@@ -32,10 +18,12 @@ public class LimitedTradeNpc {
 
 	}
 
+	/** 放入限定物品。 / Put limited items. */
 	public void putLimitedItems(List<LimitedItem> limitedItems) {
 		this.limitedItems.addAll(limitedItems);
 	}
 
+	/** 获取限定物品。 / Returns the limited items. */
 	public List<LimitedItem> getLimitedItems() {
 		return limitedItems;
 	}

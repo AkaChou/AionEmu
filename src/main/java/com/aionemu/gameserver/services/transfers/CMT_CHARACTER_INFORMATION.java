@@ -1,23 +1,8 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.transfers;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,10 +51,21 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
+ * 角色信息解析包，从跨服转移二进制流中反序列化并在目标服重建完整角色。
+ * Character-information packet that deserializes a transfer payload and rebuilds a full character on the target server.
+ *
  * @author KID
  */
 public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 
+	/**
+	 * 构造空实现的客户端包（仅用于离线反序列化，不走网络收发）。
+	 * Construct a stub client packet used only for offline deserialization (not network I/O).
+	 *
+	 * Opcode
+	 * @param state      连接状态 / Connection state
+	 * Additional states
+	 */
 	protected CMT_CHARACTER_INFORMATION(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}
@@ -82,6 +78,17 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	protected void runImpl() {
 	}
 
+	/**
+	 * 从当前 buffer 读取完整角色数据并在目标账户下创建新角色。
+	 * Read a full character from the current buffer and create it under the target account.
+	 *
+	 * Character name
+	 * Target account ID
+	 * Account name
+	 * @param rsList        转移时需剔除的技能 ID 列表 / Skill IDs to strip on transfer
+	 * Text logger
+	 * @return 新建玩家；失败返回 null / New player, or null on failure
+	 */
 	public Player readInfo(String name, int targetAccount, String accountName, List<Integer> rsList, Logger textLog) {
 
 		long st = System.currentTimeMillis();
@@ -165,7 +172,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 
 		int cnt = readD();
 		List<String> itemOut = new ArrayList<String>();
-		for (int a = 0; a < cnt; a++) { // inventory
+		for (int a = 0; a < cnt; a++) { // 背包 / inventory
 			int objIdOld = readD();
 			int itemId = readD();
 			long itemCnt = readQ();
@@ -252,7 +259,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 		}
 
 		cnt = readD();
-		for (int a = 0; a < cnt; a++) { // warehouse
+		for (int a = 0; a < cnt; a++) { // 仓库 / warehouse
 			int objIdOld = readD();
 			int itemId = readD();
 			long itemCnt = readQ();
@@ -475,13 +482,19 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 		for (int a = 0; a < cnt; a++) { // quests
 			int questId = readD();
 			if (PlayerTransferConfig.ALLOW_QUESTS) {
+				QuestStatus status = QuestStatus.valueOf(readS());
+				int questVars = readD();
+				int completeCount = readD();
+				String nextRepeatTime = readS();
+				int reward = readD();
 				player.getQuestStateList().addQuest(questId,
-						new QuestState(questId, QuestStatus.valueOf(readS()), readD(), readD(), null, readD(), null)); // TODO
-																														// null
-																														// timestamp
+						new QuestState(questId, status, questVars, completeCount,
+								nextRepeatTime.isEmpty() ? null : Timestamp.valueOf(nextRepeatTime), reward, null));
 			} else {
 				readS();
-				readB(12);
+				readB(8);
+				readS();
+				readB(4);
 			}
 		}
 		PlayerService.storePlayer(player);

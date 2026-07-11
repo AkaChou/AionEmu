@@ -11,6 +11,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 潘德莫尼姆任务脚本：Deep Maternal Love（任务 ID 2918）。
+ * Pandaemonium quest script: Deep Maternal Love (quest ID 2918).
+ *
  * @author Hellboy
  */
 public class _2918DeepMaternalLove extends QuestHandler {

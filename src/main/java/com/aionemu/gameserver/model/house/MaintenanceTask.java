@@ -1,20 +1,7 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.house;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -41,6 +28,11 @@ import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
+
+/**
+ * Maintenance 任务，用于房屋相关逻辑。
+ * Maintenance Task for house logic.
+ */
 @Slf4j
 
 public class MaintenanceTask extends AbstractCronTask {
@@ -52,6 +44,7 @@ public class MaintenanceTask extends AbstractCronTask {
 		maintainedHouses = new ArrayList<House>();
 	}
 
+	/** 获取副本。 / Returns the instance. */
 	public static final MaintenanceTask getInstance() {
 		ObjectProvider<MaintenanceTask> provider = instanceProvider;
 		if (provider != null) {
@@ -60,6 +53,7 @@ public class MaintenanceTask extends AbstractCronTask {
 		return SingletonHolder.instance;
 	}
 
+	/** 设置实例提供者。 / Sets the instance provider. */
 	public static void setInstanceProvider(ObjectProvider<MaintenanceTask> provider) {
 		instanceProvider = provider;
 	}
@@ -98,19 +92,22 @@ public class MaintenanceTask extends AbstractCronTask {
 		return false;
 	}
 
+	/**
+	 * @return Whether maintain time / Whether maintain time
+	 */
 	public boolean isMaintainTime() {
 		return (getRunTime() - System.currentTimeMillis() / 1000) <= 0;
 	}
 
 	@Override
 	protected void preInit() {
-		log.info("Initializing House maintenance task...");
+		log.info(I18n.get("log.33d70503ba48"));
 	}
 
 	@Override
 	protected void preRun() {
 		updateMaintainedHouses();
-		log.info("Executing House maintenance. Maintained Houses: " + maintainedHouses.size());
+		log.info(I18n.get("log.45653a9b8124", maintainedHouses.size()));
 	}
 
 	private void updateMaintainedHouses() {

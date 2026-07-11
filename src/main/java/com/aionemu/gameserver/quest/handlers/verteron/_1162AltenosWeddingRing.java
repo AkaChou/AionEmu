@@ -1,19 +1,3 @@
-/*
- * This file is part of aion-unique <aion-unique.org>.
- *
- * aion-unique is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aion-unique is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aion-unique. If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.verteron;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
+ * 沃特伦任务脚本：Altenos Wedding Ring（任务 ID 1162）。
+ * Verteron quest script: Altenos Wedding Ring (quest ID 1162).
+ *
  * @author Balthazar. redone DainAvenger
  */
 public class _1162AltenosWeddingRing extends QuestHandler {

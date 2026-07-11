@@ -1,28 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 通知客户端将玩家传送至指定房屋的服务端包。
+ * Server packet notifying the client to teleport a player to a given house.
+ */
 public class SM_HOUSE_TELEPORT extends AionServerPacket {
 	int address;
 	int playerId;
 
+	/**
+	 * 使用房屋地址与玩家 ID 构造传送包。
+	 * Creates a teleport packet for the given house address and player id.
+	 *
+	 * house address id
+	 * player object id
+	 */
 	public SM_HOUSE_TELEPORT(int houseAddress, int playerId) {
 		this.address = houseAddress;
 		this.playerId = playerId;

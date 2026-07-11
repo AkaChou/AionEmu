@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.quest.handlers.archives_of_eternity;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,9 +8,12 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 永恒档案馆任务脚本：A Call For Champions（任务 ID 26800）。
+ * Archives of Eternity quest script: A Call For Champions (quest ID 26800).
+ *
+ * @author (Encom)
+ */
 public class _26800A_Call_For_Champions extends QuestHandler {
 
     private final static int questId = 26800;

@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package com.aionemu.gameserver.movement.processors.movement.motor;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -19,26 +16,81 @@ import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
 import com.aionemu.gameserver.movement.processors.movement.PathfindHelper;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
 
+/**
+ * 跟随电机：周期重算目标点，按速度插值更新 NPC 位置并广播移动包。
+ * Follow motor: periodically revalidates the target, interpolates NPC position by speed, and broadcasts move packets.
+ */
 public class FollowMotor extends AMovementMotor {
+
+	/**
+	 * 目标重校验间隔（毫秒）。
+	 * Target revalidation interval in milliseconds.
+	 */
 	private static final int TARGET_REVALIDATE_TIME = 300;
+
+	/**
+	 * 下一次允许寻路重算的时间戳。
+	 * Timestamp after which pathfinding may be revalidated.
+	 */
 	private static long pathfindRevalidationTime;
+
+	/**
+	 * 当前跟随目标。
+	 * Current follow target.
+	 */
 	public VisibleObject _target;
+
+	/**
+	 * 周期更新任务句柄。
+	 * Periodic update task handle.
+	 */
 	private ScheduledFuture<?> _task;
+
+	/**
+	 * 上次移动时刻（毫秒）。
+	 * Last move timestamp in milliseconds.
+	 */
 	private long _lastMoveMs;
+
+	/**
+	 * 上次移动起点。
+	 * Last move origin point.
+	 */
 	private Vector3f _lastMovePoint;
+
+	/**
+	 * 新计算出的目标朝向。
+	 * Newly computed target heading.
+	 */
 	private byte new_targetHeading;
 
+	/**
+	 * 创建跟随指定目标的电机。
+	 * Create a motor that follows the given target.
+	 *
+	 * @param parentProcessor 父移动处理器 / Parent movement processor
+	 * Owner NPC
+	 * Follow target
+	 */
 	public FollowMotor(MovementProcessor parentProcessor, Npc owner, VisibleObject target) {
 		super(owner, parentProcessor);
 		this._target = target;
 	}
 
+	/**
+	 * 启动跟随：断言任务未创建并立即执行一次更新。
+	 * Start following: assert no task exists and run an immediate update.
+	 */
 	@Override
 	public void start() {
 		assert (this._task == null);
 		this.update();
 	}
 
+	/**
+	 * 停止跟随：取消任务并清空目标与移动状态。
+	 * Stop following: cancel the task and clear target and movement state.
+	 */
 	@Override
 	public void stop() {
 		if (this._task != null) {
@@ -50,6 +102,12 @@ public class FollowMotor extends AMovementMotor {
 		this._target = null;
 	}
 
+	/**
+	 * 重算跟随目标点、广播移动并调度下一次位置插值。
+	 * Recompute the follow target, broadcast movement, and schedule the next position interpolation.
+	 *
+	 * @return 仍可继续跟随为 true / {@code true} if following can continue
+	 */
 	public boolean update() {
 		VisibleObject target = this._target;
 		if (target == null || this._task != null && this._task.isCancelled()
@@ -153,6 +211,12 @@ public class FollowMotor extends AMovementMotor {
 		return true;
 	}
 
+	/**
+	 * 判断 NPC 当前是否允许移动（非恐惧、可执行移动且未施法）。
+	 * Whether the NPC may move (not under fear, can perform move, and not casting).
+	 *
+	 * @return {@code true} if movement is allowed。 / {@code true} if movement is allowed
+	 */
 	private boolean canMove() {
 		return !this._owner.getEffectController().isUnderFear() && this._owner.canPerformMove()
 				&& this._owner.getAi2().getSubState() != AISubState.CAST;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers.movement;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -21,10 +5,23 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 已看见的生物列表，按 objectId 去重维护可见集合。
+ * List of seen creatures, maintained as a de-duplicated set keyed by objectId.
+ */
 public class SeenCreatureList {
 
+	/** 已看见生物映射 / Map of seen creatures */
 	private Map<Integer, Creature> seenCreatures;
 
+	/**
+	 * 添加生物到已看见列表。
+	 * Add a creature to the seen list.
+	 *
+	 * Creature
+	 *
+	 * @param creature @return 是否新加入 / Whether newly added
+	 */
 	public boolean add(Creature creature) {
 		if (seenCreatures == null) {
 			seenCreatures = new LinkedHashMap<>();
@@ -32,6 +29,14 @@ public class SeenCreatureList {
 		return seenCreatures.putIfAbsent(creature.getObjectId(), creature) == null;
 	}
 
+	/**
+	 * 从已看见列表移除生物。
+	 * Remove a creature from the seen list.
+	 *
+	 * Creature
+	 *
+	 * @param creature @return 是否移除成功 / Whether removed
+	 */
 	public boolean remove(Creature creature) {
 		if (seenCreatures == null) {
 			return false;
@@ -39,12 +44,23 @@ public class SeenCreatureList {
 		return seenCreatures.remove(creature.getObjectId()) != null;
 	}
 
+	/**
+	 * 清空已看见列表。
+	 * Clear the seen list.
+	 */
 	public void clear() {
 		if (seenCreatures != null) {
 			seenCreatures.clear();
 		}
 	}
 
+	/**
+	 * 是否包含指定生物。
+	 * Whether the list contains the given creature.
+	 *
+	 * Creature
+	 * Whether contained
+	 */
 	public boolean contains(Creature creature) {
 		if (seenCreatures == null) {
 			return false;

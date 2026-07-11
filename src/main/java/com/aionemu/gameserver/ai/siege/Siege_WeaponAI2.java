@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.siege;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 import com.aionemu.gameserver.services.summons.SummonsService;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 攻城战相关 NPC AI：Siege Weapon（@AIName "siege_weapon"），继承 AISummon。
+ * Siege-related NPC AI: Siege Weapon (@AIName "siege_weapon"), extends AISummon.
+ *
+ * @author Encom
+ */
 @AIName("siege_weapon")
 public class Siege_WeaponAI2 extends AISummon
 {

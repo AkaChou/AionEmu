@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -53,17 +37,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 克罗米德斯试炼副本事件处理器。
+ * Instance event handler for Kromedes Trial.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300230000)
 public class KromedesTrialInstance extends GeneralInstanceHandler
 {
-	private Race skillRace;
+	/** 技能种族 / skill race */
+		private Race skillRace;
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onEnterInstance(Player player) {
 		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
@@ -72,6 +68,12 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
@@ -85,6 +87,12 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			break;
         }
     }
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -109,19 +117,19 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			case 217006: //Kaliga The Unjust.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188052826, 1)); //Judge's Fabled Weapon Chest.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000102, 1)); //Kaliga's Key.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053787, 1)); //Stigma Support Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
 				switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
 					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
@@ -345,6 +353,13 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -357,18 +372,36 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 		removeEffects(player);
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDie(Npc npc) {
 		Player player = getDeathRewardPlayer(npc);
@@ -404,7 +437,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			case 217006: //Kaliga The Unjust.
 				if (player != null) {
 					sendMovie(player, 455);
-					////sendMsg("[SUCCES]: You have finished <Kromede's Trial>");
+					// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Kromede's Trial>");
 					ItemService.addItem(player, 188900010, 1); //Secret Remedy Of Growth IV.
 				}
             break;
@@ -449,10 +482,16 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	
 	private void announceKaligaTreasury() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//The door to the Kaliga Treasury should be around here somewhere....
+					// 通往卡利加宝库的门应该就在附近…… / The door to the Kaliga Treasury should be around here somewhere....
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111370, player.getObjectId(), 2));
 				}
 			}
@@ -461,11 +500,17 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
-		//Kromede Transformation.
+		// 克罗梅德变身。 / Kromede Transformation.
 		effectController.removeEffect(19220);
 		effectController.removeEffect(19270);
 		effectController.removeEffect(19288); //Rage Of Kromede.
 	}
+	/**
+	 * 移除相关物品。
+	 * Remove related items.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
@@ -477,6 +522,12 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
         storage.decreaseByItemId(164000142, storage.getItemCountByItemId(164000142)); //Sapping Pollen.
 		storage.decreaseByItemId(164000143, storage.getItemCountByItemId(164000143)); //Maga's Potion.
     }
+	/**
+	 * 处理 removeSilverBladeRotan。
+	 * Handle removeSilverBladeRotan.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void removeSilverBladeRotan(Player player) {
         Storage storage = player.getInventory();
@@ -485,18 +536,42 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -508,11 +583,18 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		}, time);
 	}
 	
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
         if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MANOR_ENTRANCE_300230000")) {
             sendMovie(player, 462);
-			//There is an object of great power nearby.
+			// 附近有强大物品。 / There is an object of great power nearby.
 			sendMsgByRace(1400653, Race.PC_ALL, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("KALIGA_DUNGEONS_300230000")) {
 			sendMovie(player, 454);
@@ -526,6 +608,10 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
         doors.clear();

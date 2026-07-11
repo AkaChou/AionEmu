@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.infernalDanuarReliquary;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -45,10 +29,12 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Infernal Danuar Reliquary 副本 NPC AI：Crazed Modor（@AIName "crazed_modor"），继承 AggressiveNpcAI2。
+ * Infernal Danuar Reliquary instance NPC AI: Crazed Modor (@AIName "crazed_modor"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("crazed_modor")
 public class Crazed_ModorAI2 extends AggressiveNpcAI2
 {
@@ -82,82 +68,82 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
                 switch (percent) {
 					case 90:
                         Teleport();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 85:
                         VengefullOrbEvent();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 75:
                         Teleport2();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 70:
                         VengefullOrbEvent();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 65:
                         Teleport3();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 60:
                         VengefullOrbEvent();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 50:
                         skillfear();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 45:
                         VengefullOrbEvent();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 40:
                         Teleport4();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 35:
                         VengefullOrbEvent();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 30:
                         Teleport5();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 25:
                         VengefullOrbEvent();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 20:
                         Teleport6();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
 					case 15:
                         VengefullOrbEvent();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 10:
                         Teleport7();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                     case 5:
                         Teleport8();
-						//Modor has disappeared into another dimension.
+						//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 						announceAnotherDimension();
                     break;
                 }
@@ -217,7 +203,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void Teleport() {
-		//Rise, my children, rise!
+		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -281,7 +267,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void Teleport4() {
-		//Rise, my children, rise!
+		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -316,7 +302,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
     }
 	
 	private void Teleport6() {
-		//Rise, my children, rise!
+		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -351,7 +337,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
     }
 	
 	private void Teleport8() {
-		//Rise, my children, rise!
+		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -443,7 +429,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//Modor has disappeared into another dimension.
+					//莫多尔已消失到另一维度。 / Modor has disappeared into another dimension.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_Rune_User_Kill);
 				}
 			}

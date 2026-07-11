@@ -1,31 +1,30 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
+/**
+ * 玩家命令：解锁全部主要制作技能并设为高等级。
+ * Player command: unlocks all main crafting skills at high ranks.
+ */
 public class cmd_job extends PlayerCommand {
 
+	/**
+	 * 注册命令别名 {@code job}。
+	 * Registers the command alias {@code job}.
+	 */
 	public cmd_job() {
 		super("job");
 	}
 
+	/**
+	 * 为玩家添加/提升采集与制作技能等级。
+	 * Adds or upgrades gathering and crafting skill ranks for the player.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param params 未使用的参数 / unused parameters
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		player.getSkillList().addSkill(player, 30002, 499); // Vita
@@ -38,6 +37,13 @@ public class cmd_job extends PlayerCommand {
 		player.getSkillList().addSkill(player, 40008, 550); // Artisanat
 	}
 
+	/**
+	 * 参数错误时提示用法。
+	 * Shows usage when arguments are invalid.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "Syntax: .job ");

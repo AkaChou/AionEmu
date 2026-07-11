@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.sql.Timestamp;
@@ -24,17 +8,21 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
+ * 向客户端下发军团完整信息（名称、等级、权限、公告等）的服务端包。
+ * Server packet delivering full legion info (name, level, permissions, announcements, etc.) to the client.
+ *
  * @author Simple
  */
 public class SM_LEGION_INFO extends AionServerPacket {
 
-	/** Legion information **/
+	/** 军团信息 / Legion information */
 	private Legion legion;
 
 	/**
-	 * This constructor will handle legion info
-	 * 
-	 * @param legion
+	 * 构造军团信息下发包。
+	 * Creates a packet that delivers legion information.
+	 *
+	 * legion instance
 	 */
 	public SM_LEGION_INFO(Legion legion) {
 		this.legion = legion;
@@ -54,10 +42,13 @@ public class SM_LEGION_INFO extends AionServerPacket {
 		writeS(legion.getLegionDescription());
 		writeC(legion.getLegionJoinType());
 		writeH(legion.getMinLevel());
-		/** Get Announcements List From DB By Legion **/
+		/**
+	 * 获取 announcements 列表数据库按军团。
+	 * Get Announcements List From DB By Legion *
+	 */
 		Map<Timestamp, String> announcementList = legion.getAnnouncementList().descendingMap();
 
-		/** Show max 7 announcements **/
+		/** Show max 7 announcements  / Show max 7 announcements * */
 		int i = 0;
 		for (Timestamp unixTime : announcementList.keySet()) {
 			writeS(announcementList.get(unixTime));

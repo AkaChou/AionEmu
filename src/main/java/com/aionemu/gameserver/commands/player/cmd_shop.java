@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import java.io.File;
@@ -37,6 +21,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
+ * 玩家命令：基于 XML 配置的简易商店列表/购买/重载。
+ * Player command: simple shop list/buy/reload backed by an XML catalog.
+ *
  * @author abaton
  */
 public class cmd_shop extends PlayerCommand {
@@ -65,32 +52,32 @@ public class cmd_shop extends PlayerCommand {
 			int len0 = lhs.length() + 1;
 			int len1 = rhs.length() + 1;
 
-			// the array of distances
+			// 距离数组 / the array of distances
 			int[] cost = new int[len0];
 			int[] newcost = new int[len0];
 
-			// initial cost of skipping prefix in String s0
+			// 跳过字符串 s0 前缀的初始代价 / initial cost of skipping prefix in String s0
 			for (int i = 0; i < len0; i++)
 				cost[i] = i;
 
-			// dynamically computing the array of distances
+			// 动态计算距离数组 / dynamically computing the array of distances
 
-			// transformation cost for each letter in s1
+			// s1 中每个字母的变换代价 / transformation cost for each letter in s1
 			for (int j = 1; j < len1; j++) {
-				// initial cost of skipping prefix in String s1
+				// 跳过字符串 s1 前缀的初始代价 / initial cost of skipping prefix in String s1
 				newcost[0] = j;
 
-				// transformation cost for each letter in s0
+				// s0 中每个字母的变换代价 / transformation cost for each letter in s0
 				for (int i = 1; i < len0; i++) {
-					// matching current letters in both strings
+					// 匹配两字符串中当前字母 / matching current letters in both strings
 					int match = (lhs.charAt(i - 1) == rhs.charAt(j - 1)) ? 0 : costReplace;
 
-					// computing cost for each transformation
+					// 计算每次变换的代价 / computing cost for each transformation
 					int cost_replace = cost[i - 1] + match;
 					int cost_insert = cost[i] + costInsert;
 					int cost_delete = newcost[i - 1] + costDelete;
 
-					// keep minimum cost
+					// 保持最低代价 / keep minimum cost
 					newcost[i] = Math.min(Math.min(cost_insert, cost_delete), cost_replace);
 				}
 
@@ -100,7 +87,7 @@ public class cmd_shop extends PlayerCommand {
 				newcost = swap;
 			}
 
-			// the distance is the cost for transforming all letters in both strings
+			// 距离是将两个字符串所有字母变换的代价。 / the distance is the cost for transforming all letters in both strings
 			return cost[len0 - 1];
 		}
 
@@ -287,6 +274,13 @@ public class cmd_shop extends PlayerCommand {
 		}
 	}
 
+	/**
+	 * 处理 list/buy/reload 等子命令。
+	 * Handles list/buy/reload and related sub-commands.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * command parameters
+	 */
 	@Override
 	public void execute(final Player player, String... params) {
 		if (params.length < 1) {
@@ -321,6 +315,13 @@ public class cmd_shop extends PlayerCommand {
 		PacketSendUtility.sendMessage(player, "syntax: .shop list|buy NAME|show NAME");
 	}
 
+	/**
+	 * 参数错误时提示用法。
+	 * Shows usage when arguments are invalid.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax: .shop list|buy NAME|show NAME");

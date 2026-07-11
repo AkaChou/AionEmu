@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.item.actions;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -21,10 +5,10 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
-/****/
 /**
- * Author themoose (Encom) /
- ****/
+ * Adopt 宠物动作模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 public class AdoptPetAction extends AbstractItemAction {
 	@XmlAttribute(name = "petId")
@@ -36,23 +20,32 @@ public class AdoptPetAction extends AbstractItemAction {
 	@XmlAttribute(name = "sidekick")
 	private Boolean isSideKick = false;
 
+	/**
+	 * @return 是否 act / 是否 act。 / Whether act / Whether act
+	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		return false;
 	}
 
+	/** 执行 / act. */
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
 	}
 
+	/** 返回 pet id / Returns the pet id */
 	public int getPetId() {
 		return petId;
 	}
 
+	/** 返回 expire minutes / Returns the expire minutes */
 	public int getExpireMinutes() {
 		return expireMinutes;
 	}
 
+	/**
+	 * @return Whether side kick / Whether side kick
+	 */
 	public Boolean isSideKick() {
 		return isSideKick;
 	}

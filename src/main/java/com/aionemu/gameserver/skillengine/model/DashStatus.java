@@ -1,24 +1,23 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.model;
 
+/**
+ * 冲刺/位移状态：标识技能位移的网络与表现类型。
+ * Dash/move status: identifies skill displacement for network and presentation.
+ */
 public enum DashStatus {
 
-	NONE(0), RANDOMMOVELOC(1), DASH(2), BACKDASH(3), MOVEBEHIND(4), RIDERMOVELOC(6);
+	/** 无位移 / No dash */
+	NONE(0),
+	/** 随机位置移动 / Random move location */
+	RANDOMMOVELOC(1),
+	/** 前冲 / Forward dash */
+	DASH(2),
+	/** 后撤 / Back dash */
+	BACKDASH(3),
+	/** 移到目标身后 / Move behind target */
+	MOVEBEHIND(4),
+	/** 骑乘位移 / Rider move location */
+	RIDERMOVELOC(6);
 
 	private int id;
 
@@ -26,6 +25,12 @@ public enum DashStatus {
 		this.id = id;
 	}
 
+	/**
+	 * 获取协议 ID。
+	 * Gets protocol id.
+	 *
+	 * dash status id
+	 */
 	public int getId() {
 		return id;
 	}

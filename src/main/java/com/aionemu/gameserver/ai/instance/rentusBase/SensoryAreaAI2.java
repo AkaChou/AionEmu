@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Rentus Base 副本 NPC AI：Sensory Area（@AIName "sensory_area"），继承 AggressiveNpcAI2。
+ * Rentus Base instance NPC AI: Sensory Area (@AIName "sensory_area"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("sensory_area")
 public class SensoryAreaAI2 extends AggressiveNpcAI2
 {
@@ -51,11 +37,11 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 				if (startedEvent.compareAndSet(false, true)) {
 					switch (player.getWorldId()) {
 		                case 300280000: //Rentus Base
-						    //Xasta flies past overhead.
+						    // 萨斯塔从头顶飞过。 / Xasta flies past overhead.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_01, 9000);
-							//Use the anti-aircraft gun to attack Xasta flying overhead.
+							// 用防空炮攻击头顶飞行的萨斯塔。 / Use the anti-aircraft gun to attack Xasta flying overhead.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_02, 10000);
-							//Xasta falls from the sky, wounded!
+							// 萨斯塔受伤从空中坠落！ / Xasta falls from the sky, wounded!
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_SUCCEED_01, 120000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
@@ -67,11 +53,11 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 				        break;
 					} switch (player.getWorldId()) {
 		                case 300620000: //[Occupied] Rentus Base 4.8
-						    //Xasta flies past overhead.
+						    // 萨斯塔从头顶飞过。 / Xasta flies past overhead.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_01, 9000);
-							//Use the anti-aircraft gun to attack Xasta flying overhead.
+							// 用防空炮攻击头顶飞行的萨斯塔。 / Use the anti-aircraft gun to attack Xasta flying overhead.
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_02, 10000);
-							//Xasta falls from the sky, wounded!
+							// 萨斯塔受伤从空中坠落！ / Xasta falls from the sky, wounded!
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_SUCCEED_01, 120000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override

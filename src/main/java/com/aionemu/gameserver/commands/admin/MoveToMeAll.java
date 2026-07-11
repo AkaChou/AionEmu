@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.Race;
@@ -25,14 +9,28 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
+ * 将全服或按种族筛选的在线玩家批量传送到管理员身边的命令。
+ * Admin command to mass-teleport all online players, or by race, to the admin.
+ *
  * @author Shepper Helped by @alfa24t
  */
 public class MoveToMeAll extends AdminCommand {
 
+	/**
+	 * 以别名 {@code movetomeall} 构造命令。
+	 * Construct the command with alias {@code movetomeall}.
+	 */
 	public MoveToMeAll() {
 		super("movetomeall");
 	}
 
+	/**
+	 * 按 {@code all|elyos|asmos} 将对应玩家传送到管理员位置。
+	 * Teleport matching players to the admin for {@code all|elyos|asmos}.
+	 *
+	 * 执行 GM / Admin player
+	 * Scope selector
+	 */
 	@Override
 	public void execute(Player admin, String... params) {
 		if (params == null || params.length < 1) {
@@ -84,6 +82,13 @@ public class MoveToMeAll extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时显示语法。
+	 * Show syntax when parameters are invalid.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //movetomeall < all | elyos | asmos >");

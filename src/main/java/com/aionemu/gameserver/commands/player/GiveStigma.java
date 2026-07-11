@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import com.aionemu.gameserver.configs.main.MembershipConfig;
@@ -34,7 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by K1ll3r
+ * 玩家命令：按职业发放/回收刺针（Stigma）并完成相关任务。
+ * Player command: grants/removes class stigmas and completes related quests.
+ *
+ * @author K1ll3r
  */
 public class GiveStigma extends PlayerCommand {
     public GiveStigma(){
@@ -45,6 +32,13 @@ public class GiveStigma extends PlayerCommand {
     private static int[] asmodianStigmaQuests = {2900, 4934, 4935, 4936, 21049, 21278, 21550, 30317};
 
 
+    /**
+     * 处理 add/remove 等刺针子命令并弹出确认。
+     * Handles stigma add/remove sub-commands with confirmation dialogs.
+     *
+     * @param player 执行命令的玩家 / invoking player
+     * @param param 命令参数 / command parameters
+     */
     public void execute(final Player player, String...param){
         if(param.length < 1){
             PacketSendUtility.sendMessage(player, " You can always remove the remaining items:\n .givestigma clean\n .givestigma add\n .givestigma unlock\n .givestigma class");
@@ -557,6 +551,13 @@ public class GiveStigma extends PlayerCommand {
         PacketSendUtility.sendMessage(player, "All the junk stigma stones has been removed!");
     }
 
+    /**
+     * 参数错误时提示用法。
+     * Shows usage when arguments are invalid.
+     *
+     * @param player 执行命令的玩家 / invoking player
+     * @param msg 失败消息 / failure message
+     */
     public void onFail(Player player, String msg){
         PacketSendUtility.sendMessage(player, " " +
             "synax : .givestigma add  -- Adds Set of Stigma for you're Class\n    " +

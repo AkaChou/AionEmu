@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
 import java.sql.Timestamp;
@@ -28,7 +13,17 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+/**
+ * 职业转职服务，在简易二转模式下弹出对话框并完成职业切换。
+ * Class-change service showing dialogs and applying class switches in simple 2nd-class mode.
+ */
 public class ClassChangeService {
+	/**
+	 * 满足等级与起始职业条件时弹出转职对话框。
+	 * Shows the class-change dialog when level and starting-class conditions are met.
+	 *
+	 * @param player 玩家 / player
+	 */
 	public static void showClassChangeDialog(Player player) {
 		if (CustomConfig.ENABLE_SIMPLE_2NDCLASS) {
 			PlayerClass playerClass = player.getPlayerClass();
@@ -85,6 +80,13 @@ public class ClassChangeService {
 		}
 	}
 
+	/**
+	 * 根据对话框选项完成职业切换，并奖励经验与完成转职任务。
+	 * Applies the class switch from dialog selection and grants exp plus the class-change quest.
+	 *
+	 * @param player 玩家 / player
+	 * @param dialogId 对话框选项 ID / dialog option id
+	 */
 	public static void changeClassToSelection(final Player player, final int dialogId) {
 		Race playerRace = player.getRace();
 		if (CustomConfig.ENABLE_SIMPLE_2NDCLASS) {
@@ -124,7 +126,7 @@ public class ClassChangeService {
 					setClass(player, PlayerClass.getPlayerClassById(Byte.parseByte("16")));
 					break;
 				}
-				
+
 				player.getCommonData().addExp(73200, null);
 				completeQuest(player, 1006);
                 /* completeQuest(player, 1007); */
@@ -164,7 +166,7 @@ public class ClassChangeService {
 					setClass(player, PlayerClass.getPlayerClassById(Byte.parseByte("16")));
 					break;
 				}
-				
+
 				player.getCommonData().addExp(73200, null);
 				completeQuest(player, 2008);
                 /* completeQuest(player, 2009); */
@@ -172,6 +174,13 @@ public class ClassChangeService {
 		}
 	}
 
+	/**
+	 * 将指定任务标记为完成。
+	 * Marks the given quest as complete for the player.
+	 *
+	 * 玩家 / player
+	 * quest id
+	 */
 	private static void completeQuest(Player player, int questId) {
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		Calendar calendar = Calendar.getInstance();
@@ -186,6 +195,13 @@ public class ClassChangeService {
 		}
 	}
 
+	/**
+	 * 在校验通过后设置玩家职业并升级角色数据。
+	 * Sets the player class after validation and upgrades player data.
+	 *
+	 * 玩家 / player
+	 * target class
+	 */
 	public static void setClass(Player player, PlayerClass playerClass) {
 		if (validateSwitch(player, playerClass)) {
 			player.getCommonData().setPlayerClass(playerClass);
@@ -194,6 +210,15 @@ public class ClassChangeService {
 		}
 	}
 
+	/**
+	 * 校验转职条件：等级、是否起始职业、目标是否合法分支。
+	 * Validates class switch: level, starting class, and legal branch.
+	 *
+	 * 玩家 / player
+	 * target class
+	 *
+	 * @return 若 valid 则为 true / true if valid
+	 */
 	private static boolean validateSwitch(Player player, PlayerClass playerClass) {
 		int level = player.getLevel();
 		PlayerClass oldClass = player.getPlayerClass();

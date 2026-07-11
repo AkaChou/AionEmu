@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -30,6 +15,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYER
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 
 /**
+ * 请求指定种族欧比斯玩家排行榜的客户端包。
+ * Client packet requesting abyss player rankings for a race.
+ *
  * @author SheppeR
  */
 @Slf4j
@@ -38,7 +26,6 @@ public class CM_ABYSS_RANKING_PLAYERS extends AionClientPacket {
 	private Race queriedRace;
 	private int raceId;
 	private AbyssRankUpdateType updateType;
-
 
 	public CM_ABYSS_RANKING_PLAYERS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -79,7 +66,7 @@ public class CM_ABYSS_RANKING_PLAYERS extends AionClientPacket {
 				player.setAbyssRankListUpdated(updateType);
 			}
 		} else {
-			log.warn("Received invalid raceId: " + raceId);
+			log.warn(I18n.get("log.ef3ebf4ed8f8", raceId));
 		}
 	}
 }

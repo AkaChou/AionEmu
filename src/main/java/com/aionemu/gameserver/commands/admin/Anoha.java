@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -24,15 +8,30 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 管理员阿诺哈活动命令：启动或停止指定阿诺哈地点。
+ * Admin Anoha event command: starts or stops a specified Anoha location.
+ */
 public class Anoha extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
 	
+	/**
+	 * 注册 {@code //anoha} 命令。
+	 * Registers the {@code //anoha} command.
+	 */
 	public Anoha() {
 		super("anoha");
 	}
 	
+	/**
+	 * 执行阿诺哈控制：解析 start/stop 与地点 ID。
+	 * Executes Anoha control: parses start/stop and location id.
+	 *
+	 * admin
+	 * start|stop, location id。 / start|stop, location id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
@@ -43,6 +42,13 @@ public class Anoha extends AdminCommand
 		}
 	}
 	
+	/**
+	 * 处理阿诺哈活动的开始/停止逻辑。
+	 * Handles start/stop logic for an Anoha event.
+	 *
+	 * admin
+	 * @param params 参数：动作与地点 ID / action and location id
+	 */
 	protected void handleStartStop(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
 			showHelp(player);
@@ -69,6 +75,15 @@ public class Anoha extends AdminCommand
 		}
 	}
 	
+	/**
+	 * 校验阿诺哈地点 ID 是否有效。
+	 * Validates whether the Anoha location id exists.
+	 *
+	 * admin
+	 * location id
+	 *
+	 * @return {@code true} if valid。 / {@code true} if valid
+	 */
 	protected boolean isValidAnohaLocationId(Player player, int anohaId) {
 		if (!GameLocationBootstrapServices.anohaService().getAnohaLocations().keySet().contains(anohaId)) {
 			PacketSendUtility.sendMessage(player, "Id " + anohaId + " is invalid");
@@ -77,6 +92,12 @@ public class Anoha extends AdminCommand
 		return true;
 	}
 	
+	/**
+	 * 向管理员输出 {@code //anoha} 用法。
+	 * Sends {@code //anoha} usage help to the admin.
+	 *
+	 * admin
+	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //anoha start|stop <Id>");
 	}

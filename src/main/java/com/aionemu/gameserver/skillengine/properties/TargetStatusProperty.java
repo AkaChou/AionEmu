@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.properties;
 
 import java.util.List;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
 /**
+ * 目标状态属性：要求首要目标处于指定异常状态之一。
+ * Target status property: requires the first target to have one of the listed abnormal states.
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,9 +21,12 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 public class TargetStatusProperty {
 
 	/**
-	 * @param skill
-	 * @param properties
-	 * @return
+	 * 校验首要目标是否拥有配置的异常状态之一（仅支持单一目标）。
+	 * Validates that the single first target has one of the configured abnormal states.
+	 *
+	 * @param skill 技能上下文 / skill context
+	 * @param properties 目标筛选属性 / target filter properties
+	 * @return 目标数不为 1 时 false；否则是否匹配任一状态 / false if not exactly one target; else whether any status matches
 	 */
 	public static final boolean set(final Skill skill, Properties properties) {
 		if (skill.getEffectedList().size() != 1) {

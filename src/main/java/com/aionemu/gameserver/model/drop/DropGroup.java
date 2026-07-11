@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.drop;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +14,11 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+
+/**
+ * 掉落队伍模型。
+ * Drop Group model.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dropGroup", propOrder = { "drop" })
@@ -48,18 +38,25 @@ public class DropGroup implements DropCalculator {
 	@XmlAttribute(name = "max_items")
 	private int maxItems = 1;
 
+	/** 获取掉落。 / Returns the drop. */
 	public List<Drop> getDrop() {
 		return this.drop;
 	}
 
+	/** 获取种族。 / Returns the race. */
 	public Race getRace() {
 		return race;
 	}
 
+	/** 返回 max items / Returns the max items */
 	public int getMaxItems() {
 		return maxItems;
 	}
 
+	/**
+	 * 是否为 Use 等级 BasedChanceReduction。
+	 * Whether use level based chance reduction.
+	 */
 	public boolean isUseLevelBasedChanceReduction() {
 		return useLevelBasedChanceReduction != null ? useLevelBasedChanceReduction : true;
 	}
@@ -74,6 +71,7 @@ public class DropGroup implements DropCalculator {
 		return group_name;
 	}
 
+	/** 复制 / copy. */
 	public DropGroup copy() {
 		DropGroup copy = new DropGroup();
 		copy.drop = drop == null ? null : new ArrayList<>(drop);
@@ -85,6 +83,7 @@ public class DropGroup implements DropCalculator {
 		return copy;
 	}
 
+	/** 掉落 Calculator / Drop Calculator */
 	@Override
 	public int dropCalculator(Set<DropItem> result, int index, DropModifiers dropModifiers, Collection<Player> groupMembers) {
 		if (drop == null || drop.isEmpty()) {

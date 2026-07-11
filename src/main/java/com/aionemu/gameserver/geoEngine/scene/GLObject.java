@@ -1,74 +1,72 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.scene;
 
 /**
- * Describes a GL object. An encapsulation of a certain object on the native
- * side of the graphics library. This class is used to track
+ * 描述一个 GL 对象：对图形库原生侧某类对象的封装，用于跟踪其生命周期与更新状态。
+ * Describes a GL object: encapsulation of a native graphics-library object, used to track its lifecycle and update state.
  */
 public abstract class GLObject implements Cloneable {
 
 	/**
-	 * The ID of the object, usually depends on its type. Typically returned from
-	 * calls like glGenTextures, glGenBuffers, etc.
+	 * 对象 ID，通常取决于类型；典型来自 glGenTextures、glGenBuffers 等调用。
+	 * Object ID, usually type-dependent; typically returned from calls such as glGenTextures or glGenBuffers.
 	 */
 	protected int id = -1;
 	/**
-	 * A reference to a "handle". By hard referencing a certain object, it's
-	 * possible to find when a certain GLObject is no longer used, and to delete its
-	 * instance from the graphics library.
+	 * 硬引用句柄。通过硬引用可在 GL 对象不再使用时发现并删除图形库中的实例。
+	 * Hard-reference handle. By hard-referencing an object it is possible to detect when a GLObject is unused and delete its native instance.
 	 */
 	protected Object handleRef = null;
 	/**
-	 * True if the data represented by this GLObject has been changed and needs to
-	 * be updated before used.
+	 * 若为 true，表示数据已变更，使用前需要更新。
+	 * True if the data represented by this GLObject has changed and needs to be updated before use.
 	 */
 	protected boolean updateNeeded = true;
 	/**
-	 * The type of the GLObject, usually specified by a subclass.
+	 * GL 对象类型，通常由子类指定。
+	 * Type of the GLObject, usually specified by a subclass.
 	 */
 	protected final Type type;
 
+	/**
+	 * GL 对象类型枚举。
+	 * GL object type enumeration.
+	 */
 	public static enum Type {
 
 		/**
-		 * Vertex buffers are used to describe geometry data and it's attributes.
+		 * 顶点缓冲，用于描述几何数据及其属性。
+		 * Vertex buffers describe geometry data and its attributes.
 		 */
 		VertexBuffer,
 		/**
-		 * ShaderSource is a shader source code that controls the output of a certain
-		 * rendering pipeline, like vertex position or fragment color.
+		 * 着色器源码，控制渲染管线某一阶段输出（如顶点位置或片元颜色）。
+		 * Shader source code controlling the output of a rendering-pipeline stage (e.g. vertex position or fragment color).
 		 */
 		ShaderSource,
 		/**
-		 * A Shader is an aggregation of ShaderSources, collectively they cooperate to
-		 * control the vertex and fragment processor.
+		 * 着色器，由多个 ShaderSource 聚合，共同控制顶点与片元处理器。
+		 * A shader is an aggregation of ShaderSources that together control the vertex and fragment processors.
 		 */
 		Shader,
 	}
 
+	/**
+	 * 按类型构造，并分配句柄引用。
+	 * Constructs by type and allocates a handle reference.
+	 *
+	 * @param type GL 对象类型 / GL object type
+	 */
 	public GLObject(Type type) {
 		this.type = type;
 		this.handleRef = new Object();
 	}
 
 	/**
-	 * Protected constructor that doesn't allocate handle ref. This is used in
-	 * subclasses for the createDestructableClone().
+	 * 受保护构造：不分配句柄引用，供子类 createDestructableClone() 使用。
+	 * Protected constructor that does not allocate a handle ref; used by subclasses for createDestructableClone().
+	 *
+	 * @param type GL 对象类型 / GL object type
+	 * @param id 已有对象 ID / existing object ID
 	 */
 	protected GLObject(Type type, int id) {
 		this.type = type;
@@ -76,10 +74,10 @@ public abstract class GLObject implements Cloneable {
 	}
 
 	/**
-	 * Sets the ID of the GLObject. This method is used in Renderer and must not be
-	 * called by the user.
+	 * 设置 GL 对象 ID。由渲染器使用，用户代码通常不应调用。
+	 * Sets the ID of the GLObject. Used by the renderer; must not be called by user code in most cases.
 	 *
-	 * @param id The ID to set
+	 * @param id 要设置的 ID / ID to set
 	 */
 	public void setId(int id) {
 		if (this.id != -1) {
@@ -90,23 +88,37 @@ public abstract class GLObject implements Cloneable {
 	}
 
 	/**
-	 * @return The ID of the object. Should not be used by user code in most cases.
+	 * 返回对象 ID。多数情况下用户代码不应依赖此值。
+	 * Returns the object ID. Should not be used by user code in most cases.
+	 *
+	 * object ID
 	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * 标记为需要更新。
+	 * Marks this object as needing an update.
+	 */
 	public void setUpdateNeeded() {
 		updateNeeded = true;
 	}
 
 	/**
-	 *
+	 * 清除“需要更新”标记。
+	 * Clears the update-needed flag.
 	 */
 	public void clearUpdateNeeded() {
 		updateNeeded = false;
 	}
 
+	/**
+	 * 是否需要更新。
+	 * Whether an update is needed.
+	 *
+	 * @return 需要更新则为 true / true if update is needed
+	 */
 	public boolean isUpdateNeeded() {
 		return updateNeeded;
 	}
@@ -117,10 +129,10 @@ public abstract class GLObject implements Cloneable {
 	}
 
 	/**
-	 * This should create a deep clone. For a shallow clone, use
-	 * createDestructableClone().
+	 * 创建深拷贝。浅拷贝请使用 createDestructableClone()。
+	 * Creates a deep clone. For a shallow clone, use createDestructableClone().
 	 *
-	 * @return
+	 * @return 深拷贝实例 / deep clone instance
 	 */
 	@Override
 	protected GLObject clone() {
@@ -143,17 +155,19 @@ public abstract class GLObject implements Cloneable {
 	// return false;
 	//
 	// }
-	// Specialized calls to be used by object manager only.
+	// 仅供对象管理器使用的专用调用。 / Specialized calls to be used by object manager only.
 
 	/**
-	 * Called when the GL context is restarted to reset all IDs. Prevents "white
-	 * textures" on display restart.
+	 * GL 上下文重启时重置所有 ID，避免显示重启后出现“白贴图”等问题。
+	 * Called when the GL context is restarted to reset all IDs. Prevents issues such as "white textures" after a display restart.
 	 */
 	public abstract void resetObject();
 
 	/**
-	 * Creates a shallow clone of this GL Object. The deleteObject method should be
-	 * functional for this object.
+	 * 创建本 GL 对象的浅拷贝；对该拷贝调用 deleteObject 应仍可用。
+	 * Creates a shallow clone of this GL object. The deleteObject method should remain functional for this clone.
+	 *
+	 * @return 可销毁的浅拷贝 / destructable shallow clone
 	 */
 	public abstract GLObject createDestructableClone();
 }

@@ -1,25 +1,14 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.stats;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
+
+/**
+ * NPC 属性模板（静态数据/XML）。
+ * XML template. / XML template.
+ */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "npc_stats_template")
@@ -48,50 +37,62 @@ public class NpcStatsTemplate extends StatsTemplate {
 	@XmlAttribute(name = "maxXp")
 	private long maxXp;
 
+	/** 返回 run speed fight / Returns the run speed fight */
 	public float getRunSpeedFight() {
 		return runSpeedFight;
 	}
 
+	/** 返回 pdef / Returns the pdef */
 	public int getPdef() {
 		return pdef;
 	}
 
+	/** 返回 mdef / Returns the mdef */
 	public int getMdef() {
 		return mdef;
 	}
 
+	/** 返回 mresist / Returns the mresist */
 	public int getMresist() {
 		return mresist;
 	}
 
+	/** 返回 crit / Returns the crit */
 	public float getCrit() {
 		return crit;
 	}
 
+	/** 返回 accuracy / Returns the accuracy */
 	public float getAccuracy() {
 		return accuracy;
 	}
 
+	/** 返回 power / Returns the power */
 	public int getPower() {
 		return power;
 	}
 
+	/** 设置 power / Sets the power */
 	public void setPower(int power) {
 		this.power = power;
 	}
 
+	/** 返回 max xp / Returns the max xp */
 	public long getMaxXp() {
 		return maxXp;
 	}
 
+    /** 设置 pdef / Sets the pdef */
     public void setPdef(int pdef) {
        this.pdef = pdef;
     }
 
+    /** 设置 mdef / Sets the mdef */
     public void setMdef(int mdef) {
        this.mdef = mdef;
     }
 
+    /** 设置 mresist / Sets the mresist */
     public void setMresist(int mresist) {
        this.mresist = mresist;
     }

@@ -1,31 +1,31 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.chatserver.model;
 
 /**
+ * 聊天频道类型枚举。
+ * Chat channel type enumeration.
+ *
  * @author ATracer
  */
 public enum ChannelType {
 
+    /**
+     * 公共区域频道 / Public region channel
+     */
     PUBLIC,
+    /**
+     * 交易频道 / Trade channel
+     */
     TRADE,
+    /**
+     * 组队招募频道 / Looking-for-group channel
+     */
     GROUP,
+    /**
+     * 职业频道 / Job class channel
+     */
     JOB,
-	LANG;
+    /**
+     * 语言频道 / Language channel
+     */
+    LANG;
 }

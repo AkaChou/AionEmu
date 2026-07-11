@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.trialsOfEternity;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -36,10 +20,12 @@ import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Trials Of Eternity 副本 NPC AI：Red Energy Altar（@AIName "Altar_Red"），继承 NpcAI2。
+ * Trials Of Eternity instance NPC AI: Red Energy Altar (@AIName "Altar_Red"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Altar_Red")
 public class Red_Energy_AltarAI2 extends NpcAI2
 {
@@ -82,7 +68,7 @@ public class Red_Energy_AltarAI2 extends NpcAI2
 	
 	protected void handleUseItemFinish(Player player) {
 		if (!player.getInventory().decreaseByItemId(185000299, 1)) {
-			//You need a Red Tome to block the energy from the red altar.
+			// 需要红色典籍阻断红色祭坛的能量。 / You need a Red Tome to block the energy from the red altar.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_junk_ideternity03_zone2_book_01, 0);
 			return;
 		}
@@ -92,9 +78,9 @@ public class Red_Energy_AltarAI2 extends NpcAI2
 				WorldMapInstance worldMapInstance = worldPosition.getWorldMapInstance();
 				killNpc(worldMapInstance.getNpcs(731754)); //Red Altar.
 				killNpc(worldMapInstance.getNpcs(731758)); //Red Energy Altar.
-				//You used a Red Tome.
+				// 你使用了红色典籍。 / You used a Red Tome.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_junk_ideternity03_zone2_book_02, 0);
-				//The red altar was blocked, reducing Unyielding Guardian Shardgolem's energy recovery.
+				// 红色祭坛被封锁，削弱不屈守护者碎石魔像的能量恢复。 / The red altar was blocked, reducing Unyielding Guardian Shardgolem's energy recovery.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_junk_ideternity03_zone2_book_03, 5000);
 			}
 		}

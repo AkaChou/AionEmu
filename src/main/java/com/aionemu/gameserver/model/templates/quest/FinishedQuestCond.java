@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.quest;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
+ * Finished 任务 Cond 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author antness
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -33,10 +20,12 @@ public class FinishedQuestCond {
 	@XmlAttribute(name = "reward")
 	protected int reward;
 
+	/** 返回任务 ID / Returns the quest id */
 	public int getQuestId() {
 		return questId;
 	}
 
+	/** 获取奖励。 / Returns the reward. */
 	public Integer getReward() {
 		return reward;
 	}

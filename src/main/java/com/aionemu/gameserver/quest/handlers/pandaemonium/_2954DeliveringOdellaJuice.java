@@ -8,6 +8,9 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
+ * 潘德莫尼姆任务脚本：Delivering Odella Juice（任务 ID 2954）。
+ * Pandaemonium quest script: Delivering Odella Juice (quest ID 2954).
+ *
  * @author Altaress
  * @reworked vlog
  */

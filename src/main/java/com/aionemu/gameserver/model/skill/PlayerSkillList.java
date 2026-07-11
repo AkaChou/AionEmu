@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.skill;
 
 import java.util.ArrayList;
@@ -35,6 +19,9 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 玩家技能列表，用于技能相关逻辑。
+ * Player Skill List for skill logic.
+ *
  * @author IceReaper, orfeo087, Avol, AEJTester
  */
 public final class PlayerSkillList implements SkillList<Player> {
@@ -67,7 +54,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 	/**
-	 * Returns array with all skills
+	 * @return 返回 array 带全部 skills。 / Returns array with all skills
 	 */
 	public PlayerSkillEntry[] getAllSkills() {
 		List<PlayerSkillEntry> allSkills = new ArrayList<PlayerSkillEntry>();
@@ -77,6 +64,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return allSkills.toArray(new PlayerSkillEntry[allSkills.size()]);
 	}
 
+	/** 返回 all skills 2 / Returns the all skills 2 */
 	public List<Integer> getAllSkills2() {
 		HashSet<Integer> allSkills = new HashSet<Integer>();
 		for (PlayerSkillEntry i : basicSkills.values()) {
@@ -91,22 +79,27 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return Arrays.asList(allSkills.toArray(new Integer[0]));
 	}
 
+	/** 返回基础技能 / Returns the basic skills */
 	public PlayerSkillEntry[] getBasicSkills() {
 		return basicSkills.values().toArray(new PlayerSkillEntry[basicSkills.size()]);
 	}
 
+	/** 返回 stigma skills / Returns the stigma skills */
 	public PlayerSkillEntry[] getStigmaSkills() {
 		return stigmaSkills.values().toArray(new PlayerSkillEntry[stigmaSkills.size()]);
 	}
 
+	/** 返回 linked skills / Returns the linked skills */
 	public PlayerSkillEntry[] getLinkedSkills() {
 		return linkedSkills.values().toArray(new PlayerSkillEntry[linkedSkills.size()]);
 	}
 
+	/** 返回 deleted skills / Returns the deleted skills */
 	public PlayerSkillEntry[] getDeletedSkills() {
 		return deletedSkills.toArray(new PlayerSkillEntry[deletedSkills.size()]);
 	}
 
+	/** 获取技能条目。 / Returns the skill entry. */
 	public PlayerSkillEntry getSkillEntry(int skillId) {
 		if (basicSkills.containsKey(skillId)) {
 			return basicSkills.get(skillId);
@@ -114,15 +107,18 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return stigmaSkills.get(skillId);
 	}
 
+	/** 返回 linked skill entry / Returns the linked skill entry */
 	public PlayerSkillEntry getLinkedSkillEntry(int skillId) {
 		return linkedSkills.get(skillId);
 	}
 
+	/** 添加技能。 / Adds skill. */
 	@Override
 	public boolean addSkill(Player player, int skillId, int skillLevel) {
 		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NEW);
 	}
 
+	/** Addsgm 技能 / Adds gm skill */
 	public boolean addGMSkill(Player player, int skillId, int skillLevel) {
 		return addSkillAct(player, skillId, skillLevel, true, false, PersistentState.NOACTION, true);
 	}
@@ -161,6 +157,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return true;
 	}
 
+	/** 添加关联技能 / Adds linked skill */
 	@Override
 	public boolean addLinkedSkill(Player player, int skillId) {
 		player.setLinkedSkill(skillId);
@@ -170,6 +167,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return addSkill(player, skillId, 1, false, true, PersistentState.NOACTION);
 	}
 
+	/** Adds 烙印之石技能 / Adds stigma skill */
 	public boolean addStigmaSkill(Player player, int skillId, int skillLevel) {
 		return addSkill(player, skillId, skillLevel, true, false, PersistentState.NOACTION);
 	}
@@ -186,6 +184,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NOACTION);
 	}
 
+	/** Addslinkedstigma 技能 / Adds linked stigma skill */
 	public void addLinkedStigmaSkill(Player player, int skillId, int skillLvl) {
 		PlayerSkillEntry skill = new PlayerSkillEntry(skillId, false, true, skillLvl, 0, null, 0, false,
 				PersistentState.NOACTION);
@@ -195,6 +194,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 				new DescriptionId(DataManager.SKILL_DATA.getSkillTemplate(skill.getSkillId()).getNameId()), skillLvl));
 	}
 
+	/** Adds 烙印之石技能 / Adds stigma skill */
 	public void addStigmaSkill(Player player, List<StigmaSkill> skills, boolean equipedByNpc) {
 		for (StigmaSkill sSkill : skills) {
 			PlayerSkillEntry skill = new PlayerSkillEntry(sSkill.getSkillId(), true, false, sSkill.getSkillLvl(), 0,
@@ -206,6 +206,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		}
 	}
 
+	/** Adds 烙印之石技能 / Adds stigma skill */
 	public void addStigmaSkill(Player player, int skillId, int skillLevel, boolean withMsg, boolean equipedByNpc) {
 		PlayerSkillEntry skill = new PlayerSkillEntry(skillId, true, false, skillLevel, 0, null, 0, false,
 				PersistentState.NOACTION);
@@ -254,6 +255,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return true;
 	}
 
+	/** 是否为制作技能。 / Whether craft skill. */
 	public boolean isCraftSkill(int skilId) {
 		switch (skilId) {
 		case 30001:
@@ -325,12 +327,14 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return true;
 	}
 
+	/** 是否技能存在 / Whether skill present*/
 	@Override
 	public boolean isSkillPresent(int skillId) {
 		return basicSkills.containsKey(skillId) || stigmaSkills.containsKey(skillId)
 				|| linkedSkills.containsKey(skillId);
 	}
 
+	/** 获取技能等级。 / Returns the skill level. */
 	@Override
 	public int getSkillLevel(int skillId) {
 		if (basicSkills.containsKey(skillId)) {
@@ -342,6 +346,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return stigmaSkills.get(skillId).getSkillLevel();
 	}
 
+	/** 移除技能。 / Removes skill. */
 	@Override
 	public synchronized boolean removeSkill(int skillId) {
 		PlayerSkillEntry entry = basicSkills.get(skillId);
@@ -359,6 +364,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return entry != null;
 	}
 
+	/** 大小 / size. */
 	@Override
 	public int size() {
 		return basicSkills.size() + stigmaSkills.size();
@@ -398,6 +404,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 		}
 	}
 
+	/** 添加技能（不保存） / Adds skill without save */
 	public boolean addSkillWithoutSave(Player player, int skillId, int skillLevel) {
 		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NOACTION);
 	}

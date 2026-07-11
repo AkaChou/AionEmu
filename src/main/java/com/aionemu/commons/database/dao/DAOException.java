@@ -1,12 +1,12 @@
 package com.aionemu.commons.database.dao;
 
 /**
- * DAO异常基类
+ * DAO 异常基类
  * Base DAO Exception
  *
- * 这个类是所有DAO相关异常的基类，继承自RuntimeException。
+ * 这个类是所有 DAO 相关异常的基类，继承自 RuntimeException。
  * This is the base class for all DAO related exceptions, extending RuntimeException.
- * 它用于封装在DAO操作过程中可能发生的各种异常。
+ * 它用于封装在 DAO 操作过程中可能发生的各种异常。
  * It is used to encapsulate various exceptions that may occur during DAO operations.
  *
  * @author SoulKeeper
@@ -15,7 +15,7 @@ package com.aionemu.commons.database.dao;
 public class DAOException extends RuntimeException {
 
     /**
-     * 序列化版本ID
+ * 序列化版本 ID
      * Serialization version ID
      */
     private static final long serialVersionUID = 7637014806313099318L;
@@ -31,7 +31,7 @@ public class DAOException extends RuntimeException {
      * 使用指定的错误消息构造异常
      * Constructs exception with specified message
      *
-     * @param message 错误消息 / Error message
+     * Error message
      */
     public DAOException(String message) {
         super(message);
@@ -41,7 +41,7 @@ public class DAOException extends RuntimeException {
      * 使用指定的错误消息和原因构造异常
      * Constructs exception with specified message and cause
      *
-     * @param message 错误消息 / Error message
+     * Error message
      * @param cause 异常原因 / Cause of exception
      */
     public DAOException(String message, Throwable cause) {

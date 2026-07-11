@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -31,10 +15,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Transidium Annex 副本 NPC AI：Assult Pod1（@AIName "assult_pod_1"），继承 AggressiveNpcAI2。
+ * Transidium Annex instance NPC AI: Assult Pod1 (@AIName "assult_pod_1"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("assult_pod_1")
 public class AssultPod1AI2 extends AggressiveNpcAI2
 {
@@ -56,7 +42,7 @@ public class AssultPod1AI2 extends AggressiveNpcAI2
 					spawn(297188, 379.51096f, 395.966f, 688.8357f, (byte) 78);
 					spawn(297188, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297188, 397.13196f, 401.5456f, 688.86523f, (byte) 75);
-					//FXMon_Smoke.
+					// FXMon_Smoke. / FXMon_Smoke.
 					spawn(297352, 379.51096f, 395.966f, 688.8357f, (byte) 78);
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);

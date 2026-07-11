@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.team2.group.events;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,6 +11,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 
 /**
+ * 玩家 Disconnected 活动，用于团队2相关逻辑。
+ * Player Disconnected Event for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerDisconnectedEvent implements Predicate<Player>, TeamEvent {
@@ -47,6 +34,7 @@ public class PlayerDisconnectedEvent implements Predicate<Player>, TeamEvent {
 		return group.hasMember(player.getObjectId());
 	}
 
+	/** 处理活动。 / Handle event. */
 	@Override
 	public void handleEvent() {
 		if (group.onlineMembers() <= 1) {
@@ -59,12 +47,13 @@ public class PlayerDisconnectedEvent implements Predicate<Player>, TeamEvent {
 		}
 	}
 
+	/** 应用。 / Apply. */
 	@Override
 	public boolean apply(Player member) {
 		if (!member.equals(player)) {
 			PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_PARTY_HE_BECOME_OFFLINE(player.getName()));
 			PacketSendUtility.sendPacket(member, new SM_GROUP_MEMBER_INFO(group, player, GroupEvent.DISCONNECTED));
-			// disconnect other group members on logout? check
+			// 登出时是否断开其他队员？检查 / disconnect other group members on logout? check
 			PacketSendUtility.sendPacket(player, new SM_GROUP_MEMBER_INFO(group, member, GroupEvent.DISCONNECTED));
 		}
 		return true;

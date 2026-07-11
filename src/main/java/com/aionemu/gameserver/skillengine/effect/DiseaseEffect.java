@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,23 +9,44 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 疾病效果：标记 DISEASE 异常，阻止 HP 治疗生效。
+ * Disease effect: marks DISEASE abnormal, blocking HP heal effectiveness.
+ *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DiseaseEffect")
 public class DiseaseEffect extends EffectTemplate {
 
+	/**
+	 * 按疾病抗性计算是否命中。
+	 * Calculates hit using disease resistance.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		super.calculate(effect, StatEnum.DISEASE_RESISTANCE, null);
 	}
 
 	// skillId 18386
+	/**
+	 * 将效果加入受影响者的效果控制器。
+	 * Adds the effect to the effected creature's effect controller.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 设置疾病异常。
+	 * Sets the disease abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void startEffect(Effect effect) {
 		Creature effected = effect.getEffected();
@@ -49,6 +54,12 @@ public class DiseaseEffect extends EffectTemplate {
 		effected.getEffectController().setAbnormal(AbnormalState.DISEASE.getId());
 	}
 
+	/**
+	 * 清除疾病异常。
+	 * Clears the disease abnormal.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		if (effect.getEffected().getEffectController().isAbnormalSet(AbnormalState.DISEASE)) {

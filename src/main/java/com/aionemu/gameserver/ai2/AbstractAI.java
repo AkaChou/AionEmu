@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 import java.util.concurrent.locks.Lock;
@@ -47,6 +31,9 @@ import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.base.Preconditions;
 
 /**
+ * AI2 抽象基类：管理状态、事件分发、思考锁、场景与通用钩子。
+ * Abstract AI2 base: manages state, event dispatch, think lock, scenario and common hooks.
+ *
  * @author ATracer
  */
 public abstract class AbstractAI implements AI2 {
@@ -61,46 +48,104 @@ public abstract class AbstractAI implements AI2 {
 	private volatile AIEventLog eventLog;
 	private AI2Scenario scenario;
 
+	/**
+	 * 构造 AI，初始化为 CREATED/NONE 并清空场景。
+	 * Constructs the AI, initializing CREATED/NONE state and clearing scenario.
+	 */
 	AbstractAI() {
 		this.currentState = AIState.CREATED;
 		this.currentSubState = AISubState.NONE;
 		clearScenario();
 	}
 
+	/**
+	 * 获取当前 AI 场景。
+	 * Returns the current AI scenario.
+	 *
+	 * scenario
+	 */
 	public AI2Scenario getScenario() {
 		return scenario;
 	}
 
+	/**
+	 * 设置 AI 场景。
+	 * Sets the AI scenario.
+	 *
+	 * scenario
+	 */
 	public void setScenario(AI2Scenario scenario) {
 		this.scenario = scenario;
 	}
 
+	/**
+	 * 清空场景为无场景。
+	 * Clears the scenario to no-scenario.
+	 */
 	public void clearScenario() {
 		this.scenario = AI2Scenarios.NO_SCENARIO;
 	}
 
+	/**
+	 * 获取事件日志（调试用）。
+	 * Returns the event log (for debugging).
+	 *
+	 * event log
+	 */
 	public AIEventLog getEventLog() {
 		return eventLog;
 	}
 
+	/**
+	 * 获取当前主状态。
+	 * Returns the current main state.
+	 *
+	 * main state
+	 */
 	@Override
 	public AIState getState() {
 		return currentState;
 	}
 
+	/**
+	 * 判断是否处于指定主状态。
+	 * Returns whether the AI is in the given main state.
+	 *
+	 * @param state 目标状态 / target state
+	 * whether matching
+	 */
 	public final boolean isInState(AIState state) {
 		return currentState == state;
 	}
 
+	/**
+	 * 获取当前子状态。
+	 * Returns the current sub-state.
+	 *
+	 * sub-state
+	 */
 	@Override
 	public AISubState getSubState() {
 		return currentSubState;
 	}
 
+	/**
+	 * 判断是否处于指定子状态。
+	 * Returns whether the AI is in the given sub-state.
+	 *
+	 * @param subState 目标子状态 / target sub-state
+	 * whether matching
+	 */
 	public final boolean isInSubState(AISubState subState) {
 		return currentSubState == subState;
 	}
 
+	/**
+	 * 获取 AI 名称（来自 {@link AIName}，否则 "noname"）。
+	 * Returns the AI name from {@link AIName}, or "noname".
+	 *
+	 * AI name
+	 */
 	@Override
 	public String getName() {
 		if (getClass().isAnnotationPresent(AIName.class)) {
@@ -110,14 +155,34 @@ public abstract class AbstractAI implements AI2 {
 		return "noname";
 	}
 
+	/**
+	 * 获取当前技能 ID。
+	 * Returns the current skill id.
+	 *
+	 * skill id
+	 */
 	public int getSkillId() {
 		return skillId;
 	}
 
+	/**
+	 * 获取当前技能等级。
+	 * Returns the current skill level.
+	 *
+	 * skill level
+	 */
 	public int getSkillLevel() {
 		return skillLevel;
 	}
 
+	/**
+	 * 判断当前状态是否允许处理该事件。
+	 * Returns whether the current state allows handling the given event.
+	 *
+	 * event type
+	 *
+	 * @param eventType @return 是否可处理 / whether handleable
+	 */
 	protected boolean canHandleEvent(AIEventType eventType) {
 		switch (this.currentState) {
 		case DESPAWNED:
@@ -141,10 +206,24 @@ public abstract class AbstractAI implements AI2 {
 		return true;
 	}
 
+	/**
+	 * 判断是否处于非战斗状态（WALKING 或 IDLE）。
+	 * Returns whether the AI is in a non-fighting state (WALKING or IDLE).
+	 *
+	 * @return 是否非战斗 / whether non-fighting
+	 */
 	public boolean isNonFightingState() {
 		return currentState == AIState.WALKING || currentState == AIState.IDLE;
 	}
 
+	/**
+	 * 若状态不同则切换主状态。
+	 * Changes the main state if it differs from the current one.
+	 *
+	 * new state
+	 *
+	 * @param newState @return 是否发生切换 / whether the state changed
+	 */
 	public synchronized boolean setStateIfNot(AIState newState) {
 		if (this.currentState == newState) {
 			if (this.isLogging()) {
@@ -165,6 +244,14 @@ public abstract class AbstractAI implements AI2 {
 		return true;
 	}
 
+	/**
+	 * 若子状态不同则切换子状态。
+	 * Changes the sub-state if it differs from the current one.
+	 *
+	 * new sub-state
+	 *
+	 * @param newSubState @return 是否发生切换 / whether the sub-state changed
+	 */
 	public synchronized boolean setSubStateIfNot(AISubState newSubState) {
 		if (this.currentSubState == newSubState) {
 			if (this.isLogging()) {
@@ -179,6 +266,12 @@ public abstract class AbstractAI implements AI2 {
 		return true;
 	}
 
+	/**
+	 * 接收通用事件并在允许时分发处理。
+	 * Receives a general event and dispatches it when allowed.
+	 *
+	 * @param event 事件类型 / event type
+	 */
 	@Override
 	public void onGeneralEvent(AIEventType event) {
 		if (canHandleEvent(event)) {
@@ -189,6 +282,13 @@ public abstract class AbstractAI implements AI2 {
 		}
 	}
 
+	/**
+	 * 接收生物相关事件并在允许时分发处理。
+	 * Receives a creature event and dispatches it when allowed.
+	 *
+	 * @param event 事件类型 / event type
+	 * related creature
+	 */
 	@Override
 	public void onCreatureEvent(AIEventType event, Creature creature) {
 		Preconditions.checkNotNull(creature, "Creature must not be null");
@@ -200,6 +300,13 @@ public abstract class AbstractAI implements AI2 {
 		}
 	}
 
+	/**
+	 * 接收自定义事件并分发处理。
+	 * Receives a custom event and dispatches it.
+	 *
+	 * event id
+	 * arguments
+	 */
 	@Override
 	public void onCustomEvent(int eventId, Object... args) {
 		if (this.isLogging()) {
@@ -209,111 +316,208 @@ public abstract class AbstractAI implements AI2 {
 	}
 
 	/**
-	 * Will be hidden for all AI's below NpcAI2
-	 * 
-	 * @return
+	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
+	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
+	 *
+	 * owner
 	 */
 	public Creature getOwner() {
 		return owner;
 	}
 
+	/**
+	 * 获取所有者对象 ID。
+	 * Returns the owner's object id.
+	 *
+	 * object id
+	 */
 	public int getObjectId() {
 		return owner.getObjectId();
 	}
 
+	/**
+	 * 获取世界坐标。
+	 * Returns the world position.
+	 *
+	 * world position
+	 */
 	public WorldPosition getPosition() {
 		return owner.getPosition();
 	}
 
+	/**
+	 * 获取当前目标。
+	 * Returns the current target.
+	 *
+	 * target object
+	 */
 	public VisibleObject getTarget() {
 		return owner.getTarget();
 	}
 
+	/**
+	 * 判断所有者是否已死亡。
+	 * Returns whether the owner is already dead.
+	 *
+	 * @return 是否已死亡 / whether already dead
+	 */
 	public boolean isAlreadyDead() {
 		return owner.getLifeStats().isAlreadyDead();
 	}
 
+	/**
+	 * 绑定所有者生物。
+	 * Binds the owner creature.
+	 *
+	 * owner
+	 */
 	void setOwner(Creature owner) {
 		this.owner = owner;
 	}
 
+	/**
+	 * 尝试获取思考锁（非阻塞）。
+	 * Tries to acquire the think lock (non-blocking).
+	 *
+	 * @return 是否获取成功 / whether acquired
+	 */
 	public final boolean tryLockThink() {
 		return thinkLock.tryLock();
 	}
 
+	/**
+	 * 释放思考锁。
+	 * Releases the think lock.
+	 */
 	public final void unlockThink() {
 		thinkLock.unlock();
 	}
 
+	/**
+	 * 是否开启调试日志。
+	 * Returns whether debug logging is enabled.
+	 *
+	 * whether logging
+	 */
 	@Override
 	public final boolean isLogging() {
 		return logging;
 	}
 
+	/**
+	 * 设置调试日志开关。
+	 * Sets the debug logging flag.
+	 *
+	 * whether enable
+	 */
 	public void setLogging(boolean logging) {
 		this.logging = logging;
 	}
 
+	/** 处理激活 / Handle activate */
 	protected abstract void handleActivate();
 
+	/** 处理停用 / Handle deactivate */
 	protected abstract void handleDeactivate();
 
+	/** 处理刷新完成 / Handle spawned */
 	protected abstract void handleSpawned();
 
+	/** 处理重生 / Handle respawned */
 	protected abstract void handleRespawned();
 
+	/** 处理消失 / Handle despawned */
 	protected abstract void handleDespawned();
 
+	/** 处理死亡 / Handle died */
 	protected abstract void handleDied();
 
+	/** 处理移动校验 / Handle move validate */
 	protected abstract void handleMoveValidate();
 
+	/** 处理到达路径点 / Handle move arrived */
 	protected abstract void handleMoveArrived();
 
+	/** 处理攻击完成 / Handle attack complete */
 	protected abstract void handleAttackComplete();
 
+	/** 处理结束攻击 / Handle finish attack */
 	protected abstract void handleFinishAttack();
 
+	/** 处理到达目标 / Handle target reached */
 	protected abstract void handleTargetReached();
 
+	/** 处理目标过远 / Handle target too far */
 	protected abstract void handleTargetTooFar();
 
+	/** 处理放弃目标 / Handle target giveup */
 	protected abstract void handleTargetGiveup();
 
+	/** 处理不在出生点 / Handle not at home */
 	protected abstract void handleNotAtHome();
 
+	/** 处理返回出生点 / Handle back home */
 	protected abstract void handleBackHome();
 
+	/** 处理掉落注册完成 / Handle drop registered */
 	protected abstract void handleDropRegistered();
 
+	/** 处理被攻击 / Handle attack */
 	protected abstract void handleAttack(Creature creature);
 
+	/** 处理生物需要支援 / Handle creature needs support */
 	protected abstract boolean handleCreatureNeedsSupport(Creature creature);
 
+	/** 处理守卫反击攻击者 / Handle guard against attacker */
 	protected abstract boolean handleGuardAgainstAttacker(Creature creature);
 
+	/** 处理看见生物 / Handle creature see */
 	protected abstract void handleCreatureSee(Creature creature);
 
+	/** 处理看不见生物 / Handle creature not see */
 	protected abstract void handleCreatureNotSee(Creature creature);
 
+	/** 处理生物移动 / Handle creature moved */
 	protected abstract void handleCreatureMoved(Creature creature);
 
+	/** 处理生物仇恨 / Handle creature aggro */
 	protected abstract void handleCreatureAggro(Creature creature);
 
+	/** 处理目标变更 / Handle target changed */
 	protected abstract void handleTargetChanged(Creature creature);
 
+	/** 处理开始跟随 / Handle follow me */
 	protected abstract void handleFollowMe(Creature creature);
 
+	/** 处理停止跟随 / Handle stop follow me */
 	protected abstract void handleStopFollowMe(Creature creature);
 
+	/** 处理对话开始 / Handle dialog start */
 	protected abstract void handleDialogStart(Player player);
 
+	/** 处理对话结束 / Handle dialog finish */
 	protected abstract void handleDialogFinish(Player player);
 
+	/** 处理自定义事件 / Handle custom event */
 	protected abstract void handleCustomEvent(int eventId, Object... args);
 
+	/**
+	 * 处理模式喊话。
+	 * Handles a pattern shout.
+	 *
+	 * @param event 喊话事件 / shout event
+	 * pattern
+	 * skill number
+	 * whether handled
+	 */
 	public abstract boolean onPatternShout(ShoutEventType event, String pattern, int skillNumber);
 
+	/**
+	 * 分发通用事件到具体处理器（带回调注解）。
+	 * Dispatches a general event to the concrete handler (with callback annotation).
+	 *
+	 * @param event 事件类型 / event type
+	 */
 	@ObjectCallback(OnHandleAIGeneralEvent.class)
 	protected void handleGeneralEvent(AIEventType event) {
 		if (this.isLogging()) {
@@ -381,7 +585,10 @@ public abstract class AbstractAI implements AI2 {
 	}
 
 	/**
-	 * @param event
+	 * 在开启 EVENT_DEBUG 时记录事件。
+	 * Logs the event when EVENT_DEBUG is enabled.
+	 *
+	 * @param event 事件类型 / event type
 	 */
 	protected void logEvent(AIEventType event) {
 		if (AIConfig.EVENT_DEBUG) {
@@ -396,6 +603,13 @@ public abstract class AbstractAI implements AI2 {
 		}
 	}
 
+	/**
+	 * 分发生物相关事件到具体处理器。
+	 * Dispatches a creature event to the concrete handler.
+	 *
+	 * @param event 事件类型 / event type
+	 * related creature
+	 */
 	void handleCreatureEvent(AIEventType event, Creature creature) {
 		switch (event) {
 		case ATTACK:
@@ -453,6 +667,13 @@ public abstract class AbstractAI implements AI2 {
 		}
 	}
 
+	/**
+	 * 投票式查询：先问实例，再处理通用问题。
+	 * Polls a question: instance first, then common questions.
+	 *
+	 * AI question
+	 * whether positive
+	 */
 	@Override
 	public boolean poll(AIQuestion question) {
 		AIAnswer instanceAnswer = pollInstance(question);
@@ -473,21 +694,34 @@ public abstract class AbstractAI implements AI2 {
 	}
 
 	/**
-	 * Poll concrete AI instance for the answer.
-	 * 
-	 * @param question
-	 * @return null if there is no specific answer
+	 * 向具体 AI 实例投票；无特有答案时返回 null。
+	 * Polls the concrete AI instance; returns null when no specific answer.
+	 *
+	 * AI question
+	 * answer or null
 	 */
 	protected AIAnswer pollInstance(AIQuestion question) {
 		return null;
 	}
 
+	/**
+	 * 询问问题，默认否定。
+	 * Asks a question; defaults to negative.
+	 *
+	 * AI question
+	 * AI answer
+	 */
 	@Override
 	public AIAnswer ask(AIQuestion question) {
 		return AIAnswers.NEGATIVE;
 	}
 
-	// TODO move to NPC ai
+	/**
+	 * 按当前状态判断是否已到达目的地。
+	 * Returns whether the destination is reached based on current state.
+	 *
+	 * whether reached
+	 */
 	protected boolean isDestinationReached() {
 		AIState state = currentState;
 		switch (state) {
@@ -509,38 +743,99 @@ public abstract class AbstractAI implements AI2 {
 		return true;
 	}
 
+	/**
+	 * 昼夜切换时是否允许刷新（仅 DESPAWNED/CREATED）。
+	 * Returns whether spawn on daytime change is allowed (only DESPAWNED/CREATED).
+	 *
+	 * whether allowed
+	 */
 	protected boolean isCanSpawnOnDaytimeChange() {
 		return currentState == AIState.DESPAWNED || currentState == AIState.CREATED;
 	}
 
+	/**
+	 * 是否允许喊话。
+	 * Returns whether shouting is allowed.
+	 *
+	 * @return 是否可喊话 / whether may shout
+	 */
 	public abstract boolean isMayShout();
 
+	/**
+	 * 选择攻击意图。
+	 * Chooses the next attack intention.
+	 *
+	 * attack intention
+	 */
 	public abstract AttackIntention chooseAttackIntention();
 
+	/**
+	 * 处理对话框选择，默认不处理。
+	 * Handles dialog select; not handled by default.
+	 *
+	 * always false
+	 */
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		return false;
 	}
 
+	/**
+	 * 获取剩余时间，默认 0。
+	 * Returns remaining time; 0 by default.
+	 *
+	 * remaining time
+	 */
 	@Override
 	public long getRemainigTime() {
 		return 0;
 	}
 
 	/**
-	 * Spawn object in the same world and instance as AI's owner
+	 * 在与所有者相同世界/实例中刷新对象。
+	 * Spawns an object in the same world/instance as the AI owner.
+	 *
+	 * NPC id
+	 * @param x X 坐标 / x
+	 * @param y Y 坐标 / y
+	 * @param z Z 坐标 / z
+	 * 朝向 / heading
+	 * spawned object
 	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading) {
 		return spawn(owner.getWorldId(), npcId, x, y, z, heading, 0, getPosition().getInstanceId());
 	}
 
 	/**
-	 * Spawn object with entityId in the same world and instance as AI's owner
+	 * 在与所有者相同世界/实例中刷新带 entityId 的对象。
+	 * Spawns an object with entityId in the same world/instance as the AI owner.
+	 *
+	 * NPC id
+	 * @param x X 坐标 / x
+	 * @param y Y 坐标 / y
+	 * @param z Z 坐标 / z
+	 * 朝向 / heading
+	 * entity id
+	 * spawned object
 	 */
 	protected VisibleObject spawn(int npcId, float x, float y, float z, byte heading, int entityId) {
 		return spawn(owner.getWorldId(), npcId, x, y, z, heading, entityId, getPosition().getInstanceId());
 	}
 
+	/**
+	 * 按完整参数刷新对象。
+	 * Spawns an object with full parameters.
+	 *
+	 * 世界 ID / world id
+	 * NPC id
+	 * @param x X 坐标 / x
+	 * @param y Y 坐标 / y
+	 * @param z Z 坐标 / z
+	 * 朝向 / heading
+	 * entity id
+	 * instance id
+	 * spawned object
+	 */
 	protected VisibleObject spawn(int worldId, int npcId, float x, float y, float z, byte heading, int entityId,
 			int instanceId) {
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
@@ -548,35 +843,63 @@ public abstract class AbstractAI implements AI2 {
 		return SpawnEngine.spawnObject(template, instanceId);
 	}
 
+	/**
+	 * 修改对自身伤害，默认原样返回。
+	 * Modifies incoming damage; returns original by default.
+	 */
 	@Override
 	public int modifyDamage(int damage) {
 		return damage;
 	}
 
+	/**
+	 * 修改所有者造成的伤害，默认原样返回。
+	 * Modifies owner damage; returns original by default.
+	 */
 	@Override
 	public int modifyOwnerDamage(int damage) {
 		return damage;
 	}
 
+	/**
+	 * 处理其他 NPC 的个体事件，默认空实现。
+	 * Handles individual NPC event; empty by default.
+	 */
 	@Override
 	public void onIndividualNpcEvent(Creature npc) {
 	}
 
+	/**
+	 * 修改治疗值，默认原样返回。
+	 * Modifies heal value; returns original by default.
+	 */
 	@Override
 	public int modifyHealValue(int value) {
 		return value;
 	}
 
+	/**
+	 * 修改命中/精准值，默认原样返回。
+	 * Modifies maccuracy value; returns original by default.
+	 */
 	@Override
 	public int modifyMaccuracy(int value) {
 		return value;
 	}
 
+	/**
+	 * 修改感知范围，默认原样返回。
+	 * Modifies sensory range; returns original by default.
+	 */
 	@Override
 	public int modifySensoryRange(int value) {
 		return value;
 	}
 
+	/**
+	 * 修改攻击类型，默认原样返回。
+	 * Modifies attack type; returns original by default.
+	 */
 	@Override
 	public ItemAttackType modifyAttackType(ItemAttackType type) {
 		return type;

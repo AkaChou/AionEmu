@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -42,24 +26,43 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 帕德玛拉什卡洞穴副本事件处理器。
+ * Instance event handler for Padmarashka Cave.
+ *
+ * @author Encom
+ */
 
 @InstanceID(320150000)
 public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 {
-	private int dramataEgg55;
-	private int dramataFi55Ae;
-	private Future<?> dramataTask;
+	/** dramata egg55 / dramata egg55 */
+		private int dramataEgg55;
+	/** dramata fi55ae / dramata fi55ae */
+		private int dramataFi55Ae;
+	/** dramata 任务 / dramata task */
+		private Future<?> dramataTask;
+	/** 已播放动画集合 / played-movie set */
 	private List<Integer> movies = new ArrayList<Integer>();
 	
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
-		//You must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber.
+		// 须在时限内击败守护者以唤醒处于防护沉眠的帕德玛拉什卡。 / You must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber.
 		sendMsgByRace(1400711, Race.PC_ALL, 10000);
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
@@ -70,6 +73,12 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		});
     }
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -80,6 +89,12 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -89,7 +104,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			case 218756: //Padmarashka.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
 				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057935, 1)); //Padmarashka's Raging Weapon Box.
@@ -146,16 +161,28 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
         }
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 218756: //Padmarashka.
 			    dramataTask.cancel(true);
-				//Padmarashka has died. You will be removed from Padmarashka's Cave in 30 minutes.
+				// 帕德玛拉什卡已死亡。30 分钟后将离开其洞穴。 / Padmarashka has died. You will be removed from Padmarashka's Cave in 30 minutes.
 				sendMsgByRace(1400675, Race.PC_ALL, 10000);
-				//sendMsg("[SUCCES]: You have finished <Padmarashka Cave>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Padmarashka Cave>");
 				instance.doOnAllPlayers(new Visitor<Player>() {
+			        /**
+			         * 处理 visit。
+			         * Handle visit.
+			         *
+			         * @param player 玩家 / player
+			         */
 			        @Override
 			        public void visit(Player player) {
 				        if (player.isOnline()) {
@@ -168,10 +195,10 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			case 282614: //Huge Padmarashka's Eggs.
 			    dramataEgg55++;
 				if (dramataEgg55 == 2) {
-					//Padmarashka is about to lay eggs.
+					// 帕德玛拉什卡即将产卵。 / Padmarashka is about to lay eggs.
 					sendMsgByRace(1400526, Race.PC_ALL, 0);
 				} else if (dramataEgg55 == 5) {
-					//Padmarashka is furious after seeing so many of her eggs destroyed.
+					// 帕德玛拉什卡因大量卵被毁而暴怒。 / Padmarashka is furious after seeing so many of her eggs destroyed.
 					sendMsgByRace(1401213, Race.PC_ALL, 0);
 				}
 			break;
@@ -187,7 +214,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 					} else if (dramataFi55Ae == 3) {
 					} else if (dramataFi55Ae == 4) {
 						deleteNpc(282123); //Dramata Shield.
-						//Padmarashka has awoken from the Protective Slumber.
+						// 帕德玛拉什卡已从防护沉眠中苏醒。 / Padmarashka has awoken from the Protective Slumber.
 						sendMsgByRace(1400728, Race.PC_ALL, 10000);
 						dramata55Al.getEffectController().removeEffect(19186); //Protective Slumber.
 					}
@@ -197,30 +224,34 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
     }
 	
 	private void startPadmarashkaTimer() {
-        //Padmarashka has cast defensive magic. You will be removed from Padmarashka's Cave in 2 hours.
+        // 帕德玛拉什卡施放防御魔法。2 小时后将离开其洞穴。 / Padmarashka has cast defensive magic. You will be removed from Padmarashka's Cave in 2 hours.
 		sendMsg(1400506);
-		//You will be removed from Padmarashka's Cave in 1 hour and 30 minutes.
+		// 你将在 1 小时 30 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 1 hour and 30 minutes.
         this.sendMessage(1400507, 30 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 1 hour.
+		// 你将在 1 小时后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 1 hour.
 		this.sendMessage(1400508, 60 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 30 minutes.
+		// 你将在 30 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 30 minutes.
 		this.sendMessage(1400509, 90 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 15 minutes.
+		// 你将在 15 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 15 minutes.
 		this.sendMessage(1400510, 105 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 10 minutes.
+		// 你将在 10 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 10 minutes.
 		this.sendMessage(1400511, 110 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 5 minutes.
+		// 你将在 5 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 5 minutes.
 		this.sendMessage(1400512, 115 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 3 minutes.
+		// 你将在 3 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 3 minutes.
 		this.sendMessage(1400513, 117 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 2 minutes.
+		// 你将在 2 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 2 minutes.
 		this.sendMessage(1400514, 118 * 60 * 1000);
-		//You will be removed from Padmarashka's Cave in 1 minute.
+		// 你将在 1 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 1 minute.
 		this.sendMessage(1400515, 119 * 60 * 1000);
         dramataTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
-				//You have been forcibly removed from Padmarashka's Cave by Padmarashka's defensive magic.
+				// 你被帕德玛拉什卡的防御魔法强制移出洞穴。 / You have been forcibly removed from Padmarashka's Cave by Padmarashka's defensive magic.
 				sendMsgByRace(1400524, Race.PC_ALL, 0);
 				deleteNpc(218756); //Padmarashka.
             }
@@ -235,6 +266,12 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -247,18 +284,40 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
             this.sendMsg(msgId);
         } else {
             GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+                /**
+                 * 处理 run。
+                 * Handle run.
+                 */
                 public void run() {
                     sendMsg(msgId);
                 }
             }, delay);
         }
     }
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -277,6 +336,13 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
         }
     }
 	
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * 玩家 / player
+	 * zone
+	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
         if (zone.getAreaTemplate().getZoneName() == ZoneName.get("PADMARASHKAS_NEST_320150000")) {
@@ -284,6 +350,10 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	    }
     }
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
     public void onInstanceDestroy() {
 		movies.clear();

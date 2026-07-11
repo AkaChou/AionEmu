@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
 import java.util.List;
@@ -27,26 +11,34 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 
+/**
+ * XML 驱动任务操作集合，顺序执行全部子操作并返回是否覆盖默认处理。
+ * Set of XML-driven quest operations; runs children in order and returns whether to override default handling.
+ *
+ * @author Mr. Poke
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "QuestOperations", propOrder = { "operations" })
 public class QuestOperations {
 
+	/** 多态操作列表 / Polymorphic operation list */
 	@XmlElements({ @XmlElement(name = "take_item", type = TakeItemOperation.class),
 			@XmlElement(name = "npc_dialog", type = NpcDialogOperation.class),
 			@XmlElement(name = "set_quest_status", type = SetQuestStatusOperation.class),
 			@XmlElement(name = "give_item", type = GiveItemOperation.class),
-			@XmlElement(name = "start_quest", type = StartQuestOperation.class),
 			@XmlElement(name = "npc_use", type = ActionItemUseOperation.class),
 			@XmlElement(name = "set_quest_var", type = SetQuestVarOperation.class),
 			@XmlElement(name = "collect_items", type = CollectItemQuestOperation.class) })
 	protected List<QuestOperation> operations;
+	/** 是否 to override default handling; null means true / Whether to override default handling; null means true */
 	@XmlAttribute
 	protected Boolean override;
 
 	/**
-	 * Gets the value of the override property.
-	 * 
-	 * @return possible object is {@link Boolean }
+	 * 返回是否覆盖默认处理（未配置时默认 true）。
+	 * Returns whether default handling is overridden (defaults to true when unset).
+	 *
+	 * Whether override is enabled
 	 */
 	public boolean isOverride() {
 		if (override == null) {
@@ -56,6 +48,13 @@ public class QuestOperations {
 		}
 	}
 
+	/**
+	 * 顺序执行全部子操作，并返回覆盖标志。
+	 * Runs all child operations in order and returns the override flag.
+	 *
+	 * @param env 任务环境 / Quest environment
+	 * @return 是否覆盖默认处理 / Whether to override default handling
+	 */
 	public boolean operate(QuestEnv env) {
 		if (operations != null) {
 			for (QuestOperation oper : operations) {

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -29,10 +13,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 快递/投递 NPC AI：由创建者派发并在超时后清理。
+ * Delivery NPC AI spawned for a creator and cleaned up on timeout.
+ *
+ * @author Encom
+ */
 @AIName("deliveryman")
 public class DeliveryManAI2 extends FollowingNpcAI2
 {
@@ -41,6 +27,10 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	private static int SERVICE_TIME = 10 * 60 * 1000;
 	private static int SPAWN_ACTION_DELAY = 1000;
 	
+	/**
+	 * 处理生成完成事件。
+	 * Handle post-spawn.
+	 */
 	@Override
 	protected void handleSpawned() {
 		GameThreadPoolServices.threadPoolManager().schedule(new DeleteDeliveryMan(), SERVICE_TIME);
@@ -48,12 +38,22 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 		super.handleSpawned();
 	}
 	
+	/**
+	 * 处理消失事件。
+	 * Handle despawn.
+	 */
 	@Override
 	protected void handleDespawned() {
 		sendMsg(390267, getObjectId(), false, 0);
 		super.handleDespawned();
 	}
 	
+	/**
+	 * 玩家开始与本 NPC 对话/交互。
+	 * Player starts dialog/interaction with this NPC.
+	 *
+	 * 玩家 / player
+	 */
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.equals(owner)) {
@@ -62,6 +62,12 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 		}
 	}
 	
+	/**
+	 * 处理生物移动事件。
+	 * Handle creature-moved.
+	 *
+	 * creature
+	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		if (creature == owner) {
@@ -69,6 +75,13 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 		}
 	}
 	
+	/**
+	 * 处理自定义事件。
+	 * Handle custom event.
+	 *
+	 * event id
+	 * @param args 附加参数 / extra args
+	 */
 	@Override
 	protected void handleCustomEvent(int eventId, Object... args) {
 		if (eventId == EVENT_SET_CREATOR) {

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -27,15 +11,30 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.math.NumberUtils;
 
+/**
+ * 贝里特拉入侵启停管理命令（{@code //beritra}）。
+ * Admin command to start or stop Beritra invasions ({@code //beritra}).
+ */
 public class Beritra extends AdminCommand
 {
 	private static final String COMMAND_START = "start";
 	private static final String COMMAND_STOP = "stop";
-	
+
+	/**
+	 * 注册命令名为 {@code beritra}。
+	 * Registers the command name {@code beritra}.
+	 */
 	public Beritra() {
 		super("beritra");
 	}
-	
+
+	/**
+	 * 执行贝里特拉入侵启停。
+	 * Executes Beritra invasion start/stop.
+	 *
+	 * admin
+	 * @param params 参数：start|stop 与地点 ID / start|stop and location id
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length == 0) {
@@ -45,7 +44,14 @@ public class Beritra extends AdminCommand
 			handleStartStopInvasion(player, params);
 		}
 	}
-	
+
+	/**
+	 * 处理指定地点的入侵开始或停止。
+	 * Handles starting or stopping invasion at a location.
+	 *
+	 * admin
+	 * parameters
+	 */
 	protected void handleStartStopInvasion(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
 			showHelp(player);
@@ -65,14 +71,23 @@ public class Beritra extends AdminCommand
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
 			if (!GameLocationBootstrapServices.beritraService().isInvasionInProgress(beritraId)) {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " is not start!");
-				
+
 			} else {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " stopped!");
 				GameLocationBootstrapServices.beritraService().stopBeritraInvasion(beritraId);
 			}
 		}
 	}
-	
+
+	/**
+	 * 校验贝里特拉地点 ID 是否有效。
+	 * Validates whether the Beritra location id is valid.
+	 *
+	 * admin
+	 * location id
+	 *
+	 * @return 若 valid 则为 true / true if valid
+	 */
 	protected boolean isValidBeritraLocationId(Player player, int beritraId) {
 		if (!GameLocationBootstrapServices.beritraService().getBeritraLocations().keySet().contains(beritraId)) {
 			PacketSendUtility.sendMessage(player, "Id " + beritraId + " is invalid");
@@ -80,7 +95,13 @@ public class Beritra extends AdminCommand
 		}
 		return true;
 	}
-	
+
+	/**
+	 * 显示命令用法帮助。
+	 * Shows command usage help.
+	 *
+	 * admin
+	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //beritra start|stop <Id>");
 	}

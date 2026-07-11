@@ -1,15 +1,3 @@
-/*
- * =====================================================================================*
- * This file is part of Aion-Unique (Aion-Unique Home Software Development)             *
- * Aion-Unique Development is a closed Aion Project that use Old Aion Project Base      *
- * Like Aion-Lightning, Aion-Engine, Aion-Core, Aion-Extreme, Aion-NextGen, ArchSoft,   *
- * Aion-Ger, U3J, Encom And other Aion project, All Credit Content                      *
- * That they make is belong to them/Copyright is belong to them. And All new Content    *
- * that Aion-Unique make the copyright is belong to Aion-Unique                         *
- * You may have agreement with Aion-Unique Development, before use this Engine/Source   *
- * You have agree with all of Term of Services agreement with Aion-Unique Development   *
- * =====================================================================================*
- */
 package com.aionemu.gameserver.quest.handlers.nightmare_circus;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,10 +8,12 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
-/****/
-/** Author Ghostfur & Unknown (Aion-Unique)
-/****/
-
+/**
+ * 梦魇马戏团任务脚本：A Hallowed Eve（任务 ID 80341）。
+ * Nightmare Circus quest script: A Hallowed Eve (quest ID 80341).
+ *
+ * @author Ghostfur & Unknown (Aion-Unique)
+ */
 public class _80341A_Hallowed_Eve extends QuestHandler
 {
     private final static int questId = 80341;
@@ -34,7 +24,7 @@ public class _80341A_Hallowed_Eve extends QuestHandler
 	
 	@Override
 	public void register() {
-		//Otherworldly Pucas.
+		// 异界普卡斯。 / Otherworldly Pucas.
 		qe.registerQuestNpc(831541).addOnQuestStart(questId);
 		qe.registerQuestNpc(831542).addOnQuestStart(questId);
 		qe.registerQuestNpc(831543).addOnQuestStart(questId);
@@ -60,7 +50,7 @@ public class _80341A_Hallowed_Eve extends QuestHandler
 		QuestDialog dialog = env.getDialog();
 		int targetId = env.getTargetId();
 		if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
-			//Otherworldly Pucas.
+			// 异界普卡斯。 / Otherworldly Pucas.
 			if (targetId == 831541 || targetId == 831542 ||
 				targetId == 831543 || targetId == 831544 ||
 				targetId == 831545 || targetId == 831546 ||
@@ -76,7 +66,7 @@ public class _80341A_Hallowed_Eve extends QuestHandler
 				}
 			}
 		} else if (qs.getStatus() == QuestStatus.START) {
-			//Otherworldly Pucas.
+			// 异界普卡斯。 / Otherworldly Pucas.
 			switch (targetId) {
 				case 831541:
 				case 831542:
@@ -97,7 +87,7 @@ public class _80341A_Hallowed_Eve extends QuestHandler
 				}
 			}
 		} else if (qs.getStatus() == QuestStatus.REWARD) {
-		    //Otherworldly Pucas.
+		    // 异界普卡斯。 / Otherworldly Pucas.
 			if (targetId == 831541 || targetId == 831542 ||
 				targetId == 831543 || targetId == 831544 ||
 				targetId == 831545 || targetId == 831546 ||

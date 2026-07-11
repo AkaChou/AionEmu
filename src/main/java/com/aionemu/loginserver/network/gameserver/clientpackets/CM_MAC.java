@@ -1,49 +1,50 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 
 /**
+ * GS→LS：上报/刷新账号最近一次 MAC 地址。
+ * GS→LS: report/refresh the last MAC address of an account.
  *
  * @author nrg
- *
  */
 @Slf4j
 public class CM_MAC extends GsClientPacket {
 
+    /**
+     * 账号 ID。
+     * Account id.
+     */
     private int accountId;
+    /**
+     * MAC 地址。
+     * MAC address.
+     */
     private String address;
 
+    /**
+     * 读取账号 ID 与 MAC 地址。
+     * Reads account id and MAC address.
+     */
     @Override
     protected void readImpl() {
         accountId = readD();
         address = readS();
     }
 
+    /**
+     * 刷新账号 last MAC；失败则记错误日志。
+     * Refreshes account last MAC; logs error on failure.
+     */
     @Override
     protected void runImpl() {
         if (!AccountController.refreshAccountsLastMac(accountId, address)) {
-            log.error("[WARN] We just weren't able to update account_data.last_mac for accountId " + accountId);
+            log.error(I18n.get("log.816eb08301ce", accountId));
         }
     }
 }

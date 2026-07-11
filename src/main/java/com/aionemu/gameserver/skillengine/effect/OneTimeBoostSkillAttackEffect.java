@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,10 @@ import com.aionemu.gameserver.controllers.observer.AttackCalcObserver;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 
+/**
+ * 一次性技能攻击加成：在有限次数内提升物理/魔法技能伤害倍率。
+ * One-time skill-attack boost: multiplies physical/magic skill damage for limited hits.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OneTimeBoostSkillAttackEffect")
 public class OneTimeBoostSkillAttackEffect extends BuffEffect {
@@ -34,6 +22,10 @@ public class OneTimeBoostSkillAttackEffect extends BuffEffect {
 	@XmlAttribute
 	private SkillType type;
 
+	/**
+	 * 注册有限次数的技能伤害倍率加成。
+	 * Registers limited-count skill damage multipliers.
+	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
@@ -109,6 +101,10 @@ public class OneTimeBoostSkillAttackEffect extends BuffEffect {
 		effect.setAttackStatusObserver(observer, position);
 	}
 
+	/**
+	 * 移除一次性攻击加成。
+	 * Removes the one-time attack boost.
+	 */
 	@Override
 	public void endEffect(Effect effect) {
 		super.endEffect(effect);

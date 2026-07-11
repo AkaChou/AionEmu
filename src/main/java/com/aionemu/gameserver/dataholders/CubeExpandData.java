@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
@@ -29,8 +13,9 @@ import com.aionemu.gameserver.model.templates.CubeExpandTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * This is for the Cube Expanders.
- * 
+ * 背包扩展 NPC 数据容器，按 NPC ID 索引扩展模板。
+ * Cube expander data holder, indexing expand templates by NPC id.
+ *
  * @author dragoon112
  */
 @XmlRootElement(name = "cube_expander")
@@ -41,16 +26,34 @@ public class CubeExpandData {
 	private List<CubeExpandTemplate> clist;
 	private IntObjectHashMap<CubeExpandTemplate> npctlistData = new IntObjectHashMap<CubeExpandTemplate>();
 
+	/**
+	 * JAXB 反序列化完成后，按 NPC ID 建立索引。
+	 * After JAXB unmarshalling, indexes templates by NPC id.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (CubeExpandTemplate npc : clist) {
 			npctlistData.put(npc.getNpcId(), npc);
 		}
 	}
 
+	/**
+	 * 返回已加载的扩展 NPC 数量。
+	 * Returns the number of loaded expander NPCs.
+	 *
+	 * template count
+	 */
 	public int size() {
 		return npctlistData.size();
 	}
 
+	/**
+	 * 按 NPC ID 获取背包扩展模板。
+	 * Returns the cube expand template for the given NPC id.
+	 *
+	 * npc id
+	 *
+	 * @param id @return 模板，不存在则为 null / template or null
+	 */
 	public CubeExpandTemplate getCubeExpandListTemplate(int id) {
 		return npctlistData.get(id);
 	}

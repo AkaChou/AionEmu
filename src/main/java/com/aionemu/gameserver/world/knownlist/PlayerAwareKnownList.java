@@ -1,33 +1,32 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.world.knownlist;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 仅感知 {@link Player} 的已知列表。
+ * Known list that is only aware of {@link Player} objects.
+ *
  * @author ATracer
  */
 public class PlayerAwareKnownList extends KnownList {
 
+	/**
+	 * 创建仅感知玩家的已知列表。
+	 * Creates a player-aware known list.
+	 *
+	 * @param owner 列表所有者 / list owner
+	 */
 	public PlayerAwareKnownList(VisibleObject owner) {
 		super(owner);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * 仅当对象为 {@link Player} 时返回 {@code true}。
+	 * Returns {@code true} only when the object is a {@link Player}.
+	 */
 	@Override
 	protected final boolean isAwareOf(VisibleObject newObject) {
 		return newObject instanceof Player;

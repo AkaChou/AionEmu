@@ -1,96 +1,95 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network;
 
 import java.nio.ByteBuffer;
 
 /**
- * @author -Nemesiss-
+ * 包写入辅助基类，提供向 ByteBuffer 写入各基本类型的方法。
+ * Packet write helper base providing typed write methods into a ByteBuffer.
  *
+ * @author -Nemesiss-
  */
 public abstract class PacketWriteHelper {
 
+	/**
+	 * 子类实现的实际写入逻辑。
+	 * Subclass write implementation.
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 */
 	protected abstract void writeMe(ByteBuffer buf);
 
 	/**
-	 * Write int to buffer.
-	 * 
-	 * @param buf
-	 * @param value
+	 * 写入 int（4 字节）。
+	 * Writes an int (4 bytes).
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * value
 	 */
 	protected final void writeD(ByteBuffer buf, int value) {
 		buf.putInt(value);
 	}
 
 	/**
-	 * Write short to buffer.
-	 * 
-	 * @param buf
-	 * @param value
+	 * 写入 short（2 字节）。
+	 * Writes a short (2 bytes).
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * value
 	 */
 	protected final void writeH(ByteBuffer buf, int value) {
 		buf.putShort((short) value);
 	}
 
 	/**
-	 * Write byte to buffer.
-	 * 
-	 * @param buf
-	 * @param value
+	 * 写入 byte（1 字节）。
+	 * Writes a byte (1 byte).
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * value
 	 */
 	protected final void writeC(ByteBuffer buf, int value) {
 		buf.put((byte) value);
 	}
 
 	/**
-	 * Write double to buffer.
-	 * 
-	 * @param buf
-	 * @param value
+	 * 写入 double（8 字节）。
+	 * Writes a double (8 bytes).
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * value
 	 */
 	protected final void writeDF(ByteBuffer buf, double value) {
 		buf.putDouble(value);
 	}
 
 	/**
-	 * Write float to buffer.
-	 * 
-	 * @param buf
-	 * @param value
+	 * 写入 float（4 字节）。
+	 * Writes a float (4 bytes).
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * value
 	 */
 	protected final void writeF(ByteBuffer buf, float value) {
 		buf.putFloat(value);
 	}
 
 	/**
-	 * Write long to buffer.
-	 * 
-	 * @param buf
-	 * @param value
+	 * 写入 long（8 字节）。
+	 * Writes a long (8 bytes).
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * value
 	 */
 	protected final void writeQ(ByteBuffer buf, long value) {
 		buf.putLong(value);
 	}
 
 	/**
-	 * Write String to buffer
-	 * 
-	 * @param buf
-	 * @param text
+	 * 写入以 null 结尾的 UTF-16 字符串。
+	 * Writes a null-terminated UTF-16 string.
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * @param text 文本，null 则写空串 / text; null writes empty
 	 */
 	protected final void writeS(ByteBuffer buf, String text) {
 		if (text == null) {
@@ -105,20 +104,22 @@ public abstract class PacketWriteHelper {
 	}
 
 	/**
-	 * Write byte array to buffer.
-	 * 
-	 * @param buf
-	 * @param data
+	 * 写入字节数组。
+	 * Writes a byte array.
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * @param data 字节数据 / byte data
 	 */
 	protected final void writeB(ByteBuffer buf, byte[] data) {
 		buf.put(data);
 	}
 
 	/**
-	 * Skip specified amount of bytes
-	 * 
-	 * @param buf
-	 * @param bytes
+	 * 跳过（填充）指定字节数。
+	 * Skips (zero-fills) the given number of bytes.
+	 *
+	 * @param buf 目标缓冲区 / target buffer
+	 * byte count
 	 */
 	protected final void skip(ByteBuffer buf, int bytes) {
 		buf.put(new byte[bytes]);

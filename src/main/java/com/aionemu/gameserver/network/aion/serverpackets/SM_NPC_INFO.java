@@ -1,20 +1,3 @@
-/*
- * This file is part of aion-emu <aion-emu.com>.
- *
- *  aion-emu is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  aion-emu is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with aion-emu. If not, see <http://www.gnu.org/licenses/>.
- */
-// Credits To Magenik and to the Cinus
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -40,6 +23,17 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.TownService;
 
+/**
+ * NPC/召唤物外观与状态信息同步服务端包。
+ * summon appearance and state to the client. / summon appearance and state to the client.
+ * <p>
+ * 根据观察者阵营与关系重算 NPC 类型（可攻击、敌对、和平、不可攻击等），并写入装备、
+ * 生命、移动与生成实体等字段。
+ * Recalculates NPC type (attackable, aggressive, peace, non-attackable, etc.) based on
+ * the observer's faction/relation, and writes equipment, life, movement, and spawn entity fields.
+ *
+ * Credits To Magenik and to the Cinus
+ */
 public class SM_NPC_INFO extends AionServerPacket {
 	private Creature _npc;
 	private NpcTemplate npcTemplate;
@@ -50,6 +44,13 @@ public class SM_NPC_INFO extends AionServerPacket {
 	private float speed = 0.3f;
 	private int npcTypeId;
 
+	/**
+	 * 由 NPC 与观察者玩家构造信息包（按关系重算类型）。
+	 * Builds an info packet from an NPC and the observing player (type recalculated by relation).
+	 *
+	 * target NPC
+	 * @param player 观察者玩家 / observing player
+	 */
 	public SM_NPC_INFO(Npc npc, Player player) {
 		this._npc = npc;
 		npcTemplate = npc.getObjectTemplate();
@@ -76,6 +77,12 @@ public class SM_NPC_INFO extends AionServerPacket {
 		masterName = npc.getMasterName();
 	}
 
+	/**
+	 * 由召唤物构造信息包（主人信息写入 creator/masterName）。
+	 * Builds an info packet from a summon (master written as creator/masterName).
+	 *
+	 * summon entity
+	 */
 	public SM_NPC_INFO(Summon summon) {
 		this._npc = summon;
 		npcTemplate = summon.getObjectTemplate();
@@ -99,7 +106,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 		writeD(_npc.getObjectId());
 		writeD(npcId);
 		writeD(npcId);
-		// fix
+		// 修复 / fix
 		writeC(npcTypeId);
 		if (_npc.getLifeStats().isAlreadyDead()) {
 			_npc.setState(39);

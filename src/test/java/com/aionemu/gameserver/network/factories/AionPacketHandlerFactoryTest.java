@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.factories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -9,7 +10,9 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
+import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.AionPacketHandler;
+import com.aionemu.gameserver.network.aion.clientpackets.CM_MAY_QUIT;
 
 class AionPacketHandlerFactoryTest {
 
@@ -20,6 +23,15 @@ class AionPacketHandlerFactoryTest {
 
 		assertNotNull(packet);
 		assertEquals("CM_EQUIPMENT_SETTING_USE", packet.getPacketName());
+	}
+
+	@Test
+	void rejectsDuplicateOpcodes() {
+		AionPacketHandler handler = new AionPacketHandler();
+		handler.addPacketPrototype(new CM_MAY_QUIT(0x123, State.IN_GAME));
+
+		assertThrows(IllegalArgumentException.class,
+				() -> handler.addPacketPrototype(new CM_MAY_QUIT(0x123, State.IN_GAME)));
 	}
 
 	@SuppressWarnings("unchecked")

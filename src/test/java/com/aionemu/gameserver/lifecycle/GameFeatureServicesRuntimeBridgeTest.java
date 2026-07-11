@@ -20,7 +20,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         ProviderUsedException npcShoutsProviderUsed = new ProviderUsedException();
         ProviderUsedException shieldProviderUsed = new ProviderUsedException();
         ProviderUsedException rewardProviderUsed = new ProviderUsedException();
-        ProviderUsedException weddingProviderUsed = new ProviderUsedException();
         ProviderUsedException veteranRewardsProviderUsed = new ProviderUsedException();
         ProviderUsedException disputeLandProviderUsed = new ProviderUsedException();
         ProviderUsedException outpostProviderUsed = new ProviderUsedException();
@@ -39,7 +38,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         runtimeBridge.setNpcShoutsServiceProvider(throwingProvider(npcShoutsProviderUsed));
         runtimeBridge.setShieldServiceProvider(throwingProvider(shieldProviderUsed));
         runtimeBridge.setRewardServiceProvider(throwingProvider(rewardProviderUsed));
-        runtimeBridge.setWeddingServiceProvider(throwingProvider(weddingProviderUsed));
         runtimeBridge.setVeteranRewardsServiceProvider(throwingProvider(veteranRewardsProviderUsed));
         runtimeBridge.setDisputeLandServiceProvider(throwingProvider(disputeLandProviderUsed));
         runtimeBridge.setOutpostServiceProvider(throwingProvider(outpostProviderUsed));
@@ -57,7 +55,6 @@ class GameFeatureServicesRuntimeBridgeTest {
         assertSame(npcShoutsProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::npcShoutsService));
         assertSame(shieldProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::shieldService));
         assertSame(rewardProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::rewardService));
-        assertSame(weddingProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::weddingService));
         assertSame(veteranRewardsProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::veteranRewardsService));
         assertSame(disputeLandProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::disputeLandService));
         assertSame(outpostProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::outpostService));
@@ -200,7 +197,6 @@ class GameFeatureServicesRuntimeBridgeTest {
                 .filter(path -> !path.endsWith(Path.of("services/instance/DredgionService2.java")))
                 .filter(path -> !path.endsWith(Path.of("services/instance/AsyunatarService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/ShieldService.java")))
-                .filter(path -> !path.endsWith(Path.of("services/WeddingService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/ProtectorConquerorService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/AStationService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/F2pService.java")))
@@ -224,7 +220,6 @@ class GameFeatureServicesRuntimeBridgeTest {
             assertFalse(content.contains("DredgionService2.getInstance()"), source.toString());
             assertFalse(content.contains("AsyunatarService.getInstance()"), source.toString());
             assertFalse(content.contains("ShieldService.getInstance()"), source.toString());
-            assertFalse(content.contains("WeddingService.getInstance()"), source.toString());
             assertFalse(content.contains("ProtectorConquerorService.getInstance()"), source.toString());
             assertFalse(content.contains("AStationService.getInstance()"), source.toString());
             assertFalse(content.contains("F2pService.getInstance()"), source.toString());

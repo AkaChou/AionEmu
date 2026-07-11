@@ -1,48 +1,33 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.serverpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsServerPacket;
 
 /**
- * In this packet LoginServer is sending response for CM_ACCOUNT_RECONNECT_KEY
- * with account name and reconnectionKey.
+ * LS→GS：账号重连密钥响应（对应 CM_ACCOUNT_RECONNECT_KEY）。
+ * LS→GS: account reconnect key response (for CM_ACCOUNT_RECONNECT_KEY).
  *
  * @author -Nemesiss-
  */
 public class SM_ACCOUNT_RECONNECT_KEY extends GsServerPacket {
 
     /**
-     * accountId of account that will be reconnecting.
+     * 将要重连的账号 ID。
+     * Account id of the account that will reconnect.
      */
     private final int accountId;
     /**
-     * ReconnectKey that will be used for authentication.
+     * 用于鉴权的重连密钥。
+     * Reconnect key used for authentication.
      */
     private final int reconnectKey;
 
     /**
-     * Constructor.
+     * 构造账号重连密钥响应包。
+     * Constructs an account reconnect key response packet.
      *
-     * @param accountId
-     * @param reconnectKey
+     * 账号 ID / account id
+     * reconnect key
      */
     public SM_ACCOUNT_RECONNECT_KEY(int accountId, int reconnectKey) {
         this.accountId = accountId;

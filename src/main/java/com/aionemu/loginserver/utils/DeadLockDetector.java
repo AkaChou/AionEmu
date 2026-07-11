@@ -1,23 +1,7 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.utils;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
@@ -30,44 +14,61 @@ import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 
 /**
+ * 死锁检测线程：周期性扫描 JVM 死锁，发现后记录日志并可按策略重启进程。
+ * Deadlock detector thread: periodically scans for JVM deadlocks, logs details and may restart the process.
+ *
  * @author -Nemesiss-
  */
 @Slf4j
 public class DeadLockDetector extends Thread {
 
     /**
-     * What should we do on DeadLock
+     * 发现死锁时不采取额外动作。
+     * Do nothing when a deadlock is detected.
      */
     public static final byte NOTHING = 0;
     /**
-     * What should we do on DeadLock
+     * 发现死锁时重启进程。
+     * Restart the process when a deadlock is detected.
      */
     public static final byte RESTART = 1;
     /**
-     * how often check for deadlocks
+     * 死锁检测间隔（毫秒，构造时由秒转换）。
+     * How often to check for deadlocks (milliseconds, converted from seconds at construction).
      */
     private final int sleepTime;
     /**
-     * ThreadMXBean
+     * 线程管理 MXBean。
+     * ThreadMXBean used for deadlock detection.
      */
     private final ThreadMXBean tmx;
     /**
-     * What should we do on DeadLock
+     * 发现死锁时的处理策略。
+     * Action to take when a deadlock is detected.
      */
     private final byte doWhenDL;
     private final IntConsumer exitHandler;
 
     /**
-     * Create new DeadLockDetector with given values.
+     * 使用默认退出桥创建死锁检测器（已弃用构造）。
+     * Create a detector with the default exit bridge (deprecated constructor).
      *
-     * @param sleepTime
-     * @param doWhenDL
+     * @param sleepTime 检测间隔（秒） / check interval in seconds
+     * @param doWhenDL 死锁处理策略 / action on deadlock
      */
     @Deprecated(since = "1.0", forRemoval = false)
     public DeadLockDetector(int sleepTime, byte doWhenDL) {
         this(sleepTime, doWhenDL, status -> new LoginProcessRuntimeBridge().exit(status));
     }
 
+    /**
+     * 使用自定义退出处理器创建死锁检测器。
+     * Create a detector with a custom exit handler.
+     *
+     * @param sleepTime 检测间隔（秒） / check interval in seconds
+     * @param doWhenDL 死锁处理策略 / action on deadlock
+     * exit callback
+     */
     public DeadLockDetector(int sleepTime, byte doWhenDL, IntConsumer exitHandler) {
         super("DeadLockDetector");
         this.sleepTime = sleepTime * 1000;
@@ -77,7 +78,8 @@ public class DeadLockDetector extends Thread {
     }
 
     /**
-     * Check if there is a DeadLock.
+     * 循环检测死锁并在发现后记录详情、执行处理策略。
+     * Loop that checks for deadlocks, logs details when found and applies the configured action.
      */
     @Override
     public final void run() {
@@ -88,8 +90,8 @@ public class DeadLockDetector extends Thread {
 
                 if (ids != null) {
                     /**
-                     * deadlock found :/
-                     */
+	 * 检测到死锁。 / deadlock found :/
+	 */
                     deadlock = true;
                     ThreadInfo[] tis = tmx.getThreadInfo(ids, true, true);
                     String info = "DeadLock Found!\n";
@@ -102,7 +104,8 @@ public class DeadLockDetector extends Thread {
                         MonitorInfo[] monitors = ti.getLockedMonitors();
                         if (locks.length == 0 && monitors.length == 0) {
                             /**
-                             * this thread is deadlocked but its not guilty
+                             * 该线程已死锁，但未必是罪魁。
+	 * this thread is deadlocked but it is not necessarily guilty
                              */
                             continue;
                         }
@@ -120,11 +123,15 @@ public class DeadLockDetector extends Thread {
                 }
                 Thread.sleep(sleepTime);
             } catch (Exception e) {
-                log.warn("DeadLockDetector: " + e, e);
+                log.warn(I18n.get("log.49697309af30", e, e));
             }
         }
     }
 
+    /**
+     * 按策略处理已发现的死锁（如请求进程重启）。
+     * Handle a detected deadlock according to the configured policy (e.g. request restart).
+     */
     void handleDeadlock() {
         if (doWhenDL == RESTART) {
             exitHandler.accept(ExitCode.CODE_RESTART);

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders.loadingutils.adapters;
 
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
@@ -21,26 +5,31 @@ import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import com.aionemu.gameserver.model.items.NpcEquippedGear;
 
 /**
+ * NPC 装备 JAXB 适配器，将 {@link NpcEquipmentList} 转为运行时 {@link NpcEquippedGear}。
+ * NPC equipped-gear JAXB adapter converting {@link NpcEquipmentList} into runtime {@link NpcEquippedGear}.
+ *
  * @author Luno
  */
 public class NpcEquippedGearAdapter extends XmlAdapter<NpcEquipmentList, NpcEquippedGear> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jakarta.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
+	/**
+	 * 序列化未实现，始终返回 null。
+	 * Marshaling is not implemented and always returns null.
+	 *
+	 * @param v 运行时装备 / runtime gear
+	 * always null
 	 */
 	@Override
 	public NpcEquipmentList marshal(NpcEquippedGear v) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * jakarta.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
+	/**
+	 * 将 JAXB 装备列表反序列化为运行时装备对象。
+	 * Unmarshals a JAXB equipment list into a runtime gear object.
+	 *
+	 * @param v JAXB 装备列表 / JAXB equipment list
+	 * @return 运行时装备 / runtime gear
 	 */
 	@Override
 	public NpcEquippedGear unmarshal(NpcEquipmentList v) throws Exception {

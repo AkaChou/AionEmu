@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.shugoImperialTomb;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
@@ -23,10 +7,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Shugo Imperial Tomb 副本 NPC AI：Delighted Admirer（@AIName "Delighted_Admirer"），继承 GeneralNpcAI2。
+ * Shugo Imperial Tomb instance NPC AI: Delighted Admirer (@AIName "Delighted_Admirer"), extends GeneralNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("Delighted_Admirer")
 public class Delighted_AdmirerAI2 extends GeneralNpcAI2
 {

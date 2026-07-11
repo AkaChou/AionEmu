@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,17 +17,27 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * GM 物品限制服务，控制管理员对受限物品的交易/操作权限。
+ * Admin item-restriction service controlling GM trade and operation permissions for restricted items.
+ *
  * @author KID
  */
 @Slf4j
 public class AdminService {
 	private static volatile ObjectProvider<AdminService> instanceProvider;
+	/** 受限物品 ID 列表 / Restricted item ID list */
 	private List<Integer> list;
 
 	@Slf4j(topic = "GMITEMRESTRICTION")
 	private static class ItemRestrictionLog {
 	}
 
+	/**
+	 * 获取服务单例，优先走 Spring ObjectProvider。
+	 * Returns the service singleton, preferring Spring ObjectProvider when available.
+	 *
+	 * service instance
+	 */
 	public static AdminService getInstance() {
 		ObjectProvider<AdminService> provider = instanceProvider;
 		if (provider == null) {
@@ -51,6 +46,12 @@ public class AdminService {
 		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
+	/**
+	 * 注入 Spring ObjectProvider 以覆盖默认单例。
+	 * Injects a Spring ObjectProvider to override the default singleton.
+	 *
+	 * provider
+	 */
 	public static void setInstanceProvider(ObjectProvider<AdminService> instanceProvider) {
 		AdminService.instanceProvider = instanceProvider;
 	}
@@ -59,12 +60,20 @@ public class AdminService {
 		protected static final AdminService instance = new AdminService();
 	}
 
+	/**
+	 * 构造服务；若启用交易限制则加载配置。
+	 * Constructs the service; reloads the restriction list when trade restriction is enabled.
+	 */
 	public AdminService() {
 		list = new ArrayList<Integer>();
 		if (AdminConfig.ENABLE_TRADEITEM_RESTRICTION)
 			reload();
 	}
 
+	/**
+	 * 从配置文件重新加载受限物品列表。
+	 * Reloads the restricted item list from the configuration file.
+	 */
 	public void reload() {
 		if (list.size() > 0) {
 			list.clear();
@@ -81,24 +90,44 @@ public class AdminService {
 				list.add(Integer.parseInt(pt));
 			}
 		} catch (IOException e) {
-			log.error("Failed to load item restriction list", e);
+			log.error(I18n.get("log.2dd4f31d928c", e));
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					log.warn("Failed to close item restriction list", e);
+					log.warn(I18n.get("log.1a564ebb3da2", e));
 				}
 			}
 		}
 
-		log.info("AdminService loaded {} operational items", list.size());
+		log.info(I18n.get("log.68a0fce84f7f", list.size()));
 	}
 
+	/**
+	 * 检查玩家是否可对指定物品执行操作（基于 Item 对象）。
+	 * Checks whether the player may operate on the given item (Item overload).
+	 *
+	 * operator
+	 * @param target 目标玩家，可为 null / target player, may be null
+	 * item
+	 * @param type 操作类型描述 / operation type description
+	 * 若 allowed 则为 true / true if allowed
+	 */
 	public boolean canOperate(Player player, Player target, Item item, String type) {
 		return canOperate(player, target, item.getItemId(), type);
 	}
 
+	/**
+	 * 检查玩家是否可对指定物品 ID 执行操作。
+	 * Checks whether the player may operate on the given item ID.
+	 *
+	 * operator
+	 * @param target 目标玩家，可为 null / target player, may be null
+	 * item id
+	 * @param type 操作类型描述 / operation type description
+	 * 若 allowed 则为 true / true if allowed
+	 */
 	public boolean canOperate(Player player, Player target, int itemId, String type) {
 		if (!AdminConfig.ENABLE_TRADEITEM_RESTRICTION) {
 			return true;

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.controllers;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +13,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
+ * 玩家飞行控制器，管理飞行、滑翔状态切换与飞行冷却。
+ * Player fly controller managing flight, gliding state switches and fly cooldown.
+ *
  * @author ATracer
  */
 @Slf4j
 public class FlyController {
 
-
+	/** 飞行复用冷却时间（毫秒）。 / Fly reuse cooldown in milliseconds. */
 	private static final long FLY_REUSE_TIME = 10000;
+	/** 关联玩家。 / Associated player. */
 	private Player player;
+	/** 异常状态导致无法移动时停止滑翔的观察者。 / Observer that stops gliding when an abnormal state prevents movement. */
 	private ActionObserver glideObserver = new ActionObserver(ObserverType.ABNORMALSETTED) {
 
 		public void abnormalsetted(AbnormalState state) {
@@ -46,12 +35,21 @@ public class FlyController {
 		}
 	};
 
+	/**
+	 * 为指定玩家构造飞行控制器。
+	 * Constructs a fly controller for the given player.
+	 *
+	 * associated player
+	 */
 	public FlyController(Player player) {
 		this.player = player;
 	}
 
 	/**
-	 * 
+	 * 停止滑翔；若未在飞行则恢复 FP 并可选择收起翅膀。
+	 * Stops gliding; restores FP when not flying and optionally removes wings.
+	 *
+	 * @param removeWings 是否广播落地并收翼 / whether to broadcast landing and remove wings
 	 */
 	public void onStopGliding(boolean removeWings) {
 		if (player.isInState(CreatureState.GLIDING)) {
@@ -73,9 +71,10 @@ public class FlyController {
 	}
 
 	/**
-	 * Ends flying 1) by CM_EMOTION (pageDown or fly button press) 2) from server
-	 * side during teleportation (abyss gates should not break flying) 3) when FP is
-	 * decreased to 0
+	 * 结束飞行。可由客户端情绪包、传送或 FP 耗尽触发。
+	 * Ends flying. Triggered by client emotion packets, teleport, or FP exhaustion.
+	 *
+	 * @param forceEndFly 是否强制广播落地动画 / whether to force-broadcast the landing animation
 	 */
 	public void endFly(boolean forceEndFly) {
 		if (player.isInState(CreatureState.FLYING) || player.isInState(CreatureState.GLIDING)) {
@@ -84,9 +83,6 @@ public class FlyController {
 			player.unsetState(CreatureState.FLOATING_CORPSE);
 			player.setFlyState(0);
 
-			// this is probably needed to change back fly speed into speed.
-			// TODO remove this and just send in update?
-			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_EMOTE2, 0, 0), true);
 			if (forceEndFly) {
 				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.LAND, 0, 0), true);
 			}
@@ -98,10 +94,20 @@ public class FlyController {
 	}
 
 	/**
-	 * This method is called to start flying (called by CM_EMOTION when pageUp or
-	 * pressed fly button)
+	 * 开始飞行（由 CM_EMOTION 页上键或飞行按钮触发）。
+	 * Starts flying (triggered by CM_EMOTION pageUp or the fly button).
 	 */
 	public void startFly() {
+		startFly(true);
+	}
+
+	/**
+	 * 开始飞行，并按需广播起飞动作。
+	 * Starts flying and optionally broadcasts the take-off action.
+	 *
+	 * @param broadcastPacket 是否广播起飞动作 / whether to broadcast the take-off action
+	 */
+	public void startFly(boolean broadcastPacket) {
 		if (player.getFlyReuseTime() > System.currentTimeMillis()) {
 			AuditLogger.info(player, "No Flight Cooldown Hack. Reuse time: "
 					+ ((player.getFlyReuseTime() - System.currentTimeMillis()) / 1000));
@@ -114,15 +120,17 @@ public class FlyController {
 		}
 		player.setFlyState(1);
 		player.getLifeStats().triggerFpReduce();
-		// TODO remove it?
-		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_EMOTE2, 0, 0), true);
+		if (broadcastPacket) {
+			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.FLY, 0, 0), true);
+		}
 		player.getGameStats().updateStatsAndSpeedVisually();
 	}
 
 	/**
-	 * Switching to glide mode (called by CM_MOVE with VALIDATE_GLIDE movement type)
-	 * 1) from standing state 2) from flying state If from stand to glide - start fp
-	 * reduce + emotions/stats if from fly to glide - only emotions/stats
+	 * 切换到滑翔模式（由 CM_MOVE 的 VALIDATE_GLIDE 触发）。
+	 * Switches to gliding mode (triggered by CM_MOVE with VALIDATE_GLIDE).
+	 *
+	 * @return 是否成功切换（含已在滑翔） / whether the switch succeeded (including already gliding)
 	 */
 	public boolean switchToGliding() {
 		if (!player.isInState(CreatureState.GLIDING) && player.canPerformMove()) {

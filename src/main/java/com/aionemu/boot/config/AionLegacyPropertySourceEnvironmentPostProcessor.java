@@ -15,10 +15,21 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 
+/**
+ * 将遗留 properties 文件映射进 Spring Environment，供 {@code aion.legacy.*} 绑定使用。
+ * Maps legacy properties files into the Spring Environment for {@code aion.legacy.*} binding.
+ */
 public class AionLegacyPropertySourceEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
 
     static final String PROPERTY_SOURCE_NAME = "aionLegacyProperties";
 
+    /**
+     * 加载游戏/登录/聊天遗留配置并注册为低优先级 PropertySource。
+     * Loads game/login/chat legacy configs and registers them as a low-precedence PropertySource.
+     *
+     * @param environment 可配置环境 / configurable environment
+     * Spring application instance
+     */
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         Map<String, Object> properties = new LinkedHashMap<>();
@@ -30,13 +41,26 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         }
     }
 
+    /**
+     * 返回本处理器顺序：略高于最低优先级，确保在大部分默认源之后生效。
+     * Returns this processor's order: slightly above lowest precedence so it applies after most defaults.
+     *
+     * order value
+     */
     @Override
     public int getOrder() {
         return Ordered.LOWEST_PRECEDENCE - 20;
     }
 
+    /**
+     * 从游戏配置目录加载遗留属性。
+     * Loads legacy properties from the game config directory.
+     *
+     * environment
+     * @param target 目标属性映射 / target property map
+     */
     private void loadGameProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
-        Path configDir = configDir(environment, "aion.game.config.dir");
+        Path configDir = configDir(environment, "aion.game.config.dir", "game/config");
         String legacyPrefix = "aion.legacy.game.property.";
         loadDirectory(target, configDir.resolve("administration"), legacyPrefix);
         loadDirectory(target, configDir.resolve("main"), legacyPrefix);
@@ -44,24 +68,64 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         loadFile(target, configDir.resolve("mygs.properties"), legacyPrefix);
     }
 
+    /**
+     * 从登录配置目录加载遗留属性。
+     * Loads legacy properties from the login config directory.
+     *
+     * environment
+     * @param target 目标属性映射 / target property map
+     */
     private void loadLoginProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
-        Path configDir = configDir(environment, "aion.login.config.dir");
+        Path configDir = configDir(environment, "aion.login.config.dir", "login/config");
         String legacyPrefix = "aion.legacy.login.property.";
         loadDirectory(target, configDir.resolve("network"), legacyPrefix);
         loadFile(target, configDir.resolve("myls.properties"), legacyPrefix);
     }
 
+    /**
+     * 从聊天配置目录加载遗留属性。
+     * Loads legacy properties from the chat config directory.
+     *
+     * environment
+     * @param target 目标属性映射 / target property map
+     */
     private void loadChatProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
-        Path configDir = configDir(environment, "aion.chat.config.dir");
+        Path configDir = configDir(environment, "aion.chat.config.dir", "chat/config");
         String legacyPrefix = "aion.legacy.chat.property.";
         loadDirectory(target, configDir, legacyPrefix);
         loadFile(target, configDir.resolve("mycs.properties"), legacyPrefix);
     }
 
-    private Path configDir(ConfigurableEnvironment environment, String propertyName) {
-        return Path.of(environment.getProperty(propertyName, "./config"));
+    /**
+     * 解析配置目录路径，缺省为 {@code ./config}。
+     * Resolves the config directory path, defaulting to {@code ./config}.
+     *
+     * environment
+     * @param propertyName 目录属性名 / directory property name
+     * @return 配置目录路径 / config directory path
+     */
+    private Path configDir(ConfigurableEnvironment environment, String propertyName, String homeRelativePath) {
+        String configured = environment.getProperty(propertyName);
+        if (configured != null) {
+            return Path.of(configured);
+        }
+        if (!environment.containsProperty("aion.home")) {
+            Path sourceDirectory = Path.of("src/main/resources/aion").resolve(homeRelativePath);
+            if (Files.isDirectory(sourceDirectory)) {
+                return sourceDirectory;
+            }
+        }
+        return Path.of(environment.getProperty("aion.home", "aion")).resolve(homeRelativePath);
     }
 
+    /**
+     * 按文件名排序加载目录下全部 {@code .properties} 文件。
+     * Loads all {@code .properties} files under a directory in filename order.
+     *
+     * @param target 目标属性映射 / target property map
+     * directory path
+     * legacy key prefix
+     */
     private void loadDirectory(Map<String, Object> target, Path directory, String legacyPrefix) {
         if (!Files.isDirectory(directory)) {
             return;
@@ -77,6 +141,14 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         }
     }
 
+    /**
+     * 读取单个 properties 文件并写入目标映射。
+     * Reads a single properties file into the target map.
+     *
+     * @param target 目标属性映射 / target property map
+     * @param file 文件路径 / file path
+     * legacy key prefix
+     */
     private void loadFile(Map<String, Object> target, Path file, String legacyPrefix) {
         if (!Files.isRegularFile(file)) {
             return;
@@ -90,6 +162,15 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         properties.forEach((key, value) -> addLegacyProperty(target, legacyPrefix, String.valueOf(key), value));
     }
 
+    /**
+     * 同时写入原始键与带遗留前缀的键。
+     * Writes both the raw key and the legacy-prefixed key into the target map.
+     *
+     * @param target 目标属性映射 / target property map
+     * legacy key prefix
+     * property key
+     * property value
+     */
     private void addLegacyProperty(Map<String, Object> target, String legacyPrefix, String key, Object value) {
         target.put(key, value);
         target.put(legacyPrefix + key, value);

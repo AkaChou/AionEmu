@@ -1,25 +1,10 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.ranking;
 
 import com.aionemu.gameserver.model.PlayerClass;
 
 /**
- * Created by Wnkrz on 24/07/2017.
+ * Season 排行结果，用于排行相关逻辑。
+ * Season Ranking Result for ranking logic.
  */
 public class SeasonRankingResult {
 
@@ -42,30 +27,37 @@ public class SeasonRankingResult {
 		this.playerId = playerId;
 	}
 
+	/** 获取玩家名称。 / Returns the player name. */
 	public String getPlayerName() {
 		return playerName;
 	}
 
+	/** 返回玩家 ID / Returns the player id */
 	public int getPlayerId() {
 		return playerId;
 	}
 
+	/** 获取军阶。 / Returns the rank. */
 	public int getRank() {
 		return rank;
 	}
 
+	/** 返回旧军阶 / Returns the old rank*/
 	public int getOldRank() {
 		return oldRank;
 	}
 
+	/** 获取玩家种族。 / Returns the player race. */
 	public int getPlayerRace() {
 		return playerRace;
 	}
 
+	/** 获取玩家职业。 / Returns the player class. */
 	public PlayerClass getPlayerClass() {
 		return playerClass;
 	}
 
+	/** 获取点。 / Returns the points. */
 	public int getPoints() {
 		return pc;
 	}

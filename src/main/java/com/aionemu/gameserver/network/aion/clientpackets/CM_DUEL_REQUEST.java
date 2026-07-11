@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -28,19 +12,23 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.DuelService;
 
 /**
+ * 请求与目标玩家决斗的客户端包。
+ * Client packet requesting a duel with a target player.
+ *
  * @author xavier
  */
 public class CM_DUEL_REQUEST extends AionClientPacket {
 
-	/**
-	 * Target object id that client wants to start duel with
-	 */
+	/** 决斗目标对象 ID / target object id for the duel */
 	private int objectId;
 
 	/**
-	 * Constructs new instance of <tt>CM_DUEL_REQUEST</tt> packet
-	 * 
-	 * @param opcode
+	 * 构造客户端包实例。
+	 * Constructs a new client packet instance.
+	 *
+	 * packet opcode
+	 * @param state 连接状态 / connection state
+	 * @param restStates 其余允许状态 / additional allowed states
 	 */
 	public CM_DUEL_REQUEST(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

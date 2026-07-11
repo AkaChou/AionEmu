@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -39,15 +23,23 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.ArrayList;
 import java.util.List;
 
-/****/
-/** Author Rinzler (Encom)
-/****/
-
+/**
+ * 任务交互物 AI：玩家使用后触发任务相关逻辑。
+ * Quest interaction-item AI that runs quest logic when a player uses the object.
+ *
+ * @author Rinzler (Encom)
+ */
 @AIName("quest_use_item")
 public class QuestItemNpcAI2 extends ActionItemNpcAI2
 {
 	private List<Player> registeredPlayers = new ArrayList<Player>();
 	
+	/**
+	 * 玩家开始与本 NPC 对话/交互。
+	 * Player starts dialog/interaction with this NPC.
+	 *
+	 * 玩家 / player
+	 */
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (!(GameEngineServices.questEngine().onCanAct(new QuestEnv(getOwner(), player, 0, 0),
@@ -57,6 +49,12 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 		super.handleDialogStart(player);
 	}
 	
+	/**
+	 * 使用交互物完成时的逻辑。
+	 * Logic when action-item use finishes.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		SelectDialogResult dialogResult = AI2Actions.selectDialog(this, player, 0, -1);
@@ -95,17 +93,33 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 		return getObjectTemplate().isDialogNpc();
 	}
 	
+	/**
+	 * 处理消失事件。
+	 * Handle despawn.
+	 */
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		registeredPlayers.clear();
 	}
 	
+	/**
+	 * 处理看见生物事件。
+	 * Handle seeing a creature.
+	 *
+	 * creature
+	 */
 	@Override
 	protected void handleCreatureSee(Creature creature) {
 		CreatureEventHandler.onCreatureSee(this, creature);
 	}
 	
+	/**
+	 * 处理生物移动事件。
+	 * Handle creature-moved.
+	 *
+	 * creature
+	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		CreatureEventHandler.onCreatureMoved(this, creature);

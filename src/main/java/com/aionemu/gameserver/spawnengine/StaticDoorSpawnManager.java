@@ -1,21 +1,6 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
@@ -30,20 +15,24 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.staticdoor.DoorType;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorWorld;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
 /**
+ * 静态门刷怪管理器，按世界与实例生成门并同步地理状态。
+ * Static door spawn manager; creates doors per world/instance and syncs geo state.
+ *
  * @author MrPoke
  */
 @Slf4j
 public class StaticDoorSpawnManager {
 
-
 	/**
-	 * @param worldId
-	 * @param instanceIndex
+	 * 在指定世界与实例中刷出所有静态门。
+	 * Spawns all static doors for the world and instance.
+	 *
+	 * 世界 ID / world id
+	 * instance index
 	 */
 	public static void spawnTemplate(int worldId, int instanceIndex) {
 		StaticDoorWorld staticDoorWorld = DataManager.STATICDOOR_DATA.getStaticDoorWorlds(worldId);
@@ -66,14 +55,17 @@ public class StaticDoorSpawnManager {
 			counter++;
 		}
 		if (counter > 0) {
-			log.info("Spawned static doors: " + worldId + " [" + instanceIndex + "] : " + counter);
+			log.info(I18n.get("log.cb79035d4670", worldId, instanceIndex, counter));
 		}
 	}
 
 	/**
-	 * @param visibleObject
-	 * @param spawn
-	 * @param instanceIndex
+	 * 将门对象登记、定位并刷入世界。
+	 * Stores, positions and spawns a door into the world.
+	 *
+	 * visible object
+	 * @param spawn 刷怪模板 / spawn template
+	 * instance index
 	 */
 	private static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
 		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();

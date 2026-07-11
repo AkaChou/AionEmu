@@ -1,21 +1,3 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -25,19 +7,47 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_LS_CONTROL_RESPONSE;
 
 /**
+ * GS→LS：修改账号权限等级或会员等级。
+ * GS→LS: change account access level or membership level.
+ *
  * @author Aionchs-Wylovech
  */
 public class CM_LS_CONTROL extends GsClientPacket {
 
+    /**
+     * 账号名。
+     * Account name.
+     */
     private String accountName;
+    /**
+     * 新参数值（权限/会员等级）。
+     * New parameter value (access/membership level).
+     */
     private int param;
+    /**
+     * 控制类型：1=权限等级，2=会员等级。
+     * Control type: 1 = access level, 2 = membership.
+     */
     private int type;
+    /**
+     * 目标玩家名。
+     * Target player name.
+     */
     private String playerName;
+    /**
+     * 操作管理员名。
+     * Admin name who requested the change.
+     */
     private String adminName;
+    /**
+     * 更新是否成功。
+     * Whether the update succeeded.
+     */
     private boolean result;
 
     /**
-     * {@inheritDoc}
+     * 读取控制类型、管理员、账号、玩家与参数。
+     * Reads control type, admin, account, player, and param.
      */
     @Override
     protected void readImpl() {
@@ -50,7 +60,8 @@ public class CM_LS_CONTROL extends GsClientPacket {
     }
 
     /**
-     * {@inheritDoc}
+     * 更新账号权限/会员并回复 GS。
+     * Updates account access/membership and replies to GS.
      */
     @Override
     protected void runImpl() {

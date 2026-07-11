@@ -1,53 +1,38 @@
-/**
- * This file is part of Aion-Lightning <aion-lightning.org>.
- *
- *  Aion-Lightning is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Aion-Lightning is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details. *
- *  You should have received a copy of the GNU General Public License
- *  along with Aion-Lightning.
- *  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.aionemu.loginserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.loginserver.model.AccountTime;
 
 /**
- * DAO to manage account time
+ * 账号会话/惩罚时间数据访问抽象层。
+ * DAO that manages account time (session, penalty, expiration).
  */
 public abstract class AccountTimeDAO implements DAO {
 
     /**
-     * Updates @link com.aionemu.loginserver.model.AccountTime data of account
+     * 写入或替换账号时间数据。
+     * Updates {@link AccountTime} data of an account.
      *
-     * @param accountId
-     *          account id
-     * @param accountTime account time set
-     * @return was update successfull or not
+     * 账号 ID / Account id
+     * @param accountTime 账号时间数据 / Account time set
+     * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateAccountTime(int accountId, AccountTime accountTime);
 
     /**
-     * Updates @link com.aionemu.loginserver.model.AccountTime data of account
+     * 读取账号时间数据。
+     * Loads {@link AccountTime} data of an account.
      *
-     * @param accountId
-     * @return AccountTime
+     * 账号 ID / Account id
+     * @return 账号时间；不存在时为 null / AccountTime, or null if missing
      */
     public abstract AccountTime getAccountTime(int accountId);
 
     /**
-     * Returns uniquire class name for all implementations
+     * 返回实现唯一类名标识。
+     * Returns unique class name for all implementations.
      *
-     * @return uniquire class name for all implementations
+     * Fully qualified class name
      */
     @Override
     public final String getClassName() {

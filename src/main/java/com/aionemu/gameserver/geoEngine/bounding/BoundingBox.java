@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.geoEngine.bounding;
 
 import java.nio.FloatBuffer;
@@ -36,30 +20,37 @@ import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 //import com.jme.scene.TriMesh;
 
 /**
- * <code>BoundingBox</code> defines an axis-aligned cube that defines a
- * container for a group of vertices of a particular piece of geometry. This box
- * defines a center and extents from that center along the x, y and z axis. <br>
+ * 轴对齐包围盒（AABB），以中心点及沿 x/y/z 轴的半长（extent）描述几何顶点集合的包容体。
+ * Axis-aligned bounding box defined by a center and extents along the x, y and z axes.
  * <br>
- * A typical usage is to allow the class define the center and radius by calling
- * either <code>containAABB</code> or <code>averagePoints</code>. A call to
- * <code>computeFramePoint</code> in turn calls <code>containAABB</code>.
+ * 典型用法是通过 {@link #containAABB} 或平均点集确定中心与半径；
+ * {@code computeFramePoint} 内部会调用 {@link #containAABB}。
+ * Typical usage determines center/extents via {@link #containAABB} or average points;
+ * {@code computeFramePoint} in turn calls {@link #containAABB}.
  *
  * @author Joshua Slack
  * @version $Id: BoundingBox.java,v 1.50 2007/09/22 16:46:35 irrisor Exp $
  */
 public class BoundingBox extends BoundingVolume {
 
+	/** 沿 X 轴半范围 / Half-extent along the X axis */
 	float xExtent, yExtent, zExtent;
 
 	/**
-	 * Default constructor instantiates a new <code>BoundingBox</code> object.
+	 * 默认构造，实例化空包围盒。
+	 * Default constructor instantiating an empty bounding box.
 	 */
 	public BoundingBox() {
 	}
 
 	/**
-	 * Contstructor instantiates a new <code>BoundingBox</code> object with given
-	 * specs.
+	 * 以给定中心与三轴半长构造包围盒。
+	 * Constructs a bounding box with the given center and extents.
+	 *
+	 * @param c 中心点 / center
+	 * @param x X 半长 / X extent
+	 * @param y Y 半长 / Y extent
+	 * @param z Z 半长 / Z extent
 	 */
 	public BoundingBox(Vector3f c, float x, float y, float z) {
 		this.center.set(c);
@@ -68,6 +59,12 @@ public class BoundingBox extends BoundingVolume {
 		this.zExtent = z;
 	}
 
+	/**
+	 * 从另一包围盒拷贝构造。
+	 * Copy-constructor from another bounding box.
+	 *
+	 * source box
+	 */
 	public BoundingBox(BoundingBox source) {
 		this.center.set(source.center);
 		this.xExtent = source.xExtent;
@@ -75,20 +72,33 @@ public class BoundingBox extends BoundingVolume {
 		this.zExtent = source.zExtent;
 	}
 
+	/**
+	 * 以最小/最大角点构造包围盒。
+	 * Constructs a bounding box from min/max corners.
+	 *
+	 * @param min 最小角点 / minimum corner
+	 * @param max 最大角点 / maximum corner
+	 */
 	public BoundingBox(Vector3f min, Vector3f max) {
 		setMinMax(min, max);
 	}
 
+	/**
+	 * 返回包围体类型（AABB）。
+	 * Returns the bounding-volume type (AABB).
+	 *
+	 * type enum
+	 */
 	@Override
 	public Type getType() {
 		return Type.AABB;
 	}
 
 	/**
-	 * <code>computeFromPoints</code> creates a new Bounding Box from a given set of
-	 * points. It uses the <code>containAABB</code> method as default.
+	 * 由点集计算包围盒，默认委托 {@link #containAABB}。
+	 * Computes the bounding box from a point set; defaults to {@link #containAABB}.
 	 *
-	 * @param points the points to contain.
+	 * @param points 待包容的点缓冲 / points to contain
 	 */
 	@Override
 	public void computeFromPoints(FloatBuffer points) {
@@ -96,12 +106,12 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>computeFromTris</code> creates a new Bounding Box from a given set of
-	 * triangles. It is used in OBBTree calculations.
+	 * 由三角形数组计算包围盒，用于 OBBTree 相关计算。
+	 * Computes the bounding box from a triangle array (used in OBBTree calculations).
 	 *
-	 * @param tris
-	 * @param start
-	 * @param end
+	 * @param tris 三角形数组 / triangle array
+	 * @param start 起始下标（含） / start index (inclusive)
+	 * @param end 结束下标（不含） / end index (exclusive)
 	 */
 	public void computeFromTris(Triangle[] tris, int start, int end) {
 		if (end - start <= 0) {
@@ -132,6 +142,15 @@ public class BoundingBox extends BoundingVolume {
 		Vector3f.recycle(max);
 	}
 
+	/**
+	 * 由网格索引范围计算包围盒。
+	 * Computes the bounding box from mesh triangle indices over a range.
+	 *
+	 * @param indices 三角形索引数组 / triangle index array
+	 * mesh
+	 * @param start 起始下标（含） / start index (inclusive)
+	 * @param end 结束下标（不含） / end index (exclusive)
+	 */
 	public void computeFromTris(int[] indices, Mesh mesh, int start, int end) {
 		if (end - start <= 0) {
 			return;
@@ -165,6 +184,14 @@ public class BoundingBox extends BoundingVolume {
 		Triangle.recycle(triangle);
 	}
 
+	/**
+	 * 用点更新 min/max 角点（分量级扩展）。
+	 * Expands min/max corners component-wise with the given point.
+	 *
+	 * @param min 当前最小角点 / current minimum
+	 * @param max 当前最大角点 / current maximum
+	 * @param point 待比较点 / candidate point
+	 */
 	public static final void checkMinMax(Vector3f min, Vector3f max, Vector3f point) {
 		if (point.x < min.x) {
 			min.x = point.x;
@@ -187,11 +214,10 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>containAABB</code> creates a minimum-volume axis-aligned bounding box
-	 * of the points, then selects the smallest enclosing sphere of the box with the
-	 * sphere centered at the boxes center.
+	 * 由点缓冲构建最小体积轴对齐包围盒，中心取盒子中心。
+	 * Builds a minimum-volume axis-aligned bounding box of the points, centered at the box center.
 	 *
-	 * @param points the list of points.
+	 * @param points 点列表缓冲 / list of points
 	 */
 	public void containAABB(FloatBuffer points) {
 		if (points == null) {
@@ -239,6 +265,14 @@ public class BoundingBox extends BoundingVolume {
 		zExtent = maxZ - center.z;
 	}
 
+	/**
+	 * 用 4x4 矩阵变换本包围盒，结果写入 store（或新建）。
+	 * Transforms this bounding box by a 4x4 matrix into store (or a new box).
+	 *
+	 * @param trans 变换矩阵 / transform matrix
+	 * @param store 结果存储；null 或类型不匹配时新建 / result store; created if null or wrong type
+	 * transformed AABB
+	 */
 	@Override
 	public BoundingVolume transform(Matrix4f trans, BoundingVolume store) {
 		BoundingBox box;
@@ -254,13 +288,13 @@ public class BoundingBox extends BoundingVolume {
 		Matrix3f transMatrix = Matrix3f.newInstance();
 		trans.toRotationMatrix(transMatrix);
 
-		// Make the rotation matrix all positive to get the maximum x/y/z extent
+		// 将旋转矩阵取正以得到最大 x/y/z 范围 / Make the rotation matrix all positive to get the maximum x/y/z extent
 		transMatrix.absoluteLocal();
 		Vector3f vect1 = Vector3f.newInstance();
 		vect1.set(xExtent, yExtent, zExtent);
 		transMatrix.mult(vect1, vect1);
 
-		// Assign the biggest rotations after scales.
+		// 缩放后分配最大旋转。 / Assign the biggest rotations after scales.
 		box.xExtent = FastMath.abs(vect1.getX());
 		box.yExtent = FastMath.abs(vect1.getY());
 		box.zExtent = FastMath.abs(vect1.getZ());
@@ -271,10 +305,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>whichSide</code> takes a plane (typically provided by a view frustum)
-	 * to determine which side this bound is on.
+	 * 判断本包围盒相对给定平面（通常来自视锥）位于哪一侧。
+	 * Determines which side of the given plane (typically from a view frustum) this bound lies on.
 	 *
-	 * @param plane the plane to check against.
+	 * @param plane 待检测平面 / plane to check against
+	 * plane side
 	 */
 	@Override
 	public Plane.Side whichSide(Plane plane) {
@@ -283,7 +318,7 @@ public class BoundingBox extends BoundingVolume {
 
 		float distance = plane.pseudoDistance(center);
 
-		// changed to < and > to prevent floating point precision problems
+		// 改为 < 与 > 以防浮点精度问题 / changed to < and > to prevent floating point precision problems
 		if (distance < -radius) {
 			return Plane.Side.Negative;
 		} else if (distance > radius) {
@@ -294,11 +329,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>merge</code> combines this sphere with a second bounding sphere. This
-	 * new sphere contains both bounding spheres and is returned.
+	 * 合并本包围盒与另一包围体，返回能包容两者的新 AABB。
+	 * Merges this box with another volume and returns a new AABB containing both.
 	 *
-	 * @param volume the sphere to combine with this sphere.
-	 * @return the new sphere
+	 * @param volume 待合并的包围体 / volume to merge with
+	 * @return 合并后的包围体；不支持的类型返回 null / merged volume, or null if unsupported
 	 */
 	@Override
 	public BoundingVolume merge(BoundingVolume volume) {
@@ -324,12 +359,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>mergeLocal</code> combines this sphere with a second bounding sphere
-	 * locally. Altering this sphere to contain both the original and the additional
-	 * sphere volumes;
+	 * 就地合并另一包围体，修改自身以包容两者。
+	 * Merges another volume into this box in place, expanding to contain both.
 	 *
-	 * @param volume the sphere to combine with this sphere.
-	 * @return this
+	 * @param volume 待合并的包围体 / volume to merge with
+	 * @return 本实例；不支持的类型返回 null / this, or null if unsupported
 	 */
 	@Override
 	public BoundingVolume mergeLocal(BoundingVolume volume) {
@@ -351,10 +385,7 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * Merges this AABB with the given OBB.
-	 *
-	 * @param volume the OBB to merge this AABB with.
-	 * @return This AABB extended to fit the given OBB.
+	 * 将此 AABB 与给定 OBB 合并。 / Merges this AABB with the given OBB.
 	 */
 	// private BoundingBox mergeOBB(OrientedBoundingBox volume) {
 	// if (!volume.correctCorners)
@@ -394,15 +425,15 @@ public class BoundingBox extends BoundingVolume {
 	// }
 
 	/**
-	 * <code>merge</code> combines this bounding box with another box which is
-	 * defined by the center, x, y, z extents.
+	 * 将本包围盒与以中心/半长描述的另一盒子合并，结果写入 rVal。
+	 * Merges this box with another defined by center and extents into rVal.
 	 *
-	 * @param boxCenter the center of the box to merge with
-	 * @param boxX      the x extent of the box to merge with.
-	 * @param boxY      the y extent of the box to merge with.
-	 * @param boxZ      the z extent of the box to merge with.
-	 * @param rVal      the resulting merged box.
-	 * @return the resulting merged box.
+	 * @param boxCenter 待合并盒子的中心 / center of the box to merge with
+	 * @param boxX 待合并盒子的 X 半长 / X extent of the box to merge with
+	 * @param boxY 待合并盒子的 Y 半长 / Y extent of the box to merge with
+	 * @param boxZ 待合并盒子的 Z 半长 / Z extent of the box to merge with
+	 * @param rVal 结果盒子 / resulting merged box
+	 * @return 合并结果盒子 / the resulting merged box
 	 */
 	private BoundingBox merge(Vector3f boxCenter, float boxX, float boxY, float boxZ, BoundingBox rVal) {
 		Vector3f vect1 = Vector3f.newInstance();
@@ -446,12 +477,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>clone</code> creates a new BoundingBox object containing the same data
-	 * as this one.
+	 * 克隆本包围盒；若 store 为 AABB 则复用，否则新建。
+	 * Clones this bounding box; reuses store when it is an AABB, otherwise creates a new one.
 	 *
-	 * @param store where to store the cloned information. if null or wrong class, a
-	 *              new store is created.
-	 * @return the new BoundingBox
+	 * @param store 结果存储；null 或类型不匹配时新建 / store for the clone; created if null or wrong type
+	 * @return 克隆的包围盒 / the cloned bounding box
 	 */
 	@Override
 	public BoundingBox clone(BoundingVolume store) {
@@ -470,10 +500,10 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>toString</code> returns the string representation of this object. The
-	 * form is: "Radius: RRR.SSSS Center: <Vector>".
+	 * 返回本对象的字符串表示（中心与三轴半长）。
+	 * Returns the string representation (center and extents).
 	 *
-	 * @return the string representation of this.
+	 * @return 字符串表示 / string representation
 	 */
 	@Override
 	public String toString() {
@@ -482,9 +512,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * determines if this bounding box intersects a given bounding sphere.
+	 * 检测本包围盒是否与给定包围球相交。
+	 * Determines whether this bounding box intersects the given bounding sphere.
 	 *
-	 * @see com.jme.bounding.BoundingVolume#intersectsSphere(com.jme.bounding.BoundingSphere)
+	 * @param bs 包围球 / bounding sphere
+	 * whether they intersect
 	 */
 	@Override
 	public boolean intersectsSphere(BoundingSphere bs) {
@@ -494,10 +526,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * intersects determines if this Bounding Box intersects with another given
-	 * bounding volume. If so, true is returned, otherwise, false is returned.
+	 * 检测本包围盒是否与另一包围体相交（委托对方的 AABB 相交实现）。
+	 * Determines whether this box intersects another volume (delegates to the peer AABB test).
 	 *
-	 * @see com.aionemu.gameserver.geoEngine.bounding.jme.bounding.BoundingVolume#intersects(com.aionemu.gameserver.geoEngine.bounding.jme.bounding.BoundingVolume)
+	 * @param bv 另一包围体 / other bounding volume
+	 * whether they intersect
 	 */
 	@Override
 	public boolean intersects(BoundingVolume bv) {
@@ -505,10 +538,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * determines if this bounding box intersects a given bounding box. If the two
-	 * boxes intersect in any way, true is returned. Otherwise, false is returned.
+	 * 检测本包围盒是否与另一 AABB 在任意轴上相交。
+	 * Determines whether this box intersects another AABB in any way.
 	 *
-	 * @see com.aionemu.gameserver.geoEngine.bounding.jme.bounding.BoundingVolume#intersectsBoundingBox(com.aionemu.gameserver.geoEngine.bounding.jme.bounding.BoundingBox)
+	 * other AABB
+	 * whether they intersect
 	 */
 	@Override
 	public boolean intersectsBoundingBox(BoundingBox bb) {
@@ -526,20 +560,18 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * determines if this bounding box intersects with a given oriented bounding
-	 * box.
-	 *
-	 * @see com.jme.bounding.BoundingVolume#intersectsOrientedBoundingBox(com.jme.bounding.OrientedBoundingBox)
+	 * 判断此包围体是否与给定包围盒相交。 / determines if this bounding box intersects with a given oriented bounding box. @see com.jme.bounding.BoundingVolume#intersectsOrientedBoundingBox(com.jme.bounding.OrientedBoundingBox)
 	 */
 	// public boolean intersectsOrientedBoundingBox(OrientedBoundingBox obb) {
 	// return obb.intersectsBoundingBox(this);
 	// }
 
 	/**
-	 * determines if this bounding box intersects with a given ray object. If an
-	 * intersection has occurred, true is returned, otherwise false is returned.
+	 * 检测本包围盒是否与射线相交。
+	 * Determines whether this bounding box intersects the given ray.
 	 *
-	 * @see com.aionemu.gameserver.geoEngine.bounding.jme.bounding.BoundingVolume#intersects(com.jme.math.Ray)
+	 * ray
+	 * whether they intersect
 	 */
 	@Override
 	public boolean intersects(Ray ray) {
@@ -653,7 +685,13 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * @see com.aionemu.gameserver.geoEngine.bounding.jme.bounding.BoundingVolume#intersectsWhere(com.jme.math.Ray)
+	 * 与射线求交并将碰撞结果写入 results。
+	 * Intersects this box with a ray and records collision results.
+	 *
+	 * ray
+	 *
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * @param results number of collision points (0 / 1/2)
 	 */
 	private int collideWithRay(Ray ray, CollisionResults results) {
 		Vector3f diff = Vector3f.newInstance().set(ray.origin).subtractLocal(center);
@@ -691,6 +729,15 @@ public class BoundingBox extends BoundingVolume {
 		return 0;
 	}
 
+	/**
+	 * 与可碰撞对象求交（支持 Ray、Triangle）。
+	 * Collides with a collidable (supports Ray and Triangle).
+	 *
+	 * @param other 可碰撞对象 / collidable
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * collision count
+	 * unsupported type。 / unsupported type.
+	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
 		if (other instanceof Ray) {
@@ -710,36 +757,59 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * C code ported from
-	 * http://www.cs.lth.se/home/Tomas_Akenine_Moller/code/tribox3.txt
+	 * 检测本包围盒是否与由三顶点构成的三角形相交（移植自 Tomas Akenine-Möller 的 tribox3）。
+	 * Tests intersection with a triangle given by three vertices (ported from Tomas Akenine-Möller's tribox3).
 	 *
-	 * @param v1
-	 * @param v2
-	 * @param v3
-	 * @return
+	 * @param v1 三角形顶点 1 / triangle vertex 1
+	 * @param v2 三角形顶点 2 / triangle vertex 2
+	 * @param v3 三角形顶点 3 / triangle vertex 3
+	 * whether they intersect
 	 */
 	public boolean intersects(Vector3f v1, Vector3f v2, Vector3f v3) {
 		return Intersection.intersect(this, v1, v2, v3);
 	}
 
+	/**
+	 * 判断点是否严格位于盒内（不含边界）。
+	 * Returns whether the point lies strictly inside the box (boundary excluded).
+	 *
+	 * point to test
+	 *
+	 * @param point @return 是否在内部 / whether inside
+	 */
 	@Override
 	public boolean contains(Vector3f point) {
 		return FastMath.abs(center.x - point.x) < xExtent && FastMath.abs(center.y - point.y) < yExtent
 				&& FastMath.abs(center.z - point.z) < zExtent;
 	}
 
+	/**
+	 * 判断点是否与盒子相交（含边界）。
+	 * Returns whether the point intersects the box (boundary included).
+	 *
+	 * point to test
+	 * whether they intersect
+	 */
 	@Override
 	public boolean intersects(Vector3f point) {
 		return FastMath.abs(center.x - point.x) <= xExtent && FastMath.abs(center.y - point.y) <= yExtent
 				&& FastMath.abs(center.z - point.z) <= zExtent;
 	}
 
+	/**
+	 * 计算点到盒子表面的最短距离；点在内部时为 0。
+	 * Distance from the point to the box surface; zero when the point is inside.
+	 *
+	 * point to test
+	 *
+	 * @param point @return 到边缘的距离 / distance to edge
+	 */
 	@Override
 	public float distanceToEdge(Vector3f point) {
-		// compute coordinates of point in box coordinate system
+		// 在盒子坐标系中计算点的坐标 / compute coordinates of point in box coordinate system
 		Vector3f closest = point.subtract(center);
 
-		// project test point onto box
+		// 将测试点投影到盒子上 / project test point onto box
 		float sqrDistance = 0.0f;
 		float delta;
 
@@ -777,18 +847,18 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * <code>clip</code> determines if a line segment intersects the current test
-	 * plane.
+	 * 线段相对测试平面的裁剪；用于射线-AABB 求交。
+	 * Clips a line segment against a test plane (used by ray-AABB intersection).
 	 *
-	 * @param denom the denominator of the line segment.
-	 * @param numer the numerator of the line segment.
-	 * @param t     test values of the plane.
-	 * @return true if the line segment intersects the plane, false otherwise.
+	 * @param denom 线段分母 / denominator of the line segment
+	 * @param numer 线段分子 / numerator of the line segment
+	 * @param t 平面参数区间 [t0, t1] / plane parameter interval [t0, t1]
+	 * @return 线段是否仍与当前平面相交 / true if the segment still intersects the plane
 	 */
 	private boolean clip(float denom, float numer, float[] t) {
-		// Return value is 'true' if line segment intersects the current test
-		// plane. Otherwise 'false' is returned in which case the line segment
-		// is entirely clipped.
+		// 线段与当前测试相交时返回 true / Return value is 'true' if line segment intersects the current test
+		// 平面。否则返回 false，此时线段 / plane. Otherwise 'false' is returned in which case the line segment
+		// 被完全裁剪。 / is entirely clipped.
 		if (denom > 0.0f) {
 			if (numer > denom * t[1]) {
 				return false;
@@ -811,10 +881,11 @@ public class BoundingBox extends BoundingVolume {
 	}
 
 	/**
-	 * Query extent.
+	 * 查询三轴半长向量。
+	 * Queries the extent vector (x/y/z half-lengths).
 	 *
-	 * @param store where extent gets stored - null to return a new vector
-	 * @return store / new vector
+	 * @param store 结果存储；null 时新建 / store for extents; created if null
+	 * extent vector
 	 */
 	public Vector3f getExtent(Vector3f store) {
 		if (store == null) {
@@ -824,18 +895,43 @@ public class BoundingBox extends BoundingVolume {
 		return store;
 	}
 
+	/**
+	 * 获取 X 轴半长。
+	 * Returns the X-axis half-extent.
+	 *
+	 * X extent
+	 */
 	public float getXExtent() {
 		return xExtent;
 	}
 
+	/**
+	 * 获取 Y 轴半长。
+	 * Returns the Y-axis half-extent.
+	 *
+	 * Y extent
+	 */
 	public float getYExtent() {
 		return yExtent;
 	}
 
+	/**
+	 * 获取 Z 轴半长。
+	 * Returns the Z-axis half-extent.
+	 *
+	 * Z extent
+	 */
 	public float getZExtent() {
 		return zExtent;
 	}
 
+	/**
+	 * 设置 X 轴半长（不可为负）。
+	 * Sets the X-axis half-extent (must be non-negative).
+	 *
+	 * X extent
+	 * if negative
+	 */
 	public void setXExtent(float xExtent) {
 		if (xExtent < 0) {
 			throw new IllegalArgumentException();
@@ -844,6 +940,13 @@ public class BoundingBox extends BoundingVolume {
 		this.xExtent = xExtent;
 	}
 
+	/**
+	 * 设置 Y 轴半长（不可为负）。
+	 * Sets the Y-axis half-extent (must be non-negative).
+	 *
+	 * Y extent
+	 * if negative
+	 */
 	public void setYExtent(float yExtent) {
 		if (yExtent < 0) {
 			throw new IllegalArgumentException();
@@ -852,6 +955,13 @@ public class BoundingBox extends BoundingVolume {
 		this.yExtent = yExtent;
 	}
 
+	/**
+	 * 设置 Z 轴半长（不可为负）。
+	 * Sets the Z-axis half-extent (must be non-negative).
+	 *
+	 * Z extent
+	 * if negative
+	 */
 	public void setZExtent(float zExtent) {
 		if (zExtent < 0) {
 			throw new IllegalArgumentException();
@@ -860,6 +970,13 @@ public class BoundingBox extends BoundingVolume {
 		this.zExtent = zExtent;
 	}
 
+	/**
+	 * 获取最小角点（中心减半长）。
+	 * Returns the minimum corner (center minus extents).
+	 *
+	 * @param store 结果存储；null 时新建 / store for the result; created if null
+	 * minimum corner
+	 */
 	public Vector3f getMin(Vector3f store) {
 		if (store == null) {
 			store = new Vector3f();
@@ -868,6 +985,13 @@ public class BoundingBox extends BoundingVolume {
 		return store;
 	}
 
+	/**
+	 * 获取最大角点（中心加半长）。
+	 * Returns the maximum corner (center plus extents).
+	 *
+	 * @param store 结果存储；null 时新建 / store for the result; created if null
+	 * maximum corner
+	 */
 	public Vector3f getMax(Vector3f store) {
 		if (store == null) {
 			store = new Vector3f();
@@ -876,6 +1000,13 @@ public class BoundingBox extends BoundingVolume {
 		return store;
 	}
 
+	/**
+	 * 由最小/最大角点设置中心与三轴半长。
+	 * Sets center and extents from minimum and maximum corners.
+	 *
+	 * @param min 最小角点 / minimum corner
+	 * @param max 最大角点 / maximum corner
+	 */
 	public void setMinMax(Vector3f min, Vector3f max) {
 		this.center.set(max).addLocal(min).multLocal(0.5f);
 		xExtent = FastMath.abs(max.x - center.x);
@@ -883,6 +1014,12 @@ public class BoundingBox extends BoundingVolume {
 		zExtent = FastMath.abs(max.z - center.z);
 	}
 
+	/**
+	 * 返回包围盒体积（8 × xExtent × yExtent × zExtent）。
+	 * Returns the box volume (8 × xExtent × yExtent × zExtent).
+	 *
+	 * volume
+	 */
 	@Override
 	public float getVolume() {
 		return (8 * xExtent * yExtent * zExtent);

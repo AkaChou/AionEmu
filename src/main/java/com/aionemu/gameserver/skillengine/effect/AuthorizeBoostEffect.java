@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,14 +6,22 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
 
-/****/
 /**
- * Author Rinzler (Encom) /
- ****/
-
+ * 授权强化加成效果：标记运行中效果启用授权（Authorize）提升。
+ * Authorize boost effect: marks the runtime effect to enable authorize-rate increase.
+ *
+ * @author Rinzler (Encom)
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AuthorizeBoostEffect")
 public class AuthorizeBoostEffect extends BuffEffect {
+
+	/**
+	 * 标记本效果启用授权加成并记为成功。
+	 * Marks authorize boost and records this effect as successful.
+	 *
+	 * @param effect 运行时效果 / runtime effect
+	 */
 	@Override
 	public void calculate(Effect effect) {
 		effect.setAuthorizeBoost(true);

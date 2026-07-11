@@ -1,33 +1,21 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dao;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
+ * 玩家生命状态（HP/MP 等）数据访问对象。
+ * Player life-stats data access object.
+ *
  * @author Mr. Poke
  */
 public abstract class PlayerLifeStatsDAO implements DAO {
 
 	/**
-	 * Returns unique identifier for PlayerLifeStatsDAO
-	 * 
-	 * @return unique identifier for PlayerLifeStatsDAO
+	 * 返回本 DAO 的唯一类名标识。
+	 * Returns the unique class-name identifier of this DAO.
+	 *
+	 * DAO class name
 	 */
 	@Override
 	public final String getClassName() {
@@ -35,17 +23,26 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	}
 
 	/**
-	 * @param player
+	 * 加载玩家生命状态。
+	 * Loads player life stats.
+	 *
+	 * 玩家 / player
 	 */
 	public abstract void loadPlayerLifeStat(Player player);
 
 	/**
-	 * @param player
+	 * 插入玩家生命状态记录。
+	 * Inserts a player life-stat record.
+	 *
+	 * 玩家 / player
 	 */
 	public abstract void insertPlayerLifeStat(Player player);
 
 	/**
-	 * @param player
+	 * 更新玩家生命状态记录。
+	 * Updates a player life-stat record.
+	 *
+	 * 玩家 / player
 	 */
 	public abstract void updatePlayerLifeStat(Player player);
 }

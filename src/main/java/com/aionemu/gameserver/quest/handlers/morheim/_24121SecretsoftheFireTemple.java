@@ -7,10 +7,10 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-/*
-* DainAvenger
-*/
-
+/**
+ * 莫尔海姆任务脚本：Secretsofthe Fire Temple（任务 ID 24121）。
+ * Morheim quest script: Secretsofthe Fire Temple (quest ID 24121).
+ */
 public class _24121SecretsoftheFireTemple extends QuestHandler {
 
 	private static final int questId = 24121;

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.instance.IDEvent_Def;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * ID Event Def 副本 NPC AI：IDEVENT Def Heal Pol Tower B（@AIName "IDEVENT_Def_HealPolTower_B"），继承 NpcAI2。
+ * ID Event Def instance NPC AI: IDEVENT Def Heal Pol Tower B (@AIName "IDEVENT_Def_HealPolTower_B"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("IDEVENT_Def_HealPolTower_B")
 public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 {
@@ -42,7 +28,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		PlayerEffectController effectController = player.getEffectController();
-		// ?? ? I
+		// ？？？ III / ?? ? III
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000470, 2)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4936);
@@ -58,7 +44,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				GameEngineServices.skillEngine().applyEffectDirectly(4940, player, player, 1200000 * 1);
 			}
 		}
-		// ?? ? II
+		// ？？？ III / ?? ? III
 		else if (dialogId == 10001 && player.getInventory().decreaseByItemId(186000470, 7)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);
@@ -74,7 +60,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				GameEngineServices.skillEngine().applyEffectDirectly(4941, player, player, 1200000 * 1);
 			}
 		}
-		// ?? ? III
+		// ？？？ III / ?? ? III
 		else if (dialogId == 10002 && player.getInventory().decreaseByItemId(186000470, 13)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);
@@ -90,7 +76,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				GameEngineServices.skillEngine().applyEffectDirectly(4942, player, player, 1200000 * 1);
 			}
 		}
-		// ?? ? IV
+		// ？？？ III / ?? ? III
 		else if (dialogId == 10003 && player.getInventory().decreaseByItemId(186000470, 20)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);
@@ -106,7 +92,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				GameEngineServices.skillEngine().applyEffectDirectly(4943, player, player, 1200000 * 1);
 			}
 		}
-		// ?? ? V
+		// ？？？ III / ?? ? III
 		else if (dialogId == 10004 && player.getInventory().decreaseByItemId(186000470, 30)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);

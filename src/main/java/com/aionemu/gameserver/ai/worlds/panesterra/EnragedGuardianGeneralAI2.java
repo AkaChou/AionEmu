@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -30,10 +14,12 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Panesterra 区域 NPC AI：Enraged Guardian General（@AIName "enraged_guardian_general"），继承 AggressiveNpcAI2。
+ * Panesterra zone NPC AI: Enraged Guardian General (@AIName "enraged_guardian_general"), extends AggressiveNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("enraged_guardian_general")
 public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2
 {
@@ -130,19 +116,19 @@ public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2
         com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Loading the Advance Corridor Shield... Please wait.
+				// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
-				//The entrance to the Transidium Annex will open in 8 minutes.
+				// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_02, 10000);
-				//The entrance to the Transidium Annex will open in 6 minutes.
+				// 特兰西迪姆附楼入口将在 6 分钟后开启。 / The entrance to the Transidium Annex will open in 6 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_03, 120000);
-				//The entrance to the Transidium Annex will open in 4 minutes.
+				// 特兰西迪姆附楼入口将在 4 分钟后开启。 / The entrance to the Transidium Annex will open in 4 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_04, 240000);
-				//The entrance to the Transidium Annex will open in 2 minutes.
+				// 特兰西迪姆附楼入口将在 2 分钟后开启。 / The entrance to the Transidium Annex will open in 2 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_05, 360000);
-				//The entrance to the Transidium Annex will open in 1 minute.
+				// 特兰西迪姆附楼入口将在 1 分钟后开启。 / The entrance to the Transidium Annex will open in 1 minute.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_06, 420000);
-				//The entrance to the Transidium Annex has opened.
+				// 特兰西迪姆附楼入口已开启。 / The entrance to the Transidium Annex has opened.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_08, 480000);
 			}
 		});

@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.List;
@@ -25,6 +9,10 @@ import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+/**
+ * 同步挑战任务列表或单个挑战任务详情的服务端包。
+ * Server packet synchronizing the challenge-task list or a single challenge-task detail.
+ */
 public class SM_CHALLENGE_LIST extends AionServerPacket {
 	int action;
 	int ownerId;
@@ -32,6 +20,15 @@ public class SM_CHALLENGE_LIST extends AionServerPacket {
 	List<ChallengeTask> tasks;
 	ChallengeTask task;
 
+	/**
+	 * 构造挑战任务列表同步包。
+	 * Builds a challenge-task list sync packet.
+	 *
+	 * action code
+	 * owner id
+	 * @param ownerType 所有者类型 / owner challenge type
+	 * @param tasks 挑战任务列表 / challenge tasks
+	 */
 	public SM_CHALLENGE_LIST(int action, int ownerId, ChallengeType ownerType, List<ChallengeTask> tasks) {
 		this.action = action;
 		this.ownerId = ownerId;
@@ -39,6 +36,15 @@ public class SM_CHALLENGE_LIST extends AionServerPacket {
 		this.tasks = tasks;
 	}
 
+	/**
+	 * 构造单个挑战任务详情同步包。
+	 * Builds a single challenge-task detail sync packet.
+	 *
+	 * action code
+	 * owner id
+	 * @param ownerType 所有者类型 / owner challenge type
+	 * @param task 挑战任务 / challenge task
+	 */
 	public SM_CHALLENGE_LIST(int action, int ownerId, ChallengeType ownerType, ChallengeTask task) {
 		this.action = action;
 		this.ownerId = ownerId;

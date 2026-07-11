@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr.asmodianWarshipInvasion;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -25,10 +9,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Exploration Area Flag（@AIName "battlefield_trigger_asmodians"），继承 ActionItemNpcAI2。
+ * RvR-related NPC AI: Exploration Area Flag (@AIName "battlefield_trigger_asmodians"), extends ActionItemNpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("battlefield_trigger_asmodians")
 public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 {
@@ -123,13 +109,13 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.
+				// 先锋指挥官正在准备探索区防御。 / Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_01, 0);
-				//Strike Commanders are preparing exploration area defenses. It will be established in 5 minutes.
+				// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in 5 minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_02, 300000);
-				//Strike Commanders are preparing exploration area defenses. It will be established in one minutes.
+				// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in one minutes.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_03, 540000);
-				//Strike Commissioned Officers are defending the exploration area.
+				// 突击委任军官正在防御探索区。 / Strike Commissioned Officers are defending the exploration area.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_04, 600000);
 			}
 		});

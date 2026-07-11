@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -22,14 +6,28 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
+ * 管理员添加技能命令：为目标玩家学习指定技能等级。
+ * Admin add-skill command: teaches a skill at a given level to the target player.
+ *
  * @author Phantom
  */
 public class AddSkill extends AdminCommand {
 
+	/**
+	 * 注册 {@code //addskill} 命令。
+	 * Registers the {@code //addskill} command.
+	 */
 	public AddSkill() {
 		super("addskill");
 	}
 
+	/**
+	 * 执行添加技能：解析技能 ID/等级并授予目标玩家。
+	 * Executes add-skill: parses skill id/level and grants it to the target player.
+	 *
+	 * admin
+	 * @param params 参数：技能 ID、技能等级 / skill id, skill level
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length != 2) {
@@ -59,6 +57,13 @@ public class AddSkill extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误时输出 {@code //addskill} 用法。
+	 * Prints {@code //addskill} usage on invalid arguments.
+	 *
+	 * admin
+	 * failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, "syntax //addskill <skillId> <skillLevel>");

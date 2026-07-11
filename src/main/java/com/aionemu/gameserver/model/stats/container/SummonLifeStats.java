@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.stats.container;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -28,6 +12,9 @@ import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
+ * 召唤物 Life 属性，用于属性相关逻辑。
+ * Summon Life Stats for stats logic.
+ *
  * @author ATracer
  */
 public class SummonLifeStats extends CreatureLifeStats<Summon> {
@@ -48,24 +35,23 @@ public class SummonLifeStats extends CreatureLifeStats<Summon> {
 
 	@Override
 	protected void onIncreaseMp(TYPE type, int value, int skillId, LOG log) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	protected void onReduceHp() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	protected void onReduceMp() {
-		// TODO Auto-generated method stub
 	}
 
+	/** 返回所有者 / Returns the owner*/
 	@Override
 	public Summon getOwner() {
 		return (Summon) super.getOwner();
 	}
 
+	/** 触发恢复任务 / Trigger restore task */
 	@Override
 	public void triggerRestoreTask() {
 		restoreLock.lock();

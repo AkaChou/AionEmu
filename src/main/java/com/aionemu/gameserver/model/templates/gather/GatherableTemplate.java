@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.gather;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -25,6 +9,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 
 /**
+ * 可采集物模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author ATracer, KID
  */
 
@@ -68,93 +55,95 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	@XmlAttribute
 	protected int eraseValue;
 
-	/**
-	 * Gets the value of the materials property.
-	 * 
-	 * @return possible object is {@link Materials }
-	 */
+	 /**
+	  * 获取 materials 属性值。
+	  * Gets the value of the materials property
+	  * @return possible object is {@link Materials }
+	  */
 	public Materials getMaterials() {
 		return materials;
 	}
 
+	/** 返回 extra 材料 / Returns the extra 材料 */
 	public ExMaterials getExtraMaterials() {
 		return exmaterials;
 	}
 
-	/**
-	 * Gets the value of the id property.
-	 */
+	 /**
+	  * 获取 id 属性值。
+	  * Gets the value of the id property
+	  */
 	@Override
 	public int getTemplateId() {
 		return id;
 	}
 
-	/**
-	 * Gets the value of the aerialAdj property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 aerialAdj 属性值。
+	  * Gets the value of the aerialAdj property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getAerialAdj() {
 		return aerialAdj;
 	}
 
-	/**
-	 * Gets the value of the failureAdj property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 failureAdj 属性值。
+	  * Gets the value of the failureAdj property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getFailureAdj() {
 		return failureAdj;
 	}
 
-	/**
-	 * Gets the value of the successAdj property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 successAdj 属性值。
+	  * Gets the value of the successAdj property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getSuccessAdj() {
 		return successAdj;
 	}
 
-	/**
-	 * Gets the value of the harvestSkill property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 harvestSkill 属性值。
+	  * Gets the value of the harvestSkill property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getHarvestSkill() {
 		return harvestSkill;
 	}
 
-	/**
-	 * Gets the value of the skillLevel property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 skillLevel 属性值。
+	  * Gets the value of the skillLevel property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getSkillLevel() {
 		return skillLevel;
 	}
 
-	/**
-	 * Gets the value of the harvestCount property.
-	 * 
-	 * @return possible object is {@link Integer }
-	 */
+	 /**
+	  * 获取 harvestCount 属性值。
+	  * Gets the value of the harvestCount property
+	  * @return possible object is {@link Integer }
+	  */
 	public int getHarvestCount() {
 		return harvestCount;
 	}
 
-	/**
-	 * Gets the value of the sourceType property.
-	 * 
-	 * @return possible object is {@link String }
-	 */
+	 /**
+	  * 获取 sourceType 属性值。
+	  * Gets the value of the sourceType property
+	  * @return possible object is {@link String }
+	  */
 	public String getSourceType() {
 		return sourceType;
 	}
 
 	/**
-	 * Gets the value of the name property.
-	 * 
+	 * 获取 value 的名称 property。 / Gets the value of the name property
+	 *
 	 * @return possible object is {@link String }
 	 */
 	@Override
@@ -170,26 +159,32 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 		return nameId;
 	}
 
+	/** 返回 captcha rate / Returns the captcha rate */
 	public int getCaptchaRate() {
 		return captcha;
 	}
 
+	/** 获取等级限制。 / Returns the level limit. */
 	public int getLevelLimit() {
 		return lvlLimit;
 	}
 
+	/** 返回 required item id / Returns the required item id */
 	public int getRequiredItemId() {
 		return reqItem;
 	}
 
+	/** 返回 required item name id / Returns the required item name id */
 	public int getRequiredItemNameId() {
 		return reqItemNameId * 2 + 1;
 	}
 
+	/** 返回检查类型 / Returns the check type*/
 	public int getCheckType() {
 		return checkType;
 	}
 
+	/** 返回 erase value / Returns the erase value */
 	public int getEraseValue() {
 		return eraseValue;
 	}

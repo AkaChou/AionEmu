@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.templates.restriction;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -22,6 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
+ * 物品 Cleanup 模板（静态数据/XML）。
+ * XML template. / XML template.
+ *
  * @author KID
  */
 @XmlRootElement(name = "item_restriction_cleanups")
@@ -41,26 +28,32 @@ public class ItemCleanupTemplate {
 	@XmlAttribute
 	private byte lwh = -1;
 
+	/** 结果交易。 / Result Trade. */
 	public byte resultTrade() {
 		return trade;
 	}
 
+	/** 结果出售。 / Result Sell. */
 	public byte resultSell() {
 		return sell;
 	}
 
+	/** Result WH / Result WH */
 	public byte resultWH() {
 		return wh;
 	}
 
+	/** Result Account WH / Result Account WH */
 	public byte resultAccountWH() {
 		return awh;
 	}
 
+	/** 结果军团仓库 / Result Legion WH */
 	public byte resultLegionWH() {
 		return lwh;
 	}
 
+	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;
 	}

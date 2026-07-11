@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.siege;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * 攻城战相关 NPC AI：SWAA Gun Light（@AIName "SWAAGun_Light"），继承 NpcAI2。
+ * Siege-related NPC AI: SWAA Gun Light (@AIName "SWAAGun_Light"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("SWAAGun_Light")
 public class SWAAGun_LightAI2 extends NpcAI2
 {
@@ -47,11 +33,11 @@ public class SWAAGun_LightAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
 		    switch (getNpcId()) {
-				//Guardian Battery [Reshanta]
+				// 守护者炮台【雷珊塔】 / Guardian Battery [Reshanta]
 				case 251725:
 				case 251745:
 				case 251765:
-				//Elyos Defense Turret [Kaldor]
+				// 天族防御炮塔【卡尔多】 / Elyos Defense Turret [Kaldor]
 				case 252164:
 				case 252165:
 				case 252166:
@@ -59,7 +45,7 @@ public class SWAAGun_LightAI2 extends NpcAI2
 				case 252168:
 				case 252169:
 				case 252170:
-				//Empty Aetheric Cannon [Reshanta]
+				// 空以太加农【雷珊塔】 / Empty Aetheric Cannon [Reshanta]
 				case 881981:
 				    GameEngineServices.skillEngine().getSkill(player, 21517, 1, player).useNoAnimationSkill();
 				break;

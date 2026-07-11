@@ -12,8 +12,10 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
+ * 艾特南任务脚本：Bearer Of Bad News（任务 ID 1345）。
+ * Eltnen quest script: Bearer Of Bad News (quest ID 1345).
+ *
  * @author Ritsu
- * 
  */
 public class _1345BearerOfBadNews extends QuestHandler {
 

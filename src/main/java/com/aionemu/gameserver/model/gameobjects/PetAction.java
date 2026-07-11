@@ -1,29 +1,18 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.model.gameobjects;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 宠物动作枚举。
+ * Pet Action enumeration.
+ *
  * @author ATracer
  */
 public enum PetAction {
+	/** 收养 / Adopt. */
 	ADOPT(1), SURRENDER(2), SPAWN(3), DISMISS(4), TALK_WITH_MERCHANT(6), TALK_WITH_MINDER(7), FOOD(9), RENAME(10),
+	/** 心情 / Mood. */
 	MOOD(12), UNKNOWN(255);
 
 	private static Map<Integer, PetAction> petActions;
@@ -41,10 +30,12 @@ public enum PetAction {
 		this.actionId = actionId;
 	}
 
+	/** 返回 action id / Returns the action id */
 	public int getActionId() {
 		return actionId;
 	}
 
+	/** 按 ID 返回 action / Returns the action by id */
 	public static PetAction getActionById(int actionId) {
 		PetAction action = petActions.get(actionId);
 		return action != null ? action : UNKNOWN;

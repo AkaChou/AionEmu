@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -29,15 +13,29 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.model.TeleportAnimation;
 
 /**
+ * 根据聊天位置链接传送的管理员命令（依赖 Geo）。
+ * Admin command to warp from a chat location link (requires Geo).
+ *
  * @author Source
  * @rework Kill3r
  */
 public class Warp extends AdminCommand {
 
+	/**
+	 * 构造 warp 命令。
+	 * Creates the warp command.
+	 */
 	public Warp() {
 		super("warp");
 	}
 
+	/**
+	 * 解析位置链接并传送；失败时尝试备用链接格式。
+	 * Parses a location link and teleports; falls back to alternate link format.
+	 *
+	 * @param player 执行 GM / Admin player
+	 * @param params 位置链接分词 / Location link tokens
+	 */
 	@Override
 	public void execute(Player player, String... params) {
 		if (params.length < 5) {
@@ -50,7 +48,7 @@ public class Warp extends AdminCommand {
 			return;
 		}
 
-		// [pos:Location;1 120010000 1304.7 1423.1 0.0 0] <-- uses this format of Location
+		// [pos:Location;1 120010000 1304.7 1423.1 0.0 0] <-- 使用此坐标格式 / uses this format of Location
 		try {
 
 			String LocS, first, last;
@@ -95,8 +93,7 @@ public class Warp extends AdminCommand {
 		}
 		catch (NumberFormatException e) {
 
-			// [pos:Location;120010000 1304.7 1423.1 0.0 0] <-- uses this format of Location
-
+			// [pos:Location;120010000 1304.7 1423.1 0.0 0] <-- 使用此坐标格式 / uses this format of Location
 			if (params.length < 5) {
 				onFail(player, "");
 				return;
@@ -140,6 +137,13 @@ public class Warp extends AdminCommand {
 		}
 	}
 
+	/**
+	 * 参数错误或 Geo 关闭时的提示。
+	 * Hint when parameters are invalid or Geo is disabled.
+	 *
+	 * 玩家 / Player
+	 * Failure message
+	 */
 	@Override
 	public void onFail(Player player, String message) {
 		if (!GeoDataConfig.GEO_ENABLE) {

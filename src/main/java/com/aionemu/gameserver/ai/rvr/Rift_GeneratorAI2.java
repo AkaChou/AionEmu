@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -27,10 +11,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * RvR 相关 NPC AI：Rift Generator（@AIName "rift_generator"），继承 NpcAI2。
+ * RvR-related NPC AI: Rift Generator (@AIName "rift_generator"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("rift_generator")
 public class Rift_GeneratorAI2 extends NpcAI2
 {
@@ -54,7 +40,7 @@ public class Rift_GeneratorAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Rift Generator is under attack! Once it is destroyed, the Dimensional Vortex will close.
+				// 裂隙发生器遭受攻击！被摧毁后次元漩涡将关闭。 / The Rift Generator is under attack! Once it is destroyed, the Dimensional Vortex will close.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CHAT_INVADEPORTL_KEEPER_SYSTEM_MSG01);
 			}
 		});
@@ -63,8 +49,8 @@ public class Rift_GeneratorAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				//The Rift Generator has been destroyed.
-				//The Dimensional Vortex will close shortly, the infiltration alliance will be disbanded, and its members will be returned home.
+				// 裂隙发生器已被摧毁。 / The Rift Generator has been destroyed.
+				// 次元漩涡即将关闭，渗透联盟将解散，成员将被送回。 / The Dimensional Vortex will close shortly, the infiltration alliance will be disbanded, and its members will be returned home.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CHAT_INVADEPORTL_KEEPER_SYSTEM_MSG03);
 			}
 		});

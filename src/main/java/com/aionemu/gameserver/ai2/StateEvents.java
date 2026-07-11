@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 import java.util.Arrays;
@@ -22,10 +6,17 @@ import java.util.EnumSet;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 
 /**
+ * 状态允许的事件集合：限制特定 AI 状态下可处理的事件类型。
+ * Allowed event sets per AI state: restricts which event types can be handled in a given state.
+ *
  * @author ATracer
  */
 public enum StateEvents {
-	CREATED_EVENTS(AIEventType.SPAWNED), DESPAWN_EVENTS(AIEventType.RESPAWNED, AIEventType.SPAWNED),
+	/** 创建状态允许的事件 / Events allowed in CREATED state */
+	CREATED_EVENTS(AIEventType.SPAWNED),
+	/** 消失状态允许的事件 / Events allowed in DESPAWNED state */
+	DESPAWN_EVENTS(AIEventType.RESPAWNED, AIEventType.SPAWNED),
+	/** 死亡状态允许的事件 / Events allowed in DIED state */
 	DEAD_EVENTS(AIEventType.DESPAWNED, AIEventType.DROP_REGISTERED);
 
 	private EnumSet<AIEventType> events;
@@ -34,6 +25,13 @@ public enum StateEvents {
 		this.events = EnumSet.copyOf(Arrays.asList(aiEventTypes));
 	}
 
+	/**
+	 * 判断该状态是否允许指定事件。
+	 * Returns whether the given event is allowed for this state set.
+	 *
+	 * @param event 事件类型 / event type
+	 * whether contained
+	 */
 	public boolean hasEvent(AIEventType event) {
 		return events.contains(event);
 	}

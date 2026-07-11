@@ -1,18 +1,3 @@
-/*
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.dataholders;
 
 import java.time.DayOfWeek;
@@ -37,6 +22,10 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 副本冷却时间数据容器，按世界 ID 索引冷却配置并计算下次可进入时间。
+ * Instance cooltime data holder, indexing cooltime configs by world id and computing next entry times.
+ */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "instance_cooltimes")
 public class InstanceCooltimeData {
@@ -46,6 +35,10 @@ public class InstanceCooltimeData {
 	private Map<Integer, InstanceCooltime> instanceCooltimes = new LinkedHashMap<Integer, InstanceCooltime>();
 	private HashMap<Integer, Integer> syncIdToMapId = new HashMap<Integer, Integer>();
 
+	/**
+	 * JAXB 反序列化完成后，按世界 ID 与同步 ID 建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes by world id and sync id, then clears the list.
+	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (InstanceCooltime tmp : instanceCooltime) {
 			instanceCooltimes.put(tmp.getWorldId(), tmp);
@@ -54,14 +47,36 @@ public class InstanceCooltimeData {
 		instanceCooltime.clear();
 	}
 
+	/**
+	 * 返回全部副本冷却配置映射。
+	 * Returns the full instance cooltime map.
+	 *
+	 * @return 世界 ID 到冷却配置的映射 / map of world id to cooltime config
+	 */
 	public Map<Integer, InstanceCooltime> getAllInstances() {
 		return instanceCooltimes;
 	}
 
+	/**
+	 * 按世界 ID 获取副本冷却配置。
+	 * Returns the instance cooltime config for the given world id.
+	 *
+	 * 世界 ID / world id
+	 *
+	 * @param worldId @return 冷却配置或 null / cooltime config or null
+	 */
 	public InstanceCooltime getInstanceCooltimeByWorldId(int worldId) {
 		return instanceCooltimes.get(worldId);
 	}
 
+	/**
+	 * 将同步 ID 转换为世界 ID。
+	 * Converts a sync id to its world id.
+	 *
+	 * sync id
+	 *
+	 * @param syncId @return 世界 ID，不存在则为 0 / world id or 0
+	 */
 	public int getWorldId(int syncId) {
 		if (!syncIdToMapId.containsKey(syncId)) {
 			return 0;
@@ -69,6 +84,14 @@ public class InstanceCooltimeData {
 		return syncIdToMapId.get(syncId);
 	}
 
+	/**
+	 * 按同步 ID 计算玩家下次可进入副本的时间戳。
+	 * Computes the next entry timestamp for the player by sync id.
+	 *
+	 * 玩家 / player
+	 * sync id
+	 * @return 下次进入时间（毫秒），不存在则为 0 / next entry time in ms or 0
+	 */
 	public long getInstanceEntranceCooltimeById(Player player, int syncId) {
 		if (!syncIdToMapId.containsKey(syncId)) {
 			return 0;
@@ -76,6 +99,14 @@ public class InstanceCooltimeData {
 		return getInstanceEntranceCooltime(player, syncIdToMapId.get(syncId));
 	}
 
+	/**
+	 * 按世界 ID 返回每日最大进入次数。
+	 * Returns the max daily entry count for the given world id.
+	 *
+	 * 世界 ID / world id
+	 *
+	 * @param worldId @return 最大进入次数，无配置则为 0 / max entry count or 0
+	 */
 	public int getInstanceEntranceCountByWorldId(int worldId) {
 		InstanceCooltime clt = getInstanceCooltimeByWorldId(worldId);
 		if (clt != null) {
@@ -85,6 +116,15 @@ public class InstanceCooltimeData {
 		}
 	}
 
+	/**
+	 * 按世界 ID 计算玩家下次可进入副本的时间戳，支持日 / 周 / 相对冷却并应用冷却倍率。
+	 * weekly / relative
+	 * cooltimes and applying the instance cooldown rate.
+	 *
+	 * 玩家 / player
+	 * 世界 ID / world id
+	 * @return 下次进入时间（毫秒） / next entry time in ms
+	 */
 	public long getInstanceEntranceCooltime(Player player, int worldId) {
 		int instanceCooldownRate = InstanceService.getInstanceRate(player, worldId);
 		long instanceCoolTime = 0;
@@ -95,17 +135,17 @@ public class InstanceCooltimeData {
 				ZonedDateTime now = ZonedDateTime.now();
 				int hour = (int) (clt.getEntCoolTime() / 100);
 				ZonedDateTime repeatDate = now.withHour(hour).withMinute(0).withSecond(0).withNano(0);
-				
+
 				if (now.isAfter(repeatDate)) {
 					repeatDate = repeatDate.plusDays(1);
 				}
 				instanceCoolTime = repeatDate.toInstant().toEpochMilli();
-				
+
 			} else if (clt.getCoolTimeType().isWeekly()) {
 				String[] days = clt.getTypeValue().split(",");
 				int hour = (int) (clt.getEntCoolTime() / 100);
 				instanceCoolTime = getUpdateHours(days, hour);
-				
+
 			} else if (clt.getCoolTimeType().isRelative()) {
 				switch (worldId) {
 				case 300480000: // Sealed Danuar Mysticarium.
@@ -125,7 +165,7 @@ public class InstanceCooltimeData {
 						repeatDate = repeatDate.plusDays(1);
 					}
 					instanceCoolTime = repeatDate.toInstant().toEpochMilli();
-					// Note: The original had both calculations, keeping both for compatibility
+					// 注意：原版有两种计算，为兼容性保留两者。 / Note: The original had both calculations, keeping both for compatibility
 					instanceCoolTime = System.currentTimeMillis() + (clt.getEntCoolTime() * 60 * 1000);
 					break;
 				}
@@ -140,9 +180,9 @@ public class InstanceCooltimeData {
 	private long getUpdateHours(String[] days, int hour) {
 		ZonedDateTime now = ZonedDateTime.now();
 		ZonedDateTime repeatDate = now.withHour(hour).withMinute(0).withSecond(0).withNano(0);
-		
+
 		int currentDay = now.getDayOfWeek().getValue(); // 1 (Monday) to 7 (Sunday)
-		
+
 		for (String name : days) {
 			int day = getDay(name);
 			if (day < currentDay) {
@@ -157,8 +197,8 @@ public class InstanceCooltimeData {
 				return repeatDate.toInstant().toEpochMilli();
 			}
 		}
-		
-		// If all days passed, take the first day of next week
+
+		// 若本周所有天已过，取下周第一天 / If all days passed, take the first day of next week
 		int firstDay = getDay(days[0]);
 		repeatDate = repeatDate.plusDays((7 - currentDay) + firstDay);
 		return repeatDate.toInstant().toEpochMilli();
@@ -177,6 +217,12 @@ public class InstanceCooltimeData {
 		}
 	}
 
+	/**
+	 * 返回已加载的副本冷却配置数量。
+	 * Returns the number of loaded instance cooltime configs.
+	 *
+	 * config count
+	 */
 	public Integer size() {
 		return instanceCooltimes.size();
 	}

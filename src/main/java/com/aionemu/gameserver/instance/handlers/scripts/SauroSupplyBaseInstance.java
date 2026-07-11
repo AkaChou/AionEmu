@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -39,14 +23,24 @@ import java.util.Map;
 import java.util.Map;
 import java.util.Set;
 
-/****/
-/** Author (Encom)
-/****/
+/**
+ * 索罗补给基地副本事件处理器。
+ * Instance event handler for Sauro Supply Base.
+ *
+ * @author Encom
+ */
 
 @InstanceID(301130000)
 public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 {
+	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -65,7 +59,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				}
 			break;
 			case 230847: //Mystery Box Key.
-				//Be careful in your selection. The key cannot be changed once it is chosen.
+				// 请谨慎选择。钥匙一经选定无法更改。 / Be careful in your selection. The key cannot be changed once it is chosen.
 				sendMsgByRace(1401946, Race.PC_ALL, 0);
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
@@ -76,7 +70,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230852: //Commander Ranodim.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 					} switch (Rnd.get(1, 3)) {
 				        case 1:
 				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000176, 1)); //Red Storeroom Key.
@@ -96,7 +90,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230853: //Chief Of Staff Moriata.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 					}
 				}
 			break;
@@ -104,9 +98,9 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230858: //Brigade General Sheba.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
 				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053211, 1)); //[Event] Sauro Commander's Weapon Box.
@@ -117,11 +111,11 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 					}
 				}
 			break;
-			case 702658: //Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+			case 702658: //修道院箱子。 / Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
-			case 702659: //Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+			case 702659: //高级修道院箱子。 / Noble Abbey Box.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 			case 802181: //Sauro Supply Base Opportunity Bundle.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
@@ -133,25 +127,21 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	}
 	
 	/**
-	 * Bonus Monster: "Sauro Base Grave Robber"
-	 * They can appear in "5 different rooms" and give:
-	 * Ancient Coins.
-	 * Ancient Manastones.
-	 * Skins.
-     */
+	 * 奖励怪：“索罗基地盗墓者”，可出现在 5 个房间，掉落古代硬币、古代魔石、外观。 / Bonus Monster: "Sauro Base Grave Robber" They can appear in "5 different rooms" and give: Ancient Coins. Ancient Manastones. Skins
+	 */
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
 		doors = instance.getDoors();
-		//An intruder alarm has sounded. The Sauro Elite Protectorate are gathering.
+		// 入侵警报响起。索罗精英护卫队正在集结。 / An intruder alarm has sounded. The Sauro Elite Protectorate are gathering.
 		sendMsgByRace(1401810, Race.PC_ALL, 10000);
-		//The Sauro Elite Protectorate has assembled.
+		// 索罗精英护卫队已集结。 / The Sauro Elite Protectorate has assembled.
 		sendMsgByRace(1401811, Race.PC_ALL, 30000);
-		//The Sauro Elite Protectorate approaches.
+		// 索罗精英护卫队正在接近。 / The Sauro Elite Protectorate approaches.
 		sendMsgByRace(1401812, Race.PC_ALL, 50000);
-		//The Sauro Elite Protectorate is one minute out.
+		// 索罗精英护卫队还有一分钟到达。 / The Sauro Elite Protectorate is one minute out.
 		sendMsgByRace(1401813, Race.PC_ALL, 70000);
-		//The Sauro Elite Protectorate is upon you.
+		// 索罗精英护卫队已到你面前。 / The Sauro Elite Protectorate is upon you.
 		sendMsgByRace(1401814, Race.PC_ALL, 130000);
 		switch (Rnd.get(1, 5)) {
 		    case 1:
@@ -172,32 +162,38 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 		}
     }
 	
+    /**
+     * 处理死亡事件。
+     * Handle a death event.
+     *
+     * npc
+     */
     @Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 		   /**
-			* Area 1: Guardroom And Rune Hall.
-		    */
+	 * 区域 1：警卫室与符文大厅。 / Area 1: Guardroom And Rune Hall
+	 */
 			case 230849: //Guard Captain Rohuka.
 				doors.get(383).setOpen(true);
-				//The door to the Defiled Danuar Temple has opened.
+				// 通往被玷污的达努阿尔神殿的门已打开。 / The door to the Defiled Danuar Temple has opened.
 				sendMsgByRace(1401914, Race.PC_ALL, 0);
 			break;
 			case 230851: //Chief Gunner Kurmata.
 				doors.get(59).setOpen(true);
-				//The door to the Danuar Meditation Garden has opened.
+				// 通往达努阿尔冥想花园的门已打开。 / The door to the Danuar Meditation Garden has opened.
 				sendMsgByRace(1401915, Race.PC_ALL, 0);
 				switch (Rnd.get(1, 2)) {
 				    case 1:
 				        doors.get(382).setOpen(true);
-						//With the gatekeeper down, the door on the left is open!
+						// 守门人倒下，左侧门已打开！ / With the gatekeeper down, the door on the left is open!
 						sendMsgByRace(1401229, Race.PC_ALL, 5000);
 						spawn(230797, 610.7328f, 518.80884f, 191.2776f, (byte) 75); //Sheban Legion Elite Ambusher.
 					break;
 			        case 2:
 						doors.get(387).setOpen(true);
-						//With the gatekeeper down, the door on the right is open!
+						// 守门人倒下，右侧门已打开！ / With the gatekeeper down, the door on the right is open!
 						sendMsgByRace(1401230, Race.PC_ALL, 5000);
 						spawn(230797, 611.1872f, 452.91882f, 191.2776f, (byte) 39); //Sheban Legion Elite Ambusher.
 					break;
@@ -205,80 +201,86 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			break;
 			
 		   /**
-			* Area 2: Rune Cloister And Logistic Base.
-		    */
+	 * 区域 2：符文回廊与后勤基地。 / Area 2: Rune Cloister And Logistic Base
+	 */
 			case 230818: //Sheban Legion Elite Gunner.
 				doors.get(372).setOpen(true);
-				//The door to the Head Researcher's Office has opened.
+				// 通往首席研究员办公室的门已打开。 / The door to the Head Researcher's Office has opened.
 				sendMsgByRace(1401916, Race.PC_ALL, 0);
 			break;
 			case 230850: //Research Teselik.
 				doors.get(375).setOpen(true);
-				//The door to the Lost Tree of Devotion has opened.
+				// 通往失落虔诚之树的门已打开。 / The door to the Lost Tree of Devotion has opened.
 				sendMsgByRace(1401917, Race.PC_ALL, 0);
 			break;
 			
 		   /**
-			* Area 3: Rune Bridge And Logistic Base Arsenal.
-		    */
+	 * 区域 3：符文桥与后勤基地军械库。 / Area 3: Rune Bridge And Logistic Base Arsenal
+	 */
 			case 233255: //Gatekeeper Stranir.
 				doors.get(378).setOpen(true);
-				//The door to the Sauro Armory has opened.
+				// 通往索罗军械库的门已打开。 / The door to the Sauro Armory has opened.
 				sendMsgByRace(1401918, Race.PC_ALL, 0);
 			break;
 			case 230852: //Commander Ranodim.
 				doors.get(388).setOpen(true);
-				//The door to the Heavy Storage Area has opened.
+				// 通往重型仓储区的门已打开。 / The door to the Heavy Storage Area has opened.
 				sendMsgByRace(1401919, Race.PC_ALL, 0);
 			break;
 			
 			/**
-			 * Area 4: Chiefs Chamber.
-		     */
+	 * 区域 4。 / Area 4: Chiefs Chamber
+	 */
 			case 230791: //Sheban Legion Elite Assaulter.
 				doors.get(376).setOpen(true);
-				//The door to Moriata's Quarters has opened.
+				// 通往莫里亚塔住所的门已打开。 / The door to Moriata's Quarters has opened.
 				sendMsgByRace(1401920, Race.PC_ALL, 0);
 			break;
 			case 230853: //Chief Of Staff Moriata.
-				//A device leading to the Danuar Omphanium has been activated.
+				// 通往达努阿尔万神殿的装置已激活。 / A device leading to the Danuar Omphanium has been activated.
 				sendMsgByRace(1401921, Race.PC_ALL, 0);
-				//The passage to the Danuar Omphanium will be open for five minutes.
+				// 通往达努阿尔万神殿的通道将开放 5 分钟。 / The passage to the Danuar Omphanium will be open for five minutes.
 				sendMsgByRace(1401922, Race.PC_ALL, 5000);
 				spawn(730872, 127.77696f, 432.75684f, 151.69659f, (byte) 0, 3);
 			break;
 			
 			/**
-			 * Area 5: Final Boss.
-		     */
+	 * 区域 5。 / Area 5: Final Boss
+	 */
 			case 230857: //Guard Captain Ahuradim.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 703.3344f, 883.07666f, 411.5939f, (byte) 90); //Abbey Box.
+				        spawn(702658, 703.3344f, 883.07666f, 411.5939f, (byte) 90); //修道院箱子。 / Abbey Box.
 			        break;
 			        case 2:
-				        spawn(702659, 703.3344f, 883.07666f, 411.5939f, (byte) 90); //Noble Abbey Box.
+				        spawn(702659, 703.3344f, 883.07666f, 411.5939f, (byte) 90); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
 				spawn(801967, 708.9197f, 884.59625f, 411.57986f, (byte) 45); //Sauro Supply Base Exit.
 				spawn(802181, 710.25726f, 889.6806f, 411.59103f, (byte) 0); //Sauro Supply Base Opportunity Bundle.
-				//sendMsg("[SUCCES]: You have finished <Sauro Supply Base>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Sauro Supply Base>");
 			break;
 			case 230858: //Brigade General Sheba.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(702658, 900.2497f, 896.3568f, 411.3568f, (byte) 30); //Abbey Box.
+				        spawn(702658, 900.2497f, 896.3568f, 411.3568f, (byte) 30); //修道院箱子。 / Abbey Box.
 			        break;
 			        case 2:
-				        spawn(702659, 900.2497f, 896.3568f, 411.3568f, (byte) 30); //Noble Abbey Box.
+				        spawn(702659, 900.2497f, 896.3568f, 411.3568f, (byte) 30); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
 				spawn(801967, 905.3781f, 895.2461f, 411.57785f, (byte) 75); //Sauro Supply Base Exit.
 				spawn(802181, 906.9721f, 889.6604f, 411.59854f, (byte) 0); //Sauro Supply Base Opportunity Bundle.
-				//sendMsg("[SUCCES]: You have finished <Sauro Supply Base>");
+				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Sauro Supply Base>");
 			break;
 		}
     }
+	/**
+	 * 移除相关物品。
+	 * Remove related items.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
@@ -290,18 +292,42 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	
     private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
 			}
 		});
 	}
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * message
+	 * 阵营 / race
+	 * time
+	 */
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -313,16 +339,32 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 		}, time);
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
 	
+    /**
+     * 副本销毁时清理资源。
+     * Clean up resources when the instance is destroyed.
+     */
     @Override
     public void onInstanceDestroy() {
         doors.clear();

@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -44,25 +28,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/****/
-/** Author (Encom)
-/** Source: https://www.youtube.com/watch?v=UYCLUuaLVGI + http://aionpowerbook.com/powerbook/Shugo_Imperial_Tomb
-/****/
+/**
+ * 术古皇陵副本事件处理器。
+ * Instance event handler for Shugo Imperial Tomb.
+ *
+ * @author Encom
+ */
 
 @InstanceID(300560000)
 public class ShugoImperialTombInstance extends GeneralInstanceHandler
 {
-    private Future<?> tombRaidTaskA1;
-	private Future<?> tombRaidTaskB1;
-	private Future<?> tombRaidTaskC1;
-	private Future<?> tombRaidTaskC2;
+ /** tombraid 任务 a1 / tomb raid task a1 */
+        private Future<?> tombRaidTaskA1;
+	/** tombraid 任务 b1 / tomb raid task b1 */
+		private Future<?> tombRaidTaskB1;
+	/** tombraid 任务 c1 / tomb raid task c1 */
+		private Future<?> tombRaidTaskC1;
+	/** tombraid 任务 c2 / tomb raid task c2 */
+		private Future<?> tombRaidTaskC2;
 	/////////////////////////////////
-	private int strongKoboldWorker;
-	private int diligentKoboldWorker;
-	private int swiftKrallGraverobber;
-	private int krallLookoutCommander;
+	/** strong kobold worker / strong kobold worker */
+		private int strongKoboldWorker;
+	/** diligent kobold worker / diligent kobold worker */
+		private int diligentKoboldWorker;
+	/** swift krall graverobber / swift krall graverobber */
+		private int swiftKrallGraverobber;
+	/** krall lookout commander / krall lookout commander */
+		private int krallLookoutCommander;
+	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
-	private final List<Future<?>> imperialTombTask = new ArrayList<Future<?>>();
+	/** imperialtomb 任务 / imperial tomb task */
+		private final List<Future<?>> imperialTombTask = new ArrayList<Future<?>>();
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * npc
+	 */
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -132,6 +134,12 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
@@ -139,6 +147,12 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		spawn(831095, 218.27571f, 287.24326f, 550.68805f, (byte) 74); //Shugo Warrior Transformation Device.
 	}
 	
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * npc
+	 */
 	@Override
 	public void onDie(Npc npc) {
 		switch (npc.getObjectTemplate().getTemplateId()) {
@@ -146,11 +160,11 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			    diligentKoboldWorker++;
 				if (diligentKoboldWorker == 6) {
 					startTombRaidA1_1();
-					//A second wave of pillagers will arrive in 10 seconds!
+					// 第二波掠夺者将在 10 秒后到达！ / A second wave of pillagers will arrive in 10 seconds!
 					sendMsgByRace(1401586, Race.PC_ALL, 0);
-					//Hold a little longer and you will survive.
+					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //Only a few enemies left!
+				    //只剩少数敌人！ / Only a few enemies left!
 				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
 				} else if (diligentKoboldWorker == 20) {
 					tombRaidTaskA1.cancel(true);
@@ -163,16 +177,16 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			    strongKoboldWorker++;
 				if (strongKoboldWorker == 6) {
 					startTombRaidB1_1();
-					//A second wave of pillagers will arrive in 10 seconds!
+					// 第二波掠夺者将在 10 秒后到达！ / A second wave of pillagers will arrive in 10 seconds!
 					sendMsgByRace(1401586, Race.PC_ALL, 0);
-					//Hold a little longer and you will survive.
+					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //Only a few enemies left!
+				    //只剩少数敌人！ / Only a few enemies left!
 				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
 				} else if (strongKoboldWorker == 40) {
 					spawnFairyGuardian();
 					tombRaidTaskB1.cancel(true);
-					//Prepare for combat! More enemies swarming in!
+					//准备战斗！更多敌人涌入！ / Prepare for combat! More enemies swarming in!
 					sendMsgByRace(1402832, Race.PC_ALL, 0);
 				}
 			break;
@@ -180,18 +194,18 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			    swiftKrallGraverobber++;
 				if (swiftKrallGraverobber == 6) {
 					startTombRaidC1_1();
-					//A second wave of pillagers will arrive in 10 seconds!
+					// 第二波掠夺者将在 10 秒后到达！ / A second wave of pillagers will arrive in 10 seconds!
 					sendMsgByRace(1401586, Race.PC_ALL, 0);
-					//Hold a little longer and you will survive.
+					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //Only a few enemies left!
+				    //只剩少数敌人！ / Only a few enemies left!
 				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
 				} else if (swiftKrallGraverobber == 30) {
 					startLetuErezat();
 					tombRaidTaskC1.cancel(true);
-					//Hold a little longer and you will survive.
+					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //Only a few enemies left!
+				    //只剩少数敌人！ / Only a few enemies left!
 				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
 				}
 			break;
@@ -199,18 +213,18 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			    krallLookoutCommander++;
 			    if (krallLookoutCommander == 30) {
 					startCaptainLediar();
-					//Hold a little longer and you will survive.
+					//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				    sendMsgByRace(1402833, Race.PC_ALL, 5000);
-				    //Only a few enemies left!
+				    //只剩少数敌人！ / Only a few enemies left!
 				    sendMsgByRace(1402834, Race.PC_ALL, 10000);
 					tombRaidTaskC2.cancel(true);
 				}
 			break;
 			case 219530: //Letu Erezat.
 			    startTombRaidC1_2();
-				//Hold a little longer and you will survive.
+				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 0);
-				//Only a few enemies left!
+				//只剩少数敌人！ / Only a few enemies left!
 				sendMsgByRace(1402834, Race.PC_ALL, 5000);
 			break;
 			case 219531: //Captain Lediar.
@@ -237,10 +251,14 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* TOMB RAID A
-	*/
+	 * TOMB RAID A
+	 */
 	private void startTombRaidA1_1() {
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
@@ -252,9 +270,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 10000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
 		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
@@ -265,6 +287,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
@@ -276,9 +302,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 50000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
 		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
@@ -289,6 +319,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 70000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
@@ -300,9 +334,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 90000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
 		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
@@ -313,6 +351,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 110000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
@@ -324,9 +366,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 130000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
 		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
@@ -337,6 +383,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 150000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
@@ -348,9 +398,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 170000);
 		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219508, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 1000, "ImperialTombUnderpath1");
 		        sp(219509, 199.53075f, 270.43457f, 550.5646f, (byte) 77, 5000, "ImperialTombUnderpath1");
@@ -363,10 +417,14 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* TOMB RAID B
-	*/
+	 * TOMB RAID B
+	 */
 	private void startTombRaidB1_1() {
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
@@ -384,9 +442,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 10000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
 		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
@@ -403,6 +465,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
@@ -420,9 +486,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 50000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
 		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
@@ -439,6 +509,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 70000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
@@ -456,9 +530,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 90000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
 		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
@@ -475,6 +553,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 110000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
@@ -492,9 +574,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 130000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
 		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
@@ -511,6 +597,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 150000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
@@ -528,9 +618,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 170000);
 		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219514, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 1000, "ImperialTombUnderpath3");
 		        sp(219515, 307.80344f, 434.2390f, 298.31903f, (byte) 25, 5000, "ImperialTombUnderpath3");
@@ -549,10 +643,14 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* TOMB RAID C-1
-	*/
+	 * TOMB RAID C-1
+	 */
 	private void startTombRaidC1_1() {
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -567,9 +665,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 10000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -583,6 +685,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -597,9 +703,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 50000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -613,6 +723,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 70000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -627,9 +741,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 90000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -643,6 +761,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 110000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -657,9 +779,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 130000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -673,6 +799,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 150000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -687,9 +817,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 170000);
 		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219521, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219522, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -705,10 +839,14 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* TOMB RAID C-2
-	*/
+	 * TOMB RAID C-2
+	 */
 	private void startTombRaidC1_2() {
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -723,9 +861,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 10000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -739,6 +881,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -753,9 +899,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 50000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -769,6 +919,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 70000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -783,9 +937,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 90000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -799,6 +957,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 110000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -813,9 +975,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 130000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -829,6 +995,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 150000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
@@ -843,9 +1013,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 170000);
 		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
-				//More pillagers will arrive in 5 seconds!
+				//更多掠夺者将在 5 秒后到达！ / More pillagers will arrive in 5 seconds!
 				sendMsgByRace(1401607, Race.PC_ALL, 0);
 				sp(219527, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 1000, "ImperialTombUnderpath7");
 		        sp(219528, 398.80435f, 81.94784f, 223.16089f, (byte) 8, 5000, "ImperialTombUnderpath7");
@@ -866,6 +1040,13 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		sp(219531, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 2000, "ImperialTombUnderpath8"); //Captain Lediar.
 	}
 	
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * 玩家 / player
+	 * npc
+	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
@@ -874,6 +1055,12 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
+	/**
+	 * 移除相关物品。
+	 * Remove related items.
+	 *
+	 * @param player 玩家 / player
+	 */
 	
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
@@ -900,14 +1087,26 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		}
 	}
 	
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 		removeEffects(player);
-		//"Player Name" has left the battle.
+		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
 	
+	/**
+	 * 玩家从该副本登出时处理。
+	 * Handle a player logging out from this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
@@ -916,6 +1115,12 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
@@ -923,6 +1128,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		});
 	}
 	
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
 	@Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
@@ -938,6 +1147,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         imperialTombTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            /**
+             * 处理 run。
+             * Handle run.
+             */
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -951,9 +1164,19 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
 					@Override
 					public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

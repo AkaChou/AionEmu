@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.commands.player;
 
 import java.util.Collection;
@@ -25,14 +9,28 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 import com.aionemu.gameserver.world.World;
 
 /**
- * Created by Kill3r
+ * 玩家命令：报名参加 GM 正在举办的活动队列。
+ * Player command: registers the player for an ongoing GM-hosted event queue.
+ *
+ * @author Kill3r
  */
 public class cmd_queue extends PlayerCommand {
 
+	/**
+	 * 注册命令别名 {@code queue}。
+	 * Registers the command alias {@code queue}.
+	 */
     public cmd_queue(){
         super("queue");
     }
 
+	/**
+	 * 查找已开启报名的 GM 活动并尝试占位注册。
+	 * Finds a GM with event registration open and attempts to register a slot.
+	 *
+	 * @param player 执行命令的玩家 / invoking player
+	 * @param params 未使用的参数 / unused parameters
+	 */
     public void execute(Player player,String...params){
         boolean anyEventfound = false;
         if(player.isRegedEvent()){
@@ -62,8 +60,8 @@ public class cmd_queue extends PlayerCommand {
             }
         }
 
-        // Find a way to fix the problem when u type .queue when the gm has enabled the registration for unlimited players..
-        // since the getCountplayers are set to a value when .queue is working.. and it ends when its 0.. and by default its by 0..
+        // 修复 GM 开启无限报名时输入 .queue 的问题。 / Find a way to fix the problem when u type .queue when the gm has enabled the registration for unlimited players..
+        // getCountplayers 在 .queue 工作时设值，为 0 时结束，默认即为 0。 / since the getCountplayers are set to a value when .queue is working.. and it ends when its 0.. and by default its by 0..
 
         if(anyEventfound == true){
             PacketSendUtility.sendMessage(player, "You've registered to the upcoming event!");

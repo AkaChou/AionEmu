@@ -1,19 +1,3 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,6 +8,9 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
+ * 重生效果：挂载后允许以配置百分比与技能进行重生。
+ * Rebirth effect: while active, allows rebirth at a configured percent and skill.
+ *
  * @author Sarynth
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,15 +23,27 @@ public class RebirthEffect extends EffectTemplate {
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 
+	/**
+	 * 将重生效果加入目标控制器。
+	 * Attaches the rebirth effect to the controller.
+	 */
 	@Override
 	public void applyEffect(Effect effect) {
 		effect.addToEffectedController();
 	}
 
+	/**
+	 * 返回重生恢复生命百分比。
+	 * Returns the rebirth HP restore percent.
+	 */
 	public int getResurrectPercent() {
 		return resurrectPercent;
 	}
 
+	/**
+	 * 返回重生关联技能 ID。
+	 * Returns the rebirth-related skill id.
+	 */
 	public int getSkillId() {
 		return skillId;
 	}

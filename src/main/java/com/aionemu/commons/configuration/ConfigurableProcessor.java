@@ -1,15 +1,17 @@
 package com.aionemu.commons.configuration;
 
+
+import com.aionemu.boot.i18n.I18n;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 配置处理器类，用于处理带有@Property注解的类字段的配置加载
+ * 配置处理器类，用于处理带有@Property 注解的类字段的配置加载
  * Configuration processor class for handling configuration loading of class fields annotated with @Property
  *
- * 该类通过反射机制读取类的字段，并根据@Property注解的配置从Properties中加载对应的值
+ * 该类通过反射机制读取类的字段，并根据@Property 注解的配置从 Properties 中加载对应的值
  * This class uses reflection to read class fields and load corresponding values from Properties based on @Property annotations
  *
  * @author SunAion
@@ -63,7 +65,7 @@ public class ConfigurableProcessor {
     }
 
     /**
-     * 处理类的所有带有@Property注解的字段
+ * 处理类的所有带有@Property 注解的字段
      * Process all fields with @Property annotation in the class
      *
      * @param clazz 要处理的类
@@ -80,7 +82,7 @@ public class ConfigurableProcessor {
                 (Modifier.isStatic(f.getModifiers()) || obj != null) && 
                 f.isAnnotationPresent(Property.class)) {
                 if (Modifier.isFinal(f.getModifiers())) {
-                    log.error("Attempt to proceed final field " + f.getName() + " of class " + clazz.getName());
+                    log.error(I18n.get("log.9ad54acf6b37", f.getName(), clazz.getName()));
                     throw new RuntimeException();
                 }
 
@@ -112,7 +114,7 @@ public class ConfigurableProcessor {
                 f.set(obj, getFieldValue(f, props));
             }
         } catch (Exception var5) {
-            log.error("Can't transform field " + f.getName() + " of class " + f.getDeclaringClass());
+            log.error(I18n.get("log.de0d5400364f", f.getName(), f.getDeclaringClass()));
             throw new RuntimeException();
         }
 
@@ -134,7 +136,7 @@ public class ConfigurableProcessor {
         String key = property.key();
         String value = null;
         if (key.isEmpty()) {
-            log.warn("Property " + field.getName() + " of class " + field.getDeclaringClass().getName() + " has empty key");
+            log.warn(I18n.get("log.9815dac71108", field.getName(), field.getDeclaringClass().getName()));
         } else {
             value = findPropertyByKey(key, props);
         }
@@ -156,7 +158,7 @@ public class ConfigurableProcessor {
      *
      * @param key 要查找的键
      * @param props 配置属性数组
-     * @return 找到的值，如果未找到则返回null
+ * @return 找到的值，如果未找到则返回 null
      */
     private static String findPropertyByKey(String key, Properties[] props) {
         Properties[] arr$ = props;
@@ -178,7 +180,7 @@ public class ConfigurableProcessor {
      *
      * @param key 要检查的键
      * @param props 配置属性数组
-     * @return 如果键存在则返回true，否则返回false
+ * @return 如果键存在则返回 true，否则返回 false
      */
     private static boolean isKeyPresent(String key, Properties[] props) {
         return findPropertyByKey(key, props) != null;

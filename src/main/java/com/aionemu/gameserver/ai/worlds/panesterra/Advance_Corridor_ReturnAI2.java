@@ -1,19 +1,3 @@
-/*
- * This file is part of Encom.
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,10 +18,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/****/
-/** Author (Encom)
-/****/
-
+/**
+ * Panesterra 区域 NPC AI：Advance Corridor Return（@AIName "advance_corridor_return"），继承 NpcAI2。
+ * Panesterra zone NPC AI: Advance Corridor Return (@AIName "advance_corridor_return"), extends NpcAI2.
+ *
+ * @author Encom
+ */
 @AIName("advance_corridor_return")
 public class Advance_Corridor_ReturnAI2 extends NpcAI2
 {
@@ -81,8 +67,8 @@ public class Advance_Corridor_ReturnAI2 extends NpcAI2
 	
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 65) {
-			//You left the Advance Corridor Battle Zone.
-			//You will return to the Advance Corridor entrance area.
+			// 你离开了进阶走廊战斗区。 / You left the Advance Corridor Battle Zone.
+			// 你将返回前进通道入口区域。 / You will return to the Advance Corridor entrance area.
 			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_CONFIRM_SVS_DIRECT_PORTAL_OUT, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
 				private boolean decisionTaken = false;
 				@Override

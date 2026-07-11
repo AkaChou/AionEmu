@@ -5,6 +5,10 @@ import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
+/**
+ * Nochsana Training Camp 副本 NPC AI：Nochsana Door（@AIName "nochsanadoor"），继承 GeneralNpcAI2。
+ * Nochsana Training Camp instance NPC AI: Nochsana Door (@AIName "nochsanadoor"), extends GeneralNpcAI2.
+ */
 @AIName("nochsanadoor")
 public class NochsanaDoorAI2 extends GeneralNpcAI2 {
 

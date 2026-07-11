@@ -1,21 +1,7 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.services.events;
 
+
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -40,28 +26,48 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
+ * 小猪波比活动服务，按 cron 调度刷怪与结算。
+ * Pig Poppy event service scheduling spawns and settlement via cron.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
 public class PigPoppyEventService {
+
+	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
 	private static List<float[]> floatArray = new ArrayList<float[]>();
+
+	/** Cached event cron expression / Cached event cron expression */
 	private static final String PIG_POPPY_EVENT_SCHEDULE = EventsConfig.PIG_POPPY_EVENT_SCHEDULE;
+
+	/** Sanctum world id / Sanctum world id */
 	private static int WORLD_ELY = 110010000; // Sanctum
+
+	/** Pandaemonium world id / Pandaemonium world id */
 	private static int WORLD_ASMO = 120010000; // Pandaemonium
+
+	/** Poppy NPC template id / Poppy NPC template id */
 	private static int NPC_ID = 217385; // Poppy
 
 	/**
-	 * Rewards !
+	 * 缓存的奖励物品 ID 列表。
+	 * Cached reward item id list.
 	 */
 	private static int[] rewards = pigReward();// cannot get directly u must call an method
 
+	/**
+	 * 从配置解析奖励物品 ID 列表。
+	 * Parses reward item ids from config.
+	 *
+	 * @return 奖励物品 ID 数组 / reward item id array
+	 */
 	private static int[] pigReward() {
-		// initialize an new list
+		// 初始化新列表。 / initialize an new list
 		int[] returnArray;
-		// get an list of strings (all configs come from strings)
+		// 获取字符串列表（所有配置来自字符串）。 / get an list of strings (all configs come from strings)
 		String[] list = EventsConfig.PIG_POPPY_REWARDS.split(",");
 		returnArray = new int[list.length];
-		// run all the itens and put in the int array
+		// 遍历所有物品并放入 int 数组 / run all the itens and put in the int array
 		for (int i = 0; i < list.length; i++) {
 			returnArray[i] = Integer.parseInt(list[i]);
 		}
@@ -69,10 +75,12 @@ public class PigPoppyEventService {
 		return returnArray;
 	}
 
+	/** Current event main NPC / Current event main NPC */
 	private static Npc mainN;
 
 	/**
-	 * Schedule
+	 * 按配置 cron 调度小猪波比活动。
+	 * Schedules the Pig Poppy event from configured cron.
 	 */
 	public static void ScheduleCron() {
 		GameCronServices.cronService().schedule(new Runnable() {
@@ -83,12 +91,12 @@ public class PigPoppyEventService {
 			}
 
 		}, PIG_POPPY_EVENT_SCHEDULE);
-		log.info("Scheduled <Pig Poppy Event> based on cron expression: " + EventsConfig.PIG_POPPY_EVENT_SCHEDULE
-				+ " duration 30 min");
+		log.info(I18n.get("log.5df8f3db8e1d", EventsConfig.PIG_POPPY_EVENT_SCHEDULE));
 	}
 
 	/**
-	 * Start Pig Poppy Event
+	 * 启动小猪波比活动并刷出主 NPC。
+	 * Starts the Pig Poppy event and spawns the main NPC.
 	 */
 	public static void startEvent() {
 		if (EventsConfig.ENABLE_PIG_POPPY_EVENT) {
@@ -108,7 +116,10 @@ public class PigPoppyEventService {
 	}
 
 	/**
-	 * Announce All
+	 * 向全服在线玩家广播活动消息。
+	 * Broadcasts an event message to all online players.
+	 *
+	 * @param msg 消息内容 / message text
 	 */
 	private static void announceAll(final String msg) {
 
@@ -121,7 +132,8 @@ public class PigPoppyEventService {
 	}
 
 	/**
-	 * Init World ID's Asmo
+	 * 在黑暗之都随机坐标刷出波比。
+	 * Spawns Poppy at a random Pandaemonium coordinate.
 	 */
 	private static void initPigAsmo() {
 		float[] coords = floatArray.get(Rnd.get(floatArray.size()));
@@ -135,7 +147,8 @@ public class PigPoppyEventService {
 	}
 
 	/**
-	 * Init World ID's Ely/Asmo
+	 * 在光之圣地刷出波比，并挂接受击奖励观察者。
+	 * Spawns Poppy in Sanctum and attaches the attack reward observer.
 	 */
 	private static void initPigEly() {
 		float[] coords = floatArray.get(Rnd.get(floatArray.size()));
@@ -168,7 +181,8 @@ public class PigPoppyEventService {
 	}
 
 	/**
-	 * End The Event
+	 * 结束小猪波比活动并清理生成物。
+	 * Ends the Pig Poppy event and cleans up spawns.
 	 */
 	public static void endEvent() {
 		announceAll("[Event] Insane Poppy has been escaped thanks for your participation!");
@@ -176,7 +190,8 @@ public class PigPoppyEventService {
 	}
 
 	/**
-	 * Init Coordinates Asmo's & Elyo's
+	 * 初始化黑暗之都刷怪坐标。
+	 * Initializes Pandaemonium spawn coordinates.
 	 */
 	private static void AsmoCoordinates() {
 		floatArray.add(new float[] { 1632.9166f, 1424.3572f, 193.127f, 0f });
@@ -207,6 +222,10 @@ public class PigPoppyEventService {
 		floatArray.add(new float[] { 1016.5605f, 1518.2861f, 220.50787f, 0f });
 	}
 
+	/**
+	 * 初始化光之圣地刷怪坐标。
+	 * Initializes Sanctum spawn coordinates.
+	 */
 	private static void ElyCoordinates() {
 		floatArray.add(new float[] { 1375.3103f, 1480.2904f, 570.00366f, 0f });
 		floatArray.add(new float[] { 1317.2561f, 1522.925f, 567.9356f, 0f });

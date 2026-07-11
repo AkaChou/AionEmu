@@ -1,25 +1,21 @@
-/*
-
- *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.aionemu.gameserver.ai2;
 
 /**
+ * 攻击意图枚举，描述 AI 在战斗中下一动作的选择。
+ * Attack intention enumeration describing the AI's next combat action choice.
+ *
  * @author ATracer
  */
 public enum AttackIntention {
 
-	FINISH_ATTACK, SWITCH_TARGET, SIMPLE_ATTACK, SKILL_ATTACK, SKILL_BUFF
+	/** 结束攻击 / Finish the attack sequence */
+	FINISH_ATTACK,
+	/** 切换目标 / Switch target */
+	SWITCH_TARGET,
+	/** 普通攻击 / Simple auto-attack */
+	SIMPLE_ATTACK,
+	/** 技能攻击 / Skill attack */
+	SKILL_ATTACK,
+	/** 技能增益 / Skill buff */
+	SKILL_BUFF
 }
