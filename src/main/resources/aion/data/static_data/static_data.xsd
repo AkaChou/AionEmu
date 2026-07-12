@@ -62,8 +62,8 @@
 	<xs:include schemaLocation="ride/ride.xsd"/>
 	<xs:include schemaLocation="robot/robot.xsd"/>
 	<xs:include schemaLocation="instance_exit/instance_exit.xsd"/>
-	<xs:include schemaLocation="portals/portal_loc.xsd"/>
-	<xs:include schemaLocation="portals/portal_template2.xsd"/>
+	<xs:include schemaLocation="../../definitions/portals/portal_loc.xsd"/>
+	<xs:include schemaLocation="../../definitions/portals/portal_template2.xsd"/>
 	<xs:include schemaLocation="housing/houses.xsd"/>
 	<xs:include schemaLocation="housing/house_parts.xsd"/>
 	<xs:include schemaLocation="housing/house_npcs.xsd"/>

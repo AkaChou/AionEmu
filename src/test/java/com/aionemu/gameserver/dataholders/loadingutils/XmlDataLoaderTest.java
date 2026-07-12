@@ -27,6 +27,8 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.Portal2Data;
+import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.SkillData;
@@ -286,6 +288,28 @@ class XmlDataLoaderTest {
 
 			assertEquals(14540, data.size());
 			assertNotNull(data.getRecipeTemplateById(155000001));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedPortalDefinitionsLoadFromConfiguredDirectory() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			PortalLocData locations = loader.loadPortalLocData();
+			Portal2Data portals = loader.loadPortal2Data();
+
+			assertEquals(548, locations.size());
+			assertNotNull(locations.getPortalLoc(1100100));
+			assertEquals(826, portals.size());
+			assertTrue(portals.isPortalNpc(730197));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

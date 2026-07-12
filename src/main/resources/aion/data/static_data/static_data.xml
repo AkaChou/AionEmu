@@ -136,8 +136,6 @@
 	<import file="ride/ride.xml"/>
 	<import file="robot/robot.xml"/>
 	<import file="instance_exit/instance_exit.xml"/>
-	<import file="portals/portal_loc.xml"/>
-	<import file="portals/portal_template2.xml"/>
 	<import file="housing/houses.xml"/>
 	<import file="housing/house_buildings.xml"/>
 	<import file="housing/house_parts.xml"/>

@@ -74,12 +74,9 @@ public class Reload extends AdminCommand {
 		}
 		else if (params[0].equals("portal")) {
 			try {
-				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-				Unmarshaller un = jc.createUnmarshaller();
-				PortalLocData portalLocData = (PortalLocData) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_loc.xml"));
-				Portal2Data portal2Data = (Portal2Data) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_template2.xml"));
-				DataManager.PORTAL_LOC_DATA = portalLocData;
-				DataManager.PORTAL2_DATA = portal2Data;
+				XmlDataLoader loader = XmlDataLoader.getInstance();
+				DataManager.PORTAL_LOC_DATA = loader.loadPortalLocData();
+				DataManager.PORTAL2_DATA = loader.loadPortal2Data();
 				PacketSendUtility.sendMessage(admin, "Portal reload Success!");
 			}
 			catch (Exception e) {

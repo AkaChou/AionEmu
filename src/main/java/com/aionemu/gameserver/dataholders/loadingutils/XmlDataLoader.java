@@ -7,6 +7,8 @@ import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
+import com.aionemu.gameserver.dataholders.Portal2Data;
+import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.SkillData;
@@ -63,6 +65,8 @@ public class XmlDataLoader {
 	private static final String NPC_DEFINITIONS_FILE = "./definitions/npcs/npc_template.xml";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
+	private static final String PORTAL_LOC_DEFINITIONS_FILE = "./definitions/portals/portal_loc.xml";
+	private static final String PORTAL_TEMPLATE_DEFINITIONS_FILE = "./definitions/portals/portal_template2.xml";
 	private static final String QUEST_DEFINITIONS_FILE = "./definitions/quests/quest_data.xml";
 	private static final String QUEST_SCRIPT_DEFINITIONS_DIR = "./definitions/quests/scripts";
 	private static final String RECIPE_DEFINITIONS_FILE = "./definitions/recipes/recipe_templates.xml";
@@ -156,6 +160,8 @@ public class XmlDataLoader {
 				data.npcData = loadNpcData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
+				data.portalLocData = loadPortalLocData();
+				data.portalTemplate2 = loadPortal2Data();
 				data.questData = loadQuestData();
 				data.questsScriptData = loadQuestScripts();
 				data.recipeData = loadRecipeData();
@@ -205,6 +211,23 @@ public class XmlDataLoader {
 		NpcSkillData data = NpcSkillDefinitionLoader.load(Config.definitionFile(NPC_SKILL_DEFINITIONS_FILE));
 		log.info(I18n.get("log.b3e7ebfb7d92", data.size()));
 		return data;
+	}
+
+	public PortalLocData loadPortalLocData() {
+		return loadDefinition(PORTAL_LOC_DEFINITIONS_FILE, PortalLocData.class);
+	}
+
+	public Portal2Data loadPortal2Data() {
+		return loadDefinition(PORTAL_TEMPLATE_DEFINITIONS_FILE, Portal2Data.class);
+	}
+
+	private <T> T loadDefinition(String path, Class<T> type) {
+		File file = Config.definitionFile(path);
+		try (FileReader reader = new FileReader(file)) {
+			return type.cast(createJaxbContext(type).createUnmarshaller().unmarshal(reader));
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load definitions from " + file.getPath(), e);
+		}
 	}
 
 	public QuestsData loadQuestData() {

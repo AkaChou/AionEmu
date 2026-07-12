@@ -143,9 +143,9 @@ public class StaticData {
 	@XmlElement(name = "instance_exits")
 	public InstanceExitData instanceExitData;
 	@XmlElement(name = "portal_locs")
-	PortalLocData portalLocData;
+	public PortalLocData portalLocData;
 	@XmlElement(name = "portal_templates2")
-	Portal2Data portalTemplate2;
+	public Portal2Data portalTemplate2;
 	@XmlElement(name = "house_lands")
 	public HouseData houseData;
 	@XmlElement(name = "buildings")
