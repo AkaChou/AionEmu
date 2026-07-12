@@ -24,6 +24,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
@@ -365,6 +366,25 @@ class XmlDataLoaderTest {
 			assertEquals(9, instanceRifts.size());
 			assertEquals(80, rifts.size());
 			assertEquals(210020000, rifts.getRiftLocations().get(2120).getWorldId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedAutoGroupDefinitionsPreserveEntranceMappings() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			AutoGroupData data = new XmlDataLoader().loadAutoGroupData();
+
+			assertEquals(130, data.size());
+			assertEquals(300110000, data.getTemplateByInstaceMaskId(1).getInstanceId());
+			assertTrue(data.getTemplateByInstaceMaskId(1).getNpcIds().contains(279039));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

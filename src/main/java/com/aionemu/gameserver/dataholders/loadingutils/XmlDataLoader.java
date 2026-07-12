@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
@@ -68,6 +69,7 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
+	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
 	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
 	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
 	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
@@ -170,6 +172,7 @@ public class XmlDataLoader {
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				data.npcData = loadNpcData();
+				data.autoGroupData = loadAutoGroupData();
 				data.dynamicRiftData = loadDynamicRiftData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
@@ -217,6 +220,10 @@ public class XmlDataLoader {
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load NPC definitions from " + file.getPath(), e);
 		}
+	}
+
+	public AutoGroupData loadAutoGroupData() {
+		return loadDefinition(AUTO_GROUP_DEFINITIONS_FILE, AutoGroupData.class);
 	}
 
 	public NpcDropData loadNpcDropData() {
