@@ -81,7 +81,7 @@ public class ExtractAbyssAction extends AbstractItemAction {
 				if (targetItem.getItemTemplate().getAcquisition().getRequiredAp() != 0) {
 					AbyssPointsService.addAp(player,
 							(int) (targetItem.getItemTemplate().getAcquisition().getRequiredAp()
-									* 1000f)));
+									* 1000f));
 					player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1);
 					player.getInventory().decreaseItemCount(targetItem, 1);
 				}
