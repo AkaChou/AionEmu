@@ -18,57 +18,57 @@ class AwakeningScrollSkillDataTest {
 	@Test
 	void awakeningScrollsUseScalingCastingSpeedBuffInSourceAndRuntimeData() throws Exception {
 		assertAwakeningScrollData("src/main/resources/aion/definitions/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+				"src/main/resources/aion/definitions/skills/skill_templates.xml");
 		assertAwakeningScrollData("target/classes/aion/definitions/items/item/item_misc_templates.xml",
-				"target/classes/aion/data/static_data/skills/skill_templates.xml");
+				"target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	@Test
 	void mysteriousScrollUsesScalingAttackAndCastingSpeedBuff() throws Exception {
 		assertMysteriousScrollData("src/main/resources/aion/definitions/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+				"src/main/resources/aion/definitions/skills/skill_templates.xml");
 		assertMysteriousScrollData("target/classes/aion/definitions/items/item/item_misc_templates.xml",
-				"target/classes/aion/data/static_data/skills/skill_templates.xml");
+				"target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	@Test
 	void oneHourAndEventAwakeningScrollsUseScalingCastingSpeedBuff() throws Exception {
 		assertTimedAwakeningScrollData("src/main/resources/aion/definitions/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+				"src/main/resources/aion/definitions/skills/skill_templates.xml");
 		assertTimedAwakeningScrollData("target/classes/aion/definitions/items/item/item_misc_templates.xml",
-				"target/classes/aion/data/static_data/skills/skill_templates.xml");
+				"target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	@Test
 	void arenaAwakeningScrollsUseScalingCastingSpeedBuff() throws Exception {
 		assertArenaAwakeningScrollData("src/main/resources/aion/definitions/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+				"src/main/resources/aion/definitions/skills/skill_templates.xml");
 		assertArenaAwakeningScrollData("target/classes/aion/definitions/items/item/item_misc_templates.xml",
-				"target/classes/aion/data/static_data/skills/skill_templates.xml");
+				"target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	@Test
 	void itemStatScrollsUseSkillLevelScalingBuffs() throws Exception {
-		assertItemStatScrollScaling("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
-		assertItemStatScrollScaling("target/classes/aion/data/static_data/skills/skill_templates.xml");
+		assertItemStatScrollScaling("src/main/resources/aion/definitions/skills/skill_templates.xml");
+		assertItemStatScrollScaling("target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	@Test
 	void remainingItemConsumablesUseSkillLevelScalingBuffs() throws Exception {
-		assertRemainingItemConsumableScaling("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
-		assertRemainingItemConsumableScaling("target/classes/aion/data/static_data/skills/skill_templates.xml");
+		assertRemainingItemConsumableScaling("src/main/resources/aion/definitions/skills/skill_templates.xml");
+		assertRemainingItemConsumableScaling("target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	@Test
 	void clientStatUpAttributesArePresentInSourceAndRuntimeData() throws Exception {
-		assertClientStatUpAttributes("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
-		assertClientStatUpAttributes("target/classes/aion/data/static_data/skills/skill_templates.xml");
+		assertClientStatUpAttributes("src/main/resources/aion/definitions/skills/skill_templates.xml");
+		assertClientStatUpAttributes("target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	@Test
 	void clientBuffTemplatesAreNotOverwrittenByUnrelatedAttackSkills() throws Exception {
-		assertClientBuffTemplates("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
-		assertClientBuffTemplates("target/classes/aion/data/static_data/skills/skill_templates.xml");
+		assertClientBuffTemplates("src/main/resources/aion/definitions/skills/skill_templates.xml");
+		assertClientBuffTemplates("target/classes/aion/definitions/skills/skill_templates.xml");
 	}
 
 	private static void assertAwakeningScrollData(String itemPath, String skillPath) throws Exception {

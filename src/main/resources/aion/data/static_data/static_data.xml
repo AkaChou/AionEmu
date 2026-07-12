@@ -106,7 +106,6 @@
 	<skill_tree>
 		<import file="skill_tree" skipRoot="true"/>
 	</skill_tree>
-	<import file="skills/skill_templates.xml"/>
 	<import file="skills/motion_times.xml"/>
 	<spawns>
 		<import file="spawns" skipRoot="true"/>

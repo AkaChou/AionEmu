@@ -26,6 +26,7 @@ import jakarta.xml.bind.Unmarshaller;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -164,9 +165,9 @@ class XmlDataLoaderTest {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 		assertDoesNotThrow(() -> schemaFactory
-			.newSchema(Path.of("src/main/resources/aion/data/static_data/skills/skills.xsd").toFile())
+			.newSchema(Path.of("src/main/resources/aion/definitions/skills/skills.xsd").toFile())
 			.newValidator()
-			.validate(new StreamSource(Path.of("src/main/resources/aion/data/static_data/skills/skill_templates.xml").toFile())));
+			.validate(new StreamSource(Path.of("src/main/resources/aion/definitions/skills/skill_templates.xml").toFile())));
 	}
 
 	@Test
@@ -205,6 +206,25 @@ class XmlDataLoaderTest {
 
 			assertEquals(1, data.size());
 			assertEquals(100, data.getDrop(100).getNpcId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedSkillDefinitionsLoadWithCooldownGroups() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			SkillData data = new XmlDataLoader().loadSkillData();
+
+			assertEquals(14480, data.size());
+			assertNotNull(data.getSkillTemplate(1));
+			assertTrue(data.getSkillsForDelayId(792).contains(1));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

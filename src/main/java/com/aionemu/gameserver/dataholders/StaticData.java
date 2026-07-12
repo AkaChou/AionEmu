@@ -320,7 +320,6 @@ public class StaticData {
 		log.info(I18n.get("log.cb32c6ebe648", teleporterData.size()));
 		log.info(I18n.get("log.b463de58d584", teleLocationData.size()));
 		log.info(I18n.get("log.031bd5830a8c", hotspotLocationData.size()));
-		log.info(I18n.get("log.b5f7ba1ed5cc", skillData.size()));
 		log.info(I18n.get("log.80c433e8573e", motionData.size()));
 		log.info(I18n.get("log.2897b432221b", skillTreeData.size()));
 		log.info(I18n.get("log.a18f09254709", cubeExpandData.size()));
@@ -418,7 +417,6 @@ public class StaticData {
 		log.info(I18n.get("log.5635e0855764", itemSkillEnhance.size()));
 		log.info(I18n.get("log.adfafb08b32a", boostEvents.size()));
 		log.info(I18n.get("log.596d2257b5ed", atreianBestiary.size()));
-		log.info(I18n.get("log.2e9957f776eb", skillData.sizeOfGroup()));
 		log.info(I18n.get("log.274e3cdb640a", chargeSkillData.size()));
 		log.info(I18n.get("log.6d91ec4699d0", eventsWindow.size()));
 		log.info(I18n.get("log.9de8a898475b", mailReward.size()));

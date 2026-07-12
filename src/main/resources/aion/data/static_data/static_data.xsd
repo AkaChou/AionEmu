@@ -34,7 +34,7 @@
 	<xs:include schemaLocation="siege/siege_locations.xsd"/>
 	<xs:include schemaLocation="siege/siege_shields.xsd"/>
 	<xs:include schemaLocation="skill_tree/skill_tree.xsd"/>
-	<xs:include schemaLocation="skills/skills.xsd"/>
+	<xs:include schemaLocation="../../definitions/skills/skills.xsd"/>
 	<xs:include schemaLocation="skills/motion_times.xsd"/>
 	<xs:include schemaLocation="spawns/spawns.xsd"/>
 	<xs:include schemaLocation="staticdoors/staticdoor_templates.xsd"/>
@@ -167,7 +167,6 @@
 				<xs:element ref="siege_locations" minOccurs="0"/>
 				<xs:element ref="shields" minOccurs="0"/>
 				<xs:element ref="skill_tree" minOccurs="0"/>
-				<xs:element ref="skill_data" minOccurs="0"/>
 				<xs:element ref="motion_times" minOccurs="0"/>
 				<xs:element ref="spawns" minOccurs="0"/>
 				<xs:element ref="staticdoor_templates" minOccurs="0"/>

@@ -12,6 +12,7 @@
 - `definitions/gzip/`：与 XML 等价的压缩副本；超大领域可直接使用。
 - `definitions/npc_drops/`：当前 AionEmu 掉落数据的权威目录；数据由旧目录原样迁移，不重新生成。
 - `definitions/items/item/`：当前 AionEmu 物品运行模板的兼容目录；启动和热重载均从这里加载。
+- `definitions/skills/`：当前 AionEmu 技能运行模板的兼容目录；启动和热重载均从这里加载。
 - `cache/`：派生的 JAXB 合并缓存，不是权威数据源。
 
 ## 迁移顺序
@@ -20,8 +21,9 @@
 2. 按领域保持现有玩法并逐步替换：世界与风道、掉落、物品、技能、NPC 与 NPC 技能、任务与配方、传送门与副本，最后处理其余数据容器。
 3. 已将当前 `npc_drops` 原样迁移到 `definitions/npc_drops`，启动加载、热重载、掉落导出和测试均使用新路径。
 4. 新 `compact/items.xml` 暂不能无损生成现有运行模型，已先把现有物品模板迁入 `definitions/items/item`，保持装备、动作和属性语义。
-5. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-6. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+5. 新 `compact/skills.xml` 暂不能无损生成现有运行模型，已先把现有技能模板迁入 `definitions/skills`，保持效果、动作、条件和 motion 语义。
+6. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+7. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -32,7 +34,8 @@
 | `3f4636a8` | definitions 数据导入 | 转换器完整单测、全量生成、往返/XSD 报告、100 MB 文件审计 | 2026-07-12 通过；所有文件均小于 100 MB |
 | `279beedb` | world.xml 风道 | `mvn -q -Dtest=AionServicePathsTest,WindstreamDefinitionLoaderTest,GameServerTest,XmlDataLoaderTest#staticDataSectionCountUsesTopLevelXmlElements test` | 2026-07-12 通过；未启动项目 |
 | `bc40031a` | NPC 掉落 | `NpcDropDataTest`、`NpcTemplateDropLoadingTest`、`GameServerTest` 及 `XmlDataLoaderTest` 掉落相关方法 | 2026-07-12 通过；全部现有分片可急切加载，未启动项目 |
-| 待提交 | 物品模板 | `XmlDataLoaderTest` 物品相关方法、`DataManagerTest`、`AwakeningScrollSkillDataTest`、`DyeActionTest`、`GameServerTest`、`AionServicePathsTest` | 2026-07-12 通过；128629 个模板可加载，未启动项目 |
+| `cc01713a` | 物品模板 | `XmlDataLoaderTest` 物品相关方法、`DataManagerTest`、`AwakeningScrollSkillDataTest`、`DyeActionTest`、`GameServerTest`、`AionServicePathsTest` | 2026-07-12 通过；128629 个模板可加载，未启动项目 |
+| 待提交 | 技能模板 | `XmlDataLoaderTest` 技能相关方法、`AwakeningScrollSkillDataTest`、`MinionTransformSkillDataTest`、`HotReloadDataTest`、`SkillTemplateTest` | 2026-07-12 通过；14480 个模板及冷却组可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -41,6 +44,7 @@
 - `fly_path.xml` 不包含初始启用状态；动态风道 301、302 继续保持初始关闭，由现有 NPC AI 开启。
 - NPC 掉落继续使用现有 26 个正式分片、公共掉落组和旧表备份；`static_data.xml` 不再合并掉落，启动与热重载统一通过 `XmlDataLoader.loadNpcDropData()` 从 `definitions/npc_drops` 加载。
 - `compact/items.xml` 有 128380 条客户端源记录和 307 个字段；现有运行数据有 128629 个唯一模板，并额外依赖派生掩码、分类、装备槽、说明 ID、嵌套武器属性、修饰器和道具动作。当前参考代码不足以证明这些派生关系全部可逆，因此暂不直接替换；后续只有在转换器能生成完整 `ItemTemplate` 并通过行为覆盖审计后，才删除兼容模板。
+- `compact/skills.xml` 有 14494 条客户端源记录，现有运行数据有 14480 个模板，并额外包含嵌套属性、起始/使用/装备条件、效果、动作、周期动作和 motion。当前参考代码不足以证明所有字段到运行类的映射，因此暂不直接替换；启动与热重载统一通过 `XmlDataLoader.loadSkillData()` 从兼容目录加载。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

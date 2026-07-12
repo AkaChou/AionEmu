@@ -5,6 +5,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -51,6 +52,7 @@ public class XmlDataLoader {
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
+	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
 	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
@@ -138,6 +140,7 @@ public class XmlDataLoader {
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				data.npcDropData = loadNpcDropData();
+				data.skillData = loadSkillData();
 				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
@@ -166,6 +169,19 @@ public class XmlDataLoader {
 		NpcDropData data = NpcDropData.loadEager(Config.definitionFile(NPC_DROP_DEFINITIONS_DIR));
 		log.info(I18n.get("log.4103f2b9b4db", data.size()));
 		return data;
+	}
+
+	public SkillData loadSkillData() {
+		File file = Config.definitionFile(SKILL_DEFINITIONS_FILE);
+		try (FileReader reader = new FileReader(file)) {
+			SkillData data = (SkillData) createJaxbContext(StaticData.class).createUnmarshaller().unmarshal(reader);
+			data.initializeCooldownGroups();
+			log.info(I18n.get("log.b5f7ba1ed5cc", data.size()));
+			log.info(I18n.get("log.2e9957f776eb", data.sizeOfGroup()));
+			return data;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load skill definitions from " + file.getPath(), e);
+		}
 	}
 
 	public WindstreamData loadWindstreamData() {
