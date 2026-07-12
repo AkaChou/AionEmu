@@ -9,6 +9,7 @@ import com.aionemu.gameserver.dataholders.ItemEnchantData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
+import com.aionemu.gameserver.dataholders.ItemUpgradeData;
 import com.aionemu.gameserver.dataholders.MultiReturnItemData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.BindPointData;
@@ -98,6 +99,7 @@ public class XmlDataLoader {
 	private static final String ITEM_MULTI_RETURN_DEFINITIONS_FILE = "./definitions/items/multi_return/multi_returns.xml";
 	private static final String ITEM_RANDOM_BONUS_DEFINITIONS_FILE = "./definitions/items/random_bonuses/item_random_bonuses.xml";
 	private static final String ITEM_SET_DEFINITIONS_FILE = "./definitions/items/sets/item_sets.xml";
+	private static final String ITEM_UPGRADE_DEFINITIONS_FILE = "./definitions/items/upgrade/item_upgrades.xml";
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
 	private static final String BIND_POINT_DEFINITIONS_FILE = "./definitions/world/transport/bind_points/bind_points.xml";
 	private static final String CHEST_DEFINITIONS_FILE = "./definitions/world/resources/chests/chest_templates.xml";
@@ -238,6 +240,7 @@ public class XmlDataLoader {
 				data.multiReturnItemData = loadMultiReturnItemData();
 				data.itemRandomBonuses = loadItemRandomBonusData();
 				data.itemSetData = loadItemSetData();
+				data.itemUpgradeData = loadItemUpgradeData();
 				data.portalLocData = loadPortalLocData();
 				data.portalTemplate2 = loadPortal2Data();
 				data.questData = loadQuestData();
@@ -378,6 +381,10 @@ public class XmlDataLoader {
 
 	public ItemSetData loadItemSetData() {
 		return loadDefinition(ITEM_SET_DEFINITIONS_FILE, ItemSetData.class);
+	}
+
+	public ItemUpgradeData loadItemUpgradeData() {
+		return loadDefinition(ITEM_UPGRADE_DEFINITIONS_FILE, ItemUpgradeData.class);
 	}
 
 	public RiftData loadRiftData() {

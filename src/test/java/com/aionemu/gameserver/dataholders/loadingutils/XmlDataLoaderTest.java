@@ -44,6 +44,7 @@ import com.aionemu.gameserver.dataholders.ItemEnchantData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
+import com.aionemu.gameserver.dataholders.ItemUpgradeData;
 import com.aionemu.gameserver.dataholders.MultiReturnItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -707,6 +708,27 @@ class XmlDataLoaderTest {
 			assertEquals(189, data.size());
 			assertNotNull(data.getEnchantTemplate(EnchantType.ENCHANT, 10000));
 			assertNotNull(data.getEnchantTemplate(EnchantType.AUTHORIZE, 10040));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedItemUpgradeDefinitionsPreserveCostsAndResults() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			ItemUpgradeData data = new XmlDataLoader().loadItemUpgradeData();
+
+			assertEquals(3897, data.size());
+			var result = data.getResultItemMap(100201319).get(100201532);
+			assertEquals(10, result.getCheck_enchant_count());
+			assertEquals(2, result.getUpgrade_materials().getSubMaterialItem().size());
+			assertEquals(184749, result.getNeed_abyss_point().getCount());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

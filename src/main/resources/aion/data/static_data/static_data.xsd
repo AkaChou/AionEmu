@@ -101,7 +101,7 @@
 	<xs:include schemaLocation="service_bonusattr/players_bonus.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/enchant/enchant_templates.xsd"/>
 	<xs:include schemaLocation="hotspot_location.xsd"/>
-	<xs:include schemaLocation="items/item_upgrades.xsd"/>
+	<xs:include schemaLocation="../../definitions/items/upgrade/item_upgrades.xsd"/>
 	<xs:include schemaLocation="events_config/atreian_passports.xsd"/>
 	<xs:include schemaLocation="game_experience/game_experience_items.xsd"/>
 	<xs:include schemaLocation="abyss_op/abyss_ops.xsd"/>
