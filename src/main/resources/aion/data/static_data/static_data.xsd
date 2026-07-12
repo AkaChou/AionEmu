@@ -3,7 +3,7 @@
 	<xs:include schemaLocation="ai/ai.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/transport/bind_points/bind_points.xsd"/>
 	<xs:include schemaLocation="chests/chest_templates.xsd"/>
-	<xs:include schemaLocation="cube_expander/cube_expander.xsd"/>
+	<xs:include schemaLocation="../../definitions/player/storage/cube_expander/cube_expander.xsd"/>
 	<xs:include schemaLocation="items/disassembly_items.xsd"/>
 	<xs:include schemaLocation="assembled_npcs/assembled_npcs.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/movement/fly_rings/fly_rings.xsd"/>
@@ -39,7 +39,7 @@
 	<xs:include schemaLocation="staticdoors/staticdoor_templates.xsd"/>
 	<xs:include schemaLocation="stats/stats.xsd"/>
 	<xs:include schemaLocation="tribe/tribe_relations.xsd"/>
-	<xs:include schemaLocation="warehouse_expander/warehouse_expander.xsd"/>
+	<xs:include schemaLocation="../../definitions/player/storage/warehouse_expander/warehouse_expander.xsd"/>
 	<xs:include schemaLocation="zones/zones.xsd"/>
 	<xs:include schemaLocation="global_types.xsd"/>
 	<xs:include schemaLocation="import.xsd"/>

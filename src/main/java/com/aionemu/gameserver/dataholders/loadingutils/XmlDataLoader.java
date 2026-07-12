@@ -6,6 +6,7 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.BindPointData;
+import com.aionemu.gameserver.dataholders.CubeExpandData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
@@ -29,6 +30,7 @@ import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.TeleLocationData;
 import com.aionemu.gameserver.dataholders.TeleporterData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
+import com.aionemu.gameserver.dataholders.WarehouseExpandData;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -80,6 +82,7 @@ public class XmlDataLoader {
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
 	private static final String BIND_POINT_DEFINITIONS_FILE = "./definitions/world/transport/bind_points/bind_points.xml";
+	private static final String CUBE_EXPAND_DEFINITIONS_FILE = "./definitions/player/storage/cube_expander/cube_expander.xml";
 	private static final String FLY_PATH_DEFINITIONS_FILE = "./definitions/world/transport/flypath_template.xml";
 	private static final String FLY_RING_DEFINITIONS_FILE = "./definitions/world/movement/fly_rings/fly_rings.xml";
 	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
@@ -104,6 +107,7 @@ public class XmlDataLoader {
 	private static final String TELEPORTER_DEFINITIONS_FILE = "./definitions/world/transport/npc_teleporter.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String WORLD_MAPS_DEFINITIONS_FILE = "./definitions/world/maps/world_maps.xml";
+	private static final String WAREHOUSE_EXPAND_DEFINITIONS_FILE = "./definitions/player/storage/warehouse_expander/warehouse_expander.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
 	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
@@ -192,6 +196,7 @@ public class XmlDataLoader {
 				data.npcData = loadNpcData();
 				data.autoGroupData = loadAutoGroupData();
 				data.bindPointData = loadBindPointData();
+				data.cubeExpandData = loadCubeExpandData();
 				data.flyPath = loadFlyPathData();
 				data.flyRingData = loadFlyRingData();
 				data.dynamicRiftData = loadDynamicRiftData();
@@ -214,6 +219,7 @@ public class XmlDataLoader {
 				data.teleLocationData = loadTeleLocationData();
 				data.teleporterData = loadTeleporterData();
 				data.windstreamsData = loadWindstreamData();
+				data.warehouseExpandData = loadWarehouseExpandData();
 				data.worldMapsData = loadWorldMapsData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
@@ -255,6 +261,10 @@ public class XmlDataLoader {
 
 	public BindPointData loadBindPointData() {
 		return loadDefinition(BIND_POINT_DEFINITIONS_FILE, BindPointData.class);
+	}
+
+	public CubeExpandData loadCubeExpandData() {
+		return loadDefinition(CUBE_EXPAND_DEFINITIONS_FILE, CubeExpandData.class);
 	}
 
 	public FlyPathData loadFlyPathData() {
@@ -406,6 +416,10 @@ public class XmlDataLoader {
 
 	public WorldMapsData loadWorldMapsData() {
 		return loadDefinition(WORLD_MAPS_DEFINITIONS_FILE, WorldMapsData.class);
+	}
+
+	public WarehouseExpandData loadWarehouseExpandData() {
+		return loadDefinition(WAREHOUSE_EXPAND_DEFINITIONS_FILE, WarehouseExpandData.class);
 	}
 
 	/**

@@ -26,6 +26,7 @@ import jakarta.xml.bind.Unmarshaller;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.BindPointData;
+import com.aionemu.gameserver.dataholders.CubeExpandData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
@@ -50,6 +51,7 @@ import com.aionemu.gameserver.dataholders.TeleLocationData;
 import com.aionemu.gameserver.dataholders.TeleporterData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
+import com.aionemu.gameserver.dataholders.WarehouseExpandData;
 import com.aionemu.gameserver.model.Race;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -486,6 +488,28 @@ class XmlDataLoaderTest {
 			assertEquals(400010000, flyRings.getFlyRingTemplates().getFirst().getMap());
 			assertEquals(8, roads.size());
 			assertEquals(210030000, roads.getRoadTemplates().getFirst().getMap());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedStorageExpansionDefinitionsPreserveNpcPrices() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			CubeExpandData cube = loader.loadCubeExpandData();
+			WarehouseExpandData warehouse = loader.loadWarehouseExpandData();
+
+			assertEquals(11, cube.size());
+			assertEquals(1000, cube.getCubeExpandListTemplate(798008).get(1).getPrice());
+			assertEquals(267, warehouse.size());
+			assertEquals(1200, warehouse.getWarehouseExpandListTemplate(203221).get(1).getPrice());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
