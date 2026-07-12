@@ -13,7 +13,7 @@
 	<xs:include schemaLocation="../../definitions/instances/instance_cooltimes/instance_cooltimes.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/sets/item_sets.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/item/item_templates.xsd"/>
-	<xs:include schemaLocation="items/item_random_bonuses.xsd"/>
+	<xs:include schemaLocation="../../definitions/items/random_bonuses/item_random_bonuses.xsd"/>
 	<xs:include schemaLocation="items/item_groups.xsd"/>
 	<xs:include schemaLocation="items/assembly_items.xsd"/>
 	<xs:include schemaLocation="items/multi_returns.xsd"/>
