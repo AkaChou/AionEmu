@@ -73,7 +73,6 @@ public final class DataManager {
     public static AIData AI_DATA;
     public static FlyPathData FLY_PATH;
     public static WindstreamData WINDSTREAM_DATA;
-    public static ItemRestrictionCleanupData ITEM_CLEAN_UP;
     public static AssembledNpcsData ASSEMBLED_NPC_DATA;
     public static CosmeticItemsData COSMETIC_ITEMS_DATA;
     public static ItemGroupsData ITEM_GROUPS_DATA;
@@ -209,7 +208,6 @@ public final class DataManager {
             PLAYER_EXPERIENCE_TABLE = data.playerExperienceTable;
             PLAYER_STATS_DATA = data.playerStatsData;
             SUMMON_STATS_DATA = data.summonStatsData;
-            ITEM_CLEAN_UP = data.itemCleanup;
             ITEM_DATA = itemData;
             ITEM_RANDOM_BONUSES = data.itemRandomBonuses;
             NPC_DATA = data.npcData;
@@ -275,7 +273,6 @@ public final class DataManager {
             HOUSE_NPCS_DATA = data.houseNpcsData;
             HOUSE_SCRIPT_DATA = data.houseScriptData;
             SYSTEM_MAIL_TEMPLATES = data.systemMailTemplates;
-            ITEM_DATA.cleanup();
             NPC_DROP_DATA = data.npcDropData;
             CHALLENGE_DATA = data.challengeData;
             TOWN_SPAWNS_DATA = data.townSpawnsData;
@@ -420,4 +417,3 @@ public final class DataManager {
         protected static final DataManager instance = new DataManager();
     }
 }
-

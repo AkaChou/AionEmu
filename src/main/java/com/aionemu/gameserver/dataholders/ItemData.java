@@ -15,16 +15,14 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.items.ItemMask;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
-import com.aionemu.gameserver.model.templates.restriction.ItemCleanupTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * 物品模板数据容器，持有并索引全部 {@link ItemTemplate}，支持热重载与限制清理。
- * Item template data holder, indexing all {@link ItemTemplate} instances with reload and restriction cleanup support.
+ * 物品模板数据容器，持有并索引全部 {@link ItemTemplate}，支持热重载。
+ * Item template data holder, indexing all {@link ItemTemplate} instances with reload support.
  *
  * @author Luno
  */
@@ -69,34 +67,6 @@ public class ItemData extends ReloadableData {
 			}
 		}
 		its = null;
-	}
-
-	/**
-	 * 根据清理规则覆盖物品的交易 / 出售 / 仓库存取掩码。
-	 * sell / warehouse storage masks.
-	 */
-	public void cleanup() {
-		for (ItemCleanupTemplate ict : DataManager.ITEM_CLEAN_UP.getList()) {
-			ItemTemplate template = items.get(ict.getId());
-			applyCleanup(template, ict.resultTrade(), ItemMask.TRADEABLE);
-			applyCleanup(template, ict.resultSell(), ItemMask.SELLABLE);
-			applyCleanup(template, ict.resultWH(), ItemMask.STORABLE_IN_WH);
-			applyCleanup(template, ict.resultAccountWH(), ItemMask.STORABLE_IN_AWH);
-			applyCleanup(template, ict.resultLegionWH(), ItemMask.STORABLE_IN_LWH);
-		}
-	}
-
-	private void applyCleanup(ItemTemplate item, byte result, int mask) {
-		if (result != -1) {
-			switch (result) {
-			case 1:
-				item.modifyMask(true, mask);
-				break;
-			case 0:
-				item.modifyMask(false, mask);
-				break;
-			}
-		}
 	}
 
 	/**

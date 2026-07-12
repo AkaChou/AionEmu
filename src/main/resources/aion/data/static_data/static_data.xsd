@@ -12,7 +12,6 @@
 	<xs:include schemaLocation="guides/guide.xsd"/>
 	<xs:include schemaLocation="../../definitions/instances/instance_cooltimes/instance_cooltimes.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/sets/item_sets.xsd"/>
-	<xs:include schemaLocation="items/item_restriction_cleanups.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/item/item_templates.xsd"/>
 	<xs:include schemaLocation="items/item_random_bonuses.xsd"/>
 	<xs:include schemaLocation="items/item_groups.xsd"/>
@@ -145,7 +144,6 @@
 				<xs:element ref="guides" minOccurs="0"/>
 				<xs:element ref="instance_cooltimes" minOccurs="0"/>
 				<xs:element ref="item_sets" minOccurs="0"/>
-				<xs:element ref="item_restriction_cleanups" minOccurs="0"/>
 				<xs:element ref="random_bonuses" minOccurs="0"/>
 				<xs:element ref="item_groups" minOccurs="0"/>
 				<xs:element ref="assembly_items" minOccurs="0"/>

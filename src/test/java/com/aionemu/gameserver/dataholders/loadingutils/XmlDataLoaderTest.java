@@ -615,6 +615,7 @@ class XmlDataLoaderTest {
 
 		assertEquals(128629, itemData.size());
 		assertNotNull(itemData.getItemTemplate(100000001));
+		assertTrue(itemData.getItemTemplate(100000001).isTradeable());
 	}
 
 	@Test

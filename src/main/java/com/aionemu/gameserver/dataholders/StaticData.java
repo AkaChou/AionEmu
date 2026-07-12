@@ -116,8 +116,6 @@ public class StaticData {
 	public FlyPathData flyPath;
 	@XmlElement(name = "windstreams")
 	public WindstreamData windstreamsData;
-	@XmlElement(name = "item_restriction_cleanups")
-	public ItemRestrictionCleanupData itemCleanup;
 	@XmlElement(name = "assembled_npcs")
 	public AssembledNpcsData assembledNpcData;
 	@XmlElement(name = "cosmetic_items")
@@ -300,7 +298,6 @@ public class StaticData {
 		log.info(I18n.get("log.b223e19e2ce1", playerExperienceTable.getMaxLevel()));
 		log.info(I18n.get("log.cd1d2fa1265d", playerStatsData.size()));
 		log.info(I18n.get("log.b92082bc2aef", summonStatsData.size()));
-		log.info(I18n.get("log.163e26cbbede", itemCleanup.size()));
 		if (itemData != null) {
 			log.info(I18n.get("log.a7639d832d45", itemData.size()));
 		}
