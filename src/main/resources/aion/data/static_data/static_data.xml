@@ -63,7 +63,6 @@
 	</ai_templates>
 	<import file="assembled_npcs/assembled_npcs.xml"/>
 	<import file="guides/guide.xml"/>
-	<import file="npc_factions/npc_factions.xml"/>
 	<pet_skill_templates>
 		<import file="pet_skills" skipRoot="true"/>
 	</pet_skill_templates>

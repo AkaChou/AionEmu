@@ -29,6 +29,7 @@ import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.NpcFactionsData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.PortalLocData;
@@ -119,6 +120,7 @@ public class XmlDataLoader {
 	private static final String INSTANCE_RIFT_DEFINITIONS_FILE = "./definitions/locations/instance_rift/instance_rift.xml";
 	private static final String NPC_DEFINITIONS_FILE = "./definitions/npcs/npc_template.xml";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
+	private static final String NPC_FACTION_DEFINITIONS_FILE = "./definitions/npcs/factions/npc_factions.xml";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
 	private static final String PORTAL_LOC_DEFINITIONS_FILE = "./definitions/portals/portal_loc.xml";
 	private static final String PORTAL_TEMPLATE_DEFINITIONS_FILE = "./definitions/portals/portal_template2.xml";
@@ -234,6 +236,7 @@ public class XmlDataLoader {
 				data.dynamicRiftData = loadDynamicRiftData();
 				data.disassemblyItemSetsData = loadDisassemblyItemSetsData();
 				data.npcDropData = loadNpcDropData();
+				data.npcFactionsData = loadNpcFactionsData();
 				data.npcSkillData = loadNpcSkillData();
 				data.instanceBuffData = loadInstanceBuffData();
 				data.instanceCooltimeData = loadInstanceCooltimeData();
@@ -333,6 +336,10 @@ public class XmlDataLoader {
 		NpcDropData data = NpcDropData.loadEager(Config.definitionFile(NPC_DROP_DEFINITIONS_DIR));
 		log.info(I18n.get("log.4103f2b9b4db", data.size()));
 		return data;
+	}
+
+	public NpcFactionsData loadNpcFactionsData() {
+		return loadDefinition(NPC_FACTION_DEFINITIONS_FILE, NpcFactionsData.class);
 	}
 
 	public NpcSkillData loadNpcSkillData() {

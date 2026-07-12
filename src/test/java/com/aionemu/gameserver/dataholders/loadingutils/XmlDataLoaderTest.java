@@ -50,6 +50,7 @@ import com.aionemu.gameserver.dataholders.ItemUpgradeData;
 import com.aionemu.gameserver.dataholders.MultiReturnItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.NpcFactionsData;
 import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
@@ -771,6 +772,26 @@ class XmlDataLoaderTest {
 			assertEquals(List.of(601), data.getSkillEnhance(79, com.aionemu.gameserver.model.PlayerClass.GLADIATOR).getSkillId());
 			assertEquals(List.of(3116), data.getSkillEnhance(79, com.aionemu.gameserver.model.PlayerClass.TEMPLAR).getSkillId());
 			assertTrue(data.getSkillEnhance(65, com.aionemu.gameserver.model.PlayerClass.CLERIC).getSkillId().contains(4668));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedNpcFactionDefinitionsPreserveNpcBindingsAndLevelRules() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			NpcFactionsData data = new XmlDataLoader().loadNpcFactionsData();
+
+			assertEquals(22, data.size());
+			assertEquals(2, data.getNpcFactionByNpcId(805145).getId());
+			assertEquals(40, data.getNpcFactionById(3).getMinLevel());
+			assertEquals(806432, data.getNpcFactionById(3).getNpcId());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
