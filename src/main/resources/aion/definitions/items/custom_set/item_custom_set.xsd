@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="../modifiers.xsd"/>
+    <xs:include schemaLocation="../../../data/static_data/modifiers.xsd"/>
 	<xs:element name="item_custom_sets">
 		<xs:complexType>
 			<xs:sequence>

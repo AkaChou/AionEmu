@@ -110,7 +110,7 @@
 	<xs:include schemaLocation="locations/landing/landing_locations.xsd"/>
 	<xs:include schemaLocation="locations/landing_special/landing_special_locations.xsd"/>
 	<xs:include schemaLocation="luna/luna_consume_rewards.xsd"/>
-	<xs:include schemaLocation="items/item_custom_set.xsd"/>
+	<xs:include schemaLocation="../../definitions/items/custom_set/item_custom_set.xsd"/>
 	<xs:include schemaLocation="minions/minions.xsd"/>
 	<xs:include schemaLocation="service_bonusattr/f2p_bonusattr.xsd"/>
 	<xs:include schemaLocation="arcadelist.xsd"/>

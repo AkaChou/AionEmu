@@ -40,6 +40,7 @@ import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemCustomSetData;
 import com.aionemu.gameserver.dataholders.ItemEnchantData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
@@ -729,6 +730,26 @@ class XmlDataLoaderTest {
 			assertEquals(10, result.getCheck_enchant_count());
 			assertEquals(2, result.getUpgrade_materials().getSubMaterialItem().size());
 			assertEquals(184749, result.getNeed_abyss_point().getCount());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedItemCustomSetDefinitionsPreserveReferencedEnchantValues() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			ItemCustomSetData data = new XmlDataLoader().loadItemCustomSetData();
+
+			assertEquals(90, data.size());
+			assertEquals(5, data.getCustomTemplate(11).getCustomEnchantValue());
+			assertEquals(10, data.getCustomTemplate(81).getCustomEnchantValue());
+			assertEquals(3, data.getCustomTemplate(84).getCustomEnchantValue());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

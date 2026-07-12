@@ -168,7 +168,6 @@
 	<luna_consume_rewards>
 		<import file="luna/luna_consume_rewards.xml" skipRoot="true"/>
 	</luna_consume_rewards>
-	<import file="items/item_custom_set.xml"/>
 	<import file="minions/minions.xml"/>
 	<import file="service_bonusattr/f2p_bonusattr.xml"/>
 	<import file="arcadelist.xml"/>

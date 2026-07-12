@@ -5,6 +5,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AssemblyItemsData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemCustomSetData;
 import com.aionemu.gameserver.dataholders.ItemEnchantData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
@@ -91,6 +92,7 @@ public class XmlDataLoader {
 	private static final String CACHE_XML_FILE = "./cache/static_data.xml";
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
+	private static final String ITEM_CUSTOM_SET_DEFINITIONS_FILE = "./definitions/items/custom_set/item_custom_set.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String ITEM_ASSEMBLY_DEFINITIONS_FILE = "./definitions/items/assembly/assembly_items.xml";
 	private static final String ITEM_DISASSEMBLY_DEFINITIONS_FILE = "./definitions/items/disassembly/disassembly_items.xml";
@@ -235,6 +237,7 @@ public class XmlDataLoader {
 				data.instanceCooltimeData = loadInstanceCooltimeData();
 				data.instanceExitData = loadInstanceExitData();
 				data.instanceRiftData = loadInstanceRiftData();
+				data.itemCustomSet = loadItemCustomSetData();
 				data.itemGroupsData = loadItemGroupsData();
 				data.itemEnchantData = loadItemEnchantData();
 				data.multiReturnItemData = loadMultiReturnItemData();
@@ -365,6 +368,10 @@ public class XmlDataLoader {
 
 	public ItemGroupsData loadItemGroupsData() {
 		return loadDefinition(ITEM_GROUP_DEFINITIONS_FILE, ItemGroupsData.class);
+	}
+
+	public ItemCustomSetData loadItemCustomSetData() {
+		return loadDefinition(ITEM_CUSTOM_SET_DEFINITIONS_FILE, ItemCustomSetData.class);
 	}
 
 	public ItemEnchantData loadItemEnchantData() {
