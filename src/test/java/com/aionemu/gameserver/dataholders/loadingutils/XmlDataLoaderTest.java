@@ -38,6 +38,7 @@ import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemSetData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.Portal2Data;
@@ -560,6 +561,25 @@ class XmlDataLoaderTest {
 			assertEquals(129, trades.getTradeListTemplate(203060).getTradeTablist().getFirst().getId());
 			assertNotNull(trades.getTradeInListTemplate(205315));
 			assertNotNull(trades.getPurchaseListTemplate(206352));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedItemSetDefinitionsPreservePartLookup() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			ItemSetData data = new XmlDataLoader().loadItemSetData();
+
+			assertEquals(672, data.size());
+			assertEquals(1, data.getItemSetTemplateByItemId(100900544).getId());
+			assertEquals(6, data.getItemSetTemplate(1).getItempart().size());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

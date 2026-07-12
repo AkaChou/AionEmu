@@ -12,6 +12,7 @@
 - `definitions/gzip/`：与 XML 等价的压缩副本；超大领域可直接使用。
 - `definitions/npc_drops/`：当前 AionEmu 掉落数据的权威目录；数据由旧目录原样迁移，不重新生成。
 - `definitions/items/item/`：当前 AionEmu 物品运行模板的兼容目录；启动和热重载均从这里加载。
+- `definitions/items/sets/`：当前 AionEmu 物品套装部件与奖励属性的兼容目录。
 - `definitions/skills/`：当前 AionEmu 技能运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/npcs/`：当前 AionEmu NPC 运行模板的兼容目录；主 JAXB 缓存不再合并 NPC 模板。
 - `definitions/quests/`：当前 AionEmu 任务主数据与服务器任务脚本的兼容目录。
@@ -48,8 +49,9 @@
 18. 新包没有背包与角色仓库扩展价格表；已先迁移现有玩家存储扩展配置。
 19. 新包没有宝箱钥匙或完整采集物产出表；已先迁移现有世界资源配置。
 20. 新商店数据存在缺页、内容差异和无法解析的商品引用；已先迁移现有 NPC 商店配置。
-21. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-22. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+21. 新套装表存在缺失套装、部件引用和属性映射歧义；已先迁移现有物品套装配置。
+22. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+23. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -76,7 +78,8 @@
 | `ae8a4360` | 飞行环与道路 | `XmlDataLoaderTest` 世界移动加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；72 个飞行环和 8 条道路可加载，未启动项目 |
 | `005d2e4a` | 背包与仓库扩展 | `XmlDataLoaderTest` 存储扩展加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；11 个背包扩展 NPC、268 行仓库配置形成 267 个唯一 NPC 模板，未启动项目 |
 | `41d0342c` | 宝箱与采集物 | `XmlDataLoaderTest` 世界资源加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；359 行宝箱配置形成 358 个唯一模板，761 个采集物模板可加载，未启动项目 |
-| 待提交 | NPC 商店 | `XmlDataLoaderTest` 商店加载/主 XSD/分区统计方法、`LimitedTradeNpcTest`、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；3898 个商品页、2461 个普通商店、189 个回购和 256 个收购 NPC 映射可加载，未启动项目 |
+| `d0edaaad` | NPC 商店 | `XmlDataLoaderTest` 商店加载/主 XSD/分区统计方法、`LimitedTradeNpcTest`、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；3898 个商品页、2461 个普通商店、189 个回购和 256 个收购 NPC 映射可加载，未启动项目 |
+| 待提交 | 物品套装 | `XmlDataLoaderTest` 套装加载/主 XSD/分区统计方法、`GameServerTest`、套装 XML 的 XSD 校验 | 2026-07-12 通过；672 个套装及部件反向索引可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -101,6 +104,7 @@
 - 新源目录没有背包或角色仓库扩展的 NPC、等级和价格表；名称带 `cube` 的文件是动画/预设，`toypet_warehouse.xml` 是玩具宠物仓库，都不能驱动现有扩展服务。启动统一通过 `XmlDataLoader` 从 `definitions/player/storage` 加载 11 个背包扩展 NPC，以及 268 行仓库配置按 NPC ID 形成的 267 个唯一模板；重复 NPC `263516` 保持现有后项覆盖语义。
 - 新源目录中名称带 `chest`、`gather` 的数据仅有动画标记、任务采集条件和采集配方经验，缺少宝箱钥匙、采集物模板 ID、技能等级、采集次数以及普通/额外材料概率，不能驱动现有交互与奖励逻辑。启动统一通过 `XmlDataLoader` 从 `definitions/world/resources` 加载 359 行宝箱配置形成的 358 个唯一模板，以及 761 个采集物模板；重复宝箱 NPC `700477` 保持现有后项覆盖语义。
 - 新商店数据分散在 `compact/commerce-events.xml`、`item-relations.xml`、`npcs.xml` 和 `items.xml`：普通商品页与现有同 ID 页面仅 3019/3245 个顺序完全一致，226 个页面内容变化、11 个旧页面缺失，并有 314 个商品名称无法解析到新 Item 表；回购与收购又分别依赖 `trade_in_list.xml`、`purchase_list.xml` 和 NPC 多类交易字段。为避免商店缺货或客户端交易校验回归，启动统一通过 `XmlDataLoader` 从 `definitions/commerce/npc_shops` 加载现有 3898 个商品页、2461 个普通商店、189 个回购和 256 个收购 NPC 映射，待引用覆盖与行为差异全部可证明后再直接解释 compact 数据。
+- `compact/item-relations.xml` 的 `setitem.xml` 有 721 个套装，现有运行表有 672 个，两者仅 640 个 ID 相交；新表缺少 32 个现有套装，并新增 81 个套装，其中 42 个部件名称无法解析到新 Item 表。共同套装仍有部件差异，奖励字符串还需要 `attackdelay`、`boosthate` 的符号转换，且 `silence_arp`、`paralyze_arp` 在现有数据中分别出现抗性与抗性穿透两种解释，不能按名称唯一映射。启动统一通过 `XmlDataLoader.loadItemSetData()` 从 `definitions/items/sets` 加载现有 672 个套装，待所有部件和属性映射可证明后再直接解释新表。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.1">
-	<xs:include schemaLocation="../import.xsd"/>
-	<xs:include schemaLocation="../modifiers.xsd"/>
+	<xs:include schemaLocation="../../../data/static_data/import.xsd"/>
+	<xs:include schemaLocation="../../../data/static_data/modifiers.xsd"/>
 	<xs:element name="item_sets">
 		<xs:complexType>
 			<xs:sequence>
