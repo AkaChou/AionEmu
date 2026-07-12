@@ -14,6 +14,7 @@
 - `definitions/items/item/`：当前 AionEmu 物品运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/items/sets/`：当前 AionEmu 物品套装部件与奖励属性的兼容目录。
 - `definitions/items/random_bonuses/`：当前 AionEmu 背包洗练与伊甸石随机属性组的兼容目录。
+- `definitions/items/groups/`：当前 AionEmu 奖励池、制作材料与宠物食物分组的兼容目录。
 - `definitions/skills/`：当前 AionEmu 技能运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/npcs/`：当前 AionEmu NPC 运行模板的兼容目录；主 JAXB 缓存不再合并 NPC 模板。
 - `definitions/quests/`：当前 AionEmu 任务主数据与服务器任务脚本的兼容目录。
@@ -53,8 +54,9 @@
 21. 新套装表存在缺失套装、部件引用和属性映射歧义；已先迁移现有物品套装配置。
 22. definitions 物品模板已直接表达唯一的交易限制清理规则；已删除冗余清理表和启动后处理。
 23. 新随机属性表会改变概率、属性数量和值，且存在非唯一符号转换；已先迁移现有随机属性配置。
-24. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-25. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+24. 新包没有服务器奖励池与宠物食物分组；已先迁移现有物品组配置。
+25. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+26. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -84,7 +86,8 @@
 | `d0edaaad` | NPC 商店 | `XmlDataLoaderTest` 商店加载/主 XSD/分区统计方法、`LimitedTradeNpcTest`、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；3898 个商品页、2461 个普通商店、189 个回购和 256 个收购 NPC 映射可加载，未启动项目 |
 | `f7a8ea48` | 物品套装 | `XmlDataLoaderTest` 套装加载/主 XSD/分区统计方法、`GameServerTest`、套装 XML 的 XSD 校验 | 2026-07-12 通过；672 个套装及部件反向索引可加载，未启动项目 |
 | `2aa12ea3` | 物品限制清理 | `XmlDataLoaderTest` 物品加载/主 XSD/分区统计方法、`DataManagerTest` | 2026-07-12 通过；物品 `100000001` 无后处理仍可交易，冗余容器与规则已删除，未启动项目 |
-| 待提交 | 物品随机属性 | `XmlDataLoaderTest` 随机属性加载/主 XSD/分区统计方法、`GameServerTest`、随机属性 XML 的 XSD 校验 | 2026-07-12 通过；659 个唯一背包/抛光随机组及现有概率可加载，未启动项目 |
+| `2ab52d85` | 物品随机属性 | `XmlDataLoaderTest` 随机属性加载/主 XSD/分区统计方法、`GameServerTest`、随机属性 XML 的 XSD 校验 | 2026-07-12 通过；659 个唯一背包/抛光随机组及现有概率可加载，未启动项目 |
+| 待提交 | 物品组 | `XmlDataLoaderTest` 物品组加载/主 XSD/分区统计方法、`GameServerTest`、物品组 XML 的 XSD 校验 | 2026-07-12 通过；4994 条运行奖励、794 条宠物食物缓存及类型查询可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -111,6 +114,7 @@
 - 新商店数据分散在 `compact/commerce-events.xml`、`item-relations.xml`、`npcs.xml` 和 `items.xml`：普通商品页与现有同 ID 页面仅 3019/3245 个顺序完全一致，226 个页面内容变化、11 个旧页面缺失，并有 314 个商品名称无法解析到新 Item 表；回购与收购又分别依赖 `trade_in_list.xml`、`purchase_list.xml` 和 NPC 多类交易字段。为避免商店缺货或客户端交易校验回归，启动统一通过 `XmlDataLoader` 从 `definitions/commerce/npc_shops` 加载现有 3898 个商品页、2461 个普通商店、189 个回购和 256 个收购 NPC 映射，待引用覆盖与行为差异全部可证明后再直接解释 compact 数据。
 - `compact/item-relations.xml` 的 `setitem.xml` 有 721 个套装，现有运行表有 672 个，两者仅 640 个 ID 相交；新表缺少 32 个现有套装，并新增 81 个套装，其中 42 个部件名称无法解析到新 Item 表。共同套装仍有部件差异，奖励字符串还需要 `attackdelay`、`boosthate` 的符号转换，且 `silence_arp`、`paralyze_arp` 在现有数据中分别出现抗性与抗性穿透两种解释，不能按名称唯一映射。启动统一通过 `XmlDataLoader.loadItemSetData()` 从 `definitions/items/sets` 加载现有 672 个套装，待所有部件和属性映射可证明后再直接解释新表。
 - `compact/item-relations.xml` 的 `item_random_option.xml` 与 `polish_bonus_setlist.xml` 共提供 659 个随机属性键，数量与现有唯一键一致，但按现有属性转换规则只有 482 组能完全还原；113 个概率值不同，部分抛光组的属性数量和值也不同，`attackdelay` 与 `parry` 还出现非唯一符号转换。为保持物品洗练、随机装备属性和伊甸石结果，启动统一通过 `XmlDataLoader.loadItemRandomBonusData()` 从 `definitions/items/random_bonuses` 加载现有 659 个唯一随机组，待概率变更和全部属性转换有明确规则后再直接解释新表。
+- 新 definitions 清单没有 `item_group` 等价文档；现有表是服务器为制作材料、魔石、勋章、食物、药品、矿石、采集、强化、首领奖励和 21 类宠物食物维护的运行分组，无法从单个 Item 字段恢复。启动统一通过 `XmlDataLoader.loadItemGroupsData()` 从 `definitions/items/groups` 加载 4994 条运行奖励和 794 条宠物食物缓存。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

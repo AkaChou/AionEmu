@@ -38,6 +38,7 @@ import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
 import com.aionemu.gameserver.dataholders.NpcData;
@@ -60,6 +61,7 @@ import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.dataholders.WarehouseExpandData;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
+import com.aionemu.gameserver.model.templates.pet.FoodType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -601,6 +603,25 @@ class XmlDataLoaderTest {
 			assertEquals(659, data.size());
 			assertEquals(10f, data.getTemplate(StatBonusType.INVENTORY, 1, 1).getChance());
 			assertNotNull(data.getTemplate(StatBonusType.POLISH, 73, 1));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedItemGroupDefinitionsPreserveRewardsAndPetFood() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			ItemGroupsData data = new XmlDataLoader().loadItemGroupsData();
+
+			assertEquals(4994, data.bonusSize());
+			assertEquals(794, data.petFoodSize());
+			assertTrue(data.isFood(182003659, FoodType.FLUIDS));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
@@ -86,6 +87,7 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
+	private static final String ITEM_GROUP_DEFINITIONS_FILE = "./definitions/items/groups/item_groups.xml";
 	private static final String ITEM_RANDOM_BONUS_DEFINITIONS_FILE = "./definitions/items/random_bonuses/item_random_bonuses.xml";
 	private static final String ITEM_SET_DEFINITIONS_FILE = "./definitions/items/sets/item_sets.xml";
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
@@ -221,6 +223,7 @@ public class XmlDataLoader {
 				data.instanceCooltimeData = loadInstanceCooltimeData();
 				data.instanceExitData = loadInstanceExitData();
 				data.instanceRiftData = loadInstanceRiftData();
+				data.itemGroupsData = loadItemGroupsData();
 				data.itemRandomBonuses = loadItemRandomBonusData();
 				data.itemSetData = loadItemSetData();
 				data.portalLocData = loadPortalLocData();
@@ -335,6 +338,10 @@ public class XmlDataLoader {
 
 	public InstanceRiftData loadInstanceRiftData() {
 		return loadDefinition(INSTANCE_RIFT_DEFINITIONS_FILE, InstanceRiftData.class);
+	}
+
+	public ItemGroupsData loadItemGroupsData() {
+		return loadDefinition(ITEM_GROUP_DEFINITIONS_FILE, ItemGroupsData.class);
 	}
 
 	public ItemRandomBonusData loadItemRandomBonusData() {
