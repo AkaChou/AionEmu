@@ -2,6 +2,8 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -10,6 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
+
+import com.aionemu.gameserver.model.templates.windstreams.WindstreamRoute;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
@@ -27,13 +31,35 @@ public class WindstreamData {
 
 	private List<WindstreamTemplate> wts;
 	private IntObjectHashMap<WindstreamTemplate> windstreams;
+	@XmlTransient
+	private IntObjectHashMap<IntObjectHashMap<WindstreamRoute>> routesByMap;
+
+	public WindstreamData() {
+	}
+
+	public WindstreamData(List<WindstreamTemplate> templates, List<WindstreamRoute> routes) {
+		wts = templates;
+		indexTemplates();
+		routesByMap = new IntObjectHashMap<>();
+		for (WindstreamRoute route : routes) {
+			IntObjectHashMap<WindstreamRoute> mapRoutes = routesByMap.get(route.getMapId());
+			if (mapRoutes == null) {
+				mapRoutes = new IntObjectHashMap<>();
+				routesByMap.put(route.getMapId(), mapRoutes);
+			}
+			mapRoutes.put(route.getId(), route);
+		}
+	}
 
 	/**
 	 * JAXB 反序列化完成后，将风道模板按地图 ID 建索引并释放列表。
 	 * After JAXB unmarshalling, indexes windstream templates by map id and clears the list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
+		indexTemplates();
+	}
 
+	private void indexTemplates() {
 		windstreams = new IntObjectHashMap<WindstreamTemplate>();
 		for (WindstreamTemplate wt : wts) {
 			windstreams.put(wt.getMapid(), wt);
@@ -52,6 +78,11 @@ public class WindstreamData {
 	 */
 	public WindstreamTemplate getStreamTemplate(int mapId) {
 		return windstreams.get(mapId);
+	}
+
+	public WindstreamRoute getRoute(int mapId, int routeId) {
+		IntObjectHashMap<WindstreamRoute> routes = routesByMap.get(mapId);
+		return routes == null ? null : routes.get(routeId >= 1000 ? routeId / 1000 : routeId);
 	}
 
 	/**

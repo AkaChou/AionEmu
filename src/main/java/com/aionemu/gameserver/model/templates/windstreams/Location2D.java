@@ -25,6 +25,15 @@ public class Location2D {
 	@XmlAttribute(name = "fly_path")
 	protected FlyPathType flyPath;
 
+	public Location2D() {
+	}
+
+	public Location2D(int id, int state, FlyPathType flyPath) {
+		this.id = id;
+		this.state = state;
+		this.flyPath = flyPath;
+	}
+
 	/**
 	 * @return the id
 	 */

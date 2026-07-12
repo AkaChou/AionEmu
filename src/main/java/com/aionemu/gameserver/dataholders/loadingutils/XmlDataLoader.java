@@ -5,6 +5,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
@@ -48,6 +49,8 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
+	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
+	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
 	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
 	/**
@@ -132,6 +135,7 @@ public class XmlDataLoader {
 			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
+				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
 				logSlowSectionTimings(progressListener.sectionElapsedTimes());
@@ -153,6 +157,13 @@ public class XmlDataLoader {
 			log.error(I18n.get("log.a30b9e9db6fa", e));
 		}
 		return null;
+	}
+
+	public WindstreamData loadWindstreamData() {
+		WindstreamData data = WindstreamDefinitionLoader.load(Config.definitionFile(WORLD_DEFINITIONS_FILE),
+			Config.definitionFile(ID_DEFINITIONS_FILE));
+		log.info(I18n.get("log.e7553a368e56", data.size()));
+		return data;
 	}
 
 	/**

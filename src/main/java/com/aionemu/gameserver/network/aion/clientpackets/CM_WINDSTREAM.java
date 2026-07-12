@@ -2,11 +2,13 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamPath;
+import com.aionemu.gameserver.model.templates.windstreams.WindstreamRoute;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
@@ -63,8 +65,12 @@ public class CM_WINDSTREAM extends AionClientPacket {
 			if (player.isInPlayerMode(PlayerMode.WINDSTREAM)) {
 				return;
 			}
+			WindstreamRoute route = DataManager.WINDSTREAM_DATA.getRoute(player.getPosition().getMapId(), teleportId);
+			if (route == null || !route.contains(distance, player.getX(), player.getY(), player.getZ(), 45)) {
+				return;
+			}
 			if (player.isInState(CreatureState.GLIDING) || player.isInState(CreatureState.FLYING)) {
-				player.setPlayerMode(PlayerMode.WINDSTREAM, new WindstreamPath(teleportId, distance));
+				player.setPlayerMode(PlayerMode.WINDSTREAM, new WindstreamPath(route, teleportId, distance));
 				if (player.isGM()) {
 					PacketSendUtility.sendMessage(player,
 							"You enter teleportId: " + teleportId + ", distance: " + distance);

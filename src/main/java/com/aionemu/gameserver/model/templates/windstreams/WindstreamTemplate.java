@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.templates.windstreams;
 
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -19,6 +21,14 @@ public class WindstreamTemplate {
 	protected StreamLocations locations;
 	@XmlAttribute
 	protected int mapid;
+
+	public WindstreamTemplate() {
+	}
+
+	public WindstreamTemplate(int mapId, List<Location2D> locations) {
+		this.mapid = mapId;
+		this.locations = new StreamLocations(locations);
+	}
 
 	 /**
 	  * 获取 locations 属性值。

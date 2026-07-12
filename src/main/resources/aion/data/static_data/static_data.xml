@@ -134,7 +134,6 @@
 	<import file="teleport_location.xml"/>
 	<import file="world_maps.xml"/>
 	<import file="flypath_template.xml"/>
-	<import file="locations/windstreams/windstreams.xml"/>
 	<import file="cosmetic_items/cosmetic_items.xml"/>
 	<import file="npc_shouts/npc_shouts.xml"/>
 	<npc_drops>

@@ -116,6 +116,22 @@ public class Config {
 		return new File(dataDir, stripDataPrefix(relativePath));
 	}
 
+	public static File definitionFile(String relativePath) {
+		String definitionsDir = System.getProperty("aion.game.definitions.dir");
+		if (definitionsDir == null) {
+			String dataDir = System.getProperty("aion.game.data.dir");
+			File parent = dataDir == null ? null : new File(dataDir).getParentFile();
+			definitionsDir = new File(parent == null ? new File(".") : parent, "definitions").getPath();
+		}
+		String normalized = relativePath.replace('\\', '/');
+		if (normalized.startsWith("./definitions/")) {
+			normalized = normalized.substring("./definitions/".length());
+		} else if (normalized.startsWith("definitions/")) {
+			normalized = normalized.substring("definitions/".length());
+		}
+		return new File(definitionsDir, normalized);
+	}
+
 	public static File geoFile(String relativePath) {
 		String geoDir = System.getProperty("aion.game.geo.dir");
 		if (geoDir == null) {

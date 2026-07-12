@@ -350,7 +350,6 @@ public class StaticData {
 		log.info(I18n.get("log.d35d8517e6f0", disassemblyItemSetsData.size()));
 		log.info(I18n.get("log.7d0656872005", aiData.size()));
 		log.info(I18n.get("log.b5ce3e0bbfb7", flyPath.size()));
-		log.info(I18n.get("log.e7553a368e56", windstreamsData.size()));
 		log.info(I18n.get("log.1b0dc7dfa0c2", assembledNpcData.size()));
 		log.info(I18n.get("log.e4cbb71f003a", cosmeticItemsData.size()));
 		log.info(I18n.get("log.4103f2b9b4db", npcDropData.size()));
