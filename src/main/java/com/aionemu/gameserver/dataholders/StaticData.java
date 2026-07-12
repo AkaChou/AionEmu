@@ -324,7 +324,6 @@ public class StaticData {
 		log.info(I18n.get("log.a18f09254709", cubeExpandData.size()));
 		log.info(I18n.get("log.56f737c52823", warehouseExpandData.size()));
 		log.info(I18n.get("log.0da69f2a900a", bindPointData.size()));
-		log.info(I18n.get("log.fe9338f00401", questData.size()));
 		log.info(I18n.get("log.d41021554656", gatherableData.size()));
 		log.info(I18n.get("log.f7402147d1c0", titleData.size()));
 		log.info(I18n.get("log.926913cabd63", walkerData.size()));

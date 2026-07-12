@@ -18,17 +18,10 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.HiddenFileFilter;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import static org.apache.commons.io.filefilter.FileFilterUtils.*;
 
 /**
  * 运行时热重载指令；可重载任务、技能、传送门、指令、掉落、商城、活动与配置。
@@ -58,19 +51,9 @@ public class Reload extends AdminCommand {
 			return;
 		}
 		if (params[0].equals("quest")) {
-			File xml = Config.dataFile("./data/static_data/quest_data/quest_data.xml");
-			File dir = Config.dataFile("./data/static_data/quest_script_data");
 			try {
-				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-				Unmarshaller un = jc.createUnmarshaller();
-				QuestsData newQuestData = (QuestsData) un.unmarshal(xml);
-				List<XMLQuest> newQuestScripts = new ArrayList<>();
-				for (File file : listFiles(dir, true)) {
-					XMLQuests data = ((XMLQuests) un.unmarshal(file));
-					if (data != null && data.getQuest() != null)
-						newQuestScripts.addAll(data.getQuest());
-				}
-				reloadQuests(newQuestData.getQuestsData(), newQuestScripts);
+				XmlDataLoader loader = XmlDataLoader.getInstance();
+				reloadQuests(loader.loadQuestData().getQuestsData(), loader.loadQuestScripts().getQuest());
 				PacketSendUtility.sendMessage(admin, "Quest reload Success!");
 			}
 			catch (Exception | GameServerError e) {
@@ -180,21 +163,6 @@ public class Reload extends AdminCommand {
 			}
 			throw e;
 		}
-	}
-
-	/**
-	 * 列出目录下可见的 {@code .xml} 文件，跳过 {@code new} 前缀与隐藏文件。
-	 * Lists visible {@code .xml} files under root, skipping {@code new}-prefixed and hidden files.
-	 *
-	 * root directory
-	 * whether to recurse
-	 * @return 匹配的文件集合 / matching files
-	 */
-	private Collection<File> listFiles(File root, boolean recursive) {
-		IOFileFilter dirFilter = recursive ? makeSVNAware(HiddenFileFilter.VISIBLE) : null;
-
-		return FileUtils.listFiles(root,
-			and(and(notFileFilter(prefixFileFilter("new")), suffixFileFilter(".xml")), HiddenFileFilter.VISIBLE), dirFilter);
 	}
 
 	/**

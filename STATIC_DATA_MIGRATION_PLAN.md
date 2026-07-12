@@ -14,6 +14,7 @@
 - `definitions/items/item/`：当前 AionEmu 物品运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/skills/`：当前 AionEmu 技能运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/npcs/`：当前 AionEmu NPC 运行模板的兼容目录；主 JAXB 缓存不再合并 NPC 模板。
+- `definitions/quests/`：当前 AionEmu 任务主数据与服务器任务脚本的兼容目录。
 - `cache/`：派生的 JAXB 合并缓存，不是权威数据源。
 
 ## 迁移顺序
@@ -25,8 +26,9 @@
 5. 新 `compact/skills.xml` 暂不能无损生成现有运行模型，已先把现有技能模板迁入 `definitions/skills`，保持效果、动作、条件和 motion 语义。
 6. NPC 技能已直接使用 `compact/npc-skills.xml`，不再保留旧 `npc_skills.xml`。
 7. 新 `compact/npcs.xml` 暂不能无损生成现有运行模型，已先把现有 NPC 模板迁入 `definitions/npcs`。
-8. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-9. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+8. 新 `compact/quests.xml` 暂不能替代服务器任务模型，已先迁移任务主数据与脚本；挑战任务仍作为独立领域保留。
+9. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+10. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -40,7 +42,8 @@
 | `cc01713a` | 物品模板 | `XmlDataLoaderTest` 物品相关方法、`DataManagerTest`、`AwakeningScrollSkillDataTest`、`DyeActionTest`、`GameServerTest`、`AionServicePathsTest` | 2026-07-12 通过；128629 个模板可加载，未启动项目 |
 | `ec392399` | 技能模板 | `XmlDataLoaderTest` 技能相关方法、`AwakeningScrollSkillDataTest`、`MinionTransformSkillDataTest`、`HotReloadDataTest`、`SkillTemplateTest` | 2026-07-12 通过；14480 个模板及冷却组可加载，未启动项目 |
 | `67c4d33a` | NPC 技能 | `NpcSkillDefinitionLoaderTest`、`PriestAI2Test`、`XmlDataLoaderTest` 静态 XSD/分区方法、`GameServerTest` | 2026-07-12 通过；59058 个 NPC 分配可加载，未启动项目 |
-| 待提交 | NPC 模板 | `XmlDataLoaderTest` NPC 相关方法、`NochsanaFortressGateTemplateTest`、`NpcTemplateDropLoadingTest`、`GameServerTest` | 2026-07-12 通过；87961 个唯一模板可加载，未启动项目 |
+| `a68baad0` | NPC 模板 | `XmlDataLoaderTest` NPC 相关方法、`NochsanaFortressGateTemplateTest`、`NpcTemplateDropLoadingTest`、`GameServerTest` | 2026-07-12 通过；87961 个唯一模板可加载，未启动项目 |
+| 待提交 | 任务主数据与脚本 | `XmlDataLoaderTest` 任务/XSD/分区相关方法、`GameServerTest` | 2026-07-12 通过；6424 个任务和 3813 个脚本处理器可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -52,6 +55,7 @@
 - `compact/skills.xml` 有 14494 条客户端源记录，现有运行数据有 14480 个模板，并额外包含嵌套属性、起始/使用/装备条件、效果、动作、周期动作和 motion。当前参考代码不足以证明所有字段到运行类的映射，因此暂不直接替换；启动与热重载统一通过 `XmlDataLoader.loadSkillData()` 从兼容目录加载。
 - `compact/npc-skills.xml` 已直接替换旧 NPC 技能表：10743 个共享组展开为 59058 个 NPC 分配。663 个唯一技能节点只有真端名称而没有可解析 ID；加载器保留对应 NPC 分配但跳过不可执行技能，不猜测 ID。
 - `compact/npcs.xml` 有 87734 条客户端源记录，现有兼容 XML 有 87970 行、87961 个唯一模板，并额外依赖派生名称 ID、AI、装备、统计、边界、交互和运行枚举。当前参考代码不足以证明完整映射，启动统一通过 `XmlDataLoader.loadNpcData()` 从兼容目录加载。
+- `compact/quests.xml` 是客户端 `quest.xml` 与奖励、采集、狩猎、对话、物品使用等关联文件的源文档包，不能表达服务器 `QuestTemplate` 派生字段和 3813 个 XML 脚本处理器。启动与热重载统一通过 `XmlDataLoader.loadQuestData()`、`loadQuestScripts()` 从兼容目录加载。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

@@ -90,10 +90,6 @@
 	<merchands>
 		<import file="pets/pet_merchand.xml" skipRoot="true"/>
 	</merchands>
-	<import file="quest_data/quest_data.xml"/>
-	<quest_scripts>
-		<import file="quest_script_data" skipRoot="true"/>
-	</quest_scripts>
 	<import file="recipe/recipe_templates.xml"/>
 	<import file="luna/luna_templates.xml"/>
 	<import file="roads/roads.xml"/>

@@ -27,8 +27,10 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.dataholders.XMLQuests;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -244,6 +246,27 @@ class XmlDataLoaderTest {
 			assertEquals(14480, data.size());
 			assertNotNull(data.getSkillTemplate(1));
 			assertTrue(data.getSkillsForDelayId(792).contains(1));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedQuestDefinitionsAndScriptsLoadFromConfiguredDirectory() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			QuestsData quests = loader.loadQuestData();
+			XMLQuests scripts = loader.loadQuestScripts();
+
+			assertEquals(6424, quests.size());
+			assertNotNull(quests.getQuestById(1000));
+			assertEquals(3813, scripts.getQuest().size());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

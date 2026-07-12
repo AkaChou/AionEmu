@@ -7,10 +7,13 @@ import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
+import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
+import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -28,6 +31,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +62,8 @@ public class XmlDataLoader {
 	private static final String NPC_DEFINITIONS_FILE = "./definitions/npcs/npc_template.xml";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
+	private static final String QUEST_DEFINITIONS_FILE = "./definitions/quests/quest_data.xml";
+	private static final String QUEST_SCRIPT_DEFINITIONS_DIR = "./definitions/quests/scripts";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
@@ -146,6 +154,8 @@ public class XmlDataLoader {
 				data.npcData = loadNpcData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
+				data.questData = loadQuestData();
+				data.questsScriptData = loadQuestScripts();
 				data.skillData = loadSkillData();
 				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
@@ -192,6 +202,41 @@ public class XmlDataLoader {
 		NpcSkillData data = NpcSkillDefinitionLoader.load(Config.definitionFile(NPC_SKILL_DEFINITIONS_FILE));
 		log.info(I18n.get("log.b3e7ebfb7d92", data.size()));
 		return data;
+	}
+
+	public QuestsData loadQuestData() {
+		File file = Config.definitionFile(QUEST_DEFINITIONS_FILE);
+		try (FileReader reader = new FileReader(file)) {
+			QuestsData data = (QuestsData) createJaxbContext(StaticData.class).createUnmarshaller().unmarshal(reader);
+			log.info(I18n.get("log.fe9338f00401", data.size()));
+			return data;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load quest definitions from " + file.getPath(), e);
+		}
+	}
+
+	public XMLQuests loadQuestScripts() {
+		File directory = Config.definitionFile(QUEST_SCRIPT_DEFINITIONS_DIR);
+		List<XMLQuest> scripts = new ArrayList<>();
+		try {
+			Unmarshaller unmarshaller = createJaxbContext(StaticData.class).createUnmarshaller();
+			try (var paths = Files.walk(directory.toPath())) {
+				for (Path path : paths.filter(Files::isRegularFile)
+					.filter(p -> p.getFileName().toString().endsWith(".xml"))
+					.filter(p -> !p.getFileName().toString().startsWith("new") && !p.getFileName().toString().startsWith("."))
+					.sorted().toList()) {
+					XMLQuests data = (XMLQuests) unmarshaller.unmarshal(path.toFile());
+					if (data.getQuest() != null) {
+						scripts.addAll(data.getQuest());
+					}
+				}
+			}
+			XMLQuests data = new XMLQuests();
+			data.setData(scripts);
+			return data;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load quest scripts from " + directory.getPath(), e);
+		}
 	}
 
 	public SkillData loadSkillData() {
