@@ -53,7 +53,8 @@ public class AutoGroupData {
 	 *
 	 * instance mask id
 	 *
-	 * @param maskId @return 模板，不存在则为 null / template or null
+	 * @param maskId
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public AutoGroup getTemplateByInstaceMaskId(int maskId) {
 		return autoGroupByInstanceId.get(maskId);

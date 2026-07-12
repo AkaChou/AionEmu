@@ -287,7 +287,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		player.getController().updateNearbyQuests();
 		// 与代理人交谈。 / Talk with the Agent.
 		sendMsgByRace(1403340, Race.PC_ALL, 5000);
-		// 须摧毁以太封印才能进入。 / You must destroy the Aether seals to enter.
+		// 须摧毁奥德封印才能进入。 / You must destroy the Aether seals to enter.
 		sendMsgByRace(1403210, Race.PC_ALL, 30000);
 		// 古物学家已开始激活永恒遗物。 / The Antiquarian has begun activating the Eternity Relics.
 		sendMsgByRace(1403212, Race.PC_ALL, 60000);

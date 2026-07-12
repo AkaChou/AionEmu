@@ -490,7 +490,7 @@ public class NpcController extends CreatureController<Npc> {
 	 * 获取所有者 NPC。
 	 * Gets the owner NPC.
 	 *
-	 * @return owner NPC / 所有者 NPC / owner NPC。 / owner NPC / 所有者 NPC / owner NPC
+	 * @return owner NPC / 所有者 NPC / owner NPC。
 	 */
 	@Override
 	public Npc getOwner() {
@@ -675,7 +675,7 @@ public class NpcController extends CreatureController<Npc> {
 	 * 调度 NPC 重生。
 	 * Schedules NPC respawn.
 	 *
-	 * @return respawn task Future / 重生任务 Future / respawn task Future。 / respawn task Future / 重生任务 Future / respawn task Future
+	 * @return respawn task Future / 重生任务 Future / respawn task Future。
 	 */
 	public Future<?> scheduleRespawn() {
 		if (!getOwner().getSpawn().isNoRespawn()) {
@@ -688,7 +688,7 @@ public class NpcController extends CreatureController<Npc> {
 	 * 获取与当前目标的攻击距离。
 	 * Gets the attack distance to the current target.
 	 *
-	 * @return attack distance / 攻击距离 / attack distance。 / attack distance / 攻击距离 / attack distance
+	 * @return attack distance / 攻击距离 / attack distance。
 	 */
 	public final float getAttackDistanceToTarget() {
 		return getOwner().getGameStats().getAttackRange().getCurrent() / 1000f;
@@ -701,7 +701,7 @@ public class NpcController extends CreatureController<Npc> {
 	 * skill id
 	 * skill level
 	 *
-	 * @return whether successful / 是否成功 / whether successful。 / whether successful / 是否成功 / whether successful
+	 * @return whether successful / 是否成功 / whether successful。
 	 */
 	@Override
 	public boolean useSkill(int skillId, int skillLevel) {

@@ -210,7 +210,8 @@ public class PetitionService {
 	 *
 	 * player object id
 	 *
-	 * @param playerObjId @return 请愿，不存在为 null / petition, or null if none
+	 * @param playerObjId
+	 * @return 请愿，不存在为 null / petition, or null if none
 	 */
 	public Petition getPetition(int playerObjId) {
 		for (Petition p : registeredPetitions.values()) {
@@ -255,7 +256,8 @@ public class PetitionService {
 	 *
 	 * player object id
 	 *
-	 * @param playerObjId @return 估算等待时间 / estimated wait time
+	 * @param playerObjId
+	 * @return 估算等待时间 / estimated wait time
 	 */
 	public int calculateWaitTime(int playerObjId) {
 		int timePerPetition = 15;

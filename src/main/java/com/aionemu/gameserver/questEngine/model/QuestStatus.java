@@ -12,7 +12,7 @@ import jakarta.xml.bind.annotation.XmlEnum;
 public enum QuestStatus {
 	/**
 	 * 默认/中止/计时结束状态；用于开启新任务。与其他任务一并存储但不应计入已接任务，任务列表中不可见。
-	 * aborted / timer-ended status; used to begin a new quest. Stored with other quests but must not be counted; invisible in the quest list. / aborted / timer-ended status; used to begin a new quest. Stored with other quests but must not be counted; invisible in the quest list.
+	 * aborted / timer-ended status; used to begin a new quest. Stored with other quests but must not be counted; invisible in the quest list.
 	 */
 	NONE(0),
 	/**

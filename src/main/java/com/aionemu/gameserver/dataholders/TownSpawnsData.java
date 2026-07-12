@@ -79,7 +79,8 @@ public class TownSpawnsData {
 	 *
 	 * town id
 	 *
-	 * @param townId @return 地图 ID，未找到则为 0 / map id, or 0 if not found
+	 * @param townId
+	 * @return 地图 ID，未找到则为 0 / map id, or 0 if not found
 	 */
 	public int getWorldIdForTown(int townId) {
 		for (TownSpawnMap spawnMap : spawnMapsData.values())

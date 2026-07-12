@@ -18,7 +18,7 @@ public class SpawnedMonster extends Monster {
 
 	/**
 	 * 用于召唤该怪物的场景物体 / 生成器 object ID。
-	 * spawner object id used to summon this monster. / spawner object id used to summon this monster.
+	 * spawner object id used to summon this monster.
 	 */
 	@XmlAttribute(name = "spawner_object", required = true)
 	protected int spawnerObject;

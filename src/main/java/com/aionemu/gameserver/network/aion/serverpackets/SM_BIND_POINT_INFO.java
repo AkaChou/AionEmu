@@ -7,7 +7,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 同步玩家绑定点（回城点/Kisk）坐标与状态的服务端包。
- * Kisk) coordinates and state. / Kisk) coordinates and state.
+ * Kisk) coordinates and state.
  *
  * @author sweetkr
  * @author Sarynth

@@ -36,7 +36,8 @@ public class MultiReturnService {
 	 * World map id
 	 *
 	 * @param race 玩家种族（部分地图按种族区分） / Player race (some maps are race-split)
-	 * @param race @return 映射后的 ID；未知地图返回 0 / Mapped id; 0 when unknown
+	 * @param race
+	 * @return 映射后的 ID；未知地图返回 0 / Mapped id; 0 when unknown
 	 */
 	public static int getTeleportWorldId(int worldId, Race race) {
 		switch (worldId) {

@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
  * BoostEvents 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -77,7 +77,7 @@ public class BoostEvents {
 	}
 
 	/**
-	 * @return Whether expired / Whether expired
+	 * @return Whether expired
 	 */
 	public boolean isExpired() {
 		return !isActive();

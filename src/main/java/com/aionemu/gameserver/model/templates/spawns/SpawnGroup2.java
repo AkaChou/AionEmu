@@ -57,7 +57,7 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 
 /**
  * 刷新点队伍2模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 @Slf4j
 
@@ -377,8 +377,8 @@ public class SpawnGroup2 extends AbstractLockManager {
 	}
 
 	/**
-	 * @return 是否 pool / 是否 pool。 / Whether pool / Whether pool
-	 */
+	 * @return 是否使用对象池。 / Whether pool
+	  */
 	public boolean hasPool() {
 		return pool > 0;
 	}
@@ -394,7 +394,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 	}
 
 	/**
-	 * @return Whether temporary spawn / Whether temporary spawn
+	 * @return Whether temporary spawn
 	 */
 	public boolean isTemporarySpawn() {
 		return temporarySpawn != null;
@@ -444,7 +444,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 	}
 
 	/**
-	 * @return Whether template used / Whether template used
+	 * @return Whether template used
 	 */
 	public boolean isTemplateUsed(int instanceId, SpawnTemplate template) {
 		super.readLock();

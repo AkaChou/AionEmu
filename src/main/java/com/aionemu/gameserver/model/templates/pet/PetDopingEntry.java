@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 宠物 Doping 条目模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

@@ -333,7 +333,7 @@ public class MailService {
 
 	/**
 	 * 领取邮件附件（物品 / 基纳 / 欧比斯点）。
-	 * kinah / abyss points). / kinah / abyss points).
+	 * kinah / abyss points).
 	 *
 	 * 玩家 / player
 	 * letter id
@@ -406,7 +406,8 @@ public class MailService {
 	 * @param attachedKinahCount 附件基纳数量 / attached kinah amount
 	 * @param attachedItemObjId 附件物品对象 ID / attached item object id
 	 * @param attachedItemCount 附件物品数量 / attached item count
-	 * @param attachedItemCount @return 是否足够支付邮费 / whether the sender can pay the mail fee
+	 * @param attachedItemCount
+	 * @return 是否足够支付邮费 / whether the sender can pay the mail fee
 	 */
 	private boolean validateMailSendPrice(Player sender, int attachedKinahCount, int attachedItemObjId,
 			int attachedItemCount) {

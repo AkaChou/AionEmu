@@ -17,13 +17,13 @@ class PacketFloodFilterTest {
 
 	@Test
 	void loadsRulesFromConfiguredGameConfigDirectory() throws IOException {
-		String oldConfigDir = System.getProperty("aion.game.config.dir");
+		String oldConfigDir = System.getProperty("aion.config.dir");
 		boolean oldPffEnable = SecurityConfig.PFF_ENABLE;
 		try {
 			Path administrationDir = configDir.resolve("administration");
 			Files.createDirectories(administrationDir);
 			Files.writeString(administrationDir.resolve("pff.properties"), "0x01 = 7\n");
-			System.setProperty("aion.game.config.dir", configDir.toString());
+			System.setProperty("aion.config.dir", configDir.toString());
 			SecurityConfig.PFF_ENABLE = true;
 
 			PacketFloodFilter packetFloodFilter = new PacketFloodFilter();
@@ -32,23 +32,23 @@ class PacketFloodFilterTest {
 		} finally {
 			SecurityConfig.PFF_ENABLE = oldPffEnable;
 			if (oldConfigDir == null) {
-				System.clearProperty("aion.game.config.dir");
+				System.clearProperty("aion.config.dir");
 			} else {
-				System.setProperty("aion.game.config.dir", oldConfigDir);
+				System.setProperty("aion.config.dir", oldConfigDir);
 			}
 		}
 	}
 
 	@Test
 	void reloadsRulesAndKeepsPacketsAvailableWhenDisabled() throws IOException {
-		String oldConfigDir = System.getProperty("aion.game.config.dir");
+		String oldConfigDir = System.getProperty("aion.config.dir");
 		boolean oldPffEnable = SecurityConfig.PFF_ENABLE;
 		try {
 			Path administrationDir = configDir.resolve("administration");
 			Files.createDirectories(administrationDir);
 			Path rules = administrationDir.resolve("pff.properties");
 			Files.writeString(rules, "0x01 = 7\n");
-			System.setProperty("aion.game.config.dir", configDir.toString());
+			System.setProperty("aion.config.dir", configDir.toString());
 			SecurityConfig.PFF_ENABLE = true;
 
 			PacketFloodFilter packetFloodFilter = new PacketFloodFilter();
@@ -66,9 +66,9 @@ class PacketFloodFilterTest {
 		} finally {
 			SecurityConfig.PFF_ENABLE = oldPffEnable;
 			if (oldConfigDir == null) {
-				System.clearProperty("aion.game.config.dir");
+				System.clearProperty("aion.config.dir");
 			} else {
-				System.setProperty("aion.game.config.dir", oldConfigDir);
+				System.setProperty("aion.config.dir", oldConfigDir);
 			}
 		}
 	}

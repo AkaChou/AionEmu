@@ -154,7 +154,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 				startAnuhartPath();
-				// 你现在可夺取并登上孢子路龙族以太加农。 / You can now steal and board the Spore Road Balaur Aether Cannon.
+				// 你现在可夺取并登上孢子路龙族奥德加农。 / You can now steal and board the Spore Road Balaur Aether Cannon.
 				sendMsgByRace(1403427, Race.PC_ALL, 0);
 				spawn(703345, 285.35428f, 998.8121f, 112.34111f, (byte) 85); //Lieutenant Anuhart [Flag].
             }

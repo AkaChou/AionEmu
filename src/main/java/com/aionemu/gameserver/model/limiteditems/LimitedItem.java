@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.limiteditems;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 限定物品，用于 limiteditems 相关逻辑。
@@ -11,10 +13,16 @@ import java.util.Map;
  */
 public class LimitedItem {
 
+	@Getter
 	private int itemId;
+	@Getter
+	@Setter
 	private int sellLimit;
+	@Getter
 	private int buyLimit;
+	@Getter
 	private int defaultSellLimit;
+	@Getter
 	private String salesTime;
 
 	private Map<Integer, Integer> buyCounts = new HashMap<>();
@@ -28,13 +36,6 @@ public class LimitedItem {
 		this.buyLimit = buyLimit;
 		this.defaultSellLimit = sellLimit;
 		this.salesTime = salesTime;
-	}
-
-	/**
-	 * return itemId
-	 */
-	public int getItemId() {
-		return itemId;
 	}
 
 	/**
@@ -59,42 +60,10 @@ public class LimitedItem {
 		this.itemId = itemId;
 	}
 
-	/**
-	 * return sellLimit
-	 */
-	public int getSellLimit() {
-		return sellLimit;
-	}
-
-	/**
-	 * return buyLimit
-	 */
-	public int getBuyLimit() {
-		return buyLimit;
-	}
-
 	/** 设置默认 / Sets the to default*/
 	public void setToDefault() {
 		sellLimit = defaultSellLimit;
 		buyCounts.clear();
 	}
 
-	/**
-	 * @param sellLimit sellLimit.
-	 */
-	public void setSellLimit(int sellLimit) {
-		this.sellLimit = sellLimit;
-	}
-
-	/**
-	 * return defaultSellLimit
-	 */
-	public int getDefaultSellLimit() {
-		return defaultSellLimit;
-	}
-
-	/** 返回销量时间 / Returns the sales time*/
-	public String getSalesTime() {
-		return salesTime;
-	}
 }

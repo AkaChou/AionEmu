@@ -30,7 +30,7 @@ public class Recharger extends AdminCommand {
      * Spawns or removes the recharger NPC based on {@code on}/{@code off}.
      *
      * @param player 执行指令的管理员 / admin executing the command
-     * {@code on} or {@code off}。 / {@code on} or {@code off}
+     * {@code on} or {@code off}。
      */
     public void execute(Player player, String...params){
         int RechargerID = 730397;

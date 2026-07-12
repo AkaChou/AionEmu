@@ -87,7 +87,8 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	 *
 	 * announcement id
 	 *
-	 * @param idAnnounce @return 是否删除成功 / whether the delete succeeded
+	 * @param idAnnounce
+	 * @return 是否删除成功 / whether the delete succeeded
 	 */
 	@Override
 	public boolean delAnnouncement(final int idAnnounce) {

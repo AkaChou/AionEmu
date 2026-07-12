@@ -90,7 +90,8 @@ public class DAOManager {
  * DAO type
  * DAO implementation
  *
- * @param clazz @throws DAONotFoundException 如果未找到 DAO 实现 / If DAO implementation not found
+ * @param clazz
+ * @throws DAONotFoundException 如果未找到 DAO 实现 / If DAO implementation not found
      */
     @SuppressWarnings("unchecked")
     public static <T extends DAO> T getDAO(Class<T> clazz) throws DAONotFoundException {
@@ -110,9 +111,9 @@ public class DAOManager {
      * Registers DAO implementation
      *
  * DAO implementation class
- * If DAO is already registered。 / If DAO is already registered.
- * If error during DAO instantiation。 / If error during DAO instantiation.
- * If error during DAO instantiation。 / If error during DAO instantiation.
+ * If DAO is already registered。
+ * If error during DAO instantiation。
+ * If error during DAO instantiation。
      */
     public static void registerDAO(Class<? extends DAO> daoClass) throws DAOAlreadyRegisteredException, ReflectiveOperationException {
         DAO dao = daoClass.getDeclaredConstructor().newInstance();

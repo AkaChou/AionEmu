@@ -61,7 +61,8 @@ public class IPRange {
      *
      * IP to check
      *
-     * @param address @return 是否在范围内 / Whether in range
+     * @param address
+     * @return 是否在范围内 / Whether in range
      */
     public boolean isInRange(String address) {
         long addr = toLong("address", toByteArray(address));

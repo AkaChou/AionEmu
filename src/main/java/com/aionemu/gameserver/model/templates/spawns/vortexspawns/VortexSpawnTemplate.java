@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.vortex.VortexStateType;
 
 /**
  * 漩涡刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class VortexSpawnTemplate extends SpawnTemplate {
@@ -44,15 +44,15 @@ public class VortexSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether invasion / Whether invasion
+	 * @return Whether invasion
 	 */
 	public final boolean isInvasion() {
 		return stateType.equals(VortexStateType.INVASION);
 	}
 
 	/**
-	 * @return 是否 peace / 是否 peace。 / Whether peace / Whether peace
-	 */
+	 * @return 是否处于和平状态。 / Whether peace
+	  */
 	public final boolean isPeace() {
 		return stateType.equals(VortexStateType.PEACE);
 	}

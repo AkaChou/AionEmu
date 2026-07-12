@@ -340,7 +340,7 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	}
 
 	/**
-	 * @return Whether next attack scheduled / Whether next attack scheduled
+	 * @return Whether next attack scheduled
 	 */
 	public boolean isNextAttackScheduled() {
 		return nextAttackTime - System.currentTimeMillis() > 50;
@@ -407,7 +407,7 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	// 当前未使用 / not used at the moment
 	/*
 	 * public int getLastSkilledTimeDelta() { return
-	 * 1000f); }。 / 1000f); }
+	 * 1000f); }。
 	 */
 
 	public int getLastChangeTargetTimeDelta() {

@@ -15,7 +15,7 @@ public class GameRatioLimitGateway {
      * 种族比例限制是否已启用。
      * Whether race-ratio limitation is enabled.
      *
-     * @return {@code true} if enabled。 / {@code true} if enabled
+     * @return {@code true} if enabled。
      */
     public boolean isRatioLimitationEnabled() {
         return GSConfig.ENABLE_RATIO_LIMITATION;

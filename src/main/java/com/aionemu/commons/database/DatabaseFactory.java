@@ -91,7 +91,8 @@ public final class DatabaseFactory {
      *
      * JDBC connection
      *
-     * @return @throws SQLException 获取连接失败时 / When obtaining a connection fails
+     * @return
+     * @throws SQLException 获取连接失败时 / When obtaining a connection fails
      */
     public static Connection getConnection() throws SQLException {
         Connection con = state().dataSource.getConnection();

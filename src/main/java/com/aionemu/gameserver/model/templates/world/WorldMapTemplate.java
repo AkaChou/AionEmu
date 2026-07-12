@@ -17,7 +17,7 @@ import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
 /**
  * 世界地图模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlRootElement(name = "map")
@@ -105,7 +105,7 @@ public class WorldMapTemplate {
 	}
 
 	/**
-	 * @return Whether prison / Whether prison
+	 * @return Whether prison
 	 */
 	public boolean isPrison() {
 		return prison;
@@ -147,53 +147,53 @@ public class WorldMapTemplate {
 	}
 
 	/**
-	 * @return 是否 glide / 是否 glide。 / Whether glide / Whether glide
-	 */
+	 * @return 是否允许滑翔。 / Whether glide
+	  */
 	public boolean canGlide() {
 		return (flags & ZoneAttributes.GLIDE.getId()) != 0;
 	}
 
 	/**
-	 * @return 是否放入 kisk / 是否放入 kisk。 / Whether put kisk / Whether put kisk
-	 */
+	 * @return 是否放入 kisk。 / Whether put kisk
+	  */
 	public boolean canPutKisk() {
 		return (flags & ZoneAttributes.BIND.getId()) != 0;
 	}
 
 	/**
-	 * @return Whether recall / Whether recall
+	 * @return Whether recall
 	 */
 	public boolean canRecall() {
 		return (flags & ZoneAttributes.RECALL.getId()) != 0;
 	}
 
 	/**
-	 * @return 是否 ride / 是否 ride。 / Whether ride / Whether ride
-	 */
+	 * @return 是否允许骑乘。 / Whether ride
+	  */
 	public boolean canRide() {
 		return (flags & ZoneAttributes.RIDE.getId()) != 0;
 	}
 
 	/**
-	 * @return Whether fly ride / Whether fly ride
+	 * @return Whether fly ride
 	 */
 	public boolean canFlyRide() {
 		return (flags & ZoneAttributes.FLY_RIDE.getId()) != 0;
 	}
 
 	/**
-	 * @return Whether pvp allowed / Whether pvp allowed
+	 * @return Whether pvp allowed
 	 */
 	public boolean isPvpAllowed() {
 		return (flags & ZoneAttributes.PVP_ENABLED.getId()) != 0;
 	}
 
-	/** 是否 same race duels allowed / Whether same race duels allowed */
+	/** 是否允许同种族决斗 / Whether same race duels allowed */
 	public boolean isSameRaceDuelsAllowed() {
 		return (flags & ZoneAttributes.DUEL_SAME_RACE_ENABLED.getId()) != 0;
 	}
 
-	/** 是否 other race duels allowed / Whether other race duels allowed */
+	/** 是否允许跨种族决斗 / Whether other race duels allowed */
 	public boolean isOtherRaceDuelsAllowed() {
 		return (flags & ZoneAttributes.DUEL_OTHER_RACE_ENABLED.getId()) != 0;
 	}
@@ -207,7 +207,7 @@ public class WorldMapTemplate {
 		flags = ZoneAttributes.fromList(flagValues);
 	}
 
-	/** 是否 except buff / Whether except buff */
+	/** 是否排除增益 / Whether except buff */
 	public boolean isExceptBuff() {
 		return exceptBuff;
 	}

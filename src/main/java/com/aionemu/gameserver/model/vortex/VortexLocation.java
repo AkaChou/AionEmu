@@ -149,14 +149,14 @@ public class VortexLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param objId Whether invader inside / Whether invader inside
+	 * @param objId Whether invader inside
 	 */
 	public boolean isInvaderInside(int objId) {
 		return isActive() && getVortexController().getPassedPlayers().containsKey(objId);
 	}
 
 	/**
-	 * @param player Whether inside active vortex / Whether inside active vortex
+	 * @param player Whether inside active vortex
 	 */
 	public boolean isInsideActiveVortex(Player player) {
 		return isActive() && isInsideLocation(player);
@@ -169,7 +169,7 @@ public class VortexLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param creature Whether inside location / Whether inside location
+	 * @param creature Whether inside location
 	 */
 	public boolean isInsideLocation(Creature creature) {
 		if (zones.isEmpty()) {

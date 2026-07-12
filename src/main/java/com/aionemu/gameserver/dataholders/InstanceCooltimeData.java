@@ -63,7 +63,8 @@ public class InstanceCooltimeData {
 	 *
 	 * 世界 ID / world id
 	 *
-	 * @param worldId @return 冷却配置或 null / cooltime config or null
+	 * @param worldId
+	 * @return 冷却配置或 null / cooltime config or null
 	 */
 	public InstanceCooltime getInstanceCooltimeByWorldId(int worldId) {
 		return instanceCooltimes.get(worldId);
@@ -75,7 +76,8 @@ public class InstanceCooltimeData {
 	 *
 	 * sync id
 	 *
-	 * @param syncId @return 世界 ID，不存在则为 0 / world id or 0
+	 * @param syncId
+	 * @return 世界 ID，不存在则为 0 / world id or 0
 	 */
 	public int getWorldId(int syncId) {
 		if (!syncIdToMapId.containsKey(syncId)) {
@@ -105,7 +107,8 @@ public class InstanceCooltimeData {
 	 *
 	 * 世界 ID / world id
 	 *
-	 * @param worldId @return 最大进入次数，无配置则为 0 / max entry count or 0
+	 * @param worldId
+	 * @return 最大进入次数，无配置则为 0 / max entry count or 0
 	 */
 	public int getInstanceEntranceCountByWorldId(int worldId) {
 		InstanceCooltime clt = getInstanceCooltimeByWorldId(worldId);

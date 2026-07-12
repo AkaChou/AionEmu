@@ -35,7 +35,7 @@ public class AIEventLog extends LinkedBlockingDeque<AIEventType> {
 	 * Insert an event at the head; if full, remove the oldest event at the tail first.
 	 *
 	 * @param e 要记录的 AI 事件类型 / AI event type to record
-	 * @return Always {@code true}。 / Always {@code true}
+	 * @return Always {@code true}。
 	 */
 	@Override
 	public synchronized boolean offerFirst(AIEventType e) {

@@ -45,7 +45,7 @@ public class IdianDepths extends AdminCommand
 	 * Start or stop Idian Depths for the given location id.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * @param params start|stop and location id。 / start|stop and location id
+	 * @param params start|stop and location id。
 	 */
 	protected void handleStartStopIdian(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {

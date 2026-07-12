@@ -26,7 +26,7 @@ public class FlyRingObserver extends ActionObserver {
 	private FlyRing ring;
 	/** 上一位置 / Previous position */
 	private Point3D oldPosition;
-	/** 以太之翼技能模板 / Wings Of Aether skill template */
+	/** 奥德之翼技能模板 / Wings Of Aether skill template */
 	SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(260); // Wings Of Aether 4.8
 
 	/**

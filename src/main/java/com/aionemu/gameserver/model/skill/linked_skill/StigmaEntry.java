@@ -4,7 +4,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
- * Stigma 条目，用于技能相关逻辑。
+ * 烙印之石条目，用于技能相关逻辑。
  * Stigma Entry for skill logic.
  *
  * @author DrNism

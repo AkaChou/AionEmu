@@ -24,7 +24,7 @@ public class TalkEventHandler {
 
 	/**
 	 * 处理完整对话：进入对话子状态，处理任务对话框，并按标题 / 城镇发送对话窗口。
-	 * town. / town.
+	 * town.
 	 *
 	 * NPC AI instance
 	 * talking creature

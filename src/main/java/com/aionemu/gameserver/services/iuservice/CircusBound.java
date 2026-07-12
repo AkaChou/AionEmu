@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.iu.IuStateType;
 
 /**
  * IU 演唱会默认实现：切入 OPEN / 回到 CLOSED。
- * back to CLOSED. / back to CLOSED.
+ * back to CLOSED.
  *
  * @author Rinzler (Encom)
  */

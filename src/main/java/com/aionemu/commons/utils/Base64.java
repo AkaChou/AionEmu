@@ -494,7 +494,7 @@ public class Base64 {
 	public static String encodeToString(byte[] sArr, boolean lineSep) {
 		// 重用 char[]数组，因为无法增量创建 String，且 StringBuffer/Builder 会更慢
 		// 重用 char[]，因为无法增量创建 String，且 / Reuse char[] since we can't create a String incrementally anyway and
-		// StringBuffer/Builder would be slower. / StringBuffer/Builder would be slower.
+		// StringBuffer/Builder would be slower.
 		return new String(encodeToChar(sArr, lineSep));
 	}
 	

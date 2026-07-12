@@ -57,7 +57,8 @@ public class AssemblyItemsData {
 	 *
 	 * item id
 	 *
-	 * @param itemId @return 模板，不存在则为 null / template or null
+	 * @param itemId
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public AssemblyItem getAssemblyItem(int itemId) {
 		return itemsById.get(itemId);

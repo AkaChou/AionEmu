@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 事件引导 Spring 服务门面 / 静态访问桥：注册事件子系统实例提供者。
- * static access bridge for event bootstrap: registers event-subsystem instance providers. / static access bridge for event bootstrap: registers event-subsystem instance providers.
+ * static access bridge for event bootstrap: registers event-subsystem instance providers.
  */
 @Component
 public final class GameEventBootstrapServices implements DisposableBean {

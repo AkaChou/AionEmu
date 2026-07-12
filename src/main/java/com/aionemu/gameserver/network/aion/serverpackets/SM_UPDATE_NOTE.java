@@ -8,7 +8,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 更新玩家个性签名/备注的服务端包。
- * signature. / signature.
+ * signature.
  *
  * @author xavier
  */

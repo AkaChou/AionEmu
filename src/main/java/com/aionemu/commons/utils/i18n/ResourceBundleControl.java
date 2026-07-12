@@ -59,7 +59,7 @@ public class ResourceBundleControl extends ResourceBundle.Control {
      * Resource bundle
      * On I/O failure
      * On access failure
-     * On instantiation failure。 / On instantiation failure.
+     * On instantiation failure。
      */
     @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format,
@@ -124,7 +124,8 @@ public class ResourceBundleControl extends ResourceBundle.Control {
      * Instance
      * On access failure
      *
-     * @param bundleClass @throws InstantiationException 实例化失败 / On instantiation failure
+     * @param bundleClass
+     * @throws InstantiationException 实例化失败 / On instantiation failure
      */
     private ResourceBundle newResourceBundle(Class<? extends ResourceBundle> bundleClass)
             throws IllegalAccessException, InstantiationException {

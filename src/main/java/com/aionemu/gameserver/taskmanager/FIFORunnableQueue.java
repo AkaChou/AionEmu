@@ -7,7 +7,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
  * 以 {@link ExecuteWrapper} 执行 {@link Runnable} 元素的 FIFO 队列。
  * FIFO queue that runs {@link Runnable} elements via {@link ExecuteWrapper}.
  *
- * Must implement {@link Runnable}。 / Must implement {@link Runnable}
+ * Must implement {@link Runnable}。
  * @author NB4L1
  */
 public abstract class FIFORunnableQueue<T extends Runnable> extends FIFOSimpleExecutableQueue<T> {

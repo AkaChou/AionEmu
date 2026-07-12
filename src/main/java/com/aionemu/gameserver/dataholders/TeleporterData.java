@@ -56,7 +56,8 @@ public class TeleporterData {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 传送员模板，未找到则为 null / teleporter template or null
+	 * @param npcId
+	 * @return 传送员模板，未找到则为 null / teleporter template or null
 	 */
 	public TeleporterTemplate getTeleporterTemplateByNpcId(int npcId) {
 		for (TeleporterTemplate template : npctlistData.values()) {
@@ -73,7 +74,8 @@ public class TeleporterData {
 	 *
 	 * teleport id
 	 *
-	 * @param teleportId @return 传送员模板，不存在则为 null / teleporter template or null
+	 * @param teleportId
+	 * @return 传送员模板，不存在则为 null / teleporter template or null
 	 */
 	public TeleporterTemplate getTeleporterTemplateByTeleportId(int teleportId) {
 		return npctlistData.get(teleportId);

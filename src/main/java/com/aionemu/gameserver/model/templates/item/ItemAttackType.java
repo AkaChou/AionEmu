@@ -28,7 +28,7 @@ public enum ItemAttackType {
 	}
 
 	/**
-	 * @return Whether magical / Whether magical
+	 * @return Whether magical
 	 */
 	public boolean isMagical() {
 		return magic;

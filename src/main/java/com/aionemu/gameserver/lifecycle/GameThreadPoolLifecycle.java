@@ -54,7 +54,7 @@ public class GameThreadPoolLifecycle {
      * 是否已启动。
      * Whether the thread pool has been started.
      *
-     * @return {@code true} if started。 / {@code true} if started
+     * @return {@code true} if started。
      */
     public synchronized boolean isStarted() {
         return started;

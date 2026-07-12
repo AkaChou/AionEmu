@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.beritra.BeritraLocation;
 
 /**
  * 贝尔特拉/埃雷什基伽尔入侵启动定时任务。
- * Ereshkigal invasion events. / Ereshkigal invasion events.
+ * Ereshkigal invasion events.
  *
  * <p>按时间轴依次刷出入口、激光、黑天与正式入侵。
  * Stages portal, laser, black-sky and the actual invasion along a timed timeline.</p>

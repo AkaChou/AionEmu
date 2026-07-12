@@ -63,7 +63,8 @@ public class MailRewardData {
 	 *
 	 * reward id
 	 *
-	 * @param rewardId @return 邮件奖励模板或 null / mail reward template or null
+	 * @param rewardId
+	 * @return 邮件奖励模板或 null / mail reward template or null
 	 */
 	public MailRewardTemplate getMailReward(int rewardId) {
 		return templates.get(rewardId);

@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 守护灵 Actions 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Falke_34
  */

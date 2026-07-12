@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 征服刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -51,7 +51,7 @@ public class ConquestSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether conquest peace / Whether conquest peace
+	 * @return Whether conquest peace
 	 */
 	public final boolean isConquestPeace() {
 		return conquestType.equals(ConquestStateType.PEACE);

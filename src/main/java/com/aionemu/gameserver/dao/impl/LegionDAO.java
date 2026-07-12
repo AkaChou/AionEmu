@@ -191,7 +191,8 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      *
      * legion name
      *
-     * @param legionName @return 军团；不存在时返回 null / legion, or null if missing
+     * @param legionName
+     * @return 军团；不存在时返回 null / legion, or null if missing
      */
     @Override
     public Legion loadLegion(final String legionName) {
@@ -221,7 +222,8 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      *
      * legion id
      *
-     * @param legionId @return 军团；不存在时返回 null / legion, or null if missing
+     * @param legionId
+     * @return 军团；不存在时返回 null / legion, or null if missing
      */
     @Override
     public Legion loadLegion(final int legionId) {
@@ -346,7 +348,8 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      *
      * legion id
      *
-     * @param legionId @return 时间戳到公告内容的有序映射 / ordered map of timestamp to message
+     * @param legionId
+     * @return 时间戳到公告内容的有序映射 / ordered map of timestamp to message
      */
     @Override
     public TreeMap<Timestamp, String> loadAnnouncementList(final int legionId) {
@@ -721,7 +724,8 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
      *
      * legion id
      *
-     * @param legionId @return 加入申请列表 / join request list
+     * @param legionId
+     * @return 加入申请列表 / join request list
      */
     @Override
     public List<LegionJoinRequest> loadLegionJoinRequests(final int legionId) {

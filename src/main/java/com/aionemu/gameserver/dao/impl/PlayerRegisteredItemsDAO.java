@@ -441,7 +441,8 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
      *
      * player object id
      *
-     * @param playerId @return 是否删除成功 / whether delete succeeded
+     * @param playerId
+     * @return 是否删除成功 / whether delete succeeded
      */
     @Override
     public boolean deletePlayerItems(int playerId) {

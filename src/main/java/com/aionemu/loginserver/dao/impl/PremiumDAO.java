@@ -14,7 +14,7 @@ import com.aionemu.commons.database.DatabaseFactory;
 
 /**
  * 高级点数/Luna 点 DAO 的 MySQL 8 实现。
- * Luna). / Luna).
+ * Luna).
  *
  * @author Updated for MySQL 8
  */

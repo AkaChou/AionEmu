@@ -30,7 +30,7 @@ public class Svs extends AdminCommand
 	 * Controls S.v.s by start/stop and location id.
 	 *
 	 * 执行 GM / Admin player
-	 * start|stop &lt;Id&gt;。 / start|stop &lt;Id&gt;
+	 * start|stop &lt;Id&gt;。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

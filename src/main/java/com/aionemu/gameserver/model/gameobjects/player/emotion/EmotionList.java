@@ -65,8 +65,8 @@ public class EmotionList {
 	}
 
 	/**
-	 * @param emotionId 是否 use / 是否 use。 / Whether use / Whether use
-	 */
+	 * @param emotionId 是否可使用。 / Whether use
+	  */
 	public boolean canUse(int emotionId) {
 		return emotionId < 64 || emotionId > 155 || (emotions != null && emotions.containsKey(emotionId))
 				|| owner.havePermission(MembershipConfig.EMOTIONS_ALL);

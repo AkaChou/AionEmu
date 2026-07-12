@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
  * Adopt 宠物动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class AdoptPetAction extends AbstractItemAction {
@@ -21,8 +21,8 @@ public class AdoptPetAction extends AbstractItemAction {
 	private Boolean isSideKick = false;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		return false;
@@ -44,7 +44,7 @@ public class AdoptPetAction extends AbstractItemAction {
 	}
 
 	/**
-	 * @return Whether side kick / Whether side kick
+	 * @return Whether side kick
 	 */
 	public Boolean isSideKick() {
 		return isSideKick;

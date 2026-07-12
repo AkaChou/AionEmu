@@ -29,7 +29,7 @@ import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
 
 /**
  * 任务模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -442,7 +442,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return Whether bounty reward / Whether bounty reward
+	 * @return Whether bounty reward
 	 */
 	public boolean isBountyReward() {
 		if (bountyReward == null) {
@@ -461,7 +461,7 @@ public class QuestTemplate {
 		}
 	}
 
-	/** 是否 use repeated class reward / Whether use repeated class reward */
+	/** 是否使用重复职业奖励 / Whether use repeated class reward */
 	public boolean isUseRepeatedClassReward() {
 		if (useClassReward == null) {
 			return false;
@@ -471,7 +471,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return Whether repeatable / Whether repeatable
+	 * @return Whether repeatable
 	 */
 	public boolean isRepeatable() {
 		return getMaxRepeatCount() > 1;
@@ -561,7 +561,7 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return Whether time based / Whether time based
+	 * @return Whether time based
 	 */
 	public boolean isTimeBased() {
 		return repeatCycle != null;
@@ -573,14 +573,14 @@ public class QuestTemplate {
 	}
 
 	/**
-	 * @return 是否 daily / 是否 daily。 / Whether daily / Whether daily
-	 */
+	 * @return 是否为每日类型。 / Whether daily
+	  */
 	public boolean isDaily() {
 		return isTimeBased() && repeatCycle.size() == 1 && repeatCycle.get(0) == QuestRepeatCycle.ALL;
 	}
 
 	/**
-	 * @return Whether weekly / Whether weekly
+	 * @return Whether weekly
 	 */
 	public boolean isWeekly() {
 		return isTimeBased() && !isDaily();

@@ -31,7 +31,8 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
      *
      * player id
      *
-     * @param playerId @return 技能皮肤列表 / skill skin list
+     * @param playerId
+     * @return 技能皮肤列表 / skill skin list
      */
     @Override
     public SkillSkinList loadSkillSkinList(final int playerId) {

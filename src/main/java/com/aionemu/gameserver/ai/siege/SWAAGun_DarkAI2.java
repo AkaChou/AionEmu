@@ -45,7 +45,7 @@ public class SWAAGun_DarkAI2 extends NpcAI2
 				case 252175:
 				case 252176:
 				case 252177:
-				// 空以太加农【雷珊塔】 / Empty Aetheric Cannon [Reshanta]
+				// 空奥德加农【雷珊塔】 / Empty Aetheric Cannon [Reshanta]
 				case 881982:
 				    GameEngineServices.skillEngine().getSkill(player, 21518, 1, player).useNoAnimationSkill();
 				break;

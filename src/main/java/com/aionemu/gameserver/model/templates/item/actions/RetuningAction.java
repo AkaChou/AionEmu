@@ -32,8 +32,8 @@ public class RetuningAction extends AbstractItemAction {
 	UseTarget target;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (target.equals(UseTarget.WEAPON) && !targetItem.getItemTemplate().isWeapon()) {

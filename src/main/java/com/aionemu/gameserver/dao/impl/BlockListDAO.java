@@ -69,7 +69,8 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	 * player object id
 	 *
 	 * @param objIdToDelete 被移除对象 ID / object id to remove
-	 * @param objIdToDelete @return 是否删除成功 / whether delete succeeded
+	 * @param objIdToDelete
+	 * @return 是否删除成功 / whether delete succeeded
 	 */
 	@Override
 	public boolean delBlockedUser(final int playerObjId, final int objIdToDelete) {

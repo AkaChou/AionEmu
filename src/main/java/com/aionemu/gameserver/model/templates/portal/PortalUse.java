@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 传送门 Use 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author xTz
  */

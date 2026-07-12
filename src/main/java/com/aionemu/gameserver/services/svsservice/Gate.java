@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.svs.SvsStateType;
 
 /**
  * 帕内斯特拉（SVS）大门默认实现：切入 SVS / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

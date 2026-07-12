@@ -90,7 +90,7 @@ public class AutoGroup {
 	}
 
 	/**
-	 * @return Whether special purpose / Whether special purpose
+	 * @return Whether special purpose
 	 */
 	public boolean hasSpecialPurpose() {
 		return specialPurpose;

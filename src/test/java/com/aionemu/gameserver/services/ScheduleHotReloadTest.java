@@ -12,10 +12,10 @@ class ScheduleHotReloadTest {
 
 	@Test
 	void reloadReplacesRiftSchedulesAndSupportsDisableEnable() {
-		String oldConfigDir = System.getProperty("aion.game.config.dir");
+		String oldConfigDir = System.getProperty("aion.config.dir");
 		boolean oldEnabled = CustomConfig.RIFT_ENABLED;
 		try (ServiceContext.Scope ignored = ServiceContext.use("schedule-reload-test-" + System.nanoTime())) {
-			System.setProperty("aion.game.config.dir", "aion/game/config");
+			System.setProperty("aion.config.dir", "aion/config");
 			CustomConfig.RIFT_ENABLED = true;
 			GameCronServices.initialize();
 			RiftService service = new RiftService();
@@ -37,9 +37,9 @@ class ScheduleHotReloadTest {
 			GameCronServices.shutdownIfInitialized();
 			CustomConfig.RIFT_ENABLED = oldEnabled;
 			if (oldConfigDir == null) {
-				System.clearProperty("aion.game.config.dir");
+				System.clearProperty("aion.config.dir");
 			} else {
-				System.setProperty("aion.game.config.dir", oldConfigDir);
+				System.setProperty("aion.config.dir", oldConfigDir);
 			}
 		}
 	}

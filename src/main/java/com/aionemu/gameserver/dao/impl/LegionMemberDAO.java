@@ -51,7 +51,8 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player object id
      *
-     * @param playerObjId @return 是否已使用 / whether used
+     * @param playerObjId
+     * @return 是否已使用 / whether used
      */
     @Override
     public boolean isIdUsed(final int playerObjId) {
@@ -77,7 +78,8 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * legion member
      *
-     * @param legionMember @return 是否保存成功 / whether saved successfully
+     * @param legionMember
+     * @return 是否保存成功 / whether saved successfully
      */
     @Override
     public boolean saveNewLegionMember(final LegionMember legionMember) {
@@ -124,7 +126,8 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player object id
      *
-     * @param playerObjId @return 军团成员，不存在则为 null / legion member or null
+     * @param playerObjId
+     * @return 军团成员，不存在则为 null / legion member or null
      */
     @Override
     public LegionMember loadLegionMember(final int playerObjId) {
@@ -172,7 +175,8 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player object id
      *
-     * @param playerObjId @return 扩展军团成员，不存在则为 null / extended legion member or null
+     * @param playerObjId
+     * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
     @Override
     public LegionMemberEx loadLegionMemberEx(final int playerObjId) {
@@ -228,7 +232,8 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * player name
      *
-     * @param playerName @return 扩展军团成员，不存在则为 null / extended legion member or null
+     * @param playerName
+     * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
     @Override
     public LegionMemberEx loadLegionMemberEx(final String playerName) {
@@ -284,7 +289,8 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
      *
      * legion id
      *
-     * @param legionId @return 成员 ID 列表，无成员则为 null / member id list or null
+     * @param legionId
+     * @return 成员 ID 列表，无成员则为 null / member id list or null
      */
     @Override
     public ArrayList<Integer> loadLegionMembers(final int legionId) {

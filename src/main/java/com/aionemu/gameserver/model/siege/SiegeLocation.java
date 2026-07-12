@@ -119,14 +119,14 @@ public class SiegeLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @return Whether vulnerable / Whether vulnerable
+	 * @return Whether vulnerable
 	 */
 	public boolean isVulnerable() {
 		return this.vulnerable;
 	}
 
 	/**
-	 * @return Whether under shield / Whether under shield
+	 * @return Whether under shield
 	 */
 	public boolean isUnderShield() {
 		return this.isUnderShield;
@@ -152,8 +152,8 @@ public class SiegeLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param player 是否可 teleport / 是否可 teleport。 / Whether can teleport / Whether can teleport
-	 */
+	 * @param player 是否可传送。 / Whether can teleport
+	  */
 	public boolean isCanTeleport(Player player) {
 		return canTeleport;
 	}
@@ -185,7 +185,7 @@ public class SiegeLocation implements ZoneHandler {
 	}
 
 	/**
-	 * @param creature Whether inside location / Whether inside location
+	 * @param creature Whether inside location
 	 */
 	public boolean isInsideLocation(Creature creature) {
 		if (zone.isEmpty()) {
@@ -199,7 +199,7 @@ public class SiegeLocation implements ZoneHandler {
 		return false;
 	}
 
-	/** 是否 in active siege zone / Whether in active siege zone */
+	/** 是否处于活动攻城区域 / Whether in active siege zone */
 	public boolean isInActiveSiegeZone(Player player) {
 		if (isVulnerable() && isInsideLocation(player)) {
 			return true;

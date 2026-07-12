@@ -30,8 +30,8 @@ public final class CompiledScriptLoader {
 	 *
 	 * Package names
 	 * @return 按类名排序后的 Class 数组 / Sorted Class array by class name
-	 * When resource scanning fails。 / When resource scanning fails.
-	 * When a class cannot be loaded。 / When a class cannot be loaded.
+	 * When resource scanning fails。
+	 * When a class cannot be loaded。
 	 */
 	public static Class<?>[] load(String... packageNames) throws IOException, ClassNotFoundException {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

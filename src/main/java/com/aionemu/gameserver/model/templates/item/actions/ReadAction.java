@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * Read 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,8 +21,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class ReadAction extends AbstractItemAction {
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		return true;

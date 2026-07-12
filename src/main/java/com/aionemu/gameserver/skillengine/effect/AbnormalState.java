@@ -43,7 +43,8 @@ public enum AbnormalState {
 	 *
 	 * state name
 	 *
-	 * @param name @return 匹配的状态，未找到返回 null / matching state, or null if not found
+	 * @param name
+	 * @return 匹配的状态，未找到返回 null / matching state, or null if not found
 	 */
 	public static AbnormalState getIdByName(String name) {
 		for (AbnormalState id : values()) {

@@ -19,7 +19,7 @@ public interface IUStH {
      * Handle database insert and update operations
      *
  * @param stmt 预处理 SQL 语句对象 / The PreparedStatement object
- * If a SQL error occurs while executing the update。 / If a SQL error occurs while executing the update.
+ * If a SQL error occurs while executing the update。
      */
     void handleInsertUpdate(PreparedStatement stmt) throws SQLException;
 }

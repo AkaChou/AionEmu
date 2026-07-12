@@ -65,8 +65,8 @@ public class LegionMember {
 	}
 
 	/**
-	 * @return 是否军团长 / 是否军团长。 / Whether brigade general / Whether brigade general
-	 */
+	 * @return 是否军团长。 / Whether brigade general
+	  */
 	public boolean isBrigadeGeneral() {
 		return rank == LegionRank.BRIGADE_GENERAL;
 	}
@@ -135,7 +135,7 @@ public class LegionMember {
 	}
 
 	/**
-	 * @param permissions Whether rights / Whether rights
+	 * @param permissions Whether rights
 	 */
 	public boolean hasRights(LegionPermissionsMask permissions) {
 		int legionarPermission = 0;

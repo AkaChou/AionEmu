@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	狂暴阿诺哈 / Berserk Anoha
+	分裂的卡塔拉姆 / Split Katalam 4.7
+ -->
+<anoha_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="anoha_schedule.xsd">
+	<!-- [狂暴阿诺哈 / BERSERK ANOHA] -->
+	<anoha id="1">
+		<berserkTime>0 0 11 ? * MON-SUN *</berserkTime>
+		<berserkTime>0 0 15 ? * MON-SUN *</berserkTime>
+		<berserkTime>0 0 19 ? * MON-SUN *</berserkTime>
+		<berserkTime>0 0 9 ? * MON-SUN *</berserkTime>
+	</anoha>
+</anoha_schedule>

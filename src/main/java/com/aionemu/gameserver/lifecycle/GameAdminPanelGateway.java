@@ -15,7 +15,7 @@ public class GameAdminPanelGateway {
      * 管理面板是否已启用。
      * Whether the admin panel is enabled.
      *
-     * @return {@code true} if enabled。 / {@code true} if enabled
+     * @return {@code true} if enabled。
      */
     public boolean isAdminPanelEnabled() {
         return GSConfig.SERVER_YAADMINPANEL_SWITCH_ON;

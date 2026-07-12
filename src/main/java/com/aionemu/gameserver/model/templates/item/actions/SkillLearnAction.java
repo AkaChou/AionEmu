@@ -16,7 +16,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 技能 Learn 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author ATracer
  */
@@ -32,8 +32,8 @@ public class SkillLearnAction extends AbstractItemAction {
 	protected PlayerClass playerClass;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		// 1. 检查玩家等级 / 1. check player level

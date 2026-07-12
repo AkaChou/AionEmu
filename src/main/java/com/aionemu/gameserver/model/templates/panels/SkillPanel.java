@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 技能面板模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,7 +31,7 @@ public class SkillPanel {
 		return null;
 	}
 
-	/** 是否 use skill / Whether use skill */
+	/** 是否使用技能 / Whether use skill */
 	public boolean canUseSkill(int skillId, int level) {
 		for (Integer skill : skills) {
 			if (skill >> 8 == skillId && (skill & 0xFF) == level) {

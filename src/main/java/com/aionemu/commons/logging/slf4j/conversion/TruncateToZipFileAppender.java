@@ -34,7 +34,7 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
      * Open a new log file, compress and backup if file already exists
      *
      * @param fname 日志文件名 / Log filename
-     * File operation exception。 / File operation exception.
+     * File operation exception。
      */
     public void openFile(String fname) throws IOException {
         File file = new File(fname);

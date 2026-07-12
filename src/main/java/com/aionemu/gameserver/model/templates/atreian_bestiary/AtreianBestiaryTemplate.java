@@ -12,7 +12,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 艾特里亚图鉴模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Ranastic
  */

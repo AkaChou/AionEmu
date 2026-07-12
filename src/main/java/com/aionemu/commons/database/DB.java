@@ -147,7 +147,8 @@ public final class DB {
      *
  * The SQL statement
      *
-     * @param query @return 操作是否成功 / Whether the operation was successful
+     * @param query
+     * @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query) {
         return insertUpdate(query, null, null);
@@ -173,7 +174,8 @@ public final class DB {
  * The SQL statement
      *
      * @param batch 批处理处理器 / The batch handler
-     * @param batch @return 操作是否成功 / Whether the operation was successful
+     * @param batch
+     * @return 操作是否成功 / Whether the operation was successful
      */
     public static boolean insertUpdate(String query, IUStH batch) {
         return insertUpdate(query, batch, null);
@@ -229,7 +231,8 @@ public final class DB {
      *
      * Transaction object
      *
-     * @return @throws SQLException 如果创建事务失败 / If creating transaction fails
+     * @return
+     * @throws SQLException 如果创建事务失败 / If creating transaction fails
      */
     public static Transaction beginTransaction() throws SQLException {
         Connection con = DatabaseFactory.getConnection();
@@ -242,7 +245,8 @@ public final class DB {
      *
  * The SQL statement
      *
-     * @param sql @return 预处理语句对象 / PreparedStatement object
+     * @param sql
+     * @return 预处理语句对象 / PreparedStatement object
      */
     public static PreparedStatement prepareStatement(String sql) {
         return prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
@@ -256,7 +260,8 @@ public final class DB {
      *
      * @param resultSetType 结果集类型 / Result set type
      * @param resultSetConcurrency 结果集并发性 / Result set concurrency
-     * @param resultSetConcurrency @return 预处理语句对象 / PreparedStatement object
+     * @param resultSetConcurrency
+     * @return 预处理语句对象 / PreparedStatement object
      */
     public static PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) {
         Connection c = null;

@@ -277,7 +277,8 @@ public class NpcAI2 extends AITemplate {
 	 *
 	 * AI question
 	 *
-	 * @param question @return 答案，未知问题返回 null / answer, or null if unknown
+	 * @param question
+	 * @return 答案，未知问题返回 null / answer, or null if unknown
 	 */
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {

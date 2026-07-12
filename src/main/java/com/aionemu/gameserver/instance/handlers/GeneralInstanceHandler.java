@@ -161,7 +161,8 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 *
 	 * NPC 模板 ID / NPC template id
 	 *
-	 * @param npcId @return NPC；不存在则为 {@code null} / NPC, or {@code null}
+	 * @param npcId
+	 * @return NPC；不存在则为 {@code null} / NPC, or {@code null}
 	 */
 	protected Npc getNpc(final int npcId) {
 		return instance.getNpc(npcId);

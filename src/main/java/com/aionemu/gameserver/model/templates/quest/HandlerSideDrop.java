@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.templates.QuestTemplate;
 
 /**
  * 处理器 Side 掉落模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class HandlerSideDrop extends QuestDrop {

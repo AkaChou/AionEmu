@@ -36,7 +36,7 @@ public class ManaStone extends ItemStone {
 	}
 
 	/**
-	 * @return Whether ancient / Whether ancient
+	 * @return Whether ancient
 	 */
 	public boolean isAncient() {
 		return getItemId() >= 167020006 && // Ancient Manastone: HP +105

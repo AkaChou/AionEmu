@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 基础刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler
  */

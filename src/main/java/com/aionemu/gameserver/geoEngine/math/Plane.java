@@ -148,7 +148,8 @@ public class Plane implements Cloneable {
 	 *
 	 * query point
 	 *
-	 * @param point @return 有符号伪距离 / signed pseudo-distance
+	 * @param point
+	 * @return 有符号伪距离 / signed pseudo-distance
 	 */
 	public float pseudoDistance(Vector3f point) {
 		return this.normal.dot(point) - this.constant;
@@ -178,7 +179,8 @@ public class Plane implements Cloneable {
 	 *
 	 * query point
 	 *
-	 * @param point @return 是否在平面上 / whether on plane
+	 * @param point
+	 * @return 是否在平面上 / whether on plane
 	 */
 	public boolean isOnPlane(Vector3f point) {
 		float dist = this.pseudoDistance(point);

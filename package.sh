@@ -22,8 +22,8 @@ if [ ! -f "$ARTIFACT" ]; then
   echo "Missing $ARTIFACT"
   exit 1
 fi
-if [ ! -d "$RESOURCE_AION_DIR/game/geo" ]; then
-  echo "Missing $RESOURCE_AION_DIR/game/geo"
+if [ ! -d "$RESOURCE_AION_DIR/geo" ]; then
+  echo "Missing $RESOURCE_AION_DIR/geo"
   exit 1
 fi
 

@@ -181,7 +181,8 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * event type
 	 *
-	 * @param eventType @return 是否可处理 / whether handleable
+	 * @param eventType
+	 * @return 是否可处理 / whether handleable
 	 */
 	protected boolean canHandleEvent(AIEventType eventType) {
 		switch (this.currentState) {
@@ -222,7 +223,8 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * new state
 	 *
-	 * @param newState @return 是否发生切换 / whether the state changed
+	 * @param newState
+	 * @return 是否发生切换 / whether the state changed
 	 */
 	public synchronized boolean setStateIfNot(AIState newState) {
 		if (this.currentState == newState) {
@@ -250,7 +252,8 @@ public abstract class AbstractAI implements AI2 {
 	 *
 	 * new sub-state
 	 *
-	 * @param newSubState @return 是否发生切换 / whether the sub-state changed
+	 * @param newSubState
+	 * @return 是否发生切换 / whether the sub-state changed
 	 */
 	public synchronized boolean setSubStateIfNot(AISubState newSubState) {
 		if (this.currentSubState == newSubState) {

@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 漩涡模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

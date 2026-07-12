@@ -6,7 +6,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 礼包/套餐信息通知服务端包。
- * pack info. / pack info.
+ * pack info.
  */
 public class SM_PACKAGE_INFO_NOTIFY extends AionServerPacket {
 	private int count;

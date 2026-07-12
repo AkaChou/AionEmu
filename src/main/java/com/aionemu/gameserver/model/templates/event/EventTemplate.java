@@ -37,7 +37,7 @@ import com.aionemu.gameserver.world.World;
 
 /**
  * 活动模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -125,7 +125,7 @@ public class EventTemplate {
 	}
 
 	/**
-	 * @return Whether expired / Whether expired
+	 * @return Whether expired
 	 */
 	public boolean isExpired() {
 		return !isActive();
@@ -140,7 +140,7 @@ public class EventTemplate {
 	}
 
 	/**
-	 * @return Whether started / Whether started
+	 * @return Whether started
 	 */
 	public boolean isStarted() {
 		return isStarted;

@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 功能服务集合 Spring 门面 / 静态访问桥：注册并解析大量玩法功能服务实例。
- * static access bridge: registers and resolves many gameplay feature service instances. / static access bridge: registers and resolves many gameplay feature service instances.
+ * static access bridge: registers and resolves many gameplay feature service instances.
  */
 @Component
 public final class GameFeatureServices implements DisposableBean {

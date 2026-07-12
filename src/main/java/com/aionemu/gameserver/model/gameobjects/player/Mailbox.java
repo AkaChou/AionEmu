@@ -118,7 +118,7 @@ public class Mailbox {
 	}
 
 	/**
-	 * 检查是否 mailboxcontains 空 letters。 / Check whether mailbox contains empty letters
+	 * 检查邮箱是否包含空邮件。 / Check whether the mailbox contains empty letters.
 	 *
 	 * @return
 	 */
@@ -179,7 +179,7 @@ public class Mailbox {
 	}
 
 	/**
-	 * @return 邮箱当前容量 / 大小。 / Current size of mailbox @return
+	 * @return 邮箱当前容量 / 大小。 / Current size of mailbox
 	 */
 	public int size() {
 		return mails.size();

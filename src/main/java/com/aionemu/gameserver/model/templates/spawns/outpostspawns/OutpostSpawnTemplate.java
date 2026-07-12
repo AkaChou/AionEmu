@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 前哨刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class OutpostSpawnTemplate extends SpawnTemplate {

@@ -106,7 +106,8 @@ public class TargetRelationProperty {
 	 *
 	 * effected creature
 	 *
-	 * @param effected @return 是否允许增益 / true if buff is allowed
+	 * @param effected
+	 * @return 是否允许增益 / true if buff is allowed
 	 */
 	public static boolean isBuffAllowed(Creature effected) {
 		if (effected instanceof SiegeNpc) {

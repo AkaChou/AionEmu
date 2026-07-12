@@ -72,7 +72,8 @@ public class RepurchaseService {
 	 *
 	 * player object id
 	 *
-	 * @param playerObjectId @return 可回购物品；无则空集合 / repurchase items, or empty if none
+	 * @param playerObjectId
+	 * @return 可回购物品；无则空集合 / repurchase items, or empty if none
 	 */
 	public Collection<Item> getRepurchaseItems(int playerObjectId) {
 		Collection<Item> items = repurchaseItems.get(playerObjectId);

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * 请愿模型。
  * Petition model.
@@ -8,12 +10,18 @@ package com.aionemu.gameserver.model;
  */
 public class Petition {
 
+	@Getter
 	private final int petitionId;
+	@Getter
 	private final int playerObjId;
 	private final PetitionType type;
+	@Getter
 	private final String title;
+	@Getter
 	private final String contentText;
+	@Getter
 	private final String additionalData;
+	@Getter
 	private final PetitionStatus status;
 
 	public Petition(int petitionId) {
@@ -75,38 +83,9 @@ public class Petition {
 		}
 	}
 
-	/** 返回玩家对象 ID / Returns the player obj id */
-	public int getPlayerObjId() {
-		return playerObjId;
-	}
-
-	/** 返回请愿 ID / Returns the petition id */
-	public int getPetitionId() {
-		return petitionId;
-	}
-
 	/** 获取请愿类型。 / Returns the petition type. */
 	public PetitionType getPetitionType() {
 		return type;
 	}
 
-	/** 获取称号。 / Returns the title. */
-	public String getTitle() {
-		return title;
-	}
-
-	/** 返回正文 / Returns the content text */
-	public String getContentText() {
-		return contentText;
-	}
-
-	/** 返回附加数据 / Returns the additional data*/
-	public String getAdditionalData() {
-		return additionalData;
-	}
-
-	/** 获取状态。 / Returns the status. */
-	public PetitionStatus getStatus() {
-		return status;
-	}
 }

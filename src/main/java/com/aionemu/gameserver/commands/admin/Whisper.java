@@ -23,7 +23,7 @@ public class Whisper extends AdminCommand {
 	 * on accepts whispers; off rejects them.
 	 *
 	 * @param admin 执行 GM / Admin player
-	 * @param params on|off。 / on|off
+	 * @param params on|off。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

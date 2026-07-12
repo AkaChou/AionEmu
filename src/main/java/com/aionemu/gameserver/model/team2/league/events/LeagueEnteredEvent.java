@@ -24,7 +24,7 @@ public class LeagueEnteredEvent implements Predicate<LeagueMember>, TeamEvent {
 	}
 
 	/**
-	 * @return Check condition / Check condition
+	 * @return Check condition
 	 */
 	@Override
 	public boolean checkCondition() {

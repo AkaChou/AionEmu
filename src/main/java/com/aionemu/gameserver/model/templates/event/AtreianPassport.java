@@ -16,7 +16,7 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
  * 艾特里亚 Passport 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Ghostfur (Aion-Unique)
  */

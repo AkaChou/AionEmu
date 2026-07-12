@@ -211,7 +211,7 @@ public class IronWallWarfrontReward extends InstanceReward<IronWallWarfrontPlaye
 	}
 
 	/**
-	 * @return Whether cap points / Whether cap points
+	 * @return Whether cap points
 	 */
 	public boolean hasCapPoints() {
 		return RewardCollections.maxPoints(getInstanceRewards()) >= capPoints;

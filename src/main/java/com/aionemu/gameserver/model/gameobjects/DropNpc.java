@@ -54,7 +54,7 @@ public class DropNpc {
 		return allowedLooters;
 	}
 
-	/** 是否 allowed to loot / Whether allowed to loot */
+	/** 是否允许拾取 / Whether allowed to loot */
 	public boolean isAllowedToLoot(Player player) {
 		return isFreeForAll || allowedLooters.contains(player.getObjectId());
 	}

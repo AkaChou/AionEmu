@@ -56,7 +56,8 @@ public class MovementProcessor extends AGameProcessor {
 	 * Target NPC
 	 *
 	 * @param spot 回归目标点 / Return destination
-	 * @param spot @return 已应用的回归电机，失败为 null / Applied return motor, or null on failure
+	 * @param spot
+	 * @return 已应用的回归电机，失败为 null / Applied return motor, or null on failure
 	 */
 	public AMovementMotor applyReturn(Npc creature, Vector3f spot) {
 		ReturnMotor returnMotor = new ReturnMotor(creature, spot, this);

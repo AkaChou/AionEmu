@@ -57,7 +57,7 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/** 吸收时消耗 MP 百分比 / MP cost percent on absorb */
 	private int mpValue;
 	/**
-	 * 是否 totalHitpercent 曾 resolved/ 是否 totalHitpercent 曾 resolved。 / Whether totalHit percent was resolved / Whether totalHit percent was resolved
+	 * 总命中百分比是否已结算。 / Whether the total hit percentage has been resolved.
 	 */
 	private boolean totalHitPercentSet = false;
 

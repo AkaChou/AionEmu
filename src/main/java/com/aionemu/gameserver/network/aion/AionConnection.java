@@ -183,7 +183,8 @@ public class AionConnection extends AConnection {
 	 *
 	 * packet data
 	 *
-	 * @param data @return true 处理成功；false 表示应立即关闭连接 / true if ok, false to close now
+	 * @param data
+	 * @return true 处理成功；false 表示应立即关闭连接 / true if ok, false to close now
 	 */
 	@Override
 	protected final boolean processData(ByteBuffer data) {
@@ -291,7 +292,7 @@ public class AionConnection extends AConnection {
 	protected final void onDisconnect() {
 		/**
 		 * 客户端开始认证流程时的清理。
-		 * disconnects. / disconnects.
+		 * disconnects.
 		 */
 		pingChecker.stop();
 		if (getAccount() != null) {

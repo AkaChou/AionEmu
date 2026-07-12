@@ -5,7 +5,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 融合（Coalescence）启动/就绪包。
- * ready state. / ready state.
+ * ready state.
  *
  * @author Ranastic
  */

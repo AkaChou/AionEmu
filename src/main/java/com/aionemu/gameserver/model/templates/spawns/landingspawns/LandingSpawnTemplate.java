@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 登陆刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class LandingSpawnTemplate extends SpawnTemplate {
@@ -49,7 +49,7 @@ public class LandingSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether landing closed / Whether landing closed
+	 * @return Whether landing closed
 	 */
 	public final boolean isLandingClosed() {
 		return landingType.equals(LandingStateType.NONE);

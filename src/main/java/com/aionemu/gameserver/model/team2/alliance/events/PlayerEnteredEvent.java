@@ -31,7 +31,7 @@ public class PlayerEnteredEvent implements Predicate<PlayerAllianceMember>, Team
 	}
 
 	/**
-	 * @return Check condition / Check condition
+	 * @return Check condition
 	 */
 	@Override
 	public boolean checkCondition() {

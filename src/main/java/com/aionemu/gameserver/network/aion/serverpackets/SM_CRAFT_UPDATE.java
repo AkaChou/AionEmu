@@ -32,7 +32,7 @@ public class SM_CRAFT_UPDATE extends AionServerPacket {
 		this.success = success;
 		this.failure = failure;
 		this.nameId = item.getNameId();
-		// 以太变形。 / Aether Morphing.
+		// 奥德变形。 / Aether Morphing.
 		if (skillId == 40009) {
 			this.executionPeriod = 1500;
 		}

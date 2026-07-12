@@ -58,7 +58,8 @@ public class PlayersBonusData {
 	 *
 	 * buff id
 	 *
-	 * @param buffId @return 加成属性，不存在则为 null / bonus attribute or null
+	 * @param buffId
+	 * @return 加成属性，不存在则为 null / bonus attribute or null
 	 */
 	public PlayersBonusServiceAttr getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);

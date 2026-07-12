@@ -34,9 +34,9 @@ public class PropertyTransformerFactory {
      * Create a new property transformer instance
      *
      * @param clazzToTransform 需要转换的目标类型 / Target class type to transform
-     * Specifiedtransformerclass ,若空 willautoselectbased 在目标 type。 / Specified transformer class, if null will auto select based on target type
+     * @param tc 指定的转换器类型；为默认类型时根据目标类型自动选择 / Transformer type; the default selects by target type
      * @return 对应的属性转换器实例 / Corresponding property transformer instance
-     * Thrown when transformer cannot be created。 / Thrown when transformer cannot be created.
+     * @throws TransformationException 无法创建或找到转换器时抛出 / If a transformer cannot be created or found
      */
     public static PropertyTransformer newTransformer(Class clazzToTransform, Class<? extends PropertyTransformer> tc) throws TransformationException {
         if (tc == PropertyTransformer.class) {

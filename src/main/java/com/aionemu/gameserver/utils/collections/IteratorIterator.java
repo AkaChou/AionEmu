@@ -24,6 +24,7 @@ import java.util.NoSuchElementException;
  * 例如外层集合包含 null 与某个含 1、2 的集合时，本迭代器只返回 1 和 2。
  * E.g. if the outer set holds null and a set of 1 and 2, only 1 and 2 are returned.
  *
+ *
  * @param <V> 元素类型 / Element type
  * @author Luno
  */
@@ -82,7 +83,8 @@ public class IteratorIterator<V> implements Iterator<V> {
 	 *
 	 * Next element
 	 *
-	 * @return @throws NoSuchElementException 无更多元素时 / When exhausted
+	 * @return
+	 * @throws NoSuchElementException 无更多元素时 / When exhausted
 	 */
 	@Override
 	public V next() {

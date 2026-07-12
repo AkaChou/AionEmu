@@ -248,7 +248,7 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	 * 玩家 / player
 	 * gather template
 	 *
-	 * @return 若 allowed 则为 true / true if allowed
+	 * @return 允许采集时为 {@code true} / {@code true} if allowed
 	 */
 	private boolean checkGatherable(final Player player, final GatherableTemplate template) {
 		if (player.isNotGatherable()) {

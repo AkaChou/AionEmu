@@ -67,7 +67,8 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      *
      * player id
      *
-     * @param playerId @return 已装备灵魂石列表 / equipped stigma list
+     * @param playerId
+     * @return 已装备灵魂石列表 / equipped stigma list
      */
     @Override
     public PlayerEquippedStigmaList loadItemsList(int playerId) {

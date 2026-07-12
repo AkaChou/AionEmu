@@ -46,7 +46,7 @@ public class SiegeNpc extends Npc {
 		return (SiegeSpawnTemplate) super.getSpawn();
 	}
 
-	/** 是否 aggressive to / Whether aggressive to */
+	/** 是否会主动攻击 / Whether aggressive to */
 	public boolean isAggressiveTo(Creature creature) {
 		if ((creature instanceof SiegeNpc) && getSiegeRace() != ((SiegeNpc) creature).getSiegeRace()) {
 			return true;

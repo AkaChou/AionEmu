@@ -64,7 +64,8 @@ public class MaterialData {
 	 *
 	 * material id
 	 *
-	 * @param materialId @return 材质模板或 null / material template or null
+	 * @param materialId
+	 * @return 材质模板或 null / material template or null
 	 */
 	public MaterialTemplate getTemplate(int materialId) {
 		return materialsById.get(materialId);
@@ -76,7 +77,8 @@ public class MaterialData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 是材质技能则为 true / true if it is a material skill
+	 * @param skillId
+	 * @return 是材质技能则为 true / true if it is a material skill
 	 */
 	public boolean isMaterialSkill(int skillId) {
 		return skillIds.contains(skillId);

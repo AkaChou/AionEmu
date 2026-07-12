@@ -133,8 +133,8 @@ public class MotionList {
     }
 
     /**
-	 * 加载 motions 从数据库 / 加载 motions 从数据库。 / Load motions from database / Load motions from database
-	 */
+	 * 从数据库加载动作。 / Load motions from database
+	  */
     public void loadMotionsFromDatabase() {
         List<Motion> loadedMotions = DAOManager.getDAO(MotionDAO.class).loadMotions(owner.getObjectId());
         if (loadedMotions != null) {

@@ -18,7 +18,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 外观物品动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author xTz
  */
@@ -30,8 +30,8 @@ public class CosmeticItemAction extends AbstractItemAction {
 	protected String cosmeticName;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		CosmeticItemTemplate template = DataManager.COSMETIC_ITEMS_DATA.getCosmeticItemsTemplate(cosmeticName);

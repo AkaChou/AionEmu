@@ -48,7 +48,7 @@ public class SM_MESSAGE extends AionServerPacket {
 
 	/**
 	 * 由原始字段构造聊天消息包（系统消息、无玩家实体场景）。
-	 * no player entity). / no player entity).
+	 * no player entity).
 	 *
 	 * @param senderObjectId 发送者对象 ID / sender object id
 	 * @param senderName 发送者名称 / sender display name

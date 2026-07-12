@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * DisassembleSet 列表模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author BeckUp.Media
  */

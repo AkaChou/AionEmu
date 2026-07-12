@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	鲁基布基马戏团 / Rookie Bookie Circus 4.3
+ -->
+<circus_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="circus_schedule.xsd">
+	<!-- 普埃塔 / POETA -->
+	<circus id="1">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 贝尔特伦 / VERTERON -->
+	<circus id="2">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 埃尔特内 / ELTNEN -->
+	<circus id="3">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 因特尔蒂卡 / INTERDIKAH -->
+	<circus id="4">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 英吉斯温 / INGGISON -->
+	<circus id="5">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 泰奥勃莫斯 / THEOBOMOS -->
+	<circus id="6">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 伊斯哈尔肯 / ISHALGEN -->
+	<circus id="7">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 阿尔特盖德 / ALTGARD -->
+	<circus id="8">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 莫尔海姆 / MORHEIM -->
+	<circus id="9">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 贝鲁斯兰 / BELUSLAN -->
+	<circus id="10">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 布鲁斯特豪宁 / BRUSTHONIN -->
+	<circus id="11">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+	<!-- 格尔克马洛斯 / GELKMAROS -->
+	<circus id="12">
+		<circusTime>0 0 17 ? * SUN *</circusTime>
+	</circus>
+</circus_schedule>

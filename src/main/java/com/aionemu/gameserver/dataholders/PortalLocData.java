@@ -58,7 +58,8 @@ public class PortalLocData {
 	 *
 	 * location id
 	 *
-	 * @param locId @return 传送坐标，不存在则为 null / portal location or null
+	 * @param locId
+	 * @return 传送坐标，不存在则为 null / portal location or null
 	 */
 	public PortalLoc getPortalLoc(int locId) {
 		return portalLocs.get(locId);

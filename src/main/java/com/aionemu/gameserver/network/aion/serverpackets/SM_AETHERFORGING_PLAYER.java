@@ -5,7 +5,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
- * 向客户端同步玩家以太锻造状态的服务端包。
+ * 向客户端同步玩家奥德锻造状态的服务端包。
  * Server packet synchronizing a player's Aetherforging status to the client.
  *
  * @author Ranastic

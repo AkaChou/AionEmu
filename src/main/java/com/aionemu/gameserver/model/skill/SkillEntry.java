@@ -85,7 +85,7 @@ public abstract class SkillEntry {
 	}
 
 	/**
-	 * @return Whether activated / Whether activated
+	 * @return Whether activated
 	 */
 	public boolean isActivated() {
 		return isActivated;

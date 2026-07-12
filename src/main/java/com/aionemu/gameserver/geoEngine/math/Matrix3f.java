@@ -130,7 +130,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param i 行索引（0–2） / row index (0–2)
 	 * @param j 列索引（0–2） / column index (0–2)
 	 * @return 该位置的元素值 / element value at that position
-	 * if indices are out of range。 / if indices are out of range.
+	 * if indices are out of range。
 	 */
 	public float get(int i, int j) {
 		switch (i) {
@@ -187,7 +187,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 *
 	 * @param data 目标数组，长度须为 9 或 16 / destination array of length 9 or 16
 	 * @param rowMajor true 为行主序，false 为列主序 / true for row-major, false for column-major
-	 * if array length is invalid。 / if array length is invalid.
+	 * if array length is invalid。
 	 */
 	public void get(float[] data, boolean rowMajor) {
 		if (data.length == 9) {
@@ -257,7 +257,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param i 列索引（0–2） / column index (0–2)
 	 * @param store 结果存储，可为 null / result storage, may be null
 	 * @return 列向量（store 或新建） / the column vector (store or new)
-	 * if column index is invalid。 / if column index is invalid.
+	 * if column index is invalid。
 	 */
 	public Vector3f getColumn(int i, Vector3f store) {
 		if (store == null) {
@@ -308,7 +308,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param i 行索引（0–2） / row index (0–2)
 	 * @param store 结果存储，可为 null / result storage, may be null
 	 * @return 行向量（store 或新建） / the row vector (store or new)
-	 * if row index is invalid。 / if row index is invalid.
+	 * if row index is invalid。
 	 */
 	public Vector3f getRow(int i, Vector3f store) {
 		if (store == null) {
@@ -385,7 +385,8 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param column 列向量；为 null 时忽略 / column vector; ignored if null
 	 * this matrix
 	 *
-	 * @return @throws IllegalArgumentException 列索引非法时 / if column index is invalid
+	 * @return
+	 * @throws IllegalArgumentException 列索引非法时 / if column index is invalid
 	 */
 	public Matrix3f setColumn(int i, Vector3f column) {
 		if (column == null) {
@@ -427,7 +428,8 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param row 行向量；为 null 时忽略 / row vector; ignored if null
 	 * this matrix
 	 *
-	 * @return @throws IllegalArgumentException 行索引非法时 / if row index is invalid
+	 * @return
+	 * @throws IllegalArgumentException 行索引非法时 / if row index is invalid
 	 */
 	public Matrix3f setRow(int i, Vector3f row) {
 		if (row == null) {
@@ -469,7 +471,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param j 列索引（0–2） / column index (0–2)
 	 * new value
 	 * this matrix
-	 * if indices are out of range。 / if indices are out of range.
+	 * if indices are out of range。
 	 */
 	public Matrix3f set(int i, int j, float value) {
 		switch (i) {
@@ -530,10 +532,12 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * 从 3×3 二维数组设置矩阵元素（行主序）。
 	 * Sets matrix elements from a 3×3 two-dimensional array (row-major).
 	 *
-	 * 3×3 array。 / 3×3 array
+	 * 3×3 array。
 	 * this matrix
 	 *
-	 * @param matrix @throws IllegalArgumentException 尺寸不为 3×3 时 / if dimensions are not 3×3
+	 * @param matrix
+	 *
+	 * @throws IllegalArgumentException 尺寸不为 3×3 时 / if dimensions are not 3×3
 	 */
 	public Matrix3f set(float[][] matrix) {
 		if (matrix.length != 3 || matrix[0].length != 3) {
@@ -589,7 +593,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 	 * @param matrix 长度 9 的数组 / array of length 9
 	 * @param rowMajor true 为行主序，false 为列主序 / true for row-major, false for column-major
 	 * this matrix
-	 * if array length is not 9。 / if array length is not 9.
+	 * if array length is not 9。
 	 */
 	public Matrix3f set(float[] matrix, boolean rowMajor) {
 		if (matrix.length != 9) {

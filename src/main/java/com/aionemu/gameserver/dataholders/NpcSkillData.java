@@ -63,7 +63,8 @@ public class NpcSkillData {
 	 *
 	 * npc id
 	 *
-	 * @param id @return 技能模板或 null / skill templates or null
+	 * @param id
+	 * @return 技能模板或 null / skill templates or null
 	 */
 	public NpcSkillTemplates getNpcSkillList(int id) {
 		return npcSkillData.get(id);

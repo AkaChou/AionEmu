@@ -65,8 +65,8 @@ public abstract class CreatureLifeStats<T extends Creature> {
 	}
 
 	/**
-	 * @return 是否已经 dead / 是否已经 dead。 / Whether already dead / Whether already dead
-	 */
+	 * @return 是否已死亡。 / Whether already dead
+	  */
 	public boolean isAlreadyDead() {
 		return alreadyDead;
 	}
@@ -237,21 +237,21 @@ public abstract class CreatureLifeStats<T extends Creature> {
 	}
 
 	/**
-	 * @return Whether fully restored hp mp / Whether fully restored hp mp
+	 * @return Whether fully restored hp mp
 	 */
 	public boolean isFullyRestoredHpMp() {
 		return getMaxHp() == currentHp && getMaxMp() == currentMp;
 	}
 
 	/**
-	 * @return Whether fully restored hp / Whether fully restored hp
+	 * @return Whether fully restored hp
 	 */
 	public boolean isFullyRestoredHp() {
 		return getMaxHp() == currentHp;
 	}
 
 	/**
-	 * @return Whether fully restored mp / Whether fully restored mp
+	 * @return Whether fully restored mp
 	 */
 	public boolean isFullyRestoredMp() {
 		return getMaxMp() == currentMp;

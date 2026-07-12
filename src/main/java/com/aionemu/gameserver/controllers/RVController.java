@@ -169,7 +169,8 @@ public class RVController extends NpcController {
 	 *
 	 * requesting player
 	 *
-	 * @param player @return 是否允许通行 / whether passage is allowed
+	 * @param player
+	 * @return 是否允许通行 / whether passage is allowed
 	 */
 	private boolean onAccept(Player player) {
 		if (!isAccepting) {

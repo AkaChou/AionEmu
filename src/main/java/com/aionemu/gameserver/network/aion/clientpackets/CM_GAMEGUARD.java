@@ -9,8 +9,8 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.antihack.AntiHackService;
 
 /**
- * 反外挂校验数据的客户端包。 / 反外挂校验数据的客户端包。
- * anti-hack validation data. / anti-hack validation data.
+ * 反外挂校验数据的客户端包。
+ * anti-hack validation data.
  *
  * @author Alcapwnd
  */

@@ -116,7 +116,7 @@ public class RectangleArea extends AbstractArea {
 	}
 
 	/**
-	 * @return Whether inside 3 d / Whether inside 3 d
+	 * @return Whether inside 3 d
 	 */
 	@Override
 	public boolean isInside3D(float x, float y, float z) {
@@ -188,7 +188,7 @@ public class RectangleArea extends AbstractArea {
 			d = MathUtil.getDistance(x, y, cp.getX(), cp.getY());
 			if (d < distance) {
 				closestPoint = cp;
-				// distance = d;。 / distance = d;
+				// distance = d;。
 			}
 			return closestPoint;
 		}

@@ -20,7 +20,7 @@ class HTMLCacheTest {
 
 	@Test
 	void everyHtmlHasAnEnglishVersion() throws IOException {
-		Path htmlRoot = Path.of("src/main/resources/aion/game/data/static_data/HTML");
+		Path htmlRoot = Path.of("src/main/resources/aion/data/static_data/HTML");
 		try (var files = Files.walk(htmlRoot)) {
 			for (Path file : files.filter(path -> path.toString().endsWith(".xhtml") && !path.toString().endsWith(".en.xhtml")).toList()) {
 				String name = file.getFileName().toString();

@@ -148,7 +148,8 @@ public class NavData {
 	 *
 	 * map id
 	 *
-	 * @param worldId @return 含导航网格的 GeoMap，不可用则为 null / GeoMap with nav mesh, or null if not available
+	 * @param worldId
+	 * @return 含导航网格的 GeoMap，不可用则为 null / GeoMap with nav mesh, or null if not available
 	 */
 	public GeoMap getNavMap(int worldId) {
 		if (!GeoDataConfig.GEO_NAV_ENABLE) {
@@ -163,7 +164,8 @@ public class NavData {
 	 *
 	 * map id
 	 *
-	 * @param worldId @return 导航地图或 null / nav map or null
+	 * @param worldId
+	 * @return 导航地图或 null / nav map or null
 	 */
 	private GeoMap getStrongCachedMap(int worldId) {
 		synchronized (navMaps) {
@@ -201,7 +203,8 @@ public class NavData {
 	 *
 	 * map id
 	 *
-	 * @param worldId @return 加载成功的 GeoMap，失败则为 null / loaded GeoMap, or null on failure
+	 * @param worldId
+	 * @return 加载成功的 GeoMap，失败则为 null / loaded GeoMap, or null on failure
 	 */
 	private GeoMap loadMap(Integer worldId) {
 		// 检查该地图文件是否存在 / Check if file exists for this map
@@ -241,7 +244,7 @@ public class NavData {
 	 * Parses .nav file and constructs navigation mesh.
 	 *
 	 * 导航文件格式 / Navigation file format:
-	 * total floats = vertexCount * 3。 / total floats = vertexCount * 3
+	 * total floats = vertexCount * 3。
 	 * vertex positions
 	 * triangle count
 	 * - 每个三角形 / for each triangle:
@@ -252,7 +255,7 @@ public class NavData {
 	 * @param navFile 待解析文件 / file to parse
 	 * GeoMap to populate
 	 * @return 加载成功则为 true / true if loading succeeded
-	 * on file read errors。 / on file read errors.
+	 * on file read errors。
 	 */
 	private boolean loadNavMesh(int worldId, File navFile, GeoMap map) throws IOException {
 		try (RandomAccessFile raFile = new RandomAccessFile(navFile, "r");

@@ -62,7 +62,7 @@ public enum AionAuthResponse {
     INVALID_PASSWORD3(9),
     /**
      * 无可用登录信息 / 账号不存在。
-     * no such account. / no such account.
+     * no such account.
      */
     NO_SUCH_ACCOUNT(10),
     /**
@@ -92,7 +92,7 @@ public enum AionAuthResponse {
     SERVER_FULL(15),
     /**
      * 服务器维护中 / 仅 GM 可进。
-     * GM only. / GM only.
+     * GM only.
      */
     GM_ONLY(16),
     /**

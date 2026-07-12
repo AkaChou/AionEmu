@@ -15,7 +15,8 @@ public class ColorChat {
 	 * original message
 	 *
 	 * @param color 颜色代码 / color code
-	 * @param color @return 带颜色标签的消息 / color-tagged message
+	 * @param color
+	 * @return 带颜色标签的消息 / color-tagged message
 	 */
 	public static String colorChat(String message, String color) {
 		StringBuilder sb = new StringBuilder();

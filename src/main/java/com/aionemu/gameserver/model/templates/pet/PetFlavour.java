@@ -16,7 +16,7 @@ import com.aionemu.gameserver.services.toypet.PetHungryLevel;
 
 /**
  * 宠物 Flavour 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */
@@ -101,7 +101,7 @@ public class PetFlavour {
 	}
 
 	/**
-	 * @return Whether loved food / Whether loved food
+	 * @return Whether loved food
 	 */
 	public boolean isLovedFood(FoodType foodType, int itemId) {
 		PetRewards rewardGroup = null;

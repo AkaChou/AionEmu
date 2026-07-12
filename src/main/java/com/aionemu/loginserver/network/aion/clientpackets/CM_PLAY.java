@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
 
 /**
  * 客户端选服进入游戏请求：校验会话并回 SM_PLAY_OK / FAIL。
- * FAIL. / FAIL.
+ * FAIL.
  *
  * @author -Nemesiss-
  */

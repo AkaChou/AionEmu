@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * Robot 边界模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

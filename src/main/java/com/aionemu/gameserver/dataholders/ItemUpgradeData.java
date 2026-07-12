@@ -59,7 +59,8 @@ public class ItemUpgradeData {
 	 *
 	 * base item id
 	 *
-	 * @param itemSetId @return 升级模板或 null / upgrade template or null
+	 * @param itemSetId
+	 * @return 升级模板或 null / upgrade template or null
 	 */
 	public ItemUpgradeTemplate getItemUpgradeTemplate(int itemSetId) {
 		return itemUpgradeSets.get(itemSetId);
@@ -71,7 +72,8 @@ public class ItemUpgradeData {
 	 *
 	 * base item id
 	 *
-	 * @param baseItemId @return 结果物品映射，为空或不存在则为 null / result-item map or null
+	 * @param baseItemId
+	 * @return 结果物品映射，为空或不存在则为 null / result-item map or null
 	 */
 	public Map<Integer, UpgradeResultItem> getResultItemMap(int baseItemId) {
 		if (upgradeResultItemMap.containsKey(baseItemId)) {

@@ -603,7 +603,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @param position 创建本类对象后应恰好调用一次。 / This method should be called exactly once after creating object of this class @param position
+	 * @param position 创建本类对象后应恰好调用一次。 / This method should be called exactly once after creating object of this class
 	 */
 	public void setPosition(WorldPosition position) {
 		if (this.position != null) {
@@ -710,7 +710,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @return 返回值为经验加成百分比。 / Value returned here means % of exp bonus. @return
+	 * @return 返回值为经验加成百分比。 / Value returned here means % of exp bonus.
 	 */
 	public byte getCurrentSalvationPercent() {
 		if (salvationPoint <= 0) {
@@ -809,7 +809,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @return Whether arch daeva / Whether arch daeva
+	 * @return Whether arch daeva
 	 */
 	public boolean isArchDaeva() {
 		return isArchDaeva;
@@ -919,8 +919,8 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * @return 是否 ready 用于 aura 的 growth / 是否 ready 用于 aura 的 growth。 / Whether ready for aura of growth / Whether ready for aura of growth
-	 */
+	 * @return 是否已准备好获得成长光环。 / Whether ready for aura of growth
+	  */
 	public boolean isReadyForAuraOfGrowth() {
 		return (level >= 66) && (level < GSConfig.PLAYER_MAX_LEVEL + 1);
 	}
@@ -1050,7 +1050,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * Check berdin star percent / Check berdin star percent
+	 * Check berdin star percent
 	 */
 	public void checkBerdinStarPercent() {
 		if ((this.getPlayer() != null) && (isReadyForBerdinStar())) {
@@ -1107,7 +1107,7 @@ public double getExpMultiplier() {
 	}
 
 	/**
-	 * Check abyss favor percent / Check abyss favor percent
+	 * Check abyss favor percent
 	 */
 	public void checkAbyssFavorPercent() {
 		if ((this.getPlayer() != null) && (isReadyForAbyssFavor())) {
@@ -1193,7 +1193,7 @@ public double getExpMultiplier() {
 		this.minionSkillPoints = minionSkillPoints;
 	}
 
-	/** 是否 minion skill points auto charge / Whether minion skill points auto charge */
+	/** 是否自动补充守护灵技能点 / Whether minion skill points auto charge */
 	public boolean isMinionSkillPointsAutoCharge() {
 		return minionSkillPointsAutoCharge;
 	}

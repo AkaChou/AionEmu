@@ -13,7 +13,7 @@ abstract class DestinationChecker {
 
 	/**
 	 * 检查是否已到达目的地/满足目标条件。
-	 * target condition is met. / target condition is met.
+	 * target condition is met.
 	 *
 	 * 若 destination reached 则为 true / true if destination reached
 	 */

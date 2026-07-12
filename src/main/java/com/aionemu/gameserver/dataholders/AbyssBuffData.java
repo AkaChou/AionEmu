@@ -58,7 +58,8 @@ public class AbyssBuffData {
 	 *
 	 * buff id
 	 *
-	 * @param buffId @return 属性模板，不存在则为 null / attribute template or null
+	 * @param buffId
+	 * @return 属性模板，不存在则为 null / attribute template or null
 	 */
 	public AbyssServiceAttr getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);

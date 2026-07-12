@@ -203,7 +203,8 @@ public class HousingService {
 	 *
 	 * player id
 	 *
-	 * @param playerId @return 地址 ID，无则为 0 / address id, or 0
+	 * @param playerId
+	 * @return 地址 ID，无则为 0 / address id, or 0
 	 */
 	public int getPlayerAddress(int playerId) {
 		synchronized (studios) {
@@ -245,7 +246,8 @@ public class HousingService {
 	 *
 	 * house name
 	 *
-	 * @param houseName @return 房屋，未找到则为 null / house, or null
+	 * @param houseName
+	 * @return 房屋，未找到则为 null / house, or null
 	 */
 	public House getHouseByName(String houseName) {
 		for (House house : customHouses.values()) {
@@ -262,7 +264,8 @@ public class HousingService {
 	 *
 	 * address id
 	 *
-	 * @param address @return 房屋，未找到则为 null / house, or null
+	 * @param address
+	 * @return 房屋，未找到则为 null / house, or null
 	 */
 	public House getHouseByAddress(int address) {
 		for (House house : customHouses.values()) {
@@ -279,7 +282,8 @@ public class HousingService {
 	 *
 	 * player id
 	 *
-	 * @param playerId @return 激活后的房屋，不存在则为 null / activated house, or null
+	 * @param playerId
+	 * @return 激活后的房屋，不存在则为 null / activated house, or null
 	 */
 	public House activateBoughtHouse(int playerId) {
 		for (House house : customHouses.values()) {
@@ -303,7 +307,8 @@ public class HousingService {
 	 *
 	 * player id
 	 *
-	 * @param playerId @return 工作室，不存在则为 null / studio, or null
+	 * @param playerId
+	 * @return 工作室，不存在则为 null / studio, or null
 	 */
 	public House getPlayerStudio(int playerId) {
 		synchronized (studios) {

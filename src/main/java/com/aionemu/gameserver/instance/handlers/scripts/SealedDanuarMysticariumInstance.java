@@ -48,7 +48,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/** prison 任务 / prison task */
 		private Future<?> prisonTask;
 	/**
-	 * whether timer1 started / whether timer1 started
+	 * whether timer1 started
 	 */
 		private boolean isStartTimer1 = false;
 	/** 是否启动计时器2 / is start timer2 */

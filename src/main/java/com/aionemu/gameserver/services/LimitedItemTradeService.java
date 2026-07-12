@@ -93,7 +93,8 @@ public class LimitedItemTradeService {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 是否限购商人 / whether limited-trade NPC
+	 * @param npcId
+	 * @return 是否限购商人 / whether limited-trade NPC
 	 */
 	public boolean isLimitedTradeNpc(int npcId) {
 		return limitedTradeNpcs.containsKey(npcId);
@@ -105,7 +106,8 @@ public class LimitedItemTradeService {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 限购交易数据 / limited-trade data
+	 * @param npcId
+	 * @return 限购交易数据 / limited-trade data
 	 */
 	public LimitedTradeNpc getLimitedTradeNpc(int npcId) {
 		return limitedTradeNpcs.get(npcId);

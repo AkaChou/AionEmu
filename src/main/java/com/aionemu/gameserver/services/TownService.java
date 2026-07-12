@@ -102,7 +102,8 @@ public class TownService {
 	 *
 	 * town id
 	 *
-	 * @param townId @return 城镇，可能为 null / town, may be null
+	 * @param townId
+	 * @return 城镇，可能为 null / town, may be null
 	 */
 	public Town getTownById(int townId) {
 		if (elyosTowns.containsKey(townId)) {
@@ -134,7 +135,8 @@ public class TownService {
 	 *
 	 * creature
 	 *
-	 * @param creature @return 城镇 ID，未命中为 0 / town id, or 0 if none
+	 * @param creature
+	 * @return 城镇 ID，未命中为 0 / town id, or 0 if none
 	 */
 	public int getTownIdByPosition(Creature creature) {
 		if (creature instanceof Npc) {

@@ -4,7 +4,7 @@ import com.aionemu.commons.configuration.Property;
 
 /**
  * 管理员 / GM 权限与外观相关配置。
- * GM privilege and appearance related configuration. / GM privilege and appearance related configuration.
+ * GM privilege and appearance related configuration.
  */
 public class AdminConfig {
 

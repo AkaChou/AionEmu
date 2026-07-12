@@ -342,7 +342,8 @@ public class ObserveController {
 	 *
 	 * attack status
 	 *
-	 * @param status @return 任一观察者匹配则为 true / true if any observer matches
+	 * @param status
+	 * @return 任一观察者匹配则为 true / true if any observer matches
 	 */
 	public boolean checkAttackStatus(AttackStatus status) {
 		if (attackCalcObservers.size() > 0) {
@@ -361,7 +362,8 @@ public class ObserveController {
 	 *
 	 * attack status
 	 *
-	 * @param status @return 任一观察者匹配则为 true / true if any observer matches
+	 * @param status
+	 * @return 任一观察者匹配则为 true / true if any observer matches
 	 */
 	public boolean checkAttackerStatus(AttackStatus status) {
 		if (attackCalcObservers.size() > 0) {
@@ -381,7 +383,8 @@ public class ObserveController {
 	 * attack status
 	 *
 	 * @param isSkill 是否技能攻击 / whether it is a skill attack
-	 * @param isSkill @return 暴击状态结果 / critical status result
+	 * @param isSkill
+	 * @return 暴击状态结果 / critical status result
 	 */
 	public AttackerCriticalStatus checkAttackerCriticalStatus(AttackStatus status, boolean isSkill) {
 		if (attackCalcObservers.size() > 0) {

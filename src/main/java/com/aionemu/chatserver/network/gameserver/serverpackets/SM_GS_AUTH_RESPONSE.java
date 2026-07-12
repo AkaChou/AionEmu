@@ -23,8 +23,8 @@ public class SM_GS_AUTH_RESPONSE extends GsServerPacket {
     private final GsAuthResponse response;
 
     /**
-     * 写出认证结果与聊天服监听地址、端口。
-     * Writes auth result plus chat server listen address and port.
+     * 写出认证结果与聊天服公网地址、端口。
+     * Writes auth result plus the chat server public address and port.
      *
      * @param con 目标游戏服连接 / target game-server connection
      */
@@ -32,7 +32,7 @@ public class SM_GS_AUTH_RESPONSE extends GsServerPacket {
     protected void writeImpl(GsConnection con) {
         writeC(0);
         writeC(response.getResponseId());
-        writeB(Config.CHAT_ADDRESS.getAddress().getAddress());
-        writeH(Config.CHAT_ADDRESS.getPort());
+        writeB(Config.PUBLIC_CHAT_ADDRESS.getAddress().getAddress());
+        writeH(Config.PUBLIC_CHAT_ADDRESS.getPort());
     }
 }

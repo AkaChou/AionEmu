@@ -8,12 +8,14 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeTaskTemplate;
+import lombok.Getter;
 
 /**
  * 挑战任务模型。
  * Challenge Task model.
  */
 
+@Getter
 public class ChallengeTask {
 	private final int taskId;
 	private final int ownerId;
@@ -49,24 +51,9 @@ public class ChallengeTask {
 		this.template = template;
 	}
 
-	/** 返回任务 ID / Returns the task id */
-	public int getTaskId() {
-		return this.taskId;
-	}
-
-	/** 返回所有者 ID / Returns the owner id */
-	public int getOwnerId() {
-		return this.ownerId;
-	}
-
 	/** 返回 quests count / Returns the quests count */
 	public int getQuestsCount() {
 		return quests.size();
-	}
-
-	/** 返回 quests / Returns the quests */
-	public Map<Integer, ChallengeQuest> getQuests() {
-		return quests;
 	}
 
 	/** 获取任务。 / Returns the quest. */
@@ -74,23 +61,13 @@ public class ChallengeTask {
 		return quests.get(questId);
 	}
 
-	/** 返回 complete time / Returns the complete time */
-	public Timestamp getCompleteTime() {
-		return completeTime;
-	}
-
 	/** 更新 complete time / Update complete time */
 	public synchronized void updateCompleteTime() {
 		completeTime.setTime(System.currentTimeMillis());
 	}
 
-	/** 获取模板。 / Returns the template. */
-	public ChallengeTaskTemplate getTemplate() {
-		return this.template;
-	}
-
 	/**
-	 * @return Whether completed / Whether completed
+	 * @return Whether completed
 	 */
 	public boolean isCompleted() {
 		boolean isCompleted = true;

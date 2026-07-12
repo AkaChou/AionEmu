@@ -435,7 +435,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				}
 				deleteNpc(833284);
 				spawnGuardianStone();
-				// 以太力场已停用。战斗现在开始！ / The Aetheric Field is deactivated. The battle will now begin!
+				// 奥德力场已停用。战斗现在开始！ / The Aetheric Field is deactivated. The battle will now begin!
 				sendMsgByRace(1402867, Race.PC_ALL, 0);
 				// 保护守护石 2 分钟。 / Protect the Guardian Stone for 2 minutes.
 				sendMsgByRace(1402924, Race.PC_ALL, 2000);

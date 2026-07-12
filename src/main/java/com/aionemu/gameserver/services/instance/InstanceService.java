@@ -79,7 +79,8 @@ public class InstanceService {
 	 * world map id
 	 *
 	 * @param ownerId 所有者对象 ID（个人副本） / owner object id (personal instance)
-	 * @param ownerId @return 新建的世界地图实例 / newly created world map instance
+	 * @param ownerId
+	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
 	public synchronized static WorldMapInstance getNextAvailableInstance(int worldId, int ownerId) {
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
@@ -105,7 +106,8 @@ public class InstanceService {
 	 *
 	 * world map id
 	 *
-	 * @param worldId @return 新建的世界地图实例 / newly created world map instance
+	 * @param worldId
+	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
 	public synchronized static WorldMapInstance getNextAvailableInstance(int worldId) {
 		return getNextAvailableInstance(worldId, 0);
@@ -568,7 +570,8 @@ public class InstanceService {
 	 *
 	 * instance
 	 *
-	 * @param instance @return 延迟毫秒数 / delay in ms
+	 * @param instance
+	 * @return 延迟毫秒数 / delay in ms
 	 */
 	private static long getScheduledDestroyDelayMillis(WorldMapInstance instance) {
 		return getScheduledDestroyDelayMillis(isSoloInstance(instance));
@@ -593,7 +596,8 @@ public class InstanceService {
 	 *
 	 * map id
 	 *
-	 * @param mapId @return 最大人数，无模板则为 0 / max players, or 0 if no template
+	 * @param mapId
+	 * @return 最大人数，无模板则为 0 / max players, or 0 if no template
 	 */
 	static int getMaxPlayers(int mapId) {
 		InstanceCooltime template = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
@@ -620,7 +624,8 @@ public class InstanceService {
 	 *
 	 * world map id
 	 *
-	 * @param worldId @return 新建的世界地图实例 / newly created world map instance
+	 * @param worldId
+	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
 	public synchronized static WorldMapInstance getNextBgInstance(int worldId) {
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);

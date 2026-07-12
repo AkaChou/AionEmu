@@ -277,7 +277,8 @@ public abstract class WorldMapInstance {
 	 *
 	 * visible object
 	 *
-	 * @param object @return 本次新增的任务 ID / newly added quest ids
+	 * @param object
+	 * @return 本次新增的任务 ID / newly added quest ids
 	 */
 	private List<Integer> addQuestIds(VisibleObject object) {
 		if (!(object instanceof Npc)) {
@@ -574,7 +575,8 @@ public abstract class WorldMapInstance {
 	 *
 	 * object id
 	 *
-	 * @param objectId @return 已注册返回 true / true if registered
+	 * @param objectId
+	 * @return 已注册返回 true / true if registered
 	 */
 	public boolean isRegistered(int objectId) {
 		return registeredObjects.contains(objectId);

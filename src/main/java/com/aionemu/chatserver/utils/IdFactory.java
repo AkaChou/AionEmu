@@ -38,7 +38,7 @@ public class IdFactory {
      * 遗留单例访问入口。
      * Legacy singleton access point.
      *
-     * Singleton {@link IdFactory}。 / Singleton {@link IdFactory}
+     * Singleton {@link IdFactory}。
      * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */
     @Deprecated(since = "boot-migration")

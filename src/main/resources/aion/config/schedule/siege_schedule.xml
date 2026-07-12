@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	要塞战 / Fortress Siege 5.8
+	埃雷修兰塔 / Reshanta
+ -->
+<siege_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="siege_schedule.xsd">
+	<!-- 埃雷修兰塔 / RESHANTA 5.8 -->
+	<!-- 神圣要塞 / Divine Fortress -->
+	<fortress id="1011">
+		<siegeTime>0 0 14 ? * SAT *</siegeTime>
+		<siegeTime>0 0 16 ? * MON,TUE,WED,THU,FRI *</siegeTime>
+	</fortress>
+	<!-- 西埃尔西部要塞 / Siel's Western Fortress -->
+	<fortress id="1131">
+	    <siegeTime>0 0 14 ? * SAT *</siegeTime>
+		<siegeTime>0 0 16 ? * MON,TUE,WED,THU,FRI *</siegeTime>
+	</fortress>
+	<!-- 西埃尔东部要塞 / Siel's Eastern Fortress -->
+	<fortress id="1132">
+		<siegeTime>0 0 14 ? * SAT *</siegeTime>
+		<siegeTime>0 0 16 ? * MON,TUE,WED,THU,FRI *</siegeTime>
+	</fortress>
+	<!-- 硫磺树要塞 / Sulfur Fortress -->
+	<fortress id="1141">
+		<siegeTime>0 0 14 ? * SAT *</siegeTime>
+		<siegeTime>0 0 16 ? * MON,TUE,WED,THU,FRI *</siegeTime>
+	</fortress>
+
+	<!-- 克罗坦要塞 / Krotan Refuge -->
+	<fortress id="1221">
+	    <siegeTime>0 0 18 ? * SAT *</siegeTime>
+	    <siegeTime>0 0 18 ? * SUN *</siegeTime>
+		<siegeTime>0 0 18 ? * TUE,WED *</siegeTime>
+	</fortress>
+	<!-- 克西斯要塞 / Kysis Fortress -->
+	<fortress id="1231">
+	    <siegeTime>0 0 18 ? * SAT *</siegeTime>
+		<siegeTime>0 0 18 ? * SUN *</siegeTime>
+		<siegeTime>0 0 18 ? * MON,THU *</siegeTime>
+	</fortress>
+	<!-- 米伦要塞 / Miren Fortress -->
+	<fortress id="1241">
+	    <siegeTime>0 0 18 ? * SAT *</siegeTime>
+		<siegeTime>0 0 18 ? * SUN *</siegeTime>
+		<siegeTime>0 0 18 ? * TUE,FRI *</siegeTime>
+	</fortress>
+
+	<!-- 卡多尔 / KALDOR 4.7 -->
+	<!-- 维尔哈特要塞 / Wealhtheow's Keep -->
+	<fortress id="7011">
+	    <siegeTime>0 0 13 ? * SAT *</siegeTime>
+		<siegeTime>0 0 15 ? * SUN *</siegeTime>
+		<siegeTime>0 0 19 ? * TUE,WED *</siegeTime>	
+	</fortress>
+
+	<!-- 潘格亚 / PANESTERRA 4.7 -->
+	<!-- 阿卡迪亚要塞 / Arcadian Fortress -->
+	<fortress id="10111">
+		<siegeTime>0 0 6 ? * MON-SUN *</siegeTime>
+	</fortress>
+	<!-- 暗影要塞 / Umbral Fortress -->
+	<fortress id="10211">
+		<siegeTime>0 0 6 ? * MON-SUN *</siegeTime>
+	</fortress>
+	<!-- 永恒要塞 / Eternum Fortress -->
+	<fortress id="10311">
+		<siegeTime>0 0 6 ? * MON-SUN *</siegeTime>
+	</fortress>
+	<!-- 天空激战要塞 / Skyclash Fortress -->
+	<fortress id="10411">
+		<siegeTime>0 0 6 ? * MON-SUN *</siegeTime>
+	</fortress>
+</siege_schedule>

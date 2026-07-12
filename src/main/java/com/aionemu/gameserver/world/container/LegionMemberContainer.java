@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * 军团成员容器：按 ID / 名称缓存 {@link LegionMember} 与 {@link LegionMemberEx}。
- * {@link LegionMemberEx}). / {@link LegionMemberEx}).
+ * {@link LegionMemberEx}).
  *
  * @author Simple
  */
@@ -48,7 +48,8 @@ public class LegionMemberContainer {
 	 *
 	 * member objectId
 	 *
-	 * @param memberObjId @return 成员实例，不存在则返回 null / member instance, or null if absent
+	 * @param memberObjId
+	 * @return 成员实例，不存在则返回 null / member instance, or null if absent
 	 */
 	public synchronized LegionMember getMember(int memberObjId) {
 		return legionMemberById.get(memberObjId);
@@ -74,7 +75,8 @@ public class LegionMemberContainer {
 	 *
 	 * member objectId
 	 *
-	 * @param memberObjId @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
+	 * @param memberObjId
+	 * @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
 	 */
 	public synchronized LegionMemberEx getMemberEx(int memberObjId) {
 		return legionMemberExById.get(memberObjId);
@@ -86,7 +88,8 @@ public class LegionMemberContainer {
 	 *
 	 * member name
 	 *
-	 * @param memberName @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
+	 * @param memberName
+	 * @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
 	 */
 	public synchronized LegionMemberEx getMemberEx(String memberName) {
 		return legionMemberExByName.get(memberName);

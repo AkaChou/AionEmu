@@ -42,7 +42,8 @@ public class SkillSkinData {
 	 *
 	 * skin id
 	 *
-	 * @param skinId @return 技能皮肤模板，不存在则为 null / skill skin template or null
+	 * @param skinId
+	 * @return 技能皮肤模板，不存在则为 null / skill skin template or null
 	 */
 	public SkillSkinTemplate getSkillSkinTemplate(int skinId) {
 		return skillskins.get(skinId);

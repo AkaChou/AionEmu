@@ -31,7 +31,7 @@ public abstract class AccountDAO implements DAO {
 
     /**
      * 按名称查询账号 ID。
-     * not found. / not found.
+     * not found.
      *
      * Account name
      * @return 账号 ID；失败时为 -1 / Id, or -1 on error

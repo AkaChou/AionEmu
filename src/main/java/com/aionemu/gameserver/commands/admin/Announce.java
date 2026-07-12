@@ -29,7 +29,7 @@ public class Announce extends AdminCommand {
 	 * Executes server announce: builds the message from anonymous/name prefix and broadcasts.
 	 *
 	 * admin
-	 * anonymous|name, message。 / anonymous|name, message
+	 * anonymous|name, message。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

@@ -49,7 +49,8 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
      *
      * house id
      *
-     * @param houseId @return 玩家脚本集合 / player scripts
+     * @param houseId
+     * @return 玩家脚本集合 / player scripts
      */
     @Override
     public PlayerScripts getPlayerScripts(int houseId) {

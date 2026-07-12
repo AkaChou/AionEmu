@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.templates.rewards.CraftItem;
 
 /**
  * 制作物品奖励组模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

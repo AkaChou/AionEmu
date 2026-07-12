@@ -41,8 +41,10 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * Class loader
      * Class bytecode
      *
-     * @param loader @return 转换后的字节码 / Transformed bytecode
-     * @param clazzBytes @throws Exception 转换过程中的异常 / Exception during transformation
+     * @param loader
+     * @return 转换后的字节码 / Transformed bytecode
+     * @param clazzBytes
+     * @throws Exception 转换过程中的异常 / Exception during transformation
      */
     protected byte[] transformClass(ClassLoader loader, byte[] clazzBytes) throws Exception {
         ClassPool cp = new ClassPool();
@@ -76,8 +78,8 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      *
      * @param method 要增强的方法 / Method to enhance
      * Compilation exception
-     * Class not found exception。 / Class not found exception.
-     * Class loading exception。 / Class loading exception.
+     * Class not found exception。
+     * Class loading exception。
      */
     protected void enhanceMethod(CtMethod method) throws CannotCompileException, NotFoundException, ClassNotFoundException {
         ClassPool cp = method.getDeclaringClass().getClassPool();
@@ -106,8 +108,10 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * Parameter length
      *
      * @param listenerFieldName 监听器字段名 / Listener field name
-     * @param paramLength @return 生成的代码 / Generated code
-     * @param listenerFieldName @throws NotFoundException 类未找到异常 / Class not found exception
+     * @param paramLength
+     * @return 生成的代码 / Generated code
+     * @param listenerFieldName
+     * @throws NotFoundException 类未找到异常 / Class not found exception
      */
     protected String writeBeforeMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();
@@ -161,8 +165,10 @@ public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
      * Parameter length
      *
      * @param listenerFieldName 监听器字段名 / Listener field name
-     * @param paramLength @return 生成的代码 / Generated code
-     * @param listenerFieldName @throws NotFoundException 类未找到异常 / Class not found exception
+     * @param paramLength
+     * @return 生成的代码 / Generated code
+     * @param listenerFieldName
+     * @throws NotFoundException 类未找到异常 / Class not found exception
      */
     protected String writeAfterMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();

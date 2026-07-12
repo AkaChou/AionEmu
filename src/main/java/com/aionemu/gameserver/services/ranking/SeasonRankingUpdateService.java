@@ -61,7 +61,8 @@ public class SeasonRankingUpdateService {
 	 *
 	 * Ranking table ID
 	 *
-	 * @param tableid @return 排行下发包列表 / Ranking dispatch packets
+	 * @param tableid
+	 * @return 排行下发包列表 / Ranking dispatch packets
 	 */
 	private List<SM_SEASON_RANKING> loadRankPacket(int tableid) {
 		ArrayList<SeasonRankingResult> list = getDAO().getCompetitionRankingPlayers(tableid);
@@ -84,7 +85,8 @@ public class SeasonRankingUpdateService {
 	 *
 	 * Ranking table ID
 	 *
-	 * @param tableId @return 下发包列表 / Dispatch packets
+	 * @param tableId
+	 * @return 下发包列表 / Dispatch packets
 	 */
 	public List<SM_SEASON_RANKING> getPlayers(int tableId) {
 		return players.get(tableId);

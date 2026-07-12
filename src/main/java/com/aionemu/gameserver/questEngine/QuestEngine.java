@@ -486,7 +486,7 @@ public class QuestEngine implements GameEngine {
 	 *
 	 * @param env 任务环境 / Quest environment
 	 * Item template id
-	 * Always {@code false}。 / Always {@code false}
+	 * Always {@code false}。
 	 */
 	public boolean onHouseItemUseEvent(QuestEnv env, int itemId) {
 		IntArrayList lists = getHouseItemQuests(itemId);
@@ -1471,7 +1471,8 @@ public class QuestEngine implements GameEngine {
 	 *
 	 * Dialog id
 	 *
-	 * @param dialogId @return 枚举值；不存在时 null / Enum value, or {@code null}
+	 * @param dialogId
+	 * @return 枚举值；不存在时 null / Enum value, or {@code null}
 	 */
 	public QuestDialog getDialog(int dialogId) {
 		if (dialogMap.containsKey(dialogId)) {
@@ -1570,7 +1571,8 @@ public class QuestEngine implements GameEngine {
 	 *
 	 * Quest id
 	 *
-	 * @param questId @return 处理器；不存在时 null / Handler, or {@code null}
+	 * @param questId
+	 * @return 处理器；不存在时 null / Handler, or {@code null}
 	 */
 	private QuestHandler getQuestHandlerByQuestId(int questId) {
 		return questHandlers.get(questId);

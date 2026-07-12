@@ -33,14 +33,14 @@ public class Reward {
 
 	/**
 	 * 奖励条目序号。
-	 * serial number. / serial number.
+	 * serial number.
 	 */
 	@XmlAttribute(required = true)
 	protected BigInteger no;
 
 	/**
 	 * 奖励等级 / 档位。
-	 * tier. / tier.
+	 * tier.
 	 */
 	@XmlAttribute(required = true)
 	protected BigInteger rank;

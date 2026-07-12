@@ -122,7 +122,8 @@ public class SkillAttackManager {
 	 *
 	 * NPC AI instance
 	 *
-	 * @param npcAI @return 下一个技能条目，无可用时为 {@code null} / next skill entry, or {@code null} if none
+	 * @param npcAI
+	 * @return 下一个技能条目，无可用时为 {@code null} / next skill entry, or {@code null} if none
 	 */
 	public static NpcSkillEntry chooseNextSkill(NpcAI2 npcAI) {
 		// 如果正在施法，不选择技能

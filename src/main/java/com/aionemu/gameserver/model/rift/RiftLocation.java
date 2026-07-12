@@ -36,7 +36,7 @@ public class RiftLocation {
 	}
 
 	/**
-	 * @return Whether opened / Whether opened
+	 * @return Whether opened
 	 */
 	public boolean isOpened() {
 		return opened;

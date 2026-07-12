@@ -1,13 +1,15 @@
 package com.aionemu.gameserver.model.team.legion;
 
 import java.sql.Timestamp;
+import lombok.Getter;
 
 /**
- * 军团 History，用于团队相关逻辑。
- * Legion History for team logic.
+ * 军团历史记录。
+ * Legion history entry.
  *
  * @author Simple, xTz
  */
+@Getter
 public class LegionHistory {
 
 	private LegionHistoryType legionHistoryType;
@@ -25,28 +27,4 @@ public class LegionHistory {
 		this.description = description;
 	}
 
-	/** 返回 legion history type / Returns the legion history type */
-	public LegionHistoryType getLegionHistoryType() {
-		return legionHistoryType;
-	}
-
-	/** 获取名称。 / Returns the name. */
-	public String getName() {
-		return name;
-	}
-
-	/** 返回时间 / Returns the time*/
-	public Timestamp getTime() {
-		return time;
-	}
-
-	/** 返回 tab id / Returns the tab id */
-	public int getTabId() {
-		return tabId;
-	}
-
-	/** 获取描述。 / Returns the description. */
-	public String getDescription() {
-		return description;
-	}
 }

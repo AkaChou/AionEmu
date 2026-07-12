@@ -41,7 +41,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	/** 岛 roots 储藏室任务 / isle of roots storeroom task */
 		private Future<?> isleOfRootsStoreroomTask;
 	/**
-	 * whether timer1 started / whether timer1 started
+	 * whether timer1 started
 	 */
 		private boolean isStartTimer1 = false;
 	/** 是否启动计时器2 / is start timer2 */

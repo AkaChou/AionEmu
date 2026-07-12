@@ -67,7 +67,8 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      *
      * unique reward id
      *
-     * @param unique @return 是否更新成功 / whether update succeeded
+     * @param unique
+     * @return 是否更新成功 / whether update succeeded
      */
     public boolean setUpdate(int unique) {
         try (Connection con = DatabaseFactory.getConnection();
@@ -88,7 +89,8 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      *
      * player id
      *
-     * @param playerId @return 可用奖励条目 / available reward entries
+     * @param playerId
+     * @return 可用奖励条目 / available reward entries
      */
     @Override
     public List<RewardEntryItem> getAvailable(int playerId) {

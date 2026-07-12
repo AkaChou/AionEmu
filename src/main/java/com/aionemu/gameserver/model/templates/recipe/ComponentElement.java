@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * Component 元素模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Ranastic
  */

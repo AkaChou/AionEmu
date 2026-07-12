@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	复活的莫尔特努斯 / Resurrected Moltenus 5.3
+	愤怒的守护者 / Enraged Guardian 5.3
+	
+	周日下午 4 点的要塞战非常重要 / The fortress siege at 4 PM on Sunday is important.
+	愤怒碎片梅诺提奥斯会出现在深渊上层中央区域。
+	The Enraged Fragment Menotios appears in the central Upper Abyss.
+	因此，占领上层中央区域的要塞后，战斗会更有优势。
+	Controlling the central Upper Abyss fortresses gives your side an advantage.
+	
+	尤其是占领封闭式结构的米伦要塞后，很适合作为设置奇斯克的据点，因而更为有利。
+	Miren Fortress is especially useful because its enclosed layout makes it a good Kisk base.
+	也就是说，周日下午 4 点进行的要塞战（上层中央三座要塞）的结果，
+	In other words, the result of Sunday's 4 PM siege for the three central Upper Abyss fortresses
+	会对攻略愤怒碎片梅诺提奥斯产生很大影响。
+	has a major impact on the battle against the Enraged Fragment Menotios.
+	http://aion.power.plaync.com/wiki/%EB%B6%84%EB%85%B8%EC%9D%98+%ED%8C%8C%ED%8E%B8+%EB%A9%94%EB%85%B8%ED%8B%B0%EC%98%A4%EC%8A%A4
+ -->
+<moltenus_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="moltenus_schedule.xsd">
+	<!-- 复活的莫尔特努斯 / RESURRECTED MOLTENUS [埃雷修兰塔 / RESHANTA 5.3] -->
+	<!-- [克罗坦岩 / KROTAN ROCK] -->
+	<moltenus id="1">
+		<fightTime>0 0 22 ? * MON,WED,FRI,SAT *</fightTime>
+	</moltenus>
+	<!-- [克西斯岛 / KYSIS ISLE] -->
+	<moltenus id="2">
+		<fightTime>0 0 22 ? * MON,WED,FRI,SAT *</fightTime>
+	</moltenus>
+	<!-- [米伦岛 / MIREN ISLAND] -->
+	<moltenus id="3">
+		<fightTime>0 0 22 ? * MON,WED,FRI,SAT *</fightTime>
+	</moltenus>
+	
+	<!-- [天族愤怒守护者 / ENRAGED GUARDIAN ELYOS] -->
+	<!-- 硫磺树要塞 / Sulfur Fortress -->
+	<moltenus id="4">
+		<fightTime>0 0 18 ? * MON,WED,FRI *</fightTime>
+	</moltenus>
+	<!-- 西埃尔西部要塞 / Siel's Western Fortress -->
+	<moltenus id="5">
+		<fightTime>0 0 18 ? * MON,WED,FRI *</fightTime>
+	</moltenus>
+	<!-- 西埃尔东部要塞 / Siel's Eastern Fortress -->
+	<moltenus id="6">
+		<fightTime>0 0 18 ? * MON,WED,FRI *</fightTime>
+	</moltenus>
+	
+	<!-- [魔族愤怒守护者 / ENRAGED GUARDIAN ASMODIANS] -->
+	<!-- 硫磺树要塞 / Sulfur Fortress -->
+	<moltenus id="7">
+		<fightTime>0 0 18 ? * TUE,THU,SAT *</fightTime>
+	</moltenus>
+	<!-- 西埃尔西部要塞 / Siel's Western Fortress -->
+	<moltenus id="8">
+		<fightTime>0 0 18 ? * TUE,THU,SAT *</fightTime>
+	</moltenus>
+	<!-- 西埃尔东部要塞 / Siel's Eastern Fortress -->
+	<moltenus id="9">
+		<fightTime>0 0 18 ? * TUE,THU,SAT *</fightTime>
+	</moltenus>
+</moltenus_schedule>

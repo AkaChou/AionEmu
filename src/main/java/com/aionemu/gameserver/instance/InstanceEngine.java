@@ -86,7 +86,8 @@ public class InstanceEngine implements GameEngine {
 	 *
 	 * world-map id
 	 *
-	 * @param worldId @return 处理器实例 / handler instance
+	 * @param worldId
+	 * @return 处理器实例 / handler instance
 	 */
 	public InstanceHandler getNewInstanceHandler(int worldId) {
 		Class<? extends InstanceHandler> instanceClass = handlers.get(worldId);

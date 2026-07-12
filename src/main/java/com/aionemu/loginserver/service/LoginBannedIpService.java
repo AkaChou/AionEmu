@@ -12,7 +12,7 @@ public class LoginBannedIpService {
 
     /**
      * 启动 IP 封禁控制器（加载缓存/调度等）。
-     * schedule, etc.). / schedule, etc.).
+     * schedule, etc.).
      */
     public void start() {
         BannedIpController.start();

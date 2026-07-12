@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	代理人之战 / Agent Fight 4.7
+	提亚马兰塔之眼 / Tiamaranta's Eye 5.8
+ -->
+<agent_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="agent_schedule.xsd">
+	<!-- [莱文斯尔代理人之战 / AGENT FIGHT LEVINSHOR 4.7] -->
+	<!-- [强化马斯塔里乌斯与强化维尔 / EMPOWERED MASTARIUS & EMPOWERED VEILLE] -->
+	<agent id="1">
+		<fightTime>0 0 10 ? * MON-SUN *</fightTime>
+		<fightTime>0 0 12 ? * MON-SAT *</fightTime>
+		<fightTime>0 0 18 ? * MON-SUN *</fightTime>
+		<fightTime>0 0 0 ? * MON-SUN *</fightTime>
+		<fightTime>0 0 8 ? * MON-SUN *</fightTime>
+	</agent>
+	
+	<!-- 团队首领苏纳亚卡 / Raid Boss Sunayaka
+	团队首领苏纳亚卡说明 / Raid Boss Sunayaka Description
+	每周到达指定时间后，苏纳亚卡会出现在司令官室。
+	At the scheduled weekly time, Sunayaka appears in the commander's room.
+	苏纳亚卡需要大规模团队共同攻略，成功后可获得新武器、新头饰等丰厚奖励。
+	Sunayaka requires a large raid group; victory rewards new weapons, headgear, and other valuable items.
+	http://aion.power.plaync.com/wiki/%ED%8B%B0%EC%95%84%EB%A7%88%EB%9E%80%ED%83%80%EC%9D%98+%EB%88%88 -->
+	<!-- [总督苏纳亚卡 / GOVERNOR SUNAYAKA] -->
+	<agent id="2">
+		<fightTime>0 0 22 ? * MON-FRI *</fightTime>
+		<fightTime>0 0 0 ? * SAT-SUN *</fightTime>
+	</agent>
+	<!-- [狂战士苏纳亚卡 / BERSERKER SUNAYAKA] -->
+	<agent id="3">
+		<fightTime>0 0 20 ? * MON-FRI *</fightTime>
+	</agent>
+</agent_schedule>

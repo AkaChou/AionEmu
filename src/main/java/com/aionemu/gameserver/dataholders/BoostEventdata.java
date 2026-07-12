@@ -62,7 +62,8 @@ public class BoostEventdata {
 	 *
 	 * event id
 	 *
-	 * @param buffId @return 模板，不存在则为 null / template or null
+	 * @param buffId
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public BoostEvents getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);

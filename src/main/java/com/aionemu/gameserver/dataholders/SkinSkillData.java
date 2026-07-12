@@ -71,7 +71,8 @@ public class SkinSkillData {
 	 *
 	 * group name
 	 *
-	 * @param name @return 模板，不存在则为 null / template or null
+	 * @param name
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public SkinSkillTemplate getSkinSkillByGroupName(String name) {
 		return string.get(name);

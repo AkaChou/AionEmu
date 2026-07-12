@@ -9,7 +9,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 玩家竞技/排行历史服务端包。
- * ranking history to the client. / ranking history to the client.
+ * ranking history to the client.
  * <p>
  * 按 tableId 区分排行榜类型：1=坚韧殿堂、2=试炼之塔、3=大竞技训练营、541=孤独竞技场。
  * tableId selects ranking type: 1=Hall of Tenacity, 2=Crucible Spire,

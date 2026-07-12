@@ -20,8 +20,8 @@ public enum AGQuestion {
 	}
 
 	/**
-	 * @return 是否 added / 是否 added。 / Whether added / Whether added
-	 */
+	 * @return 是否已添加。 / Whether added
+	  */
 	public boolean isAdded() {
 		return this.equals(AGQuestion.ADDED);
 	}

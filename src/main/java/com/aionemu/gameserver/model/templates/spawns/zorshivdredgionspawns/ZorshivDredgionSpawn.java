@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 
 /**
  * 佐希夫无畏舰刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */

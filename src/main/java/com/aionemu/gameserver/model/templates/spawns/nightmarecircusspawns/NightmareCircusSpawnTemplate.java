@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 梦魇马戏团刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -46,14 +46,14 @@ public class NightmareCircusSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether circus open / Whether circus open
+	 * @return Whether circus open
 	 */
 	public final boolean isCircusOpen() {
 		return nightmareCircusType.equals(NightmareCircusStateType.OPEN);
 	}
 
 	/**
-	 * @return Whether circus closed / Whether circus closed
+	 * @return Whether circus closed
 	 */
 	public final boolean isCircusClosed() {
 		return nightmareCircusType.equals(NightmareCircusStateType.CLOSED);

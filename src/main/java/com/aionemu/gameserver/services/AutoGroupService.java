@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 /**
  * 自动组队/匹配服务：管理副本排队、入场确认、实例创建与登录/登出时的匹配状态恢复。
- * matchmaking service: manages instance queues, entry confirmation, instance creation, and match state on login/logout. / matchmaking service: manages instance queues, entry confirmation, instance creation, and match state on login/logout.
+ * matchmaking service: manages instance queues, entry confirmation, instance creation, and match state on login/logout.
  */
 @Slf4j
 
@@ -1014,7 +1014,8 @@ public class AutoGroupService {
 	 *
 	 * instance id
 	 *
-	 * @param instanceId @return 是否自动实例 / whether auto instance
+	 * @param instanceId
+	 * @return 是否自动实例 / whether auto instance
 	 */
 	public boolean isAutoInstance(int instanceId) {
 		return autoInstances.containsKey(instanceId);

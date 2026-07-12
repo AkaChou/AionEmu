@@ -51,8 +51,8 @@ public class Sky_Island_Rift_ElyosAI2 extends NpcAI2 {
 	@Override
     protected void handleDialogStart(Player player) {
 /*         if (player.isArchDaeva()) { */
-		    // 这是汇聚以太能量的天空岛传送石。 / This is a Sky Island Teleport Stone, to which Aether energy is gathered.
-			// 感觉有一束强大以太能量射向天空。 / It feels like a powerful beam of Aether energy is shooting out towards the sky.
+		    // 这是汇聚奥德能量的天空岛传送石。 / This is a Sky Island Teleport Stone, to which Aether energy is gathered.
+			// 感觉有一束强大奥德能量射向天空。 / It feels like a powerful beam of Aether energy is shooting out towards the sky.
 			// 或许可用碎片中注入的力量抵达天空之岛。 / You may be able to reach the island in the sky by using the power infused in the fragment.
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 /* 		} */

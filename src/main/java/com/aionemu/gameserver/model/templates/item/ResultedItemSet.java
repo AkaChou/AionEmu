@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * Resulted 物品 Set 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 @XmlType(name = "ResultedItemSet")
 @Slf4j(topic = "com.aionemu.gameserver.model.templates.item.ResultedItem")

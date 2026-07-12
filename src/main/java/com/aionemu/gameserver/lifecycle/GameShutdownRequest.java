@@ -69,7 +69,7 @@ public final class GameShutdownRequest implements DisposableBean {
      * Complete the shutdown sequence, optionally halting the runtime.
      *
      * @param mode 关停模式 / Shutdown mode
-     * @param haltRuntime 是否 halt 运行时 / Whether to halt the runtime
+     * @param haltRuntime 是否强制终止运行时 / whether to halt the runtime
      */
     public static void completeShutdown(ShutdownMode mode, boolean haltRuntime) {
         shutdownHook().completeShutdown(mode, haltRuntime);

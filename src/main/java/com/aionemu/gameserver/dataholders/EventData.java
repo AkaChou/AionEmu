@@ -152,7 +152,8 @@ public class EventData {
 	 *
 	 * event name
 	 *
-	 * @param eventName @return 若激活返回 true / true if the event is active
+	 * @param eventName
+	 * @return 若激活返回 true / true if the event is active
 	 */
 	public boolean Contains(String eventName) {
 		return activeEvents.containsKey(eventName);

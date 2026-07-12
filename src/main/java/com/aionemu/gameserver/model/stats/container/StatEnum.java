@@ -145,8 +145,8 @@ public enum StatEnum {
 	}
 
 	/**
-	 * @return 是否 main 或 subhandstat / 是否 main 或 subhandstat。 / Whether main or sub hand stat / Whether main or sub hand stat
-	 */
+	 * @return 是否为主手或副手属性。 / Whether main or sub hand stat
+	  */
 	public boolean isMainOrSubHandStat() {
 		switch (this) {
 		case MAGICAL_ATTACK:

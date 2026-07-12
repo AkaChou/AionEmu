@@ -28,7 +28,7 @@ public class Channel extends AdminCommand {
 	 * Toggles the {@code FACTION_CMD_CHANNEL} config flag.
 	 *
 	 * admin
-	 * on|off。 / on|off
+	 * on|off。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

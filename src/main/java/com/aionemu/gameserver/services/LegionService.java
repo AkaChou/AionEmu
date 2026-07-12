@@ -226,7 +226,8 @@ public class LegionService {
 	 * 仅当军团在缓存中时获取。
 	 * Gets a legion ONLY if he is in the cache
 	 *
-	 * @param legionId @return 军团，未缓存则为 null / Legion or null if not cached
+	 * @param legionId
+	 * @return 军团，未缓存则为 null / Legion or null if not cached
 	 */
 	private Legion getCachedLegion(int legionId) {
 		return this.allCachedLegions.get(legionId);
@@ -236,7 +237,8 @@ public class LegionService {
 	 * 仅当军团在缓存中时获取。
 	 * Gets a legion ONLY if he is in the cache
 	 *
-	 * @param legionName @return 军团，未缓存则为 null / Legion or null if not cached
+	 * @param legionName
+	 * @return 军团，未缓存则为 null / Legion or null if not cached
 	 */
 	private Legion getCachedLegion(String legionName) {
 		return this.allCachedLegions.get(legionName);
@@ -313,7 +315,8 @@ public class LegionService {
 	 *
 	 * Legion name
 	 *
-	 * @param legionName @return 军团实例；不存在时可能为 null / Legion instance, or null if missing
+	 * @param legionName
+	 * @return 军团实例；不存在时可能为 null / Legion instance, or null if missing
 	 */
 	public Legion getLegion(String legionName) {
 		/**
@@ -338,7 +341,7 @@ public class LegionService {
 		loadLegionInfo(legion);
 
 		/**
-	 * 添加我们的军团到缓存。 / Add our legion to the Cache
+	 * 将军团加入缓存。 / Add the legion to the cache.
 	 */
 		addCachedLegion(legion);
 
@@ -378,7 +381,7 @@ public class LegionService {
 		loadLegionInfo(legion);
 
 		/**
-	 * 添加我们的军团到缓存。 / Add our legion to the Cache
+	 * 将军团加入缓存。 / Add the legion to the cache.
 	 */
 		addCachedLegion(legion);
 
@@ -437,7 +440,8 @@ public class LegionService {
 	 *
 	 * Legion id
 	 *
-	 * @param legionId @return 团长 objectId；未找到时为 0 / Brigade general objectId, or 0 if not found
+	 * @param legionId
+	 * @return 团长 objectId；未找到时为 0 / Brigade general objectId, or 0 if not found
 	 */
 	public int getLegionBGeneral(int legionId) {
 		Legion legion = getLegion(legionId);
@@ -458,7 +462,8 @@ public class LegionService {
 	 *
 	 * Player object id
 	 *
-	 * @param playerObjId @return 军团成员，或 null / Legion member, or null
+	 * @param playerObjId
+	 * @return 军团成员，或 null / Legion member, or null
 	 */
 	public LegionMember getLegionMember(int playerObjId) {
 		LegionMember legionMember = null;
@@ -606,7 +611,7 @@ public class LegionService {
 			PacketSendUtility.broadcastPacketToLegion(legion,
 					new SM_LEGION_EDIT(0x05, (int) (System.currentTimeMillis() / 1000), ""));
 			/**
-	 * 添加创建并加入军团历史并并保存。 / Add create and joined legion history and save it
+	 * 添加并保存军团创建与加入历史。 / Add and save legion creation and join history.
 	 */
 			addHistory(legion, "", LegionHistoryType.CREATE);
 			addHistory(legion, activePlayer.getName(), LegionHistoryType.JOIN);
@@ -1074,7 +1079,8 @@ public class LegionService {
 	 * Target legion
 	 *
 	 * @param objExcluded 需排除的玩家 objectId，可为 null / Object id to exclude, or null
-	 * @param objExcluded @return 成员扩展列表 / Extended member list
+	 * @param objExcluded
+	 * @return 成员扩展列表 / Extended member list
 	 */
 	public ArrayList<LegionMemberEx> loadLegionMemberExList(Legion legion, Integer objExcluded) {
 		ArrayList<LegionMemberEx> legionMembers = new ArrayList<LegionMemberEx>();
@@ -1116,7 +1122,8 @@ public class LegionService {
 	 *
 	 * Target legion
 	 *
-	 * @param legion @return 在线旅长，或 null / Online brigade general, or null
+	 * @param legion
+	 * @return 在线旅长，或 null / Online brigade general, or null
 	 */
 	public Player getBrigadeGeneral(Legion legion) {
 		Player player = null;
@@ -1439,7 +1446,7 @@ public class LegionService {
 	 * current time
 	 * message
 	 *
-	 * @return true if announcement was successful saved. / true if announcement was successful saved.
+	 * @return true if announcement was successful saved.
 	 */
 	private boolean storeNewAnnouncement(int legionId, Timestamp currentTime, String message) {
 		return DAOManager.getDAO(LegionDAO.class).saveNewAnnouncement(legionId, currentTime, message);
@@ -1536,9 +1543,10 @@ public class LegionService {
 	 * 移除军团成员。
 	 * This method will remove a legion member
 	 *
-	 * character name
-	 *
-	 * @return 若 successful 则为 true / true if successful
+	 * @param charName 角色名称 / Character name
+	 * @param kick 是否由其他成员踢出 / Whether another member is kicking the character
+	 * @param playerName 操作者名称 / Acting player name
+	 * @return 移除成功时为 {@code true} / {@code true} if removed successfully
 	 */
 	private boolean removeLegionMember(String charName, boolean kick, String playerName) {
 		/**
@@ -1552,7 +1560,7 @@ public class LegionService {
 		}
 
 		/**
-	 * 删除军团成员从数据库并缓存。 / Delete legion member from database and cache
+	 * 从数据库和缓存中删除军团成员。 / Delete the legion member from the database and cache.
 	 */
 		deleteLegionMemberFromDB(legionMember);
 
@@ -1619,7 +1627,7 @@ public class LegionService {
 	 */
 		case LEGION_ACTION_KICK:
 			/**
-	 * 检查是否玩家可踢出。 / Check if player can be kicked
+	 * 检查玩家是否可被踢出军团。 / Check whether the player can be kicked from the legion.
 	 */
 			if (legionRestrictions.canKickPlayer(activePlayer, charName)) {
 				if (removeLegionMember(charName, true, activePlayer.getName())) {
@@ -1733,9 +1741,8 @@ public class LegionService {
 	 * 将玩家自身移出军团（不经 kick 流程），并清理加成图标。
 	 * Removes the player from their legion as a voluntary leave and clears bonus icons.
 	 *
-	 * Target player
-	 *
-	 * @param player 若 removed 则为 true / True if removed
+	 * @param player 目标玩家 / Target player
+	 * @return 移除成功时为 {@code true} / {@code true} if removed
 	 */
 	public boolean removePlayerFromLegionAsItself(Player player) {
 		if (removeLegionMember(player.getName(), false, "")) {
@@ -2017,7 +2024,8 @@ public class LegionService {
 	 *
 	 * @param activePlayer
 	 *
-	 * @param activePlayer @return 允许 / 成功则为 true / true if allowed to change legion level
+	 * @param activePlayer
+	 * @return 允许 / 成功则为 true / true if allowed to change legion level
 	 */
 		private boolean canChangeLevel(Player activePlayer) {
 			Legion legion = activePlayer.getLegion();
@@ -2116,7 +2124,8 @@ public class LegionService {
 	 *
 	 * @param activePlayer
 	 *
-	 * @param activePlayer @return 允许 / 成功则为 true / true if allowed to leave
+	 * @param activePlayer
+	 * @return 允许 / 成功则为 true / true if allowed to leave
 	 */
 		private boolean canLeave(Player activePlayer) {
 			if (isBrigadeGeneral(activePlayer)) {
@@ -2131,9 +2140,8 @@ public class LegionService {
 		 * 是否允许修改入团设置（仅旅长）。
 		 * Whether the player may change join settings (brigade general only).
 		 *
-		 * Acting player
-		 *
-		 * @param activePlayer 若 allowed 则为 true / True if allowed
+		 * @param activePlayer 操作玩家 / Acting player
+		 * @return 允许修改时为 {@code true} / {@code true} if allowed
 		 */
 		public boolean canChangeLegionJoinSetting(Player activePlayer) {
 			if (!isBrigadeGeneral(activePlayer)) {
@@ -2169,7 +2177,8 @@ public class LegionService {
 	 *
 	 * @param activePlayer
 	 *
-	 * @param activePlayer @return 允许 / 成功则为 true / true if allowed to upload emblem info
+	 * @param activePlayer
+	 * @return 允许 / 成功则为 true / true if allowed to upload emblem info
 	 */
 		private boolean canUploadEmblemInfo(Player activePlayer) {
 			if (!isBrigadeGeneral(activePlayer)) {
@@ -2190,7 +2199,8 @@ public class LegionService {
 	 *
 	 * @param activePlayer
 	 *
-	 * @param activePlayer @return 允许 / 成功则为 true / true if allowed to upload emblem
+	 * @param activePlayer
+	 * @return 允许 / 成功则为 true / true if allowed to upload emblem
 	 */
 		private boolean canUploadEmblem(Player activePlayer) {
 			if (!isBrigadeGeneral(activePlayer)) {
@@ -2210,9 +2220,8 @@ public class LegionService {
 		 * 是否允许打开军团仓库（成员状态、解散中、配置与占用锁）。
 		 * Whether the player may open the legion warehouse (membership, disband, config, lock).
 		 *
-		 * Acting player
-		 *
-		 * @param player 若 allowed 则为 true / True if allowed
+		 * @param player 操作玩家 / Acting player
+		 * @return 允许打开时为 {@code true} / {@code true} if allowed
 		 */
 		public boolean canOpenWarehouse(Player player) {
 			if (!player.isLegionMember()) {
@@ -2241,11 +2250,10 @@ public class LegionService {
 		 * 是否允许保存军团徽章（ID 范围、等级与基纳）。
 		 * Whether the player may store a legion emblem (id range, level and kinah).
 		 *
-		 * Acting player
-		 * Legion id
-		 * Emblem template id
-		 *
-		 * @return 若 allowed 则为 true / True if allowed
+		 * @param activePlayer 操作玩家 / Acting player
+		 * @param legionId 军团 ID / Legion ID
+		 * @param emblemId 徽章模板 ID / Emblem template ID
+		 * @return 允许保存时为 {@code true} / {@code true} if allowed
 		 */
 		public boolean canStoreLegionEmblem(Player activePlayer, int legionId, int emblemId) {
 			Legion legion = activePlayer.getLegion();
@@ -2267,7 +2275,7 @@ public class LegionService {
 		}
 
 		/**
-	 * 检查是否玩家为军团长并返回消息否则。 / Checks if player is brigade general and returns message if not
+	 * 检查玩家是否为军团长，否则返回提示消息。 / Check whether the player is the brigade general and return a message otherwise.
 	 *
 	 * @param player
 	 * @return

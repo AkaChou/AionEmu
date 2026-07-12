@@ -22,7 +22,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * Tempering 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,8 +30,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class TemperingAction extends AbstractItemAction {
 	
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (targetItem.getItemTemplate().getMaxAuthorize() == 0) {
@@ -163,7 +163,7 @@ public class TemperingAction extends AbstractItemAction {
 	}
 
 	/**
-	 * Check tempering / Check tempering
+	 * Check tempering
 	 */
 	public void checkTempering(Player player, Item item) {
 		if (item.getAuthorize() >= 5 && item.getAuthorize() <= 7) {
@@ -181,7 +181,7 @@ public class TemperingAction extends AbstractItemAction {
 	}
 
 	/**
-	 * @return Whether tempering success / Whether tempering success
+	 * @return Whether tempering success
 	 */
 	public boolean isTemperingSuccess(Player player, Item item) {
 		if (item.getItemTemplate().isBracelet()) {

@@ -42,7 +42,7 @@ public class AssultPod4AI2 extends AggressiveNpcAI2
 					spawn(297188, 636.82513f, 396.8799f, 688.8357f, (byte) 104);
 					spawn(297188, 623.8942f, 384.79068f, 688.8357f, (byte) 107);
 					spawn(297188, 621.5461f, 401.1501f, 688.86523f, (byte) 105);
-					// FXMon_Smoke. / FXMon_Smoke.
+					// FXMon_Smoke.
 					spawn(297352, 379.51096f, 395.966f, 688.8357f, (byte) 78);
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);

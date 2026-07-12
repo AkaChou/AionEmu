@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Disassembly 物品 Set 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author BeckUp.Media
  */

@@ -298,7 +298,8 @@ public class SpawnEngine {
 	 *
 	 * visible object
 	 *
-	 * @param visibleObject @throws IllegalArgumentException 位置为空时 / when position is null
+	 * @param visibleObject
+	 * @throws IllegalArgumentException 位置为空时 / when position is null
 	 */
 	public static void bringIntoWorld(VisibleObject visibleObject) {
 		if (visibleObject.getPosition() == null)

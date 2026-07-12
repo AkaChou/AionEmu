@@ -25,7 +25,7 @@ public class AssignViceCaptainEvent extends AbstractTeamPlayerEvent<PlayerAllian
 	}
 
 	/**
-	 * @return Check condition / Check condition
+	 * @return Check condition
 	 */
 	@Override
 	public boolean checkCondition() {

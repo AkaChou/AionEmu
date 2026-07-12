@@ -5,7 +5,7 @@ import com.aionemu.gameserver.utils.stats.ClassStats;
 
 /**
  * Calculated 玩家属性模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class CalculatedPlayerStatsTemplate extends PlayerStatsTemplate {

@@ -36,7 +36,8 @@ public class ReviveInstanceStartPointsData {
 	 *
 	 * 世界 ID / world id
 	 *
-	 * @param worldId @return 复活起始点，不存在则为 null / revive start point or null
+	 * @param worldId
+	 * @return 复活起始点，不存在则为 null / revive start point or null
 	 */
 	public InstanceReviveStartPoints getReviveStartPoint(int worldId) {
 		return custom.get(worldId);

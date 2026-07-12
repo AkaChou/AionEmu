@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	布鲁斯特豪宁漩涡 / Brusthonin Vortex 3.9
+	布鲁斯特豪宁不稳定裂缝 / Brusthonin Volatile Rift 4.9
+ -->
+<rift_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rift_schedule.xsd">
+	<!-- 埃尔特内 / ELTNEN -->
+	<rift id="210020000">
+	    <openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 赫伊隆 / HEIRON -->
+	<rift id="210040000">
+	    <openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 英吉斯温 / INGGISON -->
+	<rift id="210130000">
+	    <openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 希哥尼亚 / CYGNEA -->
+	<rift id="210070000">
+	    <openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 伊鲁玛 / ILUMA -->
+	<rift id="210100000">
+		<openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 莫尔海姆 / MORHEIM -->
+	<rift id="220020000">
+	    <openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 贝鲁斯兰 / BELUSLAN -->
+	<rift id="220040000">
+	    <openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 格尔克马洛斯 / GELKMAROS -->
+	<rift id="220140000">
+	    <openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 恩夏尔 / ENSHAR -->
+	<rift id="220080000">
+		<openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+	<!-- 诺斯普德 / NORSVOLD -->
+	<rift id="220110000">
+		<openTime>0 0 0/2 1/1 * ? *</openTime>
+	</rift>
+</rift_schedule>

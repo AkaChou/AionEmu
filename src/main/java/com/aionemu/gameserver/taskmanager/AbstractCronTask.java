@@ -113,7 +113,7 @@ public abstract class AbstractCronTask implements Runnable {
 	 * Initialize with a Cron expression and schedule the next run.
 	 *
 	 * Cron expression
-	 * Invalid expression。 / Invalid expression.
+	 * Invalid expression。
 	 * Expression is null
 	 */
 	public AbstractCronTask(String cronExpression) throws ParseException {
@@ -159,7 +159,7 @@ public abstract class AbstractCronTask implements Runnable {
 
 	/**
 	 * 若仍有延迟则再调度；否则执行 preRun / 任务 / 保存 / postRun。
-	 * task / save / postRun. / task / save / postRun.
+	 * task / save / postRun.
 	 */
 	@Override
 	public final void run() {

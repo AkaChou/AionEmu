@@ -162,8 +162,8 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 是否删除 delayed / 是否删除 delayed。 / Whether delete delayed / Whether delete delayed
-	 */
+	 * @return 是否删除 delayed。 / Whether delete delayed
+	  */
 	public boolean isDeleteDelayed() {
 		return isDespawnDelayed;
 	}
@@ -179,7 +179,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 生物是否正在施放技能。@return / Is creature casting some skill @return
+	 * @return 生物是否正在施放技能。 / Is creature casting some skill
 	 */
 	public boolean isCasting() {
 		return castingSkill != null;
@@ -199,14 +199,14 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 当前施放技能 ID。@return / Current casting skill id @return
+	 * @return 当前施放技能 ID。 / Current casting skill id
 	 */
 	public int getCastingSkillId() {
 		return castingSkill != null ? castingSkill.getSkillTemplate().getSkillId() : 0;
 	}
 
 	/**
-	 * @return 当前施放技能。@return / Current casting skill @return
+	 * @return 当前施放技能。 / Current casting skill
 	 */
 	public Skill getCastingSkill() {
 		return castingSkill;
@@ -238,7 +238,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 是否正在使用物品。@return / Is using item @return
+	 * @return 是否正在使用物品。 / Is using item
 	 */
 	public boolean isUsingItem() {
 		return usingItem != null;
@@ -265,21 +265,21 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 正在使用的物品。@return / Using Item @return
+	 * @return 正在使用的物品。 / Using Item
 	 */
 	public Item getUsingItem() {
 		return usingItem;
 	}
 
 	/**
-	 * @return 检查是否有禁用移动的异常效果。@return / All abnormal effects are checked that disable movements @return
+	 * @return 检查是否有禁用移动的异常效果。 / All abnormal effects are checked that disable movements
 	 */
 	public boolean canPerformMove() {
 		return !(getEffectController().isAbnormalState(AbnormalState.CANT_MOVE_STATE) || !isSpawned());
 	}
 
 	/**
-	 * @return 检查是否有禁用攻击的异常效果。@return / All abnormal effects are checked that disable attack @return
+	 * @return 检查是否有禁用攻击的异常效果。 / All abnormal effects are checked that disable attack
 	 */
 	public boolean canAttack() {
 		return !(getEffectController().isAbnormalState(AbnormalState.CANT_ATTACK_STATE) || isCasting()
@@ -342,8 +342,8 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param visualState 是否在 visualstate / 是否在 visualstate。 / Whether in visual state / Whether in visual state
-	 */
+	 * @param visualState 是否处于指定可视状态。 / Whether in visual state
+	  */
 	public boolean isInVisualState(CreatureVisualState visualState) {
 		int isVisualState = this.visualState & visualState.getId();
 
@@ -373,8 +373,8 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param seeState 是否在 seestate / 是否在 seestate。 / Whether in see state / Whether in see state
-	 */
+	 * @param seeState 是否处于指定可见状态。 / Whether in see state
+	  */
 	public boolean isInSeeState(CreatureSeeState seeState) {
 		int isSeeState = this.seeState & seeState.getId();
 
@@ -451,7 +451,11 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param creature 双重分发式方法。 / Double dispatch like method @param creature @return
+	 * 通过双重分派判断双方是否敌对。
+	 * Uses double dispatch to determine whether the creatures are enemies.
+	 *
+	 * @param creature 待检查生物 / creature to check
+	 * @return 双方敌对时为 true / true if the creatures are enemies
 	 */
 	public boolean isEnemy(Creature creature) {
 		return creature.isEnemyFrom(this);
@@ -486,7 +490,11 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param creature 双重分发式方法。 / Double dispatch like method @param creature @return
+	 * 通过双重分派判断当前生物是否会主动攻击目标。
+	 * Uses double dispatch to determine whether this creature is aggressive to the target.
+	 *
+	 * @param creature 待检查生物 / creature to check
+	 * @return 会主动攻击时为 true / true if this creature is aggressive to the target
 	 */
 	public boolean isAggressiveTo(Creature creature) {
 		return creature.isAggroFrom(this);
@@ -543,12 +551,12 @@ public abstract class Creature extends VisibleObject {
 		return creature.getVisualState() <= getSeeState();
 	}
 
-	/** 是否 see object / Whether see object */
+	/** 是否可看见对象 / Whether see object */
 	public boolean isSeeObject(VisibleObject object) {
 		return getKnownList().getVisibleObjects().containsKey(object.getObjectId());
 	}
 
-	/** 是否 see player / Whether see player */
+	/** 是否可看见玩家 / Whether see player */
 	public boolean isSeePlayer(Player player) {
 		return getKnownList().getVisiblePlayers().containsKey(player.getObjectId());
 	}
@@ -723,8 +731,8 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @return 是否在 flyingstate / 是否在 flyingstate。 / Whether in flying state / Whether in flying state
-	 */
+	 * @return 是否处于飞行状态。 / Whether in flying state
+	  */
 	public boolean isInFlyingState() {
 		return isInState(CreatureState.FLYING) && !isInState(CreatureState.RESTING);
 	}
@@ -734,7 +742,7 @@ public abstract class Creature extends VisibleObject {
 		return 0;
 	}
 
-	/** 是否 phys class / Whether phys class */
+	/** 是否为物理职业 / Whether phys class */
 	public boolean isPhysClass(Creature creature) {
 		if (creature instanceof Player) {
 			switch (((Player) creature).getPlayerClass()) {
@@ -752,7 +760,7 @@ public abstract class Creature extends VisibleObject {
 		return false;
 	}
 
-	/** 是否 magic class / Whether magic class */
+	/** 是否为魔法职业 / Whether magic class */
 	public boolean isMagicClass(Creature creature) {
 		if (creature instanceof Player) {
 			switch (((Player) creature).getPlayerClass()) {
@@ -770,8 +778,8 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param creature 是否 pvp 目标 / 是否 pvp 目标。 / Whether pvp target / Whether pvp target
-	 */
+	 * @param creature 是否为 PvP 目标。 / Whether pvp target
+	  */
 	public boolean isPvpTarget(Creature creature) {
 		return getActingCreature() instanceof Player && creature.getActingCreature() instanceof Player;
 	}
@@ -785,7 +793,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param zoneName Whether inside zone / Whether inside zone
+	 * @param zoneName Whether inside zone
 	 */
 	public boolean isInsideZone(ZoneName zoneName) {
 		if (!isSpawned()) {
@@ -806,7 +814,7 @@ public abstract class Creature extends VisibleObject {
 		zoneTypes[zoneType.getValue()] = (byte) (current - 1);
 	}
 
-	/** 是否 inside zone type / Whether inside zone type */
+	/** 是否处于指定区域类型 / Whether inside zone type */
 	public boolean isInsideZoneType(ZoneType zoneType) {
 		return zoneTypes[zoneType.getValue()] > 0;
 	}

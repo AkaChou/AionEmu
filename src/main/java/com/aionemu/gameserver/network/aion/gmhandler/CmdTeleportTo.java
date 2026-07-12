@@ -412,7 +412,7 @@ public class CmdTeleportTo extends AbstractGMHandler {
 			goTo(admin, 120020000, 1442, 1133, 302);
 
 		/**
-	 * 2.5 Maps / 2.5 Maps
+	 * 2.5 Maps
 	 */
 		else if (destination.equalsIgnoreCase("Kaisinel Academy"))
 			goTo(admin, 110070000, 459, 251, 128);

@@ -5,7 +5,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 管家（Butler）敬礼/互动动画相关的服务端包。
- * interaction animation. / interaction animation.
+ * interaction animation.
  *
  * @author Ranastic
  */

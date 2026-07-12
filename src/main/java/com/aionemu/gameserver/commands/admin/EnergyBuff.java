@@ -28,7 +28,7 @@ public class EnergyBuff extends AdminCommand {
 	 * Views, adds or resets repose/salvation energy on the target player, or refreshes stats.
 	 *
 	 * admin
-	 * repose|salvation|refresh and sub-action。 / repose|salvation|refresh and sub-action
+	 * repose|salvation|refresh and sub-action。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

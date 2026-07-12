@@ -27,7 +27,9 @@ public final class LogbackConfiguration {
 	 *
 	 * Logback LoggerContext
 	 *
-	 * @param context @throws JoranException 配置解析失败时 / When configuration parsing fails
+	 * @param context
+	 *
+	 * @throws JoranException 配置解析失败时 / When configuration parsing fails
 	 */
 	public static void configure(LoggerContext context) throws JoranException {
 		JoranConfigurator configurator = new JoranConfigurator();
@@ -42,7 +44,8 @@ public final class LogbackConfiguration {
 	 *
 	 * Configuration file URL
 	 *
-	 * @return @throws IllegalStateException 找不到配置文件时 / When no configuration file can be found
+	 * @return
+	 * @throws IllegalStateException 找不到配置文件时 / When no configuration file can be found
 	 */
 	public static URL resolveConfigUrl() {
 		String configuredPath = System.getProperty(CONFIG_PROPERTY);

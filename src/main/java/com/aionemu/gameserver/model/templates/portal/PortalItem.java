@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 传送门物品模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author AionChs Master
  * @author Schattenlilie

@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 登陆 Special 刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class LandingSpecialSpawnTemplate extends SpawnTemplate {
@@ -44,14 +44,14 @@ public class LandingSpecialSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether special landing active / Whether special landing active
+	 * @return Whether special landing active
 	 */
 	public final boolean isSpecialLandingActive() {
 		return landingSpecialType.equals(LandingSpecialStateType.ACTIVE);
 	}
 
 	/**
-	 * @return Whether special landing no active / Whether special landing no active
+	 * @return Whether special landing no active
 	 */
 	public final boolean isSpecialLandingNoActive() {
 		return landingSpecialType.equals(LandingSpecialStateType.NO_ACTIVE);

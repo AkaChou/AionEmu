@@ -75,7 +75,8 @@ public class ChargeSkillData {
 	 *
 	 * set name
 	 *
-	 * @param name @return 模板，不存在则为 null / template or null
+	 * @param name
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChargeSkillTemplate getChargeSkillTemplateBySetName(String name) {
 		return setName.get(name);
@@ -98,7 +99,8 @@ public class ChargeSkillData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 模板，不存在则为 null / template or null
+	 * @param skillId
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChargeSkillTemplate getChargeSkillTemplateTotal(int skillId) {
 		return totalTemplates.get(skillId);

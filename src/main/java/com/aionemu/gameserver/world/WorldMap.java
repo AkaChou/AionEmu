@@ -245,7 +245,8 @@ public class WorldMap {
 	 *
 	 * option
 	 *
-	 * @param option @return 已覆盖返回 true / true if overridden
+	 * @param option
+	 * @return 已覆盖返回 true / true if overridden
 	 */
 	public boolean hasOverridenOption(ZoneAttributes option) {
 		if ((worldMapTemplate.getFlags() & option.getId()) == 0) {

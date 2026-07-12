@@ -87,7 +87,7 @@ public class DropItem {
 		return playerObjIds;
 	}
 
-	/** 是否 view drop item / Whether view drop item */
+	/** 是否可查看掉落物 / Whether view drop item */
 	public boolean canViewDropItem(int objectId) {
 		return playerObjIds.isEmpty() || playerObjIds.contains(objectId);
 	}
@@ -194,8 +194,8 @@ public class DropItem {
 	}
 
 	/**
-	 * @param player 是否仅 possiblelooter / 是否仅 possiblelooter。 / Whether only possible looter / Whether only possible looter
-	 */
+	 * @param player 是否仅 possiblelooter。 / Whether only possible looter
+	  */
 	public boolean isOnlyPossibleLooter(Player player) {
 		return playerObjIds.size() == 1 && playerObjIds.contains(player.getObjectId());
 	}

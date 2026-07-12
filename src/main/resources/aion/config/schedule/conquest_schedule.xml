@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	征服／祭品 / Conquest/Offering 4.8
+    舒哥皇帝的宝库 / The Shugo Emperor's Vault 4.7.5
+	特里鲁内尔克皇帝的保险箱 / Emperor Trillirunerk's Safe 4.9.1
+	闷燃的火之神殿 / Smoldering Fire Temple 5.1
+	库穆奇洞穴 / Kumuki Cave 5.3
+	IDEvent_Def 5.6
+	提亚马兰塔之眼 / Tiamaranta's Eye 5.8
+ -->
+<conquest_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="conquest_schedule.xsd">
+	<!-- [征服／祭品 / CONQUEST/OFFERING 4.8] -->
+	<!-- [英吉斯温 / INGGISON] -->
+	<conquest id="1">
+		<offeringTime>0 0 13 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 18 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 23 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 4 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 9 ? * MON-SUN *</offeringTime>
+	</conquest>
+	<!-- [格尔克马洛斯 / GELKMAROS] -->
+	<conquest id="2">
+		<offeringTime>0 0 13 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 18 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 23 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 4 ? * MON-SUN *</offeringTime>
+		<offeringTime>0 0 9 ? * MON-SUN *</offeringTime>
+	</conquest>
+	
+	<!-- [舒哥皇帝的宝库 / THE SHUGO EMPEROR VAULT 4.7.5 - 极乐世界 / Sanctum] -->
+	<conquest id="3">
+		<offeringTime>0 0 15 ? * MON *</offeringTime>
+		<offeringTime>0 0 20 ? * MON *</offeringTime>
+		<offeringTime>0 0 1 ? * MON *</offeringTime>
+		<offeringTime>0 0 6 ? * MON *</offeringTime>
+		<offeringTime>0 0 11 ? * MON *</offeringTime>
+	</conquest>
+	<!-- [特里鲁内尔克皇帝的保险箱 / EMPEROR TRILLIRUNERK SAFE 4.9.1 - 极乐世界 / Sanctum] -->
+	<conquest id="4">
+		<offeringTime>0 0 17 ? * TUE *</offeringTime>
+		<offeringTime>0 0 22 ? * TUE *</offeringTime>
+		<offeringTime>0 0 3 ? * TUE *</offeringTime>
+		<offeringTime>0 0 8 ? * TUE *</offeringTime>
+		<offeringTime>0 0 13 ? * TUE *</offeringTime>
+	</conquest>
+	<!-- [闷燃的火之神殿 / SMOLDERING FIRE TEMPLE 5.1 - 极乐世界 / Sanctum] -->
+	<conquest id="5">
+		<offeringTime>0 0 19 ? * WED *</offeringTime>
+		<offeringTime>0 0 0 ? * WED *</offeringTime>
+		<offeringTime>0 0 5 ? * WED *</offeringTime>
+		<offeringTime>0 0 10 ? * WED *</offeringTime>
+		<offeringTime>0 0 15 ? * WED *</offeringTime>
+	</conquest>
+	<!-- [库穆奇洞穴 / KUMUKI CAVE 5.3 - 极乐世界 / Sanctum] -->
+	<conquest id="6">
+		<offeringTime>0 0 21 ? * THU *</offeringTime>
+		<offeringTime>0 0 2 ? * THU *</offeringTime>
+		<offeringTime>0 0 7 ? * THU *</offeringTime>
+		<offeringTime>0 0 12 ? * THU *</offeringTime>
+		<offeringTime>0 0 17 ? * THU *</offeringTime>
+	</conquest>
+	<!-- [IDEvent_Def 5.6 - 极乐世界 / Sanctum] -->
+	<conquest id="11">
+		<offeringTime>0 0 15 ? * FRI,SAT *</offeringTime>
+		<offeringTime>0 0 20 ? * FRI,SAT *</offeringTime>
+		<offeringTime>0 0 1 ? * FRI,SAT *</offeringTime>
+		<offeringTime>0 0 6 ? * FRI,SAT *</offeringTime>
+		<offeringTime>0 0 11 ? * FRI,SAT *</offeringTime>
+	</conquest>
+	<!-- [提亚马兰塔之眼 / Tiamaranta's Eye 5.8 - 极乐世界 / Sanctum] -->
+	<conquest id="13">
+		<offeringTime>0 0 0/4 1/1 * ? *</offeringTime>
+	</conquest>
+	
+	<!-- [舒哥皇帝的宝库 / THE SHUGO EMPEROR VAULT 4.7.5 - 伏魔殿 / Pandaemonium] -->
+	<conquest id="7">
+		<offeringTime>0 0 15 ? * MON *</offeringTime>
+		<offeringTime>0 0 20 ? * MON *</offeringTime>
+		<offeringTime>0 0 1 ? * MON *</offeringTime>
+		<offeringTime>0 0 6 ? * MON *</offeringTime>
+		<offeringTime>0 0 11 ? * MON *</offeringTime>
+	</conquest>
+	<!-- [特里鲁内尔克皇帝的保险箱 / EMPEROR TRILLIRUNERK SAFE 4.9.1 - 伏魔殿 / Pandaemonium] -->
+	<conquest id="8">
+		<offeringTime>0 0 17 ? * TUE *</offeringTime>
+		<offeringTime>0 0 22 ? * TUE *</offeringTime>
+		<offeringTime>0 0 3 ? * TUE *</offeringTime>
+		<offeringTime>0 0 8 ? * TUE *</offeringTime>
+		<offeringTime>0 0 13 ? * TUE *</offeringTime>
+	</conquest>
+	<!-- [闷燃的火之神殿 / SMOLDERING FIRE TEMPLE 5.1 - 伏魔殿 / Pandaemonium] -->
+	<conquest id="9">
+		<offeringTime>0 0 19 ? * WED *</offeringTime>
+		<offeringTime>0 0 0 ? * WED *</offeringTime>
+		<offeringTime>0 0 5 ? * WED *</offeringTime>
+		<offeringTime>0 0 10 ? * WED *</offeringTime>
+		<offeringTime>0 0 15 ? * WED *</offeringTime>
+	</conquest>
+	<!-- [库穆奇洞穴 / KUMUKI CAVE 5.3 - 伏魔殿 / Pandaemonium] -->
+	<conquest id="10">
+		<offeringTime>0 0 21 ? * THU *</offeringTime>
+		<offeringTime>0 0 2 ? * THU *</offeringTime>
+		<offeringTime>0 0 7 ? * THU *</offeringTime>
+		<offeringTime>0 0 12 ? * THU *</offeringTime>
+		<offeringTime>0 0 17 ? * THU *</offeringTime>
+	</conquest>
+	<!-- [IDEvent_Def 5.6 - 伏魔殿 / Pandaemonium] -->
+	<conquest id="12">
+		<offeringTime>0 0 15 ? * FRI,SAT *</offeringTime>
+		<offeringTime>0 0 20 ? * FRI,SAT *</offeringTime>
+		<offeringTime>0 0 1 ? * FRI,SAT *</offeringTime>
+		<offeringTime>0 0 6 ? * FRI,SAT*</offeringTime>
+		<offeringTime>0 0 11 ? * FRI,SAT *</offeringTime>
+	</conquest>
+	<!-- [提亚马兰塔之眼 / Tiamaranta's Eye 5.8 - 伏魔殿 / Pandaemonium] -->
+	<conquest id="14">
+		<offeringTime>0 0 0/4 1/1 * ? *</offeringTime>
+	</conquest>
+</conquest_schedule>

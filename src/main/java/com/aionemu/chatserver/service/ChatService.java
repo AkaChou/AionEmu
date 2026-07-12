@@ -69,9 +69,12 @@ public class ChatService {
      * Login account
      * Nickname
      *
-     * @param playerId @return 聊天客户端对象 / Chat client
-     * @param playerLogin @throws NoSuchAlgorithmException 摘要算法不可用 / Digest algorithm unavailable
-     * @param nick @throws UnsupportedEncodingException 字符编码不支持 / Encoding unsupported
+     * @param playerId
+     * @return 聊天客户端对象 / Chat client
+     * @param playerLogin
+     * @throws NoSuchAlgorithmException 摘要算法不可用 / Digest algorithm unavailable
+     * @param nick
+     * @throws UnsupportedEncodingException 字符编码不支持 / Encoding unsupported
      */
     public ChatClient registerPlayer(int playerId, String playerLogin, String nick) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -114,7 +117,7 @@ public class ChatService {
      * Identifier bytes
      * @param channelHandler 通道处理器 / Channel handler
      * @param realName 真实角色名 / Real character name
-     * Encoding unsupported。 / Encoding unsupported.
+     * Encoding unsupported。
      */
     public void registerPlayerConnection(int playerId, byte[] token, byte[] identifier, ClientChannelHandler channelHandler, String realName) throws UnsupportedEncodingException {
         ChatClient chatClient = players.get(playerId);

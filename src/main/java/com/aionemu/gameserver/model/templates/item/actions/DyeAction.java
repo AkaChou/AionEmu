@@ -17,7 +17,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * Dye 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -33,8 +33,8 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 	private boolean custom;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (targetItem == null) {
@@ -107,8 +107,8 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 	}
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	public boolean canAct(Player player, Item parentItem, HouseObject<?> targetHouseObject) {
 		if (targetHouseObject == null) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);

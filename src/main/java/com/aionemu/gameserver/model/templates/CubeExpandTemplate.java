@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.templates.expand.Expand;
 
 /**
  * 魔立方 Expand 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Simple
  */

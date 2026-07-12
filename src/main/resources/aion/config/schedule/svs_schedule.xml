@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	[S.V.S 潘格亚 / Panesterra]
+	极乐世界 / Sanctum 4.7
+ -->
+<svs_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="svs_schedule.xsd">
+	<!-- [SVS 极乐世界 / SANCTUM] -->
+	<!-- 极乐世界 / SANCTUM -->
+	<svs id="1">
+		<svsTime>0 0 6 ? * MON-SUN *</svsTime>
+	</svs>
+	<!-- [SVS 凯西内尔学院 / KAISINEL ACADEMY] -->
+	<!-- 移动至凯西内尔训练所 / Move to Kaisinel Academy -->
+	<svs id="2">
+		<svsTime>0 0 6 ? * MON-SUN *</svsTime>
+	</svs>
+	<!-- [SVS 伏魔殿 / PANDAEMONIUM] -->
+	<!-- 伏魔殿 / PANDAEMONIUM -->
+	<svs id="3">
+		<svsTime>0 0 6 ? * MON-SUN *</svsTime>
+	</svs>
+	<!-- [SVS 马尔库坦修道院 / MARCHUTAN PRIORY] -->
+	<!-- 使用后前往马尔库坦 / Use to move to Marchutan -->
+	<svs id="4">
+		<svsTime>0 0 6 ? * MON-SUN *</svsTime>
+	</svs>
+	<!-- [SVS 跨界附属区 / TRANSIDIUM ANNEX] -->
+	<svs id="5">
+		<svsTime>0 0 6 ? * MON-SUN *</svsTime>
+	</svs>
+</svs_schedule>

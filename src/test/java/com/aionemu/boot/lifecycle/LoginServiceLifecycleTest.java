@@ -29,7 +29,7 @@ class LoginServiceLifecycleTest {
 
     @AfterEach
     void clearProperties() {
-        System.clearProperty("aion.login.config.dir");
+        System.clearProperty("aion.config.dir");
         System.clearProperty("aion.login.data.dir");
     }
 
@@ -158,7 +158,7 @@ class LoginServiceLifecycleTest {
     }
 
     private void configureLoginPaths() {
-        System.setProperty("aion.login.config.dir", loginConfig.toString());
+        System.setProperty("aion.config.dir", loginConfig.toString());
         System.setProperty("aion.login.data.dir", loginData.toString());
     }
 

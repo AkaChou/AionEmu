@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.templates.item.ItemQuality;
 
 /**
  * 抽象房屋对象模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

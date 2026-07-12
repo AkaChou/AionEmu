@@ -10,22 +10,22 @@ public enum InstanceCoolTimeType {
 	RELATIVE, WEEKLY, DAILY;
 
 	/**
-	 * @return Whether relative / Whether relative
+	 * @return Whether relative
 	 */
 	public boolean isRelative() {
 		return this.equals(InstanceCoolTimeType.RELATIVE);
 	}
 
 	/**
-	 * @return Whether weekly / Whether weekly
+	 * @return Whether weekly
 	 */
 	public boolean isWeekly() {
 		return this.equals(InstanceCoolTimeType.WEEKLY);
 	}
 
 	/**
-	 * @return 是否 daily / 是否 daily。 / Whether daily / Whether daily
-	 */
+	 * @return 是否为每日类型。 / Whether daily
+	  */
 	public boolean isDaily() {
 		return this.equals(InstanceCoolTimeType.DAILY);
 	}

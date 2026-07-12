@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 势力战刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -51,7 +51,7 @@ public class SvsSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether svs peace / Whether svs peace
+	 * @return Whether svs peace
 	 */
 	public final boolean isSvsPeace() {
 		return svsType.equals(SvsStateType.PEACE);

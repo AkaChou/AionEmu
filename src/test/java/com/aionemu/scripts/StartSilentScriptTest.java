@@ -56,15 +56,15 @@ class StartSilentScriptTest {
     @Test
     void startSilentCopiesMissingRuntimeResourcesWithoutOverwritingExistingFiles() throws Exception {
         Path root = prepareRuntimeRoot();
-        Path sourceGameConfig = root.resolve("src/main/resources/aion/game/config/main/gameserver.properties");
-        Path sourceLoginConfig = root.resolve("src/main/resources/aion/login/config/network/database.properties");
+        Path sourceGameConfig = root.resolve("src/main/resources/aion/config/main/gameserver.properties");
+        Path sourceLoginConfig = root.resolve("src/main/resources/aion/config/login/database.properties");
         Path sourceLogback = root.resolve("src/main/resources/logback-spring.xml");
         Files.createDirectories(sourceGameConfig.getParent());
         Files.createDirectories(sourceLoginConfig.getParent());
         Files.writeString(sourceGameConfig, "default-game");
         Files.writeString(sourceLoginConfig, "default-login");
         Files.writeString(sourceLogback, "default-logback");
-        Path runtimeGameConfig = root.resolve("aion/game/config/main/gameserver.properties");
+        Path runtimeGameConfig = root.resolve("aion/config/main/gameserver.properties");
         Files.createDirectories(runtimeGameConfig.getParent());
         Files.writeString(runtimeGameConfig, "custom-game");
 
@@ -72,20 +72,20 @@ class StartSilentScriptTest {
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("custom-game", Files.readString(runtimeGameConfig));
-        assertEquals("default-login", Files.readString(root.resolve("aion/login/config/network/database.properties")));
+        assertEquals("default-login", Files.readString(root.resolve("aion/config/login/database.properties")));
         assertEquals("default-logback", Files.readString(root.resolve("aion/log/logback-spring.xml")));
     }
 
     @Test
     void packageCopiesGeoJarAndScriptsIntoAionDirectory() throws Exception {
         Path root = prepareRuntimeRoot();
-        Path sourceGeo = root.resolve("src/main/resources/aion/game/geo/100.geo");
-        Path sourceConfig = root.resolve("src/main/resources/aion/game/config/main/gameserver.properties");
+        Path sourceGeo = root.resolve("src/main/resources/aion/geo/100.geo");
+        Path sourceConfig = root.resolve("src/main/resources/aion/config/main/gameserver.properties");
         Files.createDirectories(sourceGeo.getParent());
         Files.createDirectories(sourceConfig.getParent());
         Files.writeString(sourceGeo, "geo");
         Files.writeString(sourceConfig, "default-config");
-        Path runtimeConfig = root.resolve("aion/game/config/main/gameserver.properties");
+        Path runtimeConfig = root.resolve("aion/config/main/gameserver.properties");
         Files.createDirectories(runtimeConfig.getParent());
         Files.writeString(runtimeConfig, "custom-config");
 
@@ -93,7 +93,7 @@ class StartSilentScriptTest {
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
-        assertEquals("geo", Files.readString(root.resolve("aion/game/geo/100.geo")));
+        assertEquals("geo", Files.readString(root.resolve("aion/geo/100.geo")));
         assertEquals("default-config", Files.readString(runtimeConfig));
         assertTrue(Files.isExecutable(root.resolve("aion/start-silent.sh")));
         assertTrue(Files.isExecutable(root.resolve("aion/stop-silent.sh")));
@@ -114,9 +114,9 @@ class StartSilentScriptTest {
     @Test
     void rePackageKeepsExistingConfigAndCopiesMissingConfig() throws Exception {
         Path root = prepareRuntimeRoot();
-        Path sourceGameConfig = root.resolve("src/main/resources/aion/game/config/main/gameserver.properties");
-        Path sourceLoginConfig = root.resolve("src/main/resources/aion/login/config/network/database.properties");
-        Path sourceGeo = root.resolve("src/main/resources/aion/game/geo/100.geo");
+        Path sourceGameConfig = root.resolve("src/main/resources/aion/config/main/gameserver.properties");
+        Path sourceLoginConfig = root.resolve("src/main/resources/aion/config/login/database.properties");
+        Path sourceGeo = root.resolve("src/main/resources/aion/geo/100.geo");
         Path sourceLogback = root.resolve("src/main/resources/logback-spring.xml");
         Files.createDirectories(sourceGameConfig.getParent());
         Files.createDirectories(sourceLoginConfig.getParent());
@@ -125,7 +125,7 @@ class StartSilentScriptTest {
         Files.writeString(sourceLoginConfig, "default-login");
         Files.writeString(sourceGeo, "new-geo");
         Files.writeString(sourceLogback, "default-logback");
-        Path runtimeGameConfig = root.resolve("aion/game/config/main/gameserver.properties");
+        Path runtimeGameConfig = root.resolve("aion/config/main/gameserver.properties");
         Path runtimeLogback = root.resolve("aion/log/logback-spring.xml");
         Files.createDirectories(runtimeGameConfig.getParent());
         Files.createDirectories(runtimeLogback.getParent());
@@ -136,8 +136,8 @@ class StartSilentScriptTest {
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("custom-game", Files.readString(runtimeGameConfig));
-        assertEquals("default-login", Files.readString(root.resolve("aion/login/config/network/database.properties")));
-        assertEquals("new-geo", Files.readString(root.resolve("aion/game/geo/100.geo")));
+        assertEquals("default-login", Files.readString(root.resolve("aion/config/login/database.properties")));
+        assertEquals("new-geo", Files.readString(root.resolve("aion/geo/100.geo")));
         assertEquals("custom-logback", Files.readString(runtimeLogback));
         assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
     }

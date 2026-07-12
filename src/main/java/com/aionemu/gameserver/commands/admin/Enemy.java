@@ -27,7 +27,7 @@ public class Enemy extends AdminCommand {
 	 * Toggles enmity appearance toward players, NPCs, all, or cancels it.
 	 *
 	 * admin
-	 * players|npcs|all|cancel|help。 / players|npcs|all|cancel|help
+	 * players|npcs|all|cancel|help。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

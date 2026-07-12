@@ -83,7 +83,8 @@ public class SimpleAttackManager {
 	 *
 	 * attacking NPC
 	 *
-	 * @param npc @return 在射程内为 {@code true} / {@code true} if in attack range
+	 * @param npc
+	 * @return 在射程内为 {@code true} / {@code true} if in attack range
 	 */
     public static boolean isTargetInAttackRange(Npc npc) {
     if (npc == null) {

@@ -77,7 +77,7 @@ public class QuestHandlerLoader implements ClassListener {
 	 * Whether a class is loadable as a quest handler (public, non-abstract, non-interface).
 	 *
 	 * @param clazz 待检查类 / Class under inspection
-	 * @return {@code true} when valid。 / {@code true} when valid
+	 * @return {@code true} when valid。
 	 */
 	public boolean isValidClass(Class<?> clazz) {
 		final int modifiers = clazz.getModifiers();

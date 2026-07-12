@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.autogroup;
 import java.util.List;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import lombok.Getter;
 
 /**
  * 自动队伍类型枚举。
@@ -765,9 +766,13 @@ public enum AutoGroupType {
 		}
 	};
 
+	@Getter
 	private int instanceMaskId;
+	@Getter
 	private int time;
+	@Getter
 	private byte playerSize;
+	@Getter
 	private byte difficultId;
 	private AutoGroup template;
 
@@ -788,16 +793,6 @@ public enum AutoGroupType {
 		return template.getInstanceId();
 	}
 
-	/** 返回玩家大小 / Returns the player size*/
-	public byte getPlayerSize() {
-		return playerSize;
-	}
-
-	/** 返回副本掩码 ID / Returns the instance mask id */
-	public int getInstanceMaskId() {
-		return instanceMaskId;
-	}
-
 	/** 返回名称 ID / Returns the name id */
 	public int getNameId() {
 		return template.getNameId();
@@ -806,11 +801,6 @@ public enum AutoGroupType {
 	/** 返回标题 ID / Returns the title id */
 	public int getTitleId() {
 		return template.getTitleId();
-	}
-
-	/** 返回时间 / Returns the time*/
-	public int getTime() {
-		return time;
 	}
 
 	/** 获取最小等级。 / Returns the min level. */
@@ -834,7 +824,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether special purpose / Whether special purpose
+	 * @return Whether special purpose
 	 */
 	public boolean hasSpecialPurpose() {
 		return template.hasSpecialPurpose();
@@ -869,7 +859,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether asyunatar / Whether asyunatar
+	 * @return Whether asyunatar
 	 */
 	public boolean isAsyunatar() {
 		switch (this) {
@@ -882,8 +872,8 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return 是否 kamar / 是否 kamar。 / Whether kamar / Whether kamar
-	 */
+	 * @return 是否为 Kamar 类型。 / Whether kamar
+	  */
 	public boolean isKamar() {
 		switch (this) {
 		case KAMAR_BATTLEFIELD:
@@ -895,7 +885,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether ophidan / Whether ophidan
+	 * @return Whether ophidan
 	 */
 	public boolean isOphidan() {
 		switch (this) {
@@ -908,7 +898,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether suspicious ophidan / Whether suspicious ophidan
+	 * @return Whether suspicious ophidan
 	 */
 	public boolean isSuspiciousOphidan() {
 		switch (this) {
@@ -921,7 +911,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether bastion / Whether bastion
+	 * @return Whether bastion
 	 */
 	public boolean isBastion() {
 		switch (this) {
@@ -934,7 +924,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether idgel dome / Whether idgel dome
+	 * @return Whether idgel dome
 	 */
 	public boolean isIdgelDome() {
 		switch (this) {
@@ -947,7 +937,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether idgel dome landmark / Whether idgel dome landmark
+	 * @return Whether idgel dome landmark
 	 */
 	public boolean isIdgelDomeLandmark() {
 		switch (this) {
@@ -960,8 +950,8 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return 是否 hall 的 tenacity / 是否 hall 的 tenacity。 / Whether hall of tenacity / Whether hall of tenacity
-	 */
+	 * @return 是否为黄金神庙训练所。 / Whether hall of tenacity
+	  */
 	public boolean isHallOfTenacity() {
 		switch (this) {
 		case HALL_OF_TENACITY:
@@ -973,7 +963,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether grand arena training camp / Whether grand arena training camp
+	 * @return Whether grand arena training camp
 	 */
 	public boolean isGrandArenaTrainingCamp() {
 		switch (this) {
@@ -986,8 +976,8 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return 是否 idrun / 是否 idrun。 / Whether id run / Whether id run
-	 */
+	 * @return 是否为 IDRun 类型。 / Whether id run
+	  */
 	public boolean isIDRun() {
 		switch (this) {
 		case IDRUN:
@@ -1038,7 +1028,7 @@ public enum AutoGroupType {
 		return null;
 	}
 
-	/** 是否 pv p solo arena / Whether pv p solo arena */
+	/** 是否为单人 PvP 竞技场 / Whether pv p solo arena */
 	public boolean isPvPSoloArena() {
 		switch (this) {
 		case ARENA_OF_DISCIPLINE_46_60_1:
@@ -1053,7 +1043,7 @@ public enum AutoGroupType {
 		return false;
 	}
 
-	/** 是否 training pv p solo arena / Whether training pv p solo arena */
+	/** 是否为单人 PvP 修炼场 / Whether training pv p solo arena */
 	public boolean isTrainingPvPSoloArena() {
 		switch (this) {
 		case DISCIPLINE_TRAINING_GROUNDS_46_60_1:
@@ -1069,7 +1059,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether pv pffa arena / Whether pv pffa arena
+	 * @return Whether pv pffa arena
 	 */
 	public boolean isPvPFFAArena() {
 		switch (this) {
@@ -1086,7 +1076,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether training pv pffa arena / Whether training pv pffa arena
+	 * @return Whether training pv pffa arena
 	 */
 	public boolean isTrainingPvPFFAArena() {
 		switch (this) {
@@ -1103,7 +1093,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether training harmony arena / Whether training harmony arena
+	 * @return Whether training harmony arena
 	 */
 	public boolean isTrainingHarmonyArena() {
 		switch (this) {
@@ -1125,7 +1115,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether harmony arena / Whether harmony arena
+	 * @return Whether harmony arena
 	 */
 	public boolean isHarmonyArena() {
 		switch (this) {
@@ -1142,7 +1132,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether glory arena / Whether glory arena
+	 * @return Whether glory arena
 	 */
 	public boolean isGloryArena() {
 		switch (this) {
@@ -1157,7 +1147,7 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @return Whether pvp arena / Whether pvp arena
+	 * @return Whether pvp arena
 	 */
 	public boolean isPvpArena() {
 		return isHarmonyArena() || isTrainingHarmonyArena() || isTrainingPvPFFAArena() || isPvPFFAArena()
@@ -1165,15 +1155,10 @@ public enum AutoGroupType {
 	}
 
 	/**
-	 * @param level Whether level permit / Whether level permit
+	 * @param level Whether level permit
 	 */
 	public boolean hasLevelPermit(int level) {
 		return level >= getMinLevel() && level <= getMaxLevel();
-	}
-
-	/** 返回 difficult id / Returns the difficult id */
-	public byte getDifficultId() {
-		return difficultId;
 	}
 
 	/** 获取自动副本。 / Returns the auto instance. */

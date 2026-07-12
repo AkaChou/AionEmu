@@ -120,8 +120,8 @@ public class PlayerSettings {
 	}
 
 	/**
-	 * @param deny 是否在 deniedstatus / 是否在 deniedstatus。 / Whether in denied status / Whether in denied status
-	 */
+	 * @param deny 是否处于指定拒绝状态。 / Whether in denied status
+	  */
 	public boolean isInDeniedStatus(DeniedStatus deny) {
 		int isDeniedStatus = this.deny & deny.getId();
 

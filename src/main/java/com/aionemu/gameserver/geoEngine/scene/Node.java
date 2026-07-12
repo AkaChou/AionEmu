@@ -106,7 +106,7 @@ public class Node extends Spatial implements Cloneable {
 	 *
 	 * @param child 待挂载子节点 / child to attach
 	 * @return 挂载后的子节点数量 / number of children maintained after attach
-	 * if child is null。 / if child is null.
+	 * if child is null。
 	 */
 	public int attachChild(Spatial child) {
 		if (child == null) {
@@ -130,7 +130,7 @@ public class Node extends Spatial implements Cloneable {
 	 * @param child 待挂载子节点 / child to attach
 	 * @param index 插入索引 / insert index
 	 * @return 挂载后的子节点数量 / number of children maintained after attach
-	 * if child is null。 / if child is null.
+	 * if child is null。
 	 */
 	public int attachChildAt(Spatial child, int index) {
 		if (child == null) {

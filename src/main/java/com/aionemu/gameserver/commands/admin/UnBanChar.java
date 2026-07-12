@@ -29,7 +29,7 @@ public class UnBanChar extends AdminCommand {
 	 * Unbans a character by name.
 	 *
 	 * @param admin 执行 GM / Admin player
-	 * @param params &lt;player&gt;。 / &lt;player&gt;
+	 * @param params &lt;player&gt;。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

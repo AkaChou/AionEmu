@@ -121,7 +121,7 @@ public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunctio
 	}
 
 	/**
-	 * @return Whether conditions / Whether conditions
+	 * @return Whether conditions
 	 */
 	@Override
 	public boolean hasConditions() {

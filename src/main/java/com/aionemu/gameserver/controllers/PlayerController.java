@@ -957,7 +957,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 获取所有者玩家。
 	 * Gets the owner player.
 	 *
-	 * @return 所有者玩家 / owner player / 所有者玩家 / owner player
+	 * @return 所有者玩家 / owner player
 	 */
 	@Override
 	public Player getOwner() {
@@ -993,7 +993,8 @@ public class PlayerController extends CreatureController<Player> {
 	 *
 	 * opponent player
 	 *
-	 * @param player @return 决斗中则为 true / true if dueling / 决斗中则为 true / true if dueling
+	 * @param player
+	 * @return 决斗中则为 true / true if dueling
 	 */
 	public boolean isDueling(Player player) {
 		return GameGameplayServices.duelService().isDueling(player.getObjectId(), getOwner().getObjectId());
@@ -1003,7 +1004,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 服务器是否处于关闭流程中。
 	 * Whether the server is in shutdown progress.
 	 *
-	 * @return 关闭中则为 true / true if shutting down / 关闭中则为 true / true if shutting down
+	 * @return 关闭中则为 true / true if shutting down
 	 */
 	public boolean isInShutdownProgress() {
 		return isInShutdownProgress;
@@ -1240,7 +1241,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * item id
 	 * count
 	 *
-	 * @return whether successful / 是否成功 / whether successful。 / whether successful / 是否成功 / whether successful
+	 * @return whether successful / 是否成功 / whether successful。
 	 */
 	public boolean addItems(int itemId, int count) {
 		return ItemService.addQuestItems(getOwner(), Collections.singletonList(new QuestItems(itemId, count)));
@@ -1271,7 +1272,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 获取当前姿态技能 ID。
 	 * Gets the current stance skill id.
 	 *
-	 * @return stance skill id / 姿态技能 ID / stance skill id。 / stance skill id / 姿态技能 ID / stance skill id
+	 * @return stance skill id / 姿态技能 ID / stance skill id。
 	 */
 	public int getStanceSkillId() {
 		return stance;
@@ -1281,7 +1282,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 是否处于姿态中。
 	 * Whether currently under stance.
 	 *
-	 * @return 处于姿态则为 true / true if under stance / 处于姿态则为 true / true if under stance
+	 * @return 处于姿态则为 true / true if under stance
 	 */
 	public boolean isUnderStance() {
 		return stance != 0;
@@ -1333,7 +1334,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 是否有无死亡惩罚效果。
 	 * Whether a no-death-penalty effect is active.
 	 *
-	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoDeathPenaltyInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
@@ -1350,7 +1351,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 是否有无死亡惩罚减免效果。
 	 * Whether a no-death-penalty-reduce effect is active.
 	 *
-	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoDeathPenaltyReduceInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
@@ -1367,7 +1368,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 是否有死亡惩罚减免效果。
 	 * Whether a death-penalty-reduce effect is active.
 	 *
-	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isDeathPenaltyReduceInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
@@ -1384,7 +1385,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 是否有无复活惩罚效果。
 	 * Whether a no-resurrect-penalty effect is active.
 	 *
-	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoResurrectPenaltyInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();
@@ -1401,7 +1402,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * 是否有 HiPass 效果。
 	 * Whether a HiPass effect is active.
 	 *
-	 * @return true if active / 有效则为 true / true if active。 / true if active / 有效则为 true / true if active
+	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isHiPassInEffect() {
 		Iterator<Effect> iterator = getOwner().getEffectController().iterator();

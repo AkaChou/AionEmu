@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.TribeClass;
 
 /**
  * 全局掉落部落模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Wnkrz
  */

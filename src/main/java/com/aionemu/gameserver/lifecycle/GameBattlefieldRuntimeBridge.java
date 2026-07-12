@@ -188,7 +188,7 @@ public class GameBattlefieldRuntimeBridge {
      * 自动组队是否启用。
      * Whether auto-group is enabled.
      *
-     * @return {@code true} if enabled。 / {@code true} if enabled
+     * @return {@code true} if enabled。
      */
     public boolean isAutoGroupEnabled() {
         return AutoGroupConfig.AUTO_GROUP_ENABLED;

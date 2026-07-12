@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 要塞刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author xTz
  */
@@ -70,8 +70,8 @@ public class SiegeSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return 是否 peace / 是否 peace。 / Whether peace / Whether peace
-	 */
+	 * @return 是否处于和平状态。 / Whether peace
+	  */
 	public final boolean isPeace() {
 		return siegeModType.equals(SiegeModType.PEACE);
 	}
@@ -82,7 +82,7 @@ public class SiegeSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether assault / Whether assault
+	 * @return Whether assault
 	 */
 	public final boolean isAssault() {
 		return siegeModType.equals(SiegeModType.ASSAULT);

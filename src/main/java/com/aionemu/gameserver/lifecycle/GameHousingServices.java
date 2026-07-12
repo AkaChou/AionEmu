@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 房屋系统 Spring 服务门面 / 静态访问桥：注册房屋相关实例提供者。
- * static access bridge: registers housing-related instance providers. / static access bridge: registers housing-related instance providers.
+ * static access bridge: registers housing-related instance providers.
  */
 @Component
 public final class GameHousingServices implements DisposableBean {

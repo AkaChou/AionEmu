@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * NPC 势力模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

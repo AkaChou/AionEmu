@@ -72,7 +72,7 @@ public class RecipeList {
 	}
 
 	/**
-	 * @param recipeId Whether recipe present / Whether recipe present
+	 * @param recipeId Whether recipe present
 	 */
 	public boolean isRecipePresent(int recipeId) {
 		return recipeList.contains(recipeId);

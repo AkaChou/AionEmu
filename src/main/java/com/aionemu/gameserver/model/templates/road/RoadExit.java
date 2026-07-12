@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 道路 Exit 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author SheppeR
  */

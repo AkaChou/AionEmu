@@ -29,7 +29,7 @@ public class UnBan extends AdminCommand {
 	 * Resolves account by character name and unbans account/IP/full.
 	 *
 	 * 执行 GM / Admin player
-	 * &lt;player&gt; [account|ip|full]。 / &lt;player&gt; [account|ip|full]
+	 * &lt;player&gt; [account|ip|full]。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

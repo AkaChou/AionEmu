@@ -19,15 +19,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * Equiped 等级 Adj 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EquipedLevelAdjAction")
 public class EquipedLevelAdjAction extends AbstractItemAction {
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null || targetItem == null) {
 			// 找不到可降低推荐等级的物品。 / No items for recommended level reduction could be found.
@@ -106,7 +106,7 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 	}
 
 	/**
-	 * @param player Whether reduction success / Whether reduction success
+	 * @param player Whether reduction success
 	 */
 	public boolean isReductionSuccess(Player player) {
 		int reduction = Rnd.get(1, 1000);

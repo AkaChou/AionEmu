@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * 公告模型。
  * Announcement model.
@@ -9,9 +11,12 @@ package com.aionemu.gameserver.model;
 public class Announcement {
 
 	private int id;
+	@Getter
 	private String faction;
+	@Getter
 	private String announce;
 	private String chatType;
+	@Getter
 	private int delay;
 
 	/**
@@ -73,28 +78,8 @@ public class Announcement {
 	}
 
 	/**
-	 * 返回公告正文。
-	 * Returns the announcement text.
-	 *
-	 * announcement text
-	 */
-	public String getAnnounce() {
-		return announce;
-	}
-
-	/**
-	 * 返回公告阵营字符串：ELYOS / ASMODIANS / ALL。
-	 * ASMODIANS / ALL. / ASMODIANS / ALL.
-	 *
-	 * @return 阵营字符串 / faction string
-	 */
-	public String getFaction() {
-		return faction;
-	}
-
-	/**
 	 * 返回公告阵营枚举：{@link Race#ELYOS} / {@link Race#ASMODIANS}；ALL 时为 null。
-	 * {@link Race#ASMODIANS}; null for ALL. / {@link Race#ASMODIANS}; null for ALL.
+	 * {@link Race#ASMODIANS}; null for ALL.
 	 *
 	 * faction race
 	 */
@@ -139,13 +124,4 @@ public class Announcement {
 		}
 	}
 
-	/**
-	 * 返回公告延迟（秒）。
-	 * Returns the announcement delay in seconds.
-	 *
-	 * delay in seconds
-	 */
-	public int getDelay() {
-		return delay;
-	}
 }

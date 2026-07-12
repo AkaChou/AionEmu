@@ -13,7 +13,7 @@ import org.w3c.dom.Document;
 
 /**
  * JAXB 序列化 / 反序列化与 Schema 生成工具。
- * deserialize and schema generation helpers. / deserialize and schema generation helpers.
+ * deserialize and schema generation helpers.
  */
 @UtilityClass
 public class JAXBUtil {
@@ -25,7 +25,8 @@ public class JAXBUtil {
      * @param obj 待序列化对象 / Object to serialize
      * XML string
      *
-     * @param obj @throws RuntimeException 序列化失败 / On marshal failure
+     * @param obj
+     * @throws RuntimeException 序列化失败 / On marshal failure
      */
     public String serialize(Object obj) {
         try {
@@ -120,7 +121,7 @@ public class JAXBUtil {
      * Validation schema, may be null
      * @param <T>    类型参数 / Type parameter
      * Object
-     * On unmarshal failure。 / On unmarshal failure.
+     * On unmarshal failure。
      */
     @SuppressWarnings("unchecked")
     public <T> T deserialize(String s, Class<T> clazz, Schema schema) {

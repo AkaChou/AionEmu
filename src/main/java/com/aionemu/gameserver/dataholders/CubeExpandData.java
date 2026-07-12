@@ -52,7 +52,8 @@ public class CubeExpandData {
 	 *
 	 * npc id
 	 *
-	 * @param id @return 模板，不存在则为 null / template or null
+	 * @param id
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public CubeExpandTemplate getCubeExpandListTemplate(int id) {
 		return npctlistData.get(id);

@@ -86,7 +86,8 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
      *
      * player id
      *
-     * @param playerId @return 欧比斯军阶 / abyss rank
+     * @param playerId
+     * @return 欧比斯军阶 / abyss rank
      */
     @Override
     public AbyssRank loadAbyssRank(int playerId) {

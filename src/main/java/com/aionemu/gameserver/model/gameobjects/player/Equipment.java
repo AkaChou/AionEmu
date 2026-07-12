@@ -546,7 +546,11 @@ public class Equipment {
 	}
 
 	/**
-	 * @param value 在装备集合中查找物品。@param value @return Item / Will look item in equipment item set @param value @return Item
+	 * 按对象 ID 查找已装备物品。
+	 * Finds an equipped item by object id.
+	 *
+	 * @param value 物品对象 ID / item object id
+	 * @return 已装备物品，未找到则为 null / equipped item, or null if absent
 	 */
 	public Item getEquippedItemByObjId(int value) {
 		synchronized (equipment) {
@@ -742,7 +746,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @param item 仅在从 DB 加载 isEquipped=1 物品时调用。@param item / Should be called only when loading from DB for items isEquipped=1 @param item
+	 * @param item 仅在从 DB 加载 isEquipped=1 物品时调用。 / Should be called only when loading from DB for items isEquipped=1
 	 */
 	public void onLoadHandler(Item item) {
 		ItemTemplate template = item.getItemTemplate();
@@ -884,7 +888,7 @@ public class Equipment {
 	}
 
 	/**
-	 * @return Whether power shard equipped / Whether power shard equipped
+	 * @return Whether power shard equipped
 	 */
 	public boolean isPowerShardEquipped() {
 		Item leftPowershard = equipment.get(ItemSlot.POWER_SHARD_LEFT.getSlotIdMask());
@@ -1067,7 +1071,7 @@ public class Equipment {
 	}
 
 	/**
-	 * 检查是否 dual 一个- handedweapon 为 equiped 在 any 槽位 combination。 / Checks if dual one-handed weapon is equiped in any slot combination
+	 * 检查任意槽位组合中是否装备了两把单手武器。 / Check whether two one-handed weapons are equipped in any slot combination.
 	 *
 	 * @param slot masks
 	 * @return
@@ -1105,7 +1109,11 @@ public class Equipment {
 	}
 
 	/**
-	 * @param slot 仅用于新建玩家（虽不严谨但够用）。 / Only used for new Player creation. Although invalid, but fits its purpose @param slot @return
+	 * 判断指定槽位是否已有装备；仅用于新建玩家。
+	 * Checks whether a slot is equipped; used only during player creation.
+	 *
+	 * @param slot 槽位掩码 / slot mask
+	 * @return 已装备时为 true / true if equipped
 	 */
 	public boolean isSlotEquipped(long slot) {
 		return !(equipment.get(slot) == null);

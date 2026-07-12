@@ -160,7 +160,7 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @return Whether walk routes / Whether walk routes
+	 * @return Whether walk routes
 	 */
 	public boolean hasWalkRoutes() {
 		return getSpawn().getWalkerId() != null;
@@ -187,8 +187,8 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @return 是否 peace / 是否 peace。 / Whether peace / Whether peace
-	 */
+	 * @return 是否处于和平状态。 / Whether peace
+	  */
 	public boolean isPeace() {
 		return getNpcType().equals(NpcType.PEACE);
 	}
@@ -201,7 +201,7 @@ public class Npc extends Creature {
 		return DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getTribe(), player.getTribe());
 	}
 
-	/** 是否 aggressive to / Whether aggressive to */
+	/** 是否会主动攻击 / Whether aggressive to */
 	@Override
 	public boolean isAggressiveTo(Creature creature) {
 		if (creature instanceof Player) {
@@ -244,15 +244,15 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param npc 是否 aggro 从 / 是否 aggro 从。 / Whether aggro from / Whether aggro from
-	 */
+	 * @param npc 是否会对其产生仇恨。 / Whether aggro from
+	  */
 	@Override
 	public boolean isAggroFrom(Npc npc) {
 		return DataManager.TRIBE_RELATIONS_DATA.isAggressiveRelation(npc.getTribe(), getTribe());
 	}
 
 	/**
-	 * 是否 hostile 从。 / Whether hostile from / Whether hostile from。 / 是否 hostile 从。 / Whether hostile from / Whether hostile from
+	 * 判断是否与其敌对。 / Whether hostile to the target.
 	 */
 	@Override
 	public boolean isHostileFrom(Npc npc) {
@@ -260,7 +260,7 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * 是否 support 从。 / Whether support from / Whether support from。 / 是否 support 从。 / Whether support from / Whether support from
+	 * 判断是否会支援其。 / Whether this NPC supports the target.
 	 */
 	@Override
 	public boolean isSupportFrom(Npc npc) {
@@ -274,7 +274,7 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param player Whether none relation / Whether none relation
+	 * @param player Whether none relation
 	 */
 	public boolean isNoneRelation(Player player) {
 		return DataManager.TRIBE_RELATIONS_DATA.isNoneRelation(getTribe(), player.getTribe());
@@ -323,8 +323,8 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param npc 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
-	 */
+	 * @param npc 是否为敌对目标。 / Whether enemy from
+	  */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
 		if (npc.isFriendFrom(this)) {
@@ -334,8 +334,8 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @param player 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
-	 */
+	 * @param player 是否为敌对目标。 / Whether enemy from
+	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return isAttackableNpc() || player.isAggroIconTo(this);
@@ -360,7 +360,7 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @return Whether attackable npc / Whether attackable npc
+	 * @return Whether attackable npc
 	 */
 	@Override
 	public boolean isAttackableNpc() {
@@ -461,7 +461,7 @@ public class Npc extends Creature {
 	}
 
 	/**
-	 * @return Whether entity / Whether entity
+	 * @return Whether entity
 	 */
 	public boolean hasEntity() {
 		return getSpawn().getEntityId() != 0;

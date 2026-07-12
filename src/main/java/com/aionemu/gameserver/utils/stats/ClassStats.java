@@ -128,7 +128,8 @@ public class ClassStats {
 	 *
 	 * Player class
 	 *
-	 * @param playerClass @return 主手暴击率 / Main-hand crit rate
+	 * @param playerClass
+	 * @return 主手暴击率 / Main-hand crit rate
 	 */
 	public static int getMainHandCritRateFor(PlayerClass playerClass) {
 		return MAIN_HAND_CRITRATE.valueOf(playerClass.toString()).getValue();

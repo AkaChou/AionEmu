@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 游戏引擎生命周期：并行加载任务 / 副本 / AI2 / 聊天等引擎。
- * instance / AI2 / chat engines in parallel. / instance / AI2 / chat engines in parallel.
+ * instance / AI2 / chat engines in parallel.
  */
 @Component
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class GameEnginesLifecycle {
     private Throwable lastFailure;
 
     /**
-     * 启动并并行加载全部游戏引擎（幂等）。
+     * 启动并行加载全部游戏引擎（幂等）。
      * Start and load all game engines in parallel (idempotent).
      */
     public synchronized void start() {
@@ -86,7 +86,7 @@ public class GameEnginesLifecycle {
      * 是否已成功加载。
      * Whether loading has completed successfully.
      *
-     * @return {@code true} if loaded。 / {@code true} if loaded
+     * @return {@code true} if loaded。
      */
     public synchronized boolean isLoaded() {
         return loaded;

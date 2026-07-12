@@ -212,7 +212,7 @@ public class ShutdownHook extends Thread {
 	 * Disconnects login/chat, kicks players, persists state and optionally halts the process.
 	 *
 	 * @param mode 关闭模式 / shutdown mode
-	 * @param haltRuntime 是否 halt 当前进程 / whether to halt the current process
+	 * @param haltRuntime 是否强制终止当前进程 / whether to halt the current process
 	 */
 	public void completeShutdown(ShutdownMode mode, boolean haltRuntime) {
 		log.info(I18n.get("shutdown.final_sequence"));

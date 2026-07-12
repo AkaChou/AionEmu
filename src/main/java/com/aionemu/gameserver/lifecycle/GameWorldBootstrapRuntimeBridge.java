@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 世界引导运行时桥：解析 IDFactory / Zone / Hotspot / Road / World。
- * Zone / Hotspot / Road / World. / Zone / Hotspot / Road / World.
+ * Zone / Hotspot / Road / World.
  */
 @Component
 public class GameWorldBootstrapRuntimeBridge {

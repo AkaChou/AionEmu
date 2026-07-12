@@ -26,7 +26,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 生物仇恨列表：维护攻击者伤害/仇恨，并提供最高仇恨、最高伤害与掉落归属等查询。
- * most-damage / loot ownership. / most-damage / loot ownership.
+ * most-damage / loot ownership.
  *
  * @author ATracer, KKnD
  */
@@ -337,7 +337,8 @@ public class AggroList {
 	 *
 	 * target creature
 	 *
-	 * @param creature @return 是否在列表中 / whether present
+	 * @param creature
+	 * @return 是否在列表中 / whether present
 	 */
 	public boolean isHating(Creature creature) {
 		return aggroList.containsKey(creature.getObjectId());

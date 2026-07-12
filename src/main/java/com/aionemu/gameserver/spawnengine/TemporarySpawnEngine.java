@@ -165,7 +165,8 @@ public class TemporarySpawnEngine {
 	 *
 	 * spawn group
 	 *
-	 * @param spawn @return 实例 ID 集合副本 / copy of instance ids
+	 * @param spawn
+	 * @return 实例 ID 集合副本 / copy of instance ids
 	 */
 	private static Set<Integer> instancesSnapshot(SpawnGroup2 spawn) {
 		synchronized (temporarySpawnLock) {

@@ -57,7 +57,8 @@ public class MinionData {
 	 *
 	 * minion id
 	 *
-	 * @param minionId @return 守护灵模板或 null / minion template or null
+	 * @param minionId
+	 * @return 守护灵模板或 null / minion template or null
 	 */
 	public MinionTemplate getMinionTemplate(int minionId) {
 		return minionData.get(minionId);

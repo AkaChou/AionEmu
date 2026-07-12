@@ -6,7 +6,6 @@ import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
 import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -56,10 +55,6 @@ public class Sys extends AdminCommand {
 		if (params[0].equals("info")) {
 			// 时间 / Time
 			PacketSendUtility.sendMessage(player, "System Informations at: " + AEInfos.getRealTime().toString());
-
-			// 版本信息 / Version Infos
-			for (String line : AEVersions.getFullVersionInfo())
-				PacketSendUtility.sendMessage(player, line);
 
 			// OS 信息 / OS Infos
 			for (String line : AEInfos.getOSInfo())

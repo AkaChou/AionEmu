@@ -33,7 +33,7 @@ public class PlayerTransferService {
 
     /**
      * 兼容旧入口的单例访问（已弃用，请走 Spring / {@link LoginTransferServices}）。
-     * {@link LoginTransferServices}). / {@link LoginTransferServices}).
+     * {@link LoginTransferServices}).
      *
      * service instance
      *

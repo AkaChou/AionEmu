@@ -61,7 +61,7 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 
 	/**
 	 * 战斗日志显示类型（决定客户端飘字/日志文案）。
-	 * log wording on the client). / log wording on the client).
+	 * log wording on the client).
 	 */
 	public static enum LOG {
 

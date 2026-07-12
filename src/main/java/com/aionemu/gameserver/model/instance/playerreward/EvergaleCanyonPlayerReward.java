@@ -180,7 +180,7 @@ public class EvergaleCanyonPlayerReward extends InstancePlayerReward {
 	}
 
 	/**
-	 * @return Whether boost morale / Whether boost morale
+	 * @return Whether boost morale
 	 */
 	public boolean hasBoostMorale() {
 		return boostMorale.hasInstanceBuff();

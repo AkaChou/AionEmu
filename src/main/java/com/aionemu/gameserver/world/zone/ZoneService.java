@@ -119,7 +119,8 @@ public final class ZoneService implements GameEngine {
 	 *
 	 * zone name
 	 *
-	 * @param zoneName @return 区域处理器 / zone handler
+	 * @param zoneName
+	 * @return 区域处理器 / zone handler
 	 */
 	public ZoneHandler getNewZoneHandler(ZoneName zoneName) {
 		ZoneHandler zoneHandler = collidableHandlers.get(zoneName);
@@ -221,7 +222,8 @@ public final class ZoneService implements GameEngine {
 	 *
 	 * map id
 	 *
-	 * @param mapId @return 区域名称 → 区域实例 / zone name → zone instance
+	 * @param mapId
+	 * @return 区域名称 → 区域实例 / zone name → zone instance
 	 */
 	public Map<ZoneName, ZoneInstance> getZoneInstancesByWorldId(int mapId) {
 		Map<ZoneName, ZoneInstance> zones = new HashMap<ZoneName, ZoneInstance>();

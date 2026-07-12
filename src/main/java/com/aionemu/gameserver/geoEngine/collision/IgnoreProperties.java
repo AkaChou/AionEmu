@@ -76,7 +76,8 @@ public class IgnoreProperties {
 	 *
 	 * static object id
 	 *
-	 * @param staticId @return 忽略属性实例 / ignore properties instance
+	 * @param staticId
+	 * @return 忽略属性实例 / ignore properties instance
 	 */
 	public static IgnoreProperties of(int staticId) {
 		return of(null, staticId);

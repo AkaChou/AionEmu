@@ -45,15 +45,15 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/** 阶段 / stage */
 	private byte stage;
 	/**
-	 * 是否 stage4 为 done/ 是否 stage4 为 done。 / whether stage 4 is done / whether stage 4 is done
+	 * 第 4 阶段是否完成。 / Whether stage 4 is complete.
 	 */
 	private boolean isDoneStage4 = false;
 	/**
-	 * 是否 stage6round2 为 done/ 是否 stage6round2 为 done。 / whether stage 6 round 2 is done / whether stage 6 round 2 is done
+	 * 第 6 阶段第 2 回合是否完成。 / Whether stage 6 round 2 is complete.
 	 */
 	private boolean isDoneStage6Round2 = false;
 	/**
-	 * 是否 stage6round1 为 done/ 是否 stage6round1 为 done。 / whether stage 6 round 1 is done / whether stage 6 round 1 is done
+	 * 第 6 阶段第 1 回合是否完成。 / Whether stage 6 round 1 is complete.
 	 */
 	private boolean isDoneStage6Round1 = false;
 	/** NPC 列表 / NPC list */
@@ -1030,7 +1030,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				}
 			break;
 		   /**
-	 * 阶段说明。 / STAGE 5 [Azoturan Version] / STAGE 5 [Azoturan Version]
+	 * 第 5 阶段（阿祖图兰版本）。 / Stage 5 (Azoturan version).
 	 */
 			case 217529:
 				despawnNpc(npc);
@@ -1100,7 +1100,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				sp(205339, 1260.1465f, 795.07495f, 358.60562f, (byte) 30);
 			break;
 		   /**
-	 * 阶段说明。 / STAGE 5 [Steel Rake Version] / STAGE 5 [Steel Rake Version]
+	 * 第 5 阶段（钢铁钩爪号版本）。 / Stage 5 (Steel Rake version).
 	 */
 			case 217547:
 			case 217548:

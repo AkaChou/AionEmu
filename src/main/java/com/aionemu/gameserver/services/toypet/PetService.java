@@ -320,7 +320,7 @@ public class PetService {
 	}
 
 	/**
-	 * 开启或关闭宠物欢呼增益（消耗以太樱桃）。
+	 * 开启或关闭宠物欢呼增益（消耗奥德樱桃）。
 	 * Enable or disable pet cheer buff (consumes Aether Cherry).
 	 *
 	 * 玩家 / Player

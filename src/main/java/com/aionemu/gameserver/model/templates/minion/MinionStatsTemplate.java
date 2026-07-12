@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.templates.stats.StatsTemplate;
 
 /**
  * 守护灵属性模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Falke_34
  */

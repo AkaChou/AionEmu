@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * 守护灵 DopingBag 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author jacjozs this copy Pet_Bag
  */

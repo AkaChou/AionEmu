@@ -19,7 +19,7 @@ public final class CmdWishId extends AbstractGMHandler {
 	 * Creates the handler and immediately grants items by id.
 	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
-	 * {@code quantity itemId}。 / {@code quantity itemId}
+	 * {@code quantity itemId}。
 	 */
 	public CmdWishId(Player admin, String params) {
 		super(admin, params);

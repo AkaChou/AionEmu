@@ -41,7 +41,7 @@ public class PlayerSkillEntry extends SkillEntry {
 	}
 
 	/**
-	 * @return Whether linked / Whether linked
+	 * @return Whether linked
 	 */
 	public boolean isLinked() {
 		return this.isLinked;

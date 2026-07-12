@@ -63,7 +63,8 @@ public class ChallengeData {
 	 *
 	 * task id
 	 *
-	 * @param taskId @return 模板，不存在则为 null / template or null
+	 * @param taskId
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChallengeTaskTemplate getTaskByTaskId(int taskId) {
 		return tasksById.get(taskId);

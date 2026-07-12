@@ -54,16 +54,16 @@ public class Kisk extends SummonedObject<Player> {
 	}
 
 	/**
-	 * @param npc 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
-	 */
+	 * @param npc 是否为敌对目标。 / Whether enemy from
+	  */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
 		return npc.isAttackableNpc() || npc.isAggressiveTo(this);
 	}
 
 	/**
-	 * @param player 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
-	 */
+	 * @param player 是否为敌对目标。 / Whether enemy from
+	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return player.getRace() != this.ownerRace;

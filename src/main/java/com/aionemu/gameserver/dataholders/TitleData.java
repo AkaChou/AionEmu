@@ -45,7 +45,8 @@ public class TitleData {
 	 *
 	 * title id
 	 *
-	 * @param titleId @return 称号模板，不存在则为 null / title template or null
+	 * @param titleId
+	 * @return 称号模板，不存在则为 null / title template or null
 	 */
 	public TitleTemplate getTitleTemplate(int titleId) {
 		return titles.get(titleId);

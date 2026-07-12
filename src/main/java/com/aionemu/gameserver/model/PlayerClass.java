@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model;
 
+import lombok.Getter;
+
 import jakarta.xml.bind.annotation.XmlEnum;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,8 +22,10 @@ public enum PlayerClass {
 	/** 技师 / Technist. */
 	TECHNIST(12, true), AETHERTECH(13), GUNSLINGER(14), MUSE(15, true), SONGWEAVER(16), ALL(17);
 
+	@Getter
 	private byte classId;
 	private int idMask;
+	@Getter
 	private boolean startingClass;
 
 	private PlayerClass(int classId) {
@@ -34,11 +38,6 @@ public enum PlayerClass {
 		this.idMask = (int) Math.pow(2, classId);
 	}
 
-	/** 返回职业 ID / Returns the class id */
-	public byte getClassId() {
-		return classId;
-	}
-
 	/** 返回按 ID 的玩家职业 / Returns the player class by id */
 	public static PlayerClass getPlayerClassById(byte classId) {
 		for (PlayerClass pc : values()) {
@@ -47,11 +46,6 @@ public enum PlayerClass {
 			}
 		}
 		throw new IllegalArgumentException("There is no player class with id " + classId);
-	}
-
-	/** 是否初始职业 / Whether starting class */
-	public boolean isStartingClass() {
-		return startingClass;
 	}
 
 	/** 返回初始职业 / Returns the starting class for*/

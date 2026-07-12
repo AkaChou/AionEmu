@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 治疗类型：生命/魔法/神圣力/飞行值。
- * MP / DP / FP. / MP / DP / FP.
+ * MP / DP / FP.
  *
  * @author ATracer
  */

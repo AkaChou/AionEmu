@@ -174,7 +174,11 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 	}
 
 	/**
-	 * @param value 调用方欲减少生物 MP 时调用。 / This method is called whenever caller wants to reduce creatures's MP @param value @return
+	 * 减少当前 FP，最低降至 0。
+	 * Reduces current FP, clamped at zero.
+	 *
+	 * @param value 要减少的 FP / FP to remove
+	 * @return 剩余 FP / remaining FP
 	 */
 	public int reduceFp(int value) {
 		fpLock.lock();
@@ -311,7 +315,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 	}
 
 	/**
-	 * @return Whether fly time fully restored / Whether fly time fully restored
+	 * @return Whether fly time fully restored
 	 */
 	public boolean isFlyTimeFullyRestored() {
 		return getMaxFp() == currentFp;

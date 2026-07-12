@@ -8,7 +8,7 @@ import com.aionemu.gameserver.services.craft.CraftService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 以太锻造：开始或停止制作的客户端包。
+ * 奥德锻造：开始或停止制作的客户端包。
  * Client packet to start or stop aetherforging craft.
  *
  * @author Ranastic

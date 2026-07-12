@@ -16,7 +16,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TIME_CHECK;
 public class CM_TIME_CHECK extends AionClientPacket {
 
 	/**
-	 * 纳秒时间 / 1000000 / Nano time / 1000000
+	 * 将纳秒时间除以 1,000,000 转为毫秒。 / Convert nanoseconds to milliseconds by dividing by 1,000,000.
 	 */
 	private int nanoTime;
 

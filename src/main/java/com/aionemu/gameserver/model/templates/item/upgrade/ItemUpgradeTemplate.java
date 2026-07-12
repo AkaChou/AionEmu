@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 
 /**
  * 物品升级模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Ranastic (Encom)
  */

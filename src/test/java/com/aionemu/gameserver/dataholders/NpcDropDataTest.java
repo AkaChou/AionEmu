@@ -145,7 +145,7 @@ class NpcDropDataTest {
 	@Test
 	void npcDropSchemaAcceptsAionServerSelectionAttributes() throws Exception {
 		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-				.newSchema(Path.of("src/main/resources/aion/game/data/static_data/npc_drops/npc_drops.xsd").toFile());
+				.newSchema(Path.of("src/main/resources/aion/data/static_data/npc_drops/npc_drops.xsd").toFile());
 
 		schema.newValidator().validate(new StreamSource(new StringReader("""
 				<npc_drops>

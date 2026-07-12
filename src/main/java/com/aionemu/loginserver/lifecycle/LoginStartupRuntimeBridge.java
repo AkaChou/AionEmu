@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 登录服启动运行时桥接，将各启动步骤转发到具体服务/静态入口。
- * static entry points. / static entry points.
+ * static entry points.
  */
 @Component
 @Lazy
@@ -111,7 +111,7 @@ public class LoginStartupRuntimeBridge {
      * 初始化密钥生成器。
      * Initialize the key generator.
      *
-     * thrown when initialization fails。 / thrown when initialization fails.
+     * thrown when initialization fails。
      */
     public void initializeKeyGenerator() throws Exception {
         KeyGen.init();

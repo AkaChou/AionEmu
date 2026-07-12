@@ -58,7 +58,8 @@ public class AbyssGroupData {
 	 *
 	 * buff id
 	 *
-	 * @param buffId @return 组属性模板，不存在则为 null / group attribute template or null
+	 * @param buffId
+	 * @return 组属性模板，不存在则为 null / group attribute template or null
 	 */
 	public AbyssGroupAttr getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);

@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.beritra.BeritraStateType;
 
 /**
  * 贝尔特拉入侵默认实现：切入 INVASION / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

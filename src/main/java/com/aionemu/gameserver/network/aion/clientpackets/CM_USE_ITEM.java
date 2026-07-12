@@ -134,7 +134,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			return;
 		}
 		// 将物品 CD 存于服务端 Player 变量。 / Store Item CD in server Player variable.
-		// 防止药水刷屏，以及重登使用 Kisk/以太果冻/长 CD。 / Prevents potion spamming, and relogging to use kisks/aether jelly/long CD
+		// 防止药水刷屏，以及重登使用 Kisk/奥德果冻/长 CD。 / Prevents potion spamming, and relogging to use kisks/aether jelly/long CD
 		// 物品。 / items.
 		if (player.isItemUseDisabled(item.getItemTemplate().getUseLimits())) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANT_USE_UNTIL_DELAY_TIME);

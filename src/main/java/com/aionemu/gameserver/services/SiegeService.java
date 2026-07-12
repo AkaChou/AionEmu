@@ -381,7 +381,8 @@ public class SiegeService {
 	 *
 	 * fortress id
 	 *
-	 * @param fortressId @return 是否攻城中 / whether in progress
+	 * @param fortressId
+	 * @return 是否攻城中 / whether in progress
 	 */
 	public boolean isSiegeInProgress(int fortressId) {
 		return activeSieges.containsKey(fortressId);
@@ -561,7 +562,8 @@ public class SiegeService {
 	 *
 	 * @param npc NPC
 	 *
-	 * @param npc @return 是否属于活动攻城 / whether in active siege
+	 * @param npc
+	 * @return 是否属于活动攻城 / whether in active siege
 	 */
 	public boolean isSiegeNpcInActiveSiege(Npc npc) {
 		if ((npc instanceof SiegeNpc)) {

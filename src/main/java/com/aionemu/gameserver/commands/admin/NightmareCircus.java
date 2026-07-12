@@ -49,7 +49,7 @@ public class NightmareCircus extends AdminCommand
 	 * Start or stop a Nightmare Circus event by location id and broadcast the start notice.
 	 *
 	 * @param player 执行 GM / Admin player
-	 * @param params {@code start|stop} and location id。 / {@code start|stop} and location id
+	 * @param params {@code start|stop} and location id。
 	 */
 	protected void handleStartStopInstance(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {

@@ -25,7 +25,7 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /** 查询扫荡 SQL / Select sweep SQL */
     private static final String SELECT_QUERY = "SELECT * FROM `player_shugo_sweep` WHERE `player_id`=?";
     /**
-	 * 删除全部 sweepSQL/ 删除全部 sweepSQL。 / Delete all sweep SQL / Delete all sweep SQL
+	 * 删除全部术古清扫记录。 / Delete all Shugo Sweep records.
 	 */
     private static final String DELETE_QUERY = "DELETE FROM `player_shugo_sweep`";
     /** 更新扫荡 SQL / Update sweep SQL */

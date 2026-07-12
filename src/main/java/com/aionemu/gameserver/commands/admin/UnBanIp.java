@@ -26,7 +26,7 @@ public class UnBanIp extends AdminCommand {
 	 * Sends an IP unban request to the login server.
 	 *
 	 * @param player 执行 GM / Admin player
-	 * @param params &lt;mask&gt;。 / &lt;mask&gt;
+	 * @param params &lt;mask&gt;。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

@@ -19,7 +19,7 @@ public interface CallReadStH extends ReadStH {
      * Set parameters for the stored procedure
      *
  * @param stmt 可调用的 SQL 语句对象 / The CallableStatement object
- * If a SQL error occurs while setting parameters。 / If a SQL error occurs while setting parameters.
+ * If a SQL error occurs while setting parameters。
      */
     void setParams(CallableStatement stmt) throws SQLException;
 }

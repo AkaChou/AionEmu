@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 事件运行时 Spring 服务门面 / 静态访问桥：注册事件运行时实例提供者。
- * static access bridge for event runtime: registers event-runtime instance providers. / static access bridge for event runtime: registers event-runtime instance providers.
+ * static access bridge for event runtime: registers event-runtime instance providers.
  */
 @Component
 public final class GameEventServices implements DisposableBean {

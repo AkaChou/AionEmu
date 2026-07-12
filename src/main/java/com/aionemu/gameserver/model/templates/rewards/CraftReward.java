@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.templates.itemgroups.ItemRaceEntry;
 
 /**
  * 制作奖励模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

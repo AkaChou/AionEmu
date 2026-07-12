@@ -767,7 +767,7 @@ public class Base<BL extends BaseLocation> {
 	 * 据点是否已结束。
 	 * Whether the base instance is finished.
 	 *
-	 * @return 若 finished 则为 true / true if finished
+	 * @return 已结束时为 {@code true} / {@code true} if finished
 	 */
 	public boolean isFinished() {
 		return finished.get();

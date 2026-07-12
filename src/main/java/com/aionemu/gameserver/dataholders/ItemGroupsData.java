@@ -304,7 +304,8 @@ public class ItemGroupsData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 制作材料奖励集合 / craft material rewards
+	 * @param skillId
+	 * @return 制作材料奖励集合 / craft material rewards
 	 */
 	public Collection<CraftReward> getCraftMaterials(int skillId) {
 		if (craftMaterialsBySkill.containsKey(skillId)) {
@@ -333,7 +334,8 @@ public class ItemGroupsData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 制作商店物品奖励集合 / craft shop item rewards
+	 * @param skillId
+	 * @return 制作商店物品奖励集合 / craft shop item rewards
 	 */
 	public Collection<CraftReward> getCraftShopItems(int skillId) {
 		if (craftShopBySkill.containsKey(skillId)) {
@@ -362,7 +364,8 @@ public class ItemGroupsData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 制作礼包奖励集合 / craft bundle rewards
+	 * @param skillId
+	 * @return 制作礼包奖励集合 / craft bundle rewards
 	 */
 	public Collection<CraftReward> getCraftBundles(int skillId) {
 		if (craftBundlesBySkill.containsKey(skillId)) {
@@ -391,7 +394,8 @@ public class ItemGroupsData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 制作配方奖励集合 / craft recipe rewards
+	 * @param skillId
+	 * @return 制作配方奖励集合 / craft recipe rewards
 	 */
 	public Collection<CraftReward> getCraftRecipes(int skillId) {
 		if (craftRecipesBySkill.containsKey(skillId)) {

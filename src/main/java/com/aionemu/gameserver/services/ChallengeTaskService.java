@@ -338,7 +338,8 @@ public class ChallengeTaskService {
 	 * legion id
 	 *
 	 * @param legionLevel 目标军团等级 / target legion level
-	 * @param legionLevel @return 可升级返回 true / true if allowed
+	 * @param legionLevel
+	 * @return 可升级返回 true / true if allowed
 	 */
 	public boolean canRaiseLegionLevel(int legionId, int legionLevel) {
 		Map<Integer, ChallengeTask> tasks;

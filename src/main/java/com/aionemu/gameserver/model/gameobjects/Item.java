@@ -498,14 +498,14 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @return Whether idian stone / Whether idian stone
+	 * @return Whether idian stone
 	 */
 	public boolean hasIdianStone() {
 		return idianStone != null;
 	}
 
 	/**
-	 * @return Whether god stone / Whether god stone
+	 * @return Whether god stone
 	 */
 	public boolean hasGodStone() {
 		return godStone != null;
@@ -595,7 +595,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @return Whether soul bound / Whether soul bound
+	 * @return Whether soul bound
 	 */
 	public boolean isSoulBound() {
 		return isSoulBound;
@@ -642,7 +642,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		return itemTemplate.getNameId();
 	}
 
-	/** 是否 fusioned item / Whether fusioned item */
+	/** 是否为合成物品 / Whether fusioned item */
 	public boolean hasFusionedItem() {
 		return fusionedItemTemplate != null;
 	}
@@ -727,49 +727,49 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @param player Whether storablein warehouse / Whether storablein warehouse
+	 * @param player Whether storablein warehouse
 	 */
 	public boolean isStorableinWarehouse(Player player) {
 		return (getItemMask(player) & ItemMask.STORABLE_IN_WH) == ItemMask.STORABLE_IN_WH && !isSoulBound(player);
 	}
 
 	/**
-	 * @param player Whether storablein acc warehouse / Whether storablein acc warehouse
+	 * @param player Whether storablein acc warehouse
 	 */
 	public boolean isStorableinAccWarehouse(Player player) {
 		return (getItemMask(player) & ItemMask.STORABLE_IN_AWH) == ItemMask.STORABLE_IN_AWH && !isSoulBound(player);
 	}
 
 	/**
-	 * @param player Whether storablein leg warehouse / Whether storablein leg warehouse
+	 * @param player Whether storablein leg warehouse
 	 */
 	public boolean isStorableinLegWarehouse(Player player) {
 		return (getItemMask(player) & ItemMask.STORABLE_IN_LWH) == ItemMask.STORABLE_IN_LWH && !isSoulBound(player);
 	}
 
 	/**
-	 * @param player Whether tradeable / Whether tradeable
+	 * @param player Whether tradeable
 	 */
 	public boolean isTradeable(Player player) {
 		return (getItemMask(player) & ItemMask.TRADEABLE) == ItemMask.TRADEABLE && !isSoulBound(player);
 	}
 
 	/**
-	 * @param player Whether remodelable / Whether remodelable
+	 * @param player Whether remodelable
 	 */
 	public boolean isRemodelable(Player player) {
 		return (getItemMask(player) & ItemMask.REMODELABLE) == ItemMask.REMODELABLE;
 	}
 
 	/**
-	 * @return Whether sellable / Whether sellable
+	 * @return Whether sellable
 	 */
 	public boolean isSellable() {
 		return (getItemMask() & ItemMask.SELLABLE) == ItemMask.SELLABLE;
 	}
 
 	/**
-	 * @return Whether ap extract / Whether ap extract
+	 * @return Whether ap extract
 	 */
 	public boolean canApExtract() {
 		return (getItemMask() & ItemMask.CAN_AP_EXTRACT) == ItemMask.CAN_AP_EXTRACT;
@@ -781,20 +781,20 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @return Whether socket godstone / Whether socket godstone
+	 * @return Whether socket godstone
 	 */
 	public boolean canSocketGodstone() {
 		return (getItemMask() & ItemMask.CAN_PROC_ENCHANT) == ItemMask.CAN_PROC_ENCHANT;
 	}
 
 	/**
-	 * @return Whether amplification / Whether amplification
+	 * @return Whether amplification
 	 */
 	public boolean canAmplification() {
 		return (getItemMask() & ItemMask.CAN_AMPLIFICATION) == ItemMask.CAN_AMPLIFICATION;
 	}
 
-	/** 是否 arch daeva item / Whether arch daeva item */
+	/** 是否为高阶守护者物品 / Whether arch daeva item */
 	public boolean isArchDaevaItem() {
 		return (getItemMask() & ItemMask.ITEM_ARCHDAEVA) == ItemMask.ITEM_ARCHDAEVA;
 	}
@@ -987,7 +987,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 		this.randomStats = randomStats;
 	}
 
-	/** 是否 identify item / Whether identify item */
+	/** 是否为鉴定物品 / Whether identify item */
 	public boolean isIdentifyItem() {
 		return itemTemplate.isCloth();
 	}
@@ -1058,7 +1058,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @return Whether amplified / Whether amplified
+	 * @return Whether amplified
 	 */
 	public boolean isAmplified() {
 		return amplification;
@@ -1090,7 +1090,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @return Whether luna reskin / Whether luna reskin
+	 * @return Whether luna reskin
 	 */
 	public boolean isLunaReskin() {
 		return luna_reskin;
@@ -1108,8 +1108,8 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @return 是否 seal / 是否 seal。 / Whether seal / Whether seal
-	 */
+	 * @return 是否已封印。 / Whether seal
+	  */
 	public boolean isSeal() {
 		if (this.unSeal == 1) {
 			return true;
@@ -1130,7 +1130,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @return Whether enhance / Whether enhance
+	 * @return Whether enhance
 	 */
 	public boolean isEnhance() {
 		return canEnhance;

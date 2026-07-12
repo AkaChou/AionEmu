@@ -40,7 +40,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
-		    // 维勒以太集中器 / Veille's Aetheric Concentrator I
+		    // 维勒奥德集中器 / Veille's Aetheric Concentrator I
 			case 296907:
 				if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceVeilleI();
@@ -51,7 +51,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 		    break;
-			// 维勒以太集中器 II / Veille's Aetheric Concentrator II
+			// 维勒奥德集中器 II / Veille's Aetheric Concentrator II
 			case 296908:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceVeilleII();
@@ -62,7 +62,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 			break;
-			// 维勒以太集中器 III / Veille's Aetheric Concentrator III
+			// 维勒奥德集中器 III / Veille's Aetheric Concentrator III
 			case 296909:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceVeilleII();

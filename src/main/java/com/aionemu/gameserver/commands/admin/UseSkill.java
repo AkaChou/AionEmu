@@ -35,7 +35,7 @@ public class UseSkill extends AdminCommand {
 	 * Uses a skill as admin/target effector, or applies effect directly.
 	 *
 	 * 执行 GM / Admin player
-	 * skillId skillLevel [true|target] [duration]。 / skillId skillLevel [true|target] [duration]
+	 * skillId skillLevel [true|target] [duration]。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

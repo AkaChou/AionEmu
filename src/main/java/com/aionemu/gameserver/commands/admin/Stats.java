@@ -41,7 +41,7 @@ public class Stats extends AdminCommand implements StatOwner {
 	 * Overrides HP or sets plume authorize level by subcommand.
 	 *
 	 * @param player 执行 GM / Admin player
-	 * @param Stringparams hp|dev and value。 / hp|dev and value
+	 * @param Stringparams hp|dev and value。
 	 */
 	public void execute(Player player, String...params){
 		int value = 1;

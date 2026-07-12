@@ -27,7 +27,7 @@ public interface SkillList<T extends Creature> {
 	boolean removeSkill(int skillId);
 
 	/**
-	 * 检查是否 skill 为 present 在列表。 / Check whether skill is present in list
+	 * 检查技能是否在列表中。 / Check whether skill is present in list
 	 */
 	boolean isSkillPresent(int skillId);
 

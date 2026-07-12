@@ -8,7 +8,7 @@ import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 
 /**
  * 具体 PvP 区域：圣殿 / 暗影之城子区域死亡后传送点。
- * Pandaemonium sub-zones. / Pandaemonium sub-zones.
+ * Pandaemonium sub-zones.
  */
 @ZoneNameAnnotation(value = "LC1_PVP_SUB_C DC1_PVP_ZONE")
 public class PvPAreaZone extends PvPZone {

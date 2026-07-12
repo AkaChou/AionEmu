@@ -5,15 +5,12 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.time.Instant;
 
-import com.aionemu.commons.network.IPRange;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
-import com.aionemu.gameserver.configs.network.IPConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.ChatService;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
@@ -76,14 +73,14 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
-		// aion 3.0 = 194 / aion 3.0 = 194
-		// aion 3.5 = 196 / aion 3.5 = 196
-		// aion 4.0 = 201 / aion 4.0 = 201
-		// aion 4.5 = 203 / aion 4.5 = 203
-		// aion 4.7 = 204 / aion 4.7 = 204
-		// aion 4.7.0.7 = 205 / aion 4.7.0.7 = 205
-		// aion 4.7.5.x = 206 / aion 4.7.5.x = 206
-		// aion 5.1.x.x = 212 / aion 5.1.x.x = 212
+		// aion 3.0 = 194
+		// aion 3.5 = 196
+		// aion 4.0 = 201
+		// aion 4.5 = 203
+		// aion 4.7 = 204
+		// aion 4.7.0.7 = 205
+		// aion 4.7.5.x = 206
+		// aion 5.1.x.x = 212
 		if (version < 213) {
 			// 发送错误的客户端版本 / Send wrong client version
 			writeC(0x02);
@@ -126,15 +123,8 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 		writeH(1);
 		writeC(0);
 		{
-			byte[] addr = IPConfig.getDefaultAddress();
-			for (IPRange range : IPConfig.getRanges()) {
-				if (range.isInRange(con.getIP())) {
-					addr = range.getAddress();
-					break;
-				}
-			}
-			writeB(addr);
-			writeH(ChatService.getPort());
+			writeB(NetworkConfig.PUBLIC_CHAT_ADDRESS.getAddress().getAddress());
+			writeH(NetworkConfig.PUBLIC_CHAT_ADDRESS.getPort());
 		}
 	}
 }

@@ -28,7 +28,7 @@ public interface DAO {
      * @param database 数据库名称 / Database name
      * @param majorVersion 数据库主版本号 / Database major version
      * @param minorVersion 数据库次版本号 / Database minor version
-     * 返回若为真则 supported , falseotherwise。 / Returns true if supported, false otherwise
+     * @return 支持指定数据库版本时为 {@code true} / {@code true} if the database version is supported
      */
     boolean supports(String database, int majorVersion, int minorVersion);
 }

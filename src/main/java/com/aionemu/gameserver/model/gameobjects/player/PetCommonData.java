@@ -125,7 +125,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
-	 * @return Whether feeding time / Whether feeding time
+	 * @return Whether feeding time
 	 */
 	public boolean isFeedingTime() {
 		return feedingTime;
@@ -303,7 +303,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
-	 * Save pet mood data / Save pet mood data
+	 * Save pet mood data
 	 */
 	public void savePetMoodData() {
 		DAOManager.getDAO(PlayerPetsDAO.class).savePetMoodData(this);
@@ -320,7 +320,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
-	 * @return Whether looting / Whether looting
+	 * @return Whether looting
 	 */
 	public boolean isLooting() {
 		return this.isLooting;
@@ -337,7 +337,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	/**
-	 * @return Whether buffing / Whether buffing
+	 * @return Whether buffing
 	 */
 	public boolean isBuffing() {
 		return this.isBuffing;

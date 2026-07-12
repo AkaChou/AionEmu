@@ -217,7 +217,7 @@ public class ClassChangeService {
 	 * 玩家 / player
 	 * target class
 	 *
-	 * @return 若 valid 则为 true / true if valid
+	 * @return 可转职时为 {@code true} / {@code true} if valid
 	 */
 	private static boolean validateSwitch(Player player, PlayerClass playerClass) {
 		int level = player.getLevel();

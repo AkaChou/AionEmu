@@ -846,7 +846,8 @@ public class HousingBidService extends AbstractCronTask {
 	 *
 	 * player race
 	 *
-	 * @param playerRace @return 拍卖条目列表 / bid entry list
+	 * @param playerRace
+	 * @return 拍卖条目列表 / bid entry list
 	 */
 	public List<HouseBidEntry> getHouseBidEntries(Race playerRace) {
 		synchronized (houseBids) {

@@ -249,7 +249,7 @@ public final class Ray implements Cloneable, Collidable {
 	 * @param other 另一可碰撞体 / other collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * hit count
-	 * unsupported collision type。 / unsupported collision type.
+	 * unsupported collision type。
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {

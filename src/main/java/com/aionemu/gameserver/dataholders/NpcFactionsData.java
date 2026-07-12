@@ -58,7 +58,8 @@ public class NpcFactionsData {
 	 *
 	 * npc id
 	 *
-	 * @param id @return 势力模板或 null / faction template or null
+	 * @param id
+	 * @return 势力模板或 null / faction template or null
 	 */
 	public NpcFactionTemplate getNpcFactionByNpcId(int id) {
 		return factionsByNpcId.get(id);

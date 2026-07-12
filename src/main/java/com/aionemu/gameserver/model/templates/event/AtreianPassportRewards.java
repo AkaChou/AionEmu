@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 艾特里亚 Passport 奖励模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Falke_34
  */

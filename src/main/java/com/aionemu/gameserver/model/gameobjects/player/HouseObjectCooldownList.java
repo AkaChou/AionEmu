@@ -16,7 +16,7 @@ public class HouseObjectCooldownList {
 	HouseObjectCooldownList(Player owner) {
 	}
 
-	/** 是否 can use object / Whether can use object */
+	/** 是否可使用房屋物件 / Whether can use object */
 	public boolean isCanUseObject(int objectId) {
 		if (houseObjectCooldowns == null || !houseObjectCooldowns.containsKey(objectId)) {
 			return true;

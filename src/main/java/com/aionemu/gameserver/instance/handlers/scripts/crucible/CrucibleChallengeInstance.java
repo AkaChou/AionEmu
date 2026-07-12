@@ -853,7 +853,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 						barrelId = 217840;
 					break;
 					case 2:
-						// 砸碎以太桶以引诱并消灭干渴的精灵。 / Smash the Aether Barrel to lure and destroy the Thirsty Spirits.
+						// 砸碎奥德桶以引诱并消灭干渴的精灵。 / Smash the Aether Barrel to lure and destroy the Thirsty Spirits.
 						sendMsgByRace(1401085, Race.PC_ALL, 0);
 						npcId = 217844;
 						barrelId = 218560;

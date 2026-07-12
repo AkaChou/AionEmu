@@ -347,7 +347,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * 获取简易攻击类型。
 	 * Gets the simple attack type.
 	 *
-	 * @return attack type / 攻击类型 / attack type。 / attack type / 攻击类型 / attack type
+	 * @return attack type / 攻击类型 / attack type。
 	 */
 	public int getSimpleAttackType() {
 		return this.SimpleAttackType;
@@ -445,7 +445,8 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 *
 	 * task id
 	 *
-	 * @param taskId @return 任务 Future，可能为 null / task Future, may be null / 任务 Future，可能为 null / task Future, may be null
+	 * @param taskId
+	 * @return 任务 Future，可能为 null / task Future, may be null
 	 */
 	public Future<?> getTask(TaskId taskId) {
 		return tasks.get(taskId.ordinal());
@@ -457,7 +458,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 *
 	 * task id
 	 *
-	 * @param taskId true if present / 存在则为 true / true if present。 / true if present / 存在则为 true / true if present
+	 * @param taskId true if present / 存在则为 true / true if present。
 	 */
 	public boolean hasTask(TaskId taskId) {
 		return tasks.containsKey(taskId.ordinal());
@@ -469,7 +470,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 *
 	 * task id
 	 *
-	 * @param taskId true if present / 存在则为 true / true if present。 / true if present / 存在则为 true / true if present
+	 * @param taskId true if present / 存在则为 true / true if present。
 	 */
 	public boolean hasScheduledTask(TaskId taskId) {
 		Future<?> task = tasks.get(taskId.ordinal());
@@ -482,7 +483,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 *
 	 * task id
 	 *
-	 * @param taskId cancelled Future / 被取消的 Future / cancelled Future。 / cancelled Future / 被取消的 Future / cancelled Future
+	 * @param taskId cancelled Future / 被取消的 Future / cancelled Future。
 	 */
 	public Future<?> cancelTask(TaskId taskId) {
 		Future<?> task = tasks.remove(taskId.ordinal());
@@ -556,7 +557,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 *
 	 * skill id
 	 *
-	 * @param skillId whether successful / 是否成功 / whether successful。 / whether successful / 是否成功 / whether successful
+	 * @param skillId whether successful / 是否成功 / whether successful。
 	 */
 	public final boolean useSkill(int skillId) {
 		return useSkill(skillId, 1);
@@ -696,7 +697,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * 获取治疗技能增益倍率。
 	 * Gets the healing skills boost multiplier.
 	 *
-	 * @return boost multiplier / 增益倍率 / boost multiplier。 / boost multiplier / 增益倍率 / boost multiplier
+	 * @return boost multiplier / 增益倍率 / boost multiplier。
 	 */
 	public float getHealingSkillsBoost() {
 		return healingSkillBoost;

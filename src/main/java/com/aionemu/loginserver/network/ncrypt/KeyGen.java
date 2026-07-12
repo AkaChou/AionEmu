@@ -28,10 +28,10 @@ public class KeyGen {
     private static EncryptedRSAKeyPair[] encryptedRSAKeyPairs;
 
     /**
-     * RSA 密钥生成器并预热 RSA 解密。 / RSA 密钥生成器并预热 RSA 解密。
+     * RSA 密钥生成器并预热 RSA 解密。
      * Initialize Blowfish and RSA key generators and warm up RSA decrypt.
      *
-     * key algo init failed。 / key algo init failed.
+     * key algo init failed。
      */
     public static void init() throws GeneralSecurityException {
         log.info(I18n.get("log.e944cdc0c5ce"));

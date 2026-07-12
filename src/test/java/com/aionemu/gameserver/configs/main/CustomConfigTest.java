@@ -33,7 +33,7 @@ class CustomConfigTest {
 	@Test
 	void customPropertiesDocumentsMagicBoostCap() throws IOException {
 		Properties properties = new Properties();
-		try (InputStream in = Files.newInputStream(Path.of("src/main/resources/aion/game/config/main/custom.properties"))) {
+		try (InputStream in = Files.newInputStream(Path.of("src/main/resources/aion/config/main/custom.properties"))) {
 			properties.load(in);
 		}
 

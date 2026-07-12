@@ -288,7 +288,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * 前哨是否已结束。
 	 * Whether the outpost is finished.
 	 *
-	 * @return {@code true} if finished。 / {@code true} if finished
+	 * @return {@code true} if finished。
 	 */
 	public boolean isFinished() {
 		return finished.get();

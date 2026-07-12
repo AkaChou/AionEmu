@@ -135,7 +135,8 @@ public class ZoneData {
 	 *
 	 * zone template
 	 *
-	 * @param template @return 天气区域序号，未登记则为 0 / weather-zone id or 0
+	 * @param template
+	 * @return 天气区域序号，未登记则为 0 / weather-zone id or 0
 	 */
 	public int getWeatherZoneId(ZoneTemplate template) {
 		Integer id = weatherZoneIds.get(template);

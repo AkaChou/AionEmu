@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.event_window;
 
 import java.sql.Timestamp;
+import lombok.Getter;
 
 /**
  * 活动窗口条目。
@@ -8,6 +9,7 @@ import java.sql.Timestamp;
  *
  * @author Ranastic
  */
+@Getter
 public class EventWindowEntry {
 
 	private int id;
@@ -20,18 +22,4 @@ public class EventWindowEntry {
 		this.elapsed = elapsed;
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回上次盖章 / Returns the last stamp*/
-	public Timestamp getLastStamp() {
-		return lastStamp;
-	}
-
-	/** 返回 elapsed / Returns the elapsed */
-	public int getElapsed() {
-		return elapsed;
-	}
 }

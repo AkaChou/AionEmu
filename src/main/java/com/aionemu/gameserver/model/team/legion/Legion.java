@@ -625,7 +625,7 @@ public class Legion {
 	}
 
 	/**
-	 * @param playerId Deletes join request / Deletes join request
+	 * @param playerId Deletes join request
 	 */
 	public void deleteJoinRequest(int playerId) {
 		joinRequestMap.remove(playerId);

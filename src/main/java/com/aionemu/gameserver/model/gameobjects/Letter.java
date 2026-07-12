@@ -101,7 +101,7 @@ public class Letter extends AionObject {
 	}
 
 	/**
-	 * @return Whether express / Whether express
+	 * @return Whether express
 	 */
 	public boolean isExpress() {
 		return express;

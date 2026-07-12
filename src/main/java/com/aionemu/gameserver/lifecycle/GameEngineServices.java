@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 游戏引擎 Spring 服务门面 / 静态访问桥：注册引擎实例提供者并对外提供静态访问。
- * static access bridge for game engines: registers engine instance providers and exposes static accessors. / static access bridge for game engines: registers engine instance providers and exposes static accessors.
+ * static access bridge for game engines: registers engine instance providers and exposes static accessors.
  */
 @Component
 public final class GameEngineServices implements DisposableBean {

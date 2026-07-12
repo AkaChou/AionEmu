@@ -156,7 +156,8 @@ public class AttackManager {
 	 *
 	 * NPC AI instance
 	 *
-	 * @param npcAI @return 应放弃目标时为 {@code true} / {@code true} if the target should be given up
+	 * @param npcAI
+	 * @return 应放弃目标时为 {@code true} / {@code true} if the target should be given up
 	 */
 	private static boolean checkGiveupDistance(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();

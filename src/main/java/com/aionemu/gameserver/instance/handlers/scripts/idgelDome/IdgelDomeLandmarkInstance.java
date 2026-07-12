@@ -135,7 +135,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 					spawn(806304, 279.98080f, 346.39691f, 79.695137f, (byte) 0, 197); //Central Square Teleport.
 				    // 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
 				    sendMsgByRace(1401181, Race.PC_ALL, 5000);
-					// 你需要激活以太供应装置。 / You need to activate the Aether Supply Device.
+					// 你需要激活奥德供应装置。 / You need to activate the Aether Supply Device.
 					sendMsgByRace(1403564, Race.PC_ALL, 10000);
                     landMarkReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
                     startInstancePacket();

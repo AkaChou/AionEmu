@@ -47,7 +47,7 @@ public class Invasion extends AdminCommand
 	 * Start or stop invasion for the given id and broadcast race-specific system messages.
 	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
-	 * @param params start|stop and vortex id。 / start|stop and vortex id
+	 * @param params start|stop and vortex id。
 	 */
 	protected void handleStartStopInvasion(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {

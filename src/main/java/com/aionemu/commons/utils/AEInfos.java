@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 运行时环境信息采集与打印（OS / CPU / JRE / JVM / 内存）。
- * CPU / JRE / JVM / memory). / CPU / JRE / JVM / memory).
+ * CPU / JRE / JVM / memory).
  */
 @Slf4j
 @UtilityClass

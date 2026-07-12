@@ -54,71 +54,71 @@ public class SearchInstance {
 	}
 
 	/**
-	 * @return 是否 kamar / 是否 kamar。 / Whether kamar / Whether kamar
-	 */
+	 * @return 是否为 Kamar 类型。 / Whether kamar
+	  */
 	public boolean isKamar() {
 		return instanceMaskId == 107;
 	}
 
 	/**
-	 * @return Whether ophidan / Whether ophidan
+	 * @return Whether ophidan
 	 */
 	public boolean isOphidan() {
 		return instanceMaskId == 108;
 	}
 
 	/**
-	 * @return Whether bastion / Whether bastion
+	 * @return Whether bastion
 	 */
 	public boolean isBastion() {
 		return instanceMaskId == 109;
 	}
 
 	/**
-	 * @return Whether idgel dome / Whether idgel dome
+	 * @return Whether idgel dome
 	 */
 	public boolean isIdgelDome() {
 		return instanceMaskId == 111;
 	}
 
 	/**
-	 * @return Whether asyunatar / Whether asyunatar
+	 * @return Whether asyunatar
 	 */
 	public boolean isAsyunatar() {
 		return instanceMaskId == 121;
 	}
 
 	/**
-	 * @return Whether suspicious ophidan / Whether suspicious ophidan
+	 * @return Whether suspicious ophidan
 	 */
 	public boolean isSuspiciousOphidan() {
 		return instanceMaskId == 122;
 	}
 
 	/**
-	 * @return Whether idgel dome landmark / Whether idgel dome landmark
+	 * @return Whether idgel dome landmark
 	 */
 	public boolean isIdgelDomeLandmark() {
 		return instanceMaskId == 123;
 	}
 
 	/**
-	 * @return 是否 hall 的 tenacity / 是否 hall 的 tenacity。 / Whether hall of tenacity / Whether hall of tenacity
-	 */
+	 * @return 是否为黄金神庙训练所。 / Whether hall of tenacity
+	  */
 	public boolean isHallOfTenacity() {
 		return instanceMaskId == 125;
 	}
 
 	/**
-	 * @return Whether grand arena training camp / Whether grand arena training camp
+	 * @return Whether grand arena training camp
 	 */
 	public boolean isGrandArenaTrainingCamp() {
 		return instanceMaskId == 127;
 	}
 
 	/**
-	 * @return 是否 idrun / 是否 idrun。 / Whether id run / Whether id run
-	 */
+	 * @return 是否为 IDRun 类型。 / Whether id run
+	  */
 	public boolean isIDRun() {
 		return instanceMaskId == 131;
 	}

@@ -6,7 +6,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
  * 简单的 start 管理员命令（占位/测试）。
- * test). / test).
+ * test).
  */
 public class Start extends AdminCommand
 {

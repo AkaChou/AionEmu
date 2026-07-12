@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 世界引导网关：并行加载 IDFactory / Zone / Hotspot / Road / World。
- * Zone / Hotspot / Road / World in parallel. / Zone / Hotspot / Road / World in parallel.
+ * Zone / Hotspot / Road / World in parallel.
  */
 @Component
 public class GameWorldBootstrapGateway {

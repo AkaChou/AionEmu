@@ -52,7 +52,8 @@ public class WarehouseExpandData {
 	 *
 	 * NPC id
 	 *
-	 * @param id @return 扩容模板，不存在则为 null / expand template or null
+	 * @param id
+	 * @return 扩容模板，不存在则为 null / expand template or null
 	 */
 	public WarehouseExpandTemplate getWarehouseExpandListTemplate(int id) {
 		return npctlistData.get(id);

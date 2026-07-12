@@ -97,7 +97,7 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 
 	/**
 	 * 战场组队选择/提示消息。
-	 * prompt message. / prompt message.
+	 * prompt message.
 	 *
 	 * world map id
 	 * @param teamChoice 是否为队伍选择模式 / whether team-choice mode

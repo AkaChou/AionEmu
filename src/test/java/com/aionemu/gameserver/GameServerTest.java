@@ -20,11 +20,11 @@ class GameServerTest {
 
 	@Test
 	void resolvesConfiguredGameRuntimeDirectories() throws IOException {
-		String oldConfigDir = System.getProperty("aion.game.config.dir");
+		String oldConfigDir = System.getProperty("aion.config.dir");
 		String oldDataDir = System.getProperty("aion.game.data.dir");
 		String oldCacheDir = System.getProperty("aion.game.cache.dir");
 		try {
-			System.setProperty("aion.game.config.dir", "AL-Game/config");
+			System.setProperty("aion.config.dir", "AL-Game/config");
 			System.setProperty("aion.game.data.dir", "AL-Game/data");
 			System.setProperty("aion.game.cache.dir", "AL-Game/cache");
 
@@ -37,7 +37,7 @@ class GameServerTest {
 			assertEquals(new File("AL-Game/cache/static_data.xml").getCanonicalFile(),
 				Config.cacheFile("./cache/static_data.xml").getCanonicalFile());
 		} finally {
-			restoreProperty("aion.game.config.dir", oldConfigDir);
+			restoreProperty("aion.config.dir", oldConfigDir);
 			restoreProperty("aion.game.data.dir", oldDataDir);
 			restoreProperty("aion.game.cache.dir", oldCacheDir);
 		}

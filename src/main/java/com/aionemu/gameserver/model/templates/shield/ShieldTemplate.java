@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.utils3d.Point3D;
 
 /**
  * 护盾模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author M@xx, Wakizashi
  */

@@ -58,7 +58,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param number @return 最近的 2 的幂 / nearest power of two
+	 * @param number
+	 * @return 最近的 2 的幂 / nearest power of two
 	 */
 	public static int nearestPowerOfTwo(int number) {
 		return (int) Math.pow(2.0, Math.ceil(Math.log(number) / Math.log(2.0)));
@@ -149,7 +150,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param fValue @return 反余弦结果（弧度） / arccosine in radians
+	 * @param fValue
+	 * @return 反余弦结果（弧度） / arccosine in radians
 	 */
 	public static float acos(float fValue) {
 		if (-1.0f < fValue) {
@@ -167,7 +169,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param fValue @return 反正弦结果（弧度） / arcsine in radians
+	 * @param fValue
+	 * @return 反正弦结果（弧度） / arcsine in radians
 	 */
 	public static float asin(float fValue) {
 		if (-1.0f < fValue) {
@@ -185,7 +188,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param fValue @return 反正切结果（弧度） / arctangent in radians
+	 * @param fValue
+	 * @return 反正切结果（弧度） / arctangent in radians
 	 */
 	public static float atan(float fValue) {
 		return (float) Math.atan(fValue);
@@ -209,7 +213,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param fValue @return 不小于输入的最小整数 / smallest integer not less than the input
+	 * @param fValue
+	 * @return 不小于输入的最小整数 / smallest integer not less than the input
 	 */
 	public static float ceil(float fValue) {
 		return (float) Math.ceil(fValue);
@@ -221,7 +226,8 @@ public final class FastMath {
 	 *
 	 * input radians
 	 *
-	 * @param radians @return 归约后的角度 / reduced angle
+	 * @param radians
+	 * @return 归约后的角度 / reduced angle
 	 */
 	public static float reduceSinAngle(float radians) {
 		if (Math.abs(radians %= (float) Math.PI * 2) > (float) Math.PI) {
@@ -311,7 +317,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param fValue @return 不大于输入的最大整数 / largest integer not greater than the input
+	 * @param fValue
+	 * @return 不大于输入的最大整数 / largest integer not greater than the input
 	 */
 	public static float floor(float fValue) {
 		return (float) Math.floor(fValue);
@@ -323,7 +330,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param fValue @return 平方根倒数 / inverse square root
+	 * @param fValue
+	 * @return 平方根倒数 / inverse square root
 	 */
 	public static float invSqrt(float fValue) {
 		return (float) (1.0 / Math.sqrt(fValue));
@@ -443,7 +451,7 @@ public final class FastMath {
 
 	/**
 	 * 判断三点的相对方向（逆时针/顺时针/共线）。
-	 * clockwise / collinear). / clockwise / collinear).
+	 * clockwise / collinear).
 	 *
 	 * @param p0 点 0 / point 0
 	 * @param p1 点 1 / point 1
@@ -654,7 +662,8 @@ public final class FastMath {
 	 *
 	 * @param min 区间下限 / range minimum
 	 * @param max 区间上限 / range maximum
-	 * @param max @return 归一化后的值 / normalized value
+	 * @param max
+	 * @return 归一化后的值 / normalized value
 	 */
 	public static float normalize(float val, float min, float max) {
 		if (Float.isInfinite(val) || Float.isNaN(val)) {
@@ -707,7 +716,8 @@ public final class FastMath {
 	 *
 	 * input value
 	 *
-	 * @param input @return 饱和后的值 / saturated value
+	 * @param input
+	 * @return 饱和后的值 / saturated value
 	 */
 	public static float saturate(float input) {
 		return FastMath.clamp(input, 0.0f, 1.0f);
@@ -745,7 +755,7 @@ public final class FastMath {
 	 *
 	 * @param flt 单精度浮点数 / single-precision float
 	 * @return 半精度位模式 / half-precision bit pattern
-	 * when the input is NaN。 / when the input is NaN.
+	 * when the input is NaN。
 	 */
 	public static short convertFloatToHalf(float flt) {
 		if (Float.isNaN(flt)) {

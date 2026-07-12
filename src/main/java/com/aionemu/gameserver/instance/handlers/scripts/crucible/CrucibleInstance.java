@@ -108,7 +108,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 		return null;
 	}
 	/**
-	 * 是否 in zone。
+	 * 是否位于区域内。
 	 * Whether in zone.
 	 *
 	 * zone

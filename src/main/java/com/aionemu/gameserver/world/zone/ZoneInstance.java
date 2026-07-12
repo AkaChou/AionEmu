@@ -84,7 +84,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 *
 	 * creature
 	 *
-	 * @param creature @return 是否成功进入（已在区内则为 false） / whether enter succeeded (false if already inside)
+	 * @param creature
+	 * @return 是否成功进入（已在区内则为 false） / whether enter succeeded (false if already inside)
 	 */
 	public synchronized boolean onEnter(Creature creature) {
 		if (creatures.containsKey(creature.getObjectId())) {
@@ -106,7 +107,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 *
 	 * creature
 	 *
-	 * @param creature @return 是否成功离开（不在区内则为 false） / whether leave succeeded (false if not inside)
+	 * @param creature
+	 * @return 是否成功离开（不在区内则为 false） / whether leave succeeded (false if not inside)
 	 */
 	public synchronized boolean onLeave(Creature creature) {
 		if (!creatures.containsKey(creature.getObjectId())) {

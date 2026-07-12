@@ -54,7 +54,7 @@ public class Orkia_Aetheric_Field_Observatory_Square_Teleport_StoneAI2 extends N
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					// 你可使用奥尔基亚以太力场观景广场传送石。 / You can use the Orkia Aetheric Field Observatory Square Teleport Stone.
+					// 你可使用奥尔基亚奥德力场观景广场传送石。 / You can use the Orkia Aetheric Field Observatory Square Teleport Stone.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDTransform_SavePoint_01);
 				}
 			}

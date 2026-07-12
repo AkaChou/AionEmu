@@ -406,7 +406,8 @@ public class SkillTemplate {
 	 *
 	 * 1-based position
 	 *
-	 * @param position @return 效果模板，无则 null / effect template or null
+	 * @param position
+	 * @return 效果模板，无则 null / effect template or null
 	 */
 	public EffectTemplate getEffectTemplate(int position) {
 		return effects != null && effects.getEffects().size() >= position ? effects.getEffects().get(position - 1)

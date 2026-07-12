@@ -350,7 +350,7 @@ public class House extends VisibleObject {
 	}
 
 	/**
-	 * @return Whether fee paid / Whether fee paid
+	 * @return Whether fee paid
 	 */
 	public boolean isFeePaid() {
 		return feePaid;
@@ -382,8 +382,8 @@ public class House extends VisibleObject {
 	}
 
 	/**
-	 * @return 是否在 graceperiod / 是否在 graceperiod。 / Whether in grace period / Whether in grace period
-	 */
+	 * @return 是否处于宽限期。 / Whether in grace period
+	  */
 	public boolean isInGracePeriod() {
 		return playerObjectId > 0 && GameHousingServices.housingService().searchPlayerHouses(playerObjectId).size() == 2
 				&& (status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) && sellStarted != null
@@ -533,8 +533,8 @@ public class House extends VisibleObject {
 	}
 
 	/**
-	 * @param status 是否在 housingstatus / 是否在 housingstatus。 / Whether in housing status / Whether in housing status
-	 */
+	 * @param status 是否处于指定房屋状态。 / Whether in housing status
+	  */
 	public boolean isInHousingStatus(PlayerHouseOwnerFlags status) {
 		return (houseOwnerInfoFlags & status.getId()) != 0;
 	}

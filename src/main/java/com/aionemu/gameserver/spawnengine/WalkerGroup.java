@@ -214,7 +214,7 @@ public class WalkerGroup {
 	 * @param origin 初始刷怪点 / initial spawn location
 	 * @param destination 下一移动点 / next move point
 	 * @param shift 相对 origin 的垂直偏移：矢状负为左、正为右；冠状负为后、正为前
-	 * offset perpendicular to destination; sagittal negative=left, coronal negative=back。 / offset perpendicular to destination; sagittal negative=left, coronal negative=back
+	 * offset perpendicular to destination; sagittal negative=left, coronal negative=back。
 	 * @return 计算后的点 / computed point
 	 */
 	public static Point2D getLinePoint(Point2D origin, Point2D destination, WalkerGroupShift shift) {
@@ -379,7 +379,8 @@ public class WalkerGroup {
 	 *
 	 * member npc
 	 *
-	 * @param npc @return 集群数据，未找到则为 null / clustered data or null
+	 * @param npc
+	 * @return 集群数据，未找到则为 null / clustered data or null
 	 */
 	public ClusteredNpc getClusterData(Npc npc) {
 		for (ClusteredNpc snpc : members) {
@@ -430,7 +431,8 @@ public class WalkerGroup {
 	 *
 	 * member npc
 	 *
-	 * @param npc @return 线性站位则为 true / true if linearly positioned
+	 * @param npc
+	 * @return 线性站位则为 true / true if linearly positioned
 	 */
 	public boolean isLinearlyPositioned(Npc npc) {
 		if (type != WalkerGroupType.SQUARE) {

@@ -31,7 +31,8 @@ public class AionPacketHandler {
 	 * packet data
 	 *
 	 * @param client 客户端连接 / client connection
-	 * @param client @return 解析出的客户端包，未知包返回 null / client packet, or null if unknown
+	 * @param client
+	 * @return 解析出的客户端包，未知包返回 null / client packet, or null if unknown
 	 */
 	public AionClientPacket handle(ByteBuffer data, AionConnection client) {
 		State state = client.getState();

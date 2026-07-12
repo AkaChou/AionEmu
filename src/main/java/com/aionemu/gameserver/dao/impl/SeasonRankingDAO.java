@@ -45,7 +45,8 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
      *
      * ranking table id
      *
-     * @param tableId @return 排行结果列表 / ranking result list
+     * @param tableId
+     * @return 排行结果列表 / ranking result list
      */
     @Override
     public ArrayList<SeasonRankingResult> getCompetitionRankingPlayers(int tableId) {

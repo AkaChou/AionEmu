@@ -69,7 +69,8 @@ public class HousePartsData {
 	 *
 	 * part id
 	 *
-	 * @param partId @return 房屋部件，不存在则为 null / house part, or null if absent
+	 * @param partId
+	 * @return 房屋部件，不存在则为 null / house part, or null if absent
 	 */
 	public HousePart getPartById(int partId) {
 		return partsById.get(partId);
@@ -81,7 +82,8 @@ public class HousePartsData {
 	 *
 	 * building template
 	 *
-	 * @param building @return 匹配部件列表，不存在则为 null / matching part list, or null if absent
+	 * @param building
+	 * @return 匹配部件列表，不存在则为 null / matching part list, or null if absent
 	 */
 	public List<HousePart> getPartsForBuilding(Building building) {
 		return partsByTags.get(building.getPartsMatchTag());

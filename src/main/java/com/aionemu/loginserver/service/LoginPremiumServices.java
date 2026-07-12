@@ -68,7 +68,8 @@ public final class LoginPremiumServices implements DisposableBean {
      *
      * controller
      *
-     * @param premiumController @return 同一控制器 / same controller
+     * @param premiumController
+     * @return 同一控制器 / same controller
      */
     private static PremiumController remember(PremiumController premiumController) {
         resolvedPremiumController = premiumController;

@@ -61,7 +61,8 @@ public class NameRestrictionService {
 	 *
 	 * original message
 	 *
-	 * @param message @return 过滤后消息 / filtered message
+	 * @param message
+	 * @return 过滤后消息 / filtered message
 	 */
 	public static String filterMessage(String message) {
 		for (String word : message.split(" ")) {

@@ -11,7 +11,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
 /**
  * 静态 DoorBounds 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

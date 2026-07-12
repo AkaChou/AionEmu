@@ -83,7 +83,8 @@ public class AtreianBestiaryData {
 	 *
 	 * npc id
 	 *
-	 * @param id @return 模板，不存在则为 null / template or null
+	 * @param id
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public AtreianBestiaryTemplate getAtreianBestiaryTemplateByNpcId(int id) {
 		return npcIdsHolder.get(id);

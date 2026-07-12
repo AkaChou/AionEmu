@@ -35,7 +35,7 @@ public class AntiHackService {
 	 * @param z 目标 Z / Target Z
 	 * @param speed 上报速度 / Reported speed
 	 * @param type 移动掩码类型 / Movement mask type
-	 * @return {@code true} if move is allowed。 / {@code true} if move is allowed
+	 * @return {@code true} if move is allowed。
 	 */
 	public static boolean canMove(Player player, float x, float y, float z, float speed, byte type) {
 

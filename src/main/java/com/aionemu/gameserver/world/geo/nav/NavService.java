@@ -208,7 +208,8 @@ public final class NavService {
 	 * @param x 目标 X / target x
 	 * @param y 目标 Y / target y
 	 * @param z 目标 Z / target z
-	 * @param z @return 路径点序列，失败则为 null / pathway points, or null on failure
+	 * @param z
+	 * @return 路径点序列，失败则为 null / pathway points, or null on failure
 	 */
 	public float[][] navigateToLocation(Creature pathOwner, float x, float y, float z) {
 		// 基础检查 / basic checks
@@ -234,7 +235,8 @@ public final class NavService {
 	 * @param x2 终点 X / end x
 	 * @param y2 终点 Y / end y
 	 * @param z2 终点 Z / end z
-	 * @param z2 @return 路径点序列，失败则为 null / pathway points, or null on failure
+	 * @param z2
+	 * @return 路径点序列，失败则为 null / pathway points, or null on failure
 	 */
 	private float[][] navigateFromLocationToLocation(int worldId, NavGeometry tile, NavGeometry tile2, float x1, float y1, float z1, float x2, float y2, float z2) {
 		boolean boxed = false;
@@ -480,7 +482,8 @@ public final class NavService {
 	 *
 	 * @param positive 是否期望正号 / whether a positive sign is expected
 	 * @param zeroAllowed 是否允许零 / whether zero is allowed
-	 * @param zeroAllowed @return 符合期望则为 true / true if the sign matches
+	 * @param zeroAllowed
+	 * @return 符合期望则为 true / true if the sign matches
 	 */
 	private static boolean compareFunnelCross(float crossZ, boolean positive, boolean zeroAllowed) {
 		if (crossZ == 0) return zeroAllowed;
@@ -513,7 +516,8 @@ public final class NavService {
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z Z 坐标 / z coordinate
-	 * @param z @return 导航三角形，未命中则为 null / nav geometry, or null if none
+	 * @param z
+	 * @return 导航三角形，未命中则为 null / nav geometry, or null if none
 	 */
 	private NavGeometry getNavTile(int worldId, float x, float y, float z) {
 		return findNavTile(worldId, x, y, z);
@@ -528,7 +532,8 @@ public final class NavService {
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z Z 坐标 / z coordinate
-	 * @param z @return 导航三角形，未命中则为 null / nav geometry, or null if none
+	 * @param z
+	 * @return 导航三角形，未命中则为 null / nav geometry, or null if none
 	 */
 	private NavGeometry findNavTile(int worldId, float x, float y, float z) {
 		GeoMap navMap = navData.getNavMap(worldId);
@@ -561,7 +566,8 @@ public final class NavService {
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z Z 坐标 / z coordinate
-	 * @param z @return 导航三角形，未命中则为 null / nav geometry, or null if none
+	 * @param z
+	 * @return 导航三角形，未命中则为 null / nav geometry, or null if none
 	 */
 	private NavGeometry getNavTileWithBox(int worldId, float x, float y, float z) {
 		return findNavTileWithBox(worldId, x, y, z);
@@ -576,7 +582,8 @@ public final class NavService {
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z Z 坐标 / z coordinate
-	 * @param z @return 导航三角形，未命中则为 null / nav geometry, or null if none
+	 * @param z
+	 * @return 导航三角形，未命中则为 null / nav geometry, or null if none
 	 */
 	private NavGeometry findNavTileWithBox(int worldId, float x, float y, float z) {
 		GeoMap navMap = navData.getNavMap(worldId);

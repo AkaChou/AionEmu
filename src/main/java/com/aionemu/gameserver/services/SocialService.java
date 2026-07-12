@@ -29,7 +29,7 @@ public class SocialService {
 	 * @param blockedPlayer 被屏蔽玩家 / blocked player
 	 * block reason
 	 *
-	 * @return 若 added 则为 true / true if added
+	 * @return 添加成功时为 {@code true} / {@code true} if added
 	 */
 	public static boolean addBlockedUser(Player player, Player blockedPlayer, String reason) {
 		if (DAOManager.getDAO(BlockListDAO.class).addBlockedUser(player.getObjectId(), blockedPlayer.getObjectId(),
@@ -50,7 +50,8 @@ public class SocialService {
 	 * operator
 	 *
 	 * @param blockedUserId 被屏蔽玩家 objectId / blocked player object id
-	 * @param blockedUserId 若 removed 则为 true / true if removed
+	 * @param blockedUserId 被屏蔽玩家 ID / Blocked player ID
+	 * @return 移除成功时为 {@code true} / {@code true} if removed
 	 */
 	public static boolean deleteBlockedUser(Player player, int blockedUserId) {
 		if (DAOManager.getDAO(BlockListDAO.class).delBlockedUser(player.getObjectId(), blockedUserId)) {

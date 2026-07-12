@@ -330,7 +330,8 @@ public class DuelService {
 	 *
 	 * player object id
 	 *
-	 * @param playerObjId @return 决斗中返回 true / true if dueling
+	 * @param playerObjId
+	 * @return 决斗中返回 true / true if dueling
 	 */
 	public boolean isDueling(int playerObjId) {
 		return duels.containsKey(playerObjId) && duels.containsValue(playerObjId);

@@ -94,7 +94,8 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
      *
      * house object id
      *
-     * @param houseObjectId @return 是否已使用 / whether used
+     * @param houseObjectId
+     * @return 是否已使用 / whether used
      */
     @Override
     public boolean isIdUsed(int houseObjectId) {

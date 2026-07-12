@@ -20,7 +20,8 @@ public class SeenCreatureList {
 	 *
 	 * Creature
 	 *
-	 * @param creature @return 是否新加入 / Whether newly added
+	 * @param creature
+	 * @return 是否新加入 / Whether newly added
 	 */
 	public boolean add(Creature creature) {
 		if (seenCreatures == null) {
@@ -35,7 +36,8 @@ public class SeenCreatureList {
 	 *
 	 * Creature
 	 *
-	 * @param creature @return 是否移除成功 / Whether removed
+	 * @param creature
+	 * @return 是否移除成功 / Whether removed
 	 */
 	public boolean remove(Creature creature) {
 		if (seenCreatures == null) {

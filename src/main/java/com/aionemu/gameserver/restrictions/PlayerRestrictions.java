@@ -88,7 +88,7 @@ public class PlayerRestrictions extends AbstractRestrictions {
 
 	/**
 	 * 自身或目标处于飞行传送/气流时禁止。
-	 * windstreaming. / windstreaming.
+	 * windstreaming.
 	 *
 	 * 玩家 / player
 	 * target, may be null

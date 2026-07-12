@@ -301,7 +301,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	/**
-	 * @return Whether full special cube / Whether full special cube
+	 * @return Whether full special cube
 	 */
 	public boolean isFullSpecialCube() {
 		return this.itemStorage.isFullSpecialCube();

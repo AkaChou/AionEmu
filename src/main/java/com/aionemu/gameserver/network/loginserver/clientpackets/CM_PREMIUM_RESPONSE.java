@@ -7,7 +7,7 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**
  * 登录服回复商城点数/月华查询结果。
- * luna query. / luna query.
+ * luna query.
  *
  * @author KID
  */

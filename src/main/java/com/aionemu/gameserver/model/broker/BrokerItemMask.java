@@ -285,14 +285,14 @@ public enum BrokerItemMask {
 	}
 
 	/**
-	 * @param item Whether matches / Whether matches
+	 * @param item Whether matches
 	 */
 	public boolean isMatches(Item item) {
 		return filter.accept(item.getItemTemplate());
 	}
 
 	/**
-	 * @param maskId Whether children mask / Whether children mask
+	 * @param maskId Whether children mask
 	 */
 	public boolean isChildrenMask(int maskId) {
 		for (BrokerItemMask p = parent; p != null; p = p.parent) {
@@ -314,7 +314,7 @@ public enum BrokerItemMask {
 	}
 
 	/**
-	 * @return Whether children / Whether children
+	 * @return Whether children
 	 */
 	public boolean hasChildren() {
 		return childrenExist;

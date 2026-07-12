@@ -22,22 +22,22 @@ public class Defense_Turret_PlatformAI2 extends NpcAI2
 		    // 这是主神创造的魔法变身背包。 / This is a magical transformation cube created by the Empyrean Lord.
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
 		} else {
-            // 你可使用【明亮以太】设置任意炮塔。 / You can use [Bright Aether] to set up any turret you like.
+            // 你可使用【明亮奥德】设置任意炮塔。 / You can use [Bright Aether] to set up any turret you like.
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
         }
 	}
 	
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
-		// 速射多管火炮安装（1 明亮以太）。 / Rapid Fire Multiple Fire Cannon Installation (1 Bright Aether).
+		// 速射多管火炮安装（1 明亮奥德）。 / Rapid Fire Multiple Fire Cannon Installation (1 Bright Aether).
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(182007405, 1)) { //Bright Aether.
 			spawn(833808, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Single Fire Cannon.
 		}
-		// 远程加农安装（2 明亮以太） / Ranged Cannon Installation (2 Bright Aether)
+		// 远程加农安装（2 明亮奥德） / Ranged Cannon Installation (2 Bright Aether)
 		else if (dialogId == 10001 && player.getInventory().decreaseByItemId(182007405, 2)) { //Bright Aether.
 			spawn(833809, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Area Antiaircraft Gun.
 		}
-		// 强力魔法加农安装（2 明亮以太）。 / Powerful Magic Cannon Installation (2 Bright Aether).
+		// 强力魔法加农安装（2 明亮奥德）。 / Powerful Magic Cannon Installation (2 Bright Aether).
 		else if (dialogId == 10002 && player.getInventory().decreaseByItemId(182007405, 2)) { //Bright Aether.
 			spawn(833810, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Wide Area Capture Device.
 		}

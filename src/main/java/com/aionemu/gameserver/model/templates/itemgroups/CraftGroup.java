@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * 制作队伍模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

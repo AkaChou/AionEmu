@@ -60,7 +60,8 @@ public class HouseNpcsData {
 	 *
 	 * house address
 	 *
-	 * @param address @return 刷怪点列表，不存在则为 null / spawn list, or null if absent
+	 * @param address
+	 * @return 刷怪点列表，不存在则为 null / spawn list, or null if absent
 	 */
 	public List<HouseSpawn> getSpawnsByAddress(int address) {
 		return houseSpawnsByAddressId.get(address);

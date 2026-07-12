@@ -76,7 +76,7 @@ public class ItemData extends ReloadableData {
 
 	/**
 	 * 根据清理规则覆盖物品的交易 / 出售 / 仓库存取掩码。
-	 * sell / warehouse storage masks. / sell / warehouse storage masks.
+	 * sell / warehouse storage masks.
 	 */
 	public void cleanup() {
 		for (ItemCleanupTemplate ict : DataManager.ITEM_CLEAN_UP.getList()) {
@@ -108,7 +108,8 @@ public class ItemData extends ReloadableData {
 	 *
 	 * item id
 	 *
-	 * @param itemId @return 物品模板或 null / item template or null
+	 * @param itemId
+	 * @return 物品模板或 null / item template or null
 	 */
 	public ItemTemplate getItemTemplate(int itemId) {
 		return items.get(itemId);
@@ -150,7 +151,8 @@ public class ItemData extends ReloadableData {
 	 *
 	 * pet id
 	 *
-	 * @param petId @return 宠物蛋模板或 null / pet-egg template or null
+	 * @param petId
+	 * @return 宠物蛋模板或 null / pet-egg template or null
 	 */
 	public ItemTemplate getPetEggTemplate(int petId) {
 		return petEggs.get(petId);

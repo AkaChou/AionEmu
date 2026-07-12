@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 世界引导服务定位器：向 IDFactory / Zone / Hotspot / Road / World 注入 Spring 提供者。
- * Zone / Hotspot / Road / World. / Zone / Hotspot / Road / World.
+ * Zone / Hotspot / Road / World.
  */
 @Component
 public final class GameWorldBootstrapServices implements DisposableBean {

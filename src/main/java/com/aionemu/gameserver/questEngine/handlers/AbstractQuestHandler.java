@@ -31,7 +31,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onDialogEvent(QuestEnv questEnv) {
 		return false;
@@ -43,7 +44,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onEnterWorldEvent(QuestEnv questEnv) {
 		return false;
@@ -106,7 +108,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onGetItemEvent(QuestEnv questEnv) {
 		return false;
@@ -131,7 +134,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onKillEvent(QuestEnv questEnv) {
 		return false;
@@ -143,7 +147,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onAttackEvent(QuestEnv questEnv) {
 		return false;
@@ -155,7 +160,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onLvlUpEvent(QuestEnv questEnv) {
 		return false;
@@ -178,7 +184,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onDieEvent(QuestEnv questEnv) {
 		return false;
@@ -236,7 +243,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onQuestTimerEndEvent(QuestEnv questEnv) {
 		return false;
@@ -248,7 +256,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onInvisibleTimerEndEvent(QuestEnv questEnv) {
 		return false;
@@ -261,7 +270,8 @@ public abstract class AbstractQuestHandler {
 	 * Quest environment
 	 *
 	 * @param flyingRing 飞行环标识 / Flying-ring key
-	 * @param flyingRing @return 是否已处理 / Whether handled
+	 * @param flyingRing
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onPassFlyingRingEvent(QuestEnv questEnv, String flyingRing) {
 		return false;
@@ -362,7 +372,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onAddAggroListEvent(QuestEnv questEnv) {
 		return false;
@@ -374,7 +385,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onAtDistanceEvent(QuestEnv questEnv) {
 		return false;
@@ -465,7 +477,8 @@ public abstract class AbstractQuestHandler {
 	 *
 	 * Quest environment
 	 *
-	 * @param questEnv @return 是否已处理 / Whether handled
+	 * @param questEnv
+	 * @return 是否已处理 / Whether handled
 	 */
 	public boolean onCreativityPointEvent(QuestEnv questEnv) {
 		return false;

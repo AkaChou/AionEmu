@@ -15,7 +15,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 技能 Animation 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -29,8 +29,8 @@ public class SkillAnimationAction extends AbstractItemAction {
 	private int expireTime = 0;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (skinId == 0 || parentItem == null) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);

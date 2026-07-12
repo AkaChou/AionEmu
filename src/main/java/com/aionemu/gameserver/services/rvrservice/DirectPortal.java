@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.rvr.RvrStateType;
 
 /**
  * 种族对抗（RVR）直通门默认实现：切入 RVR / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

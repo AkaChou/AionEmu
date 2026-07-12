@@ -36,7 +36,8 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	 *
 	 * player id
 	 *
-	 * @param playerId @return 盗贼状态，不存在则 null / thieves status, or null if missing
+	 * @param playerId
+	 * @return 盗贼状态，不存在则 null / thieves status, or null if missing
 	 */
 	@Override
 	public ThievesStatusList loadThieves(int playerId) {
@@ -72,7 +73,8 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	 *
 	 * thieves status
 	 *
-	 * @param thieves @return 是否写入成功 / whether the write succeeded
+	 * @param thieves
+	 * @return 是否写入成功 / whether the write succeeded
 	 */
 	@Override
 	public boolean saveNewThieves(ThievesStatusList thieves) {

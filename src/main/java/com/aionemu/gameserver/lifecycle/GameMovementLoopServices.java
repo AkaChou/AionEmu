@@ -109,7 +109,8 @@ public final class GameMovementLoopServices implements DisposableBean {
      * Spring provider
      *
      * @param fallback 回退供应器 / Fallback supplier
-     * @param fallback @return 解析到的实例 / Resolved instance
+     * @param fallback
+     * @return 解析到的实例 / Resolved instance
      */
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {

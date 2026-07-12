@@ -534,7 +534,7 @@ public class BIHTree implements CollisionData {
 	 * @param worldBound 世界包围体 / world bound
 	 * @param results 结果收集器 / collision results
 	 * hit count
-	 * unsupported type。 / unsupported type.
+	 * unsupported type。
 	 */
 	@Override
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound,

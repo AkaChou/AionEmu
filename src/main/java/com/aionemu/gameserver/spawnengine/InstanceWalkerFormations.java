@@ -43,7 +43,8 @@ public class InstanceWalkerFormations {
 	 *
 	 * walker route id
 	 *
-	 * @param walkerId @return 巡逻队，可能为 null / walker group or null
+	 * @param walkerId
+	 * @return 巡逻队，可能为 null / walker group or null
 	 */
 	public WalkerGroup getSpawnWalkerGroup(String walkerId) {
 		return walkFormations.get(walkerId);
@@ -55,7 +56,8 @@ public class InstanceWalkerFormations {
 	 *
 	 * clustered npc
 	 *
-	 * @param npcWalker @return 是否加入成功 / whether added
+	 * @param npcWalker
+	 * @return 是否加入成功 / whether added
 	 */
 	protected synchronized boolean cacheWalkerCandidate(ClusteredNpc npcWalker) {
 		String walkerId = npcWalker.getWalkTemplate().getRouteId();
@@ -111,7 +113,8 @@ public class InstanceWalkerFormations {
 	 *
 	 * candidate list
 	 *
-	 * @param candidates @return 位置哈希 → 成员列表 / position hash to members
+	 * @param candidates
+	 * @return 位置哈希 → 成员列表 / position hash to members
 	 */
 	private Map<Integer, List<ClusteredNpc>> groupByPositionHash(List<ClusteredNpc> candidates) {
 		Map<Integer, List<ClusteredNpc>> grouped = new HashMap<Integer, List<ClusteredNpc>>();

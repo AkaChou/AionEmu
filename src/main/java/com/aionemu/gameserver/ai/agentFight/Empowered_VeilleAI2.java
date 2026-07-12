@@ -126,9 +126,9 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				// 主神代理人召唤了以太集中器。 / The Empyrean Lord Agent summoned the Aether Concentrator.
+				// 主神代理人召唤了奥德集中器。 / The Empyrean Lord Agent summoned the Aether Concentrator.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_OdSpawn, 0);
-				// 主神代理人已启用以太集中器。 / The Empyrean Lord Agent has enabled the Aether Concentrator.
+				// 主神代理人已启用奥德集中器。 / The Empyrean Lord Agent has enabled the Aether Concentrator.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_OdStart, 20000);
 			}
 		});

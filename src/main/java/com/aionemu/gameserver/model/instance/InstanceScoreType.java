@@ -21,21 +21,21 @@ public enum InstanceScoreType {
 	}
 
 	/**
-	 * @return Whether preparing / Whether preparing
+	 * @return Whether preparing
 	 */
 	public boolean isPreparing() {
 		return id == 1048576;
 	}
 
 	/**
-	 * @return Whether start progress / Whether start progress
+	 * @return Whether start progress
 	 */
 	public boolean isStartProgress() {
 		return id == 2097152;
 	}
 
 	/**
-	 * @return Whether end progress / Whether end progress
+	 * @return Whether end progress
 	 */
 	public boolean isEndProgress() {
 		return id == 3145728;

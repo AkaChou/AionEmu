@@ -33,7 +33,7 @@ public class Agent extends AdminCommand
 	 * Executes agent-fight control: parses start/stop and location id.
 	 *
 	 * admin
-	 * start|stop, location id。 / start|stop, location id
+	 * start|stop, location id。
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -91,7 +91,7 @@ public class Agent extends AdminCommand
 	 * admin
 	 * location id
 	 *
-	 * @return {@code true} if valid。 / {@code true} if valid
+	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidAgentLocationId(Player player, int agentId) {
 		if (!GameLocationBootstrapServices.agentService().getAgentLocations().keySet().contains(agentId)) {

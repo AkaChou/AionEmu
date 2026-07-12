@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 
 /**
  * 物品 Set 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author ATracer, modified by Antivirus
  */

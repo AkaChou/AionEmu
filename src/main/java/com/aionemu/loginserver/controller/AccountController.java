@@ -275,7 +275,8 @@ public class AccountController {
      *
      * Account name
      *
-     * @param name @return 已加载账号，或 null / Loaded account or null
+     * @param name
+     * @return 已加载账号，或 null / Loaded account or null
      */
     public Account loadAccount(String name) {
         Account account = getAccountDAO().getAccount(name);

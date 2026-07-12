@@ -112,7 +112,7 @@ public class LoginStartupGateway {
      * 初始化加密密钥生成器。
      * Initialize the crypto key generator.
      *
-     * thrown when key generation fails。 / thrown when key generation fails.
+     * thrown when key generation fails。
      */
     public void initializeKeyGenerator() throws Exception {
         runtimeBridge().initializeKeyGenerator();

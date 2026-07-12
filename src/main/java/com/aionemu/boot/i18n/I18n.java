@@ -56,7 +56,8 @@ public class I18n {
      *
      * Message code
      *
-     * @param code @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing
+     * @param code
+     * @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing
      */
     public String get(String code) {
         return get(code, (Object[]) null);
@@ -69,7 +70,8 @@ public class I18n {
      * Message code
      *
      * @param args 消息参数 / Message arguments
-     * @param args @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing
+     * @param args
+     * @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing
      */
     public String get(String code, Object... args) {
         MessageSource source = messageSource;

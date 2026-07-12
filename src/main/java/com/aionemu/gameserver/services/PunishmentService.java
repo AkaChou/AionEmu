@@ -78,7 +78,7 @@ public class PunishmentService {
 	 * Sends a player into prison or releases them.
 	 *
 	 * target player
-	 * false 出狱 / true imprison / false release。 / false 出狱 / true imprison / false release
+	 * false 出狱 / true imprison / false release。
 	 * @param delayInMinutes 监禁分钟数 / prison minutes
 	 * reason
 	 */

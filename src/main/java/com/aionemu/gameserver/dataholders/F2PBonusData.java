@@ -59,7 +59,8 @@ public class F2PBonusData {
 	 *
 	 * bonus buff id
 	 *
-	 * @param buffId @return 加成属性模板，不存在则为 null / bonus attribute template, or null if absent
+	 * @param buffId
+	 * @return 加成属性模板，不存在则为 null / bonus attribute template, or null if absent
 	 */
 	public F2pBonusAttr getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);

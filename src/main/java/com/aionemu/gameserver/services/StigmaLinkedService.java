@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 烙印连结技能服务，按职业与已装备烙印组合授予/移除连结技能。
- * Stigma linked-skill service that grants or removes linked skills by class and equipped stigma combinations.
+ * 烙印之石联动技能服务 that grants or removes linked skills by class and equipped stigma combinations.
  *
  * @author DrNism
  */

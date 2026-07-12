@@ -8,7 +8,6 @@ import java.net.InetSocketAddress;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -20,24 +19,14 @@ class IPConfigTest {
 
     @AfterEach
     void tearDown() {
-        System.clearProperty("aion.game.config.dir");
-        Config.setBootOverrides(new Properties());
+        System.clearProperty("aion.config.dir");
+        Config.setBootOverrides(null);
+        NetworkConfig.PUBLIC_ADDRESS = null;
     }
 
     @Test
-    void loadUsesNetworkAddressBeforeLegacyDefaultOverride() throws Exception {
-        Path networkDir = tempDir.resolve("network");
-        Files.createDirectories(networkDir);
-        Files.writeString(networkDir.resolve("ipconfig.xml"), """
-            <ipconfig default="192.168.1.18">
-            </ipconfig>
-            """);
-        System.setProperty("aion.game.config.dir", tempDir.toString());
-
-        Properties overrides = new Properties();
-        overrides.setProperty("gameserver.network.address", "203.0.113.10");
-        overrides.setProperty("gameserver.network.ipconfig.default", "198.51.100.10");
-        Config.setBootOverrides(overrides);
+    void loadUsesPublicNetworkAddress() throws Exception {
+        NetworkConfig.PUBLIC_ADDRESS = "203.0.113.10";
 
         IPConfig.load();
 
@@ -45,7 +34,14 @@ class IPConfigTest {
     }
 
     @Test
-    void configLoadUsesNetworkAddressForLoginAddressHost() throws Exception {
+    void loadFallsBackToLoopbackWhenAddressIsMissing() throws Exception {
+        IPConfig.load();
+
+        assertArrayEquals(InetAddress.getByName("127.0.0.1").getAddress(), IPConfig.getDefaultAddress());
+    }
+
+    @Test
+    void configLoadKeepsPublicAndLoginAddressesSeparate() throws Exception {
         Files.createDirectories(tempDir.resolve("administration"));
         Files.createDirectories(tempDir.resolve("main"));
         Path networkDir = tempDir.resolve("network");
@@ -53,18 +49,16 @@ class IPConfigTest {
         Files.writeString(networkDir.resolve("network.properties"), """
             gameserver.network.address = 203.0.113.10
             gameserver.network.login.address = 192.168.1.18:9014
+            chatserver.network.public.address = 203.0.113.30:10241
             """);
-        Files.writeString(networkDir.resolve("ipconfig.xml"), """
-            <ipconfig default="192.168.1.18">
-            </ipconfig>
-            """);
-        System.setProperty("aion.game.config.dir", tempDir.toString());
+        System.setProperty("aion.config.dir", tempDir.toString());
 
         Config.load();
 
         InetSocketAddress loginAddress = NetworkConfig.LOGIN_ADDRESS;
-        assertEquals("203.0.113.10", loginAddress.getAddress().getHostAddress());
+        assertEquals("192.168.1.18", loginAddress.getAddress().getHostAddress());
         assertEquals(9014, loginAddress.getPort());
+        assertEquals("203.0.113.30", NetworkConfig.PUBLIC_CHAT_ADDRESS.getAddress().getHostAddress());
         assertArrayEquals(InetAddress.getByName("203.0.113.10").getAddress(), IPConfig.getDefaultAddress());
     }
 }

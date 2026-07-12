@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * 登录服玩家转移服务定位器，提供 {@link PlayerTransferService} 的静态访问、缓存与 Spring 回退。
  * Login-server player-transfer service locator providing static access to {@link PlayerTransferService}
- * local fallback. / local fallback.
+ * local fallback.
  */
 @Component
 public final class LoginTransferServices implements DisposableBean {

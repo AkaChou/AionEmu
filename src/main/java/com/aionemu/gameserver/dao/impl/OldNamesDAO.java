@@ -32,7 +32,8 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	 *
 	 * character name
 	 *
-	 * @param name @return 是否为旧名 / whether it is an old name
+	 * @param name
+	 * @return 是否为旧名 / whether it is an old name
 	 */
 	@Override
 	public boolean isOldName(final String name) {

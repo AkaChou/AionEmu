@@ -14,8 +14,8 @@ public class CreatureActions {
 	}
 
 	/**
-	 * @param creature 是否已经 dead / 是否已经 dead。 / Whether already dead / Whether already dead
-	 */
+	 * @param creature 是否已死亡。 / Whether already dead
+	  */
 	public static boolean isAlreadyDead(Creature creature) {
 		return creature.getLifeStats().isAlreadyDead();
 	}

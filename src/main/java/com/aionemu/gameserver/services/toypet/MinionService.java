@@ -250,7 +250,8 @@ public class MinionService {
 	 *
 	 * Current count
 	 *
-	 * @param minionCount @return 是否达上限 / Whether limit reached
+	 * @param minionCount
+	 * @return 是否达上限 / Whether limit reached
 	 */
 	static boolean isMinionLimitReached(int minionCount) {
 		return minionCount >= MAX_MINIONS;
@@ -514,7 +515,7 @@ public class MinionService {
 	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjId 守护灵对象 ID / Minion object id
-	 * @param lock 0 解锁 / 1 lock / 0 unlock。 / 0 解锁 / 1 lock / 0 unlock
+	 * @param lock 0 解锁 / 1 lock / 0 unlock。
 	 */
 	public void lockMinion(Player player, int minionObjId, int lock) {
 		MinionCommonData minion = player.getMinionList().getMinion(minionObjId);
@@ -984,7 +985,8 @@ public class MinionService {
 	 *
 	 * Random roll
 	 *
-	 * @param rnd @return 守护灵模板 ID / Minion template id
+	 * @param rnd
+	 * @return 守护灵模板 ID / Minion template id
 	 */
 	private static int minionId(int rnd) {
 		if (rnd <= 35) {

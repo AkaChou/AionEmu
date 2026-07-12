@@ -75,7 +75,8 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	 *
 	 * geometry
 	 *
-	 * @param geometry @return 是否进入即生效 / whether acts on enter
+	 * @param geometry
+	 * @return 是否进入即生效 / whether acts on enter
 	 */
 	public static boolean actsOnZoneEnter(Spatial geometry) {
 		String name = geometry.getName();
@@ -90,7 +91,8 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	 *
 	 * target creature
 	 *
-	 * @param creature @return 激活技能列表 / active skill list
+	 * @param creature
+	 * @return 激活技能列表 / active skill list
 	 */
 	private List<MaterialSkill> getSkillsForTarget(Creature creature) {
 		if (creature instanceof Player) {

@@ -9,7 +9,7 @@ import com.aionemu.gameserver.services.territory.TerritoryService;
 
 /**
  * 客户端石矛要塞（领地）攻城信息请求包。
- * territory status. / territory status.
+ * territory status.
  */
 public class CM_STONESPEAR_SIEGE extends AionClientPacket {
 	/**

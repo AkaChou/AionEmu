@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 以太矿脉任务副本事件处理器。
+ * 奥德矿脉任务副本事件处理器。
  * Instance event handler for Aether Mine Q.
  *
  * @author Encom
@@ -76,7 +76,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 		final int wi75An = spawnRace == Race.ASMODIANS ? 244128 : 244112;
 		// NPC / Npc
 		spawn(npc1, 320.69873f, 260.07156f, 256.3936f, (byte) 85);
-		// Mission_Fi_75_An. / Mission_Fi_75_An.
+		// Mission_Fi_75_An.
 		spawn(fi75An, 179.0f, 168.0f, 228.18404f, (byte) 8);
         spawn(fi75An, 172.0f, 149.0f, 230.51636f, (byte) 43);
         spawn(fi75An, 322.17755f, 222.98203f, 252.07573f, (byte) 28);
@@ -85,7 +85,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
         spawn(fi75An, 258.6159f, 195.05444f, 235.32248f, (byte) 12);
         spawn(fi75An, 226.57643f, 179.74837f, 231.16173f, (byte) 11);
         spawn(fi75An, 206.74022f, 178.92027f, 229.21239f, (byte) 5);
-		// Mission_Wi_75_An. / Mission_Wi_75_An.
+		// Mission_Wi_75_An.
 		spawn(wi75An, 187.0f, 152.0f, 228.18611f, (byte) 10);
         spawn(wi75An, 310.9536f, 237.79036f, 252.14915f, (byte) 25);
         spawn(wi75An, 290.05392f, 202.05699f, 243.7684f, (byte) 15);

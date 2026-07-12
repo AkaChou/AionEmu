@@ -87,7 +87,8 @@ public class BannedMacManager {
 	 *
 	 * target MAC
 	 *
-	 * @param address @return 是否封禁中 / true if banned
+	 * @param address
+	 * @return 是否封禁中 / true if banned
 	 */
 	public final boolean isBanned(String address) {
 		if (bannedList.containsKey(address)) {

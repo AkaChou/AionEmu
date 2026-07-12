@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * BuildingCapabilities 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */
@@ -46,28 +46,28 @@ public class BuildingCapabilities {
 	}
 
 	/**
-	 * @return Whether change floor / Whether change floor
+	 * @return Whether change floor
 	 */
 	public boolean canChangeFloor() {
 		return floor;
 	}
 
 	/**
-	 * @return Whether change room / Whether change room
+	 * @return Whether change room
 	 */
 	public boolean canChangeRoom() {
 		return room;
 	}
 
 	/**
-	 * @return Whether change interior / Whether change interior
+	 * @return Whether change interior
 	 */
 	public int canChangeInterior() {
 		return interior;
 	}
 
 	/**
-	 * @return Whether change exterior / Whether change exterior
+	 * @return Whether change exterior
 	 */
 	public int canChangeExterior() {
 		return exterior;

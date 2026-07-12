@@ -321,21 +321,21 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * @return Skin color, let's create pink lesbians :D @return skin color。 / Skin color, let's create pink lesbians :D @return skin color
+	 * @return Skin color, let's create pink lesbians :D skin color。
 	 */
 	public int getSkinRGB() {
 		return skinRGB;
 	}
 
 	/**
-	 * @param skinRGB 设置肤色。@param skinRGB 肤色 RGB / Here is the valid place to make lesbians skin pink @param skinRGB skin color
+	 * @param skinRGB 设置肤色。 肤色 RGB / Here is the valid place to make lesbians skin pink skin color
 	 */
 	public void setSkinRGB(int skinRGB) {
 		this.skinRGB = skinRGB;
 	}
 
 	/**
-	 * @return Hair color, personally i prefer brunettes @return har color。 / Hair color, personally i prefer brunettes @return har color
+	 * @return Hair color, personally i prefer brunettes har color。
 	 */
 	public int getHairRGB() {
 		return hairRGB;
@@ -367,7 +367,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * @return Lips color. @return lips color。 / Lips color. @return lips color
+	 * @return Lips color. lips color。
 	 */
 	public int getLipRGB() {
 		return lipRGB;
@@ -441,14 +441,14 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * @return Eye space @return eye space。 / Eye space @return eye space
+	 * @return Eye space eye space。
 	 */
 	public int getEyeSpace() {
 		return eyeSpace;
 	}
 
 	/**
-	 * @param eyeSpace 设置眼距。@param eyeSpace 眼距 / Eye space @param eyeSpace someting connected to eyes
+	 * @param eyeSpace 设置眼距。 眼距 / Eye space someting connected to eyes
 	 */
 	public void setEyeSpace(int eyeSpace) {
 		this.eyeSpace = eyeSpace;
@@ -525,14 +525,14 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * @return 返回眉高。@return 眉高 / Rerturn brow heigth @return brow heigth
+	 * @return 返回眉高。 眉高 / Rerturn brow heigth brow heigth
 	 */
 	public int getBrowHeight() {
 		return browHeight;
 	}
 
 	/**
-	 * @param browHeight 设置眉高。 / Brow heigth @param browHeight brow heigth
+	 * @param browHeight 设置眉高。 / Brow heigth brow heigth
 	 */
 	public void setBrowHeight(int browHeight) {
 		this.browHeight = browHeight;
@@ -881,35 +881,35 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * @return 返回肩。 / Shoulders @return shouldeers
+	 * @return 返回肩。 / Shoulders shouldeers
 	 */
 	public int getShoulders() {
 		return shoulders;
 	}
 
 	/**
-	 * @param shoulders 设置肩。 / Shoulders @param shoulders shoulders
+	 * @param shoulders 设置肩。 / Shoulders shoulders
 	 */
 	public void setShoulders(int shoulders) {
 		this.shoulders = shoulders;
 	}
 
 	/**
-	 * @return 返回肩宽。 / Shoulder Size @return shouldeerSize
+	 * @return 返回肩宽。 / Shoulder Size shouldeerSize
 	 */
 	public int getShoulderSize() {
 		return shoulderSize;
 	}
 
 	/**
-	 * @param shoulderSize 设置肩。 / Shoulder Size @param shoulderSize shoulderSize
+	 * @param shoulderSize 设置肩。 / Shoulder Size shoulderSize
 	 */
 	public void setShoulderSize(int shoulderSize) {
 		this.shoulderSize = shoulderSize;
 	}
 
 	/**
-	 * @return 返回躯干。 / Torso @return torso
+	 * @return 返回躯干。 / Torso torso
 	 */
 	public int getTorso() {
 		return torso;
@@ -1097,7 +1097,7 @@ public class PlayerAppearance implements Cloneable {
 	}
 
 	/**
-	 * @return 返回面部比例。 / Retunrs facial rate @return facial rate
+	 * @return 返回面部比例。 / Retunrs facial rate facial rate
 	 */
 	public int getFacialRate() {
 		return facialRate;

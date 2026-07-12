@@ -30,7 +30,7 @@ public class PlayerLunaShop {
 	}
 
 	/**
-	 * @return Whether free underpath / Whether free underpath
+	 * @return Whether free underpath
 	 */
 	public boolean isFreeUnderpath() {
 		return FreeUnderpath;
@@ -42,7 +42,7 @@ public class PlayerLunaShop {
 	}
 
 	/**
-	 * @return Whether free factory / Whether free factory
+	 * @return Whether free factory
 	 */
 	public boolean isFreeFactory() {
 		return FreeFactory;
@@ -54,7 +54,7 @@ public class PlayerLunaShop {
 	}
 
 	/**
-	 * @return Whether free chest / Whether free chest
+	 * @return Whether free chest
 	 */
 	public boolean isFreeChest() {
 		return FreeChest;

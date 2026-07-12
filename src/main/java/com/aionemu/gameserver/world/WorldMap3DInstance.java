@@ -85,7 +85,8 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	 *
 	 * region id
 	 *
-	 * @param regionId @return 新建的地图区域 / newly created map region
+	 * @param regionId
+	 * @return 新建的地图区域 / newly created map region
 	 */
 	@Override
 	protected MapRegion createMapRegion(int regionId) {

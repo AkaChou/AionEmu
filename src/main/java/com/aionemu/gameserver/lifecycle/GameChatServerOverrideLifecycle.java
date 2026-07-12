@@ -66,7 +66,7 @@ public class GameChatServerOverrideLifecycle {
      * 是否已加载。
      * Whether this stage is loaded.
      *
-     * @return {@code true} if loaded。 / {@code true} if loaded
+     * @return {@code true} if loaded。
      */
     public synchronized boolean isLoaded() {
         return loaded;

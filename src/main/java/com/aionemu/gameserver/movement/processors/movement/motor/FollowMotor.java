@@ -215,7 +215,7 @@ public class FollowMotor extends AMovementMotor {
 	 * 判断 NPC 当前是否允许移动（非恐惧、可执行移动且未施法）。
 	 * Whether the NPC may move (not under fear, can perform move, and not casting).
 	 *
-	 * @return {@code true} if movement is allowed。 / {@code true} if movement is allowed
+	 * @return {@code true} if movement is allowed。
 	 */
 	private boolean canMove() {
 		return !this._owner.getEffectController().isUnderFear() && this._owner.canPerformMove()

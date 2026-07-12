@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
  * 双层迭代器，用于扁平遍历嵌套可迭代结构。
  * Two-level iterator for flat traversal of nested iterables.
  *
+ *
  * @param <V> 元素类型 / Element type
  */
 public class IteratorIterator<V> implements Iterator<V> {
@@ -63,7 +64,8 @@ public class IteratorIterator<V> implements Iterator<V> {
      *
      * Next element
      *
-     * @return @throws NoSuchElementException 无更多元素时 / When exhausted
+     * @return
+     * @throws NoSuchElementException 无更多元素时 / When exhausted
      */
     @Override
     public V next() {

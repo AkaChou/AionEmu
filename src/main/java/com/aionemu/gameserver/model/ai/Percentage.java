@@ -43,7 +43,7 @@ public class Percentage {
 	}
 
 	/**
-	 * @return Whether individual / Whether individual
+	 * @return Whether individual
 	 */
 	public boolean isIndividual() {
 		return isIndividual;

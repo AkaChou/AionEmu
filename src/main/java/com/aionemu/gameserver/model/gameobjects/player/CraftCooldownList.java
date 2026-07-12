@@ -17,8 +17,8 @@ public class CraftCooldownList {
 	}
 
 	/**
-	 * @param delayId 是否可 craft / 是否可 craft。 / Whether can craft / Whether can craft
-	 */
+	 * @param delayId 是否可制作。 / Whether can craft
+	  */
 	public boolean isCanCraft(int delayId) {
 		if (craftCooldowns == null || !craftCooldowns.containsKey(delayId)) {
 			return true;

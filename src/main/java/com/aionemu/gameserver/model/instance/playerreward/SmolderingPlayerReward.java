@@ -14,7 +14,7 @@ public class SmolderingPlayerReward extends InstancePlayerReward {
 	}
 
 	/**
-	 * @return Whether rewarded / Whether rewarded
+	 * @return Whether rewarded
 	 */
 	public boolean isRewarded() {
 		return isRewarded;

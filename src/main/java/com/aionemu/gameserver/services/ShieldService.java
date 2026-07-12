@@ -109,7 +109,8 @@ public class ShieldService {
 	 * location id
 	 *
 	 * @param observed 被观察生物 / observed creature
-	 * @param observed @return 观察者，不存在时为 null / observer, or null if none
+	 * @param observed
+	 * @return 观察者，不存在时为 null / observer, or null if none
 	 */
 	public ActionObserver createShieldObserver(int locationId, Creature observed) {
 		if (sphereShields.containsKey(locationId))

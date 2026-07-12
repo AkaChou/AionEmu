@@ -608,7 +608,7 @@ public class SoloSurvivorBg extends Battleground {
 		map57.addSpawn(new SpawnPosition(620f, 423f, 607f));
 		map57.setKillZ(580f);
 		super.maps.add(map57);
-		// 以太矿。 / Aether Mine.
+		// 奥德矿。 / Aether Mine.
 		BattlegroundMap map58 = new BattlegroundMap(301690000);
 		map58.addSpawn(new SpawnPosition(174f, 155f, 230f));
 		map58.addSpawn(new SpawnPosition(214f, 174f, 230f));
@@ -658,7 +658,7 @@ public class SoloSurvivorBg extends Battleground {
 		map62.addSpawn(new SpawnPosition(229f, 245f, 224f));
 		map62.setKillZ(190f);
 		super.maps.add(map62);
-		// 以太遗传实验室。 / Aetherogenetics Lab.
+		// 奥德遗传实验室。 / Aetherogenetics Lab.
 		BattlegroundMap map63 = new BattlegroundMap(310050000);
 		map63.addSpawn(new SpawnPosition(215f, 343f, 126f));
 		map63.addSpawn(new SpawnPosition(225f, 343f, 126f));

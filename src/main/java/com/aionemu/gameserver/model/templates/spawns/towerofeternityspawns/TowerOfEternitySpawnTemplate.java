@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 
 /**
  * 高塔 Of 永恒刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class TowerOfEternitySpawnTemplate extends SpawnTemplate {
@@ -44,15 +44,15 @@ public class TowerOfEternitySpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return 是否 tower 的 eternityopen / 是否 tower 的 eternityopen。 / Whether tower of eternity open / Whether tower of eternity open
-	 */
+	 * @return 永恒之塔是否开启。 / Whether tower of eternity open
+	  */
 	public final boolean isTowerOfEternityOpen() {
 		return towerOfEternityType.equals(TowerOfEternityStateType.OPEN);
 	}
 
 	/**
-	 * @return 是否 tower 的 eternityclosed / 是否 tower 的 eternityclosed。 / Whether tower of eternity closed / Whether tower of eternity closed
-	 */
+	 * @return 永恒之塔是否关闭。 / Whether tower of eternity closed
+	  */
 	public final boolean isTowerOfEternityClosed() {
 		return towerOfEternityType.equals(TowerOfEternityStateType.CLOSED);
 	}

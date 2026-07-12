@@ -16,7 +16,7 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * 物品强化 / 授权模板数据容器，按类型与 ID 索引 {@link ItemEnchantTemplate}。
- * authorize template data holder, indexing {@link ItemEnchantTemplate} by type and id. / authorize template data holder, indexing {@link ItemEnchantTemplate} by type and id.
+ * authorize template data holder, indexing {@link ItemEnchantTemplate} by type and id.
  *
  * @author Ranastic (Encom)
  */

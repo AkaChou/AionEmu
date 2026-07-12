@@ -74,8 +74,8 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	/**
-	 * @return 是否 glory / 是否 glory。 / Whether glory / Whether glory
-	 */
+	 * @return 是否为荣耀竞技场。 / Whether glory
+	  */
 	public final boolean isGlory() {
 		return mapId == 300550000;
 	}
@@ -164,7 +164,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	/**
-	 * @param rewardedPlayer Whether reward opportunity token / Whether reward opportunity token
+	 * @param rewardedPlayer Whether reward opportunity token
 	 */
 	public boolean canRewardOpportunityToken(PvPArenaPlayerReward rewardedPlayer) {
 		if (rewardedPlayer != null) {
@@ -186,7 +186,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	/**
-	 * @return Whether cap points / Whether cap points
+	 * @return Whether cap points
 	 */
 	public boolean hasCapPoints() {
 		if (isSoloArena()
@@ -201,7 +201,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	/**
-	 * @return Whether rewarded / Whether rewarded
+	 * @return Whether rewarded
 	 */
 	public boolean canRewarded() {
 		return mapId == 300350000 || mapId == 300360000 || mapId == 300420000 || mapId == 300430000

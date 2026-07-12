@@ -131,7 +131,7 @@ public class MathUtil {
 	 * @param px 查询点 X / Query point X
 	 * @param py 查询点 Y / Query point Y
 	 * Closest point
-	 * When the segment is degenerate。 / When the segment is degenerate.
+	 * When the segment is degenerate。
 	 */
 	public static Point2D getClosestPointOnSegment(float sx1, float sy1, float sx2, float sy2, float px, float py) {
 		double xDelta = sx2 - sx1;

@@ -31,7 +31,7 @@ public class ActionItemUseOperation extends QuestOperation {
 
 	/**
 	 * 向玩家发送使用 / 表情包，并在默认 3000ms 后执行 finish。
-	 * emotion packets to the player and runs finish after the default 3000ms. / emotion packets to the player and runs finish after the default 3000ms.
+	 * emotion packets to the player and runs finish after the default 3000ms.
 	 *
 	 * @param env 任务环境 / Quest environment
 	 */

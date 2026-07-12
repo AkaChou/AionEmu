@@ -254,7 +254,8 @@ public class WeatherService {
 	 *
 	 * map id
 	 *
-	 * @param mapId @return 天气条目数组 / weather entry array
+	 * @param mapId
+	 * @return 天气条目数组 / weather entry array
 	 */
 	private WeatherEntry[] getWeatherEntries(int mapId) {
 		WeatherKey key = getWeatherKeyByMapId(mapId);

@@ -57,7 +57,7 @@ public class NetConnector {
      * Legacy alias of {@link #currentTransport()}.
      *
      * @return 服务器传输实例 / Server transport instance
-     * Prefer {@link #currentTransport()}。 / Prefer {@link #currentTransport()}
+     * Prefer {@link #currentTransport()}。
      */
     @Deprecated(since = "boot-migration")
     public ServerTransport getInstance() {

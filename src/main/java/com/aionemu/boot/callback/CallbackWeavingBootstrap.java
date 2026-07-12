@@ -48,8 +48,10 @@ public class CallbackWeavingBootstrap {
      *
      * anchor class
      *
-     * @param anchorClass @return classes 目录路径，不可用时为 null / classes directory path, or null when unavailable
-     * @return @throws Exception 解析代码源位置失败时抛出 / thrown when the code-source location cannot be resolved
+     * @param anchorClass
+     * @return classes 目录路径，不可用时为 null / classes directory path, or null when unavailable
+     * @return
+     * @throws Exception 解析代码源位置失败时抛出 / thrown when the code-source location cannot be resolved
      */
     private Path classesDirectory(Class<?> anchorClass) throws Exception {
         if (anchorClass.getProtectionDomain().getCodeSource() == null) {

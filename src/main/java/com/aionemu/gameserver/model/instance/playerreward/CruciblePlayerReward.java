@@ -17,7 +17,7 @@ public class CruciblePlayerReward extends InstancePlayerReward {
 	}
 
 	/**
-	 * @return Whether rewarded / Whether rewarded
+	 * @return Whether rewarded
 	 */
 	public boolean isRewarded() {
 		return isRewarded;
@@ -63,7 +63,7 @@ public class CruciblePlayerReward extends InstancePlayerReward {
 		isPlayerDefeated = value;
 	}
 
-	/** 是否 player defeated / Whether player defeated */
+	/** 玩家是否已被击败 / Whether player defeated */
 	public boolean isPlayerDefeated() {
 		return isPlayerDefeated;
 	}

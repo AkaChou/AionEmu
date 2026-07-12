@@ -256,7 +256,7 @@ public class PlayerAllianceService {
 	}
 
 	/**
-	 * 检查 ready/ 检查 ready。 / Check ready / Check ready
+	 * 检查就绪状态。 / Check readiness.
 	 */
 	public static void checkReady(Player player, TeamCommand eventCode) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();

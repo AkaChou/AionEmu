@@ -11418,7 +11418,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PETITION_CHAT_ERROR = new SM_SYSTEM_MESSAGE(1300563);
 
 	/**
-	 * %0 : %1 / %0 : %1
+	 * %0 : %1
 	 */
 	public static SM_SYSTEM_MESSAGE STR_PETITION_GM_CHAT_MSG(String value0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1300564, value0, value1);
@@ -12006,7 +12006,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_ALREADY_REGISTERED = new SM_SYSTEM_MESSAGE(1300656);
 
 	/**
-	 * Items for Sale! The best value around!。 / Items for Sale! The best value around!
+	 * Items for Sale! The best value around!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_PERSONAL_SHOP_DEFAULT_ADVERTISE_MSG = new SM_SYSTEM_MESSAGE(1300657);
 
@@ -14168,8 +14168,8 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_RARE_LOOTING_CHANGED_TO_AUTO = new SM_SYSTEM_MESSAGE(1301023);
 
 	/**
-	 * 联盟物品分配方式已更改。 / The rare item distribution method of the alliance has been changed to Dice Roll。 / The rare item distribution method of the alliance has been changed to Dice Roll
-	 */
+	 * 联盟物品分配方式已更改。 / The rare item distribution method of the alliance has been changed to Dice Roll
+	  */
 	public static final SM_SYSTEM_MESSAGE STR_FORCE_RARE_LOOTING_CHANGED_TO_DICE = new SM_SYSTEM_MESSAGE(1301024);
 
 	/**
@@ -14330,7 +14330,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * %0 的 %1 摧毁了以太力场发生器。 / %1 of the %0 killed the Aetheric Field Generator
+	 * %0 的 %1 摧毁了奥德力场发生器。 / %1 of the %0 killed the Aetheric Field Generator
 	 */
 	public static SM_SYSTEM_MESSAGE STR_ABYSS_SHIELD_BROKEN(String value1, String value0) {
 		return new SM_SYSTEM_MESSAGE(1301048, value1, value0);
@@ -16758,7 +16758,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @return %0: %1(%2) / %0: %1(%2)
+	 * @return %0: %1(%2)
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_CHECK_INSTANCE_COOL_TIME() {
 		return new SM_SYSTEM_MESSAGE(1400032);
@@ -18941,7 +18941,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_WindPathIN = new SM_SYSTEM_MESSAGE(1400379);
 
 	/**
-	 * Manadar's hidden trap has been tripped!。 / Manadar's hidden trap has been tripped!
+	 * Manadar's hidden trap has been tripped!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Boss_BombDrakan_TargetMSG = new SM_SYSTEM_MESSAGE(
 			1400380);
@@ -18977,7 +18977,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Boss_Summoner_Reflect = new SM_SYSTEM_MESSAGE(1400386);
 
 	/**
-	 * Soulcaller casts the Powerful Smite skill!。 / Soulcaller casts the Powerful Smite skill!
+	 * Soulcaller casts the Powerful Smite skill!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Boss_Summoner_DeadlyCasting = new SM_SYSTEM_MESSAGE(
 			1400387);
@@ -19249,7 +19249,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * @param value0 %0 正在出售用于提取活力与以太的物品。 / %0 is selling items to extract vitality and Aether
+	 * @param value0 %0 正在出售用于提取活力与奥德的物品。 / %0 is selling items to extract vitality and Aether
 	 */
 	public static SM_SYSTEM_MESSAGE STR_MSG_LIMIT_SALE_GATHERING_DESC01(String value0) {
 		return new SM_SYSTEM_MESSAGE(1400436, value0);
@@ -19294,7 +19294,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDTP_FANATIC_DrakanNamed_SpawnMSG = new SM_SYSTEM_MESSAGE(1400442);
 
 	/**
-	 * Malicious Obscura exhausts the HP of nearby enemies!。 / Malicious Obscura exhausts the HP of nearby enemies!
+	 * Malicious Obscura exhausts the HP of nearby enemies!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Normal_Stalker_DrainHealth = new SM_SYSTEM_MESSAGE(
 			1400443);
@@ -19357,13 +19357,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * The Divine Artifact has been activated!。 / The Divine Artifact has been activated!
+	 * The Divine Artifact has been activated!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Boss_ArchPriest_Artifact_Light = new SM_SYSTEM_MESSAGE(
 			1400454);
 
 	/**
-	 * The Magic Artifact has been activated!。 / The Magic Artifact has been activated!
+	 * The Magic Artifact has been activated!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Boss_ArchPriest_Artifact_Dark = new SM_SYSTEM_MESSAGE(
 			1400455);
@@ -19389,12 +19389,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Isbariya the Resolute has boosted his attack power!。 / Isbariya the Resolute has boosted his attack power!
+	 * Isbariya the Resolute has boosted his attack power!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Boss_ArchPriest_2phase = new SM_SYSTEM_MESSAGE(1400459);
 
 	/**
-	 * Isbariya the Resolute has boosted his recovery power!。 / Isbariya the Resolute has boosted his recovery power!
+	 * Isbariya the Resolute has boosted his recovery power!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_Boss_ArchPriest_3phase = new SM_SYSTEM_MESSAGE(1400460);
 
@@ -19457,7 +19457,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDCatacombs_NmdShulack_Rufukin = new SM_SYSTEM_MESSAGE(1400471);
 
 	/**
-	 * 以太力场激活石遭受攻击！ / The Aetheric Field Activation Stone is under attack!
+	 * 奥德力场激活石遭受攻击！ / The Aetheric Field Activation Stone is under attack!
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_FIELDABYSS_SHIELD_ATTACKED = new SM_SYSTEM_MESSAGE(1400472);
 
@@ -20679,17 +20679,17 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_KILLED_OUT_TIMER_5S = new SM_SYSTEM_MESSAGE(1400688);
 
 	/**
-	 * The destruction of the Huge Aether Fragment has destabilized the artifact!。 / The destruction of the Huge Aether Fragment has destabilized the artifact!
+	 * The destruction of the Huge Aether Fragment has destabilized the artifact!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_Artifact_Die_01 = new SM_SYSTEM_MESSAGE(1400689);
 
 	/**
-	 * 巨大以太碎片被摧毁，神器守护者进入警戒！ / The destruction of the Huge Aether Fragment has put the artifact protector on alert!
+	 * 巨大奥德碎片被摧毁，神器守护者进入警戒！ / The destruction of the Huge Aether Fragment has put the artifact protector on alert!
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_Artifact_Die_02 = new SM_SYSTEM_MESSAGE(1400690);
 
 	/**
-	 * 巨大以太碎片被摧毁导致神器异常，神器守护者暴怒！ / The destruction of the Huge Aether Fragment has caused abnormality on the artifact. The artifact protector is furious!
+	 * 巨大奥德碎片被摧毁导致神器异常，神器守护者暴怒！ / The destruction of the Huge Aether Fragment has caused abnormality on the artifact. The artifact protector is furious!
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_Artifact_Die_03 = new SM_SYSTEM_MESSAGE(1400691);
 
@@ -20904,7 +20904,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_DF4_DRAMATA_AWAKENING = new SM_SYSTEM_MESSAGE(1400728);
 
 	/**
-	 * Yamennes's threat level has been reset!。 / Yamennes's threat level has been reset!
+	 * Yamennes's threat level has been reset!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_NmdD_ResetAggro = new SM_SYSTEM_MESSAGE(1400729);
 
@@ -20914,12 +20914,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_NmdD_Heal = new SM_SYSTEM_MESSAGE(1400730);
 
 	/**
-	 * Yamennes Blindsight has appeared!。 / Yamennes Blindsight has appeared!
+	 * Yamennes Blindsight has appeared!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_NmdD_Wakeup = new SM_SYSTEM_MESSAGE(1400731);
 
 	/**
-	 * Yamennes Painflare has appeared!。 / Yamennes Painflare has appeared!
+	 * Yamennes Painflare has appeared!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDAbRe_Core_NmdDH_Wakeup = new SM_SYSTEM_MESSAGE(1400732);
 
@@ -20999,7 +20999,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 			1400745);
 
 	/**
-	 * High Elder Roamim's threat level has reset!。 / High Elder Roamim's threat level has reset!
+	 * High Elder Roamim's threat level has reset!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Underpass_Nephilim_Raid_ResetAggro = new SM_SYSTEM_MESSAGE(1400746);
 
@@ -22231,7 +22231,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDABRECORE_OOPS_REWARD_IS_GONE = new SM_SYSTEM_MESSAGE(1400957);
 
 	/**
-	 * The Dredgion Generator has been destroyed. Its Protector is coming soon!。 / The Dredgion Generator has been destroyed. Its Protector is coming soon!
+	 * The Dredgion Generator has been destroyed. Its Protector is coming soon!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDStation_Zone2_Tower_01 = new SM_SYSTEM_MESSAGE(1400958);
 
@@ -22372,12 +22372,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S4_Draky_CTRL_01 = new SM_SYSTEM_MESSAGE(1400982);
 
 	/**
-	 * The Ornate Treasure Chest has appeared in the Illusion Stadium!。 / The Ornate Treasure Chest has appeared in the Illusion Stadium!
+	 * The Ornate Treasure Chest has appeared in the Illusion Stadium!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S7_BookBox_01 = new SM_SYSTEM_MESSAGE(1400983);
 
 	/**
-	 * Lightning Drakie has appeared!。 / Lightning Drakie has appeared!
+	 * Lightning Drakie has appeared!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S9_DuskDraky_55_Ah_01 = new SM_SYSTEM_MESSAGE(1400984);
 
@@ -22389,37 +22389,37 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * Administrator Arminos has appeared!。 / Administrator Arminos has appeared!
+	 * Administrator Arminos has appeared!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S3_Elemeltal_CTRL_01 = new SM_SYSTEM_MESSAGE(1400986);
 
 	/**
-	 * Administrator Arminos has appeared!。 / Administrator Arminos has appeared!
+	 * Administrator Arminos has appeared!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S4_Draky_CTRL_00 = new SM_SYSTEM_MESSAGE(1400987);
 
 	/**
-	 * 3 / 3
+	 * 3
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S4_Draky_CTRL_02 = new SM_SYSTEM_MESSAGE(1400988);
 
 	/**
-	 * 2 / 2
+	 * 2
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S4_Draky_CTRL_03 = new SM_SYSTEM_MESSAGE(1400989);
 
 	/**
-	 * 1 / 1
+	 * 1
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S4_Draky_CTRL_04 = new SM_SYSTEM_MESSAGE(1400990);
 
 	/**
-	 * Administrator Arminos has appeared!。 / Administrator Arminos has appeared!
+	 * Administrator Arminos has appeared!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S6_Ghost_55_Ah_01 = new SM_SYSTEM_MESSAGE(1400991);
 
 	/**
-	 * Lightning Drakie has disappeared!。 / Lightning Drakie has disappeared!
+	 * Lightning Drakie has disappeared!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_S9_DuskDraky_55_Ah_02 = new SM_SYSTEM_MESSAGE(1400992);
 
@@ -22724,12 +22724,12 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDArena_Solo_SB1_AllDead_BROADCAST = new SM_SYSTEM_MESSAGE(1401069);
 
 	/**
-	 * Poppy has almost reached the refuge. Just a little bit further!。 / Poppy has almost reached the refuge. Just a little bit further!
+	 * Poppy has almost reached the refuge. Just a little bit further!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDArena_Solo_SB1_HideNear_BROADCAST = new SM_SYSTEM_MESSAGE(1401070);
 
 	/**
-	 * Poppy has reached the refuge safely. A successful rescue!。 / Poppy has reached the refuge safely. A successful rescue!
+	 * Poppy has reached the refuge safely. A successful rescue!。
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_IDArena_Solo_SB1_HideSucc_BROADCAST = new SM_SYSTEM_MESSAGE(1401071);
 
@@ -22769,7 +22769,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_IDArena_Solo_S4_System1 = new SM_SYSTEM_MESSAGE(1401084);
 
 	/**
-	 * 砸碎以太桶以引诱并消灭干渴的精灵。 / Smash the Aether Barrel to lure and destroy the Thirsty Spirits
+	 * 砸碎奥德桶以引诱并消灭干渴的精灵。 / Smash the Aether Barrel to lure and destroy the Thirsty Spirits
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_CHAT_IDArena_Solo_S4_System2 = new SM_SYSTEM_MESSAGE(1401085);
 
@@ -23457,7 +23457,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	}
 
 	/**
-	 * F2P / F2P
+	 * F2P
 	 */
 	public static SM_SYSTEM_MESSAGE STR_F2P_MSG_NOTICE_PACK_EXPIRE_TIME(String durationtime0, String value1) {
 		return new SM_SYSTEM_MESSAGE(1700040, durationtime0, value1);
@@ -23983,7 +23983,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Teo_T_End_02 = new SM_SYSTEM_MESSAGE(1403042);
 
 	/**
-	 * [R.v.R] 4.9 / [R.v.R] 4.9
+	 * [R.v.R] 4.9
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_RVR_DIRECT_PORTAL_OPEN = new SM_SYSTEM_MESSAGE(1403215);
 	public static final SM_SYSTEM_MESSAGE STR_MSG_RVR_DIRECT_PORTAL_OPEN_NOTICE = new SM_SYSTEM_MESSAGE(1403222);

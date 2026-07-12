@@ -11,6 +11,13 @@ import com.aionemu.commons.configuration.Property;
 public class NetworkConfig {
 
 	/**
+	 * 向客户端公布的游戏服务器地址。
+	 * Game-server address advertised to clients.
+	 */
+	@Property(key = "gameserver.network.address", defaultValue = "127.0.0.1")
+	public static String PUBLIC_ADDRESS;
+
+	/**
 	 * 游戏服务器端口。
 	 * Game server port.
 	 */
@@ -42,14 +49,21 @@ public class NetworkConfig {
 	 * 聊天服务器地址。
 	 * ChatServer address.
 	 */
-	@Property(key = "gameserver.network.chat.address", defaultValue = "localhost:9021")
+	@Property(key = "chatserver.network.gameserver.address", defaultValue = "localhost:9021")
 	public static InetSocketAddress CHAT_ADDRESS;
+
+	/**
+	 * 向游戏客户端公布的聊天服务器地址。
+	 * Chat-server address advertised to game clients.
+	 */
+	@Property(key = "chatserver.network.public.address", defaultValue = "localhost:10241")
+	public static InetSocketAddress PUBLIC_CHAT_ADDRESS;
 
 	/**
 	 * 本游戏服在聊天服认证用的密码。
 	 * Password for this GameServer ID for authentication at ChatServer.
 	 */
-	@Property(key = "gameserver.network.chat.password", defaultValue = "")
+	@Property(key = "chatserver.network.gameserver.password", defaultValue = "")
 	public static String CHAT_PASSWORD;
 
 	/**

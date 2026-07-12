@@ -111,7 +111,8 @@ public class SkillTreeData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 学习模板数组 / learn template array
+	 * @param skillId
+	 * @return 学习模板数组 / learn template array
 	 */
 	public SkillLearnTemplate[] getTemplatesForSkill(int skillId) {
 		List<SkillLearnTemplate> searchSkills = new ArrayList<SkillLearnTemplate>();
@@ -129,7 +130,8 @@ public class SkillTreeData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 是否可学习 / whether it is a learned skill
+	 * @param skillId
+	 * @return 是否可学习 / whether it is a learned skill
 	 */
 	public boolean isLearnedSkill(int skillId) {
 		return templatesById.get(skillId) != null;

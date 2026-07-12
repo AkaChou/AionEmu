@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 代理人刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -46,14 +46,14 @@ public class AgentSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether agent fight / Whether agent fight
+	 * @return Whether agent fight
 	 */
 	public final boolean isAgentFight() {
 		return agentType.equals(AgentStateType.FIGHT);
 	}
 
 	/**
-	 * @return Whether agent peace / Whether agent peace
+	 * @return Whether agent peace
 	 */
 	public final boolean isAgentPeace() {
 		return agentType.equals(AgentStateType.PEACE);

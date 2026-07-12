@@ -27,7 +27,7 @@ public class ItemCollectingData extends XMLQuest {
 
 	/**
 	 * 可交互以获取物品的动作物品 / 可采集物 ID 列表。
-	 * gatherable object ids used to obtain items. / gatherable object ids used to obtain items.
+	 * gatherable object ids used to obtain items.
 	 */
 	@XmlAttribute(name = "action_item_ids")
 	protected List<Integer> actionItemIds;

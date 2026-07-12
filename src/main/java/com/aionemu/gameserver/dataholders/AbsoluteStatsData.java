@@ -50,7 +50,8 @@ public class AbsoluteStatsData {
 	 *
 	 * stat-set id
 	 *
-	 * @param statSetId @return 修正模板，不存在则为 null / modifiers template or null
+	 * @param statSetId
+	 * @return 修正模板，不存在则为 null / modifiers template or null
 	 */
 	public ModifiersTemplate getTemplate(int statSetId) {
 		return absoluteStatsData.get(statSetId);

@@ -66,7 +66,8 @@ public class ChestData {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 模板，不存在则为 null / template or null
+	 * @param npcId
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public ChestTemplate getChestTemplate(int npcId) {
 		return chestData.get(npcId);

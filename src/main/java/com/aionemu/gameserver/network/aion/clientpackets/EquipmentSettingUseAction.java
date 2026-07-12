@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.items.ItemSlot;
 
 /**
  * 装备方案应用动作（穿戴/卸下/切换主副手）。
- * unequip / switch hands). / unequip / switch hands).
+ * unequip / switch hands).
  */
 class EquipmentSettingUseAction {
 

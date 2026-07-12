@@ -207,7 +207,7 @@ public class BalaurAssaultService {
 					// 龙族摧毁了大门守护石。 / The Balaur have destroyed the Gate Guardian Stone.
 					PacketSendUtility.playerSendPacketTime(player,
 							SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_REPAIR_BROKEN, 1500000);
-					// 龙族摧毁了以太力场激活石。 / The Balaur have destroyed the Aetheric Field Activation Stone.
+					// 龙族摧毁了奥德力场激活石。 / The Balaur have destroyed the Aetheric Field Activation Stone.
 					PacketSendUtility.playerSendPacketTime(player,
 							SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_SHIELD_BROKEN, 2100000);
 				}
@@ -361,7 +361,8 @@ public class BalaurAssaultService {
 	 *
 	 * fortress location
 	 *
-	 * @param fortress @return 是否可突击 / whether assault may start
+	 * @param fortress
+	 * @return 是否可突击 / whether assault may start
 	 */
 	private boolean calculateFortressAssault(FortressLocation fortress) {
 		boolean isBalaurea = fortress.getWorldId() != 400010000;
@@ -389,7 +390,8 @@ public class BalaurAssaultService {
 	 *
 	 * artifact location
 	 *
-	 * @param artifact @return 是否可突击 / whether assault may start
+	 * @param artifact
+	 * @return 是否可突击 / whether assault may start
 	 */
 	private boolean calculateArtifactAssault(ArtifactLocation artifact) {
 		return false;

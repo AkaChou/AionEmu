@@ -23,7 +23,7 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     /** 查询变形 SQL / Select transform SQL */
     private static final String SELECT_QUERY = "SELECT `panel_id`, `item_id` FROM `player_transform` WHERE `player_id` = ?";
     /**
-	 * Delete transform SQL / Delete transform SQL
+	 * Delete transform SQL
 	 */
     private static final String DELETE_QUERY = "DELETE FROM `player_transform` WHERE `player_id` = ?";
     /** 更新变形 SQL / Update transform SQL */

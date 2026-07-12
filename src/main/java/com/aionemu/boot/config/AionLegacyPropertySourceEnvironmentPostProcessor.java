@@ -60,7 +60,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * @param target 目标属性映射 / target property map
      */
     private void loadGameProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
-        Path configDir = configDir(environment, "aion.game.config.dir", "game/config");
+        Path configDir = configDir(environment);
         String legacyPrefix = "aion.legacy.game.property.";
         loadDirectory(target, configDir.resolve("administration"), legacyPrefix);
         loadDirectory(target, configDir.resolve("main"), legacyPrefix);
@@ -76,9 +76,10 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * @param target 目标属性映射 / target property map
      */
     private void loadLoginProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
-        Path configDir = configDir(environment, "aion.login.config.dir", "login/config");
+        Path configDir = configDir(environment).resolve("login");
         String legacyPrefix = "aion.legacy.login.property.";
-        loadDirectory(target, configDir.resolve("network"), legacyPrefix);
+        loadDirectory(target, configDir, legacyPrefix);
+        loadFile(target, networkConfigFile(environment), legacyPrefix, false);
         loadFile(target, configDir.resolve("myls.properties"), legacyPrefix);
     }
 
@@ -90,32 +91,36 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * @param target 目标属性映射 / target property map
      */
     private void loadChatProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
-        Path configDir = configDir(environment, "aion.chat.config.dir", "chat/config");
+        Path configDir = configDir(environment).resolve("chat");
         String legacyPrefix = "aion.legacy.chat.property.";
         loadDirectory(target, configDir, legacyPrefix);
+        loadFile(target, networkConfigFile(environment), legacyPrefix, false);
         loadFile(target, configDir.resolve("mycs.properties"), legacyPrefix);
     }
 
+    private Path networkConfigFile(ConfigurableEnvironment environment) {
+        return configDir(environment).resolve("network/network.properties");
+    }
+
     /**
-     * 解析配置目录路径，缺省为 {@code ./config}。
-     * Resolves the config directory path, defaulting to {@code ./config}.
+     * 解析统一配置根目录。
+     * Resolves the shared configuration root directory.
      *
      * environment
-     * @param propertyName 目录属性名 / directory property name
      * @return 配置目录路径 / config directory path
      */
-    private Path configDir(ConfigurableEnvironment environment, String propertyName, String homeRelativePath) {
-        String configured = environment.getProperty(propertyName);
+    private Path configDir(ConfigurableEnvironment environment) {
+        String configured = environment.getProperty("aion.config.dir");
         if (configured != null) {
             return Path.of(configured);
         }
         if (!environment.containsProperty("aion.home")) {
-            Path sourceDirectory = Path.of("src/main/resources/aion").resolve(homeRelativePath);
+            Path sourceDirectory = Path.of("src/main/resources/aion/config");
             if (Files.isDirectory(sourceDirectory)) {
                 return sourceDirectory;
             }
         }
-        return Path.of(environment.getProperty("aion.home", "aion")).resolve(homeRelativePath);
+        return Path.of(environment.getProperty("aion.home", "aion")).resolve("config");
     }
 
     /**
@@ -150,6 +155,10 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * legacy key prefix
      */
     private void loadFile(Map<String, Object> target, Path file, String legacyPrefix) {
+        loadFile(target, file, legacyPrefix, true);
+    }
+
+    private void loadFile(Map<String, Object> target, Path file, String legacyPrefix, boolean includeRawProperty) {
         if (!Files.isRegularFile(file)) {
             return;
         }
@@ -159,20 +168,12 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load legacy properties from " + file, e);
         }
-        properties.forEach((key, value) -> addLegacyProperty(target, legacyPrefix, String.valueOf(key), value));
-    }
-
-    /**
-     * 同时写入原始键与带遗留前缀的键。
-     * Writes both the raw key and the legacy-prefixed key into the target map.
-     *
-     * @param target 目标属性映射 / target property map
-     * legacy key prefix
-     * property key
-     * property value
-     */
-    private void addLegacyProperty(Map<String, Object> target, String legacyPrefix, String key, Object value) {
-        target.put(key, value);
-        target.put(legacyPrefix + key, value);
+        properties.forEach((key, value) -> {
+            String propertyKey = String.valueOf(key);
+            if (includeRawProperty) {
+                target.put(propertyKey, value);
+            }
+            target.put(legacyPrefix + propertyKey, value);
+        });
     }
 }

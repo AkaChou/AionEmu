@@ -61,7 +61,8 @@ public class LegionContainer implements Iterable<Legion> {
 	 *
 	 * legion ID
 	 *
-	 * @param legionId @return 军团实例，不存在则返回 null / legion instance, or null if absent
+	 * @param legionId
+	 * @return 军团实例，不存在则返回 null / legion instance, or null if absent
 	 */
 	public synchronized Legion get(int legionId) {
 		return legionsById.get(legionId);

@@ -18,7 +18,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 喷泉/硬币喷泉奖励任务模板：通过交互物体消耗收集物品并立即进入奖励流程。
- * coin-fountain reward quest template: consumes collected items via object interaction and enters reward immediately. / coin-fountain reward quest template: consumes collected items via object interaction and enters reward immediately.
+ * coin-fountain reward quest template: consumes collected items via object interaction and enters reward immediately.
  */
 public class FountainRewards extends QuestHandler {
 	/** 任务 ID / quest id */

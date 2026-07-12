@@ -58,7 +58,8 @@ public class InstanceBuffData {
 	 *
 	 * buff id
 	 *
-	 * @param buffId @return 增益属性模板或 null / bonus attribute template or null
+	 * @param buffId
+	 * @return 增益属性模板或 null / bonus attribute template or null
 	 */
 	public InstanceBonusAttr getInstanceBonusattr(int buffId) {
 		return templates.get(buffId);

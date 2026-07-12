@@ -740,7 +740,8 @@ public class StatFunctions {
 	 *
 	 * Raw damage
 	 *
-	 * @param damage @return 缩放后伤害 / Scaled damage
+	 * @param damage
+	 * @return 缩放后伤害 / Scaled damage
 	 */
 	public static int applyDamageMultiplier(int damage) {
 		return Math.round(damage * RateConfig.DAMAGE_MULTIPLIER);
@@ -1270,7 +1271,8 @@ public class StatFunctions {
 	 *
 	 * @param stat 属性枚举 / Stat enum
 	 * @param value 原始属性值 / Original stat value
-	 * @param value @return 修正后属性值 / Modified stat value
+	 * @param value
+	 * @return 修正后属性值 / Modified stat value
 	 */
 	public static float getMovementModifier(Creature creature, StatEnum stat, float value) {
 		if (!(creature instanceof Player) || stat == null) {

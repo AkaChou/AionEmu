@@ -45,7 +45,8 @@ public class ChainSkills {
 	 *
 	 * chain category
 	 *
-	 * @param category @return 毫秒时间戳，无则 0 / epoch millis, or 0 if none
+	 * @param category
+	 * @return 毫秒时间戳，无则 0 / epoch millis, or 0 if none
 	 */
 	public long getLastChainUseTime(String category) {
 		if (this.multiSkills.get(category) != null) {

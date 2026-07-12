@@ -1,11 +1,14 @@
 package com.aionemu.gameserver.model.account;
 
+import lombok.Getter;
+
 /**
- * 角色封禁信息，用于账号相关逻辑。
- * Character Ban Info for account logic.
+ * 角色封禁信息。
+ * Character ban information.
  *
  * @author nrg
  */
+@Getter
 public class CharacterBanInfo {
 
 	private int playerId;
@@ -20,31 +23,4 @@ public class CharacterBanInfo {
 		this.reason = (reason.equals("") ? "You are suspected to have violated the server's rules" : reason);
 	}
 
-	/**
-	 * @return the playerId
-	 */
-	public int getPlayerId() {
-		return playerId;
-	}
-
-	/**
-	 * @return the start
-	 */
-	public long getStart() {
-		return start;
-	}
-
-	/**
-	 * @return the end
-	 */
-	public long getEnd() {
-		return end;
-	}
-
-	/**
-	 * @return the reason
-	 */
-	public String getReason() {
-		return reason;
-	}
 }

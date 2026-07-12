@@ -122,7 +122,8 @@ public class LoginConnection extends AConnection {
      *
      * Packet data
      *
-     * @param data @return 成功为 true；失败需立即关闭连接 / True on success; false means close now
+     * @param data
+     * @return 成功为 true；失败需立即关闭连接 / True on success; false means close now
      */
     @Override
     protected final boolean processData(ByteBuffer data) {

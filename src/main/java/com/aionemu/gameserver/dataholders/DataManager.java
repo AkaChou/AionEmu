@@ -189,7 +189,7 @@ public final class DataManager {
      * 构造并加载全部静态数据，分配到各公共静态字段。
      * Constructs the manager, loads all static data, and assigns it to public static fields.
      *
-     * on duplicate construction or load failure。 / on duplicate construction or load failure.
+     * on duplicate construction or load failure。
      */
     public DataManager() {
         if (!CONSTRUCTED.compareAndSet(false, true)) {
@@ -359,7 +359,8 @@ public final class DataManager {
      *
      * assignment future
      *
-     * @param future @throws IllegalStateException 中断或执行失败 / if interrupted or the future fails
+     * @param future
+     * @throws IllegalStateException 中断或执行失败 / if interrupted or the future fails
      */
     static void awaitStaticDataAssignment(CompletableFuture<Void> future) {
         try {
@@ -380,7 +381,8 @@ public final class DataManager {
      *
      * XML data loader
      *
-     * @param loader @return 已加载的静态数据与物品数据 / loaded static data and item data
+     * @param loader
+     * @return 已加载的静态数据与物品数据 / loaded static data and item data
      */
     static LoadedStaticData loadStaticData(XmlDataLoader loader) {
         CompletableFuture<ItemData> itemDataFuture = CompletableFuture.supplyAsync(loader::loadItemData);

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	次元漩涡 / Dimensional Vortex 3.9
+ -->
+<vortex_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vortex_schedule.xsd">
+	<!-- 次元漩涡 / DIMENSIONAL VORTEX -->
+	<!-- 埃尔特内 / ELTNEN -->
+	<vortex id="1">
+		<invasionTime>0 0 11 ? * MON-SUN *</invasionTime>
+		<invasionTime>0 0 19 ? * MON-SUN *</invasionTime>
+		<invasionTime>0 0 3 ? * MON-SUN *</invasionTime>
+	</vortex>
+	<!-- 布鲁斯特豪宁 / BRUSTHONIN -->
+	<vortex id="2">
+		<invasionTime>0 0 11 ? * MON-SUN *</invasionTime>
+		<invasionTime>0 0 19 ? * MON-SUN *</invasionTime>
+		<invasionTime>0 0 3 ? * MON-SUN *</invasionTime>
+	</vortex>
+</vortex_schedule>

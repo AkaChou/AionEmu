@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.anoha.AnohaStateType;
 
 /**
  * 狂暴阿诺哈默认实现：切入 FIGHT / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

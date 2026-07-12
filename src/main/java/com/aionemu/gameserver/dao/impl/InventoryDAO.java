@@ -180,7 +180,8 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      *
      * player id
      *
-     * @param playerId @return 已装备物品列表 / equipped item list
+     * @param playerId
+     * @return 已装备物品列表 / equipped item list
      */
     @Override
     public List<Item> loadEquipment(int playerId) {
@@ -268,7 +269,8 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      *
      * player id
      *
-     * @param playerId @return 军团 ID；未加入或出错时返回 0 / legion id, or 0 if none/error
+     * @param playerId
+     * @return 军团 ID；未加入或出错时返回 0 / legion id, or 0 if none/error
      */
     public int loadLegionId(final int playerId) {
         try (Connection con = DatabaseFactory.getConnection();

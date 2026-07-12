@@ -5,7 +5,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 黑云交易（Blackcloud Trade）相关的服务端包（占位/初始化）。
- * initialization). / initialization).
+ * initialization).
  *
  * @author wanke
  */

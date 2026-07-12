@@ -101,7 +101,8 @@ public class ShutdownHook extends Thread {
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * Restart service
      *
-     * @param processBridge @return 关停钩子单例 / Singleton shutdown hook
+     * @param processBridge
+     * @return 关停钩子单例 / Singleton shutdown hook
      * @param restartService @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */
     @Deprecated(since = "boot-migration")
@@ -117,7 +118,8 @@ public class ShutdownHook extends Thread {
      * Restart service
      *
      * @param gameServerService 游戏服服务 / Game-server service
-     * @param restartService @return 关停钩子单例 / Singleton shutdown hook
+     * @param restartService
+     * @return 关停钩子单例 / Singleton shutdown hook
      * @param gameServerService @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */
     @Deprecated(since = "boot-migration")

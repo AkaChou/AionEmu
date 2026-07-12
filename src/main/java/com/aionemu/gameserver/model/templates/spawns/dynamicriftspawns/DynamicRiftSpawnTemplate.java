@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 动态裂隙刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -46,14 +46,14 @@ public class DynamicRiftSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether dynamic rift open / Whether dynamic rift open
+	 * @return Whether dynamic rift open
 	 */
 	public final boolean isDynamicRiftOpen() {
 		return dynamicRiftType.equals(DynamicRiftStateType.OPEN);
 	}
 
 	/**
-	 * @return Whether dynamic rift closed / Whether dynamic rift closed
+	 * @return Whether dynamic rift closed
 	 */
 	public final boolean isDynamicRiftClosed() {
 		return dynamicRiftType.equals(DynamicRiftStateType.CLOSED);

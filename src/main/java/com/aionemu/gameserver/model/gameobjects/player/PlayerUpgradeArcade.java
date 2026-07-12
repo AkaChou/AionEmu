@@ -56,7 +56,7 @@ public class PlayerUpgradeArcade {
 	}
 
 	/**
-	 * @return Whether frenzy / Whether frenzy
+	 * @return Whether frenzy
 	 */
 	public boolean isFrenzy() {
 		return isFrenzy;
@@ -68,8 +68,8 @@ public class PlayerUpgradeArcade {
 	}
 
 	/**
-	 * @return 是否 retry / 是否 retry。 / Whether re try / Whether re try
-	 */
+	 * @return 是否重试。 / Whether re try
+	  */
 	public boolean isReTry() {
 		return reTry;
 	}

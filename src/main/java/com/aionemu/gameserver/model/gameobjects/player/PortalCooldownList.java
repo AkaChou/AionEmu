@@ -22,7 +22,7 @@ public class PortalCooldownList {
 	}
 
 	/**
-	 * @param worldId Whether portal use disabled / Whether portal use disabled
+	 * @param worldId Whether portal use disabled
 	 */
 	public boolean isPortalUseDisabled(int worldId) {
 		if (portalCooldowns == null || !portalCooldowns.containsKey(worldId)) {

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services.transfers;
 
+import lombok.Getter;
+
 /**
  * A-Station（跨服站点）配置数据，描述目标服务器 ID、图标集以及等级限制。
  * A-Station (cross-server station) configuration holding server ID, icon set and level limits.
@@ -7,7 +9,9 @@ package com.aionemu.gameserver.services.transfers;
  * @author Ranastic
  */
 public class AStation {
+	@Getter
 	private int serverId;
+	@Getter
 	private int iconSet;
 	private int minlevel, maxlevel;
 
@@ -25,26 +29,6 @@ public class AStation {
 		this.iconSet = sendIcon ? 257 : 513; // 257 Master Server / 513 Live Server
 		this.minlevel = minLevel;
 		this.maxlevel = maxLevel;
-	}
-
-	/**
-	 * 获取服务器 ID。
-	 * Get the server ID.
-	 *
-	 * Server ID
-	 */
-	public int getServerId() {
-		return serverId;
-	}
-
-	/**
-	 * 获取图标集标识。
-	 * Get the icon set identifier.
-	 *
-	 * Icon set
-	 */
-	public int getIconSet() {
-		return iconSet;
 	}
 
 	/**

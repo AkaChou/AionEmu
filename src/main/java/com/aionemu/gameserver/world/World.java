@@ -163,7 +163,8 @@ public class World {
 	 *
 	 * visible object
 	 *
-	 * @param object @return 是否写入本地索引 / whether a local index was updated
+	 * @param object
+	 * @return 是否写入本地索引 / whether a local index was updated
 	 */
 	private boolean addLocalObject(VisibleObject object) {
 		if (object instanceof SiegeNpc) {
@@ -346,7 +347,8 @@ public class World {
 	 *
 	 * object id
 	 *
-	 * @param objectId @return 可见对象或 null / visible object or null
+	 * @param objectId
+	 * @return 可见对象或 null / visible object or null
 	 */
 	public VisibleObject findVisibleObject(int objectId) {
 		return allObjects.get(objectId);
@@ -358,7 +360,8 @@ public class World {
 	 *
 	 * visible object
 	 *
-	 * @param object @return 在世界中返回 true / true if in world
+	 * @param object
+	 * @return 在世界中返回 true / true if in world
 	 */
 	public boolean isInWorld(VisibleObject object) {
 		return allObjects.containsKey(object.getObjectId());

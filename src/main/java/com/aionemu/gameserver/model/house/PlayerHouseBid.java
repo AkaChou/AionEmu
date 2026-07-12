@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.house;
 
 import java.sql.Timestamp;
+import lombok.Getter;
 
 /**
  * 玩家房屋 Bid，用于房屋相关逻辑。
@@ -8,9 +9,12 @@ import java.sql.Timestamp;
  */
 
 public class PlayerHouseBid implements Comparable<PlayerHouseBid> {
+	@Getter
 	private int playerId;
+	@Getter
 	private int houseId;
 	private long offer;
+	@Getter
 	private Timestamp time;
 
 	public PlayerHouseBid(int playerId, int houseId, long offer, Timestamp time) {
@@ -20,24 +24,9 @@ public class PlayerHouseBid implements Comparable<PlayerHouseBid> {
 		this.time = time;
 	}
 
-	/** 返回玩家 ID / Returns the player id */
-	public int getPlayerId() {
-		return playerId;
-	}
-
-	/** 返回 house id / Returns the house id */
-	public int getHouseId() {
-		return houseId;
-	}
-
 	/** 返回 bid offer / Returns the bid offer */
 	public long getBidOffer() {
 		return offer;
-	}
-
-	/** 返回时间 / Returns the time*/
-	public Timestamp getTime() {
-		return time;
 	}
 
 	/** 比较。 / Compares to another instance. */

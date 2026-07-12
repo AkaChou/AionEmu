@@ -138,7 +138,7 @@ public class ItemStorage {
 	}
 
 	/**
-	 * @return Whether full special cube / Whether full special cube
+	 * @return Whether full special cube
 	 */
 	public boolean isFullSpecialCube() {
 		return getSpecialCubeItems().size() >= specialLimit;

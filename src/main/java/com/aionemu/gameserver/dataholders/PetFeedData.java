@@ -50,7 +50,8 @@ public class PetFeedData {
 	 *
 	 * flavour id
 	 *
-	 * @param flavourId @return 口味模板，不存在则为 null / flavour template or null
+	 * @param flavourId
+	 * @return 口味模板，不存在则为 null / flavour template or null
 	 */
 	public PetFlavour getFlavourById(int flavourId) {
 		return petFlavoursById.get(flavourId);

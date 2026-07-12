@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 称号模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -36,7 +36,7 @@ public enum EntryRequestType {
 	}
 
 	/**
-	 * @return Whether special purpose / Whether special purpose
+	 * @return Whether special purpose
 	 */
 	public boolean isSpecialPurpose() {
 		return id == 3;

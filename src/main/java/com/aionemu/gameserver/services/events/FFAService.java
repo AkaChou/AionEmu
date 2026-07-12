@@ -77,7 +77,7 @@ public class FFAService {
 
 	/**
 	 * 初始化 FFA：加载竞技场地图并启动周期调度（人数播报 / 地图轮换 / 全服邀请）。
-	 * map rotation / world invites). / map rotation / world invites).
+	 * map rotation / world invites).
 	 */
 	public void init() {
 		if (!FFAConfig.FFA_ENABLED) {
@@ -460,7 +460,7 @@ public class FFAService {
 
 	/**
 	 * 检查并处理连杀里程碑奖励（物品 / 点数 / 全场播报）。
-	 * toll / arena announce). / toll / arena announce).
+	 * toll / arena announce).
 	 *
 	 * killer
 	 */

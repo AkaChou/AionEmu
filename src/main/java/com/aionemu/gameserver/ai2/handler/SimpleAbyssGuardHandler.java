@@ -12,7 +12,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 
 /**
  * 欧比斯简易守卫处理器，对可攻击 / 敌对 NPC 做仇恨检查，其余委托 {@link CreatureEventHandler}。
- * aggressive NPCs, delegates others to {@link CreatureEventHandler}. / aggressive NPCs, delegates others to {@link CreatureEventHandler}.
+ * aggressive NPCs, delegates others to {@link CreatureEventHandler}.
  */
 public class SimpleAbyssGuardHandler {
 

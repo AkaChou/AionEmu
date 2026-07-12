@@ -641,7 +641,7 @@ public class SpawnsData2 {
 	 *
 	 * @param directory 刷怪数据目录 / spawn data directory
 	 * @return 已索引的刷怪数据 / indexed spawn data
-	 * on load or validation failure。 / on load or validation failure.
+	 * on load or validation failure。
 	 */
 	public static SpawnsData2 load(File directory) throws Exception {
 		Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
@@ -687,7 +687,8 @@ public class SpawnsData2 {
 	 *
 	 * world map id
 	 *
-	 * @param worldId @return 刷怪组列表，不存在则为空列表 / spawn groups, or empty list
+	 * @param worldId
+	 * @return 刷怪组列表，不存在则为空列表 / spawn groups, or empty list
 	 */
 	public List<SpawnGroup2> getSpawnsByWorldId(int worldId) {
 		if (!allSpawnMaps.containsKey(worldId)) {
@@ -721,7 +722,8 @@ public class SpawnsData2 {
 	 *
 	 * siege location id
 	 *
-	 * @param siegeId @return 刷怪组列表，可能为 null / spawn groups or null
+	 * @param siegeId
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
 	public List<SpawnGroup2> getSiegeSpawnsByLocId(int siegeId) {
 		return siegeSpawnMaps.get(siegeId);
@@ -733,7 +735,8 @@ public class SpawnsData2 {
 	 *
 	 * legion dominion id
 	 *
-	 * @param legionDominionId @return 刷怪组列表，可能为 null / spawn groups or null
+	 * @param legionDominionId
+	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
 	public List<SpawnGroup2> getLegionDominionSpawnsByLocId(int legionDominionId) {
 		return legionDominionSpawnMaps.get(legionDominionId);
@@ -967,8 +970,10 @@ public class SpawnsData2 {
 	 * target visible object
 	 *
 	 * @param delete true 表示删除点位 / true to delete the spot
-	 * @param visibleObject @return 是否保存成功 / whether the save succeeded
-	 * @param delete @throws IOException 文件读写失败 / on file I/O failure
+	 * @param visibleObject
+	 * @return 是否保存成功 / whether the save succeeded
+	 * @param delete
+	 * @throws IOException 文件读写失败 / on file I/O failure
 	 */
 	public synchronized boolean saveSpawn(Player admin, VisibleObject visibleObject, boolean delete)
 			throws IOException {

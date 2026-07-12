@@ -47,7 +47,8 @@ public class GeomUtil {
 	 * Origin
 	 *
 	 * @param to 终点 / Destination
-	 * @param to @return 归一化方向向量 / Normalized direction vector
+	 * @param to
+	 * @return 归一化方向向量 / Normalized direction vector
 	 */
 	public static Vector3f getDirection3D(Vector3f from, Vector3f to) {
 		Vector3f direction = to.subtract(from);

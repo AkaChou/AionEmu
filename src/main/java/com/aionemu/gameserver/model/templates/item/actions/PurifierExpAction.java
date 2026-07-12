@@ -19,7 +19,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * Purifier 经验动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -35,8 +35,8 @@ public class PurifierExpAction extends AbstractItemAction {
 	protected int extractionReward;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (parentItem == null) {

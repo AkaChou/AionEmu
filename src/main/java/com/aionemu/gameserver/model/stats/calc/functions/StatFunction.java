@@ -115,7 +115,7 @@ public class StatFunction implements IStatFunction {
 	}
 
 	/**
-	 * @return Whether conditions / Whether conditions
+	 * @return Whether conditions
 	 */
 	public boolean hasConditions() {
 		return conditions != null;

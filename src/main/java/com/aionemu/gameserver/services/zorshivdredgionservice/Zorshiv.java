@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 
 /**
  * 佐尔希夫挖掘舰默认实现：切入 LANDING / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

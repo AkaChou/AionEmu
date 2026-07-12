@@ -71,7 +71,8 @@ public class HouseData {
 	 *
 	 * entry world id
 	 *
-	 * @param worldId @return 地块集合，不存在则为 null / set of lands, or null if absent
+	 * @param worldId
+	 * @return 地块集合，不存在则为 null / set of lands, or null if absent
 	 */
 	public Set<HousingLand> getLandsForWorldId(int worldId) {
 		return landsByEntryWorldId.get(worldId);
@@ -84,7 +85,8 @@ public class HouseData {
 	 * entry world id
 	 *
 	 * @param houseSize 房屋类型尺寸 / house size type
-	 * @param houseSize @return 匹配地块，不存在则为 null / matching land, or null if absent
+	 * @param houseSize
+	 * @return 匹配地块，不存在则为 null / matching land, or null if absent
 	 */
 	public HousingLand getLandForHouse(int worldId, HouseType houseSize) {
 		Set<HousingLand> worldHouseAreas = landsByEntryWorldId.get(worldId);
@@ -107,7 +109,8 @@ public class HouseData {
 	 *
 	 * land id
 	 *
-	 * @param landId @return 地块模板，不存在则为 null / land template, or null if absent
+	 * @param landId
+	 * @return 地块模板，不存在则为 null / land template, or null if absent
 	 */
 	public HousingLand getLand(int landId) {
 		return landsById.get(landId);

@@ -20,7 +20,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 任务 Start 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Nemiroff Date: 17.12.2009
  */
@@ -33,8 +33,8 @@ public class QuestStartAction extends AbstractItemAction {
 	protected int questid;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		QuestState qs = player.getQuestStateList().getQuestState(questid);

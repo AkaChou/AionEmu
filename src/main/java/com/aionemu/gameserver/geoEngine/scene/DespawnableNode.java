@@ -59,7 +59,8 @@ public class DespawnableNode extends Node {
 	 *
 	 * source node
 	 *
-	 * @param node @throws CloneNotSupportedException 遇到不支持的子类型时 / when an unsupported child type is encountered
+	 * @param node
+	 * @throws CloneNotSupportedException 遇到不支持的子类型时 / when an unsupported child type is encountered
 	 */
 	public void copyFrom(Node node) throws CloneNotSupportedException {
 		name = node.name;

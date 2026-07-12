@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 静态数据服务定位器：向 DataManager / HTMLCache / XmlDataLoader 注入 Spring 提供者。
- * HTMLCache / XmlDataLoader. / HTMLCache / XmlDataLoader.
+ * HTMLCache / XmlDataLoader.
  */
 @Component
 public final class GameStaticDataServices implements DisposableBean {

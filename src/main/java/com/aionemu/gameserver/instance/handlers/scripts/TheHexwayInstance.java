@@ -32,7 +32,7 @@ import java.util.concurrent.Future;
 public class TheHexwayInstance extends GeneralInstanceHandler
 {
 	/**
-	 * whether timer1 started / whether timer1 started
+	 * whether timer1 started
 	 */
 		private boolean isStartTimer1 = false;
 	/** 是否启动计时器2 / is start timer2 */

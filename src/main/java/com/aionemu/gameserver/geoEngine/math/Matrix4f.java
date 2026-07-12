@@ -491,7 +491,7 @@ public final class Matrix4f implements Cloneable {
 	 * 从 4×4 二维数组设置矩阵。
 	 * Sets the matrix from a 4×4 two-dimensional array.
 	 *
-	 * @param matrix 4×4 source array。 / 4×4 source array
+	 * @param matrix 4×4 source array。
 	 */
 	public void set(float[][] matrix) {
 		if (matrix.length != 4 || matrix[0].length != 4) {
@@ -1195,7 +1195,8 @@ public final class Matrix4f implements Cloneable {
 	 *
 	 * inverse matrix
 	 *
-	 * @return @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
+	 * @return
+	 * @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
 	 */
 	public Matrix4f invert() {
 		return this.invert(null);
@@ -1208,7 +1209,9 @@ public final class Matrix4f implements Cloneable {
 	 * @param store 结果存储（null 时分配） / result storage (allocated if null)
 	 * store itself
 	 *
-	 * @param store @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
+	 * @param store
+	 *
+	 * @throws ArithmeticException 矩阵不可逆 / if the matrix is singular
 	 */
 	public Matrix4f invert(Matrix4f store) {
 		float fB0;
@@ -1624,7 +1627,7 @@ public final class Matrix4f implements Cloneable {
 	 * 按欧拉角（度，顺序 Z-Y-X）设置旋转部分。
 	 * Sets the rotation part from Euler angles in degrees (order Z-Y-X).
 	 *
-	 * @param angles Euler angles in degrees: x=roll, y=pitch, z=yaw。 / Euler angles in degrees: x=roll, y=pitch, z=yaw
+	 * @param angles Euler angles in degrees: x=roll, y=pitch, z=yaw。
 	 */
 	public void angleRotation(Vector3f angles) {
 		float angle = angles.z * ((float) Math.PI / 180);

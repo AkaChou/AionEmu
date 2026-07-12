@@ -4,7 +4,7 @@ import com.aionemu.gameserver.model.geometry.Area;
 
 /**
  * 区域信息模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author MrPoke
  */

@@ -146,7 +146,7 @@ public final class ShoutEventHandler {
 
 	/**
 	 * 处理被攻击 / 求助喊话（首次受击时 ATTACKED 或 HELPCALL）。
-	 * help shouts (ATTACKED or HELPCALL on first hit). / help shouts (ATTACKED or HELPCALL on first hit).
+	 * help shouts (ATTACKED or HELPCALL on first hit).
 	 *
 	 * NPC AI instance
 	 * attacker

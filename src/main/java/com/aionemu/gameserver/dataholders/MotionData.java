@@ -60,7 +60,8 @@ public class MotionData {
 	 *
 	 * motion name
 	 *
-	 * @param name @return 动作时间或 null / motion time or null
+	 * @param name
+	 * @return 动作时间或 null / motion time or null
 	 */
 	public MotionTime getMotionTime(String name) {
 		return motionTimesMap.get(name);

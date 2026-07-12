@@ -65,7 +65,8 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	 *
 	 * material id
 	 *
-	 * @param materialId @return 匹配技能列表 / matching skill list
+	 * @param materialId
+	 * @return 匹配技能列表 / matching skill list
 	 */
 	private List<MaterialSkill> findSkills(int materialId) {
 		if (materialId == 0 || DataManager.MATERIAL_DATA == null) {

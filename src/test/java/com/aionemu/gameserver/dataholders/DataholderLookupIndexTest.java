@@ -141,7 +141,7 @@ class DataholderLookupIndexTest {
 
 	@Test
 	void enteredInstancesHaveConfiguredExits() throws Exception {
-		String xml = Files.readString(Path.of("src/main/resources/aion/game/data/static_data/instance_exit/instance_exit.xml"));
+		String xml = Files.readString(Path.of("src/main/resources/aion/data/static_data/instance_exit/instance_exit.xml"));
 		InstanceExitData data = unmarshal(InstanceExitData.class, xml);
 
 		assertExit(data, 310100000, Race.ELYOS, 210040000);

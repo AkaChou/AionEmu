@@ -32,7 +32,8 @@ public class IntArrayList extends ArrayList<Integer> {
      *
      * Value
      *
-     * @param value @return 是否添加成功 / Whether added
+     * @param value
+     * @return 是否添加成功 / Whether added
      */
     public boolean add(int value) {
         return super.add(value);
@@ -56,7 +57,8 @@ public class IntArrayList extends ArrayList<Integer> {
      *
      * Callback
      *
-     * @param procedure @return 全部执行完为 true，提前中断为 false / True if completed, false if aborted
+     * @param procedure
+     * @return 全部执行完为 true，提前中断为 false / True if completed, false if aborted
      */
     public boolean forEach(IntProcedure procedure) {
         for (int value : this) {

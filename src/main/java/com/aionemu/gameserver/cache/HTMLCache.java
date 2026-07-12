@@ -342,7 +342,8 @@ public final class HTMLCache {
 	 *
 	 * file
 	 *
-	 * @param file @return 内容；不可加载时返回 null / content, or null when not loadable
+	 * @param file
+	 * @return 内容；不可加载时返回 null / content, or null when not loadable
 	 */
 	public String loadFile(File file) {
 		if (isLoadable(file)) {

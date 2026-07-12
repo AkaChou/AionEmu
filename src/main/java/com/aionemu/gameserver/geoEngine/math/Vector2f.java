@@ -516,7 +516,8 @@ public final class Vector2f implements Cloneable {
 	 *
 	 * Other vector
 	 *
-	 * @param otherVector @return 有向夹角（弧度） / Signed angle in radians
+	 * @param otherVector
+	 * @return 有向夹角（弧度） / Signed angle in radians
 	 */
 	public float angleBetween(Vector2f otherVector) {
 		float angle = FastMath.atan2(otherVector.y, otherVector.x) - FastMath.atan2(this.y, this.x);

@@ -61,7 +61,7 @@ public class FollowEventHandler {
 
 	/**
 	 * 判断跟随目标是否在允许距离内（副本 / 残血 / 满血使用不同半径）。
-	 * low HP / full HP). / low HP / full HP).
+	 * low HP / full HP).
 	 *
 	 * @param ai AI 实例 / AI instance
 	 * @param object 目标可见对象 / target visible object
@@ -82,7 +82,7 @@ public class FollowEventHandler {
 
 	/**
 	 * 停止跟随：切回空闲、清空目标、中止移动并删除 / 安排重生。
-	 * schedules respawn. / schedules respawn.
+	 * schedules respawn.
 	 *
 	 * NPC AI instance
 	 * @param creature 停止跟随的目标 / creature no longer followed

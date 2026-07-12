@@ -30,7 +30,8 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
      * Source map
      * Key-value container
      *
-     * @param v @throws Exception 序列化失败 / On marshal failure
+     * @param v
+     * @throws Exception 序列化失败 / On marshal failure
      */
     @Override
     public KeyValuePairContainer<K, V> marshal(Map<K, V> v) throws Exception {
@@ -52,7 +53,8 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
      * @param v 键值容器 / Key-value container
      * Reconstructed map
      *
-     * @param v @throws Exception 反序列化失败 / On unmarshal failure
+     * @param v
+     * @throws Exception 反序列化失败 / On unmarshal failure
      */
     @Override
     @SuppressWarnings({"unchecked"})
@@ -113,7 +115,7 @@ public class GenericMapAdapter<K, V> extends XmlAdapter<GenericMapAdapter.KeyVal
 
     /**
      * 复合键值对：普通值 / 集合 / 嵌套 Map。
-     * collection / nested map. / collection / nested map.
+     * collection / nested map.
      *
      * @param <K> 键类型 / Key type
      * @param <V> 值类型 / Value type

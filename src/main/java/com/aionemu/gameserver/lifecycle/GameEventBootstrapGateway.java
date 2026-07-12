@@ -62,7 +62,7 @@ public class GameEventBootstrapGateway {
 
     /**
      * 使用指定进度报告器构造（包内 / 测试用）。
-     * test use). / test use).
+     * test use).
      *
      * @param progressReporter 进度报告器 / Progress reporter
      */

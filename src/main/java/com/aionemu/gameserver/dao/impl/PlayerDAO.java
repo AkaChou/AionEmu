@@ -112,7 +112,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param name @return 若已使用为 true；查询异常时也返回 true / true if used, or on query error
+     * @param name
+     * @return 若已使用为 true；查询异常时也返回 true / true if used, or on query error
      */
     @Override
     public boolean isNameUsed(final String name) {
@@ -300,7 +301,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param name @return 公共数据，未找到时为 null / common data, or null if not found
+     * @param name
+     * @return 公共数据，未找到时为 null / common data, or null if not found
      */
     @Override
     public PlayerCommonData loadPlayerCommonDataByName(final String name) {
@@ -337,7 +339,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * player object id
      *
-     * @param playerObjId @return 公共数据，未找到时为 null / common data, or null if not found
+     * @param playerObjId
+     * @return 公共数据，未找到时为 null / common data, or null if not found
      */
     @Override
     public PlayerCommonData loadPlayerCommonData(final int playerObjId) {
@@ -699,7 +702,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * player object id
      *
-     * @param playerObjId @return 角色名，未找到时为 null / name, or null if not found
+     * @param playerObjId
+     * @return 角色名，未找到时为 null / name, or null if not found
      */
     @Override
     public String getPlayerNameByObjId(final int playerObjId) {
@@ -726,7 +730,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * player object id
      *
-     * @param playerObjId @return 月神消费点数，未找到或异常时为 0 / luna consume points, or 0 if missing/error
+     * @param playerObjId
+     * @return 月神消费点数，未找到或异常时为 0 / luna consume points, or 0 if missing/error
      */
     @Override
     public int getPlayerLunaConsumeByObjId(final int playerObjId) {
@@ -753,7 +758,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param playerName @return 对象 ID，未找到或异常时为 0 / object id, or 0 if missing/error
+     * @param playerName
+     * @return 对象 ID，未找到或异常时为 0 / object id, or 0 if missing/error
      */
     @Override
     public int getPlayerIdByName(final String playerName) {
@@ -780,7 +786,8 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
      *
      * character name
      *
-     * @param name @return 账号 ID，未找到或异常时为 0 / account id, or 0 if missing/error
+     * @param name
+     * @return 账号 ID，未找到或异常时为 0 / account id, or 0 if missing/error
      */
     @Override
     public int getAccountIdByName(final String name) {

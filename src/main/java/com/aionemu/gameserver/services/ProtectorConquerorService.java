@@ -54,7 +54,7 @@ public class ProtectorConquerorService {
 
 	/**
 	 * 世界归属类型：魔族/天族/双方。
-	 * Elyos / both. / Elyos / both.
+	 * Elyos / both.
 	 */
 	public enum WorldType {
 		ASMODIANS, ELYOS, USEALL;

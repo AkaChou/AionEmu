@@ -54,8 +54,10 @@ public class NettyTransportLifecycle implements AionTransportLifecycle {
      * Listen endpoint
      *
      * @param initializer 子通道初始化器 / Child channel initializer
-     * @param initializer @return 绑定完成的通道 Future / Channel future after bind completes
-     * @return @throws InterruptedException 绑定等待被中断 / Interrupted while waiting for bind
+     * @param initializer
+     * @return 绑定完成的通道 Future / Channel future after bind completes
+     * @return
+     * @throws InterruptedException 绑定等待被中断 / Interrupted while waiting for bind
      */
     public synchronized ChannelFuture bind(AionNettyEndpoint endpoint, ChannelInitializer<SocketChannel> initializer)
         throws InterruptedException {

@@ -41,7 +41,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	/** twilightbattlefield 任务 / twilight battlefield task */
 		private Future<?> twilightBattlefieldTask;
 	/**
-	 * whether timer1 started / whether timer1 started
+	 * whether timer1 started
 	 */
 		private boolean isStartTimer1 = false;
 	/** 是否启动计时器2 / is start timer2 */

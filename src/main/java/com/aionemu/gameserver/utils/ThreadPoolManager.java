@@ -325,8 +325,10 @@ public final class ThreadPoolManager {
 	 *
 	 * Timeout in milliseconds
 	 *
-	 * @param timeoutInMillisec @return 全部终止返回 true / True if all terminated
-	 * @return @throws InterruptedException 等待被中断 / Wait interrupted
+	 * @param timeoutInMillisec
+	 * @return 全部终止返回 true / True if all terminated
+	 * @return
+	 * @throws InterruptedException 等待被中断 / Wait interrupted
 	 */
 	private boolean awaitTermination(long timeoutInMillisec) throws InterruptedException {
 		final long begin = System.currentTimeMillis();

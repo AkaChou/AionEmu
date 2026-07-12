@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * Disassembly 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author BeckUp.Media
  */
@@ -164,7 +164,8 @@ public class DisassemblyAction extends AbstractItemAction
 				}
 
 				/**
-	 * 检查是否 action 为有效- canAct , calcinvslots ,移除物品从 inv。 / Check if the action is valid - canAct, calc inv slots, remove item from inv
+	 * 校验操作、计算背包空位并移除待拆解物品。
+	 * Validates the action, calculates free inventory slots and removes the source item.
 	 *
 	 * @param player
 	 * @param parentItem

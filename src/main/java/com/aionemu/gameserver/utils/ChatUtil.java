@@ -53,7 +53,8 @@ public class ChatUtil {
 	 *
 	 * Item id
 	 *
-	 * @param itemId @return 物品链接字符串 / Item link string
+	 * @param itemId
+	 * @return 物品链接字符串 / Item link string
 	 */
 	public static String item(long itemId) {
 		return String.format("[item: %d]", itemId);
@@ -65,7 +66,8 @@ public class ChatUtil {
 	 *
 	 * Recipe id
 	 *
-	 * @param recipeId @return 配方链接字符串 / Recipe link string
+	 * @param recipeId
+	 * @return 配方链接字符串 / Recipe link string
 	 */
 	public static String recipe(long recipeId) {
 		return String.format("[recipe: %d]", recipeId);
@@ -77,7 +79,8 @@ public class ChatUtil {
 	 *
 	 * Quest id
 	 *
-	 * @param questId @return 任务链接字符串 / Quest link string
+	 * @param questId
+	 * @return 任务链接字符串 / Quest link string
 	 */
 	public static String quest(int questId) {
 		return String.format("[quest: %d]", questId);

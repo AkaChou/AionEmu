@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 挑战任务模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -68,14 +68,14 @@ public class ChallengeTaskTemplate {
 	}
 
 	/**
-	 * @return Whether repeatable / Whether repeatable
+	 * @return Whether repeatable
 	 */
 	public boolean isRepeatable() {
 		return this.repeat != null && this.repeat == true;
 	}
 
 	/**
-	 * @return Whether town residence / Whether town residence
+	 * @return Whether town residence
 	 */
 	public boolean isTownResidence() {
 		return this.townResidence != null && this.townResidence == true;

@@ -49,7 +49,8 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
      *
      * petition id
      *
-     * @param petitionId @return 请愿工单，未找到时返回 null / petition, or null if not found
+     * @param petitionId
+     * @return 请愿工单，未找到时返回 null / petition, or null if not found
      */
     @Override
     public Petition getPetitionById(int petitionId) {

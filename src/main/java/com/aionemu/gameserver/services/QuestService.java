@@ -1062,7 +1062,8 @@ public final class QuestService {
 	 * Player object
 	 *
 	 * @param drop 掉落物品信息 / Drop item information
-	 * @param drop @return 是否允许掉落 / Whether dropping is allowed
+	 * @param drop
+	 * @return 是否允许掉落 / Whether dropping is allowed
 	 */
 	private static boolean isQuestDrop(Player player, QuestDrop drop) {
 		// 获取任务 ID / Get quest ID

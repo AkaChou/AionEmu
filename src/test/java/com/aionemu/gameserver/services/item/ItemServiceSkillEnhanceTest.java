@@ -82,7 +82,7 @@ class ItemServiceSkillEnhanceTest {
 	@Test
 	void rbShoesSkillEnhance65IsAvailableForClericLike58AL() throws Exception {
 		Item item = new Item(1, new TestItemTemplate(65));
-		ItemSkillEnhanceData data = unmarshal(Path.of("src/main/resources/aion/game/data/static_data/items/item_skill_enhances.xml"));
+		ItemSkillEnhanceData data = unmarshal(Path.of("src/main/resources/aion/data/static_data/items/item_skill_enhances.xml"));
 
 		assertTrue(ItemService.ensureSkillEnhance(item, data, PlayerClass.CLERIC));
 

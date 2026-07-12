@@ -28,7 +28,7 @@ public class Clear extends AdminCommand {
 	 * Clears caches by type: groups, allys or findgroup.
 	 *
 	 * admin
-	 * groups|allys|findgroup。 / groups|allys|findgroup
+	 * groups|allys|findgroup。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

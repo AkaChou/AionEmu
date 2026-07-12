@@ -16,8 +16,8 @@ class NochsanaFortressGateTemplateTest {
 
 	@Test
 	void nochsanaFortressGateUsesDragonCastleDoorRaceInSourceAndRuntimeData() throws Exception {
-		assertNochsanaFortressGateRace("src/main/resources/aion/game/data/static_data/npcs/npc_template.xml");
-		assertNochsanaFortressGateRace("aion/game/data/static_data/npcs/npc_template.xml");
+		assertNochsanaFortressGateRace("src/main/resources/aion/data/static_data/npcs/npc_template.xml");
+		assertNochsanaFortressGateRace("aion/data/static_data/npcs/npc_template.xml");
 	}
 
 	private static void assertNochsanaFortressGateRace(String path) throws Exception {

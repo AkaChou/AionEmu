@@ -3,7 +3,6 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.PrintUtils;
-import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * 系统级收尾网关：打印版本/系统信息、横幅与内存，并计算启动耗时。
- * System-finalization gateway: prints version/system info, banner and memory, and computes startup time.
+ * 系统级收尾网关：打印系统信息、横幅与内存，并计算启动耗时。
+ * System-finalization gateway: prints system info, banner and memory, and computes startup time.
  */
 @Component
 @Slf4j
@@ -48,15 +47,14 @@ public class GameSystemGateway {
     );
 
     /**
-     * 执行系统收尾：打印分区、版本、信息、横幅与内存，返回启动耗时秒数。
-     * Run system finalization: print sections, versions, info, banner and memory; return startup seconds.
+     * 执行系统收尾：打印分区、信息、横幅与内存，返回启动耗时秒数。
+     * Run system finalization: print sections, info, banner and memory; return startup seconds.
      *
      * @param serverStartTimeMillis 服务器启动时间戳（毫秒） / Server start time millis
      * @return 启动耗时秒数 / Startup time in seconds
      */
     public long start(long serverStartTimeMillis) {
         Util.printSection(I18n.get("console.section.system"));
-        AEVersions.printFullVersionInfo();
         AEInfos.printAllInfos();
         Util.printSection(I18n.get("console.section.gameserver"));
         bannerLines().forEach(PrintUtils::printBannerLine);

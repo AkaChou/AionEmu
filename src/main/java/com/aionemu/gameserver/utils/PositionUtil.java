@@ -61,7 +61,8 @@ public class PositionUtil {
 	 * Reference object
 	 *
 	 * @param object2 待判定对象 / Object to test
-	 * @param object2 @return 是否在背后半平面 / Whether in the behind half-plane
+	 * @param object2
+	 * @return 是否在背后半平面 / Whether in the behind half-plane
 	 */
 	public static boolean isBehind(VisibleObject object1, VisibleObject object2) {
 		float angle = MathUtil.convertHeadingToDegree(object1.getHeading()) + 90;

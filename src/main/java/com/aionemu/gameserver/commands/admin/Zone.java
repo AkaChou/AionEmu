@@ -31,7 +31,7 @@ public class Zone extends AdminCommand {
 	 * With no args lists zones for target; refresh revalidates; inside checks a zone name.
 	 *
 	 * @param admin 执行 GM / Admin player
-	 * @param params Optional refresh|inside &lt;name&gt;。 / Optional refresh|inside &lt;name&gt;
+	 * @param params Optional refresh|inside &lt;name&gt;。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

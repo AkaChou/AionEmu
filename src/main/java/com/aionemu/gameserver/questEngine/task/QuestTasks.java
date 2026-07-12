@@ -40,7 +40,7 @@ public class QuestTasks {
 	 * Following NPC
 	 * Target NPC template id
 	 * Scheduled future
-	 * if the target NPC has no spawn in the map。 / if the target NPC has no spawn in the map.
+	 * if the target NPC has no spawn in the map。
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, int npcTargetId) {
 		SpawnSearchResult searchResult = DataManager.SPAWNS_DATA2.getFirstSpawnByNpcId(npc.getWorldId(), npcTargetId);

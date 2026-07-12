@@ -11,7 +11,7 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 
 /**
  * 刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class SpawnTemplate {
@@ -231,22 +231,22 @@ public class SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether random walk / Whether random walk
+	 * @return Whether random walk
 	 */
 	public boolean hasRandomWalk() {
 		return randomWalk != 0;
 	}
 
 	/**
-	 * @return Whether no respawn / Whether no respawn
+	 * @return Whether no respawn
 	 */
 	public boolean isNoRespawn() {
 		return spawnGroup.getRespawnTime() == 0;
 	}
 
 	/**
-	 * @return 是否 pool / 是否 pool。 / Whether pool / Whether pool
-	 */
+	 * @return 是否使用对象池。 / Whether pool
+	  */
 	public boolean hasPool() {
 		return spawnGroup.hasPool();
 	}
@@ -267,7 +267,7 @@ public class SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether temporary spawn / Whether temporary spawn
+	 * @return Whether temporary spawn
 	 */
 	public boolean isTemporarySpawn() {
 		return spawnGroup.isTemporarySpawn();

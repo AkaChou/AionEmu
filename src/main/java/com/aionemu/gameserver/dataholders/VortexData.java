@@ -60,7 +60,8 @@ public class VortexData {
 	 *
 	 * invasion world id
 	 *
-	 * @param invasionWorldId @return 漩涡点位，不存在则为 null / vortex location or null
+	 * @param invasionWorldId
+	 * @return 漩涡点位，不存在则为 null / vortex location or null
 	 */
 	public VortexLocation getVortexLocation(int invasionWorldId) {
 		return vortexByInvasionWorldId.get(invasionWorldId);

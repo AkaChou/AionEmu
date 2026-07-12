@@ -16,7 +16,7 @@ public class SemisphereArea extends SphereArea {
 	}
 
 	/**
-	 * @param point Whether inside 3 d / Whether inside 3 d
+	 * @param point Whether inside 3 d
 	 */
 	@Override
 	public boolean isInside3D(Point3D point) {
@@ -24,7 +24,7 @@ public class SemisphereArea extends SphereArea {
 	}
 
 	/**
-	 * @return Whether inside 3 d / Whether inside 3 d
+	 * @return Whether inside 3 d
 	 */
 	@Override
 	public boolean isInside3D(float x, float y, float z) {
@@ -32,7 +32,7 @@ public class SemisphereArea extends SphereArea {
 	}
 
 	/**
-	 * @param point Whether inside z / Whether inside z
+	 * @param point Whether inside z
 	 */
 	@Override
 	public boolean isInsideZ(Point3D point) {

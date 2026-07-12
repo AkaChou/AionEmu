@@ -27,7 +27,8 @@ public class PvPZoneInstance extends SiegeZoneInstance {
 	 *
 	 * creature
 	 *
-	 * @param creature @return 是否成功进入 / whether enter succeeded
+	 * @param creature
+	 * @return 是否成功进入 / whether enter succeeded
 	 */
 	@Override
 	public synchronized boolean onEnter(Creature creature) {
@@ -45,7 +46,8 @@ public class PvPZoneInstance extends SiegeZoneInstance {
 	 *
 	 * creature
 	 *
-	 * @param creature @return 是否成功离开 / whether leave succeeded
+	 * @param creature
+	 * @return 是否成功离开 / whether leave succeeded
 	 */
 	@Override
 	public synchronized boolean onLeave(Creature creature) {

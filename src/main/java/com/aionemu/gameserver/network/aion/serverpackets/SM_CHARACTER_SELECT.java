@@ -19,7 +19,7 @@ public class SM_CHARACTER_SELECT extends AionServerPacket {
 
 	/**
 	 * 打开二级密码相关窗口（新建/输入）。
-	 * input). / input).
+	 * input).
 	 *
 	 * @param type 窗口类型：0 新建、1 输入、2 消息 / window type: 0 create, 1 input, 2 message
 	 */

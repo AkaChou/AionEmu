@@ -19,7 +19,7 @@ public class SM_CHAT_WINDOW extends AionServerPacket {
 	/**
 	 * target player
 	 * @param isGroup {@code true} 时写入队伍/联盟信息，否则写个人资料
-	 * when {@code true} writes group/alliance info, else personal profile。 / when {@code true} writes group/alliance info, else personal profile
+	 * when {@code true} writes group/alliance info, else personal profile。
 	 */
 	public SM_CHAT_WINDOW(Player target, boolean isGroup) {
 		this.target = target;

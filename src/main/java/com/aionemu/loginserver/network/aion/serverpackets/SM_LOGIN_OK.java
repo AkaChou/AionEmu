@@ -6,7 +6,7 @@ import com.aionemu.loginserver.network.aion.SessionKey;
 
 /**
  * 登录服→客户端：登录成功，下发会话密钥片段（accountId / loginOk）。
- * loginOk). / loginOk).
+ * loginOk).
  *
  * @author -Nemesiss-
  */

@@ -49,7 +49,7 @@ public abstract class OnHandleAIGeneralEvent implements Callback<AbstractAI> {
 	 * 返回本回调的基类类型，用于回调系统注册与匹配。
 	 * Return this callback's base class type for registration and matching.
 	 *
-	 * @return {@link OnHandleAIGeneralEvent} class。 / {@link OnHandleAIGeneralEvent} class
+	 * @return {@link OnHandleAIGeneralEvent} class。
 	 */
 	@Override
 	public Class<? extends Callback> getBaseClass() {

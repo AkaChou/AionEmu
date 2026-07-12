@@ -94,7 +94,8 @@ public class AI2Engine implements GameEngine {
 	 * AI name
 	 *
 	 * @param owner 所有者生物 / owner creature
-	 * @param owner @return 装配好的 AI 实例 / configured AI instance
+	 * @param owner
+	 * @return 装配好的 AI 实例 / configured AI instance
 	 */
 	public final AI2 setupAI(String name, Creature owner) {
 		AbstractAI aiInstance = null;

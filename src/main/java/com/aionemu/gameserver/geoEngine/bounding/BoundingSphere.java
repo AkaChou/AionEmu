@@ -766,7 +766,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * @param other 可碰撞对象 / collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 碰撞点数量 / number of collision points
-	 * unsupported collision type。 / unsupported collision type.
+	 * unsupported collision type。
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {

@@ -50,7 +50,8 @@ public class PropertiesUtils {
      * @param files 路径数组 / File paths
      * Properties array
      *
-     * @param files @throws IOException 任一文件读取失败 / On any read failure
+     * @param files
+     * @throws IOException 任一文件读取失败 / On any read failure
      */
     public Properties[] load(String... files) throws IOException {
         Properties[] result = new Properties[files.length];
@@ -69,7 +70,8 @@ public class PropertiesUtils {
      * @param files 文件数组 / File array
      * Properties array
      *
-     * @param files @throws IOException 任一文件读取失败 / On any read failure
+     * @param files
+     * @throws IOException 任一文件读取失败 / On any read failure
      */
     public Properties[] load(File... files) throws IOException {
         Properties[] result = new Properties[files.length];
@@ -139,7 +141,8 @@ public class PropertiesUtils {
      * Initial array
      *
      * @param properties 覆盖源数组 / Override sources
-     * @param properties @return 更新后的初始数组 / Updated initial array
+     * @param properties
+     * @return 更新后的初始数组 / Updated initial array
      */
     public Properties[] overrideProperties(Properties[] initialProperties, Properties[] properties) {
         if (properties != null) {

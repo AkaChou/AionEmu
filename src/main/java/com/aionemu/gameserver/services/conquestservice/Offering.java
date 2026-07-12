@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.conquest.ConquestStateType;
 
 /**
  * 征服/供奉默认实现：切入 CONQUEST 并初始化 BOSS / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

@@ -117,7 +117,7 @@ public abstract class Spatial implements Collidable, Cloneable {
 	}
 
 	/**
-	 * {@link Node#detachChild(Spatial)} 调用，请勿直接调用。 / {@link Node#detachChild(Spatial)} 调用，请勿直接调用。
+	 * {@link Node#detachChild(Spatial)} 调用，请勿直接调用。
 	 * Called by {@link Node#attachChild(Spatial)} and {@link Node#detachChild(Spatial)} — do not call directly.
 	 *
 	 * parent of this node

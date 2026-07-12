@@ -59,8 +59,10 @@ public class GeoWorldLoader {
 	 *
 	 * relative geo path
 	 *
-	 * @param fileName @return 小写名称到模型的映射 / lowercase name to model map
-	 * @return @throws IOException 读文件失败 / on I/O failure
+	 * @param fileName
+	 * @return 小写名称到模型的映射 / lowercase name to model map
+	 * @return
+	 * @throws IOException 读文件失败 / on I/O failure
 	 */
 	public static Map<String, Spatial> loadMeshs(String fileName) throws IOException {
 		Map<String, Spatial> geoms = new HashMap<String, Spatial>();
@@ -160,7 +162,9 @@ public class GeoWorldLoader {
 	 * @param models 已加载模型表 / loaded model table
 	 * @param map 目标地图 / target geo map
 	 * @param missingMeshes 缺失 mesh 名称收集器 / collector for missing mesh names
-	 * @param missingMeshes @throws IOException 读文件失败 / on I/O failure
+	 * @param missingMeshes
+	 *
+	 * @throws IOException 读文件失败 / on I/O failure
 	 */
 	public static void loadWorldObjects(int worldId, Map<String, Spatial> models, GeoMap map, Set<String> missingMeshes) throws IOException {
 		File geoFile = Config.geoFile(GEO_DIR + worldId + ".geo");
@@ -267,7 +271,8 @@ public class GeoWorldLoader {
 	 *
 	 * file name
 	 *
-	 * @param fileName @return 是否直接地形文件 / true if direct terrain
+	 * @param fileName
+	 * @return 是否直接地形文件 / true if direct terrain
 	 */
 	private static boolean isDirectTerrainFile(String fileName) {
 		String suffix = fileName.endsWith("_materials.png") ? "_materials.png" : ".png";
@@ -479,7 +484,7 @@ public class GeoWorldLoader {
 	 * file channel
 	 * foreign Arena
 	 * mapped buffer
-	 * on map failure or oversized file。 / on map failure or oversized file.
+	 * on map failure or oversized file。
 	 */
 	private static ByteBuffer mapReadOnly(FileChannel channel, Arena arena) throws IOException {
 		long size = channel.size();

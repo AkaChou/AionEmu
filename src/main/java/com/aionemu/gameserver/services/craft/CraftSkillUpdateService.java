@@ -263,7 +263,7 @@ public class CraftSkillUpdateService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1330069));
 			return;
 		}
-		// 以太采集 / AETHERTAPPING
+		// 奥德采集 / AETHERTAPPING
 		if (skillLvl == 399 && ((skillId == 30003 && (!player.isCompleteQuest(19003) || !player.isCompleteQuest(29003))))) { // [Journeyman]
 			// 须通过专家试炼才能晋升。 / You must pass the Expert test in order to be promoted.
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400284));
@@ -323,7 +323,8 @@ public class CraftSkillUpdateService {
 	 *
 	 * Skill id
 	 *
-	 * @param skillId @return 是否为制作技能 / Whether it is a craft skill
+	 * @param skillId
+	 * @return 是否为制作技能 / Whether it is a craft skill
 	 */
 	public static boolean isCraftingSkill(int skillId) {
 		Iterator<Integer> it = craftingSkillIds.iterator();

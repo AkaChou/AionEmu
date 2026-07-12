@@ -38,7 +38,7 @@ public class SphereArea implements Area {
 
 	@Deprecated
 	/**
-	 * @param point Whether inside 2 d / Whether inside 2 d
+	 * @param point Whether inside 2 d
 	 */
 	@Override
 	public boolean isInside2D(Point2D point) {
@@ -47,7 +47,7 @@ public class SphereArea implements Area {
 
 	@Deprecated
 	/**
-	 * @return Whether inside 2 d / Whether inside 2 d
+	 * @return Whether inside 2 d
 	 */
 	@Override
 	public boolean isInside2D(float x, float y) {
@@ -55,7 +55,7 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @param point Whether inside 3 d / Whether inside 3 d
+	 * @param point Whether inside 3 d
 	 */
 	@Override
 	public boolean isInside3D(Point3D point) {
@@ -63,7 +63,7 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @return Whether inside 3 d / Whether inside 3 d
+	 * @return Whether inside 3 d
 	 */
 	@Override
 	public boolean isInside3D(float x, float y, float z) {
@@ -71,7 +71,7 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @param point Whether inside z / Whether inside z
+	 * @param point Whether inside z
 	 */
 	@Override
 	public boolean isInsideZ(Point3D point) {
@@ -79,7 +79,7 @@ public class SphereArea implements Area {
 	}
 
 	/**
-	 * @param z Whether inside z / Whether inside z
+	 * @param z Whether inside z
 	 */
 	@Override
 	public boolean isInsideZ(float z) {

@@ -103,7 +103,8 @@ public class GameServerTable {
      *
      * GameServer id
      *
-     * @param gameServerId @return 游戏服信息 / GameServer info
+     * @param gameServerId
+     * @return 游戏服信息 / GameServer info
      */
     public GameServerInfo getGameServerInfo(byte gameServerId) {
         return gameservers.get(gameServerId);

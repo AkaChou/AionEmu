@@ -106,7 +106,7 @@ public class EncryptionKeyPair {
 	 * Validates that the client packet was decoded correctly and coded by the Aion client.
 	 *
 	 * @param buf 包缓冲区 / packet buffer
-	 * @return 若 valid 则为 true / true if valid
+	 * @return 密钥对有效时为 {@code true} / {@code true} if valid
 	 */
 	private final boolean validateClientPacket(ByteBuffer buf) {
 		return buf.getShort(0) == ~buf.getShort(3) && buf.get(2) == staticClientPacketCode;

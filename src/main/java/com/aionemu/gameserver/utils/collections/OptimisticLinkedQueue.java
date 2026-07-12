@@ -161,7 +161,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * Expected value
 	 * New value
 	 *
-	 * @return 若 successful 则为 true / True if successful
+	 * @return 成功时为 {@code true} / {@code true} if successful
 	 */
 	private boolean casTail(Node<E> cmp, Node<E> val) {
 		return tailUpdater.compareAndSet(this, cmp, val);
@@ -174,7 +174,7 @@ public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<
 	 * Expected value
 	 * New value
 	 *
-	 * @return 若 successful 则为 true / True if successful
+	 * @return 成功时为 {@code true} / {@code true} if successful
 	 */
 	private boolean casHead(Node<E> cmp, Node<E> val) {
 		return headUpdater.compareAndSet(this, cmp, val);

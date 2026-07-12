@@ -19,8 +19,8 @@ public class CM_ACCOUNT_AUTH extends GsClientPacket {
     private SessionKey sessionKey;
 
     /**
-     * loginOk / playOk1 / playOk2 并组装 SessionKey。 / loginOk / playOk1 / playOk2 并组装 SessionKey。
-     * loginOk / playOk1 / playOk2 and builds SessionKey. / loginOk / playOk1 / playOk2 and builds SessionKey.
+     * loginOk / playOk1 / playOk2 并组装 SessionKey。
+     * loginOk / playOk1 / playOk2 and builds SessionKey.
      */
     @Override
     protected void readImpl() {

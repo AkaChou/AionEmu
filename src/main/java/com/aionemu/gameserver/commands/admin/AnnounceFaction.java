@@ -29,7 +29,7 @@ public class AnnounceFaction extends AdminCommand {
 	 * Executes faction announce: filters online players by ely/asmo and center-broadcasts.
 	 *
 	 * admin
-	 * ely|asmo, message。 / ely|asmo, message
+	 * ely|asmo, message。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

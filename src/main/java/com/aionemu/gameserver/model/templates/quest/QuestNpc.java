@@ -14,7 +14,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 
 /**
  * 任务 NPC 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author MrPoke
  */

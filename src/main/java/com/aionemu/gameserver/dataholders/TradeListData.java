@@ -69,7 +69,8 @@ public class TradeListData {
 	 *
 	 * NPC id
 	 *
-	 * @param id @return 交易列表模板，不存在则为 null / trade-list template or null
+	 * @param id
+	 * @return 交易列表模板，不存在则为 null / trade-list template or null
 	 */
 	public TradeListTemplate getTradeListTemplate(int id) {
 		return npctlistData.get(id);
@@ -81,7 +82,8 @@ public class TradeListData {
 	 *
 	 * NPC id
 	 *
-	 * @param id @return 以物易物模板，不存在则为 null / trade-in template or null
+	 * @param id
+	 * @return 以物易物模板，不存在则为 null / trade-in template or null
 	 */
 	public TradeListTemplate getTradeInListTemplate(int id) {
 		return npcTradeInlistData.get(id);
@@ -93,7 +95,8 @@ public class TradeListData {
 	 *
 	 * NPC id
 	 *
-	 * @param id @return 收购列表模板，不存在则为 null / purchase template or null
+	 * @param id
+	 * @return 收购列表模板，不存在则为 null / purchase template or null
 	 */
 	public TradeListTemplate getPurchaseListTemplate(int id) {
 		return npcPurchaselistData.get(id);

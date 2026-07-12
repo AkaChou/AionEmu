@@ -21,8 +21,10 @@ public class AionConnectionFactoryImpl implements NettyConnectionFactory {
      *
      * Connection transport
      *
-     * @param transport @return 新连接，或洪水拦截时为 null / New connection, or null when flood-blocked
-     * @return @throws IOException 创建失败时 / On creation failure
+     * @param transport
+     * @return 新连接，或洪水拦截时为 null / New connection, or null when flood-blocked
+     * @return
+     * @throws IOException 创建失败时 / On creation failure
      */
     @Override
     public AConnection create(ConnectionTransport transport) throws IOException {

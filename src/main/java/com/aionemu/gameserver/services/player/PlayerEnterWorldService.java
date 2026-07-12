@@ -35,8 +35,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.versionning.Version;
-import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.AStationConfig;
@@ -169,18 +167,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public final class PlayerEnterWorldService {
 
 	/**
-	 * 服务器信息缓冲（MOTD 等）。
-	 * Server info buffer (MOTD etc.).
-	 */
-	private static final String serverInfo;
-
-	/**
-	 * 修订/附加信息缓冲。
-	 * Revision/extra info buffer.
-	 */
-	private static final String alInfo;
-
-	/**
 	 * 正在进入世界的角色 ID 集合，防重入。
 	 * Object ids currently entering world (re-entry guard).
 	 */
@@ -203,21 +189,6 @@ public final class PlayerEnterWorldService {
 	 * Advertisement/announce schedule handle.
 	 */
 	static ScheduledFuture<?> adv = null;
-
-	static {
-		String infoBuffer;
-		String alBuffer;
-		alBuffer = "\n";
-		infoBuffer = "";
-		if (GSConfig.SERVER_MOTD_DISPLAYREV) {
-			alBuffer += "----------------------------\n";
-			alBuffer += "Server Revision: " + String.format(" ", new Object[] { new Version(GameServer.class).getRevision() }) + "\n";
-		}
-		serverInfo = infoBuffer;
-		alInfo = alBuffer;
-		infoBuffer = null;
-		alBuffer = null;
-	}
 
 	/**
 	 * 开始进入世界：冷却/封禁/二级密码校验后进图。
@@ -667,7 +638,7 @@ public final class PlayerEnterWorldService {
 				PunishmentService.updateGatherableStatus(player);
 			}
 			PlayerGroupService.onPlayerLogin(player);
-			// SM_PET / SM_PET
+			// SM_PET
 			GameFeatureServices.petService().onPlayerLogin(player);
 			// SM_Minions
 			GameEventBootstrapServices.minionService().onPlayerLogin(player);
@@ -869,7 +840,7 @@ public final class PlayerEnterWorldService {
 
 	/**
 	 * 展示高级账号/会员信息。
-	 * membership info. / membership info.
+	 * membership info.
 	 *
 	 * connection
 	 * 账号 / account
@@ -892,7 +863,7 @@ public final class PlayerEnterWorldService {
 
 	/**
 	 * 向玩家发送登录服务器/欢迎信息。
-	 * welcome info to the player. / welcome info to the player.
+	 * welcome info to the player.
 	 *
 	 * 玩家 / player
 	 */

@@ -108,7 +108,7 @@ public abstract class Battleground {
 	/** 是否活动模式。 / Whether event mode. */
 	protected boolean isEvent = false;
 	/**
-	 * Whether 1v1 mode / Whether 1v1 mode
+	 * Whether 1v1 mode
 	 */
 	protected boolean is1v1 = false;
 	/** 当前世界地图实例。 / Current world map instance. */

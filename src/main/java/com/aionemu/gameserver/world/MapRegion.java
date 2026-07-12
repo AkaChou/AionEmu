@@ -164,7 +164,7 @@ public class MapRegion {
 	 * 本区域内的静态门。
 	 * Static doors in this region.
 	 *
-	 * @return entityId → door。 / entityId → door
+	 * @return entityId → door。
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();

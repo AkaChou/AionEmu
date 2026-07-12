@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.atreian_bestiary;
 
+import lombok.Getter;
+
 /**
  * AB 条目，用于艾特里亚图鉴相关逻辑。
  * AB Entry for atreian bestiary logic.
@@ -8,8 +10,11 @@ package com.aionemu.gameserver.model.atreian_bestiary;
  */
 
 public class ABEntry {
+	@Getter
 	private int id;
+	@Getter
 	private int killCount;
+	@Getter
 	private int level;
 	private int claimReward;
 
@@ -18,21 +23,6 @@ public class ABEntry {
 		this.killCount = killCount;
 		this.level = level;
 		this.claimReward = claimReward;
-	}
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回 kill count / Returns the kill count */
-	public int getKillCount() {
-		return killCount;
-	}
-
-	/** 获取等级。 / Returns the level. */
-	public int getLevel() {
-		return level;
 	}
 
 	/** Claim Reward Level / Claim Reward Level */

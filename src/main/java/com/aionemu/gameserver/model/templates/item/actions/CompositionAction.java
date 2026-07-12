@@ -18,15 +18,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * Composition 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CompositionAction")
 public class CompositionAction extends AbstractItemAction {
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		return false;
@@ -38,8 +38,8 @@ public class CompositionAction extends AbstractItemAction {
 	}
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	public boolean canAct(Player player, Item tools, Item first, Item second) {
 		if (!tools.getItemTemplate().isCombinationItem())
 			return false;

@@ -14,7 +14,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 经验加成道具动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */

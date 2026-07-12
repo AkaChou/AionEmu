@@ -112,19 +112,19 @@ public class IDAb1_Heroes_Boss_73_AhAI2 extends AggressiveNpcAI2
 					if (!isAlreadyDead()) {
 						switch (Rnd.get(1, 4)) {
 						    case 1:
-							    // IDAb1_Heroes_Boss_Summon_01_73_Ae. / IDAb1_Heroes_Boss_Summon_01_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_01_73_Ae.
 							    spawn(248026, x, y, z, (byte) 0);
 							break;
 							case 2:
-							    // IDAb1_Heroes_Boss_Summon_02_73_Ae. / IDAb1_Heroes_Boss_Summon_02_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_02_73_Ae.
 							    spawn(248027, x, y, z, (byte) 0);
 							break;
 							case 3:
-							    // IDAb1_Heroes_Boss_Summon_03_73_Ae. / IDAb1_Heroes_Boss_Summon_03_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_03_73_Ae.
 							    spawn(248028, x, y, z, (byte) 0);
 							break;
 							case 4:
-							    // IDAb1_Heroes_Boss_Summon_04_73_Ae. / IDAb1_Heroes_Boss_Summon_04_73_Ae.
+							    // IDAb1_Heroes_Boss_Summon_04_73_Ae.
 							    spawn(248029, x, y, z, (byte) 0);
 							break;
 						}

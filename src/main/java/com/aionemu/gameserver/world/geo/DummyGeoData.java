@@ -12,7 +12,7 @@ import com.aionemu.gameserver.geoEngine.models.GeoMap;
  */
 public class DummyGeoData implements GeoData {
 
-	/** 共享的哑地理地图。 / Shared dummy geo map. */
+	/** 共享的空实现地理地图。 / Shared dummy geo map. */
 	public static final DummyGeoMap DUMMY_MAP = new DummyGeoMap(StringUtils.EMPTY, 0);
 
 	/**
@@ -29,7 +29,8 @@ public class DummyGeoData implements GeoData {
 	 *
 	 * world id (ignored)
 	 *
-	 * @param worldId @return 哑地理地图 / the dummy geo map
+	 * @param worldId
+	 * @return 空实现地理地图 / the dummy geo map
 	 */
 	@Override
 	public GeoMap getMap(int worldId) {

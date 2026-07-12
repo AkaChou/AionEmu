@@ -74,7 +74,7 @@ public class PvPArenaPlayerReward extends InstancePlayerReward {
 	}
 
 	/**
-	 * @return Whether rewarded / Whether rewarded
+	 * @return Whether rewarded
 	 */
 	public boolean isRewarded() {
 		return isRewarded;
@@ -308,7 +308,7 @@ public class PvPArenaPlayerReward extends InstancePlayerReward {
 	}
 
 	/**
-	 * @return Whether boost morale / Whether boost morale
+	 * @return Whether boost morale
 	 */
 	public boolean hasBoostMorale() {
 		return boostMorale.hasInstanceBuff();

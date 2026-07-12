@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 阿诺哈刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -46,14 +46,14 @@ public class AnohaSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether anoha fight / Whether anoha fight
+	 * @return Whether anoha fight
 	 */
 	public final boolean isAnohaFight() {
 		return anohaType.equals(AnohaStateType.FIGHT);
 	}
 
 	/**
-	 * @return Whether anoha peace / Whether anoha peace
+	 * @return Whether anoha peace
 	 */
 	public final boolean isAnohaPeace() {
 		return anohaType.equals(AnohaStateType.PEACE);

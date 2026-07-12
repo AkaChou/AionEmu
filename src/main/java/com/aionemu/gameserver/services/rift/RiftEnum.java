@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.Race;
  * @author Rinzler (Encom)
  */
 public enum RiftEnum {
-	// 天族裂隙 ---。 / 天族裂隙 ---
+	// 天族裂隙 ---。
 
 	/** 凯斯奈尔学院次元漩涡（3.9）/ Kaisinel Academy dimensional vortex (3.9) */
 	KAISINEL_AM(1170, "KAISINEL_AM", "KAISINEL_AS", 24, 10000, 46, 65, Race.ASMODIANS, true),
@@ -99,7 +99,7 @@ public enum RiftEnum {
 	/** Iluma rift G (5.0) / Iluma rift G (5.0) */
 	ILUMA_GM(2107, "ILUMA_GM", "NORSVOLD_AS", 24, 84, 66, 83, Race.ASMODIANS),
 
-	// 魔族裂隙 ---。 / 魔族裂隙 ---
+	// 魔族裂隙 ---。
 
 	/** 马修坦神殿次元漩涡（3.9）/ Marchutan Priory dimensional vortex (3.9) */
 	MARCHUTAN_AM(1280, "MARCHUTAN_AM", "MARCHUTAN_AS", 24, 10000, 46, 65, Race.ELYOS, true),
@@ -240,7 +240,7 @@ public enum RiftEnum {
 	 *
 	 * @param race 目标种族 / Destination race
 	 * @return 匹配的漩涡枚举 / Matching vortex enum
-	 * Unsupported race。 / Unsupported race.
+	 * Unsupported race。
 	 */
 	public static RiftEnum getVortex(Race race) throws IllegalArgumentException {
 		for (RiftEnum rift : RiftEnum.values()) {
@@ -335,7 +335,7 @@ public enum RiftEnum {
 	 * 是否为次元漩涡。
 	 * Whether this is a dimensional vortex.
 	 *
-	 * @return {@code true} if vortex。 / {@code true} if vortex
+	 * @return {@code true} if vortex。
 	 */
 	public boolean isVortex() {
 		return vortex;

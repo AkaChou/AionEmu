@@ -216,7 +216,8 @@ public class Eigen3f {
 	 *
 	 * @param maxMagnitudeStore 最大幅值输出 [0] / max magnitude output [0]
 	 * @param maxRowStore 最大行向量输出 / dominant row vector output
-	 * @param maxRowStore @return 若最大幅值 ≥ 容差则为 true / true if max magnitude ≥ tolerance
+	 * @param maxRowStore
+	 * @return 若最大幅值 ≥ 容差则为 true / true if max magnitude ≥ tolerance
 	 */
 	private boolean positiveRank(Matrix3f matrix, float[] maxMagnitudeStore, Vector3f maxRowStore) {
 		maxMagnitudeStore[0] = -1.0f;

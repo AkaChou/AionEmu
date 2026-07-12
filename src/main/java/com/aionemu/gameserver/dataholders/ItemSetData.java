@@ -57,7 +57,8 @@ public class ItemSetData {
 	 *
 	 * item-set id
 	 *
-	 * @param itemSetId @return 套装模板或 null / item-set template or null
+	 * @param itemSetId
+	 * @return 套装模板或 null / item-set template or null
 	 */
 	public ItemSetTemplate getItemSetTemplate(int itemSetId) {
 		return sets.get(itemSetId);
@@ -69,7 +70,8 @@ public class ItemSetData {
 	 *
 	 * part item id
 	 *
-	 * @param itemId @return 套装模板或 null / item-set template or null
+	 * @param itemId
+	 * @return 套装模板或 null / item-set template or null
 	 */
 	public ItemSetTemplate getItemSetTemplateByItemId(int itemId) {
 		return setItems.get(itemId);

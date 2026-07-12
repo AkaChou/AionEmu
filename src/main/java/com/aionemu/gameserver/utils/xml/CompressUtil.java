@@ -16,7 +16,7 @@ public final class CompressUtil {
 	 *
 	 * @param bytes 压缩数据 / Compressed bytes
 	 * @return 解压后的文本 / Decompressed text
-	 * On decompress failure。 / On decompress failure.
+	 * On decompress failure。
 	 */
 	public static String Decompress(byte[] bytes) throws Exception {
 		Inflater decompressor = new Inflater();
@@ -52,7 +52,8 @@ public final class CompressUtil {
 	 * Source text
 	 * Compressed bytes
 	 *
-	 * @param text @throws Exception 压缩失败时 / On compress failure
+	 * @param text
+	 * @throws Exception 压缩失败时 / On compress failure
 	 */
 	public static byte[] Compress(String text) throws Exception {
 		Deflater compressor = new Deflater();

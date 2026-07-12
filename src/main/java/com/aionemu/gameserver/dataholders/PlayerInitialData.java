@@ -79,7 +79,7 @@ public class PlayerInitialData {
 	 *
 	 * 阵营 / race
 	 * @return 出生坐标数据 / spawn location data
-	 * if race is unsupported。 / if race is unsupported.
+	 * if race is unsupported。
 	 */
 	public LocationData getSpawnLocation(Race race) {
 		switch (race) {

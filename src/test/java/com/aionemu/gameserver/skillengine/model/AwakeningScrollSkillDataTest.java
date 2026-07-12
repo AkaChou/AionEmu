@@ -17,58 +17,58 @@ class AwakeningScrollSkillDataTest {
 
 	@Test
 	void awakeningScrollsUseScalingCastingSpeedBuffInSourceAndRuntimeData() throws Exception {
-		assertAwakeningScrollData("src/main/resources/aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertAwakeningScrollData("aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"aion/game/data/static_data/skills/skill_templates.xml");
+		assertAwakeningScrollData("src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml",
+				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertAwakeningScrollData("aion/data/static_data/items/item/item_misc_templates.xml",
+				"aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	@Test
 	void mysteriousScrollUsesScalingAttackAndCastingSpeedBuff() throws Exception {
-		assertMysteriousScrollData("src/main/resources/aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertMysteriousScrollData("aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"aion/game/data/static_data/skills/skill_templates.xml");
+		assertMysteriousScrollData("src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml",
+				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertMysteriousScrollData("aion/data/static_data/items/item/item_misc_templates.xml",
+				"aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	@Test
 	void oneHourAndEventAwakeningScrollsUseScalingCastingSpeedBuff() throws Exception {
-		assertTimedAwakeningScrollData("src/main/resources/aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertTimedAwakeningScrollData("aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"aion/game/data/static_data/skills/skill_templates.xml");
+		assertTimedAwakeningScrollData("src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml",
+				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertTimedAwakeningScrollData("aion/data/static_data/items/item/item_misc_templates.xml",
+				"aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	@Test
 	void arenaAwakeningScrollsUseScalingCastingSpeedBuff() throws Exception {
-		assertArenaAwakeningScrollData("src/main/resources/aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertArenaAwakeningScrollData("aion/game/data/static_data/items/item/item_misc_templates.xml",
-				"aion/game/data/static_data/skills/skill_templates.xml");
+		assertArenaAwakeningScrollData("src/main/resources/aion/data/static_data/items/item/item_misc_templates.xml",
+				"src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertArenaAwakeningScrollData("aion/data/static_data/items/item/item_misc_templates.xml",
+				"aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	@Test
 	void itemStatScrollsUseSkillLevelScalingBuffs() throws Exception {
-		assertItemStatScrollScaling("src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertItemStatScrollScaling("aion/game/data/static_data/skills/skill_templates.xml");
+		assertItemStatScrollScaling("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertItemStatScrollScaling("aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	@Test
 	void remainingItemConsumablesUseSkillLevelScalingBuffs() throws Exception {
-		assertRemainingItemConsumableScaling("src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertRemainingItemConsumableScaling("aion/game/data/static_data/skills/skill_templates.xml");
+		assertRemainingItemConsumableScaling("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertRemainingItemConsumableScaling("aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	@Test
 	void clientStatUpAttributesArePresentInSourceAndRuntimeData() throws Exception {
-		assertClientStatUpAttributes("src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertClientStatUpAttributes("aion/game/data/static_data/skills/skill_templates.xml");
+		assertClientStatUpAttributes("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertClientStatUpAttributes("aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	@Test
 	void clientBuffTemplatesAreNotOverwrittenByUnrelatedAttackSkills() throws Exception {
-		assertClientBuffTemplates("src/main/resources/aion/game/data/static_data/skills/skill_templates.xml");
-		assertClientBuffTemplates("aion/game/data/static_data/skills/skill_templates.xml");
+		assertClientBuffTemplates("src/main/resources/aion/data/static_data/skills/skill_templates.xml");
+		assertClientBuffTemplates("aion/data/static_data/skills/skill_templates.xml");
 	}
 
 	private static void assertAwakeningScrollData(String itemPath, String skillPath) throws Exception {

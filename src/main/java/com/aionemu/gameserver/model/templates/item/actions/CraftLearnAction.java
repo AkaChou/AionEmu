@@ -15,7 +15,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 制作 Learn 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author ATracer, MrPoke, KID
  */
@@ -40,8 +40,8 @@ public class CraftLearnAction extends AbstractItemAction {
 	}
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		return RecipeService.validateNewRecipe(player, recipeid) != null;

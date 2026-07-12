@@ -41,7 +41,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 	/** gravesteel 储藏室任务 / grave of steel storeroom task */
 		private Future<?> graveOfSteelStoreroomTask;
 	/**
-	 * whether timer1 started / whether timer1 started
+	 * whether timer1 started
 	 */
 		private boolean isStartTimer1 = false;
 	/** 是否启动计时器2 / is start timer2 */

@@ -33,7 +33,7 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
      * Protection domain
      * @param classfileBuffer 类文件字节码 / Class file bytecode
      * Transformed bytecode, or null if no transformation needed
-     * If bytecode format is illegal。 / If bytecode format is illegal.
+     * If bytecode format is illegal。
      */
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
             ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
@@ -64,7 +64,8 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
      *
      * Class loader
      *
-     * @param loader @return 需要增强返回 true / True when transformation should run
+     * @param loader
+     * @return 需要增强返回 true / True when transformation should run
      */
     private boolean shouldTransform(ClassLoader loader) {
         return loader != null && loader != ClassLoader.getPlatformClassLoader();
@@ -76,7 +77,8 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
      *
      * Class loader
      *
-     * @param loader @return 是系统加载器返回 true / True if it is the system class loader
+     * @param loader
+     * @return 是系统加载器返回 true / True if it is the system class loader
      */
     private boolean isSystemClassLoader(ClassLoader loader) {
         return loader != null && loader == ClassLoader.getSystemClassLoader();
@@ -89,7 +91,7 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
      * Class loader
      * @param classfileBuffer 类文件字节码 / Class file bytecode
      * @return 转换后的字节码 / Transformed bytecode
-     * Exception during transformation。 / Exception during transformation.
+     * Exception during transformation。
      */
     protected abstract byte[] transformClass(ClassLoader loader, byte[] classfileBuffer) throws Exception;
 }

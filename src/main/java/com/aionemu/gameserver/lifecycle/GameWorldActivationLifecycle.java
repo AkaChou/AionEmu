@@ -73,7 +73,7 @@ public class GameWorldActivationLifecycle {
      * 是否已激活。
      * Whether the world has been activated.
      *
-     * @return {@code true} if activated。 / {@code true} if activated
+     * @return {@code true} if activated。
      */
     public synchronized boolean isActivated() {
         return activated;

@@ -93,7 +93,7 @@ public class MaintenanceTask extends AbstractCronTask {
 	}
 
 	/**
-	 * @return Whether maintain time / Whether maintain time
+	 * @return Whether maintain time
 	 */
 	public boolean isMaintainTime() {
 		return (getRunTime() - System.currentTimeMillis() / 1000) <= 0;

@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.vortex.VortexStateType;
 
 /**
  * 漩涡刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

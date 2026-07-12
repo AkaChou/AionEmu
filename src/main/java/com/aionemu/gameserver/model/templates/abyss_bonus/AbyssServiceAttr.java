@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 欧比斯服务 Attr 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -716,7 +716,8 @@ public class ItemService {
 	 *
 	 * item
 	 *
-	 * @param item @return 是否可升级 / true if upgradable
+	 * @param item
+	 * @return 是否可升级 / true if upgradable
 	 */
 	public static boolean isUpgradable(Item item) {
 		if (item.getItemTemplate().isNoEnchant() && !item.getItemTemplate().isStigma()) {

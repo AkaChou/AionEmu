@@ -2,6 +2,7 @@ package com.aionemu.gameserver.utils.stats;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.DescriptionId;
@@ -13,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  * Abyss rank enum defining AP/GP thresholds and quotas for soldier/officer/general ranks
  */
 @XmlEnum
+@Getter
 @Slf4j
 public enum AbyssRankEnum {
 	// AP 军阶 5.3 / Ap Rank 5.3
@@ -91,76 +93,6 @@ public enum AbyssRankEnum {
 		this.gpRequired = gpRequired;
 		this.quota = quota;
 		this.descriptionId = descriptionId;
-	}
-
-	/**
-	 * 获取军衔 ID
-	 * Get rank id
-	 *
-	 * Rank id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * 获取死亡损失点数
-	 * Get points lost on death
-	 *
-	 * Points lost
-	 */
-	public int getPointsLost() {
-		return pointsLost;
-	}
-
-	/**
-	 * 获取击杀获得点数
-	 * Get points gained on kill
-	 *
-	 * Points gained
-	 */
-	public int getPointsGained() {
-		return pointsGained;
-	}
-
-	/**
-	 * 获取升至该军衔所需 AP
-	 * Get AP required for this rank
-	 *
-	 * Required AP
-	 */
-	public int getApRequired() {
-		return apRequired;
-	}
-
-	/**
-	 * 获取升至该军衔所需 GP
-	 * Get GP required for this rank
-	 *
-	 * Required GP
-	 */
-	public int getGpRequired() {
-		return gpRequired;
-	}
-
-	/**
-	 * 获取该军衔允许的最大玩家数
-	 * Get the maximum number of players allowed for this rank
-	 *
-	 * Player quota
-	 */
-	public int getQuota() {
-		return quota;
-	}
-
-	/**
-	 * 获取描述字符串 ID
-	 * Get description string id
-	 *
-	 * Description id
-	 */
-	public int getDescriptionId() {
-		return descriptionId;
 	}
 
 	/**

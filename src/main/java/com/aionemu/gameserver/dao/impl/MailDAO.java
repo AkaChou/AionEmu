@@ -113,7 +113,8 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      *
      * player id
      *
-     * @param playerId @return 是否有未读邮件 / whether unread mail exists
+     * @param playerId
+     * @return 是否有未读邮件 / whether unread mail exists
      */
     @Override
     public boolean haveUnread(int playerId) {
@@ -139,7 +140,8 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      *
      * player id
      *
-     * @param playerId @return 附件物品列表 / list of attachment items
+     * @param playerId
+     * @return 附件物品列表 / list of attachment items
      */
     private List<Item> loadMailboxItems(final int playerId) {
         final List<Item> mailboxItems = new ArrayList<>();

@@ -7,7 +7,7 @@ import com.aionemu.gameserver.geoEngine.scene.Spatial;
 
 /**
  * 材料区域模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

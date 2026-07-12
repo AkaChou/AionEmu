@@ -34,7 +34,8 @@ public class EncryptedRSAKeyPair {
      *
      * RSA modulus
      *
-     * @param modulus @return 混淆后的模数 / encrypted modulus
+     * @param modulus
+     * @return 混淆后的模数 / encrypted modulus
      */
     private byte[] encryptModulus(BigInteger modulus) {
         byte[] encryptedModulus = modulus.toByteArray();

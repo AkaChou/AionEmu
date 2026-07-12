@@ -85,7 +85,7 @@ public class AionTransportBoundary implements DisposableBean {
      *
      * @param mode 传输模式 / Transport mode
      * @return 对应生命周期 / Matching lifecycle
-     * No implementation registered for the mode。 / No implementation registered for the mode.
+     * No implementation registered for the mode。
      */
     private AionTransportLifecycle transport(TransportMode mode) {
         AionTransportLifecycle transport = transportsByMode.get(mode);
@@ -101,7 +101,7 @@ public class AionTransportBoundary implements DisposableBean {
      *
      * @param transportLifecycles 生命周期列表 / Lifecycle list
      * @return 模式到实现的映射 / Mode-to-implementation map
-     * Same mode registered more than once。 / Same mode registered more than once.
+     * Same mode registered more than once。
      */
     private static Map<TransportMode, AionTransportLifecycle> indexTransportLifecycles(
         List<AionTransportLifecycle> transportLifecycles

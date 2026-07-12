@@ -143,7 +143,8 @@ public class DeadLockDetector extends Thread {
      *
      * Thread information
      *
-     * @param threadInfo @return 格式化锁信息 / Formatted lock information
+     * @param threadInfo
+     * @return 格式化锁信息 / Formatted lock information
      */
     private String createShortLockInfo(ThreadInfo threadInfo) {
         StringBuilder sb = new StringBuilder("\t");
@@ -166,7 +167,8 @@ public class DeadLockDetector extends Thread {
      *
      * Thread information
      *
-     * @param threadInfo @return 格式化线程信息 / Formatted thread information
+     * @param threadInfo
+     * @return 格式化线程信息 / Formatted thread information
      */
     private String printDumpedThreadInfo(ThreadInfo threadInfo) {
         StringBuilder sb = new StringBuilder();

@@ -114,7 +114,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      * Starts each embedded service after application bootstrap according to config.
      *
      * @param args 应用启动参数 / application arguments
-     * if any service fails to start。 / if any service fails to start.
+     * if any service fails to start。
      */
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -169,7 +169,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
      *
      * @param serviceLifecycle 目标服务生命周期 / target service lifecycle
      * @param args 应用启动参数 / application arguments
-     * if start fails。 / if start fails.
+     * if start fails。
      */
     private void startService(AionServiceLifecycle serviceLifecycle, ApplicationArguments args) throws Exception {
         String name = serviceLifecycle.getName();

@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.flypath.FlyPathType;
 
 /**
  * 位置2D 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author LokiReborn
  */

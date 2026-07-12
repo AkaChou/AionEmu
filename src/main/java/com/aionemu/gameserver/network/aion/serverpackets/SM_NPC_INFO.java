@@ -25,7 +25,7 @@ import com.aionemu.gameserver.services.TownService;
 
 /**
  * NPC/召唤物外观与状态信息同步服务端包。
- * summon appearance and state to the client. / summon appearance and state to the client.
+ * summon appearance and state to the client.
  * <p>
  * 根据观察者阵营与关系重算 NPC 类型（可攻击、敌对、和平、不可攻击等），并写入装备、
  * 生命、移动与生成实体等字段。

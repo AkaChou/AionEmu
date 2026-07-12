@@ -49,7 +49,7 @@ public final class BufferUtils {
 	 *
 	 * @param buf 待克隆的缓冲 / buffer to clone
 	 * @return 克隆后的缓冲 / cloned buffer
-	 * unsupported buffer type。 / unsupported buffer type.
+	 * unsupported buffer type。
 	 */
 	public static Buffer clone(Buffer buf) {
 		if (buf instanceof FloatBuffer) {
@@ -435,7 +435,8 @@ public final class BufferUtils {
 	 *
 	 * the DoubleBuffer to copy
 	 *
-	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
+	 * @param buf
+	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static DoubleBuffer clone(DoubleBuffer buf) {
 		if (buf == null) {
@@ -494,7 +495,8 @@ public final class BufferUtils {
 	 *
 	 * the FloatBuffer to copy
 	 *
-	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
+	 * @param buf
+	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static FloatBuffer clone(FloatBuffer buf) {
 		if (buf == null) {
@@ -554,7 +556,8 @@ public final class BufferUtils {
 	 *
 	 * the IntBuffer to copy
 	 *
-	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
+	 * @param buf
+	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static IntBuffer clone(IntBuffer buf) {
 		if (buf == null) {
@@ -642,7 +645,8 @@ public final class BufferUtils {
 	 *
 	 * the ByteBuffer to copy
 	 *
-	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
+	 * @param buf
+	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static ByteBuffer clone(ByteBuffer buf) {
 		if (buf == null) {
@@ -719,7 +723,8 @@ public final class BufferUtils {
 	 *
 	 * the ShortBuffer to copy
 	 *
-	 * @param buf @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
+	 * @param buf
+	 * @return 拷贝结果，buf 为 null 时返回 null / the copy, or null if buf is null
 	 */
 	public static ShortBuffer clone(ShortBuffer buf) {
 		if (buf == null) {

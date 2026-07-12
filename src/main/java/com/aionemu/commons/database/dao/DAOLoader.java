@@ -74,7 +74,7 @@ public class DAOLoader implements ClassListener {
      * Check if the class is a valid DAO implementation
      *
      * @param clazz 要检查的类 / Class to check
-     * 返回若为真则有效 DAOimplementation , falseotherwise。 / Returns true if valid DAO implementation, false otherwise
+     * @return 是有效 DAO 实现时为 {@code true} / {@code true} if this is a valid DAO implementation
      */
     public boolean isValidDAO(Class<?> clazz) {
         if (!ClassUtils.isSubclass(clazz, DAO.class)) {

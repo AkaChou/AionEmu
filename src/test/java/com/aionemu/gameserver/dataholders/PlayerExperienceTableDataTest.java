@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 class PlayerExperienceTableDataTest {
 
 	private static final Path EXPERIENCE_TABLE = Path.of(
-			"src/main/resources/aion/game/data/static_data/player_experience_table.xml");
+			"src/main/resources/aion/data/static_data/player_experience_table.xml");
 
 	@Test
 	void playerExperienceTableUsesCumulativeFiveEightValuesThroughLevelOneHundred() throws Exception {

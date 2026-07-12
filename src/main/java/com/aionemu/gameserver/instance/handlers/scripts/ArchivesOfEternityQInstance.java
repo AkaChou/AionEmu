@@ -73,7 +73,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 		   /**
-	 * MOBS / MOBS
+	 * MOBS
 	 */
 			case 857782: //Lesser Fleshgolem.
 			    IDEternityQSadoWi65An01++;

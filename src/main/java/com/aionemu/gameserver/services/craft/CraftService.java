@@ -34,7 +34,7 @@ import com.aionemu.gameserver.skillengine.task.MorphingTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * 制作服务，处理玩家配方制作、材料消耗、经验结算与以太锻造流程。
+ * 制作服务，处理玩家配方制作、材料消耗、经验结算与奥德锻造流程。
  * Craft service handling player recipe crafting, material consumption, experience settlement and aetherforging.
  */
 @Slf4j(topic = "CRAFT_LOG")
@@ -147,7 +147,7 @@ public class CraftService {
 	}
 
 	/**
-	 * 停止以太锻造（构造中断观察器，用于打断流程）。
+	 * 停止奥德锻造（构造中断观察器，用于打断流程）。
 	 * Stop aetherforging (build abort observer used to interrupt the process).
 	 *
 	 * 玩家 / Player
@@ -166,7 +166,7 @@ public class CraftService {
 	}
 
 	/**
-	 * 开始以太锻造（默认制作数量为 1）。
+	 * 开始奥德锻造（默认制作数量为 1）。
 	 * Start aetherforging (default craft count is 1).
 	 *
 	 * 玩家 / Player
@@ -178,7 +178,7 @@ public class CraftService {
 	}
 
 	/**
-	 * 开始以太锻造：播放动画、延迟结算产物与经验。
+	 * 开始奥德锻造：播放动画、延迟结算产物与经验。
 	 * Start aetherforging: play animation, then settle product and experience after delay.
 	 *
 	 * 玩家 / Player
@@ -290,7 +290,8 @@ public class CraftService {
 	 *
 	 * Craft skill id
 	 *
-	 * @param skillId @return 加成物品 ID，未匹配返回 0 / Bonus item id, or 0 if unmatched
+	 * @param skillId
+	 * @return 加成物品 ID，未匹配返回 0 / Bonus item id, or 0 if unmatched
 	 */
 	private static int getBonusReqItem(int skillId) {
 		switch (skillId) {

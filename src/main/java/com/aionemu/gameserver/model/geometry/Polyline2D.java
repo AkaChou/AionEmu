@@ -39,7 +39,7 @@ class Polyline2D implements Shape, Cloneable, Serializable {
 	public float[] ypoints;
 
 	/**
-	 * Bounds of the Polyline2D. @see #getBounds()。 / Bounds of the Polyline2D. @see #getBounds()
+	 * Bounds of the Polyline2D. @see #getBounds()。
 	 */
 	protected Rectangle2D bounds;
 
@@ -218,7 +218,7 @@ class Polyline2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the high precision bounding box of the {@link Shape}。 / Returns the high precision bounding box of the {@link Shape}
+	 * Returns the high precision bounding box of the {@link Shape}。
 	 *
 	 * @return a {@link Rectangle2D} that precisely bounds the <code>Shape< / code>.
 	 */

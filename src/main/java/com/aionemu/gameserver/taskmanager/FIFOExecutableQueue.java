@@ -40,7 +40,7 @@ public abstract class FIFOExecutableQueue implements Runnable {
 
 	/**
 	 * 当前队列状态：{@link #NONE} / {@link #QUEUED} / {@link #RUNNING}。
-	 * {@link #QUEUED} / {@link #RUNNING}. / {@link #QUEUED} / {@link #RUNNING}.
+	 * {@link #QUEUED} / {@link #RUNNING}.
 	 */
 	private volatile byte state = NONE;
 

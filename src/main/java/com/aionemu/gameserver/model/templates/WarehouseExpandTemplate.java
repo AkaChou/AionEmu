@@ -13,7 +13,7 @@ import com.aionemu.gameserver.utils.Util;
 
 /**
  * 仓库 Expand 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Simple
  */
@@ -25,7 +25,7 @@ public class WarehouseExpandTemplate {
 	protected List<Expand> warehouseExpands;
 
 	/**
-	 * NPC ID / NPC ID
+	 * NPC ID
 	 */
 	@XmlAttribute(name = "id", required = true)
 	protected int id;

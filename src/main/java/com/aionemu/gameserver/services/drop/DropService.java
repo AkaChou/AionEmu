@@ -252,7 +252,8 @@ public class DropService {
 	 * requesting player
 	 *
 	 * @param requestedItem 目标掉落物 / requested drop item
-	 * @param requestedItem @return 可直接发放时为 true / true if direct distribution is allowed
+	 * @param requestedItem
+	 * @return 可直接发放时为 true / true if direct distribution is allowed
 	 */
 	public boolean canDistribute(Player player, DropItem requestedItem) {
 		int npcId = requestedItem.getNpcObj();
@@ -318,7 +319,8 @@ public class DropService {
 	 * requesting player
 	 *
 	 * @param requestedItem 目标掉落物 / requested drop item
-	 * @param requestedItem @return 可自动拾取时为 true / true if auto-loot is allowed
+	 * @param requestedItem
+	 * @return 可自动拾取时为 true / true if auto-loot is allowed
 	 */
 	public boolean canAutoLoot(Player player, DropItem requestedItem) {
 		int npcId = requestedItem.getNpcObj();

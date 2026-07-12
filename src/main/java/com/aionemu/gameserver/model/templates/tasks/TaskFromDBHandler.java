@@ -5,7 +5,7 @@ import com.aionemu.gameserver.dao.TaskFromDBDAO;
 
 /**
  * 任务 FromDB 处理器模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Divinity
  */
@@ -15,7 +15,7 @@ public abstract class TaskFromDBHandler implements Runnable {
 	protected String params[];
 
 	/**
-	 * @param id 设置任务 ID。 / Task's id @param id
+	 * @param id 设置任务 ID。 / Task's id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -34,7 +34,7 @@ public abstract class TaskFromDBHandler implements Runnable {
 	public abstract String getTaskName();
 
 	/**
-	 * 检查是否 task ' sparameters 为有效。 / Check if the task's parameters are valid
+	 * 检查任务参数是否有效。 / Check if the task's parameters are valid
 	 *
 	 * @return true if valid, false otherwise
 	 */

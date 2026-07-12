@@ -100,10 +100,11 @@ public class XmlMerger {
 	 * Rebuilds the merged document when missing or when sources/imports changed; otherwise no-op.
 	 *
 	 * @return 是否实际执行了更新 / whether an update was performed
-	 * when the source file is missing。 / when the source file is missing.
+	 * when the source file is missing。
 	 * on XML processing errors
 	 *
-	 * @return @throws Exception 其它 I / O 或解析错误 / other I/O or parse errors
+	 * @return
+	 * @throws Exception 其它 I / O 或解析错误 / other I/O or parse errors
 	 */
 	public boolean process() throws Exception {
 		log.debug("Processing " + sourceFile + " files into " + destFile);
@@ -146,7 +147,7 @@ public class XmlMerger {
 	 * Checks whether the source or any imported file changed relative to the cache.
 	 *
 	 * @return 若至少有一处变更则为 true / true if any included file was modified
-	 * on I/O or parse errors。 / on I/O or parse errors.
+	 * on I/O or parse errors。
 	 */
 	private boolean checkFileModifications() throws Exception {
 		long destFileTime = destFile.lastModified();
@@ -177,8 +178,8 @@ public class XmlMerger {
 	 * 处理源文件，将全部 {@code import} 标签替换为对应文件内容并写出目标。
 	 * Processes the source file, replacing every {@code import} tag with imported content.
 	 *
-	 * on event read/write errors。 / on event read/write errors.
-	 * if the destination cannot be created or written。 / if the destination cannot be created or written.
+	 * on event read/write errors。
+	 * if the destination cannot be created or written。
 	 */
 	private void doUpdate() throws XMLStreamException, IOException {
 		XMLEventReader reader = null;
@@ -254,8 +255,8 @@ public class XmlMerger {
 	 * import start element
 	 * @param writer 目标写入器 / destination writer
 	 * @param metadata 文件哈希元数据 / file-hash metadata
-	 * on event writing errors。 / on event writing errors.
-	 * if an imported file is missing or unreadable。 / if an imported file is missing or unreadable.
+	 * on event writing errors。
+	 * if an imported file is missing or unreadable。
 	 */
 	private void processImportElement(StartElement element, XMLEventWriter writer, Properties metadata)
 			throws XMLStreamException, IOException {
@@ -301,7 +302,7 @@ public class XmlMerger {
 	 * @param def 默认值，可为 null / default value, or null if required
 	 * @param onErrorMessage 缺失且无默认值时的错误信息 / error message when missing and no default
 	 * attribute value
-	 * if the attribute is missing and no default is set。 / if the attribute is missing and no default is set.
+	 * if the attribute is missing and no default is set。
 	 */
 	private String getAttributeValue(StartElement element, QName name, String def, String onErrorMessage)
 			throws XMLStreamException {
@@ -324,8 +325,8 @@ public class XmlMerger {
 	 * @param skipRoot 是否跳过根标签 / whether to skip the root element
 	 * @param writer 目标写入器 / destination writer
 	 * @param metadata 文件哈希元数据 / file-hash metadata
-	 * on event read/write errors。 / on event read/write errors.
-	 * if the file cannot be opened for reading。 / if the file cannot be opened for reading.
+	 * on event read/write errors。
+	 * if the file cannot be opened for reading。
 	 */
 	private void importFile(File file, boolean skipRoot, XMLEventWriter writer, Properties metadata)
 			throws XMLStreamException, IOException {
@@ -511,7 +512,7 @@ public class XmlMerger {
 	 *
 	 * @param file 待校验文件，不可为 null / file to checksum, must not be null
 	 * @return 字符串标识 / string identifier
-	 * if an I/O error occurs reading the file。 / if an I/O error occurs reading the file.
+	 * if an I/O error occurs reading the file。
 	 */
 	private static String makeHash(File file) throws IOException {
 		return String.valueOf(FileUtils.checksumCRC32(file));

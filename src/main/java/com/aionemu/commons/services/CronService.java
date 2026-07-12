@@ -77,7 +77,8 @@ public final class CronService {
      *
      * Current CronService instance
      *
-     * @return @throws CronServiceException 服务未初始化时 / When the service is not initialized
+     * @return
+     * @throws CronServiceException 服务未初始化时 / When the service is not initialized
      */
     public static CronService requireCurrent() {
       CronService cronService = instances.get(ServiceContext.current());
@@ -117,6 +118,7 @@ public final class CronService {
      * Initialize CronService singleton
      *
      * @param runableRunner 任务执行器类 Task executor class
+     *
      * @throws CronServiceException 如果服务已初始化 if service is already initialized
      */
     public static synchronized CronService initSingleton(Class<? extends RunnableRunner> runableRunner) {
@@ -140,6 +142,7 @@ public final class CronService {
      * Initialize scheduler
      *
      * @param runnableRunner 任务执行器类 Task executor class
+     *
      * @throws CronServiceException 初始化失败时 when initialization fails
      */
     public synchronized void init(Class<? extends RunnableRunner> runnableRunner) {
@@ -212,6 +215,7 @@ public final class CronService {
      * @param r 要执行的任务 Task to execute
  * @param cronExpression cron 表达式 Cron expression
      * @param longRunning 是否为长时任务 Whether it's a long-running task
+     *
      * @throws CronServiceException 调度失败时 when scheduling fails
      */
     public void schedule(Runnable r, String cronExpression, boolean longRunning) {
@@ -281,6 +285,7 @@ public final class CronService {
      * Cancel a scheduled task by job detail
      *
      * @param jd 任务详情 Job detail
+     *
      * @throws CronServiceException 取消失败时 when cancellation fails
      */
     public void cancel(JobDetail jd) {
@@ -302,6 +307,7 @@ public final class CronService {
      * Get all job details
      *
      * @return 任务详情集合 Collection of job details
+     *
      * @throws CronServiceException 获取失败时 when retrieval fails
      */
     protected Collection<JobDetail> getJobDetails() {
@@ -372,6 +378,7 @@ public final class CronService {
      *
      * @param jk 任务键 Job key
      * @return 触发器列表 List of triggers
+     *
      * @throws CronServiceException 获取失败时 when retrieval fails
      */
     public List<? extends Trigger> getJobTriggers(JobKey jk) {

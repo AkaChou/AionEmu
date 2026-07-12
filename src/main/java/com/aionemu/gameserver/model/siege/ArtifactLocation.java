@@ -70,7 +70,7 @@ public class ArtifactLocation extends SiegeLocation {
 	}
 
 	/**
-	 * @return Whether stand alone / Whether stand alone
+	 * @return Whether stand alone
 	 */
 	public boolean isStandAlone() {
 		return !GameFeatureServices.siegeService().getFortresses().containsKey(getLocationId());

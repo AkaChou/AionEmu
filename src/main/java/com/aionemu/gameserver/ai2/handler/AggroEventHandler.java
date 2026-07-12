@@ -55,7 +55,8 @@ public class AggroEventHandler {
 	 * NPC AI instance
 	 *
 	 * @param notMyTarget 请求支援的友方生物 / ally creature requesting support
-	 * @param notMyTarget @return 是否成功进入支援 / whether support was engaged
+	 * @param notMyTarget
+	 * @return 是否成功进入支援 / whether support was engaged
 	 */
 	public static boolean onCreatureNeedsSupport(NpcAI2 npcAI, Creature notMyTarget) {
 		Npc owner = npcAI.getOwner();

@@ -561,7 +561,7 @@ public class GeoService {
 	 * 地理数据是否开启。
 	 * Whether geo data is enabled.
 	 *
-	 * @return 若 enabled 则为 true / true if enabled
+	 * @return 地形检测已启用时为 {@code true} / {@code true} if enabled
 	 */
 	public boolean isGeoOn() {
 		return GeoDataConfig.GEO_ENABLE;
@@ -578,7 +578,8 @@ public class GeoService {
 	 * @param z 目标 Z / target z
 	 * @param changeDirection 是否允许改向 / whether direction may change
 	 * @param intentions 碰撞意图掩码 / collision intention mask
-	 * @param intentions @return 最近碰撞点 / closest collision point
+	 * @param intentions
+	 * @return 最近碰撞点 / closest collision point
 	 */
 	public Vector3f getClosestCollision(Creature object, float x, float y, float z, boolean changeDirection, byte intentions) {
 		return getClosestCollision(object, x, y, z, changeDirection, intentions, null);

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	副本裂缝 / Instance Rift 4.9/5.0
+	埃雷修兰塔 / Reshanta
+ -->
+<instance_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="instance_schedule.xsd">
+	<!-- 版本 / Ver 4.9 -->
+	<!-- 根源之岛储藏室 / ISLE OF ROOTS STOREROOM -->
+	<instance id="1">
+		<instanceTime>0 0 18 ? * MON,THU,SUN *</instanceTime>
+	</instance>
+	<!-- 钢铁墓地储藏室 / GRAVE OF STEEL STOREROOM -->
+	<instance id="2">
+		<instanceTime>0 0 18 ? * TUE,FRI,SUN *</instanceTime>
+	</instance>
+	<!-- 暮光战场储藏室 / TWILIGHT BATTELFIELD STOREROOM -->
+	<instance id="3">
+		<instanceTime>0 0 18 ? * WED,SAT,SUN *</instanceTime>
+	</instance>
+	<!-- 卡尔普斯岛储藏室 / CARPUS ISLE STOREROOM -->
+	<instance id="4">
+		<instanceTime>0 0 18 ? * TUE,THU,SAT,SUN *</instanceTime>
+	</instance>
+	<!-- 哈马特岛储藏室 / HAMATE ISLE STOREROOM -->
+	<instance id="5">
+		<instanceTime>0 0 18 ? * MON,WED,FRI,SUN *</instanceTime>
+	</instance>
+	<!-- 版本 / Ver 5.0 -->
+	<!-- IDF6_Adma 5.0 [伊鲁玛 / Iluma] -->
+	<instance id="6">
+		<instanceTime>0 0 18 ? * MON,WED,FRI *</instanceTime>
+	</instance>
+	<!-- IDF6_Lap 5.0 [伊鲁玛 / Iluma] -->
+	<instance id="7">
+		<instanceTime>0 0 18 ? * TUE,THU,SAT *</instanceTime>
+	</instance>
+	<!-- IDF6_Adma 5.0 [诺斯普德 / Norsvold] -->
+	<instance id="8">
+		<instanceTime>0 0 18 ? * MON,WED,FRI *</instanceTime>
+	</instance>
+	<!-- IDF6_Lap 5.0 [诺斯普德 / Norsvold] -->
+	<instance id="9">
+		<instanceTime>0 0 18 ? * TUE,THU,SAT *</instanceTime>
+	</instance>
+</instance_schedule>

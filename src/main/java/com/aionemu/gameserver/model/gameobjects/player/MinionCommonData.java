@@ -173,8 +173,8 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	}
 
 	/**
-	 * @return 是否 lock / 是否 lock。 / Whether lock / Whether lock
-	 */
+	 * @return 是否已锁定。 / Whether lock
+	  */
 	public boolean isLock() {
 		return lock;
 	}
@@ -205,7 +205,7 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	}
 
 	/**
-	 * @return Whether looting / Whether looting
+	 * @return Whether looting
 	 */
 	public boolean isLooting() {
 		return this.isLooting;

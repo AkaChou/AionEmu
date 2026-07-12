@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * MultiReturn 位置列表模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlType(name = "MultiReturnLocationList")

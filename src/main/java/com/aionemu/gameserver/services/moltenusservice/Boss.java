@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
 
 /**
  * 熔岩领主默认实现：切入 FIGHT / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

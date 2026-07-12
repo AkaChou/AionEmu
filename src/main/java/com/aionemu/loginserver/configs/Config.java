@@ -1,15 +1,17 @@
 package com.aionemu.loginserver.configs;
 
-import java.util.Properties;
-
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.configs.CommonsConfig;
 import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.configuration.ConfigurableProcessor;
 import com.aionemu.commons.configuration.Property;
 import com.aionemu.commons.utils.PropertiesUtils;
-
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.Properties;
 
 /**
  * 登录服配置项与加载逻辑。
@@ -126,7 +128,7 @@ public class Config {
      * Config directory
      */
     private static String configDir() {
-        return System.getProperty("aion.login.config.dir", "./config");
+        return Objects.requireNonNull(System.getProperty("aion.config.dir"), "aion.config.dir is not configured");
     }
 
     /**
@@ -152,27 +154,37 @@ public class Config {
             Properties myProps = null;
             try {
                 log.info(I18n.get("log.d74fbaa2d37d"));
-                myProps = PropertiesUtils.load(configDir() + "/myls.properties");
+                myProps = PropertiesUtils.load(configDir() + "/login/myls.properties");
             } catch (Exception e) {
                 log.info(I18n.get("log.c453f21e95f6"));
             }
 
-            String network = configDir() + "/network";
-            Properties[] props = PropertiesUtils.loadAllFromDirectory(network);
+            String config = configDir();
+            Properties[] props = loadProperties(config);
             PropertiesUtils.overrideProperties(props, myProps);
             PropertiesUtils.overrideProperties(props, bootOverrides);
-            log.info(I18n.get("log.82761a77d855", network));
+            log.info(I18n.get("log.82761a77d855", config));
             ConfigurableProcessor.process(Config.class, props);
-            log.info(I18n.get("log.b4cc54f61657", network));
+            log.info(I18n.get("log.b4cc54f61657", config));
             ConfigurableProcessor.process(SvStatsConfig.class, props);
-            log.info(I18n.get("log.9d5403420a43", network));
+            log.info(I18n.get("log.9d5403420a43", config));
             ConfigurableProcessor.process(CommonsConfig.class, props);
-            log.info(I18n.get("log.e2109203a77c", network));
+            log.info(I18n.get("log.e2109203a77c", config));
             ConfigurableProcessor.process(DatabaseConfig.class, props);
 
         } catch (Exception e) {
             log.error(I18n.get("log.a4dc4f436c94", e));
             throw new Error("Can't load loginserver configuration", e);
         }
+    }
+
+    private static Properties[] loadProperties(String config) throws IOException {
+        Properties[] serviceProperties = PropertiesUtils.loadAllFromDirectory(Path.of(config).resolve("login").toFile());
+        Properties[] properties = new Properties[serviceProperties.length + 1];
+        properties[0] = PropertiesUtils.load(
+            Path.of(config).resolve("network/network.properties").toFile()
+        );
+        System.arraycopy(serviceProperties, 0, properties, 1, serviceProperties.length);
+        return properties;
     }
 }

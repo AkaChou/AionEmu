@@ -77,7 +77,8 @@ final class DatabaseSchemaInitializer {
      *
      * Database name
      *
-     * @param database @return 资源路径，未配置时返回 null / Resource path, or null when not configured
+     * @param database
+     * @return 资源路径，未配置时返回 null / Resource path, or null when not configured
      */
     static String schemaResource(String database) {
         return BASELINE_SCHEMAS.get(database);
@@ -90,8 +91,10 @@ final class DatabaseSchemaInitializer {
      * @param connection 服务器级连接 / Server-level connection
      * Database name
      *
-     * @param connection @return 已有表返回 true / True when tables exist
-     * @param database @throws SQLException 查询失败时 / When the query fails
+     * @param connection
+     * @return 已有表返回 true / True when tables exist
+     * @param database
+     * @throws SQLException 查询失败时 / When the query fails
      */
     private static boolean hasTables(Connection connection, String database) throws SQLException {
         String sql = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ?";
@@ -111,8 +114,10 @@ final class DatabaseSchemaInitializer {
      * @param connection 数据库连接 / Database connection
      * Schema resource path
      *
-     * @param connection @throws SQLException 执行 SQL 失败时 / When SQL execution fails
-     * @param schemaResource @throws IOException 读取资源失败时 / When reading the resource fails
+     * @param connection
+     * @throws SQLException 执行 SQL 失败时 / When SQL execution fails
+     * @param schemaResource
+     * @throws IOException 读取资源失败时 / When reading the resource fails
      */
     private static void executeScript(Connection connection, String schemaResource) throws SQLException, IOException {
         for (String statementSql : splitStatements(readResource(schemaResource))) {
@@ -129,7 +134,8 @@ final class DatabaseSchemaInitializer {
      * Resource path
      * Script text
      *
-     * @param schemaResource @throws IOException 资源缺失或读取失败时 / When the resource is missing or unreadable
+     * @param schemaResource
+     * @throws IOException 资源缺失或读取失败时 / When the resource is missing or unreadable
      */
     private static String readResource(String schemaResource) throws IOException {
         ClassLoader classLoader = DatabaseSchemaInitializer.class.getClassLoader();

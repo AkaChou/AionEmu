@@ -53,7 +53,8 @@ public class TribeRelationsData {
 	 *
 	 * tribe
 	 *
-	 * @param tribeName @return 存在攻击性关系则为 true / true if aggressive relations exist
+	 * @param tribeName
+	 * @return 存在攻击性关系则为 true / true if aggressive relations exist
 	 */
 	public boolean hasAggressiveRelations(TribeClass tribeName) {
 		Tribe tribe = tribeNameMap.get(tribeName);
@@ -70,7 +71,8 @@ public class TribeRelationsData {
 	 *
 	 * tribe
 	 *
-	 * @param tribeName @return 存在敌对关系则为 true / true if hostile relations exist
+	 * @param tribeName
+	 * @return 存在敌对关系则为 true / true if hostile relations exist
 	 */
 	public boolean hasHostileRelations(TribeClass tribeName) {
 		Tribe tribe = tribeNameMap.get(tribeName);
@@ -87,7 +89,8 @@ public class TribeRelationsData {
 	 *
 	 * tribe
 	 *
-	 * @param tribeName @return 存在支援关系则为 true / true if support relations exist
+	 * @param tribeName
+	 * @return 存在支援关系则为 true / true if support relations exist
 	 */
 	public boolean hasSupportRelations(TribeClass tribeName) {
 		Tribe tribe = tribeNameMap.get(tribeName);
@@ -104,7 +107,8 @@ public class TribeRelationsData {
 	 *
 	 * tribe
 	 *
-	 * @param tribeName @return 存在友好关系则为 true / true if friendly relations exist
+	 * @param tribeName
+	 * @return 存在友好关系则为 true / true if friendly relations exist
 	 */
 	public boolean hasFriendRelations(TribeClass tribeName) {
 		Tribe tribe = tribeNameMap.get(tribeName);
@@ -121,7 +125,8 @@ public class TribeRelationsData {
 	 *
 	 * tribe
 	 *
-	 * @param tribeName @return 存在无关系配置则为 true / true if none relations exist
+	 * @param tribeName
+	 * @return 存在无关系配置则为 true / true if none relations exist
 	 */
 	public boolean hasNoneRelations(TribeClass tribeName) {
 		Tribe tribe = tribeNameMap.get(tribeName);
@@ -138,7 +143,8 @@ public class TribeRelationsData {
 	 *
 	 * tribe
 	 *
-	 * @param tribeName @return 存在中立关系则为 true / true if neutral relations exist
+	 * @param tribeName
+	 * @return 存在中立关系则为 true / true if neutral relations exist
 	 */
 	public boolean hasNeutralRelations(TribeClass tribeName) {
 		Tribe tribe = tribeNameMap.get(tribeName);
@@ -271,7 +277,8 @@ public class TribeRelationsData {
 	 *
 	 * target tribe
 	 *
-	 * @param tribeName @return 存在支援者则为 true / true if any supporter exists
+	 * @param tribeName
+	 * @return 存在支援者则为 true / true if any supporter exists
 	 */
 	public boolean hasAnySupporter(TribeClass tribeName) {
 		Tribe tribe1 = tribeNameMap.get(tribeName);

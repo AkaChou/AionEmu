@@ -41,7 +41,7 @@ import java.util.concurrent.Future;
 public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 	/** 发光水虫计数 / luminous waterworm count */
 	private int luminousWaterworm;
-	/** 巨型以太碎片 / huge aether fragment */
+	/** 巨型奥德碎片 / huge aether fragment */
 		private int hugeAetherFragment;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
@@ -165,13 +165,13 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 			case 700955: //Huge Aether Fragment.
 				hugeAetherFragment++;
 				if (hugeAetherFragment == 1) {
-					// 巨大以太碎片被摧毁，神器已不稳定！ / The destruction of the Huge Aether Fragment has destabilized the artifact!
+					// 巨大奥德碎片被摧毁，神器已不稳定！ / The destruction of the Huge Aether Fragment has destabilized the artifact!
 				    sendMsgByRace(1400689, Race.PC_ALL, 0);
 				} else if (hugeAetherFragment == 2) {
-					// 巨大以太碎片被摧毁，神器守护者进入警戒！ / The destruction of the Huge Aether Fragment has put the artifact protector on alert!
+					// 巨大奥德碎片被摧毁，神器守护者进入警戒！ / The destruction of the Huge Aether Fragment has put the artifact protector on alert!
 				    sendMsgByRace(1400690, Race.PC_ALL, 0);
 				} else if (hugeAetherFragment == 3) {
-					// 巨大以太碎片被摧毁导致神器异常，神器守护者暴怒！ / The destruction of the Huge Aether Fragment has caused abnormality on the artifact. The artifact protector is furious!
+					// 巨大奥德碎片被摧毁导致神器异常，神器守护者暴怒！ / The destruction of the Huge Aether Fragment has caused abnormality on the artifact. The artifact protector is furious!
 				    sendMsgByRace(1400691, Race.PC_ALL, 0);
 				}
 				despawnNpc(npc);

@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 阵营战刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -51,7 +51,7 @@ public class RvrSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether rvr peace / Whether rvr peace
+	 * @return Whether rvr peace
 	 */
 	public final boolean isRvrPeace() {
 		return rvrType.equals(RvrStateType.PEACE);

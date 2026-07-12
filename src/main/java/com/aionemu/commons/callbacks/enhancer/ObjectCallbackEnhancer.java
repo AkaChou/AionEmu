@@ -62,8 +62,10 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * Class loader
      * Class bytecode
      *
-     * @param loader @return 增强后的字节码；无需增强时返回 null / Enhanced bytecode, or null when no enhancement is needed
-     * @param clazzBytes @throws Exception 增强失败时 / When enhancement fails
+     * @param loader
+     * @return 增强后的字节码；无需增强时返回 null / Enhanced bytecode, or null when no enhancement is needed
+     * @param clazzBytes
+     * @throws Exception 增强失败时 / When enhancement fails
      */
     protected byte[] transformClass(ClassLoader loader, byte[] clazzBytes) throws Exception {
         ClassPool cp = new ClassPool();
@@ -108,9 +110,9 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * Enhance a method by writing pre/post callback invocation code
      *
      * @param method 需要编辑的方法 / Method that has to be edited
-     * When code compilation fails。 / When code compilation fails.
-     * When a type is not found。 / When a type is not found.
-     * When an annotation class cannot be loaded。 / When an annotation class cannot be loaded.
+     * When code compilation fails。
+     * When a type is not found。
+     * When an annotation class cannot be loaded。
      */
     protected void enhanceMethod(CtMethod method) throws CannotCompileException, NotFoundException, ClassNotFoundException {
         ClassPool cp = method.getDeclaringClass().getClassPool();
@@ -142,8 +144,8 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * @param paramLength 方法参数个数 / Number of method parameters
      * @param listenerFieldName 监听器类字段名 / Listener class field name used for the method
      * @return 插入方法前的代码 / Code that will be inserted before the method body
-     * When a type is not found。 / When a type is not found.
-     * When code generation fails。 / When code generation fails.
+     * When a type is not found。
+     * When code generation fails。
      */
     protected String writeBeforeMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException, CannotCompileException {
         StringBuilder sb = new StringBuilder();
@@ -196,7 +198,7 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * @param paramLength 方法参数个数 / Number of method parameters
      * @param listenerFieldName 监听器类字段名 / Method listener field name
      * @return 实际插入的代码 / Actual code that should be inserted
-     * When a type is not found。 / When a type is not found.
+     * When a type is not found。
      */
     protected String writeAfterMethod(CtMethod method, int paramLength, String listenerFieldName) throws NotFoundException {
         StringBuilder sb = new StringBuilder();
@@ -242,8 +244,8 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * Write fields and methods that implement {@link EnhancedObject}
      *
      * @param clazz 需要编辑的类 / Class to edit
-     * When a type is not found。 / When a type is not found.
-     * When code compilation fails。 / When code compilation fails.
+     * When a type is not found。
+     * When code compilation fails。
      */
     protected void writeEnhancedObjectImpl(CtClass clazz) throws NotFoundException, CannotCompileException {
         ClassPool cp = clazz.getClassPool();
@@ -257,8 +259,8 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * Add fields required by {@link EnhancedObject}
      *
      * @param clazz 需要添加字段的类 / Class to add fields to
-     * When field generation fails。 / When field generation fails.
-     * When a type is not found。 / When a type is not found.
+     * When field generation fails。
+     * When a type is not found。
      */
     private void writeEnhancedOBjectFields(CtClass clazz) throws CannotCompileException, NotFoundException {
         ClassPool cp = clazz.getClassPool();
@@ -279,8 +281,8 @@ public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
      * Add methods required by {@link EnhancedObject}
      *
      * @param clazz 需要添加方法的类 / Class to add methods to
-     * When a type is not found。 / When a type is not found.
-     * When method generation fails。 / When method generation fails.
+     * When a type is not found。
+     * When method generation fails。
      */
     private void writeEnhancedObjectMethods(CtClass clazz) throws NotFoundException, CannotCompileException {
         

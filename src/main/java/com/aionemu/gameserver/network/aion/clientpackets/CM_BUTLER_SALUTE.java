@@ -6,7 +6,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_BUTLER_SALUTE;
 
 /**
  * 管家（Butler）敬礼/互动相关的客户端包。
- * housing butler interaction. / housing butler interaction.
+ * housing butler interaction.
  *
  * @author Ranastic
  */

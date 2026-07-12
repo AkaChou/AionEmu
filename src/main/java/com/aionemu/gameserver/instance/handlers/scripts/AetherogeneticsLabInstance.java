@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 以太遗传实验室副本事件处理器。
+ * 奥德遗传实验室副本事件处理器。
  * Instance event handler for Aetherogenetics Lab.
  *
  * @author Encom

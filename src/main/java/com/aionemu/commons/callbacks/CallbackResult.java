@@ -1,5 +1,7 @@
 package com.aionemu.commons.callbacks;
 
+import lombok.Getter;
+
 /**
  * 回调结果类，用于控制回调链和目标方法的执行流程
  * Callback result class that controls the execution flow of callback chain and target method
@@ -38,6 +40,7 @@ public class CallbackResult<T> {
      * 回调结果值
      * Callback result value
      */
+    @Getter
     private final T result;
 
     /**
@@ -53,16 +56,6 @@ public class CallbackResult<T> {
     private CallbackResult(T result, int blockPolicy) {
         this.result = result;
         this.blockPolicy = blockPolicy;
-    }
-
-    /**
-     * 获取回调结果值
-     * Get the callback result value
-     *
-     * Result value
-     */
-    public T getResult() {
-        return this.result;
     }
 
     /**
@@ -111,7 +104,8 @@ public class CallbackResult<T> {
      *
      * Result value
      *
-     * @param result @return 完全阻止的结果实例 / Callback result instance for full blocking
+     * @param result
+     * @return 完全阻止的结果实例 / Callback result instance for full blocking
      */
     public static <T> CallbackResult<T> newFullBlocker(T result) {
         return new CallbackResult(result, 3);

@@ -30,7 +30,7 @@ public class Anoha extends AdminCommand
 	 * Executes Anoha control: parses start/stop and location id.
 	 *
 	 * admin
-	 * start|stop, location id。 / start|stop, location id
+	 * start|stop, location id。
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -82,7 +82,7 @@ public class Anoha extends AdminCommand
 	 * admin
 	 * location id
 	 *
-	 * @return {@code true} if valid。 / {@code true} if valid
+	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidAnohaLocationId(Player player, int anohaId) {
 		if (!GameLocationBootstrapServices.anohaService().getAnohaLocations().keySet().contains(anohaId)) {

@@ -243,7 +243,7 @@ public class NpcFactions {
 	}
 
 	/**
-	 * Send daily quest / Send daily quest
+	 * Send daily quest
 	 */
 	public void sendDailyQuest() {
 		for (int i = 0; i < 2; i++) {

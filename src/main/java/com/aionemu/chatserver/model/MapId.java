@@ -1,5 +1,7 @@
 package com.aionemu.chatserver.model;
 
+import lombok.Getter;
+
 /**
  * 聊天服使用的世界地图 ID 枚举。
  * World map id enum used by the chat server.
@@ -192,6 +194,7 @@ public enum MapId {
      * 地图 ID。
      * Map id.
      */
+    @Getter
     private int mapId;
 
     /**
@@ -201,14 +204,4 @@ public enum MapId {
         this.mapId = mapId;
     }
 
-    /**
-     * 获取地图 ID。
-     * Returns the map id.
-     *
-     * map id
-     */
-    public int getMapId() {
-        return mapId;
-    }
 }
-

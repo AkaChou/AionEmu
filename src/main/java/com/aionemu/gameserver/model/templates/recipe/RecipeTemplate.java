@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 配方模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -144,7 +144,7 @@ public class RecipeTemplate {
 	}
 
 	/**
-	 * @return Whether arch daeva / Whether arch daeva
+	 * @return Whether arch daeva
 	 */
 	public boolean isArchDaeva() {
 		return archdaeva;

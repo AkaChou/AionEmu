@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.Race;
 
 /**
  * 副本 Exit 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author xTz
  */

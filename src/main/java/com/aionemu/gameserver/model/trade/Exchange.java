@@ -59,7 +59,7 @@ public class Exchange {
 		this.kinahCount += countToAdd;
 	}
 
-	/** 是否 exchange list full / Whether exchange list full */
+	/** 交易列表是否已满 / Whether exchange list full */
 	public boolean isExchangeListFull() {
 		return items.size() > 18;
 	}

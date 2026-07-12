@@ -54,7 +54,8 @@ public class BindPointData {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 模板，不存在则为 null / template or null
+	 * @param npcId
+	 * @return 模板，不存在则为 null / template or null
 	 */
 	public BindPointTemplate getBindPointTemplate(int npcId) {
 		return bindplistData.get(npcId);

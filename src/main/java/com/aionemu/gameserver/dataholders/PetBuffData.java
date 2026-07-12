@@ -58,7 +58,8 @@ public class PetBuffData {
 	 *
 	 * buff id
 	 *
-	 * @param buffId @return 增益属性，不存在则为 null / bonus attribute or null
+	 * @param buffId
+	 * @return 增益属性，不存在则为 null / bonus attribute or null
 	 */
 	public PetBonusAttr getPetBonusattr(int buffId) {
 		return templates.get(buffId);

@@ -131,7 +131,8 @@ public class NpcDropData {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 掉落配置或 null / drop config or null
+	 * @param npcId
+	 * @return 掉落配置或 null / drop config or null
 	 */
 	public synchronized NpcDrop getDrop(int npcId) {
 		if (dropsByNpcId == null || dropsByNpcId.isEmpty() && !getNpcDrop().isEmpty()) {

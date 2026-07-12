@@ -199,7 +199,8 @@ public class SysMail extends AdminCommand {
 	 * Word tokens
 	 *
 	 * @param outText 输出缓冲区（长度 1） / Output buffer of length 1
-	 * @param outText @return 消耗的词数 / Consumed word count
+	 * @param outText
+	 * @return 消耗的词数 / Consumed word count
 	 */
 	private int extractText(String[] words, String[] outText) {
 		if (words.length == 0 || outText.length == 0)

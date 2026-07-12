@@ -562,24 +562,24 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
         spawn(231156, 741.1732f, 302.49472f, 233.75148f, (byte) 96);
 		spawn(231105, 750.00336f, 295.08008f, 233.88875f, (byte) 69);
 		spawn(231106, 742.04126f, 299.33875f, 233.85815f, (byte) 96);
-		// FXMon_Smoke. / FXMon_Smoke.
+		// FXMon_Smoke.
 		spawn(297352, 753.4488f, 296.26138f, 233.75148f, (byte) 67);
 		spawn(297352, 741.1732f, 302.49472f, 233.75148f, (byte) 96);
 	}
 	private void startAssaultPod2() {
 		spawn(231157, 706.7695f, 261.6263f, 253.43394f, (byte) 40);
-		// FXMon_Smoke. / FXMon_Smoke.
+		// FXMon_Smoke.
 		spawn(297352, 706.7695f, 261.6263f, 253.43394f, (byte) 40);
 	}
 	private void startAssaultPod3() {
 		spawn(231158, 699.1482f, 308.8426f, 249.30322f, (byte) 103);
-		// FXMon_Smoke. / FXMon_Smoke.
+		// FXMon_Smoke.
 		spawn(297352, 699.1482f, 308.8426f, 249.30322f, (byte) 103);
 	}
 	private void startAssaultPod4() {
 		spawn(231159, 626.0661f, 294.24414f, 238.0753f, (byte) 23);
 		spawn(231160, 754.409f, 400.14343f, 243.35422f, (byte) 63);
-		// FXMon_Smoke. / FXMon_Smoke.
+		// FXMon_Smoke.
 		spawn(297352, 626.0661f, 294.24414f, 238.0753f, (byte) 23);
 		spawn(297352, 754.409f, 400.14343f, 243.35422f, (byte) 63);
 	}

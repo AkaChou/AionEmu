@@ -90,7 +90,7 @@ public class AccountTimeController {
      * Checks whether the account is expired.
      *
      * @param account 账号 / Account
-     * @return 若 expired 则为 true / True if expired
+     * @return 已过期时为 {@code true} / {@code true} if expired
      */
     public boolean isAccountExpired(Account account) {
         AccountTime accountTime = account.getAccountTime();

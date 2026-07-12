@@ -14,7 +14,7 @@ import com.aionemu.gameserver.model.limiteditems.LimitedItem;
 
 /**
  * Goods 列表模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author ATracer
  */

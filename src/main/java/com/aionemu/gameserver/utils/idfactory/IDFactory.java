@@ -181,7 +181,7 @@ public class IDFactory {
 	 * Release the given id.
 	 *
 	 * @param id 要释放的 ID / Id to release
-	 * If the id was not taken。 / If the id was not taken.
+	 * If the id was not taken。
 	 */
 	public void releaseId(int id) {
 		try {
@@ -204,7 +204,7 @@ public class IDFactory {
 	 * Release a collection of ids.
 	 *
 	 * @param ids 要释放的 ID 集合 / Ids to release
-	 * If any id was not taken。 / If any id was not taken.
+	 * If any id was not taken。
 	 */
 	public void releaseIds(Collection<Integer> ids) {
 		if (GenericValidator.isBlankOrNull(ids)) {

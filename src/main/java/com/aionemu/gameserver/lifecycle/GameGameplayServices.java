@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 核心玩法 Spring 服务门面 / 静态访问桥：决斗、生命恢复、赛季排名与裂隙。
- * static access bridge: duel, life restore, season ranking, and rifts. / static access bridge: duel, life restore, season ranking, and rifts.
+ * static access bridge: duel, life restore, season ranking, and rifts.
  */
 @Component
 public final class GameGameplayServices implements DisposableBean {

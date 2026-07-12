@@ -50,7 +50,7 @@ public class InstanceExitData {
 	 * 按世界 ID 与种族获取匹配的副本出口。
 	 * Returns the matching instance exit for the given world id and race.
 	 *
-	 * @param worldId 副本 ID / world / instance id。 / 副本 ID / world / instance id
+	 * @param worldId 副本 ID / world / instance id。
 	 * @param race 玩家种族 / player race
 	 * @return 匹配的出口，不存在则为 null / matching exit or null
 	 */

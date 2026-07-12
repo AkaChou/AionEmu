@@ -83,7 +83,8 @@ public abstract class ReloadableData {
 	 * root directory
 	 *
 	 * @param recursive 是否递归子目录 / whether to recurse into subdirectories
-	 * @param recursive @return 匹配的文件集合 / matching file collection
+	 * @param recursive
+	 * @return 匹配的文件集合 / matching file collection
 	 */
 	protected Collection<File> listFiles(File root, boolean recursive) {
 		IOFileFilter dirFilter = recursive ? makeSVNAware(HiddenFileFilter.VISIBLE) : null;

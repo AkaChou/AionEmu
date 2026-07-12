@@ -25,7 +25,7 @@ public class CollectItemQuestOperation extends QuestOperation {
 	/** 检查失败时执行的操作 / Operations when the check fails */
 	@XmlElement(name = "false", required = true)
 	protected QuestOperations _false;
-	/** 是否 to remove items on check; null treated as true / Whether to remove items on check; null treated as true */
+	/** 检查时是否移除物品；null 按 true 处理 / Whether to remove items on check; null treated as true */
 	@XmlAttribute
 	protected Boolean removeItems;
 

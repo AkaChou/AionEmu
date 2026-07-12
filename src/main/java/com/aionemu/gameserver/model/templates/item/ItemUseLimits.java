@@ -11,7 +11,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
  * 物品 UseLimits 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -84,7 +84,7 @@ public class ItemUseLimits {
 	}
 
 	/**
-	 * @return Whether ride usable / Whether ride usable
+	 * @return Whether ride usable
 	 */
 	public boolean isRideUsable() {
 		if (rideUsable == null) {

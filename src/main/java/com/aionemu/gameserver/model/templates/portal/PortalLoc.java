@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * 传送门 Loc 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author xTz
  */

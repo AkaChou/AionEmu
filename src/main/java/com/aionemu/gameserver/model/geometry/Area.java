@@ -47,7 +47,7 @@ public interface Area {
 	public boolean isInside3D(float x, float y, float z);
 
 	/**
-	 * 检查是否 zcoord 为 insize。 / Checks if z coord is insize
+	 * 检查 Z 坐标是否在范围内。 / Checks if z coord is insize
 	 *
 	 * @param point point to check
 	 * @return is z inside or not

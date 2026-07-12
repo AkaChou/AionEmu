@@ -78,7 +78,8 @@ public class cmd_enchant extends PlayerCommand {
 	 *
 	 * item
 	 *
-	 * @param item @return 可强化返回 true / {@code true} if upgradeable
+	 * @param item
+	 * @return 可强化返回 true / {@code true} if upgradeable
 	 */
 	public static boolean isUpgradeble(Item item) {
 		if (item.getItemTemplate().isNoEnchant()) {

@@ -110,7 +110,7 @@ public class CubeExpandService {
 	 * 玩家 / player
 	 * ticket level
 	 *
-	 * @return 若 allowed 则为 true / true if allowed
+	 * @return 允许扩展背包时为 {@code true} / {@code true} if allowed
 	 */
 	public static boolean canExpandByTicket(Player player, int ticketLevel) {
 		if (!canExpand(player))

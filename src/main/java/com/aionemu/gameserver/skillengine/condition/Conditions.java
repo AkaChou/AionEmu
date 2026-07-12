@@ -102,7 +102,8 @@ public class Conditions {
 	 *
 	 * effect environment
 	 *
-	 * @param effect @return 全部通过则为 true / true if all pass
+	 * @param effect
+	 * @return 全部通过则为 true / true if all pass
 	 */
 	public boolean validate(Effect effect) {
 		if (conditions != null) {

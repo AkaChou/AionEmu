@@ -82,7 +82,7 @@ public class BannedMacEntry {
 	 * 判断当前是否仍在封禁有效期内。
 	 * Whether the ban is still active now.
 	 *
-	 * @return 若 active 则为 true / true if active
+	 * @return 封禁生效时为 {@code true} / {@code true} if active
 	 */
 	public final boolean isActive() {
 		return timeEnd != null && timeEnd.getTime() > System.currentTimeMillis();
@@ -93,7 +93,7 @@ public class BannedMacEntry {
 	 * Whether the ban is still active at the given time.
 	 *
 	 * @param time 时间戳（毫秒） / timestamp in ms
-	 * @return 若 active 则为 true / true if active
+	 * @return 封禁生效时为 {@code true} / {@code true} if active
 	 */
 	public final boolean isActiveTill(long time) {
 		return timeEnd != null && timeEnd.getTime() > time;

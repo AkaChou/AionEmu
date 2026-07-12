@@ -7,7 +7,7 @@ import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 
 /**
- * 哑地理地图：碰撞与视线检查一律放行，高度原样返回。
+ * 空实现地理地图：碰撞与视线检查一律放行，高度原样返回。
  * Dummy geo map that always passes collision/LOS checks and returns heights as-is.
  *
  * @author ATracer

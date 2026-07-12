@@ -31,7 +31,8 @@ public class WorldWalkerFormations {
 	 *
 	 * instance id
 	 *
-	 * @param instanceId @return 实例巡逻编队 / instance walker formations
+	 * @param instanceId
+	 * @return 实例巡逻编队 / instance walker formations
 	 */
 	protected InstanceWalkerFormations getInstanceFormations(int instanceId) {
 		InstanceWalkerFormations instanceFormation = formations.get(instanceId);

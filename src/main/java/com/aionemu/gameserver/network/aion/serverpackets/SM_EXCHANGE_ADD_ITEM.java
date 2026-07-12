@@ -21,7 +21,7 @@ public class SM_EXCHANGE_ADD_ITEM extends AionServerPacket {
 	private Item item;
 
 	/**
-	 * 0=self, 1=other。 / 0=self, 1=other
+	 * 0=self, 1=other。
 	 * @param item   放入的物品 / item added
 	 * @param player 所属玩家（用于写 ItemInfoBlob） / owner player for ItemInfoBlob
 	 */

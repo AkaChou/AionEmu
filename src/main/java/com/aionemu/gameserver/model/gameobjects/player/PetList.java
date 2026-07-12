@@ -32,7 +32,7 @@ public class PetList {
 	}
 
 	/**
-	 * 加载 pets/ 加载 pets。 / Load pets / Load pets
+	 * 从数据库加载宠物。 / Load pets from the database.
 	 */
 	public void loadPets() {
 		List<PetCommonData> playerPets = DAOManager.getDAO(PlayerPetsDAO.class).getPlayerPets(player);

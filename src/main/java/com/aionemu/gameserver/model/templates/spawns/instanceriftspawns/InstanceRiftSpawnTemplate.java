@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 副本裂隙刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -46,14 +46,14 @@ public class InstanceRiftSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether instance rift open / Whether instance rift open
+	 * @return Whether instance rift open
 	 */
 	public final boolean isInstanceRiftOpen() {
 		return instanceRiftType.equals(InstanceRiftStateType.OPEN);
 	}
 
 	/**
-	 * @return Whether instance rift closed / Whether instance rift closed
+	 * @return Whether instance rift closed
 	 */
 	public final boolean isInstanceRiftClosed() {
 		return instanceRiftType.equals(InstanceRiftStateType.CLOSED);

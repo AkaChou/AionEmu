@@ -223,7 +223,7 @@ public class PacketProcessor<T extends AConnection> {
      * Get first packet whose connection can be locked.
      *
      * @return 可用数据包 / Available packet
-     * Wait interrupted。 / Wait interrupted.
+     * Wait interrupted。
      */
     private BaseClientPacket<T> getFirstAviable() throws InterruptedException {
         while (true) {

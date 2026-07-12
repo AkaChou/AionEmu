@@ -199,7 +199,8 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
      *
      * player id
      *
-     * @param playerId @return 有效冷却数量 / active cooldown count
+     * @param playerId
+     * @return 有效冷却数量 / active cooldown count
      */
     public int getActiveCooldownsCount(int playerId) {
         try (Connection con = DatabaseFactory.getConnection();

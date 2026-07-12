@@ -27,7 +27,7 @@ public class Neutral extends AdminCommand {
 	 * Set neutrality for players, npcs, or all, or cancel back to default enmity.
 	 *
 	 * @param admin 执行 GM / Admin player
-	 * @param params Mode: players|npcs|all|cancel|help。 / Mode: players|npcs|all|cancel|help
+	 * @param params Mode: players|npcs|all|cancel|help。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

@@ -44,7 +44,7 @@ import java.util.Map;
 
 /**
  * 天梯 / 战场匹配服务，管理普通与活动队列、战场创建、排名与名称伪装。
- * battleground matchmaking service managing normal and event queues, BG creation, ranks, and name masking. / battleground matchmaking service managing normal and event queues, BG creation, ranks, and name masking.
+ * battleground matchmaking service managing normal and event queues, BG creation, ranks, and name masking.
  *
  * @author Rinzler (Encom)
  */
@@ -202,7 +202,8 @@ public class LadderService {
 	 *
 	 * party
 	 *
-	 * @param group @return 是否注册成功 / whether registration succeeded
+	 * @param group
+	 * @return 是否注册成功 / whether registration succeeded
 	 */
 	public boolean registerForNormal(PlayerGroup group) {
 		if (!isNormalReady()) {
@@ -231,7 +232,8 @@ public class LadderService {
 	 *
 	 * party
 	 *
-	 * @param group @return 是否注册成功 / whether registration succeeded
+	 * @param group
+	 * @return 是否注册成功 / whether registration succeeded
 	 */
 	public boolean registerForEvent(PlayerGroup group) {
 		if (!isEventReady()) {
@@ -278,7 +280,8 @@ public class LadderService {
 	 *
 	 * party
 	 *
-	 * @param group @return 是否在队列中 / whether queued
+	 * @param group
+	 * @return 是否在队列中 / whether queued
 	 */
 	public boolean isInQueue(PlayerGroup group) {
 		if (normalQueueList.contains(group) || eventQueueList.contains(group)) {
@@ -1179,7 +1182,7 @@ public class LadderService {
 
 	/**
 	 * 处理自动组队 / 战场报名窗口交互。
-	 * battleground registration window interactions. / battleground registration window interactions.
+	 * battleground registration window interactions.
 	 *
 	 * 玩家 / player
 	 * window id

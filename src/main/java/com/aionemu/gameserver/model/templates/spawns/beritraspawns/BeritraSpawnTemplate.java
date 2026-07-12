@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 贝里特拉刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rinzler (Encom)
  */
@@ -46,14 +46,14 @@ public class BeritraSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return Whether beritra invasion / Whether beritra invasion
+	 * @return Whether beritra invasion
 	 */
 	public final boolean isBeritraInvasion() {
 		return beritraType.equals(BeritraStateType.INVASION);
 	}
 
 	/**
-	 * @return Whether beritra peace / Whether beritra peace
+	 * @return Whether beritra peace
 	 */
 	public final boolean isBeritraPeace() {
 		return beritraType.equals(BeritraStateType.PEACE);

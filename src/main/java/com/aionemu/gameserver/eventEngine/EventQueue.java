@@ -14,6 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 延迟事件阻塞优先队列：按 {@link DelayedEvent#compareTo} 排序，仅在到期后可取出。
  * Blocking priority queue of delayed events ordered by {@link DelayedEvent#compareTo}; only due items poll.
  *
+ *
  * @param <E> 延迟事件类型 / delayed event type
  * @author wanke
  */
@@ -142,7 +143,8 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	 *
 	 * due element
 	 *
-	 * @return @throws InterruptedException 等待被中断 / wait interrupted
+	 * @return
+	 * @throws InterruptedException 等待被中断 / wait interrupted
 	 */
 	public E take() throws InterruptedException {
 		final ReentrantLock lock = this.lock;
@@ -179,8 +181,10 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	 * timeout
 	 *
 	 * @param unit 时间单位 / time unit
-	 * @param unit @return 到期元素或 null / due element or null
-	 * @return @throws InterruptedException 等待被中断 / wait interrupted
+	 * @param unit
+	 * @return 到期元素或 null / due element or null
+	 * @return
+	 * @throws InterruptedException 等待被中断 / wait interrupted
 	 */
 	public E poll(long timeout, TimeUnit unit) throws InterruptedException {
 		long nanos = unit.toNanos(timeout);
@@ -372,6 +376,7 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	 * Snapshot into the given array.
 	 *
 	 * @param a 目标数组 / target array
+	 *
 	 * @param <T> 数组元素类型 / array element type
 	 * @return 填充后的数组 / filled array
 	 */

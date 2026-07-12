@@ -12,7 +12,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 
 /**
  * 对话事件：条件通过后按任务变量节点分发到 NPC / 对话处理。
- * dialog handlers. / dialog handlers.
+ * dialog handlers.
  *
  * @author Mr. Poke
  */

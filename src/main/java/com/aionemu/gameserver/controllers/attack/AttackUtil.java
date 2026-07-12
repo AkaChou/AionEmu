@@ -876,7 +876,7 @@ public class AttackUtil {
 			}
 		} else {
 			/**
-			 * AlwaysParry / AlwaysBlock。 / AlwaysParry / AlwaysBlock。
+			 * AlwaysParry / AlwaysBlock。
 	 * Check AlwaysDodge, AlwaysParry, AlwaysBlock
 			 */
 			StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod);

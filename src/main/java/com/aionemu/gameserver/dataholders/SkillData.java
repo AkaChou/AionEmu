@@ -52,7 +52,8 @@ public class SkillData {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 技能模板或 null / skill template or null
+	 * @param skillId
+	 * @return 技能模板或 null / skill template or null
 	 */
 	public SkillTemplate getSkillTemplate(int skillId) {
 		return skillData.get(skillId);

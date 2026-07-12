@@ -18,7 +18,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 物品指令/信件任务模板：使用起始物品接取，可选途经 NPC 对话推进，最终到结束 NPC 交任务。
- * letter quest template: start via item use, optional mid-NPC talk steps, turn in at the end NPC. / letter quest template: start via item use, optional mid-NPC talk steps, turn in at the end NPC.
+ * letter quest template: start via item use, optional mid-NPC talk steps, turn in at the end NPC.
  */
 public class ItemOrders extends QuestHandler {
 	/** 任务 ID / quest id */

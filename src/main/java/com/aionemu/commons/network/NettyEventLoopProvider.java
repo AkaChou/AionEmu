@@ -87,7 +87,8 @@ public final class NettyEventLoopProvider {
      * Boss group
      * Worker group
      *
-     * @return @param owned 是否由调用方负责关闭 / Whether caller owns shutdown
+     * @return
+     * @param owned 是否由调用方负责关闭 / Whether caller owns shutdown
      */
     public record Allocation(EventLoopGroup bossGroup, EventLoopGroup workerGroup, boolean owned) {
 

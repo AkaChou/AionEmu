@@ -64,7 +64,8 @@ public enum ZoneAttributes {
 	 *
 	 * attribute list
 	 *
-	 * @param flagValues @return 合并后的位掩码 / combined bit-mask
+	 * @param flagValues
+	 * @return 合并后的位掩码 / combined bit-mask
 	 */
 	public static Integer fromList(List<ZoneAttributes> flagValues) {
 		Integer result = 0;

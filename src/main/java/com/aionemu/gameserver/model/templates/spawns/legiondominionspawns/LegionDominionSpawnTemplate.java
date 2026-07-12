@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 /**
  * 军团领地刷新点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class LegionDominionSpawnTemplate extends SpawnTemplate {
@@ -56,8 +56,8 @@ public class LegionDominionSpawnTemplate extends SpawnTemplate {
 	}
 
 	/**
-	 * @return 是否 peace / 是否 peace。 / Whether peace / Whether peace
-	 */
+	 * @return 是否处于和平状态。 / Whether peace
+	  */
 	public final boolean isPeace() {
 		return legionDominionModType.equals(LegionDominionModType.PEACE);
 	}

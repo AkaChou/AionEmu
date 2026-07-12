@@ -19,7 +19,7 @@ public class WalkerGroupShift {
 
 	/**
 	 * 前后（冠状）偏移。
-	 * dorsoventral) shift. / dorsoventral) shift.
+	 * dorsoventral) shift.
 	 */
 	private float coronalShift;
 

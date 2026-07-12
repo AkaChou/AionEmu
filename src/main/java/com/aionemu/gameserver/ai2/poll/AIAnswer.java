@@ -12,7 +12,7 @@ public interface AIAnswer {
 	 * 判断该回答是否为肯定。
 	 * Whether this answer is positive.
 	 *
-	 * {@code true} if positive。 / {@code true} if positive
+	 * {@code true} if positive。
 	 */
 	boolean isPositive();
 

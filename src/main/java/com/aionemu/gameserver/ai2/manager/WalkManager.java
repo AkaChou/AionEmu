@@ -68,7 +68,8 @@ public class WalkManager {
 	 *
 	 * NPC AI instance
 	 *
-	 * @param npcAI @return 成功进入行走时为 {@code true} / {@code true} if walking started
+	 * @param npcAI
+	 * @return 成功进入行走时为 {@code true} / {@code true} if walking started
 	 */
 	public static boolean startWalking(NpcAI2 npcAI) {
 		cancelPendingTask(npcAI.getOwner().getObjectId());
@@ -164,7 +165,7 @@ public class WalkManager {
 	 *
 	 * NPC AI instance
 	 *
-	 * @param npcAI {@code true} if walking is applicable。 / {@code true} if walking is applicable
+	 * @param npcAI {@code true} if walking is applicable。
 	 */
 	public static boolean isWalking(NpcAI2 npcAI) {
 		return npcAI.isMoveSupported() && (hasWalkRoutes(npcAI) || npcAI.getOwner().isAttackableNpc());
@@ -176,7 +177,7 @@ public class WalkManager {
 	 *
 	 * NPC AI instance
 	 *
-	 * @param npcAI {@code true} if walk routes exist。 / {@code true} if walk routes exist
+	 * @param npcAI {@code true} if walk routes exist。
 	 */
 	public static boolean hasWalkRoutes(NpcAI2 npcAI) {
 		return npcAI.getOwner().hasWalkRoutes();
@@ -423,7 +424,7 @@ public class WalkManager {
 	 *
 	 * NPC AI instance
 	 *
-	 * @param npcAI {@code true} if arrived。 / {@code true} if arrived
+	 * @param npcAI {@code true} if arrived。
 	 */
 	public static boolean isArrivedAtPoint(NpcAI2 npcAI) {
 		return npcAI.getOwner().getMoveController().isReachedPoint();

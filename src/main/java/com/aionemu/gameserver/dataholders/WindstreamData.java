@@ -47,7 +47,8 @@ public class WindstreamData {
 	 *
 	 * map id
 	 *
-	 * @param mapId @return 风道模板，不存在则为 null / windstream template or null
+	 * @param mapId
+	 * @return 风道模板，不存在则为 null / windstream template or null
 	 */
 	public WindstreamTemplate getStreamTemplate(int mapId) {
 		return windstreams.get(mapId);

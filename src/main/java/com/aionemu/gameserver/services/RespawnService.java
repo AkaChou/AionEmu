@@ -32,7 +32,8 @@ public class RespawnService {
 	 *
 	 * target NPC
 	 *
-	 * @param npc @return 消散任务句柄 / decay task handle
+	 * @param npc
+	 * @return 消散任务句柄 / decay task handle
 	 */
 	public static Future<?> scheduleDecayTask(Npc npc) {
 		int decayInterval;
@@ -55,7 +56,8 @@ public class RespawnService {
 	 * target NPC
 	 *
 	 * @param decayInterval 消散延迟（毫秒） / decay delay in milliseconds
-	 * @param decayInterval @return 消散任务句柄 / decay task handle
+	 * @param decayInterval
+	 * @return 消散任务句柄 / decay task handle
 	 */
 	public static Future<?> scheduleDecayTask(Npc npc, long decayInterval) {
 		return GameThreadPoolServices.threadPoolManager().schedule(new DecayTask(npc.getObjectId()), decayInterval);
@@ -67,7 +69,8 @@ public class RespawnService {
 	 *
 	 * visible object
 	 *
-	 * @param visibleObject @return 重生任务句柄 / respawn task handle
+	 * @param visibleObject
+	 * @return 重生任务句柄 / respawn task handle
 	 */
 	public static final Future<?> scheduleRespawnTask(VisibleObject visibleObject) {
 		final int interval = visibleObject.getSpawn().getRespawnTime();

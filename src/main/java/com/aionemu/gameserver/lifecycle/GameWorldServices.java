@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 世界服务定位器：向 Geo / Nav / Drop 相关组件注入 Spring 提供者。
- * Nav / Drop related components. / Nav / Drop related components.
+ * Nav / Drop related components.
  */
 @Component
 public final class GameWorldServices implements DisposableBean {

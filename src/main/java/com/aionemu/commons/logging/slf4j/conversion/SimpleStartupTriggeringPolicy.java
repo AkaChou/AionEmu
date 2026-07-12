@@ -26,7 +26,7 @@ public final class SimpleStartupTriggeringPolicy<E> extends TriggeringPolicyBase
      *
      * @param activeFile 当前活动的日志文件 / Current active log file
      * @param event 日志事件 / Logging event
-     * 返回若为真则 rollover 应为 triggered , falseotherwise。 / Returns true if rollover should be triggered, false otherwise
+     * @return 需要滚动日志时为 {@code true} / {@code true} if rollover should be triggered
      */
     public boolean isTriggeringEvent(File activeFile, E event) {
         boolean result = !this.fired && activeFile.length() > 0L;

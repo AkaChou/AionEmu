@@ -89,7 +89,7 @@ public class PrivateStoreService {
 				return;
 
 			/**
-	 * 检查是否玩家有足够基纳。 / Check if player has enough kinah
+	 * 检查玩家是否有足够基纳。 / Check whether the player has enough Kinah.
 	 */
 			if (buyer.getInventory().getKinah() >= price) {
 				for (TradeItem tradeItem : tradeList.getTradeItems()) {
@@ -178,7 +178,7 @@ public class PrivateStoreService {
 			}
 
 			/**
-	 * 检查是否玩家已经有商店,否则创建一个。 / Check if player already has a store, if not create one
+	 * 检查玩家是否已有商店，没有则创建。 / Check whether the player already has a store and create one if needed.
 	 */
 			if (activePlayer.getStore() == null) {
 				createStore(activePlayer);
@@ -190,7 +190,7 @@ public class PrivateStoreService {
 			}
 
 			/**
-	 * 检查是否玩家拥有 itemObjId 否则不添加物品。 / Check if player owns itemObjId else don't add item
+	 * 检查玩家是否拥有指定物品，否则不添加。 / Check whether the player owns the item before adding it.
 	 */
 			for (int i = 0; i < tradePSItems.length; i++) {
 				Item item = getItemByObjId(activePlayer, tradePSItems[i].getItemObjId());
@@ -345,7 +345,7 @@ public class PrivateStoreService {
 		}
 
 		/**
-	 * 检查是否玩家仍然拥有物品。 / Check if player still owns items
+	 * 检查玩家是否仍拥有物品。 / Check whether the player still owns the items.
 	 */
 		if (!validateBuyItems(seller, newTradeList)) {
 			return null;

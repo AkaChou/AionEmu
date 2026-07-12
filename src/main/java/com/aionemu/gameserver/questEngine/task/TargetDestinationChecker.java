@@ -28,7 +28,7 @@ final class TargetDestinationChecker extends DestinationChecker {
 	 * 判断跟随者是否接近目标生物。
 	 * Returns whether the follower is near the target creature.
 	 *
-	 * true if 3D distance ≤ 10。 / true if 3D distance ≤ 10
+	 * true if 3D distance ≤ 10。
 	 */
 	@Override
 	boolean check() {

@@ -156,7 +156,7 @@ public class GameServerInfo {
      * 是否已满员。
      * Whether the server is full.
      *
-     * @return 若 full 则为 true / true if full
+     * @return 已满员时为 {@code true} / {@code true} if full
      */
     public boolean isFull() {
         return getCurrentPlayers() >= getMaxPlayers();
@@ -171,7 +171,8 @@ public class GameServerInfo {
      *
      * Player IP
      *
-     * @param playerIp @return 对该玩家有效的地址字节 / Address bytes valid for the player
+     * @param playerIp
+     * @return 对该玩家有效的地址字节 / Address bytes valid for the player
      */
     public byte[] getIPAddressForPlayer(String playerIp) {
         if (!isOnline()) {

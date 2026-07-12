@@ -736,7 +736,7 @@ public class BoundingBox extends BoundingVolume {
 	 * @param other 可碰撞对象 / collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * collision count
-	 * unsupported type。 / unsupported type.
+	 * unsupported type。
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) {
@@ -775,7 +775,8 @@ public class BoundingBox extends BoundingVolume {
 	 *
 	 * point to test
 	 *
-	 * @param point @return 是否在内部 / whether inside
+	 * @param point
+	 * @return 是否在内部 / whether inside
 	 */
 	@Override
 	public boolean contains(Vector3f point) {
@@ -802,7 +803,8 @@ public class BoundingBox extends BoundingVolume {
 	 *
 	 * point to test
 	 *
-	 * @param point @return 到边缘的距离 / distance to edge
+	 * @param point
+	 * @return 到边缘的距离 / distance to edge
 	 */
 	@Override
 	public float distanceToEdge(Vector3f point) {

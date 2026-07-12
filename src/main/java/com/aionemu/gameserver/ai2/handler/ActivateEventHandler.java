@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 
 /**
  * NPC 激活 / 停用事件处理器，负责在 AI 被激活或停用时更新已知列表、思考与清理状态。
- * deactivate events: updates known list, triggers think, and clears state. / deactivate events: updates known list, triggers think, and clears state.
+ * deactivate events: updates known list, triggers think, and clears state.
  *
  * @author ATracer
  */

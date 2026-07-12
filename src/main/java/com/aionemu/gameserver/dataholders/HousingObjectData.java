@@ -71,7 +71,8 @@ public class HousingObjectData {
 	 *
 	 * object template id
 	 *
-	 * @param templateId @return 房屋物件模板，不存在则为 null / housing object template, or null if absent
+	 * @param templateId
+	 * @return 房屋物件模板，不存在则为 null / housing object template, or null if absent
 	 */
 	public PlaceableHouseObject getTemplateById(int templateId) {
 		return objectTemplatesById.get(templateId);

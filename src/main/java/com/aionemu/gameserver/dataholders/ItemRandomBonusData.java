@@ -63,7 +63,8 @@ public class ItemRandomBonusData {
 	 * bonus type
 	 *
 	 * @param rndOptionSet 随机选项集 ID / random option-set id
-	 * @param rndOptionSet @return 随机加成结果，无匹配则为 null / random bonus result or null
+	 * @param rndOptionSet
+	 * @return 随机加成结果，无匹配则为 null / random bonus result or null
 	 */
 	public RandomBonusResult getRandomModifiers(StatBonusType bonusType, int rndOptionSet) {
 		RandomBonus bonus = getBonusMap(bonusType).get(rndOptionSet);
@@ -95,7 +96,8 @@ public class ItemRandomBonusData {
 	 *
 	 * @param rndOptionSet 随机选项集 ID / random option-set id
 	 * @param number 1 起始的修正序号 / 1-based modifiers index
-	 * @param number @return 修正模板或 null / modifiers template or null
+	 * @param number
+	 * @return 修正模板或 null / modifiers template or null
 	 */
 	public ModifiersTemplate getTemplate(StatBonusType bonusType, int rndOptionSet, int number) {
 		RandomBonus bonus = getBonusMap(bonusType).get(rndOptionSet);

@@ -32,7 +32,8 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	 *
 	 * variable key
 	 *
-	 * @param var @return 变量值，不存在则 0 / value, or 0 if missing
+	 * @param var
+	 * @return 变量值，不存在则 0 / value, or 0 if missing
 	 */
 	@Override
 	public int load(String var) {

@@ -28,7 +28,7 @@ class ChatServiceLifecycleTest {
 
     @AfterEach
     void clearProperties() {
-        System.clearProperty("aion.chat.config.dir");
+        System.clearProperty("aion.config.dir");
     }
 
     @Test
@@ -45,7 +45,7 @@ class ChatServiceLifecycleTest {
 
     @Test
     void startupFailureRunsChatShutdown() {
-        System.setProperty("aion.chat.config.dir", chatConfig.toString());
+        System.setProperty("aion.config.dir", chatConfig.toString());
         List<String> events = new ArrayList<>();
         ChatServerLifecycleGateway gateway = new RecordingChatServerLifecycleGateway(events, true);
         ChatServiceLifecycle lifecycle = new ChatServiceLifecycle(
@@ -69,7 +69,7 @@ class ChatServiceLifecycleTest {
 
     @Test
     void stopRunsOnceAfterSuccessfulStartup() {
-        System.setProperty("aion.chat.config.dir", chatConfig.toString());
+        System.setProperty("aion.config.dir", chatConfig.toString());
         List<String> events = new ArrayList<>();
         ChatServerLifecycleGateway gateway = new RecordingChatServerLifecycleGateway(events, false);
         ChatServiceLifecycle lifecycle = new ChatServiceLifecycle(
@@ -87,7 +87,7 @@ class ChatServiceLifecycleTest {
 
     @Test
     void startAppliesLegacyConfigOverridesBeforeStartingChatServer() {
-        System.setProperty("aion.chat.config.dir", chatConfig.toString());
+        System.setProperty("aion.config.dir", chatConfig.toString());
         List<String> events = new ArrayList<>();
         ChatServiceLifecycle lifecycle = new ChatServiceLifecycle(
             new AionServicesProperties(),

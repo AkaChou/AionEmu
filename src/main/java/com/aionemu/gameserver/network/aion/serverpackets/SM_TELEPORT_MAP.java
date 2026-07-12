@@ -17,7 +17,7 @@ import com.aionemu.gameserver.world.World;
 
 /**
  * 打开传送 NPC 传送地图/目的地列表的服务端包。
- * destination list. / destination list.
+ * destination list.
  * <p>
  * 可按配置禁用部分 NPC 的目的地展示。
  * Destination listing for certain NPCs can be disabled via config.

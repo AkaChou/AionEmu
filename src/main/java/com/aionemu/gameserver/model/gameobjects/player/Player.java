@@ -532,7 +532,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 该玩家是否正在寻找小队。@return true / false / Is this player looking for a group @return true or false
+	 * @return 该玩家是否正在寻找小队。 true / false / Is this player looking for a group true or false
 	 */
 	public boolean isLookingForGroup() {
 		return lookingForGroup;
@@ -815,7 +815,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 来自 UPDATE_REQUIRED 仓库与装备的物品。@return / Items from UPDATE_REQUIRED storages and equipment @return
+	 * @return 来自 UPDATE_REQUIRED 仓库与装备的物品。 / Items from UPDATE_REQUIRED storages and equipment
 	 */
 	public List<Item> getDirtyItemsToUpdate() {
 		List<Item> dirtyItems = new ArrayList<Item>();
@@ -1009,7 +1009,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * 检查是否 objectid ' s 为相同。 / Checks if object id's are the same
+	 * 检查对象 ID 是否相同。 / Check whether the object ids are equal.
 	 *
 	 * @return true if the object id is the same
 	 */
@@ -1039,14 +1039,14 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 该玩家的访问等级。@return byte / Access level of this player @return byte
+	 * @return 该玩家的访问等级。 byte / Access level of this player byte
 	 */
 	public byte getAccessLevel() {
 		return playerAccount.getAccessLevel();
 	}
 
 	/**
-	 * @return 该玩家的会员等级。@return / Membership of this player @return
+	 * @return 该玩家的会员等级。 / Membership of this player
 	 */
 	public byte getMembership() {
 		if (playerAccount == null) {
@@ -1056,7 +1056,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 该玩家的账号名。@return / accountName of this player @return int
+	 * @return 该玩家的账号名。 / accountName of this player int
 	 */
 	public String getAcountName() {
 		return playerAccount.getName();
@@ -1465,7 +1465,11 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param npc 用于 SM_NPC_INFO，按与等级无关的仇恨判定。@param npc @return / Used in SM_NPC_INFO to check aggro irrespective to level @param npc @return
+	 * 用于 {@code SM_NPC_INFO}，判断是否显示仇恨图标。
+	 * Used by {@code SM_NPC_INFO} to decide whether to show the aggro icon.
+	 *
+	 * @param npc 待检查 NPC / NPC to check
+	 * @return 应显示仇恨图标时为 true / true if the aggro icon should be shown
 	 */
 	public boolean isAggroIconTo(Npc npc) {
 		Race race = npc.getRace();
@@ -1477,7 +1481,7 @@ public class Player extends Creature {
 		if (tribe == TribeClass.USEALL) {
 			return false;
 		}
-		// AbyssType != NONE -> SiegeNpc。 / AbyssType != NONE -> SiegeNpc
+		// AbyssType != NONE -> SiegeNpc。
 		if (npc.getObjectTemplate().getAbyssNpcType() != AbyssNpcType.NONE) {
 			return checkSiegeRelations(npc);
 		}
@@ -2209,14 +2213,14 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 判断物品是否可用于自我复活。 / Need to find how an item is determined as able to self-rez. @return boolean can self rez with item
+	 * @return 判断物品是否可用于自我复活。 / Need to find how an item is determined as able to self-rez. boolean can self rez with item
 	 */
 	public boolean haveSelfRezItem() {
 		return (getSelfRezStone() != null);
 	}
 
 	/**
-	 * @return 重生效果 ID 为 160。 / Rebirth Effect is id 160. @return
+	 * @return 重生效果 ID 为 160。 / Rebirth Effect is id 160.
 	 */
 	public boolean haveSelfRezEffect() {
 		if (getAccessLevel() >= AdminConfig.ADMIN_AUTO_RES) {
@@ -3105,14 +3109,14 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return Whether spectating / Whether spectating
+	 * @return Whether spectating
 	 */
 	public boolean isSpectating() {
 		return isSpectating;
 	}
 
 	/**
-	 * @return Whether lawless / Whether lawless
+	 * @return Whether lawless
 	 */
 	public boolean isLawless() {
 		return lawless;
@@ -3132,8 +3136,8 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 是否 afk / 是否 afk。 / Whether afk / Whether afk
-	 */
+	 * @return 是否离开。 / Whether afk
+	  */
 	public boolean isAfk() {
 		return isAfk;
 	}
@@ -3143,7 +3147,7 @@ public class Player extends Creature {
 		this.isAfk = isAfk;
 	}
 
-	/** 是否 ffa / Whether ffa */
+	/** 是否处于自由混战 / Whether ffa */
 	public boolean isFFA() {
 		return this.isFFA;
 	}
@@ -3245,7 +3249,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return GM Mode / GM Mode
+	 * @return GM Mode
 	 */
 	public boolean isGmMode() {
 		return isGmMode;
@@ -3279,7 +3283,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return Whether reged event / Whether reged event
+	 * @return Whether reged event
 	 */
 	public boolean isRegedEvent() {
 		return isRegedEvent;
@@ -3291,7 +3295,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return Whether event started / Whether event started
+	 * @return Whether event started
 	 */
 	public boolean isEventStarted() {
 		return isEventStarted;
@@ -3358,8 +3362,8 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @return 是否在 pvemode / 是否在 pvemode。 / Whether in pv e mode / Whether in pv e mode
-	 */
+	 * @return 是否处于 PvE 模式。 / Whether in pv e mode
+	  */
 	public boolean isInPvEMode() {
 		return isInPvEMode;
 	}
@@ -3422,7 +3426,7 @@ public class Player extends Creature {
 		this.getCommonData().setMinionSkillPoints(minionSkillPoints);
 	}
 
-	/** 是否 magical type class / Whether magical type class */
+	/** 是否为魔法职业 / Whether magical type class */
 	public boolean isMagicalTypeClass() {
 		if (playerCommonData.getPlayerClass() == PlayerClass.MUSE || playerCommonData.getPlayerClass() == PlayerClass.SONGWEAVER || playerCommonData.getPlayerClass() == PlayerClass.CLERIC || playerCommonData.getPlayerClass() == PlayerClass.SORCERER || playerCommonData.getPlayerClass() == PlayerClass.SPIRIT_MASTER || playerCommonData.getPlayerClass() == PlayerClass.AETHERTECH) {
 			return true;

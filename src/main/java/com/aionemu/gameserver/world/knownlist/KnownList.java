@@ -254,7 +254,8 @@ public class KnownList {
 	 *
 	 * candidate object
 	 *
-	 * @param newObject @return 应感知则返回 {@code true} / {@code true} if aware
+	 * @param newObject
+	 * @return 应感知则返回 {@code true} / {@code true} if aware
 	 */
 	protected boolean isAwareOf(VisibleObject newObject) {
 		return true;
@@ -266,7 +267,8 @@ public class KnownList {
 	 *
 	 * candidate object
 	 *
-	 * @param newObject @return 在范围内返回 {@code true} / {@code true} if in range
+	 * @param newObject
+	 * @return 在范围内返回 {@code true} / {@code true} if in range
 	 */
 	protected boolean checkObjectInRange(VisibleObject newObject) {
 		// 检查 Z 距离是否大于 maxZvisibleDistance / check if Z distance is greater than maxZvisibleDistance
@@ -282,7 +284,7 @@ public class KnownList {
 	 *
 	 * candidate object
 	 *
-	 * @param newObject {@code false} by default。 / {@code false} by default
+	 * @param newObject {@code false} by default。
 	 */
 	protected boolean checkReversedObjectInRange(VisibleObject newObject) {
 		return false;
@@ -305,7 +307,8 @@ public class KnownList {
 	 * visitor callback
 	 *
 	 * @param iterationLimit 最大遍历数 / maximum iterations
-	 * @param iterationLimit @return 实际遍历数量 / number of NPCs visited
+	 * @param iterationLimit
+	 * @return 实际遍历数量 / number of NPCs visited
 	 */
 	public int doOnAllNpcs(Visitor<Npc> visitor, int iterationLimit) {
 		int counter = 0;
@@ -341,7 +344,8 @@ public class KnownList {
 	 * visitor callback
 	 *
 	 * @param iterationLimit 最大遍历数 / maximum iterations
-	 * @param iterationLimit @return 实际遍历数量 / number of NPCs visited
+	 * @param iterationLimit
+	 * @return 实际遍历数量 / number of NPCs visited
 	 */
 	public int doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor, int iterationLimit) {
 		int counter = 0;
@@ -532,7 +536,8 @@ public class KnownList {
 	 *
 	 * target object id
 	 *
-	 * @param targetObjectId @return 已知对象，不存在则为 {@code null} / known object, or {@code null}
+	 * @param targetObjectId
+	 * @return 已知对象，不存在则为 {@code null} / known object, or {@code null}
 	 */
 	public VisibleObject getObject(int targetObjectId) {
 		return this.knownObjects.get(targetObjectId);

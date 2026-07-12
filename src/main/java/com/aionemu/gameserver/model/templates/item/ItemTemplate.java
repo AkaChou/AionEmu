@@ -29,7 +29,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
  * 物品模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.NONE)
@@ -429,7 +429,7 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return (getMask() & ItemMask.NO_ENCHANT) == ItemMask.NO_ENCHANT;
 	}
 
-	/** 是否 item dye permitted / Whether item dye permitted */
+	/** 是否允许物品染色 / Whether item dye permitted */
 	public boolean isItemDyePermitted() {
 		return (getMask() & ItemMask.DYEABLE) == ItemMask.DYEABLE;
 	}
@@ -470,28 +470,28 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether cp stones / Whether cp stones
+	 * @return Whether cp stones
 	 */
 	public boolean isCpStones() {
 		return itemId >= 187300002 && itemId <= 187300005; // 5.6
 	}
 
 	/**
-	 * @return 是否 plume / 是否 plume。 / Whether plume / Whether plume
-	 */
+	 * @return 是否为羽饰。 / Whether plume
+	  */
 	public boolean isPlume() {
 		return category == ItemCategory.PLUME;
 	}
 
 	/**
-	 * @return Whether bracelet / Whether bracelet
+	 * @return Whether bracelet
 	 */
 	public boolean isBracelet() {
 		return category == ItemCategory.BRACELET;
 	}
 
 	/**
-	 * @return Whether mana stone / Whether mana stone
+	 * @return Whether mana stone
 	 */
 	public boolean isManaStone() {
 		return category == ItemCategory.MANASTONE || category == ItemCategory.SPECIAL_MANASTONE
@@ -499,14 +499,14 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether estima / Whether estima
+	 * @return Whether estima
 	 */
 	public boolean isEstima() {
 		return category == ItemCategory.ESTIMA;
 	}
 
 	/**
-	 * @return Whether tempering solution / Whether tempering solution
+	 * @return Whether tempering solution
 	 */
 	public boolean isTemperingSolution() {
 		return category == ItemCategory.TEMPERING;
@@ -589,69 +589,69 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return 是否 limit 一个 / 是否 limit 一个。 / Whether limit one / Whether limit one
-	 */
+	 * @return 是否限制为一个。 / Whether limit one
+	  */
 	public boolean hasLimitOne() {
 		return (getMask() & ItemMask.LIMIT_ONE) == ItemMask.LIMIT_ONE;
 	}
 
 	/**
-	 * @return Whether tradeable / Whether tradeable
+	 * @return Whether tradeable
 	 */
 	public boolean isTradeable() {
 		return (getMask() & ItemMask.TRADEABLE) == ItemMask.TRADEABLE;
 	}
 
 	/**
-	 * @return 是否可 fuse / 是否可 fuse。 / Whether can fuse / Whether can fuse
-	 */
+	 * @return 是否可合成。 / Whether can fuse
+	  */
 	public boolean isCanFuse() {
 		return (getMask() & ItemMask.CAN_COMPOSITE_WEAPON) == ItemMask.CAN_COMPOSITE_WEAPON;
 	}
 
 	/**
-	 * @return Whether extract / Whether extract
+	 * @return Whether extract
 	 */
 	public boolean canExtract() {
 		return (getMask() & ItemMask.CAN_SPLIT) == ItemMask.CAN_SPLIT;
 	}
 
 	/**
-	 * @return Whether soul bound / Whether soul bound
+	 * @return Whether soul bound
 	 */
 	public boolean isSoulBound() {
 		return (getMask() & ItemMask.SOUL_BOUND) == ItemMask.SOUL_BOUND;
 	}
 
 	/**
-	 * @return Whether breakable / Whether breakable
+	 * @return Whether breakable
 	 */
 	public boolean isBreakable() {
 		return (getMask() & ItemMask.BREAKABLE) == ItemMask.BREAKABLE;
 	}
 
 	/**
-	 * @return Whether deletable / Whether deletable
+	 * @return Whether deletable
 	 */
 	public boolean isDeletable() {
 		return (getMask() & ItemMask.DELETABLE) == ItemMask.DELETABLE;
 	}
 
 	/**
-	 * @return 是否可 idian / 是否可 idian。 / Whether can idian / Whether can idian
-	 */
+	 * @return 是否可镶嵌伊迪安。 / Whether can idian
+	  */
 	public boolean isCanIdian() {
 		return (getMask() & ItemMask.CAN_IDIAN) == ItemMask.CAN_IDIAN;
 	}
 
 	/**
-	 * @return Whether archdaeva / Whether archdaeva
+	 * @return Whether archdaeva
 	 */
 	public boolean isArchdaeva() {
 		return (getMask() & ItemMask.ITEM_ARCHDAEVA) == ItemMask.ITEM_ARCHDAEVA;
 	}
 
-	/** 是否 two hand weapon / Whether two hand weapon */
+	/** 是否为双手武器 / Whether two hand weapon */
 	public boolean isTwoHandWeapon() {
 		if (!isWeapon()) {
 			return false;
@@ -694,14 +694,14 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether stackable / Whether stackable
+	 * @return Whether stackable
 	 */
 	public boolean isStackable() {
 		return this.maxStackCount > 1;
 	}
 
 	/**
-	 * @return Whether area restriction / Whether area restriction
+	 * @return Whether area restriction
 	 */
 	public boolean hasAreaRestriction() {
 		return useLimits.getUseArea() != null;
@@ -782,13 +782,13 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return idianAction;
 	}
 
-	/** 是否 combination item / Whether combination item */
+	/** 是否为组合物品 / Whether combination item */
 	public boolean isCombinationItem() {
 		return category == ItemCategory.COMBINATION;
 	}
 
 	/**
-	 * @return Whether enchantment stone / Whether enchantment stone
+	 * @return Whether enchantment stone
 	 */
 	public boolean isEnchantmentStone() {
 		return category == ItemCategory.ENCHANTMENT;
@@ -800,21 +800,21 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether amplification stone / Whether amplification stone
+	 * @return Whether amplification stone
 	 */
 	public boolean isAmplificationStone() {
 		return category == ItemCategory.ENCHANTMENT_AMPLIFICATION;
 	}
 
 	/**
-	 * @return 是否 cloth / 是否 cloth。 / Whether cloth / Whether cloth
-	 */
+	 * @return 是否为布甲。 / Whether cloth
+	  */
 	public boolean isCloth() {
 		return armorType != null && equipmentType == EquipType.ARMOR;
 	}
 
 	/**
-	 * @return Whether ancient stone / Whether ancient stone
+	 * @return Whether ancient stone
 	 */
 	public boolean isAncientStone() {
 		// 古代魔石：生命 +105 与【印章】古代魔石：治疗增强 +6。 / Ancient Manastone: HP +105 && //[Stamp] Ancient Manastone: Healing Boost +6
@@ -822,7 +822,7 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether accessory / Whether accessory
+	 * @return Whether accessory
 	 */
 	public boolean isAccessory() {
 		return category == ItemCategory.EARRINGS || category == ItemCategory.RINGS || category == ItemCategory.NECKLACE
@@ -879,7 +879,7 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether minion cash contract / Whether minion cash contract
+	 * @return Whether minion cash contract
 	 */
 	public boolean isMinionCashContract() {
 		return this.is_cash_contract;

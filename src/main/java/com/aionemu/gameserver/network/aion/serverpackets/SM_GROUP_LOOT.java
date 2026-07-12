@@ -5,7 +5,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 /**
  * 向客户端发送小队拾取/掷骰相关信息的服务端包。
- * roll information to the client. / roll information to the client.
+ * roll information to the client.
  */
 public class SM_GROUP_LOOT extends AionServerPacket {
 	private int groupId;

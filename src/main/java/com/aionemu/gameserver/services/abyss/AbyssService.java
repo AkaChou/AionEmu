@@ -10,7 +10,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 欧比斯通用工具：PvP 地图判定与军阶击杀/技能全服广播。
- * skill world announcements. / skill world announcements.
+ * skill world announcements.
  */
 public class AbyssService {
 	private static final int[] abyssMapList = {

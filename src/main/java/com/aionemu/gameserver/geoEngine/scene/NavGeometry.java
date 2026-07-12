@@ -224,7 +224,8 @@ public class NavGeometry extends Spatial {
 	 *
 	 * edge number (1–3)
 	 *
-	 * @param edge @return 两端点，或无效边时为 null / endpoints, or null for an invalid edge
+	 * @param edge
+	 * @return 两端点，或无效边时为 null / endpoints, or null for an invalid edge
 	 */
 	public float[][] getEndpoints(byte edge) {
 		float[][] ret = new float[2][];
@@ -282,7 +283,8 @@ public class NavGeometry extends Spatial {
 	 * edge number (1–3)
 	 *
 	 * @param vec 目标点（用 x,y） / destination point (x,y used)
-	 * @param vec @return 朝向该边则为 true / true if toward the edge
+	 * @param vec
+	 * @return 朝向该边则为 true / true if toward the edge
 	 */
 	public boolean isTowardsEdge(byte edge, float[] vec) {
 		float[] p0 = new float[] {data[0], data[1]};
@@ -374,7 +376,7 @@ public class NavGeometry extends Spatial {
 	 * @param other 目标可碰撞对象 / target collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * number of collisions
-	 * for unsupported types。 / for unsupported types.
+	 * for unsupported types。
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {

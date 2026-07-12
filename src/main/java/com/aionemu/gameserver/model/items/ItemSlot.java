@@ -101,7 +101,7 @@ public enum ItemSlot {
 	}
 
 	/**
-	 * @param slot Whether estisma / Whether estisma
+	 * @param slot Whether estisma
 	 */
 	public static boolean isEstisma(long slot) {
 		return (ALL_CP_SLOT.slotIdMask & slot) == slot;

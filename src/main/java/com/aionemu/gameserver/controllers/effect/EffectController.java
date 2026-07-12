@@ -207,12 +207,13 @@ public class EffectController {
 	}
 
 	/**
-	 * 判断技能是否为以太科技类开关效果（4.8）。
+	 * 判断技能是否为奥德科技类开关效果（4.8）。
 	 * Returns whether the skill is an Aethertech-style toggle effect (4.8).
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return true 若为以太科技效果 / true if Aethertech effect
+	 * @param skillId
+	 * @return true 若为奥德科技效果 / true if Aethertech effect
 	 */
 	public boolean isAethertechEffect(int skillId) { // 4.8
 		switch (skillId) {
@@ -293,7 +294,7 @@ public class EffectController {
 
 	/**
 	 * 按效果类型返回对应存储映射（被动 / 开关 / 异常）。
-	 * toggle / abnormal). / toggle / abnormal).
+	 * toggle / abnormal).
 	 *
 	 * effect
 	 * matching map
@@ -315,7 +316,8 @@ public class EffectController {
 	 *
 	 * effect stack key
 	 *
-	 * @param stack @return 异常效果或 null / abnormal effect or null
+	 * @param stack
+	 * @return 异常效果或 null / abnormal effect or null
 	 */
 	public Effect getAnormalEffect(String stack) {
 		return abnormalEffectMap.get(stack);
@@ -473,7 +475,8 @@ public class EffectController {
 	 *
 	 * dispel level
 	 *
-	 * @param dispelLevel @return 可驱散数量 / removable count
+	 * @param dispelLevel
+	 * @return 可驱散数量 / removable count
 	 */
 	public int calculateNumberOfEffects(int dispelLevel) {
 		int number = 0;
@@ -708,7 +711,8 @@ public class EffectController {
 	 * effect
 	 *
 	 * @param power 驱散强度 / power to apply
-	 * @param power @return true 若效果应结束 / true if the effect should end
+	 * @param power
+	 * @return true 若效果应结束 / true if the effect should end
 	 */
 	private boolean removePower(Effect effect, int power) {
 		int effectPower = effect.removePower(power);
@@ -1020,7 +1024,7 @@ public class EffectController {
 	 * Checks whether a compound abnormal state matches (any subset bits).
 	 *
 	 * @param id 异常状态 / abnormal state
-	 * @return 若 matched 则为 true / true if matched
+	 * @return 效果匹配时为 {@code true} / {@code true} if matched
 	 */
 	public boolean isAbnormalState(AbnormalState id) {
 		int state = abnormals & id.getId();
@@ -1125,7 +1129,8 @@ public class EffectController {
 	 *
 	 * new effect
 	 *
-	 * @param effect @return true 若已替换已有效果 / true if an existing effect was replaced
+	 * @param effect
+	 * @return true 若已替换已有效果 / true if an existing effect was replaced
 	 */
 	private boolean checkExtraEffect(Effect effect) {
 		Effect existingEffect = getMapForEffect(effect).get(effect.getStack());
@@ -1171,7 +1176,8 @@ public class EffectController {
 	 *
 	 * new effect
 	 *
-	 * @param nextEffect @return true 若新效果因冲突被拒绝 / true if new effect is rejected
+	 * @param nextEffect
+	 * @return true 若新效果因冲突被拒绝 / true if new effect is rejected
 	 */
 	private boolean searchConflict(Effect nextEffect) {
 		if (priorityStigmaEffect(nextEffect) || checkExtraEffect(nextEffect)) {

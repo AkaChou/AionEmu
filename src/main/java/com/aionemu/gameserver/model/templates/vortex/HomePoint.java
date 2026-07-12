@@ -9,7 +9,7 @@ import com.aionemu.gameserver.world.WorldPosition;
 
 /**
  * Home 点模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)

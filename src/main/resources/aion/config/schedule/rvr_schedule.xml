@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	[伊鲁玛／诺斯普德 / Iluma/Norsvold 5.0/5.6]
+	“天族战舰入侵” / "Elyos Warship Invasion"
+	“魔族战舰入侵” / "Asmodian Warship Invasion"
+	“执政官武器入侵” / "Archon's Weapon Invasion"
+	“远古武器入侵” / "Ancient's Weapon Invasion"
+ -->
+<rvr_schedule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rvr_schedule.xsd">
+	<!--
+	伊鲁玛 / ILUMA
+	波尔滕沼泽空岛 / SKY ISLAND OF POLTEN MARSH
+	黑风关隘空岛 / SKY ISLAND OF BLACK GALE PASS
+	克拉尔奥德矿山空岛 / SKY ISLAND OF KRALL AETHER MINE
+    失光之地空岛 / SKY ISLAND OF THE LIGHT DEPRIVED
+	红蘑菇谷空岛 / SKY ISLAND OF RED MUSHROOM VALLEY
+	西风高原空岛 / SKY ISLAND OF THE PLATEAU OF ZEPHYR
+	迷失山谷空岛 / SKY ISLAND OF THE VALLEY OF THE LOST
+	沉眠生命之森空岛 / SKY ISLAND OF THE FOREST OF DORMANT LIFE
+    远古生命神殿空岛 / SKY ISLAND OF THE ANCIENT TEMPLE OF LIFE
+	宁静精灵之森空岛 / SKY ISLAND OF THE SERENE FOREST OF SPIRITS
+	-->
+	<rvr id="3">
+		<rvrTime>0 0 0/6 1/1 * ? *</rvrTime>
+	</rvr>
+	<!--
+	诺斯普德 / NORSVOLD
+	卡利达格峡谷空岛 / SKY ISLAND OF KALIDAG CANYON
+	萨福拉森林空岛 / SKY ISLAND OF SAPHORA FOREST
+	生命之湖空岛 / SKY ISLAND OF THE LAKE OF LIFE
+	诅咒峡谷空岛 / SKY ISLAND OF THE CURSED CANYON
+	蓝色幻影森林空岛 / SKY ISLAND OF BLUE ILLUSION FOREST
+	失落时光遗迹空岛 / SKY ISLAND OF THE RUINS OF LOST TIME
+	审判高原空岛 / SKY ISLAND OF THE PLATEAU OF JUDGMENT
+	羽枝森林空岛 / SKY ISLAND OF THE FEATHER BOUGH FOREST
+	黑鬃山脉空岛 / SKY ISLAND OF THE BLACK MANE MOUNTAINS
+	斯皮里图斯领地空岛 / SKY ISLAND OF THE TERRITORY OF SPIRITUS
+	-->
+	<rvr id="4">
+		<rvrTime>0 0 0/6 1/1 * ? *</rvrTime>
+	</rvr>
+	<!--
+	凯诺维坎与特特兰 / KENOVIKAN & TETRAN 5.6
+	-->
+	<rvr id="5">
+		<rvrTime>0 0 0/8 1/1 * ? *</rvrTime>
+	</rvr>
+	<rvr id="6">
+		<rvrTime>0 0 0/8 1/1 * ? *</rvrTime>
+	</rvr>
+</rvr_schedule>

@@ -65,7 +65,8 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	 *
 	 * 世界 ID / world id
 	 *
-	 * @param worldId @return 地图模板，不存在则为 null / map template or null
+	 * @param worldId
+	 * @return 地图模板，不存在则为 null / map template or null
 	 */
 	public WorldMapTemplate getTemplate(int worldId) {
 		return worldIdMap.get(worldId);

@@ -16,7 +16,7 @@ public class NetworkUtils {
      * @param pattern 匹配模式，如 {@code 192.168.*.*} 或 {@code 192.168.1-100.*} / Pattern, e.g. {@code 192.168.*.*} or {@code 192.168.1-100.*}
      * IP address to check
      *
-     * @return 若 matched 则为 true / True if matched
+     * @return 匹配时为 {@code true} / {@code true} if matched
      */
     public boolean checkIPMatching(String pattern, String address) {
         if (!pattern.equals("*.*.*.*") && !pattern.equals("*")) {

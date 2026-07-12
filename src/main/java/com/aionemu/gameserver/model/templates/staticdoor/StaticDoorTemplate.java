@@ -14,7 +14,7 @@ import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 
 /**
  * 静态 Door 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Wakizashi
  */

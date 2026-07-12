@@ -28,7 +28,8 @@ public class RiftInformer {
 	 *
 	 * World map id
 	 *
-	 * @param worldId @return 该世界的裂隙 NPC / Rift NPCs in that world
+	 * @param worldId
+	 * @return 该世界的裂隙 NPC / Rift NPCs in that world
 	 */
 	public static List<Npc> getSpawned(int worldId) {
 		List<Npc> rifts = RiftManager.getSpawned();

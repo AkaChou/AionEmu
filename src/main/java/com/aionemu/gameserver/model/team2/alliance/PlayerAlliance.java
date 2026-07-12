@@ -108,14 +108,14 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	}
 
 	/**
-	 * @param player Whether vice captain / Whether vice captain
+	 * @param player Whether vice captain
 	 */
 	public final boolean isViceCaptain(Player player) {
 		return viceCaptainIds.contains(player.getObjectId());
 	}
 
 	/**
-	 * @param player Whether some captain / Whether some captain
+	 * @param player Whether some captain
 	 */
 	public final boolean isSomeCaptain(Player player) {
 		return isLeader(player) || isViceCaptain(player);
@@ -142,8 +142,8 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	}
 
 	/**
-	 * @return 是否在 league / 是否在 league。 / Whether in league / Whether in league
-	 */
+	 * @return 是否在联合部队中。 / Whether in league
+	  */
 	public final boolean isInLeague() {
 		return this.league != null;
 	}

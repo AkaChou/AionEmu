@@ -43,7 +43,7 @@ public class State extends AdminCommand {
 	 * Shows or sets/unsets target creature state bits (1–16).
 	 *
 	 * 执行 GM / Admin player
-	 * show | set|unset &lt;bit&gt;。 / show | set|unset &lt;bit&gt;
+	 * show | set|unset &lt;bit&gt;。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

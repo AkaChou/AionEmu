@@ -34,12 +34,6 @@ public class GSConfig {
 	@Property(key = "gameserver.chatserver.enable", defaultValue = "false")
 	public static boolean ENABLE_CHAT_SERVER;
 	/**
-	 * 是否在 MOTD 中显示版本修订号。
-	 * Whether to display revision in server MOTD.
-	 */
-	@Property(key = "gameserver.revisiondisplay.enable", defaultValue = "false")
-	public static boolean SERVER_MOTD_DISPLAYREV;
-	/**
 	 * 是否启用启动进度输出。
 	 * Whether startup progress output is enabled.
 	 */

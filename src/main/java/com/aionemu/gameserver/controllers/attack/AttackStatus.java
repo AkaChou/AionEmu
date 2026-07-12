@@ -118,7 +118,8 @@ public enum AttackStatus {
 	 * main-hand status
 	 * off-hand status
 	 *
-	 * @param mainHandStatus @throws IllegalArgumentException 无法映射时 / if the status cannot be mapped
+	 * @param mainHandStatus
+	 * @throws IllegalArgumentException 无法映射时 / if the status cannot be mapped
 	 */
 	public static final AttackStatus getOffHandStats(AttackStatus mainHandStatus) {
 		switch (mainHandStatus) {

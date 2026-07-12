@@ -5,7 +5,7 @@ import com.aionemu.gameserver.model.agent.AgentStateType;
 
 /**
  * 代理战默认实现：切入 FIGHT / 回到 PEACE。
- * back to PEACE. / back to PEACE.
+ * back to PEACE.
  *
  * @author Rinzler (Encom)
  */

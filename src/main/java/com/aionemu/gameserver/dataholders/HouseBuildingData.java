@@ -50,7 +50,8 @@ public class HouseBuildingData {
 	 *
 	 * building id
 	 *
-	 * @param buildingId @return 建筑模板，不存在则为 null / building template, or null if absent
+	 * @param buildingId
+	 * @return 建筑模板，不存在则为 null / building template, or null if absent
 	 */
 	public Building getBuilding(int buildingId) {
 		return buildingById.get(buildingId);

@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 /**
  * Placeable 房屋对象模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */
@@ -44,7 +44,7 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	}
 
 	/**
-	 * @return 对象允许放置在何处？ / Where the object is allowed to be placed on? @return {@link LimitType.NONE} if no restriction
+	 * @return 对象允许放置在何处？ / Where the object is allowed to be placed on? {@link LimitType.NONE} if no restriction
 	 */
 	public LimitType getPlacementLimit() {
 		if (limit == null) {

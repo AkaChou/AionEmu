@@ -26,9 +26,9 @@ public class PlayerTransferRequest {
     public int targetAccountId;
     /** 角色 ID / player id */
     public int playerId;
-    /** accountused 在 targetsideoften 相同 astargetAccount / account used on target side (often same as targetAccount) */
+    /** 目标服使用的账号，通常与 {@link #targetAccount} 相同 / Account used on the target server, usually {@link #targetAccount} */
     public Account account;
-    /** 源账号实体 / source account entity */
+    /** 源账号实体 / Source account entity */
     public Account saccount;
     /** 关联的转移任务 ID / related transfer task id */
     public int taskId;
@@ -37,7 +37,7 @@ public class PlayerTransferRequest {
      * 以给定步骤状态创建转移请求。
      * Create a transfer request with the given step status.
      *
-     * initial step
+     * @param status 初始转移步骤 / Initial transfer step
      */
     public PlayerTransferRequest(PlayerTransferStatus status) {
         this.status = status;

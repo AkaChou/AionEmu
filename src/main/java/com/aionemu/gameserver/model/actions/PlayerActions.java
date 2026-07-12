@@ -16,7 +16,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class PlayerActions extends CreatureActions {
-	/** 是否 in player mode / Whether in player mode */
+	/** 是否处于玩家模式 / Whether in player mode */
 	public static boolean isInPlayerMode(Player player, PlayerMode mode) {
 		switch (mode) {
 		case RIDE:

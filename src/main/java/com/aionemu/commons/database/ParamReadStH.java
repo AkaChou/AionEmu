@@ -19,7 +19,7 @@ public interface ParamReadStH extends ReadStH {
      * Set parameters for the SQL statement
      *
  * @param stmt 预处理 SQL 语句对象 / The PreparedStatement object
- * If a SQL error occurs while setting parameters。 / If a SQL error occurs while setting parameters.
+ * If a SQL error occurs while setting parameters。
      */
     void setParams(PreparedStatement stmt) throws SQLException;
 }

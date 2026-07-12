@@ -22,26 +22,25 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
 
     @Test
     void loadsExistingPropertiesFilesIntoSpringEnvironmentWithoutChangingPrecedence() throws Exception {
-        Path gameConfig = tempDir.resolve("game");
-        Path loginConfig = tempDir.resolve("login");
-        Path chatConfig = tempDir.resolve("chat");
-        Files.createDirectories(gameConfig.resolve("main"));
-        Files.createDirectories(gameConfig.resolve("network"));
-        Files.createDirectories(loginConfig.resolve("network"));
+        Path configDir = tempDir.resolve("config");
+        Path loginConfig = configDir.resolve("login");
+        Path chatConfig = configDir.resolve("chat");
+        Files.createDirectories(configDir.resolve("main"));
+        Files.createDirectories(configDir.resolve("network"));
+        Files.createDirectories(loginConfig);
         Files.createDirectories(chatConfig);
 
-        Files.writeString(gameConfig.resolve("main/main.properties"), """
+        Files.writeString(configDir.resolve("main/main.properties"), """
             gameserver.name=from-game-main
             gameserver.network.login.gsid=1
             """);
-        Files.writeString(gameConfig.resolve("network/network.properties"), """
+        Files.writeString(configDir.resolve("network/network.properties"), """
             gameserver.network.login.gsid=2
-            """);
-        Files.writeString(gameConfig.resolve("mygs.properties"), """
-            gameserver.network.login.gsid=3
-            """);
-        Files.writeString(loginConfig.resolve("network/network.properties"), """
             loginserver.network.client.port=2106
+            chatserver.network.public.address=203.0.113.30:10241
+            """);
+        Files.writeString(configDir.resolve("mygs.properties"), """
+            gameserver.network.login.gsid=3
             """);
         Files.writeString(loginConfig.resolve("myls.properties"), """
             loginserver.network.client.port=2206
@@ -57,9 +56,7 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
         environment.getPropertySources().addFirst(new MapPropertySource(
             "commandLine",
             Map.of(
-                "aion.game.config.dir", gameConfig.toString(),
-                "aion.login.config.dir", loginConfig.toString(),
-                "aion.chat.config.dir", chatConfig.toString(),
+                "aion.config.dir", configDir.toString(),
                 "gameserver.name", "from-command-line"
             )
         ));
@@ -74,6 +71,7 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
         assertEquals("3", environment.getProperty("aion.legacy.game.property.gameserver.network.login.gsid"));
         assertEquals("2206", environment.getProperty("aion.legacy.login.property.loginserver.network.client.port"));
         assertEquals("2", environment.getProperty("aion.legacy.chat.property.chatserver.chat.lang"));
+        assertEquals("203.0.113.30:10241", environment.getProperty("aion.legacy.chat.property.chatserver.network.public.address"));
 
         LegacyGameProperties gameProperties = bindLegacyGameProperties(environment);
         LegacyLoginProperties loginProperties = bindLegacyLoginProperties(environment);
@@ -95,7 +93,7 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
 
     @Test
     void loadsDefaultConfigDirectoriesFromAionHome() throws Exception {
-        Path gameConfig = tempDir.resolve("aion/game/config/main");
+        Path gameConfig = tempDir.resolve("aion/config/main");
         Files.createDirectories(gameConfig);
         Files.writeString(gameConfig.resolve("gameserver.properties"), "gameserver.country.code=5\n");
 

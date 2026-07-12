@@ -109,7 +109,8 @@ public class GuideHtmlData {
 	 *
 	 * @param race 玩家种族 / player race
 	 * @param level 玩家等级 / player level
-	 * @param level @return 匹配的引导模板数组 / array of matching guide templates
+	 * @param level
+	 * @return 匹配的引导模板数组 / array of matching guide templates
 	 */
 	public GuideTemplate[] getTemplatesFor(PlayerClass playerClass, Race race, int level) {
 		List<GuideTemplate> guideTemplate = new ArrayList<GuideTemplate>();

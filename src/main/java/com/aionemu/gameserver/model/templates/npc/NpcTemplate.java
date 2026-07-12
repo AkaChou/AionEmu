@@ -22,7 +22,7 @@ import com.aionemu.gameserver.model.templates.stats.NpcStatsTemplate;
 
 /**
  * NPC 模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 @XmlAccessorType(XmlAccessType.NONE)
@@ -280,14 +280,14 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether interact / Whether interact
+	 * @return Whether interact
 	 */
 	public boolean canInteract() {
 		return talkInfo != null;
 	}
 
 	/**
-	 * @return Whether dialog npc / Whether dialog npc
+	 * @return Whether dialog npc
 	 */
 	public boolean isDialogNpc() {
 		if (talkInfo == null) {
@@ -297,7 +297,7 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * @return Whether float corpse / Whether float corpse
+	 * @return Whether float corpse
 	 */
 	public boolean isFloatCorpse() {
 		return floatcorpse;

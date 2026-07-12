@@ -27,7 +27,7 @@ class AionServicePaths {
      */
     void configureLogin() {
         configureLogging();
-        configureConfig("aion.login.config.dir", "login/config", "aion/login/config");
+        configureConfig("aion.config.dir", "config", "aion/config");
         configureResourceDirectory("aion.login.data.dir", "login/data", "aion/login/data");
     }
 
@@ -37,7 +37,7 @@ class AionServicePaths {
      */
     void configureChat() {
         configureLogging();
-        configureConfig("aion.chat.config.dir", "chat/config", "aion/chat/config");
+        configureConfig("aion.config.dir", "config", "aion/config");
     }
 
     /**
@@ -46,9 +46,9 @@ class AionServicePaths {
      */
     void configureGame() {
         configureLogging();
-        configureConfig("aion.game.config.dir", "game/config", "aion/game/config");
-        configureGameData("aion.game.data.dir", "game/data", "aion/game/data");
-        configureGeoData("aion.game.geo.dir", "game/geo", "aion/game/geo");
+        configureConfig("aion.config.dir", "config", "aion/config");
+        configureGameData("aion.game.data.dir", "data", "aion/data");
+        configureGeoData("aion.game.geo.dir", "geo", "aion/geo");
         configureDirectory("aion.game.cache.dir", "game/cache");
     }
 
@@ -240,7 +240,7 @@ class AionServicePaths {
      * @param resourcePath 资源根路径 / resource root path
      * Spring resource
      * target directory
-     * if I/O fails。 / if I/O fails.
+     * if I/O fails。
      */
     private void copyResource(String resourcePath, Resource resource, Path targetDirectory) throws IOException {
         if (!resource.isReadable() || resource.getFilename() == null) {
@@ -307,7 +307,8 @@ class AionServicePaths {
          *
          * property name
          *
-         * @param property @return 已设置则为 true / true if set
+         * @param property
+         * @return 已设置则为 true / true if set
          */
         private boolean has(String property) {
             return System.getProperty(property) != null;

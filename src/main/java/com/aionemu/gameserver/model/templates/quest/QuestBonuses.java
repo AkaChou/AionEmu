@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.templates.rewards.BonusType;
 
 /**
  * 任务加成模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

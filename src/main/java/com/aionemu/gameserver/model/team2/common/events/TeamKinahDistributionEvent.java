@@ -25,7 +25,7 @@ public class TeamKinahDistributionEvent<T extends TemporaryPlayerTeam<? extends 
 	}
 
 	/**
-	 * @return Check condition / Check condition
+	 * @return Check condition
 	 */
 	@Override
 	public boolean checkCondition() {

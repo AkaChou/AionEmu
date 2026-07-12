@@ -154,7 +154,7 @@ class XmlDataLoaderTest {
 	void staticDataSchemaCompiles() {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-		assertDoesNotThrow(() -> schemaFactory.newSchema(Path.of("src/main/resources/aion/game/data/static_data/static_data.xsd").toFile()));
+		assertDoesNotThrow(() -> schemaFactory.newSchema(Path.of("src/main/resources/aion/data/static_data/static_data.xsd").toFile()));
 	}
 
 	@Test
@@ -162,9 +162,9 @@ class XmlDataLoaderTest {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 		assertDoesNotThrow(() -> schemaFactory
-			.newSchema(Path.of("src/main/resources/aion/game/data/static_data/skills/skills.xsd").toFile())
+			.newSchema(Path.of("src/main/resources/aion/data/static_data/skills/skills.xsd").toFile())
 			.newValidator()
-			.validate(new StreamSource(Path.of("src/main/resources/aion/game/data/static_data/skills/skill_templates.xml").toFile())));
+			.validate(new StreamSource(Path.of("src/main/resources/aion/data/static_data/skills/skill_templates.xml").toFile())));
 	}
 
 	@Test
@@ -181,7 +181,7 @@ class XmlDataLoaderTest {
 
 	@Test
 	void mainStaticDataImportsNpcDropsIntoSharedCache() throws Exception {
-		String staticData = Files.readString(Path.of("src/main/resources/aion/game/data/static_data/static_data.xml"), StandardCharsets.UTF_8);
+		String staticData = Files.readString(Path.of("src/main/resources/aion/data/static_data/static_data.xml"), StandardCharsets.UTF_8);
 
 		assertTrue(staticData.contains("<npc_drops>"));
 		assertTrue(staticData.contains("file=\"npc_drops/"));

@@ -2,7 +2,10 @@ package com.aionemu.chatserver.configs;
 
 
 import com.aionemu.boot.i18n.I18n;
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Properties;
 
 import lombok.experimental.UtilityClass;
@@ -31,6 +34,13 @@ public class Config {
      */
     @Property(key = "chatserver.network.client.address", defaultValue = "localhost:10241")
     public static InetSocketAddress CHAT_ADDRESS;
+
+    /**
+     * 向游戏客户端公布的聊天服务器地址。
+     * Chat-server address advertised to game clients.
+     */
+    @Property(key = "chatserver.network.public.address", defaultValue = "localhost:10241")
+    public static InetSocketAddress PUBLIC_CHAT_ADDRESS;
 
     /**
      * 游戏服对接监听地址。
@@ -96,13 +106,13 @@ public class Config {
     public static String CHATSERVER_RESTART_TIME;
 
     /**
-     * 解析配置目录路径（系统属性 {@code aion.chat.config.dir}，默认 {@code ./config}）。
-     * Resolve config directory path (system property {@code aion.chat.config.dir}, default {@code ./config}).
+     * 解析统一配置根目录。
+     * Resolves the shared configuration root directory.
      *
      * Config directory
      */
     private static String configDir() {
-        return System.getProperty("aion.chat.config.dir", "./config");
+        return Objects.requireNonNull(System.getProperty("aion.config.dir"), "aion.config.dir is not configured");
     }
 
     /**
@@ -129,12 +139,12 @@ public class Config {
             Properties myProps = null;
             try {
                 log.info(I18n.get("log.42a96ab0c032"));
-                myProps = PropertiesUtils.load(configDir() + "/mycs.properties");
+                myProps = PropertiesUtils.load(configDir() + "/chat/mycs.properties");
             } catch (Exception e) {
                 log.info(I18n.get("log.c453f21e95f6"));
             }
 
-            Properties[] props = PropertiesUtils.loadAllFromDirectory(configDir());
+            Properties[] props = loadProperties();
             PropertiesUtils.overrideProperties(props, myProps);
             PropertiesUtils.overrideProperties(props, bootOverrides);
 
@@ -146,5 +156,15 @@ public class Config {
             log.error(I18n.get("log.7e1c21e90609", e));
             throw new Error("Can't load chatserver configuration", e);
         }
+    }
+
+    private static Properties[] loadProperties() throws IOException {
+        Properties[] serviceProperties = PropertiesUtils.loadAllFromDirectory(Path.of(configDir()).resolve("chat").toFile());
+        Properties[] properties = new Properties[serviceProperties.length + 1];
+        properties[0] = PropertiesUtils.load(
+            Path.of(configDir()).resolve("network/network.properties").toFile()
+        );
+        System.arraycopy(serviceProperties, 0, properties, 1, serviceProperties.length);
+        return properties;
     }
 }

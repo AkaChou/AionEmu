@@ -2,7 +2,7 @@ package com.aionemu.gameserver.model.templates.windstreams;
 
 /**
  * 风道路径模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  */
 
 public class WindstreamPath {

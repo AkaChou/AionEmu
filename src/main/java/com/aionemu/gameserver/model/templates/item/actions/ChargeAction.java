@@ -13,7 +13,7 @@ import com.aionemu.gameserver.services.item.ItemChargeService;
 
 /**
  * Charge 动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author ATracer
  */
@@ -25,8 +25,8 @@ public class ChargeAction extends AbstractItemAction {
 	protected int capacity;
 
 	/**
-	 * @return 是否 act / 是否 act。 / Whether act / Whether act
-	 */
+	 * @return 是否允许执行。 / Whether act
+	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		Collection<Item> conditioningItems = ItemChargeService.filterItemsToCondition(player, null,

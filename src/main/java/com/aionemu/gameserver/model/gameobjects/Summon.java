@@ -168,16 +168,16 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @param npc 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
-	 */
+	 * @param npc 是否为敌对目标。 / Whether enemy from
+	  */
 	@Override
 	public boolean isEnemyFrom(Npc npc) {
 		return master != null ? master.isEnemyFrom(npc) : false;
 	}
 
 	/**
-	 * @param player 是否 enemy 从 / 是否 enemy 从。 / Whether enemy from / Whether enemy from
-	 */
+	 * @param player 是否为敌对目标。 / Whether enemy from
+	  */
 	@Override
 	public boolean isEnemyFrom(Player player) {
 		return master != null ? master.isEnemyFrom(player) : false;
@@ -193,8 +193,8 @@ public class Summon extends Creature {
 	}
 
 	/**
-	 * @param npc 是否 aggro 从 / 是否 aggro 从。 / Whether aggro from / Whether aggro from
-	 */
+	 * @param npc 是否会对其产生仇恨。 / Whether aggro from
+	  */
 	@Override
 	public final boolean isAggroFrom(Npc npc) {
 		if (getMaster() == null) {

@@ -26,14 +26,14 @@ public enum TeamType {
 	}
 
 	/**
-	 * @return Whether offence / Whether offence
+	 * @return Whether offence
 	 */
 	public boolean isOffence() {
 		return this.getSubType() == 3;
 	}
 
 	/**
-	 * @return Whether defence / Whether defence
+	 * @return Whether defence
 	 */
 	public boolean isDefence() {
 		return this.getSubType() == 4;

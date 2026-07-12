@@ -42,6 +42,7 @@ public class JAXBUtil {
 	 *
 	 * @param is 输入流 / Input stream
 	 * @param clazz 目标类型 / Target class
+	 *
 	 * @param <T> 结果类型 / Result type
 	 * Object or null
 	 */
@@ -65,9 +66,10 @@ public class JAXBUtil {
 	 *
 	 * File
 	 * @param clazz 目标类型 / Target class
+	 *
 	 * @param <T> 结果类型 / Result type
 	 * Object
-	 * On read/bind failure。 / On read/bind failure.
+	 * On read/bind failure。
 	 */
 	public static <T> T unmarshal(File file, Class<T> clazz) throws JAXBException {
 		try (InputStream is = new java.io.FileInputStream(file)) {
@@ -83,6 +85,7 @@ public class JAXBUtil {
 	 *
 	 * XML string
 	 * @param clazz 目标类型 / Target class
+	 *
 	 * @param <T> 结果类型 / Result type
 	 * Object or null
 	 */
@@ -107,6 +110,7 @@ public class JAXBUtil {
 	 * @param file 输出路径 / Output path
 	 * Class
 	 * Object
+	 *
 	 * @param <T> 对象类型 / Object type
 	 */
 	public static <T> void marshal(String file, Class<T> clazz, T object) {
@@ -128,6 +132,7 @@ public class JAXBUtil {
 	 *
 	 * Class
 	 * Object
+	 *
 	 * @param <T> 对象类型 / Object type
 	 * XML string or null
 	 */
@@ -154,7 +159,8 @@ public class JAXBUtil {
 	 * XML string
 	 * Class
 	 *
-	 * @param xml @param <T> 类型参数 / Type param
+	 * @param xml
+	 * @param <T> 类型参数 / Type param
 	 * @param clazz 若 valid 则为 true / True if valid
 	 */
 	public static <T> boolean validate(String xml, Class<T> clazz) {
@@ -179,7 +185,8 @@ public class JAXBUtil {
 	 * @param is 输入流 / Input stream
 	 * Class
 	 *
-	 * @param is @param <T> 类型参数 / Type param
+	 * @param is
+	 * @param <T> 类型参数 / Type param
 	 * @param clazz 若 valid 则为 true / True if valid
 	 */
 	public static <T> boolean validate(InputStream is, Class<T> clazz) {

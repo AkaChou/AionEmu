@@ -1,11 +1,16 @@
 package com.aionemu.gameserver.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 描述 ID 模型。
  * Description Id model.
  *
  * @author MrPoke
  */
+@Getter
+@Setter
 public final class DescriptionId {
 
 	private int value;
@@ -14,13 +19,4 @@ public final class DescriptionId {
 		this.value = value;
 	}
 
-	/** 返回值 / Returns the value*/
-	public int getValue() {
-		return value;
-	}
-
-	/** 设置值 / Sets the value*/
-	public void setValue(int val) {
-		this.value = val;
-	}
 }

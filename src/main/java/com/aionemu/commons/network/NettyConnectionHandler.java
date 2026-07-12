@@ -69,7 +69,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      * Create business connection and initialize on channel active.
      *
      * @param context 通道上下文 / Channel context
-     * Connection creation failure。 / Connection creation failure.
+     * Connection creation failure。
      */
     @Override
     public void channelActive(ChannelHandlerContext context) throws IOException {
@@ -283,7 +283,8 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      *
      * Buffer
      *
-     * @param buffer @return 是否处理成功 / Whether processing succeeded
+     * @param buffer
+     * @return 是否处理成功 / Whether processing succeeded
      */
     private boolean parse(ByteBuffer buffer) {
         int size = 0;

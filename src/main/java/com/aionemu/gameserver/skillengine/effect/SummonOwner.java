@@ -4,7 +4,7 @@ import jakarta.xml.bind.annotation.XmlEnum;
 
 /**
  * 召唤物归属范围：个人/小队/军团/联盟。
- * group / legion / alliance. / group / legion / alliance.
+ * group / legion / alliance.
  *
  * @author Rolandas
  */

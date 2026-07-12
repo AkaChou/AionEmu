@@ -87,7 +87,7 @@ public class Drop {
 	}
 
 	/**
-	 * @return Whether no reduction / Whether no reduction
+	 * @return Whether no reduction
 	 */
 	public boolean isNoReduction() {
 		return noReduce;

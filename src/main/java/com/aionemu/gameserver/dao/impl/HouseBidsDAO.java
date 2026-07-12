@@ -170,7 +170,8 @@ public class HouseBidsDAO extends com.aionemu.gameserver.dao.HouseBidsDAO {
      *
      * house id
      *
-     * @param houseId @return 最高出价；无记录时为 0 / highest bid, or 0 if none
+     * @param houseId
+     * @return 最高出价；无记录时为 0 / highest bid, or 0 if none
      */
     public long getHighestBid(int houseId) {
         try (Connection con = DatabaseFactory.getConnection();

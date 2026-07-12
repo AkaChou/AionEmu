@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResult;
@@ -26,8 +28,6 @@ import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.world.RegionUtil;
 import com.aionemu.gameserver.world.WorldMapType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 世界地图几何根节点，管理分块、地形、可消隐物体与碰撞查询。
@@ -35,10 +35,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Mr. Poke
  */
+@Slf4j
 public class GeoMap extends Node {
 
-	/** 日志。 / Logger. */
-	private static final Logger log = LoggerFactory.getLogger(GeoMap.class);
 	/** 碰撞检测时应用的 Z 偏移 / Z offset applied during collision checks */
 	public static final float COLLISION_CHECK_Z_OFFSET = 1;
 	/** 碰撞回退边界偏移。 / Bound offset when backing off from a contact. */
@@ -79,7 +78,8 @@ public class GeoMap extends Node {
 	 *
 	 * map name
 	 *
-	 * @param name @return 地图 ID，解析失败为 0 / map id, or 0 on failure
+	 * @param name
+	 * @return 地图 ID，解析失败为 0 / map id, or 0 on failure
 	 */
 	private int parseMapId(String name) {
 		try {

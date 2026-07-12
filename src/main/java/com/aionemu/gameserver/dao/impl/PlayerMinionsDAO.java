@@ -35,7 +35,7 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /** Checkminionexistencevia 次数 / Check minion existence via COUNT */
     private static final String CHECK_EXIST_QUERY = "SELECT COUNT(*) FROM player_minions WHERE player_id = ? AND object_id = ?";
     /**
-	 * Check minion existence via LIMIT 1 / Check minion existence via LIMIT 1
+	 * Check minion existence via LIMIT 1
 	 */
     private static final String CHECK_EXIST_LIMIT_QUERY = "SELECT 1 FROM player_minions WHERE player_id = ? AND object_id = ? LIMIT 1";
     /** 随从进化 / Evolve minion */

@@ -5,7 +5,7 @@ package com.aionemu.gameserver.questEngine.handlers;
  * Result of a quest-handler chain invocation.
  *
  * <p>UNKNOWN 表示本处理器未处理该事件，允许后续处理器继续；
- * FAILED 表示已处理并给出明确结果。</p>。 / FAILED 表示已处理并给出明确结果。</p>
+ * FAILED 表示已处理并给出明确结果。</p>。
  * <p>UNKNOWN means this handler did not process the event and others may continue;
  * FAILED means a definitive outcome was produced.</p>
  *
@@ -24,7 +24,7 @@ public enum HandlerResult {
 	 * Convert a nullable Boolean into a handler result.
 	 *
 	 * @param value 布尔结果；null 表示未知 / Boolean outcome; {@code null} means unknown
-	 * @return Matching {@link HandlerResult}。 / Matching {@link HandlerResult}
+	 * @return Matching {@link HandlerResult}。
 	 */
 	public static HandlerResult fromBoolean(Boolean value) {
 		if (value == null) {

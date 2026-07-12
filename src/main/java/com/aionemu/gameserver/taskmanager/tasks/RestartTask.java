@@ -55,7 +55,7 @@ public class RestartTask extends TaskFromDBHandler {
 	 * 校验参数个数是否为 3。
 	 * Whether parameter count is exactly 3.
 	 *
-	 * @return 若 valid 则为 true / True if valid
+	 * @return 配置有效时为 {@code true} / {@code true} if valid
 	 */
 	@Override
 	public boolean isValid() {

@@ -6,7 +6,7 @@ import java.util.Random;
 
 /**
  * Disassemble 物品模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author BeckUp.Media
  */
@@ -66,7 +66,7 @@ public class DisassembleItem {
     }
 
 	/**
-	 * @return Whether disuse / Whether disuse
+	 * @return Whether disuse
 	 */
 	public boolean isDisuse() {
 		return disuse;

@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 
 /**
  * 思考事件处理器，按 AI 状态在战斗 / 行走 / 空闲间调度决策，含非活跃区域逻辑。
- * walking / idle, including inactive-region logic. / walking / idle, including inactive-region logic.
+ * walking / idle, including inactive-region logic.
  *
  * @author ATracer
  */
@@ -19,7 +19,7 @@ public class ThinkEventHandler {
 
 	/**
 	 * 主思考入口：加锁后按状态调度攻击、行走或空闲思考；非活跃区域走专用逻辑。
-	 * walking / idle think; uses inactive-region logic when needed. / walking / idle think; uses inactive-region logic when needed.
+	 * walking / idle think; uses inactive-region logic when needed.
 	 *
 	 * NPC AI instance
 	 */
@@ -88,7 +88,7 @@ public class ThinkEventHandler {
 
 	/**
 	 * 战斗思考：锁定最高仇恨目标，或结束攻击并触发归家 / 不在家事件。
-	 * not-at-home events. / not-at-home events.
+	 * not-at-home events.
 	 *
 	 * NPC AI instance
 	 */

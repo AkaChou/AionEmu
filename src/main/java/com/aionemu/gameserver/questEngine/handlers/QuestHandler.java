@@ -149,7 +149,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 * Send the quest-selection list dialog.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * @return Always {@code true}。 / Always {@code true}
+	 * @return Always {@code true}。
 	 */
 	public boolean sendQuestSelectionDialog(QuestEnv env) {
 		sendQuestSelectionPacket(env, 10);
@@ -161,7 +161,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 * Close the current dialog window.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * @return Always {@code true}。 / Always {@code true}
+	 * @return Always {@code true}。
 	 */
 	public boolean closeDialogWindow(QuestEnv env) {
 		sendQuestSelectionPacket(env, 0);
@@ -663,7 +663,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	 *
 	 * @param env 任务环境 / Quest environment
 	 * Movie id
-	 * Always {@code false}。 / Always {@code false}
+	 * Always {@code false}。
 	 */
 	public boolean playQuestMovie(QuestEnv env, int MovieId) {
 		Player player = env.getPlayer();
@@ -883,7 +883,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 
 	/**
 	 * NPC 开始跟随玩家至目标 NPC；配合 onLostTarget / onReachTarget 使用。
-	 * onReachTarget. / onReachTarget.
+	 * onReachTarget.
 	 *
 	 * @param env 任务环境 / Quest environment
 	 * Following NPC

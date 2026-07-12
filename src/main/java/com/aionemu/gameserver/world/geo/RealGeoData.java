@@ -176,7 +176,8 @@ public class RealGeoData implements GeoData {
 	 *
 	 * 世界 ID / world id
 	 *
-	 * @param worldId @return 地理地图或哑地图 / geo map or dummy map
+	 * @param worldId
+	 * @return 地理地图或哑地图 / geo map or dummy map
 	 */
 	@Override
 	public GeoMap getMap(int worldId) {

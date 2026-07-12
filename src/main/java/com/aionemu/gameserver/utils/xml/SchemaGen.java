@@ -22,7 +22,8 @@ public class SchemaGen {
 	 *
 	 * Output directory
 	 *
-	 * @param baseDir @throws Exception 生成失败时 / On generation failure
+	 * @param baseDir
+	 * @throws Exception 生成失败时 / On generation failure
 	 */
 	public static void generateStaticDataSchema(File baseDir) throws Exception {
 		class MySchemaOutputResolver extends SchemaOutputResolver {

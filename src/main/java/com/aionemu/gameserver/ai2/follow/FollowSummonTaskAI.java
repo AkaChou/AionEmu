@@ -154,7 +154,8 @@ public class FollowSummonTaskAI implements Runnable {
 	 *
 	 * skill id
 	 *
-	 * @param skillId @return 第一目标射程，失败为 0 / first-target range, or 0 on failure
+	 * @param skillId
+	 * @return 第一目标射程，失败为 0 / first-target range, or 0 on failure
 	 */
 	private static int skillFirstTargetRange(int skillId) {
 		if (DataManager.SKILL_DATA == null) {

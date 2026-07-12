@@ -30,7 +30,7 @@ public class UnGag extends AdminCommand {
 	 * Clears gag flag and cancels gag task on the target player.
 	 *
 	 * @param admin 执行 GM / Admin player
-	 * @param params &lt;player&gt;。 / &lt;player&gt;
+	 * @param params &lt;player&gt;。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

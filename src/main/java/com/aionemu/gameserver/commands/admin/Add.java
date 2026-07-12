@@ -470,7 +470,8 @@ public class Add extends AdminCommand {
      *
      * item template id
      *
-     * @param itemId @return 若受限返回 {@code true} / {@code true} if restricted
+     * @param itemId
+     * @return 若受限返回 {@code true} / {@code true} if restricted
      */
     private boolean isRestrictedItem(int itemId){
     	for(int item : opItemsId){
@@ -491,7 +492,8 @@ public class Add extends AdminCommand {
      *
      * @param itemCode 数值物品 ID 回退值 / numeric item id fallback
      * @param itemLink 命令参数（含物品链接） / command params (may include item link)
-     * @param itemLink @return 解析到的物品 ID，失败为 0 / resolved item id, or 0 on failure
+     * @param itemLink
+     * @return 解析到的物品 ID，失败为 0 / resolved item id, or 0 on failure
      */
     private int validateItem(Player player, int itemCode, String... itemLink){
         try {

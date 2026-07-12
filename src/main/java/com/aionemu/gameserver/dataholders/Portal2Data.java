@@ -107,7 +107,8 @@ public class Portal2Data {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 是否为传送门 / whether it is a portal NPC
+	 * @param npcId
+	 * @return 是否为传送门 / whether it is a portal NPC
 	 */
 	public boolean isPortalNpc(int npcId) {
 		return portalUses.get(npcId) != null || portalDialogs.get(npcId) != null;
@@ -119,7 +120,8 @@ public class Portal2Data {
 	 *
 	 * npc id
 	 *
-	 * @param npcId @return 使用型传送配置，不存在则为 null / use portal or null
+	 * @param npcId
+	 * @return 使用型传送配置，不存在则为 null / use portal or null
 	 */
 	public PortalUse getPortalUse(int npcId) {
 		return portalUses.get(npcId);

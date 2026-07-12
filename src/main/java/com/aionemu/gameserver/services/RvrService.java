@@ -373,7 +373,7 @@ public class RvrService {
 						PacketSendUtility.playerSendPacketTime(player,
 								SM_SYSTEM_MESSAGE.STR_MSG_LF6_G_G2_Spawn_Chat_MSG, 80000);
 						// 执政官突击护卫舰即将抵达天空岛。 / The Archon Assault Frigate will soon arrive at the Sky Island of the Krall
-						// 以太矿。 / Aether Mine.
+						// 奥德矿。 / Aether Mine.
 						PacketSendUtility.playerSendPacketTime(player,
 								SM_SYSTEM_MESSAGE.STR_MSG_LF6_H_G2_Spawn_Chat_MSG, 90000);
 						// 执政官突击护卫舰即将抵达天空岛。 / The Archon Assault Frigate will soon arrive at the Sky Island of Red Mushroom

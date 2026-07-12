@@ -29,7 +29,7 @@ public class Wc extends AdminCommand {
 	 * Broadcasts a world-channel message to Elyos, Asmodians, all, or default own race.
 	 *
 	 * @param admin 执行 GM / Admin player
-	 * @param params ELY|ASM|ALL|default and message。 / ELY|ASM|ALL|default and message
+	 * @param params ELY|ASM|ALL|default and message。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

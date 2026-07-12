@@ -56,7 +56,8 @@ public class AttackCalcObserver {
 	 * attack status
 	 *
 	 * @param isSkill 是否技能攻击 / whether skill attack
-	 * @param isSkill @return 暴击状态（默认失败） / critical status (default fail)
+	 * @param isSkill
+	 * @return 暴击状态（默认失败） / critical status (default fail)
 	 */
 	public AttackerCriticalStatus checkAttackerCriticalStatus(AttackStatus status, boolean isSkill) {
 		return new AttackerCriticalStatus(false);

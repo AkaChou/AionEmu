@@ -156,7 +156,8 @@ public class AnnouncementService {
 	 *
 	 * announcement id
 	 *
-	 * @param idAnnounce @return 删除成功返回 true / true if deleted
+	 * @param idAnnounce
+	 * @return 删除成功返回 true / true if deleted
 	 */
 	public boolean delAnnouncement(final int idAnnounce) {
 		return getDAO().delAnnouncement(idAnnounce);

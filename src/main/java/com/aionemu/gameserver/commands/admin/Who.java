@@ -27,7 +27,7 @@ public class Who extends AdminCommand {
 	 * Prints online characters with race and account; optional ely/asmo/member filter.
 	 *
 	 * 执行 GM / Admin player
-	 * Optional ely|asmo|member|premium。 / Optional ely|asmo|member|premium
+	 * Optional ely|asmo|member|premium。
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

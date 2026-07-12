@@ -110,7 +110,7 @@ class MinionTransformSkillDataTest {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 		Document document = factory.newDocumentBuilder()
-				.parse(Path.of("src/main/resources/aion/game/data/static_data/skills/skill_templates.xml").toFile());
+				.parse(Path.of("src/main/resources/aion/data/static_data/skills/skill_templates.xml").toFile());
 		NodeList skills = document.getElementsByTagName("skill_template");
 		for (int i = 0; i < skills.getLength(); i++) {
 			Element skill = (Element) skills.item(i);

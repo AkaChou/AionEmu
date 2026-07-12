@@ -40,7 +40,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	public float[] ypoints;
 
 	/**
-	 * Bounds of the Polygon2D. @see #getBounds()。 / Bounds of the Polygon2D. @see #getBounds()
+	 * Bounds of the Polygon2D. @see #getBounds()。
 	 */
 	protected Rectangle2D bounds;
 
@@ -244,7 +244,7 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns the high precision bounding box of the {@link Shape}。 / Returns the high precision bounding box of the {@link Shape}
+	 * Returns the high precision bounding box of the {@link Shape}。
 	 *
 	 * @return a {@link Rectangle2D} that precisely bounds the <code>Shape< / code>.
 	 */

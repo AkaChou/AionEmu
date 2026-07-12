@@ -69,7 +69,7 @@ public abstract class VisibleObject extends AionObject {
 	private VisibleObject target;
 
 	/**
-	 * Spawn template of this visibleObject. / Spawn template of this visibleObject.
+	 * Spawn template of this visibleObject.
 	 */
 	private SpawnTemplate spawn;
 
@@ -142,7 +142,7 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * 检查是否 object 为 spawned。 / Check if object is spawned
+	 * 检查对象是否已生成。 / Check whether the object is spawned.
 	 *
 	 * @return true if object is spawned.
 	 */
@@ -177,8 +177,8 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	/**
-	 * @param creature 是否 see / 是否 see。 / Whether see / Whether see
-	 */
+	 * @param creature 是否可见。 / Whether see
+	  */
 	public boolean canSee(Creature creature) {
 		return creature != null;
 	}

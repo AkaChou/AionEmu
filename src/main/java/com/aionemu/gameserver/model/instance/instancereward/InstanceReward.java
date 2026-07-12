@@ -81,21 +81,21 @@ public class InstanceReward<T extends InstancePlayerReward> {
 	}
 
 	/**
-	 * @return Whether rewarded / Whether rewarded
+	 * @return Whether rewarded
 	 */
 	public boolean isRewarded() {
 		return instanceScoreType.isEndProgress();
 	}
 
 	/**
-	 * @return Whether preparing / Whether preparing
+	 * @return Whether preparing
 	 */
 	public boolean isPreparing() {
 		return instanceScoreType.isPreparing();
 	}
 
 	/**
-	 * @return Whether start progress / Whether start progress
+	 * @return Whether start progress
 	 */
 	public boolean isStartProgress() {
 		return instanceScoreType.isStartProgress();
@@ -116,8 +116,8 @@ public class InstanceReward<T extends InstancePlayerReward> {
 	}
 
 	/**
-	 * @param log 发送 log / 发送 log。 / Send log / Send log
-	 */
+	 * @param log 是否发送日志。 / Send log
+	  */
 	public void sendLog(String log) {
 		this.log.info(log);
 	}

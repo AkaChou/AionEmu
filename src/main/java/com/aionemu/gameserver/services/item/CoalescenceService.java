@@ -141,7 +141,7 @@ public class CoalescenceService {
 
 	/**
 	 * 融合完成后推进相关任务（15542 / 25542）至可领奖状态。
-	 * 25542) to reward status after coalescence completes. / 25542) to reward status after coalescence completes.
+	 * 25542) to reward status after coalescence completes.
 	 *
 	 * 玩家 / player
 	 * core item

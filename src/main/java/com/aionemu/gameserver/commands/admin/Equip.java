@@ -407,7 +407,8 @@ public class Equip extends AdminCommand {
 	 *
 	 * item
 	 *
-	 * @param item @return 可回火则为 true / true if temperable
+	 * @param item
+	 * @return 可回火则为 true / true if temperable
 	 */
 	public static boolean isTempering(Item item) {
 		if (item.getItemTemplate().isNoEnchant()) {
@@ -444,7 +445,8 @@ public class Equip extends AdminCommand {
 	 *
 	 * item
 	 *
-	 * @param item @return 可升级则为 true / true if upgradable
+	 * @param item
+	 * @return 可升级则为 true / true if upgradable
 	 */
 	public static boolean isUpgradable(Item item) {
 		if (item.getItemTemplate().isNoEnchant()) {

@@ -28,7 +28,8 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
      *
      * player id
      *
-     * @param playerId @return 玩家外观；加载失败返回 null / player appearance, or null on failure
+     * @param playerId
+     * @return 玩家外观；加载失败返回 null / player appearance, or null on failure
      */
     @Override
     public PlayerAppearance load(final int playerId) {

@@ -96,7 +96,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return Whether canceled / Whether canceled
+	 * @return Whether canceled
 	 */
 	public boolean isCanceled() {
 		return isCanceled;
@@ -130,7 +130,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return Whether split sell / Whether split sell
+	 * @return Whether split sell
 	 */
 	public boolean isSplitSell() {
 		return this.isSplitSell;
@@ -152,8 +152,8 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return 是否 sold / 是否 sold。 / Whether sold / Whether sold
-	 */
+	 * @return 是否已售出。 / Whether sold
+	  */
 	public boolean isSold() {
 		return this.isSold;
 	}
@@ -184,7 +184,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	}
 
 	/**
-	 * @return Whether settled / Whether settled
+	 * @return Whether settled
 	 */
 	public boolean isSettled() {
 		return isSettled;

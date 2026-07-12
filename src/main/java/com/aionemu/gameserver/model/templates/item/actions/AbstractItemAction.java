@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 /**
  * 抽象物品动作模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author ATracer
  */

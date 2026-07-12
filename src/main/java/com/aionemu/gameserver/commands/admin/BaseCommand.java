@@ -55,7 +55,7 @@ public class BaseCommand extends AdminCommand
 	 * admin
 	 * base id
 	 *
-	 * @return {@code true} if valid。 / {@code true} if valid
+	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidBaseLocationId(Player player, int baseId) {
 		if (!GameFeatureServices.baseService().getBaseLocations().keySet().contains(baseId)) {

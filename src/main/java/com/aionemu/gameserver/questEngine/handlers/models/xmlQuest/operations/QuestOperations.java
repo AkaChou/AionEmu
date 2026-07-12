@@ -30,7 +30,7 @@ public class QuestOperations {
 			@XmlElement(name = "set_quest_var", type = SetQuestVarOperation.class),
 			@XmlElement(name = "collect_items", type = CollectItemQuestOperation.class) })
 	protected List<QuestOperation> operations;
-	/** 是否 to override default handling; null means true / Whether to override default handling; null means true */
+	/** 是否覆盖默认处理；null 表示 true / Whether to override default handling; null means true */
 	@XmlAttribute
 	protected Boolean override;
 

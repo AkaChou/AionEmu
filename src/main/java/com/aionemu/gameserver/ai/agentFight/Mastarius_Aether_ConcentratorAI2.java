@@ -40,7 +40,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
-		    // 玛斯塔里乌斯以太集中器 I / Mastarius's Aether Concentrator I
+		    // 玛斯塔里乌斯奥德集中器 I / Mastarius's Aether Concentrator I
 			case 296913:
 				if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceMastariusI();
@@ -51,7 +51,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 		    break;
-			// 玛斯塔里乌斯以太集中器 II / Mastarius's Aether Concentrator II
+			// 玛斯塔里乌斯奥德集中器 II / Mastarius's Aether Concentrator II
 			case 296914:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceMastariusII();
@@ -62,7 +62,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 				    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_DEATHBLOW_FAIL);
 				}
 			break;
-			// 玛斯塔里乌斯以太集中器 III / Mastarius's Aether Concentrator III
+			// 玛斯塔里乌斯奥德集中器 III / Mastarius's Aether Concentrator III
 			case 296915:
 			    if (player.getInventory().decreaseByItemId(164000103, 1)) { //Blessing Of Concentration.
 					announceMastariusII();

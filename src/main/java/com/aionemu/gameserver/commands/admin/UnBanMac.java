@@ -26,7 +26,7 @@ public class UnBanMac extends AdminCommand {
 	 * Unbans the given MAC address.
 	 *
 	 * @param player 执行 GM / Admin player
-	 * @param params &lt;mac&gt;。 / &lt;mac&gt;
+	 * @param params &lt;mac&gt;。
 	 */
 	@Override
 	public void execute(Player player, String... params) {

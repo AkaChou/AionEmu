@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 
 /**
  * NPC 喊话条目模板（静态数据/XML）。
- * XML template. / XML template.
+ * XML template.
  *
  * @author Rolandas
  */

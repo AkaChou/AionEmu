@@ -607,7 +607,8 @@ public class TeleportService2 {
 	 *
 	 * NPC id
 	 *
-	 * @param npcId @return 传送员模板 / Teleporter template
+	 * @param npcId
+	 * @return 传送员模板 / Teleporter template
 	 */
 	public static TeleporterTemplate getTeleporterTemplate(int npcId) {
 		return DataManager.TELEPORTER_DATA.getTeleporterTemplateByNpcId(npcId);
@@ -704,7 +705,7 @@ public class TeleportService2 {
 	 * Moves the player to bind point; optionally via full teleport.
 	 *
 	 * @param player 玩家 / Player
-	 * @param useTeleport {@code true} use teleport path。 / {@code true} use teleport path
+	 * @param useTeleport {@code true} use teleport path。
 	 */
 	public static void moveToBindLocation(Player player, boolean useTeleport) {
 		float x, y, z;
