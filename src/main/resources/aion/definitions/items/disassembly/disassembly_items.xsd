@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="../../../definitions/items/item/item_templates.xsd"/>
+    <xs:include schemaLocation="../item/item_templates.xsd"/>
     <xs:element name="disassemblyitemsets">
         <xs:complexType>
             <xs:sequence>

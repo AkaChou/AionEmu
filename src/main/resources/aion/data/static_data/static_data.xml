@@ -164,7 +164,6 @@
 	<panel_cps>
 		<import file="creativity/panel_cps.xml" skipRoot="true"/>
 	</panel_cps>
-	<import file="items/disassembly_items.xml"/>
 	<import file="pets/pet_bonusattr.xml"/>
 	<import file="locations/landing/landing_locations.xml"/>
 	<import file="locations/landing_special/landing_special_locations.xml"/>

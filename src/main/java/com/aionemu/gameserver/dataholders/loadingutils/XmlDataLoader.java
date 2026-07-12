@@ -14,6 +14,7 @@ import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.ChestData;
 import com.aionemu.gameserver.dataholders.CubeExpandData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
+import com.aionemu.gameserver.dataholders.DisassemblyItemSetsData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
@@ -90,6 +91,7 @@ public class XmlDataLoader {
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String ITEM_ASSEMBLY_DEFINITIONS_FILE = "./definitions/items/assembly/assembly_items.xml";
+	private static final String ITEM_DISASSEMBLY_DEFINITIONS_FILE = "./definitions/items/disassembly/disassembly_items.xml";
 	private static final String ITEM_GROUP_DEFINITIONS_FILE = "./definitions/items/groups/item_groups.xml";
 	private static final String ITEM_MULTI_RETURN_DEFINITIONS_FILE = "./definitions/items/multi_return/multi_returns.xml";
 	private static final String ITEM_RANDOM_BONUS_DEFINITIONS_FILE = "./definitions/items/random_bonuses/item_random_bonuses.xml";
@@ -222,6 +224,7 @@ public class XmlDataLoader {
 				data.gatherableData = loadGatherableData();
 				data.goodsListData = loadGoodsListData();
 				data.dynamicRiftData = loadDynamicRiftData();
+				data.disassemblyItemSetsData = loadDisassemblyItemSetsData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
 				data.instanceBuffData = loadInstanceBuffData();
@@ -328,6 +331,10 @@ public class XmlDataLoader {
 
 	public DynamicRiftData loadDynamicRiftData() {
 		return loadDefinition(DYNAMIC_RIFT_DEFINITIONS_FILE, DynamicRiftData.class);
+	}
+
+	public DisassemblyItemSetsData loadDisassemblyItemSetsData() {
+		return loadDefinition(ITEM_DISASSEMBLY_DEFINITIONS_FILE, DisassemblyItemSetsData.class);
 	}
 
 	public InstanceBuffData loadInstanceBuffData() {

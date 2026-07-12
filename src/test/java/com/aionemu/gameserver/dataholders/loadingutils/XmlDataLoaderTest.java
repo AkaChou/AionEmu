@@ -30,6 +30,7 @@ import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.ChestData;
 import com.aionemu.gameserver.dataholders.CubeExpandData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
+import com.aionemu.gameserver.dataholders.DisassemblyItemSetsData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
@@ -664,6 +665,27 @@ class XmlDataLoaderTest {
 			assertEquals(12, data.getMultiReturnById(6).getMultiReturnList().size());
 			assertEquals(210130000, data.getMultiReturnById(6).getReturnDataById(8).getWorldId());
 			assertEquals(220140000, data.getMultiReturnById(7).getReturnDataById(8).getWorldId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedDisassemblyDefinitionsPreserveRewardGroupsAndFilters() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			DisassemblyItemSetsData data = new XmlDataLoader().loadDisassemblyItemSetsData();
+
+			assertEquals(8861, data.size());
+			var groups = data.getInfoByItemId(188050000);
+			assertEquals(3, groups.size());
+			assertEquals(45, groups.getFirst().getMinLevel());
+			assertEquals(152000907, groups.getFirst().getGroupItems().getFirst().getItem().getItemId());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
