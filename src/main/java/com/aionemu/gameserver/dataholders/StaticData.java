@@ -307,7 +307,6 @@ public class StaticData {
 		log.info(I18n.get("log.cb813eb3067b", itemRandomBonuses.size()));
 		log.info(I18n.get("log.d7990503f474", itemGroupsData.bonusSize()));
 		log.info(I18n.get("log.b29f4c6a427b", itemGroupsData.petFoodSize()));
-		log.info(I18n.get("log.7a39ab3cdda2", npcData.size()));
 		log.info(I18n.get("log.02542267fe52", systemMailTemplates.size()));
 		log.info(I18n.get("log.3af3de6f0421", npcShoutData.size()));
 		log.info(I18n.get("log.58b469a0870e", petData.size()));

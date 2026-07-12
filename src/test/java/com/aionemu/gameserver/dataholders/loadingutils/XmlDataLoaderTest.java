@@ -25,6 +25,7 @@ import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
@@ -206,6 +207,24 @@ class XmlDataLoaderTest {
 
 			assertEquals(1, data.size());
 			assertEquals(100, data.getDrop(100).getNpcId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedNpcDefinitionsLoadFromConfiguredDirectory() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			NpcData data = new XmlDataLoader().loadNpcData();
+
+			assertEquals(87961, data.size());
+			assertEquals("DRAGON_CASTLE_DOOR", data.getNpcTemplate(256694).getRace().name());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

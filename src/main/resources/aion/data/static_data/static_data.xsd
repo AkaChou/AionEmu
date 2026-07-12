@@ -19,7 +19,7 @@
 	<xs:include schemaLocation="items/assembly_items.xsd"/>
 	<xs:include schemaLocation="items/multi_returns.xsd"/>
 	<xs:include schemaLocation="npc_factions/npc_factions.xsd"/>
-	<xs:include schemaLocation="npcs/npcs.xsd"/>
+	<xs:include schemaLocation="../../definitions/npcs/npcs.xsd"/>
 	<xs:include schemaLocation="pet_skills/pet_skills.xsd"/>
 	<xs:include schemaLocation="pets/pets.xsd"/>
 	<xs:include schemaLocation="pets/pet_feed.xsd"/>
@@ -151,7 +151,6 @@
 				<xs:element ref="assembly_items" minOccurs="0"/>
 				<xs:element ref="multi_returns" minOccurs="0"/>
 				<xs:element ref="npc_factions" minOccurs="0"/>
-				<xs:element ref="npc_templates" minOccurs="0"/>
 				<xs:element ref="pet_skill_templates" minOccurs="0"/>
 				<xs:element ref="pets" minOccurs="0"/>
 				<xs:element ref="pet_feed" minOccurs="0"/>

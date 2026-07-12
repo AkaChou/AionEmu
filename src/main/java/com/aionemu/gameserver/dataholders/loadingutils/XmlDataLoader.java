@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.SkillData;
@@ -52,6 +53,7 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
+	private static final String NPC_DEFINITIONS_FILE = "./definitions/npcs/npc_template.xml";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
@@ -141,6 +143,7 @@ public class XmlDataLoader {
 			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
+				data.npcData = loadNpcData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
 				data.skillData = loadSkillData();
@@ -166,6 +169,17 @@ public class XmlDataLoader {
 			log.error(I18n.get("log.a30b9e9db6fa", e));
 		}
 		return null;
+	}
+
+	public NpcData loadNpcData() {
+		File file = Config.definitionFile(NPC_DEFINITIONS_FILE);
+		try (FileReader reader = new FileReader(file)) {
+			NpcData data = (NpcData) createJaxbContext(StaticData.class).createUnmarshaller().unmarshal(reader);
+			log.info(I18n.get("log.7a39ab3cdda2", data.size()));
+			return data;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load NPC definitions from " + file.getPath(), e);
+		}
 	}
 
 	public NpcDropData loadNpcDropData() {

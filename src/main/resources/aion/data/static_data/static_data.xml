@@ -77,9 +77,6 @@
 	<import file="items/assembly_items.xml"/>
 	<import file="items/multi_returns.xml"/>
 	<import file="npc_factions/npc_factions.xml"/>
-	<npc_templates>
-		<import file="npcs" skipRoot="true"/>
-	</npc_templates>
 	<pet_skill_templates>
 		<import file="pet_skills" skipRoot="true"/>
 	</pet_skill_templates>

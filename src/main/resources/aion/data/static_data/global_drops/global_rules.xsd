@@ -2,7 +2,7 @@
 <!-- Global Drop Made By (SUNBSN) -->
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:include schemaLocation="../import.xsd" />
-	<xs:include schemaLocation="../npcs/npcs.xsd" />
+	<xs:include schemaLocation="../../../definitions/npcs/npcs.xsd" />
 	<xs:include schemaLocation="../world_maps.xsd" />
 	<xs:include schemaLocation="../global_types.xsd"  />
 	
