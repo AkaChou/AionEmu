@@ -14,8 +14,8 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
- * 世界地图数据容器，持有全部地图模板，数据源为 data/static_data/world_maps.xml。
- * World maps data holder containing all {@link WorldMapTemplate} objects, loaded from data/static_data/world_maps.xml.
+ * 世界地图数据容器，持有全部地图模板，数据源为 definitions/world/maps/world_maps.xml。
+ * World maps data holder containing all {@link WorldMapTemplate} objects from definitions/world/maps/world_maps.xml.
  *
  * @author Luno
  */

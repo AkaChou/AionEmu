@@ -23,6 +23,7 @@ import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
+import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.questEngine.handlers.models.XMLQuest;
@@ -90,6 +91,7 @@ public class XmlDataLoader {
 	private static final String REVIVE_WORLD_DEFINITIONS_FILE = "./definitions/world/revive_start_points/revive_world_start_points.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
+	private static final String WORLD_MAPS_DEFINITIONS_FILE = "./definitions/world/maps/world_maps.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
 	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
@@ -194,6 +196,7 @@ public class XmlDataLoader {
 				data.reviveWorldStartPoints = loadReviveWorldStartPointsData();
 				data.skillData = loadSkillData();
 				data.windstreamsData = loadWindstreamData();
+				data.worldMapsData = loadWorldMapsData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
 				logSlowSectionTimings(progressListener.sectionElapsedTimes());
@@ -357,6 +360,10 @@ public class XmlDataLoader {
 			Config.definitionFile(ID_DEFINITIONS_FILE));
 		log.info(I18n.get("log.e7553a368e56", data.size()));
 		return data;
+	}
+
+	public WorldMapsData loadWorldMapsData() {
+		return loadDefinition(WORLD_MAPS_DEFINITIONS_FILE, WorldMapsData.class);
 	}
 
 	/**

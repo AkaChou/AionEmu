@@ -43,6 +43,7 @@ import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
+import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.model.Race;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -409,6 +410,26 @@ class XmlDataLoaderTest {
 			assertEquals(854.45807f, worlds.getReviveStartPoint(210010000, Race.ELYOS, 75).getX());
 			assertEquals(92, instances.size());
 			assertEquals(513f, instances.getReviveStartPoint(300030000).getX());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedWorldMapsPreserveRuntimeGeometryAndFlags() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			WorldMapsData data = new XmlDataLoader().loadWorldMapsData();
+
+			assertEquals(185, data.size());
+			assertEquals(3072, data.getTemplate(210020000).getWorldSize());
+			assertTrue(data.getTemplate(210020000).isFly());
+			assertTrue(data.getTemplate(300030000).isInstance());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
