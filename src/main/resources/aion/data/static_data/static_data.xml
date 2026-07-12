@@ -205,9 +205,7 @@
 	</events_window>
 	<import file="reward/reward_mail_template.xml"/>
 	<import file="luna/luna_dice.xml"/>
-	<import file="revive_start_points/revive_world_start_points.xml"/>
 	<import file="locations/tower_of_eternity/tower_of_eternity.xml"/>
-	<import file="revive_start_points/instance_revive_start_points.xml"/>
 	<import file="locations/outpost/outpost_locations.xml"/>
 	<import file="creativity/stone_cp.xml"/>
 	<import file="reward/tower_reward_template.xml"/>

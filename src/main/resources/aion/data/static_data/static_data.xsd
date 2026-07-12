@@ -122,9 +122,9 @@
 	<xs:include schemaLocation="events_window/events_window.xsd"/>
 	<xs:include schemaLocation="reward/reward_mail_template.xsd"/>
 	<xs:include schemaLocation="luna/luna_dice.xsd"/>
-	<xs:include schemaLocation="revive_start_points/revive_world_start_points.xsd"/>
+	<xs:include schemaLocation="../../definitions/world/revive_start_points/revive_world_start_points.xsd"/>
 	<xs:include schemaLocation="locations/tower_of_eternity/tower_of_eternity.xsd"/>
-	<xs:include schemaLocation="revive_start_points/instance_revive_start_points.xsd"/>
+	<xs:include schemaLocation="../../definitions/world/revive_start_points/instance_revive_start_points.xsd"/>
 	<xs:include schemaLocation="locations/outpost/outpost_locations.xsd"/>
 	<xs:include schemaLocation="creativity/stone_cp.xsd"/>
 	<xs:include schemaLocation="reward/tower_reward_template.xsd"/>

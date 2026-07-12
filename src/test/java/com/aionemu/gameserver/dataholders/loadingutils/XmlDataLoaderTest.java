@@ -38,6 +38,8 @@ import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.RiftData;
+import com.aionemu.gameserver.dataholders.ReviveInstanceStartPointsData;
+import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
@@ -385,6 +387,28 @@ class XmlDataLoaderTest {
 			assertEquals(130, data.size());
 			assertEquals(300110000, data.getTemplateByInstaceMaskId(1).getInstanceId());
 			assertTrue(data.getTemplateByInstaceMaskId(1).getNpcIds().contains(279039));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedReviveStartPointsPreserveCoordinatesAndSelection() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			ReviveWorldStartPointsData worlds = loader.loadReviveWorldStartPointsData();
+			ReviveInstanceStartPointsData instances = loader.loadReviveInstanceStartPointsData();
+
+			assertEquals(26, worlds.size());
+			assertEquals(854.45807f, worlds.getReviveStartPoint(210010000, Race.ELYOS, 75).getX());
+			assertEquals(92, instances.size());
+			assertEquals(513f, instances.getReviveStartPoint(300030000).getX());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

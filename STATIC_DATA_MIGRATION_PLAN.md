@@ -19,6 +19,7 @@
 - `definitions/portals/`：当前 AionEmu 固定传送坐标、NPC 传送路径和卷轴传送配置的兼容目录。
 - `definitions/instances/`：当前 AionEmu 副本冷却、增益属性、出口和自动组队配置的兼容目录。
 - `definitions/locations/`：当前 AionEmu 动态裂隙、副本裂隙和普通裂隙地点索引的兼容目录。
+- `definitions/world/`：当前 AionEmu 世界与副本复活坐标等服务器世界配置的兼容目录。
 - `cache/`：派生的 JAXB 合并缓存，不是权威数据源。
 
 ## 迁移顺序
@@ -36,8 +37,9 @@
 11. 新副本数据与当前冷却次数、增益数值不完全相同，且不含服务器出口坐标；已先迁移现有副本基础配置。
 12. 新包没有现有三类裂隙服务使用的地点 ID 索引；已先迁移现有裂隙配置。
 13. 新匹配器数据不能无损形成 NPC 入口和服务器提示字段；已先迁移现有自动组队配置。
-14. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-15. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+14. 新副本创建表只有复活点别名，没有当前服务使用的坐标；已先迁移世界与副本复活起点。
+15. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+16. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -57,7 +59,8 @@
 | `244a2c34` | 传送门 | `XmlDataLoaderTest` 传送门加载/主 XSD 方法、`GameServerTest`、两份传送门 XML 的 XSD 校验 | 2026-07-12 通过；548 个固定坐标和 826 个传送配置可加载，未启动项目 |
 | `0bcbcd95` | 副本基础配置 | `XmlDataLoaderTest` 副本加载/主 XSD 方法、`DataholderLookupIndexTest` 出口覆盖方法、`GameServerTest`、三份 XML 的 XSD 校验 | 2026-07-12 通过；110 个冷却、18 个增益和 242 个出口可加载，未启动项目 |
 | `dae2de3a` | 裂隙地点 | `XmlDataLoaderTest` 裂隙加载/主 XSD/分区统计方法、两类裂隙模型测试、`GameServerTest`、三份 XML 的 XSD 校验 | 2026-07-12 通过；6 个动态、9 个副本和 80 个普通裂隙地点可加载，未启动项目 |
-| 待提交 | 自动组队 | `XmlDataLoaderTest` 自动组队加载/主 XSD/分区统计方法、`AutoGroupServiceTest`、`GameServerTest`、自动组队 XML 的 XSD 校验 | 2026-07-12 通过；130 个匹配掩码及 NPC 入口映射可加载，未启动项目 |
+| `afa2149d` | 自动组队 | `XmlDataLoaderTest` 自动组队加载/主 XSD/分区统计方法、`AutoGroupServiceTest`、`GameServerTest`、自动组队 XML 的 XSD 校验 | 2026-07-12 通过；130 个匹配掩码及 NPC 入口映射可加载，未启动项目 |
+| 待提交 | 复活起点 | `XmlDataLoaderTest` 复活点加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；26 条世界起点和 92 条副本起点可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -75,6 +78,7 @@
 - `compact/instances.xml` 的冷却表必须结合世界 ID 表和 `instance_cooltime2.xml` 才能形成运行模板，但其行为值与当前配置不同，例如 Indratu Fortress 的 `maxcount` 为 2、当前运行值为 5。增益表也存在有意调整，buff 7/8 的客户端 `Pvpdefendratio +9999`、`arAll +9999` 在当前运行数据中为 `+900`、`+1000`；新包同时没有服务器按阵营设置的副本出口坐标。为避免玩法回归，启动统一通过 `XmlDataLoader` 从 `definitions/instances` 加载 110 个冷却配置、18 个增益模板和 242 个出口，待这些差异有明确迁移规则后再直接解释 compact 数据。
 - 三类现有裂隙配置只保存服务使用的地点 ID 与普通裂隙所属世界；具体刷新点由刷怪数据和服务代码解释。`compact/world.xml` 的 `direct_portal.xml` 是另一套真端动态直通门定义，`compact/instances.xml` 也没有这 6 个动态裂隙、9 个副本裂隙和 80 个普通裂隙地点索引，不能可靠替代；启动统一通过 `XmlDataLoader` 从 `definitions/locations` 加载兼容数据。
 - `compact/instances.xml` 的 `matchmaker.xml` 有等级、队伍规模、职业配额、登记方式和开放时段，但没有当前自动组队入口依赖的 NPC ID；实例字段仍是客户端名称，`name_id`、`title_id` 也不能由单条记录直接得到。当前 130 个服务器匹配掩码还被多个服务和封包直接引用，因此启动统一通过 `XmlDataLoader.loadAutoGroupData()` 从 `definitions/instances/auto_group` 加载兼容配置，待 NPC/文本/世界映射均可证明后再直接解释新匹配器数据。
+- `compact/instances.xml` 的 `instance_creation.xml` 只给出 `start_point_alias_*`、`resurrect_point_alias_*` 等客户端别名，没有三维坐标；`compact/world.xml` 也不包含当前按世界、阵营和等级选择的复活表。启动统一通过 `XmlDataLoader` 从 `definitions/world/revive_start_points` 加载 26 条世界起点和 92 条副本起点，待客户端 Level 别名可可靠解析到坐标后再直接替换。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

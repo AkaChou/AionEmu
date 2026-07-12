@@ -18,6 +18,8 @@ import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.RiftData;
+import com.aionemu.gameserver.dataholders.ReviveInstanceStartPointsData;
+import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
@@ -84,6 +86,8 @@ public class XmlDataLoader {
 	private static final String QUEST_SCRIPT_DEFINITIONS_DIR = "./definitions/quests/scripts";
 	private static final String RECIPE_DEFINITIONS_FILE = "./definitions/recipes/recipe_templates.xml";
 	private static final String RIFT_DEFINITIONS_FILE = "./definitions/locations/rift/rift_locations.xml";
+	private static final String REVIVE_INSTANCE_DEFINITIONS_FILE = "./definitions/world/revive_start_points/instance_revive_start_points.xml";
+	private static final String REVIVE_WORLD_DEFINITIONS_FILE = "./definitions/world/revive_start_points/revive_world_start_points.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
@@ -186,6 +190,8 @@ public class XmlDataLoader {
 				data.questsScriptData = loadQuestScripts();
 				data.recipeData = loadRecipeData();
 				data.riftData = loadRiftData();
+				data.reviveInstanceStartPoints = loadReviveInstanceStartPointsData();
+				data.reviveWorldStartPoints = loadReviveWorldStartPointsData();
 				data.skillData = loadSkillData();
 				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
@@ -260,6 +266,14 @@ public class XmlDataLoader {
 
 	public RiftData loadRiftData() {
 		return loadDefinition(RIFT_DEFINITIONS_FILE, RiftData.class);
+	}
+
+	public ReviveInstanceStartPointsData loadReviveInstanceStartPointsData() {
+		return loadDefinition(REVIVE_INSTANCE_DEFINITIONS_FILE, ReviveInstanceStartPointsData.class);
+	}
+
+	public ReviveWorldStartPointsData loadReviveWorldStartPointsData() {
+		return loadDefinition(REVIVE_WORLD_DEFINITIONS_FILE, ReviveWorldStartPointsData.class);
 	}
 
 	public PortalLocData loadPortalLocData() {
