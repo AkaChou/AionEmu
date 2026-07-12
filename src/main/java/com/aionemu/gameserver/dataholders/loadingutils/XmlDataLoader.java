@@ -5,6 +5,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
@@ -52,6 +53,7 @@ public class XmlDataLoader {
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
+	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
@@ -140,6 +142,7 @@ public class XmlDataLoader {
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				data.npcDropData = loadNpcDropData();
+				data.npcSkillData = loadNpcSkillData();
 				data.skillData = loadSkillData();
 				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
@@ -168,6 +171,12 @@ public class XmlDataLoader {
 	public NpcDropData loadNpcDropData() {
 		NpcDropData data = NpcDropData.loadEager(Config.definitionFile(NPC_DROP_DEFINITIONS_DIR));
 		log.info(I18n.get("log.4103f2b9b4db", data.size()));
+		return data;
+	}
+
+	public NpcSkillData loadNpcSkillData() {
+		NpcSkillData data = NpcSkillDefinitionLoader.load(Config.definitionFile(NPC_SKILL_DEFINITIONS_FILE));
+		log.info(I18n.get("log.b3e7ebfb7d92", data.size()));
 		return data;
 	}
 

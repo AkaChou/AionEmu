@@ -337,7 +337,6 @@ public class StaticData {
 		log.info(I18n.get("log.b56d2ee109f4", staticDoorData.size()));
 		log.info(I18n.get("log.13792a5f89b7", itemSetData.size()));
 		log.info(I18n.get("log.6be770e218ef", npcFactionsData.size()));
-		log.info(I18n.get("log.b3e7ebfb7d92", npcSkillData.size()));
 		log.info(I18n.get("log.05be76e45171", petSkillData.size()));
 		log.info(I18n.get("log.817680ce4780", siegeLocationData.size()));
 		log.info(I18n.get("log.6850322d6c37", flyRingData.size()));

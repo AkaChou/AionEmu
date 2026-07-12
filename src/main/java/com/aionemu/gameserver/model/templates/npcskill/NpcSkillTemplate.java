@@ -38,6 +38,15 @@ public class NpcSkillTemplate {
 	@XmlAttribute(name = "useinspawned")
 	protected boolean useinspawned = false;
 
+	public NpcSkillTemplate() {
+	}
+
+	public NpcSkillTemplate(int skillId, int skillLevel, int probability) {
+		this.skillid = skillId;
+		this.skilllevel = skillLevel;
+		this.probability = probability;
+	}
+
 	/**
 	 * @return the id
 	 */

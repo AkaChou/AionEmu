@@ -37,7 +37,7 @@ class PriestAI2Test {
 		assertTrue(source.contains("synchronized (servantLock)"));
 		assertTrue(source.contains("canSpawnServants = false;\n\t\t\tcancelPhaseTask();\n\t\t\tdeleteHelpers();"));
 
-		String skills = Files.readString(Path.of("src/main/resources/aion/data/static_data/npc_skills/npc_skills.xml"));
-		assertTrue(skills.contains("<npcskills npcid=\"281301\">"));
+		String skills = Files.readString(Path.of("src/main/resources/aion/definitions/compact/npc-skills.xml"));
+		assertTrue(skills.contains("281301"));
 	}
 }
