@@ -115,7 +115,7 @@
 	<xs:include schemaLocation="service_bonusattr/f2p_bonusattr.xsd"/>
 	<xs:include schemaLocation="arcadelist.xsd"/>
 	<xs:include schemaLocation="global_drops/global_rules.xsd"/>
-	<xs:include schemaLocation="items/item_skill_enhances.xsd"/>
+	<xs:include schemaLocation="../../definitions/items/skill_enhance/item_skill_enhances.xsd"/>
 	<xs:include schemaLocation="events_config/boost_events.xsd"/>
 	<xs:include schemaLocation="monster_book/monster_books.xsd"/>
 	<xs:include schemaLocation="events_window/events_window.xsd"/>

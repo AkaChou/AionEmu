@@ -21,6 +21,7 @@
 - `definitions/items/enchant/`：当前 AionEmu 物品强化与授权属性表的兼容目录。
 - `definitions/items/upgrade/`：当前 AionEmu 物品净化升级产物、条件与成本的兼容目录。
 - `definitions/items/custom_set/`：当前 AionEmu 新物品初始强化套装的兼容目录。
+- `definitions/items/skill_enhance/`：当前 AionEmu 按职业选择的新物品技能强化池兼容目录。
 - `definitions/skills/`：当前 AionEmu 技能运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/npcs/`：当前 AionEmu NPC 运行模板的兼容目录；主 JAXB 缓存不再合并 NPC 模板。
 - `definitions/quests/`：当前 AionEmu 任务主数据与服务器任务脚本的兼容目录。
@@ -67,8 +68,9 @@
 28. 新强化与授权表不能直接保持服务器模板 ID 和属性函数语义；已先迁移现有强化表。
 29. 新物品升级表会改变大量产物、材料和费用；已先迁移现有净化升级表。
 30. 新自定义套装表会改变当前物品引用的初始强化值；已先迁移现有套装。
-31. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-32. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+31. 新物品技能强化表包含当前模型未表达的概率并新增未验证 ID；已先迁移现有职业技能池。
+32. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+33. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -105,7 +107,8 @@
 | `70b1a3f1` | 物品拆解 | `XmlDataLoaderTest` 拆解加载/主 XSD、`GameServerTest`、拆解 XML 的 XSD 校验 | 2026-07-12 通过；8861 个分组及代表性等级过滤、奖励 ID 可加载，未启动项目 |
 | `80faac2a` | 物品强化与授权 | `XmlDataLoaderTest` 强化加载/主 XSD、`GameServerTest`、强化 XML 的 XSD 校验 | 2026-07-12 通过；189 张模板及 ENCHANT/AUTHORIZE 类型索引可加载，未启动项目 |
 | `25902510` | 物品净化升级 | `XmlDataLoaderTest` 升级加载/主 XSD、`GameServerTest`、升级 XML 的 XSD 校验 | 2026-07-12 通过；3897 个基础物品、代表性结果、材料与 AP 成本可加载，未启动项目 |
-| 待提交 | 物品初始强化套装 | `XmlDataLoaderTest` 套装加载/主 XSD、`GameServerTest`、套装 XML 的 XSD 校验 | 2026-07-12 通过；90 组及关键引用的现有强化值可加载，未启动项目 |
+| `3af5e65c` | 物品初始强化套装 | `XmlDataLoaderTest` 套装加载/主 XSD、`GameServerTest`、套装 XML 的 XSD 校验 | 2026-07-12 通过；90 组及关键引用的现有强化值可加载，未启动项目 |
+| 待提交 | 物品技能强化池 | `XmlDataLoaderTest` 技能池加载/主 XSD、`ItemServiceSkillEnhanceTest`、`GameServerTest`、技能池 XML 的 XSD 校验 | 2026-07-12 通过；389 个 ID、职业专属与通用回退技能池可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -139,6 +142,7 @@
 - `compact/item-relations.xml` 的 `item_enchanttable.xml` 有 131 张原始强化表，`item_authorizetable.xml` 有 264 张授权表；现有运行数据使用 `10000–10222` 的服务器模板 ID，只保留 40 张 `ENCHANT` 和 149 张 `AUTHORIZE`，并把原始属性符号转换为 `StatFunction`。新表还包含无限强化和当前模型未表达的随机字段，不能按 ID 或字段直接替换。启动统一通过 `XmlDataLoader.loadItemEnchantData()` 从 `definitions/items/enchant` 加载现有 189 张表，待物品 `tempering_table_id`、类型划分和属性转换全部可证明后再解释新表。
 - `compact/item-relations.xml` 的 `item_upgrade.xml` 有 3898 个基础物品和 4493 个可解析结果；现有运行表保留 3897 个基础物品、4066 个结果。共同基础项只有 3017 个在当前模型支持的产物、检查强化/授权等级、材料、金币和 AP 字段上完全一致，880 个存在结果数量或成本差异；新表的结果强化变化、NPC 限制等字段也未被当前模型表达。为保持净化升级行为，启动统一通过 `XmlDataLoader.loadItemUpgradeData()` 从 `definitions/items/upgrade` 加载现有数据，待全部差异和附加字段有运行规则后再直接解释新表。
 - `compact/item-relations.xml` 的 `itemcustomset.xml` 有 104 组，现有 90 组全部存在，但只有 80 组名称和初始强化值完全一致；10 组数值变化，其中 7 组仍被当前物品模板引用。新表还提供 `custom_option_slot_1..6`，当前运行模型未解释这些选项。为避免新建物品强化等级变化，启动统一通过 `XmlDataLoader.loadItemCustomSetData()` 从 `definitions/items/custom_set` 加载现有 90 组，待自定义选项和变化规则实现后再直接解释新表。
+- `compact/item-relations.xml` 的 `item_skill_enhance.xml` 有 457 个 ID 和 1486 条技能组引用；现有运行表只实现其中 389 个 ID，并按职业展开为 556 条数值技能规则。新表另有每级强化概率和每个技能的权重，当前物品服务使用等概率技能 ID 列表，无法直接表达这些概率；68 个新增 ID 也未被当前兼容物品模板验证。启动统一通过 `XmlDataLoader.loadItemSkillEnhanceData()` 从 `definitions/items/skill_enhance` 加载现有规则，待技能组到数值 ID、权重和强化等级算法完整实现后再解释新表。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

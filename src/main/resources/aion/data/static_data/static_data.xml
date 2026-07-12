@@ -174,7 +174,6 @@
 	<global_rules>
         <import file="global_drops/global_rules.xml" skipRoot="true"/>
     </global_rules>
-	<import file="items/item_skill_enhances.xml"/>
     <import file="events_config/boost_events.xml"/>
 	<import file="monster_book/monster_books.xml"/>
 	<events_window>

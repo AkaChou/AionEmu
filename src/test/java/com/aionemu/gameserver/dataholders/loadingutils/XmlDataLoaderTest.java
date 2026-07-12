@@ -45,6 +45,7 @@ import com.aionemu.gameserver.dataholders.ItemEnchantData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
+import com.aionemu.gameserver.dataholders.ItemSkillEnhanceData;
 import com.aionemu.gameserver.dataholders.ItemUpgradeData;
 import com.aionemu.gameserver.dataholders.MultiReturnItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
@@ -750,6 +751,26 @@ class XmlDataLoaderTest {
 			assertEquals(5, data.getCustomTemplate(11).getCustomEnchantValue());
 			assertEquals(10, data.getCustomTemplate(81).getCustomEnchantValue());
 			assertEquals(3, data.getCustomTemplate(84).getCustomEnchantValue());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedItemSkillEnhanceDefinitionsPreserveClassSpecificSkills() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			ItemSkillEnhanceData data = new XmlDataLoader().loadItemSkillEnhanceData();
+
+			assertEquals(389, data.size());
+			assertEquals(List.of(601), data.getSkillEnhance(79, com.aionemu.gameserver.model.PlayerClass.GLADIATOR).getSkillId());
+			assertEquals(List.of(3116), data.getSkillEnhance(79, com.aionemu.gameserver.model.PlayerClass.TEMPLAR).getSkillId());
+			assertTrue(data.getSkillEnhance(65, com.aionemu.gameserver.model.PlayerClass.CLERIC).getSkillId().contains(4668));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
