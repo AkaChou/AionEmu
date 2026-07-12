@@ -42,6 +42,7 @@ import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
+import com.aionemu.gameserver.dataholders.MultiReturnItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.Portal2Data;
@@ -643,6 +644,26 @@ class XmlDataLoaderTest {
 			assertEquals(List.of(188100001, 188100002, 188100003, 188100004, 188100005),
 				data.getAssemblyItem(186000018).getParts());
 			assertEquals(40, data.getAssemblyItem(164002329).getPartsNum());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedMultiReturnDefinitionsPreserveServerWorldMappings() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			MultiReturnItemData data = new XmlDataLoader().loadMultiReturnItemData();
+
+			assertEquals(4, data.size());
+			assertEquals(12, data.getMultiReturnById(6).getMultiReturnList().size());
+			assertEquals(210130000, data.getMultiReturnById(6).getReturnDataById(8).getWorldId());
+			assertEquals(220140000, data.getMultiReturnById(7).getReturnDataById(8).getWorldId());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
+import com.aionemu.gameserver.dataholders.MultiReturnItemData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.ChestData;
@@ -90,6 +91,7 @@ public class XmlDataLoader {
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String ITEM_ASSEMBLY_DEFINITIONS_FILE = "./definitions/items/assembly/assembly_items.xml";
 	private static final String ITEM_GROUP_DEFINITIONS_FILE = "./definitions/items/groups/item_groups.xml";
+	private static final String ITEM_MULTI_RETURN_DEFINITIONS_FILE = "./definitions/items/multi_return/multi_returns.xml";
 	private static final String ITEM_RANDOM_BONUS_DEFINITIONS_FILE = "./definitions/items/random_bonuses/item_random_bonuses.xml";
 	private static final String ITEM_SET_DEFINITIONS_FILE = "./definitions/items/sets/item_sets.xml";
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
@@ -227,6 +229,7 @@ public class XmlDataLoader {
 				data.instanceExitData = loadInstanceExitData();
 				data.instanceRiftData = loadInstanceRiftData();
 				data.itemGroupsData = loadItemGroupsData();
+				data.multiReturnItemData = loadMultiReturnItemData();
 				data.itemRandomBonuses = loadItemRandomBonusData();
 				data.itemSetData = loadItemSetData();
 				data.portalLocData = loadPortalLocData();
@@ -349,6 +352,10 @@ public class XmlDataLoader {
 
 	public ItemGroupsData loadItemGroupsData() {
 		return loadDefinition(ITEM_GROUP_DEFINITIONS_FILE, ItemGroupsData.class);
+	}
+
+	public MultiReturnItemData loadMultiReturnItemData() {
+		return loadDefinition(ITEM_MULTI_RETURN_DEFINITIONS_FILE, MultiReturnItemData.class);
 	}
 
 	public ItemRandomBonusData loadItemRandomBonusData() {

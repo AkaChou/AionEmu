@@ -16,6 +16,7 @@
 - `definitions/items/random_bonuses/`：当前 AionEmu 背包洗练与伊甸石随机属性组的兼容目录。
 - `definitions/items/groups/`：当前 AionEmu 奖励池、制作材料与宠物食物分组的兼容目录。
 - `definitions/items/assembly/`：当前 AionEmu 组合道具产物、部件与数量的兼容目录。
+- `definitions/items/multi_return/`：当前 AionEmu 多目的地回城卷轴地图列表的兼容目录。
 - `definitions/skills/`：当前 AionEmu 技能运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/npcs/`：当前 AionEmu NPC 运行模板的兼容目录；主 JAXB 缓存不再合并 NPC 模板。
 - `definitions/quests/`：当前 AionEmu 任务主数据与服务器任务脚本的兼容目录。
@@ -57,8 +58,9 @@
 23. 新随机属性表会改变概率、属性数量和值，且存在非唯一符号转换；已先迁移现有随机属性配置。
 24. 新包没有服务器奖励池与宠物食物分组；已先迁移现有物品组配置。
 25. 新组合道具表存在无法解析的物品名称和运行数量差异；已先迁移现有组合配方。
-26. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-27. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+26. 新多目的地回城表会丢失服务器兼容地图；已先迁移现有目的地列表。
+27. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+28. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -90,7 +92,8 @@
 | `2aa12ea3` | 物品限制清理 | `XmlDataLoaderTest` 物品加载/主 XSD/分区统计方法、`DataManagerTest` | 2026-07-12 通过；物品 `100000001` 无后处理仍可交易，冗余容器与规则已删除，未启动项目 |
 | `2ab52d85` | 物品随机属性 | `XmlDataLoaderTest` 随机属性加载/主 XSD/分区统计方法、`GameServerTest`、随机属性 XML 的 XSD 校验 | 2026-07-12 通过；659 个唯一背包/抛光随机组及现有概率可加载，未启动项目 |
 | `c21d45ba` | 物品组 | `XmlDataLoaderTest` 物品组加载/主 XSD/分区统计方法、`GameServerTest`、物品组 XML 的 XSD 校验 | 2026-07-12 通过；4994 条运行奖励、794 条宠物食物缓存及类型查询可加载，未启动项目 |
-| 待提交 | 组合道具 | `XmlDataLoaderTest` 组合道具加载/主 XSD、`GameServerTest`、组合道具 XML 的 XSD 校验 | 2026-07-12 通过；173 条运行配方、关键部件列表及数量可加载，未启动项目 |
+| `1a22d17a` | 组合道具 | `XmlDataLoaderTest` 组合道具加载/主 XSD、`GameServerTest`、组合道具 XML 的 XSD 校验 | 2026-07-12 通过；173 条运行配方、关键部件列表及数量可加载，未启动项目 |
+| 待提交 | 多目的地回城 | `XmlDataLoaderTest` 多目的地加载/主 XSD、`GameServerTest`、多目的地 XML 的 XSD 校验 | 2026-07-12 通过；4 组目的地及 Inggison/Gelkmaros 兼容世界 ID 可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -119,6 +122,7 @@
 - `compact/item-relations.xml` 的 `item_random_option.xml` 与 `polish_bonus_setlist.xml` 共提供 659 个随机属性键，数量与现有唯一键一致，但按现有属性转换规则只有 482 组能完全还原；113 个概率值不同，部分抛光组的属性数量和值也不同，`attackdelay` 与 `parry` 还出现非唯一符号转换。为保持物品洗练、随机装备属性和伊甸石结果，启动统一通过 `XmlDataLoader.loadItemRandomBonusData()` 从 `definitions/items/random_bonuses` 加载现有 659 个唯一随机组，待概率变更和全部属性转换有明确规则后再直接解释新表。
 - 新 definitions 清单没有 `item_group` 等价文档；现有表是服务器为制作材料、魔石、勋章、食物、药品、矿石、采集、强化、首领奖励和 21 类宠物食物维护的运行分组，无法从单个 Item 字段恢复。启动统一通过 `XmlDataLoader.loadItemGroupsData()` 从 `definitions/items/groups` 加载 4994 条运行奖励和 794 条宠物食物缓存。
 - `compact/item-relations.xml` 的 `assembly_items.xml` 有 202 条组合道具，按新 Item 名称只能唯一解析 175 条产物，24 条配方仍含无法解析的部件。与现有 173 条运行配方相交的 171 条中，5 条会改变部件数量或暴击产物，另有 1 条各部件数量不同，当前运行模型无法无损表达。为保持现有组合动作，启动统一通过 `XmlDataLoader.loadAssemblyItemsData()` 从 `definitions/items/assembly` 加载现有 173 条配方，待物品引用和逐部件数量模型完整后再直接解释新表。
+- `compact/item-relations.xml` 的 `item_multi_return.xml` 有 9 组真端目的地，但当前物品动作只引用 6/7 两组；新表各含 10 个目的地，现有运行表各含 12 个。真端的 Inggison/Gelkmaros 世界 ID `210050000/220070000` 在当前服务器与 Geo 数据中兼容为 `210130000/220140000`，现有表还保留 Cygnea、Iluma、Enshar、Norsvold，而当前传送服务不识别新表的两个原始世界 ID。启动统一通过 `XmlDataLoader.loadMultiReturnItemData()` 从 `definitions/items/multi_return` 加载现有 4 组目的地，待世界别名、PortalLoc 坐标和客户端选项一并迁移后再直接解释新表。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件
