@@ -35,7 +35,7 @@ class DyeActionTest {
 
 	@Test
 	void versatileDyeStaticDataHasCustomDyeAction() throws Exception {
-		String xml = Files.readString(Path.of("src/main/resources/aion/data/static_data/items/item/item_etc_templates.xml"));
+		String xml = Files.readString(Path.of("src/main/resources/aion/definitions/items/item/item_etc_templates.xml"));
 		int itemStart = xml.indexOf("<item_template id=\"169250002\"");
 		int nextItem = xml.indexOf("<item_template id=\"169250003\"", itemStart);
 

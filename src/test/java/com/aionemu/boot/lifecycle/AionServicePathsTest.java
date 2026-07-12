@@ -49,7 +49,7 @@ class AionServicePathsTest {
         assertTrue(aionHome.resolve("config/login/database.properties").toFile().isFile());
         assertTrue(aionHome.resolve("config/chat/chatserver.properties").toFile().isFile());
         assertTrue(aionHome.resolve("config/main/gameserver.properties").toFile().isFile());
-        assertTrue(aionHome.resolve("data/static_data/items/item/item_misc_templates.xml").toFile().isFile());
+		assertTrue(aionHome.resolve("definitions/items/item/item_misc_templates.xml").toFile().isFile());
         assertTrue(aionHome.resolve("game/cache").toFile().isDirectory());
     }
 

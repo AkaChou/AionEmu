@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:include schemaLocation="../../skill_tree/skill_tree.xsd"/>
-	<xs:include schemaLocation="../../global_types.xsd"/>
-	<xs:include schemaLocation="../../modifiers.xsd"/>
+	<xs:include schemaLocation="../../../data/static_data/skill_tree/skill_tree.xsd"/>
+	<xs:include schemaLocation="../../../data/static_data/global_types.xsd"/>
+	<xs:include schemaLocation="../../../data/static_data/modifiers.xsd"/>
 	<xs:element name="item_templates">
 		<xs:complexType>
 			<xs:sequence>

@@ -49,7 +49,7 @@ public class XmlDataLoader {
 	private static final String CACHE_XML_FILE = "./cache/static_data.xml";
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
-	private static final String ITEM_DATA_DIR = "./data/static_data/items";
+	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
@@ -182,7 +182,7 @@ public class XmlDataLoader {
 	 * item data
 	 */
 	public ItemData loadItemData() {
-		return loadItemData(Config.cacheFile(ITEM_CACHE_XML_FILE), Config.dataFile(ITEM_DATA_DIR));
+		return loadItemData(Config.cacheFile(ITEM_CACHE_XML_FILE), Config.definitionFile(ITEM_DEFINITIONS_DIR));
 	}
 
 	/**

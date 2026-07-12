@@ -34,10 +34,10 @@ class GameServerTest {
 				Config.configFile("administration/commands.properties").getCanonicalFile());
 			assertEquals(new File("AL-Game/data/scripts/system/aihandlers.xml").getCanonicalFile(),
 				Config.dataFile("./data/scripts/system/aihandlers.xml").getCanonicalFile());
-			assertEquals(new File("AL-Game/data/static_data/items/item_templates.xml").getCanonicalFile(),
-				Config.dataFile("data/static_data/items/item_templates.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/definitions/compact/world.xml").getCanonicalFile(),
 				Config.definitionFile("definitions/compact/world.xml").getCanonicalFile());
+			assertEquals(new File("AL-Game/definitions/items/item/item_misc_templates.xml").getCanonicalFile(),
+				Config.definitionFile("definitions/items/item/item_misc_templates.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/cache/static_data.xml").getCanonicalFile(),
 				Config.cacheFile("./cache/static_data.xml").getCanonicalFile());
 		} finally {

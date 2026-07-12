@@ -3,6 +3,7 @@ package com.aionemu.gameserver.dataholders.loadingutils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -229,6 +230,16 @@ class XmlDataLoaderTest {
 
 		assertEquals(1, itemData.size());
 		assertTrue(Files.readString(cache, StandardCharsets.UTF_8).contains("<item_template"));
+	}
+
+	@Test
+	void migratedItemDefinitionsLoadFromSeparateCache() {
+		Path cache = tempDir.resolve("cache/item_templates.xml");
+		ItemData itemData = new XmlDataLoader().loadItemData(cache.toFile(),
+			Path.of("src/main/resources/aion/definitions/items").toFile());
+
+		assertEquals(128629, itemData.size());
+		assertNotNull(itemData.getItemTemplate(100000001));
 	}
 
 	@Test
