@@ -14,6 +14,7 @@ import com.aionemu.gameserver.dataholders.ItemSkillEnhanceData;
 import com.aionemu.gameserver.dataholders.ItemUpgradeData;
 import com.aionemu.gameserver.dataholders.MultiReturnItemData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
+import com.aionemu.gameserver.dataholders.AssembledNpcsData;
 import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.ChestData;
 import com.aionemu.gameserver.dataholders.CubeExpandData;
@@ -106,6 +107,7 @@ public class XmlDataLoader {
 	private static final String ITEM_SKILL_ENHANCE_DEFINITIONS_FILE = "./definitions/items/skill_enhance/item_skill_enhances.xml";
 	private static final String ITEM_UPGRADE_DEFINITIONS_FILE = "./definitions/items/upgrade/item_upgrades.xml";
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
+	private static final String ASSEMBLED_NPC_DEFINITIONS_FILE = "./definitions/npcs/assembled/assembled_npcs.xml";
 	private static final String BIND_POINT_DEFINITIONS_FILE = "./definitions/world/transport/bind_points/bind_points.xml";
 	private static final String CHEST_DEFINITIONS_FILE = "./definitions/world/resources/chests/chest_templates.xml";
 	private static final String CUBE_EXPAND_DEFINITIONS_FILE = "./definitions/player/storage/cube_expander/cube_expander.xml";
@@ -225,6 +227,7 @@ public class XmlDataLoader {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				data.npcData = loadNpcData();
 				data.assemblyItemData = loadAssemblyItemsData();
+				data.assembledNpcData = loadAssembledNpcsData();
 				data.autoGroupData = loadAutoGroupData();
 				data.bindPointData = loadBindPointData();
 				data.chestData = loadChestData();
@@ -302,6 +305,10 @@ public class XmlDataLoader {
 
 	public AutoGroupData loadAutoGroupData() {
 		return loadDefinition(AUTO_GROUP_DEFINITIONS_FILE, AutoGroupData.class);
+	}
+
+	public AssembledNpcsData loadAssembledNpcsData() {
+		return loadDefinition(ASSEMBLED_NPC_DEFINITIONS_FILE, AssembledNpcsData.class);
 	}
 
 	public BindPointData loadBindPointData() {

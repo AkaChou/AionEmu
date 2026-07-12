@@ -26,6 +26,7 @@ import jakarta.xml.bind.Unmarshaller;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AssemblyItemsData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
+import com.aionemu.gameserver.dataholders.AssembledNpcsData;
 import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.ChestData;
 import com.aionemu.gameserver.dataholders.CubeExpandData;
@@ -792,6 +793,28 @@ class XmlDataLoaderTest {
 			assertEquals(2, data.getNpcFactionByNpcId(805145).getId());
 			assertEquals(40, data.getNpcFactionById(3).getMinLevel());
 			assertEquals(806432, data.getNpcFactionById(3).getNpcId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedAssembledNpcDefinitionsPreserveRoutesAndParts() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			AssembledNpcsData data = new XmlDataLoader().loadAssembledNpcsData();
+
+			assertEquals(2, data.size());
+			var template = data.getAssembledNpcTemplate(1);
+			assertEquals(356, template.getRouteId());
+			assertEquals(400010000, template.getMapId());
+			assertEquals(33, template.getAssembledNpcPartTemplates().size());
+			assertEquals(276724, template.getAssembledNpcPartTemplates().getFirst().getNpcId());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

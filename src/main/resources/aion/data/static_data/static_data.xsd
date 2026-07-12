@@ -5,7 +5,7 @@
 	<xs:include schemaLocation="../../definitions/world/resources/chests/chest_templates.xsd"/>
 	<xs:include schemaLocation="../../definitions/player/storage/cube_expander/cube_expander.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/disassembly/disassembly_items.xsd"/>
-	<xs:include schemaLocation="assembled_npcs/assembled_npcs.xsd"/>
+	<xs:include schemaLocation="../../definitions/npcs/assembled/assembled_npcs.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/movement/fly_rings/fly_rings.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/resources/gatherables/gatherable_templates.xsd"/>
 	<xs:include schemaLocation="../../definitions/commerce/npc_shops/goodslists.xsd"/>
