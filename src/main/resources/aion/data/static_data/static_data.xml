@@ -68,12 +68,6 @@
 	<pet_feed>
 		<import file="pets/pet_feed.xml" skipRoot="true"/>
 	</pet_feed>
-	<dopings>
-		<import file="pets/pet_doping.xml" skipRoot="true"/>
-	</dopings>
-	<merchands>
-		<import file="pets/pet_merchand.xml" skipRoot="true"/>
-	</merchands>
 	<import file="luna/luna_templates.xml"/>
 	<import file="siege/siege_locations.xml"/>
 	<import file="siege/siege_shields.xml"/>

@@ -37,6 +37,7 @@
 - `definitions/world/`：当前 AionEmu 地图、复活坐标和常规传送网络等服务器世界配置的兼容目录。
 - `definitions/world/movement/`：当前 AionEmu 飞行环与跨地图道路定义的兼容目录。
 - `definitions/world/resources/`：当前 AionEmu 宝箱钥匙与采集物材料定义的兼容目录。
+- `definitions/compact/pets-rides.xml`：宠物自动使用药剂与商店价格倍率的直接运行来源；其余宠物子表按兼容性逐项处理。
 - `cache/`：派生的 JAXB 合并缓存，不是权威数据源。
 
 ## 迁移顺序
@@ -75,8 +76,9 @@
 32. 新 NPC 阵营表缺少服务器加入 NPC 绑定且等级规则不同；已先迁移现有阵营表。
 33. 新包没有深渊战舰的组装部件和封包实体映射；已先迁移现有组装 NPC 表。
 34. 新包没有服务器等级引导问卷与奖励表；已先迁移现有 guide 配置。
-35. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-36. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+35. 宠物药剂和商店表已直接从 `compact/pets-rides.xml` 流式加载，不再保留旧表。
+36. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+37. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -117,7 +119,8 @@
 | `db687168` | 物品技能强化池 | `XmlDataLoaderTest` 技能池加载/主 XSD、`ItemServiceSkillEnhanceTest`、`GameServerTest`、技能池 XML 的 XSD 校验 | 2026-07-12 通过；389 个 ID、职业专属与通用回退技能池可加载，未启动项目 |
 | `57abf839` | NPC 阵营 | `XmlDataLoaderTest` 阵营加载/主 XSD、`GameServerTest`、阵营 XML 的 XSD 校验 | 2026-07-12 通过；22 行阵营、NPC 反向索引及重复 ID 后项覆盖可加载，未启动项目 |
 | `bb43d030` | 组装 NPC | `XmlDataLoaderTest` 组装模板加载/主 XSD、`AssembledNpcTest`、`GameServerTest`、组装 XML 的 XSD 校验 | 2026-07-12 通过；2 条航线及 65 个部件可加载，未启动项目 |
-| 待提交 | 等级引导问卷 | `XmlDataLoaderTest` 引导加载/主 XSD、`GameServerTest`、引导 XML 的 XSD 校验 | 2026-07-12 通过；代表性 HTML、奖励选择数和奖励列表可加载，未启动项目 |
+| `3a373e86` | 等级引导问卷 | `XmlDataLoaderTest` 引导加载/主 XSD、`GameServerTest`、引导 XML 的 XSD 校验 | 2026-07-12 通过；代表性 HTML、奖励选择数和奖励列表可加载，未启动项目 |
+| 待提交 | 宠物药剂与商店 | `XmlDataLoaderTest` 宠物药剂与商店加载/主 XSD、`GameServerTest` | 2026-07-12 通过；33 条药剂规则和 5 条商店倍率直接从 compact 数据加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -155,6 +158,7 @@
 - `compact/npc-relations.xml` 的 `npcfactions.xml` 有 18 条真端阵营，但不包含现有加入/退出流程所需的 NPC ID 或数值名称 ID；当前运行表用 22 行绑定 22 个 NPC，并形成 14 个有效阵营。字段行为也不同，例如真端 Army_Li/Army_Da 最低等级为 45、当前为 40，导师阵营在新表中出现 `minlevel=999/maxlevel=1`，不能直接用于当前等级校验。启动统一通过 `XmlDataLoader.loadNpcFactionsData()` 从 `definitions/npcs/factions` 加载现有阵营，待 NPC 名称引用、文本 ID 和等级语义全部映射后再直接解释新表。
 - 新 definitions 清单没有组装 NPC 等价文档；`fly_path.xml`、`airports.xml` 和 `AnimationMarkers/*carrier*` 只能提供航线或客户端动画标记，不能形成 `SM_NPC_ASSEMBLER` 所需的 route、存活时间以及 65 个 `npcId/entityId` 部件映射。启动统一通过 `XmlDataLoader.loadAssembledNpcsData()` 从 `definitions/npcs/assembled` 加载现有 2 条深渊战舰模板。
 - 新 definitions 清单没有服务器等级引导问卷等价文档；名称带 `guide` 的输入仅是动画标记和角色外观预设，不能表达当前 50 个按等级、种族、职业选择的 HTML 文案、问卷按钮及 470 个奖励项。启动统一通过 `XmlDataLoader.loadGuideData()` 从 `definitions/player/guides` 加载现有配置。
+- `compact/pets-rides.xml` 的 `toypet_doping.xml` 有 33 条规则，其中现有 31 条在饮料、食物和卷轴字段上逐项一致；`toypet_merchant.xml` 的 5 条价格倍率与现有表全部一致。启动通过 `PetDefinitionLoader` 直接流式解释这两张新表，旧 `pet_doping.xml`、`pet_merchand.xml` 及其 XSD 已删除。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

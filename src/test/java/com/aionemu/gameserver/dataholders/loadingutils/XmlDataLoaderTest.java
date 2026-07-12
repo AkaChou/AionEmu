@@ -55,6 +55,8 @@ import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcFactionsData;
 import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.PortalLocData;
+import com.aionemu.gameserver.dataholders.PetDopingData;
+import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.RiftData;
@@ -837,6 +839,29 @@ class XmlDataLoaderTest {
 			assertEquals(2, guide.getRewardCount());
 			assertEquals(12, guide.getSurveys().size());
 			assertTrue(guide.getMessage().contains("Adventurer's Guide"));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void petUtilityDefinitionsLoadDirectlyFromCompactBundle() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			PetDopingData doping = loader.loadPetDopingData();
+			PetMerchandData merchants = loader.loadPetMerchandData();
+
+			assertEquals(33, doping.size());
+			assertTrue(doping.getDopingTemplate((short) 1).isUseDrink());
+			assertEquals(6, doping.getDopingTemplate((short) 2).getScrollsUsed());
+			assertEquals(5, merchants.size());
+			assertEquals(21, merchants.getMerchandTemplate(5).getRatePrice());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

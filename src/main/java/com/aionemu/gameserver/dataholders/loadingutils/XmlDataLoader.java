@@ -35,6 +35,8 @@ import com.aionemu.gameserver.dataholders.NpcFactionsData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.PortalLocData;
+import com.aionemu.gameserver.dataholders.PetDopingData;
+import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.RiftData;
@@ -126,6 +128,7 @@ public class XmlDataLoader {
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
 	private static final String NPC_FACTION_DEFINITIONS_FILE = "./definitions/npcs/factions/npc_factions.xml";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
+	private static final String PET_RIDES_DEFINITIONS_FILE = "./definitions/compact/pets-rides.xml";
 	private static final String PORTAL_LOC_DEFINITIONS_FILE = "./definitions/portals/portal_loc.xml";
 	private static final String PORTAL_TEMPLATE_DEFINITIONS_FILE = "./definitions/portals/portal_template2.xml";
 	private static final String QUEST_DEFINITIONS_FILE = "./definitions/quests/quest_data.xml";
@@ -227,6 +230,7 @@ public class XmlDataLoader {
 			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
+				PetDefinitionLoader.Result petDefinitions = loadPetDefinitions();
 				data.npcData = loadNpcData();
 				data.assemblyItemData = loadAssemblyItemsData();
 				data.assembledNpcData = loadAssembledNpcsData();
@@ -258,6 +262,8 @@ public class XmlDataLoader {
 				data.itemUpgradeData = loadItemUpgradeData();
 				data.portalLocData = loadPortalLocData();
 				data.portalTemplate2 = loadPortal2Data();
+				data.petDopingData = petDefinitions.doping();
+				data.petMerchandData = petDefinitions.merchant();
 				data.questData = loadQuestData();
 				data.questsScriptData = loadQuestScripts();
 				data.recipeData = loadRecipeData();
@@ -456,6 +462,18 @@ public class XmlDataLoader {
 
 	public Portal2Data loadPortal2Data() {
 		return loadDefinition(PORTAL_TEMPLATE_DEFINITIONS_FILE, Portal2Data.class);
+	}
+
+	public PetDopingData loadPetDopingData() {
+		return loadPetDefinitions().doping();
+	}
+
+	public PetMerchandData loadPetMerchandData() {
+		return loadPetDefinitions().merchant();
+	}
+
+	private PetDefinitionLoader.Result loadPetDefinitions() {
+		return PetDefinitionLoader.load(Config.definitionFile(PET_RIDES_DEFINITIONS_FILE));
 	}
 
 	private <T> T loadDefinition(String path, Class<T> type) {

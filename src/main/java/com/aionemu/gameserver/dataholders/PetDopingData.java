@@ -27,6 +27,15 @@ public class PetDopingData {
 	@XmlTransient
 	private ShortObjectHashMap<PetDopingEntry> dopingsById = new ShortObjectHashMap<PetDopingEntry>();
 
+	public PetDopingData() {
+	}
+
+	public PetDopingData(List<PetDopingEntry> entries) {
+		for (PetDopingEntry entry : entries) {
+			dopingsById.put(entry.getId(), entry);
+		}
+	}
+
 	/**
 	 * JAXB 反序列化完成后，将药剂条目写入 ID 索引并释放列表。
 	 * After JAXB unmarshalling, indexes doping entries by id and releases the list.
