@@ -3,6 +3,7 @@ package com.aionemu.gameserver.dataholders.loadingutils;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.AssemblyItemsData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
@@ -87,6 +88,7 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
+	private static final String ITEM_ASSEMBLY_DEFINITIONS_FILE = "./definitions/items/assembly/assembly_items.xml";
 	private static final String ITEM_GROUP_DEFINITIONS_FILE = "./definitions/items/groups/item_groups.xml";
 	private static final String ITEM_RANDOM_BONUS_DEFINITIONS_FILE = "./definitions/items/random_bonuses/item_random_bonuses.xml";
 	private static final String ITEM_SET_DEFINITIONS_FILE = "./definitions/items/sets/item_sets.xml";
@@ -208,6 +210,7 @@ public class XmlDataLoader {
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				data.npcData = loadNpcData();
+				data.assemblyItemData = loadAssemblyItemsData();
 				data.autoGroupData = loadAutoGroupData();
 				data.bindPointData = loadBindPointData();
 				data.chestData = loadChestData();
@@ -338,6 +341,10 @@ public class XmlDataLoader {
 
 	public InstanceRiftData loadInstanceRiftData() {
 		return loadDefinition(INSTANCE_RIFT_DEFINITIONS_FILE, InstanceRiftData.class);
+	}
+
+	public AssemblyItemsData loadAssemblyItemsData() {
+		return loadDefinition(ITEM_ASSEMBLY_DEFINITIONS_FILE, AssemblyItemsData.class);
 	}
 
 	public ItemGroupsData loadItemGroupsData() {

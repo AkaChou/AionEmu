@@ -24,6 +24,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.AssemblyItemsData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.ChestData;
@@ -622,6 +623,26 @@ class XmlDataLoaderTest {
 			assertEquals(4994, data.bonusSize());
 			assertEquals(794, data.petFoodSize());
 			assertTrue(data.isFood(182003659, FoodType.FLUIDS));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedAssemblyDefinitionsPreserveRecipesAndRequiredCounts() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			AssemblyItemsData data = new XmlDataLoader().loadAssemblyItemsData();
+
+			assertEquals(173, data.size());
+			assertEquals(List.of(188100001, 188100002, 188100003, 188100004, 188100005),
+				data.getAssemblyItem(186000018).getParts());
+			assertEquals(40, data.getAssemblyItem(164002329).getPartsNum());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

@@ -15,7 +15,7 @@
 	<xs:include schemaLocation="../../definitions/items/item/item_templates.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/random_bonuses/item_random_bonuses.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/groups/item_groups.xsd"/>
-	<xs:include schemaLocation="items/assembly_items.xsd"/>
+	<xs:include schemaLocation="../../definitions/items/assembly/assembly_items.xsd"/>
 	<xs:include schemaLocation="items/multi_returns.xsd"/>
 	<xs:include schemaLocation="npc_factions/npc_factions.xsd"/>
 	<xs:include schemaLocation="../../definitions/npcs/npcs.xsd"/>
