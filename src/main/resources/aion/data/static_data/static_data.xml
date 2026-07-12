@@ -64,7 +64,6 @@
 	<import file="chests/chest_templates.xml"/>
 	<import file="cube_expander/cube_expander.xml"/>
 	<import file="assembled_npcs/assembled_npcs.xml"/>
-	<import file="fly_rings/fly_rings.xml"/>
 	<import file="gatherables/gatherable_templates.xml"/>
 	<import file="goodslists/goodslists.xml"/>
 	<import file="guides/guide.xml"/>
@@ -89,7 +88,6 @@
 		<import file="pets/pet_merchand.xml" skipRoot="true"/>
 	</merchands>
 	<import file="luna/luna_templates.xml"/>
-	<import file="roads/roads.xml"/>
 	<import file="siege/siege_locations.xml"/>
 	<import file="siege/siege_shields.xml"/>
 	<skill_tree>

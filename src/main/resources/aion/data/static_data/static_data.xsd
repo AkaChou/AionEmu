@@ -6,7 +6,7 @@
 	<xs:include schemaLocation="cube_expander/cube_expander.xsd"/>
 	<xs:include schemaLocation="items/disassembly_items.xsd"/>
 	<xs:include schemaLocation="assembled_npcs/assembled_npcs.xsd"/>
-	<xs:include schemaLocation="fly_rings/fly_rings.xsd"/>
+	<xs:include schemaLocation="../../definitions/world/movement/fly_rings/fly_rings.xsd"/>
 	<xs:include schemaLocation="gatherables/gatherable_templates.xsd"/>
 	<xs:include schemaLocation="goodslists/goodslists.xsd"/>
 	<xs:include schemaLocation="guides/guide.xsd"/>
@@ -29,7 +29,7 @@
 	<xs:include schemaLocation="../../definitions/quests/scripts/quest_script_data.xsd"/>
 	<xs:include schemaLocation="../../definitions/recipes/recipe_templates.xsd"/>
 	<xs:include schemaLocation="luna/luna_templates.xsd"/>
-	<xs:include schemaLocation="roads/roads.xsd"/>
+	<xs:include schemaLocation="../../definitions/world/movement/roads/roads.xsd"/>
 	<xs:include schemaLocation="siege/siege_locations.xsd"/>
 	<xs:include schemaLocation="siege/siege_shields.xsd"/>
 	<xs:include schemaLocation="skill_tree/skill_tree.xsd"/>

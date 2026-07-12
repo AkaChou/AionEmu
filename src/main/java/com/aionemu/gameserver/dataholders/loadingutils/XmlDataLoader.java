@@ -12,6 +12,7 @@ import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.FlyPathData;
+import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
@@ -20,6 +21,7 @@ import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.RiftData;
+import com.aionemu.gameserver.dataholders.RoadData;
 import com.aionemu.gameserver.dataholders.ReviveInstanceStartPointsData;
 import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
@@ -79,6 +81,7 @@ public class XmlDataLoader {
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
 	private static final String BIND_POINT_DEFINITIONS_FILE = "./definitions/world/transport/bind_points/bind_points.xml";
 	private static final String FLY_PATH_DEFINITIONS_FILE = "./definitions/world/transport/flypath_template.xml";
+	private static final String FLY_RING_DEFINITIONS_FILE = "./definitions/world/movement/fly_rings/fly_rings.xml";
 	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
 	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
 	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
@@ -93,6 +96,7 @@ public class XmlDataLoader {
 	private static final String QUEST_SCRIPT_DEFINITIONS_DIR = "./definitions/quests/scripts";
 	private static final String RECIPE_DEFINITIONS_FILE = "./definitions/recipes/recipe_templates.xml";
 	private static final String RIFT_DEFINITIONS_FILE = "./definitions/locations/rift/rift_locations.xml";
+	private static final String ROAD_DEFINITIONS_FILE = "./definitions/world/movement/roads/roads.xml";
 	private static final String REVIVE_INSTANCE_DEFINITIONS_FILE = "./definitions/world/revive_start_points/instance_revive_start_points.xml";
 	private static final String REVIVE_WORLD_DEFINITIONS_FILE = "./definitions/world/revive_start_points/revive_world_start_points.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
@@ -189,6 +193,7 @@ public class XmlDataLoader {
 				data.autoGroupData = loadAutoGroupData();
 				data.bindPointData = loadBindPointData();
 				data.flyPath = loadFlyPathData();
+				data.flyRingData = loadFlyRingData();
 				data.dynamicRiftData = loadDynamicRiftData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
@@ -202,6 +207,7 @@ public class XmlDataLoader {
 				data.questsScriptData = loadQuestScripts();
 				data.recipeData = loadRecipeData();
 				data.riftData = loadRiftData();
+				data.roadData = loadRoadData();
 				data.reviveInstanceStartPoints = loadReviveInstanceStartPointsData();
 				data.reviveWorldStartPoints = loadReviveWorldStartPointsData();
 				data.skillData = loadSkillData();
@@ -255,6 +261,10 @@ public class XmlDataLoader {
 		return loadDefinition(FLY_PATH_DEFINITIONS_FILE, FlyPathData.class);
 	}
 
+	public FlyRingData loadFlyRingData() {
+		return loadDefinition(FLY_RING_DEFINITIONS_FILE, FlyRingData.class);
+	}
+
 	public NpcDropData loadNpcDropData() {
 		NpcDropData data = NpcDropData.loadEager(Config.definitionFile(NPC_DROP_DEFINITIONS_DIR));
 		log.info(I18n.get("log.4103f2b9b4db", data.size()));
@@ -289,6 +299,10 @@ public class XmlDataLoader {
 
 	public RiftData loadRiftData() {
 		return loadDefinition(RIFT_DEFINITIONS_FILE, RiftData.class);
+	}
+
+	public RoadData loadRoadData() {
+		return loadDefinition(ROAD_DEFINITIONS_FILE, RoadData.class);
 	}
 
 	public ReviveInstanceStartPointsData loadReviveInstanceStartPointsData() {

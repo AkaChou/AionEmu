@@ -32,6 +32,7 @@ import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.FlyPathData;
+import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -40,6 +41,7 @@ import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.RiftData;
+import com.aionemu.gameserver.dataholders.RoadData;
 import com.aionemu.gameserver.dataholders.ReviveInstanceStartPointsData;
 import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
@@ -462,6 +464,28 @@ class XmlDataLoaderTest {
 			assertEquals(110010000, locations.getTelelocationTemplate(2).getMapId());
 			assertEquals(316, flyPaths.size());
 			assertEquals(310020000, flyPaths.getPathTemplate((byte) 1).getStartWorldId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedWorldMovementDefinitionsPreserveCoordinates() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			FlyRingData flyRings = loader.loadFlyRingData();
+			RoadData roads = loader.loadRoadData();
+
+			assertEquals(72, flyRings.size());
+			assertEquals(400010000, flyRings.getFlyRingTemplates().getFirst().getMap());
+			assertEquals(8, roads.size());
+			assertEquals(210030000, roads.getRoadTemplates().getFirst().getMap());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
