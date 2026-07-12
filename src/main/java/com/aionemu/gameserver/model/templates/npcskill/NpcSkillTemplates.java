@@ -23,6 +23,14 @@ public class NpcSkillTemplates {
 	@XmlElement(name = "npcskill")
 	protected List<NpcSkillTemplate> npcSkills;
 
+	public NpcSkillTemplates() {
+	}
+
+	public NpcSkillTemplates(int npcId, List<NpcSkillTemplate> npcSkills) {
+		this.npcId = npcId;
+		this.npcSkills = npcSkills;
+	}
+
 	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return npcId;

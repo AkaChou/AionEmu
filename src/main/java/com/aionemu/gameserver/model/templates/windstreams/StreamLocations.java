@@ -20,6 +20,13 @@ public class StreamLocations {
 	@XmlElement(required = true)
 	protected List<Location2D> location;
 
+	public StreamLocations() {
+	}
+
+	public StreamLocations(List<Location2D> location) {
+		this.location = location;
+	}
+
 	/** 获取位置。 / Returns the location. */
 	public List<Location2D> getLocation() {
 

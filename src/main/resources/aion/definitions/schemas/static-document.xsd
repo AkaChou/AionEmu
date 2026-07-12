@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="static_document">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">尚未领域化的真端静态 XML 的规范化无损容器。</xs:documentation>
+      <xs:documentation xml:lang="en">Canonical lossless container for retail static XML not yet represented by a domain schema.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="content">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:any minOccurs="1" maxOccurs="1" processContents="skip"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

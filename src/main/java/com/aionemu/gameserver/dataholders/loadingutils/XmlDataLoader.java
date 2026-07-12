@@ -4,7 +4,11 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.NpcSkillData;
+import com.aionemu.gameserver.dataholders.PetDopingData;
+import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
@@ -48,6 +52,10 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
+	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
+	private static final String PET_RIDES_DEFINITIONS_FILE = "./definitions/compact/pets-rides.xml";
+	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
+	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
 	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
 	/**
@@ -132,6 +140,11 @@ public class XmlDataLoader {
 			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
+				PetDefinitionLoader.Result petDefinitions = loadPetDefinitions();
+				data.npcSkillData = loadNpcSkillData();
+				data.petDopingData = petDefinitions.doping();
+				data.petMerchandData = petDefinitions.merchant();
+				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
 				logSlowSectionTimings(progressListener.sectionElapsedTimes());
@@ -153,6 +166,31 @@ public class XmlDataLoader {
 			log.error(I18n.get("log.a30b9e9db6fa", e));
 		}
 		return null;
+	}
+
+	public NpcSkillData loadNpcSkillData() {
+		NpcSkillData data = NpcSkillDefinitionLoader.load(Config.definitionFile(NPC_SKILL_DEFINITIONS_FILE));
+		log.info(I18n.get("log.b3e7ebfb7d92", data.size()));
+		return data;
+	}
+
+	public PetDopingData loadPetDopingData() {
+		return loadPetDefinitions().doping();
+	}
+
+	public PetMerchandData loadPetMerchandData() {
+		return loadPetDefinitions().merchant();
+	}
+
+	private PetDefinitionLoader.Result loadPetDefinitions() {
+		return PetDefinitionLoader.load(Config.definitionFile(PET_RIDES_DEFINITIONS_FILE));
+	}
+
+	public WindstreamData loadWindstreamData() {
+		WindstreamData data = WindstreamDefinitionLoader.load(Config.definitionFile(WORLD_DEFINITIONS_FILE),
+			Config.definitionFile(ID_DEFINITIONS_FILE));
+		log.info(I18n.get("log.e7553a368e56", data.size()));
+		return data;
 	}
 
 	/**

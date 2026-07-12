@@ -338,7 +338,6 @@ public class StaticData {
 		log.info(I18n.get("log.b56d2ee109f4", staticDoorData.size()));
 		log.info(I18n.get("log.13792a5f89b7", itemSetData.size()));
 		log.info(I18n.get("log.6be770e218ef", npcFactionsData.size()));
-		log.info(I18n.get("log.b3e7ebfb7d92", npcSkillData.size()));
 		log.info(I18n.get("log.05be76e45171", petSkillData.size()));
 		log.info(I18n.get("log.817680ce4780", siegeLocationData.size()));
 		log.info(I18n.get("log.6850322d6c37", flyRingData.size()));
@@ -350,7 +349,6 @@ public class StaticData {
 		log.info(I18n.get("log.d35d8517e6f0", disassemblyItemSetsData.size()));
 		log.info(I18n.get("log.7d0656872005", aiData.size()));
 		log.info(I18n.get("log.b5ce3e0bbfb7", flyPath.size()));
-		log.info(I18n.get("log.e7553a368e56", windstreamsData.size()));
 		log.info(I18n.get("log.1b0dc7dfa0c2", assembledNpcData.size()));
 		log.info(I18n.get("log.e4cbb71f003a", cosmeticItemsData.size()));
 		log.info(I18n.get("log.4103f2b9b4db", npcDropData.size()));

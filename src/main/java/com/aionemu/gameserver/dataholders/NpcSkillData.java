@@ -33,6 +33,14 @@ public class NpcSkillData {
 	/** 全部 NPC 技能模板映射 / map containing all npc skill templates */
 	private IntObjectHashMap<NpcSkillTemplates> npcSkillData = new IntObjectHashMap<NpcSkillTemplates>();
 
+	public NpcSkillData() {
+	}
+
+	public NpcSkillData(List<NpcSkillTemplates> npcSkills) {
+		this.npcSkills = npcSkills;
+		afterUnmarshal(null, null);
+	}
+
 	/**
 	 * JAXB 反序列化完成后，按 NPC ID 建立索引；技能列表为空时记录错误日志。
 	 * After JAXB unmarshalling, indexes templates by npc id; logs an error when skill list is null.

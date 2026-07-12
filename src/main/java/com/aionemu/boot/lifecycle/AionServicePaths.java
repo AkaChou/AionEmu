@@ -48,6 +48,7 @@ class AionServicePaths {
         configureLogging();
         configureConfig("aion.config.dir", "config", "aion/config");
         configureGameData("aion.game.data.dir", "data", "aion/data");
+        configureGameData("aion.game.definitions.dir", "definitions", "aion/definitions");
         configureGeoData("aion.game.geo.dir", "geo", "aion/geo");
         configureDirectory("aion.game.cache.dir", "game/cache");
     }

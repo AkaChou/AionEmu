@@ -21,6 +21,14 @@ public class PetMerchandEntry {
 	@XmlAttribute(name = "rate_price")
 	private int ratePrice;
 
+	public PetMerchandEntry() {
+	}
+
+	public PetMerchandEntry(int id, int ratePrice) {
+		this.id = id;
+		this.ratePrice = ratePrice;
+	}
+
 	/** 返回 ID / Returns the id */
 	public int getId() {
 		return id;

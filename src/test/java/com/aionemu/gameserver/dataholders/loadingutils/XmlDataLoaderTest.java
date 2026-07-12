@@ -24,6 +24,8 @@ import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.PetDopingData;
+import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -187,6 +189,29 @@ class XmlDataLoaderTest {
 		assertTrue(staticData.contains("file=\"npc_drops/"));
 		assertTrue(!staticData.contains("<item_templates>"));
 		assertTrue(!staticData.contains("file=\"items/item\""));
+	}
+
+	@Test
+	void petUtilityDefinitionsLoadDirectlyFromCompactBundle() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			PetDopingData doping = loader.loadPetDopingData();
+			PetMerchandData merchants = loader.loadPetMerchandData();
+
+			assertEquals(33, doping.size());
+			assertTrue(doping.getDopingTemplate((short) 1).isUseDrink());
+			assertEquals(6, doping.getDopingTemplate((short) 2).getScrollsUsed());
+			assertEquals(5, merchants.size());
+			assertEquals(21, merchants.getMerchandTemplate(5).getRatePrice());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
 	}
 
 	@Test

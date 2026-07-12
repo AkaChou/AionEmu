@@ -69,8 +69,7 @@ public class NavData {
 		protected boolean removeEldestEntry(Map.Entry<Integer, GeoMap> eldest) {
 			int maxSize = GeoDataConfig.GEO_NAV_CACHE_SIZE;
 			boolean remove = maxSize > 0 && size() > maxSize;
-			if (remove && eldest.getValue() != null) {
-				eldest.getValue().detachAllChildren();
+			if (remove) {
 				logDebug("Evicted navigation mesh for map {} from strong cache", eldest.getKey());
 			}
 			return remove;
@@ -227,7 +226,7 @@ public class NavData {
 			if (loadNavMesh(worldId, navFile, geoMap)) {
 				long duration = System.currentTimeMillis() - startTime;
 				logInfo(I18n.get("console.navigation.mesh_loaded", worldId,
-						geoMap.getChildren() != null ? geoMap.getChildren().size() : 0, duration));
+						geoMap.getTriangleCount(), duration));
 				return geoMap;
 			}
 		} catch (IOException e) {
@@ -333,20 +332,24 @@ public class NavData {
 				triangles[i] = new NavGeometry(null, vertices);
 
 				// 读取边连接 / Read edge connections
-				connections[i][0] = nav.getInt();
-				connections[i][1] = nav.getInt();
-				connections[i][2] = nav.getInt();
+				for (int edge = 0; edge < 3; edge++) {
+					int connection = nav.getInt();
+					if (connection < -1 || connection >= triangleCount) {
+						throw new IOException("Invalid connection index in triangle " + i + ", edge " + edge + ": " + connection);
+					}
+					connections[i][edge] = connection;
+				}
 			}
 
 			// 构建邻接链接 / Build adjacency links
 			for (int i = 0; i < triangleCount; i++) {
-				if (connections[i][0] != -1 && connections[i][0] < triangleCount) {
+				if (connections[i][0] != -1) {
 					triangles[i].setEdge1(triangles[connections[i][0]]);
 				}
-				if (connections[i][1] != -1 && connections[i][1] < triangleCount) {
+				if (connections[i][1] != -1) {
 					triangles[i].setEdge2(triangles[connections[i][1]]);
 				}
-				if (connections[i][2] != -1 && connections[i][2] < triangleCount) {
+				if (connections[i][2] != -1) {
 					triangles[i].setEdge3(triangles[connections[i][2]]);
 				}
 

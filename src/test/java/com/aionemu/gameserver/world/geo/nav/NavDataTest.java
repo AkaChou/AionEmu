@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.world.geo.nav;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -15,15 +16,18 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
+import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 class NavDataTest {
 
@@ -44,6 +48,11 @@ class NavDataTest {
 		oldOut = System.out;
 		System.setProperty("aion.game.data.dir", dataDir.toString());
 		System.setProperty("aion.game.geo.dir", dataDir.resolve("geo").toString());
+		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+		messageSource.setBasename("messages");
+		messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
+		I18n.setMessageSource(messageSource);
+		I18n.applyCountryCode(1);
 		DataManager.WORLD_MAPS_DATA = worldMaps(256, 1001, 1002);
 		resetNavData();
 		GeoDataConfig.GEO_NAV_ENABLE = true;
@@ -65,6 +74,7 @@ class NavDataTest {
 			System.setProperty("aion.game.geo.dir", oldGeoDir);
 		}
 		System.setOut(oldOut);
+		I18n.setMessageSource(null);
 		GeoDataConfig.GEO_NAV_ENABLE = false;
 	}
 
@@ -86,8 +96,7 @@ class NavDataTest {
 		navData.loadNavMaps();
 
 		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.contains("\r████████████████████ | \"NavigationFiles\" | 2/2\n"));
-		assertTrue(output.contains("NavigationFiles"));
+		assertTrue(output.contains("\r████████████████████ | \"") && output.contains("\" | 2/2\n"));
 		assertTrue(output.chars().noneMatch(character -> character == '%'));
 	}
 
@@ -98,23 +107,53 @@ class NavDataTest {
 		writeNavFile(1002);
 		navData.loadNavMaps();
 
-		navData.getNavMap(1001);
+		GeoMap first = navData.getNavMap(1001);
 		navData.getNavMap(1002);
 
 		assertEquals(2, navData.getAvailableMapCount());
 		assertEquals(1, navData.getLoadedMapCount());
+		assertEquals(2, first.getTriangleCount());
+	}
+
+	@Test
+	void loadReportsTriangleCountRatherThanChunkCount() throws Exception {
+		writeNavFile(1001);
+		navData.loadNavMaps();
+		ByteArrayOutputStream bytes = captureSystemOut();
+
+		navData.getNavMap(1001);
+
+		String output = bytes.toString(StandardCharsets.UTF_8);
+		assertTrue(output.contains("2 triangles") || output.contains("2 个三角面"));
+	}
+
+	@Test
+	void rejectsInvalidConnectionIndices() throws Exception {
+		writeNavFile(1001, -2);
+		writeNavFile(1002, 2);
+		navData.loadNavMaps();
+
+		assertNull(navData.getNavMap(1001));
+		assertNull(navData.getNavMap(1002));
 	}
 
 	private void writeNavFile(int mapId) throws IOException {
+		writeNavFile(mapId, -1);
+	}
+
+	private void writeNavFile(int mapId, int firstConnection) throws IOException {
 		Path navDir = dataDir.resolve("geo/nav");
 		Files.createDirectories(navDir);
-		ByteBuffer buffer = ByteBuffer.allocate(4 + 9 * 4 + 4 + 6 * 4).order(ByteOrder.LITTLE_ENDIAN);
-		buffer.putInt(9);
+		ByteBuffer buffer = ByteBuffer.allocate(4 + 12 * 4 + 4 + 12 * 4).order(ByteOrder.LITTLE_ENDIAN);
+		buffer.putInt(12);
 		buffer.putFloat(0F).putFloat(0F).putFloat(0F);
 		buffer.putFloat(10F).putFloat(0F).putFloat(0F);
 		buffer.putFloat(0F).putFloat(10F).putFloat(0F);
-		buffer.putInt(1);
+		buffer.putFloat(10F).putFloat(10F).putFloat(0F);
+		buffer.putInt(2);
 		buffer.putInt(0).putInt(1).putInt(2);
+		buffer.putInt(firstConnection).putInt(-1).putInt(-1);
+		buffer.putInt(1).putInt(3).putInt(2);
 		buffer.putInt(-1).putInt(-1).putInt(-1);
 		Files.write(navDir.resolve(mapId + ".nav"), buffer.array());
 	}

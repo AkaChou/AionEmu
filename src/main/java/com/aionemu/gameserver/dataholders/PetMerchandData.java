@@ -28,6 +28,15 @@ public class PetMerchandData {
 	@XmlTransient
 	private IntObjectHashMap<PetMerchandEntry> merchandsById = new IntObjectHashMap<PetMerchandEntry>();
 
+	public PetMerchandData() {
+	}
+
+	public PetMerchandData(List<PetMerchandEntry> entries) {
+		for (PetMerchandEntry entry : entries) {
+			merchandsById.put(entry.getId(), entry);
+		}
+	}
+
 	/**
 	 * JAXB 反序列化完成后，将商人条目写入 ID 索引并释放列表。
 	 * After JAXB unmarshalling, indexes merchant entries by id and releases the list.

@@ -40,7 +40,7 @@ public class ExecuteWrapper implements Executor {
         try {
             runnable.run();
         } catch (Throwable t) {
-            log.warn(I18n.get("log.5a65654beccd", t));
+            log.warn(I18n.get("log.5a65654beccd"), t);
         } finally {
             long runtimeInNanosec = System.nanoTime() - begin;
             Class<? extends Runnable> clazz = runnable.getClass();

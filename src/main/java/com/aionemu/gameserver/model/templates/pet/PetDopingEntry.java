@@ -27,6 +27,16 @@ public class PetDopingEntry {
 	@XmlAttribute(name = "usescroll", required = true)
 	private int usescroll;
 
+	public PetDopingEntry() {
+	}
+
+	public PetDopingEntry(short id, boolean usedrink, boolean usefood, int usescroll) {
+		this.id = id;
+		this.usedrink = usedrink;
+		this.usefood = usefood;
+		this.usescroll = usescroll;
+	}
+
 	/**
 	 * @return the id
 	 */

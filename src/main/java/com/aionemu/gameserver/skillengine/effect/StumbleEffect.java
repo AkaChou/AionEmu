@@ -87,7 +87,7 @@ public class StumbleEffect extends EffectTemplate {
 		float z = effected.getZ();
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
 		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, effected.getX() + x1,
-				effected.getY() + y1, effected.getZ() - 0.4f, false, intentions);
+				effected.getY() + y1, effected.getZ(), true, intentions);
 		x1 = closestCollision.x;
 		y1 = closestCollision.y;
 		z = closestCollision.z;

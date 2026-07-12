@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="static_bundle">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">按领域整理的静态文档集合；每个子文档保留自己的来源名称和完整根结构。</xs:documentation>
+      <xs:documentation xml:lang="en">Domain-organized static document bundle; every child retains its source name and complete root structure.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="static_document" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="content">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:any minOccurs="1" maxOccurs="1" processContents="skip"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:anyAttribute processContents="skip"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

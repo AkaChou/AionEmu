@@ -77,7 +77,6 @@
 	<import file="items/assembly_items.xml"/>
 	<import file="items/multi_returns.xml"/>
 	<import file="npc_factions/npc_factions.xml"/>
-	<import file="npc_skills/npc_skills.xml"/>
 	<npc_templates>
 		<import file="npcs" skipRoot="true"/>
 	</npc_templates>
@@ -88,12 +87,6 @@
 	<pet_feed>
 		<import file="pets/pet_feed.xml" skipRoot="true"/>
 	</pet_feed>
-	<dopings>
-		<import file="pets/pet_doping.xml" skipRoot="true"/>
-	</dopings>
-	<merchands>
-		<import file="pets/pet_merchand.xml" skipRoot="true"/>
-	</merchands>
 	<import file="quest_data/quest_data.xml"/>
 	<quest_scripts>
 		<import file="quest_script_data" skipRoot="true"/>
@@ -134,7 +127,6 @@
 	<import file="teleport_location.xml"/>
 	<import file="world_maps.xml"/>
 	<import file="flypath_template.xml"/>
-	<import file="locations/windstreams/windstreams.xml"/>
 	<import file="cosmetic_items/cosmetic_items.xml"/>
 	<import file="npc_shouts/npc_shouts.xml"/>
 	<npc_drops>
