@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="Core">
+    <xs:sequence><xs:element name="table" minOccurs="0" maxOccurs="unbounded">
+      <xs:complexType>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="ref" type="xs:string" use="required"/>
+        <xs:attribute name="source_sha256" type="xs:string" use="required"/>
+      </xs:complexType>
+    </xs:element></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Files">
+    <xs:sequence><xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+      <xs:complexType>
+        <xs:attribute name="path" type="xs:string" use="required"/>
+        <xs:attribute name="ref" type="xs:string" use="required"/>
+        <xs:attribute name="bundle" type="xs:string" use="required"/>
+      </xs:complexType>
+    </xs:element></xs:sequence>
+  </xs:complexType>
+  <xs:element name="regional_data">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="base">
+          <xs:complexType><xs:sequence>
+            <xs:element name="core" type="Core"/>
+            <xs:element name="files" type="Files"/>
+          </xs:sequence><xs:attribute name="name" type="xs:string" use="required"/></xs:complexType>
+        </xs:element>
+        <xs:element name="regions">
+          <xs:complexType><xs:sequence><xs:element name="region" minOccurs="1" maxOccurs="unbounded">
+            <xs:complexType><xs:sequence>
+              <xs:element name="core" type="Core"/>
+              <xs:element name="overrides" type="Files"/>
+            </xs:sequence>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+              <xs:attribute name="base" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element></xs:sequence></xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

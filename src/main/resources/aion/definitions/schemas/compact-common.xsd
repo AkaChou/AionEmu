@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="GroupId">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">由规范化完整内容生成的稳定分组标识。</xs:documentation>
+      <xs:documentation xml:lang="en">Stable group identifier derived from complete normalized content.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="NS_[0-9A-F]{16}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NpcIdList">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">引用同一分组的 NPC ID 空格分隔数组。</xs:documentation>
+      <xs:documentation xml:lang="en">Whitespace-separated NPC IDs referencing one shared group.</xs:documentation>
+    </xs:annotation>
+    <xs:list itemType="xs:positiveInteger"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="Probability">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

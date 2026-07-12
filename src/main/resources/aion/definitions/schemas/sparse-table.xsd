@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="sparse_table">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">宽静态表的无损稀疏表示。字段只定义一次，记录仅保存偏离默认状态的值。</xs:documentation>
+      <xs:documentation xml:lang="en">Lossless sparse representation for wide static tables. Fields are declared once and rows store only deviations from defaults.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="fields">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="field" type="SparseField" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pools" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="pool" type="ValuePool" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="records">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="r" type="SparseRow" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="record" type="xs:string" use="required"/>
+      <xs:attribute name="count" type="xs:nonNegativeInteger" use="required"/>
+      <xs:attribute name="excluded" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="SparseField">
+    <xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="occurrence" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="kind" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="attribute"/>
+          <xs:enumeration value="text"/>
+          <xs:enumeration value="xml"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="default_present" type="xs:boolean"/>
+    <xs:attribute name="default" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="ValuePool">
+    <xs:sequence>
+      <xs:element name="v" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType mixed="true">
+          <xs:attribute name="i" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="k" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="SparseRow">
+    <xs:attribute name="missing" type="IndexList"/>
+    <xs:attribute name="order" type="IndexList"/>
+    <xs:anyAttribute processContents="skip"/>
+  </xs:complexType>
+
+  <xs:simpleType name="IndexList">
+    <xs:list itemType="xs:nonNegativeInteger"/>
+  </xs:simpleType>
+</xs:schema>

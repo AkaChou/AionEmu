@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="compact-common.xsd"/>
+
+  <xs:element name="npc_skill_data">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">真端 NPC 技能的无损紧凑表示。技能组只定义一次，再由 NPC ID 数组引用。</xs:documentation>
+      <xs:documentation xml:lang="en">Lossless compact retail NPC skills. A skill group is defined once and referenced by an NPC ID list.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="groups">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="group" type="NpcSkillGroup" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="assignments">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="assign" type="NpcSkillAssignment" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+    <xs:key name="npcSkillGroupKey">
+      <xs:selector xpath="groups/group"/>
+      <xs:field xpath="@id"/>
+    </xs:key>
+    <xs:keyref name="npcSkillGroupReference" refer="npcSkillGroupKey">
+      <xs:selector xpath="assignments/assign"/>
+      <xs:field xpath="@group"/>
+    </xs:keyref>
+  </xs:element>
+
+  <xs:complexType name="NpcSkillGroup">
+    <xs:sequence>
+      <xs:element name="skill" type="RetailNpcSkill" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="GroupId" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="RetailNpcSkill">
+    <xs:attribute name="name" type="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="zh-CN">真端原始 skill_name；无法映射 ID 时仍保留。</xs:documentation>
+        <xs:documentation xml:lang="en">Original retail skill_name, retained even when no ID can be resolved.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="id" type="xs:positiveInteger"/>
+    <xs:attribute name="level" type="xs:string"/>
+    <xs:attribute name="raw_rate" type="xs:string"/>
+    <xs:attribute name="probability" type="Probability" use="required"/>
+    <xs:attribute name="delay_time" type="xs:string"/>
+    <xs:attribute name="count" type="xs:string"/>
+    <xs:attribute name="ultra_skill" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="NpcSkillAssignment">
+    <xs:attribute name="group" type="GroupId" use="required"/>
+    <xs:attribute name="npc_ids" type="NpcIdList" use="required"/>
+  </xs:complexType>
+</xs:schema>

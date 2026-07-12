@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="item_partitions">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">以核心 Item 表为基准的有序来源视图；ID 数组保留顺序，覆盖记录保留不同或额外的完整 Item。</xs:documentation>
+      <xs:documentation xml:lang="en">Ordered source views backed by the core Item table; the ID array preserves order and overrides retain complete changed or extra Items.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="partition" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="root_attributes" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="attribute" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="item_ids" type="xs:string"/>
+              <xs:element name="overrides">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="record" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:any minOccurs="1" maxOccurs="1" processContents="skip"/>
+                        </xs:sequence>
+                        <xs:attribute name="position" type="xs:nonNegativeInteger" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="root" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="base" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

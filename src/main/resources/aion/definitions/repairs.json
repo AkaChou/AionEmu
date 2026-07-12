@@ -1,0 +1,1704 @@
+[
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/AnimationMarkers/frara.xml",
+    "type": "duplicate_attribute",
+    "count": 42,
+    "replacements": [
+      {
+        "line": 27,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 28,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 29,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 30,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 31,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 32,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 35,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 36,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 37,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 38,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 39,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 43,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 44,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 45,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 46,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 47,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 51,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 52,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 53,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 54,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 55,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 56,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 57,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 58,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 59,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 60,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 61,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 62,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 63,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 66,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 67,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 68,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 69,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 70,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 71,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 72,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 75,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 76,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 79,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 80,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 83,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      },
+      {
+        "line": 84,
+        "name": "vol",
+        "replacement": "__duplicate_1_vol"
+      }
+    ]
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/builder_policy.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/client_strings.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/China/disassembly_item.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/China/disassembly_item.xml",
+    "type": "invalid_comment_terminator",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/Game.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/ID/CastleId.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/ID/client_npcid.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/ID/Clientitemid.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/ID/itemid.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/ID/npcid.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/China/item_weapons.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/China/item_weapons.xml",
+    "type": "invalid_comment_terminator",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns.xml",
+    "type": "canonical_tag_case",
+    "count": 8771
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1_New_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1_New_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 554
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1_Under_Ver53_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1_Under_Ver53_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 332
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1_Ver53_Raid_YDY.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1_Ver53_Raid_YDY.xml",
+    "type": "canonical_tag_case",
+    "count": 312
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1Re_Ver45_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1Re_Ver45_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 92
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1Re_Ver47_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ab1Re_Ver47_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 5
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Adma_YDY.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Adma_YDY.xml",
+    "type": "canonical_tag_case",
+    "count": 29
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF3_SJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF3_SJS.xml",
+    "type": "canonical_tag_case",
+    "count": 20
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF4_minho.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF4_minho.xml",
+    "type": "canonical_tag_case",
+    "count": 213
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF5_Named_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF5_Named_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 161
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF5_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF5_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 7
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF6_D2_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF6_D2_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 901
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF6_Named_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_DF6_Named_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 101
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Ctrl_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Ctrl_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 15
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 208
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_JM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_JM.xml",
+    "type": "canonical_tag_case",
+    "count": 332
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Monster_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Monster_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 201
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Named_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Named_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 236
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Sub_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Dreadgion_Sub_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 3
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_EscapeRobot_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_EscapeRobot_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F2A_Guard_SP_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F2A_Guard_SP_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 86
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F4_Rotation_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F4_Rotation_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 36
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F5_Legion_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F5_Legion_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 337
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F5_NewSpecies_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F5_NewSpecies_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 44
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F6_Condition_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F6_Condition_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 3
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F6_Envir_YDY.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F6_Envir_YDY.xml",
+    "type": "canonical_tag_case",
+    "count": 6
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F6_Invasion_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_F6_Invasion_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 29
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Fanatic40_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Fanatic40_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 45
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Gab1_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Gab1_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 767
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_GAb1_Sub_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_GAb1_Sub_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 215
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_GMevent_LJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_GMevent_LJH.xml",
+    "type": "canonical_tag_case",
+    "count": 44
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Housing_Personal_JK.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Housing_Personal_JK.xml",
+    "type": "canonical_tag_case",
+    "count": 52
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDAB1_Renew_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDAB1_Renew_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 322
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDAbRe_Core_02_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDAbRe_Core_02_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 76
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDAbRe_Core_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDAbRe_Core_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 107
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_JM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_JM.xml",
+    "type": "canonical_tag_case",
+    "count": 1158
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_pvp01_JUN.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_pvp01_JUN.xml",
+    "type": "canonical_tag_case",
+    "count": 112
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_pvp02_SJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_pvp02_SJS.xml",
+    "type": "canonical_tag_case",
+    "count": 49
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_pvp02_SJS_Test.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_pvp02_SJS_Test.xml",
+    "type": "canonical_tag_case",
+    "count": 12
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_Solo_JUN.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_Solo_JUN.xml",
+    "type": "canonical_tag_case",
+    "count": 31
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_Solo_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_Solo_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 165
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_Solo_MeanS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_Solo_MeanS.xml",
+    "type": "canonical_tag_case",
+    "count": 34
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_team01_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArena_team01_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 17
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArenaBonus_Minu.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDArenaBonus_Minu.xml",
+    "type": "canonical_tag_case",
+    "count": 9
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDCatacombs_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDCatacombs_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 3
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDDF2A_SP_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDDF2A_SP_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDDF3_dragon_SP_YDY.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDDF3_dragon_SP_YDY.xml",
+    "type": "canonical_tag_case",
+    "count": 12
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDDF3_SP_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDDF3_SP_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 7
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDElemental_2_E_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDElemental_2_E_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 2
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDElemental_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDElemental_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 4
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDEternity_02_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDEternity_02_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 441
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDEternity_Q_PSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDEternity_Q_PSH.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDF4Re_Drana_JM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDF4Re_Drana_JM.xml",
+    "type": "canonical_tag_case",
+    "count": 20
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDF5_TD_War_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDF5_TD_War_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 51
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDKamar_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDKamar_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 7
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF4_Re_01_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF4_Re_01_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 6
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under01_KMJ.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under01_KMJ.xml",
+    "type": "canonical_tag_case",
+    "count": 21
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under02_MJ.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under02_MJ.xml",
+    "type": "canonical_tag_case",
+    "count": 41
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_01_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_01_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 30
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_01_War_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_01_War_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 16
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_02_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_02_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 15
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_03_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_03_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 26
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_Rune_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_Rune_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 29
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_Rune_KJS_ver47.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5_Under_Rune_KJS_ver47.xml",
+    "type": "canonical_tag_case",
+    "count": 5
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5b_TD_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5b_TD_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 88
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5Re_02_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLDF5Re_02_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 36
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLF1_SP_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLF1_SP_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLuna_Def_KTW.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDLuna_Def_KTW.xml",
+    "type": "canonical_tag_case",
+    "count": 41
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDRaksha_JK.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDRaksha_JK.xml",
+    "type": "canonical_tag_case",
+    "count": 7
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDRuneWeapon_KMJ.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDRuneWeapon_KMJ.xml",
+    "type": "canonical_tag_case",
+    "count": 29
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Immortal_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Immortal_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 36
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Named_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Named_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 41
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_NPC_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_NPC_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 6
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Twin_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Twin_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 19
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Wave_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_Wave_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 16
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDSeal_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 18
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDShulackShip_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDShulackShip_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 54
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDShulackship_Rose_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDShulackship_Rose_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 502
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDStation_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDStation_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 17
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTemple_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTemple_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 148
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTemple_Minu.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTemple_Minu.xml",
+    "type": "canonical_tag_case",
+    "count": 50
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTiamat_JK.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTiamat_JK.xml",
+    "type": "canonical_tag_case",
+    "count": 2
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTiamat_Reward_Bemaniax.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTiamat_Reward_Bemaniax.xml",
+    "type": "canonical_tag_case",
+    "count": 85
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTransform_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDTransform_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 1515
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDUnderpass_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDUnderpass_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 33
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDVritra_Base_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDVritra_Base_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 178
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDVritra_Base_Named_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDVritra_Base_Named_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 444
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDYun_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDYun_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 179
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDYun_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_IDYun_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 29
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_Guard_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_Guard_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 8
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 181
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_VillageChief_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_VillageChief_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 25
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_VillageCtrl_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Advance_VillageCtrl_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 12
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 117
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_PJW.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_PJW.xml",
+    "type": "canonical_tag_case",
+    "count": 782
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Ver47_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4_Ver47_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 39
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4a_Bemaniax.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4a_Bemaniax.xml",
+    "type": "canonical_tag_case",
+    "count": 156
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4a_Boss_Bemaniax.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4a_Boss_Bemaniax.xml",
+    "type": "canonical_tag_case",
+    "count": 192
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4b_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4b_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 412
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4b_iosi.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF4b_iosi.xml",
+    "type": "canonical_tag_case",
+    "count": 279
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_Britra_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_Britra_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 311
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_D2_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_D2_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 93
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_FieldNamed_D2_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_FieldNamed_D2_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 235
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_FieldNamed_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_FieldNamed_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 470
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_Fortress_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_Fortress_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 7
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_VillageChief_JUN.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5_VillageChief_JUN.xml",
+    "type": "canonical_tag_case",
+    "count": 20
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5a_5011_JUN.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5a_5011_JUN.xml",
+    "type": "canonical_tag_case",
+    "count": 10
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5b_6021_KGW.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF5b_6021_KGW.xml",
+    "type": "canonical_tag_case",
+    "count": 30
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF_VillageOccupyingCombat.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LDF_VillageOccupyingCombat.xml",
+    "type": "canonical_tag_case",
+    "count": 55
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF3_v30_JUN.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF3_v30_JUN.xml",
+    "type": "canonical_tag_case",
+    "count": 42
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF4_minho.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF4_minho.xml",
+    "type": "canonical_tag_case",
+    "count": 185
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF5_Named_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF5_Named_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 159
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF6_D2_YDY.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF6_D2_YDY.xml",
+    "type": "canonical_tag_case",
+    "count": 862
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF6_Named_YDY.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_LF6_Named_YDY.xml",
+    "type": "canonical_tag_case",
+    "count": 181
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Master_4ID_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Master_4ID_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 475
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Master_Dreadgion_SP_PSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Master_Dreadgion_SP_PSH.xml",
+    "type": "canonical_tag_case",
+    "count": 11
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Master_RVR_SP_PSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Master_RVR_SP_PSH.xml",
+    "type": "canonical_tag_case",
+    "count": 64
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Mission_KJS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Mission_KJS.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TeCa_JM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TeCa_JM.xml",
+    "type": "canonical_tag_case",
+    "count": 16
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Test_CYS.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Test_CYS.xml",
+    "type": "canonical_tag_case",
+    "count": 5
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_GHB.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_GHB.xml",
+    "type": "canonical_tag_case",
+    "count": 5
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_kgw.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_kgw.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_ksj0927_01.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_ksj0927_01.xml",
+    "type": "canonical_tag_case",
+    "count": 2
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_KYJ.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_KYJ.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_LHJ.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_LHJ.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_lswoo.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_lswoo.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_SNR.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_SNR.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_sunflare.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_sunflare.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_SYSTEM1.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_SYSTEM1.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_TAIKEN.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_TAIKEN.xml",
+    "type": "canonical_tag_case",
+    "count": 2
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_worldevent.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TEST_worldevent.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Test_WSY.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Test_WSY.xml",
+    "type": "canonical_tag_case",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Tiamat_hue.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Tiamat_hue.xml",
+    "type": "canonical_tag_case",
+    "count": 9
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Tiamat_Remnant_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Tiamat_Remnant_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 5
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TiamatHard_SSH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_TiamatHard_SSH.xml",
+    "type": "canonical_tag_case",
+    "count": 3
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ver30_Minu.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_Ver30_Minu.xml",
+    "type": "canonical_tag_case",
+    "count": 5
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_ver40.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_ver40.xml",
+    "type": "canonical_tag_case",
+    "count": 12
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_WorldRaid_JSM.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_WorldRaid_JSM.xml",
+    "type": "canonical_tag_case",
+    "count": 34
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_WorldRaid_YJH.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/NpcAIPatterns_WorldRaid_YJH.xml",
+    "type": "canonical_tag_case",
+    "count": 16
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/PCs.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/strings.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/strings.xml",
+    "type": "invalid_comment_terminator",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/China/trade_in_list.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/China/trade_in_list.xml",
+    "type": "missing_tag_close",
+    "count": 5
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/weather.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  },
+  {
+    "file": "/Users/mc/IdeaProjects/58Server/Map/XML/zcheat_detect_worlds.xml",
+    "type": "encoding_declaration",
+    "count": 1
+  }
+]

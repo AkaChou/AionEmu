@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="npc_partitions">
+    <xs:annotation>
+      <xs:documentation xml:lang="zh-CN">以核心 NPC 和 NPC 技能表为基准的有序来源视图；ID 数组保留记录顺序，字段覆盖保留变化值及来源字段顺序。</xs:documentation>
+      <xs:documentation xml:lang="en">Ordered source views backed by the core NPC and NPC-skill tables; the ID array preserves record order and field overrides retain changed values plus source-field order.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="fields">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="field" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+                  <xs:attribute name="name" type="xs:string" use="required"/>
+                  <xs:attribute name="occurrence" type="xs:nonNegativeInteger" use="required"/>
+                  <xs:attribute name="kind" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="partition" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="root_attributes" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="attribute" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="npc_ids" type="xs:string"/>
+              <xs:element name="overrides">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="r" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="position" type="xs:nonNegativeInteger" use="required"/>
+                        <xs:attribute name="order" type="xs:string"/>
+                        <xs:anyAttribute processContents="skip"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="root" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="base" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

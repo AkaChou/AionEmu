@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="regional_objects">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="object" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence><xs:any processContents="skip"/></xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="source_name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="domain" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:key name="objectId"><xs:selector xpath="object"/><xs:field xpath="@id"/></xs:key>
+  </xs:element>
+</xs:schema>
