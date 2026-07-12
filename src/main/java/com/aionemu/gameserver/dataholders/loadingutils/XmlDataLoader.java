@@ -16,6 +16,7 @@ import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
+import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
@@ -31,6 +32,7 @@ import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.TeleLocationData;
 import com.aionemu.gameserver.dataholders.TeleporterData;
+import com.aionemu.gameserver.dataholders.TradeListData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.dataholders.WarehouseExpandData;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
@@ -89,6 +91,7 @@ public class XmlDataLoader {
 	private static final String FLY_PATH_DEFINITIONS_FILE = "./definitions/world/transport/flypath_template.xml";
 	private static final String FLY_RING_DEFINITIONS_FILE = "./definitions/world/movement/fly_rings/fly_rings.xml";
 	private static final String GATHERABLE_DEFINITIONS_FILE = "./definitions/world/resources/gatherables/gatherable_templates.xml";
+	private static final String GOODS_LIST_DEFINITIONS_FILE = "./definitions/commerce/npc_shops/goodslists.xml";
 	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
 	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
 	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
@@ -109,6 +112,7 @@ public class XmlDataLoader {
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String TELEPORT_LOCATION_DEFINITIONS_FILE = "./definitions/world/transport/teleport_location.xml";
 	private static final String TELEPORTER_DEFINITIONS_FILE = "./definitions/world/transport/npc_teleporter.xml";
+	private static final String TRADE_LIST_DEFINITIONS_FILE = "./definitions/commerce/npc_shops/npc_trade_list.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String WORLD_MAPS_DEFINITIONS_FILE = "./definitions/world/maps/world_maps.xml";
 	private static final String WAREHOUSE_EXPAND_DEFINITIONS_FILE = "./definitions/player/storage/warehouse_expander/warehouse_expander.xml";
@@ -205,6 +209,7 @@ public class XmlDataLoader {
 				data.flyPath = loadFlyPathData();
 				data.flyRingData = loadFlyRingData();
 				data.gatherableData = loadGatherableData();
+				data.goodsListData = loadGoodsListData();
 				data.dynamicRiftData = loadDynamicRiftData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
@@ -224,6 +229,7 @@ public class XmlDataLoader {
 				data.skillData = loadSkillData();
 				data.teleLocationData = loadTeleLocationData();
 				data.teleporterData = loadTeleporterData();
+				data.tradeListData = loadTradeListData();
 				data.windstreamsData = loadWindstreamData();
 				data.warehouseExpandData = loadWarehouseExpandData();
 				data.worldMapsData = loadWorldMapsData();
@@ -289,6 +295,10 @@ public class XmlDataLoader {
 		return loadDefinition(GATHERABLE_DEFINITIONS_FILE, GatherableData.class);
 	}
 
+	public GoodsListData loadGoodsListData() {
+		return loadDefinition(GOODS_LIST_DEFINITIONS_FILE, GoodsListData.class);
+	}
+
 	public NpcDropData loadNpcDropData() {
 		NpcDropData data = NpcDropData.loadEager(Config.definitionFile(NPC_DROP_DEFINITIONS_DIR));
 		log.info(I18n.get("log.4103f2b9b4db", data.size()));
@@ -343,6 +353,10 @@ public class XmlDataLoader {
 
 	public TeleporterData loadTeleporterData() {
 		return loadDefinition(TELEPORTER_DEFINITIONS_FILE, TeleporterData.class);
+	}
+
+	public TradeListData loadTradeListData() {
+		return loadDefinition(TRADE_LIST_DEFINITIONS_FILE, TradeListData.class);
 	}
 
 	public PortalLocData loadPortalLocData() {

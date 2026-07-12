@@ -8,7 +8,7 @@
 	<xs:include schemaLocation="assembled_npcs/assembled_npcs.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/movement/fly_rings/fly_rings.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/resources/gatherables/gatherable_templates.xsd"/>
-	<xs:include schemaLocation="goodslists/goodslists.xsd"/>
+	<xs:include schemaLocation="../../definitions/commerce/npc_shops/goodslists.xsd"/>
 	<xs:include schemaLocation="guides/guide.xsd"/>
 	<xs:include schemaLocation="../../definitions/instances/instance_cooltimes/instance_cooltimes.xsd"/>
 	<xs:include schemaLocation="item_sets/item_sets.xsd"/>
@@ -44,7 +44,7 @@
 	<xs:include schemaLocation="global_types.xsd"/>
 	<xs:include schemaLocation="import.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/transport/npc_teleporter.xsd"/>
-	<xs:include schemaLocation="npc_trade_list.xsd"/>
+	<xs:include schemaLocation="../../definitions/commerce/npc_shops/npc_trade_list.xsd"/>
 	<xs:include schemaLocation="npc_walker/npc_walker.xsd"/>
 	<xs:include schemaLocation="player_experience_table.xsd"/>
 	<xs:include schemaLocation="player_initial_data.xsd"/>

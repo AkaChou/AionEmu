@@ -62,7 +62,6 @@
 		<import file="ai" skipRoot="true"/>
 	</ai_templates>
 	<import file="assembled_npcs/assembled_npcs.xml"/>
-	<import file="goodslists/goodslists.xml"/>
 	<import file="guides/guide.xml"/>
 	<import file="item_sets/item_sets.xml"/>
 	<import file="items/item_restriction_cleanups.xml"/>
@@ -105,7 +104,6 @@
 	<zones>
 		<import file="zones" skipRoot="true"/>
 	</zones>
-	<import file="npc_trade_list.xml"/>
 	<npc_walker>
 		<import file="npc_walker" skipRoot="true"/>
 	</npc_walker>

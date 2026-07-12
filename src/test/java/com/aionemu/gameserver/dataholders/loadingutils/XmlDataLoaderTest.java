@@ -36,6 +36,7 @@ import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
+import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -51,6 +52,7 @@ import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.TeleLocationData;
 import com.aionemu.gameserver.dataholders.TeleporterData;
+import com.aionemu.gameserver.dataholders.TradeListData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.dataholders.WarehouseExpandData;
@@ -534,6 +536,30 @@ class XmlDataLoaderTest {
 			assertEquals(185000263, chests.getChestTemplate(806220).getKeyItem().getFirst().getItemId());
 			assertEquals(761, gatherables.size());
 			assertEquals(152000006, gatherables.getGatherableTemplate(400007).getMaterials().getMaterial().getFirst().getItemid());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedNpcShopDefinitionsPreserveGoodsAndNpcTabs() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			GoodsListData goods = loader.loadGoodsListData();
+			TradeListData trades = loader.loadTradeListData();
+
+			assertEquals(3898, goods.size());
+			assertEquals(110100010, goods.getGoodsListById(129).getItemIdList().getFirst());
+			assertEquals(2461, trades.size());
+			assertEquals(129, trades.getTradeListTemplate(203060).getTradeTablist().getFirst().getId());
+			assertNotNull(trades.getTradeInListTemplate(205315));
+			assertNotNull(trades.getPurchaseListTemplate(206352));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
