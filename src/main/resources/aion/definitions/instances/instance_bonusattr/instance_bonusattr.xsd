@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.1">
-	<xs:include schemaLocation="../modifiers.xsd"/>
+	<xs:include schemaLocation="../../../data/static_data/modifiers.xsd"/>
 	<xs:element name="instance_bonusattrs">
 		<xs:complexType>
 			<xs:sequence>

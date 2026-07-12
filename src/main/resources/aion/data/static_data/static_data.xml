@@ -69,7 +69,6 @@
 	<import file="gatherables/gatherable_templates.xml"/>
 	<import file="goodslists/goodslists.xml"/>
 	<import file="guides/guide.xml"/>
-	<import file="instance_cooltimes/instance_cooltimes.xml"/>
 	<import file="item_sets/item_sets.xml"/>
 	<import file="items/item_restriction_cleanups.xml"/>
 	<import file="items/item_random_bonuses.xml"/>
@@ -131,11 +130,9 @@
 		<import file="events_config/events_config.xml" skipRoot="true"/>
 	</events_config>
 	<import file="polymorph_panels/polymorph_panels.xml"/>
-	<import file="instance_bonusattr/instance_bonusattr.xml"/>
 	<import file="housing/housing_objects.xml"/>
 	<import file="ride/ride.xml"/>
 	<import file="robot/robot.xml"/>
-	<import file="instance_exit/instance_exit.xml"/>
 	<import file="housing/houses.xml"/>
 	<import file="housing/house_buildings.xml"/>
 	<import file="housing/house_parts.xml"/>

@@ -4,6 +4,9 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.InstanceBuffData;
+import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
+import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
@@ -62,6 +65,9 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
+	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
+	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
+	private static final String INSTANCE_EXIT_DEFINITIONS_FILE = "./definitions/instances/instance_exit/instance_exit.xml";
 	private static final String NPC_DEFINITIONS_FILE = "./definitions/npcs/npc_template.xml";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
@@ -160,6 +166,9 @@ public class XmlDataLoader {
 				data.npcData = loadNpcData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
+				data.instanceBuffData = loadInstanceBuffData();
+				data.instanceCooltimeData = loadInstanceCooltimeData();
+				data.instanceExitData = loadInstanceExitData();
 				data.portalLocData = loadPortalLocData();
 				data.portalTemplate2 = loadPortal2Data();
 				data.questData = loadQuestData();
@@ -211,6 +220,18 @@ public class XmlDataLoader {
 		NpcSkillData data = NpcSkillDefinitionLoader.load(Config.definitionFile(NPC_SKILL_DEFINITIONS_FILE));
 		log.info(I18n.get("log.b3e7ebfb7d92", data.size()));
 		return data;
+	}
+
+	public InstanceBuffData loadInstanceBuffData() {
+		return loadDefinition(INSTANCE_BUFF_DEFINITIONS_FILE, InstanceBuffData.class);
+	}
+
+	public InstanceCooltimeData loadInstanceCooltimeData() {
+		return loadDefinition(INSTANCE_COOLTIME_DEFINITIONS_FILE, InstanceCooltimeData.class);
+	}
+
+	public InstanceExitData loadInstanceExitData() {
+		return loadDefinition(INSTANCE_EXIT_DEFINITIONS_FILE, InstanceExitData.class);
 	}
 
 	public PortalLocData loadPortalLocData() {

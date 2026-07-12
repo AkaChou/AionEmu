@@ -24,6 +24,9 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.InstanceBuffData;
+import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
+import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -34,6 +37,7 @@ import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
+import com.aionemu.gameserver.model.Race;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -310,6 +314,31 @@ class XmlDataLoaderTest {
 			assertNotNull(locations.getPortalLoc(1100100));
 			assertEquals(826, portals.size());
 			assertTrue(portals.isPortalNpc(730197));
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedInstanceDefinitionsPreserveRuntimeValues() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			InstanceCooltimeData cooltimes = loader.loadInstanceCooltimeData();
+			InstanceBuffData buffs = loader.loadInstanceBuffData();
+			InstanceExitData exits = loader.loadInstanceExitData();
+
+			assertEquals(110, cooltimes.size());
+			assertEquals(5, cooltimes.getInstanceCooltimeByWorldId(310090000).getMaxEntriesCount());
+			assertEquals(18, buffs.size());
+			assertEquals(900, buffs.getInstanceBonusattr(7).getPenaltyAttr().getFirst().getValue());
+			assertEquals(242, exits.size());
+			assertEquals(210020000, exits.getInstanceExit(300030000, Race.ELYOS).getExitWorld());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

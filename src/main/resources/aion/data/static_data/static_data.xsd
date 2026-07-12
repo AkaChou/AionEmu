@@ -10,7 +10,7 @@
 	<xs:include schemaLocation="gatherables/gatherable_templates.xsd"/>
 	<xs:include schemaLocation="goodslists/goodslists.xsd"/>
 	<xs:include schemaLocation="guides/guide.xsd"/>
-	<xs:include schemaLocation="instance_cooltimes/instance_cooltimes.xsd"/>
+	<xs:include schemaLocation="../../definitions/instances/instance_cooltimes/instance_cooltimes.xsd"/>
 	<xs:include schemaLocation="item_sets/item_sets.xsd"/>
 	<xs:include schemaLocation="items/item_restriction_cleanups.xsd"/>
 	<xs:include schemaLocation="../../definitions/items/item/item_templates.xsd"/>
@@ -57,11 +57,11 @@
 	<xs:include schemaLocation="auto_group/auto_group.xsd"/>
 	<xs:include schemaLocation="events_config/events_config.xsd"/>
 	<xs:include schemaLocation="polymorph_panels/polymorph_panels.xsd"/>
-	<xs:include schemaLocation="instance_bonusattr/instance_bonusattr.xsd"/>
+	<xs:include schemaLocation="../../definitions/instances/instance_bonusattr/instance_bonusattr.xsd"/>
 	<xs:include schemaLocation="housing/housing_objects.xsd"/>
 	<xs:include schemaLocation="ride/ride.xsd"/>
 	<xs:include schemaLocation="robot/robot.xsd"/>
-	<xs:include schemaLocation="instance_exit/instance_exit.xsd"/>
+	<xs:include schemaLocation="../../definitions/instances/instance_exit/instance_exit.xsd"/>
 	<xs:include schemaLocation="../../definitions/portals/portal_loc.xsd"/>
 	<xs:include schemaLocation="../../definitions/portals/portal_template2.xsd"/>
 	<xs:include schemaLocation="housing/houses.xsd"/>

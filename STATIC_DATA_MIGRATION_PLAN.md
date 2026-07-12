@@ -17,6 +17,7 @@
 - `definitions/quests/`：当前 AionEmu 任务主数据与服务器任务脚本的兼容目录。
 - `definitions/recipes/`：当前 AionEmu 制作配方的兼容目录。
 - `definitions/portals/`：当前 AionEmu 固定传送坐标、NPC 传送路径和卷轴传送配置的兼容目录。
+- `definitions/instances/`：当前 AionEmu 副本冷却、增益属性和出口配置的兼容目录。
 - `cache/`：派生的 JAXB 合并缓存，不是权威数据源。
 
 ## 迁移顺序
@@ -31,8 +32,9 @@
 8. 新 `compact/quests.xml` 暂不能替代服务器任务模型，已先迁移任务主数据与脚本；挑战任务仍作为独立领域保留。
 9. 新 `compact/recipes.xml` 暂不能直接形成运行配方，已先迁移现有配方模板。
 10. `compact/world.xml` 的 `direct_portal.xml` 是动态直通门模型，不能替代固定传送配置；已先迁移现有传送门数据。
-11. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-12. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+11. 新副本数据与当前冷却次数、增益数值不完全相同，且不含服务器出口坐标；已先迁移现有副本基础配置。
+12. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+13. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -49,7 +51,8 @@
 | `a68baad0` | NPC 模板 | `XmlDataLoaderTest` NPC 相关方法、`NochsanaFortressGateTemplateTest`、`NpcTemplateDropLoadingTest`、`GameServerTest` | 2026-07-12 通过；87961 个唯一模板可加载，未启动项目 |
 | `34594cd9` | 任务主数据与脚本 | `XmlDataLoaderTest` 任务/XSD/分区相关方法、`GameServerTest` | 2026-07-12 通过；6424 个任务和 3813 个脚本处理器可加载，未启动项目 |
 | `c130304f` | 制作配方 | `XmlDataLoaderTest` 配方/XSD/分区相关方法、`GameServerTest` | 2026-07-12 通过；14540 个配方可加载，未启动项目 |
-| 待提交 | 传送门 | `XmlDataLoaderTest` 传送门加载/主 XSD 方法、`GameServerTest`、两份传送门 XML 的 XSD 校验 | 2026-07-12 通过；548 个固定坐标和 826 个传送配置可加载，未启动项目 |
+| `244a2c34` | 传送门 | `XmlDataLoaderTest` 传送门加载/主 XSD 方法、`GameServerTest`、两份传送门 XML 的 XSD 校验 | 2026-07-12 通过；548 个固定坐标和 826 个传送配置可加载，未启动项目 |
+| 待提交 | 副本基础配置 | `XmlDataLoaderTest` 副本加载/主 XSD 方法、`DataholderLookupIndexTest` 出口覆盖方法、`GameServerTest`、三份 XML 的 XSD 校验 | 2026-07-12 通过；110 个冷却、18 个增益和 242 个出口可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -64,6 +67,7 @@
 - `compact/quests.xml` 是客户端 `quest.xml` 与奖励、采集、狩猎、对话、物品使用等关联文件的源文档包，不能表达服务器 `QuestTemplate` 派生字段和 3813 个 XML 脚本处理器。启动与热重载统一通过 `XmlDataLoader.loadQuestData()`、`loadQuestScripts()` 从兼容目录加载。
 - `compact/recipes.xml` 保存客户端配方名称引用，现有运行模板已解析为技能 ID、物品 ID、名称 ID、组件和组合产物。当前转换器未提供这些引用的完整运行映射，因此启动统一通过 `XmlDataLoader.loadRecipeData()` 从兼容目录加载。
 - `compact/world.xml` 中的 `direct_portal.xml` 是 218 条动态跨地图直通门配置，真端按地图生成组、时间表、开放时长和使用次数创建 NPC；现有 `PortalLocData`、`Portal2Data` 则索引 548 个固定坐标以及 826 个 NPC 对话、卷轴和副本路径配置。两者运行语义不同，不能互相替代；启动与 `//reload portal` 统一通过 `XmlDataLoader` 从 `definitions/portals` 加载兼容数据。
+- `compact/instances.xml` 的冷却表必须结合世界 ID 表和 `instance_cooltime2.xml` 才能形成运行模板，但其行为值与当前配置不同，例如 Indratu Fortress 的 `maxcount` 为 2、当前运行值为 5。增益表也存在有意调整，buff 7/8 的客户端 `Pvpdefendratio +9999`、`arAll +9999` 在当前运行数据中为 `+900`、`+1000`；新包同时没有服务器按阵营设置的副本出口坐标。为避免玩法回归，启动统一通过 `XmlDataLoader` 从 `definitions/instances` 加载 110 个冷却配置、18 个增益模板和 242 个出口，待这些差异有明确迁移规则后再直接解释 compact 数据。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件
