@@ -125,8 +125,15 @@ public class BoundingSphere extends BoundingVolume {
 
 	//
 	// /**
-	 * 由三角形集合计算包围体（OBBTree 用）。 / // * <code>computeFromTris</code> creates a new Bounding Box from a given // * set of triangles. It is used in OBBTree calculations. // * // *.
-	 */
+	// * 由三角形集合计算包围体（OBBTree 用）。
+	// * <code>computeFromTris</code> creates a new Bounding Box from a given
+	// * set of triangles. It is used in OBBTree calculations.
+	// *
+	// * @param indices
+	// * @param mesh
+	// * @param start
+	// * @param end
+	// */
 	// public void computeFromTris(int[] indices, Mesh mesh, int start, int end) {
 	// if (end - start <= 0) {
 	// return;
@@ -383,7 +390,8 @@ public class BoundingSphere extends BoundingVolume {
 	 * Determines which side of a plane (typically from a view frustum) this bound lies on.
 	 *
 	 * @param plane 检测平面 / plane to check against
-	 * @return 负侧 / 跨越 / Positive, Negative, or None (straddling)。 / 负侧 / 跨越 / Positive, Negative, or None (straddling)
+	 * @return 负侧 / 跨越 / 正侧，或 None（跨越）
+	 *         Positive, Negative, or None (straddling)
 	 */
 	@Override
 	public Plane.Side whichSide(Plane plane) {
@@ -480,10 +488,14 @@ public class BoundingSphere extends BoundingVolume {
 	}
 
 	// /**
-	 * 将此球与给定 OBB 合并。 / // * Merges this sphere with the given OBB. // * // *.
-	 */
+	// * 将此球与给定 OBB 合并。
+	// * Merges this sphere with the given OBB.
+	// *
+	// * @param volume The OBB to merge.
+	// * @return This sphere, after merging.
+	// */
 	// private BoundingSphere mergeOBB(OrientedBoundingBox volume) {
-	// 从 OBB 计算边点。 / compute edge points from the obb
+	// // 从 OBB 计算边点。 / compute edge points from the obb
 	// if (!volume.correctCorners)
 	// volume.computeCorners();
 	// _mergeBuf.rewind();
@@ -493,20 +505,20 @@ public class BoundingSphere extends BoundingVolume {
 	// _mergeBuf.put(volume.vectorStore[i].z);
 	// }
 	//
-	// 记住旧半径与中心。 / remember old radius and center
+	// // 记住旧半径与中心。 / remember old radius and center
 	// float oldRadius = radius;
 	// Vector3f oldCenter = _compVect2.set( center );
 	//
-	// 由 OBB 点计算新半径与中心。 / compute new radius and center from obb points
+	// // 由 OBB 点计算新半径与中心。 / compute new radius and center from obb points
 	// computeFromPoints(_mergeBuf);
 	// Vector3f newCenter = _compVect3.set( center );
 	// float newRadius = radius;
 	//
-	// 恢复旧中心与半径。 / restore old center and radius
+	// // 恢复旧中心与半径。 / restore old center and radius
 	// center.set( oldCenter );
 	// radius = oldRadius;
 	//
-	// 合并 OBB 点结果 / //merge obb points result
+	// // 合并 OBB 点结果 / merge obb points result
 	// merge( newRadius, newCenter, this );
 	//
 	// return this;
@@ -694,7 +706,8 @@ public class BoundingSphere extends BoundingVolume {
 	 * ray
 	 *
 	 * @param results 碰撞结果收集器 / collision results collector
-	 * @param results @return 碰撞点数量（0 / 1/2） / number of collision points (0/1/2)
+	 * @param results 碰撞结果收集器 / collision results collector
+	 * @return 碰撞点数量（0/1/2） / number of collision points (0/1/2)
 	 */
 	public int collideWithRay(Ray ray, CollisionResults results) {
 		Vector3f vect1 = Vector3f.newInstance();
@@ -771,7 +784,8 @@ public class BoundingSphere extends BoundingVolume {
 	 *
 	 * point to test
 	 *
-	 * @param point @return 是否在球内 / whether the point is inside
+	 * @param point 检测点 / point to test
+	 * @return 是否在球内 / whether the point is inside
 	 */
 	@Override
 	public boolean contains(Vector3f point) {
@@ -796,7 +810,8 @@ public class BoundingSphere extends BoundingVolume {
 	 *
 	 * point to test
 	 *
-	 * @param point @return 有符号距离 / signed distance to the edge
+	 * @param point 检测点 / point to test
+	 * @return 有符号距离 / signed distance to the edge
 	 */
 	@Override
 	public float distanceToEdge(Vector3f point) {

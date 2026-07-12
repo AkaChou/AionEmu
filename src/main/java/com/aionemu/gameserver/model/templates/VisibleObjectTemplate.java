@@ -24,8 +24,11 @@ public abstract class VisibleObjectTemplate {
 	public abstract int getNameId();
 
 	// /**
-	 * 对象的全局种族。 / // * Global race of the object // * // *.
-	 */
+	// * 对象的全局种族。
+	// * Global race of the object.
+	// *
+	// * @return
+	// */
 	// public abstract Race getRace();
 
 	/**
