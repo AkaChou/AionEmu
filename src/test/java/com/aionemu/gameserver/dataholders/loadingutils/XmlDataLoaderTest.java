@@ -40,6 +40,7 @@ import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.GoodsListData;
+import com.aionemu.gameserver.dataholders.GuideHtmlData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.ItemCustomSetData;
 import com.aionemu.gameserver.dataholders.ItemEnchantData;
@@ -815,6 +816,27 @@ class XmlDataLoaderTest {
 			assertEquals(400010000, template.getMapId());
 			assertEquals(33, template.getAssembledNpcPartTemplates().size());
 			assertEquals(276724, template.getAssembledNpcPartTemplates().getFirst().getNpcId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedGuideDefinitionsPreserveHtmlAndRewards() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			GuideHtmlData data = new XmlDataLoader().loadGuideData();
+
+			var guide = data.getTemplateByTitle("adventurers_guide10_asmo");
+			assertNotNull(guide);
+			assertEquals(2, guide.getRewardCount());
+			assertEquals(12, guide.getSurveys().size());
+			assertTrue(guide.getMessage().contains("Adventurer's Guide"));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

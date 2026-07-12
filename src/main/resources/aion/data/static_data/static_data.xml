@@ -61,7 +61,6 @@
 	<ai_templates>
 		<import file="ai" skipRoot="true"/>
 	</ai_templates>
-	<import file="guides/guide.xml"/>
 	<pet_skill_templates>
 		<import file="pet_skills" skipRoot="true"/>
 	</pet_skill_templates>

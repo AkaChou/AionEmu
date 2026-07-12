@@ -28,6 +28,7 @@ import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.GoodsListData;
+import com.aionemu.gameserver.dataholders.GuideHtmlData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcFactionsData;
@@ -115,6 +116,7 @@ public class XmlDataLoader {
 	private static final String FLY_RING_DEFINITIONS_FILE = "./definitions/world/movement/fly_rings/fly_rings.xml";
 	private static final String GATHERABLE_DEFINITIONS_FILE = "./definitions/world/resources/gatherables/gatherable_templates.xml";
 	private static final String GOODS_LIST_DEFINITIONS_FILE = "./definitions/commerce/npc_shops/goodslists.xml";
+	private static final String GUIDE_DEFINITIONS_FILE = "./definitions/player/guides/guide.xml";
 	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
 	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
 	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
@@ -236,6 +238,7 @@ public class XmlDataLoader {
 				data.flyRingData = loadFlyRingData();
 				data.gatherableData = loadGatherableData();
 				data.goodsListData = loadGoodsListData();
+				data.guideData = loadGuideData();
 				data.dynamicRiftData = loadDynamicRiftData();
 				data.disassemblyItemSetsData = loadDisassemblyItemSetsData();
 				data.npcDropData = loadNpcDropData();
@@ -337,6 +340,10 @@ public class XmlDataLoader {
 
 	public GoodsListData loadGoodsListData() {
 		return loadDefinition(GOODS_LIST_DEFINITIONS_FILE, GoodsListData.class);
+	}
+
+	public GuideHtmlData loadGuideData() {
+		return loadDefinition(GUIDE_DEFINITIONS_FILE, GuideHtmlData.class);
 	}
 
 	public NpcDropData loadNpcDropData() {
