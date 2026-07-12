@@ -24,6 +24,7 @@ import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -180,13 +181,36 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void mainStaticDataImportsNpcDropsIntoSharedCache() throws Exception {
+	void mainStaticDataDoesNotImportDefinitionsNpcDropsIntoSharedCache() throws Exception {
 		String staticData = Files.readString(Path.of("src/main/resources/aion/data/static_data/static_data.xml"), StandardCharsets.UTF_8);
 
-		assertTrue(staticData.contains("<npc_drops>"));
-		assertTrue(staticData.contains("file=\"npc_drops/"));
+		assertFalse(staticData.contains("<npc_drops>"));
+		assertFalse(staticData.contains("file=\"npc_drops/"));
 		assertTrue(!staticData.contains("<item_templates>"));
 		assertTrue(!staticData.contains("file=\"items/item\""));
+	}
+
+	@Test
+	void npcDropsLoadFromConfiguredDefinitionsDirectory() throws Exception {
+		Path drops = tempDir.resolve("npc_drops");
+		Files.createDirectories(drops);
+		Files.writeString(drops.resolve("npc_drops_part_001.xml"), """
+			<npc_drops><npc_drop npc_id="100"/></npc_drops>
+			""", StandardCharsets.UTF_8);
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", tempDir.toString());
+		try {
+			NpcDropData data = new XmlDataLoader().loadNpcDropData();
+
+			assertEquals(1, data.size());
+			assertEquals(100, data.getDrop(100).getNpcId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
 	}
 
 	@Test

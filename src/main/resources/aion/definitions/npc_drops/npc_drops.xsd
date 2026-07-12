@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:include schemaLocation="../import.xsd"/>
-	<xs:include schemaLocation="../global_types.xsd"/>
 	<xs:element name="npc_drops" type="npcDrops"/>
 	<xs:element name="common_drop_groups" type="commonDropGroups"/>
 	<xs:complexType name="npcDrops">
 		<xs:sequence>
-			<xs:element ref="import" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="group" type="dropGroup" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="npc_drop" type="npcDrop" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -30,7 +27,7 @@
 		<xs:sequence>
 			<xs:element name="drop" type="drop" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="race" type="Race"/>
+		<xs:attribute name="race" type="xs:string"/>
 		<xs:attribute name="use_category" type="xs:boolean"/>
 		<xs:attribute name="level_based_chance_reduction" type="xs:boolean"/>
 		<xs:attribute name="max_items" type="xs:int"/>

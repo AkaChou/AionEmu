@@ -11,6 +11,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.*;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -121,7 +122,7 @@ public class Reload extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "Configs successfully reloaded!");
 		}
 		else if (params[0].equals("drop")) {
-			DataManager.NPC_DROP_DATA = NpcDropData.loadEager(Config.dataFile("./data/static_data/npc_drops"));
+			DataManager.NPC_DROP_DATA = XmlDataLoader.getInstance().loadNpcDropData();
 			PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
 		}
 		else if (params[0].equals("gameshop")) {

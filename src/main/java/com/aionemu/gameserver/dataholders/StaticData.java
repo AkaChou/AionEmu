@@ -352,7 +352,6 @@ public class StaticData {
 		log.info(I18n.get("log.b5ce3e0bbfb7", flyPath.size()));
 		log.info(I18n.get("log.1b0dc7dfa0c2", assembledNpcData.size()));
 		log.info(I18n.get("log.e4cbb71f003a", cosmeticItemsData.size()));
-		log.info(I18n.get("log.4103f2b9b4db", npcDropData.size()));
 		log.info(I18n.get("log.546e904b6600", autoGroupData.size()));
 		log.info(I18n.get("log.2bcccf8f811f", spawnsData2.size()));
 		log.info(I18n.get("log.a8fed52a5964", eventData.size()));

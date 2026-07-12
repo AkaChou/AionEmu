@@ -30,6 +30,13 @@ class NpcDropDataTest {
 	Path tempDir;
 
 	@Test
+	void migratedDefinitionsLoadEagerly() {
+		NpcDropData data = NpcDropData.loadEager(Path.of("src/main/resources/aion/definitions/npc_drops").toFile());
+
+		assertTrue(data.size() > 0);
+	}
+
+	@Test
 	void eagerLoaderExpandsCommonDropGroupsFromSharedDefinitions() throws Exception {
 		writeDrops("common_drop_groups.xml", """
 			<common_drop_groups>
@@ -145,7 +152,7 @@ class NpcDropDataTest {
 	@Test
 	void npcDropSchemaAcceptsAionServerSelectionAttributes() throws Exception {
 		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-				.newSchema(Path.of("src/main/resources/aion/data/static_data/npc_drops/npc_drops.xsd").toFile());
+				.newSchema(Path.of("src/main/resources/aion/definitions/npc_drops/npc_drops.xsd").toFile());
 
 		schema.newValidator().validate(new StreamSource(new StringReader("""
 				<npc_drops>
