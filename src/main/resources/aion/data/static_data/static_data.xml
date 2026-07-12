@@ -160,8 +160,6 @@
 	<import file="locations/svs/svs.xml"/>
 	<import file="locations/rvr/rvr.xml"/>
 	<import file="locations/moltenus/moltenus.xml"/>
-	<import file="locations/dynamic_rift/dynamic_rift.xml"/>
-	<import file="locations/instance_rift/instance_rift.xml"/>
 	<import file="locations/nightmare_circus/nightmare_circus.xml"/>
 	<import file="locations/zorshiv_dredgion/zorshiv_dredgion.xml"/>
 	<import file="locations/dominion/dominion_locations.xml"/>
@@ -171,7 +169,6 @@
 	<import file="locations/conquest/conquest.xml"/>
 	<import file="serial_guard/serial_guard.xml"/>
 	<import file="serial_killer/serial_killer.xml"/>
-	<import file="locations/rift/rift_locations.xml"/>
 	<import file="service_bonusattr/service_bonusattr.xml"/>
 	<import file="service_bonusattr/players_bonus.xml"/>
 	<import file="items/enchant_templates.xml"/>

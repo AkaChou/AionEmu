@@ -4,9 +4,11 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
+import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
@@ -14,6 +16,7 @@ import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
+import com.aionemu.gameserver.dataholders.RiftData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
@@ -65,9 +68,11 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
+	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
 	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
 	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
 	private static final String INSTANCE_EXIT_DEFINITIONS_FILE = "./definitions/instances/instance_exit/instance_exit.xml";
+	private static final String INSTANCE_RIFT_DEFINITIONS_FILE = "./definitions/locations/instance_rift/instance_rift.xml";
 	private static final String NPC_DEFINITIONS_FILE = "./definitions/npcs/npc_template.xml";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/npc_drops";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
@@ -76,6 +81,7 @@ public class XmlDataLoader {
 	private static final String QUEST_DEFINITIONS_FILE = "./definitions/quests/quest_data.xml";
 	private static final String QUEST_SCRIPT_DEFINITIONS_DIR = "./definitions/quests/scripts";
 	private static final String RECIPE_DEFINITIONS_FILE = "./definitions/recipes/recipe_templates.xml";
+	private static final String RIFT_DEFINITIONS_FILE = "./definitions/locations/rift/rift_locations.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
@@ -164,16 +170,19 @@ public class XmlDataLoader {
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				data.npcData = loadNpcData();
+				data.dynamicRiftData = loadDynamicRiftData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
 				data.instanceBuffData = loadInstanceBuffData();
 				data.instanceCooltimeData = loadInstanceCooltimeData();
 				data.instanceExitData = loadInstanceExitData();
+				data.instanceRiftData = loadInstanceRiftData();
 				data.portalLocData = loadPortalLocData();
 				data.portalTemplate2 = loadPortal2Data();
 				data.questData = loadQuestData();
 				data.questsScriptData = loadQuestScripts();
 				data.recipeData = loadRecipeData();
+				data.riftData = loadRiftData();
 				data.skillData = loadSkillData();
 				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
@@ -222,6 +231,10 @@ public class XmlDataLoader {
 		return data;
 	}
 
+	public DynamicRiftData loadDynamicRiftData() {
+		return loadDefinition(DYNAMIC_RIFT_DEFINITIONS_FILE, DynamicRiftData.class);
+	}
+
 	public InstanceBuffData loadInstanceBuffData() {
 		return loadDefinition(INSTANCE_BUFF_DEFINITIONS_FILE, InstanceBuffData.class);
 	}
@@ -232,6 +245,14 @@ public class XmlDataLoader {
 
 	public InstanceExitData loadInstanceExitData() {
 		return loadDefinition(INSTANCE_EXIT_DEFINITIONS_FILE, InstanceExitData.class);
+	}
+
+	public InstanceRiftData loadInstanceRiftData() {
+		return loadDefinition(INSTANCE_RIFT_DEFINITIONS_FILE, InstanceRiftData.class);
+	}
+
+	public RiftData loadRiftData() {
+		return loadDefinition(RIFT_DEFINITIONS_FILE, RiftData.class);
 	}
 
 	public PortalLocData loadPortalLocData() {

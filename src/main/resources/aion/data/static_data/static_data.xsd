@@ -86,8 +86,8 @@
 	<xs:include schemaLocation="locations/svs/svs.xsd"/>
 	<xs:include schemaLocation="locations/rvr/rvr.xsd"/>
 	<xs:include schemaLocation="locations/moltenus/moltenus.xsd"/>
-	<xs:include schemaLocation="locations/dynamic_rift/dynamic_rift.xsd"/>
-	<xs:include schemaLocation="locations/instance_rift/instance_rift.xsd"/>
+	<xs:include schemaLocation="../../definitions/locations/dynamic_rift/dynamic_rift.xsd"/>
+	<xs:include schemaLocation="../../definitions/locations/instance_rift/instance_rift.xsd"/>
 	<xs:include schemaLocation="locations/nightmare_circus/nightmare_circus.xsd"/>
 	<xs:include schemaLocation="locations/zorshiv_dredgion/zorshiv_dredgion.xsd"/>
 	<xs:include schemaLocation="locations/dominion/dominion_locations.xsd"/>
@@ -97,7 +97,7 @@
 	<xs:include schemaLocation="locations/conquest/conquest.xsd"/>
 	<xs:include schemaLocation="serial_guard/serial_guard.xsd"/>
 	<xs:include schemaLocation="serial_killer/serial_killer.xsd"/>
-	<xs:include schemaLocation="locations/rift/rift_locations.xsd"/>
+	<xs:include schemaLocation="../../definitions/locations/rift/rift_locations.xsd"/>
 	<xs:include schemaLocation="service_bonusattr/service_bonusattr.xsd"/>
 	<xs:include schemaLocation="service_bonusattr/players_bonus.xsd"/>
 	<xs:include schemaLocation="items/enchant_templates.xsd"/>

@@ -24,9 +24,11 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
+import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -34,6 +36,7 @@ import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.RecipeData;
+import com.aionemu.gameserver.dataholders.RiftData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
@@ -339,6 +342,29 @@ class XmlDataLoaderTest {
 			assertEquals(900, buffs.getInstanceBonusattr(7).getPenaltyAttr().getFirst().getValue());
 			assertEquals(242, exits.size());
 			assertEquals(210020000, exits.getInstanceExit(300030000, Race.ELYOS).getExitWorld());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedRiftDefinitionsLoadFromConfiguredDirectory() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			DynamicRiftData dynamicRifts = loader.loadDynamicRiftData();
+			InstanceRiftData instanceRifts = loader.loadInstanceRiftData();
+			RiftData rifts = loader.loadRiftData();
+
+			assertEquals(6, dynamicRifts.size());
+			assertEquals(9, instanceRifts.size());
+			assertEquals(80, rifts.size());
+			assertEquals(210020000, rifts.getRiftLocations().get(2120).getWorldId());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");
