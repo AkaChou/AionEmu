@@ -28,6 +28,7 @@ import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.QuestsData;
+import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
@@ -267,6 +268,24 @@ class XmlDataLoaderTest {
 			assertEquals(6424, quests.size());
 			assertNotNull(quests.getQuestById(1000));
 			assertEquals(3813, scripts.getQuest().size());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedRecipeDefinitionsLoadFromConfiguredDirectory() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			RecipeData data = new XmlDataLoader().loadRecipeData();
+
+			assertEquals(14540, data.size());
+			assertNotNull(data.getRecipeTemplateById(155000001));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

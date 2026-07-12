@@ -27,7 +27,7 @@
 	<xs:include schemaLocation="pets/pet_merchand.xsd"/>
 	<xs:include schemaLocation="../../definitions/quests/quest_data.xsd"/>
 	<xs:include schemaLocation="../../definitions/quests/scripts/quest_script_data.xsd"/>
-	<xs:include schemaLocation="recipe/recipe_templates.xsd"/>
+	<xs:include schemaLocation="../../definitions/recipes/recipe_templates.xsd"/>
 	<xs:include schemaLocation="luna/luna_templates.xsd"/>
 	<xs:include schemaLocation="roads/roads.xsd"/>
 	<xs:include schemaLocation="siege/siege_locations.xsd"/>
@@ -156,7 +156,6 @@
 				<xs:element ref="pet_feed" minOccurs="0"/>
 				<xs:element ref="dopings" minOccurs="0"/>
 				<xs:element ref="merchands" minOccurs="0"/>
-				<xs:element ref="recipe_templates" minOccurs="0"/>
 				<xs:element ref="luna_templates" minOccurs="0"/>
 				<xs:element ref="roads" minOccurs="0"/>
 				<xs:element ref="siege_locations" minOccurs="0"/>

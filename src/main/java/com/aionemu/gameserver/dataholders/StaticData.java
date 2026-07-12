@@ -329,7 +329,6 @@ public class StaticData {
 		log.info(I18n.get("log.926913cabd63", walkerData.size()));
 		log.info(I18n.get("log.2a423e0f769e", zoneData.size()));
 		log.info(I18n.get("log.68bda207beab", tribeRelationsData.size()));
-		log.info(I18n.get("log.330854034f35", recipeData.size()));
 		log.info(I18n.get("log.412d1d563a20", lunaData.size()));
 		log.info(I18n.get("log.02db48cab2bc", chestData.size()));
 		log.info(I18n.get("log.b56d2ee109f4", staticDoorData.size()));

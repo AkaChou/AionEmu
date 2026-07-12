@@ -8,6 +8,7 @@ import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.QuestsData;
+import com.aionemu.gameserver.dataholders.RecipeData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
@@ -64,6 +65,7 @@ public class XmlDataLoader {
 	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
 	private static final String QUEST_DEFINITIONS_FILE = "./definitions/quests/quest_data.xml";
 	private static final String QUEST_SCRIPT_DEFINITIONS_DIR = "./definitions/quests/scripts";
+	private static final String RECIPE_DEFINITIONS_FILE = "./definitions/recipes/recipe_templates.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
@@ -156,6 +158,7 @@ public class XmlDataLoader {
 				data.npcSkillData = loadNpcSkillData();
 				data.questData = loadQuestData();
 				data.questsScriptData = loadQuestScripts();
+				data.recipeData = loadRecipeData();
 				data.skillData = loadSkillData();
 				data.windstreamsData = loadWindstreamData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
@@ -236,6 +239,17 @@ public class XmlDataLoader {
 			return data;
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load quest scripts from " + directory.getPath(), e);
+		}
+	}
+
+	public RecipeData loadRecipeData() {
+		File file = Config.definitionFile(RECIPE_DEFINITIONS_FILE);
+		try (FileReader reader = new FileReader(file)) {
+			RecipeData data = (RecipeData) createJaxbContext(StaticData.class).createUnmarshaller().unmarshal(reader);
+			log.info(I18n.get("log.330854034f35", data.size()));
+			return data;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load recipe definitions from " + file.getPath(), e);
 		}
 	}
 
