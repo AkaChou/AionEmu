@@ -26,6 +26,7 @@ import jakarta.xml.bind.Unmarshaller;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.BindPointData;
+import com.aionemu.gameserver.dataholders.ChestData;
 import com.aionemu.gameserver.dataholders.CubeExpandData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
@@ -34,6 +35,7 @@ import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.FlyRingData;
+import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -510,6 +512,28 @@ class XmlDataLoaderTest {
 			assertEquals(1000, cube.getCubeExpandListTemplate(798008).get(1).getPrice());
 			assertEquals(267, warehouse.size());
 			assertEquals(1200, warehouse.getWarehouseExpandListTemplate(203221).get(1).getPrice());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedWorldResourceDefinitionsPreserveKeysAndMaterials() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			ChestData chests = loader.loadChestData();
+			GatherableData gatherables = loader.loadGatherableData();
+
+			assertEquals(358, chests.size());
+			assertEquals(185000263, chests.getChestTemplate(806220).getKeyItem().getFirst().getItemId());
+			assertEquals(761, gatherables.size());
+			assertEquals(152000006, gatherables.getGatherableTemplate(400007).getMaterials().getMaterial().getFirst().getItemid());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

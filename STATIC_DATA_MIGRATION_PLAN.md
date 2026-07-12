@@ -22,6 +22,7 @@
 - `definitions/player/storage/`：当前 AionEmu 背包与角色仓库扩展 NPC、等级和价格的兼容目录。
 - `definitions/world/`：当前 AionEmu 地图、复活坐标和常规传送网络等服务器世界配置的兼容目录。
 - `definitions/world/movement/`：当前 AionEmu 飞行环与跨地图道路定义的兼容目录。
+- `definitions/world/resources/`：当前 AionEmu 宝箱钥匙与采集物材料定义的兼容目录。
 - `cache/`：派生的 JAXB 合并缓存，不是权威数据源。
 
 ## 迁移顺序
@@ -44,8 +45,9 @@
 16. 新机场/航线数据与现有路径存在地图、坐标和服务器扩展差异；已先迁移常规传送网络。
 17. 新包没有飞行环三点坐标、半径和道路出口定义；已先迁移现有世界移动配置。
 18. 新包没有背包与角色仓库扩展价格表；已先迁移现有玩家存储扩展配置。
-19. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-20. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+19. 新包没有宝箱钥匙或完整采集物产出表；已先迁移现有世界资源配置。
+20. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+21. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -70,7 +72,8 @@
 | `4e2986da` | 世界地图模板 | `XmlDataLoaderTest` 地图加载/主 XSD/分区统计方法、`GameServerTest`、地图 XML 的 XSD 校验 | 2026-07-12 通过；185 个地图模板及关键几何/能力字段可加载，未启动项目 |
 | `f7cdc7c9` | 常规传送网络 | `XmlDataLoaderTest` 传送加载方法、主 XSD/分区统计方法、`GameServerTest`、四份 XML 的 XSD 校验 | 2026-07-12 通过；139 个绑定点、363 个传送模板、357 个地点和 316 条飞行路径可加载，未启动项目 |
 | `ae8a4360` | 飞行环与道路 | `XmlDataLoaderTest` 世界移动加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；72 个飞行环和 8 条道路可加载，未启动项目 |
-| 待提交 | 背包与仓库扩展 | `XmlDataLoaderTest` 存储扩展加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；11 个背包扩展 NPC、268 行仓库配置形成 267 个唯一 NPC 模板，未启动项目 |
+| `005d2e4a` | 背包与仓库扩展 | `XmlDataLoaderTest` 存储扩展加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；11 个背包扩展 NPC、268 行仓库配置形成 267 个唯一 NPC 模板，未启动项目 |
+| 待提交 | 宝箱与采集物 | `XmlDataLoaderTest` 世界资源加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；359 行宝箱配置形成 358 个唯一模板，761 个采集物模板可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -93,6 +96,7 @@
 - `compact/world.xml` 的 `airline.xml`、`airports.xml`、`fly_path.xml` 能表达大量客户端机场和航线，但机场坐标仍是 Level 别名，缺少绑定价格与 NPC 映射；现有 316 条飞行路径中有 97 条与同 ID 新路径存在坐标或地图差异，419–423 五条服务器路径在新数据中不存在，且主服继续把旧 Inggison/Gelkmaros 路径映射到 `210130000/220140000`。为保持传送落点和航线，启动统一通过 `XmlDataLoader` 从 `definitions/world/transport` 加载 139 个唯一绑定点、363 个唯一传送模板、357 个地点和 316 条飞行路径。
 - 新源目录没有飞行环或跨地图道路定义；`AnimationMarkers` 中名称带 `fly`、`road` 的文件只是客户端动画标记，不能表达现有飞行环的中心/左右三点、半径，也不能表达道路出口地图与坐标。启动统一通过 `XmlDataLoader` 从 `definitions/world/movement` 加载原样迁移的 72 个飞行环和 8 条道路。
 - 新源目录没有背包或角色仓库扩展的 NPC、等级和价格表；名称带 `cube` 的文件是动画/预设，`toypet_warehouse.xml` 是玩具宠物仓库，都不能驱动现有扩展服务。启动统一通过 `XmlDataLoader` 从 `definitions/player/storage` 加载 11 个背包扩展 NPC，以及 268 行仓库配置按 NPC ID 形成的 267 个唯一模板；重复 NPC `263516` 保持现有后项覆盖语义。
+- 新源目录中名称带 `chest`、`gather` 的数据仅有动画标记、任务采集条件和采集配方经验，缺少宝箱钥匙、采集物模板 ID、技能等级、采集次数以及普通/额外材料概率，不能驱动现有交互与奖励逻辑。启动统一通过 `XmlDataLoader` 从 `definitions/world/resources` 加载 359 行宝箱配置形成的 358 个唯一模板，以及 761 个采集物模板；重复宝箱 NPC `700477` 保持现有后项覆盖语义。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

@@ -6,6 +6,7 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
 import com.aionemu.gameserver.dataholders.BindPointData;
+import com.aionemu.gameserver.dataholders.ChestData;
 import com.aionemu.gameserver.dataholders.CubeExpandData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
@@ -14,6 +15,7 @@ import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.InstanceRiftData;
 import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.FlyRingData;
+import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
@@ -82,9 +84,11 @@ public class XmlDataLoader {
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
 	private static final String BIND_POINT_DEFINITIONS_FILE = "./definitions/world/transport/bind_points/bind_points.xml";
+	private static final String CHEST_DEFINITIONS_FILE = "./definitions/world/resources/chests/chest_templates.xml";
 	private static final String CUBE_EXPAND_DEFINITIONS_FILE = "./definitions/player/storage/cube_expander/cube_expander.xml";
 	private static final String FLY_PATH_DEFINITIONS_FILE = "./definitions/world/transport/flypath_template.xml";
 	private static final String FLY_RING_DEFINITIONS_FILE = "./definitions/world/movement/fly_rings/fly_rings.xml";
+	private static final String GATHERABLE_DEFINITIONS_FILE = "./definitions/world/resources/gatherables/gatherable_templates.xml";
 	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
 	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
 	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
@@ -196,9 +200,11 @@ public class XmlDataLoader {
 				data.npcData = loadNpcData();
 				data.autoGroupData = loadAutoGroupData();
 				data.bindPointData = loadBindPointData();
+				data.chestData = loadChestData();
 				data.cubeExpandData = loadCubeExpandData();
 				data.flyPath = loadFlyPathData();
 				data.flyRingData = loadFlyRingData();
+				data.gatherableData = loadGatherableData();
 				data.dynamicRiftData = loadDynamicRiftData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
@@ -263,6 +269,10 @@ public class XmlDataLoader {
 		return loadDefinition(BIND_POINT_DEFINITIONS_FILE, BindPointData.class);
 	}
 
+	public ChestData loadChestData() {
+		return loadDefinition(CHEST_DEFINITIONS_FILE, ChestData.class);
+	}
+
 	public CubeExpandData loadCubeExpandData() {
 		return loadDefinition(CUBE_EXPAND_DEFINITIONS_FILE, CubeExpandData.class);
 	}
@@ -273,6 +283,10 @@ public class XmlDataLoader {
 
 	public FlyRingData loadFlyRingData() {
 		return loadDefinition(FLY_RING_DEFINITIONS_FILE, FlyRingData.class);
+	}
+
+	public GatherableData loadGatherableData() {
+		return loadDefinition(GATHERABLE_DEFINITIONS_FILE, GatherableData.class);
 	}
 
 	public NpcDropData loadNpcDropData() {

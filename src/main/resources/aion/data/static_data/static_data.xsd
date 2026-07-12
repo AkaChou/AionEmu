@@ -2,12 +2,12 @@
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:include schemaLocation="ai/ai.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/transport/bind_points/bind_points.xsd"/>
-	<xs:include schemaLocation="chests/chest_templates.xsd"/>
+	<xs:include schemaLocation="../../definitions/world/resources/chests/chest_templates.xsd"/>
 	<xs:include schemaLocation="../../definitions/player/storage/cube_expander/cube_expander.xsd"/>
 	<xs:include schemaLocation="items/disassembly_items.xsd"/>
 	<xs:include schemaLocation="assembled_npcs/assembled_npcs.xsd"/>
 	<xs:include schemaLocation="../../definitions/world/movement/fly_rings/fly_rings.xsd"/>
-	<xs:include schemaLocation="gatherables/gatherable_templates.xsd"/>
+	<xs:include schemaLocation="../../definitions/world/resources/gatherables/gatherable_templates.xsd"/>
 	<xs:include schemaLocation="goodslists/goodslists.xsd"/>
 	<xs:include schemaLocation="guides/guide.xsd"/>
 	<xs:include schemaLocation="../../definitions/instances/instance_cooltimes/instance_cooltimes.xsd"/>
