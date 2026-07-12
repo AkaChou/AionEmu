@@ -40,6 +40,7 @@ import com.aionemu.gameserver.dataholders.FlyRingData;
 import com.aionemu.gameserver.dataholders.GatherableData;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemEnchantData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
@@ -63,6 +64,7 @@ import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.dataholders.WarehouseExpandData;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.templates.item.EnchantType;
 import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
 import com.aionemu.gameserver.model.templates.pet.FoodType;
 import org.junit.jupiter.api.Test;
@@ -686,6 +688,25 @@ class XmlDataLoaderTest {
 			assertEquals(3, groups.size());
 			assertEquals(45, groups.getFirst().getMinLevel());
 			assertEquals(152000907, groups.getFirst().getGroupItems().getFirst().getItem().getItemId());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedEnchantDefinitionsPreserveServerTemplateTypes() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			ItemEnchantData data = new XmlDataLoader().loadItemEnchantData();
+
+			assertEquals(189, data.size());
+			assertNotNull(data.getEnchantTemplate(EnchantType.ENCHANT, 10000));
+			assertNotNull(data.getEnchantTemplate(EnchantType.AUTHORIZE, 10040));
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

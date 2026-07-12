@@ -99,7 +99,7 @@
 	<xs:include schemaLocation="../../definitions/locations/rift/rift_locations.xsd"/>
 	<xs:include schemaLocation="service_bonusattr/service_bonusattr.xsd"/>
 	<xs:include schemaLocation="service_bonusattr/players_bonus.xsd"/>
-	<xs:include schemaLocation="items/enchant_templates.xsd"/>
+	<xs:include schemaLocation="../../definitions/items/enchant/enchant_templates.xsd"/>
 	<xs:include schemaLocation="hotspot_location.xsd"/>
 	<xs:include schemaLocation="items/item_upgrades.xsd"/>
 	<xs:include schemaLocation="events_config/atreian_passports.xsd"/>

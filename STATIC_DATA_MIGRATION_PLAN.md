@@ -18,6 +18,7 @@
 - `definitions/items/assembly/`：当前 AionEmu 组合道具产物、部件与数量的兼容目录。
 - `definitions/items/multi_return/`：当前 AionEmu 多目的地回城卷轴地图列表的兼容目录。
 - `definitions/items/disassembly/`：当前 AionEmu 物品拆解分组、概率与奖励的兼容目录。
+- `definitions/items/enchant/`：当前 AionEmu 物品强化与授权属性表的兼容目录。
 - `definitions/skills/`：当前 AionEmu 技能运行模板的兼容目录；启动和热重载均从这里加载。
 - `definitions/npcs/`：当前 AionEmu NPC 运行模板的兼容目录；主 JAXB 缓存不再合并 NPC 模板。
 - `definitions/quests/`：当前 AionEmu 任务主数据与服务器任务脚本的兼容目录。
@@ -61,8 +62,9 @@
 25. 新组合道具表存在无法解析的物品名称和运行数量差异；已先迁移现有组合配方。
 26. 新多目的地回城表会丢失服务器兼容地图；已先迁移现有目的地列表。
 27. 新拆解数据需要合并缺失引用、自定义覆盖与禁用规则；已先迁移现有拆解表。
-28. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-29. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+28. 新强化与授权表不能直接保持服务器模板 ID 和属性函数语义；已先迁移现有强化表。
+29. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+30. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -96,7 +98,8 @@
 | `c21d45ba` | 物品组 | `XmlDataLoaderTest` 物品组加载/主 XSD/分区统计方法、`GameServerTest`、物品组 XML 的 XSD 校验 | 2026-07-12 通过；4994 条运行奖励、794 条宠物食物缓存及类型查询可加载，未启动项目 |
 | `1a22d17a` | 组合道具 | `XmlDataLoaderTest` 组合道具加载/主 XSD、`GameServerTest`、组合道具 XML 的 XSD 校验 | 2026-07-12 通过；173 条运行配方、关键部件列表及数量可加载，未启动项目 |
 | `f4a5842c` | 多目的地回城 | `XmlDataLoaderTest` 多目的地加载/主 XSD、`GameServerTest`、多目的地 XML 的 XSD 校验 | 2026-07-12 通过；4 组目的地及 Inggison/Gelkmaros 兼容世界 ID 可加载，未启动项目 |
-| 待提交 | 物品拆解 | `XmlDataLoaderTest` 拆解加载/主 XSD、`GameServerTest`、拆解 XML 的 XSD 校验 | 2026-07-12 通过；8861 个分组及代表性等级过滤、奖励 ID 可加载，未启动项目 |
+| `70b1a3f1` | 物品拆解 | `XmlDataLoaderTest` 拆解加载/主 XSD、`GameServerTest`、拆解 XML 的 XSD 校验 | 2026-07-12 通过；8861 个分组及代表性等级过滤、奖励 ID 可加载，未启动项目 |
+| 待提交 | 物品强化与授权 | `XmlDataLoaderTest` 强化加载/主 XSD、`GameServerTest`、强化 XML 的 XSD 校验 | 2026-07-12 通过；189 张模板及 ENCHANT/AUTHORIZE 类型索引可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -127,6 +130,7 @@
 - `compact/item-relations.xml` 的 `assembly_items.xml` 有 202 条组合道具，按新 Item 名称只能唯一解析 175 条产物，24 条配方仍含无法解析的部件。与现有 173 条运行配方相交的 171 条中，5 条会改变部件数量或暴击产物，另有 1 条各部件数量不同，当前运行模型无法无损表达。为保持现有组合动作，启动统一通过 `XmlDataLoader.loadAssemblyItemsData()` 从 `definitions/items/assembly` 加载现有 173 条配方，待物品引用和逐部件数量模型完整后再直接解释新表。
 - `compact/item-relations.xml` 的 `item_multi_return.xml` 有 9 组真端目的地，但当前物品动作只引用 6/7 两组；新表各含 10 个目的地，现有运行表各含 12 个。真端的 Inggison/Gelkmaros 世界 ID `210050000/220070000` 在当前服务器与 Geo 数据中兼容为 `210130000/220140000`，现有表还保留 Cygnea、Iluma、Enshar、Norsvold，而当前传送服务不识别新表的两个原始世界 ID。启动统一通过 `XmlDataLoader.loadMultiReturnItemData()` 从 `definitions/items/multi_return` 加载现有 4 组目的地，待世界别名、PortalLoc 坐标和客户端选项一并迁移后再直接解释新表。
 - `compact/item-relations.xml` 的拆解数据来自 `disassembly_item.xml`、`disassembly_item_customize.xml` 和 `disassembly_item_setlist.xml` 三张关联表。基础表 8889 条中 8879 条能映射到新 Item，但比现有运行表多 18 个 ID；15 个集合名称引用缺失，3 个奖励名称无法解析，还必须合并 1206 条自定义覆盖。现有表另保留 672 个禁用奖励标记、范围数量以及等级/职业/种族条件。为避免拆解概率或奖励变化，启动统一通过 `XmlDataLoader.loadDisassemblyItemSetsData()` 从 `definitions/items/disassembly` 加载现有 8861 个分组，待三表引用和修复规则能完整往返后再直接解释新表。
+- `compact/item-relations.xml` 的 `item_enchanttable.xml` 有 131 张原始强化表，`item_authorizetable.xml` 有 264 张授权表；现有运行数据使用 `10000–10222` 的服务器模板 ID，只保留 40 张 `ENCHANT` 和 149 张 `AUTHORIZE`，并把原始属性符号转换为 `StatFunction`。新表还包含无限强化和当前模型未表达的随机字段，不能按 ID 或字段直接替换。启动统一通过 `XmlDataLoader.loadItemEnchantData()` 从 `definitions/items/enchant` 加载现有 189 张表，待物品 `tempering_table_id`、类型划分和属性转换全部可证明后再解释新表。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件

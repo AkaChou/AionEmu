@@ -5,6 +5,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AssemblyItemsData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.ItemEnchantData;
 import com.aionemu.gameserver.dataholders.ItemGroupsData;
 import com.aionemu.gameserver.dataholders.ItemRandomBonusData;
 import com.aionemu.gameserver.dataholders.ItemSetData;
@@ -92,6 +93,7 @@ public class XmlDataLoader {
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String ITEM_ASSEMBLY_DEFINITIONS_FILE = "./definitions/items/assembly/assembly_items.xml";
 	private static final String ITEM_DISASSEMBLY_DEFINITIONS_FILE = "./definitions/items/disassembly/disassembly_items.xml";
+	private static final String ITEM_ENCHANT_DEFINITIONS_FILE = "./definitions/items/enchant/enchant_templates.xml";
 	private static final String ITEM_GROUP_DEFINITIONS_FILE = "./definitions/items/groups/item_groups.xml";
 	private static final String ITEM_MULTI_RETURN_DEFINITIONS_FILE = "./definitions/items/multi_return/multi_returns.xml";
 	private static final String ITEM_RANDOM_BONUS_DEFINITIONS_FILE = "./definitions/items/random_bonuses/item_random_bonuses.xml";
@@ -232,6 +234,7 @@ public class XmlDataLoader {
 				data.instanceExitData = loadInstanceExitData();
 				data.instanceRiftData = loadInstanceRiftData();
 				data.itemGroupsData = loadItemGroupsData();
+				data.itemEnchantData = loadItemEnchantData();
 				data.multiReturnItemData = loadMultiReturnItemData();
 				data.itemRandomBonuses = loadItemRandomBonusData();
 				data.itemSetData = loadItemSetData();
@@ -359,6 +362,10 @@ public class XmlDataLoader {
 
 	public ItemGroupsData loadItemGroupsData() {
 		return loadDefinition(ITEM_GROUP_DEFINITIONS_FILE, ItemGroupsData.class);
+	}
+
+	public ItemEnchantData loadItemEnchantData() {
+		return loadDefinition(ITEM_ENCHANT_DEFINITIONS_FILE, ItemEnchantData.class);
 	}
 
 	public MultiReturnItemData loadMultiReturnItemData() {
