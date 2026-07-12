@@ -25,11 +25,13 @@ import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
+import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.InstanceRiftData;
+import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -42,6 +44,8 @@ import com.aionemu.gameserver.dataholders.ReviveInstanceStartPointsData;
 import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.dataholders.TeleLocationData;
+import com.aionemu.gameserver.dataholders.TeleporterData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.model.Race;
@@ -430,6 +434,34 @@ class XmlDataLoaderTest {
 			assertEquals(3072, data.getTemplate(210020000).getWorldSize());
 			assertTrue(data.getTemplate(210020000).isFly());
 			assertTrue(data.getTemplate(300030000).isInstance());
+		} finally {
+			if (previous == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previous);
+			}
+		}
+	}
+
+	@Test
+	void migratedTransportDefinitionsPreserveNpcLocationsAndFlightPaths() {
+		String previous = System.getProperty("aion.game.definitions.dir");
+		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+		try {
+			XmlDataLoader loader = new XmlDataLoader();
+			BindPointData bindPoints = loader.loadBindPointData();
+			TeleporterData teleporters = loader.loadTeleporterData();
+			TeleLocationData locations = loader.loadTeleLocationData();
+			FlyPathData flyPaths = loader.loadFlyPathData();
+
+			assertEquals(139, bindPoints.size());
+			assertEquals(40, bindPoints.getBindPointTemplate(700013).getPrice());
+			assertEquals(363, teleporters.size());
+			assertTrue(teleporters.getTeleporterTemplateByTeleportId(1).containNpc(203726));
+			assertEquals(357, locations.size());
+			assertEquals(110010000, locations.getTelelocationTemplate(2).getMapId());
+			assertEquals(316, flyPaths.size());
+			assertEquals(310020000, flyPaths.getPathTemplate((byte) 1).getStartWorldId());
 		} finally {
 			if (previous == null) {
 				System.clearProperty("aion.game.definitions.dir");

@@ -5,11 +5,13 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.AutoGroupData;
+import com.aionemu.gameserver.dataholders.BindPointData;
 import com.aionemu.gameserver.dataholders.DynamicRiftData;
 import com.aionemu.gameserver.dataholders.InstanceBuffData;
 import com.aionemu.gameserver.dataholders.InstanceCooltimeData;
 import com.aionemu.gameserver.dataholders.InstanceExitData;
 import com.aionemu.gameserver.dataholders.InstanceRiftData;
+import com.aionemu.gameserver.dataholders.FlyPathData;
 import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
@@ -22,6 +24,8 @@ import com.aionemu.gameserver.dataholders.ReviveInstanceStartPointsData;
 import com.aionemu.gameserver.dataholders.ReviveWorldStartPointsData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.dataholders.TeleLocationData;
+import com.aionemu.gameserver.dataholders.TeleporterData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
@@ -73,6 +77,8 @@ public class XmlDataLoader {
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DEFINITIONS_DIR = "./definitions/items";
 	private static final String AUTO_GROUP_DEFINITIONS_FILE = "./definitions/instances/auto_group/auto_group.xml";
+	private static final String BIND_POINT_DEFINITIONS_FILE = "./definitions/world/transport/bind_points/bind_points.xml";
+	private static final String FLY_PATH_DEFINITIONS_FILE = "./definitions/world/transport/flypath_template.xml";
 	private static final String DYNAMIC_RIFT_DEFINITIONS_FILE = "./definitions/locations/dynamic_rift/dynamic_rift.xml";
 	private static final String INSTANCE_BUFF_DEFINITIONS_FILE = "./definitions/instances/instance_bonusattr/instance_bonusattr.xml";
 	private static final String INSTANCE_COOLTIME_DEFINITIONS_FILE = "./definitions/instances/instance_cooltimes/instance_cooltimes.xml";
@@ -90,6 +96,8 @@ public class XmlDataLoader {
 	private static final String REVIVE_INSTANCE_DEFINITIONS_FILE = "./definitions/world/revive_start_points/instance_revive_start_points.xml";
 	private static final String REVIVE_WORLD_DEFINITIONS_FILE = "./definitions/world/revive_start_points/revive_world_start_points.xml";
 	private static final String SKILL_DEFINITIONS_FILE = "./definitions/skills/skill_templates.xml";
+	private static final String TELEPORT_LOCATION_DEFINITIONS_FILE = "./definitions/world/transport/teleport_location.xml";
+	private static final String TELEPORTER_DEFINITIONS_FILE = "./definitions/world/transport/npc_teleporter.xml";
 	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
 	private static final String WORLD_MAPS_DEFINITIONS_FILE = "./definitions/world/maps/world_maps.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
@@ -179,6 +187,8 @@ public class XmlDataLoader {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				data.npcData = loadNpcData();
 				data.autoGroupData = loadAutoGroupData();
+				data.bindPointData = loadBindPointData();
+				data.flyPath = loadFlyPathData();
 				data.dynamicRiftData = loadDynamicRiftData();
 				data.npcDropData = loadNpcDropData();
 				data.npcSkillData = loadNpcSkillData();
@@ -195,6 +205,8 @@ public class XmlDataLoader {
 				data.reviveInstanceStartPoints = loadReviveInstanceStartPointsData();
 				data.reviveWorldStartPoints = loadReviveWorldStartPointsData();
 				data.skillData = loadSkillData();
+				data.teleLocationData = loadTeleLocationData();
+				data.teleporterData = loadTeleporterData();
 				data.windstreamsData = loadWindstreamData();
 				data.worldMapsData = loadWorldMapsData();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
@@ -233,6 +245,14 @@ public class XmlDataLoader {
 
 	public AutoGroupData loadAutoGroupData() {
 		return loadDefinition(AUTO_GROUP_DEFINITIONS_FILE, AutoGroupData.class);
+	}
+
+	public BindPointData loadBindPointData() {
+		return loadDefinition(BIND_POINT_DEFINITIONS_FILE, BindPointData.class);
+	}
+
+	public FlyPathData loadFlyPathData() {
+		return loadDefinition(FLY_PATH_DEFINITIONS_FILE, FlyPathData.class);
 	}
 
 	public NpcDropData loadNpcDropData() {
@@ -277,6 +297,14 @@ public class XmlDataLoader {
 
 	public ReviveWorldStartPointsData loadReviveWorldStartPointsData() {
 		return loadDefinition(REVIVE_WORLD_DEFINITIONS_FILE, ReviveWorldStartPointsData.class);
+	}
+
+	public TeleLocationData loadTeleLocationData() {
+		return loadDefinition(TELEPORT_LOCATION_DEFINITIONS_FILE, TeleLocationData.class);
+	}
+
+	public TeleporterData loadTeleporterData() {
+		return loadDefinition(TELEPORTER_DEFINITIONS_FILE, TeleporterData.class);
 	}
 
 	public PortalLocData loadPortalLocData() {

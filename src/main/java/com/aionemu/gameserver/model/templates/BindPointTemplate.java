@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  *
  * @author avol
  */
-@XmlRootElement(name = "bind_points")
+@XmlRootElement(name = "bind_point")
 @XmlAccessorType(XmlAccessType.NONE)
 public class BindPointTemplate {
 

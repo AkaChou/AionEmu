@@ -19,7 +19,7 @@
 - `definitions/portals/`：当前 AionEmu 固定传送坐标、NPC 传送路径和卷轴传送配置的兼容目录。
 - `definitions/instances/`：当前 AionEmu 副本冷却、增益属性、出口和自动组队配置的兼容目录。
 - `definitions/locations/`：当前 AionEmu 动态裂隙、副本裂隙和普通裂隙地点索引的兼容目录。
-- `definitions/world/`：当前 AionEmu 世界与副本复活坐标等服务器世界配置的兼容目录。
+- `definitions/world/`：当前 AionEmu 地图、复活坐标和常规传送网络等服务器世界配置的兼容目录。
 - `cache/`：派生的 JAXB 合并缓存，不是权威数据源。
 
 ## 迁移顺序
@@ -39,8 +39,9 @@
 13. 新匹配器数据不能无损形成 NPC 入口和服务器提示字段；已先迁移现有自动组队配置。
 14. 新副本创建表只有复活点别名，没有当前服务使用的坐标；已先迁移世界与副本复活起点。
 15. 新世界 ID 表缺少地图几何和运行权限字段；已先迁移现有世界地图模板。
-16. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
-17. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
+16. 新机场/航线数据与现有路径存在地图、坐标和服务器扩展差异；已先迁移常规传送网络。
+17. 每个领域的新定义加载器和聚焦测试通过后，才删除对应的旧 `static_data` 导入。
+18. 所有 `DataManager` 数据容器都有已验证的新来源后，再移除最后的 JAXB 合并缓存假设。
 
 ## 验证记录
 
@@ -62,7 +63,8 @@
 | `dae2de3a` | 裂隙地点 | `XmlDataLoaderTest` 裂隙加载/主 XSD/分区统计方法、两类裂隙模型测试、`GameServerTest`、三份 XML 的 XSD 校验 | 2026-07-12 通过；6 个动态、9 个副本和 80 个普通裂隙地点可加载，未启动项目 |
 | `afa2149d` | 自动组队 | `XmlDataLoaderTest` 自动组队加载/主 XSD/分区统计方法、`AutoGroupServiceTest`、`GameServerTest`、自动组队 XML 的 XSD 校验 | 2026-07-12 通过；130 个匹配掩码及 NPC 入口映射可加载，未启动项目 |
 | `4a27b2e1` | 复活起点 | `XmlDataLoaderTest` 复活点加载/主 XSD/分区统计方法、`GameServerTest`、两份 XML 的 XSD 校验 | 2026-07-12 通过；26 条世界起点和 92 条副本起点可加载，未启动项目 |
-| 待提交 | 世界地图模板 | `XmlDataLoaderTest` 地图加载/主 XSD/分区统计方法、`GameServerTest`、地图 XML 的 XSD 校验 | 2026-07-12 通过；185 个地图模板及关键几何/能力字段可加载，未启动项目 |
+| `4e2986da` | 世界地图模板 | `XmlDataLoaderTest` 地图加载/主 XSD/分区统计方法、`GameServerTest`、地图 XML 的 XSD 校验 | 2026-07-12 通过；185 个地图模板及关键几何/能力字段可加载，未启动项目 |
+| 待提交 | 常规传送网络 | `XmlDataLoaderTest` 传送加载方法、主 XSD/分区统计方法、`GameServerTest`、四份 XML 的 XSD 校验 | 2026-07-12 通过；139 个绑定点、363 个传送模板、357 个地点和 316 条飞行路径可加载，未启动项目 |
 
 ## 待实现或无法可靠映射
 
@@ -82,6 +84,7 @@
 - `compact/instances.xml` 的 `matchmaker.xml` 有等级、队伍规模、职业配额、登记方式和开放时段，但没有当前自动组队入口依赖的 NPC ID；实例字段仍是客户端名称，`name_id`、`title_id` 也不能由单条记录直接得到。当前 130 个服务器匹配掩码还被多个服务和封包直接引用，因此启动统一通过 `XmlDataLoader.loadAutoGroupData()` 从 `definitions/instances/auto_group` 加载兼容配置，待 NPC/文本/世界映射均可证明后再直接解释新匹配器数据。
 - `compact/instances.xml` 的 `instance_creation.xml` 只给出 `start_point_alias_*`、`resurrect_point_alias_*` 等客户端别名，没有三维坐标；`compact/world.xml` 也不包含当前按世界、阵营和等级选择的复活表。启动统一通过 `XmlDataLoader` 从 `definitions/world/revive_start_points` 加载 26 条世界起点和 92 条副本起点，待客户端 Level 别名可可靠解析到坐标后再直接替换。
 - `compact/id-mappings.xml` 的 `id/worldid.xml` 有 233 个客户端世界 ID 和分流、限制、PVE 比率等字段，但没有当前地图模板依赖的 `world_size`、水面/死亡高度、区域能力 flags、实例标记、世界类型、AI 追击范围和可读名称。上述字段直接服务于 Geo/Nav、区域、飞行、召回、PVP 和实例创建，不能猜测；启动统一通过 `XmlDataLoader.loadWorldMapsData()` 从 `definitions/world/maps` 加载现有 185 个模板。
+- `compact/world.xml` 的 `airline.xml`、`airports.xml`、`fly_path.xml` 能表达大量客户端机场和航线，但机场坐标仍是 Level 别名，缺少绑定价格与 NPC 映射；现有 316 条飞行路径中有 97 条与同 ID 新路径存在坐标或地图差异，419–423 五条服务器路径在新数据中不存在，且主服继续把旧 Inggison/Gelkmaros 路径映射到 `210130000/220140000`。为保持传送落点和航线，启动统一通过 `XmlDataLoader` 从 `definitions/world/transport` 加载 139 个唯一绑定点、363 个唯一传送模板、357 个地点和 316 条飞行路径。
 - 字段行为若无法从 58Server 真端、`aion-server`、转换器或 5.8 客户端证明，必须先记录在此处，才能移除该领域的兼容数据源。
 
 ## 大型生成文件
