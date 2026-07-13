@@ -167,6 +167,8 @@ public class Config {
             ConfigurableProcessor.process(Config.class, props);
             log.info(I18n.get("log.b4cc54f61657", config));
             ConfigurableProcessor.process(SvStatsConfig.class, props);
+            ConfigurableProcessor.process(VipConfig.class, props);
+            VipConfig.validate();
             log.info(I18n.get("log.9d5403420a43", config));
             ConfigurableProcessor.process(CommonsConfig.class, props);
             log.info(I18n.get("log.e2109203a77c", config));
@@ -179,12 +181,15 @@ public class Config {
     }
 
     private static Properties[] loadProperties(String config) throws IOException {
-        Properties[] serviceProperties = PropertiesUtils.loadAllFromDirectory(Path.of(config).resolve("login").toFile());
-        Properties[] properties = new Properties[serviceProperties.length + 1];
+        Path configPath = Path.of(config);
+        Properties[] serviceProperties = PropertiesUtils.loadAllFromDirectory(configPath.resolve("login").toFile());
+        Properties[] properties = new Properties[serviceProperties.length + 2];
         properties[0] = PropertiesUtils.load(
-            Path.of(config).resolve("network/network.properties").toFile()
+            configPath.resolve("network/network.properties").toFile()
         );
-        System.arraycopy(serviceProperties, 0, properties, 1, serviceProperties.length);
+        var vipFile = configPath.resolve("main/vip.properties").toFile();
+        properties[1] = vipFile.isFile() ? PropertiesUtils.load(vipFile) : new Properties();
+        System.arraycopy(serviceProperties, 0, properties, 2, serviceProperties.length);
         return properties;
     }
 }

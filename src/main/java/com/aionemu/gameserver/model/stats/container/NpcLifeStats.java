@@ -24,7 +24,11 @@ public class NpcLifeStats extends CreatureLifeStats<Npc> {
 
 	@Override
 	protected void onIncreaseHp(TYPE type, int value, int skillId, LOG log) {
-		sendAttackStatusPacketUpdate(type, value, skillId, log);
+		sendAttackStatusPacketUpdate(packetType(type), value, skillId, log);
+	}
+
+	static TYPE packetType(TYPE type) {
+		return type == TYPE.NATURAL_HP ? TYPE.HP : type;
 	}
 
 	@Override

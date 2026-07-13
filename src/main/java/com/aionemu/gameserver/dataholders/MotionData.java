@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -37,7 +38,7 @@ public class MotionData {
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MotionTime motion : motionTimes) {
-			motionTimesMap.put(motion.getName(), motion);
+			motionTimesMap.put(motion.getName().toLowerCase(Locale.ROOT), motion);
 		}
 	}
 
@@ -64,7 +65,7 @@ public class MotionData {
 	 * @return 动作时间或 null / motion time or null
 	 */
 	public MotionTime getMotionTime(String name) {
-		return motionTimesMap.get(name);
+		return name == null ? null : motionTimesMap.get(name.toLowerCase(Locale.ROOT));
 	}
 
 	/**

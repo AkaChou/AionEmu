@@ -58,9 +58,6 @@
 		* by merged xml file ( because it'll be used for validation when loading)
 		* by every single xml file ( IDE will use it to validate xml files, when editing)
 	-->
-	<ai_templates>
-		<import file="ai" skipRoot="true"/>
-	</ai_templates>
 	<import file="bind_points/bind_points.xml"/>
 	<import file="chests/chest_templates.xml"/>
 	<import file="cube_expander/cube_expander.xml"/>
@@ -99,8 +96,6 @@
 	<skill_tree>
 		<import file="skill_tree" skipRoot="true"/>
 	</skill_tree>
-	<import file="skills/skill_templates.xml"/>
-	<import file="skills/motion_times.xml"/>
 	<spawns>
 		<import file="spawns" skipRoot="true"/>
 	</spawns>
@@ -129,27 +124,6 @@
 	<import file="flypath_template.xml"/>
 	<import file="cosmetic_items/cosmetic_items.xml"/>
 	<import file="npc_shouts/npc_shouts.xml"/>
-	<npc_drops>
-		<import file="npc_drops/common_drop_groups.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_001.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_002.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_003.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_004.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_005.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_006.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_007.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_008.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_009.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_010.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_011.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_012.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_013.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_014.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_015.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_016.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_017.xml" skipRoot="true"/>
-		<import file="npc_drops/npc_drops_part_018.xml" skipRoot="true"/>
-	</npc_drops>
 	<import file="auto_group/auto_group.xml"/>
 	<events_config>
 		<import file="events_config/events_config.xml" skipRoot="true"/>
@@ -174,9 +148,6 @@
 	<town_spawns_data>
 		<import file="town_spawns" skipRoot="true"/>
 	</town_spawns_data>
-	<charge_skills>
-		<import file="skills/charge_skills.xml" skipRoot="true"/>
-	</charge_skills>
 	<import file="abyss_bonusattr/abyss_bonusattr.xml"/>
 	<import file="abyss_bonusattr/abyss_groupattr.xml"/>
 	<import file="stats/absolute_stats.xml"/>
@@ -204,7 +175,6 @@
 	<import file="service_bonusattr/service_bonusattr.xml"/>
 	<import file="service_bonusattr/players_bonus.xml"/>
 	<import file="items/enchant_templates.xml"/>
-	<import file="hotspot_location.xml"/>
 	<import file="items/item_upgrades.xml"/>
 	<import file="events_config/atreian_passports.xml"/>
 	<game_experience_items>

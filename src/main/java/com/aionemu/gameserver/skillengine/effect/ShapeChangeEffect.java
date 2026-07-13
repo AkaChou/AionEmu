@@ -3,8 +3,6 @@ package com.aionemu.gameserver.skillengine.effect;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
@@ -18,18 +16,12 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlType(name = "ShapeChangeEffect")
 public class ShapeChangeEffect extends TransformEffect {
 
-    @XmlAttribute(name = "neutral_to_npc")
-    private boolean neutralToNpc = false;
-
 	/**
 	 * 可选设置对 NPC 中立，移除施法者隐身，再执行变身开始逻辑。
 	 * Optionally sets admin-neutral, removes hide on the effector, then starts the transform.
 	 */
 	@Override
 	public void startEffect(Effect effect) {
-        if (neutralToNpc && effect.getEffected() instanceof Player) {
-            ((Player) effect.getEffected()).setAdminNeutral(1);
-        }
 		if ((effect.getEffector() instanceof Player)) {
 			if (effect.getEffector().getEffectController().isAbnormalSet(AbnormalState.HIDE)) {
 				effect.getEffector().getEffectController().removeHideEffects();
@@ -44,9 +36,6 @@ public class ShapeChangeEffect extends TransformEffect {
 	 */
 	@Override
 	public void endEffect(Effect effect) {
-        if (neutralToNpc && effect.getEffected() instanceof Player) {
-            ((Player) effect.getEffected()).setAdminNeutral(0);
-        }
 		super.endEffect(effect, null);
 	}
 }

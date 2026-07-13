@@ -36,6 +36,8 @@ public class RandomMoveLocEffect extends EffectTemplate {
 
 	@XmlAttribute(name = "distance")
 	private float distance;
+	@XmlAttribute(name = "distance_delta")
+	private float distanceDelta;
 
 	@XmlAttribute(name = "direction")
 	private float direction;
@@ -95,8 +97,9 @@ public class RandomMoveLocEffect extends EffectTemplate {
 			}
 		}
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(effector.getHeading()));
-		float x1 = (float) (Math.cos(Math.PI * direction + radian) * distance);
-		float y1 = (float) (Math.sin(Math.PI * direction + radian) * distance);
+		float retailDistance = calculateDistance(effect.getSkillLevel());
+		float x1 = (float) (Math.cos(Math.PI * direction + radian) * retailDistance);
+		float y1 = (float) (Math.sin(Math.PI * direction + radian) * retailDistance);
 		effector.getEffectController().updatePlayerEffectIcons();
 		PacketSendUtility.broadcastPacketAndReceive(effector, new SM_TRANSFORM(effector, true));
 		PacketSendUtility.broadcastPacketAndReceive(effector,
@@ -158,5 +161,9 @@ public class RandomMoveLocEffect extends EffectTemplate {
 		player.getEffectController().removeEffect(2846); // Mounting Frustration IX
 		player.getEffectController().removeEffect(2847); // Mounting Frustration X
 		player.getEffectController().removeEffect(2848); // Mounting Frustration XI
+	}
+
+	float calculateDistance(int skillLevel) {
+		return distance + distanceDelta * skillLevel;
 	}
 }

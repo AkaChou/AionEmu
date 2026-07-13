@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
@@ -25,6 +26,25 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 
 	@XmlAttribute
 	protected boolean percent;
+
+	public boolean isPercent() {
+		return percent;
+	}
+
+	static int capMpHealBoost(int baseValue, int boostedValue) {
+		return (int) Math.min(boostedValue, (long) baseValue * 3);
+	}
+
+	static void notifyHealedByUser(Effect effect, HealType healType, int restoredValue) {
+		if (restoredValue <= 0 || healType != HealType.HP && healType != HealType.MP
+			|| !(effect.getEffected() instanceof Npc npc)) {
+			return;
+		}
+		Creature effector = effect.getEffector();
+		if (effector != null && effector.getActingCreature() instanceof Player player) {
+			npc.getAi2().onHealedByUser(player);
+		}
+	}
 
 	/**
 	 * 计算最终治疗量（含治疗加成/削弱、疾病状态拦截），并写入效果预留值。
@@ -54,7 +74,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 
 		if (healType == HealType.HP) {
 			int baseHeal = possibleHealValue;
-			if (effect.getItemTemplate() == null) {
+			if (effect.getItemTemplate() == null && effect.getSkillTemplate().isHealBoostApplied()) {
 				int boostHealAdd = effector.getGameStats().getStat(StatEnum.HEAL_BOOST, 0).getCurrent();
 				// 应用百分比治疗增强加成（如特性技能） / Apply percent Heal Boost bonus (ex. Passive skills)
 				int boostHeal = (effector.getGameStats().getStat(StatEnum.HEAL_BOOST, baseHeal).getCurrent() - boostHealAdd);
@@ -63,6 +83,11 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 				finalHeal = effector.getGameStats().getStat(StatEnum.HEAL_SKILL_BOOST, boostHeal).getCurrent();
 			}
 			finalHeal = effector.getGameStats().getStat(StatEnum.HEAL_SKILL_DEBOOST, finalHeal).getCurrent();
+		}
+		else if (effect.getItemTemplate() == null && healType == HealType.MP
+			&& effect.getSkillTemplate().isMpHealBoostApplied()) {
+			finalHeal = effector.getGameStats().getStat(StatEnum.MP_HEAL_SKILL_BOOST, possibleHealValue).getCurrent();
+			finalHeal = capMpHealBoost(possibleHealValue, finalHeal);
 		}
 
 		if (finalHeal < 0) {
@@ -94,6 +119,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 		if (healValue == 0) {
 			return;
 		}
+		int previousValue = healType == HealType.HP || healType == HealType.MP ? getCurrentStatValue(effect) : 0;
 
 		switch (healType) {
 			case HP:
@@ -124,6 +150,9 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 			case DP:
 				((Player) effected).getCommonData().addDp(healValue);
 				break;
+		}
+		if (healType == HealType.HP || healType == HealType.MP) {
+			notifyHealedByUser(effect, healType, getCurrentStatValue(effect) - previousValue);
 		}
 	}
 

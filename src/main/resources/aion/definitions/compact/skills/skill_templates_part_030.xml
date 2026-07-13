@@ -1,0 +1,1215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skill_data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/skills.xsd">
+  <skill_template skill_id="10592" name="cash_food_l_phy_2017hallo_01_live" nameId="2291310" stack="CASH_FOOD_PHY_2017HALLO_01_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202735" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="10593" name="cash_food_d_phy_2017hallo_01_live" nameId="2291310" stack="CASH_FOOD_PHY_2017HALLO_01_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202736" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="10594" name="cash_food_l_mag_2017hallo_01_live" nameId="2291311" stack="CASH_FOOD_MAG_2017HALLO_01_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202735" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="10595" name="cash_food_d_mag_2017hallo_01_live" nameId="2291311" stack="CASH_FOOD_MAG_2017HALLO_01_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202736" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="10596" name="cash_food_l_mix_2017hallo_01_live" nameId="2291312" stack="CASH_FOOD_MIX_2017HALLO_01_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202735" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="10597" name="cash_food_d_mix_2017hallo_01_live" nameId="2291312" stack="CASH_FOOD_MIX_2017HALLO_01_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202736" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="10598" name="cash_food_l_phy_2017hallo_01_master" nameId="2291313" stack="CASH_FOOD_PHY_2017HALLO_01_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202735" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="10599" name="cash_food_d_phy_2017hallo_01_master" nameId="2291313" stack="CASH_FOOD_PHY_2017HALLO_01_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202736" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11151" name="cash_food_d_mag_2017hallo_01_master" nameId="2291314" stack="CASH_FOOD_MAG_2017HALLO_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202735" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11152" name="cash_food_d_mag_2017hallo_01_master" nameId="2291314" stack="CASH_FOOD_MAG_2017HALLO_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202736" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11153" name="cash_food_l_phy_2017hallo_02_live" nameId="2291317" stack="CASH_FOOD_PHY_2017HALLO_02_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202737" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11154" name="cash_food_d_phy_2017hallo_02_live" nameId="2291317" stack="CASH_FOOD_PHY_2017HALLO_02_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202738" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11155" name="cash_food_l_mag_2017hallo_02_live" nameId="2291318" stack="CASH_FOOD_MAG_2017HALLO_02_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202737" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11156" name="cash_food_d_mag_2017hallo_02_live" nameId="2291318" stack="CASH_FOOD_MAG_2017HALLO_02_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202738" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11157" name="cash_food_l_mix_2017hallo_02_live" nameId="2291319" stack="CASH_FOOD_MIX_2017HALLO_02_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202737" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11158" name="cash_food_d_mix_2017hallo_02_live" nameId="2291319" stack="CASH_FOOD_MIX_2017HALLO_02_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202738" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11159" name="cash_food_l_phy_2017hallo_02_master" nameId="2291320" stack="CASH_FOOD_PHY_2017HALLO_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202737" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11452" name="cash_food_l_phy_brick_01_master" nameId="4582309" stack="CASH_FOOD_PHY_BRICK_01_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202731" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11453" name="cash_food_d_phy_brick_01_master" nameId="4582309" stack="CASH_FOOD_PHY_BRICK_01_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202732" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11454" name="cash_food_l_mag_brick_01_master" nameId="4582311" stack="CASH_FOOD_MAG_BRICK_01_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202731" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11455" name="cash_food_d_mag_brick_01_master" nameId="4582311" stack="CASH_FOOD_MAG_BRICK_01_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202732" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11462" name="cash_food_l_phy_brick_02_master" nameId="4582319" stack="CASH_FOOD_PHY_BRICK_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202733" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11463" name="cash_food_d_phy_brick_02_master" nameId="4582319" stack="CASH_FOOD_PHY_BRICK_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202734" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11464" name="cash_food_l_mag_brick_02_master" nameId="4582321" stack="CASH_FOOD_MAG_BRICK_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202733" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11465" name="cash_food_d_mag_brick_02_master" nameId="4582321" stack="CASH_FOOD_MAG_BRICK_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202734" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11619" name="event_cocktail_effect_01" nameId="4582447" stack="EVENT_COCKTAIL_EFFECT" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="SPEC" conflict_id="21" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="1800000" effectid="10013" e="1" noresist="true" element="FIRE">
+        <change stat="REGEN_HP" func="ADD" value="14"/>
+        <change stat="REGEN_MP" func="ADD" value="21"/>
+      </statup>
+      <dpheal checktime="9000" value="10" duration2="1800000" effectid="10013" e="2" noresist="true" preeffect="1"/>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11620" name="event_cocktail_effect_02" nameId="4582449" stack="EVENT_COCKTAIL_EFFECT" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="SPEC" conflict_id="21" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="1800000" effectid="10013" e="1" noresist="true" element="FIRE">
+        <change stat="REGEN_HP" func="ADD" value="14"/>
+        <change stat="REGEN_MP" func="ADD" value="21"/>
+      </statup>
+      <dpheal checktime="9000" value="10" duration2="1800000" effectid="10013" e="2" noresist="true" preeffect="1"/>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11621" name="event_cocktail_effect_03" nameId="4582451" stack="EVENT_COCKTAIL_EFFECT" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="SPEC" conflict_id="21" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="1800000" effectid="10013" e="1" noresist="true" element="FIRE">
+        <change stat="REGEN_HP" func="ADD" value="14"/>
+        <change stat="REGEN_MP" func="ADD" value="21"/>
+      </statup>
+      <dpheal checktime="9000" value="10" duration2="1800000" effectid="10013" e="2" noresist="true" preeffect="1"/>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11622" name="event_cocktail_effect_04" nameId="4582453" stack="EVENT_COCKTAIL_EFFECT" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="SPEC" conflict_id="21" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="1800000" effectid="10013" e="1" noresist="true" element="FIRE">
+        <change stat="REGEN_HP" func="ADD" value="14"/>
+        <change stat="REGEN_MP" func="ADD" value="21"/>
+      </statup>
+      <dpheal checktime="9000" value="10" duration2="1800000" effectid="10013" e="2" noresist="true" preeffect="1"/>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11623" name="event_potion_a_hp_mp_75" nameId="1760907" stack="EVENT_POTION_A_HP_MP_07A" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <prochealinstant value="5376" e="1" noresist="true" element="WATER"/>
+      <procmphealinstant value="4548" e="2" noresist="true" element="WATER" preeffect="1"/>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11624" name="event_potion_a_hp_mp_50" nameId="1760909" stack="EVENT_POTION_A_HP_MP_03A" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <prochealinstant value="2700" e="1" noresist="true" element="WATER"/>
+      <procmphealinstant value="2808" e="2" noresist="true" element="WATER" preeffect="1"/>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11625" name="cash_item_enchant_attackdelay" nameId="4582481" stack="CASH_ITEM_ENCHANT_ATTACKDELAY" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" conflict_id="8" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="600000" effectid="1116251" e="1" noresist="true">
+        <change stat="PVE_ATTACK_RATIO" func="ADD" value="50"/>
+        <change stat="UNK_STAT" func="ADD" value="50"/>
+      </statup>
+      <statup duration2="600000" effectid="1116252" e="2" basiclvl="100" noresist="true" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="FLY_SPEED" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="600000" effectid="1116253" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="ATTACK_SPEED" func="PERCENT" value="3"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11626" name="cash_item_enchant_boostcastingtime" nameId="4582483" stack="CASH_ITEM_ENCHANT_BOOSTCASTINGTIME" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" conflict_id="8" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="600000" effectid="1116261" e="1" noresist="true">
+        <change stat="PVE_ATTACK_RATIO" func="ADD" value="50"/>
+        <change stat="UNK_STAT" func="ADD" value="50"/>
+      </statup>
+      <statup duration2="600000" effectid="1116262" e="2" basiclvl="100" noresist="true" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="FLY_SPEED" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="600000" effectid="1116263" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11627" name="cash_item_enchant_attackdelay_sp" nameId="4582489" stack="CASH_ITEM_ENCHANT_ATTACKDELAY" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" conflict_id="8" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="600000" effectid="1116271" e="1" noresist="true">
+        <change stat="PVE_ATTACK_RATIO" func="ADD" value="30"/>
+        <change stat="UNK_STAT" func="ADD" value="30"/>
+      </statup>
+      <statup duration2="600000" effectid="1116272" e="2" basiclvl="100" noresist="true" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="2"/>
+        <change stat="FLY_SPEED" func="PERCENT" value="2"/>
+      </statup>
+      <statup duration2="600000" effectid="1116273" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="ATTACK_SPEED" func="PERCENT" value="2"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11628" name="cash_item_enchant_boostcastingtime_sp" nameId="4582491" stack="CASH_ITEM_ENCHANT_BOOSTCASTINGTIME" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" conflict_id="8" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <statup duration2="600000" effectid="1116281" e="1" noresist="true">
+        <change stat="PVE_ATTACK_RATIO" func="ADD" value="30"/>
+        <change stat="UNK_STAT" func="ADD" value="30"/>
+      </statup>
+      <statup duration2="600000" effectid="1116282" e="2" basiclvl="100" noresist="true" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="2"/>
+        <change stat="FLY_SPEED" func="PERCENT" value="2"/>
+      </statup>
+      <statup duration2="600000" effectid="1116283" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="2"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11629" name="IDEvent_Def_Li_B_Polymorph_04_Item" nameId="4581865" delayId="5" stack="IDEVENT_DEF_LI_A_POLYMORPH" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" conflict_id="1" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="TARGET" first_target_range="3" target_relation="FRIEND" target_type="ONLYONE" target_species="PC"/>
+    <startconditions>
+      <target value="PC"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <dispel dispeltype="EFFECTID" e="1" noresist="true" hoptype="SKILLLV">
+        <effectids>947522</effectids>
+        <effectids>947523</effectids>
+      </dispel>
+      <polymorph model="202708" type="FORM1" panelid="123" duration2="1200000" effectid="947522" e="2" noresist="true" preeffect="1"/>
+      <absstatbuff statsetid="61" value="10" duration2="1200000" e="3" element="FIRE" preeffect="1"/>
+    </effects>
+    <motion name="NormalFire"/>
+  </skill_template>
+  <skill_template skill_id="11630" name="cash_food_d_phy_2017hallo_02_master" nameId="2291320" stack="CASH_FOOD_PHY_2017HALLO_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202738" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11631" name="cash_food_l_mag_2017hallo_02_master" nameId="2291321" stack="CASH_FOOD_MAG_2017HALLO_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202735" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11632" name="cash_food_d_mag_2017hallo_02_master" nameId="2291321" stack="CASH_FOOD_MAG_2017HALLO_02_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202736" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11633" name="cash_food_l_phy_2017hallo_03_live" nameId="2291324" stack="CASH_FOOD_PHY_2017HALLO_03_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11634" name="cash_food_d_phy_2017hallo_03_live" nameId="2291324" stack="CASH_FOOD_PHY_2017HALLO_03_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11635" name="cash_food_l_mag_2017hallo_03_live" nameId="2291325" stack="CASH_FOOD_MAG_2017HALLO_03_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11636" name="cash_food_d_mag_2017hallo_03_live" nameId="2291325" stack="CASH_FOOD_MAG_2017HALLO_03_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11637" name="cash_food_l_mix_2017hallo_03_live" nameId="2291326" stack="CASH_FOOD_MIX_2017HALLO_03_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11638" name="cash_food_d_mix_2017hallo_03_live" nameId="2291326" stack="CASH_FOOD_MIX_2017HALLO_03_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="20"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11639" name="cash_food_l_phy_2017hallo_03_master" nameId="2291327" stack="CASH_FOOD_PHY_2017HALLO_03_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11640" name="cash_food_d_phy_2017hallo_03_master" nameId="2291327" stack="CASH_FOOD_PHY_2017HALLO_03_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11641" name="cash_food_l_mag_2017hallo_03_master" nameId="2291328" stack="CASH_FOOD_MAG_2017HALLO_03_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11642" name="cash_food_d_mag_2017hallo_03_master" nameId="2291328" stack="CASH_FOOD_MAG_2017HALLO_03_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="-1" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="BOOST_CASTING_TIME" func="PERCENT" value="3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="BOOST_MAGICAL_SKILL" func="ADD" value="15"/>
+        <change stat="MAGICAL_ACCURACY" func="ADD" value="25"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11643" name="cash_food_l_phy_2017hallo_04_live" nameId="2291331" stack="CASH_FOOD_PHY_2017HALLO_04_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202739" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11644" name="cash_food_d_phy_2017hallo_04_live" nameId="2291331" stack="CASH_FOOD_PHY_2017HALLO_04_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202740" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11645" name="cash_food_l_phy_2017hallo_04_master" nameId="2291332" stack="CASH_FOOD_PHY_2017HALLO_04_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202739" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11646" name="cash_food_d_phy_2017hallo_04_master" nameId="2291332" stack="CASH_FOOD_PHY_2017HALLO_04_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202740" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11647" name="cash_food_l_phy_2017hallo_05_live" nameId="2291335" stack="CASH_FOOD_PHY_2017HALLO_05_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202741" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11648" name="cash_food_d_phy_2017hallo_05_live" nameId="2291335" stack="CASH_FOOD_PHY_2017HALLO_05_LIVE" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202742" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="2">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="4"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="65"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="4" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_CRITICAL" func="ADD" value="20"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11649" name="cash_food_l_phy_2017hallo_05_master" nameId="2291336" stack="CASH_FOOD_PHY_2017HALLO_05_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202741" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11650" name="cash_food_d_phy_2017hallo_05_master" nameId="2291336" stack="CASH_FOOD_PHY_2017HALLO_05_MASTER" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="2" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" noremoveatdie="true">
+    <properties first_target="ME" target_relation="FRIEND" target_type="ONLYONE"/>
+    <startconditions>
+      <weapon weapon="SWORD_2H BOOK_2H BOW DAGGER_1H MACE_1H ORB_2H POLEARM_2H STAFF_2H SWORD_1H GUN_1H CANNON_2H HARP_2H KEYBLADE_2H"/>
+    </startconditions>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <shapechange model="202742" type="PC" duration2="3600000" effectid="275" e="1" noresist="true"/>
+      <statup duration2="3600000" effectid="10012" e="2" noresist="true" element="FIRE" preeffect="1">
+        <change stat="SPEED" func="PERCENT" value="3"/>
+        <change stat="ATTACK_SPEED" func="PERCENT" value="-3"/>
+      </statup>
+      <statup duration2="3600000" effectid="10012" e="3" noresist="true" element="FIRE" preeffect="3">
+        <change stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
+        <change stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+      </statup>
+    </effects>
+  </skill_template>
+  <skill_template skill_id="11651" name="event_halloween_candybomb_skill" nameId="2291339" stack="EVENT_HALLOWEEN_CANDYBOMB" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0">
+    <properties first_target="TARGET" first_target_range="20" target_relation="ALL" target_type="ONLYONE" target_maxcount="1"/>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <noreducespellatk value="10000000" e="1" element="WATER" hoptype="DAMAGE"/>
+    </effects>
+    <motion name="NormalfireSC2"/>
+  </skill_template>
+  <skill_template skill_id="17603" name="Dev_Event_Spawn" nameId="588039" stack="BNWI_SPELLATKTA5_APPEAR" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" first_target_range="5" target_relation="ALL" target_type="ONLYONE" target_maxcount="1"/>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <summontrap time="10" npc_id="249166" e="1" noresist="true"/>
+    </effects>
+    <motion name="NormalFire" instant_skill="true"/>
+  </skill_template>
+  <skill_template skill_id="17604" name="Dev_Event_Spawn_Sp" nameId="588039" stack="BNWI_SPELLATKTA5_APPEAR" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0">
+    <properties first_target="ME" first_target_range="5" target_relation="ALL" target_type="ONLYONE" target_maxcount="1"/>
+    <useconditions>
+      <playermove allow="false"/>
+    </useconditions>
+    <effects>
+      <summontrap time="10" npc_id="249167" e="1" noresist="true"/>
+    </effects>
+    <motion name="NormalFire" instant_skill="true"/>
+  </skill_template>
+</skill_data>

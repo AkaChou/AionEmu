@@ -3,6 +3,7 @@ package com.aionemu.gameserver.ai2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIAnswer;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
+import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemAttackType;
@@ -23,6 +24,77 @@ public interface AI2 {
 	 * related creature
 	 */
 	void onCreatureEvent(AIEventType event, Creature creature);
+
+	/** 处理带真实命中状态的受击事件。 */
+	default void onAttacked(Creature attacker, AttackStatus status) {
+		onCreatureEvent(AIEventType.ATTACK, attacker);
+	}
+
+	/**
+	 * 处理技能成功作用事件。
+	 *
+	 * @param caster 施法者
+	 * @param skillId 技能 ID
+	 * @param skillLevel 技能等级
+	 */
+	default void onSpelled(Creature caster, int skillId, int skillLevel) {
+	}
+
+	/** 处理玩家实际治疗 NPC 事件。 */
+	default void onHealedByUser(Player player) {
+	}
+
+	/** 处理实际伤害事件。 */
+	default void onDamaged(Creature attacker, int skillId) {
+	}
+
+	/** 处理看见附近生物参与攻击事件。 */
+	default void onSeeAttack(Creature attacker, Creature attacked) {
+	}
+
+	/** 处理看见附近生物开始施法事件。 */
+	default void onSeeSkill(Creature caster, Creature target, int skillId, int skillLevel) {
+	}
+
+	/** 处理附近友军被技能命中事件。 */
+	default void onFriendSpelled(Creature caster, Creature friend, int skillId, int skillLevel) {
+	}
+
+	/** 处理附近友军被玩家击杀事件。 */
+	default void onFriendKilledByUser(Creature friend, Player killer) {
+	}
+
+	/** 处理附近友军首次进入攻击状态事件。 */
+	default void onFriendEnterAttackState(Creature friend, Creature target) {
+	}
+
+	/** 处理技能成功施放到自身事件。 */
+	default void onCasted(Creature caster, int skillId, int skillLevel) {
+	}
+
+	/** 处理看见附近技能完成事件。 */
+	default void onSeeSpell(Creature caster, Creature target, int skillId, int skillLevel) {
+	}
+
+	/** 处理玩家结束过场动画事件。 */
+	default void onQuitCutscene(Player player, int cutsceneId) {
+	}
+
+	/** 处理玩家在该 NPC 处完成并领取任务奖励事件。 */
+	default void onQuestFinished(Player player, int questId) {
+	}
+
+	/** 处理最高仇恨对象变化事件。 */
+	default void onMostHatingUpdated(Creature creature) {
+	}
+
+	/** 处理进入异常状态事件。 */
+	default void onEnterAbnormalState(Creature caster, int abnormalState) {
+	}
+
+	/** 处理离开异常状态事件。 */
+	default void onLeaveAbnormalState(Creature caster, int abnormalState) {
+	}
 
 	/**
 	 * 处理自定义 AI 事件。

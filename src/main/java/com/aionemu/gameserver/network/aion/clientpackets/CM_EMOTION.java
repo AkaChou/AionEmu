@@ -106,8 +106,13 @@ public class CM_EMOTION extends AionClientPacket {
 		if (player.getState() == CreatureState.PRIVATE_SHOP.getId()
 				|| player.isAttackMode() && (emotionType == EmotionType.CHAIR_SIT || emotionType == EmotionType.JUMP))
 			return;
+		if (emotionType == EmotionType.JUMP && player.getTransformModel().isJumpDisabled()) {
+			return;
+		}
 		player.getController().cancelUseItem();
-		if (emotionType != EmotionType.SELECT_TARGET) {
+		boolean noJumpCancel = player.getCastingSkill() != null
+				&& player.getCastingSkill().getSkillTemplate().isNoJumpCancel();
+		if (shouldCancelCurrentSkill(emotionType, noJumpCancel)) {
 			player.getController().cancelCurrentSkill();
 		}
 		if (player.getController().isUnderStance() && (emotionType == EmotionType.SIT || emotionType == EmotionType.JUMP
@@ -212,6 +217,10 @@ public class CM_EMOTION extends AionClientPacket {
 			PacketSendUtility.broadcastPacket(player,
 					new SM_EMOTION(player, emotionType, emotion, x, y, z, heading, getTargetObjectId(player)), true);
 		}
+	}
+
+	static boolean shouldCancelCurrentSkill(EmotionType emotionType, boolean noJumpCancel) {
+		return emotionType != EmotionType.SELECT_TARGET && (emotionType != EmotionType.JUMP || !noJumpCancel);
 	}
 
 	/**

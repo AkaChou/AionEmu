@@ -34,6 +34,7 @@ public class LoginStartupSequenceLifecycle {
             startupGateway.loadConfig();
             startupGateway.initializeDatabase();
             startupGateway.initializeDaos();
+            startupGateway.synchronizeVipAccounts();
             startupGateway.startDeadlockDetector();
             startupGateway.initializeThreadPool();
             initializeKeyGenerator();

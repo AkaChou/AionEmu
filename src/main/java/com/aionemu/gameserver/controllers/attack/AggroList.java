@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.controllers.attack;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,19 +58,30 @@ public class AggroList {
 	 */
 	@ObjectCallback(AddDamageValueCallback.class)
 	public void addDamage(Creature attacker, int damage) {
+		addDamageInternal(attacker, damage, AttackStatus.NORMALHIT);
+	}
+
+	@ObjectCallback(AddDamageValueCallback.class)
+	public void addDamage(Creature attacker, int damage, AttackStatus status) {
+		addDamageInternal(attacker, damage, status);
+	}
+
+	private void addDamageInternal(Creature attacker, int damage, AttackStatus status) {
 		if (!isAware(attacker)) {
 			return;
 		}
+		Creature previousMostHated = getMostHated();
 		AggroInfo ai = getAggroInfo(attacker);
 		/**
 		 * 当前按每次受到伤害等量增加仇恨，并额外广播仇恨。
 	 * For now add hate equal to each damage received; additionally broadcast extra hate
 		 */
-		synchronized (ai) {
+			synchronized (ai) {
 			ai.addDamage(damage);
 			ai.addHate(damage);
 		}
-		owner.getAi2().onCreatureEvent(AIEventType.ATTACK, attacker);
+		notifyMostHatedChanged(previousMostHated);
+		owner.getAi2().onAttacked(attacker, status);
 	}
 
 	/**
@@ -84,6 +96,30 @@ public class AggroList {
 			return;
 		}
 		addHateValue(creature, hate);
+	}
+
+	/**
+	 * Adds hate that is removed again after the supplied duration.
+	 *
+	 * @param creature hate source
+	 * @param hate hate amount
+	 * @param duration duration in milliseconds
+	 */
+	public void addHate(final Creature creature, int hate, int duration) {
+		if (duration <= 0) {
+			addHate(creature, hate);
+			return;
+		}
+		if (!isAware(creature)) {
+			return;
+		}
+		Creature previousMostHated = getMostHated();
+		AggroInfo aggroInfo = getAggroInfo(creature);
+		long token = aggroInfo.addVolatileHate(hate);
+		afterHateAdded(creature, previousMostHated);
+		int objectId = creature.getObjectId();
+		GameThreadPoolServices.threadPoolManager().schedule(
+			() -> removeTimedHate(objectId, aggroInfo, token), duration);
 	}
 
 	/**
@@ -103,11 +139,17 @@ public class AggroList {
 	 * hate source
 	 * @param hate 仇恨增量 / hate amount
 	 */
-	protected void addHateValue(final Creature creature, int hate) {
+	protected AggroInfo addHateValue(final Creature creature, int hate) {
+		Creature previousMostHated = getMostHated();
 		AggroInfo ai = getAggroInfo(creature);
 		synchronized (ai) {
 			ai.addHate(hate);
 		}
+		afterHateAdded(creature, previousMostHated);
+		return ai;
+	}
+
+	private void afterHateAdded(Creature creature, Creature previousMostHated) {
 		if (creature instanceof Player && owner instanceof Npc) {
 			owner.getKnownList().doOnAllPlayers(new Visitor<Player>() {
 				@Override
@@ -118,7 +160,36 @@ public class AggroList {
 				}
 			});
 		}
+		notifyMostHatedChanged(previousMostHated);
 		owner.getAi2().onCreatureEvent(AIEventType.ATTACK, creature);
+	}
+
+	void removeTimedHate(int objectId, AggroInfo expected, long token) {
+		if (aggroList.get(objectId) == expected) {
+			expected.removeVolatileHate(token);
+		}
+	}
+
+	public void resetHatepoints(boolean keepMostHated, boolean volatileOnly) {
+		Creature previousMostHated = getMostHated();
+		for (AggroInfo aggroInfo : getList()) {
+			boolean keep = keepMostHated && aggroInfo.getAttacker() == previousMostHated;
+			if (volatileOnly) {
+				if (!keep) {
+					aggroInfo.resetVolatileHate();
+				}
+			} else {
+				aggroInfo.setHate(keep ? 1 : 0);
+			}
+		}
+		notifyMostHatedChanged(previousMostHated);
+	}
+
+	private void notifyMostHatedChanged(Creature previous) {
+		Creature current = getMostHated();
+		if (current != previous) {
+			owner.getAi2().onMostHatingUpdated(current);
+		}
 	}
 
 	/**
@@ -290,7 +361,9 @@ public class AggroList {
 	public void stopHating(VisibleObject creature) {
 		AggroInfo aggroInfo = aggroList.get(creature.getObjectId());
 		if (aggroInfo != null) {
+			Creature previousMostHated = getMostHated();
 			aggroInfo.setHate(0);
+			notifyMostHatedChanged(previousMostHated);
 		}
 	}
 
@@ -301,7 +374,9 @@ public class AggroList {
 	 * target creature
 	 */
 	public void remove(Creature creature) {
+		Creature previousMostHated = getMostHated();
 		aggroList.remove(creature.getObjectId());
+		notifyMostHatedChanged(previousMostHated);
 	}
 
 	/**

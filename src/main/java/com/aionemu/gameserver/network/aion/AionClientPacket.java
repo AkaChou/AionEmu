@@ -53,7 +53,7 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 			if (name == null) {
 				name = getConnection().getIP();
 			}
-			// log.error(I18n.get("log.ec7e1a30c38c", name, this, e));
+			log.error(I18n.get("log.ec7e1a30c38c", name, this), e);
 		}
 	}
 

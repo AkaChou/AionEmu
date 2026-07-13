@@ -61,7 +61,7 @@ public class AccountService {
 	 * @return 账号 / account
 	 */
 	public static Account getAccount(int accountId, String accountName, AccountTime accountTime, byte accessLevel,
-			byte membership, long toll, long luna) {
+			byte membership, long toll, long luna, byte vipLevel, long vipExp) {
 		log.debug("[AS] request for account: " + accountId);
 
 		Account account = accountsMap.get(accountId);
@@ -77,6 +77,8 @@ public class AccountService {
 		account.setMembership(membership);
 		account.setToll(toll);
 		account.setLuna(luna);
+		account.setVipLevel(vipLevel);
+		account.setVipExp(vipExp);
 		removeDeletedCharacters(account);
 		if (account.isEmpty()) {
 			removeAccountWH(accountId);

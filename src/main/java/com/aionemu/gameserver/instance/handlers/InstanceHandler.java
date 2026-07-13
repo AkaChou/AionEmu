@@ -209,4 +209,10 @@ public interface InstanceHandler {
 	 * target NPC
 	 */
 	void handleUseItemFinish(Player player, Npc npcId);
+
+	/** 返回当前副本是否能按真端语义消费该 NPC 的计分动作。 */
+	boolean supportsRetailNpcScore(int npcId);
+
+	/** 将真端 NPC 分值交给当前副本的既有计分模型。 */
+	boolean onRetailNpcScore(Player player, Npc npc, int points);
 }

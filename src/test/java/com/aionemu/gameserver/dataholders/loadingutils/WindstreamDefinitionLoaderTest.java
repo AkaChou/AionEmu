@@ -19,7 +19,8 @@ class WindstreamDefinitionLoaderTest {
 	@Test
 	void loadsRetailWindstreamsWithCanonicalAndCompatibilityMapIds() {
 		WindstreamData data = WindstreamDefinitionLoader.load(
-			new File("src/main/resources/aion/definitions/compact/world.xml"),
+			new File("src/main/resources/aion/definitions/compact/world/fly_path.xml"),
+			new File("src/main/resources/aion/definitions/compact/wind.xml"),
 			new File("src/main/resources/aion/definitions/compact/id-mappings.xml"));
 
 		assertEquals(27, data.size());

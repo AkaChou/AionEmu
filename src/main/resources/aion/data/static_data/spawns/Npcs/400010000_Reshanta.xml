@@ -217,6 +217,7 @@
 		<!-- Haug -->
         <spawn npc_id="278040" respawn_time="60">
             <spot h="74" z="1655.4773" y="2716.4824" x="420.30707"/>
+          <spot x="418.900391" y="2716.463623" z="1655.4775" h="75"/>
         </spawn>
 		<!-- Altak -->
         <spawn npc_id="278041" respawn_time="60">
@@ -237,6 +238,7 @@
 		<!-- Tern -->
         <spawn npc_id="278045" respawn_time="60">
             <spot h="15" z="1642.3323" y="2617.391" x="486.45337" walker_id="Tern"/>
+          <spot x="487.371277" y="2618.566406" z="1642.3315" h="75"/>
         </spawn>
 		<!-- Bokbor -->
         <spawn npc_id="278046" respawn_time="60">
@@ -453,6 +455,7 @@
 		<!-- Noiman -->
         <spawn npc_id="278136" respawn_time="60">
             <spot h="46" z="1594.2235" y="2497.5515" x="238.77199"/>
+          <spot x="238.535889" y="2497.698730" z="1594.2235" h="48"/>
         </spawn>
 		<!-- Jafnhar -->
         <spawn npc_id="278137" respawn_time="60">
@@ -557,6 +560,7 @@
 		<!-- Lucius -->
         <spawn npc_id="278510" respawn_time="60">
             <spot h="104" z="1546.1555" y="571.9754" x="2392.9153"/>
+          <spot x="2394.222168" y="572.742920" z="1546.1555" h="105"/>
         </spawn>
 		<!-- Minon -->
         <spawn npc_id="278511" respawn_time="60">
@@ -665,6 +669,7 @@
 		<!-- Aries -->
         <spawn npc_id="278538" respawn_time="60">
             <spot h="32" z="1546.0913" y="519.0901" x="2380.9385"/>
+          <spot x="2382.409180" y="520.547668" z="1546.0913" h="45"/>
         </spawn>
 		<!-- Ara -->
         <spawn npc_id="278539" respawn_time="60">
@@ -681,6 +686,7 @@
 		<!-- Trian -->
         <spawn npc_id="278542" respawn_time="60">
             <spot z="1546.093" y="549.5384" x="2383.9844"/>
+          <spot x="2384.333008" y="549.711426" z="1546.093" h="75"/>
         </spawn>
 		<!-- Rupus -->
         <spawn npc_id="278543" respawn_time="60">
@@ -725,6 +731,7 @@
 		<!-- Caranos -->
         <spawn npc_id="278553" respawn_time="60">
             <spot h="44" z="1527.9968" y="662.56995" x="2260.041" walker_id="Caranos"/>
+          <spot x="2269.307617" y="650.565613" z="1528.0334" h="105"/>
         </spawn>
 		<!-- Claudia -->
         <spawn npc_id="278554" respawn_time="60">
@@ -881,6 +888,7 @@
 		<!-- Sileni -->
         <spawn npc_id="278628" respawn_time="60">
             <spot h="10" z="1513.9065" y="602.0919" x="2485.9043"/>
+          <spot x="2486.040039" y="602.224487" z="1513.9066" h="11"/>
         </spawn>
 		<!-- Adrastea -->
         <spawn npc_id="278629" respawn_time="60">
@@ -889,6 +897,7 @@
 		<!-- Lachesis -->
         <spawn npc_id="278630" respawn_time="60">
             <spot h="37" z="1513.9073" y="590.25104" x="2520.2463"/>
+          <spot x="2520.104004" y="590.707886" z="1513.9073" h="40"/>
         </spawn>
 		<!-- Erdias -->
         <spawn npc_id="278631" respawn_time="60">
@@ -901,6 +910,7 @@
 		<!-- Larentia -->
         <spawn npc_id="278633" respawn_time="60">
             <spot h="90" z="1513.9066" y="646.02045" x="2509.2595"/>
+          <spot x="2509.093750" y="645.521973" z="1513.9065" h="88"/>
         </spawn>
 		<!-- Glaucos -->
         <spawn npc_id="278634" respawn_time="60">
@@ -1056,6 +1066,7 @@
             <spot h="7" z="2766.6812" y="2050.6533" x="2776.3381"/>
             <spot h="10" z="2765.0737" y="2068.49" x="2738.1404"/>
             <spot h="88" z="2766.5562" y="2079.2456" x="2805.6753"/>
+          <spot x="2783.748047" y="2070.667480" z="2766.6677" h="56"/>
         </spawn>
 		<!-- Jarumonerk -->
         <spawn npc_id="279022" respawn_time="60">
@@ -1072,6 +1083,7 @@
 		<!-- Guuminerk -->
         <spawn npc_id="279025" respawn_time="60">
             <spot h="10" z="1533.6819" y="671.07477" x="2330.839"/>
+          <spot x="2331.474121" y="671.512451" z="1533.6816" h="30"/>
         </spawn>
 		<!-- Sienrurerk -->
         <spawn npc_id="279026" respawn_time="60">
@@ -1113,6 +1125,7 @@
 		<!-- Juimonmonerk -->
         <spawn npc_id="279037" respawn_time="60">
             <spot z="1639.0138" y="2521.996" x="439.95816"/>
+          <spot x="440.579712" y="2522.602295" z="1639.0138" h="75"/>
         </spawn>
 		<!-- Fayrunerk -->
         <spawn npc_id="279038" respawn_time="60">
@@ -1201,6 +1214,7 @@
 		<!-- Tostig -->
         <spawn npc_id="799870" respawn_time="60">
             <spot h="44" z="1655.3513" y="2693.8757" x="432.61865"/>
+          <spot x="432.063171" y="2694.166016" z="1655.3513" h="38"/>
         </spawn>
 		<!-- Kisment -->
         <spawn npc_id="799871" respawn_time="60">
@@ -5307,5 +5321,42 @@
             <spot h="99" z="2911.99" y="1962.157" x="928.38043"/>
             <spot h="55" z="2913.5134" y="1950.4254" x="940.6749"/>
         </spawn>
+		<spawn npc_id="253739" respawn_time="90">
+		  <spot x="355.674500" y="2064.148926" z="1492.8114" h="25"/>
+		</spawn>
+		<spawn npc_id="276768" respawn_time="86400">
+		  <spot x="828.516052" y="966.397888" z="1691.7794" h="60"/>
+		</spawn>
+		<spawn npc_id="279032" respawn_time="60">
+		  <spot x="664.426575" y="1530.846069" z="1604.3312" h="71"/>
+		</spawn>
+		<spawn npc_id="833591" respawn_time="30">
+		  <spot x="1699.993408" y="1388.980957" z="1549.34" h="30"/>
+		</spawn>
+		<spawn npc_id="883643" respawn_time="300">
+		  <spot x="1466.499268" y="1892.898438" z="2880.9082" h="33"/>
+		</spawn>
+		<spawn npc_id="883645" respawn_time="300">
+		  <spot x="2006.355957" y="1168.295776" z="2916.8914" h="33"/>
+		  <spot x="2058.321777" y="1746.003174" z="3004.3625" h="33"/>
+		</spawn>
+		<spawn npc_id="883647" respawn_time="300">
+		  <spot x="2233.298828" y="418.576904" z="2889.5945" h="33"/>
+		  <spot x="2207.056641" y="450.044861" z="2865.1445" h="33"/>
+		  <spot x="2175.294434" y="515.885681" z="2869.9106" h="33"/>
+		  <spot x="2203.430664" y="394.981567" z="2854.6765" h="33"/>
+		</spawn>
+		<spawn npc_id="883909" respawn_time="300">
+		  <spot x="519.699951" y="2486.322754" z="2736.7588" h="33"/>
+		</spawn>
+		<spawn npc_id="883910" respawn_time="300">
+		  <spot x="496.079132" y="2453.715332" z="2823.6436" h="33"/>
+		  <spot x="415.702545" y="2469.391113" z="2840.3264" h="33"/>
+		  <spot x="509.458221" y="2492.716309" z="2820.6917" h="33"/>
+		</spawn>
+		<spawn npc_id="883911" respawn_time="300">
+		  <spot x="329.640778" y="2317.939941" z="2900.9873" h="33"/>
+		  <spot x="446.578583" y="2488.763916" z="2762.9722" h="33"/>
+		</spawn>
 	</spawn_map>
 </spawns>

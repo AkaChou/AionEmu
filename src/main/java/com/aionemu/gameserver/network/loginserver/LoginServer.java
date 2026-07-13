@@ -321,7 +321,7 @@ public class LoginServer {
 	 * Luna balance
 	 */
 	public void accountAuthenticationResponse(int accountId, String accountName, boolean result,
-			AccountTime accountTime, byte accessLevel, byte membership, long toll, long luna) {
+			AccountTime accountTime, byte accessLevel, byte membership, long toll, long luna, byte vipLevel, long vipExp) {
 		AionConnection client = loginRequests.remove(accountId);
 
 		if (client == null) {
@@ -329,7 +329,7 @@ public class LoginServer {
 		}
 
 		Account account = AccountService.getAccount(accountId, accountName, accountTime, accessLevel, membership, toll,
-				luna);
+				luna, vipLevel, vipExp);
 
 		if (!validateAccount(account)) {
 			log.info(I18n.get("log.0402d3ab6af9", accountId));

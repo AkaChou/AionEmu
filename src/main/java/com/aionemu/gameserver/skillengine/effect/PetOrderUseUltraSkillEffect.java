@@ -23,6 +23,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlType(name = "PetOrderUseUltraSkillEffect")
 public class PetOrderUseUltraSkillEffect extends EffectTemplate {
 
+	private static final int FIRST_ULTRA_SKILL = 3;
+	private static final int[] ORDER_SKILLS = {
+		3643, 3531, 3835, 3833, 3852, 3837, 3549,
+		3836, 3548, 3853, 3838, 3839, 4833, 4832
+	};
+
+	@XmlAttribute(name = "ultra_skill")
+	protected int ultraSkill;
+
 	@XmlAttribute
 	protected boolean release;
 
@@ -41,7 +50,7 @@ public class PetOrderUseUltraSkillEffect extends EffectTemplate {
 		int effectorId = effector.getSummon().getObjectId();
 
 		int npcId = effector.getSummon().getNpcId();
-		int orderSkillId = effect.getSkillId();
+		int orderSkillId = resolveOrderSkillId(effect.getSkillId());
 
 		int petUseSkillId = DataManager.PET_SKILL_DATA.getPetOrderSkill(orderSkillId, npcId);
 		int targetId = effect.getEffected().getObjectId();
@@ -54,6 +63,11 @@ public class PetOrderUseUltraSkillEffect extends EffectTemplate {
 			}
 		}
 		PacketSendUtility.sendPacket(effector, new SM_SUMMON_USESKILL(effectorId, petUseSkillId, 1, targetId));
+	}
+
+	int resolveOrderSkillId(int skillId) {
+		int index = ultraSkill - FIRST_ULTRA_SKILL;
+		return index >= 0 && index < ORDER_SKILLS.length ? ORDER_SKILLS[index] : skillId;
 	}
 
 	/**

@@ -4,6 +4,8 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
+import com.aionemu.gameserver.skillengine.model.Effect;
+
 /**
  * 奥德拉恢复提升效果：作为 Buff 壳，提高 Odella 恢复相关收益。
  * Odella recover increase effect: buff shell that boosts Odella recovery gains.
@@ -14,4 +16,9 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlType(name = "OdellaRecoverIncreaseEffect")
 public class OdellaRecoverIncreaseEffect extends BuffEffect {
 
+	@Override
+	public void calculate(Effect effect) {
+		effect.setOdellaRecoverIncrease(true);
+		effect.addSucessEffect(this);
+	}
 }

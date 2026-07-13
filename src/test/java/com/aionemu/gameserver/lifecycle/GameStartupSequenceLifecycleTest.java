@@ -17,7 +17,7 @@ class GameStartupSequenceLifecycleTest {
             new RecordingGameStaticDataLifecycle(events),
             new RecordingGameWorldBootstrapLifecycle(events),
             new RecordingGameEventBootstrapLifecycle(events),
-            new RecordingGameGeoNavLifecycle(events),
+            new RecordingGameGeoPathLifecycle(events),
             new RecordingGameWorldActivationLifecycle(events),
             new RecordingGameEnginesLifecycle(events),
             new RecordingGameLocationBootstrapLifecycle(events),
@@ -61,7 +61,7 @@ class GameStartupSequenceLifecycleTest {
             "chatOverride:start:true",
             "adminPanel:start",
             "staticData:start",
-            "geoNav:start",
+            "geoPath:start",
             "worldBootstrap:start",
             "eventBootstrap:start",
             "worldActivation:start",
@@ -144,18 +144,18 @@ class GameStartupSequenceLifecycleTest {
         }
     }
 
-    private static final class RecordingGameGeoNavLifecycle extends GameGeoNavLifecycle {
+    private static final class RecordingGameGeoPathLifecycle extends GameGeoPathLifecycle {
 
         private final List<String> events;
 
-        private RecordingGameGeoNavLifecycle(List<String> events) {
-            super(new GameGeoNavGateway());
+        private RecordingGameGeoPathLifecycle(List<String> events) {
+            super(new GameGeoPathGateway());
             this.events = events;
         }
 
         @Override
         public synchronized void start() {
-            events.add("geoNav:start");
+            events.add("geoPath:start");
         }
     }
 

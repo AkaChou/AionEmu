@@ -414,5 +414,17 @@
 		<spawn npc_id="215169">
 			<spot x="512.23" y="346.5" z="179.96648" h="20" walker_id="E93A3DF2E3316DB1DAB6BBB4C869EB55A2EE8972"/>
 		</spawn>
+		<spawn npc_id="206096" respawn_time="1">
+		  <spot x="528.742554" y="756.131042" z="199.4762"/>
+		</spawn>
+		<spawn npc_id="215179" respawn_time="1">
+		  <spot x="526.456238" y="845.340210" z="199.45186" h="90"/>
+		</spawn>
+		<spawn npc_id="700542" respawn_time="1">
+		  <spot x="577.569397" y="836.968384" z="199.42522" h="56"/>
+		</spawn>
+		<spawn npc_id="856595" respawn_time="30">
+		  <spot x="521.304138" y="124.654427" z="175.95619"/>
+		</spawn>
 	</spawn_map>
 </spawns>

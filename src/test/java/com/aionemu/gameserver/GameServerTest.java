@@ -36,8 +36,8 @@ class GameServerTest {
 				Config.dataFile("./data/scripts/system/aihandlers.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/data/static_data/items/item_templates.xml").getCanonicalFile(),
 				Config.dataFile("data/static_data/items/item_templates.xml").getCanonicalFile());
-			assertEquals(new File("AL-Game/definitions/compact/world.xml").getCanonicalFile(),
-				Config.definitionFile("definitions/compact/world.xml").getCanonicalFile());
+			assertEquals(new File("AL-Game/definitions/compact/world/fly_path.xml").getCanonicalFile(),
+				Config.definitionFile("definitions/compact/world/fly_path.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/cache/static_data.xml").getCanonicalFile(),
 				Config.cacheFile("./cache/static_data.xml").getCanonicalFile());
 		} finally {
@@ -51,53 +51,29 @@ class GameServerTest {
 	@Test
 	void loadsGeoDataDefaultsWithoutOverrideProperties() {
 		assertDoesNotThrow(() -> ConfigurableProcessor.process(GeoDataConfig.class, new Properties()));
-		assertEquals(50, readIntConfig("GEO_NAV_CACHE_SIZE"));
-		assertTrue(readBooleanConfig("GEO_NAV_PULL_ENABLE"));
-		assertEquals(800, readIntConfig("GEO_NAV_MAX_NODES"));
-		assertEquals(5F, readFloatConfig("GEO_NAV_TARGET_THRESHOLD"), 0.0001F);
-		assertEquals(0.2F, readFloatConfig("GEO_NAV_PATH_WEIGHT"), 0.0001F);
-		assertEquals(20F, readFloatConfig("GEO_NAV_TARGET_WEIGHT"), 0.0001F);
-		assertEquals(5F, readFloatConfig("GEO_NAV_GROUND_SEARCH_DISTANCE"), 0.0001F);
-		assertEquals(0.8F, readFloatConfig("GEO_NAV_BOX_EXTENT_XY"), 0.0001F);
-		assertEquals(-1F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MIN"), 0.0001F);
-		assertEquals(4F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MAX"), 0.0001F);
-		assertEquals(0.2F, readFloatConfig("GEO_NAV_BOX_CENTER_Z"), 0.0001F);
-		assertTrue(readBooleanConfig("GEO_NAV_SMOOTH_PATH"));
-		assertEquals(800, readIntConfig("GEO_NAV_CORRIDOR_LENGTH"));
+		assertFalse(readBooleanConfig("GEO_PATH_ENABLE"));
+		assertEquals(10, readIntConfig("GEO_PATH_CACHE_SIZE"));
+		assertEquals(50000, readIntConfig("GEO_PATH_MAX_NODES"));
+		assertEquals(250, readIntConfig("GEO_PATH_TIMEOUT_MS"));
+		assertEquals(2, readFloatConfig("GEO_PATH_SPATIAL_STEP"), 0.001f);
 	}
 
 	@Test
-	void loadsGeoNavOverrideProperties() {
+	void loadsGeoPathOverrideProperties() {
 		Properties properties = new Properties();
-		properties.setProperty("gameserver.geo.nav.cache.size", "7");
-		properties.setProperty("gameserver.geo.nav.pull.enable", "false");
-		properties.setProperty("gameserver.geo.nav.max.nodes", "123");
-		properties.setProperty("gameserver.geo.nav.target.threshold", "6.5");
-		properties.setProperty("gameserver.geo.nav.path.weight", "0.4");
-		properties.setProperty("gameserver.geo.nav.target.weight", "12.5");
-		properties.setProperty("gameserver.geo.nav.ground.search.distance", "9.5");
-		properties.setProperty("gameserver.geo.nav.box.extent.xy", "1.5");
-		properties.setProperty("gameserver.geo.nav.box.offset.z.min", "-2.5");
-		properties.setProperty("gameserver.geo.nav.box.offset.z.max", "6.5");
-		properties.setProperty("gameserver.geo.nav.box.center.z", "0.6");
-		properties.setProperty("gameserver.geo.nav.smooth.path", "false");
-		properties.setProperty("gameserver.geo.nav.corridor.length", "321");
+		properties.setProperty("gameserver.geo.path.enable", "true");
+		properties.setProperty("gameserver.geo.path.cache.size", "7");
+		properties.setProperty("gameserver.geo.path.max.nodes", "123");
+		properties.setProperty("gameserver.geo.path.timeout.ms", "400");
+		properties.setProperty("gameserver.geo.path.spatial.step", "1.5");
 
 		ConfigurableProcessor.process(GeoDataConfig.class, properties);
 
-		assertEquals(7, readIntConfig("GEO_NAV_CACHE_SIZE"));
-		assertFalse(readBooleanConfig("GEO_NAV_PULL_ENABLE"));
-		assertEquals(123, readIntConfig("GEO_NAV_MAX_NODES"));
-		assertEquals(6.5F, readFloatConfig("GEO_NAV_TARGET_THRESHOLD"), 0.0001F);
-		assertEquals(0.4F, readFloatConfig("GEO_NAV_PATH_WEIGHT"), 0.0001F);
-		assertEquals(12.5F, readFloatConfig("GEO_NAV_TARGET_WEIGHT"), 0.0001F);
-		assertEquals(9.5F, readFloatConfig("GEO_NAV_GROUND_SEARCH_DISTANCE"), 0.0001F);
-		assertEquals(1.5F, readFloatConfig("GEO_NAV_BOX_EXTENT_XY"), 0.0001F);
-		assertEquals(-2.5F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MIN"), 0.0001F);
-		assertEquals(6.5F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MAX"), 0.0001F);
-		assertEquals(0.6F, readFloatConfig("GEO_NAV_BOX_CENTER_Z"), 0.0001F);
-		assertFalse(readBooleanConfig("GEO_NAV_SMOOTH_PATH"));
-		assertEquals(321, readIntConfig("GEO_NAV_CORRIDOR_LENGTH"));
+		assertTrue(readBooleanConfig("GEO_PATH_ENABLE"));
+		assertEquals(7, readIntConfig("GEO_PATH_CACHE_SIZE"));
+		assertEquals(123, readIntConfig("GEO_PATH_MAX_NODES"));
+		assertEquals(400, readIntConfig("GEO_PATH_TIMEOUT_MS"));
+		assertEquals(1.5f, readFloatConfig("GEO_PATH_SPATIAL_STEP"), 0.001f);
 	}
 
 	@Test

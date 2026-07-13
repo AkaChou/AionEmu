@@ -34,11 +34,13 @@ public class SpellAtkDrainEffect extends AbstractOverTimeEffect {
 	public void onPeriodicAction(Effect effect) {
 		int valueWithDelta = value + delta * effect.getSkillLevel();
 		int critAddDmg = critAddDmg2 + critAddDmg1 * effect.getSkillLevel();
-		int damage = AttackUtil.calculateMagicalOverTimeSkillResult(effect, valueWithDelta, element, position, true,
-				critProbMod2, critAddDmg);
+		int damage = AttackUtil.calculateMagicalOverTimeSkillResult(effect, valueWithDelta, element, position,
+				effect.getSkillTemplate().isMboostApplied(), mrResist, critProbMod2, critAddDmg);
 		effect.getEffected().getController().onAttack(effect.getEffector(), effect.getSkillId(), TYPE.REGULAR, damage,
 				true, LOG.SPELLATKDRAIN);
-		effect.getEffector().getObserveController().notifyAttackObservers(effect.getEffected());
+		if (effect.tryActivateGodstone()) {
+			effect.getEffector().getObserveController().notifyAttackObservers(effect.getEffected(), effect.getSkillId());
+		}
 
 		// 吸取（治疗）造成伤害的一部分 / Drain (heal) portion of damage inflicted
 		if (hp_percent != 0) {

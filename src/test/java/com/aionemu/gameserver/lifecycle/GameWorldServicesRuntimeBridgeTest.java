@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavData;
-import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,16 +23,16 @@ class GameWorldServicesRuntimeBridgeTest {
     @Test
     void usesSpringProvidersBeforeLegacySingletonFallbacks() {
         GeoService geoService = instance(GeoService.class);
-        NavService navService = instance(NavService.class);
+        PathService pathService = instance(PathService.class);
         DropRegistrationService dropRegistrationService = instance(DropRegistrationService.class);
         GameWorldServicesRuntimeBridge runtimeBridge = new GameWorldServicesRuntimeBridge();
 
         runtimeBridge.setGeoServiceProvider(provider(GeoService.class, geoService));
-        runtimeBridge.setNavServiceProvider(provider(NavService.class, navService));
+        runtimeBridge.setPathServiceProvider(provider(PathService.class, pathService));
         runtimeBridge.setDropRegistrationServiceProvider(provider(DropRegistrationService.class, dropRegistrationService));
 
         assertSame(geoService, runtimeBridge.geoService());
-        assertSame(navService, runtimeBridge.navService());
+        assertSame(pathService, runtimeBridge.pathService());
         assertSame(dropRegistrationService, runtimeBridge.dropRegistrationService());
     }
 
@@ -42,7 +41,7 @@ class GameWorldServicesRuntimeBridgeTest {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameWorldServicesRuntimeBridge.java"));
 
         assertFalse(source.contains("GeoService.getInstance()"));
-        assertFalse(source.contains("NavService.getInstance()"));
+        assertFalse(source.contains("PathService.getInstance()"));
         assertFalse(source.contains("DropRegistrationService.getInstance()"));
     }
 
@@ -51,8 +50,7 @@ class GameWorldServicesRuntimeBridgeTest {
         DropRegistrationService dropRegistrationService = instance(DropRegistrationService.class);
         GameWorldServices worldServices = new GameWorldServices(
             provider(GeoService.class, instance(GeoService.class)),
-            provider(NavService.class, instance(NavService.class)),
-            provider(NavData.class, instance(NavData.class)),
+            provider(PathService.class, instance(PathService.class)),
             provider(DropRegistrationService.class, dropRegistrationService)
         );
 
@@ -61,33 +59,6 @@ class GameWorldServicesRuntimeBridgeTest {
         } finally {
             worldServices.destroy();
         }
-    }
-
-    @Test
-    void worldServicesNavDataAccessorUsesSpringProviderBeforeLegacyFallback() {
-        NavData navData = instance(NavData.class);
-        GameWorldServices worldServices = new GameWorldServices(
-            provider(GeoService.class, instance(GeoService.class)),
-            provider(NavService.class, instance(NavService.class)),
-            provider(NavData.class, navData),
-            provider(DropRegistrationService.class, instance(DropRegistrationService.class))
-        );
-
-        try {
-            assertSame(navData, GameWorldServices.navData());
-            assertSame(navData, NavData.getInstance());
-        } finally {
-            worldServices.destroy();
-            NavData.setInstanceProvider(null);
-        }
-    }
-
-    @Test
-    void navServiceUsesWorldServicesBridgeForNavData() throws IOException {
-        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/nav/NavService.java"));
-
-        assertFalse(source.contains("NavData.getInstance()"));
-        assertTrue(source.contains("GameWorldServices.navData()"));
     }
 
     @Test

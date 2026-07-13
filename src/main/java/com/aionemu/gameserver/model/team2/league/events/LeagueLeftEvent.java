@@ -55,9 +55,18 @@ public class LeagueLeftEvent extends AlwaysTrueTeamEvent implements Predicate<Le
 		}
 	}
 
-	private final void checkDisband() {
-		if (league.onlineMembers() <= 1) {
+	void checkDisband() {
+		if (league.onlineMembers() == 0) {
 			LeagueService.disband(league);
+			return;
+		}
+		if (league.onlineMembers() == 1) {
+			PlayerAlliance remaining = league.getMembers().iterator().next();
+			if (remaining.getTeamType().shouldDisband(1)) {
+				LeagueService.disband(league);
+			} else if (!league.hasMember(league.getLeaderObject().getObjectId())) {
+				league.changeLeader(league.getMember(remaining.getObjectId()));
+			}
 		}
 	}
 

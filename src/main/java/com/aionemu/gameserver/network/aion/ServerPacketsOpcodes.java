@@ -60,6 +60,8 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_AUTO_GROUP.class, 0x7a, idSet); // 5.8
 		addPacketOpcode(SM_INSTANCE_INFO.class, 0x8D, idSet); // 5.8
 		addPacketOpcode(SM_MINIONS.class, 0x16A, idSet); // 5.8
+		addPacketOpcode(SM_DYNAMIC_LIMIT_AREA_INFO.class, 0x16B, idSet); // 5.8
+		addPacketOpcode(SM_DYNAMIC_LIMIT_AREA_INFO_LIST.class, 0x16C, idSet); // 5.8
 		addPacketOpcode(SM_ABYSS_RANK.class, 0xef, idSet); // 5.8
 		addPacketOpcode(SM_ABYSS_ARTIFACT_INFO.class, 0x60, idSet); // 5.8
 		addPacketOpcode(SM_MAIL_SERVICE.class, 0xa1, idSet); // 5.8
@@ -243,7 +245,7 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_HOUSE_TELEPORT.class, 0xDD, idSet); // 5.8
 		addPacketOpcode(SM_BUTLER_SALUTE.class, 0xB2, idSet); // 5.8
 		addPacketOpcode(SM_USE_ROBOT.class, 0x5C, idSet); // 5.8
-		addPacketOpcode(SM_CASH_BUFF.class, 0xFD, idSet); // 5.8
+		addPacketOpcode(SM_CHAR_BM_PACK_LIST.class, 0xFD, idSet); // 5.8
 		addPacketOpcode(SM_STONESPEAR_SIEGE.class, 0x12F, idSet); // 5.8
 		addPacketOpcode(SM_SERVER_IDS.class, 0x115, idSet); // 5.8
 		addPacketOpcode(SM_TERRITORY_LIST.class, 0x131, idSet); // 5.8

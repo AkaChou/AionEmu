@@ -1,18 +1,23 @@
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.skillengine.model.ExclusiveAttribute;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
@@ -27,11 +32,20 @@ public class SkillData {
 	@XmlElement(name = "skill_template")
 	private List<SkillTemplate> skillTemplates;
 
+	@XmlTransient
 	private HashMap<Integer, ArrayList<Integer>> cooldownGroups;
+	@XmlTransient
+	private Set<Integer> persistentCooldownGroups;
 
+	@XmlTransient
 	private IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
 
+	@XmlTransient
 	private final Map<String, SkillTemplate> skillGroup = new LinkedHashMap<String, SkillTemplate>();
+	@XmlTransient
+	private Map<Integer, Set<String>> itemExclusiveAttributes = Map.of();
+	@XmlTransient
+	private Map<String, ExclusiveAttribute> exclusiveAttributes = Map.of();
 
 	/**
 	 * JAXB 反序列化完成后，重建技能 ID 与技能组索引。
@@ -117,12 +131,16 @@ public class SkillData {
 	 */
 	public void initializeCooldownGroups() {
 		cooldownGroups = new HashMap<Integer, ArrayList<Integer>>();
+		persistentCooldownGroups = new HashSet<>();
 		for (SkillTemplate skillTemplate : skillTemplates) {
 			int delayId = skillTemplate.getDelayId();
 			if (!cooldownGroups.containsKey(delayId)) {
 				cooldownGroups.put(delayId, new ArrayList<Integer>());
 			}
 			cooldownGroups.get(delayId).add(skillTemplate.getSkillId());
+			if (skillTemplate.isRemainCooltimeOnLogin()) {
+				persistentCooldownGroups.add(delayId);
+			}
 		}
 	}
 
@@ -140,6 +158,13 @@ public class SkillData {
 		return cooldownGroups.get(delayId);
 	}
 
+	public boolean shouldPersistCooldown(int delayId) {
+		if (persistentCooldownGroups == null) {
+			initializeCooldownGroups();
+		}
+		return persistentCooldownGroups.contains(delayId);
+	}
+
 	/**
 	 * 返回技能 ID 到模板的映射。
 	 * Returns the skill-id to template map.
@@ -148,5 +173,44 @@ public class SkillData {
 	 */
 	public IntObjectHashMap<SkillTemplate> getSkillData() {
 		return skillData;
+	}
+
+	public void setExclusiveAttributes(Map<String, ExclusiveAttribute> exclusiveAttributes,
+			Map<Integer, Set<String>> itemExclusiveAttributes) {
+		this.exclusiveAttributes = exclusiveAttributes;
+		this.itemExclusiveAttributes = itemExclusiveAttributes;
+	}
+
+	public ExclusiveAttribute getExclusiveAttribute(String name) {
+		return name == null ? null : exclusiveAttributes.get(name);
+	}
+
+	public List<ExclusiveAttribute> getItemExclusiveAttributes(int itemId) {
+		return itemExclusiveAttributes.getOrDefault(itemId, Set.of()).stream().map(exclusiveAttributes::get).toList();
+	}
+
+	public int applyExclusiveSkillReduction(int damage, Collection<Integer> itemIds, String skillAttributeName) {
+		ExclusiveAttribute skill = getExclusiveAttribute(skillAttributeName);
+		if (skill == null) {
+			return damage;
+		}
+		int flat = 0;
+		int percent = 0;
+		for (int itemId : itemIds) {
+			for (ExclusiveAttribute item : getItemExclusiveAttributes(itemId)) {
+				if (item != null && item.tag().equals(skill.tag())) {
+					flat += item.skillFlat();
+					percent += item.skillPercent();
+				}
+			}
+		}
+		return Math.max(0, damage - flat) * Math.max(0, 100 - percent) / 100;
+	}
+
+	public int getExclusiveStatusImmune(Collection<Integer> itemIds, String skillAttributeName) {
+		ExclusiveAttribute skill = getExclusiveAttribute(skillAttributeName);
+		return skill == null ? 0 : itemIds.stream().flatMap(id -> getItemExclusiveAttributes(id).stream())
+			.filter(item -> item != null && item.tag().equals(skill.tag()))
+			.mapToInt(ExclusiveAttribute::statusImmune).sum();
 	}
 }

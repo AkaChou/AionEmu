@@ -4,6 +4,7 @@ package com.aionemu.gameserver.dao.impl;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import java.sql.*;
@@ -31,7 +32,8 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     private static final String DELETE_EXPIRED_QUERY = "DELETE FROM `player_effects` WHERE `end_time` < ?";
 
     /** 可持久化效果过滤条件（剩余时间大于 28 秒） / Predicate for insertable effects (remaining time > 28s) */
-    private static final Predicate<Effect> INSERTABLE_EFFECTS_PREDICATE = effect -> effect != null && effect.getRemainingTime() > 28000;
+    private static final Predicate<Effect> INSERTABLE_EFFECTS_PREDICATE = effect -> effect != null
+        && !effect.getSkillTemplate().isNoSaveOnLogout() && effect.getRemainingTime() > 28000;
 
     /**
      * 加载玩家技能效果到效果控制器。
@@ -55,7 +57,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
                     int remainingTime = rset.getInt("current_time");
                     long endTime = rset.getLong("end_time");
 
-                    if (remainingTime > 0 && endTime > System.currentTimeMillis()) {
+                    if (remainingTime > 0) {
                         savedEffects.add(new SavedEffect(skillId, skillLvl, remainingTime, endTime));
                     }
                 }
@@ -114,7 +116,7 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
                     insertStmt.setInt(2, effect.getSkillId());
                     insertStmt.setInt(3, effect.getSkillLevel());
                     insertStmt.setInt(4, effect.getRemainingTime());
-                    insertStmt.setLong(5, effect.getEndTime());
+                    insertStmt.setLong(5, persistedEndTime(effect));
                     insertStmt.addBatch();
                     batchCount++;
 
@@ -133,6 +135,12 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
         } catch (SQLException e) {
             log.error(I18n.get("log.db9bf45e33ff", player.getObjectId(), e));
         }
+    }
+
+    private static long persistedEndTime(Effect effect) {
+        var template = effect.getSkillTemplate();
+        return template.isSpendTimeOnLogout() || CustomConfig.ABYSSXFORM_LOGOUT && template.isDeityAvatar()
+            ? effect.getEndTime() : Long.MAX_VALUE;
     }
 
     /**

@@ -94,6 +94,11 @@ public abstract class AITemplate extends AbstractAI {
 	protected void handleCreatureAggro(Creature creature) {
 	}
 
+	/** 处理技能成功作用事件（空实现） / Handles spelled (no-op) */
+	@Override
+	protected void handleSpelled(Creature caster, int skillId, int skillLevel) {
+	}
+
 	/** 处理开始跟随（空实现） / Handles follow me (no-op) */
 	@Override
 	protected void handleFollowMe(Creature creature) {
@@ -137,6 +142,11 @@ public abstract class AITemplate extends AbstractAI {
 	/** 处理死亡（空实现） / Handles died (no-op) */
 	@Override
 	protected void handleDied() {
+	}
+
+	/** 处理击杀来源（空实现） / Handles killer source (no-op) */
+	@Override
+	protected void handleKilled(Creature killer) {
 	}
 
 	/** 处理到达目标（空实现） / Handles target reached (no-op) */

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="portalEndpoint">
+    <xs:sequence>
+      <xs:element name="group" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="point" minOccurs="1" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:attribute name="x" type="xs:float" use="required"/>
+                <xs:attribute name="y" type="xs:float" use="required"/>
+                <xs:attribute name="z" type="xs:float" use="required"/>
+                <xs:attribute name="dir" type="xs:float" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="weight" type="xs:nonNegativeInteger" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="world_id" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="world_name" type="xs:string" use="required"/>
+    <xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+  <xs:element name="direct_portals">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="portal" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="start" type="portalEndpoint"/>
+              <xs:element name="destination" type="portalEndpoint"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="time" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="count" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="min_level" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="max_level" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="need_item" type="xs:string" use="required"/>
+            <xs:attribute name="group_id" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="invade_type" type="xs:nonNegativeInteger" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

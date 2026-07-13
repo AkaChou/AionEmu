@@ -5,14 +5,14 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 世界服务运行时桥：解析 Geo/Nav/Drop，并创建/激活 GameServer、标记玩家离线。
- * World-services runtime bridge: resolves Geo/Nav/Drop, creates/activates GameServer, marks players offline.
+ * 世界服务运行时桥：解析 Geo/Path/Drop，并创建/激活 GameServer、标记玩家离线。
+ * World-services runtime bridge: resolves Geo/Path/Drop, creates/activates GameServer, marks players offline.
  */
 @Component
 public class GameWorldServicesRuntimeBridge {
@@ -24,10 +24,10 @@ public class GameWorldServicesRuntimeBridge {
     private ObjectProvider<GeoService> geoServiceProvider;
 
     /**
-     * NavService 的可选提供者。
-     * Optional provider for NavService.
+     * PathService 的可选提供者。
+     * Optional provider for PathService.
      */
-    private ObjectProvider<NavService> navServiceProvider;
+    private ObjectProvider<PathService> pathServiceProvider;
 
     /**
      * DropRegistrationService 的可选提供者。
@@ -47,14 +47,14 @@ public class GameWorldServicesRuntimeBridge {
     }
 
     /**
-     * 注入 NavService 提供者。
-     * Inject the NavService provider.
+     * 注入 PathService 提供者。
+     * Inject the PathService provider.
      *
-     * NavService provider
+     * PathService provider
      */
     @Autowired(required = false)
-    void setNavServiceProvider(ObjectProvider<NavService> navServiceProvider) {
-        this.navServiceProvider = navServiceProvider;
+    void setPathServiceProvider(ObjectProvider<PathService> pathServiceProvider) {
+        this.pathServiceProvider = pathServiceProvider;
     }
 
     /**
@@ -82,16 +82,16 @@ public class GameWorldServicesRuntimeBridge {
     }
 
     /**
-     * 解析 NavService：优先 Spring，否则回退。
-     * Resolve NavService: prefer Spring, otherwise fallback.
+     * 解析 PathService：优先 Spring，否则回退。
+     * Resolve PathService: prefer Spring, otherwise fallback.
      *
-     * NavService instance
+     * PathService instance
      */
-    public NavService navService() {
-        if (navServiceProvider == null) {
-            return GameWorldServiceFallbacks.navService();
+    public PathService pathService() {
+        if (pathServiceProvider == null) {
+            return GameWorldServiceFallbacks.pathService();
         }
-        return navServiceProvider.getIfAvailable(GameWorldServiceFallbacks::navService);
+        return pathServiceProvider.getIfAvailable(GameWorldServiceFallbacks::pathService);
     }
 
     /**

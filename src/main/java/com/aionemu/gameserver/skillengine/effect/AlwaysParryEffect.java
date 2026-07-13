@@ -38,15 +38,13 @@ public class AlwaysParryEffect extends EffectTemplate {
 	 */
 	@Override
 	public void startEffect(final Effect effect) {
-		AttackCalcObserver acObserver = new AttackStatusObserver(value, AttackStatus.PARRY) {
+		AttackCalcObserver acObserver = new AttackStatusObserver(calculateValue(effect.getSkillLevel()), AttackStatus.PARRY) {
 
 			@Override
 			public boolean checkStatus(AttackStatus status) {
 				if (status == AttackStatus.PARRY) {
-					if (value <= 1) {
+					if (consume && value > 0 && --value == 0) {
 						effect.endEffect();
-					} else {
-						value--;
 					}
 					return true;
 				} else {

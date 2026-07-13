@@ -360,7 +360,7 @@ public class ItemService {
 			}
 		}
 		if (sourceItem.getGodStone() != null) {
-			newItem.addGodStone(sourceItem.getGodStone().getItemId());
+			newItem.addGodStone(sourceItem.getGodStone().getItemId(), sourceItem.getGodStone().getActivatedCount());
 		}
 		if (sourceItem.getEnchantLevel() > 0) {
 			newItem.setEnchantLevel(sourceItem.getEnchantLevel());
@@ -664,7 +664,7 @@ public class ItemService {
 			}
 		}
 		if (sourceItem.getGodStone() != null) {
-			newItem.addGodStone(sourceItem.getGodStone().getItemId());
+			newItem.addGodStone(sourceItem.getGodStone().getItemId(), sourceItem.getGodStone().getActivatedCount());
 		}
 		if (sourceItem.getEnchantLevel() > 0) {
 			newItem.setEnchantLevel(sourceItem.getEnchantLevel() - 5);

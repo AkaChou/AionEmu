@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.skillengine.properties;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
@@ -84,6 +85,19 @@ class TargetRangePropertyTest {
 		}
 	}
 
+	@Test
+	void onlyOneOtherTargetRejectsEffector() {
+		TestCreature effector = new TestCreature(1);
+		Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);
+		skill.getEffectedList().add(effector);
+		Properties properties = new Properties();
+		properties.targetType = TargetRangeAttribute.ONLYONE;
+		properties.otherTargetOnly = true;
+
+		assertFalse(TargetRangeProperty.set(skill, properties));
+		assertTrue(skill.getEffectedList().isEmpty());
+	}
+
 	private static class TestCreature extends Creature {
 
 		private TestCreature(int objectId) {
@@ -91,7 +105,7 @@ class TargetRangePropertyTest {
 		}
 
 		private TestCreature(int objectId, float x, float y, float z, float collision) {
-			super(objectId, (CreatureController<? extends Creature>) null, null,
+			super(objectId, new CreatureController<>() {}, null,
 					new TestVisibleObjectTemplate(collision), position(x, y, z));
 			setKnownlist(new KnownList(this));
 			setLifeStats(new TestLifeStats(this));

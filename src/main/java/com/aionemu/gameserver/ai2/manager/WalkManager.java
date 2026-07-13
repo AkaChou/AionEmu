@@ -87,11 +87,21 @@ public class WalkManager {
 	}
 
 	private static boolean startRandomWalking(NpcAI2 npcAI, Npc owner) {
+		return startRandomWalking(npcAI, owner, false);
+	}
+
+	public static boolean startRandomWalking(NpcAI2 npcAI) {
+		stopWalking(npcAI);
+		npcAI.setStateIfNot(AIState.WALKING);
+		return startRandomWalking(npcAI, npcAI.getOwner(), true);
+	}
+
+	private static boolean startRandomWalking(NpcAI2 npcAI, Npc owner, boolean forced) {
 		if (!AIConfig.ACTIVE_NPC_MOVEMENT) {
 			return false;
 		}
 		int randomWalkNr = owner.getSpawn().getRandomWalk();
-		if (randomWalkNr == 0) {
+		if (!forced && randomWalkNr == 0) {
 			return false;
 		}
 		if (npcAI.setSubStateIfNot(AISubState.WALK_RANDOM)) {
@@ -113,6 +123,26 @@ public class WalkManager {
 		owner.getMoveController().setRouteStep(nextStep, route.get(currentPoint));
 		EmoteManager.emoteStartWalking(npcAI.getOwner());
 		npcAI.getOwner().getMoveController().moveToNextPoint();
+	}
+
+	/** 移动到指定路径点；到达后不自动选择下一点。 */
+	public static boolean startWalkingToWaypoint(NpcAI2 npcAI, WalkerTemplate template, int waypoint) {
+		if (!AIConfig.ACTIVE_NPC_MOVEMENT || !npcAI.isMoveSupported() || template == null
+			|| template.getRouteSteps() == null || waypoint < 0 || waypoint >= template.getRouteSteps().size()) {
+			return false;
+		}
+		Npc owner = npcAI.getOwner();
+		List<RouteStep> route = template.getRouteSteps();
+		cancelPendingTask(owner.getObjectId());
+		walkAttemptCounts.remove(owner.getObjectId());
+		randomWalkingNpcs.remove(owner.getObjectId());
+		owner.getMoveController().abortMove();
+		npcAI.setStateIfNot(AIState.WALKING);
+		npcAI.setSubStateIfNot(AISubState.WALK_PATH);
+		owner.getMoveController().setCurrentRoute(route);
+		owner.getMoveController().setRouteStep(route.get(waypoint), route.get(Math.max(0, waypoint - 1)));
+		owner.getMoveController().moveToNextPoint();
+		return true;
 	}
 
 	protected static RouteStep findNextRoutStep(Npc owner, List<RouteStep> route) {

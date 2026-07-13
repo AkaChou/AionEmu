@@ -17,6 +17,7 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.ai2.scenario.AI2Scenario;
 import com.aionemu.gameserver.ai2.scenario.AI2Scenarios;
 import com.aionemu.gameserver.configs.main.AIConfig;
+import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -303,6 +304,25 @@ public abstract class AbstractAI implements AI2 {
 		}
 	}
 
+	@Override
+	public void onAttacked(Creature attacker, AttackStatus status) {
+		Preconditions.checkNotNull(attacker, "Attacker must not be null");
+		if (canHandleEvent(AIEventType.ATTACK)
+				&& !DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getOwner().getTribe(), attacker.getTribe())) {
+			handleAttack(attacker, status);
+			logEvent(AIEventType.ATTACK);
+		}
+	}
+
+	@Override
+	public void onSpelled(Creature caster, int skillId, int skillLevel) {
+		Preconditions.checkNotNull(caster, "Caster must not be null");
+		if (canHandleEvent(AIEventType.SPELLED)) {
+			handleSpelled(caster, skillId, skillLevel);
+			logEvent(AIEventType.SPELLED);
+		}
+	}
+
 	/**
 	 * 接收自定义事件并分发处理。
 	 * Receives a custom event and dispatches it.
@@ -435,6 +455,9 @@ public abstract class AbstractAI implements AI2 {
 	/** 处理死亡 / Handle died */
 	protected abstract void handleDied();
 
+	/** 处理被指定生物击杀 / Handle killed by creature */
+	protected abstract void handleKilled(Creature killer);
+
 	/** 处理移动校验 / Handle move validate */
 	protected abstract void handleMoveValidate();
 
@@ -468,6 +491,10 @@ public abstract class AbstractAI implements AI2 {
 	/** 处理被攻击 / Handle attack */
 	protected abstract void handleAttack(Creature creature);
 
+	protected void handleAttack(Creature creature, AttackStatus status) {
+		handleAttack(creature);
+	}
+
 	/** 处理生物需要支援 / Handle creature needs support */
 	protected abstract boolean handleCreatureNeedsSupport(Creature creature);
 
@@ -485,6 +512,9 @@ public abstract class AbstractAI implements AI2 {
 
 	/** 处理生物仇恨 / Handle creature aggro */
 	protected abstract void handleCreatureAggro(Creature creature);
+
+	/** 处理技能成功作用事件 / Handle successfully affected by skill */
+	protected abstract void handleSpelled(Creature caster, int skillId, int skillLevel);
 
 	/** 处理目标变更 / Handle target changed */
 	protected abstract void handleTargetChanged(Creature creature);
@@ -615,6 +645,9 @@ public abstract class AbstractAI implements AI2 {
 	 */
 	void handleCreatureEvent(AIEventType event, Creature creature) {
 		switch (event) {
+		case DIED:
+			handleKilled(creature);
+			break;
 		case ATTACK:
 			if (DataManager.TRIBE_RELATIONS_DATA.isFriendlyRelation(getOwner().getTribe(), creature.getTribe())) {
 				return;
@@ -734,8 +767,7 @@ public abstract class AbstractAI implements AI2 {
 		case FIGHT:
 			return SimpleAttackManager.isTargetInAttackRange((Npc) owner);
 		case RETURNING:
-			SpawnTemplate spawn = getOwner().getSpawn();
-			return MathUtil.isNearCoordinates(getOwner(), spawn.getX(), spawn.getY(), spawn.getZ(), 1);
+			return ((Npc) owner).getMoveController().isHomeReturnDestinationReached();
 		case FOLLOWING:
 			return FollowEventHandler.isInRange(this, getOwner().getTarget());
 		case WALKING:
@@ -896,6 +928,11 @@ public abstract class AbstractAI implements AI2 {
 	 */
 	@Override
 	public int modifySensoryRange(int value) {
+		if (currentState == AIState.RETURNING && owner instanceof Npc npc) {
+			var definition = DataManager.NPC_PATH_BEHAVIOR_DATA == null ? null
+				: DataManager.NPC_PATH_BEHAVIOR_DATA.get(npc.getNpcId());
+			return value * (definition == null ? 50 : Math.max(0, definition.returnSensoryPercent())) / 100;
+		}
 		return value;
 	}
 

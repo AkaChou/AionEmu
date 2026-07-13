@@ -4,6 +4,7 @@ package com.aionemu.gameserver.dao.impl;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import java.sql.*;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
                     int cooldownId = rset.getInt("cooldown_id");
                     long reuseDelay = rset.getLong("reuse_delay");
 
-                    if (reuseDelay > currentTime) {
+                    if (reuseDelay > currentTime && DataManager.SKILL_DATA.shouldPersistCooldown(cooldownId)) {
                         validCooldowns.put(cooldownId, reuseDelay);
                     }
                 }
@@ -97,7 +98,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
 
         for (Map.Entry<Integer, Long> entry : cooldowns.entrySet()) {
             Long reuseDelay = entry.getValue();
-            if (COOLDOWN_PREDICATE.test(reuseDelay)) {
+            if (COOLDOWN_PREDICATE.test(reuseDelay) && DataManager.SKILL_DATA.shouldPersistCooldown(entry.getKey())) {
                 validCooldowns.put(entry.getKey(), reuseDelay);
             }
         }
@@ -317,7 +318,8 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
 
                     for (Map.Entry<Integer, Long> cooldownEntry : cooldowns.entrySet()) {
                         Long reuseDelay = cooldownEntry.getValue();
-                        if (reuseDelay != null && reuseDelay > currentTime) {
+                        if (reuseDelay != null && reuseDelay > currentTime
+                            && DataManager.SKILL_DATA.shouldPersistCooldown(cooldownEntry.getKey())) {
                             insertStmt.setInt(1, player.getObjectId());
                             insertStmt.setInt(2, cooldownEntry.getKey());
                             insertStmt.setLong(3, reuseDelay);

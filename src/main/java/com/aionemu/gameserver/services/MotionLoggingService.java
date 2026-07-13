@@ -312,7 +312,7 @@ public class MotionLoggingService {
 			motionTimes.add(motion);
 		}
 		// 编组最终 XML 文件 / marshall the final xml file
-		marshallFile(motionData, "data/static_data/skills/new_motion_times.xml");
+		marshallFile(motionData, "compact/skills/new_motion_times.xml");
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class MotionLoggingService {
 			JAXBContext jaxbContext = JAXBContext.newInstance(templates.getClass());
 			Marshaller marshaller = jaxbContext.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			marshaller.marshal(templates, new FileOutputStream(Config.dataFile(file)));
+			marshaller.marshal(templates, new FileOutputStream(Config.definitionFile(file)));
 		} catch (JAXBException e) {
 			log.error(I18n.get("log.a34c1da0cbcb", file, e));
 		} catch (FileNotFoundException e) {

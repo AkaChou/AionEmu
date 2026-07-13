@@ -68,7 +68,8 @@ public class DropInfo extends AdminCommand {
 		for (DropGroup dropGroup: npcDrop.getDropGroup()){
 			PacketSendUtility.sendMessage(player, "DropGroup: "+ dropGroup.getGroupName());
 			for (Drop drop : dropGroup.getDrop()){
-				PacketSendUtility.sendMessage(player, "[item:" + drop.getItemId() + "]" + "	Rate: " + drop.getChance());
+				float adjustedChance = Math.min(dropGroup.getAdjustedChance(drop), 100f);
+				PacketSendUtility.sendMessage(player, "[item:" + drop.getItemId() + "]" + "	Rate: " + adjustedChance);
 				count ++;
 			}
 		}

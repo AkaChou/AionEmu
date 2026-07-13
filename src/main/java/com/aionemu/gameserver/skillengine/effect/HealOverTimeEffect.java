@@ -43,7 +43,7 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 		int finalHeal = possibleHealValue;
 		if (healType == HealType.HP) {
 			int baseHeal = possibleHealValue;
-			if (effect.getItemTemplate() == null) {
+			if (effect.getItemTemplate() == null && effect.getSkillTemplate().isHealBoostApplied()) {
 				int boostHealAdd = effector.getGameStats().getStat(StatEnum.HEAL_BOOST, 0).getCurrent();
 				int boostHeal = (effector.getGameStats().getStat(StatEnum.HEAL_BOOST, baseHeal).getCurrent()
 						- boostHealAdd);
@@ -55,6 +55,11 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 			}
 			finalHeal = effect.getEffected().getGameStats().getStat(StatEnum.HEAL_SKILL_DEBOOST, finalHeal)
 					.getCurrent();
+		}
+		else if (effect.getItemTemplate() == null && healType == HealType.MP
+			&& effect.getSkillTemplate().isMpHealBoostApplied()) {
+			finalHeal = effector.getGameStats().getStat(StatEnum.MP_HEAL_SKILL_BOOST, possibleHealValue).getCurrent();
+			finalHeal = AbstractHealEffect.capMpHealBoost(possibleHealValue, finalHeal);
 		}
 		effect.setReservedInt(position, finalHeal);
 	}
@@ -86,6 +91,9 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 		case DP:
 			((Player) effected).getCommonData().addDp(healValue);
 			break;
+		}
+		if (healType == HealType.HP || healType == HealType.MP) {
+			AbstractHealEffect.notifyHealedByUser(effect, healType, getCurrentStatValue(effect) - currentValue);
 		}
 	}
 

@@ -27,10 +27,10 @@ public class MpAttackInstantEffect extends EffectTemplate {
 	@Override
 	public void applyEffect(Effect effect) {
 		int maxMP = effect.getEffected().getLifeStats().getMaxMp();
-		int newValue = value;
+		int newValue = calculateValue(effect.getSkillLevel());
 		// 支持百分比数值 / Support for values in percentage
 		if (percent) {
-			newValue = ((maxMP * value) / 100);
+			newValue = maxMP * newValue / 100;
 		}
 		effect.getEffected().getLifeStats().reduceMp(newValue);
 	}

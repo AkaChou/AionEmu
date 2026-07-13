@@ -30,6 +30,7 @@
 			<spot x="1787.7944" y="2319.0996" z="206.06873" entity_id="1506"/>
 			<spot x="1816.8088" y="2326.6040" z="206.54106" entity_id="1507"/>
 			<spot x="1782.9731" y="2236.0818" z="199.68214" entity_id="1508"/>
+		  <spot x="1630.102417" y="2147.306641" z="177.08167" h="53"/>
 		</spawn>
 		<!-- Guardian's Trap -->
 		<spawn npc_id="703075" respawn_time="60">
@@ -53,6 +54,7 @@
 			<spot x="1269.1841" y="1446.5643" z="206.81824" entity_id="2867"/>
 			<spot x="1396.1842" y="1458.1675" z="203.36104" entity_id="2875"/>
 			<spot x="1472.9731" y="1425.2637" z="201.83658" entity_id="2876"/>
+		  <spot x="1818.543213" y="1697.118530" z="225.18008"/>
 		</spawn>
 		<!-- Broken Bone Pile -->
 		<spawn npc_id="703076" respawn_time="60">
@@ -132,6 +134,7 @@
 			<spot x="2572.6392" y="2030.6982" z="244.16592" entity_id="1219"/>
 			<spot x="2414.1921" y="1840.6019" z="229.46753" entity_id="1220"/>
 			<spot x="2311.4336" y="1957.9574" z="238.22365" entity_id="1221"/>
+		  <spot x="2448.280273" y="2000.390991" z="235.38884"/>
 		</spawn>
 		<!-- Calydon Totem -->
 		<spawn npc_id="703079" respawn_time="60">
@@ -224,6 +227,7 @@
 			<spot x="416.80737" y="2803.6777" z="230.19371" entity_id="1717"/>
 			<spot x="597.49194" y="2831.5447" z="223.84196" entity_id="1718"/>
 			<spot x="200.85880" y="2426.4495" z="241.14119" entity_id="1719"/>
+		  <spot x="597.310913" y="2831.520020" z="223.86613"/>
 		</spawn>
 		<!-- Howling Daeva Statue -->
 		<spawn npc_id="703083" respawn_time="60">
@@ -338,6 +342,7 @@
 			<spot x="691.43164" y="429.81857" z="296.75436" entity_id="3424"/>
 			<spot x="716.15881" y="456.34039" z="296.75351" entity_id="3425"/>
 			<spot x="915.41071" y="769.46716" z="264.39920" entity_id="3426"/>
+		  <spot x="691.481323" y="429.973602" z="296.25"/>
 		</spawn>
 		<!-- Suspicious Aether Fragment -->
 		<spawn npc_id="703318" respawn_time="295">
@@ -17795,6 +17800,19 @@
 		<!-- DF6_FOBJ_Od_Track_Q25670_E -->
 		<spawn npc_id="731794" respawn_time="60">
 			<spot x="2680.0000" y="1765.0000" z="212.38014"/>
+		</spawn>
+		<spawn npc_id="207144" respawn_time="0">
+		  <spot x="1838.937866" y="1550.217163" z="242.1669"/>
+		</spawn>
+		<spawn npc_id="241338" respawn_time="600">
+		  <spot x="221.624924" y="2862.732178" z="847.67194"/>
+		</spawn>
+		<spawn npc_id="703438" respawn_time="10">
+		  <spot x="2680.531982" y="1764.493286" z="212.59491" h="45"/>
+		  <spot x="2460.303223" y="1645.918335" z="246.44206" h="45"/>
+		</spawn>
+		<spawn npc_id="805883" respawn_time="1">
+		  <spot x="394.015076" y="1628.897339" z="920.9485" h="105"/>
 		</spawn>
 	</spawn_map>
 </spawns>

@@ -77,12 +77,28 @@ public class ActionObserver {
 	};
 
 	/**
+	 * 受到物理或魔法攻击时回调；旧观察者继续走无类型重载。
+	 * Callback with the incoming attack category; legacy observers use the untyped overload.
+	 */
+	public void attacked(Creature creature, boolean magical) {
+		attacked(creature);
+	};
+
+	/**
 	 * 主动攻击时回调。
 	 * Callback when attacking.
 	 *
 	 * target
 	 */
 	public void attack(Creature creature) {
+	};
+
+	/**
+	 * 主动攻击时回调并携带当前技能 ID；普通攻击的技能 ID 为 0。
+	 * Callback with the current skill id; normal attacks use skill id 0.
+	 */
+	public void attack(Creature creature, int skillId) {
+		attack(creature);
 	};
 
 	/**

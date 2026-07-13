@@ -9,6 +9,7 @@ import java.util.Set;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.utils.Rnd;
@@ -37,6 +38,10 @@ public class DropGroup implements DropCalculator {
 	private Boolean useLevelBasedChanceReduction;
 	@XmlAttribute(name = "max_items")
 	private int maxItems = 1;
+	@XmlAttribute(name = "drop_group_adjustment")
+	private int dropGroupAdjustment = 100;
+	@XmlTransient
+	private float chanceMultiplier = 1f;
 
 	/** 获取掉落。 / Returns the drop. */
 	public List<Drop> getDrop() {
@@ -80,7 +85,24 @@ public class DropGroup implements DropCalculator {
 		copy.legacyUseCategory = legacyUseCategory;
 		copy.useLevelBasedChanceReduction = useLevelBasedChanceReduction;
 		copy.maxItems = maxItems;
+		copy.dropGroupAdjustment = dropGroupAdjustment;
+		copy.chanceMultiplier = chanceMultiplier;
 		return copy;
+	}
+
+	/** 设置 NPC 专属掉落倍率，1 表示 1 倍。 */
+	public void setChanceMultiplier(float chanceMultiplier) {
+		this.chanceMultiplier = chanceMultiplier;
+	}
+
+	/** 返回 NPC 专属掉落倍率。 */
+	public float getChanceMultiplier() {
+		return chanceMultiplier;
+	}
+
+	/** 返回应用 NPC 和掉落组专属倍率后的基础概率。 */
+	public float getAdjustedChance(Drop candidate) {
+		return candidate.getChance() * chanceMultiplier * dropGroupAdjustment / 100f;
 	}
 
 	/** 掉落 Calculator / Drop Calculator */
@@ -118,8 +140,8 @@ public class DropGroup implements DropCalculator {
 	}
 
 	float calculateEffectiveChance(Drop candidate, DropModifiers dropModifiers) {
-		return dropModifiers.calculateDropChance(candidate.getChance(),
-				isUseLevelBasedChanceReduction() && !candidate.isNoReduction());
+		return dropModifiers.calculateDropChance(getAdjustedChance(candidate),
+			isUseLevelBasedChanceReduction() && !candidate.isNoReduction());
 	}
 
 	private int addDropItem(Set<DropItem> result, int index, Drop selected, Collection<Player> groupMembers) {

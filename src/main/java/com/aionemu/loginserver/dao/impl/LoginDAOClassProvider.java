@@ -38,6 +38,7 @@ public class LoginDAOClassProvider implements DAOClassProvider {
 			PremiumDAO.class,
 			SvStatsDAO.class,
 			TaskFromDBDAO.class,
+			VipDAO.class,
 		};
 	}
 }

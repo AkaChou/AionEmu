@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_test_ktw.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>IDLUNA_DEF_ODD_3_3</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>IDLUNA_DEF_ODD_3_4</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>IDLUNA_DEF_ODD_3_5</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>IDLUNA_DEF_ODD_3_6</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>IDLUNA_DEF_ODD_3_7</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>IDLUNA_DEF_ODD_3_8</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Basic_Monster_AI_KTW_1</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Basic_Monster_AI_KTW_2</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Basic_Monster_AI_KTW_3</name><event_handlers/></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

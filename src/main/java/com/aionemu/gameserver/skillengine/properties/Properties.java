@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.skillengine.properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -68,6 +69,9 @@ public class Properties {
 	 */
 	@XmlAttribute(name = "target_maxcount")
 	protected int targetMaxCount;
+
+	@XmlAttribute(name = "other_target_only")
+	protected boolean otherTargetOnly;
 
 	/**
 	 * 目标异常状态筛选列表。
@@ -152,7 +156,7 @@ public class Properties {
 				return false;
 			}
 		}
-		if (targetStatus != null) {
+		if (targetStatus != null && !targetStatus.isEmpty()) {
 			if (!TargetStatusProperty.set(skill, this)) {
 				return false;
 			}
@@ -161,6 +165,43 @@ public class Properties {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 过滤由外部区域预选的目标，跳过技能自身的距离和几何选区。
+	 */
+	public boolean validatePreselectedTargets(Skill skill) {
+		skill.setFirstTargetAttribute(firstTarget);
+		skill.setTargetRangeAttribute(targetType);
+		List<Creature> accepted = new ArrayList<>();
+		for (Creature target : List.copyOf(skill.getEffectedList())) {
+			if (otherTargetOnly && target == skill.getEffector()) {
+				continue;
+			}
+			skill.setFirstTarget(target);
+			skill.getEffectedList().clear();
+			skill.getEffectedList().add(target);
+			if (targetRelation != null) {
+				TargetRelationProperty.set(skill, this);
+				if (!skill.getEffectedList().contains(target)) {
+					continue;
+				}
+			}
+			if (targetStatus != null && !targetStatus.isEmpty() && !TargetStatusProperty.set(skill, this)) {
+				continue;
+			}
+			if (targetSpecies != TargetSpeciesAttribute.ALL) {
+				TargetSpeciesProperty.set(skill, this);
+				if (!skill.getEffectedList().contains(target)) {
+					continue;
+				}
+			}
+			accepted.add(target);
+		}
+		skill.getEffectedList().clear();
+		skill.getEffectedList().addAll(accepted);
+		skill.setFirstTarget(accepted.isEmpty() ? skill.getEffector() : accepted.getFirst());
+		return !accepted.isEmpty();
 	}
 
 	/**
@@ -195,7 +236,7 @@ public class Properties {
 				return false;
 			}
 		}
-		if (targetStatus != null) {
+		if (targetStatus != null && !targetStatus.isEmpty()) {
 			if (!TargetStatusProperty.set(skill, this)) {
 				return false;
 			}
@@ -274,6 +315,10 @@ public class Properties {
 	 */
 	public int getTargetMaxCount() {
 		return targetMaxCount;
+	}
+
+	public boolean isOtherTargetOnly() {
+		return otherTargetOnly;
 	}
 
 	/**

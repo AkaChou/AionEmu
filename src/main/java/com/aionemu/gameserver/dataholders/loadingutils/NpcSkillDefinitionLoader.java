@@ -11,15 +11,20 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 
+@Slf4j
 final class NpcSkillDefinitionLoader {
 
 	static NpcSkillData load(File file) {
 		Map<String, List<NpcSkillTemplate>> groups = new HashMap<>();
 		List<NpcSkillTemplates> assignments = new ArrayList<>();
+		int sourceOrphanCount = 0;
+		int sourceIndex = 0;
 		XMLInputFactory factory = XMLInputFactory.newFactory();
 		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
@@ -33,13 +38,23 @@ final class NpcSkillDefinitionLoader {
 					if (reader.getLocalName().equals("group")) {
 						groupId = attribute(reader, "id");
 						skills = new ArrayList<>();
+						sourceIndex = 0;
 					} else if (reader.getLocalName().equals("skill") && skills != null) {
 						String skillId = attribute(reader, "id");
 						if (skillId != null) {
-							skills.add(new NpcSkillTemplate(parseInt(skillId, "skill id"),
+							NpcSkillTemplate skill = new NpcSkillTemplate(parseInt(skillId, "skill id"),
 								parseInt(attribute(reader, "level"), 1, "skill level"),
-								parseInt(attribute(reader, "probability"), "skill probability")));
+								parseInt(attribute(reader, "probability"), "skill probability"),
+								parseInt(attribute(reader, "raw_rate"), 0, "skill raw rate"),
+								parseInt(attribute(reader, "delay_time"), 0, "skill delay"),
+								parseInt(attribute(reader, "ultra_skill"), 0, "ultra skill") != 0, sourceIndex);
+							skill.setCount(parseInt(attribute(reader, "count"), 0, "skill count"));
+							skills.add(skill);
+						} else {
+							sourceOrphanCount++;
+							skills.add(NpcSkillTemplate.unresolved(sourceIndex));
 						}
+						sourceIndex++;
 					} else if (reader.getLocalName().equals("assign")) {
 						String assignedGroup = attribute(reader, "group");
 						List<NpcSkillTemplate> assignedSkills = groups.get(assignedGroup);
@@ -57,6 +72,9 @@ final class NpcSkillDefinitionLoader {
 				}
 			}
 			reader.close();
+			if (sourceOrphanCount > 0) {
+				log.warn("Skipped {} retail NPC skill definitions without a source skill ID in {}", sourceOrphanCount, file.getPath());
+			}
 			return new NpcSkillData(assignments);
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load NPC skill definitions from " + file.getPath(), e);

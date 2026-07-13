@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="../import.xsd"/>
   <xs:element name="pet_feed">
     <xs:complexType>
       <xs:sequence>
+        <xs:element ref="import" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="flavour" type="PetFlavour"/>
       </xs:sequence>
     </xs:complexType>

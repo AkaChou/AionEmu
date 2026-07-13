@@ -134,17 +134,9 @@ public class PlayerEffectController extends EffectController {
 	 */
 	public void addSavedEffect(int skillId, int skillLvl, int remainingTime, long endTime) {
 		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
-
-		if (remainingTime <= 0 || template == null) {
+		remainingTime = remainingTimeAfterLogout(template, remainingTime, endTime, System.currentTimeMillis());
+		if (remainingTime <= 0) {
 			return;
-		}
-		if (CustomConfig.ABYSSXFORM_LOGOUT && template.isDeityAvatar()) {
-
-			if (System.currentTimeMillis() >= endTime) {
-				return;
-			} else {
-				remainingTime = (int) (endTime - System.currentTimeMillis());
-			}
 		}
 		Effect effect = new Effect(getOwner(), getOwner(), template, skillLvl, remainingTime);
 		abnormalEffectMap.put(effect.getStack(), effect);
@@ -155,6 +147,17 @@ public class PlayerEffectController extends EffectController {
 			PacketSendUtility.sendPacket(getOwner(),
 					new SM_ABNORMAL_STATE(Collections.singletonList(effect), abnormals));
 		}
+	}
+
+	static int remainingTimeAfterLogout(SkillTemplate template, int savedRemainingTime, long endTime, long now) {
+		if (template == null || template.isNoSaveOnLogout()) {
+			return -1;
+		}
+		if (template.isSpendTimeOnLogout() || CustomConfig.ABYSSXFORM_LOGOUT && template.isDeityAvatar()) {
+			long remainingTime = endTime - now;
+			return remainingTime > 0 ? (int) Math.min(remainingTime, Integer.MAX_VALUE) : -1;
+		}
+		return savedRemainingTime;
 	}
 
 	/**

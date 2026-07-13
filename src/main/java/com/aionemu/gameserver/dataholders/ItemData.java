@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBContext;
@@ -40,6 +41,8 @@ public class ItemData extends ReloadableData {
 
 	@XmlTransient
 	private IntObjectHashMap<ItemTemplate> items;
+	@XmlTransient
+	private Map<String, ItemTemplate> itemsByName;
 
 	@XmlTransient
 	private IntObjectHashMap<ItemTemplate> petEggs = new IntObjectHashMap<ItemTemplate>();
@@ -56,9 +59,16 @@ public class ItemData extends ReloadableData {
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		items = new IntObjectHashMap<ItemTemplate>();
+		itemsByName = new HashMap<>();
 		allItems = new HashMap<Integer, ItemTemplate>();
 		for (ItemTemplate it : its) {
 			items.put(it.getTemplateId(), it);
+			if (it.getNamedesc() != null && !it.getNamedesc().isBlank()) {
+				itemsByName.putIfAbsent(it.getNamedesc().toLowerCase(Locale.ROOT), it);
+			}
+			if (!it.getName().isBlank()) {
+				itemsByName.putIfAbsent(it.getName().toLowerCase(Locale.ROOT), it);
+			}
 			allItems.put(it.getTemplateId(), it);
 			// if (it.getCategory().equals(ItemCategory.MANASTONE)) {
 			// int level = it.getLevel();
@@ -113,6 +123,10 @@ public class ItemData extends ReloadableData {
 	 */
 	public ItemTemplate getItemTemplate(int itemId) {
 		return items.get(itemId);
+	}
+
+	public ItemTemplate getItemTemplate(String name) {
+		return name == null ? null : itemsByName.get(name.toLowerCase(Locale.ROOT));
 	}
 
 	/**

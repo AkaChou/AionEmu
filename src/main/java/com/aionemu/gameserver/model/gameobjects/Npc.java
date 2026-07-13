@@ -59,6 +59,8 @@ public class Npc extends Creature {
 	private long lastShoutedSeconds;
 	private String masterName = StringUtils.EMPTY;
 	private int creatorId = 0;
+	private Creature master;
+	private final String npcPartyId;
 	private int townId;
 	private int abyssId;
 	private NpcType npcType;
@@ -73,6 +75,10 @@ public class Npc extends Creature {
 			byte level) {
 		super(objId, controller, spawnTemplate, objectTemplate, new WorldPosition(spawnTemplate.getWorldId()));
 		Preconditions.checkNotNull(objectTemplate, "Npcs should be based on template");
+		creatorId = spawnTemplate.getCreatorId();
+		masterName = spawnTemplate.getMasterName();
+		master = spawnTemplate.getMaster();
+		npcPartyId = spawnTemplate.getNpcPartyId();
 		controller.setOwner(this);
 		moveController = new NpcMoveController(this);
 		skillList = new NpcSkillList(this);
@@ -122,6 +128,10 @@ public class Npc extends Creature {
 	/** 返回 NPC ID / Returns the npc id */
 	public int getNpcId() {
 		return getObjectTemplate().getTemplateId();
+	}
+
+	public String getNpcPartyId() {
+		return npcPartyId;
 	}
 
 	/** 获取等级。 / Returns the level. */
@@ -390,6 +400,11 @@ public class Npc extends Creature {
 	/** 设置 creator id / Sets the creator id */
 	public void setCreatorId(int creatorId) {
 		this.creatorId = creatorId;
+	}
+
+	@Override
+	public Creature getMaster() {
+		return master == null ? this : master;
 	}
 
 	/** 返回城镇 ID / Returns the town id */

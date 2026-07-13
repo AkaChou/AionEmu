@@ -25,6 +25,7 @@ import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.attack.AttackUtil;
 import com.aionemu.gameserver.controllers.observer.TerrainZoneCollisionMaterialActor;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -42,6 +43,8 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.skillengine.model.SkillType;
 import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
@@ -203,6 +206,11 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * @param log 日志类型 / log type
 	 */
 	public void onAttack(final Creature attacker, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log) {
+		onAttack(attacker, skillId, type, damage, notifyAttack, log, AttackStatus.NORMALHIT);
+	}
+
+	public void onAttack(final Creature attacker, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,
+			AttackStatus attackStatus) {
 		if (damage != 0 && !((getOwner() instanceof Npc) && ((Npc) getOwner()).isBoss())) {
 			Skill skill = getOwner().getCastingSkill();
 			if (skill != null && log != LOG.BLEED && log != LOG.SPELLATK && log != LOG.POISON) {
@@ -231,7 +239,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 			notifyAttack = false;
 		}
 		if (notifyAttack) {
-			getOwner().getObserveController().notifyAttackedObservers(attacker);
+			SkillTemplate attack = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+			boolean magical = attack != null ? attack.getType() == SkillType.MAGICAL : attacker.getAttackType().isMagical();
+			getOwner().getObserveController().notifyAttackedObservers(attacker, magical);
 		}
 
 		// 将伤害降到恰好能确保死亡所需。 / Reduce the damage to exactly what is required to ensure death.
@@ -240,8 +250,11 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		if (damage > getOwner().getLifeStats().getCurrentHp()) {
 			damage = getOwner().getLifeStats().getCurrentHp() + 1;
 		}
-		getOwner().getAggroList().addDamage(attacker, damage);
+		getOwner().getAggroList().addDamage(attacker, damage, attackStatus);
 		getOwner().getLifeStats().reduceHp(damage, attacker);
+		if (damage > 0) {
+			getOwner().getAi2().onDamaged(attacker, skillId);
+		}
 
 		if (getOwner() instanceof Npc) {
 			AI2 ai = getOwner().getAi2();
@@ -265,6 +278,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 			@Override
 			public void visit(Npc object) {
 				object.getAi2().onCreatureEvent(AIEventType.CREATURE_NEEDS_SUPPORT, getOwner());
+				object.getAi2().onSeeAttack(attacker, getOwner());
 			}
 		});
 	}
@@ -292,6 +306,10 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public final void onAttack(Creature creature, final int damage, boolean notifyAttack) {
 		this.onAttack(creature, 0, TYPE.REGULAR, damage, notifyAttack, LOG.REGULAR);
+	}
+
+	public final void onAttack(Creature creature, final int damage, boolean notifyAttack, AttackStatus attackStatus) {
+		this.onAttack(creature, 0, TYPE.REGULAR, damage, notifyAttack, LOG.REGULAR, attackStatus);
 	}
 
 	/**
@@ -393,6 +411,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 			attackType = 1;
 		}
 		int damage = 0;
+		AttackStatus attackStatus = attackResult.isEmpty() ? AttackStatus.NORMALHIT : attackResult.getFirst().getAttackStatus();
 		for (AttackResult result : attackResult) {
 			if (result.getAttackStatus() == AttackStatus.RESIST || result.getAttackStatus() == AttackStatus.DODGE) {
 				addAttackObservers = false;
@@ -404,14 +423,14 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 
 		getOwner().getGameStats().increaseAttackCounter();
 		if (addAttackObservers) {
-			getOwner().getObserveController().notifyAttackObservers(target);
+			getOwner().getObserveController().notifyAttackObservers(target, 0);
 		}
 		final Creature creature = getOwner();
 
 		if (time == 0) {
-			target.getController().onAttack(getOwner(), damage, true);
+			target.getController().onAttack(getOwner(), damage, true, attackStatus);
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new DelayedOnAttack(target, creature, damage), time);
+			GameThreadPoolServices.threadPoolManager().schedule(new DelayedOnAttack(target, creature, damage, attackStatus), time);
 		}
 	}
 
@@ -678,16 +697,18 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		private Creature target;
 		private Creature creature;
 		private int finalDamage;
+		private final AttackStatus attackStatus;
 
-		public DelayedOnAttack(Creature target, Creature creature, int finalDamage) {
+		public DelayedOnAttack(Creature target, Creature creature, int finalDamage, AttackStatus attackStatus) {
 			this.target = target;
 			this.creature = creature;
 			this.finalDamage = finalDamage;
+			this.attackStatus = attackStatus;
 		}
 
 		@Override
 		public void run() {
-			target.getController().onAttack(creature, finalDamage, true);
+			target.getController().onAttack(creature, finalDamage, true, attackStatus);
 			target = null;
 			creature = null;
 		}

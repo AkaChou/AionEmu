@@ -32,10 +32,10 @@ public final class WindstreamDefinitionLoader {
 	private WindstreamDefinitionLoader() {
 	}
 
-	public static WindstreamData load(File worldFile, File idMappingsFile) {
+	public static WindstreamData load(File flyPathFile, File windFile, File idMappingsFile) {
 		try {
-			Document world = parse(worldFile);
-			Map<String, Element> documents = documents(world);
+			Map<String, Element> documents = documents(parse(flyPathFile));
+			documents.putAll(documents(parse(windFile)));
 			Map<String, List<Integer>> worldIds = worldIds(parse(idMappingsFile));
 			// AionEmu still exposes these two pre-5.8 IDs for the same client levels.
 			worldIds.computeIfAbsent("tiamat_down", key -> new ArrayList<>()).add(600040000);
@@ -54,8 +54,8 @@ public final class WindstreamDefinitionLoader {
 				if (mapIds == null || mapIds.isEmpty()) {
 					throw new IllegalStateException("No world ID for windstream world " + worldName);
 				}
-				String windFile = text(requiredChild(wind, "file"));
-				String documentName = "windpath/" + windFile.substring(0, windFile.lastIndexOf('.')) + ".xml";
+				String windPathFile = text(requiredChild(wind, "file"));
+				String documentName = "windpath/" + windPathFile.substring(0, windPathFile.lastIndexOf('.')) + ".xml";
 				List<Point3D> points = points(requiredDocument(documents, documentName));
 				int durationMillis = Math.round(decimal(group, "fly_time") * 1000);
 				verifyEndpoints(groupId, group, points);
@@ -78,7 +78,7 @@ public final class WindstreamDefinitionLoader {
 				templates.add(new WindstreamTemplate(entry.getKey(), locations));
 			}
 			if (routes.isEmpty()) {
-				throw new IllegalStateException("No windstream routes found in " + worldFile);
+				throw new IllegalStateException("No windstream routes found in " + flyPathFile + " / " + windFile);
 			}
 			return new WindstreamData(templates, routes);
 		} catch (Exception e) {

@@ -21,6 +21,8 @@ public class AbstractDispelEffect extends EffectTemplate {
 	protected int dpower;
 	@XmlAttribute
 	protected int power;
+	@XmlAttribute(name = "dispel_level_delta")
+	protected int dispelLevelDelta;
 	@XmlAttribute(name = "dispel_level")
 	protected int dispelLevel;
 
@@ -43,10 +45,12 @@ public class AbstractDispelEffect extends EffectTemplate {
 	 */
 	public void applyEffect(Effect effect, DispelCategoryType type, SkillTargetSlot slot) {
 		boolean isItemTriggered = effect.getItemTemplate() != null;
-		int count = value + delta * effect.getSkillLevel();
-		int finalPower = power + dpower * effect.getSkillLevel();
+		int skillLevel = effect.getSkillLevel();
+		int count = value + delta * skillLevel;
+		int finalPower = power + dpower * skillLevel;
+		int finalDispelLevel = dispelLevel + dispelLevelDelta * skillLevel;
 
-		effect.getEffected().getEffectController().removeEffectByDispelCat(type, slot, count, dispelLevel, finalPower,
+		effect.getEffected().getEffectController().removeEffectByDispelCat(type, slot, count, finalDispelLevel, finalPower,
 				isItemTriggered);
 	}
 }

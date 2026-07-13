@@ -131,7 +131,7 @@ public class DropLists {
 			Transformer transFormer = transFactory.newTransformer();
 			DOMSource domSource = new DOMSource(document);
 			String name = min + " - " + max;
-			File file = Config.dataFile("data/static_data/npc_drops/" + name + ".xml");
+			File file = Config.definitionFile("definitions/compact/npc_drops/" + name + ".xml");
 			if (!file.exists()) {
 				file.createNewFile();
 			}

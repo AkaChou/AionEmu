@@ -5,6 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
+import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.utils.stats.CalculationType;
@@ -15,20 +16,25 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
  *
  * @author ATracer (based on Mr.Poke WeaponMasteryModifier)
  */
-public class StatWeaponMasteryFunction extends StatRateFunction {
+public class StatWeaponMasteryFunction extends StatFunctionProxy {
 
 	private final WeaponType weaponType;
 
-	public StatWeaponMasteryFunction(WeaponType weaponType, StatEnum name, int value, boolean bonus) {
-		super(name, value, bonus);
+	public StatWeaponMasteryFunction(StatOwner owner, WeaponType weaponType, IStatFunction function, StatEnum stat) {
+		super(owner, function, stat);
 		this.weaponType = weaponType;
+	}
+
+	@Override
+	public void apply(Stat2 stat) {
+		apply(stat, new CalculationType[0]);
 	}
 
 	/** 应用。 / Apply. */
 	@Override
 	public void apply(Stat2 stat, CalculationType... calculationTypes) {
 		Player player = (Player) stat.getOwner();
-		switch (this.stat) {
+		switch (getName()) {
 		case MAIN_HAND_POWER:
 			if (player.getEquipment().getMainHandWeaponType() == weaponType) {
 				applyTo(stat, calculationTypes);
@@ -47,7 +53,7 @@ public class StatWeaponMasteryFunction extends StatRateFunction {
 	}
 
 	private void applyTo(Stat2 stat, CalculationType... calculationTypes) {
-		if (isBonus()) {
+		if (getProxiedFunction() instanceof StatRateFunction && isBonus()) {
 			int bonusRate = getValue();
 			if (ArrayUtils.contains(calculationTypes, CalculationType.SKILL)
 					&& ArrayUtils.contains(calculationTypes, CalculationType.DUAL_WIELD)) {
@@ -55,7 +61,7 @@ public class StatWeaponMasteryFunction extends StatRateFunction {
 			}
 			stat.setFixedBonusRate(bonusRate / 100f);
 		} else {
-			stat.setBase(stat.getExactBaseWithoutBaseRate() * stat.calculatePercent(getValue()));
+			super.apply(stat, calculationTypes);
 		}
 	}
 }

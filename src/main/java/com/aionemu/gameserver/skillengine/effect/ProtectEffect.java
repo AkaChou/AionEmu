@@ -29,9 +29,11 @@ public class ProtectEffect extends ShieldEffect {
 	 */
 	@Override
 	public void startEffect(final Effect effect) {
-
-		AttackShieldObserver asObserver = new AttackShieldObserver(value, radius, percent, effect, this.hitType,
-				this.getType(), this.hitTypeProb);
+		int skillLevel = effect.getSkillLevel();
+		int protectedDamage = getHitValue(skillLevel);
+		int protectorDamage = value + delta * skillLevel;
+		AttackShieldObserver asObserver = new AttackShieldObserver(protectedDamage, protectorDamage, radius, percent,
+				effect, this.hitType, this.getType(), getHitTypeProbability(skillLevel));
 
 		effect.getEffected().getObserveController().addAttackCalcObserver(asObserver);
 		effect.setAttackShieldObserver(asObserver, position);

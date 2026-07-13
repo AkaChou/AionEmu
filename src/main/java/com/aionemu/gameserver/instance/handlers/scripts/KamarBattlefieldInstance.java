@@ -693,6 +693,24 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             stopInstance(kamarBattlefieldReward.getWinnerRaceByScore());
         }
     }
+
+	@Override
+	public boolean supportsRetailNpcScore(int npcId) {
+		return switch (npcId) {
+			case 232855, 232856, 730878, 730879, 730880, 801766, 801767, 801818, 801819, 801820, 801821,
+				801903 -> true;
+			default -> false;
+		};
+	}
+
+	@Override
+	public boolean onRetailNpcScore(Player player, Npc npc, int points) {
+		if (!supportsRetailNpcScore(npc.getNpcId())) {
+			return false;
+		}
+		updateScore(player, npc, points, false);
+		return true;
+	}
 	
     /**
      * 处理死亡事件。

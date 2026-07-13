@@ -2,6 +2,7 @@ package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -15,6 +16,11 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SignetEffect")
 public class SignetEffect extends EffectTemplate {
+	@XmlAttribute(name = "signet_type", required = true)
+	private int signetType;
+
+	@XmlAttribute(name = "signet_level", required = true)
+	private int signetLevel;
 
 	/**
 	 * 将效果加入目标的效果控制器。
@@ -32,5 +38,13 @@ public class SignetEffect extends EffectTemplate {
 	@Override
 	public void calculate(Effect effect) {
 		effect.addSucessEffect(this);
+	}
+
+	public int getSignetType() {
+		return signetType;
+	}
+
+	public int getSignetLevel() {
+		return signetLevel;
 	}
 }

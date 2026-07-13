@@ -107,12 +107,12 @@ public class HideEffect extends BuffEffect {
 			// 使用技能时移除隐身 / Remove Hide when use skill
 			ActionObserver observer = new ActionObserver(ObserverType.SKILLUSE) {
 
-				int bufNumber = 1;
+				int remaining = buffCount;
 
 				@Override
 				public void skilluse(Skill skill) {
-					// [2.5] 允许自身增益 = (buffCount - 1) / [2.5] Allow self buffs = (buffCount - 1)
-					if (skill.isSelfBuff() && bufNumber++ < buffCount) {
+					int decrease = skill.getSkillTemplate().getHideDecreaseCount();
+					if (decrease == 255 || decrease != 0 && (remaining -= decrease) > 0) {
 						return;
 					}
 					effect.endEffect();

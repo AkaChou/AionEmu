@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.templates.npc;
 
+import java.util.Locale;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -15,6 +17,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.drop.NpcDrop;
 import com.aionemu.gameserver.model.items.NpcEquippedGear;
+import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.stats.KiskStatsTemplate;
@@ -28,7 +31,11 @@ import com.aionemu.gameserver.model.templates.stats.NpcStatsTemplate;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "npc_template")
 public class NpcTemplate extends VisibleObjectTemplate {
+	private static final int STUN_LIKE_ABNORMALS = 0x9D040;
+	private static final int ALL_OTHER_ABNORMALS = 0x1FFFFFF & ~STUN_LIKE_ABNORMALS;
+
 	private int npcId;
+	private int abnormalImmunity;
 	@XmlAttribute(name = "level", required = true)
 	private byte level;
 	@XmlAttribute(name = "name_id", required = true)
@@ -178,6 +185,75 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "npc_id", required = true)
 	private void setXmlUid(String uid) {
 		npcId = Integer.parseInt(uid);
+	}
+
+	@XmlAttribute(name = "abnormal_immunity")
+	private void setAbnormalImmunity(String value) {
+		for (String name : value.split(",")) {
+			abnormalImmunity |= switch (name.trim().toLowerCase(Locale.ROOT)) {
+				case "", "0" -> 0;
+				case "stat_arall" -> ALL_OTHER_ABNORMALS;
+				case "stat_arstunlike" -> STUN_LIKE_ABNORMALS;
+				case "stat_arphysicalab" -> 0x1620B7;
+				case "stat_armentalab" -> 0x800F48;
+				case "poison" -> 1 << 0;
+				case "bleed" -> 1 << 1;
+				case "paralyze" -> 1 << 2;
+				case "sleep" -> 1 << 3;
+				case "root" -> 1 << 4;
+				case "blind" -> 1 << 5;
+				case "charm" -> 1 << 6;
+				case "disease" -> 1 << 7;
+				case "silence" -> 1 << 8;
+				case "fear" -> 1 << 9;
+				case "curse" -> 1 << 10;
+				case "confuse" -> 1 << 11;
+				case "stun" -> 1 << 12;
+				case "petrification", "perification" -> 1 << 13;
+				case "stumble" -> 1 << 14;
+				case "stagger" -> 1 << 15;
+				case "openaerial" -> 1 << 16;
+				case "snare" -> 1 << 17;
+				case "slow" -> 1 << 18;
+				case "spin" -> 1 << 19;
+				case "bind" -> 1 << 20;
+				case "deform" -> 1 << 21;
+				case "pulled" -> 1 << 22;
+				case "nofly" -> 1 << 23;
+				case "simpleroot" -> 1 << 24;
+				default -> throw new IllegalArgumentException("Unknown NPC abnormal immunity: " + name);
+			};
+		}
+	}
+
+	public boolean isImmuneTo(StatEnum stat) {
+		int mask = switch (stat) {
+			case POISON_RESISTANCE -> 1 << 0;
+			case BLEED_RESISTANCE -> 1 << 1;
+			case PARALYZE_RESISTANCE -> 1 << 2;
+			case SLEEP_RESISTANCE -> 1 << 3;
+			case ROOT_RESISTANCE -> 1 << 4 | 1 << 24;
+			case BLIND_RESISTANCE -> 1 << 5;
+			case CHARM_RESISTANCE -> 1 << 6;
+			case DISEASE_RESISTANCE -> 1 << 7;
+			case SILENCE_RESISTANCE -> 1 << 8;
+			case FEAR_RESISTANCE -> 1 << 9;
+			case CURSE_RESISTANCE -> 1 << 10;
+			case CONFUSE_RESISTANCE -> 1 << 11;
+			case STUN_RESISTANCE -> 1 << 12;
+			case PERIFICATION_RESISTANCE -> 1 << 13;
+			case STUMBLE_RESISTANCE -> 1 << 14;
+			case STAGGER_RESISTANCE -> 1 << 15;
+			case OPENAREIAL_RESISTANCE -> 1 << 16;
+			case SNARE_RESISTANCE -> 1 << 17;
+			case SLOW_RESISTANCE -> 1 << 18;
+			case SPIN_RESISTANCE -> 1 << 19;
+			case BIND_RESISTANCE -> 1 << 20;
+			case DEFORM_RESISTANCE -> 1 << 21;
+			case PULLED_RESISTANCE -> 1 << 22;
+			default -> 0;
+		};
+		return (abnormalImmunity & mask) != 0;
 	}
 
 	/** 获取军阶。 / Returns the rank. */

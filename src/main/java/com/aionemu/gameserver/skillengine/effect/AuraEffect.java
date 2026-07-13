@@ -31,6 +31,8 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 public class AuraEffect extends EffectTemplate {
 	@XmlAttribute
 	protected int distance;
+	@XmlAttribute(name = "distance_z")
+	protected int distanceZ;
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
 

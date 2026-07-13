@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_ldf4_advance_cdy.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>LDF4_Advance_Field_Setting</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>중복되는 퀘스트 에어리어를 올려주는 패턴 2014.03.19일에 삭제함</comment><actions><despawn_self/></actions></pattern></on_wake_up></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

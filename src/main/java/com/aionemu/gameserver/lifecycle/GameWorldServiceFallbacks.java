@@ -2,8 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavData;
-import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
  * 世界服务回退：在无 Spring 提供者时返回各组件 getInstance 单例。
@@ -29,23 +28,13 @@ final class GameWorldServiceFallbacks {
     }
 
     /**
-     * 回退 NavService。
-     * Fallback NavService.
+     * 回退 PathService。
+     * Fallback PathService.
      *
-     * NavService singleton
+     * PathService singleton
      */
-    static NavService navService() {
-        return NavServiceFallback.INSTANCE;
-    }
-
-    /**
-     * 回退 NavData。
-     * Fallback NavData.
-     *
-     * NavData singleton
-     */
-    static NavData navData() {
-        return NavDataFallback.INSTANCE;
+    static PathService pathService() {
+        return PathServiceFallback.INSTANCE;
     }
 
     /**
@@ -71,27 +60,15 @@ final class GameWorldServiceFallbacks {
     }
 
     /**
-     * NavService 回退持有者。
-     * NavService fallback holder.
+     * PathService 回退持有者。
+     * PathService fallback holder.
      */
-    private static final class NavServiceFallback {
+    private static final class PathServiceFallback {
         /**
-         * NavService 单例。
-         * NavService singleton.
+         * PathService 单例。
+         * PathService singleton.
          */
-        private static final NavService INSTANCE = NavService.getInstance();
-    }
-
-    /**
-     * NavData 回退持有者。
-     * NavData fallback holder.
-     */
-    private static final class NavDataFallback {
-        /**
-         * NavData 单例。
-         * NavData singleton.
-         */
-        private static final NavData INSTANCE = NavData.getInstance();
+        private static final PathService INSTANCE = PathService.getInstance();
     }
 
     /**

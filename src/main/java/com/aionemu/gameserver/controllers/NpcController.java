@@ -27,6 +27,7 @@ import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.controllers.attack.AggroList;
+import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -225,6 +226,10 @@ public class NpcController extends CreatureController<Npc> {
 		owner.unsetState(CreatureState.FLYING);
 		owner.unsetState(CreatureState.GLIDING);
 		owner.setState(CreatureState.DEAD);
+		Creature killer = lastAttacker == null ? null : lastAttacker.getMaster();
+		if (killer instanceof Player player) {
+			owner.getKnownList().doOnAllNpcs(observer -> observer.getAi2().onFriendKilledByUser(owner, player));
+		}
 		
 		if (owner.getSpawn().hasPool()) {
 			owner.getSpawn().setUse(false);
@@ -237,6 +242,7 @@ public class NpcController extends CreatureController<Npc> {
 				this.doReward();
 			}
 			owner.getPosition().getWorldMapInstance().getInstanceHandler().onDie(owner);
+			owner.getAi2().onCreatureEvent(AIEventType.DIED, lastAttacker);
 			owner.getAi2().onGeneralEvent(AIEventType.DIED);
 		} finally { // always make sure npc is scheduled to respawn
 			if (owner.getAi2().poll(AIQuestion.SHOULD_DECAY)) {
@@ -546,7 +552,8 @@ public class NpcController extends CreatureController<Npc> {
 	 * @param log 日志类型 / log type
 	 */
 	@Override
-	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log) {
+	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,
+			AttackStatus attackStatus) {
 		if (getOwner().getLifeStats().isAlreadyDead()) {
 			return;
 		}
@@ -560,7 +567,7 @@ public class NpcController extends CreatureController<Npc> {
 			actingCreature = creature.getActingCreature();
 		}
 
-		super.onAttack(actingCreature, skillId, type, damage, notifyAttack, log);
+		super.onAttack(actingCreature, skillId, type, damage, notifyAttack, log, attackStatus);
 
 		Npc npc = getOwner();
 

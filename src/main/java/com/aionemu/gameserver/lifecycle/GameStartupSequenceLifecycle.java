@@ -49,10 +49,10 @@ public class GameStartupSequenceLifecycle {
     private final GameEventBootstrapLifecycle eventBootstrapLifecycle;
 
     /**
-     * 地理/导航生命周期。
-     * Geo/nav lifecycle.
+     * 地理/PATH 生命周期。
+     * Geo/path lifecycle.
      */
-    private final GameGeoNavLifecycle geoNavLifecycle;
+    private final GameGeoPathLifecycle geoPathLifecycle;
 
     /**
      * 世界激活生命周期。
@@ -260,7 +260,7 @@ public class GameStartupSequenceLifecycle {
         adminPanelLifecycle.start();
 
         staticDataLifecycle.start();
-        geoNavLifecycle.start();
+        geoPathLifecycle.start();
         worldBootstrapLifecycle.start();
         eventBootstrapLifecycle.start();
 

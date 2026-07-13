@@ -8,27 +8,25 @@ import org.junit.jupiter.api.Test;
 class AttackManagerLeashTest {
 
 	@Test
-	void givesUpImmediatelyAfterMovingBeyondHomeChaseDistance() {
-		assertTrue(AttackManager.shouldGiveUpByHomeDistance(201, 200, 0, 0));
+	void numericRetailChaseTimeRefreshesAfterEachAttack() {
+		assertFalse(AttackManager.shouldStopTimedChase(1_000, 0, 5, 5_999));
+		assertTrue(AttackManager.shouldStopTimedChase(1_000, 0, 5, 6_000));
+		assertFalse(AttackManager.shouldStopTimedChase(1_000, 5_000, 5, 9_999));
+		assertTrue(AttackManager.shouldStopTimedChase(1_000, 5_000, 5, 10_000));
+		assertFalse(AttackManager.shouldStopTimedChase(1_000, 5_000, 0, 20_000));
 	}
 
 	@Test
-	void bossGivesUpBeyondBossHomeChaseDistance() {
-		assertTrue(AttackManager.shouldGiveUpByHomeDistance(151, 150, 0, 0));
+	void spawnPointChaseChecksEveryTwoSeconds() {
+		assertFalse(AttackManager.shouldCheckSpawnPointChase(0, 1_000));
+		assertFalse(AttackManager.shouldCheckSpawnPointChase(1_000, 2_999));
+		assertTrue(AttackManager.shouldCheckSpawnPointChase(1_000, 3_000));
 	}
 
 	@Test
-	void staysEngagedInsideHomeChaseDistanceWhileCombatIsActive() {
-		assertFalse(AttackManager.shouldGiveUpByHomeDistance(199, 200, 0, 0));
-	}
-
-	@Test
-	void defaultMonstersStillGiveUpAfterNoCombatNearHomeLimit() {
-		assertTrue(AttackManager.shouldGiveUpByHomeDistance(50, 200, 21, 21));
-	}
-
-	@Test
-	void givesUpPastHalfHomeDistanceAfterTenSecondsWithoutBeingHit() {
-		assertTrue(AttackManager.shouldGiveUpByHomeDistance(76, 150, 0, 11));
+	void spawnPointChaseStopsOnRetailThirtyOnePercentBand() {
+		assertFalse(AttackManager.shouldStopSpawnPointChase(69));
+		assertTrue(AttackManager.shouldStopSpawnPointChase(70));
+		assertTrue(AttackManager.shouldStopSpawnPointChase(100));
 	}
 }

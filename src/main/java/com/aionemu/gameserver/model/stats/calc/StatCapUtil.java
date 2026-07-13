@@ -150,6 +150,7 @@ public class StatCapUtil {
 		case REGEN_MP:
 		case HEAL_BOOST:
 		case HEAL_SKILL_BOOST:
+		case MP_HEAL_SKILL_BOOST:
 		case PHYSICAL_ACCURACY:
 		case PHYSICAL_ATTACK:
 		case PHYSICAL_CRITICAL:

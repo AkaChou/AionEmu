@@ -10,6 +10,7 @@ import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIAnswer;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
+import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.movement.MoveController;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -46,13 +47,32 @@ class MoveTaskManagerTest {
 		assertEquals(0, creature.moveController.moveCalls);
 	}
 
+	@Test
+	void completedOldMoveCannotRemoveANewerRegistration() {
+		MoveTaskManager manager = new MoveTaskManager();
+		TestCreature creature = new TestCreature(1);
+		creature.ai.destinationReached = true;
+		creature.ai.onDestinationReached = () -> {
+			creature.ai.destinationReached = false;
+			manager.addCreature(creature);
+		};
+
+		manager.addCreature(creature);
+		manager.run();
+		manager.run();
+
+		assertEquals(2, creature.moveController.moveCalls);
+		assertEquals(0, creature.ai.arrivedEvents);
+		assertEquals(1, creature.ai.validateEvents);
+	}
+
 	private static final class TestCreature extends Creature {
 
 		private final TestMoveController moveController = new TestMoveController();
 		private final TestAI2 ai = new TestAI2();
 
 		private TestCreature(int objectId) {
-			super(objectId, null, null, new TestVisibleObjectTemplate(), null);
+			super(objectId, new CreatureController<>() {}, null, new TestVisibleObjectTemplate(), null);
 		}
 
 		@Override
@@ -152,6 +172,9 @@ class MoveTaskManagerTest {
 	private static final class TestAI2 implements AI2 {
 
 		private int validateEvents;
+		private int arrivedEvents;
+		private boolean destinationReached;
+		private Runnable onDestinationReached;
 
 		@Override
 		public void onCreatureEvent(AIEventType event, Creature creature) {
@@ -165,6 +188,8 @@ class MoveTaskManagerTest {
 		public void onGeneralEvent(AIEventType event) {
 			if (event == AIEventType.MOVE_VALIDATE) {
 				validateEvents++;
+			} else if (event == AIEventType.MOVE_ARRIVED) {
+				arrivedEvents++;
 			}
 		}
 
@@ -199,7 +224,13 @@ class MoveTaskManagerTest {
 
 		@Override
 		public boolean poll(AIQuestion question) {
-			return false;
+			boolean reached = question == AIQuestion.DESTINATION_REACHED && destinationReached;
+			if (reached && onDestinationReached != null) {
+				Runnable action = onDestinationReached;
+				onDestinationReached = null;
+				action.run();
+			}
+			return reached;
 		}
 
 		@Override

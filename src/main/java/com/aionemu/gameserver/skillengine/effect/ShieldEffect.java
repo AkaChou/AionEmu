@@ -63,10 +63,10 @@ public class ShieldEffect extends EffectTemplate {
 	public void startEffect(final Effect effect) {
 		int skillLvl = effect.getSkillLevel();
 		int valueWithDelta = value + delta * skillLvl;
-		int hitValueWithDelta = hitvalue + hitdelta * skillLvl;
+		int hitValueWithDelta = getHitValue(skillLvl);
 
 		AttackShieldObserver asObserver = new AttackShieldObserver(hitValueWithDelta, valueWithDelta, percent, effect,
-				hitType, getType(), hitTypeProb);
+				hitType, getType(), getHitTypeProbability(skillLvl));
 
 		effect.getEffected().getObserveController().addAttackCalcObserver(asObserver);
 		effect.setAttackShieldObserver(asObserver, position);
@@ -92,5 +92,13 @@ public class ShieldEffect extends EffectTemplate {
 	 */
 	public int getType() {
 		return 2;
+	}
+
+	/**
+	 * 按技能等级返回单次吸收量。
+	 * Returns the per-hit absorption amount for a skill level.
+	 */
+	public int getHitValue(int skillLevel) {
+		return hitvalue + hitdelta * skillLevel;
 	}
 }

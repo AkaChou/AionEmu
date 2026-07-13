@@ -8,8 +8,16 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.AttackManager;
 import com.aionemu.gameserver.ai2.manager.FollowManager;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.NpcPathBehaviorData;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_FORCED_MOVE;
+import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 目标事件处理器，负责到达目标、目标过远、放弃目标与切换目标。
@@ -39,9 +47,9 @@ public class TargetEventHandler {
 					npcAI.getOwner().getMoveController().storeStep();
 				break;
 			case RETURNING:
+				boolean reachedReturnDestination = npcAI.getOwner().getMoveController().isHomeReturnDestinationReached();
 				npcAI.getOwner().getMoveController().abortMove();
-				npcAI.getOwner().getMoveController().recallPreviousStep();
-				if (npcAI.getOwner().isAtSpawnLocation())
+				if (reachedReturnDestination)
 					npcAI.onGeneralEvent(AIEventType.BACK_HOME);
 				else
 					npcAI.onGeneralEvent(AIEventType.NOT_AT_HOME);
@@ -109,8 +117,82 @@ public class TargetEventHandler {
 			npcAI.getOwner().getMoveController().abortMove();
 		}
 		if (!npcAI.isAlreadyDead()) {
-			npcAI.think();
+			if (npcAI.getOwner().getMoveController().isReturningToWaypoint()) {
+				npcAI.onGeneralEvent(AIEventType.ATTACK_FINISH);
+				npcAI.onGeneralEvent(AIEventType.NOT_AT_HOME);
+			} else {
+				npcAI.think();
+			}
 		}
+	}
+
+	/** 按真端 NPC 数据处理连续寻路失败。 */
+	public static void onPathFindFailed(NpcAI2 npcAI) {
+		if (!npcAI.isInState(AIState.FIGHT)) {
+			return;
+		}
+		Npc owner = npcAI.getOwner();
+		Creature target = owner.getTarget() instanceof Creature creature ? creature : null;
+		NpcPathBehaviorData.Behavior behavior = DataManager.NPC_PATH_BEHAVIOR_DATA == null ? null
+				: DataManager.NPC_PATH_BEHAVIOR_DATA.get(owner.getNpcId());
+		NpcPathBehaviorData.PathfindFailReaction reaction = behavior == null || behavior.pathfindFailReaction() == null
+				? NpcPathBehaviorData.PathfindFailReaction.RETURN_TO_SP : behavior.pathfindFailReaction();
+		switch (reaction) {
+			case PULL_TARGET:
+				if (target != null && owner.getMoveController().tryPathPull(target.getObjectId())) {
+					pullTarget(owner, target);
+					owner.getMoveController().clearPathFailureContext();
+					return;
+				}
+				returnToSpawn(npcAI);
+				break;
+			case ABANDON_TARGET:
+				owner.getMoveController().clearPathFailureContext();
+				if (target != null) {
+					owner.getAggroList().remove(target);
+				}
+				owner.getMoveController().abortMove();
+				if (!npcAI.isAlreadyDead()) {
+					npcAI.think();
+				}
+				break;
+			case RETURN_TO_SP:
+				returnToSpawn(npcAI);
+				break;
+		}
+	}
+
+	private static void returnToSpawn(NpcAI2 npcAI) {
+		returnToSpawn(npcAI, true);
+	}
+
+	public static void returnToSpawn(NpcAI2 npcAI, boolean restoreHp) {
+		Npc owner = npcAI.getOwner();
+		owner.getMoveController().clearHomeReturn();
+		if (restoreHp) {
+			owner.getMoveController().requestFullHealOnHomeReturn();
+		}
+		owner.getAggroList().clear();
+		owner.getMoveController().abortMove();
+		if (!npcAI.isAlreadyDead()) {
+			npcAI.onGeneralEvent(AIEventType.ATTACK_FINISH);
+			npcAI.onGeneralEvent(owner.isAtSpawnLocation() ? AIEventType.BACK_HOME : AIEventType.NOT_AT_HOME);
+		}
+	}
+
+	private static void pullTarget(Npc owner, Creature target) {
+		double radians = Math.toRadians(MathUtil.convertHeadingToDegree(owner.getHeading()));
+		float x = owner.getX() + (float) Math.cos(radians);
+		float y = owner.getY() + (float) Math.sin(radians);
+		float z = owner.getZ();
+		if (!GameWorldServices.pathService().canReachWaypoint(owner, x, y, z)) {
+			x = owner.getX();
+			y = owner.getY();
+		}
+		byte heading = (byte) Math.floorMod(owner.getHeading() + 60, 120);
+		target.getMoveController().abortMove();
+		GameWorldBootstrapServices.world().updatePosition(target, x, y, z, heading);
+		PacketSendUtility.broadcastPacketAndReceive(target, new SM_FORCED_MOVE(owner, target.getObjectId(), x, y, z));
 	}
 
 	/**
@@ -125,6 +207,10 @@ public class TargetEventHandler {
 			AI2Logger.info(npcAI, "onTargetChange");
 		}
 		if (npcAI.isInState(AIState.FIGHT)) {
+			if (!npcAI.getOwner().isTargeting(creature.getObjectId())) {
+				npcAI.getOwner().getMoveController().clearPathFailureContext();
+				npcAI.getOwner().getMoveController().clearPathPullAttempts();
+			}
 			npcAI.getOwner().setTarget(creature);
 			AttackManager.scheduleNextAttack(npcAI);
 		}

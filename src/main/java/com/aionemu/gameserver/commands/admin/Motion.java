@@ -50,7 +50,7 @@ public class Motion extends AdminCommand implements StatOwner {
 			PacketSendUtility.sendMessage(player, "//motion as (value) - adds attack speed");
 			PacketSendUtility.sendMessage(player, "//motion analyze - creats .txt files in SERVER_DIR/motions with detailed info about motions");
 			PacketSendUtility.sendMessage(player, "//motion savetosql - saves content of MotionLoggingService to database");
-			PacketSendUtility.sendMessage(player, "//motion createxml - create new_motion_times.xml in static_data/skills");
+			PacketSendUtility.sendMessage(player, "//motion createxml - create new_motion_times.xml in definitions/compact/skills");
 		}
 		else if (params[0].equalsIgnoreCase("start")) {
 			GameFeatureServices.motionLoggingService().start();
@@ -62,7 +62,7 @@ public class Motion extends AdminCommand implements StatOwner {
 		}
 		else if (params[0].equalsIgnoreCase("createxml")) {
 			GameFeatureServices.motionLoggingService().createFinalFile();
-			PacketSendUtility.sendMessage(player, "Created new_motion_times.xml in data/static_data/skills!");
+			PacketSendUtility.sendMessage(player, "Created new_motion_times.xml in definitions/compact/skills!");
 		}
 		else if (params[0].equalsIgnoreCase("savetosql")) {
 			GameFeatureServices.motionLoggingService().saveToSql();

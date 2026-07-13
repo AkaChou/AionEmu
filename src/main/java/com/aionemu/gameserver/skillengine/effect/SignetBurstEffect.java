@@ -19,8 +19,13 @@ public class SignetBurstEffect extends DamageEffect {
 	@XmlAttribute
 	protected int signetlvl;
 
+	@XmlAttribute(name = "signet_type")
+	protected int signetType;
 	@XmlAttribute
 	protected String signet;
+
+	@XmlAttribute(name = "min_signet_level")
+	protected int minSignetLevel;
 
 	/**
 	 * 查找印记效果，按层数调整伤害与命中修正，结算后结束印记。
@@ -29,7 +34,12 @@ public class SignetBurstEffect extends DamageEffect {
 	 */
 	@Override
 	public void calculate(Effect effect) {
-		Effect signetEffect = effect.getEffected().getEffectController().getAnormalEffect(signet);
+		Effect signetEffect = signetType == 0 ? effect.getEffected().getEffectController().getAnormalEffect(signet)
+				: effect.getEffected().getEffectController().getAbnormalEffects().stream()
+						.filter(active -> active.getEffectTemplates().stream()
+								.anyMatch(template -> template instanceof SignetEffect signetTemplate
+										&& signetTemplate.getSignetType() == signetType))
+						.findFirst().orElse(null);
 		if (!super.calculate(effect, DamageType.MAGICAL)) {
 			if (signetEffect != null) {
 				signetEffect.endEffect();
@@ -41,11 +51,18 @@ public class SignetBurstEffect extends DamageEffect {
 		if (signetEffect == null) {
 			valueWithDelta *= 0.05f;
 			effect.setLaunchSubEffect(false);
-			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, null, getElement(), true, true, false,
+			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, getActionModifiers(effect), getElement(), true, true, false,
 					getMode(), this.critProbMod2, critAddDmg, shared, false);
 		} else {
-			int level = signetEffect.getSkillLevel();
-			if (level < 3) {
+			int level = signetEffect.getEffectTemplates().stream()
+					.filter(SignetEffect.class::isInstance).map(SignetEffect.class::cast)
+					.filter(signetEffectTemplate -> signetType == 0 || signetEffectTemplate.getSignetType() == signetType)
+					.mapToInt(SignetEffect::getSignetLevel).findFirst().orElse(signetEffect.getSkillLevel());
+			if (level == 0) {
+				level = signetEffect.getSkillLevel();
+			}
+			level = Math.min(level, signetlvl);
+			if (minSignetLevel > 0 && level < minSignetLevel) {
 				effect.setSubEffectAborted(true);
 			}
 			effect.setSignetBurstedCount(level);
@@ -87,7 +104,7 @@ public class SignetBurstEffect extends DamageEffect {
 			}
 			effect.setAccModBoost(accmod);
 			effect.setLaunchSubEffect(true);
-			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, null, getElement(), true, true, false,
+			AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, getActionModifiers(effect), getElement(), true, true, false,
 					getMode(), this.critProbMod2, critAddDmg, shared, false);
 			if (signetEffect != null) {
 				signetEffect.endEffect();

@@ -12,24 +12,24 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.ai.RetailAreaEngine;
+import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
+import com.aionemu.gameserver.ai.RetailWindstreamEngine;
 import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.Pet;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.StorageType;
-import com.aionemu.gameserver.model.templates.windstreams.Location2D;
-import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_CASH_BUFF;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_CHAR_BM_PACK_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUBE_UPDATE;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_DYNAMIC_LIMIT_AREA_INFO_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OBJECTS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_COUNT_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AStationService;
@@ -85,18 +85,9 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		sendPacket(new SM_PLAYER_INFO(activePlayer, false));
 		activePlayer.getController().startProtectionActiveTask();
 		sendPacket(new SM_MOTION(activePlayer.getObjectId(), activePlayer.getMotions().getActiveMotions()));
-		WindstreamTemplate template = DataManager.WINDSTREAM_DATA
-				.getStreamTemplate(activePlayer.getPosition().getMapId());
-		Location2D location;
-		if (template != null) {
-			for (int i = 0; i < template.getLocations().getLocation().size(); i++) {
-				location = template.getLocations().getLocation().get(i);
-				sendPacket(new SM_WINDSTREAM_ANNOUNCE(location.getFlyPathType().getId(), template.getMapid(),
-						location.getId(), location.getState()));
-			}
-		}
-		location = null;
-		template = null;
+		RetailWindstreamEngine.sendStates(activePlayer);
+		RetailDynamicAreaEngine.sendStates(activePlayer);
+		sendPacket(new SM_DYNAMIC_LIMIT_AREA_INFO_LIST(RetailAreaEngine.getNoRecallStates(activePlayer.getPosition().getWorldMapInstance())));
 		if (activePlayer.isSpawned()) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(activePlayer);
 		}
@@ -162,6 +153,8 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		}
 
 		activePlayer.setPortAnimation(0x02);
-		PacketSendUtility.sendPacket(activePlayer, new SM_CASH_BUFF(1));
+		PacketSendUtility.sendPacket(activePlayer, new SM_CHAR_BM_PACK_LIST(1));
+		PacketSendUtility.sendPacket(activePlayer,
+				SM_CHAR_BM_PACK_LIST.vip(activePlayer.getPlayerAccount().getVipLevel()));
 	}
 }

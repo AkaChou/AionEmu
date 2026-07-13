@@ -37,7 +37,10 @@ Thumbs.db
 
 .codegraph
 .cursor
-/docs
+/docs/*
+!/docs/RETAIL_SKILL_ENGINE_MIGRATION_PLAN.md
+!/docs/RETAIL_SKILL_FIELD_MAPPING.md
+!/docs/RETAIL_AI_MIGRATION.md
 
 log
 

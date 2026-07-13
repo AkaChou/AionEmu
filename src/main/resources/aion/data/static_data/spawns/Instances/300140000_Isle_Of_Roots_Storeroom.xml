@@ -416,5 +416,17 @@
 		<spawn npc_id="215287">
 			<spot x="431.416" y="414.044" z="197.135" h="93"/>
 		</spawn>
+		<spawn npc_id="206095" respawn_time="1">
+		  <spot x="528.200012" y="759.520020" z="199.46678"/>
+		</spawn>
+		<spawn npc_id="215136" respawn_time="1">
+		  <spot x="526.401001" y="845.379883" z="199.39537" h="90"/>
+		</spawn>
+		<spawn npc_id="700540" respawn_time="1">
+		  <spot x="576.463379" y="837.337402" z="199.37367" h="56"/>
+		</spawn>
+		<spawn npc_id="856595" respawn_time="30">
+		  <spot x="519.705383" y="121.890259" z="175.90147"/>
+		</spawn>
 	</spawn_map>
 </spawns>

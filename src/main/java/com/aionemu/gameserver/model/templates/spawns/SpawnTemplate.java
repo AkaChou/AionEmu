@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
@@ -49,6 +50,8 @@ public class SpawnTemplate {
 	private String alternateIdValues;
 	private String selectprobValues;
 	private String masterName = StringUtils.EMPTY;
+	private String npcPartyId;
+	private Creature master;
 	private TemporarySpawn temporarySpawn;
 	private VisibleObject visibleObject;
 	private List<VisibleObject> visibleObjects;
@@ -173,6 +176,11 @@ public class SpawnTemplate {
 	/** 获取飞行。 / Returns the fly. */
 	public int getFly() {
 		return fly;
+	}
+
+	/** 设置飞行。 / Sets the fly. */
+	public void setFly(int fly) {
+		this.fly = fly;
 	}
 
 	/** 是否可以飞行。 / Whether fly. */
@@ -425,6 +433,22 @@ public class SpawnTemplate {
 	/** 设置 master name / Sets the master name */
 	public void setMasterName(String masterName) {
 		this.masterName = masterName;
+	}
+
+	public String getNpcPartyId() {
+		return npcPartyId;
+	}
+
+	public void setNpcPartyId(String npcPartyId) {
+		this.npcPartyId = npcPartyId;
+	}
+
+	public Creature getMaster() {
+		return master;
+	}
+
+	public void setMaster(Creature master) {
+		this.master = master;
 	}
 
 	/** 获取可见对象。 / Returns the visible object. */

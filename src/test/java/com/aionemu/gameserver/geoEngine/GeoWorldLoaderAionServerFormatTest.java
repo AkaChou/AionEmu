@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 
@@ -64,7 +65,7 @@ class GeoWorldLoaderAionServerFormatTest {
 		System.setProperty("aion.game.geo.dir", geoDir.toString());
 		Files.createDirectories(geoDir);
 		Files.write(geoDir.resolve("models.mesh"), modelsMesh());
-		Files.write(geoDir.resolve("1001.geo"), worldGeo(0, 0, 0));
+		writeGzip(geoDir.resolve("1001.geo.gz"), worldGeo(0, 0, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
 		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
@@ -112,6 +113,14 @@ class GeoWorldLoaderAionServerFormatTest {
 		loadCurrentWorld(1001, Map.of(), map);
 
 		assertEquals(1250F, map.getZ(2F, 2F), 0.01F);
+	}
+
+	@Test
+	void interpolatesRetailTerrainHeightForPathCells() {
+		GeoMap map = new GeoMap("1001", 4);
+		map.setTerrainData(new short[] { 0, 64, 32, 96 }, 2, 2);
+
+		assertEquals(1.5F, map.getTerrainPathHeight(1F, 1F), 0.001F);
 	}
 
 	@Test
@@ -427,6 +436,12 @@ class GeoWorldLoaderAionServerFormatTest {
 		writeShortBE(out, id);
 		out.write(level);
 		return out.toByteArray();
+	}
+
+	private static void writeGzip(Path path, byte[] data) throws Exception {
+		try (GZIPOutputStream output = new GZIPOutputStream(Files.newOutputStream(path))) {
+			output.write(data);
+		}
 	}
 
 	private static void writeTerrainPng(Path path, int height) throws Exception {

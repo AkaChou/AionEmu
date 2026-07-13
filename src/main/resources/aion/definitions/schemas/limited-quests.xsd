@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="limited_quests">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="quest" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="max_count" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="recover_count" type="xs:positiveInteger" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

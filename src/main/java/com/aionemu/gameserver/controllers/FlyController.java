@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
@@ -108,6 +109,10 @@ public class FlyController {
 	 * @param broadcastPacket 是否广播起飞动作 / whether to broadcast the take-off action
 	 */
 	public void startFly(boolean broadcastPacket) {
+		if (player.getTransformModel().isFlyDisabled()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANT_FLY_NOW_DUE_TO_NOFLY);
+			return;
+		}
 		if (player.getFlyReuseTime() > System.currentTimeMillis()) {
 			AuditLogger.info(player, "No Flight Cooldown Hack. Reuse time: "
 					+ ((player.getFlyReuseTime() - System.currentTimeMillis()) / 1000));
@@ -133,6 +138,9 @@ public class FlyController {
 	 * @return 是否成功切换（含已在滑翔） / whether the switch succeeded (including already gliding)
 	 */
 	public boolean switchToGliding() {
+		if (player.getTransformModel().isFlyDisabled()) {
+			return false;
+		}
 		if (!player.isInState(CreatureState.GLIDING) && player.canPerformMove()) {
 			if (player.getFlyReuseTime() > System.currentTimeMillis()) {
 				return false;

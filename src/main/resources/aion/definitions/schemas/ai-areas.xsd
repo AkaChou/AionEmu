@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ai_areas">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="area" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="3" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="world_id" type="xs:int" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="bottom" type="xs:float" use="required"/>
+            <xs:attribute name="top" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="groupctrl_area" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="3" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="world_id" type="xs:int" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="bottom" type="xs:float" use="required"/>
+            <xs:attribute name="top" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="resurrect_area" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="3" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="destination" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                  <xs:attribute name="z" type="xs:float" use="required"/>
+                  <xs:attribute name="dir" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="world_id" type="xs:int" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="location_alias" type="xs:string" use="required"/>
+            <xs:attribute name="race" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:nonNegativeInteger">
+                  <xs:maxInclusive value="2"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="tribe" type="xs:string" use="required"/>
+            <xs:attribute name="bottom" type="xs:float" use="required"/>
+            <xs:attribute name="top" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="quest_area" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="3" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="world_id" type="xs:int" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="quests" type="xs:string" use="required"/>
+            <xs:attribute name="bottom" type="xs:float" use="required"/>
+            <xs:attribute name="top" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="limit_area" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="3" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="world_id" type="xs:int" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="dynamic" type="xs:boolean" use="required"/>
+            <xs:attribute name="no_bind" type="xs:string" use="required"/>
+            <xs:attribute name="no_recall" type="xs:boolean" use="required"/>
+            <xs:attribute name="no_park" type="xs:string" use="required"/>
+            <xs:attribute name="no_park_reenter_interval" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="no_ride" type="xs:boolean" use="required"/>
+            <xs:attribute name="no_shop" type="xs:boolean" use="required"/>
+            <xs:attribute name="priority" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="bottom" type="xs:float" use="required"/>
+            <xs:attribute name="top" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="skill_area" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="3" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="world_id" type="xs:int" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="bottom" type="xs:float" use="required"/>
+            <xs:attribute name="top" type="xs:float" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

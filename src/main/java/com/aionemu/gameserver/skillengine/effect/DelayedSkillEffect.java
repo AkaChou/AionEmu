@@ -23,6 +23,8 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class DelayedSkillEffect extends EffectTemplate {
 	@XmlAttribute(name = "skill_id")
 	protected int skillId;
+	@XmlAttribute(name = "use_current_level")
+	protected boolean useCurrentLevel;
 
 	/**
 	 * 将效果加入受影响者的效果控制器。
@@ -50,20 +52,23 @@ public class DelayedSkillEffect extends EffectTemplate {
 			public void run() {
 				if (effect.getEffected().getEffectController().hasAbnormalEffect(effect.getSkill().getSkillId())) {
 					final SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+					if (template == null) {
+						return;
+					}
+					int launchedSkillLevel = Math.max(1,
+						useCurrentLevel ? effect.getSkillLevel() : calculateValue(effect.getSkillLevel()));
 					if (template.getProperties().getTargetMaxCount() > 1) {
-						final Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, template.getLvl(), 0);
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(new Visitor<VisibleObject>() {
 							@Override
 							public void visit(VisibleObject object) {
-								if (MathUtil.getDistance(effect.getEffected(), object) <= template.getProperties().getRevisionDistance()) {
-									GameEngineServices.skillEngine().applyEffectDirectly(template.getSkillId(), effect.getEffected(), (Creature) object, template.getDuration());
-									e.applyEffect();
-									e.initialize();
+								if (object instanceof Creature target && MathUtil.getDistance(effect.getEffected(), target) <= template.getProperties().getRevisionDistance()) {
+									GameEngineServices.skillEngine().applyEffectDirectly(template.getSkillId(), effect.getEffector(),
+										target, template.getDuration(), launchedSkillLevel);
 								}
 							}
 						});
 					} else {
-						Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, template.getLvl(), 0);
+						Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, launchedSkillLevel, 0);
 						e.initialize();
 						e.applyEffect();
 					}

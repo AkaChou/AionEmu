@@ -1,15 +1,16 @@
 package com.aionemu.gameserver.ai2.manager;
 
+import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AttackIntention;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
+import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.utils.MathUtil;
 
 /**
  * NPC 攻击管理器：负责攻击调度、意图选择与追击/放弃目标判定。
@@ -30,6 +31,7 @@ public class AttackManager {
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "AttackManager: startAttacking");
 		}
+		npcAI.getOwner().getMoveController().clearHomeReturn();
 		npcAI.getOwner().getGameStats().setFightStartingTime();
 		EmoteManager.emoteStartAttacking(npcAI.getOwner());
 		scheduleNextAttack(npcAI);
@@ -45,8 +47,7 @@ public class AttackManager {
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "AttackManager: scheduleNextAttack");
 		}
-		if (checkGiveupDistance(npcAI)) {
-			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+		if (stopRetailChase(npcAI)) {
 			return;
 		}
 
@@ -138,8 +139,7 @@ public class AttackManager {
 			return;
 		}
 		// 检查是否应该放弃目标
-		if (checkGiveupDistance(npcAI)) {
-			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+		if (stopRetailChase(npcAI)) {
 			return;
 		}
 		// 尝试移动到目标
@@ -151,51 +151,79 @@ public class AttackManager {
 	}
 
 	/**
-	 * 检查是否应因距离（追击目标/出生点）放弃目标。
-	 * Checks whether the target should be given up by chase-target or home distance.
+	 * 按真端 NPC 数据检查是否停止追击。
+	 * Checks whether chase should stop according to retail NPC data.
 	 *
 	 * NPC AI instance
 	 *
 	 * @param npcAI
 	 * @return 应放弃目标时为 {@code true} / {@code true} if the target should be given up
 	 */
-	private static boolean checkGiveupDistance(NpcAI2 npcAI) {
+	private static boolean checkStopChase(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
-		// 若目标跑得太远 / if target run away too far
-		VisibleObject target = npc.getTarget();
-		if (target != null) {
-			double distanceToTarget = MathUtil.getDistance(npc, target);
-			if (npcAI.isLogging()) {
-				AI2Logger.info(npcAI, "AttackManager: distanceToTarget " + distanceToTarget);
-			}
-			int chaseTarget = npc.isBoss() ? 50 : npc.getPosition().getWorldMapInstance().getTemplate().getAiInfo().getChaseTarget();
-			if (distanceToTarget >= chaseTarget) {
-				return true;
-			}
-		}
-
 		double distanceToHome = npc.getDistanceToSpawnLocation();
-		int chaseHome = npc.isBoss() ? 150 : npc.getPosition().getWorldMapInstance().getTemplate().getAiInfo().getChaseHome();
-		return shouldGiveUpByHomeDistance(distanceToHome, chaseHome, npc.getGameStats().getLastAttackTimeDelta(),
-			npc.getGameStats().getLastAttackedTimeDelta());
+		return shouldStopRetailChase(npc, distanceToHome, System.currentTimeMillis());
 	}
 
-	/**
-	 * 按出生点距离与最近攻击/受击时间判定是否脱战放弃。
-	 * Decides give-up by home distance and last attack/attacked time deltas.
-	 *
-	 * @param distanceToHome 到出生点的距离 / distance to spawn location
-	 * @param chaseHome 追击出生点上限 / chase-home limit
-	 * @param lastAttackTimeDelta 距上次攻击的秒数 / seconds since last attack
-	 * @param lastAttackedTimeDelta 距上次受击的秒数 / seconds since last attacked
-	 * @return 应放弃时为 {@code true} / {@code true} if should give up
-	 */
-	static boolean shouldGiveUpByHomeDistance(double distanceToHome, int chaseHome, int lastAttackTimeDelta,
-			int lastAttackedTimeDelta) {
-		if (distanceToHome > chaseHome) {
-			return true;
+	private static boolean stopRetailChase(NpcAI2 npcAI) {
+		if (!checkStopChase(npcAI)) {
+			return false;
 		}
-		return chaseHome <= 200 && ((lastAttackTimeDelta > 20 && lastAttackedTimeDelta > 20)
-			|| (distanceToHome > chaseHome / 2.0 && lastAttackedTimeDelta > 10));
+		if (npcAI.getOwner().getMoveController().isReturningToWaypoint()) {
+			npcAI.getOwner().getAggroList().clear();
+			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+		} else {
+			TargetEventHandler.returnToSpawn(npcAI, false);
+		}
+		return true;
 	}
+
+	private static boolean shouldStopRetailChase(Npc npc, double distanceToHome, long now) {
+		var definition = DataManager.NPC_PATH_BEHAVIOR_DATA == null ? null
+			: DataManager.NPC_PATH_BEHAVIOR_DATA.get(npc.getNpcId());
+		String maxChaseTime = definition == null ? null : definition.maxChaseTime();
+		if (maxChaseTime == null || maxChaseTime.isBlank() || "0".equals(maxChaseTime)) {
+			return false;
+		}
+		if (!"sp".equalsIgnoreCase(maxChaseTime)) {
+			try {
+				boolean stop = shouldStopTimedChase(npc.getGameStats().getFightStartingTime(),
+						npc.getGameStats().getLastAttackTime(), Integer.parseInt(maxChaseTime), now);
+				if (stop) {
+					npc.getMoveController().requestReturnToCurrentWaypoint();
+				}
+				return stop;
+			} catch (NumberFormatException ignored) {
+				return false;
+			}
+		}
+		if (distanceToHome < 3) {
+			npc.getGameStats().setLastSpawnPointChaseCheck(0);
+			return false;
+		}
+		long lastCheck = npc.getGameStats().getLastSpawnPointChaseCheck();
+		if (lastCheck == 0) {
+			npc.getGameStats().setLastSpawnPointChaseCheck(now);
+			return false;
+		}
+		if (!shouldCheckSpawnPointChase(lastCheck, now)) {
+			return false;
+		}
+		npc.getGameStats().setLastSpawnPointChaseCheck(now);
+		return shouldStopSpawnPointChase(Rnd.get(1, 100));
+	}
+
+	static boolean shouldStopTimedChase(long fightStartedAt, long lastAttackAt, int maxSeconds, long now) {
+		long chaseRefreshedAt = Math.max(fightStartedAt, lastAttackAt);
+		return maxSeconds > 0 && chaseRefreshedAt > 0 && now - chaseRefreshedAt >= maxSeconds * 1000L;
+	}
+
+	static boolean shouldCheckSpawnPointChase(long lastCheck, long now) {
+		return lastCheck > 0 && now - lastCheck >= 2_000;
+	}
+
+	static boolean shouldStopSpawnPointChase(int roll) {
+		return roll > 69;
+	}
+
 }

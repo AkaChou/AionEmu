@@ -387,14 +387,14 @@
         <bonus_attr stat="PVP_DEFEND_RATIO" func="ADD" value="2"/>
 	</service_bonusattr>
 	
-	<!-- VIP_Base_CN_01 -->
+			<!-- VIP_Base_CN_01 -->
 	<service_bonusattr buff_id="1000001">
 		<bonus_attr stat="MAXHP" func="ADD" value="666"/>
 		<bonus_attr stat="MAXMP" func="ADD" value="666"/>
 		<bonus_attr stat="PHYSICAL_ACCURACY" func="ADD" value="7"/>
 		<bonus_attr stat="MAGICAL_ACCURACY" func="ADD" value="3"/>
 	</service_bonusattr>
-	<!-- VIP_Base_CN_02 -->
+			<!-- VIP_Base_CN_02 -->
 	<service_bonusattr buff_id="1000002">
 		<bonus_attr stat="MAXHP" func="ADD" value="666"/>
 		<bonus_attr stat="MAXMP" func="ADD" value="666"/>
@@ -403,7 +403,7 @@
 		<bonus_attr stat="PHYSICAL_CRITICAL" func="ADD" value="8"/>
 		<bonus_attr stat="MAGICAL_CRITICAL" func="ADD" value="1"/>
 	</service_bonusattr>
-	<!-- VIP_Base_CN_03 -->
+			<!-- VIP_Base_CN_03 -->
 	<service_bonusattr buff_id="1000003">
 		<bonus_attr stat="MAXHP" func="ADD" value="666"/>
 		<bonus_attr stat="MAXMP" func="ADD" value="666"/>
@@ -414,7 +414,7 @@
 		<bonus_attr stat="PHYSICAL_ATTACK" func="ADD" value="3"/>
 		<bonus_attr stat="BOOST_MAGICAL_SKILL" func="ADD" value="14"/>
 	</service_bonusattr>
-	<!-- VIP_Base_CN_04 -->
+			<!-- VIP_Base_CN_04 -->
 	<service_bonusattr buff_id="1000004">
 		<bonus_attr stat="MAXHP" func="ADD" value="666"/>
 		<bonus_attr stat="MAXMP" func="ADD" value="666"/>
@@ -425,134 +425,128 @@
 		<bonus_attr stat="PHYSICAL_ATTACK" func="ADD" value="5"/>
 		<bonus_attr stat="BOOST_MAGICAL_SKILL" func="ADD" value="28"/>
 	</service_bonusattr>
-	<!-- VIP_Base_CN_05 -->
+			<!-- VIP_Base_CN_05 -->
 	<service_bonusattr buff_id="1000005">
-		<bonus_attr stat="MAXHP" func="ADD" value="666"/>
-		<bonus_attr stat="MAXMP" func="ADD" value="666"/>
-		<bonus_attr stat="PHYSICAL_ACCURACY" func="ADD" value="29"/>
-		<bonus_attr stat="MAGICAL_ACCURACY" func="ADD" value="16"/>
-		<bonus_attr stat="PHYSICAL_CRITICAL" func="ADD" value="19"/>
-		<bonus_attr stat="MAGICAL_CRITICAL" func="ADD" value="5"/>
-		<bonus_attr stat="PHYSICAL_ATTACK" func="ADD" value="5"/>
-		<bonus_attr stat="BOOST_MAGICAL_SKILL" func="ADD" value="28"/>
+		<bonus_attr stat="MAXHP" func="ADD" value="888"/>
+		<bonus_attr stat="MAXMP" func="ADD" value="800"/>
+		<bonus_attr stat="PHYSICAL_ACCURACY" func="ADD" value="33"/>
+		<bonus_attr stat="MAGICAL_ACCURACY" func="ADD" value="22"/>
+		<bonus_attr stat="PHYSICAL_CRITICAL" func="ADD" value="24"/>
+		<bonus_attr stat="MAGICAL_CRITICAL" func="ADD" value="7"/>
+		<bonus_attr stat="PHYSICAL_ATTACK" func="ADD" value="7"/>
+		<bonus_attr stat="BOOST_MAGICAL_SKILL" func="ADD" value="34"/>
 	</service_bonusattr>
-	<!-- VIP_Base_CN_06 -->
+			<!-- VIP_Base_CN_06 -->
 	<service_bonusattr buff_id="1000006">
-		<bonus_attr stat="MAXHP" func="ADD" value="666"/>
-		<bonus_attr stat="MAXMP" func="ADD" value="666"/>
-		<bonus_attr stat="PHYSICAL_ACCURACY" func="ADD" value="29"/>
-		<bonus_attr stat="MAGICAL_ACCURACY" func="ADD" value="16"/>
-		<bonus_attr stat="PHYSICAL_CRITICAL" func="ADD" value="19"/>
-		<bonus_attr stat="MAGICAL_CRITICAL" func="ADD" value="5"/>
-		<bonus_attr stat="PHYSICAL_ATTACK" func="ADD" value="5"/>
-		<bonus_attr stat="BOOST_MAGICAL_SKILL" func="ADD" value="28"/>
+		<bonus_attr stat="MAXHP" func="ADD" value="888"/>
+		<bonus_attr stat="MAXMP" func="ADD" value="800"/>
+		<bonus_attr stat="PHYSICAL_ACCURACY" func="ADD" value="40"/>
+		<bonus_attr stat="MAGICAL_ACCURACY" func="ADD" value="28"/>
+		<bonus_attr stat="PHYSICAL_CRITICAL" func="ADD" value="31"/>
+		<bonus_attr stat="MAGICAL_CRITICAL" func="ADD" value="9"/>
+		<bonus_attr stat="PHYSICAL_ATTACK" func="ADD" value="9"/>
+		<bonus_attr stat="BOOST_MAGICAL_SKILL" func="ADD" value="43"/>
 	</service_bonusattr>
-	<!-- VIP_OP_A_CN_01 -->
+			<!-- VIP_OP_A_CN_01 -->
 	<service_bonusattr buff_id="1000007">
 		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="2"/>
 		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="20"/>
-        <bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="20"/>
-        <bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="20"/>
-        <bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="20"/>
-		<bonus_attr stat="BOOST_BOOK_XP_RATE" func="ADD" value="20"/>
+		<bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="20"/>
+		<bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="20"/>
+		<bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="20"/>
 		<bonus_attr stat="DEATH_PENALTY_REDUCE" func="ADD" value="10"/>
 	</service_bonusattr>
-	<!-- VIP_OP_A_CN_02 -->
+			<!-- VIP_OP_A_CN_02 -->
 	<service_bonusattr buff_id="1000008">
 		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="2"/>
 		<bonus_attr stat="SPEED" func="PERCENT" value="1"/>
 		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="20"/>
-        <bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="20"/>
-        <bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="20"/>
-        <bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="20"/>
-		<bonus_attr stat="BOOST_BOOK_XP_RATE" func="ADD" value="20"/>
+		<bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="20"/>
+		<bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="20"/>
+		<bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="20"/>
 		<bonus_attr stat="DEATH_PENALTY_REDUCE" func="ADD" value="20"/>
 	</service_bonusattr>
-	<!-- VIP_OP_A_CN_03 -->
+			<!-- VIP_OP_A_CN_03 -->
 	<service_bonusattr buff_id="1000009">
 		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="3"/>
 		<bonus_attr stat="SPEED" func="PERCENT" value="2"/>
 		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="40"/>
-        <bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="40"/>
-        <bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="40"/>
-        <bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="40"/>
-		<bonus_attr stat="BOOST_BOOK_XP_RATE" func="ADD" value="40"/>
+		<bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="40"/>
+		<bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="40"/>
+		<bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="40"/>
 		<bonus_attr stat="DEATH_PENALTY_REDUCE" func="ADD" value="30"/>
 	</service_bonusattr>
-	<!-- VIP_OP_A_CN_04 -->
+			<!-- VIP_OP_A_CN_04 -->
 	<service_bonusattr buff_id="1000010">
 		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="5"/>
 		<bonus_attr stat="SPEED" func="PERCENT" value="3"/>
 		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="60"/>
-		<bonus_attr stat="BOOST_BOOK_XP_RATE" func="ADD" value="60"/>
+		<bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="60"/>
+		<bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="60"/>
+		<bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="60"/>
 		<bonus_attr stat="DEATH_PENALTY_REDUCE" func="ADD" value="50"/>
 	</service_bonusattr>
-	<!-- VIP_OP_A_CN_05 -->
+			<!-- VIP_OP_A_CN_05 -->
 	<service_bonusattr buff_id="1000011">
-		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="1"/>
+		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="5"/>
 		<bonus_attr stat="SPEED" func="PERCENT" value="3"/>
-		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="60"/>
-		<bonus_attr stat="BOOST_BOOK_XP_RATE" func="ADD" value="60"/>
+		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="80"/>
+		<bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="80"/>
+		<bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="80"/>
+		<bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="80"/>
 		<bonus_attr stat="DEATH_PENALTY_REDUCE" func="ADD" value="50"/>
 	</service_bonusattr>
-	<!-- VIP_OP_A_CN_06 -->
+			<!-- VIP_OP_A_CN_06 -->
 	<service_bonusattr buff_id="1000012">
-		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="1"/>
-		<bonus_attr stat="SPEED" func="PERCENT" value="3"/>
-		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="60"/>
-        <bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="60"/>
-		<bonus_attr stat="BOOST_BOOK_XP_RATE" func="ADD" value="60"/>
-		<bonus_attr stat="DEATH_PENALTY_REDUCE" func="ADD" value="50"/>
+		<bonus_attr stat="FLY_SPEED" func="PERCENT" value="5"/>
+		<bonus_attr stat="SPEED" func="PERCENT" value="4"/>
+		<bonus_attr stat="BOOST_CRAFTING_XP_RATE" func="ADD" value="80"/>
+		<bonus_attr stat="BOOST_HUNTING_XP_RATE" func="ADD" value="80"/>
+		<bonus_attr stat="BOOST_GROUP_HUNTING_XP_RATE" func="ADD" value="80"/>
+		<bonus_attr stat="BOOST_GATHERING_XP_RATE" func="ADD" value="80"/>
+		<bonus_attr stat="DEATH_PENALTY_REDUCE" func="ADD" value="60"/>
 	</service_bonusattr>
-	<!-- VIP_OP_B_CN_01 -->
+			<!-- VIP_OP_B_CN_01 -->
 	<service_bonusattr buff_id="1000013">
 		<bonus_attr stat="INDUN_DROP_BOOST" func="ADD" value="10"/>
-        <bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
 	</service_bonusattr>
-	<!-- VIP_OP_B_CN_02 -->
+			<!-- VIP_OP_B_CN_02 -->
 	<service_bonusattr buff_id="1000014">
 		<bonus_attr stat="INDUN_DROP_BOOST" func="ADD" value="10"/>
-        <bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
 	</service_bonusattr>
-	<!-- VIP_OP_B_CN_03 -->
+			<!-- VIP_OP_B_CN_03 -->
 	<service_bonusattr buff_id="1000015">
 		<bonus_attr stat="INDUN_DROP_BOOST" func="ADD" value="10"/>
-        <bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
 	</service_bonusattr>
-	<!-- VIP_OP_B_CN_04 -->
+			<!-- VIP_OP_B_CN_04 -->
 	<service_bonusattr buff_id="1000016">
 		<bonus_attr stat="INDUN_DROP_BOOST" func="ADD" value="10"/>
-        <bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
 	</service_bonusattr>
-	<!-- VIP_OP_B_CN_05 -->
+			<!-- VIP_OP_B_CN_05 -->
 	<service_bonusattr buff_id="1000017">
 		<bonus_attr stat="INDUN_DROP_BOOST" func="ADD" value="10"/>
-        <bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
 	</service_bonusattr>
-	<!-- VIP_OP_B_CN_06 -->
+			<!-- VIP_OP_B_CN_06 -->
 	<service_bonusattr buff_id="1000018">
 		<bonus_attr stat="INDUN_DROP_BOOST" func="ADD" value="10"/>
-        <bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
-        <bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="AUTHORIZE_BOOST" func="ADD" value="3"/>
+		<bonus_attr stat="ENCHANT_OPTION_BOOST" func="ADD" value="3"/>
 	</service_bonusattr>
 	
 	<!-- MEMBERSHIP_BASE_TW_01 -->

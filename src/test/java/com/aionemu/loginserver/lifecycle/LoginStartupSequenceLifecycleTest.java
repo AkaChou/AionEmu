@@ -39,6 +39,7 @@ class LoginStartupSequenceLifecycleTest {
             "config:load",
             "database:init",
             "dao:init",
+            "vip:sync",
             "deadlock:start",
             "threadpool:init",
             "keygen:init",
@@ -70,6 +71,7 @@ class LoginStartupSequenceLifecycleTest {
             "config:load",
             "database:init",
             "dao:init",
+            "vip:sync",
             "deadlock:start",
             "threadpool:init",
             "keygen:init",
@@ -104,6 +106,7 @@ class LoginStartupSequenceLifecycleTest {
             "config:load",
             "database:init",
             "dao:init",
+            "vip:sync",
             "deadlock:start",
             "threadpool:init",
             "keygen:init",
@@ -122,6 +125,7 @@ class LoginStartupSequenceLifecycleTest {
             "config:load",
             "database:init",
             "dao:init",
+            "vip:sync",
             "deadlock:start",
             "threadpool:init",
             "keygen:init",
@@ -180,6 +184,7 @@ class LoginStartupSequenceLifecycleTest {
             gateway.loadConfig();
             gateway.initializeDatabase();
             gateway.initializeDaos();
+            gateway.synchronizeVipAccounts();
             gateway.startDeadlockDetector();
             gateway.initializeThreadPool();
             gateway.initializeKeyGenerator();
@@ -200,6 +205,7 @@ class LoginStartupSequenceLifecycleTest {
                 "config:load",
                 "database:init",
                 "dao:init",
+                "vip:sync",
                 "deadlock:start:false",
                 "threadpool:init",
                 "keygen:init",
@@ -303,6 +309,11 @@ class LoginStartupSequenceLifecycleTest {
         @Override
         public void initializeDaos() {
             events.add("dao:init");
+        }
+
+        @Override
+        public void synchronizeVipAccounts() {
+            events.add("vip:sync");
         }
 
         @Override
@@ -422,6 +433,11 @@ class LoginStartupSequenceLifecycleTest {
         @Override
         public void initializeDaos() {
             events.add("dao:init");
+        }
+
+        @Override
+        public void synchronizeVipAccounts() {
+            events.add("vip:sync");
         }
 
         @Override

@@ -38,15 +38,13 @@ public class AlwaysDodgeEffect extends EffectTemplate {
 	 */
 	@Override
 	public void startEffect(final Effect effect) {
-		AttackCalcObserver acObserver = new AttackStatusObserver(value, AttackStatus.DODGE) {
+		AttackCalcObserver acObserver = new AttackStatusObserver(calculateValue(effect.getSkillLevel()), AttackStatus.DODGE) {
 
 			@Override
 			public boolean checkStatus(AttackStatus status) {
 				if (status == AttackStatus.DODGE) {
-					if (value <= 1) {
+					if (consume && value > 0 && --value == 0) {
 						effect.endEffect();
-					} else {
-						value--;
 					}
 					return true;
 				} else {

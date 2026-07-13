@@ -49,4 +49,22 @@ class DropModifiersTest {
 		assertEquals(0f, group.calculateEffectiveChance(group.getDrop().get(0), modifiers));
 		assertEquals(25f, group.calculateEffectiveChance(group.getDrop().get(1), modifiers));
 	}
+
+	@Test
+	void appliesNpcCommonDropAdjustmentBeforeDropModifiers() throws Exception {
+		DropGroup group = JAXBContext.newInstance(DropGroup.class)
+				.createUnmarshaller()
+				.unmarshal(new StreamSource(new StringReader("""
+						<dropGroup drop_group_adjustment="200">
+							<drop item_id="1" chance="10"/>
+						</dropGroup>
+						""")), DropGroup.class)
+				.getValue();
+		group.setChanceMultiplier(1.25f);
+		DropModifiers modifiers = new DropModifiers();
+		modifiers.setBoostDropRate(1f);
+		modifiers.setReductionDropRate(1f);
+
+		assertEquals(25f, group.calculateEffectiveChance(group.getDrop().getFirst(), modifiers));
+	}
 }

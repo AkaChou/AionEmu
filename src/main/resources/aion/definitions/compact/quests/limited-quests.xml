@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<limited_quests version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/limited-quests.xsd">
+  <quest id="9645" max_count="10" recover_count="5"/>
+  <quest id="9661" max_count="240" recover_count="2"/>
+  <quest id="9663" max_count="240" recover_count="2"/>
+  <quest id="13816" max_count="240" recover_count="2"/>
+  <quest id="23816" max_count="240" recover_count="2"/>
+</limited_quests>

@@ -274,7 +274,7 @@ public class Config {
 		int threadPoolSize = ThreadConfig.THREAD_POOL_SIZE;
 		boolean useThreadPriorities = ThreadConfig.USE_PRIORITIES;
 		boolean geoEnabled = GeoDataConfig.GEO_ENABLE;
-		boolean navEnabled = GeoDataConfig.GEO_NAV_ENABLE;
+		boolean pathEnabled = GeoDataConfig.GEO_PATH_ENABLE;
 		String houseAuctionTime = HousingConfig.HOUSE_AUCTION_TIME;
 		String houseRegisterEnd = HousingConfig.HOUSE_REGISTER_END;
 		String houseMaintenanceTime = HousingConfig.HOUSE_MAINTENANCE_TIME;
@@ -347,7 +347,7 @@ public class Config {
 			ThreadConfig.THREAD_POOL_SIZE = threadPoolSize;
 			ThreadConfig.USE_PRIORITIES = useThreadPriorities;
 			GeoDataConfig.GEO_ENABLE = geoEnabled;
-			GeoDataConfig.GEO_NAV_ENABLE = navEnabled;
+			GeoDataConfig.GEO_PATH_ENABLE = pathEnabled;
 			HousingConfig.HOUSE_AUCTION_TIME = houseAuctionTime;
 			HousingConfig.HOUSE_REGISTER_END = houseRegisterEnd;
 			HousingConfig.HOUSE_MAINTENANCE_TIME = houseMaintenanceTime;
@@ -379,7 +379,7 @@ public class Config {
 			GameLocationBootstrapServices.svsService().reloadSchedule();
 			GameLocationBootstrapServices.vortexService().reloadSchedule();
 			GameLocationBootstrapServices.zorshivDredgionService().reloadSchedule();
-			log.warn(I18n.get("log.41e3eaa3d3fb"));
+			log.warn(I18n.get("log.b5283679a940"));
 		} catch (Exception e) {
 			WorldConfig.WORLD_REGION_SIZE = worldRegionSize;
 			ThreadConfig.BASE_THREAD_POOL_SIZE = baseThreadPoolSize;
@@ -387,7 +387,7 @@ public class Config {
 			ThreadConfig.THREAD_POOL_SIZE = threadPoolSize;
 			ThreadConfig.USE_PRIORITIES = useThreadPriorities;
 			GeoDataConfig.GEO_ENABLE = geoEnabled;
-			GeoDataConfig.GEO_NAV_ENABLE = navEnabled;
+			GeoDataConfig.GEO_PATH_ENABLE = pathEnabled;
 			HousingConfig.HOUSE_AUCTION_TIME = houseAuctionTime;
 			HousingConfig.HOUSE_REGISTER_END = houseRegisterEnd;
 			HousingConfig.HOUSE_MAINTENANCE_TIME = houseMaintenanceTime;

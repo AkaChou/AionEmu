@@ -51,12 +51,10 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 		case LEAVE:
 			// PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_PARTY_SECEDE); //
 			// 客户端侧？ / client side?
-			if (team.onlineMembers() <= 1) {
+			if (team.getTeamType().shouldDisband(team.onlineMembers())) {
 				PlayerGroupService.disband(team);
-			} else {
-				if (leavedPlayer.equals(team.getLeader().getObject())) {
-					team.onEvent(new ChangeGroupLeaderEvent(team));
-				}
+			} else if (team.onlineMembers() > 0 && leavedPlayer.equals(team.getLeader().getObject())) {
+				team.onEvent(new ChangeGroupLeaderEvent(team));
 			}
 			if (reason == LeaveReson.BAN) {
 				PacketSendUtility.sendPacket(leavedPlayer, SM_SYSTEM_MESSAGE.STR_PARTY_YOU_ARE_BANISHED);

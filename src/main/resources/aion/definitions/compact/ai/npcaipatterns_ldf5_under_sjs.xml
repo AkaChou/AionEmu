@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_ldf5_under_sjs.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>LDF5_under_quest_on</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><enable_area><area_type>AI_CONTROL_AREA_QUESTSCRIPT</area_type><area_name>LDF5_Under_QuestArea_All</area_name><op_code>1</op_code></enable_area></actions></pattern></on_wake_up></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

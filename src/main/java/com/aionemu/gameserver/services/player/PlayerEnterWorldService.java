@@ -130,6 +130,7 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.SurveyService;
+import com.aionemu.gameserver.services.VipService;
 import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.abyss.AbyssSkillService;
@@ -269,7 +270,7 @@ public final class PlayerEnterWorldService {
 					}
 					enterWorld(client, objectId);
 				} catch (Throwable ex) {
-					log.error(I18n.get("log.24d84e2b082e", objectId, ex));
+					log.error(I18n.get("log.24d84e2b082e", objectId), ex);
 				} finally {
 					pendingEnterWorld.remove(objectId);
 				}
@@ -295,6 +296,7 @@ public final class PlayerEnterWorldService {
 			player.setClientConnection(client);
 			log.info(I18n.get("log.4110bd1bb049", player.getName(), account.getName(), client.getMacAddress()));
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().storeObject(player);
+			player.getController().validateLoginZone();
 			StigmaService.onPlayerLogin(player);
 			if (playerAccData.getPlayerCommonData().getLastOnline() != null) {
 				long lastOnline = playerAccData.getPlayerCommonData().getLastOnline().getTime();
@@ -419,6 +421,7 @@ public final class PlayerEnterWorldService {
 				client.sendPacket(new SM_UI_SETTINGS(houseBuddies, 2));
 			}
 			GameCreativityServices.creativityEssenceService().onLogin(player);
+			VipService.applyBenefits(player);
 			sendItemInfos(client, player);
 			if (!player.getEquipmentSettingList().getEquipmentSetting().isEmpty()) {
 				client.sendPacket(new SM_EQUIPMENT_SETTING(player.getEquipmentSettingList().getEquipmentSetting()));

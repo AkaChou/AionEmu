@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -52,6 +53,45 @@ class NpcDropDataTest {
 
 		assertEquals(List.of(111, 222), itemIds(data.getDrop(100)));
 		assertTrue(data.getDrop(100).getDropGroup().get(1).isUseLevelBasedChanceReduction());
+	}
+
+	@Test
+	void commonDropAdjustmentIsAppliedWhenExpandingNpcReference() throws Exception {
+		writeDrops("common_drop_groups.xml", """
+			<common_drop_groups>
+				<group name="COMMON_A">
+					<drop item_id="222" min_amount="1" max_amount="1" chance="10"/>
+				</group>
+			</common_drop_groups>
+			""");
+		writeDrops("npc_drops_part_001.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<common_drop_group name="COMMON_A" common_drop_adjustment="250"/>
+				</npc_drop>
+			</npc_drops>
+			""");
+
+		NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
+
+		assertEquals(2.5f, data.getDrop(100).getDropGroup().getFirst().getChanceMultiplier());
+	}
+
+	@Test
+	void ragnarokKeepsRetailRingAdjustmentInCompactData() {
+		NpcDropData data = NpcDropData.loadEager(
+			Path.of("src/main/resources/aion/definitions/compact/npc_drops").toFile());
+		NpcDrop ragnarok = data.getDrop(216576);
+		assertNotNull(ragnarok);
+
+		DropGroup ring = ragnarok.getDropGroup().stream()
+			.filter(group -> "DF4_ACCESSORY_RING_D_N_E1_55A".equals(group.getGroupName()))
+			.findFirst()
+			.orElseThrow();
+		Drop ringDrop = ring.getDrop().getFirst();
+		assertEquals(0.00946f, ringDrop.getChance(), 0.000001f);
+		assertEquals(2664f, ring.getChanceMultiplier(), 0.0001f);
+		assertEquals(25.20144f, ring.getAdjustedChance(ringDrop), 0.0001f);
 	}
 
 	@Test
@@ -145,13 +185,14 @@ class NpcDropDataTest {
 	@Test
 	void npcDropSchemaAcceptsAionServerSelectionAttributes() throws Exception {
 		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-				.newSchema(Path.of("src/main/resources/aion/data/static_data/npc_drops/npc_drops.xsd").toFile());
+				.newSchema(Path.of("src/main/resources/aion/definitions/schemas/npc_drops.xsd").toFile());
 
 		schema.newValidator().validate(new StreamSource(new StringReader("""
 				<npc_drops>
-					<npc_drop npc_id="100">
-						<drop_group max_items="2" level_based_chance_reduction="true"/>
-					</npc_drop>
+				<npc_drop npc_id="100">
+					<drop_group max_items="2" level_based_chance_reduction="true" drop_group_adjustment="250"/>
+					<common_drop_group name="COMMON_A" common_drop_adjustment="250"/>
+				</npc_drop>
 				</npc_drops>
 				""")));
 	}

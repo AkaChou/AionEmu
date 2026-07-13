@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_lf3_v30_jun.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>NKrall_AeA_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>8000</delay></add_battle_timer><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>5000</delay></add_battle_timer></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>대상이 상처 디버프에 걸려 있으면 스킬3(상처 덧내기) 사용
+
+
+
+
+
+
+
+
+
+(5초마다 체크)</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator><is_obj_in_abnormal_state><obj>OBJI_CUR_TARGET</obj><abnormal_state>ABNSTATEI_BLEED</abnormal_state></is_obj_in_abnormal_state></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>5000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_3</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment>10초마다 BT 0번 받아서 스킬2(상처)</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>10000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment>상처 디버프 체크를 위해 5초마다 돌려주는 타이머</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>5000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_AeB_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>30</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_4</skill><skill_level>0</skill_level></use_skill><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_5</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment>4초마다 돌려주는 0번 배틀타이머</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_AeC_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>40</larger_than><less_than>70</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>40</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_BETA_1</flagvar_indicator></set_flag_var></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment>4초마다 돌려주는 0번 배틀타이머</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_FeA_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>0번 타이머 : 8초 반복, 스킬4를 발동
+
+
+
+
+
+
+
+
+
+1번 타이머 : 4초 반복, 스킬3을 발동</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>7000</delay></add_battle_timer><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>7000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_4</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>40</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_3</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>4</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>7000</delay></add_battle_timer></actions></pattern><pattern><priority>3</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_FeB_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>전투 시작시 스킬3(강타).
+
+
+
+
+
+
+
+
+
+4초 간격 타이머 0번</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_3</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>체력 40% 이하에서,
+
+
+
+
+
+
+
+
+
+"STR_CHAT_NKrall_PEA_1_attack" 외치고
+
+
+
+
+
+
+
+
+
+스킬2(끌어오기)
+
+
+
+
+
+
+
+
+
+-&gt; 스킬4(강공)
+
+
+
+
+
+
+
+
+
+(반복하지 않음)</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>40</less_than></is_hp_in_boundary></conditions><actions><say_to_all><string_id>STR_CHAT_NKrall_PEA_1_attack</string_id></say_to_all><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_4</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_FeC_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>1. 전투 시작시 스킬4(일격파동)
+
+
+
+
+
+
+
+
+
+2. 스킬5를 위한 10초 반복 타이머 0번
+
+
+
+
+
+
+
+
+
+3. 체력 30% 체크를 위한 4초 반복 타이머 1번</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>10000</delay></add_battle_timer><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>4000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_4</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>10초마다 스킬5</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>10000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_5</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment>체력 30% 이하에서 스킬4 한번만 사용</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>30</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_4</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment>타이머 2번(8초 반복)이 들어올 때마다 스킬4</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_2</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_2</btimer_indicator><delay>8000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_4</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>4</priority><action_category>PLANNED</action_category><comment>타이머 1번 반복</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_KeB_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>1. 전투 시작시 스킬5(자기강화)
+
+
+
+
+
+
+
+2. BT 8 스킬2(강공)</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>8000</delay></add_battle_timer><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_5</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>8000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_KeC_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>10000</delay></add_battle_timer><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>10000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>40</less_than></is_hp_in_boundary></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_PeA_Solo</name><event_handlers><on_see_friend_attacked><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_hp_lower_than><who>OBJI_FRIEND</who><percent>50</percent></is_hp_lower_than><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_FRIEND</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_see_friend_attacked><on_friend_spelled><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_enemy><who>OBJI_CASTER</who></is_enemy><is_event_skill_category><skill_category>SKILLCTG_PHYSICAL_DEBUFF</skill_category></is_event_skill_category></conditions><actions><say_to_all><string_id>STR_CHAT_Lycan_HEB_1_KATK6_b</string_id></say_to_all><use_skill><target>OBJI_FRIEND</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment/><conditions><is_enemy><who>OBJI_CASTER</who></is_enemy><is_event_skill_category><skill_category>SKILLCTG_MENTAL_DEBUFF</skill_category></is_event_skill_category></conditions><actions><say_to_all><string_id>STR_CHAT_Lycan_HEB_1_KATK6_b</string_id></say_to_all><use_skill><target>OBJI_FRIEND</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_friend_spelled><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>10000</delay></add_battle_timer><add_battle_timer><btimer_indicator>BTIMERI_INDEX_2</btimer_indicator><delay>4000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_3</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment>체력 100~40% 구간 10초마다 스킬3 반복</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>40</larger_than><less_than>100</less_than></is_hp_in_boundary></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>10000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_3</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>3</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_2</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>20</less_than></is_hp_in_boundary></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>2</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_2</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_2</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern><pattern><priority>1</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_PeB_Solo</name><event_handlers><on_friend_spelled><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_enemy><who>OBJI_CASTER</who></is_enemy><is_event_skill_category><skill_category>SKILLCTG_PHYSICAL_DEBUFF</skill_category></is_event_skill_category></conditions><actions><say_to_all><string_id>STR_CHAT_Lycan_HEB_1_KATK6_b</string_id></say_to_all><use_skill><target>OBJI_FRIEND</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>6</priority><action_category>PLANNED</action_category><comment/><conditions><is_enemy><who>OBJI_CASTER</who></is_enemy><is_event_skill_category><skill_category>SKILLCTG_MENTAL_DEBUFF</skill_category></is_event_skill_category></conditions><actions><say_to_all><string_id>STR_CHAT_Lycan_HEB_1_KATK6_b</string_id></say_to_all><use_skill><target>OBJI_FRIEND</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_friend_spelled><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_3</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>30</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment/><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>4000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_ReB_Solo</name><event_handlers><on_attacked><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>물리 공격 당했을 때 루트 걸리면 디스펠로 풀고 1초 도망</comment><conditions><is_in_abnormal_state><abnormal_state>ABNSTATEI_ROOT</abnormal_state></is_in_abnormal_state><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_attacked><on_spelled><pattern><priority>6</priority><action_category>PLANNED</action_category><comment>스펠 공격 당했을 때 루트 걸리면 디스펠로 풀고 1초 도망</comment><conditions><is_in_abnormal_state><abnormal_state>ABNSTATEI_ROOT</abnormal_state></is_in_abnormal_state><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_spelled></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_RhA_Solo</name><event_handlers><on_attacked><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>물리 공격 당했을 때 루트 걸리면 디스펠로 풀고 1초 도망</comment><conditions><is_in_abnormal_state><abnormal_state>ABNSTATEI_ROOT</abnormal_state></is_in_abnormal_state><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill><use_skill><target>OBJI_ATTACKER</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_attacked><on_spelled><pattern><priority>6</priority><action_category>PLANNED</action_category><comment>스펠 공격 당했을 때 루트 걸리면 디스펠로 풀고 1초 도망</comment><conditions><is_in_abnormal_state><abnormal_state>ABNSTATEI_ROOT</abnormal_state></is_in_abnormal_state><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill><use_skill><target>OBJI_CASTER</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_spelled></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_WeA_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>전투 시작시 BT 0번을 10초 간격으로 시작.
+
+
+
+
+
+
+
+
+
+
+전투 시작시 스킬0(화염) 시전</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>10000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>전투 중 10초마다(BT 0번) 스킬4(불꽃뿜기) 시전</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>10000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_4</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_WeB_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>전투 시작시 스킬0(혹한).
+
+
+
+
+
+
+
+
+
+
+BT 0번(2초) 시작.</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>2000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>6</priority><action_category>PLANNED</action_category><comment>BT 0번을 받고,
+
+
+
+체력 20% 이하에서 대상에게 스킬2(영혼동결)</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>30</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment>2초마다 돌아가는 0번 타이머</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>2000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>NKrall_WeC_Solo</name><event_handlers><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>2000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_3</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>체력 70% 이하로 내려갔을 때
+
+
+
+스킬0(자세불안) 1번만 사용</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>40</larger_than><less_than>70</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>2000</delay></add_battle_timer><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>5</priority><action_category>PLANNED</action_category><comment>체력 30% 이하로 내려갔을 때
+
+
+
+스킬 2(마취) 1번만 사용</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><is_hp_in_boundary><who>OBJI_SELF</who><larger_than>1</larger_than><less_than>30</less_than></is_hp_in_boundary><set_flag_var><flagvar_indicator>FLAGVARI_GAMMA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>4</priority><action_category>PLANNED</action_category><comment>2초마다 돌아가는 0번 배틀타이머</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>2000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

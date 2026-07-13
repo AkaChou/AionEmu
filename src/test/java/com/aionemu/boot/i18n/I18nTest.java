@@ -73,6 +73,20 @@ class I18nTest {
     }
 
     @Test
+    void autoCountryCode99UsesSystemLocale() {
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of("gameserver.country.code", "99")));
+        Locale previous = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
+            new I18nConfig(messageSource, environment).wireI18n();
+            assertEquals(Locale.SIMPLIFIED_CHINESE, I18n.currentLocale());
+        } finally {
+            Locale.setDefault(previous);
+        }
+    }
+
+    @Test
     void englishWhenCountryCodeIsNot5() {
         I18n.applyCountryCode(1);
         assertEquals("Startup successful", I18n.get("console.startup.successful"));

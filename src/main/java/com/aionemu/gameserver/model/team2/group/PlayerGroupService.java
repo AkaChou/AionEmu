@@ -122,10 +122,15 @@ public class PlayerGroupService {
 		return newGroup;
 	}
 
-	@GlobalCallback(PlayerGroupCreateCallback.class)
 	/** 创建队伍。 / Create group. */
 	public static final PlayerGroup createGroup(Player leader) {
-		PlayerGroup newGroup = new PlayerGroup(new PlayerGroupMember(leader), TeamType.GROUP);
+		return createGroup(leader, TeamType.GROUP);
+	}
+
+	@GlobalCallback(PlayerGroupCreateCallback.class)
+	/** 创建指定协议类型的单人队伍。 */
+	public static final PlayerGroup createGroup(Player leader, TeamType type) {
+		PlayerGroup newGroup = new PlayerGroup(new PlayerGroupMember(leader), type);
 		groups.put(newGroup.getTeamId(), newGroup);
 		addPlayer(newGroup, leader);
 		if (offlineCheckStarted.compareAndSet(false, true)) {

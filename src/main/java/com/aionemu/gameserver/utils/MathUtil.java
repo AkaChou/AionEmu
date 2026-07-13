@@ -392,7 +392,7 @@ public class MathUtil {
 	 *
 	 * @return 若 near 则为 true / True if near
 	 */
-	public final static boolean isNearCoordinates(VisibleObject obj, float x, float y, float z, int offset) {
+	public final static boolean isNearCoordinates(VisibleObject obj, float x, float y, float z, float offset) {
 		return getDistance(obj.getX(), obj.getY(), obj.getZ(), x, y, z) < offset + NpcMoveController.MOVE_CHECK_OFFSET;
 	}
 

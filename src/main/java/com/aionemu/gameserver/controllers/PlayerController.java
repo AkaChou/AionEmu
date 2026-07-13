@@ -2,8 +2,11 @@ package com.aionemu.gameserver.controllers;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.ai.RetailAreaEngine;
+import com.aionemu.gameserver.ai.RetailSensoryAreaEngine;
 import com.aionemu.gameserver.configs.main.*;
 import com.aionemu.gameserver.controllers.attack.AttackUtil;
+import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.lifecycle.*;
@@ -79,6 +82,7 @@ public class PlayerController extends CreatureController<Player> {
 	private long lastAttackMilis = 0;
 	private long lastAttackedMilis = 0;
 	private int stance = 0;
+	private int stanceType = 0;
 	private Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<Integer, VisibleObject>();
 
 	/**
@@ -492,10 +496,12 @@ public class PlayerController extends CreatureController<Player> {
 			z = start.getZ();
 			h = start.getHeading();
 		}
-		long lastOnline = getOwner().getCommonData().getLastOnline().getTime();
-		long secondsOffline = (System.currentTimeMillis() / 1000) - lastOnline / 1000;
-		if (secondsOffline > 10 * 60) { // Logout in no-recall zone sends you to bindpoint after 10 (??) minutes
-			for (ZoneInstance zone : getOwner().getPosition().getMapRegion().getZones(getOwner())) {
+		var lastOnline = getOwner().getCommonData().getLastOnline();
+		long secondsOffline = lastOnline == null ? 0 : (System.currentTimeMillis() - lastOnline.getTime()) / 1000;
+		moveToBind = RetailAreaEngine.isNoPark(getOwner(), secondsOffline);
+		if (!moveToBind && secondsOffline > 10 * 60) {
+			MapRegion mapRegion = getOwner().getPosition().getWorldMapInstance().getRegion(getOwner().getX(), getOwner().getY(), getOwner().getZ());
+			for (ZoneInstance zone : mapRegion.getZones(getOwner())) {
 				if (!zone.canRecall()) {
 					moveToBind = true;
 					break;
@@ -765,7 +771,8 @@ public class PlayerController extends CreatureController<Player> {
 	 * @param log 日志类型 / log type
 	 */
 	@Override
-	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log) {
+	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,
+			AttackStatus attackStatus) {
 		if (getOwner().getLifeStats().isAlreadyDead())
 			return;
 
@@ -774,7 +781,7 @@ public class PlayerController extends CreatureController<Player> {
 
 		cancelUseItem();
 		cancelGathering();
-		super.onAttack(creature, skillId, type, damage, notifyAttack, log);
+		super.onAttack(creature, skillId, type, damage, notifyAttack, log, attackStatus);
 
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_ATTACK_STATUS(getOwner(), creature, type, skillId, damage, log), true);
 
@@ -851,6 +858,18 @@ public class PlayerController extends CreatureController<Player> {
 	public void onMove() {
 		getOwner().getObserveController().notifyMoveObservers();
 		super.onMove();
+	}
+
+	@Override
+	public void onAfterSpawn() {
+		super.onAfterSpawn();
+		RetailSensoryAreaEngine.onPlayerMoved(getOwner());
+	}
+
+	@Override
+	public void onDespawn() {
+		RetailSensoryAreaEngine.onPlayerDespawned(getOwner());
+		super.onDespawn();
 	}
 
 	/**
@@ -1254,7 +1273,12 @@ public class PlayerController extends CreatureController<Player> {
 	 * stance skill id
 	 */
 	public void startStance(final int skillId) {
+		startStance(skillId, skillId == 0 ? 0 : 1);
+	}
+
+	public void startStance(final int skillId, final int type) {
 		stance = skillId;
+		stanceType = type;
 	}
 
 	/**
@@ -1266,6 +1290,7 @@ public class PlayerController extends CreatureController<Player> {
 		getOwner().getEffectController().removeEffect(stance);
 		PacketSendUtility.sendPacket(getOwner(), new SM_PLAYER_STANCE(getOwner(), 0));
 		stance = 0;
+		stanceType = 0;
 	}
 
 	/**
@@ -1286,6 +1311,10 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	public boolean isUnderStance() {
 		return stance != 0;
+	}
+
+	public int getStanceType() {
+		return stanceType;
 	}
 
 	/**

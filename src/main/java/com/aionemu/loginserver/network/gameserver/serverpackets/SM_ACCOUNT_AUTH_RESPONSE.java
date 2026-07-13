@@ -52,6 +52,8 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
      * Return-player flag.
      */
     private final byte isReturn;
+    private final int vipLevel;
+    private final long vipExp;
 
     /**
      * 构造账号鉴权响应包。
@@ -66,7 +68,8 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
      * luna currency
      * return-player flag
      */
-    public SM_ACCOUNT_AUTH_RESPONSE(int accountId, boolean ok, String accountName, byte accessLevel, byte membership, long toll, long luna, byte isReturn) {
+    public SM_ACCOUNT_AUTH_RESPONSE(int accountId, boolean ok, String accountName, byte accessLevel, byte membership,
+            long toll, long luna, byte isReturn, int vipLevel, long vipExp) {
         this.accountId = accountId;
         this.ok = ok;
         this.accountName = accountName;
@@ -75,6 +78,8 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
         this.toll = toll;
         this.luna = luna;
         this.isReturn = isReturn;
+        this.vipLevel = vipLevel;
+        this.vipExp = vipExp;
     }
 
     /**
@@ -98,6 +103,8 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
             writeQ(toll);
             writeQ(luna);
             writeC(isReturn);
+            writeC(vipLevel);
+            writeQ(vipExp);
         }
     }
 }

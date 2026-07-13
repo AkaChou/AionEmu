@@ -5,7 +5,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_0x125;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_0x126;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_BLACKCLOUD_TRADE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_CASH_BUFF;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_CHAR_BM_PACK_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_UNK_168;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_VERSION_CHECK;
 
@@ -53,6 +53,6 @@ public class CM_VERSION_CHECK extends AionClientPacket {
 		sendPacket(new SM_0x126(unk));
 		sendPacket(new SM_UNK_168());
 		sendPacket(new SM_BLACKCLOUD_TRADE());
-		sendPacket(new SM_CASH_BUFF(2));
+		sendPacket(new SM_CHAR_BM_PACK_LIST(2));
 	}
 }

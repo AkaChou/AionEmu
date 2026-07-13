@@ -91,12 +91,12 @@ public class CreatureEventHandler {
 			double distance = MathUtil.getDistance(owner, creature);
 			if (distance <= shoutRange) {
 				ShoutEventHandler.onSee(ai, creature);
-				isInAggroRange = shoutRange <= owner.getObjectTemplate().getAggroRange();
+				isInAggroRange = shoutRange <= owner.getAggroRange();
 			}
 		}
 
 		if (!ai.isInState(AIState.FIGHT) && (isInAggroRange
-				|| MathUtil.isIn3dRange(owner, creature, (float) (owner.getObjectTemplate().getAggroRange() * 1.6)))) { // 1.6 is for aggro range correction
+				|| MathUtil.isIn3dRange(owner, creature, owner.getAggroRange() * 1.6f))) { // 1.6 is for aggro range correction
 			if (owner.isAggressiveTo(creature) && GameWorldServices.geoService().canSee(owner, creature)) {
 				if (!ai.isInState(AIState.RETURNING)) {
 					ai.getOwner().getMoveController().storeStep();

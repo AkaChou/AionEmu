@@ -25,8 +25,8 @@ public class SummonFunctionalNpcEffect extends SummonEffect {
 	private SummonOwner owner;
 
 	/**
-	 * 生成功能 NPC，并在 300 秒后删除。
-	 * Spawns the functional NPC and schedules deletion after 300 seconds.
+	 * 生成功能 NPC，并按模板时限删除。
+	 * Spawns the functional NPC and schedules deletion after the template lifetime.
 	 */
 	@Override
 	public void applyEffect(Effect effect) {
@@ -40,6 +40,6 @@ public class SummonFunctionalNpcEffect extends SummonEffect {
 					functionalNpc.getController().onDelete();
 				}
 			}
-		}, 300000);
+		}, (time > 0 ? time : 300) * 1000L);
 	}
 }

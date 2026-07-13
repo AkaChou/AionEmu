@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="aitimeconditions.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><aitimeconditions><aitimecondition><id>1</id><name>test_Weekly1</name><type>Weekly</type><typevalue>Mon</typevalue><start>1810</start><duration>20</duration></aitimecondition>
+<aitimecondition><id>2</id><name>test_once1</name><type>once</type><typevalue>1123</typevalue><start>1300</start><duration>20</duration></aitimecondition>
+<aitimecondition><id>3</id><name>test_daily1</name><type>daily</type><start>1810</start><duration>20</duration></aitimecondition>
+<aitimecondition><id>4</id><name>F6_Event</name><type>daily</type><start>1100</start><duration>900</duration></aitimecondition>
+</aitimeconditions></content></static_document>
+</static_bundle>

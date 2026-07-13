@@ -130,6 +130,18 @@ public class PlayerAllianceService {
 		return newAlliance;
 	}
 
+	@GlobalCallback(PlayerAllianceCreateCallback.class)
+	/** 创建指定协议类型的单人联盟。 */
+	public static final PlayerAlliance createAlliance(Player leader, TeamType type) {
+		PlayerAlliance newAlliance = new PlayerAlliance(new PlayerAllianceMember(leader), type);
+		alliances.put(newAlliance.getTeamId(), newAlliance);
+		addPlayer(newAlliance, leader);
+		if (offlineCheckStarted.compareAndSet(false, true)) {
+			initializeOfflineCheck();
+		}
+		return newAlliance;
+	}
+
 	private static void initializeOfflineCheck() {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerAllianceChecker(), 1000, 30 * 1000);
 	}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_test_yzh.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>Test_Basic_Monster_AI_YZH_1</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><say_to_all_str><string>나 잡아 봐라~</string></say_to_all_str></actions></pattern></on_wake_up><on_attacked><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><test_probability><percent>70</percent></test_probability></conditions><actions><give_item_by_user_indicator><receiver>USERI_ATTACKER</receiver><item_id>junk_new_elemental_j01_05</item_id><min>1</min><max>1</max></give_item_by_user_indicator></actions></pattern></on_attacked></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

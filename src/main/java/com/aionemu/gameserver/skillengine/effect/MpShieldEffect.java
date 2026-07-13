@@ -23,6 +23,10 @@ public class MpShieldEffect extends EffectTemplate {
 	protected int hitvalue;
 	@XmlAttribute
 	protected boolean percent;
+	@XmlAttribute(name = "mp_delta")
+	protected int mpDelta;
+	@XmlAttribute(name = "mp_value")
+	protected int mpValue;
 	@XmlAttribute
 	protected int radius = 0;
 	@XmlAttribute
@@ -67,7 +71,7 @@ public class MpShieldEffect extends EffectTemplate {
 		int valueWithDelta = value + delta * skillLvl;
 		int hitValueWithDelta = hitvalue + hitdelta * skillLvl;
 		AttackShieldObserver asObserver = new AttackShieldObserver(hitValueWithDelta, valueWithDelta, percent, effect,
-				hitType, getType(), hitTypeProb);
+				hitType, getType(), hitTypeProb, calculateMpValue(skillLvl));
 		effect.getEffected().getObserveController().addAttackCalcObserver(asObserver);
 		effect.setAttackShieldObserver(asObserver, position);
 		effect.getEffected().getEffectController().setUnderShield(true);
@@ -94,5 +98,9 @@ public class MpShieldEffect extends EffectTemplate {
 	 */
 	public int getType() {
 		return 2;
+	}
+
+	int calculateMpValue(int skillLevel) {
+		return Math.min(100, mpValue + mpDelta * skillLevel);
 	}
 }

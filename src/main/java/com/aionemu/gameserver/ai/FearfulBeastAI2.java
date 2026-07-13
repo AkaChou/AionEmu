@@ -1,8 +1,7 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
-
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -62,7 +61,7 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
         checkAndTriggerFear(creature);
     }
     
-    private void checkAndTriggerFear(Creature creature) {
+    private synchronized void checkAndTriggerFear(Creature creature) {
         if (!(creature instanceof Player)) {
             return;
         }
@@ -112,27 +111,19 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
         float targetX = (float) (x + Math.cos(radian) * FLEE_DISTANCE);
         float targetY = (float) (y + Math.sin(radian) * FLEE_DISTANCE);
         
-        float[][] path = GameWorldServices.navService().navigateToLocation(npc, targetX, targetY, z);
-        
-        if (path != null && path.length > 0) {
-            npc.getMoveController().resetMove();
-            npc.getMoveController().moveToPoint(path[0][0], path[0][1], path[0][2]);
-        } else {
+        npc.getMoveController().resetMove();
+        if (!GameWorldServices.pathService().hasPathingData(npc)) {
             byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-            Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(npc, targetX, targetY, z, true, intentions);
-            npc.getMoveController().resetMove();
-            npc.getMoveController().moveToPoint(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ());
+            Vector3f collision = GameWorldServices.geoService().getClosestCollision(npc, targetX, targetY, z, true, intentions);
+            targetX = collision.getX();
+            targetY = collision.getY();
+            z = collision.getZ();
         }
-        
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                onFleeEnd();
-            }
-        }, FLEE_DURATION);
+        npc.getMoveController().moveToPoint(targetX, targetY, z);
+        GameThreadPoolServices.threadPoolManager().schedule(this::onFleeEnd, FLEE_DURATION);
     }
     
-    private void onFleeEnd() {
+    private synchronized void onFleeEnd() {
         isFeared = false;
         Npc npc = getOwner();
         if (npc == null || npc.getLifeStats().isAlreadyDead()) {

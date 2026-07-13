@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
+import com.aionemu.gameserver.ai.RetailAreaEngine;
+import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
+import com.aionemu.gameserver.ai.RetailWindstreamEngine;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +14,7 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,25 +135,34 @@ public class InstanceService {
 			return;
 		}
 		int instanceId = instance.getInstanceId();
+		var pathService = GameWorldServices.pathService();
 		map.removeWorldMapInstance(instanceId);
-		log.info(I18n.get("log.e1c9d831d4ea", worldId, instanceId));
-		Iterator<VisibleObject> it = instance.objectIterator();
-		while (it.hasNext()) {
-			VisibleObject obj = it.next();
-			if (obj instanceof Player) {
-				Player player = (Player) obj;
-				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(SystemMessageId.LEAVE_INSTANCE_NOT_PARTY));
-				moveToExitPoint((Player) obj);
-			} else {
-				obj.getController().onDelete();
+		try {
+			RetailConditionSpawnEngine.clear(instance);
+			RetailAreaEngine.clear(instance);
+			RetailWindstreamEngine.clear(instance);
+			RetailDynamicAreaEngine.clear(instance);
+			log.info(I18n.get("log.e1c9d831d4ea", worldId, instanceId));
+			Iterator<VisibleObject> it = instance.objectIterator();
+			while (it.hasNext()) {
+				VisibleObject obj = it.next();
+				if (obj instanceof Player) {
+					Player player = (Player) obj;
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(SystemMessageId.LEAVE_INSTANCE_NOT_PARTY));
+					moveToExitPoint((Player) obj);
+				} else {
+					obj.getController().onDelete();
+				}
 			}
-		}
-		instance.getInstanceHandler().onInstanceDestroy();
-		if (instance instanceof WorldMap2DInstance) {
-			WorldMap2DInstance w2d = (WorldMap2DInstance) instance;
-			if (w2d.isPersonal()) {
-				GameHousingServices.housingService().onInstanceDestroy(w2d.getOwnerId());
+			instance.getInstanceHandler().onInstanceDestroy();
+			if (instance instanceof WorldMap2DInstance) {
+				WorldMap2DInstance w2d = (WorldMap2DInstance) instance;
+				if (w2d.isPersonal()) {
+					GameHousingServices.housingService().onInstanceDestroy(w2d.getOwnerId());
+				}
 			}
+		} finally {
+			pathService.instanceDestroyed(worldId, instanceId);
 		}
 	}
 

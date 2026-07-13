@@ -49,6 +49,11 @@ public class AIData {
 		return aiTemplate.size();
 	}
 
+	/** 合并另一份 AI 模板数据。 / Merges another AI template data set. */
+	public void merge(AIData data) {
+		aiTemplate.putAll(data.aiTemplate);
+	}
+
 	/**
 	 * 返回全部 AI 模板映射。
 	 * Returns the full AI template map.

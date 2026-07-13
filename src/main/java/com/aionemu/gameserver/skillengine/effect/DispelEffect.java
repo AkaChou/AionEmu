@@ -1,14 +1,14 @@
 package com.aionemu.gameserver.skillengine.effect;
 
 
-import com.aionemu.boot.i18n.I18n;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
-import lombok.extern.slf4j.Slf4j;
-
+import com.aionemu.gameserver.controllers.effect.EffectController;
 import com.aionemu.gameserver.skillengine.model.DispelType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
@@ -19,7 +19,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
  *
  * @author ATracer
  */
-@Slf4j
 public class DispelEffect extends EffectTemplate {
 
 	@XmlElement(type = Integer.class)
@@ -30,8 +29,18 @@ public class DispelEffect extends EffectTemplate {
 	protected List<String> slottype;
 	@XmlAttribute
 	protected DispelType dispeltype;
+	@XmlAttribute(name = "dispel_level_delta")
+	protected int dispelLevelDelta;
+	@XmlAttribute(name = "dispel_level")
+	protected int dispelLevel = 100;
 	@XmlAttribute
-	protected Integer value;
+	protected int dpower;
+	@XmlAttribute
+	protected int power = 255;
+
+	public DispelEffect() {
+		value = 255;
+	}
 
 	/**
 	 * 按配置的驱散类型移除目标效果。
@@ -41,56 +50,70 @@ public class DispelEffect extends EffectTemplate {
 	 */
 	@Override
 	public void applyEffect(Effect effect) {
-		if (effect.getEffected() == null || effect.getEffected().getEffectController() == null) {
+		if (effect.getEffected() == null || effect.getEffected().getEffectController() == null || dispeltype == null) {
 			return;
 		}
 
-		if (dispeltype == null) {
-			return;
-		}
-
-		if ((dispeltype == DispelType.EFFECTID || dispeltype == DispelType.EFFECTIDRANGE) && effectids == null) {
-			return;
-		}
-
-		if (dispeltype == DispelType.EFFECTTYPE && effecttype == null) {
-			return;
-		}
-
-		if (dispeltype == DispelType.SLOTTYPE && slottype == null) {
-			return;
-		}
-
+		EffectController controller = effect.getEffected().getEffectController();
+		int skillLevel = effect.getSkillLevel();
 		switch (dispeltype) {
 		case EFFECTID:
-			for (Integer effectId : effectids) {
-				effect.getEffected().getEffectController().removeEffectByEffectId(effectId);
+			if (effectids != null) {
+				controller.removeEffectsByDispel(
+					target -> target.getSuccessEffect().stream().anyMatch(et -> effectids.contains(et.getEffectid())),
+					getMaxTargets(skillLevel), getDispelLevel(skillLevel), getDispelPower(skillLevel));
 			}
 			break;
 		case EFFECTIDRANGE:
-			for (int i = effectids.get(0); i <= effectids.get(1); i++) {
-				effect.getEffected().getEffectController().removeEffectByEffectId(i);
+			if (effectids != null && effectids.size() >= 2) {
+				int first = effectids.get(0);
+				int last = effectids.get(1);
+				controller.removeEffectsByDispel(
+					target -> target.getSuccessEffect().stream()
+						.anyMatch(et -> et.getEffectid() >= first && et.getEffectid() <= last),
+					getMaxTargets(skillLevel), getDispelLevel(skillLevel), getDispelPower(skillLevel));
 			}
 			break;
 		case EFFECTTYPE:
-			for (String type : effecttype) {
-				EffectType temp = null;
-				try {
-					temp = EffectType.valueOf(type);
-				} catch (Exception e) {
-					log.error(I18n.get("log.9cc59c110d11", type, e));
-				}
-				if (temp != null) {
-					effect.getEffected().getEffectController().removeEffectByEffectType(temp);
-				}
+			Set<EffectType> effectTypes = enumValues(effecttype, EffectType.class);
+			if (!effectTypes.isEmpty()) {
+				controller.removeEffectsByDispel(
+					target -> target.getSuccessEffect().stream().anyMatch(et -> effectTypes.contains(et.getEffectType())),
+					getMaxTargets(skillLevel), getDispelLevel(skillLevel), getDispelPower(skillLevel));
 			}
 			break;
 		case SLOTTYPE:
-			for (String type : slottype) {
-				effect.getEffected().getEffectController()
-						.removeAbnormalEffectsByTargetSlot(SkillTargetSlot.valueOf(type));
+			Set<SkillTargetSlot> slots = enumValues(slottype, SkillTargetSlot.class);
+			if (!slots.isEmpty()) {
+				controller.removeEffectsByDispel(target -> slots.contains(target.getTargetSlotEnum()),
+					getMaxTargets(skillLevel), getDispelLevel(skillLevel), getDispelPower(skillLevel));
 			}
 			break;
 		}
+	}
+
+	public int getMaxTargets(int skillLevel) {
+		return value + delta * skillLevel;
+	}
+
+	public int getDispelLevel(int skillLevel) {
+		return dispelLevel + dispelLevelDelta * skillLevel;
+	}
+
+	public int getDispelPower(int skillLevel) {
+		return power + dpower * skillLevel;
+	}
+
+	private static <E extends Enum<E>> Set<E> enumValues(List<String> values, Class<E> type) {
+		Set<E> result = EnumSet.noneOf(type);
+		if (values != null) {
+			for (String value : values) {
+				try {
+					result.add(Enum.valueOf(type, value));
+				} catch (IllegalArgumentException ignored) {
+				}
+			}
+		}
+		return result;
 	}
 }

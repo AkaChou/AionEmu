@@ -20,6 +20,8 @@ public class NoReduceSpellATKInstantEffect extends DamageEffect {
 
 	@XmlAttribute
 	protected boolean percent;
+	@XmlAttribute
+	protected int maxdamage;
 
 	/**
 	 * 计算不可减免的瞬时法术伤害。
@@ -31,13 +33,30 @@ public class NoReduceSpellATKInstantEffect extends DamageEffect {
 			return;
 		}
 
-		int valueWithDelta = value + delta * effect.getSkillLevel();
-		if (percent) {
-			valueWithDelta = (int) (valueWithDelta / 100f * effect.getEffected().getLifeStats().getMaxHp());
-		}
+		int valueWithDelta = calculateBaseDamage(effect.getSkillLevel(), effect.getEffected().getLifeStats().getMaxHp());
 		int critAddDmg = this.critAddDmg2 + this.critAddDmg1 * effect.getSkillLevel();
+		int critProb = this.critProbMod2 + this.critProbMod1 * effect.getSkillLevel();
 
 		AttackUtil.calculateMagicalSkillResult(effect, valueWithDelta, null, getElement(), false, true, true, getMode(),
-				this.critProbMod2, critAddDmg, shared, false);
+				critProb, critAddDmg, shared, false);
+	}
+
+	int calculateBaseDamage(int skillLevel, int maxHp) {
+		int damage = value + delta * skillLevel;
+		if (percent) {
+			damage = (int) (maxHp * (damage / 100f));
+			if (maxdamage > 0) {
+				damage = Math.min(damage, maxdamage);
+			}
+		}
+		return Math.max(1, damage);
+	}
+
+	public boolean isPercent() {
+		return percent;
+	}
+
+	public int getMaxDamage() {
+		return maxdamage;
 	}
 }

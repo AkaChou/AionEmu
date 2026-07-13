@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.controllers.effect;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -141,6 +142,32 @@ class EffectControllerTest {
 	}
 
 	@Test
+	void filteredDispelHonorsLevelPowerAndRemovalLimit() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect partiallyReduced = abnormalEffect(controller, "partial", 10, 1, 1).withPower(20);
+		TestEffect removed = abnormalEffect(controller, "removed", 11, 2, 1).withPower(10);
+		TestEffect forced = abnormalEffect(controller, "forced", 12, 3, 1).withPower(10);
+		TestEffect unrelated = abnormalEffect(controller, "unrelated", 13, 4, 1).withPower(10);
+		setField(partiallyReduced.getSkillTemplate(), "reqDispelLevel", 5);
+		setField(removed.getSkillTemplate(), "reqDispelLevel", 5);
+		setField(forced.getSkillTemplate(), "reqDispelLevel", 200);
+		controller.addEffect(partiallyReduced);
+		controller.addEffect(removed);
+		controller.addEffect(forced);
+		controller.addEffect(unrelated);
+
+		assertEquals(1, controller.removeEffectsByDispel(effect -> effect.getSkillId() != 13, 1, 5, 10));
+		assertEquals(10, partiallyReduced.getPower());
+		assertSame(partiallyReduced, controller.abnormalEffect("partial"));
+		assertNull(controller.abnormalEffect("removed"));
+		assertSame(forced, controller.abnormalEffect("forced"));
+		assertSame(unrelated, controller.abnormalEffect("unrelated"));
+
+		assertEquals(1, controller.removeEffectsByDispel(effect -> effect.getSkillId() == 12, 1, 100, 10));
+		assertNull(controller.abnormalEffect("forced"));
+	}
+
+	@Test
 	void referenceLongDurationSkillRemainsDispellable() {
 		TestEffectController controller = new TestEffectController();
 		TestEffect effect = abnormalEffect(controller, "long", 21438, 1, 1, 86400000);
@@ -150,6 +177,40 @@ class EffectControllerTest {
 		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 5, 50, false);
 
 		assertNull(controller.abnormalEffect("long"));
+	}
+
+	@Test
+	void npcDispelsMatchRetailCategoriesAndLevel() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect physical = effect(controller, "physical", 10, 1, 1, ActivationAttribute.ACTIVE, SkillTargetSlot.DEBUFF);
+		TestEffect mental = effect(controller, "mental", 11, 2, 1, ActivationAttribute.ACTIVE, SkillTargetSlot.DEBUFF);
+		TestEffect playerDebuff = effect(controller, "player", 12, 3, 1, ActivationAttribute.ACTIVE, SkillTargetSlot.DEBUFF);
+		TestEffect npcBuff = effect(controller, "npc-buff", 13, 4, 1, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
+		TestEffect allBuff = effect(controller, "all-buff", 14, 5, 1, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
+		setField(physical.getSkillTemplate(), "dispelCategory", DispelCategoryType.NPC_DEBUFF_PHYSICAL);
+		setField(mental.getSkillTemplate(), "dispelCategory", DispelCategoryType.NPC_DEBUFF_MENTAL);
+		setField(playerDebuff.getSkillTemplate(), "dispelCategory", DispelCategoryType.DEBUFF_PHYSICAL);
+		setField(npcBuff.getSkillTemplate(), "dispelCategory", DispelCategoryType.NPC_BUFF);
+		setField(npcBuff.getSkillTemplate(), "reqDispelLevel", 6);
+		setField(allBuff.getSkillTemplate(), "dispelCategory", DispelCategoryType.ALL);
+		controller.addEffect(physical);
+		controller.addEffect(mental);
+		controller.addEffect(playerDebuff);
+		controller.addEffect(npcBuff);
+		controller.addEffect(allBuff);
+
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_DEBUFF, SkillTargetSlot.DEBUFF, 2, 5, 100, false);
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 5, 100, false);
+		controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 5, 100, false);
+
+		assertNull(controller.abnormalEffect("physical"));
+		assertNull(controller.abnormalEffect("mental"));
+		assertSame(playerDebuff, controller.abnormalEffect("player"));
+		assertSame(npcBuff, controller.abnormalEffect("npc-buff"));
+		assertNull(controller.abnormalEffect("all-buff"));
+
+		controller.removeEffectByDispelCat(DispelCategoryType.NPC_BUFF, SkillTargetSlot.BUFF, 1, 6, 100, false);
+		assertNull(controller.abnormalEffect("npc-buff"));
 	}
 
 	@Test
@@ -202,6 +263,22 @@ class EffectControllerTest {
 		} finally {
 			DataManager.SKILL_DATA = originalSkillData;
 		}
+	}
+
+	@Test
+	void restoredEffectHonorsRetailLogoutPersistenceFlags() {
+		long now = 1_000_000;
+		SkillTemplate noSave = new SkillTemplate();
+		setField(noSave, "noSaveOnLogout", true);
+		assertEquals(-1, PlayerEffectController.remainingTimeAfterLogout(noSave, 60_000, now + 30_000, now));
+
+		SkillTemplate spending = new SkillTemplate();
+		setField(spending, "spendTimeOnLogout", true);
+		assertEquals(30_000,
+			PlayerEffectController.remainingTimeAfterLogout(spending, 60_000, now + 30_000, now));
+
+		assertEquals(60_000,
+			PlayerEffectController.remainingTimeAfterLogout(new SkillTemplate(), 60_000, now - 1, now));
 	}
 
 	private static TestEffect abnormalEffect(TestEffectController controller, String stack, int skillId, int effectId,
@@ -312,6 +389,7 @@ class EffectControllerTest {
 
 		private final TestEffectController controller;
 		private boolean ended;
+		private boolean useRealPower;
 
 		private TestEffect(TestEffectController controller, SkillTemplate skillTemplate) {
 			this(controller, skillTemplate, 0);
@@ -334,7 +412,13 @@ class EffectControllerTest {
 
 		@Override
 		public int removePower(int power) {
-			return 0;
+			return useRealPower ? super.removePower(power) : 0;
+		}
+
+		private TestEffect withPower(int power) {
+			setPower(power);
+			useRealPower = true;
+			return this;
 		}
 
 		private boolean ended() {

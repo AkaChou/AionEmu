@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.ai.RetailAreaEngine;
+import com.aionemu.gameserver.dataholders.RetailAiData.LocationAliasPoint;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.EmotionType;
@@ -155,6 +157,10 @@ public class PlayerReviveService {
 		if (player.isInPrison()) {
 			TeleportService2.teleportToPrison(player);
 		} else {
+			if (teleportToRetailResurrectArea(player)) {
+				player.unsetResPosState();
+				return;
+			}
 			boolean isInvadeActiveVortex = false;
 			for (VortexLocation loc : GameLocationBootstrapServices.vortexService().getVortexLocations().values()) {
 				isInvadeActiveVortex = loc.isInsideActiveVortex(player)
@@ -245,6 +251,10 @@ public class PlayerReviveService {
 		PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
 		PacketSendUtility.sendPacket(player,
 				new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
+		if (teleportToRetailResurrectArea(player)) {
+			player.unsetResPosState();
+			return;
+		}
 		InstanceReviveStartPoints revivePoint = TeleportService2.getReviveInstanceStartPoints(map.getMapId());
 		if (map.isInstanceType() && revivePoint != null) {
 			TeleportService2.teleportTo(player, revivePoint.getReviveWorld(), revivePoint.getX(), revivePoint.getY(),
@@ -253,6 +263,13 @@ public class PlayerReviveService {
 			bindRevive(player);
 		}
 		player.unsetResPosState();
+	}
+
+	private static boolean teleportToRetailResurrectArea(Player player) {
+		LocationAliasPoint point = RetailAreaEngine.findResurrectPoint(player);
+		return point != null && TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(), point.x(),
+			point.y(), point.z(), com.aionemu.gameserver.utils.MathUtil.convertDegreeToHeading(point.direction()),
+			TeleportAnimation.NO_ANIMATION);
 	}
 
 	/**

@@ -88,6 +88,11 @@ public class WalkerData {
 		return walkerlistData.get(routeId);
 	}
 
+	/** 将另一份完整路径数据合并进当前索引，同名路径以后加载的数据为准。 */
+	public void merge(WalkerData data) {
+		walkerlistData.putAll(data.walkerlistData);
+	}
+
 	/**
 	 * 追加一条待导出的巡逻模板到内部列表。
 	 * Appends a walker template to the internal list for later export.

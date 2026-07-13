@@ -12,9 +12,11 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
+import com.aionemu.gameserver.geoEngine.collision.CollisionResult;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.collision.IgnoreProperties;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -22,6 +24,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 
 /**
@@ -104,6 +107,7 @@ public class GeoService {
 	public void setDoorState(int worldId, int instanceId, int doorId, boolean isOpened) {
 		if (GeoDataConfig.GEO_ENABLE) {
 			this.geoData.getMap(worldId).setDoorState(instanceId, doorId, isOpened);
+			com.aionemu.gameserver.lifecycle.GameWorldServices.pathService().obstacleChanged(worldId, instanceId);
 		}
 	}
 
@@ -304,6 +308,10 @@ public class GeoService {
 		return newZ;
 	}
 
+	public float getTerrainZ(int worldId, float x, float y) {
+		return this.geoData.getMap(worldId).getTerrainPathHeight(x, y);
+	}
+
 	/**
 	 * 仅按 XY 采样地表高度（水下兼容路径）。
 	 * Samples ground height from X/Y only (water-compatible path).
@@ -366,6 +374,14 @@ public class GeoService {
 	 * @return 若 visible 则为 true / true if visible
 	 */
 	public boolean canSee(VisibleObject object, VisibleObject target) {
+		return canSee(object, target, null);
+	}
+
+	public boolean canSeeSkill(VisibleObject object, VisibleObject target, int obstacle) {
+		return canSee(object, target, obstacle);
+	}
+
+	private boolean canSee(VisibleObject object, VisibleObject target, Integer skillObstacle) {
 
     if (object == null || target == null) {
         log.warn(I18n.get("log.f1725ab36627", object, target));
@@ -410,13 +426,34 @@ public class GeoService {
         return true;
     }
 
-	Race race = object instanceof Creature creature ? creature.getRace() : null;
-	int staticId = target.getSpawn() == null ? 0 : target.getSpawn().getStaticId();
-	IgnoreProperties ignoreProperties = race == null && staticId == 0 ? null : IgnoreProperties.of(race, staticId);
-    return this.geoData.getMap(worldId).canSee(
-        x, y, object.getZ() + getSeeCheckOffset(object),
-        targetX, targetY, target.getZ() + getSeeCheckOffset(target),
-        limit, object.getInstanceId(), ignoreProperties);
+		Race race = object instanceof Creature creature ? creature.getRace() : null;
+		int staticId = target.getSpawn() == null ? 0 : target.getSpawn().getStaticId();
+		IgnoreProperties ignoreProperties = race == null && staticId == 0 ? null : IgnoreProperties.of(race, staticId);
+		GeoMap map = this.geoData.getMap(worldId);
+		float originZ = object.getZ() + getSeeCheckOffset(object);
+		float destinationZ = target.getZ() + getSeeCheckOffset(target);
+		if (!map.canSee(
+				x, y, originZ, targetX, targetY, destinationZ,
+				limit, object.getInstanceId(), ignoreProperties)) {
+			return false;
+		}
+		if (skillObstacle == null) {
+			return true;
+		}
+		CollisionResults collisions = map.getCollisions(new Vector3f(x, y, originZ), targetX, targetY, destinationZ,
+				object.getInstanceId(), CollisionIntention.SKILL.getId(), ignoreProperties);
+		for (CollisionResult collision : collisions) {
+			Spatial geometry = collision.getGeometry();
+			if (geometry == null) {
+				continue;
+			}
+			MaterialTemplate material = DataManager.MATERIAL_DATA == null ? null
+					: DataManager.MATERIAL_DATA.getTemplate(Byte.toUnsignedInt(geometry.getMaterialId()));
+			if (material == null || material.getSkillObstacle() == null || skillObstacle <= material.getSkillObstacle()) {
+				return false;
+			}
+		}
+		return true;
    }
 
 	/**

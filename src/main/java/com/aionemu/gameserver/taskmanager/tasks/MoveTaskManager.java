@@ -34,7 +34,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 正在移动的生物（objectId → 生物）。
 	 * Creatures currently moving (objectId → creature).
 	 */
-	private final Map<Integer, Creature> movingCreatures = new ConcurrentHashMap<Integer, Creature>();
+	private final Map<Integer, MoveRegistration> movingCreatures = new ConcurrentHashMap<>();
 
 	/**
 	 * 移动更新周期（毫秒）。
@@ -46,14 +46,19 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 单次移动步进谓词：推进目标点，到达则移除并触发 AI 事件。
 	 * Per-creature move step: advance destination; on arrival remove and fire AI events.
 	 */
-	private final Predicate<Creature> CREATURE_MOVE_PREDICATE = new Predicate<Creature>() {
+	private final Predicate<MoveRegistration> CREATURE_MOVE_PREDICATE = new Predicate<MoveRegistration>() {
 		@Override
-		public boolean apply(Creature creature) {
+		public boolean apply(MoveRegistration registration) {
+			Creature creature = registration.creature();
+			if (movingCreatures.get(creature.getObjectId()) != registration) {
+				return true;
+			}
 			creature.getMoveController().moveToDestination();
 			if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
-				movingCreatures.remove(creature.getObjectId());
-				creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
-				GameMovementLoopServices.zoneUpdateService().add(creature);
+				if (movingCreatures.remove(creature.getObjectId(), registration)) {
+					creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
+					GameMovementLoopServices.zoneUpdateService().add(creature);
+				}
 			} else {
 				creature.getAi2().onGeneralEvent(AIEventType.MOVE_VALIDATE);
 			}
@@ -76,7 +81,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * Creature
 	 */
 	public void addCreature(Creature creature) {
-		movingCreatures.put(creature.getObjectId(), creature);
+		movingCreatures.put(creature.getObjectId(), new MoveRegistration(creature));
 	}
 
 	/**
@@ -95,10 +100,23 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 */
 	@Override
 	public void run() {
-		final ArrayList<Creature> copy = new ArrayList<Creature>(movingCreatures.values());
-		ForkJoinTask<Creature> task = forEach(copy, CREATURE_MOVE_PREDICATE);
+		final ArrayList<MoveRegistration> copy = new ArrayList<>(movingCreatures.values());
+		ForkJoinTask<MoveRegistration> task = forEach(copy, CREATURE_MOVE_PREDICATE);
 		if (task != null) {
 			GameThreadPoolServices.threadPoolManager().getForkingPool().invoke(task);
+		}
+	}
+
+	private static final class MoveRegistration {
+
+		private final Creature creature;
+
+		private MoveRegistration(Creature creature) {
+			this.creature = creature;
+		}
+
+		private Creature creature() {
+			return creature;
 		}
 	}
 

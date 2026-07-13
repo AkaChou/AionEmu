@@ -2,8 +2,10 @@ package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
@@ -14,6 +16,9 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DeformEffect")
 public class DeformEffect extends TransformEffect {
+	@XmlAttribute(name = "neutral_to_npc")
+	private boolean neutralToNpc;
+
 	/**
 	 * 按变形抗性计算是否命中。
 	 * Calculates hit using deform resistance.
@@ -33,6 +38,9 @@ public class DeformEffect extends TransformEffect {
 	 */
 	@Override
 	public void startEffect(Effect effect) {
+		if (neutralToNpc && effect.getEffected() instanceof Player player) {
+			player.setAdminNeutral(1);
+		}
 		super.startEffect(effect, AbnormalState.DEFORM);
 	}
 
@@ -44,6 +52,9 @@ public class DeformEffect extends TransformEffect {
 	 */
 	@Override
 	public void endEffect(Effect effect) {
+		if (neutralToNpc && effect.getEffected() instanceof Player player) {
+			player.setAdminNeutral(0);
+		}
 		super.endEffect(effect, AbnormalState.DEFORM);
 	}
 }

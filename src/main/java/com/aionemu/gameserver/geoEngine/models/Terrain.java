@@ -92,6 +92,29 @@ public class Terrain {
 		return materials != null;
 	}
 
+	public float getPathHeight(float x, float y) {
+		if (heightmap == null) {
+			return Float.NaN;
+		}
+		float sampleX = x / HEIGHTMAP_UNIT_SIZE;
+		float sampleY = y / HEIGHTMAP_UNIT_SIZE;
+		int x0 = (int) Math.floor(sampleX);
+		int y0 = (int) Math.floor(sampleY);
+		if (x0 < 0 || y0 < 0 || x0 + 1 >= heightmapXSize || y0 + 1 >= heightmapYSize) {
+			return Float.NaN;
+		}
+		float fx = sampleX - x0;
+		float fy = sampleY - y0;
+		float top = pathHeight(x0, y0) * (1 - fx) + pathHeight(x0 + 1, y0) * fx;
+		float bottom = pathHeight(x0, y0 + 1) * (1 - fx) + pathHeight(x0 + 1, y0 + 1) * fx;
+		return top * (1 - fy) + bottom * fy;
+	}
+
+	private float pathHeight(int x, int y) {
+		short value = heightmap.length == 1 ? heightmap[0] : heightmap[y + x * heightmapYSize];
+		return value == -1 ? Float.NaN : (Short.toUnsignedInt(value) & 0xfffc) / 32f;
+	}
+
 	/**
 	 * 在射线起点附近与地形做碰撞检测。
 	 * Collides the ray against terrain near the ray origin.

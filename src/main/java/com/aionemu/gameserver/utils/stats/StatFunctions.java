@@ -696,7 +696,8 @@ public class StatFunctions {
 	 * @return 魔法技能伤害 / Magical skill damage
 	 */
 	public static int calculateMagicalSkillDamage(Creature speller, Creature target, int baseDamages, int bonus,
-			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce, int pvpDamage) {
+			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce,
+			boolean useMagicalDefense, int pvpDamage) {
 		CreatureGameStats<?> sgs = speller.getGameStats();
 		CreatureGameStats<?> tgs = target.getGameStats();
 		float damages = baseDamages;
@@ -714,9 +715,11 @@ public class StatFunctions {
 			float elementalDef = getMovementModifier(target, SkillElement.getResistanceForElement(element),
 					tgs.getMagicalDefenseFor(element));
 			damages *= (1 - elementalDef / getElementalDefenseDenominator(speller, target));
-			float mDef = target.getGameStats().getMDef().getBonus()
-					+ getMovementModifier(target, StatEnum.MAGICAL_DEFEND, target.getGameStats().getMDef().getBase());
-			damages -= mDef * 0.10f;
+			if (useMagicalDefense) {
+				float mDef = target.getGameStats().getMDef().getBonus()
+						+ getMovementModifier(target, StatEnum.MAGICAL_DEFEND, target.getGameStats().getMDef().getBase());
+				damages -= mDef * 0.10f;
+			}
 		}
 		if (damages < 0) {
 			damages = 0;
@@ -1006,6 +1009,9 @@ public class StatFunctions {
 	 * Whether dodged
 	 */
 	public static boolean calculatePhysicalDodgeRate(Creature attacker, Creature attacked, int accMod) {
+		if (attacker.getObserveController().hasAlwaysHit()) {
+			return false;
+		}
 		// 检查攻击者是否目盲 / check if attacker is blinded
 		if (attacker.getObserveController().checkAttackerStatus(AttackStatus.DODGE)) {
 			return true;
@@ -1060,6 +1066,9 @@ public class StatFunctions {
 	 * Whether parried
 	 */
 	public static boolean calculatePhysicalParryRate(Creature attacker, Creature attacked, int accMod) {
+		if (attacker.getObserveController().hasAlwaysHit()) {
+			return false;
+		}
 		// 始终检查招架 / check always parry
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.PARRY)) {
 			return true;
@@ -1100,6 +1109,9 @@ public class StatFunctions {
 	 * Whether blocked
 	 */
 	public static boolean calculatePhysicalBlockRate(Creature attacker, Creature attacked, int accMod) {
+		if (attacker.getObserveController().hasAlwaysHit()) {
+			return false;
+		}
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.BLOCK)) {
 			return true;
 		}
@@ -1207,6 +1219,9 @@ public class StatFunctions {
 	 * @return 抗性概率值 / Resist rate value
 	 */
 	public static int calculateMagicalResistRate(Creature attacker, Creature attacked, int accMod, SkillElement element) {
+		if (attacker.getObserveController().hasAlwaysNoResist()) {
+			return 0;
+		}
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.RESIST)) {
 			return 1000;
 		}

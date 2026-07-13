@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:include schemaLocation="../items/item_templates.xsd"/>
+	<xs:include schemaLocation="../items/item/item_templates.xsd"/>
 	<xs:include schemaLocation="../stats/stats.xsd"/>
 	<xs:include schemaLocation="../import.xsd"/>
 	<xs:include schemaLocation="../modifiers.xsd"/>
@@ -30,6 +30,7 @@
 		<xs:attribute name="npc_type" type="npcType" default="ATTACKABLE" use="optional"/>
 		<xs:attribute name="rating" type="NpcRating"/>
 		<xs:attribute name="rank" type="NpcRank"/>
+		<xs:attribute name="abnormal_immunity" type="xs:string"/>
 		<xs:attribute name="name_desc" type="xs:string" default="" use="optional"/>
 		<xs:attribute name="sensory_range" type="xs:int" default="0"/>
 		<xs:attribute name="tribe" type="TribeClass"/>

@@ -45,10 +45,10 @@ public class FpAttackInstantEffect extends EffectTemplate {
 		}
 		Player player = (Player) effect.getEffected();
 		int maxFP = player.getLifeStats().getMaxFp();
-		int newValue = value;
+		int newValue = calculateValue(effect.getSkillLevel());
 		// 支持百分比数值 / Support for values in percentage
 		if (percent) {
-			newValue = (int) ((maxFP * value) / 100);
+			newValue = maxFP * newValue / 100;
 		}
 		player.getLifeStats().reduceFp(newValue);
 	}

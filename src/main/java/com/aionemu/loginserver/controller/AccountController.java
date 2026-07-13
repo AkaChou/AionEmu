@@ -11,11 +11,13 @@ import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.configs.Config;
+import com.aionemu.loginserver.configs.VipConfig;
 import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.dao.AccountTimeDAO;
 import com.aionemu.loginserver.dao.PremiumDAO;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.ReconnectingAccount;
+import com.aionemu.loginserver.model.Vip;
 import com.aionemu.loginserver.network.aion.AionAuthResponse;
 import com.aionemu.loginserver.network.aion.LoginConnection;
 import com.aionemu.loginserver.network.aion.LoginConnection.State;
@@ -27,6 +29,7 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_AUTH_
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_GS_CHARACTER_RESPONSE;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
 import com.aionemu.loginserver.service.LoginProtectionServices;
+import com.aionemu.loginserver.service.VipService;
 import com.aionemu.loginserver.utils.AccountUtils;
 
 import lombok.experimental.UtilityClass;
@@ -100,13 +103,18 @@ public class AccountController {
 
             long toll = DAOManager.getDAO(PremiumDAO.class).getPoints(acc.getId());
             long luna = DAOManager.getDAO(PremiumDAO.class).getLuna(acc.getId());
+            Vip vip = new VipService().findByAccountId(acc.getId());
+            int vipLevel = vip == null ? 0 : vip.getLevel();
+            long vipExp = vip == null ? 0 : vip.getExperience();
             /**
              * 向游戏服发送认证结果。
              * Send auth response to GameServer.
              */
-            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, true, acc.getName(), acc.getAccessLevel(), acc.getMembership(), toll, luna, acc.getReturn()));
+            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, true, acc.getName(), acc.getAccessLevel(),
+                acc.getMembership(), toll, luna, acc.getReturn(), vipLevel, vipExp));
         } else {
-            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, false, null, (byte) 0, (byte) 0, 0, 0, (byte) 0));
+            gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, false, null, (byte) 0, (byte) 0,
+                0, 0, (byte) 0, 0, 0));
         }
     }
 
@@ -323,6 +331,9 @@ public class AccountController {
         account.setReturnEnd(new Timestamp(System.currentTimeMillis()));
 
         if (getAccountDAO().insertAccount(account)) {
+            if (VipConfig.AUTO_ENABLE) {
+                new VipService().insertIfAbsent(account.getId());
+            }
             return account;
         }
         return null;

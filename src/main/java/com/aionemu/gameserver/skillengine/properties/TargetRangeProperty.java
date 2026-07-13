@@ -210,6 +210,12 @@ public class TargetRangeProperty {
 			}
 			break;
 		}
+		if (properties.isOtherTargetOnly()) {
+			effectedList.remove(skill.getEffector());
+			if (value == TargetRangeAttribute.ONLYONE && effectedList.isEmpty()) {
+				return false;
+			}
+		}
 		return true;
 	}
 }

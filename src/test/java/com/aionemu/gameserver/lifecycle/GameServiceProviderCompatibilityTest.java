@@ -155,8 +155,7 @@ import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavData;
-import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import org.junit.jupiter.api.Test;
@@ -172,7 +171,7 @@ class GameServiceProviderCompatibilityTest {
     @Test
     void singletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() {
         GeoService geoService = instance(GeoService.class);
-        NavService navService = instance(NavService.class);
+        PathService pathService = instance(PathService.class);
         DropRegistrationService dropRegistrationService = instance(DropRegistrationService.class);
         LandingUpdateService landingUpdateService = instance(LandingUpdateService.class);
         AbyssLandingSpecialService abyssLandingSpecialService = instance(AbyssLandingSpecialService.class);
@@ -285,7 +284,7 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             GeoService.setInstanceProvider(provider(GeoService.class, geoService));
-            NavService.setInstanceProvider(provider(NavService.class, navService));
+            PathService.setInstanceProvider(provider(PathService.class, pathService));
             DropRegistrationService.setInstanceProvider(provider(DropRegistrationService.class, dropRegistrationService));
             LandingUpdateService.setInstanceProvider(provider(LandingUpdateService.class, landingUpdateService));
             AbyssLandingSpecialService.setInstanceProvider(provider(AbyssLandingSpecialService.class, abyssLandingSpecialService));
@@ -398,8 +397,8 @@ class GameServiceProviderCompatibilityTest {
 
             assertSame(geoService, GeoService.getInstance());
             assertSame(geoService, GameWorldServices.geoService());
-            assertSame(navService, NavService.getInstance());
-            assertSame(navService, GameWorldServices.navService());
+            assertSame(pathService, PathService.getInstance());
+            assertSame(pathService, GameWorldServices.pathService());
             assertSame(dropRegistrationService, DropRegistrationService.getInstance());
             assertSame(landingUpdateService, LandingUpdateService.getInstance());
             assertSame(abyssLandingSpecialService, AbyssLandingSpecialService.getInstance());
@@ -532,7 +531,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(gmService, GameRuntimeServices.gmService());
         } finally {
             GeoService.setInstanceProvider(null);
-            NavService.setInstanceProvider(null);
+            PathService.setInstanceProvider(null);
             DropRegistrationService.setInstanceProvider(null);
             LandingUpdateService.setInstanceProvider(null);
             AbyssLandingSpecialService.setInstanceProvider(null);
@@ -1367,7 +1366,6 @@ class GameServiceProviderCompatibilityTest {
     @Test
     void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() throws Exception {
         LegionService legionService = instance(LegionService.class);
-        NavData navData = instance(NavData.class);
         WebshopService webshopService = instance(WebshopService.class);
         ThievesGuildService thievesGuildService = instance(ThievesGuildService.class);
         InGameShopEn inGameShopEn = instance(InGameShopEn.class);
@@ -1379,7 +1377,6 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             LegionService.setInstanceProvider(provider(LegionService.class, legionService));
-            NavData.setInstanceProvider(provider(NavData.class, navData));
             WebshopService.setInstanceProvider(provider(WebshopService.class, webshopService));
             ThievesGuildService.setInstanceProvider(provider(ThievesGuildService.class, thievesGuildService));
             InGameShopEn.setInstanceProvider(provider(InGameShopEn.class, inGameShopEn));
@@ -1390,7 +1387,6 @@ class GameServiceProviderCompatibilityTest {
             SurveyService.setInstanceProvider(provider(SurveyService.class, surveyService));
 
             assertSame(legionService, LegionService.getInstance());
-            assertSame(navData, NavData.getInstance());
             assertSame(webshopService, WebshopService.getInstance());
             assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(inGameShopEn, InGameShopEn.getInstance());
@@ -1403,7 +1399,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(surveyService, SurveyService.getInstance());
         } finally {
             LegionService.setInstanceProvider(null);
-            NavData.setInstanceProvider(null);
             WebshopService.setInstanceProvider(null);
             ThievesGuildService.setInstanceProvider(null);
             InGameShopEn.setInstanceProvider(null);

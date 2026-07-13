@@ -79,11 +79,16 @@ class StartSilentScriptTest {
     @Test
     void packageCopiesGeoJarAndScriptsIntoAionDirectory() throws Exception {
         Path root = prepareRuntimeRoot();
-        Path sourceGeo = root.resolve("src/main/resources/aion/geo/100.geo");
+        Path sourceGeo = root.resolve("src/main/resources/aion/geo/100.geo.gz");
+        Path sourcePath = root.resolve("src/main/resources/aion/geo/path/100.path.gz");
+        Path sourceIndex = root.resolve("src/main/resources/aion/geo/path/100.idx");
         Path sourceConfig = root.resolve("src/main/resources/aion/config/main/gameserver.properties");
         Files.createDirectories(sourceGeo.getParent());
+        Files.createDirectories(sourcePath.getParent());
         Files.createDirectories(sourceConfig.getParent());
         Files.writeString(sourceGeo, "geo");
+        Files.writeString(sourcePath, "path");
+        Files.writeString(sourceIndex, "index");
         Files.writeString(sourceConfig, "default-config");
         Path runtimeConfig = root.resolve("aion/config/main/gameserver.properties");
         Files.createDirectories(runtimeConfig.getParent());
@@ -93,7 +98,9 @@ class StartSilentScriptTest {
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
-        assertEquals("geo", Files.readString(root.resolve("aion/geo/100.geo")));
+        assertEquals("geo", Files.readString(root.resolve("aion/geo/100.geo.gz")));
+        assertEquals("path", Files.readString(root.resolve("aion/geo/path/100.path.gz")));
+        assertEquals("index", Files.readString(root.resolve("aion/geo/path/100.idx")));
         assertEquals("default-config", Files.readString(runtimeConfig));
         assertTrue(Files.isExecutable(root.resolve("aion/start-silent.sh")));
         assertTrue(Files.isExecutable(root.resolve("aion/stop-silent.sh")));
@@ -116,14 +123,19 @@ class StartSilentScriptTest {
         Path root = prepareRuntimeRoot();
         Path sourceGameConfig = root.resolve("src/main/resources/aion/config/main/gameserver.properties");
         Path sourceLoginConfig = root.resolve("src/main/resources/aion/config/login/database.properties");
-        Path sourceGeo = root.resolve("src/main/resources/aion/geo/100.geo");
+        Path sourceGeo = root.resolve("src/main/resources/aion/geo/100.geo.gz");
+        Path sourcePath = root.resolve("src/main/resources/aion/geo/path/100.path.gz");
+        Path sourceIndex = root.resolve("src/main/resources/aion/geo/path/100.idx");
         Path sourceLogback = root.resolve("src/main/resources/logback-spring.xml");
         Files.createDirectories(sourceGameConfig.getParent());
         Files.createDirectories(sourceLoginConfig.getParent());
         Files.createDirectories(sourceGeo.getParent());
+        Files.createDirectories(sourcePath.getParent());
         Files.writeString(sourceGameConfig, "default-game");
         Files.writeString(sourceLoginConfig, "default-login");
         Files.writeString(sourceGeo, "new-geo");
+        Files.writeString(sourcePath, "path");
+        Files.writeString(sourceIndex, "index");
         Files.writeString(sourceLogback, "default-logback");
         Path runtimeGameConfig = root.resolve("aion/config/main/gameserver.properties");
         Path runtimeLogback = root.resolve("aion/log/logback-spring.xml");
@@ -137,7 +149,7 @@ class StartSilentScriptTest {
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("custom-game", Files.readString(runtimeGameConfig));
         assertEquals("default-login", Files.readString(root.resolve("aion/config/login/database.properties")));
-        assertEquals("new-geo", Files.readString(root.resolve("aion/geo/100.geo")));
+        assertEquals("new-geo", Files.readString(root.resolve("aion/geo/100.geo.gz")));
         assertEquals("custom-logback", Files.readString(runtimeLogback));
         assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
     }

@@ -26,7 +26,8 @@ public class Actions {
 	@XmlElements({ @XmlElement(name = "itemuse", type = ItemUseAction.class),
 			@XmlElement(name = "mpuse", type = MpUseAction.class),
 			@XmlElement(name = "hpuse", type = HpUseAction.class),
-			@XmlElement(name = "dpuse", type = DpUseAction.class) })
+			@XmlElement(name = "dpuse", type = DpUseAction.class),
+			@XmlElement(name = "chargeuse", type = ChargeUseAction.class) })
 	protected List<Action> actions;
 
 	/**

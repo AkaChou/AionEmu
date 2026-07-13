@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.controllers.effect;
 
 import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABNORMAL_EFFECT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -43,6 +45,7 @@ public class EffectController {
 	protected Map<String, Effect> noshowEffects = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
 	/** 异常效果映射。 / Abnormal effect map. */
 	protected Map<String, Effect> abnormalEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+	private final ArrayDeque<List<Effect>> maintainEffectGroups = new ArrayDeque<>();
 
 	/** 效果映射互斥锁。 / Mutex for effect maps. */
 	private final Lock lock = new ReentrantLock();
@@ -200,7 +203,12 @@ public class EffectController {
 		} finally {
 			lock.unlock();
 		}
+		int previousAbnormals = abnormals;
 		nextEffect.startEffect(false);
+		int enteredAbnormals = abnormals & ~previousAbnormals;
+		if (enteredAbnormals != 0 && owner instanceof Npc npc) {
+			npc.getAi2().onEnterAbnormalState(nextEffect.getEffector(), enteredAbnormals);
+		}
 		if (!nextEffect.isPassive()) {
 			broadCastEffects();
 		}
@@ -429,6 +437,29 @@ public class EffectController {
 		}
 	}
 
+	public void removeTargetStoppableEffect(int skillId) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
+			if (effect.getSkillId() == skillId && effect.getSkillTemplate().isTargetStop()) {
+				effect.endEffect();
+			}
+		}
+	}
+
+	public synchronized void registerMaintainEffects(List<Effect> effects, int maxTargetCount) {
+		if (effects.isEmpty() || maxTargetCount <= 0) {
+			return;
+		}
+		maintainEffectGroups.forEach(group -> group.removeIf(Effect::isStopped));
+		maintainEffectGroups.removeIf(List::isEmpty);
+		int currentTargets = maintainEffectGroups.stream().mapToInt(List::size).sum();
+		while (!maintainEffectGroups.isEmpty() && currentTargets + effects.size() > maxTargetCount) {
+			List<Effect> oldest = maintainEffectGroups.removeFirst();
+			currentTargets -= oldest.size();
+			oldest.forEach(Effect::endEffect);
+		}
+		maintainEffectGroups.addLast(new ArrayList<>(effects));
+	}
+
 	/**
 	 * 移除隐身类效果（视觉状态较低时）。
 	 * Removes hide effects when visual state is below threshold.
@@ -571,7 +602,8 @@ public class EffectController {
 				}
 				break;
 			case BUFF:
-				if (effect.getDispelCategory() == DispelCategoryType.BUFF
+				if ((effect.getDispelCategory() == DispelCategoryType.BUFF
+						|| effect.getDispelCategory() == DispelCategoryType.ALL)
 						&& effect.getReqDispelLevel() <= dispelLevel) {
 					remove = true;
 				}
@@ -582,7 +614,15 @@ public class EffectController {
 				}
 				break;
 			case NPC_BUFF:
-				if (effect.getDispelCategory() == DispelCategoryType.NPC_BUFF) {
+				if (effect.getDispelCategory() == DispelCategoryType.NPC_BUFF
+						&& effect.getReqDispelLevel() <= dispelLevel) {
+					remove = true;
+				}
+				break;
+			case NPC_DEBUFF:
+				if ((effect.getDispelCategory() == DispelCategoryType.NPC_DEBUFF_PHYSICAL
+						|| effect.getDispelCategory() == DispelCategoryType.NPC_DEBUFF_MENTAL)
+						&& effect.getReqDispelLevel() <= dispelLevel) {
 					remove = true;
 				}
 				break;
@@ -702,6 +742,30 @@ public class EffectController {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 按真端通用驱散规则筛选效果，并应用驱散等级、强度与最大移除数。
+	 * Filters effects using retail dispel level, power and removal-limit rules.
+	 */
+	public int removeEffectsByDispel(Predicate<Effect> filter, int count, int dispelLevel, int power) {
+		if (count <= 0) {
+			return 0;
+		}
+		int removed = 0;
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
+			if (!filter.apply(effect)
+					|| dispelLevel < effect.getReqDispelLevel() && dispelLevel < 100) {
+				continue;
+			}
+			if (removePower(effect, power)) {
+				effect.endEffect();
+				if (++removed == count) {
+					break;
+				}
+			}
+		}
+		return removed;
 	}
 
 	/**

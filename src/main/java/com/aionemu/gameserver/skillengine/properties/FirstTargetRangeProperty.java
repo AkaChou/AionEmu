@@ -63,7 +63,7 @@ public class FirstTargetRangeProperty {
 
 		// 召唤小队成员异常 / Summon Group Member exception
 		if (skill.getSkillTemplate().getSkillId() != 3777) { // 4.8
-			if (!GameWorldServices.geoService().canSee(effector, firstTarget)) {
+			if (!GameWorldServices.geoService().canSeeSkill(effector, firstTarget, skill.getSkillTemplate().getObstacle())) {
 				if (effector instanceof Player) {
 					PacketSendUtility.sendPacket((Player) effector, SM_SYSTEM_MESSAGE.STR_SKILL_OBSTACLE);
 				}

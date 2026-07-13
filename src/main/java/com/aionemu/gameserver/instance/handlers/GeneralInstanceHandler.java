@@ -137,6 +137,15 @@ public class GeneralInstanceHandler implements InstanceHandler {
 		return SpawnEngine.spawnObject(template, instanceId);
 	}
 
+	protected VisibleObject spawnPartyMember(String partyId, int npcId, float x, float y, float z, byte heading) {
+		if (partyId == null || partyId.isBlank()) {
+			throw new IllegalArgumentException("NPC party id must not be blank");
+		}
+		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(mapId, npcId, x, y, z, heading);
+		template.setNpcPartyId(partyId);
+		return SpawnEngine.spawnObject(template, instanceId);
+	}
+
 	/**
 	 * 在当前副本刷出绑定实体 ID 的一次性 NPC。
 	 * Spawn a one-shot NPC bound to an entity id in the current instance.
@@ -291,5 +300,15 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
+	}
+
+	@Override
+	public boolean supportsRetailNpcScore(int npcId) {
+		return false;
+	}
+
+	@Override
+	public boolean onRetailNpcScore(Player player, Npc npc, int points) {
+		return false;
 	}
 }

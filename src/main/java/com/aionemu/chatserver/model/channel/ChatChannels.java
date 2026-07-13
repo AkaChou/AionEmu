@@ -3,6 +3,7 @@ package com.aionemu.chatserver.model.channel;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,8 @@ public class ChatChannels {
     static {
         // 寻找小队频道 / LFG channels
         addGroupChannel("partyFind_PF");
+        addGroupChannel("gotcha_PF");
+        addChineseJobChannels();
         // 交易 / TRADE
         addTradeChannel("trade_LC1");
         addTradeChannel("trade_LC2");
@@ -554,7 +557,7 @@ public class ChatChannels {
             }
         }
         if (Config.LOG_CHANNEL_INVALID) {
-            log.warn(I18n.get("log.b99c072ad830", identifier));
+            log.warn(I18n.get("log.b99c072ad830", new String(identifier, StandardCharsets.UTF_16LE)));
         }
         // 在支持 i18n 频道名前不能抛运行时异常 / we can't throw runtime exceptions before support of i18n channel names
         return null;
@@ -597,6 +600,32 @@ public class ChatChannels {
     private static void addJobChannel(Gender gender, PlayerClass playerClass, String channelName) {
         addChannel(new JobChannel(gender, playerClass, Race.ELYOS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".0.AION.KOR"));
         addChannel(new JobChannel(gender, playerClass, Race.ASMODIANS, "@\u0001" + channelName + "\u0001" + GameServerService.GAMESERVER_ID + ".1.AION.KOR"));
+    }
+
+    private static void addChineseJobChannels() {
+        addChineseJobChannel(PlayerClass.WARRIOR, "战士");
+        addChineseJobChannel(PlayerClass.GLADIATOR, "剑星");
+        addChineseJobChannel(PlayerClass.TEMPLAR, "守护星");
+        addChineseJobChannel(PlayerClass.SCOUT, "斥候");
+        addChineseJobChannel(PlayerClass.ASSASSIN, "杀星");
+        addChineseJobChannel(PlayerClass.RANGER, "弓星");
+        addChineseJobChannel(PlayerClass.MAGE, "法师");
+        addChineseJobChannel(PlayerClass.SORCERER, "魔道星");
+        addChineseJobChannel(PlayerClass.SPIRIT_MASTER, "精灵星");
+        addChineseJobChannel(PlayerClass.PRIEST, "祭司");
+        addChineseJobChannel(PlayerClass.CLERIC, "治愈星");
+        addChineseJobChannel(PlayerClass.CHANTER, "护法星");
+        addChineseJobChannel(PlayerClass.ENGINEER, "工程师");
+        addChineseJobChannel(PlayerClass.RIDER, "机甲星");
+        addChineseJobChannel(PlayerClass.GUNNER, "枪炮星");
+        addChineseJobChannel(PlayerClass.ARTIST, "艺术家");
+        addChineseJobChannel(PlayerClass.BARD, "吟游星");
+    }
+
+    private static void addChineseJobChannel(PlayerClass playerClass, String name) {
+        for (Gender gender : Gender.values()) {
+            addJobChannel(gender, playerClass, "job_" + name);
+        }
     }
 
     private static void addLangChannel(String channelName) {

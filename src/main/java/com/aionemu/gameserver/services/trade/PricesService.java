@@ -116,7 +116,7 @@ public class PricesService {
 	 */
 	public static final int getVendorSellModifier(Race playerRace) {
 		return (int) ((int) ((int) (PricesConfig.VENDOR_SELL_MODIFIER * getGlobalPrices(playerRace) / 100F)
-				* 100F) * getTaxes(playerRace) / 100F);
+				* getGlobalPricesModifier() / 100F) * getTaxes(playerRace) / 100F);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class PricesService {
 	public static final long getKinahForBuy(long requiredKinah, Race playerRace) {
 		// 200 万以上基纳物品需要双精度 / Requires double precision for 2mil+ kinah items
 		return (long) ((long) ((long) ((long) (requiredKinah * getVendorBuyModifier() / 100.0D)
-				* 100.0D) * getGlobalPricesModifier() / 100.0D) * getTaxes(playerRace)
+				* getGlobalPrices(playerRace) / 100.0D) * getGlobalPricesModifier() / 100.0D) * getTaxes(playerRace)
 				/ 100.0D);
 	}
 

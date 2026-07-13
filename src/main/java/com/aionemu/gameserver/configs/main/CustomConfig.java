@@ -625,12 +625,11 @@ public class CustomConfig {
 	@Property(key = "gameserver.protector.conqueror.2nd.rank.kills", defaultValue = "10")
 	public static int PROTECTOR_CONQUEROR_2ND_RANK_KILLS;
 
-	/**
-	 * 幻影神石破碎概率倍率。
-	 * Illusion godstone break rate multiplier.
-	 */
-	@Property(key = "gameserver.break.illusion.godstones", defaultValue = "1.0")
-	public static float ILLUSION_GODSTONE_BREAK_RATE;
+	@Property(key = "gameserver.rates.godstone.activation.rate", defaultValue = "1.0")
+	public static float GODSTONE_ACTIVATION_RATE;
+
+	@Property(key = "gameserver.rates.godstone.evaluation.cooldown_millis", defaultValue = "750")
+	public static int GODSTONE_EVALUATION_COOLDOWN_MILLIS;
 
 	/**
 	 * 是否启用休憩能量。

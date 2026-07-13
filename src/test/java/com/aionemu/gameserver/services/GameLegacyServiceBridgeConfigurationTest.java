@@ -106,8 +106,7 @@ import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavData;
-import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import java.io.IOException;
@@ -465,22 +464,22 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
-    void exposesGeoNavServicesAsLazySpringBeans() {
+    void exposesGeoPathServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("geoService"));
-            assertTrue(context.containsBeanDefinition("navService"));
+            assertTrue(context.containsBeanDefinition("pathService"));
             assertEquals(GeoService.class, context.getType("geoService"));
-            assertEquals(NavService.class, context.getType("navService"));
+            assertEquals(PathService.class, context.getType("pathService"));
             assertLazy(context.getBeanFactory(), "geoService");
-            assertLazy(context.getBeanFactory(), "navService");
+            assertLazy(context.getBeanFactory(), "pathService");
         }
     }
 
     @Test
-    void createsSpringManagedGeoNavServicesInsteadOfLegacySingletons() {
+    void createsSpringManagedGeoPathServicesInsteadOfLegacySingletons() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertNotSame(GeoService.getInstance(), context.getBean(GeoService.class));
-            assertNotSame(NavService.getInstance(), context.getBean(NavService.class));
+            assertNotSame(PathService.getInstance(), context.getBean(PathService.class));
         }
     }
 
@@ -964,14 +963,12 @@ class GameLegacyServiceBridgeConfigurationTest {
     @Test
     void exposesRemainingPhaseInitializedServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertEquals(NavData.class, context.getType("navData"));
             assertEquals(HousingService.class, context.getType("housingService"));
             assertEquals(LegionService.class, context.getType("legionService"));
             assertEquals(WebshopService.class, context.getType("webshopService"));
             assertEquals(SurveyService.class, context.getType("surveyService"));
             assertEquals(FindGroupService.class, context.getType("findGroupService"));
             assertEquals(InGameShopEn.class, context.getType("inGameShopEn"));
-            assertLazy(context.getBeanFactory(), "navData");
             assertLazy(context.getBeanFactory(), "housingService");
             assertLazy(context.getBeanFactory(), "legionService");
             assertLazy(context.getBeanFactory(), "webshopService");

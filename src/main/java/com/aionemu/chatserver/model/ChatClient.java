@@ -226,17 +226,19 @@ public class ChatClient {
     }
 
     /**
-     * 比较昵称是否与会话一致（当前实现始终返回 true，并在不一致时记录警告）。
-     * Compares nickname with session name (currently always returns true and logs on mismatch).
+     * 比较昵称是否与会话一致，并接受私有区字形开头的管理员标签。
+     * Compares the nickname with the session name and accepts admin tags starting with a private-use glyph.
      *
      * @param nick 待比较昵称 / nickname to compare
      * comparison result
      */
     public boolean same(String nick) {
-        if (!this.realName.equals(nick)) {
+        boolean matches = this.realName.equals(nick)
+                || nick != null && !nick.isEmpty() && Character.getType(nick.charAt(0)) == Character.PRIVATE_USE
+                && nick.endsWith(" " + this.realName);
+        if (!matches) {
             log.warn(I18n.get("log.46e58c597440", nick, this.realName));
-            return true;
         }
-        return true;
+        return matches;
     }
 }

@@ -54,6 +54,7 @@ public class GameUtilityServicesRuntimeBridge {
      */
     public void loadConfig() {
         Config.load();
+        GSConfig.resolveServerCountryCode();
         I18n.applyCountryCode(GSConfig.SERVER_COUNTRY_CODE);
     }
 

@@ -1,5 +1,6 @@
 package com.aionemu.boot.i18n;
 
+import com.aionemu.gameserver.configs.main.GSConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -24,6 +25,7 @@ public class I18nConfig {
     @PostConstruct
     void wireI18n() {
         I18n.setMessageSource(messageSource);
-        I18n.applyCountryCode(environment.getProperty("gameserver.country.code", Integer.class, 1));
+        int countryCode = environment.getProperty("gameserver.country.code", Integer.class, 99);
+        I18n.applyCountryCode(GSConfig.resolveCountryCode(countryCode));
     }
 }

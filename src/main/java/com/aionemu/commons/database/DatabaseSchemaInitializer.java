@@ -60,6 +60,9 @@ final class DatabaseSchemaInitializer {
 
         try (Connection connection = DriverManager.getConnection(target.serverUrl(), user, password)) {
             if (hasTables(connection, target.database())) {
+                migrateGodstoneProcCount(connection, target.database());
+                migrateLimitedQuestCounters(connection, target.database());
+                migrateAccountVip(connection, target.database());
                 log.debug("Database {} already contains tables; skipping schema initialization.", target.database());
                 return;
             }
@@ -68,6 +71,57 @@ final class DatabaseSchemaInitializer {
             executeScript(connection, schemaResource);
         } catch (SQLException | IOException e) {
             throw new IllegalStateException("Failed to initialize database schema for " + target.database(), e);
+        }
+    }
+
+    private static void migrateGodstoneProcCount(Connection connection, String database) throws SQLException {
+        if (!"al_server_gs".equals(database)) {
+            return;
+        }
+        String query = "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? "
+            + "AND table_name = 'item_stones' AND column_name = 'proc_count'";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, database);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                if (resultSet.getInt(1) > 0) {
+                    return;
+                }
+            }
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE `al_server_gs`.`item_stones` ADD COLUMN `proc_count` INT NOT NULL DEFAULT 0 "
+                + "AFTER `polishCharge`");
+            log.info(I18n.get("log.59a545534c80"));
+        }
+    }
+
+    private static void migrateLimitedQuestCounters(Connection connection, String database) throws SQLException {
+        if (!"al_server_gs".equals(database)) {
+            return;
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TABLE IF NOT EXISTS `al_server_gs`.`limited_quest_counters` ("
+                + "`quest_id` INT UNSIGNED NOT NULL, "
+                + "`remaining` INT UNSIGNED NOT NULL, "
+                + "PRIMARY KEY (`quest_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+        }
+    }
+
+    private static void migrateAccountVip(Connection connection, String database) throws SQLException {
+        if (!"al_server_ls".equals(database)) {
+            return;
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("CREATE TABLE IF NOT EXISTS `al_server_ls`.`account_vip` ("
+                + "`account_id` INT NOT NULL, "
+                + "`vip_level` TINYINT UNSIGNED NOT NULL COMMENT 'Client VIP stage (1-6)', "
+                + "`vip_exp` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'VIP progress experience', "
+                + "PRIMARY KEY (`account_id`), "
+                + "CONSTRAINT `FK_account_vip_account` FOREIGN KEY (`account_id`) "
+                + "REFERENCES `al_server_ls`.`account_data` (`id`) ON DELETE CASCADE, "
+                + "CONSTRAINT `CHK_account_vip_level` CHECK (`vip_level` BETWEEN 1 AND 6)"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8");
         }
     }
 

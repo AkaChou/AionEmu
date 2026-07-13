@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_test_jun.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>Test_Monster_Jun01</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><set_condition_spawn_variable><string>v01</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v02</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v03</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v04</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v05</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v06</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v07</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v08</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v09</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v10</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v11</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v12</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v13</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v14</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v15</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v16</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v17</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v18</string><set>1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>v19</string><set>1</set><modify>0</modify></set_condition_spawn_variable></actions></pattern></on_wake_up></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun02</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>킬러 스폰시 30001을 브로드하여 촌장이 킬러에게 hate를 쌓도록 유도.</comment><actions><broadcast_message><message_type>30001</message_type><param1>0</param1><param2>0</param2><range_as_meter>20</range_as_meter><param_obj>OBJI_SELF</param_obj></broadcast_message></actions></pattern></on_wake_up><on_die><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><set_condition_spawn_variable><string>v03ctrl</string><set>-1</set><modify>0</modify></set_condition_spawn_variable></actions></pattern></on_die><on_message><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>30002 수신시 발신자에게 hate를 백만 추가.
+
+
+
+
+
+
+촌장이 발신하는 메시지로 킬러가 타겟을 촌장에게 고정하기 위함.</comment><conditions><is_message><message_type>30002</message_type></is_message></conditions><actions><add_hate_point><target>OBJI_MESSAGE_SENDER</target><point_to_add>1000000</point_to_add></add_hate_point></actions></pattern></on_message></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun03</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>킬러 스폰시 30001을 브로드하여 촌장이 킬러에게 hate를 쌓도록 유도.</comment><actions><broadcast_message><message_type>30001</message_type><param1>0</param1><param2>0</param2><range_as_meter>20</range_as_meter><param_obj>OBJI_SELF</param_obj></broadcast_message></actions></pattern></on_wake_up><on_die><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><set_condition_spawn_variable><string>v05ctrl</string><set>-1</set><modify>0</modify></set_condition_spawn_variable></actions></pattern></on_die><on_message><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>30002 수신시 발신자에게 hate를 백만 추가.
+
+
+
+
+
+
+촌장이 발신하는 메시지로 킬러가 타겟을 촌장에게 고정하기 위함.</comment><conditions><is_message><message_type>30002</message_type></is_message></conditions><actions><add_hate_point><target>OBJI_MESSAGE_SENDER</target><point_to_add>1000000</point_to_add></add_hate_point></actions></pattern></on_message></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun04</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>킬러 스폰시 30001을 브로드하여 촌장이 킬러에게 hate를 쌓도록 유도.</comment><actions><broadcast_message><message_type>30001</message_type><param1>0</param1><param2>0</param2><range_as_meter>20</range_as_meter><param_obj>OBJI_SELF</param_obj></broadcast_message></actions></pattern></on_wake_up><on_die><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><set_condition_spawn_variable><string>v08ctrl</string><set>-1</set><modify>0</modify></set_condition_spawn_variable></actions></pattern></on_die><on_message><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>30002 수신시 발신자에게 hate를 백만 추가.
+
+
+
+
+
+
+촌장이 발신하는 메시지로 킬러가 타겟을 촌장에게 고정하기 위함.</comment><conditions><is_message><message_type>30002</message_type></is_message></conditions><actions><add_hate_point><target>OBJI_MESSAGE_SENDER</target><point_to_add>1000000</point_to_add></add_hate_point></actions></pattern></on_message></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun05</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun06</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_NPC_Jun01</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><set_condition_spawn_variable><string>5011_L</string><set>1</set><modify>0</modify></set_condition_spawn_variable></actions></pattern></on_wake_up></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_NPC_Jun02</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><set_condition_spawn_variable><string>5011_L</string><set>-1</set><modify>0</modify></set_condition_spawn_variable><set_condition_spawn_variable><string>5011_D</string><set>-1</set><modify>0</modify></set_condition_spawn_variable></actions></pattern></on_wake_up></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_NPC_Jun03</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_NPC_Jun04</name><event_handlers/></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

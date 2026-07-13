@@ -42,6 +42,21 @@ class KnownListTest {
 	}
 
 	@Test
+	void clearAsOutOfRangeUsesNormalDeleteReason() {
+		TestVisibleObject owner = visibleObject(1);
+		RecordingVisibleObjectController controller = new RecordingVisibleObjectController();
+		TestVisibleObject observer = new TestVisibleObject(2, controller);
+		observer.setKnownlist(new TestKnownList(observer));
+		((TestKnownList) owner.getKnownList()).addKnown(observer);
+		((TestKnownList) observer.getKnownList()).addKnown(owner);
+
+		owner.getKnownList().clear(true);
+
+		assertTrue(controller.outOfRange);
+		assertFalse(observer.getKnownList().knowns(owner));
+	}
+
+	@Test
 	void doOnAllNpcsWithOwnerUsesStableSnapshotWhenKnownObjectsChangeDuringVisit() {
 		TestVisibleObject owner = visibleObject(1);
 		TestKnownList knownList = (TestKnownList) owner.getKnownList();
@@ -226,7 +241,11 @@ class KnownListTest {
 	private static final class TestVisibleObject extends VisibleObject {
 
 		private TestVisibleObject(int objectId) {
-			super(objectId, new TestVisibleObjectController(), null, null, null);
+			this(objectId, new TestVisibleObjectController());
+		}
+
+		private TestVisibleObject(int objectId, VisibleObjectController<VisibleObject> controller) {
+			super(objectId, controller, null, null, null);
 		}
 
 		@Override
@@ -236,5 +255,14 @@ class KnownListTest {
 	}
 
 	private static final class TestVisibleObjectController extends VisibleObjectController<VisibleObject> {
+	}
+
+	private static final class RecordingVisibleObjectController extends VisibleObjectController<VisibleObject> {
+		private boolean outOfRange;
+
+		@Override
+		public void notSee(VisibleObject object, boolean isOutOfRange) {
+			outOfRange = isOutOfRange;
+		}
 	}
 }

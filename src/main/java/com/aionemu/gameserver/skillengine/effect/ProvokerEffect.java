@@ -10,11 +10,13 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.skillengine.model.HitType;
 import com.aionemu.gameserver.skillengine.model.ProvokeTarget;
-import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.PositionUtil;
 
 /**
  * 挑衅/反制触发效果：在攻击或受击时按目标类型触发指定技能。
@@ -44,93 +46,64 @@ public class ProvokerEffect extends ShieldEffect {
 	 */
 	@Override
 	public void startEffect(Effect effect) {
-		ActionObserver observer = null;
-		final Creature effector = effect.getEffector();
-		final int prob2 = this.hitTypeProb / 10;
-		final int radius = this.radius;
+		Creature caster = effect.getEffected();
+		int probability = getHitTypeProbability(effect.getSkillLevel());
+		int triggeredSkillLevel = getTriggeredSkillLevel(effect.getSkillLevel());
+		ActionObserver observer;
 		switch (this.hitType) {
-		case NMLATK:
-			observer = new ActionObserver(ObserverType.ATTACK) {
+		case NMLATK, BACKATK:
+			observer = new ActionObserver(getTriggerObserverType()) {
 				@Override
-				public void attack(Creature creature) {
-					if (Rnd.get(0, 100) <= prob2) {
-						Creature target = getProvokeTarget(provokeTarget, effector, creature);
-						createProvokedEffect(effector, target);
+				public void attack(Creature opponent, int sourceSkillId) {
+					if (hitType == HitType.BACKATK
+							&& !PositionUtil.isBehindTarget(caster, opponent)) {
+						return;
 					}
+					if (sourceSkillId > 0 && DataManager.SKILL_DATA.getSkillTemplate(sourceSkillId) != null
+							&& DataManager.SKILL_DATA.getSkillTemplate(sourceSkillId).isProvoked()) {
+						return;
+					}
+					trigger(caster, opponent, probability, triggeredSkillLevel);
 				}
 			};
 			break;
-		case EVERYHIT:
-			observer = new ActionObserver(ObserverType.ATTACKED) {
+		case EVERYHIT, PHHIT, MAHIT:
+			observer = new ActionObserver(getTriggerObserverType()) {
 				@Override
-				public void attacked(Creature creature) {
-					if (radius > 0) {
-						if (!MathUtil.isIn3dRange(effector, creature, radius)) {
-							return;
-						}
+				public void attacked(Creature opponent, boolean magical) {
+					if (!acceptsAttackedType(magical)) {
+						return;
 					}
-					if (Rnd.get(0, 100) <= prob2) {
-						Creature target = getProvokeTarget(provokeTarget, effector, creature);
-						createProvokedEffect(effector, target);
-					}
+					trigger(caster, opponent, probability, triggeredSkillLevel);
 				}
 			};
 			break;
-		case BACKATK:
-			observer = new ActionObserver(ObserverType.ATTACKED) {
-				@Override
-				public void attacked(Creature creature) {
-					if (Rnd.get(0, 100) <= prob2) {
-						Creature target = getProvokeTarget(provokeTarget, effector, creature);
-						createProvokedEffect(effector, target);
-					}
-				}
-			};
-			break;
-		case PHHIT:
-			observer = new ActionObserver(ObserverType.ATTACKED) {
-				@Override
-				public void attacked(Creature creature) {
-					int physical = creature.getGameStats().getMainHandPAttack().getBase();
-					int magical = creature.getGameStats().getMainHandMAttack().getBase();
-					if (Rnd.get(0, 100) <= prob2) {
-						if (physical > magical) {
-							Creature target = getProvokeTarget(provokeTarget, effector, creature);
-							createProvokedEffect(effector, target);
-						}
-					}
-				}
-			};
-			break;
-		case MAHIT:
-			observer = new ActionObserver(ObserverType.ATTACKED) {
-				@Override
-				public void attacked(Creature creature) {
-					int physical = creature.getGameStats().getMainHandPAttack().getBase();
-					int magical = creature.getGameStats().getMainHandMAttack().getBase();
-					if (Rnd.get(0, 100) <= prob2) {
-						if (physical < magical) {
-							Creature target = getProvokeTarget(provokeTarget, effector, creature);
-							createProvokedEffect(effector, target);
-						}
-					}
-				}
-			};
-			break;
-		}
-		if (observer == null) {
+		default:
 			return;
 		}
 		effect.setActionObserver(observer, position);
 		effect.getEffected().getObserveController().addObserver(observer);
 	}
 
-	/**
-	 * 创建被触发的技能效果实例。
-	 * Creates the provoked skill effect instance.
-	 */
-	private void createProvokedEffect(Creature effector, Creature target) {
-		GameEngineServices.skillEngine().applyEffectDirectly(skillId, effector, target, 0);
+	private void trigger(Creature caster, Creature opponent, int probability, int triggeredSkillLevel) {
+		if (!matchesOpponent(caster, opponent) || probability <= 0 || Rnd.get(1000) >= probability) {
+			return;
+		}
+		Creature target = getProvokeTarget(provokeTarget, caster, opponent);
+		GameEngineServices.skillEngine().applyEffectDirectly(skillId, caster, target, 0, triggeredSkillLevel);
+	}
+
+	private boolean matchesOpponent(Creature caster, Creature opponent) {
+		if (opponent == null || caster.getWorldId() != opponent.getWorldId()
+				|| caster.getInstanceId() != opponent.getInstanceId() || condrace != null && opponent.getRace() != condrace) {
+			return false;
+		}
+		float dx = opponent.getX() - caster.getX();
+		float dy = opponent.getY() - caster.getY();
+		float dz = opponent.getZ() - caster.getZ();
+		int squaredDistance = (int) (dx * dx + dy * dy + dz * dz);
+		return (minradius <= 0 || squaredDistance >= minradius * minradius)
+			&& (radius <= 0 || squaredDistance <= radius * radius);
 	}
 
 	/**
@@ -145,6 +118,38 @@ public class ProvokerEffect extends ShieldEffect {
 			return target;
 		}
 		throw new IllegalArgumentException("Provoker target is invalid " + provokeTarget);
+	}
+
+	public int getTriggeredSkillLevel(int effectSkillLevel) {
+		return delta * effectSkillLevel + value;
+	}
+
+	ObserverType getTriggerObserverType() {
+		return hitType == HitType.NMLATK || hitType == HitType.BACKATK ? ObserverType.ATTACK : ObserverType.ATTACKED;
+	}
+
+	boolean acceptsAttackedType(boolean magical) {
+		return hitType == HitType.EVERYHIT || hitType == HitType.MAHIT && magical || hitType == HitType.PHHIT && !magical;
+	}
+
+	public int getTriggeredSkillId() {
+		return skillId;
+	}
+
+	public ProvokeTarget getProvokeTarget() {
+		return provokeTarget;
+	}
+
+	public Race getTriggerRace() {
+		return condrace;
+	}
+
+	public int getMinRadius() {
+		return minradius;
+	}
+
+	public int getRadius() {
+		return radius;
 	}
 
 	/**

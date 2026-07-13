@@ -27,8 +27,8 @@ import com.aionemu.gameserver.lifecycle.GameEventBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeGateway;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
-import com.aionemu.gameserver.lifecycle.GameGeoNavGateway;
-import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
+import com.aionemu.gameserver.lifecycle.GameGeoPathGateway;
+import com.aionemu.gameserver.lifecycle.GameGeoPathLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlGateway;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingGateway;
@@ -292,18 +292,18 @@ class GameServiceLifecycleTest {
         }
     }
 
-    private static final class RecordingGameGeoNavLifecycle extends GameGeoNavLifecycle {
+    private static final class RecordingGameGeoPathLifecycle extends GameGeoPathLifecycle {
 
         private final List<String> events;
 
-        private RecordingGameGeoNavLifecycle(List<String> events) {
-            super(new GameGeoNavGateway());
+        private RecordingGameGeoPathLifecycle(List<String> events) {
+            super(new GameGeoPathGateway());
             this.events = events;
         }
 
         @Override
         public synchronized void start() {
-            events.add("geoNav:start");
+            events.add("geoPath:start");
         }
     }
 

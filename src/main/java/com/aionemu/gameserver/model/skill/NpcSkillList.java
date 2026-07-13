@@ -21,7 +21,11 @@ public class NpcSkillList implements SkillList<Npc> {
 	private List<NpcSkillEntry> skills;
 
 	public NpcSkillList(Npc owner) {
-		initSkillList(owner.getNpcId());
+		this(owner.getNpcId());
+	}
+
+	NpcSkillList(int npcId) {
+		initSkillList(npcId);
 	}
 
 	private void initSkillList(int npcId) {
@@ -29,7 +33,15 @@ public class NpcSkillList implements SkillList<Npc> {
 		if (npcSkillList != null) {
 			initSkills();
 			for (NpcSkillTemplate template : npcSkillList.getNpcSkills()) {
-				skills.add(new NpcSkillTemplateEntry(template));
+				NpcSkillEntry entry = template.getSkillid() > 0 ? new NpcSkillTemplateEntry(template) : null;
+				if (template.getSourceIndex() < 0) {
+					skills.add(entry);
+				} else {
+					while (skills.size() <= template.getSourceIndex()) {
+						skills.add(null);
+					}
+					skills.set(template.getSourceIndex(), entry);
+				}
 			}
 		}
 	}
@@ -48,7 +60,7 @@ public class NpcSkillList implements SkillList<Npc> {
 		Iterator<NpcSkillEntry> iter = skills.iterator();
 		while (iter.hasNext()) {
 			NpcSkillEntry next = iter.next();
-			if (next.getSkillId() == skillId) {
+			if (next != null && next.getSkillId() == skillId) {
 				iter.remove();
 				return true;
 			}
@@ -88,12 +100,37 @@ public class NpcSkillList implements SkillList<Npc> {
 		if (skills == null || skills.size() == 0) {
 			return null;
 		}
-		return skills.size() == 1 ? skills.get(0) : skills.get(Rnd.get(0, skills.size() - 1));
+		int count = 0;
+		for (NpcSkillEntry skill : skills) {
+			if (skill != null && !skill.isUltraSkill() && skill.hasUsesLeft()) {
+				count++;
+			}
+		}
+		if (count == 0) {
+			return null;
+		}
+		int selected = Rnd.get(count);
+		for (NpcSkillEntry skill : skills) {
+			if (skill != null && !skill.isUltraSkill() && skill.hasUsesLeft() && selected-- == 0) {
+				return skill;
+			}
+		}
+		return null;
+	}
+
+	public NpcSkillEntry getSkillByIndex(int index) {
+		return skills == null || index < 0 || index >= skills.size() ? null : skills.get(index);
+	}
+
+	public void resetUseCounts() {
+		if (skills != null) {
+			skills.stream().filter(java.util.Objects::nonNull).forEach(NpcSkillEntry::resetUseCount);
+		}
 	}
 
 	private SkillEntry getSkill(int skillId) {
 		for (SkillEntry entry : skills) {
-			if (entry.getSkillId() == skillId) {
+			if (entry != null && entry.getSkillId() == skillId) {
 				return entry;
 			}
 		}
@@ -108,6 +145,9 @@ public class NpcSkillList implements SkillList<Npc> {
 		Iterator<NpcSkillEntry> iter = skills.iterator();
 		while (iter.hasNext()) {
 			NpcSkillEntry next = iter.next();
+			if (next == null) {
+				continue;
+			}
 			NpcSkillTemplateEntry tmpEntry = (NpcSkillTemplateEntry) next;
 			if (tmpEntry.UseInSpawned()) {
 				return next;

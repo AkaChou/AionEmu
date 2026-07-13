@@ -62,6 +62,8 @@ public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 	private long toll;
 
 	private long luna;
+	private byte vipLevel;
+	private long vipExp;
 
 	/**
 	 * 读取鉴权结果及成功时的账号详情。
@@ -83,6 +85,9 @@ public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 			membership = (byte) readC();
 			toll = readQ();
 			luna = readQ();
+			readC(); // return-account flag is not used by the GameServer
+			vipLevel = (byte) readC();
+			vipExp = readQ();
 		}
 	}
 
@@ -93,6 +98,6 @@ public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 	@Override
 	public void runImpl() {
 		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().accountAuthenticationResponse(accountId, accountName, result, accountTime,
-				accessLevel, membership, toll, luna);
+				accessLevel, membership, toll, luna, vipLevel, vipExp);
 	}
 }

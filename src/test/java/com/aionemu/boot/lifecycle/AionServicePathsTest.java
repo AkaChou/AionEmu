@@ -87,7 +87,7 @@ class AionServicePathsTest {
     void prefersRuntimeGameConfigDirectoryOverProjectResources() throws Exception {
         Path sourceGameConfig = aionHome.resolve("src/main/resources/aion/config");
         java.nio.file.Files.createDirectories(sourceGameConfig.resolve("main"));
-        java.nio.file.Files.writeString(sourceGameConfig.resolve("main/geodata.properties"), "gameserver.geo.nav.pathfinding.enable = true");
+        java.nio.file.Files.writeString(sourceGameConfig.resolve("main/geodata.properties"), "gameserver.geo.path.enable = true");
 
         System.setProperty("aion.home", aionHome.toString());
 

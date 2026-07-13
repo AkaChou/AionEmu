@@ -42,6 +42,7 @@ public class SpawnEventHandler {
 	 * NPC AI instance
 	 */
 	public static void onRespawn(NpcAI2 npcAI) {
+		npcAI.getOwner().getMoveController().clearHomeReturn();
 		npcAI.getOwner().getMoveController().resetMove();
 	}
 }

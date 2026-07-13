@@ -49,6 +49,16 @@ class DatabaseSchemaInitializerTest {
     }
 
     @Test
+    void gameServerSchemaIncludesPersistentLimitedQuestCounters() throws IOException {
+        String schema = resourceText("db/mysql/al_server_gs.sql");
+
+        assertTrue(schema.contains("CREATE TABLE `limited_quest_counters`"));
+        assertTrue(schema.contains("`quest_id` int(10) unsigned NOT NULL"));
+        assertTrue(schema.contains("`remaining` int(10) unsigned NOT NULL"));
+        assertTrue(schema.contains("PRIMARY KEY (`quest_id`)"));
+    }
+
+    @Test
     void splitsSqlStatementsWithoutSplittingQuotedSemicolons() {
         List<String> statements = DatabaseSchemaInitializer.splitStatements(
             "CREATE DATABASE `al_server_gs`;\n"

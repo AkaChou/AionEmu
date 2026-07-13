@@ -2,6 +2,7 @@ package com.aionemu.gameserver.skillengine.condition;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -17,6 +18,8 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IdianChargeCondition")
 public class IdianChargeCondition extends ChargeCondition {
+	@XmlAttribute
+	private int value = 500;
 
 	/**
 	 * 校验并消耗已装备武器上伊迪安石的抛光充能。
@@ -31,10 +34,14 @@ public class IdianChargeCondition extends ChargeCondition {
 			Player effector = (Player) env.getEffector();
 			for (Item item : effector.getEquipment().getEquippedItems()) {
 				if (item.getItemTemplate().isWeapon() && item.getIdianStone() != null) {
-					item.getIdianStone().decreasePolishCharge(effector, 500);
+					item.getIdianStone().decreasePolishCharge(effector, value);
 				}
 			}
 		}
 		return true;
+	}
+
+	public int getValue() {
+		return value;
 	}
 }

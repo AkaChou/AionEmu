@@ -52,6 +52,7 @@ public class GameDAOClassProvider implements DAOClassProvider {
 			LadderDAO.class,
 			LegionDAO.class,
 			LegionMemberDAO.class,
+			LimitedQuestDAO.class,
 			MailDAO.class,
 			MotionDAO.class,
 			OldNamesDAO.class,

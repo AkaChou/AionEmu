@@ -102,8 +102,7 @@ import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavData;
-import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import java.text.ParseException;
@@ -850,15 +849,15 @@ public class GameLegacyServiceBridgeConfiguration {
     }
 
     /**
-     * 提供懒加载的 NavService Bean。
-     * Provides a lazy NavService bean.
+     * 提供懒加载的 PathService Bean。
+     * Provides a lazy PathService bean.
      *
-     * NavService instance
+     * PathService instance
      */
     @Bean
     @Lazy
-    public NavService navService() {
-        return new NavService();
+    public PathService pathService() {
+        return new PathService();
     }
 
     /**
@@ -1942,18 +1941,6 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     public BattlefieldUnionService battlefieldUnionService() {
         return new BattlefieldUnionService();
-    }
-
-    /**
-     * 提供懒加载的 NavData Bean。
-     * Provides a lazy NavData bean.
-     *
-     * NavData instance
-     */
-    @Bean
-    @Lazy
-    public NavData navData() {
-        return new NavData();
     }
 
     /**

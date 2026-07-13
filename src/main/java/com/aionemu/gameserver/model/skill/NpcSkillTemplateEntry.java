@@ -20,7 +20,7 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 	/** 是否就绪。 / Whether Ready. */
 	@Override
 	public boolean isReady(int hpPercentage, long fightingTimeInMSec) {
-		if (hasCooldown() || !chanceReady()) {
+		if (!hasUsesLeft() || hasCooldown() || !chanceReady()) {
 			return false;
 		}
 
@@ -77,5 +77,15 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 	@Override
 	public boolean UseInSpawned() {
 		return template.getUseInSpawned();
+	}
+
+	@Override
+	public boolean isUltraSkill() {
+		return template.isUltraSkill();
+	}
+
+	@Override
+	public boolean hasUsesLeft() {
+		return template.getCount() == 0 || useCount < template.getCount();
 	}
 }

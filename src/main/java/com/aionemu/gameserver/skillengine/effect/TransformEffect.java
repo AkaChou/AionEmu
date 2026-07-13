@@ -34,6 +34,26 @@ public abstract class TransformEffect extends EffectTemplate {
 	protected int panelid;
 	@XmlAttribute
 	protected int itemId;
+	@XmlAttribute(name = "use_item")
+	protected boolean useItem;
+	@XmlAttribute(name = "transform_level")
+	protected int transformLevel;
+	@XmlAttribute(name = "cant_recall")
+	protected boolean cantRecall;
+	@XmlAttribute(name = "cant_jump")
+	protected boolean cantJump;
+	@XmlAttribute(name = "cant_attack")
+	protected boolean cantAttack;
+	@XmlAttribute(name = "cant_use_item")
+	protected boolean cantUseItem;
+	@XmlAttribute(name = "cant_fly")
+	protected boolean cantFly;
+	@XmlAttribute(name = "cant_use_skill")
+	protected boolean cantUseSkill;
+	@XmlAttribute(name = "cant_move")
+	protected boolean cantMove;
+	@XmlAttribute(name = "animation_skill_id")
+	protected int animationSkillId;
 
 	@Override
 	public void applyEffect(Effect effect) {
@@ -53,38 +73,34 @@ public abstract class TransformEffect extends EffectTemplate {
 		if (state != null) {
 			effected.getEffectController().unsetAbnormal(state.getId());
 		}
-		if (effected instanceof Player) {
-			int newModel = 0;
-			TransformType transformType = TransformType.PC;
-			for (Effect tmp : effected.getEffectController().getAbnormalEffects()) {
-				for (EffectTemplate template : tmp.getEffectTemplates()) {
-					if (template instanceof TransformEffect) {
-						if (((TransformEffect) template).getTransformId() == model)
-							continue;
-						newModel = ((TransformEffect) template).getTransformId();
-						transformType = ((TransformEffect) template).getTransformType();
-						break;
-					}
+		effected.getTransformModel().removeRestrictions(
+				cantFly, cantUseSkill, cantUseItem, cantAttack, cantJump, cantRecall, cantMove);
+		if (!effected.getTransformModel().isActiveTransform(effect)) {
+			return;
+		}
+
+		Effect nextEffect = null;
+		TransformEffect nextTemplate = null;
+		for (Effect candidate : effected.getEffectController().getAbnormalEffects()) {
+			if (candidate == effect) {
+				continue;
+			}
+			for (EffectTemplate template : candidate.getEffectTemplates()) {
+				if (template instanceof TransformEffect transform
+						&& (nextTemplate == null || transform.transformLevel > nextTemplate.transformLevel)) {
+					nextEffect = candidate;
+					nextTemplate = transform;
 				}
 			}
-			effected.getTransformModel().setModelId(newModel);
-			effected.getTransformModel().setTransformType(transformType);
-			effected.getTransformModel().setItemId(0);
-			DAOManager.getDAO(PlayerTransformDAO.class).deletePlTransfo(effected.getObjectId());
-		} else if (effected instanceof Summon) {
-			effected.getTransformModel().setModelId(0);
-		} else if (effected instanceof Npc) {
-			effected.getTransformModel().setModelId(effected.getObjectTemplate().getTemplateId());
 		}
-		effected.getTransformModel().setPanelId(0);
-		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_TRANSFORM(effected, 0, false, 0));
-
 		if (effected instanceof Player) {
-			((Player) effected).setTransformed(false);
-			((Player) effected).setTransformedModelId(0);
-			((Player) effected).setTransformedItemId(0);
-			((Player) effected).setTransformedPanelId(0);
+			DAOManager.getDAO(PlayerTransformDAO.class).deletePlTransfo(effected.getObjectId());
 		}
+		if (nextTemplate != null) {
+			nextTemplate.applyTransform(nextEffect);
+			return;
+		}
+		clearTransform(effected);
 	}
 
 	/**
@@ -102,18 +118,49 @@ public abstract class TransformEffect extends EffectTemplate {
 			effected.getEffectController().setAbnormal(effectId.getId());
 		}
 
+		effected.getTransformModel().addRestrictions(
+				cantFly, cantUseSkill, cantUseItem, cantAttack, cantJump, cantRecall, cantMove);
+		if (cantFly && effected instanceof Player player) {
+			player.getFlyController().endFly(true);
+		}
+		if (effected.getTransformModel().canReplaceActiveTransform(transformLevel)) {
+			applyTransform(effect);
+		}
+	}
+
+	private void applyTransform(Effect effect) {
+		Creature effected = effect.getEffected();
 		effected.getTransformModel().setModelId(model);
 		effected.getTransformModel().setPanelId(panelid);
 		effected.getTransformModel().setItemId(itemId);
-		effected.getTransformModel().setTransformType(effect.getTransformType());
+		effected.getTransformModel().setTransformType(type);
+		effected.getTransformModel().setActiveTransform(effect, transformLevel, useItem, animationSkillId);
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_TRANSFORM(effected, panelid, true, itemId));
 
-		if (effected instanceof Player) {
-			((Player) effected).setTransformed(true);
-			((Player) effected).setTransformedModelId(model);
-			((Player) effected).setTransformedItemId(itemId);
-			((Player) effected).setTransformedItemId(panelid);
+		if (effected instanceof Player player) {
+			player.setTransformedModelId(model);
+			player.setTransformedItemId(itemId);
+			player.setTransformedPanelId(panelid);
 			DAOManager.getDAO(PlayerTransformDAO.class).storePlTransfo(effected.getObjectId(), panelid, itemId);
+		}
+	}
+
+	private void clearTransform(Creature effected) {
+		if (effected instanceof Summon || effected instanceof Player) {
+			effected.getTransformModel().setModelId(0);
+		} else if (effected instanceof Npc) {
+			effected.getTransformModel().setModelId(effected.getObjectTemplate().getTemplateId());
+		}
+		effected.getTransformModel().setPanelId(0);
+		effected.getTransformModel().setItemId(0);
+		effected.getTransformModel().setTransformType(effected instanceof Player ? TransformType.PC : TransformType.NONE);
+		effected.getTransformModel().clearActiveTransform();
+		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_TRANSFORM(effected, 0, false, 0));
+
+		if (effected instanceof Player player) {
+			player.setTransformedModelId(0);
+			player.setTransformedItemId(0);
+			player.setTransformedPanelId(0);
 		}
 	}
 

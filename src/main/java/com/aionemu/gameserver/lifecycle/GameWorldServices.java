@@ -2,15 +2,14 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavData;
-import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
- * 世界服务定位器：向 Geo / Nav / Drop 相关组件注入 Spring 提供者。
- * Nav / Drop related components.
+ * 世界服务定位器：向 Geo / Path / Drop 相关组件注入 Spring 提供者。
+ * Geo / Path / Drop related components.
  */
 @Component
 public final class GameWorldServices implements DisposableBean {
@@ -22,16 +21,10 @@ public final class GameWorldServices implements DisposableBean {
     private static volatile ObjectProvider<GeoService> geoServiceProvider;
 
     /**
-     * NavService 提供者的静态缓存。
-     * Static cache of the NavService provider.
+     * PathService 提供者的静态缓存。
+     * Static cache of the PathService provider.
      */
-    private static volatile ObjectProvider<NavService> navServiceProvider;
-
-    /**
-     * NavData 提供者的静态缓存。
-     * Static cache of the NavData provider.
-     */
-    private static volatile ObjectProvider<NavData> navDataProvider;
+    private static volatile ObjectProvider<PathService> pathServiceProvider;
 
     /**
      * DropRegistrationService 提供者的静态缓存。
@@ -44,20 +37,16 @@ public final class GameWorldServices implements DisposableBean {
      * Construct and register instance providers for world-service components.
      *
      * GeoService provider
-     * NavService provider
-     * NavData provider
+     * PathService provider
      * DropRegistrationService provider
      */
-    public GameWorldServices(ObjectProvider<GeoService> geoServiceProvider, ObjectProvider<NavService> navServiceProvider,
-            ObjectProvider<NavData> navDataProvider,
+    public GameWorldServices(ObjectProvider<GeoService> geoServiceProvider, ObjectProvider<PathService> pathServiceProvider,
             ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider) {
         GameWorldServices.geoServiceProvider = geoServiceProvider;
-        GameWorldServices.navServiceProvider = navServiceProvider;
-        GameWorldServices.navDataProvider = navDataProvider;
+        GameWorldServices.pathServiceProvider = pathServiceProvider;
         GameWorldServices.dropRegistrationServiceProvider = dropRegistrationServiceProvider;
         GeoService.setInstanceProvider(geoServiceProvider);
-        NavService.setInstanceProvider(navServiceProvider);
-        NavData.setInstanceProvider(navDataProvider);
+        PathService.setInstanceProvider(pathServiceProvider);
         DropRegistrationService.setInstanceProvider(dropRegistrationServiceProvider);
     }
 
@@ -90,31 +79,17 @@ public final class GameWorldServices implements DisposableBean {
     }
 
     /**
-     * 解析 NavService：优先 Spring，否则回退。
-     * Resolve NavService: prefer Spring, otherwise fallback.
+     * 解析 PathService：优先 Spring，否则回退。
+     * Resolve PathService: prefer Spring, otherwise fallback.
      *
-     * NavService instance
+     * PathService instance
      */
-    public static NavService navService() {
-        ObjectProvider<NavService> provider = navServiceProvider;
+    public static PathService pathService() {
+        ObjectProvider<PathService> provider = pathServiceProvider;
         if (provider == null) {
-            return GameWorldServiceFallbacks.navService();
+            return GameWorldServiceFallbacks.pathService();
         }
-        return provider.getIfAvailable(GameWorldServiceFallbacks::navService);
-    }
-
-    /**
-     * 解析 NavData：优先 Spring，否则回退。
-     * Resolve NavData: prefer Spring, otherwise fallback.
-     *
-     * NavData instance
-     */
-    public static NavData navData() {
-        ObjectProvider<NavData> provider = navDataProvider;
-        if (provider == null) {
-            return GameWorldServiceFallbacks.navData();
-        }
-        return provider.getIfAvailable(GameWorldServiceFallbacks::navData);
+        return provider.getIfAvailable(GameWorldServiceFallbacks::pathService);
     }
 
     /**
@@ -124,12 +99,10 @@ public final class GameWorldServices implements DisposableBean {
     @Override
     public void destroy() {
         geoServiceProvider = null;
-        navServiceProvider = null;
-        navDataProvider = null;
+        pathServiceProvider = null;
         dropRegistrationServiceProvider = null;
         GeoService.setInstanceProvider(null);
-        NavService.setInstanceProvider(null);
-        NavData.setInstanceProvider(null);
+        PathService.setInstanceProvider(null);
         DropRegistrationService.setInstanceProvider(null);
     }
 }

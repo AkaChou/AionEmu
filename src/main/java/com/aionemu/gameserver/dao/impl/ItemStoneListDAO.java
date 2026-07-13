@@ -30,16 +30,16 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 
 
     /** 插入镶嵌石 / Insert item stone */
-    public static final String INSERT_QUERY = "INSERT INTO `item_stones` " + "(`item_unique_id`, `item_id`, `slot`, `category`, `polishNumber`, `polishCharge`) " + "VALUES (?, ?, ?, ?, ?, ?)";
+    public static final String INSERT_QUERY = "INSERT INTO `item_stones` " + "(`item_unique_id`, `item_id`, `slot`, `category`, `polishNumber`, `polishCharge`, `proc_count`) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     /** 更新镶嵌石 / Update item stone */
-    public static final String UPDATE_QUERY = "UPDATE `item_stones` SET " + "`item_id` = ?, `slot` = ?, `polishNumber` = ?, `polishCharge` = ? " + "WHERE `item_unique_id` = ? AND `category` = ?";
+    public static final String UPDATE_QUERY = "UPDATE `item_stones` SET " + "`item_id` = ?, `slot` = ?, `polishNumber` = ?, `polishCharge` = ?, `proc_count` = ? " + "WHERE `item_unique_id` = ? AND `category` = ?";
 
     /** 删除镶嵌石 / Delete item stone */
     public static final String DELETE_QUERY = "DELETE FROM `item_stones` " + "WHERE `item_unique_id` = ? AND `slot` = ? AND `category` = ?";
 
     /** 查询物品镶嵌石 / Select item stones */
-    public static final String SELECT_QUERY = "SELECT `item_id`, `slot`, `category`, " + "`polishNumber`, `polishCharge` FROM `item_stones` WHERE `item_unique_id` = ?";
+    public static final String SELECT_QUERY = "SELECT `item_id`, `slot`, `category`, " + "`polishNumber`, `polishCharge`, `proc_count` FROM `item_stones` WHERE `item_unique_id` = ?";
 
     /** 筛选需新增的镶嵌石 / Filter stones to insert */
     private static final Predicate<ItemStone> itemStoneAddPredicate =
@@ -109,7 +109,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                                     break;
 
                                 case 1: // GodStone
-                                    item.setGodStone(new GodStone(item.getObjectId(), itemId, PersistentState.UPDATED));
+                                    item.setGodStone(new GodStone(item.getObjectId(), itemId, rset.getInt("proc_count"), PersistentState.UPDATED));
                                     break;
 
                                 case 2: // FusionStone
@@ -293,6 +293,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                     st.setInt(5, 0);
                     st.setInt(6, 0);
                 }
+				st.setInt(7, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
 
                 st.addBatch();
             }
@@ -332,8 +333,9 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
                     st.setInt(4, 0);
                 }
 
-                st.setInt(5, is.getItemObjId());
-                st.setInt(6, ist.ordinal());
+				st.setInt(5, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
+				st.setInt(6, is.getItemObjId());
+				st.setInt(7, ist.ordinal());
                 st.addBatch();
             }
 

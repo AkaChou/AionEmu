@@ -6,6 +6,7 @@ import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.skillengine.model.SkillType;
 
 /**
  * 攻击结算观察者基类，可改写状态判定、护盾与伤害倍率。
@@ -49,6 +50,22 @@ public class AttackCalcObserver {
 		return false;
 	}
 
+	public boolean hasAlwaysHit() {
+		return false;
+	}
+
+	public boolean consumeAlwaysHit() {
+		return false;
+	}
+
+	public boolean hasAlwaysNoResist() {
+		return false;
+	}
+
+	public boolean consumeAlwaysNoResist() {
+		return false;
+	}
+
 	/**
 	 * 检查攻击方暴击状态。
 	 * Check attacker critical status.
@@ -82,5 +99,17 @@ public class AttackCalcObserver {
 	 */
 	public float getBaseMagicalDamageMultiplier() {
 		return 1f;
+	}
+
+	public int getPhysicalSkillDamageBonus() {
+		return 0;
+	}
+
+	public int getMagicalSkillDamageBonus() {
+		return 0;
+	}
+
+	public int getSkillAccuracyModifier(SkillType skillType) {
+		return 0;
 	}
 }

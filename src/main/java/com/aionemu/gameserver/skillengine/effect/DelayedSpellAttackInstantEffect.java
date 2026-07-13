@@ -25,6 +25,8 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 
 	@XmlAttribute
 	protected int delay;
+	@XmlAttribute
+	protected int delaydelta;
 
 	/**
 	 * 延迟后对敌对目标计算并应用伤害。
@@ -42,7 +44,12 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 					calculateAndApplyDamage(effect);
 				}
 			}
-		}, delay);
+		}, calculateDelay(effect.getSkillLevel()));
+	}
+
+	int calculateDelay(int skillLevel) {
+		int calculated = delay + delaydelta * skillLevel;
+		return calculated < 0 ? 500 : calculated;
 	}
 
 	/**
@@ -60,6 +67,8 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 				getMode(), this.critProbMod2, critAddDmg, shared, false);
 		effect.getEffected().getController().onAttack(effect.getEffector(), effect.getSkillId(), TYPE.DELAYDAMAGE,
 				effect.getReserved1(), true, LOG.PROCATKINSTANT);
-		effect.getEffector().getObserveController().notifyAttackObservers(effect.getEffected());
+		if (effect.tryActivateGodstone()) {
+			effect.getEffector().getObserveController().notifyAttackObservers(effect.getEffected(), effect.getSkillId());
+		}
 	}
 }

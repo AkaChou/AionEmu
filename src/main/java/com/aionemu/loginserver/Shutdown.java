@@ -11,6 +11,7 @@ import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.dao.SvStatsDAO;
 import com.aionemu.loginserver.network.NetConnector;
+import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 
@@ -80,6 +81,12 @@ public class Shutdown extends Thread {
             NetConnector.shutdownIfInitialized();
         } catch (Throwable t) {
             log.error(I18n.get("log.8a48277abecd", t));
+        }
+
+        try {
+            StsVipServer.shutdownIfStarted();
+        } catch (Throwable t) {
+            log.error("Failed to stop STS VIP server", t);
         }
 
         // 在线程池关闭前先关闭 cron 服务 / shutdown cron service prior to threadpool shutdown

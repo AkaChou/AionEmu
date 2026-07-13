@@ -49,6 +49,7 @@ public class MagicCounterAtkEffect extends EffectTemplate {
 		final Creature effector = effect.getEffector();
 		final Creature effected = effect.getEffected();
 		final CreatureLifeStats<? extends Creature> cls = effect.getEffected().getLifeStats();
+		final int percent = value + delta * effect.getSkillLevel();
 
 		ActionObserver observer = new ActionObserver(ObserverType.SKILLUSE) {
 
@@ -60,9 +61,9 @@ public class MagicCounterAtkEffect extends EffectTemplate {
 
 						if (skill.getSkillTemplate().getType() == SkillType.MAGICAL
 								&& skill.getSkillTemplate().getSubType() == SkillSubType.ATTACK) {
-							if ((int) (cls.getMaxHp() / 100f * value) <= maxdmg) {
+							if ((int) (cls.getMaxHp() / 100f * percent) <= maxdmg) {
 								effected.getController().onAttack(effector, effect.getSkillId(), TYPE.DAMAGE,
-										(int) (cls.getMaxHp() / 100f * value), true, LOG.REGULAR);
+										(int) (cls.getMaxHp() / 100f * percent), true, LOG.REGULAR);
 							} else {
 								effected.getController().onAttack(effector, maxdmg, true);
 							}

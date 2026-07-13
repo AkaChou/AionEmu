@@ -19,7 +19,7 @@ class NpcSkillDefinitionLoaderTest {
 	@Test
 	void loadsAllRetailAssignmentsAndResolvedSkills() {
 		NpcSkillData data = NpcSkillDefinitionLoader.load(
-			Path.of("src/main/resources/aion/definitions/compact/npc-skills.xml").toFile());
+			Path.of("src/main/resources/aion/definitions/compact/skills/npc-skills.xml").toFile());
 
 		assertEquals(59058, data.size());
 		var skills = data.getNpcSkillList(211157).getNpcSkills();
@@ -43,6 +43,40 @@ class NpcSkillDefinitionLoaderTest {
 		NpcSkillData data = NpcSkillDefinitionLoader.load(file.toFile());
 
 		assertEquals(2, data.size());
-		assertEquals(0, data.getNpcSkillList(100).getNpcSkills().size());
+		assertEquals(1, data.getNpcSkillList(100).getNpcSkills().size());
+		assertEquals(0, data.getNpcSkillList(100).getNpcSkills().get(0).getSkillid());
+	}
+
+	@Test
+	void keepsSourceIndexAfterUnresolvedRetailSkill() throws Exception {
+		Path file = tempDir.resolve("npc-skills-index.xml");
+		Files.writeString(file, """
+			<npc_skill_data><groups><group id="G">
+			<skill name="unknown" probability="100"/><skill id="16516" probability="100"/>
+			</group></groups><assignments><assign group="G" npc_ids="100"/></assignments></npc_skill_data>
+			""");
+
+		var skills = NpcSkillDefinitionLoader.load(file.toFile()).getNpcSkillList(100).getNpcSkills();
+
+		assertEquals(2, skills.size());
+		assertEquals(0, skills.get(0).getSourceIndex());
+		assertEquals(1, skills.get(1).getSourceIndex());
+	}
+
+	@Test
+	void keepsRetailSchedulingFields() throws Exception {
+		Path file = tempDir.resolve("npc-skills-fields.xml");
+		Files.writeString(file, """
+			<npc_skill_data><groups><group id="G">
+			<skill id="16516" level="40" probability="70" raw_rate="700" delay_time="15000" count="2" ultra_skill="1"/>
+			</group></groups><assignments><assign group="G" npc_ids="100"/></assignments></npc_skill_data>
+			""");
+
+		var skill = NpcSkillDefinitionLoader.load(file.toFile()).getNpcSkillList(100).getNpcSkills().get(0);
+
+		assertEquals(700, skill.getRawRate());
+		assertEquals(15000, skill.getCooldown());
+		assertEquals(2, skill.getCount());
+		assertEquals(true, skill.isUltraSkill());
 	}
 }

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.skillengine.effect;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.DescriptionId;
@@ -20,6 +21,18 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProcAtkInstantEffect")
 public class ProcAtkInstantEffect extends DamageEffect {
+	@XmlAttribute(name = "checkprotector")
+	private boolean checkProtector = true;
+	@XmlAttribute(name = "weaponboost")
+	private int weaponBoost;
+
+	public boolean isCheckProtector() {
+		return checkProtector;
+	}
+
+	public int getWeaponBoost() {
+		return weaponBoost;
+	}
 
 	/**
 	 * 对目标结算 PROCATKINSTANT 伤害，并在需要时通知施法者。

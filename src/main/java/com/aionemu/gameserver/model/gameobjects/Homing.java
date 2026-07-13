@@ -19,6 +19,7 @@ public class Homing extends SummonedObject<Creature> {
 	private int attackCount;
 	private int skillId;
 	private int activeSkillId;
+	private int homingId;
 
 	public Homing(int objId, NpcController controller, SpawnTemplate spawnTemplate, NpcTemplate objectTemplate,
 			byte level, int skillId) {
@@ -90,5 +91,13 @@ public class Homing extends SummonedObject<Creature> {
 	/** 设置当前技能 ID / Sets the active skill id */
 	public void setActiveSkillId(int activeSkillId) {
 		this.activeSkillId = activeSkillId;
+	}
+
+	public int getHomingId() {
+		return homingId;
+	}
+
+	public void setHomingId(int homingId) {
+		this.homingId = homingId;
 	}
 }

@@ -22,6 +22,7 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.skillengine.model.SkillType;
 
 /**
  * 行为观察控制器，管理一次性/常驻观察者及攻击计算观察者。
@@ -166,10 +167,10 @@ public class ObserveController {
 	private void notifyAction(ObserverType type, ActionObserver observer, Object... object) {
 		switch (type) {
 		case ATTACK:
-			observer.attack((Creature) object[0]);
+			observer.attack((Creature) object[0], object.length > 1 ? (Integer) object[1] : 0);
 			break;
 		case ATTACKED:
-			observer.attacked((Creature) object[0]);
+			observer.attacked((Creature) object[0], object.length > 1 && (Boolean) object[1]);
 			break;
 		case DEATH:
 			observer.died((Creature) object[0]);
@@ -234,7 +235,15 @@ public class ObserveController {
 	 * @param creature 被攻击目标 / the attacked creature
 	 */
 	public void notifyAttackObservers(Creature creature) {
-		notifyObservers(ObserverType.ATTACK, creature);
+		notifyAttackObservers(creature, 0);
+	}
+
+	/**
+	 * 通知攻击观察者并携带造成攻击的技能 ID。
+	 * Notifies attack observers with the skill id that caused the attack.
+	 */
+	public void notifyAttackObservers(Creature creature, int skillId) {
+		notifyObservers(ObserverType.ATTACK, creature, skillId);
 	}
 
 	/**
@@ -244,7 +253,15 @@ public class ObserveController {
 	 * the attacker
 	 */
 	public void notifyAttackedObservers(Creature creature) {
-		notifyObservers(ObserverType.ATTACKED, creature);
+		notifyAttackedObservers(creature, false);
+	}
+
+	/**
+	 * 通知受击观察者并标记本次攻击是否为魔法攻击。
+	 * Notifies attacked observers and identifies magical attacks.
+	 */
+	public void notifyAttackedObservers(Creature creature, boolean magical) {
+		notifyObservers(ObserverType.ATTACKED, creature, magical);
 	}
 
 	/**
@@ -376,6 +393,42 @@ public class ObserveController {
 		return false;
 	}
 
+	public boolean hasAlwaysHit() {
+		for (AttackCalcObserver observer : attackCalcObservers) {
+			if (observer.hasAlwaysHit()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean consumeAlwaysHit() {
+		for (AttackCalcObserver observer : attackCalcObservers) {
+			if (observer.consumeAlwaysHit()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasAlwaysNoResist() {
+		for (AttackCalcObserver observer : attackCalcObservers) {
+			if (observer.hasAlwaysNoResist()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean consumeAlwaysNoResist() {
+		for (AttackCalcObserver observer : attackCalcObservers) {
+			if (observer.consumeAlwaysNoResist()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * 检查攻击者暴击状态。
 	 * Checks attacker critical status.
@@ -445,6 +498,30 @@ public class ObserveController {
 			}
 		}
 		return multiplier;
+	}
+
+	public int getPhysicalSkillDamageBonus() {
+		int bonus = 0;
+		for (AttackCalcObserver observer : attackCalcObservers) {
+			bonus += observer.getPhysicalSkillDamageBonus();
+		}
+		return bonus;
+	}
+
+	public int getMagicalSkillDamageBonus() {
+		int bonus = 0;
+		for (AttackCalcObserver observer : attackCalcObservers) {
+			bonus += observer.getMagicalSkillDamageBonus();
+		}
+		return bonus;
+	}
+
+	public int getSkillAccuracyModifier(SkillType skillType) {
+		int modifier = 0;
+		for (AttackCalcObserver observer : attackCalcObservers) {
+			modifier += observer.getSkillAccuracyModifier(skillType);
+		}
+		return modifier;
 	}
 
 	/**

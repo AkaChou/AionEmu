@@ -22,8 +22,14 @@ public class SpellAtkDrainInstantEffect extends DamageEffect {
 
 	@XmlAttribute(name = "hp_percent")
 	protected int hp_percent;
+	@XmlAttribute(name = "hp_percent_delta")
+	protected int hpPercentDelta;
 	@XmlAttribute(name = "mp_percent")
 	protected int mp_percent;
+	@XmlAttribute(name = "mp_percent_delta")
+	protected int mpPercentDelta;
+	@XmlAttribute(name = "applymboost")
+	protected Boolean applyMBoost;
 
 	/**
 	 * 先结算伤害，再按配置百分比回复 HP/MP。
@@ -32,14 +38,29 @@ public class SpellAtkDrainInstantEffect extends DamageEffect {
 	@Override
 	public void applyEffect(Effect effect) {
 		super.applyEffect(effect);
-		if (hp_percent != 0) {
-			effect.getEffector().getLifeStats().increaseHp(TYPE.HP, effect.getReserved1() * hp_percent / 100,
+		int hpPercent = calculateHpPercent(effect.getSkillLevel());
+		int mpPercent = calculateMpPercent(effect.getSkillLevel());
+		if (hpPercent != 0) {
+			effect.getEffector().getLifeStats().increaseHp(TYPE.HP, effect.getReserved1() * hpPercent / 100,
 					effect.getSkillId(), LOG.SPELLATKDRAININSTANT);
 		}
-		if (mp_percent != 0) {
-			effect.getEffector().getLifeStats().increaseMp(TYPE.ABSORBED_MP, effect.getReserved1() * mp_percent / 100,
+		if (mpPercent != 0) {
+			effect.getEffector().getLifeStats().increaseMp(TYPE.ABSORBED_MP, effect.getReserved1() * mpPercent / 100,
 					effect.getSkillId(), LOG.SPELLATKDRAININSTANT);
 		}
+	}
+
+	int calculateHpPercent(int skillLevel) {
+		return hp_percent + hpPercentDelta * skillLevel;
+	}
+
+	int calculateMpPercent(int skillLevel) {
+		return mp_percent + mpPercentDelta * skillLevel;
+	}
+
+	@Override
+	protected boolean isMagicBoostApplied(Effect effect) {
+		return applyMBoost == null ? super.isMagicBoostApplied(effect) : applyMBoost;
 	}
 
 	/**

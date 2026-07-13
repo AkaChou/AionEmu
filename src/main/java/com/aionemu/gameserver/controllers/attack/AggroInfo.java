@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.controllers.attack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 
 /**
@@ -16,6 +19,8 @@ public class AggroInfo {
 	private int hate;
 	/** 累计伤害 / Accumulated damage */
 	private int damage;
+	private long volatileHateSequence;
+	private final Map<Long, Integer> volatileHate = new HashMap<>();
 
 	/**
 	 * 以指定攻击者创建仇恨条目。
@@ -81,6 +86,31 @@ public class AggroInfo {
 	 */
 	public synchronized void setHate(int hate) {
 		this.hate = hate;
+		volatileHate.clear();
+	}
+
+	public synchronized long addVolatileHate(int hate) {
+		long token = ++volatileHateSequence;
+		int previousHate = this.hate;
+		addHate(hate);
+		volatileHate.put(token, this.hate - previousHate);
+		return token;
+	}
+
+	public synchronized void removeVolatileHate(long token) {
+		Integer hate = volatileHate.remove(token);
+		if (hate != null) {
+			this.hate = Math.max(0, this.hate - hate);
+		}
+	}
+
+	public synchronized void resetVolatileHate() {
+		long total = 0;
+		for (int hate : volatileHate.values()) {
+			total += hate;
+		}
+		this.hate = (int) Math.max(0, Math.min(Integer.MAX_VALUE, this.hate - total));
+		volatileHate.clear();
 	}
 
 	/**

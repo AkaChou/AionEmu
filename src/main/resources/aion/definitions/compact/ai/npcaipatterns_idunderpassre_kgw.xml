@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_idunderpassre_kgw.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>Underpass_IDUnderpassRe_msg</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>본 NPC가 스폰되면 시스템 메시지를 해당 레벨에 있는 모든 플레이어게 출력</comment><conditions><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><send_system_msg><string_id>STR_Underpass_IDUnderpassRe_Open</string_id></send_system_msg></actions></pattern></on_wake_up></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

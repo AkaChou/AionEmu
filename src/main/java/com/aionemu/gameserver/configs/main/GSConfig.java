@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.configs.main;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import com.aionemu.commons.configuration.Property;
 
@@ -10,11 +11,38 @@ import com.aionemu.commons.configuration.Property;
  */
 public class GSConfig {
 	/**
-	 * 服务器国家代码。
-	 * Server country code.
+	 * 服务器国家代码。99 = 按系统 Locale 自动适配。
+	 * Server country code. 99 = auto-detect from system Locale.
 	 */
-	@Property(key = "gameserver.country.code", defaultValue = "1")
+	@Property(key = "gameserver.country.code", defaultValue = "99")
 	public static int SERVER_COUNTRY_CODE;
+
+	/**
+	 * 解析国家码：99 按系统 Locale 映射，其余原样返回。
+	 * Resolve country code: 99 maps from system Locale, otherwise unchanged.
+	 */
+	public static int resolveCountryCode(int countryCode) {
+		if (countryCode != 99) {
+			return countryCode;
+		}
+		// ponytail: JVM default locale only; override via gameserver.country.code if wrong
+		Locale locale = Locale.getDefault();
+		return switch (locale.getLanguage()) {
+			case "zh" -> 5;
+			case "ja" -> 4;
+			case "ko" -> 0;
+			case "ru" -> 7;
+			default -> switch (locale.getCountry()) {
+				case "GB", "DE", "FR", "ES", "IT", "PL", "NL", "SE", "NO", "DK", "FI", "AT", "CH", "BE", "PT", "IE", "CZ", "HU", "RO", "GR" -> 2;
+				default -> 1;
+			};
+		};
+	}
+
+	/** 将 99 解析为具体地区码并写回字段。 / Resolve 99 into a concrete code in-place. */
+	public static void resolveServerCountryCode() {
+		SERVER_COUNTRY_CODE = resolveCountryCode(SERVER_COUNTRY_CODE);
+	}
 	/**
 	 * 玩家最大等级。
 	 * Player maximum level.

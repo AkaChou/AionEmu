@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="npc_ai_mappings">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="npc" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="id" type="xs:int" use="required"/>
+						<xs:attribute name="name" type="xs:string" use="required"/>
+						<xs:attribute name="ai" type="xs:string" use="required"/>
+						<xs:attribute name="sensory_range" type="xs:float" use="required"/>
+							<xs:attribute name="sensory_range_short" type="xs:float" use="required"/>
+							<xs:attribute name="sensory_angle" type="xs:float" use="required"/>
+							<xs:attribute name="talk_delay" type="xs:nonNegativeInteger" use="required"/>
+							<xs:attribute name="max_chase_time" type="xs:string"/>
+							<xs:attribute name="react_to_pathfind_fail" default="return_to_sp">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="return_to_sp"/>
+										<xs:enumeration value="pull_target"/>
+										<xs:enumeration value="abandon_target"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="move_type_return" type="xs:string" default="walk"/>
+							<xs:attribute name="move_speed_return" type="xs:nonNegativeInteger" default="150"/>
+							<xs:attribute name="decrease_sensory_range_return" type="xs:nonNegativeInteger" default="50"/>
+						</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

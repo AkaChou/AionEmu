@@ -46,6 +46,5 @@ public class PolymorphEffect extends TransformEffect {
 			((Player) effect.getEffected()).setAdminNeutral(0);
 		}
 		super.endEffect(effect, AbnormalState.NOFLY);
-		effect.getEffected().getTransformModel().setActive(false);
 	}
 }

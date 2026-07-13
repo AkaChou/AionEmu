@@ -37,7 +37,7 @@ public class BoostSkillCostEffect extends BuffEffect {
 
 			@Override
 			public void skilluse(Skill skill) {
-				skill.setBoostSkillCost(value);
+				skill.setBoostSkillCost(value + delta * effect.getSkillLevel());
 			}
 		};
 		effect.getEffected().getObserveController().addObserver(observer);

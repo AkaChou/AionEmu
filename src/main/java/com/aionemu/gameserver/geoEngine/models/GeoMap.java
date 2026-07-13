@@ -432,6 +432,10 @@ public class GeoMap extends Node {
 		return terrain != null && terrain.hasHeightmap();
 	}
 
+	public float getTerrainPathHeight(float x, float y) {
+		return terrain == null ? Float.NaN : terrain.getPathHeight(x, y);
+	}
+
 	/**
 	 * 是否存在地形材质图。
 	 * Whether terrain materials are present.

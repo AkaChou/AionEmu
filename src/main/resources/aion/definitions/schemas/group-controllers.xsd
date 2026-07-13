@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="group_controllers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="controller" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="world_id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:positiveInteger">
+                  <xs:maxInclusive value="6"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="area_1" type="xs:string" use="required"/>
+            <xs:attribute name="area_2" type="xs:string" use="required"/>
+            <xs:attribute name="race" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="pc_light"/>
+                  <xs:enumeration value="pc_dark"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="control_target_type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:nonNegativeInteger">
+                  <xs:maxInclusive value="4"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="exit_world_id" type="xs:positiveInteger"/>
+            <xs:attribute name="exit_world" type="xs:string"/>
+            <xs:attribute name="exit_alias" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

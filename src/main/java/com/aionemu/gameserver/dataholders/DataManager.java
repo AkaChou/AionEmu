@@ -71,6 +71,8 @@ public final class DataManager {
     public static InstanceCooltimeData INSTANCE_COOLTIME_DATA;
     public static DisassemblyItemSetsData DISASSEMBLY_ITEMS_DATA;
     public static AIData AI_DATA;
+    public static NpcPathBehaviorData NPC_PATH_BEHAVIOR_DATA;
+    public static RetailAiData RETAIL_AI_DATA;
     public static FlyPathData FLY_PATH;
     public static WindstreamData WINDSTREAM_DATA;
     public static ItemRestrictionCleanupData ITEM_CLEAN_UP;
@@ -252,6 +254,8 @@ public final class DataManager {
             INSTANCE_COOLTIME_DATA = data.instanceCooltimeData;
             DISASSEMBLY_ITEMS_DATA = data.disassemblyItemSetsData;
             AI_DATA = data.aiData;
+            NPC_PATH_BEHAVIOR_DATA = data.npcPathBehaviorData;
+            RETAIL_AI_DATA = data.retailAiData;
             FLY_PATH = data.flyPath;
             WINDSTREAM_DATA = data.windstreamsData;
             ASSEMBLED_NPC_DATA = data.assembledNpcData;
@@ -420,4 +424,3 @@ public final class DataManager {
         protected static final DataManager instance = new DataManager();
     }
 }
-

@@ -51,6 +51,11 @@ public class NpcDrop implements DropCalculator {
 			.toList();
 	}
 
+	/** 返回带 NPC 专属倍率的公共掉落组引用。 */
+	public List<CommonDropGroup> getCommonDropGroups() {
+		return commonDropGroup == null ? Collections.emptyList() : commonDropGroup;
+	}
+
 	/** Adds 掉落组 / Adds drop groups */
 	public void addDropGroups(List<DropGroup> groups) {
 		if (groups.isEmpty()) {
@@ -89,10 +94,17 @@ public class NpcDrop implements DropCalculator {
 	public static class CommonDropGroup {
 		@XmlAttribute(name = "name", required = true)
 		protected String name;
+		@XmlAttribute(name = "common_drop_adjustment")
+		protected int commonDropAdjustment = 100;
 
 		/** 获取名称。 / Returns the name. */
 		public String getName() {
 			return name;
+		}
+
+		/** 返回真端公共掉落倍率，100 表示 1 倍。 */
+		public int getCommonDropAdjustment() {
+			return commonDropAdjustment;
 		}
 	}
 }

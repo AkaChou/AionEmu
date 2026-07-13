@@ -57,23 +57,23 @@ public class ChargeInfo extends ActionObserver {
 		return newChargePoints;
 	}
 
-	/** 受攻击 / attacked. */
-	@Override
-	public void attacked(Creature creature) {
-		updateChargePoints(-defendBurn);
+	public void burn(int points) {
+		updateChargePoints(-points);
 		Player player = this.player;
 		if (player != null) {
 			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
 		}
 	}
 
+	/** 受攻击 / attacked. */
+	@Override
+	public void attacked(Creature creature) {
+		burn(defendBurn);
+	}
+
 	/** 攻击。 / Attack. */
 	@Override
 	public void attack(Creature creature) {
-		updateChargePoints(-attackBurn);
-		Player player = this.player;
-		if (player != null) {
-			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
-		}
+		burn(attackBurn);
 	}
 }

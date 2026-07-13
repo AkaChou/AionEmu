@@ -34,6 +34,10 @@ public class SummonHomingEffect extends SummonEffect {
 	protected int npcCount;
 	@XmlAttribute(name = "attack_count", required = true)
 	protected int attackCount;
+	@XmlAttribute(name = "attack_count_delta")
+	protected int attackCountDelta;
+	@XmlAttribute(name = "homing_id")
+	protected int homingId;
 	@XmlAttribute(name = "skill_id", required = false)
 	protected int skillId;
 
@@ -51,12 +55,22 @@ public class SummonHomingEffect extends SummonEffect {
 		int worldId = effector.getWorldId();
 		int instanceId = effector.getInstanceId();
 
-		for (int i = 0; i < npcCount; i++) {
+		int existingCount = 0;
+		if (homingId > 0) {
+			existingCount = (int) effector.getPosition().getWorldMapInstance().getNpcs().stream()
+					.filter(Homing.class::isInstance)
+					.map(Homing.class::cast)
+					.filter(homing -> homing.getCreator() == effector && homing.getHomingId() == homingId)
+					.count();
+		}
+		int spawnCount = Math.max(0, npcCount - existingCount);
+		int calculatedAttackCount = Math.min(254, attackCountDelta * effect.getSkillLevel() + attackCount);
+		for (int i = 0; i < spawnCount; i++) {
 			SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
-			final Homing homing = VisibleObjectSpawner.spawnHoming(spawn, instanceId, effector, attackCount,
-					effect.getSkillId(), effect.getSkillLevel());
+			final Homing homing = VisibleObjectSpawner.spawnHoming(spawn, instanceId, effector, homingId,
+					calculatedAttackCount, effect.getSkillId(), effect.getSkillLevel());
 
-			if (attackCount > 0) {
+			if (calculatedAttackCount > 0) {
 				ActionObserver observer = new ActionObserver(ObserverType.ATTACK) {
 
 					@Override
@@ -79,7 +93,7 @@ public class SummonHomingEffect extends SummonEffect {
 						homing.getController().onDelete();
 					}
 				}
-			}, 15 * 1000);
+			}, 15 * 1000L);
 			homing.getController().addTask(TaskId.DESPAWN, task);
 			homing.getAi2().onCreatureEvent(AIEventType.ATTACK, effect.getEffected());
 		}

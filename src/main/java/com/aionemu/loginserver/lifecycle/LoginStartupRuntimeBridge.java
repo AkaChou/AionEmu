@@ -16,6 +16,8 @@ import com.aionemu.loginserver.service.LoginTaskManagerServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.loginserver.service.LoginTransferServices;
 import com.aionemu.loginserver.service.PlayerTransferService;
+import com.aionemu.loginserver.service.VipService;
+import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.utils.DeadLockDetector;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +86,13 @@ public class LoginStartupRuntimeBridge {
     }
 
     /**
+     * Synchronize independent VIP data for accounts that do not have a row yet.
+     */
+    public void synchronizeVipAccounts() {
+        new VipService().syncMissingAccounts();
+    }
+
+    /**
      * 启动死锁检测器；嵌入式模式下仅记录，独立模式下触发重启退出。
      * Start the deadlock detector; embedded mode only records, standalone mode exits for restart.
      *
@@ -147,6 +156,8 @@ public class LoginStartupRuntimeBridge {
      */
     public void connectNetwork() {
         LoginNetworkServices.serverTransport().connect();
+        // China client VIP stage UI uses STS /Level/GetLevel, not the Aion game protocol.
+        StsVipServer.startIfEnabled();
     }
 
     /**

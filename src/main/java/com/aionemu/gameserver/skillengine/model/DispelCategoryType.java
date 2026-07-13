@@ -26,8 +26,12 @@ public enum DispelCategoryType {
 	NEVER,
 	/** NPC 增益 / NPC buff */
 	NPC_BUFF,
+	/** NPC 减益（物理或精神） / NPC debuff (physical or mental) */
+	NPC_DEBUFF,
 	/** NPC 物理减益 / NPC physical debuff */
 	NPC_DEBUFF_PHYSICAL,
+	/** NPC 精神减益 / NPC mental debuff */
+	NPC_DEBUFF_MENTAL,
 	/** 眩晕类 / Stun category */
 	STUN;
 }

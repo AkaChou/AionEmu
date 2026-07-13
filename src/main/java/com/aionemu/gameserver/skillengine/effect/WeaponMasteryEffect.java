@@ -37,13 +37,12 @@ public class WeaponMasteryEffect extends BuffEffect {
 		List<IStatFunction> masteryModifiers = new ArrayList<IStatFunction>(modifiers.size());
 		for (IStatFunction modifier : modifiers) {
 			if (weaponType.getRequiredSlots() == 2) {
-				masteryModifiers.add(new StatWeaponMasteryFunction(weaponType, modifier.getName(), modifier.getValue(),
-						modifier.isBonus()));
+				masteryModifiers.add(new StatWeaponMasteryFunction(effect, weaponType, modifier, modifier.getName()));
 			} else if (modifier.getName() == StatEnum.PHYSICAL_ATTACK) {
-				masteryModifiers.add(new StatWeaponMasteryFunction(weaponType, StatEnum.MAIN_HAND_POWER,
-						modifier.getValue(), modifier.isBonus()));
-				masteryModifiers.add(new StatWeaponMasteryFunction(weaponType, StatEnum.OFF_HAND_POWER,
-						modifier.getValue(), modifier.isBonus()));
+				masteryModifiers.add(new StatWeaponMasteryFunction(effect, weaponType, modifier, StatEnum.MAIN_HAND_POWER));
+				masteryModifiers.add(new StatWeaponMasteryFunction(effect, weaponType, modifier, StatEnum.OFF_HAND_POWER));
+			} else if (modifier.getName() == StatEnum.MAGICAL_ATTACK) {
+				masteryModifiers.add(new StatWeaponMasteryFunction(effect, weaponType, modifier, StatEnum.MAGICAL_ATTACK));
 			}
 		}
 		effect.getEffected().getGameStats().addEffect(effect, masteryModifiers);

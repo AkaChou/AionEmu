@@ -212,5 +212,12 @@
 			<spot x="435.272" y="473.595" z="163.186" entity_id="87"/>
 			<spot x="385.331" y="483.029" z="163.996" entity_id="63"/>
 		</spawn>
+		<spawn npc_id="206091" respawn_time="1">
+		  <spot x="463.370270" y="384.862793" z="165.78523" h="30"/>
+		</spawn>
+		<spawn npc_id="283080" respawn_time="1">
+		  <spot x="462.975586" y="365.529755" z="165.74628"/>
+		  <spot x="462.975586" y="418.350677" z="163.95732"/>
+		</spawn>
 	</spawn_map>
 </spawns>

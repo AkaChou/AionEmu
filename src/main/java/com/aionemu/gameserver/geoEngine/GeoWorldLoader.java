@@ -5,8 +5,11 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -21,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 import javax.imageio.ImageIO;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -167,14 +171,16 @@ public class GeoWorldLoader {
 	 * @throws IOException 读文件失败 / on I/O failure
 	 */
 	public static void loadWorldObjects(int worldId, Map<String, Spatial> models, GeoMap map, Set<String> missingMeshes) throws IOException {
-		File geoFile = Config.geoFile(GEO_DIR + worldId + ".geo");
-		if (!geoFile.exists()) {
+		File geoFile = Config.geoFile(GEO_DIR + worldId + ".geo.gz");
+		if (!geoFile.isFile()) {
+			geoFile = Config.geoFile(GEO_DIR + worldId + ".geo");
+		}
+		if (!geoFile.isFile()) {
 			return;
 		}
-		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
-			 FileChannel roChannel = raFile.getChannel();
-			 Arena arena = Arena.ofConfined()) {
-			ByteBuffer geo = mapReadOnly(roChannel, arena).order(ByteOrder.BIG_ENDIAN);
+		try (InputStream fileInput = new BufferedInputStream(new FileInputStream(geoFile));
+			 InputStream input = geoFile.getName().endsWith(".gz") ? new GZIPInputStream(fileInput) : fileInput) {
+			ByteBuffer geo = ByteBuffer.wrap(input.readAllBytes()).order(ByteOrder.BIG_ENDIAN);
 
 			while (geo.hasRemaining()) {
 				int nameLength = Short.toUnsignedInt(geo.getShort());

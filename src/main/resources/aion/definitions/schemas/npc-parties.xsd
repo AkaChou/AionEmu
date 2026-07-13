@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="npc_parties">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="world" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="party" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="npc" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+                        <xs:attribute name="x" type="xs:float" use="required"/>
+                        <xs:attribute name="y" type="xs:float" use="required"/>
+                        <xs:attribute name="z" type="xs:float" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="token" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+    <xs:key name="worldId">
+      <xs:selector xpath="world"/>
+      <xs:field xpath="@id"/>
+    </xs:key>
+    <xs:key name="partyToken">
+      <xs:selector xpath="world/party"/>
+      <xs:field xpath="@token"/>
+    </xs:key>
+  </xs:element>
+</xs:schema>

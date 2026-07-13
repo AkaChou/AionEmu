@@ -120,5 +120,8 @@
         <spawn npc_id="832003" respawn_time="295">
             <spot x="1538.8657" y="1384.1332" z="271.38977" h="24"/>
         </spawn>
+        <spawn npc_id="798708" respawn_time="60">
+          <spot x="1544.525879" y="1369.888916" z="271.40652" h="10"/>
+        </spawn>
 	</spawn_map>
 </spawns>

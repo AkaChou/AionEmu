@@ -876,6 +876,20 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             stopInstance(engulfedOphidanBridgeReward.getWinnerRaceByScore());
         }
     }
+
+	@Override
+	public boolean supportsRetailNpcScore(int npcId) {
+		return npcId == 833935 || npcId == 833936 || npcId == 833961;
+	}
+
+	@Override
+	public boolean onRetailNpcScore(Player player, Npc npc, int points) {
+		if (!supportsRetailNpcScore(npc.getNpcId())) {
+			return false;
+		}
+		updateScore(player, npc, points, false);
+		return true;
+	}
 	
 	/**
 	 * 玩家进入区域时处理。

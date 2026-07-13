@@ -275,7 +275,8 @@ public abstract class Creature extends VisibleObject {
 	 * @return 检查是否有禁用移动的异常效果。 / All abnormal effects are checked that disable movements
 	 */
 	public boolean canPerformMove() {
-		return !(getEffectController().isAbnormalState(AbnormalState.CANT_MOVE_STATE) || !isSpawned());
+		return !(getEffectController().isAbnormalState(AbnormalState.CANT_MOVE_STATE)
+				|| getTransformModel().isMoveDisabled() || !isSpawned());
 	}
 
 	/**
@@ -283,6 +284,7 @@ public abstract class Creature extends VisibleObject {
 	 */
 	public boolean canAttack() {
 		return !(getEffectController().isAbnormalState(AbnormalState.CANT_ATTACK_STATE) || isCasting()
+				|| getTransformModel().isAttackDisabled()
 				|| isInState(CreatureState.RESTING) || isInState(CreatureState.PRIVATE_SHOP));
 	}
 
@@ -624,6 +626,10 @@ public abstract class Creature extends VisibleObject {
 			return 0;
 		}
 		return skillCoolDowns.get(delayId);
+	}
+
+	public long getSkillCoolDownBase(int delayId) {
+		return skillCoolDownsBase == null ? 0 : skillCoolDownsBase.getOrDefault(delayId, 0L);
 	}
 
 	/**

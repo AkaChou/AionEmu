@@ -24,5 +24,8 @@
 	    <spawn npc_id="831573">
 	        <spot x="524.807556" y="565.477783" z="200.118851" h="0"/>
 		</spawn>
+	    <spawn npc_id="831747" respawn_time="1">
+	      <spot x="522.389526" y="571.335693" z="198.906" h="60"/>
+	    </spawn>
 	</spawn_map>
 </spawns>

@@ -66,6 +66,32 @@ LOCK TABLES `account_data` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `account_vip`
+--
+
+DROP TABLE IF EXISTS `account_vip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `account_vip` (
+  `account_id` int(11) NOT NULL,
+  `vip_level` tinyint(3) unsigned NOT NULL COMMENT 'Client VIP stage (1-6)',
+  `vip_exp` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'VIP progress experience',
+  PRIMARY KEY (`account_id`),
+  CONSTRAINT `FK_account_vip_account` FOREIGN KEY (`account_id`) REFERENCES `account_data` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `CHK_account_vip_level` CHECK (`vip_level` BETWEEN 1 AND 6)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `account_vip`
+--
+
+LOCK TABLES `account_vip` WRITE;
+/*!40000 ALTER TABLE `account_vip` DISABLE KEYS */;
+/*!40000 ALTER TABLE `account_vip` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `account_playtime`
 --
 

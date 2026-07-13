@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="npc_scores">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="npc_score" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="npc_id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="name_id" type="xs:string" use="required"/>
+            <xs:attribute name="type" use="required" fixed="NPC"/>
+            <xs:attribute name="score_apply_type" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="equalizing_score" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="value" type="xs:int" use="required"/>
+            <xs:attribute name="description" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

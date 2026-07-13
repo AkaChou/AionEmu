@@ -98,10 +98,15 @@ public class ThinkEventHandler {
 		if (mostHated != null && !mostHated.getLifeStats().isAlreadyDead()) {
 			npcAI.onCreatureEvent(AIEventType.TARGET_CHANGED, mostHated);
 		} else {
-			npc.getMoveController().recallPreviousStep();
+			npc.getMoveController().requestReturnToCurrentWaypoint();
 			npcAI.onGeneralEvent(AIEventType.ATTACK_FINISH);
-			npcAI.onGeneralEvent(npc.isAtSpawnLocation() ? AIEventType.BACK_HOME : AIEventType.NOT_AT_HOME);
+			npcAI.onGeneralEvent(shouldReturn(npc.getMoveController().isReturningToWaypoint(), npc.isAtSpawnLocation())
+					? AIEventType.NOT_AT_HOME : AIEventType.BACK_HOME);
 		}
+	}
+
+	static boolean shouldReturn(boolean returningToWaypoint, boolean atSpawn) {
+		return returningToWaypoint || !atSpawn;
 	}
 
 	/**

@@ -34,12 +34,6 @@ public class AttackEventHandler {
 		if (creature == null || creature.getLifeStats().isAlreadyDead()) {
 			return;
 		}
-		if (npcAI.isInState(AIState.RETURNING)) {
-			npcAI.getOwner().getMoveController().abortMove();
-			npcAI.setStateIfNot(AIState.IDLE);
-			npcAI.onGeneralEvent(AIEventType.NOT_AT_HOME);
-			return;
-		}
 		if (!npcAI.canThink()) {
 			return;
 		}
@@ -61,7 +55,7 @@ public class AttackEventHandler {
 	}
 
 	static boolean tryEnterFight(NpcAI2 npcAI) {
-		return npcAI.setStateIfNot(AIState.FIGHT);
+		return !npcAI.isInState(AIState.RETURNING) && npcAI.setStateIfNot(AIState.FIGHT);
 	}
 
 	/**
@@ -102,6 +96,8 @@ public class AttackEventHandler {
 			AI2Logger.info(npcAI, "onFinishAttack");
 		}
 		Npc npc = npcAI.getOwner();
+		npc.getMoveController().clearPathFailureContext();
+		npc.getMoveController().clearPathPullAttempts();
 		EmoteManager.emoteStopAttacking(npc);
 		npc.getLifeStats().startResting();
 		npc.getAggroList().clear();

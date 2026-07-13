@@ -743,6 +743,7 @@ CREATE TABLE `item_stones` (
   `category` int(2) NOT NULL DEFAULT '0',
   `polishNumber` int(11) DEFAULT NULL,
   `polishCharge` int(11) DEFAULT NULL,
+  `proc_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`item_unique_id`,`slot`,`category`),
   CONSTRAINT `item_stones_ibfk_1` FOREIGN KEY (`item_unique_id`) REFERENCES `inventory` (`item_unique_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2033,6 +2034,29 @@ CREATE TABLE `player_quests` (
 LOCK TABLES `player_quests` WRITE;
 /*!40000 ALTER TABLE `player_quests` DISABLE KEYS */;
 /*!40000 ALTER TABLE `player_quests` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `limited_quest_counters`
+--
+
+DROP TABLE IF EXISTS `limited_quest_counters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `limited_quest_counters` (
+  `quest_id` int(10) unsigned NOT NULL,
+  `remaining` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`quest_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `limited_quest_counters`
+--
+
+LOCK TABLES `limited_quest_counters` WRITE;
+/*!40000 ALTER TABLE `limited_quest_counters` DISABLE KEYS */;
+/*!40000 ALTER TABLE `limited_quest_counters` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

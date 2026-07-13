@@ -4,10 +4,15 @@ import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
-import com.aionemu.gameserver.ai2.manager.WalkManager;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
-import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
+import com.aionemu.gameserver.model.geometry.Point3D;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
+import com.aionemu.gameserver.skillengine.model.HealType;
+import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 返回出生点事件处理器，负责 NPC 不在家 / 回到家时的移动、重生与空闲恢复。
@@ -33,34 +38,29 @@ public class ReturningEventHandler {
 			if (npcAI.isLogging()) {
 				AI2Logger.info(npcAI, "returning and restoring");
 			}
+			npcAI.getOwner().getMoveController().beginHomeReturn();
 			EmoteManager.emoteStartReturning(npcAI.getOwner());
 		}
 		if (npcAI.isInState(AIState.RETURNING)) {
-			Npc npc = (Npc) npcAI.getOwner();
-			if (npc.hasWalkRoutes()) {
-				WalkManager.startWalking(npcAI);
-			}else if (npcAI.isMoveSupported() && npc.getDistanceToSpawnLocation() < 100) { //Arbitrary distance
-//					Point3D prevStep = npc.getMoveController().recallPreviousStep();
-//					npcAI.getOwner().getMoveController().moveToPoint(prevStep.getX(), prevStep.getY(), prevStep.getZ());
+			Npc npc = npcAI.getOwner();
+			var definition = DataManager.NPC_PATH_BEHAVIOR_DATA == null ? null
+					: DataManager.NPC_PATH_BEHAVIOR_DATA.get(npc.getNpcId());
+			if (definition == null || !"run".equalsIgnoreCase(definition.returnMoveType())) {
+				npc.setState(CreatureState.WALKING);
+			} else {
+				npc.unsetState(CreatureState.WALKING);
+			}
+			if (definition != null && "teleport".equalsIgnoreCase(definition.returnMoveType())) {
+				teleportHome(npc);
+				onBackHome(npcAI);
+				return;
+			}
+			if (npcAI.isMoveSupported()) {
 				npc.getMoveController().abortMove();
 				npc.getMoveController().moveToHome();
 			} else {
-				if (npc.isDeleteDelayed()) {
-					onBackHome(npcAI);
-				} else {
-					/*
-					 * The idea is the entity cannot move, but has been moved from its spawn...
-					 * so instead of moving it back to spawn (not possible), it should just
-					 * despawn and then respawn back at the original spawn point.
-					 *
-					 * Or, if the entity can move, but is too far away from spawn to worry about
-					 * moving back directly (which can happen since mob leashes have been removed).
-					 */
-					SpawnTemplate spawn = npc.getSpawn();
-					int instanceId = npc.getInstanceId();
-					npc.getController().onDelete();
-					SpawnEngine.spawnObject(spawn, instanceId);
-				}
+				teleportHome(npc);
+				onBackHome(npcAI);
 			}
 		}
 	}
@@ -76,11 +76,36 @@ public class ReturningEventHandler {
 			AI2Logger.info(npcAI, "onBackHome");
 		}
 //		npcAI.getOwner().getMoveController().clearBackSteps();
+		Npc npc = npcAI.getOwner();
+		boolean returnedToWaypoint = npc.getMoveController().isReturningToWaypoint();
+		boolean fullHeal = npc.getMoveController().consumeFullHealOnHomeReturn();
+		npc.getMoveController().clearHomeReturn();
+		if (fullHeal) {
+			int restoredHp = npc.getLifeStats().getMaxHp() - npc.getLifeStats().getCurrentHp();
+			npc.getLifeStats().setCurrentHpPercent(100);
+			if (restoredHp > 0) {
+				PacketSendUtility.broadcastPacketAndReceive(npc,
+						new SM_ATTACK_STATUS(npc, npc, SM_ATTACK_STATUS.TYPE.HP, 0, restoredHp));
+				npc.getObserveController().notifyLifeChangedObservers(HealType.HP, npc.getLifeStats().getCurrentHp());
+			}
+		}
+		npc.unsetState(CreatureState.WEAPON_EQUIPPED);
+		npc.getAggroList().clear();
+		if (!returnedToWaypoint) {
+			npc.setXYZH(null, null, null, npc.getSpawn().getHeading());
+		}
+		PacketSendUtility.broadcastPacket(npc, new SM_MOVE(npc));
 		if (npcAI.setStateIfNot(AIState.IDLE)) {
 			EmoteManager.emoteStartIdling(npcAI.getOwner());
 			ThinkEventHandler.thinkIdle(npcAI);
 		}
-		Npc npc = (Npc) npcAI.getOwner();
 		npc.getController().onReturnHome();
+	}
+
+	private static void teleportHome(Npc npc) {
+		Point3D target = npc.getMoveController().getHomeReturnDestination();
+		byte heading = npc.getMoveController().isReturningToWaypoint() ? npc.getHeading() : npc.getSpawn().getHeading();
+		npc.getMoveController().abortMove();
+		GameWorldBootstrapServices.world().updatePosition(npc, target.getX(), target.getY(), target.getZ(), heading);
 	}
 }

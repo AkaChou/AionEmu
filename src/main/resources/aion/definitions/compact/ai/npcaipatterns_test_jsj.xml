@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_test_jsj.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>TEST_MONSTER_JSJ_01</name><event_handlers><on_attacked><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>처음 5대 피격</comment><conditions><increase_intvar><intvar_indicator>INTVARI_FIRST</intvar_indicator><lower_bound>0</lower_bound><upper_bound>5</upper_bound><be_true_only_when_hit_the_bound>TRUE</be_true_only_when_hit_the_bound></increase_intvar></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>다음 5대 피격</comment><conditions><increase_intvar><intvar_indicator>INTVARI_FIRST</intvar_indicator><lower_bound>5</lower_bound><upper_bound>10</upper_bound><be_true_only_when_hit_the_bound>TRUE</be_true_only_when_hit_the_bound></increase_intvar><set_intvar_if_larger_than><intvar_indicator>INTVARI_FIRST</intvar_indicator><intvar_to_set>0</intvar_to_set><comparand>9</comparand></set_intvar_if_larger_than></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_attacked><on_die><pattern><priority>7</priority><action_category>DIRECT</action_category><comment>친구에게 한번만 살려달라고 메세지 보냄</comment><conditions><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><broadcast_message><message_type>50002</message_type><param1>0</param1><param2>0</param2><range_as_meter>100</range_as_meter><param_obj>OBJI_CUR_TARGET</param_obj></broadcast_message></actions></pattern></on_die><on_message><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>50001 메세지를 받으면!</comment><conditions><is_message><message_type>50001</message_type></is_message></conditions><actions><switch_target><target>OBJI_MESSAGE_PARAM</target><percent_to_add>0</percent_to_add><points_to_add>500</points_to_add></switch_target></actions></pattern><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>50003 메제시를 받으면!</comment><conditions><is_message><message_type>50003</message_type></is_message></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>5000</delay></add_battle_timer></actions></pattern></on_message><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>전투상황시작</comment><actions><broadcast_message><message_type>50001</message_type><param1>0</param1><param2>0</param2><range_as_meter>100</range_as_meter><param_obj>OBJI_CUR_TARGET</param_obj></broadcast_message><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>친구가 죽고 5초가 지났을때, 친구소환</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><spawn><spawn_id>SPAWN_ID_NONE</spawn_id><npc_nameid>TEST_MONSTER_JSJ_03</npc_nameid><num_to_spawn>1</num_to_spawn><spawn_location_type>SPAWN_LOCATION_MY_POINT</spawn_location_type><x>0</x><y>0</y><z>0</z><dir>0</dir><spawn_range>5</spawn_range><live_time>0</live_time><despawn_at_attack_state>TRUE</despawn_at_attack_state><is_aerial_spawn>FALSE</is_aerial_spawn><except_specialize>0</except_specialize><pathname/></spawn><broadcast_message><message_type>50001</message_type><param1>0</param1><param2>0</param2><range_as_meter>100</range_as_meter><param_obj>OBJI_CUR_TARGET</param_obj></broadcast_message></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>TEST_MONSTER_JSJ_02</name><event_handlers><on_see_user><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>PC가 천족이고,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+살성일때.</comment><conditions><is_race><from>OBJI_SEEN</from><race_type>pc_light</race_type></is_race><is_user_class><user>USERI_SEEN</user><class>CLASSI_ASSASSIN</class></is_user_class></conditions><actions><add_hate_point><target>OBJI_SEEN</target><point_to_add>100</point_to_add></add_hate_point></actions></pattern></on_see_user><on_attacked><pattern><priority>7</priority><action_category>INSTANT</action_category><comment>공격당하다가 HP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+가 60%이하가
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+되면,,</comment><conditions><is_hp_lower_than><who>OBJI_SELF</who><percent>60</percent></is_hp_lower_than><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_attacked><on_spelled><pattern><priority>7</priority><action_category>INSTANT</action_category><comment>공격당하다가 HP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+가 60%이하가
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+되면,,</comment><conditions><is_hp_lower_than><who>OBJI_SELF</who><percent>60</percent></is_hp_lower_than><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_spelled><on_die><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><spawn><spawn_id>SPAWN_ID_NONE</spawn_id><npc_nameid>Zombie_24_An</npc_nameid><num_to_spawn>1</num_to_spawn><spawn_location_type>SPAWN_LOCATION_MY_POINT</spawn_location_type><x>0</x><y>0</y><z>0</z><dir>0</dir><spawn_range>5</spawn_range><live_time>0</live_time><despawn_at_attack_state>TRUE</despawn_at_attack_state><is_aerial_spawn>FALSE</is_aerial_spawn><except_specialize>0</except_specialize><pathname/></spawn></actions></pattern></on_die><on_enter_attack_state><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>배틀타이머 시작</comment><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>6000</delay></add_battle_timer><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>16000</delay></add_battle_timer></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>배틀타이머 시작 후
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6초가 지나면!</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>배틀타이머 시작 후
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+매 10초간 공격스킬
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2 사용</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator></is_battle_timer_indicator></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill><add_battle_timer><btimer_indicator>BTIMERI_INDEX_1</btimer_indicator><delay>10000</delay></add_battle_timer></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>TEST_MONSTER_JSJ_03</name><event_handlers><on_attacked><pattern><priority>5</priority><action_category>PLANNED</action_category><comment>처음 5대 피격</comment><conditions><increase_intvar><intvar_indicator>INTVARI_FIRST</intvar_indicator><lower_bound>0</lower_bound><upper_bound>5</upper_bound><be_true_only_when_hit_the_bound>TRUE</be_true_only_when_hit_the_bound></increase_intvar></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_0</skill><skill_level>0</skill_level></use_skill></actions></pattern><pattern><priority>4</priority><action_category>PLANNED</action_category><comment>다음 5대 피격</comment><conditions><increase_intvar><intvar_indicator>INTVARI_FIRST</intvar_indicator><lower_bound>5</lower_bound><upper_bound>10</upper_bound><be_true_only_when_hit_the_bound>TRUE</be_true_only_when_hit_the_bound></increase_intvar><set_intvar_if_larger_than><intvar_indicator>INTVARI_FIRST</intvar_indicator><intvar_to_set>0</intvar_to_set><comparand>9</comparand></set_intvar_if_larger_than></conditions><actions><use_skill><target>OBJI_CUR_TARGET</target><skill>SKILLI_INDEX_1</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_attacked><on_die><pattern><priority>6</priority><action_category>DIRECT</action_category><comment>친구에게 한번만 살려달라고 메세지 보냄</comment><conditions><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><broadcast_message><message_type>50003</message_type><param1>0</param1><param2>0</param2><range_as_meter>100</range_as_meter><param_obj>OBJI_CUR_TARGET</param_obj></broadcast_message></actions></pattern></on_die><on_message><pattern><priority>8</priority><action_category>PLANNED</action_category><comment>50001 메세지를 받으면!</comment><conditions><is_message><message_type>50001</message_type></is_message></conditions><actions><switch_target><target>OBJI_MESSAGE_PARAM</target><percent_to_add>0</percent_to_add><points_to_add>500</points_to_add></switch_target></actions></pattern><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>50002 메세지를 받으면!</comment><conditions><is_message><message_type>50002</message_type></is_message></conditions><actions><add_battle_timer><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator><delay>5000</delay></add_battle_timer></actions></pattern></on_message><on_enter_attack_state><pattern><priority>3</priority><action_category>PLANNED</action_category><comment>전투상황시작</comment><actions><broadcast_message><message_type>50001</message_type><param1>0</param1><param2>0</param2><range_as_meter>10</range_as_meter><param_obj>OBJI_CUR_TARGET</param_obj></broadcast_message><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill></actions></pattern></on_enter_attack_state><on_battle_timer><pattern><priority>2</priority><action_category>PLANNED</action_category><comment>친구가 죽고 5초가 지났을때,</comment><conditions><is_battle_timer_indicator><btimer_indicator>BTIMERI_INDEX_0</btimer_indicator></is_battle_timer_indicator><set_flag_var><flagvar_indicator>FLAGVARI_ALPHA_1</flagvar_indicator></set_flag_var></conditions><actions><spawn><spawn_id>SPAWN_ID_NONE</spawn_id><npc_nameid>TEST_MONSTER_JSJ_01</npc_nameid><num_to_spawn>1</num_to_spawn><spawn_location_type>SPAWN_LOCATION_MY_POINT</spawn_location_type><x>0</x><y>0</y><z>0</z><dir>0</dir><spawn_range>5</spawn_range><live_time>0</live_time><despawn_at_attack_state>TRUE</despawn_at_attack_state><is_aerial_spawn>FALSE</is_aerial_spawn><except_specialize>0</except_specialize><pathname/></spawn><broadcast_message><message_type>50001</message_type><param1>0</param1><param2>0</param2><range_as_meter>100</range_as_meter><param_obj>OBJI_CUR_TARGET</param_obj></broadcast_message></actions></pattern></on_battle_timer></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

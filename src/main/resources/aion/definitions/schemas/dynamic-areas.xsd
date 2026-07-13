@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="dynamic_areas">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="area" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="world_id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="type" use="required">
+              <xs:simpleType><xs:restriction base="xs:string">
+                <xs:enumeration value="MOVING_COLLISION_JUMP"/>
+                <xs:enumeration value="MOVING_COLLISION_WINDBOX"/>
+              </xs:restriction></xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="ai_pattern" type="xs:boolean" use="required"/>
+            <xs:attribute name="start_time" use="required"><xs:simpleType><xs:restriction base="xs:nonNegativeInteger"><xs:maxInclusive value="23"/></xs:restriction></xs:simpleType></xs:attribute>
+            <xs:attribute name="end_time" use="required"><xs:simpleType><xs:restriction base="xs:nonNegativeInteger"><xs:maxInclusive value="23"/></xs:restriction></xs:simpleType></xs:attribute>
+            <xs:attribute name="life_time" type="xs:nonNegativeInteger" use="required"/>
+            <xs:attribute name="always_enabled" type="xs:boolean" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

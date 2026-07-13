@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.restrictions;
 
+import com.aionemu.gameserver.ai.RetailAreaEngine;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.actions.PlayerMode;
@@ -67,6 +68,12 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			}
 		}
 		if (skill.getSkillTemplate().hasRecallInstant()) {
+			if (target instanceof Player targetPlayer && RetailAreaEngine.isNoRecall(targetPlayer)) {
+				return false;
+			}
+			if (((Creature) target).getTransformModel().isRecallDisabled()) {
+				return false;
+			}
 			if (player.getController().isInCombat() || ((Player) target).getController().isInCombat()) {
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_Recall_CANNOT_ACCEPT_EFFECT(target.getName()));
@@ -120,6 +127,15 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	public boolean canUseSkill(Player player, Skill skill) {
 		VisibleObject target = player.getTarget();
 		SkillTemplate template = skill.getSkillTemplate();
+		if (RetailAreaEngine.isNoRecall(player) && template.getEffects() != null
+				&& (template.hasRecallInstant() || template.getEffects().isEffectTypePresent(EffectType.RETURN)
+					|| template.getEffects().isEffectTypePresent(EffectType.RETURNPOINT))) {
+			return false;
+		}
+		if (player.getTransformModel().isSkillDisabled()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CAN_NOT_CAST_IN_SHAPECHANGE);
+			return false;
+		}
 		if (!checkFly(player, target)) {
 			return false;
 		}
@@ -135,7 +151,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_TOO_HEAVY_TO_ATTACK);
 			return false;
 		}
-		if (!player.canAttack() && !template.hasEvadeEffect()) {
+		if ((player.getEffectController().isAbnormalState(AbnormalState.CANT_ATTACK_STATE)
+				|| player.isInState(CreatureState.RESTING) || player.isInState(CreatureState.PRIVATE_SHOP))
+				&& !template.hasEvadeEffect()) {
 			return false;
 		}
 		if ((template.getType() == SkillType.MAGICAL)
@@ -150,10 +168,6 @@ public class PlayerRestrictions extends AbstractRestrictions {
 			return false;
 		}
 		if (player.isSkillDisabled(template)) {
-			return false;
-		}
-		if (player.getTransformModel().isActive() && player.getTransformModel().getType() == TransformType.NONE) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CAN_NOT_CAST_IN_SHAPECHANGE);
 			return false;
 		}
 		if (template.hasResurrectEffect()) {
@@ -376,6 +390,9 @@ public class PlayerRestrictions extends AbstractRestrictions {
 		if (target == null) {
 			return false;
 		}
+		if (player.getTransformModel().isAttackDisabled()) {
+			return false;
+		}
 		if (!checkFly(player, target)) {
 			return false;
 		}
@@ -492,6 +509,10 @@ public class PlayerRestrictions extends AbstractRestrictions {
 	@Override
 	public boolean canUseItem(Player player, Item item) {
 		if (player == null || !player.isOnline()) {
+			return false;
+		}
+		if (player.getTransformModel().isItemDisabled()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CAN_NOT_USE_ITEM_WHILE_IN_ABNORMAL_STATE);
 			return false;
 		}
 		if (player.getEffectController().isAbnormalState(AbnormalState.CANT_ATTACK_STATE)) {

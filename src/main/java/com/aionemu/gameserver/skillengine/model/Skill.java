@@ -14,6 +14,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -107,6 +108,8 @@ public class Skill {
 	private int serverTime;// time when effect is applied
 	private String chainCategory = null;
 	private volatile boolean isMultiCast = false;
+	private List<Creature> preselectedTargets;
+	private boolean broadcastToPreselectedTargets;
 
 	public enum SkillMethod {
 		CAST, ITEM, PASSIVE, PROVOKED;
@@ -171,8 +174,20 @@ public class Skill {
 	 * whether usable
 	 */
 	public boolean canUseSkill() {
+		if (skillTemplate.isStanceUsable()
+				&& (!(effector instanceof Player player) || player.getController().getStanceType() != 2)) {
+			return false;
+		}
+		if (skillTemplate.isUltraTransfer()) {
+			if (!(effector instanceof Player source) || !(firstTarget instanceof Player target)
+					|| source.getPlayerClass() != target.getPlayerClass() || target.getCastingSkill() == null
+					|| !target.getCastingSkill().getSkillTemplate().isUltraSkill()) {
+				return false;
+			}
+		}
 		Properties properties = skillTemplate.getProperties();
-		if (properties != null && !properties.validate(this)) {
+		if (properties != null && !(preselectedTargets == null
+				? properties.validate(this) : properties.validatePreselectedTargets(this))) {
 			log.debug("properties failed");
 			return false;
 		}
@@ -239,6 +254,18 @@ public class Skill {
 	}
 
 	/**
+	 * 对外部区域预选的目标执行技能；技能模板仍负责关系、物种、状态与效果判定。
+	 */
+	public boolean useSkillOnPreselectedTargets(Collection<? extends Creature> targets, boolean broadcastToTargets) {
+		preselectedTargets = List.copyOf(targets);
+		broadcastToPreselectedTargets = broadcastToTargets;
+		effectedList.clear();
+		effectedList.addAll(preselectedTargets);
+		firstTarget = effectedList.isEmpty() ? effector : effectedList.getFirst();
+		return useSkill();
+	}
+
+	/**
 	 * 使用技能（无动画）。
 	 * Uses the skill without animation.
 	 *
@@ -298,7 +325,7 @@ public class Skill {
 			this.setCooldowns();
 		}
 		// 发送数据包以开始施法 / send packets to start casting
-		if (skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) {
+		if ((skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) && preselectedTargets == null) {
 			startCast();
 			if (effector instanceof Npc) {
 				((NpcAI2) ((Npc) effector).getAi2()).setSubStateIfNot(AISubState.CAST);
@@ -312,7 +339,9 @@ public class Skill {
 				this.duration += charge.getTime();
 			}
 		}
-		if (this.duration > 0) {
+		if (preselectedTargets != null) {
+			endCast();
+		} else if (this.duration > 0) {
 			schedule(this.duration);
 		} else {
 			endCast();
@@ -321,7 +350,9 @@ public class Skill {
 	}
 
 	private void setCooldowns() {
-		int cooldown = effector.getSkillCooldown(skillTemplate);
+		int cooldown = chainCategory == null && skillTemplate.getNonchainedCooldown() > 0
+				? Math.max(1, Math.ceilDiv(skillTemplate.getNonchainedCooldown(), 100))
+				: effector.getSkillCooldown(skillTemplate);
 		if (cooldown != 0) {
 			cooldown = StigmaEnchantCoolDown(this, cooldown);
 			effector.setSkillCoolDown(skillTemplate.getDelayId(), cooldown * 100 + this.duration + System.currentTimeMillis());
@@ -342,6 +373,9 @@ public class Skill {
 			return 0;
 		}
 		int SkillLevel = skill.getSkillLevel();
+		if (skill.getSkillTemplate().getCooldownDelta() != 0) {
+			return Math.max(0, cooldown + skill.getSkillTemplate().getCooldownDelta() * SkillLevel);
+		}
 		switch (skill.getSkillId()) {
 		case 564: // Dauntless Spirit
 		case 565: // Dauntless Spirit
@@ -1177,6 +1211,9 @@ public class Skill {
 			return;
 		}
 		GameEngineServices.skillEngine().applyEffectDirectly(penaltySkill, firstTarget, effector, 0);
+		if (skillTemplate.isPenaltySkillMessage() && effector instanceof Player player) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_PENALTY_TITLE);
+		}
 	}
 
 	/**
@@ -1278,7 +1315,8 @@ public class Skill {
 
 		// 检查目标是否超出技能范围 / Check if target is out of skill range
 		Properties properties = skillTemplate.getProperties();
-		if (properties != null && !properties.endCastValidate(this)) {
+		if (properties != null && !(preselectedTargets == null
+				? properties.endCastValidate(this) : properties.validatePreselectedTargets(this))) {
 			effector.getController().cancelCurrentSkill();
 			return;
 		}
@@ -1291,6 +1329,11 @@ public class Skill {
 		if (!preUsageCheck()) {
 			return;
 		}
+		for (Creature effected : effectedList) {
+			if (effected instanceof Npc npc) {
+				npc.getAi2().onCasted(effector, skillTemplate.getSkillId(), skillLevel);
+			}
+		}
 		if (skillMethod == SkillMethod.CAST && effector instanceof Player
 				&& !GameEventBootstrapServices.minionService().consumeMinionSkillPoints((Player) effector, skillTemplate.getSkillId())) {
 			effector.setCasting(null);
@@ -1298,7 +1341,7 @@ public class Skill {
 		}
 		effector.setCasting(null);
 
-		if (this.getSkillTemplate().isDeityAvatar() && effector instanceof Player) {
+		if (this.getSkillTemplate().isBroadcastUseMessage() && effector instanceof Player) {
 			AbyssService.rankerSkillAnnounce((Player) effector, this.getSkillTemplate().getNameId());
 		}
 
@@ -1356,16 +1399,29 @@ public class Skill {
 					blockAOESpread = true;
 				}
 
-				if (effect.getAttackStatus() == AttackStatus.RESIST || effect.getAttackStatus() == AttackStatus.DODGE) {
-					resistCount++;
+					if (effect.getAttackStatus() == AttackStatus.RESIST || effect.getAttackStatus() == AttackStatus.DODGE) {
+						resistCount++;
+					}
 				}
-			}
+			if (!effects.isEmpty() && skillTemplate.getHostileType() != HostileType.NONE) {
+					if (skillTemplate.getType() == SkillType.PHYSICAL) {
+						effector.getObserveController().consumeAlwaysHit();
+					} else if (skillTemplate.getType() == SkillType.MAGICAL) {
+						effector.getObserveController().consumeAlwaysNoResist();
+					}
+				}
 
-			if (!effectedList.isEmpty()) {
+				if (!effectedList.isEmpty()) {
 				if (resistCount == effectedList.size()) {
 					blockedChain = true;
 					blockedPenaltySkill = true;
 				}
+			}
+			if (skillTemplate.isMaintain() && skillTemplate.getMaxMaintainCount() > 0) {
+				List<Effect> successfulEffects = effects.stream()
+						.filter(effect -> !effect.getSuccessEffect().isEmpty()).toList();
+				effector.getEffectController().registerMaintainEffects(successfulEffects,
+						skillTemplate.getMaxMaintainCount());
 			}
 
 			// 点对点技能例外（如冰面） / exception for point point skills(example Ice Sheet)
@@ -1382,11 +1438,11 @@ public class Skill {
 
 		if (effector instanceof Player && skillMethod == SkillMethod.CAST) {
 			Player playerEffector = (Player) effector;
-			if (playerEffector.getController().isUnderStance()) {
+			if (playerEffector.getController().isUnderStance() && !skillTemplate.isStanceUsable()) {
 				playerEffector.getController().stopStance();
 			}
 			if (skillTemplate.isStance() && !blockedStance) {
-				playerEffector.getController().startStance(skillTemplate.getSkillId());
+				playerEffector.getController().startStance(skillTemplate.getSkillId(), skillTemplate.getStanceType());
 			}
 		}
 
@@ -1457,11 +1513,34 @@ public class Skill {
 	 * effects
 	 */
 	public void applyEffect(List<Effect> effects) {
+		Creature eventTarget = null;
 		/**
 	 * Apply effects to effected objects
 	 */
 		for (Effect effect : effects) {
 			effect.applyEffect();
+			if (isFullyDodgedNpc(effect)) {
+				Npc npc = (Npc) effect.getEffected();
+				npc.getAggroList().addDamage(effector, 0, effect.getAttackStatus());
+			}
+			if (!effect.getSuccessEffect().isEmpty()) {
+				Creature effected = effect.getEffected();
+				if (eventTarget == null) {
+					eventTarget = effected;
+				}
+				if (effected instanceof Npc npc) {
+					npc.getAi2().onSpelled(effector, skillTemplate.getSkillId(), skillLevel);
+				}
+				effected.getKnownList().doOnAllNpcs(observer -> {
+					observer.getAi2().onSeeSkill(effector, effected, skillTemplate.getSkillId(), skillLevel);
+					observer.getAi2().onFriendSpelled(effector, effected, skillTemplate.getSkillId(), skillLevel);
+				});
+			}
+		}
+		if (eventTarget != null) {
+			Creature target = eventTarget;
+			effector.getKnownList().doOnAllNpcs(observer ->
+				observer.getAi2().onSeeSpell(effector, target, skillTemplate.getSkillId(), skillLevel));
 		}
 
 		/**
@@ -1470,6 +1549,11 @@ public class Skill {
 		if (!blockedPenaltySkill) {
 			startPenaltySkill();
 		}
+	}
+
+	static boolean isFullyDodgedNpc(Effect effect) {
+		return effect.getSuccessEffect().isEmpty() && effect.getEffected() instanceof Npc
+			&& AttackStatus.getBaseStatus(effect.getAttackStatus()) == AttackStatus.DODGE;
 	}
 
 	/**
@@ -1481,7 +1565,8 @@ public class Skill {
 		if (skillMethod == SkillMethod.CAST) {
 			switch (targetType) {
 			case 0: // PlayerObjectId as Target
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, skillskinId));
+				broadcastCastResult(new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus,
+					dashStatus, skillskinId));
 				break;
 
 			case 4:
@@ -1501,6 +1586,18 @@ public class Skill {
 			PacketSendUtility.broadcastPacketAndReceive(effector, new SM_ITEM_USAGE_ANIMATION(effector.getObjectId(), firstTarget.getObjectId(), (this.itemObjectId == 0 ? 0 : this.itemObjectId), itemTemplate.getTemplateId(), 0, 1, 0));
 			if (effector instanceof Player) {
 				PacketSendUtility.sendPacket((Player) effector, SM_SYSTEM_MESSAGE.STR_USE_ITEM(new DescriptionId(getItemTemplate().getNameId())));
+			}
+		}
+	}
+
+	private void broadcastCastResult(SM_CASTSPELL_RESULT packet) {
+		if (preselectedTargets == null || !broadcastToPreselectedTargets) {
+			PacketSendUtility.broadcastPacketAndReceive(effector, packet);
+			return;
+		}
+		for (Creature target : preselectedTargets) {
+			if (target instanceof Player player && player.isOnline()) {
+				PacketSendUtility.sendPacket(player, packet);
 			}
 		}
 	}
@@ -1863,6 +1960,9 @@ public class Skill {
 		if (skillMethod != SkillMethod.CAST) {
 			return true;
 		}
+		if (!skillTemplate.isApplyCastingTimeBonus()) {
+			return true;
+		}
 		switch (this.getSkillId()) {
 		case 17: // Sleep: Scarecrow
 		case 18: // Sleep: Frightcorn
@@ -1959,7 +2059,7 @@ public class Skill {
 					return false;
 				}
 			}
-			return GameWorldServices.geoService().canSee(getFirstTarget(), object);
+			return GameWorldServices.geoService().canSeeSkill(getFirstTarget(), object, skillTemplate.getObstacle());
 		}
 		return true;
 	}

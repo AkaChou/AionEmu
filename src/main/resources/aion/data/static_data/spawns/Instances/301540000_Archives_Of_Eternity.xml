@@ -785,5 +785,17 @@
 			<spot x="435.37366" y="352.33032" z="469.06445" entity_id="626"/>
 			<spot x="578.33746" y="352.38580" z="468.73813" entity_id="627"/>
 		</spawn>
+		<spawn npc_id="206535" respawn_time="1">
+		  <spot x="723.700623" y="512.148132" z="469.0264"/>
+		</spawn>
+		<spawn npc_id="247518" respawn_time="1">
+		  <spot x="730.568909" y="514.380493" z="469.08374"/>
+		</spawn>
+		<spawn npc_id="702900" respawn_time="1">
+		  <spot x="727.075623" y="512.148132" z="469.0534"/>
+		</spawn>
+		<spawn npc_id="703141" respawn_time="1">
+		  <spot x="727.075623" y="508.148132" z="469.04703"/>
+		</spawn>
     </spawn_map>
 </spawns>

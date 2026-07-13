@@ -23,6 +23,7 @@ import com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HitType;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.CalculationType;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
@@ -292,6 +293,19 @@ public class AttackUtil {
 		return damage * getRandomDamagePercent(randomDamageType, Rnd.get(20)) / 100f;
 	}
 
+	private static float applyDistanceAttenuation(Effect effect, float damage) {
+		SkillTemplate template = effect.getSkillTemplate();
+		if (!template.hasDamageAttenuation() || template.getProperties() == null) {
+			return damage;
+		}
+		float range = template.getProperties().getFirstTargetRange();
+		if (template.getProperties().isAddWeaponRange()) {
+			range += effect.getEffector().getGameStats().getAttackRange().getCurrent() / 1000f;
+		}
+		return MathUtil.getDistance(effect.getEffector(), effect.getEffected()) > Math.max(1, range) * 0.4f
+				? damage * 0.5f : damage;
+	}
+
 	static int getRandomDamagePercent(int randomDamageType, int range) {
 		switch (randomDamageType) {
 		case 1:
@@ -498,6 +512,13 @@ public class AttackUtil {
 	public static void calculateSkillResult(Effect effect, int skillDamage, ActionModifier modifier, Func func,
 			int randomDamage, int accMod, int criticalProb, int critAddDmg, boolean cannotMiss, boolean shared,
 			boolean ignoreShield, boolean isMainHand) {
+		calculateSkillResult(effect, skillDamage, modifier, func, 0, 0, randomDamage, accMod, criticalProb,
+				critAddDmg, cannotMiss, shared, ignoreShield, isMainHand);
+	}
+
+	public static void calculateSkillResult(Effect effect, int skillDamage, ActionModifier modifier, Func func,
+			int flatDamage, int percentDamage, int randomDamage, int accMod, int criticalProb, int critAddDmg,
+			boolean cannotMiss, boolean shared, boolean ignoreShield, boolean isMainHand) {
 		Creature effector = effect.getEffector();
 		Creature effected = effect.getEffected();
 
@@ -554,6 +575,7 @@ public class AttackUtil {
 				break;
 			}
 		}
+		damage += flatDamage + baseAttack * percentDamage / 100f;
 
 		// 添加额外伤害 / add bonus damage
 		if (modifier != null) {
@@ -570,8 +592,9 @@ public class AttackUtil {
 			}
 		}
 
+		int damageBonus = effector.getObserveController().getPhysicalSkillDamageBonus();
 		float damageMultiplier = effector.getObserveController().getBasePhysicalDamageMultiplier(true);
-		damage = Math.round(damage * damageMultiplier);
+		damage = Math.round(damage * damageMultiplier) + damageBonus;
 
 		// 眩晕射击等技能的随机伤害实现 / implementation of random damage for skills like Stunning Shot, etc
 		if (randomDamage > 0) {
@@ -591,6 +614,7 @@ public class AttackUtil {
 						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
 			}
 		}
+		damage = applyDistanceAttenuation(effect, damage);
 
 		float pDef = effected.getGameStats().getPDef().getBonus() + StatFunctions.getMovementModifier(effected,
 				StatEnum.PHYSICAL_DEFENSE, effected.getGameStats().getPDef().getBase());
@@ -644,6 +668,7 @@ public class AttackUtil {
 	 */
 	private static void calculateEffectResult(Effect effect, Creature effected, int damage, AttackStatus status,
 			HitType hitType, boolean ignoreShield) {
+		damage = applyExclusiveSkillReduction(effect, damage);
 		AttackResult attackResult = new AttackResult(damage, status, hitType);
 
 		if (!ignoreShield) {
@@ -663,6 +688,16 @@ public class AttackUtil {
 		effect.setShieldDefense(attackResult.getShieldType());
 	}
 
+	private static int applyExclusiveSkillReduction(Effect effect, int damage) {
+		SkillTemplate template = effect.getSkillTemplate();
+		if (!(effect.getEffected() instanceof Player player) || template.getExclusiveAttribute() == null
+				|| DataManager.SKILL_DATA == null) {
+			return damage;
+		}
+		return DataManager.SKILL_DATA.applyExclusiveSkillReduction(damage,
+			player.getEquipment().getEquippedItemIds(), template.getExclusiveAttribute());
+	}
+
 	/**
 	 * 计算持续魔法技能（DoT）的单次伤害。
 	 * Calculates a single tick of magical over-time (DoT) skill damage.
@@ -677,14 +712,16 @@ public class AttackUtil {
 	 * tick damage
 	 */
 	public static int calculateMagicalOverTimeSkillResult(Effect effect, int skillDamage, SkillElement element,
-			int position, boolean useMagicBoost, int criticalProb, int critAddDmg) {
+			int position, boolean useMagicBoost, boolean useMagicalDefense, int criticalProb, int critAddDmg) {
 		Creature effector = effect.getEffector();
 		Creature effected = effect.getEffected();
 
+		int oneTimeDamageBonus = effector.getObserveController().getMagicalSkillDamageBonus();
 		float damageMultiplier = effector.getObserveController().getBaseMagicalDamageMultiplier();
 
-		int damage = Math.round(StatFunctions.calculateMagicalSkillDamage(effect.getEffector(), effect.getEffected(),
-				skillDamage, 0, element, useMagicBoost, false, false, effect.getSkillTemplate().getPvpDamage())
+		int damage = oneTimeDamageBonus + Math.round(StatFunctions.calculateMagicalSkillDamage(effect.getEffector(), effect.getEffected(),
+				skillDamage, 0, element, useMagicBoost, false, false, useMagicalDefense,
+				effect.getSkillTemplate().getPvpDamage())
 				* damageMultiplier);
 
 		AttackStatus status = effect.getAttackStatus();
@@ -720,7 +757,7 @@ public class AttackUtil {
 		if (effected instanceof Npc) {
 			damage = effected.getAi2().modifyDamage(damage);
 		}
-		return damage;
+		return applyExclusiveSkillReduction(effect, damage);
 	}
 
 	/**
@@ -758,9 +795,17 @@ public class AttackUtil {
 	public static void calculateMagicalSkillResult(Effect effect, int skillDamage, ActionModifier modifier,
 			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce, Func func,
 			int criticalProb, int critAddDmg, boolean shared, boolean ignoreShield) {
+		calculateMagicalSkillResult(effect, skillDamage, modifier, element, useMagicBoost, useKnowledge, noReduce,
+				func, 0, 0, criticalProb, critAddDmg, shared, ignoreShield);
+	}
+
+	public static void calculateMagicalSkillResult(Effect effect, int skillDamage, ActionModifier modifier,
+			SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce, Func func,
+			int flatDamage, int percentDamage, int criticalProb, int critAddDmg, boolean shared, boolean ignoreShield) {
 		Creature effector = effect.getEffector();
 		Creature effected = effect.getEffected();
 
+		int oneTimeDamageBonus = effector.getObserveController().getMagicalSkillDamageBonus();
 		float damageMultiplier = effector.getObserveController().getBaseMagicalDamageMultiplier();
 		int baseAttack = effector.getGameStats().getMainHandPAttack().getBase(); // Npc spells scale with this
 		int damages = 0;
@@ -771,6 +816,9 @@ public class AttackUtil {
 		} else {
 			damages = skillDamage;
 		}
+		damages += flatDamage;
+		damages += effector instanceof Npc ? Math.round(baseAttack * percentDamage / 100f) : percentDamage;
+		damages = Math.round(applyDistanceAttenuation(effect, damages));
 
 		// 添加额外伤害 / add bonus damage
 		if (modifier != null) {
@@ -787,9 +835,10 @@ public class AttackUtil {
 				break;
 			}
 		}
-		int damage = Math
+		int damage = oneTimeDamageBonus + Math
 				.round(StatFunctions.calculateMagicalSkillDamage(effect.getEffector(), effect.getEffected(), damages,
-						bonus, element, useMagicBoost, useKnowledge, noReduce, effect.getSkillTemplate().getPvpDamage())
+						bonus, element, useMagicBoost, useKnowledge, noReduce, true,
+						effect.getSkillTemplate().getPvpDamage())
 						* damageMultiplier);
 
 		AttackStatus status = calculateMagicalStatus(effector, effected, criticalProb, true, effect.getSkillTemplate().isMcritApplied());
@@ -857,8 +906,10 @@ public class AttackUtil {
 	public static AttackStatus calculatePhysicalStatus(Creature attacker, Creature attacked, boolean isMainHand,
 			int accMod, int criticalProb, boolean isSkill, boolean cannotMiss) {
 		AttackStatus status = AttackStatus.NORMALHIT;
+		boolean alwaysHit = isSkill ? attacker.getObserveController().hasAlwaysHit()
+				: attacker.getObserveController().consumeAlwaysHit();
 
-		if (!cannotMiss) { // Parry can only be done with weapon, blocking - with a shield. These
+		if (!cannotMiss && !alwaysHit) { // Parry can only be done with weapon, blocking - with a shield. These
 							// 限制不适用于 NPC。正式服 NPC 不需要护盾或武器即可 / limitations don't apply to npc. Retail npc don't need a shield or weapon to
 							// 格挡/招架 / block/parry
 			if (!isSkill && StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod)) {
@@ -874,7 +925,7 @@ public class AttackUtil {
 			} else if (attacked instanceof Npc && StatFunctions.calculatePhysicalParryRate(attacker, attacked, accMod)) {
 				status = AttackStatus.PARRY;
 			}
-		} else {
+		} else if (!alwaysHit) {
 			/**
 			 * AlwaysParry / AlwaysBlock。
 	 * Check AlwaysDodge, AlwaysParry, AlwaysBlock
@@ -933,7 +984,9 @@ public class AttackUtil {
 	 */
 	public static AttackStatus calculateMagicalStatus(Creature attacker, Creature attacked, int criticalProb,
 			boolean isSkill, boolean applyMcrit) {
-		if (!isSkill) {
+		boolean alwaysNoResist = isSkill ? attacker.getObserveController().hasAlwaysNoResist()
+				: attacker.getObserveController().consumeAlwaysNoResist();
+		if (!alwaysNoResist && !isSkill) {
 			if (Rnd.get(0, 1000) < StatFunctions.calculateMagicalResistRate(attacker, attacked, 0, SkillElement.NONE)) {
 				return AttackStatus.RESIST;
 			}

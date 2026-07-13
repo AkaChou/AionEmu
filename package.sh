@@ -26,6 +26,10 @@ if [ ! -d "$RESOURCE_AION_DIR/geo" ]; then
   echo "Missing $RESOURCE_AION_DIR/geo"
   exit 1
 fi
+if ! find "$RESOURCE_AION_DIR/geo/path" -name '*.path.gz' -print -quit 2>/dev/null | grep -q .; then
+  echo "Missing compressed PATH data in $RESOURCE_AION_DIR/geo/path"
+  exit 1
+fi
 
 while IFS= read -r -d '' source_file; do
   rel_path="${source_file#"$RESOURCE_AION_DIR/"}"

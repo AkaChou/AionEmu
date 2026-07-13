@@ -37,10 +37,10 @@ public class FpAttackEffect extends AbstractOverTimeEffect {
 	public void onPeriodicAction(Effect effect) {
 		Player effected = (Player) effect.getEffected();
 		int maxFP = effected.getLifeStats().getMaxFp();
-		int newValue = value;
+		int newValue = calculateValue(effect.getSkillLevel());
 		// 支持百分比数值 / Support for values in percentage
 		if (percent) {
-			newValue = (int) ((maxFP * value) / 100);
+			newValue = maxFP * newValue / 100;
 		}
 		effected.getLifeStats().reduceFp(newValue);
 	}

@@ -27,6 +27,7 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	private long lastSkillTime = 0;
 	private long nextSkillTime = 0;
 	private long fightStartingTime = 0;
+	private long lastSpawnPointChaseCheck;
 	private int cachedState;
 	private Stat2 cachedSpeedStat;
 	private long lastGeoZUpdate;
@@ -324,6 +325,10 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 		return Math.round((System.currentTimeMillis() - lastAttackTime) / 1000f);
 	}
 
+	public long getLastAttackTime() {
+		return lastAttackTime;
+	}
+
 	/** 返回 last attacked time delta / Returns the last attacked time delta */
 	public int getLastAttackedTimeDelta() {
 		return Math.round((System.currentTimeMillis() - lastAttackedTime) / 1000f);
@@ -349,11 +354,20 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	/** 设置 fight starting time / Sets the fight starting time */
 	public void setFightStartingTime() {
 		this.fightStartingTime = System.currentTimeMillis();
+		this.lastSpawnPointChaseCheck = 0;
 	}
 
 	/** 返回 fight starting time / Returns the fight starting time */
 	public long getFightStartingTime() {
 		return this.fightStartingTime;
+	}
+
+	public long getLastSpawnPointChaseCheck() {
+		return lastSpawnPointChaseCheck;
+	}
+
+	public void setLastSpawnPointChaseCheck(long time) {
+		lastSpawnPointChaseCheck = time;
 	}
 
 	/** 设置 next attack time / Sets the next attack time */

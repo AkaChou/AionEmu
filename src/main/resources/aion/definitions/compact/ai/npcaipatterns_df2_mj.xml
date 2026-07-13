@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_df2_mj.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>DF2_Teleport_v40_1</name><event_handlers><on_talked_by_user><pattern><priority>7</priority><action_category>PLANNED</action_category><comment>안개갈기부락입구 텔레포트</comment><actions><teleport_target_alias><target>OBJI_TALKER</target><alias>DF2_Teleport_1</alias><showfx>TRUE</showfx></teleport_target_alias></actions></pattern></on_talked_by_user></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.dataholders;
 
 import com.aionemu.boot.i18n.I18n;
-import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -20,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @XmlAccessorType(XmlAccessType.NONE)
 @Slf4j
 public class StaticData {
+	public NpcPathBehaviorData npcPathBehaviorData;
+	public RetailAiData retailAiData;
 	@XmlElement(name = "world_maps")
 	public WorldMapsData worldMapsData;
 	@XmlElement(name = "npc_trade_list")
@@ -288,11 +289,10 @@ public class StaticData {
 	public SkillSkinData skillSkinData;
 
 	/**
-	 * JAXB 反序列化完成后，按配置输出各分区加载数量摘要日志。
-	 * After JAXB unmarshalling, logs a size summary for each loaded section when enabled.
+	 * 全部静态定义加载完成后，按配置输出各分区加载数量摘要日志。
+	 * Logs a size summary after all static definitions have been loaded when enabled.
 	 */
-	@SuppressWarnings("unused")
-	private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+	public void logSummary() {
 		if (!GSConfig.STATIC_DATA_SUMMARY_LOG) {
 			return;
 		}

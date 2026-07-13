@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.utils.Rnd;
@@ -15,7 +16,6 @@ import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.AttackCalcObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -36,6 +36,7 @@ import com.aionemu.gameserver.skillengine.effect.FearEffect;
 import com.aionemu.gameserver.skillengine.effect.HideEffect;
 import com.aionemu.gameserver.skillengine.effect.ParalyzeEffect;
 import com.aionemu.gameserver.skillengine.effect.PetOrderUseUltraSkillEffect;
+import com.aionemu.gameserver.skillengine.effect.ProcAtkInstantEffect;
 import com.aionemu.gameserver.skillengine.effect.SanctuaryEffect;
 import com.aionemu.gameserver.skillengine.effect.SummonEffect;
 import com.aionemu.gameserver.skillengine.effect.TransformEffect;
@@ -139,6 +140,11 @@ public class Effect implements StatOwner {
 	private int power = 10;
 	private int accModBoost = 0;
 	private EffectResult effectResult = EffectResult.NORMAL;
+	private final AtomicBoolean allowGodstoneActivation = new AtomicBoolean(true);
+
+	public boolean tryActivateGodstone() {
+		return allowGodstoneActivation.compareAndSet(true, false);
+	}
 
 	/**
 	 * 获取关联技能实例。
@@ -262,6 +268,10 @@ public class Effect implements StatOwner {
 	 */
 	public final SkillTemplate getSkillTemplate() {
 		return skillTemplate;
+	}
+
+	public boolean isDamageProtectorEnabled() {
+		return !(currentEffectTemplate instanceof ProcAtkInstantEffect proc) || proc.isCheckProtector();
 	}
 
 	/**
@@ -1072,28 +1082,11 @@ public class Effect implements StatOwner {
 		}
 		if (successEffects.isEmpty()) {
 			skillMoveType = SkillMoveType.RESIST;
-			if (getSkillType() == SkillType.PHYSICAL) {
-				if (getEffector() instanceof Player) {
-					Player p = (Player) getEffector();
-					if (p.getPlayerClass() == PlayerClass.GUNSLINGER || p.getPlayerClass() == PlayerClass.AETHERTECH) {
-						if (getAttackStatus() == AttackStatus.CRITICAL) {
-							setAttackStatus(AttackStatus.CRITICAL_RESIST);
-						} else {
-							setAttackStatus(AttackStatus.RESIST);
-						}
-					} else {
-						if (getAttackStatus() == AttackStatus.CRITICAL) {
-							setAttackStatus(AttackStatus.CRITICAL_DODGE);
-						} else {
-							setAttackStatus(AttackStatus.DODGE);
-						}
-					}
+			if (skillTemplate.getMessageType() == SkillType.PHYSICAL) {
+				if (getAttackStatus() == AttackStatus.CRITICAL) {
+					setAttackStatus(AttackStatus.CRITICAL_DODGE);
 				} else {
-					if (getAttackStatus() == AttackStatus.CRITICAL) {
-						setAttackStatus(AttackStatus.CRITICAL_DODGE);
-					} else {
-						setAttackStatus(AttackStatus.DODGE);
-					}
+					setAttackStatus(AttackStatus.DODGE);
 				}
 			} else {
 				if (getAttackStatus() == AttackStatus.CRITICAL) {
@@ -1228,8 +1221,13 @@ public class Effect implements StatOwner {
 		if (isStopped) {
 			return;
 		}
+		int previousAbnormals = effected.getEffectController().getAbnormals();
 		for (EffectTemplate template : successEffects) {
 			template.endEffect(this);
+		}
+		int leftAbnormals = previousAbnormals & ~effected.getEffectController().getAbnormals();
+		if (leftAbnormals != 0 && effected instanceof Npc npc) {
+			npc.getAi2().onLeaveAbnormalState(effector, leftAbnormals);
 		}
 		// 若效果为姿态，则从玩家移除姿态 / If effect is a stance, remove stance from player
 		if (effector instanceof Player) {
@@ -1252,6 +1250,10 @@ public class Effect implements StatOwner {
 		effected.getEffectController().clearEffect(this);
 		this.isStopped = true;
 		this.addedToController = false;
+	}
+
+	public boolean isStopped() {
+		return isStopped;
 	}
 	/**
 	 * 停止相关任务。
@@ -2131,97 +2133,7 @@ public class Effect implements StatOwner {
 	}
 
 	private int initializePower(SkillTemplate skill) {
-		if (skill.getActivationAttribute().equals(ActivationAttribute.MAINTAIN)) {
-			return 30;
-		}
-		switch (skill.getSkillId()) {
-		case 4170: // Word Of Destruction I
-		case 4171: // Word Of Destruction II
-		case 4172: // Word Of Destruction III
-		case 4173: // Word Of Destruction IV
-		case 4174: // Word Of Destruction V
-		case 4175: // Word Of Destruction VI
-		case 1066: // Silence Arrow I
-		case 1067: // Silence Arrow II
-		case 1068: // Silence Arrow III
-		case 1069: // Silence Arrow IV
-		case 1070: // Silence Arrow V
-		case 1071: // Silence Arrow VI
-		case 1072: // Silence Arrow VII
-		case 1073: // Silence Arrow VIII
-		case 1074: // Silence Arrow IX
-			return 20;
-		case 2932: // Unwavering Devotion I
-		case 3127: // Iron Skin I
-		case 2922: // Empyrean Providence I
-		case 3128: // Prayer Of Freedom I
-		case 3839: // Spirit Preserve I
-		case 1832: // Elemental Screen I
-		case 1192: // Gain Mana I
-		case 1193: // Gain Mana II
-		case 1194: // Gain Mana III
-		case 1195: // Gain Mana IV
-		case 1196: // Gain Mana V
-		case 1197: // Gain Mana VI
-		case 1198: // Gain Mana VII
-		case 1199: // Gain Mana VIII
-		case 1200: // Gain Mana IX
-		case 1201: // Gain Mana X
-		case 1202: // Gain Mana XI
-		case 1203: // Gain Mana XII
-		case 4725: // [ArchDaeva] Gain Mana 5.1
-		case 1022: // Shackle Arrow I
-		case 1023: // Shackle Arrow II
-		case 1024: // Shackle Arrow III
-		case 1025: // Shackle Arrow IV
-		case 1026: // Shackle Arrow V
-		case 618: // Ankle Snare I
-		case 1329: // Curse Of Weakness I
-		case 1330: // Curse Of Weakness II
-		case 1331: // Curse Of Weakness II
-		case 1332: // Curse Of Weakness IV
-		case 1333: // Curse Of Weakness V
-		case 1334: // Curse Of Weakness VI
-		case 1335: // Curse Of Weakness VII
-		case 1336: // Curse Of Weakness VIII
-		case 4144: // Chain Of Suffering I
-		case 4145: // Chain Of Suffering II
-		case 4146: // Chain Of Suffering III
-		case 4147: // Chain Of Suffering IV
-		case 4148: // Chain Of Suffering V
-		case 4149: // Chain Of Suffering VI
-		case 1754: // Stilling Word I
-		case 3854: // Wing Root I
-			// NPC 技能 / Npc Skill
-		case 18214: // Protective Shield
-		case 18232: // Explosion Of Wrath
-		case 18239: // Soul Petrify
-			return 30;
-		case 3790: // Cursecloud I
-		case 3791: // Cursecloud II
-		case 3792: // Cursecloud III
-		case 3793: // Cursecloud IV
-		case 3794: // Cursecloud V
-		case 3795: // Cursecloud VI
-			return 40;
-		// NPC 技能 / Npc Skill
-		case 18889: // Submissive Strike I
-		case 18892: // Weeping Curtain I
-		case 18994: // Weakness I
-		case 19090: // Spinning Smash I
-		case 19148: // Resistance I
-		case 19504: // Canyonguard's Target I
-		case 19505: // Relic Explosion I
-		case 19512: // Sap Damage I
-		case 19513: // Sap Damage II
-		case 19514: // Sap Damage III
-		case 19515: // Sap Damage IV
-		case 19516: // Sap Damage V
-		case 19644: // Total Exhaustion I
-		case 19647: // Weaken I
-			return 255;
-		}
-		return 10;
+		return skill.getReqDispelCount();
 	}
 	/**
 	 * 获取强度。

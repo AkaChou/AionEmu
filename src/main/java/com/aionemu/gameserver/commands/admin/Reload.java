@@ -8,6 +8,7 @@ import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.*;
@@ -80,11 +81,7 @@ public class Reload extends AdminCommand {
 
 		else if (params[0].equals("skill")) {
 			try {
-				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-				Unmarshaller un = jc.createUnmarshaller();
-				SkillData data = (SkillData) un.unmarshal(Config.dataFile("./data/static_data/skills/skill_templates.xml"));
-				data.initializeCooldownGroups();
-				DataManager.SKILL_DATA = data;
+				DataManager.SKILL_DATA = XmlDataLoader.getInstance().loadSkillData();
 				PacketSendUtility.sendMessage(admin, "Skill reload Success!");
 			}
 			catch (Exception e) {
@@ -121,7 +118,7 @@ public class Reload extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "Configs successfully reloaded!");
 		}
 		else if (params[0].equals("drop")) {
-			DataManager.NPC_DROP_DATA = NpcDropData.loadEager(Config.dataFile("./data/static_data/npc_drops"));
+			DataManager.NPC_DROP_DATA = NpcDropData.loadEager(Config.definitionFile("./definitions/compact/npc_drops"));
 			PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
 		}
 		else if (params[0].equals("gameshop")) {

@@ -342,5 +342,8 @@
 		<spawn npc_id="212876">
 			<spot x="217.985" y="286.921" z="550.688" h="75"/>
 		</spawn>
+		<spawn npc_id="206058" respawn_time="60">
+		  <spot x="470.040009" y="113.320000" z="214.81424"/>
+		</spawn>
 	</spawn_map>
 </spawns>

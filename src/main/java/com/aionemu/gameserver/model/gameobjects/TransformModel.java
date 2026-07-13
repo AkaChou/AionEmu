@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.gameobjects;
 
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.TransformType;
 
 /**
@@ -19,6 +20,17 @@ public class TransformModel {
 	private TribeClass transformTribe;
 	private TribeClass overrideTribe;
 	private int ItemId;
+	private Effect activeTransformEffect;
+	private int transformLevel;
+	private boolean useItem;
+	private int animationSkillId;
+	private int cantFly;
+	private int cantUseSkill;
+	private int cantUseItem;
+	private int cantAttack;
+	private int cantJump;
+	private int cantRecall;
+	private int cantMove;
 
 	public TransformModel(Creature creature) {
 		if (creature instanceof Player) {
@@ -32,7 +44,7 @@ public class TransformModel {
 
 	/** 返回 model id / Returns the model id */
 	public int getModelId() {
-		if (isActive && modelId > 0) {
+		if (isActive) {
 			return modelId;
 		}
 		return originalModelId;
@@ -40,11 +52,10 @@ public class TransformModel {
 
 	/** 设置 model id / Sets the model id */
 	public void setModelId(int modelId) {
+		this.modelId = modelId;
 		if (modelId == 0 || modelId == originalModelId) {
-			modelId = originalModelId;
 			isActive = false;
 		} else {
-			this.modelId = modelId;
 			isActive = true;
 		}
 	}
@@ -100,6 +111,88 @@ public class TransformModel {
 	/** 设置 active / Sets the active */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public synchronized boolean canReplaceActiveTransform(int level) {
+		return activeTransformEffect == null || level >= transformLevel;
+	}
+
+	public synchronized void setActiveTransform(Effect effect, int level, boolean useItem, int animationSkillId) {
+		activeTransformEffect = effect;
+		transformLevel = level;
+		this.useItem = useItem;
+		this.animationSkillId = animationSkillId;
+		isActive = true;
+	}
+
+	public synchronized boolean isActiveTransform(Effect effect) {
+		return activeTransformEffect == effect;
+	}
+
+	public synchronized void clearActiveTransform() {
+		activeTransformEffect = null;
+		transformLevel = 0;
+		useItem = false;
+		animationSkillId = 0;
+		isActive = false;
+	}
+
+	public synchronized void addRestrictions(boolean fly, boolean skill, boolean item, boolean attack,
+			boolean jump, boolean recall, boolean move) {
+		cantFly += fly ? 1 : 0;
+		cantUseSkill += skill ? 1 : 0;
+		cantUseItem += item ? 1 : 0;
+		cantAttack += attack ? 1 : 0;
+		cantJump += jump ? 1 : 0;
+		cantRecall += recall ? 1 : 0;
+		cantMove += move ? 1 : 0;
+	}
+
+	public synchronized void removeRestrictions(boolean fly, boolean skill, boolean item, boolean attack,
+			boolean jump, boolean recall, boolean move) {
+		cantFly = Math.max(0, cantFly - (fly ? 1 : 0));
+		cantUseSkill = Math.max(0, cantUseSkill - (skill ? 1 : 0));
+		cantUseItem = Math.max(0, cantUseItem - (item ? 1 : 0));
+		cantAttack = Math.max(0, cantAttack - (attack ? 1 : 0));
+		cantJump = Math.max(0, cantJump - (jump ? 1 : 0));
+		cantRecall = Math.max(0, cantRecall - (recall ? 1 : 0));
+		cantMove = Math.max(0, cantMove - (move ? 1 : 0));
+	}
+
+	public synchronized boolean isFlyDisabled() {
+		return cantFly > 0;
+	}
+
+	public synchronized boolean isSkillDisabled() {
+		return cantUseSkill > 0;
+	}
+
+	public synchronized boolean isItemDisabled() {
+		return cantUseItem > 0;
+	}
+
+	public synchronized boolean isAttackDisabled() {
+		return cantAttack > 0;
+	}
+
+	public synchronized boolean isJumpDisabled() {
+		return cantJump > 0;
+	}
+
+	public synchronized boolean isRecallDisabled() {
+		return cantRecall > 0;
+	}
+
+	public synchronized boolean isMoveDisabled() {
+		return cantMove > 0;
+	}
+
+	public synchronized boolean isUseItem() {
+		return useItem;
+	}
+
+	public synchronized int getAnimationSkillId() {
+		return animationSkillId;
 	}
 
 	/** 获取部落。 / Returns the tribe. */

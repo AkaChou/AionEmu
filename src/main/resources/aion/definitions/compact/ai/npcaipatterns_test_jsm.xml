@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_test_jsm.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>DF6_H2_Din_03_Enter_Attack_74</name><event_handlers><on_wake_up><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><actions><use_skill><target>OBJI_SELF</target><skill>SKILLI_INDEX_2</skill><skill_level>0</skill_level></use_skill><goto_waypoint><waypoint>1</waypoint><move_type>MOVETYPE_WALK</move_type></goto_waypoint></actions></pattern></on_wake_up></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Basic_Monster_AI_JSM_1</name><event_handlers><on_see_user><pattern><priority>100</priority><action_category>PLANNED</action_category><comment/><conditions><is_on_time><time_name>test_daily1</time_name></is_on_time></conditions><actions><say_to_all_str><string>정상 작동합니다!!</string></say_to_all_str></actions></pattern><pattern><priority>90</priority><action_category>PLANNED</action_category><comment/><actions><say_to_all_str><string>지금은 타임 테이블에 명시된 시간이 아닙니다!</string></say_to_all_str></actions></pattern></on_see_user></event_handlers></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

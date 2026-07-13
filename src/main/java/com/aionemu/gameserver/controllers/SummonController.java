@@ -7,6 +7,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
@@ -161,7 +162,8 @@ public class SummonController extends CreatureController<Summon> {
 	 * @param log 伤害日志类型 / damage log type
 	 */
 	@Override
-	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log) {
+	public void onAttack(Creature creature, int skillId, TYPE type, int damage, boolean notifyAttack, LOG log,
+			AttackStatus attackStatus) {
 		if (getOwner().getLifeStats().isAlreadyDead()) {
 			return;
 		}
@@ -171,7 +173,7 @@ public class SummonController extends CreatureController<Summon> {
 			return;
 		}
 
-		super.onAttack(creature, skillId, type, damage, notifyAttack, log);
+		super.onAttack(creature, skillId, type, damage, notifyAttack, log, attackStatus);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_ATTACK_STATUS(getOwner(), creature, TYPE.REGULAR, 0, damage, log));
 		PacketSendUtility.sendPacket(getOwner().getMaster(), new SM_SUMMON_UPDATE(getOwner()));
 	}

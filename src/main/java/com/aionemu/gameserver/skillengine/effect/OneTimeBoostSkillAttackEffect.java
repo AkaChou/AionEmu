@@ -18,6 +18,20 @@ import com.aionemu.gameserver.skillengine.model.SkillType;
 public class OneTimeBoostSkillAttackEffect extends BuffEffect {
 	@XmlAttribute
 	private int count;
+	@XmlAttribute(name = "count_delta")
+	private int countDelta;
+	@XmlAttribute(name = "damage_flat_delta")
+	private int damageFlatDelta;
+	@XmlAttribute(name = "damage_flat_value")
+	private int damageFlatValue;
+	@XmlAttribute(name = "accuracy_delta")
+	private int accuracyDelta;
+	@XmlAttribute(name = "accuracy_value")
+	private int accuracyValue;
+	@XmlAttribute(name = "accuracy_flat_delta")
+	private int accuracyFlatDelta;
+	@XmlAttribute(name = "accuracy_flat_value")
+	private int accuracyFlatValue;
 
 	@XmlAttribute
 	private SkillType type;
@@ -29,76 +43,71 @@ public class OneTimeBoostSkillAttackEffect extends BuffEffect {
 	@Override
 	public void startEffect(final Effect effect) {
 		super.startEffect(effect);
-		final int stopCount = count;
-		final float percent = 1.0f + value / 100.0f;
-		AttackCalcObserver observer = null;
-		switch (type) {
-		case MAGICAL:
-			observer = new AttackCalcObserver() {
-				private int count = 0;
+		final int skillLevel = effect.getSkillLevel();
+		AttackCalcObserver observer = new AttackCalcObserver() {
+			private int remaining = calculateCount(skillLevel);
 
-				@Override
-				public float getBaseMagicalDamageMultiplier() {
-					if (count++ < stopCount) {
-						return percent;
-					} else {
-						effect.getEffected().getEffectController().removeEffect(effect.getSkillId());
-					}
-					return 1.0f;
-				}
-			};
-			break;
-		case PHYSICAL:
-			observer = new AttackCalcObserver() {
-				private int count = 0;
+			private boolean supports(SkillType skillType) {
+				return type == SkillType.ALL || type == skillType;
+			}
 
-				@Override
-				public float getBasePhysicalDamageMultiplier(boolean isSkill) {
-					if (!isSkill) {
-						return 1f;
-					}
-					if (count++ < stopCount) {
-						if (count == stopCount) {
-							effect.getEffected().getEffectController().removeEffect(effect.getSkillId());
-						}
-						return percent;
-					}
-					return 1.0f;
+			private float consume(SkillType skillType) {
+				if (!supports(skillType) || remaining <= 0) {
+					return 1f;
 				}
-			};
-			break;
-		case ALL:
-			observer = new AttackCalcObserver() {
-				private int count = 0;
+				if (--remaining == 0) {
+					effect.getEffected().getEffectController().removeEffect(effect.getSkillId());
+				}
+				return 1f + calculateValue(skillLevel) / 100f;
+			}
 
-				@Override
-				public float getBaseMagicalDamageMultiplier() {
-					if (count++ < stopCount) {
-						return percent;
-					} else {
-						effect.getEffected().getEffectController().removeEffect(effect.getSkillId());
-					}
-					return 1.0f;
-				}
+			@Override
+			public float getBasePhysicalDamageMultiplier(boolean isSkill) {
+				return isSkill ? consume(SkillType.PHYSICAL) : 1f;
+			}
 
-				@Override
-				public float getBasePhysicalDamageMultiplier(boolean isSkill) {
-					if (!isSkill) {
-						return 1f;
-					}
-					if (count++ < stopCount) {
-						if (count == stopCount) {
-							effect.getEffected().getEffectController().removeEffect(effect.getSkillId());
-						}
-						return percent;
-					}
-					return 1.0f;
+			@Override
+			public float getBaseMagicalDamageMultiplier() {
+				return consume(SkillType.MAGICAL);
+			}
+
+			@Override
+			public int getPhysicalSkillDamageBonus() {
+				return supports(SkillType.PHYSICAL) ? calculateFlatDamage(skillLevel) : 0;
+			}
+
+			@Override
+			public int getMagicalSkillDamageBonus() {
+				return supports(SkillType.MAGICAL) ? calculateFlatDamage(skillLevel) : 0;
+			}
+
+			@Override
+			public int getSkillAccuracyModifier(SkillType skillType) {
+				if (!supports(skillType)) {
+					return 0;
 				}
-			};
-			break;
-		}
+				int base = skillType == SkillType.MAGICAL
+						? effect.getEffected().getGameStats().getMAccuracy().getCurrent()
+						: effect.getEffected().getGameStats().getMainHandPAccuracy().getCurrent();
+				return calculateAccuracyModifier(base, skillLevel);
+			}
+		};
 		effect.getEffected().getObserveController().addAttackCalcObserver(observer);
 		effect.setAttackStatusObserver(observer, position);
+	}
+
+	int calculateCount(int skillLevel) {
+		return Math.max(0, count + countDelta * skillLevel);
+	}
+
+	int calculateFlatDamage(int skillLevel) {
+		return damageFlatValue + damageFlatDelta * skillLevel;
+	}
+
+	int calculateAccuracyModifier(int baseAccuracy, int skillLevel) {
+		int percent = accuracyValue + accuracyDelta * skillLevel;
+		int flat = accuracyFlatValue + accuracyFlatDelta * skillLevel;
+		return Math.round(baseAccuracy * percent / 100f) + flat;
 	}
 
 	/**

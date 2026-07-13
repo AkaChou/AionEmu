@@ -66,6 +66,8 @@ public abstract class EffectTemplate {
 	protected HitType hitType = HitType.EVERYHIT;
 	@XmlAttribute(name = "hittypeprob2", required = false)
 	protected int hitTypeProb = 1000;
+	@XmlAttribute(name = "hittypeprob1", required = false)
+	protected int hitTypeProbDelta;
 	@XmlAttribute(name = "element")
 	protected SkillElement element = SkillElement.NONE;
 	@XmlElement(name = "subeffect")
@@ -86,12 +88,16 @@ public abstract class EffectTemplate {
 	protected int accMod1;// accdelta
 	@XmlAttribute(name = "accmod2")
 	protected int accMod2;// accvalue
+	@XmlAttribute(name = "mrresist")
+	protected boolean mrResist = true;
 	@XmlAttribute(name = "preeffect")
 	protected String preEffect;
 	@XmlAttribute(name = "preeffect_prob")
 	protected int preEffectProb = 100;
 	@XmlAttribute(name = "critprobmod2")
 	protected int critProbMod2 = 100;
+	@XmlAttribute(name = "critprobmod1")
+	protected int critProbMod1;
 	@XmlAttribute(name = "critadddmg1")
 	protected int critAddDmg1 = 0;
 	@XmlAttribute(name = "critadddmg2")
@@ -100,6 +106,8 @@ public abstract class EffectTemplate {
 	protected int value;
 	@XmlAttribute
 	protected int delta;
+	@XmlAttribute
+	protected boolean consume = true;
 	@XmlTransient
 	protected EffectType effectType = null;
 	@XmlTransient
@@ -114,6 +122,10 @@ public abstract class EffectTemplate {
 		return value;
 	}
 
+	public boolean isMrResist() {
+		return mrResist;
+	}
+
 	/**
 	 * 获取每技能等级的数值增量。
 	 * Returns the per-skill-level delta.
@@ -122,6 +134,14 @@ public abstract class EffectTemplate {
 	 */
 	public int getDelta() {
 		return delta;
+	}
+
+	protected int calculateValue(int skillLevel) {
+		return value + delta * skillLevel;
+	}
+
+	public boolean isConsume() {
+		return consume;
 	}
 
 	/**
@@ -205,6 +225,14 @@ public abstract class EffectTemplate {
 	}
 
 	/**
+	 * 按技能等级返回命中类型触发概率（千分比）。
+	 * Returns the hit-type trigger probability in per mille for a skill level.
+	 */
+	public int getHitTypeProbability(int skillLevel) {
+		return hitTypeProb + hitTypeProbDelta * skillLevel;
+	}
+
+	/**
 	 * 获取技能元素属性。
 	 * Returns the skill element.
 	 *
@@ -242,6 +270,10 @@ public abstract class EffectTemplate {
 	 */
 	public int getCritProbMod2() {
 		return critProbMod2;
+	}
+
+	public int getCritProbMod1() {
+		return critProbMod1;
 	}
 
 	/**
@@ -355,6 +387,9 @@ public abstract class EffectTemplate {
 		if (statEnum != null && isAlteredState(statEnum) && isImuneToAbnormal(effect, statEnum)) {
 			return false;
 		}
+		if (statEnum != null && isAlteredState(statEnum) && isExclusiveStatusImmune(effect)) {
+			return false;
+		}
 
 		if (effect.getIsForcedEffect()) {
 			this.addSuccessEffect(effect, spellStatus);
@@ -404,7 +439,8 @@ public abstract class EffectTemplate {
 				break;
 			}
 
-			int accMod = accMod2 + accMod1 * effect.getSkillLevel() + effect.getAccModBoost() + boostResist;
+			int accMod = accMod2 + accMod1 * effect.getSkillLevel() + effect.getAccModBoost() + boostResist
+					+ effect.getEffector().getObserveController().getSkillAccuracyModifier(skillType);
 			switch (skillType) {
 			case PHYSICAL:
 				switch (effect.getEffector().getAttackType()) {
@@ -658,7 +694,7 @@ public abstract class EffectTemplate {
 		if (effected != effect.getEffector()) {
 			if (effected instanceof Npc) {
 				Npc npc = (Npc) effected;
-				if (npc.isBoss() || npc.hasEntity() || npc instanceof Kisk
+				if (npc.getObjectTemplate().isImmuneTo(statEnum) || npc.hasEntity() || npc instanceof Kisk
 						|| npc.getAi2().ask(AIQuestion.CAN_RESIST_ABNORMAL).isPositive()) {
 					return true;
 				}
@@ -680,17 +716,32 @@ public abstract class EffectTemplate {
 		return false;
 	}
 
+	private boolean isExclusiveStatusImmune(Effect effect) {
+		SkillTemplate skill = effect.getSkillTemplate();
+		if (!(effect.getEffected() instanceof com.aionemu.gameserver.model.gameobjects.player.Player player)
+				|| skill.getExclusiveAttribute() == null || DataManager.SKILL_DATA == null) {
+			return false;
+		}
+		int immune = DataManager.SKILL_DATA.getExclusiveStatusImmune(
+			player.getEquipment().getEquippedItemIds(), skill.getExclusiveAttribute());
+		return Rnd.get(1000) < immune;
+	}
+
 	private boolean isAlteredState(StatEnum stat) {
 		switch (stat) {
+		case BLEED_RESISTANCE:
 		case BIND_RESISTANCE:
 		case BLIND_RESISTANCE:
 		case CHARM_RESISTANCE:
 		case CONFUSE_RESISTANCE:
 		case CURSE_RESISTANCE:
 		case DEFORM_RESISTANCE:
+		case DISEASE_RESISTANCE:
 		case FEAR_RESISTANCE:
 		case OPENAREIAL_RESISTANCE:
 		case PARALYZE_RESISTANCE:
+		case PERIFICATION_RESISTANCE:
+		case POISON_RESISTANCE:
 		case PULLED_RESISTANCE:
 		case ROOT_RESISTANCE:
 		case SILENCE_RESISTANCE:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:include schemaLocation="items/item/item_templates.xsd"/>
-	<xs:include schemaLocation="skills/skills.xsd"/>
+	<xs:include schemaLocation="../../definitions/schemas/skills.xsd"/>
 	<xs:complexType name="Modifiers">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="add" type="SimpleModifier" minOccurs="0" maxOccurs="unbounded"/>
@@ -135,6 +135,7 @@
 			<xs:enumeration value="REGEN_FP"/>
 			<xs:enumeration value="HEAL_BOOST"/>
 			<xs:enumeration value="HEAL_SKILL_BOOST"/>
+			<xs:enumeration value="MP_HEAL_SKILL_BOOST"/>
 			<xs:enumeration value="HEAL_SKILL_DEBOOST"/>
 			<xs:enumeration value="ALLRESIST"/>
 			<xs:enumeration value="STUNLIKE_RESISTANCE"/>
@@ -260,6 +261,8 @@
 			<xs:element name="onfly" type="OnFlyCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="noflying" type="NoFlyingCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="weapon" type="WeaponCondition" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="shield" type="ShieldCondition" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dualweapon" type="DualWeaponCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="armor" type="ArmorCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="charge" type="ChargeCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="targetflying" type="TargetFlyingCondition" minOccurs="0" maxOccurs="1"/>
@@ -269,6 +272,9 @@
 			<xs:element name="back" type="BackCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="front" type="FrontCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="form" type="FormCondition" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="selfhide" type="SelfHideCondition" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="skillgroup" type="SkillGroupCondition" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="riderobot" type="RideRobotCondition" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="idianchargeweapon" type="IdianChargeCondition" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -325,6 +331,16 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="ShieldCondition">
+		<xs:complexContent>
+			<xs:extension base="Condition"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DualWeaponCondition">
+		<xs:complexContent>
+			<xs:extension base="Condition"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="ArmorCondition">
 		<xs:complexContent>
 			<xs:extension base="Condition">
@@ -343,6 +359,11 @@
 			<xs:extension base="Condition">
 			 <xs:attribute name="value" type="AbnormalState"/>
 			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SelfHideCondition">
+		<xs:complexContent>
+			<xs:extension base="Condition"/>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ChargeCondition">
@@ -409,9 +430,22 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="SkillGroupCondition">
+		<xs:complexContent>
+			<xs:extension base="Condition">
+				<xs:attribute name="value" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RideRobotCondition">
+		<xs:complexContent>
+			<xs:extension base="Condition"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="IdianChargeCondition">
 		<xs:complexContent>
 			<xs:extension base="ChargeCondition">
+				<xs:attribute name="value" type="xs:int" use="optional" default="500"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -427,12 +461,14 @@
 			<xs:enumeration value="OPENAERIAL"/>
 			<xs:enumeration value="PARALYZE"/>
 			<xs:enumeration value="POISON"/>
+			<xs:enumeration value="ROOT"/>
 			<xs:enumeration value="SILENCE"/>
 			<xs:enumeration value="SNARE"/>
 			<xs:enumeration value="SPIN"/>
 			<xs:enumeration value="STAGGER"/>
 			<xs:enumeration value="STUMBLE"/>
 			<xs:enumeration value="STUN"/>
+			<xs:enumeration value="STUNLIKE"/>
 			<xs:enumeration value="SLEEP"/>
 			<xs:enumeration value="NOFLY"/>
 		</xs:restriction>

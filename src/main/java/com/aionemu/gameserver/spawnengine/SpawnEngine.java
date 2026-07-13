@@ -1,8 +1,11 @@
 package com.aionemu.gameserver.spawnengine;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
+import com.aionemu.gameserver.ai.RetailNpcPartyEngine;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.List;
 
@@ -427,6 +430,9 @@ public class SpawnEngine {
 		}
 		log.info(I18n.get("log.1a270a579228", worldId, instanceId, spawnedCounter));
 		GameHousingServices.housingService().spawnHouses(worldId, instanceId, ownerId);
+		var instance = GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(instanceId);
+		RetailNpcPartyEngine.initialize(instance);
+		RetailConditionSpawnEngine.initialize(instance);
 	}
 
 	/**

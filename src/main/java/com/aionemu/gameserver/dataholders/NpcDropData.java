@@ -163,13 +163,15 @@ public class NpcDropData {
 	}
 
 	private void expandCommonDropGroups(NpcDrop drop) {
-		List<DropGroup> groups = drop.getCommonDropGroupNames().stream()
-			.map(name -> {
-				DropGroup group = commonDropGroups.get(name);
+		List<DropGroup> groups = drop.getCommonDropGroups().stream()
+			.map(reference -> {
+				DropGroup group = commonDropGroups.get(reference.getName());
 				if (group == null) {
-					throw new IllegalStateException("Unknown common_drop_group: " + name);
+					throw new IllegalStateException("Unknown common_drop_group: " + reference.getName());
 				}
-				return group.copy();
+				DropGroup copy = group.copy();
+				copy.setChanceMultiplier(reference.getCommonDropAdjustment() / 100f);
+				return copy;
 			})
 			.toList();
 		drop.addDropGroups(groups);

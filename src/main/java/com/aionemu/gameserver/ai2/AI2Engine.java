@@ -17,6 +17,7 @@ import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
 import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.gameserver.GameServerError;
+import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.GameEngine;
@@ -100,6 +101,9 @@ public class AI2Engine implements GameEngine {
 	public final AI2 setupAI(String name, Creature owner) {
 		AbstractAI aiInstance = null;
 		try {
+			if (owner instanceof Npc npc) {
+				name = selectNpcAi(name, npc.getNpcId(), npc);
+			}
 			aiInstance = aiMap.get(name).getDeclaredConstructor().newInstance();
 			aiInstance.setOwner(owner);
 			owner.setAi2(aiInstance);
@@ -110,6 +114,11 @@ public class AI2Engine implements GameEngine {
 			log.error(I18n.get("log.b80441439b8c", name, e));
 		}
 		return aiInstance;
+	}
+
+	static String selectNpcAi(String fallback, int npcId, Npc npc) {
+		var pattern = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getPattern(npcId);
+		return RetailPatternAI2.supports(pattern, npc) ? "retail_pattern" : fallback;
 	}
 
 	/**

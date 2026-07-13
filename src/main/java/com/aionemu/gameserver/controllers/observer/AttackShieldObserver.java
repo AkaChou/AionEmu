@@ -160,6 +160,9 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	 */
 	@Override
 	public void checkShield(List<AttackResult> attackList, Effect attackerEffect, Creature attacker) {
+		if (shieldType == 8 && attackerEffect != null && !attackerEffect.isDamageProtectorEnabled()) {
+			return;
+		}
 		for (AttackResult attackResult : attackList) {
 			if (AttackStatus.getBaseStatus(attackResult.getAttackStatus()) == AttackStatus.DODGE
 					|| AttackStatus.getBaseStatus(attackResult.getAttackStatus()) == AttackStatus.RESIST) {
@@ -169,7 +172,7 @@ public class AttackShieldObserver extends AttackCalcObserver {
 				if ((attackResult.getDamageType() != null) && (attackResult.getDamageType() != this.hitType))
 					continue;
 			}
-			if (Rnd.get(0, 100) > probability) {
+			if (!isTriggered(probability, Rnd.get(1000))) {
 				continue;
 			}
 			if (shieldType == 2) {
@@ -205,8 +208,7 @@ public class AttackShieldObserver extends AttackCalcObserver {
 					}
 				}
 				if (MathUtil.isIn3dRange(attacker, effect.getEffected(), maxradius)) {
-					int reflectedDamage = attackResult.getDamage() * totalHit / 100;
-					int reflectedHit = Math.max(reflectedDamage, hit);
+					int reflectedHit = calculateReflectedDamage(attackResult.getDamage(), totalHit, hit);
 					attackResult.setShieldType(shieldType);
 					if (attacker instanceof Npc) {
 						reflectedHit = attacker.getAi2().modifyDamage(reflectedHit);
@@ -219,7 +221,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 								.STR_SKILL_PROC_EFFECT_OCCURRED(effect.getSkillTemplate().getNameId()));
 					}
 				}
-				break;
 			} else if (shieldType == 8) {
 				if (effect.getEffector() == null || effect.getEffector().getLifeStats().isAlreadyDead()) {
 					effect.endEffect();
@@ -289,6 +290,14 @@ public class AttackShieldObserver extends AttackCalcObserver {
 				}
 			}
 		}
+	}
+
+	static boolean isTriggered(int probability, int roll) {
+		return roll < probability;
+	}
+
+	static int calculateReflectedDamage(int damage, int percent, int minimum) {
+		return Math.max(damage * percent / 100, minimum);
 	}
 
 	/**

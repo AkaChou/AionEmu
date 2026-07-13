@@ -94,8 +94,12 @@ public class KnownList {
 	 * Clears the known list (used on despawn) and tells counterparts to drop this owner.
 	 */
 	public void clear() {
+		clear(false);
+	}
+
+	public void clear(boolean isOutOfRange) {
 		for (VisibleObject object : knownObjectsSnapshot()) {
-			object.getKnownList().del(owner, false);
+			object.getKnownList().del(owner, isOutOfRange);
 		}
 		knownObjects.clear();
 		if (knownPlayers != null) {

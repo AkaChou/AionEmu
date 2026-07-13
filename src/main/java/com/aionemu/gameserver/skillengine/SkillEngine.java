@@ -174,11 +174,19 @@ public class SkillEngine {
 	 * @param duration 强制持续时长（毫秒），&gt;0 时锁定时长 / forced duration in ms; &gt;0 locks duration
 	 */
 	public void applyEffectDirectly(int skillId, Creature effector, Creature effected, int duration) {
+		applyEffectDirectly(skillId, effector, effected, duration, 0);
+	}
+
+	/**
+	 * 强制直接应用指定等级的技能效果；等级不为正时沿用模板等级。
+	 * Applies a forced effect at an explicit skill level; non-positive values use the template level.
+	 */
+	public void applyEffectDirectly(int skillId, Creature effector, Creature effected, int duration, int skillLevel) {
 		SkillTemplate st = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		if (st == null) {
 			return;
 		}
-		final Effect ef = new Effect(effector, effected, st, st.getLvl(), duration);
+		final Effect ef = new Effect(effector, effected, st, skillLevel > 0 ? skillLevel : st.getLvl(), duration);
 		ef.setIsForcedEffect(true);
 		ef.initialize();
 		if (duration > 0) {

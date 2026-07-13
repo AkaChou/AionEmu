@@ -36,6 +36,8 @@ public enum AIEventType {
 	CREATURE_MOVED,
 	/** 生物触发仇恨 / Creature aggro triggered */
 	CREATURE_AGGRO,
+	/** 技能成功作用于自身 / Successfully affected by a skill */
+	SPELLED,
 	/** 已刷出 / Spawned */
 	SPAWNED,
 	/** 已重生 / Respawned */

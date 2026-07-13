@@ -3,11 +3,20 @@ package com.aionemu.gameserver.dataholders.loadingutils;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.AIData;
+import com.aionemu.gameserver.dataholders.ChargeSkillData;
+import com.aionemu.gameserver.dataholders.HotspotLocationData;
 import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.dataholders.MotionData;
+import com.aionemu.gameserver.dataholders.NpcDropData;
+import com.aionemu.gameserver.dataholders.NpcPathBehaviorData;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.PetDopingData;
 import com.aionemu.gameserver.dataholders.PetMerchandData;
+import com.aionemu.gameserver.dataholders.RetailAiData;
+import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.dataholders.WalkerData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import jakarta.xml.bind.JAXBContext;
@@ -52,9 +61,32 @@ public class XmlDataLoader {
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
-	private static final String NPC_SKILL_DEFINITIONS_FILE = "./definitions/compact/npc-skills.xml";
+	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/compact/npc_drops";
+	private static final String HOTSPOT_LOCATION_DEFINITIONS_FILE = "./definitions/compact/hotspot_location/hotspot_location.xml";
+	private static final String SKILL_DEFINITIONS_DIR = "./definitions/compact/skills";
+	private static final String NPC_SKILL_DEFINITIONS_FILE = SKILL_DEFINITIONS_DIR + "/npc-skills.xml";
+	private static final String MOTION_DEFINITIONS_FILE = SKILL_DEFINITIONS_DIR + "/motion_times.xml";
+	private static final String CHARGE_SKILL_DEFINITIONS_FILE = SKILL_DEFINITIONS_DIR + "/charge_skills.xml";
+	private static final String AI_DEFINITIONS_DIR = "./definitions/compact/ai";
+	private static final String AI_BOMBS_FILE = AI_DEFINITIONS_DIR + "/bombs.xml";
+	private static final String AI_SPAWN_HELPERS_FILE = AI_DEFINITIONS_DIR + "/spawn_helpers.xml";
+	private static final String NPC_PATH_BEHAVIOR_FILE = "./definitions/compact/ai/npc-ai.xml";
+	private static final String RETAIL_NPC_AI_MAPPINGS_FILE = AI_DEFINITIONS_DIR + "/npc-ai.xml";
+	private static final String RETAIL_AI_STRINGS_FILE = AI_DEFINITIONS_DIR + "/ai-strings.xml";
+	private static final String RETAIL_AI_AREAS_FILE = AI_DEFINITIONS_DIR + "/ai-areas.xml";
+	private static final String RETAIL_AI_LOCATION_ALIASES_FILE = AI_DEFINITIONS_DIR + "/ai-location-aliases.xml";
+	private static final String RETAIL_DIRECT_PORTALS_FILE = AI_DEFINITIONS_DIR + "/direct-portals.xml";
+	private static final String RETAIL_CONDITION_SPAWNS_FILE = AI_DEFINITIONS_DIR + "/condition-spawns.xml";
+	private static final String RETAIL_SKILL_CATEGORIES_FILE = SKILL_DEFINITIONS_DIR + "/skill-categories.xml";
+	private static final String RETAIL_NPC_SCORES_FILE = AI_DEFINITIONS_DIR + "/npc-scores.xml";
+	private static final String RETAIL_GROUP_CONTROLLERS_FILE = AI_DEFINITIONS_DIR + "/group-controllers.xml";
+	private static final String RETAIL_NPC_PARTIES_FILE = AI_DEFINITIONS_DIR + "/npc-parties.xml";
+	private static final String RETAIL_DYNAMIC_AREAS_FILE = AI_DEFINITIONS_DIR + "/dynamic-areas.xml";
+	private static final String RETAIL_AI_WAYPOINTS_FILE = AI_DEFINITIONS_DIR + "/ai-waypoints.xml";
+	private static final String RETAIL_AI_WAYPOINTS_SCHEMA = "./definitions/schemas/ai-waypoints.xsd";
 	private static final String PET_RIDES_DEFINITIONS_FILE = "./definitions/compact/pets-rides.xml";
-	private static final String WORLD_DEFINITIONS_FILE = "./definitions/compact/world.xml";
+	private static final String FLY_PATH_DEFINITIONS_FILE = "./definitions/compact/world/fly_path.xml";
+	private static final String WIND_DEFINITIONS_FILE = "./definitions/compact/wind.xml";
 	private static final String ID_DEFINITIONS_FILE = "./definitions/compact/id-mappings.xml";
 	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
@@ -141,10 +173,20 @@ public class XmlDataLoader {
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				PetDefinitionLoader.Result petDefinitions = loadPetDefinitions();
+				data.npcDropData = loadNpcDropData();
+				data.hotspotLocationData = loadHotspotLocationData();
+				data.skillData = loadSkillData();
+				data.motionData = loadMotionData();
+				data.chargeSkillData = loadChargeSkillData();
 				data.npcSkillData = loadNpcSkillData();
+				data.aiData = loadAiData();
+				data.npcPathBehaviorData = loadNpcPathBehaviorData();
+				data.retailAiData = loadRetailAiData();
+				data.walkerData.merge(loadRetailAiWaypointData());
 				data.petDopingData = petDefinitions.doping();
 				data.petMerchandData = petDefinitions.merchant();
 				data.windstreamsData = loadWindstreamData();
+				data.logSummary();
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
 				logSlowSectionTimings(progressListener.sectionElapsedTimes());
@@ -168,10 +210,85 @@ public class XmlDataLoader {
 		return null;
 	}
 
+	public NpcDropData loadNpcDropData() {
+		return NpcDropData.loadEager(Config.definitionFile(NPC_DROP_DEFINITIONS_DIR));
+	}
+
+	public HotspotLocationData loadHotspotLocationData() {
+		return HotspotLocationData.load(Config.definitionFile(HOTSPOT_LOCATION_DEFINITIONS_FILE));
+	}
+
 	public NpcSkillData loadNpcSkillData() {
 		NpcSkillData data = NpcSkillDefinitionLoader.load(Config.definitionFile(NPC_SKILL_DEFINITIONS_FILE));
 		log.info(I18n.get("log.b3e7ebfb7d92", data.size()));
 		return data;
+	}
+
+	public SkillData loadSkillData() {
+		SkillData data = SkillDefinitionLoader.load(Config.definitionFile(SKILL_DEFINITIONS_DIR));
+		log.info("Loaded {} compact skill templates", data.size());
+		return data;
+	}
+
+	MotionData loadMotionData() {
+		return loadDefinition(MotionData.class, MOTION_DEFINITIONS_FILE);
+	}
+
+	ChargeSkillData loadChargeSkillData() {
+		return loadDefinition(ChargeSkillData.class, CHARGE_SKILL_DEFINITIONS_FILE);
+	}
+
+	private static <T> T loadDefinition(Class<T> type, String relativePath) {
+		File file = Config.definitionFile(relativePath);
+		try {
+			return type.cast(createJaxbContext(type).createUnmarshaller().unmarshal(file));
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load " + file.getPath(), e);
+		}
+	}
+
+	public AIData loadAiData() {
+		AIData data = loadDefinition(AIData.class, AI_BOMBS_FILE);
+		data.merge(loadDefinition(AIData.class, AI_SPAWN_HELPERS_FILE));
+		return data;
+	}
+
+	public NpcPathBehaviorData loadNpcPathBehaviorData() {
+		NpcPathBehaviorData data = NpcPathBehaviorDefinitionLoader.load(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE));
+		log.info("Loaded {} NPC path behaviors", data.size());
+		return data;
+	}
+
+	public RetailAiData loadRetailAiData() {
+		RetailAiData data = RetailAiDefinitionLoader.load(Config.definitionFile(AI_DEFINITIONS_DIR),
+			Config.definitionFile(RETAIL_NPC_AI_MAPPINGS_FILE), Config.definitionFile(RETAIL_AI_STRINGS_FILE),
+			Config.definitionFile(RETAIL_AI_AREAS_FILE), Config.definitionFile(RETAIL_CONDITION_SPAWNS_FILE),
+			Config.definitionFile(RETAIL_SKILL_CATEGORIES_FILE), Config.definitionFile(RETAIL_AI_LOCATION_ALIASES_FILE),
+			Config.definitionFile(RETAIL_DIRECT_PORTALS_FILE), Config.definitionFile(RETAIL_NPC_SCORES_FILE),
+			Config.definitionFile(RETAIL_GROUP_CONTROLLERS_FILE), Config.definitionFile(RETAIL_NPC_PARTIES_FILE),
+			Config.definitionFile(RETAIL_DYNAMIC_AREAS_FILE));
+		log.info("Loaded {} retail condition spawns", data.conditionSpawnCount());
+		log.info("Loaded {} retail NPC parties with {} members", data.npcPartyCount(), data.npcPartyMemberCount());
+		log.info("Loaded {} retail dynamic areas", data.dynamicAreaCount());
+		return data;
+	}
+
+	WalkerData loadRetailAiWaypointData() {
+		return loadRetailAiWaypointData(Config.definitionFile(RETAIL_AI_WAYPOINTS_FILE),
+			Config.definitionFile(RETAIL_AI_WAYPOINTS_SCHEMA));
+	}
+
+	static WalkerData loadRetailAiWaypointData(File file, File schemaFile) {
+		try {
+			Unmarshaller unmarshaller = createJaxbContext(WalkerData.class).createUnmarshaller();
+			unmarshaller.setSchema(SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+				.newSchema(schemaFile));
+			WalkerData data = (WalkerData) unmarshaller.unmarshal(file);
+			log.info("Loaded {} retail AI waypoint paths", data.size());
+			return data;
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load retail AI waypoints from " + file.getPath(), e);
+		}
 	}
 
 	public PetDopingData loadPetDopingData() {
@@ -187,8 +304,8 @@ public class XmlDataLoader {
 	}
 
 	public WindstreamData loadWindstreamData() {
-		WindstreamData data = WindstreamDefinitionLoader.load(Config.definitionFile(WORLD_DEFINITIONS_FILE),
-			Config.definitionFile(ID_DEFINITIONS_FILE));
+		WindstreamData data = WindstreamDefinitionLoader.load(Config.definitionFile(FLY_PATH_DEFINITIONS_FILE),
+			Config.definitionFile(WIND_DEFINITIONS_FILE), Config.definitionFile(ID_DEFINITIONS_FILE));
 		log.info(I18n.get("log.e7553a368e56", data.size()));
 		return data;
 	}
@@ -275,7 +392,7 @@ public class XmlDataLoader {
 		return un;
 	}
 
-	private static JAXBContext createJaxbContext(Class<?> boundType) throws jakarta.xml.bind.JAXBException {
+	static JAXBContext createJaxbContext(Class<?> boundType) throws jakarta.xml.bind.JAXBException {
 		Thread thread = Thread.currentThread();
 		ClassLoader originalClassLoader = thread.getContextClassLoader();
 		ClassLoader boundTypeClassLoader = boundType.getClassLoader();

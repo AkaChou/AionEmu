@@ -49,6 +49,8 @@ public class Account implements Iterable<PlayerAccountData> {
 
 	private long tollCount;
 	private long lunaCount;
+	private byte vipLevel;
+	private long vipExp;
 
 	public Account(int id) {
 		this.id = id;
@@ -105,6 +107,22 @@ public class Account implements Iterable<PlayerAccountData> {
 	 */
 	public void setMembership(byte membership) {
 		this.membership = membership;
+	}
+
+	public byte getVipLevel() {
+		return vipLevel;
+	}
+
+	public void setVipLevel(byte vipLevel) {
+		this.vipLevel = vipLevel;
+	}
+
+	public long getVipExp() {
+		return vipExp;
+	}
+
+	public void setVipExp(long vipExp) {
+		this.vipExp = vipExp;
 	}
 
 	/** 是否相等。 / Equality check. */

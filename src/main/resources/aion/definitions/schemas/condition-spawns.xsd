@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="condition_spawns">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="world" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="variable" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType><xs:attribute name="name" type="xs:string" use="required"/></xs:complexType>
+              </xs:element>
+              <xs:element name="condition" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="group" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="slot" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:choice minOccurs="1" maxOccurs="unbounded">
+                                <xs:element name="npc" type="npcType"/>
+                                <xs:element name="party" type="partyType"/>
+                              </xs:choice>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="probability" type="xs:positiveInteger" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+                  <xs:attribute name="expression" type="xs:string" use="required"/>
+                  <xs:attribute name="despawn_at_other" type="xs:boolean" use="required"/>
+                  <xs:attribute name="group_mode" use="required">
+                    <xs:simpleType><xs:restriction base="xs:string"><xs:enumeration value="all"/><xs:enumeration value="one"/></xs:restriction></xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="source" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="npcType">
+    <xs:sequence>
+      <xs:element name="sensory_area" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="point" minOccurs="3" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:attribute name="x" type="xs:float" use="required"/>
+                <xs:attribute name="y" type="xs:float" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="bottom" type="xs:float" use="required"/>
+          <xs:attribute name="top" type="xs:float" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="probability" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="x" type="xs:float" use="required"/>
+    <xs:attribute name="y" type="xs:float" use="required"/>
+    <xs:attribute name="z" type="xs:float" use="required"/>
+    <xs:attribute name="heading" type="xs:unsignedShort" use="required"/>
+    <xs:attribute name="initial_delay" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="initial_delay_extra" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="walker" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="partyType">
+    <xs:sequence>
+      <xs:element name="npc" type="npcType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="probability" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="token" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:schema>

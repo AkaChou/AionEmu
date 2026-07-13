@@ -27,7 +27,9 @@ public class AbnormalStateCondition extends Condition {
 	@Override
 	public boolean validate(Skill env) {
 		if (env.getFirstTarget() != null) {
-			return (env.getFirstTarget().getEffectController().isAbnormalSet(value));
+			return value == AbnormalState.STUNLIKE
+				? env.getFirstTarget().getEffectController().isAbnormalState(value)
+				: env.getFirstTarget().getEffectController().isAbnormalSet(value);
 		}
 		return false;
 	}
@@ -42,7 +44,9 @@ public class AbnormalStateCondition extends Condition {
 	@Override
 	public boolean validate(Effect effect) {
 		if (effect.getEffected() != null) {
-			return (effect.getEffected().getEffectController().isAbnormalSet(value));
+			return value == AbnormalState.STUNLIKE
+				? effect.getEffected().getEffectController().isAbnormalState(value)
+				: effect.getEffected().getEffectController().isAbnormalSet(value);
 		}
 		return false;
 	}

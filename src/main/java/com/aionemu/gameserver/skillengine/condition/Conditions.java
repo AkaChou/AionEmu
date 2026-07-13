@@ -33,6 +33,7 @@ public class Conditions {
 			@XmlElement(name = "weapon", type = WeaponCondition.class),
 			@XmlElement(name = "noflying", type = NoFlyingCondition.class),
 			@XmlElement(name = "shield", type = ShieldCondition.class),
+			@XmlElement(name = "dualweapon", type = DualWeaponCondition.class),
 			@XmlElement(name = "armor", type = ArmorCondition.class),
 			@XmlElement(name = "charge", type = ChargeCondition.class),
 			@XmlElement(name = "targetflying", type = TargetFlyingCondition.class),
@@ -42,6 +43,9 @@ public class Conditions {
 			@XmlElement(name = "chain", type = ChainCondition.class),
 			@XmlElement(name = "back", type = BackCondition.class),
 			@XmlElement(name = "form", type = FormCondition.class),
+			@XmlElement(name = "selfhide", type = SelfHideCondition.class),
+			@XmlElement(name = "skillgroup", type = SkillGroupCondition.class),
+			@XmlElement(name = "riderobot", type = RideRobotCondition.class),
 			@XmlElement(name = "idianchargeweapon", type = IdianChargeCondition.class) })
 	protected List<Condition> conditions;
 

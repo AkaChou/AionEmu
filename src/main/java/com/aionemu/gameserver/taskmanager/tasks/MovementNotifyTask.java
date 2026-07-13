@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.gameserver.ai.RetailSensoryAreaEngine;
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -114,6 +115,9 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 				creature.getWorldId() == 400050000 || // Atanatos.
 				creature.getWorldId() == 400060000 ? 200 : Integer.MAX_VALUE; // Disillon.
 		int iterations = creature.getKnownList().doOnAllNpcsWithOwner(MOVE_NOTIFIER, limit);
+		if (creature instanceof Player player) {
+			RetailSensoryAreaEngine.onPlayerMoved(player);
+		}
 		if (!(creature instanceof Player)) {
 			int[] maxCounts = moveBroadcastCounts(creature.getWorldId());
 			synchronized (maxCounts) {

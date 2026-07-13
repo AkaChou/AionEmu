@@ -42,6 +42,6 @@ public class CM_REMOVE_ALTERED_STATE extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		player.getEffectController().removeEffect(skillid);
+		player.getEffectController().removeTargetStoppableEffect(skillid);
 	}
 }

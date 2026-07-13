@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<static_bundle version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/static-bundle.xsd">
+
+<static_document version="1" name="npcaipatterns_test_pyj.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/static-document.xsd"><content><npc_ai_patterns><npc_ai_pattern><name>Test_Monster_Jun_01</name><event_handlers><on_see_user><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_user_gender><user>USERI_SEEN</user><gender>GENDERI_MALE</gender></is_user_gender></conditions><actions><say_to_all_str><string>남자다</string></say_to_all_str></actions></pattern><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_user_gender><user>USERI_SEEN</user><gender>GENDERI_FEMALE</gender></is_user_gender></conditions><actions><say_to_all_str><string>여자다</string></say_to_all_str></actions></pattern></on_see_user><on_attacked><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_user_gender><user>USERI_ATTACKER</user><gender>GENDERI_MALE</gender></is_user_gender></conditions><actions><say_to_all_str><string>남자</string></say_to_all_str></actions></pattern><pattern><priority>7</priority><action_category>PLANNED</action_category><comment/><conditions><is_user_gender><user>USERI_ATTACKER</user><gender>GENDERI_FEMALE</gender></is_user_gender></conditions><actions><say_to_all_str><string>여자</string></say_to_all_str></actions></pattern></on_attacked></event_handlers></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun_02</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun_03</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun_04</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_Monster_Jun_05</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Arena_Teleport_01_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Arena_Teleport_02_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Arena_Teleport_03_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Resurrect_01_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Resurrect_02_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Resurrect_03_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Tag_01_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Tag_02_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Tag_03_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Timer_01</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Timer_02</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_Timer_Start</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_WaitingRoom_Teleport_01_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_WaitingRoom_Teleport_02_L</name><event_handlers/></npc_ai_pattern>
+<npc_ai_pattern><name>Test_PYJ_WaitingRoom_Teleport_03_L</name><event_handlers/></npc_ai_pattern>
+</npc_ai_patterns></content></static_document>
+</static_bundle>

@@ -413,7 +413,14 @@ public final class QuestService {
 		if (template.getNpcFactionId() != 0) {
 			player.getNpcFactions().completeQuest(template);
 		}
+		notifyQuestFinished(env);
 		return true;
+	}
+
+	static void notifyQuestFinished(QuestEnv env) {
+		if (env.getVisibleObject() instanceof Npc npc) {
+			npc.getAi2().onQuestFinished(env.getPlayer(), env.getQuestId());
+		}
 	}
 
 	private static QuestItems getQuestItemsbyClass(int id, List<QuestItems> classSelRew, int selRewIndex) {
@@ -638,14 +645,21 @@ public final class QuestService {
 			if (!qs.canRepeat()) {
 				return false;
 			}
-			qs.setStatus(status);
-		} else {
-			player.getQuestStateList().addQuest(id, new QuestState(id, status, 0, 0, null, 0, null));
 		}
 		if (template.getNpcFactionId() != 0 && !template.isTimeBased()) {
 			if (!player.getNpcFactions().canStartQuest(template)) {
 				return false;
 			}
+		}
+		if (!LimitedQuestService.tryAcquire(template)) {
+			return false;
+		}
+		if (qs != null) {
+			qs.setStatus(status);
+		} else {
+			player.getQuestStateList().addQuest(id, new QuestState(id, status, 0, 0, null, 0, null));
+		}
+		if (template.getNpcFactionId() != 0 && !template.isTimeBased()) {
 			player.getNpcFactions().startQuest(template);
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, status.value(), 0));

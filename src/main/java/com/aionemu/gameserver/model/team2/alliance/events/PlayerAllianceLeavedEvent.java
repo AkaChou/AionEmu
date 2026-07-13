@@ -53,12 +53,10 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 		case BAN:
 		case LEAVE:
 		case LEAVE_TIMEOUT:
-			if (team.onlineMembers() <= 1) {
+			if (team.getTeamType().shouldDisband(team.onlineMembers())) {
 				PlayerAllianceService.disband(team);
-			} else {
-				if (leavedPlayer.equals(team.getLeader().getObject())) {
-					team.onEvent(new ChangeAllianceLeaderEvent(team));
-				}
+			} else if (team.onlineMembers() > 0 && leavedPlayer.equals(team.getLeader().getObject())) {
+				team.onEvent(new ChangeAllianceLeaderEvent(team));
 			}
 			if (reason == LeaveReson.BAN) {
 				PacketSendUtility.sendPacket(leavedPlayer, SM_SYSTEM_MESSAGE.STR_FORCE_BAN_ME(banPersonName));

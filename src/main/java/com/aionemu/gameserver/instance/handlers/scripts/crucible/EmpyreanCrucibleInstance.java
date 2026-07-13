@@ -2065,7 +2065,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 crucibleTeleport(1760.9441f, 1278.033f, 394.23764f, (byte) 0);
                 sendEventPacket(type, 2000);
             break;
-            case START_STAGE_10_ROUND_1:
+			case START_STAGE_10_ROUND_1:
                 sendEventPacket(type, 2000);
 				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
@@ -2073,6 +2073,11 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 sp(217601, 1774.4563f, 1302.1516f, 394.3f, (byte) 82, 2000);
                 sp(217602, 1765.1488f, 1305.1216f, 394.3f, (byte) 84, 2000);
             break;
+			case START_BONUS_STAGE_9:
+				if (stageType != type) {
+					sendEventPacket(type, 0);
+				}
+			break;
 		}
 	}
 	

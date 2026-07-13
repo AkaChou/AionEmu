@@ -93,6 +93,13 @@ public class LoginStartupGateway {
     }
 
     /**
+     * Synchronize missing independent VIP rows before accepting connections.
+     */
+    public void synchronizeVipAccounts() {
+        runtimeBridge().synchronizeVipAccounts();
+    }
+
+    /**
      * 启动死锁检测器。
      * Start the deadlock detector.
      */

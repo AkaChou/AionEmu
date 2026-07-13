@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ai_location_aliases">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="alias" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="point" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="x" type="xs:float" use="required"/>
+                  <xs:attribute name="y" type="xs:float" use="required"/>
+                  <xs:attribute name="z" type="xs:float" use="required"/>
+                  <xs:attribute name="dir" type="xs:float" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="world_id" type="xs:int" use="required"/>
+            <xs:attribute name="world_name" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

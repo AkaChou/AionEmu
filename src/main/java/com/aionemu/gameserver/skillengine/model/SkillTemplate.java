@@ -32,7 +32,7 @@ import com.aionemu.gameserver.skillengine.properties.Properties;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "skillTemplate", propOrder = { "properties", "startconditions", "useconditions",
-		"useequipmentconditions", "effects", "actions", "periodicActions", "motion" })
+		"useequipmentconditions", "effects", "actions", "periodicActions", "motion", "retailFields" })
 public class SkillTemplate {
 	protected Properties properties;
 	protected Conditions startconditions;
@@ -43,6 +43,8 @@ public class SkillTemplate {
 	@XmlElement(name = "periodicactions")
 	protected PeriodicActions periodicActions;
 	protected Motion motion;
+	@XmlElement(name = "retail_fields")
+	protected RetailSkillFields retailFields;
 	@XmlAttribute(name = "skill_id", required = true)
 	protected int skillId;
 	@XmlAttribute(name = "name_desc")
@@ -63,6 +65,8 @@ public class SkillTemplate {
 	protected int lvl;
 	@XmlAttribute(name = "skilltype", required = true)
 	protected SkillType type = SkillType.NONE;
+	@XmlAttribute(name = "type_message")
+	protected SkillType messageType;
 	@XmlAttribute(name = "skillsubtype", required = true)
 	protected SkillSubType subType;
 	@XmlAttribute(name = "tslot")
@@ -73,16 +77,34 @@ public class SkillTemplate {
 	protected DispelCategoryType dispelCategory = DispelCategoryType.NONE;
 	@XmlAttribute(name = "req_dispel_level")
 	protected int reqDispelLevel;
+	@XmlAttribute(name = "req_dispel_count")
+	protected Integer reqDispelCount;
 	@XmlAttribute(name = "activation", required = true)
 	protected ActivationAttribute activationAttribute;
 	@XmlAttribute(required = true)
 	protected int duration;
+	@XmlAttribute(name = "apply_casting_time_bonus")
+	protected boolean applyCastingTimeBonus = true;
+	@XmlAttribute(name = "no_save_on_logout")
+	protected boolean noSaveOnLogout;
+	@XmlAttribute(name = "spend_time_on_logout")
+	protected boolean spendTimeOnLogout;
+	@XmlAttribute(name = "remain_cooltime_on_login")
+	protected boolean remainCooltimeOnLogin;
+	@XmlAttribute(name = "no_jump_cancel")
+	protected boolean noJumpCancel;
 	@XmlAttribute(name = "toggle_timer")
 	protected int toggleTimer;
 	@XmlAttribute(name = "cooldown")
 	protected int cooldown;
+	@XmlAttribute(name = "cooldown_delta")
+	protected int cooldownDelta;
+	@XmlAttribute(name = "nonchained_cooldown")
+	protected int nonchainedCooldown;
 	@XmlAttribute(name = "penalty_skill_id")
 	protected int penaltySkillId;
+	@XmlAttribute(name = "penalty_skill_message")
+	protected boolean penaltySkillMessage;
 	@XmlAttribute(name = "pvp_damage")
 	protected int pvpDamage;
 	@XmlAttribute(name = "pvp_duration")
@@ -93,6 +115,10 @@ public class SkillTemplate {
 	protected int cancelRate;
 	@XmlAttribute(name = "stance")
 	protected boolean stance;
+	@XmlAttribute(name = "stance_type")
+	protected int stanceType;
+	@XmlAttribute(name = "stance_usable")
+	protected boolean stanceUsable;
 	@XmlAttribute(name = "skillset_exception")
 	protected int skillSetException;
 	@XmlAttribute(name = "skillset_maxoccur")
@@ -105,18 +131,46 @@ public class SkillTemplate {
 	protected boolean isUndispellableByPotions;
 	@XmlAttribute(name = "ammospeed")
 	protected int ammoSpeed;
+	@XmlAttribute
+	protected int obstacle;
 	@XmlAttribute(name = "conflict_id")
 	protected int conflictId;
 	@XmlAttribute(name = "counter_skill")
 	protected AttackStatus counterSkill = null;
 	@XmlAttribute(name = "noremoveatdie")
 	protected boolean noRemoveAtDie = false;
+	@XmlAttribute(name = "remove_flyend")
+	protected boolean removeFlyEnd;
+	@XmlAttribute(name = "applymboost")
+	protected boolean applyMboost = true;
+	@XmlAttribute(name = "applyhealboost")
+	protected boolean applyHealBoost = true;
+	@XmlAttribute(name = "applymphealboost")
+	protected boolean applyMpHealBoost = true;
 	@XmlAttribute(name = "applymcrit")
 	protected boolean applyMcrit = true;
 	@XmlAttribute(name = "hostile_type")
 	protected HostileType hostileType = HostileType.DIRECT;
 	@XmlAttribute(name = "charge_set_name")
 	protected String charge_set_name;
+	@XmlAttribute(name = "damage_attenuation")
+	protected String damageAttenuation;
+	@XmlAttribute(name = "broadcast_use_message")
+	protected boolean broadcastUseMessage;
+	@XmlAttribute(name = "hide_decrease_count")
+	protected int hideDecreaseCount;
+	@XmlAttribute(name = "is_familiar_skill")
+	protected boolean familiarSkill;
+	@XmlAttribute(name = "max_maintain_count")
+	protected int maxMaintainCount;
+	@XmlAttribute(name = "target_stop")
+	protected int targetStop;
+	@XmlAttribute(name = "ultra_skill")
+	protected boolean ultraSkill;
+	@XmlAttribute(name = "ultra_transfer")
+	protected boolean ultraTransfer;
+	@XmlAttribute(name = "exclusive_attribute")
+	protected String exclusiveAttribute;
 	@XmlAttribute(name = "stigma")
 	protected StigmaType stigmaType = StigmaType.NONE;
 	@XmlTransient
@@ -195,6 +249,10 @@ public class SkillTemplate {
 	public Motion getMotion() {
 		return motion;
 	}
+
+	public RetailSkillFields getRetailFields() {
+		return retailFields;
+	}
 	/**
 	 * 获取技能 ID。
 	 * Gets skill id.
@@ -267,6 +325,10 @@ public class SkillTemplate {
 	public SkillType getType() {
 		return type;
 	}
+
+	public SkillType getMessageType() {
+		return messageType == null ? type : messageType;
+	}
 	/**
 	 * 获取技能子类型。
 	 * Gets skill sub type.
@@ -312,6 +374,10 @@ public class SkillTemplate {
 	public int getReqDispelLevel() {
 		return reqDispelLevel;
 	}
+
+	public int getReqDispelCount() {
+		return reqDispelCount != null ? reqDispelCount : isMaintain() ? 30 : 10;
+	}
 	/**
 	 * 获取效果持续时间。
 	 * Gets effect duration.
@@ -320,6 +386,22 @@ public class SkillTemplate {
 	 */
 	public int getDuration() {
 		return duration;
+	}
+
+	public boolean isApplyCastingTimeBonus() {
+		return applyCastingTimeBonus;
+	}
+
+	public boolean isNoSaveOnLogout() {
+		return noSaveOnLogout;
+	}
+
+	public boolean isSpendTimeOnLogout() {
+		return spendTimeOnLogout;
+	}
+
+	public boolean isRemainCooltimeOnLogin() {
+		return remainCooltimeOnLogin;
 	}
 
 	/**
@@ -423,6 +505,19 @@ public class SkillTemplate {
 	public int getCooldown() {
 		return cooldown;
 	}
+
+	public int getCooldownDelta() {
+		return cooldownDelta;
+	}
+
+	public int getNonchainedCooldown() {
+		return nonchainedCooldown;
+	}
+
+	public String getExclusiveAttribute() {
+		return exclusiveAttribute;
+	}
+
 	/**
 	 * 获取惩罚技能 ID。
 	 * Gets penalty skill id.
@@ -431,6 +526,10 @@ public class SkillTemplate {
 	 */
 	public int getPenaltySkillId() {
 		return penaltySkillId;
+	}
+
+	public boolean isPenaltySkillMessage() {
+		return penaltySkillMessage;
 	}
 	/**
 	 * 获取 PvP 伤害系数。
@@ -475,7 +574,15 @@ public class SkillTemplate {
 	 * whether stance
 	 */
 	public boolean isStance() {
-		return stance;
+		return getStanceType() != 0;
+	}
+
+	public int getStanceType() {
+		return stanceType != 0 ? stanceType : stance ? 1 : 0;
+	}
+
+	public boolean isStanceUsable() {
+		return stanceUsable;
 	}
 	/**
 	 * 获取技能组例外标识。
@@ -546,8 +653,52 @@ public class SkillTemplate {
 		return applyMcrit;
 	}
 
+	public boolean isMboostApplied() {
+		return applyMboost;
+	}
+
+	public boolean isHealBoostApplied() {
+		return applyHealBoost;
+	}
+
+	public boolean isMpHealBoostApplied() {
+		return applyMpHealBoost;
+	}
+
 	public HostileType getHostileType() {
 		return hostileType;
+	}
+
+	public boolean hasDamageAttenuation() {
+		return damageAttenuation != null;
+	}
+
+	public boolean isBroadcastUseMessage() {
+		return broadcastUseMessage;
+	}
+
+	public int getHideDecreaseCount() {
+		return hideDecreaseCount;
+	}
+
+	public boolean isFamiliarSkill() {
+		return familiarSkill;
+	}
+
+	public int getMaxMaintainCount() {
+		return maxMaintainCount;
+	}
+
+	public boolean isTargetStop() {
+		return targetStop != 0;
+	}
+
+	public boolean isUltraSkill() {
+		return ultraSkill;
+	}
+
+	public boolean isUltraTransfer() {
+		return ultraTransfer;
 	}
 
 	/**
@@ -631,6 +782,10 @@ public class SkillTemplate {
 		return ammoSpeed;
 	}
 
+	public int getObstacle() {
+		return obstacle;
+	}
+
 	/**
 	 * 获取冲突 ID。
 	 * Gets conflict id.
@@ -659,6 +814,14 @@ public class SkillTemplate {
 	 */
 	public boolean isNoRemoveAtDie() {
 		return noRemoveAtDie;
+	}
+
+	public boolean isRemoveFlyEnd() {
+		return removeFlyEnd;
+	}
+
+	public boolean isNoJumpCancel() {
+		return noJumpCancel;
 	}
 
 	/**

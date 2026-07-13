@@ -900,7 +900,7 @@ public class VisibleObjectSpawner {
         return servant;
     }
 
-    public static Homing spawnHoming(SpawnTemplate spawn, int instanceIndex, Creature creator, int attackCount, int skillId, int level) {
+    public static Homing spawnHoming(SpawnTemplate spawn, int instanceIndex, Creature creator, int homingId, int attackCount, int skillId, int level) {
         int objectId = spawn.getNpcId();
         NpcTemplate npcTemplate = RatedTemplate(objectId);
         int creatureLevel = creator.getLevel();
@@ -911,6 +911,7 @@ public class VisibleObjectSpawner {
         homing.setKnownlist(new NpcKnownList(homing));
         homing.setEffectController(new EffectController(homing));
         homing.setCreator(creator);
+        homing.setHomingId(homingId);
         int homingSkillId = 0;
         if (homing.getSkillList() != null) {
             NpcSkillEntry hmSkill = homing.getSkillList().getRandomSkill();

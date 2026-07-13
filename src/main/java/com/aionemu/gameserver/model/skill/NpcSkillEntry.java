@@ -7,6 +7,7 @@ package com.aionemu.gameserver.model.skill;
 
 public abstract class NpcSkillEntry extends SkillEntry {
 	protected long lastTimeUsed = 0;
+	protected int useCount;
 
 	public NpcSkillEntry(int skillId, int skillLevel) {
 		super(skillId, skillLevel, 0, null, 0, false);
@@ -38,5 +39,18 @@ public abstract class NpcSkillEntry extends SkillEntry {
 	/** 设置 last time used / Sets the last time used */
 	public void setLastTimeUsed() {
 		lastTimeUsed = System.currentTimeMillis();
+		useCount++;
+	}
+
+	public boolean isUltraSkill() {
+		return false;
+	}
+
+	public boolean hasUsesLeft() {
+		return true;
+	}
+
+	public void resetUseCount() {
+		useCount = 0;
 	}
 }
