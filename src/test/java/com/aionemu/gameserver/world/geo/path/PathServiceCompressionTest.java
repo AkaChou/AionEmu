@@ -81,6 +81,25 @@ class PathServiceCompressionTest {
 	}
 
 	@Test
+	void firstGroundSearchUsesPassabilityOnlyWhenGeoIsOn() {
+		// GEO 关时 canPass 恒真，A* 不必再挂 passability。
+		assertFalse(PathService.shouldSearchGroundWithPassability(false));
+		assertTrue(PathService.shouldSearchGroundWithPassability(true));
+	}
+
+	@Test
+	void pathCacheKeyQuantizesEndpointsToTwoMeterCells() {
+		// 2m 格：[-1,1)→0，[1,3)→1
+		var a = PathService.pathCacheKey(1, 0, 3L, false, 0.4f, 0.4f, 0.4f, 10.4f, 10.4f, 1f);
+		var b = PathService.pathCacheKey(1, 0, 3L, false, 0.9f, 0.9f, 0.9f, 9.6f, 9.6f, 1f);
+		var c = PathService.pathCacheKey(1, 0, 4L, false, 0.4f, 0.4f, 0.4f, 10.4f, 10.4f, 1f);
+		assertEquals(a, b);
+		assertEquals(0, PathService.pathCacheCell(0.4f));
+		assertEquals(1, PathService.pathCacheCell(1.4f));
+		assertFalse(a.equals(c));
+	}
+
+	@Test
 	void pathingFeatureFlagMustBeEnabled() {
 		assertFalse(PathService.pathingAvailable(false, true));
 		assertTrue(PathService.pathingAvailable(true, true));

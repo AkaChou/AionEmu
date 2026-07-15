@@ -112,7 +112,8 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
             }
         } catch (SQLException e) {
             log.error(I18n.get("log.70ecf26917fd", e));
-            return null;
+            // 表缺失/库未初始化时返回空集，避免启动 NPE。
+            return results;
         }
         return results;
     }

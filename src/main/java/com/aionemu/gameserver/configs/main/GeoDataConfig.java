@@ -53,7 +53,8 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.path.enable", defaultValue = "false")
 	public static boolean GEO_PATH_ENABLE;
 
-	@Property(key = "gameserver.geo.path.cache.size", defaultValue = "10")
+	/** 内存中保留的 PATH 地图数；0=不限制。 / Cached PATH maps; 0 = unlimited. */
+	@Property(key = "gameserver.geo.path.cache.size", defaultValue = "32")
 	public static int GEO_PATH_CACHE_SIZE;
 
 	@Property(key = "gameserver.geo.path.max.nodes", defaultValue = "50000")
@@ -64,5 +65,13 @@ public class GeoDataConfig {
 
 	@Property(key = "gameserver.geo.path.spatial.step", defaultValue = "2")
 	public static float GEO_PATH_SPATIAL_STEP;
+
+	/** 寻路 worker 数；0 表示按 CPU 自动（最多 8）。 / Path worker count; 0 = auto by CPU (cap 8). */
+	@Property(key = "gameserver.geo.path.workers", defaultValue = "0")
+	public static int GEO_PATH_WORKERS;
+
+	/** 异步寻路队列容量。 / Async path queue capacity. */
+	@Property(key = "gameserver.geo.path.queue.capacity", defaultValue = "256")
+	public static int GEO_PATH_QUEUE_CAPACITY;
 
 }

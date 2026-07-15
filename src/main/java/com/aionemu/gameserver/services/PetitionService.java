@@ -65,8 +65,10 @@ public class PetitionService {
 	public PetitionService() {
 		log.info(I18n.get("log.f495913b1078"));
 		Set<Petition> petitions = DAOManager.getDAO(PetitionDAO.class).getPetitions();
-		for (Petition p : petitions) {
-			registeredPetitions.put(p.getPetitionId(), p);
+		if (petitions != null) {
+			for (Petition p : petitions) {
+				registeredPetitions.put(p.getPetitionId(), p);
+			}
 		}
 		log.info(I18n.get("log.2b3ade613951", registeredPetitions.size()));
 	}

@@ -290,4 +290,13 @@ class NpcMoveControllerPathTest {
 		assertFalse(controller.isReturningToWaypoint());
 	}
 
+
+	@Test
+	void reusesReachChecksForTheSameEndpoints() {
+		assertTrue(NpcMoveController.canReuseReachCheck(1_100, 1_000, 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6));
+		assertFalse(NpcMoveController.canReuseReachCheck(1_101, 1_000, 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6));
+		assertFalse(NpcMoveController.canReuseReachCheck(1_050, 1_000, 1.2f, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6));
+		assertFalse(NpcMoveController.canReuseReachCheck(1_050, 1_000, 1, 2, 3, 1, 2, 3, 4.2f, 5, 6, 4, 5, 6));
+	}
+
 }

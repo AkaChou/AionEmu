@@ -45,7 +45,10 @@ public class AbyssLandingSpecialService {
 		abyssSpecialLanding = DataManager.LANDING_SPECIAL_LOCATION_DATA.getLandingSpecialLocations();
 		DAOManager.getDAO(AbyssSpecialLandingDAO.class).loadLandingSpecialLocations(abyssSpecialLanding);
 		for (LandingSpecialLocation loc : getLandingSpecialLocations().values()) {
-			if (loc.getType().equals(LandingSpecialStateType.ACTIVE)) {
+			if (loc.getType() == null) {
+				loc.setType(LandingSpecialStateType.NO_ACTIVE);
+			}
+			if (loc.getType() == LandingSpecialStateType.ACTIVE) {
 				spawn(loc, LandingSpecialStateType.ACTIVE);
 			}
 			log.info(I18n.get("log.f1b25999792d", loc.getId(), loc.getType()));

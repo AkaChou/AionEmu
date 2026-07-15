@@ -33,29 +33,52 @@ import java.util.concurrent.atomic.LongAdder;
 @Slf4j
 public final class PathService implements DisposableBean {
 
-	private static final int WORKERS = Math.max(1, Math.min(4, Runtime.getRuntime().availableProcessors() / 2));
-	private static final int QUEUE_CAPACITY = 256;
 	private static final int MIN_LOCATION_TIMEOUT_MS = 1_000;
 	private static final float MAX_GROUND_GEO_SEGMENT = 49;
 	private static final float SPATIAL_CLEARANCE_SAMPLE = 0.5f;
 	private static final float GLOBAL_WATER_SAMPLE = 2;
+	/** 起终点量化格子（米）；与追击 repath 量级一致。 / Query cell size in meters. */
+	private static final float RESULT_CACHE_CELL = 2f;
+	/** 路径结果 TTL；对齐 NpcMoveController 500ms replan。 / Result TTL. */
+	private static final long RESULT_CACHE_TTL_MS = 500;
+	private static final int RESULT_CACHE_MAX = 1024;
 	private static volatile ObjectProvider<PathService> instanceProvider;
 	private final PathData data = new PathData();
 	private final WaterVolumeStore waterVolumes = new WaterVolumeStore();
 	private final AtomicLong sequence = new AtomicLong();
-	private final Semaphore queueSlots = new Semaphore(QUEUE_CAPACITY, true);
+	private final Semaphore queueSlots;
 	private final LongAdder submitted = new LongAdder();
 	private final LongAdder completed = new LongAdder();
 	private final LongAdder rejected = new LongAdder();
 	private final LongAdder timedOut = new LongAdder();
+	private final LongAdder cacheHits = new LongAdder();
 	private final LongAdder runNanos = new LongAdder();
 	private final ConcurrentHashMap<Long, AtomicLong> obstacleVersions = new ConcurrentHashMap<>();
-	private final ThreadPoolExecutor pathfinders = new ThreadPoolExecutor(WORKERS, WORKERS, 0, TimeUnit.MILLISECONDS,
-			new PriorityBlockingQueue<>(), runnable -> {
-				Thread thread = new Thread(runnable, "pathfinder");
-				thread.setDaemon(true);
-				return thread;
-			});
+	private final ConcurrentHashMap<PathCacheKey, PathCacheEntry> resultCache = new ConcurrentHashMap<>();
+	private final ThreadPoolExecutor pathfinders;
+
+	public PathService() {
+		int workers = workerCount(GeoDataConfig.GEO_PATH_WORKERS, Runtime.getRuntime().availableProcessors());
+		int queueCapacity = queueCapacity(GeoDataConfig.GEO_PATH_QUEUE_CAPACITY);
+		this.queueSlots = new Semaphore(queueCapacity, true);
+		this.pathfinders = new ThreadPoolExecutor(workers, workers, 0, TimeUnit.MILLISECONDS,
+				new PriorityBlockingQueue<>(), runnable -> {
+					Thread thread = new Thread(runnable, "pathfinder");
+					thread.setDaemon(true);
+					return thread;
+				});
+	}
+
+	static int workerCount(int configured, int cpus) {
+		if (configured > 0) {
+			return Math.max(1, configured);
+		}
+		return Math.max(1, Math.min(8, Math.max(1, cpus) / 2));
+	}
+
+	static int queueCapacity(int configured) {
+		return configured > 0 ? configured : 256;
+	}
 
 	public void initializePath() {
 		if (!GeoDataConfig.GEO_PATH_ENABLE) {
@@ -78,6 +101,7 @@ public final class PathService implements DisposableBean {
 			pathTask.cancel(false);
 			pathTask.result.cancel(false);
 		});
+		resultCache.clear();
 	}
 
 	public boolean hasPathData(int worldId) {
@@ -148,6 +172,7 @@ public final class PathService implements DisposableBean {
 
 	public void instanceDestroyed(int worldId, int instanceId) {
 		obstacleVersions.remove(obstacleKey(worldId, instanceId));
+		resultCache.keySet().removeIf(key -> key.worldId() == worldId && key.instanceId() == instanceId);
 	}
 
 	public boolean usesSpatialPath(Creature owner) {
@@ -168,10 +193,19 @@ public final class PathService implements DisposableBean {
 		return geoEnabled || pathAvailable;
 	}
 
+	/**
+	 * GEO 开时第一次 A* 就带 passability，避免 mesh 路径 compress 失败后再整次重搜。
+	 * When geo is on, first A* already applies passability so a second full search is unnecessary.
+	 */
+	static boolean shouldSearchGroundWithPassability(boolean geoEnabled) {
+		return geoEnabled;
+	}
+
 	public Metrics metrics() {
 		long done = completed.sum();
-		return new Metrics(submitted.sum(), done, rejected.sum(), timedOut.sum(), pathfinders.getQueue().size(),
-				pathfinders.getActiveCount(), done == 0 ? 0 : TimeUnit.NANOSECONDS.toMicros(runNanos.sum() / done));
+		return new Metrics(submitted.sum(), done, rejected.sum(), timedOut.sum(), cacheHits.sum(),
+				pathfinders.getQueue().size(), pathfinders.getActiveCount(),
+				done == 0 ? 0 : TimeUnit.NANOSECONDS.toMicros(runNanos.sum() / done));
 	}
 
 	public static boolean isDefinitivePathFailure(Throwable failure) {
@@ -179,12 +213,77 @@ public final class PathService implements DisposableBean {
 	}
 
 	private CompletableFuture<float[][]> navigateAsync(Creature owner, float targetX, float targetY, float targetZ, int priority) {
+		PathCacheKey key = pathCacheKey(owner.getWorldId(), owner.getInstanceId(),
+				obstacleVersion(owner.getWorldId(), owner.getInstanceId()), usesSpatialPath(owner),
+				owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ);
+		PathCacheEntry cached = getFreshCacheEntry(key);
+		if (cached != null) {
+			cacheHits.increment();
+			return CompletableFuture.completedFuture(copyPath(cached.path()));
+		}
 		return executeAsync(priority, () -> {
 			WaterArea water = owner.isFlying() ? null : waterArea(owner);
-			return owner.isFlying() || water != null
+			float[][] path = owner.isFlying() || water != null
 					? findSpatialPath(owner, targetX, targetY, targetZ, water)
 					: findGroundPath(owner, targetX, targetY, targetZ);
+			putCachedPath(key, path);
+			return path;
 		});
+	}
+
+	static int pathCacheCell(float value) {
+		return Math.round(value / RESULT_CACHE_CELL);
+	}
+
+	static PathCacheKey pathCacheKey(int worldId, int instanceId, long obstacleVersion, boolean spatial,
+			float startX, float startY, float startZ, float targetX, float targetY, float targetZ) {
+		return new PathCacheKey(worldId, instanceId, obstacleVersion, spatial,
+				pathCacheCell(startX), pathCacheCell(startY), pathCacheCell(startZ),
+				pathCacheCell(targetX), pathCacheCell(targetY), pathCacheCell(targetZ));
+	}
+
+	private PathCacheEntry getFreshCacheEntry(PathCacheKey key) {
+		PathCacheEntry entry = resultCache.get(key);
+		if (entry == null) {
+			return null;
+		}
+		if (entry.expiresAt() <= System.currentTimeMillis()) {
+			resultCache.remove(key, entry);
+			return null;
+		}
+		return entry;
+	}
+
+	private void putCachedPath(PathCacheKey key, float[][] path) {
+		// null 也缓存：短时间避免重复对「无路」全量 A*。
+		resultCache.put(key, new PathCacheEntry(copyPath(path), System.currentTimeMillis() + RESULT_CACHE_TTL_MS));
+		if (resultCache.size() > RESULT_CACHE_MAX) {
+			evictResultCache(System.currentTimeMillis());
+		}
+	}
+
+	private void evictResultCache(long now) {
+		resultCache.entrySet().removeIf(entry -> entry.getValue().expiresAt() <= now);
+		if (resultCache.size() <= RESULT_CACHE_MAX) {
+			return;
+		}
+		int drop = resultCache.size() - RESULT_CACHE_MAX + RESULT_CACHE_MAX / 4;
+		var iterator = resultCache.keySet().iterator();
+		while (drop-- > 0 && iterator.hasNext()) {
+			iterator.next();
+			iterator.remove();
+		}
+	}
+
+	static float[][] copyPath(float[][] path) {
+		if (path == null) {
+			return null;
+		}
+		float[][] copy = new float[path.length][];
+		for (int i = 0; i < path.length; i++) {
+			copy[i] = path[i].clone();
+		}
+		return copy;
 	}
 
 	float[][] execute(int priority, Callable<float[][]> action) {
@@ -263,8 +362,12 @@ public final class PathService implements DisposableBean {
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
 		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
+		// GEO 开时第一次就带 passability，省掉 mesh 成功但 compress 失败后的整次重搜。
+		PathData.EdgePassability passability = shouldSearchGroundWithPassability(GeoDataConfig.GEO_ENABLE)
+				? (startX, startY, startZ, endX, endY, endZ) -> canPass(owner, startX, startY, startZ, endX, endY, endZ, false)
+				: null;
 		PathData.SearchResult search = map.searchAStar(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY,
-				targetZ, GeoDataConfig.GEO_PATH_MAX_NODES, terrain, null);
+				targetZ, GeoDataConfig.GEO_PATH_MAX_NODES, terrain, passability);
 		if (search.status() == PathData.SearchStatus.INVALID_POSITION) {
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
@@ -273,17 +376,8 @@ public final class PathService implements DisposableBean {
 			return null;
 		}
 		SegmentAllowed pathAllowed = (from, to) -> map.canWalkStraight(from[0], from[1], from[2], to[0], to[1],
-				to[2], terrain, null);
-		float[][] result = compress(owner, waypoints(path, targetX, targetY), false, null, pathAllowed);
-		if (result != null) {
-			return result;
-		}
-		PathData.EdgePassability passability = (startX, startY, startZ, endX, endY, endZ) ->
-				canPass(owner, startX, startY, startZ, endX, endY, endZ, false);
-		search = map.searchAStar(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ,
-				GeoDataConfig.GEO_PATH_MAX_NODES, terrain, passability);
-		path = groundPath(search);
-		return path == null ? null : compress(owner, waypoints(path, targetX, targetY), false, null, pathAllowed);
+				to[2], terrain, passability);
+		return compress(owner, waypoints(path, targetX, targetY), false, null, pathAllowed);
 	}
 
 	private static float[][] geoGroundPath(Creature owner, float[] start, float[] target, SegmentAllowed allowed) {
@@ -320,10 +414,11 @@ public final class PathService implements DisposableBean {
 			}
 		}
 		SpatialPathfinder.EdgeAllowed waterEdge = swimming ? waterEdge(owner, water, clearance, new HashMap<>()) : null;
+		// 先高度/水体（廉价），最后 canPass 射线，边被挡时少打 geo。
 		SpatialPathfinder.EdgeAllowed edgeAllowed = (startX, startY, startZ, endX, endY, endZ) ->
-				canPass(owner, startX, startY, startZ, endX, endY, endZ, true)
-						&& hasTerrainClearance(startX, startY, startZ, endX, endY, endZ, clearance, terrain)
-						&& (waterEdge == null || waterEdge.test(startX, startY, startZ, endX, endY, endZ));
+				hasTerrainClearance(startX, startY, startZ, endX, endY, endZ, clearance, terrain)
+						&& (waterEdge == null || waterEdge.test(startX, startY, startZ, endX, endY, endZ))
+						&& canPass(owner, startX, startY, startZ, endX, endY, endZ, true);
 		List<float[]> path = SpatialPathfinder.findProgressive(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ,
 				Math.max(1, GeoDataConfig.GEO_PATH_SPATIAL_STEP), Math.max(1, GeoDataConfig.GEO_PATH_MAX_NODES),
 				worldSize, worldSize,
@@ -525,8 +620,13 @@ public final class PathService implements DisposableBean {
 		instanceProvider = provider;
 	}
 
-	public record Metrics(long submitted, long completed, long rejected, long timedOut, int queued, int active,
-			long averageMicros) {}
+	public record Metrics(long submitted, long completed, long rejected, long timedOut, long cacheHits, int queued,
+			int active, long averageMicros) {}
+
+	record PathCacheKey(int worldId, int instanceId, long obstacleVersion, boolean spatial, int startX, int startY,
+			int startZ, int targetX, int targetY, int targetZ) {}
+
+	private record PathCacheEntry(float[][] path, long expiresAt) {}
 
 	private record WaterArea(WaterVolumeStore.Volume volume, float globalSurface) {
 

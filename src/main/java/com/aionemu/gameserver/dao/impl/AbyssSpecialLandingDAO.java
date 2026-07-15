@@ -107,6 +107,7 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
      * @return 是否插入成功 / whether insert succeeded
      */
     private boolean insertLandingSpecialLocation(final LandingSpecialLocation locations) {
+        locations.setType(LandingSpecialStateType.NO_ACTIVE);
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(INSERT_QUERY)) {
 

@@ -117,31 +117,37 @@ final class NpcCrowdManager {
 
 		private float[] choose(Agent owner, float desiredX, float desiredY, float desiredZ,
 				Passability passability, long now, long elapsedMillis) {
+			List<AgentMotion> neighbors;
 			synchronized (this) {
-				update(owner, now);
+				AgentState state = update(owner, now);
+				neighbors = neighbors(state.bucket, owner.id, now);
 			}
-			List<float[]> candidates = candidates(owner.x, owner.y, owner.z,
-					desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z);
-			float[] direct = candidates.getFirst();
-			if (passability.test(direct[0], direct[1], direct[2])) {
+			// 先廉价碰撞，再对真正可能采用的候选做 passability，避免先扫 12 次 geo。
+			float[] direct = new float[] {desiredX, desiredY, desiredZ};
+			if (collisionFree(owner, desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z, neighbors, elapsedMillis)
+					&& passability.test(desiredX, desiredY, desiredZ)) {
 				synchronized (this) {
 					AgentState state = agents.get(owner.id);
 					if (state == null) {
 						return null;
 					}
-					if (collisionFree(owner, direct[0] - owner.x, direct[1] - owner.y, direct[2] - owner.z,
-							neighbors(state.bucket, owner.id, now), elapsedMillis)) {
-						updateMovement(state, owner, direct, elapsedMillis, now);
-						cleanup(now, false);
-						return direct;
-					}
+					updateMovement(state, owner, direct, elapsedMillis, now);
+					cleanup(now, false);
 				}
+				return direct;
 			}
-			List<float[]> passable = new ArrayList<>();
+			List<float[]> candidates = candidates(owner.x, owner.y, owner.z,
+					desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z);
+			float[] selected = null;
 			for (int i = 1; i < candidates.size(); i++) {
 				float[] candidate = candidates.get(i);
-				if (passability.test(candidate[0], candidate[1], candidate[2])) {
-					passable.add(candidate);
+				float vx = candidate[0] - owner.x;
+				float vy = candidate[1] - owner.y;
+				float vz = candidate[2] - owner.z;
+				if (collisionFree(owner, vx, vy, vz, neighbors, elapsedMillis)
+						&& passability.test(candidate[0], candidate[1], candidate[2])) {
+					selected = candidate;
+					break;
 				}
 			}
 			synchronized (this) {
@@ -149,21 +155,10 @@ final class NpcCrowdManager {
 				if (state == null) {
 					return null;
 				}
-				float[] selected = null;
-				List<AgentMotion> neighbors = neighbors(state.bucket, owner.id, now);
-				for (float[] candidate : passable) {
-					float vx = candidate[0] - owner.x;
-					float vy = candidate[1] - owner.y;
-					float vz = candidate[2] - owner.z;
-					if (collisionFree(owner, vx, vy, vz, neighbors, elapsedMillis)) {
-						selected = candidate;
-						break;
-					}
-				}
 				updateMovement(state, owner, selected, elapsedMillis, now);
 				cleanup(now, false);
-				return selected;
 			}
+			return selected;
 		}
 
 		private static void updateMovement(AgentState state, Agent owner, float[] selected, long elapsedMillis, long now) {

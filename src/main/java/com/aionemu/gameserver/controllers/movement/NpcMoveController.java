@@ -53,6 +53,8 @@ public class NpcMoveController
     private static final float MOVE_OFFSET = 0.05f;
     /** 追击目标相对路径终点偏移超过该值则重寻。 / Repath chase when target drifts this far from path end. */
     static final float CHASE_REPATH_DISTANCE = 2.0f;
+    /** 同起点/终点的可达性结果复用窗口。 / Reuse reach checks for the same endpoints this long. */
+    private static final long REACH_CHECK_CACHE_MS = 100;
     private static final long PATH_RETRY_DELAY_MS = 500;
     private static final long PATH_FAILURE_REACTION_DELAY_MS = 5_000;
     private static final long HOME_RETURN_TIMEOUT_MS = 60_000;
@@ -79,6 +81,11 @@ public class NpcMoveController
     int walkPause;
     /** 上次因运行时碰撞重规划时间 / Last runtime-collision replan time */
     private long lastPathReplan;
+    /** 最近一次 canReach 检测缓存。 / Last canReach check cache. */
+    private float reachFromX = Float.NaN, reachFromY, reachFromZ;
+    private float reachToX = Float.NaN, reachToY, reachToZ;
+    private boolean reachResult;
+    private long reachCheckedAt;
     /** 创建缓存路径时的动态障碍版本。 / Dynamic-obstacle version used by the cached path. */
     private long cachedObstacleVersion;
     /** 缓存路径是否有效 / Whether cached path is valid */
@@ -367,7 +374,7 @@ public class NpcMoveController
                         pointZ = getTargetZ(spatialPath, creature);
                         float[][] path = pathSnapshot();
                         boolean targetReachable = path != null && path.length == 1
-                                && GameWorldServices.pathService().canReachWaypoint(owner, pointX, pointY, pointZ);
+                                && canReachWaypointCached(pointX, pointY, pointZ);
                         float destinationDrift = pendingPath != null
                                 ? (float) MathUtil.getDistance(pendingPathX, pendingPathY, pendingPathZ, pointX, pointY, pointZ)
                                 : pathDestinationDrift(path, pointX, pointY, pointZ);
@@ -683,6 +690,40 @@ public class NpcMoveController
         return GeoDataConfig.GEO_PATH_ENABLE;
     }
 
+    private boolean canReachWaypointCached(float x, float y, float z) {
+        float fromX = owner.getX();
+        float fromY = owner.getY();
+        float fromZ = owner.getZ();
+        long now = System.currentTimeMillis();
+        if (canReuseReachCheck(now, reachCheckedAt, fromX, fromY, fromZ, reachFromX, reachFromY, reachFromZ,
+                x, y, z, reachToX, reachToY, reachToZ)) {
+            return reachResult;
+        }
+        reachResult = GameWorldServices.pathService().canReachWaypoint(owner, x, y, z);
+        reachFromX = fromX;
+        reachFromY = fromY;
+        reachFromZ = fromZ;
+        reachToX = x;
+        reachToY = y;
+        reachToZ = z;
+        reachCheckedAt = now;
+        return reachResult;
+    }
+
+    static boolean canReuseReachCheck(long now, long checkedAt, float fromX, float fromY, float fromZ,
+            float cachedFromX, float cachedFromY, float cachedFromZ, float toX, float toY, float toZ,
+            float cachedToX, float cachedToY, float cachedToZ) {
+        return now - checkedAt <= REACH_CHECK_CACHE_MS
+                && samePoint(fromX, fromY, fromZ, cachedFromX, cachedFromY, cachedFromZ)
+                && samePoint(toX, toY, toZ, cachedToX, cachedToY, cachedToZ);
+    }
+
+    private static boolean samePoint(float x, float y, float z, float otherX, float otherY, float otherZ) {
+        return Math.abs(x - otherX) <= MOVE_CHECK_OFFSET
+                && Math.abs(y - otherY) <= MOVE_CHECK_OFFSET
+                && Math.abs(z - otherZ) <= MOVE_CHECK_OFFSET;
+    }
+
     private float[] avoidNearbyNpcs(float targetX, float targetY, float targetZ, long now, long elapsedMillis) {
         return NpcCrowdManager.choose(crowdAgent(owner), targetX, targetY, targetZ,
                 (x, y, z) -> GameWorldServices.pathService().canReachWaypoint(owner, x, y, z), now, elapsedMillis);
@@ -714,7 +755,7 @@ public class NpcMoveController
         }
         float[][] path = pathSnapshot();
         boolean blocked = path != null && path.length > 0
-                && !GameWorldServices.pathService().canReachWaypoint(owner, path[0][0], path[0][1], path[0][2]);
+                && !canReachWaypointCached(path[0][0], path[0][1], path[0][2]);
         if (shouldKeepPathResult(path, blocked)) {
             return true;
         }

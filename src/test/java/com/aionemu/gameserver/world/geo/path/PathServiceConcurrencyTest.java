@@ -28,7 +28,7 @@ class PathServiceConcurrencyTest {
 		field.setAccessible(true);
 		ThreadPoolExecutor pathfinders = (ThreadPoolExecutor) field.get(service);
 
-		assertTrue(pathfinders.getMaximumPoolSize() >= 1 && pathfinders.getMaximumPoolSize() <= 4);
+		assertTrue(pathfinders.getMaximumPoolSize() >= 1 && pathfinders.getMaximumPoolSize() <= 8);
 		assertEquals(pathfinders.getCorePoolSize(), pathfinders.getMaximumPoolSize());
 		assertTrue(pathfinders.getQueue() instanceof PriorityBlockingQueue);
 		service.destroy();
@@ -39,6 +39,20 @@ class PathServiceConcurrencyTest {
 	void ordersByPriorityThenSubmissionSequence() {
 		assertTrue(PathService.comparePriority(0, 2, 1, 1) < 0);
 		assertTrue(PathService.comparePriority(1, 1, 1, 2) < 0);
+	}
+
+	@Test
+	void resolvesWorkerCountFromConfigOrCpu() {
+		assertEquals(1, PathService.workerCount(0, 1));
+		assertEquals(4, PathService.workerCount(0, 8));
+		assertEquals(8, PathService.workerCount(0, 32));
+		assertEquals(6, PathService.workerCount(6, 2));
+	}
+
+	@Test
+	void resolvesQueueCapacityWithSensibleDefault() {
+		assertEquals(256, PathService.queueCapacity(0));
+		assertEquals(512, PathService.queueCapacity(512));
 	}
 
 	@Test

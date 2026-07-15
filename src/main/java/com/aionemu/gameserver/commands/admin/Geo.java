@@ -1,34 +1,45 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
- * 管理员地理高度查询命令：对比 GeoService 计算 Z 与玩家当前 Z。
- * Admin geo height query command: compare GeoService-computed Z with the player's current Z.
- *
- * @author MrPoke
+ * 管理员地理/寻路诊断：高度对比与 PathService 队列指标。
+ * Admin geo/path diagnostics: height check and PathService queue metrics.
  */
-public class Geo extends AdminCommand{
+public class Geo extends AdminCommand {
 
 	public Geo() {
 		super("geo");
 	}
 
-	/**
-	 * 查询当前坐标的地理高度（子命令 z）。
-	 * Query geo height at the current position (subcommand z).
-	 *
-	 * @param player 执行命令的管理员 / Admin executing the command
-	 * @param params 子命令参数 / Subcommand parameters
-	 */
 	@Override
 	public void execute(Player player, String... params) {
-		if ("z".startsWith(params[0])){
-			PacketSendUtility.sendMessage(player, "GeoZ: "+GameWorldServices.geoService().getZ(player)+ " current Z: "+player.getZ());
+		if (params == null || params.length < 1) {
+			onFail(player, null);
+			return;
 		}
+		if ("z".startsWith(params[0])) {
+			PacketSendUtility.sendMessage(player,
+					"GeoZ: " + GameWorldServices.geoService().getZ(player) + " current Z: " + player.getZ());
+			return;
+		}
+		if ("path".startsWith(params[0])) {
+			PathService.Metrics metrics = GameWorldServices.pathService().metrics();
+			PacketSendUtility.sendMessage(player, String.format(
+					"PATH submitted=%d completed=%d rejected=%d timedOut=%d cacheHits=%d queued=%d active=%d avgMicros=%d",
+					metrics.submitted(), metrics.completed(), metrics.rejected(), metrics.timedOut(),
+					metrics.cacheHits(), metrics.queued(), metrics.active(), metrics.averageMicros()));
+			return;
+		}
+		onFail(player, null);
+	}
+
+	@Override
+	public void onFail(Player player, String message) {
+		PacketSendUtility.sendMessage(player, "Usage: //geo z | //geo path");
 	}
 }

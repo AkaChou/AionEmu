@@ -122,4 +122,23 @@ class NpcCrowdManagerTest {
 			assertNotNull(first.get(1, TimeUnit.SECONDS));
 		}
 	}
+
+	@Test
+	void checksPassabilityOnlyForCollisionFreeCandidates() {
+		long now = 1000;
+		// 先占位一个邻居，迫使直达碰撞，只应探测偏转候选。
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, 0, 0.5f), 1, 0, 0,
+				(x, y, z) -> true, now, 100);
+		int[] checks = {0};
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, 0,
+				(x, y, z) -> {
+					checks[0]++;
+					return Math.abs(y) > 0.01f;
+				}, now, 100);
+		assertNotNull(step);
+		assertTrue(checks[0] >= 1);
+		assertTrue(checks[0] < 12, "passability should stop after first free candidate, checks=" + checks[0]);
+		assertTrue(Math.abs(step[1]) > 0.1f);
+	}
+
 }
