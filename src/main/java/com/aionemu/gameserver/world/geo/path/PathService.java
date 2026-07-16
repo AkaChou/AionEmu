@@ -193,14 +193,6 @@ public final class PathService implements DisposableBean {
 		return geoEnabled || pathAvailable;
 	}
 
-	/**
-	 * GEO 开时第一次 A* 就带 passability，避免 mesh 路径 compress 失败后再整次重搜。
-	 * When geo is on, first A* already applies passability so a second full search is unnecessary.
-	 */
-	static boolean shouldSearchGroundWithPassability(boolean geoEnabled) {
-		return geoEnabled;
-	}
-
 	public Metrics metrics() {
 		long done = completed.sum();
 		return new Metrics(submitted.sum(), done, rejected.sum(), timedOut.sum(), cacheHits.sum(),
@@ -362,12 +354,8 @@ public final class PathService implements DisposableBean {
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
 		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
-		// GEO 开时第一次就带 passability，省掉 mesh 成功但 compress 失败后的整次重搜。
-		PathData.EdgePassability passability = shouldSearchGroundWithPassability(GeoDataConfig.GEO_ENABLE)
-				? (startX, startY, startZ, endX, endY, endZ) -> canPass(owner, startX, startY, startZ, endX, endY, endZ, false)
-				: null;
 		PathData.SearchResult search = map.searchAStar(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY,
-				targetZ, GeoDataConfig.GEO_PATH_MAX_NODES, terrain, passability);
+				targetZ, GeoDataConfig.GEO_PATH_MAX_NODES, terrain, null);
 		if (search.status() == PathData.SearchStatus.INVALID_POSITION) {
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
@@ -376,7 +364,7 @@ public final class PathService implements DisposableBean {
 			return null;
 		}
 		SegmentAllowed pathAllowed = (from, to) -> map.canWalkStraight(from[0], from[1], from[2], to[0], to[1],
-				to[2], terrain, passability);
+				to[2], terrain, null);
 		return compress(owner, waypoints(path, targetX, targetY), false, null, pathAllowed);
 	}
 
@@ -546,11 +534,12 @@ public final class PathService implements DisposableBean {
 		float[] start = {owner.getX(), owner.getY(), owner.getZ()};
 		if (!spatial) {
 			points = boundedGroundSegments(start, points);
+			return simplifyPath(start, points, pathAllowed);
 		}
 		return simplifyPath(start, points,
 				(first, second) -> pathAllowed.test(first, second)
-						&& (!spatial || square(first[0] - second[0]) + square(first[1] - second[1]) <= 2_500)
-						&& canPass(owner, first[0], first[1], first[2], second[0], second[1], second[2], spatial)
+						&& square(first[0] - second[0]) + square(first[1] - second[1]) <= 2_500
+						&& canPass(owner, first[0], first[1], first[2], second[0], second[1], second[2], true)
 						&& (edgeAllowed == null || edgeAllowed.test(first[0], first[1], first[2], second[0], second[1], second[2])));
 	}
 

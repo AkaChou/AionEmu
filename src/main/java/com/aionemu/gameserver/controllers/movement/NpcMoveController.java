@@ -968,7 +968,7 @@ public class NpcMoveController
 
     static boolean shouldRequestHomePath(boolean cachedPathValid, boolean retryFailedPath, boolean requestPending,
             long now, long retryAt) {
-        return !requestPending && (!cachedPathValid || !retryFailedPath) && now >= retryAt;
+        return !requestPending && !cachedPathValid && retryFailedPath && now >= retryAt;
     }
 
     static float returnSpeed(float baseSpeed, int percent) {

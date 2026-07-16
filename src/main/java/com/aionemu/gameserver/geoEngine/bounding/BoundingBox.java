@@ -6,7 +6,6 @@ import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResult;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.collision.UnsupportedCollisionException;
-import com.aionemu.gameserver.geoEngine.math.Array3f;
 import com.aionemu.gameserver.geoEngine.math.FastMath;
 import com.aionemu.gameserver.geoEngine.math.Matrix3f;
 import com.aionemu.gameserver.geoEngine.math.Matrix4f;
@@ -575,113 +574,36 @@ public class BoundingBox extends BoundingVolume {
 	 */
 	@Override
 	public boolean intersects(Ray ray) {
-		// assert Vector3f.isValidVector(center);
+		float directionX = ray.direction.x;
+		float directionY = ray.direction.y;
+		float directionZ = ray.direction.z;
+		float diffX = ray.origin.x - center.x;
+		float diffY = ray.origin.y - center.y;
+		float diffZ = ray.origin.z - center.z;
+		float absDirectionX = FastMath.abs(directionX);
+		float absDirectionY = FastMath.abs(directionY);
+		float absDirectionZ = FastMath.abs(directionZ);
 
-		float rhs;
-
-		Vector3f vect1 = Vector3f.newInstance();
-		Vector3f vect2 = Vector3f.newInstance();
-		Vector3f diff = ray.origin.subtract(getCenter(vect2), vect1);
-
-		final Array3f fWdU = Array3f.newInstance();
-		final Array3f fAWdU = Array3f.newInstance();
-		final Array3f fDdU = Array3f.newInstance();
-		final Array3f fADdU = Array3f.newInstance();
-		final Array3f fAWxDdU = Array3f.newInstance();
-
-		fWdU.a = ray.getDirection().dot(Vector3f.UNIT_X);
-		fAWdU.a = FastMath.abs(fWdU.a);
-		fDdU.a = diff.dot(Vector3f.UNIT_X);
-		fADdU.a = FastMath.abs(fDdU.a);
-		if (fADdU.a > xExtent && fDdU.a * fWdU.a >= 0.0) {
-			Vector3f.recycle(vect1);
-			Vector3f.recycle(vect2);
-			Array3f.recycle(fWdU);
-			Array3f.recycle(fAWdU);
-			Array3f.recycle(fDdU);
-			Array3f.recycle(fADdU);
-			Array3f.recycle(fAWxDdU);
+		if (FastMath.abs(diffX) > xExtent && diffX * directionX >= 0) {
+			return false;
+		}
+		if (FastMath.abs(diffY) > yExtent && diffY * directionY >= 0) {
+			return false;
+		}
+		if (FastMath.abs(diffZ) > zExtent && diffZ * directionZ >= 0) {
 			return false;
 		}
 
-		fWdU.b = ray.getDirection().dot(Vector3f.UNIT_Y);
-		fAWdU.b = FastMath.abs(fWdU.b);
-		fDdU.b = diff.dot(Vector3f.UNIT_Y);
-		fADdU.b = FastMath.abs(fDdU.b);
-		if (fADdU.b > yExtent && fDdU.b * fWdU.b >= 0.0) {
-			Vector3f.recycle(vect1);
-			Vector3f.recycle(vect2);
-			Array3f.recycle(fWdU);
-			Array3f.recycle(fAWdU);
-			Array3f.recycle(fDdU);
-			Array3f.recycle(fADdU);
-			Array3f.recycle(fAWxDdU);
+		float crossX = directionY * diffZ - directionZ * diffY;
+		if (FastMath.abs(crossX) > yExtent * absDirectionZ + zExtent * absDirectionY) {
 			return false;
 		}
-
-		fWdU.c = ray.getDirection().dot(Vector3f.UNIT_Z);
-		fAWdU.c = FastMath.abs(fWdU.c);
-		fDdU.c = diff.dot(Vector3f.UNIT_Z);
-		fADdU.c = FastMath.abs(fDdU.c);
-		if (fADdU.c > zExtent && fDdU.c * fWdU.c >= 0.0) {
-			Vector3f.recycle(vect1);
-			Vector3f.recycle(vect2);
-			Array3f.recycle(fWdU);
-			Array3f.recycle(fAWdU);
-			Array3f.recycle(fDdU);
-			Array3f.recycle(fADdU);
-			Array3f.recycle(fAWxDdU);
+		float crossY = directionZ * diffX - directionX * diffZ;
+		if (FastMath.abs(crossY) > xExtent * absDirectionZ + zExtent * absDirectionX) {
 			return false;
 		}
-
-		Vector3f wCrossD = ray.getDirection().cross(diff, vect2);
-
-		fAWxDdU.a = FastMath.abs(wCrossD.dot(Vector3f.UNIT_X));
-		rhs = yExtent * fAWdU.c + zExtent * fAWdU.b;
-		if (fAWxDdU.a > rhs) {
-			Vector3f.recycle(vect1);
-			Vector3f.recycle(vect2);
-			Array3f.recycle(fWdU);
-			Array3f.recycle(fAWdU);
-			Array3f.recycle(fDdU);
-			Array3f.recycle(fADdU);
-			Array3f.recycle(fAWxDdU);
-			return false;
-		}
-
-		fAWxDdU.b = FastMath.abs(wCrossD.dot(Vector3f.UNIT_Y));
-		rhs = xExtent * fAWdU.c + zExtent * fAWdU.a;
-		if (fAWxDdU.b > rhs) {
-			Vector3f.recycle(vect1);
-			Vector3f.recycle(vect2);
-			Array3f.recycle(fWdU);
-			Array3f.recycle(fAWdU);
-			Array3f.recycle(fDdU);
-			Array3f.recycle(fADdU);
-			Array3f.recycle(fAWxDdU);
-			return false;
-		}
-
-		fAWxDdU.c = FastMath.abs(wCrossD.dot(Vector3f.UNIT_Z));
-		rhs = xExtent * fAWdU.b + yExtent * fAWdU.a;
-		if (fAWxDdU.c > rhs) {
-			Vector3f.recycle(vect1);
-			Vector3f.recycle(vect2);
-			Array3f.recycle(fWdU);
-			Array3f.recycle(fAWdU);
-			Array3f.recycle(fDdU);
-			Array3f.recycle(fADdU);
-			Array3f.recycle(fAWxDdU);
-			return false;
-		}
-		Vector3f.recycle(vect1);
-		Vector3f.recycle(vect2);
-		Array3f.recycle(fWdU);
-		Array3f.recycle(fAWdU);
-		Array3f.recycle(fDdU);
-		Array3f.recycle(fADdU);
-		Array3f.recycle(fAWxDdU);
-		return true;
+		float crossZ = directionX * diffY - directionY * diffX;
+		return FastMath.abs(crossZ) <= xExtent * absDirectionY + yExtent * absDirectionX;
 	}
 
 	/**

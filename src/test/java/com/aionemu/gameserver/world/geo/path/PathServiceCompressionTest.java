@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -81,10 +84,13 @@ class PathServiceCompressionTest {
 	}
 
 	@Test
-	void firstGroundSearchUsesPassabilityOnlyWhenGeoIsOn() {
-		// GEO 关时 canPass 恒真，A* 不必再挂 passability。
-		assertFalse(PathService.shouldSearchGroundWithPassability(false));
-		assertTrue(PathService.shouldSearchGroundWithPassability(true));
+	void groundPathSearchDoesNotRetryAStarWithGeoPassability() throws IOException {
+		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/path/PathService.java"));
+		String method = source.substring(source.indexOf("private float[][] findGroundPath"),
+				source.indexOf("private static float[][] geoGroundPath"));
+
+		assertEquals(1, method.split("searchAStar\\(", -1).length - 1);
+		assertFalse(method.contains("EdgePassability"));
 	}
 
 	@Test

@@ -57,8 +57,7 @@ public final class ThreadPoolManager {
 	 * Initialize all pools and start periodic purge.
 	 */
 	public ThreadPoolManager() {
-		final int instantPoolSize = Math.max(1, ThreadConfig.THREAD_POOL_SIZE)
-				* Runtime.getRuntime().availableProcessors();
+		final int instantPoolSize = instantPoolSize(ThreadConfig.THREAD_POOL_SIZE);
 		instantPool = new ThreadPoolExecutor(instantPoolSize, instantPoolSize, 0, TimeUnit.SECONDS,
 				new ArrayBlockingQueue<Runnable>(100000),
 				new PriorityThreadFactory("InstantPool", ThreadConfig.USE_PRIORITIES ? 7 : Thread.NORM_PRIORITY));
@@ -84,6 +83,10 @@ public final class ThreadPoolManager {
 				purge();
 			}
 		}, 1000000, 1000000);
+	}
+
+	static int instantPoolSize(int configuredPoolSize) {
+		return Math.max(1, configuredPoolSize);
 	}
 
 	/**

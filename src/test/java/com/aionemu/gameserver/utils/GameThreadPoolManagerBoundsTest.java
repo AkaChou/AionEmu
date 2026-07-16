@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,6 +13,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.junit.jupiter.api.Test;
 
 class GameThreadPoolManagerBoundsTest {
+
+	@Test
+	void instantPoolUsesTheAlreadyCpuScaledConfiguration() {
+		assertEquals(1, ThreadPoolManager.instantPoolSize(0));
+		assertEquals(60, ThreadPoolManager.instantPoolSize(60));
+	}
 
 	@Test
 	void longRunningPoolUsesFiniteThreadsAndQueueBackpressure() throws Exception {

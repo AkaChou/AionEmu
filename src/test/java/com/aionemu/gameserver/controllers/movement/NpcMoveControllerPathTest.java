@@ -215,6 +215,7 @@ class NpcMoveControllerPathTest {
 	void homeReturnKeepsItsInFlightPathRequest() {
 		assertFalse(NpcMoveController.shouldRequestHomePath(false, true, true, 1_000, 500));
 		assertTrue(NpcMoveController.shouldRequestHomePath(false, true, false, 1_000, 500));
+		assertFalse(NpcMoveController.shouldRequestHomePath(true, false, false, 1_000, 500));
 	}
 
 	@Test
