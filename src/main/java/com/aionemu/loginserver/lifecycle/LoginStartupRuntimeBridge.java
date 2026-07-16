@@ -8,6 +8,7 @@ import com.aionemu.loginserver.LoginServer;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
+import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginNetworkServices;
 import com.aionemu.loginserver.service.LoginPremiumServices;
@@ -17,7 +18,6 @@ import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.loginserver.service.LoginTransferServices;
 import com.aionemu.loginserver.service.PlayerTransferService;
 import com.aionemu.loginserver.service.VipService;
-import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.utils.DeadLockDetector;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,8 +156,8 @@ public class LoginStartupRuntimeBridge {
      */
     public void connectNetwork() {
         LoginNetworkServices.serverTransport().connect();
-        // China client VIP stage UI uses STS /Level/GetLevel, not the Aion game protocol.
-        StsVipServer.startIfEnabled();
+        // TODO: STS 尚未实现完成，暂不启动。 / STS is not fully implemented; keep it disabled.
+        // StsVipServer.startIfEnabled();
     }
 
     /**

@@ -117,11 +117,28 @@ final class DatabaseSchemaInitializer {
                 + "`account_id` INT NOT NULL, "
                 + "`vip_level` TINYINT UNSIGNED NOT NULL COMMENT 'Client VIP stage (1-6)', "
                 + "`vip_exp` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'VIP progress experience', "
+                + "`expire_time` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Unix seconds VIP end time', "
                 + "PRIMARY KEY (`account_id`), "
                 + "CONSTRAINT `FK_account_vip_account` FOREIGN KEY (`account_id`) "
                 + "REFERENCES `al_server_ls`.`account_data` (`id`) ON DELETE CASCADE, "
                 + "CONSTRAINT `CHK_account_vip_level` CHECK (`vip_level` BETWEEN 1 AND 6)"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8");
+        }
+        String query = "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? "
+            + "AND table_name = 'account_vip' AND column_name = 'expire_time'";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, database);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                resultSet.next();
+                if (resultSet.getInt(1) > 0) {
+                    return;
+                }
+            }
+        }
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE `al_server_ls`.`account_vip` "
+                + "ADD COLUMN `expire_time` BIGINT UNSIGNED NOT NULL DEFAULT 0 "
+                + "COMMENT 'Unix seconds VIP end time' AFTER `vip_exp`");
         }
     }
 

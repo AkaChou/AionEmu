@@ -26,6 +26,7 @@ class AccountVipAuthResponseTest {
 		buffer.put((byte) 1);
 		buffer.put((byte) 4);
 		buffer.putLong(1035);
+		buffer.putLong(1_700_000_000L);
 		buffer.flip();
 
 		CM_ACOUNT_AUTH_RESPONSE packet = new CM_ACOUNT_AUTH_RESPONSE(1);
@@ -35,6 +36,7 @@ class AccountVipAuthResponseTest {
 		assertEquals(0, packet.getRemainingBytes());
 		assertEquals((byte) 4, field(packet, "vipLevel"));
 		assertEquals(1035L, field(packet, "vipExp"));
+		assertEquals(1_700_000_000L, field(packet, "vipExpireTime"));
 	}
 
 	private static Object field(Object instance, String name) throws Exception {

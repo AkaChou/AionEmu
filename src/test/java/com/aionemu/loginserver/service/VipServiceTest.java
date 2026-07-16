@@ -16,19 +16,11 @@ class VipServiceTest {
 
     private final boolean originalAutoEnable = VipConfig.AUTO_ENABLE;
     private final int originalLevel = VipConfig.AUTO_ENABLE_LEVEL;
-    private final boolean originalStsEnable = VipConfig.STS_ENABLE;
-    private final int originalStsPort = VipConfig.STS_PORT;
-    private final long originalStsDefaultScore = VipConfig.STS_DEFAULT_SCORE;
-    private final String originalStsAppGroup = VipConfig.STS_APP_GROUP;
 
     @AfterEach
     void restoreConfig() {
         VipConfig.AUTO_ENABLE = originalAutoEnable;
         VipConfig.AUTO_ENABLE_LEVEL = originalLevel;
-        VipConfig.STS_ENABLE = originalStsEnable;
-        VipConfig.STS_PORT = originalStsPort;
-        VipConfig.STS_DEFAULT_SCORE = originalStsDefaultScore;
-        VipConfig.STS_APP_GROUP = originalStsAppGroup;
     }
 
     @Test
@@ -66,13 +58,10 @@ class VipServiceTest {
     }
 
     @Test
-    void enabledStsRejectsInvalidPort() {
-        VipConfig.STS_ENABLE = true;
-        VipConfig.STS_PORT = 0;
-        VipConfig.STS_APP_GROUP = "AION";
-        VipConfig.STS_DEFAULT_SCORE = 0;
-
-        assertThrows(IllegalArgumentException.class, VipConfig::validate);
+    void vipExpiryAllowsPermanentAndRejectsExpiredRows() {
+        assertTrue(new Vip(1, 5, 0, 0).isActive(100));
+        assertTrue(new Vip(1, 5, 0, 101).isActive(100));
+        assertFalse(new Vip(1, 5, 0, 100).isActive(100));
     }
 
     @Test

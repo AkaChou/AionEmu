@@ -53,6 +53,7 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_SIEGE_LOCATION_INFO.class, 0xd1, idSet); // 5.8
 		addPacketOpcode(SM_RIFT_ANNOUNCE.class, 0xed, idSet); // 5.8
 		addPacketOpcode(SM_PRICES.class, 0xfe, idSet); // 5.8
+		addPacketOpcode(SM_NP_AUTH_TOKEN.class, 0x129, idSet); // 5.8
 		addPacketOpcode(SM_HOTSPOT_TELEPORT.class, 0x12a, idSet); // 5.8
 		addPacketOpcode(SM_SYSTEM_MESSAGE.class, 0x19, idSet); // 5.8
 		addPacketOpcode(SM_FRIEND_LIST.class, 0x84, idSet); // 5.8
@@ -270,6 +271,7 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_BLACKCLOUD_TRADE.class, 0x15E, idSet); // 5.8
 		addPacketOpcode(SM_SHUGO_SWEEP.class, 0x14B, idSet); // 5.8
 		addPacketOpcode(SM_ABYSS_FAVOR.class, 0x162, idSet); // 5.8
+		addPacketOpcode(SM_NOTIFY_VIP_ICON.class, 0x163, idSet); // 5.8
 		addPacketOpcode(SM_YOUTUBE_VIDEO.class, 0x146, idSet); // 5.8
 		// addPacketOpcode(SM_PETITION.class, 0xEF, idSet); //5.8 To Do
 		// -----------------战场联合-------------------- / -----------------BATTLEFIELD UNION--------------------//

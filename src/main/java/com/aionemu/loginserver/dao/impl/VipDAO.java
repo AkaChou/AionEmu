@@ -17,11 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class VipDAO extends com.aionemu.loginserver.dao.VipDAO {
 
-    static final String FIND_QUERY = "SELECT account_id, vip_level, vip_exp "
+    static final String FIND_QUERY = "SELECT account_id, vip_level, vip_exp, expire_time "
         + "FROM account_vip WHERE account_id = ?";
-    static final String SYNC_QUERY = "INSERT IGNORE INTO account_vip (account_id, vip_level) "
-        + "SELECT id, ? FROM account_data";
-    static final String INSERT_QUERY = "INSERT IGNORE INTO account_vip (account_id, vip_level) VALUES (?, ?)";
+    static final String SYNC_QUERY = "INSERT IGNORE INTO account_vip (account_id, vip_level, expire_time) "
+        + "SELECT id, ?, UNIX_TIMESTAMP() + 30 * 24 * 3600 FROM account_data";
+    static final String INSERT_QUERY = "INSERT IGNORE INTO account_vip (account_id, vip_level, expire_time) "
+        + "VALUES (?, ?, UNIX_TIMESTAMP() + 30 * 24 * 3600)";
 
     @Override
     public Vip findByAccountId(int accountId) {
@@ -33,7 +34,8 @@ public class VipDAO extends com.aionemu.loginserver.dao.VipDAO {
                     return new Vip(
                         resultSet.getInt("account_id"),
                         resultSet.getInt("vip_level"),
-                        resultSet.getLong("vip_exp")
+                        resultSet.getLong("vip_exp"),
+                        resultSet.getLong("expire_time")
                     );
                 }
             }

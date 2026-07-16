@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_IMMOBILIZE;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -38,14 +39,16 @@ public class StunEffect extends EffectTemplate {
 	}
 
 	/**
-	 * 打断技能、中止移动，施加 STUN 并广播定身。
-	 * Cancels skill, aborts move, applies STUN, and broadcasts immobilize.
+	 * 打断技能并施加 STUN；NPC 保留移动任务，以便晕厥结束后恢复追击。
+	 * Cancels skill and applies STUN; NPCs retain their movement task so pursuit can resume.
 	 */
 	@Override
 	public void startEffect(Effect effect) {
 		final Creature effected = effect.getEffected();
 		effected.getController().cancelCurrentSkill();
-		effected.getMoveController().abortMove();
+		if (!(effected instanceof Npc)) {
+			effected.getMoveController().abortMove();
+		}
 		effect.getEffected().getEffectController().setAbnormal(AbnormalState.STUN.getId());
 		effect.setAbnormal(AbnormalState.STUN.getId());
 		PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(),

@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
@@ -22,7 +23,9 @@ public class PetrificationEffect extends BuffEffect {
 		super.startEffect(effect);
 		Creature effected = effect.getEffected();
 		effected.getController().cancelCurrentSkill();
-		effected.getMoveController().abortMove();
+		if (!(effected instanceof Npc)) {
+			effected.getMoveController().abortMove();
+		}
 		effected.getEffectController().setAbnormal(AbnormalState.PETRIFICATION.getId());
 		effect.setAbnormal(AbnormalState.PETRIFICATION.getId());
 	}

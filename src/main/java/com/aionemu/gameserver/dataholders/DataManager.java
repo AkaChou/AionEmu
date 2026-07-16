@@ -380,8 +380,8 @@ public final class DataManager {
     }
 
     /**
-     * 并行加载主静态数据与物品数据。
-     * Loads main static data and item data in parallel.
+     * 并行加载主静态数据、物品数据与技能数据。
+     * Loads main static data, item data, and skill data in parallel.
      *
      * XML data loader
      *
@@ -390,10 +390,13 @@ public final class DataManager {
      */
     static LoadedStaticData loadStaticData(XmlDataLoader loader) {
         CompletableFuture<ItemData> itemDataFuture = CompletableFuture.supplyAsync(loader::loadItemData);
+        CompletableFuture<SkillData> skillDataFuture = CompletableFuture.supplyAsync(loader::loadSkillData);
         try {
-            StaticData staticData = loader.loadStaticData();
+            StaticData staticData = loader.loadStaticData(skillDataFuture::join);
             return new LoadedStaticData(staticData, itemDataFuture.join());
         } catch (CompletionException e) {
+            itemDataFuture.cancel(true);
+            skillDataFuture.cancel(true);
             Throwable cause = e.getCause();
             if (cause instanceof Error error) {
                 throw error;
@@ -404,6 +407,7 @@ public final class DataManager {
             throw e;
         } catch (RuntimeException | Error e) {
             itemDataFuture.cancel(true);
+            skillDataFuture.cancel(true);
             throw e;
         }
     }

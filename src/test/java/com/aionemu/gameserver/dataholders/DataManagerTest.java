@@ -11,39 +11,45 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
 
 class DataManagerTest {
 
 	@Test
-	void itemDataLoadingStartsBeforeMainStaticDataFinishes() {
+	void itemAndSkillDataLoadingStartBeforeMainStaticDataFinishes() {
 		StaticData staticData = new StaticData();
 		ItemData itemData = new ItemData();
+		SkillData skillData = new SkillData();
 		CountDownLatch itemStarted = new CountDownLatch(1);
-		CountDownLatch staticFinished = new CountDownLatch(1);
-		AtomicBoolean itemStartedBeforeStaticReturned = new AtomicBoolean();
+		CountDownLatch skillStarted = new CountDownLatch(1);
 		XmlDataLoader loader = new XmlDataLoader() {
 			@Override
-			public StaticData loadStaticData() {
+			public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier) {
 				assertTrue(await(itemStarted), "item data loading should start while main static data is still loading");
-				itemStartedBeforeStaticReturned.set(true);
-				staticFinished.countDown();
+				assertTrue(await(skillStarted), "skill data loading should start while main static data is still loading");
+				staticData.skillData = skillDataSupplier.get();
 				return staticData;
 			}
 
 			@Override
 			public ItemData loadItemData() {
 				itemStarted.countDown();
-				assertTrue(await(staticFinished), "item data loading should overlap main static data loading");
 				return itemData;
+			}
+
+			@Override
+			public SkillData loadSkillData() {
+				skillStarted.countDown();
+				return skillData;
 			}
 		};
 
 		DataManager.LoadedStaticData loaded = DataManager.loadStaticData(loader);
 
-		assertTrue(itemStartedBeforeStaticReturned.get());
 		assertSame(staticData, loaded.staticData());
 		assertSame(itemData, loaded.itemData());
+		assertSame(skillData, loaded.staticData().skillData);
 		assertNotNull(loaded);
 	}
 

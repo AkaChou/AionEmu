@@ -61,7 +61,6 @@ public class MoveBehindEffect extends DamageEffect {
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
 		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effector, effected.getX() + x1,
 				effected.getY() + y1, z, false, intentions);
-		effected.getMoveController().abortMove();
 		PacketSendUtility.sendPacket(effector, new SM_TARGET_UPDATE(effector));
 		effect.setDashStatus(DashStatus.MOVEBEHIND);
 		effect.setSkillMoveType(SkillMoveType.MOVEBEHIND);

@@ -168,6 +168,19 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void usesDefaultIdleThinkingForCombatOnlyPatterns() {
+		Rule rule = new Rule(1, "DIRECT", List.of(), List.of(new Operation("do_nothing", Map.of())));
+
+		assertTrue(RetailPatternAI2.shouldUseDefaultIdleThinking(
+			new Pattern("combat", Map.of("on_enter_attack_state", List.of(rule)))));
+		for (String event : Set.of(
+			"on_wake_up", "on_enter_idle_state", "on_enter_wakeup_state", "on_leave_wakeup_state")) {
+			assertFalse(RetailPatternAI2.shouldUseDefaultIdleThinking(
+				new Pattern("idle", Map.of(event, List.of(rule)))));
+		}
+	}
+
+	@Test
 	void supportsMasterEventsOnlyWhenNpcHasMaster() {
 		Pattern pattern = new Pattern("master", Map.of(
 			"on_master_attacked", List.of(new Rule(1, "INSTANT",

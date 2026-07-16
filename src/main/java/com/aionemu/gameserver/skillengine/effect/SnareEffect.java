@@ -4,6 +4,8 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
+import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_IMMOBILIZE;
@@ -51,13 +53,15 @@ public class SnareEffect extends BuffEffect {
 	 */
 	@Override
 	public void startEffect(Effect effect) {
+		final Creature effected = effect.getEffected();
 		super.startEffect(effect);
-		effect.getEffected().getEffectController().setAbnormal(AbnormalState.SNARE.getId());
+		effected.getEffectController().setAbnormal(AbnormalState.SNARE.getId());
 		effect.setAbnormal(AbnormalState.SNARE.getId());
-		if (effect.getEffected().isFlying() || effect.getEffected().isInState(CreatureState.GLIDING)) {
-			PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(),
-					new SM_TARGET_IMMOBILIZE(effect.getEffected()));
-			effect.getEffected().getMoveController().abortMove();
+		if (effected.isFlying() || effected.isInState(CreatureState.GLIDING)) {
+			PacketSendUtility.broadcastPacketAndReceive(effected, new SM_TARGET_IMMOBILIZE(effected));
+			if (!(effected instanceof Npc)) {
+				effected.getMoveController().abortMove();
+			}
 		}
 	}
 }

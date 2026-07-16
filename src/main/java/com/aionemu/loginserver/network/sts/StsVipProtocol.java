@@ -1,52 +1,110 @@
 package com.aionemu.loginserver.network.sts;
 
+import com.aionemu.boot.i18n.I18n;
+
+import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Minimal China-client STS framing helpers for VIP stage display.
- *
- * Client path: POST /Level/GetLevel -> FUN_1087a6e0 -> AccumulateGradeScore -> FUN_10577c40.
- */
+import lombok.extern.slf4j.Slf4j;
+
+/** China-client STS/1.0 framing for membership stage + token auth. */
+@Slf4j
 public final class StsVipProtocol {
 
-    private static final Pattern HEADER_PATTERN = Pattern.compile("(?im)^([A-Za-z]):\\s*(.+?)\\s*$");
-    private static final Pattern XML_FIELD = Pattern.compile("<([A-Za-z0-9_]+)>(.*?)</\\1>", Pattern.DOTALL);
-
-    /** vip_grade_exp.xml grade floors used when only vip_level is known. */
-    private static final long[] LEVEL_TO_SCORE = {
-        0L,    // 0
-        178L,  // 1
-        544L,  // 2
-        1034L, // 3
-        2069L, // 4
-        3758L, // 5
-        3759L  // 6
-    };
+    private static final int MAX_LINE_BYTES = 8 * 1024;
+    private static final int MAX_BODY_BYTES = 64 * 1024;
+    private static final long MAX_VIP_SCORE = 3759L;
+    private static final long[] LEVEL_TO_SCORE = { 0L, 178L, 544L, 1034L, 2069L, 3758L, 3759L };
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private StsVipProtocol() {
     }
 
-    public static long scoreForLevel(int vipLevel) {
-        if (vipLevel <= 0) {
-            return 0L;
-        }
-        if (vipLevel >= LEVEL_TO_SCORE.length) {
-            return LEVEL_TO_SCORE[LEVEL_TO_SCORE.length - 1];
-        }
-        return LEVEL_TO_SCORE[vipLevel];
-    }
-
-    public static long resolveScore(int vipLevel, long vipExp, long defaultScore) {
+    public static long resolveScore(int vipLevel, long vipExp) {
         if (vipExp > 0) {
             return vipExp;
         }
-        if (vipLevel > 0) {
-            return scoreForLevel(vipLevel);
+        if (vipLevel <= 0) {
+            return 0L;
         }
-        return Math.max(0L, defaultScore);
+        return LEVEL_TO_SCORE[Math.min(vipLevel, LEVEL_TO_SCORE.length - 1)];
+    }
+
+    public static ParsedRequest readRequest(InputStream input) throws IOException {
+        String requestLine = readLine(input);
+        if (requestLine == null) {
+            return null;
+        }
+
+        String sequence = null;
+        int bodyLength = 0;
+        while (true) {
+            String header = readLine(input);
+            if (header == null) {
+                throw new EOFException("Unexpected end of STS headers");
+            }
+            if (header.isEmpty()) {
+                break;
+            }
+            int colon = header.indexOf(':');
+            if (colon <= 0) {
+                continue;
+            }
+            String key = header.substring(0, colon).trim();
+            String value = header.substring(colon + 1).trim();
+            if ("s".equalsIgnoreCase(key)) {
+                sequence = value;
+            } else if ("l".equalsIgnoreCase(key)) {
+                bodyLength = parseBodyLength(value);
+            }
+        }
+
+        byte[] body = input.readNBytes(bodyLength);
+        if (body.length != bodyLength) {
+            throw new EOFException("Unexpected end of STS body");
+        }
+        return new ParsedRequest(requestLine, new String(body, StandardCharsets.UTF_8), sequence);
+    }
+
+    public static boolean isConnect(ParsedRequest request) {
+        return request.isPath("/Sts/Connect");
+    }
+
+    public static boolean isLoginTokenStart(ParsedRequest request) {
+        return request.isPath("/Auth/LoginTokenStart");
+    }
+
+    public static boolean isTokenKeyData(ParsedRequest request) {
+        return request.isPath("/Auth/TokenKeyData");
+    }
+
+    public static boolean isLoginFinish(ParsedRequest request) {
+        // Client dispatches both the STS path and the internal protocol name.
+        return request.isPath("/Auth/LoginFinish")
+            || "POST TokenLoginFinish STS/1.0".equalsIgnoreCase(request.requestLine().trim());
+    }
+
+    public static boolean isListMyAccounts(ParsedRequest request) {
+        return request.isPath("/GameAccount/ListMyAccounts");
+    }
+
+    public static boolean isRequestGameToken(ParsedRequest request) {
+        return request.isPath("/Auth/RequestGameToken");
+    }
+
+    public static boolean isLevelGetLevel(ParsedRequest request) {
+        // Client may send /Level/GetLevel or /Grade/GetLevel; membership body is the filter.
+        return (request.isPath("/Level/GetLevel") || request.isPath("/Grade/GetLevel"))
+            && request.body().toUpperCase(Locale.ROOT).contains("AION_MEMBERSHIP");
     }
 
     public static String extractXmlField(String body, String tag) {
@@ -63,66 +121,105 @@ public final class StsVipProtocol {
         return matcher.group(1).trim();
     }
 
-    public static String extractHeader(String headers, String key) {
-        if (headers == null || key == null || key.isEmpty()) {
-            return null;
+    /**
+     * LoginTokenStart reply with private-server trust-anchor.
+     * Requires Game.dll patched with the matching public NC blob.
+     */
+    public static String buildLoginTokenStartReplyBody() {
+        if (!StsAuthCrypto.isAvailable()) {
+            log.error(I18n.get("log.c9e58ac1d427"));
+            // ServerRand-only keeps client alive but will not finish auth.
+            return buildServerRandOnlyReply();
         }
-        Matcher matcher = HEADER_PATTERN.matcher(headers);
-        while (matcher.find()) {
-            if (matcher.group(1).equalsIgnoreCase(key)) {
-                return matcher.group(2).trim();
-            }
+        try {
+            byte[] serverRand = new byte[32];
+            RANDOM.nextBytes(serverRand);
+            StsAuthCrypto crypto = StsAuthCrypto.get();
+            byte[] signature = crypto.signServerPublicKey();
+            String body = "<Reply>"
+                + "<ServerRand>" + Base64.getEncoder().encodeToString(serverRand) + "</ServerRand>"
+                + "<ServerPublicKey>" + crypto.publicKeyB64() + "</ServerPublicKey>"
+                + "<ServerSignature>" + Base64.getEncoder().encodeToString(signature) + "</ServerSignature>"
+                + "</Reply>\r\n";
+            log.info(I18n.get(
+                "log.3c7011fd3dcf",
+                serverRand.length,
+                signature.length,
+                crypto.publicKeyFingerprint()
+            ));
+            return body;
+        } catch (GeneralSecurityException e) {
+            log.error(I18n.get("log.a627ce227b9d"), e);
+            return buildServerRandOnlyReply();
         }
-        return null;
     }
 
-    public static boolean isLevelGetLevel(String requestLine, String headers, String body) {
-        String haystack = ((requestLine == null ? "" : requestLine) + "\n"
-            + (headers == null ? "" : headers) + "\n"
-            + (body == null ? "" : body)).toLowerCase(Locale.ROOT);
-        return haystack.contains("/level/getlevel")
-            || (haystack.contains("getlevel") && haystack.contains("aion_membership"))
-            || haystack.contains("gametierkey");
-    }
-
-    public static boolean isConnect(String requestLine, String body) {
-        String haystack = ((requestLine == null ? "" : requestLine) + "\n"
-            + (body == null ? "" : body)).toLowerCase(Locale.ROOT);
-        return haystack.contains("<connect");
-    }
-
-    public static String buildLevelReplyBody(String userId, String appGroup, long score) {
-        String safeUser = userId == null || userId.isBlank() ? "unknown" : userId;
-        String safeGroup = appGroup == null || appGroup.isBlank() ? "AION" : appGroup;
-        long safeScore = Math.max(0L, score);
+    private static String buildServerRandOnlyReply() {
+        byte[] serverRand = new byte[32];
+        RANDOM.nextBytes(serverRand);
         return "<Reply>"
-            + "<UserId>" + escapeXml(safeUser) + "</UserId>"
-            + "<AppGroupCode>" + escapeXml(safeGroup) + "</AppGroupCode>"
-            + "<LevelId>1</LevelId>"
-            + "<AccumulateGradeScore>" + safeScore + "</AccumulateGradeScore>"
-            + "<MinimumLevelScore>" + safeScore + "</MinimumLevelScore>"
-            + "<MaximumLevelScore>" + safeScore + "</MaximumLevelScore>"
-            + "<MaximumGradeScore>" + safeScore + "</MaximumGradeScore>"
+            + "<ServerRand>" + Base64.getEncoder().encodeToString(serverRand) + "</ServerRand>"
             + "</Reply>\r\n";
     }
 
-    public static byte[] buildResponse(String body, String session, String seq) {
-        String payload = body == null ? "" : body;
-        byte[] bodyBytes = payload.getBytes(StandardCharsets.UTF_8);
-        StringBuilder headers = new StringBuilder(96);
-        headers.append("STS/1.0 200 OK\r\n");
-        if (session != null && !session.isBlank()) {
-            headers.append("s:").append(session.trim()).append("\r\n");
+    public static String buildTokenKeyDataReplyBody() {
+        return "<Reply/>\r\n";
+    }
+
+    public static String buildLoginFinishReplyBody(String userId) {
+        String safeUser = userId == null || userId.isBlank() ? "unknown" : escapeXml(userId);
+        return "<Reply>"
+            + "<UserId>" + safeUser + "</UserId>"
+            + "<UserName>" + safeUser + "</UserName>"
+            + "</Reply>\r\n";
+    }
+
+    /** Client walks Reply/GameAccount/Alias after LoginFinish. */
+    public static String buildListMyAccountsReplyBody(String alias) {
+        String safe = alias == null || alias.isBlank() ? "unknown" : escapeXml(alias);
+        return "<Reply>"
+            + "<GameAccount>"
+            + "<Alias>" + safe + "</Alias>"
+            + "</GameAccount>"
+            + "</Reply>\r\n";
+    }
+
+    /** Client requires Reply/Token after ListMyAccounts. */
+    public static String buildRequestGameTokenReplyBody(String token) {
+        String safe = token == null || token.isBlank() ? "local-token" : escapeXml(token);
+        return "<Reply>"
+            + "<Token>" + safe + "</Token>"
+            + "</Reply>\r\n";
+    }
+
+    public static String buildLevelReplyBody(long score) {
+        long safeScore = Math.max(0L, score);
+        long maximumScore = Math.max(MAX_VIP_SCORE, safeScore);
+        return "<Reply>"
+            + "<LevelId>1</LevelId>"
+            + "<AppGroupCode>AION</AppGroupCode>"
+            + "<MaximumLevelScore>" + maximumScore + "</MaximumLevelScore>"
+            + "<MaximumGradeScore>" + maximumScore + "</MaximumGradeScore>"
+            + "<AccumulateGradeScore>" + safeScore + "</AccumulateGradeScore>"
+            + "<MinimumLevelScore>0</MinimumLevelScore>"
+            + "<ReservedScore>0</ReservedScore>"
+            + "<PolicyVersion>1</PolicyVersion>"
+            + "<EffectiveTimeSec>0</EffectiveTimeSec>"
+            + "</Reply>\r\n";
+    }
+
+    public static byte[] buildResponse(String body, String sequence) {
+        byte[] bodyBytes = (body == null ? "" : body).getBytes(StandardCharsets.UTF_8);
+        StringBuilder header = new StringBuilder(64).append("STS/1.0 200 OK\r\n");
+        if (sequence != null && !sequence.isBlank()) {
+            header.append("s:").append(sequence.trim()).append("\r\n");
         }
-        if (seq != null && !seq.isBlank()) {
-            headers.append("R:").append(seq.trim()).append("\r\n");
-        }
-        headers.append("l:").append(bodyBytes.length).append("\r\n\r\n");
-        byte[] headBytes = headers.toString().getBytes(StandardCharsets.UTF_8);
-        byte[] out = new byte[headBytes.length + bodyBytes.length];
-        System.arraycopy(headBytes, 0, out, 0, headBytes.length);
-        System.arraycopy(bodyBytes, 0, out, headBytes.length, bodyBytes.length);
-        return out;
+        header.append("l:").append(bodyBytes.length).append("\r\n\r\n");
+        byte[] headerBytes = header.toString().getBytes(StandardCharsets.US_ASCII);
+        byte[] response = new byte[headerBytes.length + bodyBytes.length];
+        System.arraycopy(headerBytes, 0, response, 0, headerBytes.length);
+        System.arraycopy(bodyBytes, 0, response, headerBytes.length, bodyBytes.length);
+        return response;
     }
 
     public static String escapeXml(String value) {
@@ -134,78 +231,47 @@ public final class StsVipProtocol {
             .replace("'", "&apos;");
     }
 
-    /** Best-effort first complete STS/text request from a TCP buffer. */
-    public static ParsedRequest tryParse(String buffer) {
-        if (buffer == null) {
-            return null;
-        }
-        int sep = buffer.indexOf("\r\n\r\n");
-        if (sep < 0) {
-            return null;
-        }
-        String headers = buffer.substring(0, sep);
-        String rest = buffer.substring(sep + 4);
-        int bodyLen = 0;
-        String lengthHeader = extractHeader(headers, "l");
-        if (lengthHeader != null) {
-            try {
-                bodyLen = Integer.parseInt(lengthHeader.trim());
-            } catch (NumberFormatException ignored) {
-                bodyLen = 0;
+    private static int parseBodyLength(String value) throws IOException {
+        try {
+            int length = Integer.parseInt(value);
+            if (length < 0 || length > MAX_BODY_BYTES) {
+                throw new IOException("STS body length out of range: " + length);
             }
+            return length;
+        } catch (NumberFormatException e) {
+            throw new IOException("Invalid STS body length: " + value, e);
         }
-        if (bodyLen < 0) {
-            bodyLen = 0;
-        }
-        if (rest.length() < bodyLen) {
-            return null;
-        }
-        String body = bodyLen > 0 ? rest.substring(0, bodyLen) : "";
-        String leftover = bodyLen > 0 ? rest.substring(bodyLen) : rest;
-        String requestLine = headers;
-        int firstBreak = headers.indexOf("\r\n");
-        if (firstBreak >= 0) {
-            requestLine = headers.substring(0, firstBreak);
-            headers = headers.substring(firstBreak + 2);
-        }
-        return new ParsedRequest(requestLine, headers, body, leftover);
     }
 
-    public static final class ParsedRequest {
-        public final String requestLine;
-        public final String headers;
-        public final String body;
-        public final String leftover;
-
-        public ParsedRequest(String requestLine, String headers, String body, String leftover) {
-            this.requestLine = requestLine;
-            this.headers = headers;
-            this.body = body;
-            this.leftover = leftover;
-        }
-
-        public String session() {
-            return extractHeader(headers, "s");
-        }
-
-        public String seq() {
-            String value = extractHeader(headers, "R");
-            return value != null ? value : extractHeader(headers, "r");
-        }
-
-        public String userId() {
-            String fromBody = extractXmlField(body, "UserId");
-            if (fromBody != null && !fromBody.isBlank()) {
-                return fromBody;
-            }
-            // fallback: some clients may only put path/user elsewhere
-            Matcher matcher = XML_FIELD.matcher(body == null ? "" : body);
-            while (matcher.find()) {
-                if ("userid".equalsIgnoreCase(matcher.group(1))) {
-                    return matcher.group(2).trim();
+    private static String readLine(InputStream input) throws IOException {
+        ByteArrayOutputStream line = new ByteArrayOutputStream(64);
+        while (true) {
+            int value = input.read();
+            if (value < 0) {
+                if (line.size() == 0) {
+                    return null;
                 }
+                throw new EOFException("Unexpected end of STS line");
             }
-            return null;
+            if (value == '\n') {
+                byte[] bytes = line.toByteArray();
+                int length = bytes.length;
+                if (length > 0 && bytes[length - 1] == '\r') {
+                    length--;
+                }
+                return new String(bytes, 0, length, StandardCharsets.US_ASCII);
+            }
+            if (line.size() >= MAX_LINE_BYTES) {
+                throw new IOException("STS header line too long");
+            }
+            line.write(value);
+        }
+    }
+
+    public record ParsedRequest(String requestLine, String body, String sequence) {
+
+        boolean isPath(String path) {
+            return ("POST " + path + " STS/1.0").equalsIgnoreCase(requestLine.trim());
         }
     }
 }

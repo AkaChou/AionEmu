@@ -28,6 +28,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DYNAMIC_LIMIT_AREA_I
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OBJECTS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_COUNT_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_NOTIFY_VIP_ICON;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -82,7 +83,10 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		if (activePlayer.isInInstance()) {
 			sendPacket(new SM_INSTANCE_COUNT_INFO(activePlayer.getWorldId(), activePlayer.getInstanceId()));
 		}
+		sendPacket(SM_CHAR_BM_PACK_LIST.vipForCharSelect(
+			activePlayer.getPlayerAccount().getVipLevel(), activePlayer.getPlayerAccount().getVipExp()));
 		sendPacket(new SM_PLAYER_INFO(activePlayer, false));
+		sendPacket(new SM_NOTIFY_VIP_ICON(activePlayer));
 		activePlayer.getController().startProtectionActiveTask();
 		sendPacket(new SM_MOTION(activePlayer.getObjectId(), activePlayer.getMotions().getActiveMotions()));
 		RetailWindstreamEngine.sendStates(activePlayer);
@@ -154,7 +158,8 @@ public class CM_LEVEL_READY extends AionClientPacket {
 
 		activePlayer.setPortAnimation(0x02);
 		PacketSendUtility.sendPacket(activePlayer, new SM_CHAR_BM_PACK_LIST(1));
-		PacketSendUtility.sendPacket(activePlayer,
-				SM_CHAR_BM_PACK_LIST.vip(activePlayer.getPlayerAccount().getVipLevel()));
+		PacketSendUtility.sendPacket(activePlayer, SM_CHAR_BM_PACK_LIST.vip(
+			activePlayer.getPlayerAccount().getVipLevel(),
+			activePlayer.getPlayerAccount().getVipRemainingSeconds()));
 	}
 }

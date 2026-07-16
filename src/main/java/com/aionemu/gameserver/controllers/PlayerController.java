@@ -97,6 +97,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (object instanceof Player) {
 			Player player = (Player) object;
 			PacketSendUtility.sendPacket(getOwner(), new SM_PLAYER_INFO(player, getOwner().isAggroIconTo(player)));
+			PacketSendUtility.sendPacket(getOwner(), new SM_NOTIFY_VIP_ICON(player));
 			PacketSendUtility.sendPacket(getOwner(), new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
 			if (player.isUseRobot() || player.getRobotId() != 0) {
 				PacketSendUtility.sendPacket(getOwner(), new SM_USE_ROBOT(player, getRobotInfo(player).getRobotId()));

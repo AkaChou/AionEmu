@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
@@ -42,7 +43,9 @@ public class StaggerEffect extends EffectTemplate {
 			}
 			effected.getController().cancelCurrentSkill();
 			effected.getEffectController().removeParalyzeEffects();
-			effected.getMoveController().abortMove();
+			if (!(effected instanceof Npc)) {
+				effected.getMoveController().abortMove();
+			}
 			PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(), new SM_FORCED_MOVE(effect.getEffector(),
 					effect.getEffected().getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),

@@ -20,4 +20,16 @@ class PlayerEnterWorldVipTest {
 		assertTrue(applyBenefits < sendItemInfos);
 		assertEquals(applyBenefits, source.lastIndexOf("VipService.applyBenefits(player);"));
 	}
+
+	@Test
+	void sendsClientVipBenefitsAfterBaseBenefitPack() throws Exception {
+		String source = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_LEVEL_READY.java"));
+		int basePack = source.indexOf("new SM_CHAR_BM_PACK_LIST(1)");
+		int vipPack = source.indexOf("PacketSendUtility.sendPacket(activePlayer, SM_CHAR_BM_PACK_LIST.vip(");
+
+		assertTrue(basePack >= 0);
+		assertTrue(basePack < vipPack);
+		assertEquals(vipPack, source.lastIndexOf("PacketSendUtility.sendPacket(activePlayer, SM_CHAR_BM_PACK_LIST.vip("));
+	}
 }

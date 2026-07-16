@@ -76,6 +76,7 @@ CREATE TABLE `account_vip` (
   `account_id` int(11) NOT NULL,
   `vip_level` tinyint(3) unsigned NOT NULL COMMENT 'Client VIP stage (1-6)',
   `vip_exp` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'VIP progress experience',
+  `expire_time` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'Unix seconds VIP end time',
   PRIMARY KEY (`account_id`),
   CONSTRAINT `FK_account_vip_account` FOREIGN KEY (`account_id`) REFERENCES `account_data` (`id`) ON DELETE CASCADE,
   CONSTRAINT `CHK_account_vip_level` CHECK (`vip_level` BETWEEN 1 AND 6)

@@ -9,6 +9,7 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_IMMOBILIZE;
@@ -54,7 +55,9 @@ public class RootEffect extends EffectTemplate {
 		if (effected.isInState(CreatureState.RESTING)) {
 			effected.unsetState(CreatureState.RESTING);
 		}
-		effected.getMoveController().abortMove();
+		if (!(effected instanceof Npc)) {
+			effected.getMoveController().abortMove();
+		}
 		effected.getController().cancelCurrentSkill();
 		effected.getEffectController().setAbnormal(AbnormalState.ROOT.getId());
 		effect.setAbnormal(AbnormalState.ROOT.getId());

@@ -94,6 +94,18 @@ class PathServiceCompressionTest {
 	}
 
 	@Test
+	void groundWaypointUsesBoundedPathSearchBeforeGeoFallback() throws IOException {
+		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/path/PathService.java"));
+		String method = source.substring(source.indexOf("public boolean canReachWaypoint"),
+				source.indexOf("public long obstacleVersion"));
+
+		assertTrue(method.indexOf("groundWaypointStatus") < method.indexOf("canPass("));
+		assertTrue(method.contains("status != PathData.SearchStatus.INVALID_POSITION"));
+		assertTrue(method.contains("WAYPOINT_SEARCH_MAX_NODES"));
+		assertFalse(method.contains(", 1, terrain"));
+	}
+
+	@Test
 	void pathCacheKeyQuantizesEndpointsToTwoMeterCells() {
 		// 2m 格：[-1,1)→0，[1,3)→1
 		var a = PathService.pathCacheKey(1, 0, 3L, false, 0.4f, 0.4f, 0.4f, 10.4f, 10.4f, 1f);

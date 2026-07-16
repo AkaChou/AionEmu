@@ -54,6 +54,8 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
     private final byte isReturn;
     private final int vipLevel;
     private final long vipExp;
+    /** Unix seconds VIP end time. */
+    private final long vipExpireTime;
 
     /**
      * 构造账号鉴权响应包。
@@ -69,7 +71,7 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
      * return-player flag
      */
     public SM_ACCOUNT_AUTH_RESPONSE(int accountId, boolean ok, String accountName, byte accessLevel, byte membership,
-            long toll, long luna, byte isReturn, int vipLevel, long vipExp) {
+            long toll, long luna, byte isReturn, int vipLevel, long vipExp, long vipExpireTime) {
         this.accountId = accountId;
         this.ok = ok;
         this.accountName = accountName;
@@ -80,6 +82,7 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
         this.isReturn = isReturn;
         this.vipLevel = vipLevel;
         this.vipExp = vipExp;
+        this.vipExpireTime = vipExpireTime;
     }
 
     /**
@@ -105,6 +108,7 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
             writeC(isReturn);
             writeC(vipLevel);
             writeQ(vipExp);
+            writeQ(vipExpireTime);
         }
     }
 }

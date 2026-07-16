@@ -142,6 +142,22 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
+	void movingChaseTargetDoesNotRestartTheMoveAnimation() {
+		assertTrue(NpcMoveController.shouldRestartMovement(true, MovementMask.IMMEDIATE));
+		assertFalse(NpcMoveController.shouldRestartMovement(true, MovementMask.NPC_STARTMOVE));
+		assertFalse(NpcMoveController.shouldRestartMovement(true, MovementMask.NPC_RUN_SLOW));
+		assertTrue(NpcMoveController.shouldRestartMovement(false, MovementMask.NPC_RUN_SLOW));
+	}
+
+	@Test
+	void movingChaseTargetPacketsAreThrottled() {
+		assertFalse(NpcMoveController.shouldBroadcastDestination(true, true, 1_199, 1_000));
+		assertTrue(NpcMoveController.shouldBroadcastDestination(true, true, 1_200, 1_000));
+		assertTrue(NpcMoveController.shouldBroadcastDestination(false, true, 1_001, 1_000));
+		assertFalse(NpcMoveController.shouldBroadcastDestination(true, false, 2_000, 1_000));
+	}
+
+	@Test
 	void directCrowdStepDoesNotRestartTheMoveAnimation() {
 		assertFalse(NpcMoveController.avoidanceChangedStep(1, 2, 3, new float[] {1, 2, 3}));
 		assertTrue(NpcMoveController.avoidanceChangedStep(1, 2, 3, new float[] {1, 2.1f, 3}));
@@ -191,7 +207,23 @@ class NpcMoveControllerPathTest {
 		assertTrue(NpcMoveController.shouldReactToPathFailure(1_000, false, 6_001));
 		assertFalse(NpcMoveController.shouldReactToPathFailure(1_000, true, 7_000));
 		long definitive = NpcMoveController.pathFailureStartedAt(0, 6_000, true);
-		assertTrue(NpcMoveController.shouldReactToPathFailure(definitive, false, 6_000));
+		assertFalse(NpcMoveController.shouldReactToPathFailure(definitive, false, 11_000));
+		assertTrue(NpcMoveController.shouldReactToPathFailure(definitive, false, 11_001));
+	}
+
+	@Test
+	void failedPathTriesLocalAvoidanceOncePerSecond() {
+		assertFalse(NpcMoveController.shouldTryPathAvoidance(1_000, 0, 0, 1_999));
+		assertTrue(NpcMoveController.shouldTryPathAvoidance(1_000, 0, 0, 2_000));
+		assertFalse(NpcMoveController.shouldTryPathAvoidance(1_000, 1_500, 1, 2_000));
+		assertFalse(NpcMoveController.shouldTryPathAvoidance(1_000, 0, 4, 5_000));
+	}
+
+	@Test
+	void localAvoidanceStepKeepsTheTargetSlope() {
+		assertArrayEquals(new float[] {0.9f, 1.2f, 3},
+				NpcMoveController.localAvoidanceTarget(0, 0, 0, 3, 4, 10, 1.5f), 0.001f);
+		assertEquals(null, NpcMoveController.localAvoidanceTarget(1, 1, 1, 1, 1, 3, 1.5f));
 	}
 
 	@Test
@@ -216,6 +248,14 @@ class NpcMoveControllerPathTest {
 		assertFalse(NpcMoveController.shouldRequestHomePath(false, true, true, 1_000, 500));
 		assertTrue(NpcMoveController.shouldRequestHomePath(false, true, false, 1_000, 500));
 		assertFalse(NpcMoveController.shouldRequestHomePath(true, false, false, 1_000, 500));
+	}
+
+	@Test
+	void failedHomePathTeleportsOnlyAfterTheRequestCompletes() {
+		assertTrue(NpcMoveController.shouldFinishFailedHomeReturn(1_000, false, false));
+		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(0, false, false));
+		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(1_000, true, false));
+		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(1_000, false, true));
 	}
 
 	@Test

@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
@@ -43,7 +44,9 @@ public class StumbleEffect extends EffectTemplate {
 			}
 			effected.getController().cancelCurrentSkill();
 			effected.getEffectController().removeParalyzeEffects();
-			effected.getMoveController().abortMove();
+			if (!(effected instanceof Npc)) {
+				effected.getMoveController().abortMove();
+			}
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
 					effected.getHeading());
 			PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(), new SM_FORCED_MOVE(effect.getEffector(),

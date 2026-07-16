@@ -44,6 +44,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 /**
  * 负责通过 JAXB 加载静态数据 XML；配合 {@link XmlMerger} 将多文件合并为缓存后反序列化。
@@ -140,7 +141,15 @@ public class XmlDataLoader {
 	 * @return 包含全部游戏静态数据的对象 / object containing all game static data from XML
 	 */
 	public StaticData loadStaticData() {
-		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole());
+		return loadStaticData(this::loadSkillData);
+	}
+
+	/**
+	 * 使用可预先启动的技能数据提供器加载静态数据。
+	 * Loads static data with a skill-data supplier that callers may start in advance.
+	 */
+	public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier) {
+		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole(), skillDataSupplier);
 	}
 
 	/**
@@ -151,6 +160,10 @@ public class XmlDataLoader {
 	 * @return 静态数据，失败则为 null / static data, or null on failure
 	 */
 	StaticData loadStaticData(StaticDataProgressReporter progressReporter) {
+		return loadStaticData(progressReporter, this::loadSkillData);
+	}
+
+	private StaticData loadStaticData(StaticDataProgressReporter progressReporter, Supplier<SkillData> skillDataSupplier) {
 		File cachedXml = Config.cacheFile(CACHE_XML_FILE);
 		makeCacheDirectory(cachedXml.getParentFile());
 		File cleanMainXml = Config.dataFile(MAIN_XML_FILE);
@@ -175,7 +188,7 @@ public class XmlDataLoader {
 				PetDefinitionLoader.Result petDefinitions = loadPetDefinitions();
 				data.npcDropData = loadNpcDropData();
 				data.hotspotLocationData = loadHotspotLocationData();
-				data.skillData = loadSkillData();
+				data.skillData = skillDataSupplier.get();
 				data.motionData = loadMotionData();
 				data.chargeSkillData = loadChargeSkillData();
 				data.npcSkillData = loadNpcSkillData();

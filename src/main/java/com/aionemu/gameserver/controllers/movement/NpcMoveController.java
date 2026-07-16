@@ -57,8 +57,12 @@ public class NpcMoveController
     private static final long REACH_CHECK_CACHE_MS = 100;
     private static final long PATH_RETRY_DELAY_MS = 500;
     private static final long PATH_FAILURE_REACTION_DELAY_MS = 5_000;
+    private static final long PATH_AVOIDANCE_INTERVAL_MS = 1_000;
+    private static final int PATH_AVOIDANCE_MAX_ATTEMPTS = 4;
+    private static final float PATH_AVOIDANCE_STEP = 1.5f;
     private static final long HOME_RETURN_TIMEOUT_MS = 60_000;
     private static final long HOME_SP_RETURN_TIMEOUT_MS = 30_000;
+    private static final long CHASE_MOVE_BROADCAST_INTERVAL_MS = 200;
     /** 当前目的地类型 / Current destination type */
     private Destination destination = Destination.TARGET_OBJECT;
     /** Point X / Point X */
@@ -106,6 +110,7 @@ public class NpcMoveController
     private long pathRetryAt;
     /** 当前 PATH 等待阶段是否已经广播停止。 / Whether stop was already broadcast for the current PATH wait. */
     private boolean pathStopSent;
+    private long lastMoveBroadcastAt;
     /** 最近一次确定无路的目标坐标。 / Last destination that was confirmed unreachable. */
     private float failedPathX = Float.NaN, failedPathY, failedPathZ;
     /** 首次连续寻路失败时间。 / First failure time in the current consecutive failure period. */
@@ -114,6 +119,8 @@ public class NpcMoveController
     private long failedPathObstacleVersion;
     /** 当前连续失败是否已经进入失败策略。 / Whether the current failure period already entered its policy. */
     private boolean pathFailureHandled;
+    private long lastPathAvoidanceAt;
+    private int pathAvoidanceAttempts;
     /** 已应用拉取策略的目标 ID。 / Target ID tracked by the pull-target failure policy. */
     private int pathPullTargetId;
     /** 对同一目标已执行的拉取次数。 / Pull attempts already used for the same target. */
@@ -228,6 +235,15 @@ public class NpcMoveController
      */
     static boolean shouldBroadcastMovement(byte currentMask, byte newMask, boolean destinationChanged) {
         return currentMask != newMask || destinationChanged;
+    }
+
+    static boolean shouldRestartMovement(boolean chasingTarget, byte currentMask) {
+        return !chasingTarget || currentMask == MovementMask.IMMEDIATE;
+    }
+
+    static boolean shouldBroadcastDestination(boolean chasingTarget, boolean destinationChanged, long now,
+            long lastBroadcastAt) {
+        return destinationChanged && (!chasingTarget || now - lastBroadcastAt >= CHASE_MOVE_BROADCAST_INTERVAL_MS);
     }
 
     static boolean avoidanceChangedStep(float x, float y, float z, float[] avoidance) {
@@ -387,8 +403,12 @@ public class NpcMoveController
                     }
                     boolean retryFailedPath = shouldRetryFailedPath(failedPathX, failedPathY, failedPathZ, pointX, pointY,
                             pointZ, failedPathObstacleVersion, currentObstacleVersion());
-                    if (!retryFailedPath && shouldReactToPathFailure(firstPathFailureAt, pathFailureHandled,
-                            System.currentTimeMillis())) {
+                    long now = System.currentTimeMillis();
+                    if (!retryFailedPath && tryPathAvoidance(creature, now)) {
+                        updateLastMove();
+                        return;
+                    }
+                    if (!retryFailedPath && shouldReactToPathFailure(firstPathFailureAt, pathFailureHandled, now)) {
                         pathFailureHandled = true;
                         TargetEventHandler.onPathFindFailed((NpcAI2) owner.getAi2());
                         return;
@@ -432,9 +452,7 @@ public class NpcMoveController
                     return;
                 }
                 if (hasHomeReturnTimedOut(homeReturnStartedAt, HOME_RETURN_TIMEOUT_MS, now)) {
-                    abortMove();
-                    owner.getController().scheduleRespawn();
-                    owner.getController().onDelete();
+                    finishFailedHomeReturn();
                     return;
                 }
                 if (!usesPath()) {
@@ -444,6 +462,10 @@ public class NpcMoveController
                 if (GameWorldServices.pathService().hasPathingData(owner)
                         && shouldRequestHomePath(cachedPathValid, retryFailedPath, pendingPath != null, now, pathRetryAt)) {
                     requestLocationPath();
+                }
+                if (shouldFinishFailedHomeReturn(firstPathFailureAt, retryFailedPath, pendingPath != null)) {
+                    finishFailedHomeReturn();
+                    return;
                 }
                 float[][] path = pathSnapshot();
                 if (path != null && path.length > 0) {
@@ -487,12 +509,12 @@ public class NpcMoveController
     }
 
     private void moveToLocation(float targetX, float targetY, float targetZ, float offset, float[][] path) {
-        boolean directionChanged = false;
         float ownerX = ((Npc)this.owner).getX();
         float ownerY = ((Npc)this.owner).getY();
         float ownerZ = ((Npc)this.owner).getZ();
-        boolean bl = directionChanged = targetX != this.targetDestX || targetY != this.targetDestY || targetZ != this.targetDestZ;
-        if (directionChanged) {
+        boolean destinationChanged = targetX != this.targetDestX || targetY != this.targetDestY || targetZ != this.targetDestZ;
+        boolean directionChanged = destinationChanged && shouldRestartMovement(destination == Destination.TARGET_OBJECT, movementMask);
+        if (destinationChanged) {
             this.heading = (byte)(Math.toDegrees(Math.atan2(targetY - ownerY, targetX - ownerX)) / 3.0);
         }
         if (((Npc)this.owner).getAi2().isLogging()) {
@@ -577,13 +599,16 @@ public class NpcMoveController
             return;
         }
         byte newMask = this.getMoveMask(directionChanged);
-        if (shouldBroadcastMovement(this.movementMask, newMask, directionChanged)) {
+        boolean broadcastDestination = shouldBroadcastDestination(destination == Destination.TARGET_OBJECT, destinationChanged, now,
+                lastMoveBroadcastAt);
+        if (shouldBroadcastMovement(this.movementMask, newMask, broadcastDestination || directionChanged)) {
             if (this.movementMask != newMask) {
                 if (((Npc)this.owner).getAi2().isLogging()) {
                     AI2Logger.moveinfo((Creature)this.owner, "oldMask=" + this.movementMask + " newMask=" + newMask);
                 }
                 this.movementMask = newMask;
             }
+            lastMoveBroadcastAt = now;
             PacketSendUtility.broadcastPacket(this.owner, new SM_MOVE((Creature)this.owner));
         }
     }
@@ -727,6 +752,35 @@ public class NpcMoveController
     private float[] avoidNearbyNpcs(float targetX, float targetY, float targetZ, long now, long elapsedMillis) {
         return NpcCrowdManager.choose(crowdAgent(owner), targetX, targetY, targetZ,
                 (x, y, z) -> GameWorldServices.pathService().canReachWaypoint(owner, x, y, z), now, elapsedMillis);
+    }
+
+    private boolean tryPathAvoidance(Creature target, long now) {
+        if (!shouldTryPathAvoidance(firstPathFailureAt, lastPathAvoidanceAt, pathAvoidanceAttempts, now)) {
+            return false;
+        }
+        lastPathAvoidanceAt = now;
+        pathAvoidanceAttempts++;
+        float[] desired = localAvoidanceTarget(owner.getX(), owner.getY(), owner.getZ(), pointX, pointY, pointZ,
+                PATH_AVOIDANCE_STEP);
+        if (desired == null) {
+            return false;
+        }
+        float oldX = owner.getX();
+        float oldY = owner.getY();
+        float oldZ = owner.getZ();
+        float[] step = NpcCrowdManager.choose(crowdAgent(owner), desired[0], desired[1], desired[2],
+                (x, y, z) -> GameWorldServices.pathService().canReachWaypoint(owner, x, y, z), now,
+                Math.max(1, now - lastMoveUpdate));
+        if (step == null) {
+            return false;
+        }
+        moveToLocation(step[0], step[1], step[2], 0);
+        if (MathUtil.getDistance(oldX, oldY, oldZ, owner.getX(), owner.getY(), owner.getZ()) <= MOVE_OFFSET) {
+            return false;
+        }
+        resetPath();
+        requestTargetPath(target);
+        return true;
     }
 
     private static NpcCrowdManager.Agent crowdAgent(Npc npc) {
@@ -950,8 +1004,25 @@ public class NpcMoveController
         return !handled && firstFailureAt > 0 && now - firstFailureAt > PATH_FAILURE_REACTION_DELAY_MS;
     }
 
+    static boolean shouldTryPathAvoidance(long firstFailureAt, long lastAttemptAt, int attempts, long now) {
+        return firstFailureAt > 0 && attempts < PATH_AVOIDANCE_MAX_ATTEMPTS
+                && now - firstFailureAt >= PATH_AVOIDANCE_INTERVAL_MS
+                && now - lastAttemptAt >= PATH_AVOIDANCE_INTERVAL_MS;
+    }
+
+    static float[] localAvoidanceTarget(float x, float y, float z, float targetX, float targetY, float targetZ, float step) {
+        float dx = targetX - x;
+        float dy = targetY - y;
+        float distance = (float) Math.hypot(dx, dy);
+        if (distance <= MOVE_OFFSET) {
+            return null;
+        }
+        float ratio = Math.min(Math.max(0, step), distance) / distance;
+        return new float[] {x + dx * ratio, y + dy * ratio, z + (targetZ - z) * ratio};
+    }
+
     static long pathFailureStartedAt(long current, long now, boolean definitive) {
-        return definitive ? now - PATH_FAILURE_REACTION_DELAY_MS - 1 : current == 0 ? now : current;
+        return current == 0 ? now : current;
     }
 
     static boolean hasHomeReturnTimedOut(long startedAt, long timeout, long now) {
@@ -960,6 +1031,10 @@ public class NpcMoveController
 
     static boolean shouldTeleportFailedHomeReturn(boolean spReturn, long startedAt, long now) {
         return spReturn && hasHomeReturnTimedOut(startedAt, HOME_SP_RETURN_TIMEOUT_MS, now);
+    }
+
+    static boolean shouldFinishFailedHomeReturn(long firstFailureAt, boolean retryFailedPath, boolean requestPending) {
+        return firstFailureAt > 0 && !retryFailedPath && !requestPending;
     }
 
     static boolean shouldCompleteHomeReturn(boolean pathFinished, boolean homeReached) {
@@ -1046,6 +1121,8 @@ public class NpcMoveController
         firstPathFailureAt = 0;
         failedPathObstacleVersion = 0;
         pathFailureHandled = false;
+        lastPathAvoidanceAt = 0;
+        pathAvoidanceAttempts = 0;
     }
 
     private void recordPathFailure(float targetX, float targetY, float targetZ, boolean definitive) {
@@ -1056,6 +1133,10 @@ public class NpcMoveController
         failedPathZ = targetZ;
         failedPathObstacleVersion = cachedObstacleVersion;
         long now = System.currentTimeMillis();
+        if (newFailure) {
+            lastPathAvoidanceAt = 0;
+            pathAvoidanceAttempts = 0;
+        }
         if (newFailure || firstPathFailureAt == 0 || definitive) {
             firstPathFailureAt = pathFailureStartedAt(newFailure ? 0 : firstPathFailureAt, now, definitive);
             pathFailureHandled = false;

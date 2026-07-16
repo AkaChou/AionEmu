@@ -98,6 +98,7 @@ public class Skill {
 	private int skillskinHitTIme = 0;
 	private ChargeSkillTemplate chargeTemplate = null;
 	private Future<?> castingTask = null;
+	private volatile boolean castCancelled;
 	private long castStart = 0;
 	/**
 	 * 依赖 BOOST_CASTING_TIME 的持续时间。
@@ -1271,6 +1272,7 @@ public class Skill {
 	 *
 	 */
 	public void cancelCast() {
+		castCancelled = true;
 		if (castingTask != null) {
 			castingTask.cancel(true);
 			castingTask = null;
@@ -1281,7 +1283,7 @@ public class Skill {
 	 * Apply effects and perform actions specified in skill template
 	 */
 	private void endCast() {
-		if (!effector.isCasting()) {
+		if (castCancelled || !effector.isCasting()) {
 			return;
 		}
 

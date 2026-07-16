@@ -104,17 +104,21 @@ public class AccountController {
             long toll = DAOManager.getDAO(PremiumDAO.class).getPoints(acc.getId());
             long luna = DAOManager.getDAO(PremiumDAO.class).getLuna(acc.getId());
             Vip vip = new VipService().findByAccountId(acc.getId());
-            int vipLevel = vip == null ? 0 : vip.getLevel();
-            long vipExp = vip == null ? 0 : vip.getExperience();
+            long now = System.currentTimeMillis() / 1000L;
+            boolean vipActive = vip != null && vip.isActive(now);
+            int vipLevel = vipActive ? vip.getLevel() : 0;
+            long vipExp = vipActive ? vip.getExperience() : 0L;
+            // keep expire even when permanent (0); zero only when inactive
+            long vipExpire = vipActive ? vip.getExpireTime() : 0L;
             /**
              * 向游戏服发送认证结果。
              * Send auth response to GameServer.
              */
             gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, true, acc.getName(), acc.getAccessLevel(),
-                acc.getMembership(), toll, luna, acc.getReturn(), vipLevel, vipExp));
+                acc.getMembership(), toll, luna, acc.getReturn(), vipLevel, vipExp, vipExpire));
         } else {
             gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId, false, null, (byte) 0, (byte) 0,
-                0, 0, (byte) 0, 0, 0));
+                0, 0, (byte) 0, 0, 0, 0));
         }
     }
 

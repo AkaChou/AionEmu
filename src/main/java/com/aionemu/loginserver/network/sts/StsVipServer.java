@@ -1,46 +1,43 @@
 package com.aionemu.loginserver.network.sts;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.loginserver.configs.VipConfig;
 import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.Vip;
 import com.aionemu.loginserver.service.VipService;
-
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Tiny STS endpoint that answers China-client /Level/GetLevel with account VIP score.
- *
- * This is intentionally separate from the Aion game protocol listeners.
- */
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+/** STS endpoint that returns account_vip data to the China client. */
 @Slf4j
 public final class StsVipServer {
 
+    static final long ACCOUNT_BINDING_TTL_MILLIS = 5 * 60_000L;
+
     private static final Object LOCK = new Object();
+    private static final Map<String, AccountBinding> AUTHENTICATED_ACCOUNTS = new ConcurrentHashMap<>();
     private static StsVipServer instance;
 
-    private final AtomicBoolean running = new AtomicBoolean(false);
+    private final AtomicBoolean running = new AtomicBoolean();
+    private final String serviceContext;
+    private final VipService vipService;
     private ServerSocket serverSocket;
-    private ExecutorService acceptPool;
-    private ExecutorService clientPool;
-    private VipService vipService;
+    private Thread acceptThread;
 
     private StsVipServer() {
+        serviceContext = ServiceContext.current();
+        vipService = new VipService();
     }
 
     public static void startIfEnabled() {
@@ -67,6 +64,41 @@ public final class StsVipServer {
         if (server != null) {
             server.stop();
         }
+        AUTHENTICATED_ACCOUNTS.clear();
+    }
+
+    public static void rememberAuthenticatedAccount(String ip, int accountId) {
+        rememberAuthenticatedAccount(ip, accountId, System.currentTimeMillis());
+    }
+
+    static void rememberAuthenticatedAccount(String ip, int accountId, long nowMillis) {
+        String key = normalizeIp(ip);
+        if (key == null || accountId <= 0) {
+            return;
+        }
+        // ponytail: O(n) cleanup on login; schedule it only if login volume makes this measurable.
+        AUTHENTICATED_ACCOUNTS.entrySet().removeIf(entry -> entry.getValue().expired(nowMillis));
+        AUTHENTICATED_ACCOUNTS.put(key, new AccountBinding(accountId, nowMillis));
+    }
+
+    static Integer authenticatedAccountId(String ip, long nowMillis) {
+        String key = normalizeIp(ip);
+        if (key == null) {
+            return null;
+        }
+        AccountBinding binding = AUTHENTICATED_ACCOUNTS.get(key);
+        if (binding == null) {
+            return null;
+        }
+        if (binding.expired(nowMillis)) {
+            AUTHENTICATED_ACCOUNTS.remove(key, binding);
+            return null;
+        }
+        return binding.accountId();
+    }
+
+    static void clearAuthenticatedAccountsForTests() {
+        AUTHENTICATED_ACCOUNTS.clear();
     }
 
     private void start() {
@@ -74,154 +106,181 @@ public final class StsVipServer {
             return;
         }
         try {
-            InetAddress bindAddress = resolveBindAddress(VipConfig.STS_HOST);
-            serverSocket = new ServerSocket(VipConfig.STS_PORT, 50, bindAddress);
+            StsAuthCrypto.isAvailable(); // eager-load keys before accepting clients
+            serverSocket = new ServerSocket();
             serverSocket.setReuseAddress(true);
-            vipService = new VipService();
-            acceptPool = Executors.newSingleThreadExecutor(namedFactory("sts-vip-accept"));
-            clientPool = Executors.newCachedThreadPool(namedFactory("sts-vip-client"));
-            acceptPool.execute(this::acceptLoop);
-            log.info("STS VIP server listening on {}:{}",
-                bindAddress == null ? "*" : bindAddress.getHostAddress(),
-                VipConfig.STS_PORT);
-        } catch (Exception e) {
+            serverSocket.bind(bindAddress(), 50);
+            acceptThread = Thread.ofPlatform().daemon().name("sts-vip-accept")
+                .start(ServiceContext.wrap(this::acceptLoop, serviceContext));
+            String host = VipConfig.STS_HOST == null || VipConfig.STS_HOST.isBlank() ? "*" : VipConfig.STS_HOST;
+            log.info(I18n.get("log.cee114d726d8", host, VipConfig.STS_PORT));
+        } catch (IOException e) {
             running.set(false);
-            closeQuietly();
+            closeServerSocket();
             throw new IllegalStateException("Failed to start STS VIP server on port " + VipConfig.STS_PORT, e);
         }
     }
 
     private void stop() {
         running.set(false);
-        closeQuietly();
-        if (acceptPool != null) {
-            acceptPool.shutdownNow();
+        closeServerSocket();
+        if (acceptThread != null) {
+            acceptThread.interrupt();
+            acceptThread = null;
         }
-        if (clientPool != null) {
-            clientPool.shutdownNow();
-        }
-        log.info("STS VIP server stopped");
     }
 
     private void acceptLoop() {
         while (running.get()) {
             try {
                 Socket socket = serverSocket.accept();
-                clientPool.execute(() -> handleClient(socket));
-            } catch (SocketException closed) {
+                Thread.ofVirtual().name("sts-vip-client")
+                    .start(ServiceContext.wrap(() -> handleClient(socket), serviceContext));
+            } catch (SocketException e) {
                 if (running.get()) {
-                    log.warn("STS VIP accept socket error", closed);
+                    log.warn(I18n.get("log.d6ba62c67e76"), e);
                 }
-                break;
-            } catch (Throwable t) {
+                return;
+            } catch (IOException e) {
                 if (running.get()) {
-                    log.warn("STS VIP accept failed", t);
+                    log.warn(I18n.get("log.d6ba62c67e76"), e);
                 }
             }
         }
     }
 
     private void handleClient(Socket socket) {
-        String peer = socket.getRemoteSocketAddress() == null
-            ? "unknown"
-            : socket.getRemoteSocketAddress().toString();
-        try {
+        String peer = socket.getRemoteSocketAddress() == null ? "unknown" : socket.getRemoteSocketAddress().toString();
+        try (socket) {
             socket.setTcpNoDelay(true);
-            socket.setSoTimeout(30_000);
-            InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
-            StringBuilder buffer = new StringBuilder(1024);
-            byte[] chunk = new byte[4096];
+            socket.setSoTimeout((int) ACCOUNT_BINDING_TTL_MILLIS);
+            InputStream input = socket.getInputStream();
+            OutputStream output = socket.getOutputStream();
             while (running.get()) {
-                int read = in.read(chunk);
-                if (read < 0) {
-                    break;
+                StsVipProtocol.ParsedRequest request = StsVipProtocol.readRequest(input);
+                if (request == null) {
+                    return;
                 }
-                buffer.append(new String(chunk, 0, read, StandardCharsets.UTF_8));
-                while (true) {
-                    StsVipProtocol.ParsedRequest request = StsVipProtocol.tryParse(buffer.toString());
-                    if (request == null) {
-                        break;
-                    }
-                    buffer.setLength(0);
-                    if (request.leftover != null && !request.leftover.isEmpty()) {
-                        buffer.append(request.leftover);
-                    }
-                    byte[] response = buildResponse(request);
-                    out.write(response);
-                    out.flush();
-                    log.debug("STS VIP reply to {} for {}", peer, request.requestLine);
-                }
+                String peerIp = socket.getInetAddress().getHostAddress();
+                log.info(I18n.get("log.4bf46ab6a57e", peerIp, request.requestLine()));
+                output.write(buildResponse(request, peerIp));
+                output.flush();
             }
-        } catch (SocketException ignored) {
-            // client closed
-        } catch (Throwable t) {
-            log.warn("STS VIP client error from {}", peer, t);
-        } finally {
+        } catch (SocketException | SocketTimeoutException e) {
+            log.debug("STS client closed: {}", peer);
+        } catch (IOException e) {
+            log.warn(I18n.get("log.f207e5d32e9a", peer), e);
+        }
+    }
+
+    private byte[] buildResponse(StsVipProtocol.ParsedRequest request, String clientIp) {
+        if (StsVipProtocol.isLoginTokenStart(request)) {
+            String reply = StsVipProtocol.buildLoginTokenStartReplyBody();
+            return StsVipProtocol.buildResponse(reply, request.sequence());
+        }
+        if (StsVipProtocol.isTokenKeyData(request)) {
+            return StsVipProtocol.buildResponse(
+                StsVipProtocol.buildTokenKeyDataReplyBody(),
+                request.sequence()
+            );
+        }
+        if (StsVipProtocol.isLoginFinish(request)) {
+            String userId = resolveUserId(clientIp);
+            return StsVipProtocol.buildResponse(
+                StsVipProtocol.buildLoginFinishReplyBody(userId),
+                request.sequence()
+            );
+        }
+        if (StsVipProtocol.isListMyAccounts(request)) {
+            String alias = resolveUserId(clientIp);
+            return StsVipProtocol.buildResponse(
+                StsVipProtocol.buildListMyAccountsReplyBody(alias),
+                request.sequence()
+            );
+        }
+        if (StsVipProtocol.isRequestGameToken(request)) {
+            String alias = resolveUserId(clientIp);
+            // ponytail: opaque token; client only stores/logs it
+            String token = "local-" + alias;
+            return StsVipProtocol.buildResponse(
+                StsVipProtocol.buildRequestGameTokenReplyBody(token),
+                request.sequence()
+            );
+        }
+        if (StsVipProtocol.isLevelGetLevel(request)) {
+            Integer accountId = authenticatedAccountId(clientIp, System.currentTimeMillis());
+            long score = resolveScore(accountId);
+            log.info(I18n.get("log.64d0e3575bc9", clientIp, accountId, score));
+            return StsVipProtocol.buildResponse(StsVipProtocol.buildLevelReplyBody(score), request.sequence());
+        }
+        // Keep unknown STS calls alive with empty OK so the client can advance.
+        log.debug("STS unhandled path from {}: {}", clientIp, request.requestLine());
+        return StsVipProtocol.buildResponse("<Reply/>\r\n", request.sequence());
+    }
+
+    private String resolveUserId(String clientIp) {
+        Integer accountId = authenticatedAccountId(clientIp, System.currentTimeMillis());
+        if (accountId == null || !DAOManager.isInitialized()) {
+            return "unknown";
+        }
+        try {
+            Account account = DAOManager.getDAO(AccountDAO.class).getAccount(accountId);
+            if (account != null && account.getName() != null && !account.getName().isBlank()) {
+                return account.getName();
+            }
+        } catch (RuntimeException e) {
+            log.warn(I18n.get("log.eab3b20d42d7", accountId), e);
+        }
+        return String.valueOf(accountId);
+    }
+
+    private long resolveScore(Integer accountId) {
+        if (accountId == null || !DAOManager.isInitialized()) {
+            return 0L;
+        }
+        try {
+            Vip vip = vipService.findByAccountId(accountId);
+            long now = System.currentTimeMillis() / 1000L;
+            if (vip == null || !vip.isActive(now)) {
+                return 0L;
+            }
+            return StsVipProtocol.resolveScore(vip.getLevel(), vip.getExperience());
+        } catch (RuntimeException e) {
+            log.warn(I18n.get("log.eab3b20d42d7", accountId), e);
+            return 0L;
+        }
+    }
+
+    private static InetSocketAddress bindAddress() {
+        String host = VipConfig.STS_HOST;
+        if (host == null || host.isBlank() || "*".equals(host) || "0.0.0.0".equals(host)) {
+            return new InetSocketAddress(VipConfig.STS_PORT);
+        }
+        return new InetSocketAddress(host, VipConfig.STS_PORT);
+    }
+
+    private static String normalizeIp(String ip) {
+        if (ip == null || ip.isBlank() || "unknown".equalsIgnoreCase(ip)) {
+            return null;
+        }
+        return ip.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private void closeServerSocket() {
+        ServerSocket socket = serverSocket;
+        if (socket != null) {
             try {
                 socket.close();
             } catch (IOException ignored) {
             }
         }
+        serverSocket = null;
     }
 
-    private byte[] buildResponse(StsVipProtocol.ParsedRequest request) {
-        String session = request.session();
-        String seq = request.seq();
-        if (StsVipProtocol.isLevelGetLevel(request.requestLine, request.headers, request.body)) {
-            String userId = request.userId();
-            long score = resolveScore(userId);
-            String body = StsVipProtocol.buildLevelReplyBody(userId, VipConfig.STS_APP_GROUP, score);
-            log.info("STS Level/GetLevel userId={} score={}", userId, score);
-            return StsVipProtocol.buildResponse(body, session, seq);
-        }
-        if (StsVipProtocol.isConnect(request.requestLine, request.body)) {
-            return StsVipProtocol.buildResponse("<Reply/>\r\n", session, seq);
-        }
-        // Keep the session alive for other STS methods we do not implement yet.
-        return StsVipProtocol.buildResponse("<Reply/>\r\n", session, seq);
-    }
+    private record AccountBinding(int accountId, long authenticatedAtMillis) {
 
-    private long resolveScore(String userId) {
-        if (userId != null && !userId.isBlank() && DAOManager.isInitialized()) {
-            try {
-                Account account = DAOManager.getDAO(AccountDAO.class).getAccount(userId);
-                if (account != null && account.getId() != null) {
-                    Vip vip = vipService.findByAccountId(account.getId());
-                    if (vip != null) {
-                        return StsVipProtocol.resolveScore(vip.getLevel(), vip.getExperience(), VipConfig.STS_DEFAULT_SCORE);
-                    }
-                }
-            } catch (Throwable t) {
-                log.warn("STS VIP account lookup failed for userId={}", userId, t);
-            }
+        boolean expired(long nowMillis) {
+            return nowMillis - authenticatedAtMillis >= ACCOUNT_BINDING_TTL_MILLIS;
         }
-        return Math.max(0L, VipConfig.STS_DEFAULT_SCORE);
-    }
-
-    private static InetAddress resolveBindAddress(String host) throws IOException {
-        if (host == null || host.isBlank() || "*".equals(host) || "0.0.0.0".equals(host)) {
-            return null;
-        }
-        return InetAddress.getByName(host);
-    }
-
-    private void closeQuietly() {
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException ignored) {
-            }
-            serverSocket = null;
-        }
-    }
-
-    private static ThreadFactory namedFactory(String prefix) {
-        AtomicInteger n = new AtomicInteger();
-        return runnable -> {
-            Thread thread = new Thread(runnable, prefix + "-" + n.incrementAndGet());
-            thread.setDaemon(true);
-            return thread;
-        };
     }
 }

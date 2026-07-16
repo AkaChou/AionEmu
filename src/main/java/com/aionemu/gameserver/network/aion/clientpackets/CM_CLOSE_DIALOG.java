@@ -56,8 +56,9 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 				}
 			}, 1200);
 		}
-		if (player.getMailbox().mailBoxState != 0) {
-			player.getMailbox().mailBoxState = PlayerMailboxState.CLOSED;
+		var mailbox = player.getMailbox();
+		if (mailbox != null && mailbox.mailBoxState != PlayerMailboxState.CLOSED) {
+			mailbox.mailBoxState = PlayerMailboxState.CLOSED;
 		}
 	}
 }

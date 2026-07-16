@@ -34,6 +34,8 @@ import java.util.concurrent.atomic.LongAdder;
 public final class PathService implements DisposableBean {
 
 	private static final int MIN_LOCATION_TIMEOUT_MS = 1_000;
+	// ponytail: bounded synchronous check; raise only if local waypoints still exhaust it.
+	private static final int WAYPOINT_SEARCH_MAX_NODES = 512;
 	private static final float MAX_GROUND_GEO_SEGMENT = 49;
 	private static final float SPATIAL_CLEARANCE_SAMPLE = 0.5f;
 	private static final float GLOBAL_WATER_SAMPLE = 2;
@@ -143,6 +145,12 @@ public final class PathService implements DisposableBean {
 		}
 		WaterArea water = owner.isFlying() ? null : waterArea(owner);
 		boolean spatial = owner.isFlying() || water != null;
+		if (!spatial) {
+			PathData.SearchStatus status = groundWaypointStatus(owner, x, y, z);
+			if (status != PathData.SearchStatus.INVALID_POSITION) {
+				return status == PathData.SearchStatus.FOUND;
+			}
+		}
 		if (!canPass(owner, owner.getX(), owner.getY(), owner.getZ(), x, y, z, spatial)) {
 			return false;
 		}
@@ -159,6 +167,22 @@ public final class PathService implements DisposableBean {
 			}
 		}
 		return true;
+	}
+
+	private PathData.SearchStatus groundWaypointStatus(Creature owner, float x, float y, float z) {
+		PathData.MapData map;
+		try {
+			map = data.getMap(owner.getWorldId());
+		} catch (IllegalStateException e) {
+			return PathData.SearchStatus.INVALID_POSITION;
+		}
+		if (map == null) {
+			return PathData.SearchStatus.INVALID_POSITION;
+		}
+		PathData.HeightProvider terrain = (sampleX, sampleY) ->
+				GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), sampleX, sampleY);
+		return map.searchAStar(owner.getX(), owner.getY(), owner.getZ(), x, y, z, WAYPOINT_SEARCH_MAX_NODES, terrain,
+				null).status();
 	}
 
 	public long obstacleVersion(int worldId, int instanceId) {

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.skillengine.properties;
 
 import java.util.List;
+import java.util.Locale;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -39,7 +40,7 @@ public class TargetStatusProperty {
 		boolean result = false;
 
 		for (String status : targetStatus) {
-			if (effected.getEffectController().isAbnormalSet(AbnormalState.valueOf(status))) {
+			if (effected.getEffectController().isAbnormalSet(AbnormalState.valueOf(status.toUpperCase(Locale.ROOT)))) {
 				result = true;
 			}
 		}

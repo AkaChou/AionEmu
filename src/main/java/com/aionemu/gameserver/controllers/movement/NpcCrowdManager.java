@@ -58,7 +58,7 @@ final class NpcCrowdManager {
 				double angle = direction * Math.PI / 6;
 				float cos = (float) Math.cos(angle);
 				float sin = (float) Math.sin(angle);
-				result.add(new float[] {x + vx * cos - vy * sin, y + vx * sin + vy * cos, z + vz});
+				result.add(new float[] {x + vx * cos - vy * sin, y + vx * sin + vy * cos, z + vz * cos});
 			}
 		}
 		return result;
@@ -124,7 +124,9 @@ final class NpcCrowdManager {
 			}
 			// 先廉价碰撞，再对真正可能采用的候选做 passability，避免先扫 12 次 geo。
 			float[] direct = new float[] {desiredX, desiredY, desiredZ};
-			if (collisionFree(owner, desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z, neighbors, elapsedMillis)
+			boolean directPreferred = Math.abs(desiredZ - owner.z) > 0.0001f
+					|| collisionFree(owner, desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z, neighbors, elapsedMillis);
+			if (directPreferred
 					&& passability.test(desiredX, desiredY, desiredZ)) {
 				synchronized (this) {
 					AgentState state = agents.get(owner.id);
@@ -149,6 +151,9 @@ final class NpcCrowdManager {
 					selected = candidate;
 					break;
 				}
+			}
+			if (selected == null && !directPreferred && passability.test(desiredX, desiredY, desiredZ)) {
+				selected = direct;
 			}
 			synchronized (this) {
 				AgentState state = agents.get(owner.id);

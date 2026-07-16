@@ -51,6 +51,8 @@ public class Account implements Iterable<PlayerAccountData> {
 	private long lunaCount;
 	private byte vipLevel;
 	private long vipExp;
+	/** Unix seconds VIP end time. */
+	private long vipExpireTime;
 
 	public Account(int id) {
 		this.id = id;
@@ -123,6 +125,30 @@ public class Account implements Iterable<PlayerAccountData> {
 
 	public void setVipExp(long vipExp) {
 		this.vipExp = vipExp;
+	}
+
+	public long getVipExpireTime() {
+		return vipExpireTime;
+	}
+
+	public void setVipExpireTime(long vipExpireTime) {
+		this.vipExpireTime = vipExpireTime;
+	}
+
+	/** Remaining VIP seconds; 0 if expired/inactive. expire_time==0 = permanent. */
+	public int getVipRemainingSeconds() {
+		if (vipLevel <= 0) {
+			return 0;
+		}
+		if (vipExpireTime <= 0) {
+			// permanent / unset expiry — still need a large remaining for BM duration
+			return Integer.MAX_VALUE;
+		}
+		long remain = vipExpireTime - (System.currentTimeMillis() / 1000L);
+		if (remain <= 0) {
+			return 0;
+		}
+		return remain > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) remain;
 	}
 
 	/** 是否相等。 / Equality check. */

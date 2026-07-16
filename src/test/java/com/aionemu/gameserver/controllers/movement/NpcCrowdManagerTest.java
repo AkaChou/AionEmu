@@ -78,6 +78,19 @@ class NpcCrowdManagerTest {
 	}
 
 	@Test
+	void keepsDirectSlopeMovementStableWhenCrowded() {
+		long now = 1000;
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, -1, 0.5f), 1, 0, -1,
+				(x, y, z) -> true, now, 100);
+
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, -1,
+				(x, y, z) -> true, now, 100);
+
+		assertNotNull(step);
+		assertArrayEquals(new float[] {1, 0, -1}, step);
+	}
+
+	@Test
 	void removesExpiredAgent() {
 		long now = 1000;
 		NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, 0,
@@ -139,6 +152,18 @@ class NpcCrowdManagerTest {
 		assertTrue(checks[0] >= 1);
 		assertTrue(checks[0] < 12, "passability should stop after first free candidate, checks=" + checks[0]);
 		assertTrue(Math.abs(step[1]) > 0.1f);
+	}
+
+	@Test
+	void fallsBackToPassableDirectStepWhenCrowded() {
+		long now = 1000;
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 0, 0, 0, 10), 1, 0, 0,
+				(x, y, z) -> true, now, 100);
+
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, 0,
+				(x, y, z) -> true, now, 100);
+
+		assertArrayEquals(new float[] {1, 0, 0}, step);
 	}
 
 }
