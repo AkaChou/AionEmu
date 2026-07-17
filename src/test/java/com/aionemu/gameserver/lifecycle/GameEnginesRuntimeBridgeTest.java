@@ -16,7 +16,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 
 class GameEnginesRuntimeBridgeTest {
 
@@ -90,6 +92,23 @@ class GameEnginesRuntimeBridgeTest {
 
         try {
             assertSame(skillEngine, GameEngineServices.skillEngine());
+        } finally {
+            gameEngineServices.destroy();
+        }
+    }
+
+    @Test
+    void gameEngineServicesCachesResolvedSkillEngine() {
+        GameEngineServices gameEngineServices = new GameEngineServices(
+            provider(QuestEngine.class, instance(QuestEngine.class)),
+            prototypeProvider(SkillEngine.class),
+            provider(InstanceEngine.class, instance(InstanceEngine.class)),
+            provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ChatProcessor.class, instance(ChatProcessor.class))
+        );
+
+        try {
+            assertSame(GameEngineServices.skillEngine(), GameEngineServices.skillEngine());
         } finally {
             gameEngineServices.destroy();
         }
@@ -182,6 +201,15 @@ class GameEnginesRuntimeBridgeTest {
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
+    }
+
+    private <T> ObjectProvider<T> prototypeProvider(Class<T> type) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        RootBeanDefinition definition = new RootBeanDefinition(type);
+        definition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+        definition.setInstanceSupplier(() -> instance(type));
+        beanFactory.registerBeanDefinition(type.getName(), definition);
         return beanFactory.getBeanProvider(type);
     }
 }

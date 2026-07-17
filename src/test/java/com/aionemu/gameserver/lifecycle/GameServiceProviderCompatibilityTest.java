@@ -161,7 +161,9 @@ import com.aionemu.gameserver.world.zone.ZoneService;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 class GameServiceProviderCompatibilityTest {
@@ -656,7 +658,7 @@ class GameServiceProviderCompatibilityTest {
         AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
         CoalescenceService coalescenceService = instance(CoalescenceService.class);
         GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
-        SiegeService siegeService = instance(SiegeService.class);
+        ObjectProvider<SiegeService> siegeServiceProvider = prototypeProvider(SiegeService.class);
         BaseService baseService = instance(BaseService.class);
         DisputeLandService disputeLandService = instance(DisputeLandService.class);
         BanditService banditService = instance(BanditService.class);
@@ -684,7 +686,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(LadderService.class, ladderService),
                 provider(BGService.class, instance(BGService.class)),
                 provider(BanditService.class, banditService),
-                provider(SiegeService.class, siegeService),
+                siegeServiceProvider,
                 provider(BaseService.class, baseService),
                 provider(AStationService.class, aStationService),
                 provider(F2pService.class, instance(F2pService.class)),
@@ -711,7 +713,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(disputeLandService, GameFeatureServices.disputeLandService());
             assertSame(banditService, GameFeatureServices.banditService());
             assertSame(staticDoorService, GameFeatureServices.staticDoorService());
-            assertSame(siegeService, GameFeatureServices.siegeService());
+            assertSame(GameFeatureServices.siegeService(), GameFeatureServices.siegeService());
             assertSame(baseService, GameFeatureServices.baseService());
             assertSame(ffaService, GameFeatureServices.ffaService());
             assertSame(ladderService, GameFeatureServices.ladderService());
@@ -1423,6 +1425,15 @@ class GameServiceProviderCompatibilityTest {
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
+    }
+
+    private <T> ObjectProvider<T> prototypeProvider(Class<T> type) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        RootBeanDefinition definition = new RootBeanDefinition(type);
+        definition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+        definition.setInstanceSupplier(() -> instance(type));
+        beanFactory.registerBeanDefinition(type.getName(), definition);
         return beanFactory.getBeanProvider(type);
     }
 

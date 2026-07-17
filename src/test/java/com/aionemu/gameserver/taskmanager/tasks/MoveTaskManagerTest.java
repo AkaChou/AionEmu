@@ -1,8 +1,14 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+
+import com.google.common.base.Predicate;
 
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AIState;
@@ -64,6 +70,37 @@ class MoveTaskManagerTest {
 		assertEquals(2, creature.moveController.moveCalls);
 		assertEquals(0, creature.ai.arrivedEvents);
 		assertEquals(1, creature.ai.validateEvents);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void readdingTheSameCreatureKeepsItsRegistration() throws Exception {
+		MoveTaskManager manager = new MoveTaskManager();
+		TestCreature creature = new TestCreature(1);
+		Field movingField = MoveTaskManager.class.getDeclaredField("movingCreatures");
+		movingField.setAccessible(true);
+		Map<Integer, Object> moving = (Map<Integer, Object>) movingField.get(manager);
+
+		manager.addCreature(creature);
+		Object captured = moving.get(creature.getObjectId());
+		manager.addCreature(creature);
+		assertSame(captured, moving.get(creature.getObjectId()));
+		Field predicateField = MoveTaskManager.class.getDeclaredField("CREATURE_MOVE_PREDICATE");
+		predicateField.setAccessible(true);
+		Predicate<Object> predicate = (Predicate<Object>) predicateField.get(manager);
+		predicate.apply(captured);
+
+		assertEquals(1, creature.moveController.moveCalls);
+	}
+
+	@Test
+	void onlyDistantIdleAndWalkingNpcsUseSlowerMovementTicks() {
+		assertEquals(100, MoveTaskManager.movementUpdatePeriod(false, AIState.WALKING, Float.POSITIVE_INFINITY));
+		assertEquals(100, MoveTaskManager.movementUpdatePeriod(true, AIState.FIGHT, Float.POSITIVE_INFINITY));
+		assertEquals(100, MoveTaskManager.movementUpdatePeriod(true, AIState.WALKING, 30 * 30));
+		assertEquals(200, MoveTaskManager.movementUpdatePeriod(true, AIState.WALKING, 30 * 30 + 1));
+		assertEquals(200, MoveTaskManager.movementUpdatePeriod(true, AIState.IDLE, 60 * 60));
+		assertEquals(500, MoveTaskManager.movementUpdatePeriod(true, AIState.WALKING, 60 * 60 + 1));
 	}
 
 	private static final class TestCreature extends Creature {

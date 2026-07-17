@@ -32,6 +32,10 @@ public final class GameWorldServices implements DisposableBean {
      */
     private static volatile ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider;
 
+    private static volatile GeoService resolvedGeoService;
+    private static volatile PathService resolvedPathService;
+    private static volatile DropRegistrationService resolvedDropRegistrationService;
+
     /**
      * 构造并注册各世界服务组件的实例提供者。
      * Construct and register instance providers for world-service components.
@@ -45,6 +49,9 @@ public final class GameWorldServices implements DisposableBean {
         GameWorldServices.geoServiceProvider = geoServiceProvider;
         GameWorldServices.pathServiceProvider = pathServiceProvider;
         GameWorldServices.dropRegistrationServiceProvider = dropRegistrationServiceProvider;
+        resolvedGeoService = null;
+        resolvedPathService = null;
+        resolvedDropRegistrationService = null;
         GeoService.setInstanceProvider(geoServiceProvider);
         PathService.setInstanceProvider(pathServiceProvider);
         DropRegistrationService.setInstanceProvider(dropRegistrationServiceProvider);
@@ -57,11 +64,15 @@ public final class GameWorldServices implements DisposableBean {
      * GeoService instance
      */
     public static GeoService geoService() {
-        ObjectProvider<GeoService> provider = geoServiceProvider;
-        if (provider == null) {
-            return GameWorldServiceFallbacks.geoService();
+        GeoService resolved = resolvedGeoService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameWorldServiceFallbacks::geoService);
+        ObjectProvider<GeoService> provider = geoServiceProvider;
+        resolved = provider == null ? GameWorldServiceFallbacks.geoService()
+                : provider.getIfAvailable(GameWorldServiceFallbacks::geoService);
+        resolvedGeoService = resolved;
+        return resolved;
     }
 
     /**
@@ -71,11 +82,15 @@ public final class GameWorldServices implements DisposableBean {
      * DropRegistrationService instance
      */
     public static DropRegistrationService dropRegistrationService() {
-        ObjectProvider<DropRegistrationService> provider = dropRegistrationServiceProvider;
-        if (provider == null) {
-            return GameWorldServiceFallbacks.dropRegistrationService();
+        DropRegistrationService resolved = resolvedDropRegistrationService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameWorldServiceFallbacks::dropRegistrationService);
+        ObjectProvider<DropRegistrationService> provider = dropRegistrationServiceProvider;
+        resolved = provider == null ? GameWorldServiceFallbacks.dropRegistrationService()
+                : provider.getIfAvailable(GameWorldServiceFallbacks::dropRegistrationService);
+        resolvedDropRegistrationService = resolved;
+        return resolved;
     }
 
     /**
@@ -85,11 +100,15 @@ public final class GameWorldServices implements DisposableBean {
      * PathService instance
      */
     public static PathService pathService() {
-        ObjectProvider<PathService> provider = pathServiceProvider;
-        if (provider == null) {
-            return GameWorldServiceFallbacks.pathService();
+        PathService resolved = resolvedPathService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameWorldServiceFallbacks::pathService);
+        ObjectProvider<PathService> provider = pathServiceProvider;
+        resolved = provider == null ? GameWorldServiceFallbacks.pathService()
+                : provider.getIfAvailable(GameWorldServiceFallbacks::pathService);
+        resolvedPathService = resolved;
+        return resolved;
     }
 
     /**
@@ -101,6 +120,9 @@ public final class GameWorldServices implements DisposableBean {
         geoServiceProvider = null;
         pathServiceProvider = null;
         dropRegistrationServiceProvider = null;
+        resolvedGeoService = null;
+        resolvedPathService = null;
+        resolvedDropRegistrationService = null;
         GeoService.setInstanceProvider(null);
         PathService.setInstanceProvider(null);
         DropRegistrationService.setInstanceProvider(null);

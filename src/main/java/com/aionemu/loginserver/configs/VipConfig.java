@@ -13,7 +13,7 @@ public final class VipConfig {
     @Property(key = "loginserver.vip.auto-enable.level", defaultValue = "1")
     public static int AUTO_ENABLE_LEVEL;
 
-    @Property(key = "loginserver.vip.sts.enable", defaultValue = "true")
+    @Property(key = "loginserver.vip.sts.enable", defaultValue = "false")
     public static boolean STS_ENABLE;
 
     @Property(key = "loginserver.vip.sts.host", defaultValue = "*")

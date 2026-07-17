@@ -9,11 +9,13 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
- * 维护服务 Spring 门面：将 ObjectProvider 注入各维护服务 setInstanceProvider，并提供赛季排名静态访问。
- * Maintenance-services Spring facade: wires ObjectProviders into each service setInstanceProvider and exposes a static season-ranking accessor.
+ * 维护服务 Spring 门面：将 ObjectProvider 注入各维护服务 setInstanceProvider，并提供静态访问。
+ * Maintenance-services Spring facade: wires ObjectProviders into each service setInstanceProvider and exposes static accessors.
  */
 @Component
 public final class GameMaintenanceServices implements DisposableBean {
+
+    private static volatile ObjectProvider<ShugoImperialTombSpawnManager> shugoImperialTombSpawnManagerProvider;
 
     /**
      * 赛季排名更新服务的 Spring 提供者。
@@ -34,6 +36,7 @@ public final class GameMaintenanceServices implements DisposableBean {
             ObjectProvider<AbyssRankCleaningService> abyssRankCleaningServiceProvider,
             ObjectProvider<ShugoImperialTombSpawnManager> shugoImperialTombSpawnManagerProvider,
             ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider) {
+        GameMaintenanceServices.shugoImperialTombSpawnManagerProvider = shugoImperialTombSpawnManagerProvider;
         GameMaintenanceServices.seasonRankingUpdateServiceProvider = seasonRankingUpdateServiceProvider;
         DatabaseCleaningService.setInstanceProvider(databaseCleaningServiceProvider);
         AbyssRankCleaningService.setInstanceProvider(abyssRankCleaningServiceProvider);
@@ -56,11 +59,26 @@ public final class GameMaintenanceServices implements DisposableBean {
     }
 
     /**
+     * 解析术古皇陵生成管理器：优先 Spring 提供者，否则回退工厂。
+     * Resolve the Shugo Imperial Tomb spawn manager: prefer Spring provider, otherwise fallback factory.
+     *
+     * @return 术古皇陵生成管理器 / Shugo Imperial Tomb spawn manager
+     */
+    public static ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
+        ObjectProvider<ShugoImperialTombSpawnManager> provider = shugoImperialTombSpawnManagerProvider;
+        if (provider == null) {
+            return GameMaintenanceServiceFallbacks.shugoImperialTombSpawnManager();
+        }
+        return provider.getIfAvailable(GameMaintenanceServiceFallbacks::shugoImperialTombSpawnManager);
+    }
+
+    /**
      * 销毁时清理静态提供者与服务实例桥。
      * Clear static providers and service instance bridges on destroy.
      */
     @Override
     public void destroy() {
+        shugoImperialTombSpawnManagerProvider = null;
         seasonRankingUpdateServiceProvider = null;
         DatabaseCleaningService.setInstanceProvider(null);
         AbyssRankCleaningService.setInstanceProvider(null);

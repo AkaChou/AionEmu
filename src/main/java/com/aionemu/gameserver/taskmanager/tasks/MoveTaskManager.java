@@ -12,9 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.concurrent.ForkJoinTask;
+import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
+import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 import com.google.common.base.Predicate;
 
@@ -41,6 +44,10 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * Movement update period in milliseconds.
 	 */
 	public static final int UPDATE_PERIOD = 100;
+	private static final int MID_DISTANCE_UPDATE_PERIOD = 200;
+	private static final int FAR_DISTANCE_UPDATE_PERIOD = 500;
+	private static final float NEAR_PLAYER_DISTANCE_SQUARED = 30 * 30;
+	private static final float MID_PLAYER_DISTANCE_SQUARED = 60 * 60;
 
 	/**
 	 * 单次移动步进谓词：推进目标点，到达则移除并触发 AI 事件。
@@ -50,17 +57,31 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 		@Override
 		public boolean apply(MoveRegistration registration) {
 			Creature creature = registration.creature();
-			if (movingCreatures.get(creature.getObjectId()) != registration) {
+			int objectId = creature.getObjectId();
+			if (movingCreatures.get(objectId) != registration) {
 				return true;
 			}
-			creature.getMoveController().moveToDestination();
-			if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
-				if (movingCreatures.remove(creature.getObjectId(), registration)) {
-					creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
-					GameMovementLoopServices.zoneUpdateService().add(creature);
+			long now = System.currentTimeMillis();
+			if (now < registration.nextUpdateAt) {
+				return true;
+			}
+			registration.processing = true;
+			try {
+				creature.getMoveController().moveToDestination();
+				if (movingCreatures.get(objectId) != registration) {
+					return true;
 				}
-			} else {
-				creature.getAi2().onGeneralEvent(AIEventType.MOVE_VALIDATE);
+				if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
+					if (movingCreatures.remove(objectId, registration)) {
+						creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
+						GameMovementLoopServices.zoneUpdateService().add(creature);
+					}
+				} else {
+					creature.getAi2().onGeneralEvent(AIEventType.MOVE_VALIDATE);
+				}
+			} finally {
+				registration.nextUpdateAt = now + movementUpdatePeriod(creature);
+				registration.processing = false;
 			}
 			return true;
 		}
@@ -81,7 +102,39 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * Creature
 	 */
 	public void addCreature(Creature creature) {
-		movingCreatures.put(creature.getObjectId(), new MoveRegistration(creature));
+		int objectId = creature.getObjectId();
+		while (true) {
+			MoveRegistration current = movingCreatures.get(objectId);
+			if (current != null && current.creature == creature && !current.processing) {
+				current.nextUpdateAt = 0;
+				return;
+			}
+			MoveRegistration replacement = new MoveRegistration(creature);
+			if (current == null) {
+				if (movingCreatures.putIfAbsent(objectId, replacement) == null) {
+					return;
+				}
+			} else if (movingCreatures.replace(objectId, current, replacement)) {
+				return;
+			}
+		}
+	}
+
+	private static int movementUpdatePeriod(Creature creature) {
+		if (!(creature instanceof Npc) || creature.getKnownList() == null) {
+			return UPDATE_PERIOD;
+		}
+		return movementUpdatePeriod(GeoDataConfig.GEO_PATH_DISTANCE_TIERS_ENABLE, creature.getAi2().getState(),
+				creature.getKnownList().getNearestKnownPlayerDistanceSquared());
+	}
+
+	static int movementUpdatePeriod(boolean distanceTiersEnabled, AIState state, float nearestPlayerDistanceSquared) {
+		if (!distanceTiersEnabled || state != AIState.IDLE && state != AIState.WALKING
+				|| nearestPlayerDistanceSquared <= NEAR_PLAYER_DISTANCE_SQUARED) {
+			return UPDATE_PERIOD;
+		}
+		return nearestPlayerDistanceSquared <= MID_PLAYER_DISTANCE_SQUARED
+				? MID_DISTANCE_UPDATE_PERIOD : FAR_DISTANCE_UPDATE_PERIOD;
 	}
 
 	/**
@@ -100,7 +153,13 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 */
 	@Override
 	public void run() {
-		final ArrayList<MoveRegistration> copy = new ArrayList<>(movingCreatures.values());
+		long now = System.currentTimeMillis();
+		final ArrayList<MoveRegistration> copy = new ArrayList<>();
+		for (MoveRegistration registration : movingCreatures.values()) {
+			if (now >= registration.nextUpdateAt) {
+				copy.add(registration);
+			}
+		}
 		ForkJoinTask<MoveRegistration> task = forEach(copy, CREATURE_MOVE_PREDICATE);
 		if (task != null) {
 			GameThreadPoolServices.threadPoolManager().getForkingPool().invoke(task);
@@ -110,6 +169,8 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	private static final class MoveRegistration {
 
 		private final Creature creature;
+		private volatile boolean processing;
+		private volatile long nextUpdateAt;
 
 		private MoveRegistration(Creature creature) {
 			this.creature = creature;

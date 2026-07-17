@@ -5,9 +5,9 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
@@ -36,7 +36,7 @@ public class AbyssCore implements ZoneHandler {
 	 * Load the abyss-core collision geometry.
 	 */
 	public AbyssCore() {
-		geometry = GeoService.getInstance().getGeometry(400010000, CORE_GEOMETRY);
+		geometry = GameWorldServices.geoService().getGeometry(400010000, CORE_GEOMETRY);
 		if (geometry == null) {
 			log.error(I18n.get("log.a1345eb67e87", CORE_GEOMETRY));
 		}

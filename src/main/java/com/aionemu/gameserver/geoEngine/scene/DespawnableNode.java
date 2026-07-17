@@ -7,9 +7,9 @@ import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.collision.IgnoreProperties;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
-import com.aionemu.gameserver.services.SiegeService;
 
 /**
  * 可按实例/事件/攻城护盾等条件动态禁用碰撞的场景节点。
@@ -131,7 +131,7 @@ public class DespawnableNode extends Node {
 	/** 按 ID 查找攻城地点；失败返回 null / Looks up siege location by id; null on failure */
 	private SiegeLocation getSiegeLocation() {
 		try {
-			return SiegeService.getInstance().getSiegeLocation(id);
+			return GameFeatureServices.siegeService().getSiegeLocation(id);
 		} catch (NullPointerException e) {
 			return null;
 		}

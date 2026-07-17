@@ -8,7 +8,7 @@ import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.*;
@@ -81,7 +81,7 @@ public class Reload extends AdminCommand {
 
 		else if (params[0].equals("skill")) {
 			try {
-				DataManager.SKILL_DATA = XmlDataLoader.getInstance().loadSkillData();
+				DataManager.SKILL_DATA = GameStaticDataServices.xmlDataLoader().loadSkillData();
 				PacketSendUtility.sendMessage(admin, "Skill reload Success!");
 			}
 			catch (Exception e) {

@@ -23,6 +23,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,6 +33,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.zip.GZIPInputStream;
 
@@ -235,6 +237,11 @@ public final class PathData {
 		boolean canPass(float startX, float startY, float startZ, float targetX, float targetY, float targetZ);
 	}
 
+	@FunctionalInterface
+	public interface PointPassability {
+		boolean canPass(float x, float y, float z);
+	}
+
 	public record PathPoint(float x, float y, float z) {}
 
 	public enum SearchStatus {
@@ -245,14 +252,31 @@ public final class PathData {
 		INVALID_POSITION
 	}
 
-	public record SearchResult(SearchStatus status, List<PathPoint> path, int processedNodes) {
+	public enum SearchMode {
+		DIRECT,
+		LOW_LEVEL,
+		HIERARCHICAL,
+		HIERARCHICAL_FALLBACK
+	}
+
+	public record SearchResult(SearchStatus status, List<PathPoint> path, int processedNodes, SearchMode mode,
+			int abstractNodes) {
+
+		private static SearchResult direct(List<PathPoint> path) {
+			return new SearchResult(SearchStatus.FOUND, path, 0, SearchMode.DIRECT, 0);
+		}
 
 		private static SearchResult found(List<PathPoint> path, int processedNodes) {
-			return new SearchResult(SearchStatus.FOUND, path, processedNodes);
+			return new SearchResult(SearchStatus.FOUND, path, processedNodes, SearchMode.LOW_LEVEL, 0);
 		}
 
 		private static SearchResult failed(SearchStatus status, int processedNodes) {
-			return new SearchResult(status, null, processedNodes);
+			return new SearchResult(status, null, processedNodes, SearchMode.LOW_LEVEL, 0);
+		}
+
+		private SearchResult hierarchical(SearchMode searchMode, int extraProcessedNodes, int processedAbstractNodes) {
+			return new SearchResult(status, path, processedNodes + extraProcessedNodes, searchMode,
+					abstractNodes + processedAbstractNodes);
 		}
 	}
 
@@ -278,11 +302,20 @@ public final class PathData {
 
 		private static final int MAX_PROCESSED_NODES = 49_999;
 		private static final int MAX_PATH_POINTS = 20_000;
-		private static final float MAX_STRAIGHT_HEIGHT_DEVIATION = 0.25f;
+		private static final int HIERARCHICAL_MIN_BLOCK_DISTANCE = 8;
+		private static final int HIERARCHICAL_MAX_ABSTRACT_NODES = 2_048;
+		private static final int HIERARCHICAL_FINE_MAX_NODES = 8_192;
+		private static final float MAX_STRAIGHT_HEIGHT_DEVIATION = 0.10f;
 		private static final int[] DX = {1, 0, -1, 0};
 		private static final int[] DY = {0, 1, 0, -1};
 		private static final int[] DIAGONAL_FIRST = {0, 1, 0, 2};
 		private static final int[] DIAGONAL_SECOND = {1, 2, 3, 3};
+		private static final Comparator<OpenNode> OPEN_NODE_ORDER = Comparator.comparingDouble(OpenNode::score)
+				.thenComparing(Comparator.comparingLong(OpenNode::sequence).reversed());
+		private static final Comparator<BlockOpenNode> BLOCK_OPEN_NODE_ORDER = Comparator.comparingDouble(BlockOpenNode::score)
+				.thenComparing(Comparator.comparingLong(BlockOpenNode::sequence).reversed());
+		// ponytail: 每线程保留峰值工作区；只有实测极端搜索长期占内存时才增加容量上限。
+		private static final ThreadLocal<SearchWorkspace> SEARCH_WORKSPACE = ThreadLocal.withInitial(SearchWorkspace::new);
 		private final ByteBuffer data;
 		private final int width;
 		private final int height;
@@ -293,7 +326,8 @@ public final class PathData {
 		private final int portalOffset;
 		private final int portalCount;
 		private final int[] blockOffsets;
-		private final Map<Integer, Block> blocks = new ConcurrentHashMap<>();
+		private final AtomicReferenceArray<Block> blocks;
+		private final Map<Integer, int[]> blockNeighbors = new ConcurrentHashMap<>();
 
 		private MapData(ByteBuffer data, int width, int height, int blockColumns, int blockRows,
 				int nodeTableOffset, int nodeTableSize, int portalOffset, int portalCount, int[] blockOffsets) {
@@ -307,6 +341,7 @@ public final class PathData {
 			this.portalOffset = portalOffset;
 			this.portalCount = portalCount;
 			this.blockOffsets = blockOffsets;
+			this.blocks = new AtomicReferenceArray<>(blockOffsets.length);
 		}
 
 		static MapData load(File path, File index) throws IOException {
@@ -373,6 +408,12 @@ public final class PathData {
 
 		SearchResult searchAStar(float startX, float startY, float startZ, float targetX, float targetY,
 				float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability) {
+			return searchAStar(startX, startY, startZ, targetX, targetY, targetZ, maxNodes, terrain, passability, false);
+		}
+
+		SearchResult searchAStar(float startX, float startY, float startZ, float targetX, float targetY,
+				float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability, boolean hierarchical) {
+			workspace().resetNodes();
 			Node start = findNode(startX, startY, startZ, terrain);
 			Node target = findNode(targetX, targetY, targetZ, terrain);
 			if (start == null || target == null) {
@@ -383,67 +424,452 @@ public final class PathData {
 			float deltaZ = targetZ - startZ;
 			float distanceSquared = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
 			if (canWalkStraight(start, target, terrain, passability)) {
-				return SearchResult.found(List.of(point(start), point(target)), 0);
+				return SearchResult.direct(List.of(point(start), point(target)));
 			}
 			float searchRadiusSquared = Math.max(2_500, 2 * distanceSquared);
-			Map<Long, SearchNode> visited = new HashMap<>();
-			PriorityQueue<OpenNode> open = new PriorityQueue<>(Comparator.comparingDouble(OpenNode::score)
-					.thenComparing(Comparator.comparingLong(OpenNode::sequence).reversed()));
-			long sequence = 0;
-			SearchNode first = new SearchNode(start, null, 0, distance(start, target));
-			visited.put(start.key(), first);
-			open.add(new OpenNode(start.key(), 0, first.score, sequence++));
-			int processed = 0;
 			int budget = Math.min(MAX_PROCESSED_NODES, Math.max(1, maxNodes));
-			while (!open.isEmpty() && processed < budget && !Thread.currentThread().isInterrupted()) {
-				OpenNode queued = open.poll();
-				SearchNode current = visited.get(queued.key());
-				if (current == null || current.closed || Float.compare(current.cost, queued.cost()) != 0) {
+			if (hierarchical && usesHierarchicalSearch(start, target)) {
+				BlockPath corridor = findBlockPath(start.sector().block.id(), target.sector().block.id());
+				if (corridor.status() == SearchStatus.INTERRUPTED) {
+					return SearchResult.failed(SearchStatus.INTERRUPTED, 0)
+							.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
+				}
+				if (corridor.blocks() != null) {
+					SearchResult refined = refineBlockPath(start, target, corridor.blocks(),
+							Math.min(budget, HIERARCHICAL_FINE_MAX_NODES), terrain, passability);
+					if (refined.status() == SearchStatus.FOUND || refined.status() == SearchStatus.INTERRUPTED) {
+						return refined.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
+					}
+					SearchResult fallback = searchLowLevel(start, target, startX, startY, startZ, targetX, targetY,
+							targetZ, searchRadiusSquared, budget, terrain, passability, null);
+					return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, refined.processedNodes(),
+							corridor.processedNodes());
+				}
+				SearchResult fallback = searchLowLevel(start, target, startX, startY, startZ, targetX, targetY,
+						targetZ, searchRadiusSquared, budget, terrain, passability, null);
+				return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, 0, corridor.processedNodes());
+			}
+			return searchLowLevel(start, target, startX, startY, startZ, targetX, targetY, targetZ,
+					searchRadiusSquared, budget, terrain, passability, null);
+		}
+
+		private SearchResult searchLowLevel(Node start, Node target, float startX, float startY, float startZ,
+				float targetX, float targetY, float targetZ, float searchRadiusSquared, int budget,
+				HeightProvider terrain, EdgePassability passability, BitSet allowedBlocks) {
+			SearchWorkspace workspace = workspace();
+			workspace.beginLowLevelSearch();
+			Map<Long, SearchNode> visited = workspace.visited;
+			PriorityQueue<OpenNode> open = workspace.open;
+			try {
+				long sequence = 0;
+				SearchNode first = workspace.searchNode(start, null, 0, distance(start, target));
+				visited.put(start.key(), first);
+				open.add(workspace.openNode(start.key(), 0, first.score, sequence++));
+				int processed = 0;
+				while (!open.isEmpty() && processed < budget && !Thread.currentThread().isInterrupted()) {
+					OpenNode queued = open.poll();
+					SearchNode current = visited.get(queued.key());
+					if (current == null || current.closed || Float.compare(current.cost, queued.cost()) != 0) {
+						continue;
+					}
+					processed++;
+					current.closed = true;
+					if (current.node.key() == target.key()) {
+						List<PathPoint> path = reconstruct(current);
+						return path == null ? SearchResult.failed(SearchStatus.NODE_LIMIT, processed)
+								: SearchResult.found(path, processed);
+					}
+					for (int direction = 0; direction < 8; direction++) {
+						Node neighbor = step(current.node, direction, terrain, passability);
+						if (neighbor == null || allowedBlocks != null && !allowedBlocks.get(neighbor.sector().block.id())
+								|| !withinSearchArea(neighbor, startX, startY, startZ, targetX, targetY, targetZ,
+										searchRadiusSquared)) {
+							continue;
+						}
+						float cost = current.cost + distance(current.node, neighbor);
+						SearchNode known = visited.get(neighbor.key());
+						if (known != null && known.closed) {
+							continue;
+						}
+						if (known == null || cost + 0.5f < known.cost) {
+							float score = cost + distance(neighbor, target);
+							if (known == null) {
+								known = workspace.searchNode(neighbor, current, cost, score);
+								visited.put(neighbor.key(), known);
+							} else {
+								known.parent = current;
+								known.cost = cost;
+								known.score = score;
+							}
+							open.add(workspace.openNode(neighbor.key(), cost, score, sequence++));
+						}
+					}
+				}
+				if (Thread.currentThread().isInterrupted()) {
+					return SearchResult.failed(SearchStatus.INTERRUPTED, processed);
+				}
+				return SearchResult.failed(open.isEmpty() ? SearchStatus.NO_PATH : SearchStatus.NODE_LIMIT, processed);
+			} finally {
+				workspace.endLowLevelSearch();
+			}
+		}
+
+		private boolean usesHierarchicalSearch(Node start, Node target) {
+			int startBlock = start.sector().block.id();
+			int targetBlock = target.sector().block.id();
+			int deltaColumn = Math.abs(startBlock % blockColumns - targetBlock % blockColumns);
+			int deltaRow = Math.abs(startBlock / blockColumns - targetBlock / blockColumns);
+			return Math.max(deltaColumn, deltaRow) >= HIERARCHICAL_MIN_BLOCK_DISTANCE;
+		}
+
+		private BlockPath findBlockPath(int startBlock, int targetBlock) {
+			SearchWorkspace workspace = workspace();
+			workspace.beginBlockSearch();
+			Map<Integer, BlockSearchNode> visited = workspace.blockVisited;
+			PriorityQueue<BlockOpenNode> open = workspace.blockOpen;
+			try {
+				long sequence = 0;
+				BlockSearchNode first = workspace.blockSearchNode(startBlock, null, 0,
+						blockDistance(startBlock, targetBlock));
+				visited.put(startBlock, first);
+				open.add(workspace.blockOpenNode(startBlock, 0, first.score, sequence++));
+				int processed = 0;
+				while (!open.isEmpty() && processed < HIERARCHICAL_MAX_ABSTRACT_NODES
+						&& !Thread.currentThread().isInterrupted()) {
+					BlockOpenNode queued = open.poll();
+					BlockSearchNode current = visited.get(queued.blockId());
+					if (current == null || current.closed || Float.compare(current.cost, queued.cost()) != 0) {
+						continue;
+					}
+					processed++;
+					current.closed = true;
+					if (current.blockId == targetBlock) {
+						return new BlockPath(SearchStatus.FOUND, reconstructBlocks(current), processed);
+					}
+					for (int neighborId : blockNeighbors(current.blockId)) {
+						float cost = current.cost + 1;
+						BlockSearchNode known = visited.get(neighborId);
+						if (known != null && (known.closed || cost >= known.cost)) {
+							continue;
+						}
+						float score = cost + blockDistance(neighborId, targetBlock);
+						if (known == null) {
+							known = workspace.blockSearchNode(neighborId, current, cost, score);
+							visited.put(neighborId, known);
+						} else {
+							known.parent = current;
+							known.cost = cost;
+							known.score = score;
+						}
+						open.add(workspace.blockOpenNode(neighborId, cost, score, sequence++));
+					}
+				}
+				SearchStatus status = Thread.currentThread().isInterrupted() ? SearchStatus.INTERRUPTED
+						: open.isEmpty() ? SearchStatus.NO_PATH : SearchStatus.NODE_LIMIT;
+				return new BlockPath(status, null, processed);
+			} finally {
+				workspace.endBlockSearch();
+			}
+		}
+
+		private int[] blockNeighbors(int blockId) {
+			return blockNeighbors.computeIfAbsent(blockId, this::readBlockNeighbors);
+		}
+
+		private int[] readBlockNeighbors(int blockId) {
+			Block block = block(blockId);
+			int column = blockId % blockColumns;
+			int row = blockId / blockColumns;
+			int[] result = new int[4];
+			int count = 0;
+			for (int direction = 0; direction < 4; direction++) {
+				int targetColumn = column + DX[direction];
+				int targetRow = row + DY[direction];
+				if (targetColumn < 0 || targetRow < 0 || targetColumn >= blockColumns || targetRow >= blockRows) {
 					continue;
 				}
-				processed++;
-				current.closed = true;
-				if (current.node.key() == target.key()) {
-					List<PathPoint> path = reconstruct(current);
-					return path == null ? SearchResult.failed(SearchStatus.NODE_LIMIT, processed)
-							: SearchResult.found(path, processed);
+				for (Sector sector : block.sectors()) {
+					if (sector.hasBoundaryLink(direction)) {
+						result[count++] = targetRow * blockColumns + targetColumn;
+						break;
+					}
 				}
-				for (int direction = 0; direction < 8; direction++) {
-					Node neighbor = step(current.node, direction, terrain, passability);
-					if (neighbor == null || !withinSearchArea(neighbor, startX, startY, startZ, targetX, targetY, targetZ,
-									searchRadiusSquared)) {
+			}
+			return Arrays.copyOf(result, count);
+		}
+
+		private SearchResult refineBlockPath(Node start, Node target, int[] blockPath, int budget,
+				HeightProvider terrain, EdgePassability passability) {
+			List<PathPoint> result = new ArrayList<>();
+			result.add(point(start));
+			Node current = start;
+			int processed = 0;
+			for (int index = 1; index < blockPath.length; index++) {
+				int remaining = budget - processed;
+				if (remaining <= 0) {
+					return SearchResult.failed(SearchStatus.NODE_LIMIT, processed);
+				}
+				List<PortalStep> portals = boundaryPortals(blockPath[index - 1], blockPath[index], terrain,
+						passability);
+				PortalSearchResult segment = searchToAnyPortal(current, blockPath[index - 1], portals, remaining,
+						terrain, passability);
+				processed += segment.processedNodes();
+				if (segment.status() != SearchStatus.FOUND) {
+					return SearchResult.failed(segment.status(), processed);
+				}
+				if (!appendPath(result, segment.path()) || result.size() == MAX_PATH_POINTS) {
+					return SearchResult.failed(SearchStatus.NODE_LIMIT, processed);
+				}
+				current = segment.portal().target();
+				result.add(point(current));
+			}
+
+			if (current.key() == target.key()) {
+				return SearchResult.found(result, processed);
+			}
+			if (canWalkStraight(current, target, terrain, passability)) {
+				if (result.size() == MAX_PATH_POINTS) {
+					return SearchResult.failed(SearchStatus.NODE_LIMIT, processed);
+				}
+				result.add(point(target));
+				return SearchResult.found(result, processed);
+			}
+			int remaining = budget - processed;
+			if (remaining <= 0) {
+				return SearchResult.failed(SearchStatus.NODE_LIMIT, processed);
+			}
+			BitSet targetBlock = new BitSet(blockOffsets.length);
+			targetBlock.set(blockPath[blockPath.length - 1]);
+			float distanceSquared = square(target.x() - current.x()) + square(target.y() - current.y())
+					+ square(target.z() - current.z());
+			SearchResult last = searchLowLevel(current, target, current.x(), current.y(), current.z(), target.x(),
+					target.y(), target.z(), Math.max(2_500, 2 * distanceSquared), remaining, terrain, passability,
+					targetBlock);
+			processed += last.processedNodes();
+			if (last.status() != SearchStatus.FOUND) {
+				return SearchResult.failed(last.status(), processed);
+			}
+			if (!appendPath(result, last.path())) {
+				return SearchResult.failed(SearchStatus.NODE_LIMIT, processed);
+			}
+			return SearchResult.found(result, processed);
+		}
+
+		private PortalSearchResult searchToAnyPortal(Node start, int blockId, List<PortalStep> portals, int budget,
+				HeightProvider terrain, EdgePassability passability) {
+			if (portals.isEmpty()) {
+				return PortalSearchResult.failed(SearchStatus.NO_PATH, 0);
+			}
+			SearchWorkspace workspace = workspace();
+			workspace.beginPortalSearch();
+			Map<Long, PortalStep> goals = workspace.portalGoals;
+			Map<Long, SearchNode> visited = workspace.visited;
+			PriorityQueue<OpenNode> open = workspace.open;
+			try {
+				for (PortalStep portal : portals) {
+					goals.putIfAbsent(portal.source().key(), portal);
+				}
+				PortalStep immediate = goals.get(start.key());
+				if (immediate != null) {
+					return PortalSearchResult.found(List.of(point(start)), immediate, 0);
+				}
+				long sequence = 0;
+				float firstScore = portalDistance(start, portals);
+				SearchNode first = workspace.searchNode(start, null, 0, firstScore);
+				visited.put(start.key(), first);
+				open.add(workspace.openNode(start.key(), 0, firstScore, sequence++));
+				int processed = 0;
+				while (!open.isEmpty() && processed < budget && !Thread.currentThread().isInterrupted()) {
+					OpenNode queued = open.poll();
+					SearchNode current = visited.get(queued.key());
+					if (current == null || current.closed || Float.compare(current.cost, queued.cost()) != 0) {
 						continue;
 					}
-					float cost = current.cost + distance(current.node, neighbor);
-					SearchNode known = visited.get(neighbor.key());
-					if (known != null && known.closed) {
-						continue;
+					processed++;
+					current.closed = true;
+					PortalStep reached = goals.get(current.node.key());
+					if (reached != null) {
+						List<PathPoint> path = reconstruct(current);
+						return path == null ? PortalSearchResult.failed(SearchStatus.NODE_LIMIT, processed)
+								: PortalSearchResult.found(path, reached, processed);
 					}
-					if (known == null || cost + 0.5f < known.cost) {
-						float score = cost + distance(neighbor, target);
+					for (int direction = 0; direction < 8; direction++) {
+						Node neighbor = step(current.node, direction, terrain, passability);
+						if (neighbor == null || neighbor.sector().block.id() != blockId) {
+							continue;
+						}
+						float cost = current.cost + distance(current.node, neighbor);
+						SearchNode known = visited.get(neighbor.key());
+						if (known != null && (known.closed || cost + 0.5f >= known.cost)) {
+							continue;
+						}
+						float score = cost + portalDistance(neighbor, portals);
 						if (known == null) {
-							known = new SearchNode(neighbor, current, cost, score);
+							known = workspace.searchNode(neighbor, current, cost, score);
 							visited.put(neighbor.key(), known);
 						} else {
 							known.parent = current;
 							known.cost = cost;
 							known.score = score;
 						}
-						open.add(new OpenNode(neighbor.key(), cost, score, sequence++));
+						open.add(workspace.openNode(neighbor.key(), cost, score, sequence++));
 					}
 				}
+				if (Thread.currentThread().isInterrupted()) {
+					return PortalSearchResult.failed(SearchStatus.INTERRUPTED, processed);
+				}
+				return PortalSearchResult.failed(open.isEmpty() ? SearchStatus.NO_PATH : SearchStatus.NODE_LIMIT, processed);
+			} finally {
+				workspace.endPortalSearch();
 			}
-			if (Thread.currentThread().isInterrupted()) {
-				return SearchResult.failed(SearchStatus.INTERRUPTED, processed);
+		}
+
+		private static float portalDistance(Node node, List<PortalStep> portals) {
+			float result = Float.POSITIVE_INFINITY;
+			for (PortalStep portal : portals) {
+				result = Math.min(result, distance(node, portal.source()));
 			}
-			return SearchResult.failed(open.isEmpty() ? SearchStatus.NO_PATH : SearchStatus.NODE_LIMIT, processed);
+			return result;
+		}
+
+		private List<PortalStep> boundaryPortals(int blockId, int targetBlockId, HeightProvider terrain,
+				EdgePassability passability) {
+			int direction = blockDirection(blockId, targetBlockId);
+			if (direction < 0) {
+				return List.of();
+			}
+			Block block = block(blockId);
+			List<PortalStep> result = new ArrayList<>();
+			for (Sector sector : block.sectors()) {
+				if (sector.type == 16) {
+					for (int offset : sector.nodeOffsets()) {
+						addBoundaryPortal(result, sector.complexNode(offset), direction, targetBlockId, terrain,
+								passability);
+					}
+					continue;
+				}
+				int blockColumn = blockId % blockColumns;
+				int blockRow = blockId / blockColumns;
+				for (int coordinate = 0; coordinate < 32; coordinate++) {
+					int gridX = switch (direction) {
+						case 0 -> blockColumn * 32 + 31;
+						case 2 -> blockColumn * 32;
+						default -> blockColumn * 32 + coordinate;
+					};
+					int gridY = switch (direction) {
+						case 1 -> blockRow * 32 + 31;
+						case 3 -> blockRow * 32;
+						default -> blockRow * 32 + coordinate;
+					};
+					addBoundaryPortal(result, sector.simpleNode(gridX, gridY, terrain), direction, targetBlockId,
+							terrain, passability);
+				}
+			}
+			return result;
+		}
+
+		private void addBoundaryPortal(List<PortalStep> result, Node source, int direction, int targetBlockId,
+				HeightProvider terrain, EdgePassability passability) {
+			if (source == null) {
+				return;
+			}
+			Node target = direction < 4 ? neighbor(source, direction, terrain) : null;
+			if (target != null && target.sector().block.id() == targetBlockId && edgeAllowed(source, target, passability)) {
+				result.add(new PortalStep(source, target));
+			}
+		}
+
+		private int blockDirection(int blockId, int targetBlockId) {
+			int column = blockId % blockColumns;
+			int row = blockId / blockColumns;
+			int targetColumn = targetBlockId % blockColumns;
+			int targetRow = targetBlockId / blockColumns;
+			for (int direction = 0; direction < 4; direction++) {
+				if (column + DX[direction] == targetColumn && row + DY[direction] == targetRow) {
+					return direction;
+				}
+			}
+			return -1;
+		}
+
+		private static boolean appendPath(List<PathPoint> target, List<PathPoint> segment) {
+			if (segment == null) {
+				return false;
+			}
+			for (int index = 1; index < segment.size(); index++) {
+				if (target.size() == MAX_PATH_POINTS) {
+					return false;
+				}
+				target.add(segment.get(index));
+			}
+			return true;
+		}
+
+		private float blockDistance(int first, int second) {
+			int deltaColumn = first % blockColumns - second % blockColumns;
+			int deltaRow = first / blockColumns - second / blockColumns;
+			return (float) Math.hypot(deltaColumn, deltaRow);
+		}
+
+		private static int[] reconstructBlocks(BlockSearchNode end) {
+			int count = 0;
+			for (BlockSearchNode node = end; node != null; node = node.parent) {
+				count++;
+			}
+			int[] result = new int[count];
+			for (BlockSearchNode node = end; node != null; node = node.parent) {
+				result[--count] = node.blockId;
+			}
+			return result;
 		}
 
 		boolean canWalkStraight(float startX, float startY, float startZ, float targetX, float targetY,
 				float targetZ, HeightProvider terrain, EdgePassability passability) {
+			workspace().resetNodes();
 			Node current = findNode(startX, startY, startZ, terrain);
 			Node target = findNode(targetX, targetY, targetZ, terrain);
 			return current != null && target != null && canWalkStraight(current, target, terrain, passability);
+		}
+
+		PathPoint projectPoint(float x, float y, float z, HeightProvider terrain) {
+			workspace().resetNodes();
+			Node node = findNode(x, y, z, terrain);
+			return node == null ? null : point(node);
+		}
+
+		PathPoint nearestPathPoint(float x, float y, float z, float maxRadius, float maxVerticalDelta,
+				HeightProvider terrain, PointPassability passability) {
+			workspace().resetNodes();
+			int centerX = (int) (x * 2);
+			int centerY = (int) (y * 2);
+			int radius = Math.max(0, (int) Math.ceil(Math.max(0, maxRadius) * 2));
+			float radiusSquared = maxRadius * maxRadius;
+			Node best = null;
+			float bestDistance = Float.POSITIVE_INFINITY;
+			for (int offsetX = -radius; offsetX <= radius; offsetX++) {
+				for (int offsetY = -radius; offsetY <= radius; offsetY++) {
+					int gridX = centerX + offsetX;
+					int gridY = centerY + offsetY;
+					float pointX = gridX * 0.5f + 0.25f;
+					float pointY = gridY * 0.5f + 0.25f;
+					float distance = square(pointX - x) + square(pointY - y);
+					if (distance > radiusSquared || distance > bestDistance) {
+						continue;
+					}
+					Block block = block(gridX, gridY);
+					if (block == null) {
+						continue;
+					}
+					for (Sector sector : block.sectors) {
+						Node node = sector.find(gridX, gridY, z, terrain, maxVerticalDelta);
+						if (node != null && (passability == null || passability.canPass(node.x(), node.y(), node.z()))) {
+							best = node;
+							bestDistance = distance;
+						}
+					}
+				}
+			}
+			return best == null ? null : point(best);
 		}
 
 		private boolean canWalkStraight(Node current, Node target, HeightProvider terrain, EdgePassability passability) {
@@ -626,7 +1052,16 @@ public final class PathData {
 				return null;
 			}
 			int id = row * blockColumns + column;
-			return blocks.computeIfAbsent(id, this::readBlock);
+			return block(id);
+		}
+
+		private Block block(int id) {
+			Block cached = blocks.get(id);
+			if (cached != null) {
+				return cached;
+			}
+			Block loaded = readBlock(id);
+			return blocks.compareAndSet(id, null, loaded) ? loaded : blocks.get(id);
 		}
 
 		private Block readBlock(int id) {
@@ -690,6 +1125,10 @@ public final class PathData {
 			return (float) Math.sqrt(x * x + y * y + z * z);
 		}
 
+		private static float square(float value) {
+			return value * value;
+		}
+
 		private static boolean withinSearchArea(Node node, float startX, float startY, float startZ, float targetX,
 				float targetY, float targetZ, float radiusSquared) {
 			float x = node.x() - startX;
@@ -730,12 +1169,16 @@ public final class PathData {
 			}
 
 			private Node find(int x, int y, float z, HeightProvider terrain) {
+				return find(x, y, z, terrain, 0.7f);
+			}
+
+			private Node find(int x, int y, float z, HeightProvider terrain, float maxVerticalDelta) {
 				if (type != 16) {
 					Node node = simpleNode(x, y, terrain);
-					return node != null && Math.abs(node.z() - z) < 0.7f ? node : null;
+					return node != null && Math.abs(node.z() - z) < maxVerticalDelta ? node : null;
 				}
 				Node best = null;
-				float difference = 0.7f;
+				float difference = maxVerticalDelta;
 				for (int offset : nodeOffsets()) {
 					Node node = complexNode(offset);
 					if (node != null && node.gridX() == x && node.gridY() == y) {
@@ -758,7 +1201,7 @@ public final class PathData {
 					return null;
 				}
 				long key = (long) block.id << 24 | (long) layer << 10 | (y & 31) * 32L | x & 31;
-				return new Node(this, x, y, -1, key, x * 0.5f + 0.25f, y * 0.5f + 0.25f, z);
+				return workspace().node(this, x, y, -1, key, x * 0.5f + 0.25f, y * 0.5f + 0.25f, z);
 			}
 
 			private Node complexNode(int offset) {
@@ -770,7 +1213,7 @@ public final class PathData {
 				int y = Short.toUnsignedInt(data.getShort(position + 6));
 				float z = data.getInt(position) / 100f;
 				long key = Long.MIN_VALUE | Integer.toUnsignedLong(offset);
-				return new Node(this, x, y, offset, key, x * 0.5f + 0.25f, y * 0.5f + 0.25f, z);
+				return workspace().node(this, x, y, offset, key, x * 0.5f + 0.25f, y * 0.5f + 0.25f, z);
 			}
 
 			private int[] nodeOffsets() {
@@ -819,6 +1262,37 @@ public final class PathData {
 					cursor += mode == 1 ? 2 : mode == 2 ? 4 : 0;
 				}
 				return 0;
+			}
+
+			private boolean hasBoundaryLink(int direction) {
+				if (type == 16) {
+					for (int offset : nodeOffsets()) {
+						Node node = complexNode(offset);
+						int localX = node == null ? -1 : node.gridX() & 31;
+						int localY = node == null ? -1 : node.gridY() & 31;
+						boolean onBoundary = switch (direction) {
+							case 0 -> localX == 31;
+							case 1 -> localY == 31;
+							case 2 -> localX == 0;
+							case 3 -> localY == 0;
+							default -> false;
+						};
+						if (onBoundary && edge(offset, direction) != 0) {
+							return true;
+						}
+					}
+					return false;
+				}
+				if ((boundaryMask & 1 << direction) != 0) {
+					return boundaries[direction] != -1;
+				}
+				long portalIndex = Integer.toUnsignedLong(boundaries[direction]);
+				for (int coordinate = 0; coordinate < 32 && portalIndex + coordinate < portalCount; coordinate++) {
+					if (data.getInt(portalOffset + (int) (portalIndex + coordinate) * 4) != 0) {
+						return true;
+					}
+				}
+				return false;
 			}
 
 			private boolean hasLink(int x, int y, int direction) {
@@ -872,27 +1346,296 @@ public final class PathData {
 			}
 		}
 
+		private static SearchWorkspace workspace() {
+			return SEARCH_WORKSPACE.get();
+		}
+
 		private record Block(int id, Sector[] sectors) {}
 
-		private record Node(Sector sector, int gridX, int gridY, int complexOffset, long key,
-				float x, float y, float z) {}
+		private static final class Node {
+			private Sector sector;
+			private int gridX;
+			private int gridY;
+			private int complexOffset;
+			private long key;
+			private float x;
+			private float y;
+			private float z;
+
+			private Node reset(Sector sector, int gridX, int gridY, int complexOffset, long key,
+					float x, float y, float z) {
+				this.sector = sector;
+				this.gridX = gridX;
+				this.gridY = gridY;
+				this.complexOffset = complexOffset;
+				this.key = key;
+				this.x = x;
+				this.y = y;
+				this.z = z;
+				return this;
+			}
+
+			private Sector sector() {
+				return sector;
+			}
+
+			private int gridX() {
+				return gridX;
+			}
+
+			private int gridY() {
+				return gridY;
+			}
+
+			private int complexOffset() {
+				return complexOffset;
+			}
+
+			private long key() {
+				return key;
+			}
+
+			private float x() {
+				return x;
+			}
+
+			private float y() {
+				return y;
+			}
+
+			private float z() {
+				return z;
+			}
+		}
 
 		private static final class SearchNode {
-			private final Node node;
+			private Node node;
 			private SearchNode parent;
 			private float cost;
 			private float score;
 			private boolean closed;
 
-			private SearchNode(Node node, SearchNode parent, float cost, float score) {
+			private SearchNode reset(Node node, SearchNode parent, float cost, float score) {
 				this.node = node;
 				this.parent = parent;
 				this.cost = cost;
 				this.score = score;
+				this.closed = false;
+				return this;
 			}
 		}
 
-		private record OpenNode(long key, float cost, float score, long sequence) {}
+		private static final class OpenNode {
+			private long key;
+			private float cost;
+			private float score;
+			private long sequence;
+
+			private OpenNode reset(long key, float cost, float score, long sequence) {
+				this.key = key;
+				this.cost = cost;
+				this.score = score;
+				this.sequence = sequence;
+				return this;
+			}
+
+			private long key() {
+				return key;
+			}
+
+			private float cost() {
+				return cost;
+			}
+
+			private float score() {
+				return score;
+			}
+
+			private long sequence() {
+				return sequence;
+			}
+		}
+
+		private static final class BlockSearchNode {
+			private int blockId;
+			private BlockSearchNode parent;
+			private float cost;
+			private float score;
+			private boolean closed;
+
+			private BlockSearchNode reset(int blockId, BlockSearchNode parent, float cost, float score) {
+				this.blockId = blockId;
+				this.parent = parent;
+				this.cost = cost;
+				this.score = score;
+				this.closed = false;
+				return this;
+			}
+		}
+
+		private static final class BlockOpenNode {
+			private int blockId;
+			private float cost;
+			private float score;
+			private long sequence;
+
+			private BlockOpenNode reset(int blockId, float cost, float score, long sequence) {
+				this.blockId = blockId;
+				this.cost = cost;
+				this.score = score;
+				this.sequence = sequence;
+				return this;
+			}
+
+			private int blockId() {
+				return blockId;
+			}
+
+			private float cost() {
+				return cost;
+			}
+
+			private float score() {
+				return score;
+			}
+
+			private long sequence() {
+				return sequence;
+			}
+		}
+
+		private static final class SearchWorkspace {
+			private Node[] nodes = new Node[256];
+			private SearchNode[] searchNodes = new SearchNode[128];
+			private OpenNode[] openNodes = new OpenNode[256];
+			private BlockSearchNode[] blockSearchNodes = new BlockSearchNode[32];
+			private BlockOpenNode[] blockOpenNodes = new BlockOpenNode[64];
+			private int nodeIndex;
+			private int searchNodeIndex;
+			private int openNodeIndex;
+			private int blockSearchNodeIndex;
+			private int blockOpenNodeIndex;
+			private final Map<Long, SearchNode> visited = new HashMap<>();
+			private final PriorityQueue<OpenNode> open = new PriorityQueue<>(OPEN_NODE_ORDER);
+			private final Map<Long, PortalStep> portalGoals = new HashMap<>();
+			private final Map<Integer, BlockSearchNode> blockVisited = new HashMap<>();
+			private final PriorityQueue<BlockOpenNode> blockOpen = new PriorityQueue<>(BLOCK_OPEN_NODE_ORDER);
+
+			private void resetNodes() {
+				nodeIndex = 0;
+			}
+
+			private Node node(Sector sector, int gridX, int gridY, int complexOffset, long key,
+					float x, float y, float z) {
+				if (nodeIndex == nodes.length) {
+					nodes = Arrays.copyOf(nodes, nodes.length * 2);
+				}
+				Node node = nodes[nodeIndex];
+				if (node == null) {
+					node = nodes[nodeIndex] = new Node();
+				}
+				nodeIndex++;
+				return node.reset(sector, gridX, gridY, complexOffset, key, x, y, z);
+			}
+
+			private void beginLowLevelSearch() {
+				visited.clear();
+				open.clear();
+				searchNodeIndex = 0;
+				openNodeIndex = 0;
+			}
+
+			private void endLowLevelSearch() {
+				visited.clear();
+				open.clear();
+			}
+
+			private void beginPortalSearch() {
+				beginLowLevelSearch();
+				portalGoals.clear();
+			}
+
+			private void endPortalSearch() {
+				portalGoals.clear();
+				endLowLevelSearch();
+			}
+
+			private SearchNode searchNode(Node node, SearchNode parent, float cost, float score) {
+				if (searchNodeIndex == searchNodes.length) {
+					searchNodes = Arrays.copyOf(searchNodes, searchNodes.length * 2);
+				}
+				SearchNode result = searchNodes[searchNodeIndex];
+				if (result == null) {
+					result = searchNodes[searchNodeIndex] = new SearchNode();
+				}
+				searchNodeIndex++;
+				return result.reset(node, parent, cost, score);
+			}
+
+			private OpenNode openNode(long key, float cost, float score, long sequence) {
+				if (openNodeIndex == openNodes.length) {
+					openNodes = Arrays.copyOf(openNodes, openNodes.length * 2);
+				}
+				OpenNode result = openNodes[openNodeIndex];
+				if (result == null) {
+					result = openNodes[openNodeIndex] = new OpenNode();
+				}
+				openNodeIndex++;
+				return result.reset(key, cost, score, sequence);
+			}
+
+			private void beginBlockSearch() {
+				blockVisited.clear();
+				blockOpen.clear();
+				blockSearchNodeIndex = 0;
+				blockOpenNodeIndex = 0;
+			}
+
+			private void endBlockSearch() {
+				blockVisited.clear();
+				blockOpen.clear();
+			}
+
+			private BlockSearchNode blockSearchNode(int blockId, BlockSearchNode parent, float cost, float score) {
+				if (blockSearchNodeIndex == blockSearchNodes.length) {
+					blockSearchNodes = Arrays.copyOf(blockSearchNodes, blockSearchNodes.length * 2);
+				}
+				BlockSearchNode result = blockSearchNodes[blockSearchNodeIndex];
+				if (result == null) {
+					result = blockSearchNodes[blockSearchNodeIndex] = new BlockSearchNode();
+				}
+				blockSearchNodeIndex++;
+				return result.reset(blockId, parent, cost, score);
+			}
+
+			private BlockOpenNode blockOpenNode(int blockId, float cost, float score, long sequence) {
+				if (blockOpenNodeIndex == blockOpenNodes.length) {
+					blockOpenNodes = Arrays.copyOf(blockOpenNodes, blockOpenNodes.length * 2);
+				}
+				BlockOpenNode result = blockOpenNodes[blockOpenNodeIndex];
+				if (result == null) {
+					result = blockOpenNodes[blockOpenNodeIndex] = new BlockOpenNode();
+				}
+				blockOpenNodeIndex++;
+				return result.reset(blockId, cost, score, sequence);
+			}
+		}
+
+		private record BlockPath(SearchStatus status, int[] blocks, int processedNodes) {}
+
+		private record PortalStep(Node source, Node target) {}
+
+		private record PortalSearchResult(SearchStatus status, List<PathPoint> path, PortalStep portal,
+				int processedNodes) {
+
+			private static PortalSearchResult found(List<PathPoint> path, PortalStep portal, int processedNodes) {
+				return new PortalSearchResult(SearchStatus.FOUND, path, portal, processedNodes);
+			}
+
+			private static PortalSearchResult failed(SearchStatus status, int processedNodes) {
+				return new PortalSearchResult(status, null, null, processedNodes);
+			}
+		}
 
 	}
 }

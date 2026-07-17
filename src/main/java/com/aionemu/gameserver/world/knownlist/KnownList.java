@@ -492,6 +492,31 @@ public class KnownList {
 	}
 
 	/**
+	 * 返回所有者到最近已知玩家的水平距离平方；没有玩家时返回正无穷。
+	 * Returns the squared horizontal distance to the nearest known player, or positive infinity when none are known.
+	 */
+	public float getNearestKnownPlayerDistanceSquared() {
+		Map<Integer, Player> players = knownPlayers;
+		if (players == null) {
+			return Float.POSITIVE_INFINITY;
+		}
+		float ownerX = owner.getX();
+		float ownerY = owner.getY();
+		float nearest = Float.POSITIVE_INFINITY;
+		synchronized (players) {
+			for (Player player : players.values()) {
+				if (player == null) {
+					continue;
+				}
+				float dx = player.getX() - ownerX;
+				float dy = player.getY() - ownerY;
+				nearest = Math.min(nearest, dx * dx + dy * dy);
+			}
+		}
+		return nearest;
+	}
+
+	/**
 	 * 返回可见玩家映射的副本；未初始化时返回空映射。
 	 * Returns a copy of the visual-players map; empty if not initialized.
 	 *

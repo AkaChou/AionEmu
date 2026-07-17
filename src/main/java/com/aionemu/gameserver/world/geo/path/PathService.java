@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -37,6 +38,10 @@ public final class PathService implements DisposableBean {
 	// ponytail: bounded synchronous check; raise only if local waypoints still exhaust it.
 	private static final int WAYPOINT_SEARCH_MAX_NODES = 512;
 	private static final float MAX_GROUND_GEO_SEGMENT = 49;
+	private static final int MAX_GROUND_SMOOTH_LOOKAHEAD = 128;
+	private static final float MAX_GROUND_HEIGHT_DEVIATION = 0.25f;
+	private static final float NEAREST_GROUND_PATH_RADIUS = 2;
+	private static final float NEAREST_GROUND_PATH_VERTICAL = 0.7f;
 	private static final float SPATIAL_CLEARANCE_SAMPLE = 0.5f;
 	private static final float GLOBAL_WATER_SAMPLE = 2;
 	/** 起终点量化格子（米）；与追击 repath 量级一致。 / Query cell size in meters. */
@@ -53,8 +58,29 @@ public final class PathService implements DisposableBean {
 	private final LongAdder completed = new LongAdder();
 	private final LongAdder rejected = new LongAdder();
 	private final LongAdder timedOut = new LongAdder();
+	private final LongAdder queueExpired = new LongAdder();
 	private final LongAdder cacheHits = new LongAdder();
+	private final LongAdder found = new LongAdder();
+	private final LongAdder noPath = new LongAdder();
+	private final LongAdder invalidPosition = new LongAdder();
+	private final LongAdder nodeLimit = new LongAdder();
+	private final LongAdder interrupted = new LongAdder();
+	private final LongAdder cancelled = new LongAdder();
+	private final LongAdder failed = new LongAdder();
+	private final LongAdder processedNodes = new LongAdder();
+	private final LongAdder hierarchicalAttempts = new LongAdder();
+	private final LongAdder hierarchicalFound = new LongAdder();
+	private final LongAdder hierarchicalFallbacks = new LongAdder();
+	private final LongAdder abstractNodes = new LongAdder();
+	private final LongAdder queueNanos = new LongAdder();
 	private final LongAdder runNanos = new LongAdder();
+	private final LongAdder recoverySubmitted = new LongAdder();
+	private final LongAdder recoveryFound = new LongAdder();
+	private final LongAdder recoveryFailed = new LongAdder();
+	private final LongAdder pathsBeforeSmooth = new LongAdder();
+	private final LongAdder pathsAfterSmooth = new LongAdder();
+	private final LongAdder geoSegmentChecks = new LongAdder();
+	private final LongAdder geoSegmentRejected = new LongAdder();
 	private final ConcurrentHashMap<Long, AtomicLong> obstacleVersions = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<PathCacheKey, PathCacheEntry> resultCache = new ConcurrentHashMap<>();
 	private final ThreadPoolExecutor pathfinders;
@@ -124,9 +150,14 @@ public final class PathService implements DisposableBean {
 	}
 
 	public CompletableFuture<float[][]> navigateToTargetAsync(Creature owner, float x, float y, float z) {
+		return navigateToTargetAsync(owner, x, y, z, null);
+	}
+
+	public CompletableFuture<float[][]> navigateToTargetAsync(Creature owner, float x, float y, float z,
+			BlockedSegment blockedSegment) {
 		return owner == null || owner.getLifeStats().isAlreadyDead()
 				? CompletableFuture.completedFuture(null)
-				: navigateAsync(owner, x, y, z, 0);
+				: navigateAsync(owner, x, y, z, 0, blockedSegment);
 	}
 
 	public float[][] navigateToLocation(Creature owner, float x, float y, float z) {
@@ -134,9 +165,14 @@ public final class PathService implements DisposableBean {
 	}
 
 	public CompletableFuture<float[][]> navigateToLocationAsync(Creature owner, float x, float y, float z) {
+		return navigateToLocationAsync(owner, x, y, z, null);
+	}
+
+	public CompletableFuture<float[][]> navigateToLocationAsync(Creature owner, float x, float y, float z,
+			BlockedSegment blockedSegment) {
 		return owner == null || owner.getLifeStats().isAlreadyDead()
 				? CompletableFuture.completedFuture(null)
-				: navigateAsync(owner, x, y, z, 1);
+				: navigateAsync(owner, x, y, z, blockedSegment == null ? 1 : 0, blockedSegment);
 	}
 
 	public boolean canReachWaypoint(Creature owner, float x, float y, float z) {
@@ -151,6 +187,122 @@ public final class PathService implements DisposableBean {
 				return status == PathData.SearchStatus.FOUND;
 			}
 		}
+		return canMoveStraight(owner, x, y, z, water, spatial);
+	}
+
+	public boolean canMoveStraight(Creature owner, float x, float y, float z) {
+		if (owner == null) {
+			return false;
+		}
+		WaterArea water = owner.isFlying() ? null : waterArea(owner);
+		return canMoveStraight(owner, x, y, z, water, owner.isFlying() || water != null);
+	}
+
+	public int waypointSkipIndex(Creature owner, float[][] path, int lookahead) {
+		if (owner == null || path == null || path.length < 2 || lookahead < 1 || usesSpatialPath(owner)) {
+			return 0;
+		}
+		PathData.MapData map;
+		try {
+			map = data.getMap(owner.getWorldId());
+		} catch (IllegalStateException e) {
+			return 0;
+		}
+		if (map == null) {
+			return 0;
+		}
+		float[] start = {owner.getX(), owner.getY(), owner.getZ()};
+		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
+		SegmentAllowed pathAllowed = (from, to) -> map.canWalkStraight(from[0], from[1], from[2], to[0], to[1],
+				to[2], terrain, null);
+		SegmentAllowed geoAllowed = (from, to) -> {
+			geoSegmentChecks.increment();
+			boolean allowed = canPass(owner, from[0], from[1], from[2], to[0], to[1], to[2], false);
+			if (!allowed) {
+				geoSegmentRejected.increment();
+			}
+			return allowed;
+		};
+		return waypointSkipIndex(start, path, lookahead, pathAllowed, geoAllowed);
+	}
+
+	public float[] projectGroundStep(Creature owner, float x, float y, float referenceZ) {
+		if (owner == null || owner.isFlying()) {
+			return null;
+		}
+		PathData.MapData map;
+		try {
+			map = data.getMap(owner.getWorldId());
+		} catch (IllegalStateException e) {
+			return null;
+		}
+		if (map == null) {
+			return null;
+		}
+		PathData.HeightProvider terrain = terrain(owner.getWorldId());
+		PathData.PathPoint projected = map.projectPoint(x, y, referenceZ, terrain);
+		if (projected == null || !map.canWalkStraight(owner.getX(), owner.getY(), owner.getZ(), x, y, projected.z(),
+				terrain, null)) {
+			return null;
+		}
+		return new float[] {x, y, projected.z()};
+	}
+
+	public float[] projectLocalStep(Creature owner, float x, float y, float referenceZ) {
+		if (owner == null) {
+			return null;
+		}
+		return usesSpatialPath(owner) ? new float[] {x, y, referenceZ} : projectGroundStep(owner, x, y, referenceZ);
+	}
+
+	public float[] projectGroundPoint(Creature context, float x, float y, float referenceZ) {
+		if (context == null || context.isFlying()) {
+			return null;
+		}
+		PathData.MapData map;
+		try {
+			map = data.getMap(context.getWorldId());
+		} catch (IllegalStateException e) {
+			return null;
+		}
+		if (map == null) {
+			return null;
+		}
+		PathData.PathPoint projected = map.projectPoint(x, y, referenceZ, terrain(context.getWorldId()));
+		return projected == null ? null : new float[] {x, y, projected.z()};
+	}
+
+	public float[] nearestGroundPoint(Creature owner, float maxRadius, float maxVerticalDelta) {
+		if (owner == null || owner.isFlying()) {
+			return null;
+		}
+		PathData.MapData map;
+		try {
+			map = data.getMap(owner.getWorldId());
+		} catch (IllegalStateException e) {
+			return null;
+		}
+		if (map == null) {
+			return null;
+		}
+		float ownerX = owner.getX();
+		float ownerY = owner.getY();
+		float ownerZ = owner.getZ();
+		PathData.PathPoint point = map.nearestPathPoint(ownerX, ownerY, ownerZ, maxRadius, maxVerticalDelta,
+				terrain(owner.getWorldId()), (x, y, z) -> {
+					if (square(x - ownerX) + square(y - ownerY) <= 0.01f) {
+						return false;
+					}
+					return canPass(owner, ownerX, ownerY, ownerZ, x, y, z, false);
+				});
+		return point == null ? null : new float[] {point.x(), point.y(), point.z()};
+	}
+
+	private static PathData.HeightProvider terrain(int worldId) {
+		return (x, y) -> GameWorldServices.geoService().getTerrainZ(worldId, x, y);
+	}
+
+	private boolean canMoveStraight(Creature owner, float x, float y, float z, WaterArea water, boolean spatial) {
 		if (!canPass(owner, owner.getX(), owner.getY(), owner.getZ(), x, y, z, spatial)) {
 			return false;
 		}
@@ -219,32 +371,78 @@ public final class PathService implements DisposableBean {
 
 	public Metrics metrics() {
 		long done = completed.sum();
-		return new Metrics(submitted.sum(), done, rejected.sum(), timedOut.sum(), cacheHits.sum(),
+		return new Metrics(submitted.sum(), done, rejected.sum(), timedOut.sum(), queueExpired.sum(), cacheHits.sum(),
+				found.sum(), noPath.sum(), invalidPosition.sum(), nodeLimit.sum(), interrupted.sum(), cancelled.sum(), failed.sum(),
+				processedNodes.sum(), hierarchicalAttempts.sum(), hierarchicalFound.sum(), hierarchicalFallbacks.sum(),
+				abstractNodes.sum(), recoverySubmitted.sum(), recoveryFound.sum(), recoveryFailed.sum(), pathsBeforeSmooth.sum(),
+				pathsAfterSmooth.sum(), geoSegmentChecks.sum(), geoSegmentRejected.sum(),
 				pathfinders.getQueue().size(), pathfinders.getActiveCount(),
+				done == 0 ? 0 : TimeUnit.NANOSECONDS.toMicros(queueNanos.sum() / done),
 				done == 0 ? 0 : TimeUnit.NANOSECONDS.toMicros(runNanos.sum() / done));
 	}
 
 	public static boolean isDefinitivePathFailure(Throwable failure) {
-		return failure instanceof IncompletePathSearchException;
+		if (failure == null) {
+			return false;
+		}
+		PathResultStatus status = failureStatus(failure);
+		return status == PathResultStatus.NO_PATH || status == PathResultStatus.INVALID_POSITION;
 	}
 
-	private CompletableFuture<float[][]> navigateAsync(Creature owner, float targetX, float targetY, float targetZ, int priority) {
-		PathCacheKey key = pathCacheKey(owner.getWorldId(), owner.getInstanceId(),
-				obstacleVersion(owner.getWorldId(), owner.getInstanceId()), usesSpatialPath(owner),
-				owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ);
-		PathCacheEntry cached = getFreshCacheEntry(key);
-		if (cached != null) {
-			cacheHits.increment();
-			return CompletableFuture.completedFuture(copyPath(cached.path()));
+	public static PathResultStatus failureStatus(Throwable failure) {
+		return resultStatus(null, failure);
+	}
+
+	private CompletableFuture<float[][]> navigateAsync(Creature owner, float targetX, float targetY, float targetZ,
+			int priority, BlockedSegment blockedSegment) {
+		PathRequest request = snapshot(owner, targetX, targetY, targetZ, blockedSegment);
+		PathCacheKey key = pathCacheKey(request.worldId(), request.instanceId(), request.obstacleVersion(), request.spatial(),
+				request.startX(), request.startY(), request.startZ(), request.targetX(), request.targetY(), request.targetZ());
+		if (usesResultCache(request.blockedSegment())) {
+			PathCacheEntry cached = getFreshCacheEntry(key);
+			if (cached != null) {
+				cacheHits.increment();
+				return CompletableFuture.completedFuture(copyPath(cached.path()));
+			}
 		}
-		return executeAsync(priority, () -> {
-			WaterArea water = owner.isFlying() ? null : waterArea(owner);
-			float[][] path = owner.isFlying() || water != null
-					? findSpatialPath(owner, targetX, targetY, targetZ, water)
-					: findGroundPath(owner, targetX, targetY, targetZ);
-			putCachedPath(key, path);
+		CompletableFuture<float[][]> result = executeAsync(priority, () -> {
+			float[][] path = request.spatial() ? findSpatialPath(request) : findGroundPath(owner, request);
+			if (usesResultCache(request.blockedSegment())) {
+				putCachedPath(key, path);
+			}
 			return path;
 		});
+		if (request.blockedSegment() != null) {
+			recoverySubmitted.increment();
+			result.whenComplete((path, failure) -> {
+				if (failure == null && path != null && path.length > 0) {
+					recoveryFound.increment();
+				} else {
+					recoveryFailed.increment();
+				}
+			});
+		}
+		return result;
+	}
+
+	private PathRequest snapshot(Creature owner, float targetX, float targetY, float targetZ,
+			BlockedSegment blockedSegment) {
+		int worldId = owner.getWorldId();
+		int instanceId = owner.getInstanceId();
+		float startX = owner.getX();
+		float startY = owner.getY();
+		float startZ = owner.getZ();
+		boolean flying = owner.isFlying();
+		WaterArea water = flying ? null : waterArea(owner, startX, startY, startZ);
+		BlockedSegment activeBlockedSegment = blockedSegment != null && blockedSegment.active(System.currentTimeMillis())
+				? blockedSegment : null;
+		return new PathRequest(worldId, instanceId, obstacleVersion(worldId, instanceId), startX, startY, startZ,
+				targetX, targetY, targetZ, flying || water != null, Math.max(0.5f, owner.getCollision()), water,
+				activeBlockedSegment);
+	}
+
+	static boolean usesResultCache(BlockedSegment blockedSegment) {
+		return blockedSegment == null;
 	}
 
 	static int pathCacheCell(float value) {
@@ -312,7 +510,9 @@ public final class PathService implements DisposableBean {
 			return CompletableFuture.failedFuture(new RejectedExecutionException("PATH queue is full"));
 		}
 		CompletableFuture<float[][]> result = new CompletableFuture<>();
+		long queuedAt = System.nanoTime();
 		PrioritizedTask task = new PrioritizedTask(priority, sequence.getAndIncrement(), () -> {
+			queueNanos.add(System.nanoTime() - queuedAt);
 			long start = System.nanoTime();
 			try {
 				return action.call();
@@ -321,7 +521,8 @@ public final class PathService implements DisposableBean {
 				completed.increment();
 			}
 		}, result);
-		result.whenComplete((ignored, failure) -> {
+		result.whenComplete((path, failure) -> {
+			recordResultStatus(resultStatus(path, failure));
 			if (result.isCancelled()) {
 				task.cancel(true);
 				pathfinders.remove(task);
@@ -336,15 +537,66 @@ public final class PathService implements DisposableBean {
 			result.completeExceptionally(e);
 		}
 		CompletableFuture.delayedExecutor(requestTimeout(priority), TimeUnit.MILLISECONDS).execute(() -> {
-			Throwable failure = task.hasStarted() ? new TimeoutException("PATH request timed out")
-					: new RejectedExecutionException("PATH request expired in queue");
+			boolean started = task.hasStarted();
 			if (task.cancel(true)) {
-				timedOut.increment();
+				Throwable failure = started ? new TimeoutException("PATH request timed out")
+						: new QueueExpiredException("PATH request expired in queue");
+				if (started) {
+					timedOut.increment();
+				} else {
+					queueExpired.increment();
+				}
 				result.completeExceptionally(failure);
 				pathfinders.remove(task);
 			}
 		});
 		return result;
+	}
+
+	static PathResultStatus resultStatus(float[][] path, Throwable failure) {
+		if (failure == null) {
+			return path == null ? PathResultStatus.NO_PATH : PathResultStatus.FOUND;
+		}
+		if (failure instanceof CompletionException || failure instanceof ExecutionException) {
+			return resultStatus(path, failure.getCause());
+		}
+		if (failure instanceof IncompletePathSearchException incomplete) {
+			return switch (incomplete.status()) {
+				case NODE_LIMIT -> PathResultStatus.NODE_LIMIT;
+				case INTERRUPTED -> PathResultStatus.INTERRUPTED;
+				case INVALID_POSITION -> PathResultStatus.INVALID_POSITION;
+				case NO_PATH -> PathResultStatus.NO_PATH;
+				case FOUND -> PathResultStatus.FAILED;
+			};
+		}
+		if (failure instanceof TimeoutException) {
+			return PathResultStatus.TIMEOUT;
+		}
+		if (failure instanceof QueueExpiredException) {
+			return PathResultStatus.QUEUE_EXPIRED;
+		}
+		if (failure instanceof RejectedExecutionException) {
+			return PathResultStatus.REJECTED;
+		}
+		if (failure instanceof CancellationException) {
+			return PathResultStatus.CANCELLED;
+		}
+		return PathResultStatus.FAILED;
+	}
+
+	private void recordResultStatus(PathResultStatus status) {
+		switch (status) {
+			case FOUND -> found.increment();
+			case NO_PATH -> noPath.increment();
+			case INVALID_POSITION -> invalidPosition.increment();
+			case NODE_LIMIT -> nodeLimit.increment();
+			case INTERRUPTED -> interrupted.increment();
+			case CANCELLED -> cancelled.increment();
+			case FAILED -> failed.increment();
+			case TIMEOUT, QUEUE_EXPIRED, REJECTED -> {
+				// 调度层在决定具体原因的位置计数，避免同一请求重复累计。
+			}
+		}
 	}
 
 	static int requestTimeout(int priority) {
@@ -364,23 +616,51 @@ public final class PathService implements DisposableBean {
 		}
 	}
 
-	private float[][] findGroundPath(Creature owner, float targetX, float targetY, float targetZ) {
-		float[] start = {owner.getX(), owner.getY(), owner.getZ()};
-		float[] target = {targetX, targetY, targetZ};
-		SegmentAllowed groundAllowed = (from, to) -> canPass(owner, from[0], from[1], from[2], to[0], to[1], to[2], false);
+	private float[][] findGroundPath(Creature owner, PathRequest request) {
+		float[] start = {request.startX(), request.startY(), request.startZ()};
+		float[] target = {request.targetX(), request.targetY(), request.targetZ()};
+		SegmentAllowed groundAllowed = (from, to) -> canPass(request.worldId(), request.instanceId(), from[0], from[1], from[2],
+				to[0], to[1], to[2], false);
 		PathData.MapData map;
 		try {
-			map = data.getMap(owner.getWorldId());
+			map = data.getMap(request.worldId());
 		} catch (IllegalStateException e) {
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
 		if (map == null) {
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
-		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
-		PathData.SearchResult search = map.searchAStar(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY,
-				targetZ, GeoDataConfig.GEO_PATH_MAX_NODES, terrain, null);
+		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(request.worldId(), x, y);
+		PathData.PathPoint pathStart = map.projectPoint(request.startX(), request.startY(), request.startZ(), terrain);
+		float[] bridge = null;
+		if (pathStart == null) {
+			pathStart = map.nearestPathPoint(request.startX(), request.startY(), request.startZ(),
+					NEAREST_GROUND_PATH_RADIUS, NEAREST_GROUND_PATH_VERTICAL, terrain,
+					(x, y, z) -> groundAllowed.test(start, new float[] {x, y, z}));
+			if (pathStart == null) {
+				invalidPosition.increment();
+				return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
+			}
+			bridge = new float[] {pathStart.x(), pathStart.y(), pathStart.z()};
+		}
+		PathData.EdgePassability recoveryAllowed = request.blockedSegment() == null ? null
+				: request.blockedSegment()::allows;
+		PathData.SearchResult search = map.searchAStar(pathStart.x(), pathStart.y(), pathStart.z(), request.targetX(),
+				request.targetY(), request.targetZ(), GeoDataConfig.GEO_PATH_MAX_NODES, terrain, recoveryAllowed,
+				GeoDataConfig.GEO_PATH_HIERARCHICAL_ENABLE);
+		processedNodes.add(search.processedNodes());
+		abstractNodes.add(search.abstractNodes());
+		if (search.mode() == PathData.SearchMode.HIERARCHICAL) {
+			hierarchicalAttempts.increment();
+			if (search.status() == PathData.SearchStatus.FOUND) {
+				hierarchicalFound.increment();
+			}
+		} else if (search.mode() == PathData.SearchMode.HIERARCHICAL_FALLBACK) {
+			hierarchicalAttempts.increment();
+			hierarchicalFallbacks.increment();
+		}
 		if (search.status() == PathData.SearchStatus.INVALID_POSITION) {
+			invalidPosition.increment();
 			return GeoDataConfig.GEO_ENABLE ? geoGroundPath(owner, start, target, groundAllowed) : null;
 		}
 		List<PathData.PathPoint> path = groundPath(search);
@@ -388,8 +668,26 @@ public final class PathService implements DisposableBean {
 			return null;
 		}
 		SegmentAllowed pathAllowed = (from, to) -> map.canWalkStraight(from[0], from[1], from[2], to[0], to[1],
-				to[2], terrain, null);
-		return compress(owner, waypoints(path, targetX, targetY), false, null, pathAllowed);
+				to[2], terrain, recoveryAllowed);
+		List<float[]> waypoints = waypoints(path, request.targetX(), request.targetY());
+		pathsBeforeSmooth.add(waypoints.size() + (bridge == null ? 0 : 1));
+		SegmentAllowed geoAllowed = (from, to) -> {
+			geoSegmentChecks.increment();
+			boolean allowed = groundAllowed.test(from, to);
+			if (!allowed) {
+				geoSegmentRejected.increment();
+			}
+			return allowed;
+		};
+		float[] smoothStart = bridge == null ? start : bridge;
+		float[][] result = simplifyGroundPath(smoothStart, waypoints, pathAllowed, geoAllowed);
+		if (result != null && bridge != null) {
+			result = prependWaypoint(bridge, result);
+		}
+		if (result != null) {
+			pathsAfterSmooth.add(result.length);
+		}
+		return result;
 	}
 
 	private static float[][] geoGroundPath(Creature owner, float[] start, float[] target, SegmentAllowed allowed) {
@@ -410,11 +708,15 @@ public final class PathService implements DisposableBean {
 		};
 	}
 
-	private float[][] findSpatialPath(Creature owner, float targetX, float targetY, float targetZ, WaterArea water) {
+	private float[][] findSpatialPath(PathRequest request) {
+		float targetX = request.targetX();
+		float targetY = request.targetY();
+		float targetZ = request.targetZ();
+		WaterArea water = request.water();
 		boolean swimming = water != null;
-		float clearance = Math.max(0.5f, owner.getCollision());
-		int worldSize = GameWorldBootstrapServices.world().getWorldMap(owner.getWorldId()).getWorldSize();
-		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
+		float clearance = request.clearance();
+		int worldSize = GameWorldBootstrapServices.world().getWorldMap(request.worldId()).getWorldSize();
+		PathData.HeightProvider terrain = (x, y) -> GameWorldServices.geoService().getTerrainZ(request.worldId(), x, y);
 		float targetGround = terrain.get(targetX, targetY);
 		if (Float.isFinite(targetGround)) {
 			targetZ = Math.max(targetZ, targetGround + clearance);
@@ -425,13 +727,15 @@ public final class PathService implements DisposableBean {
 				targetZ = Math.min(targetZ, surface - clearance);
 			}
 		}
-		SpatialPathfinder.EdgeAllowed waterEdge = swimming ? waterEdge(owner, water, clearance, new HashMap<>()) : null;
+		SpatialPathfinder.EdgeAllowed waterEdge = swimming
+				? waterEdge(request.worldId(), request.instanceId(), water, clearance, new HashMap<>()) : null;
 		// 先高度/水体（廉价），最后 canPass 射线，边被挡时少打 geo。
 		SpatialPathfinder.EdgeAllowed edgeAllowed = (startX, startY, startZ, endX, endY, endZ) ->
 				hasTerrainClearance(startX, startY, startZ, endX, endY, endZ, clearance, terrain)
 						&& (waterEdge == null || waterEdge.test(startX, startY, startZ, endX, endY, endZ))
-						&& canPass(owner, startX, startY, startZ, endX, endY, endZ, true);
-		List<float[]> path = SpatialPathfinder.findProgressive(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ,
+						&& canPass(request.worldId(), request.instanceId(), startX, startY, startZ, endX, endY, endZ, true);
+		List<float[]> path = SpatialPathfinder.findProgressive(request.startX(), request.startY(), request.startZ(), targetX, targetY,
+				targetZ,
 				Math.max(1, GeoDataConfig.GEO_PATH_SPATIAL_STEP), Math.max(1, GeoDataConfig.GEO_PATH_MAX_NODES),
 				worldSize, worldSize,
 				(x, y, z) -> {
@@ -440,23 +744,27 @@ public final class PathService implements DisposableBean {
 							&& (!swimming || water.allows(x, y, z, clearance))
 							&& (!Float.isFinite(ground) || z >= ground + clearance);
 				}, edgeAllowed);
-		return path == null ? null : compress(owner, path, true, waterEdge);
+		return path == null ? null : compress(request.worldId(), request.instanceId(),
+				new float[] {request.startX(), request.startY(), request.startZ()}, path, true, waterEdge);
 	}
 
 	private WaterArea waterArea(Creature owner) {
-		float ground = GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), owner.getX(), owner.getY());
-		WaterVolumeStore.Volume volume = waterVolumes.find(owner.getWorldId(), owner.getX(), owner.getY(), owner.getZ());
+		return waterArea(owner, owner.getX(), owner.getY(), owner.getZ());
+	}
+
+	private WaterArea waterArea(Creature owner, float x, float y, float z) {
+		float ground = GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
+		WaterVolumeStore.Volume volume = waterVolumes.find(owner.getWorldId(), x, y, z);
 		if (volume != null) {
-			float surface = volume.surfaceZ(owner.getX(), owner.getY());
-			if (isSubmerged(owner.getZ(), ground, surface)) {
+			float surface = volume.surfaceZ(x, y);
+			if (isSubmerged(z, ground, surface)) {
 				return new WaterArea(volume, surface);
 			}
 		}
 		float waterLevel = GameWorldBootstrapServices.world().getWorldMap(owner.getWorldId()).getWaterLevel();
-		boolean openToSurface = isSubmerged(owner.getZ(), ground, waterLevel)
-				&& canPass(owner, owner.getX(), owner.getY(), owner.getZ(), owner.getX(), owner.getY(),
-						waterLevel - 0.5f, true);
-		return acceptsGlobalWater(owner.getZ(), ground, waterLevel, openToSurface) ? new WaterArea(null, waterLevel) : null;
+		boolean openToSurface = isSubmerged(z, ground, waterLevel)
+				&& canPass(owner, x, y, z, x, y, waterLevel - 0.5f, true);
+		return acceptsGlobalWater(z, ground, waterLevel, openToSurface) ? new WaterArea(null, waterLevel) : null;
 	}
 
 	static boolean acceptsGlobalWater(float z, float ground, float surface, boolean openToSurface) {
@@ -469,12 +777,17 @@ public final class PathService implements DisposableBean {
 
 	private static SpatialPathfinder.EdgeAllowed waterEdge(Creature owner, WaterArea water, float clearance,
 			Map<WaterColumn, Boolean> openColumns) {
+		return waterEdge(owner.getWorldId(), owner.getInstanceId(), water, clearance, openColumns);
+	}
+
+	private static SpatialPathfinder.EdgeAllowed waterEdge(int worldId, int instanceId, WaterArea water, float clearance,
+			Map<WaterColumn, Boolean> openColumns) {
 		if (water.volume != null) {
 			return (startX, startY, startZ, endX, endY, endZ) ->
 					water.volume.allowsSegment(startX, startY, startZ, endX, endY, endZ, clearance);
 		}
 		SpatialPathfinder.PointAllowed openColumn = (x, y, z) -> openColumns.computeIfAbsent(new WaterColumn(x, y, z),
-				ignored -> canPass(owner, x, y, z, x, y, water.globalSurface, true));
+				ignored -> canPass(worldId, instanceId, x, y, z, x, y, water.globalSurface, true));
 		return (startX, startY, startZ, endX, endY, endZ) -> allowsGlobalWaterSegment(startX, startY, startZ, endX, endY,
 				endZ, water.globalSurface, clearance, openColumn);
 	}
@@ -518,6 +831,11 @@ public final class PathService implements DisposableBean {
 
 	private static boolean canPass(Creature owner, float startX, float startY, float startZ, float endX, float endY,
 			float endZ, boolean spatial) {
+		return canPass(owner.getWorldId(), owner.getInstanceId(), startX, startY, startZ, endX, endY, endZ, spatial);
+	}
+
+	private static boolean canPass(int worldId, int instanceId, float startX, float startY, float startZ, float endX,
+			float endY, float endZ, boolean spatial) {
 		if (!GeoDataConfig.GEO_ENABLE) {
 			return true;
 		}
@@ -526,10 +844,10 @@ public final class PathService implements DisposableBean {
 		float dz = endZ - startZ;
 		float distance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
 		return spatial
-				? GameWorldServices.geoService().canPass(owner.getWorldId(), startX, startY, startZ, endX, endY, endZ,
-					distance + 0.1f, owner.getInstanceId())
-				: GameWorldServices.geoService().canPassWalker(owner.getWorldId(), startX, startY, startZ, endX, endY,
-					endZ, distance + 0.1f, owner.getInstanceId());
+				? GameWorldServices.geoService().canPass(worldId, startX, startY, startZ, endX, endY, endZ,
+					distance + 0.1f, instanceId)
+				: GameWorldServices.geoService().canPassWalker(worldId, startX, startY, startZ, endX, endY,
+					endZ, distance + 0.1f, instanceId);
 	}
 
 	static boolean hasTerrainClearance(float startX, float startY, float startZ, float endX, float endY, float endZ,
@@ -548,22 +866,21 @@ public final class PathService implements DisposableBean {
 		return true;
 	}
 
-	private static float[][] compress(Creature owner, List<float[]> points, boolean spatial,
+	private static float[][] compress(int worldId, int instanceId, float[] start, List<float[]> points, boolean spatial,
 			SpatialPathfinder.EdgeAllowed edgeAllowed) {
-		return compress(owner, points, spatial, edgeAllowed, (start, end) -> true);
+		return compress(worldId, instanceId, start, points, spatial, edgeAllowed, (from, to) -> true);
 	}
 
-	private static float[][] compress(Creature owner, List<float[]> points, boolean spatial,
+	private static float[][] compress(int worldId, int instanceId, float[] start, List<float[]> points, boolean spatial,
 			SpatialPathfinder.EdgeAllowed edgeAllowed, SegmentAllowed pathAllowed) {
-		float[] start = {owner.getX(), owner.getY(), owner.getZ()};
 		if (!spatial) {
-			points = boundedGroundSegments(start, points);
-			return simplifyPath(start, points, pathAllowed);
+			return simplifyGroundPath(start, points, pathAllowed,
+					(from, to) -> canPass(worldId, instanceId, from[0], from[1], from[2], to[0], to[1], to[2], false));
 		}
 		return simplifyPath(start, points,
 				(first, second) -> pathAllowed.test(first, second)
 						&& square(first[0] - second[0]) + square(first[1] - second[1]) <= 2_500
-						&& canPass(owner, first[0], first[1], first[2], second[0], second[1], second[2], true)
+						&& canPass(worldId, instanceId, first[0], first[1], first[2], second[0], second[1], second[2], true)
 						&& (edgeAllowed == null || edgeAllowed.test(first[0], first[1], first[2], second[0], second[1], second[2])));
 	}
 
@@ -585,6 +902,92 @@ public final class PathService implements DisposableBean {
 		}
 		result.remove(0);
 		return result.toArray(float[][]::new);
+	}
+
+	static float[][] simplifyGroundPath(float[] start, List<float[]> points, SegmentAllowed pathAllowed,
+			SegmentAllowed geoAllowed) {
+		List<float[]> result = new ArrayList<>();
+		float[] from = start;
+		int current = -1;
+		while (current + 1 < points.size()) {
+			int last = Math.min(points.size() - 1, current + MAX_GROUND_SMOOTH_LOOKAHEAD);
+			int selected = -1;
+			for (int candidate = last; candidate > current; candidate--) {
+				float[] to = points.get(candidate);
+				if (square(to[0] - from[0]) + square(to[1] - from[1]) > square(MAX_GROUND_GEO_SEGMENT)
+						|| !preservesGroundHeight(from, points, current + 1, candidate)
+						|| !pathAllowed.test(from, to)) {
+					continue;
+				}
+				if (geoAllowed.test(from, to)) {
+					selected = candidate;
+					break;
+				}
+			}
+			if (selected < 0) {
+				int next = current + 1;
+				if (!pathAllowed.test(from, points.get(next))) {
+					return null;
+				}
+				selected = next;
+			}
+			from = points.get(selected);
+			result.add(from);
+			current = selected;
+		}
+		return result.toArray(float[][]::new);
+	}
+
+	static int waypointSkipIndex(float[] start, float[][] path, int lookahead, SegmentAllowed pathAllowed,
+			SegmentAllowed geoAllowed) {
+		int last = Math.min(Math.max(0, lookahead), path.length - 1);
+		for (int index = last; index > 0; index--) {
+			if (preservesGroundHeight(start, path, index)
+					&& pathAllowed.test(start, path[index]) && geoAllowed.test(start, path[index])) {
+				return index;
+			}
+		}
+		return 0;
+	}
+
+	private static boolean preservesGroundHeight(float[] from, List<float[]> points, int first, int last) {
+		float[] to = points.get(last);
+		for (int index = first; index < last; index++) {
+			if (!matchesGroundHeight(from, to, points.get(index))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean preservesGroundHeight(float[] from, float[][] points, int last) {
+		float[] to = points[last];
+		for (int index = 0; index < last; index++) {
+			if (!matchesGroundHeight(from, to, points[index])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean matchesGroundHeight(float[] from, float[] to, float[] point) {
+		float dx = to[0] - from[0];
+		float dy = to[1] - from[1];
+		float lengthSquared = dx * dx + dy * dy;
+		if (lengthSquared <= 0.000001f) {
+			return false;
+		}
+		float amount = ((point[0] - from[0]) * dx + (point[1] - from[1]) * dy) / lengthSquared;
+		amount = Math.max(0, Math.min(1, amount));
+		float expectedZ = from[2] + (to[2] - from[2]) * amount;
+		return Math.abs(point[2] - expectedZ) <= MAX_GROUND_HEIGHT_DEVIATION;
+	}
+
+	static float[][] prependWaypoint(float[] waypoint, float[][] path) {
+		float[][] result = new float[path.length + 1][];
+		result[0] = waypoint;
+		System.arraycopy(path, 0, result, 1, path.length);
+		return result;
 	}
 
 	static float[][] directGroundPath(float[] start, float[] target, SegmentAllowed allowed) {
@@ -633,8 +1036,56 @@ public final class PathService implements DisposableBean {
 		instanceProvider = provider;
 	}
 
-	public record Metrics(long submitted, long completed, long rejected, long timedOut, long cacheHits, int queued,
-			int active, long averageMicros) {}
+	public enum PathResultStatus {
+		FOUND,
+		NO_PATH,
+		INVALID_POSITION,
+		NODE_LIMIT,
+		INTERRUPTED,
+		TIMEOUT,
+		QUEUE_EXPIRED,
+		REJECTED,
+		CANCELLED,
+		FAILED
+	}
+
+	public record Metrics(long submitted, long completed, long rejected, long timedOut, long queueExpired, long cacheHits,
+			long found, long noPath, long invalidPosition, long nodeLimit, long interrupted, long cancelled, long failed,
+			long processedNodes, long hierarchicalAttempts, long hierarchicalFound, long hierarchicalFallbacks,
+			long abstractNodes, long recoverySubmitted, long recoveryFound, long recoveryFailed, long pathsBeforeSmooth,
+			long pathsAfterSmooth, long geoSegmentChecks, long geoSegmentRejected, int queued, int active,
+			long averageQueueMicros, long averageMicros) {}
+
+	private record PathRequest(int worldId, int instanceId, long obstacleVersion, float startX, float startY, float startZ,
+			float targetX, float targetY, float targetZ, boolean spatial, float clearance, WaterArea water,
+			BlockedSegment blockedSegment) {}
+
+	public record BlockedSegment(float fromX, float fromY, float fromZ, float toX, float toY, float toZ,
+			float radius, long expiresAt) {
+
+		public boolean active(long now) {
+			return expiresAt > now;
+		}
+
+		boolean allows(float startX, float startY, float startZ, float targetX, float targetY, float targetZ) {
+			float dx = toX - fromX;
+			float dy = toY - fromY;
+			float dz = toZ - fromZ;
+			float distance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+			if (distance <= 0.01f) {
+				return true;
+			}
+			float amount = Math.min(0.5f, distance) / distance;
+			float expectedX = fromX + dx * amount;
+			float expectedY = fromY + dy * amount;
+			float expectedZ = fromZ + dz * amount;
+			float startDistance = (float) Math.hypot(startX - fromX, startY - fromY);
+			float targetDistance = (float) Math.hypot(targetX - expectedX, targetY - expectedY);
+			float forward = (targetX - startX) * dx + (targetY - startY) * dy;
+			return startDistance > 0.75f || targetDistance > Math.max(0, radius) || forward <= 0
+					|| Math.abs(targetZ - expectedZ) >= 0.7f;
+		}
+	}
 
 	record PathCacheKey(int worldId, int instanceId, long obstacleVersion, boolean spatial, int startX, int startY,
 			int startZ, int targetX, int targetY, int targetZ) {}
@@ -713,9 +1164,22 @@ public final class PathService implements DisposableBean {
 	}
 
 	static final class IncompletePathSearchException extends RuntimeException {
+		private final PathData.SearchStatus status;
 
 		IncompletePathSearchException(PathData.SearchStatus status, int processedNodes) {
 			super("PATH search incomplete: " + status + " after " + processedNodes + " nodes");
+			this.status = status;
+		}
+
+		PathData.SearchStatus status() {
+			return status;
+		}
+	}
+
+	static final class QueueExpiredException extends RejectedExecutionException {
+
+		QueueExpiredException(String message) {
+			super(message);
 		}
 	}
 

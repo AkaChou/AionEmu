@@ -87,8 +87,7 @@ public class CM_LOGIN extends AionClientPacket {
         AionAuthResponse response = AccountController.login(user, password, client);
         switch (response) {
             case AUTHED:
-                // TODO: STS 尚未实现完成，暂不记录 STS 账号绑定。 / STS is not fully implemented; keep it disabled.
-                // StsVipServer.rememberAuthenticatedAccount(client.getIP(), client.getAccount().getId());
+                StsVipServer.rememberAuthenticatedAccount(client.getIP(), client.getAccount().getId());
                 client.setState(State.AUTHED_LOGIN);
                 client.setSessionKey(new SessionKey(client.getAccount()));
                 client.sendPacket(new SM_LOGIN_OK(client.getSessionKey()));

@@ -65,7 +65,7 @@ import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
-import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
+import com.aionemu.gameserver.lifecycle.GameMaintenanceServices;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -364,7 +364,7 @@ public class Config {
 			GameEventServices.playerEventService().reload();
 			GameEventServices.abyssRankUpdateService().reload();
 			GameEventServices.crazyDaevaService().startTimer();
-			ShugoImperialTombSpawnManager.getInstance().start();
+			GameMaintenanceServices.shugoImperialTombSpawnManager().start();
 			GameCronServices.cronService().reload();
 			GameLocationBootstrapServices.agentService().reloadSchedule();
 			GameLocationBootstrapServices.anohaService().reloadSchedule();

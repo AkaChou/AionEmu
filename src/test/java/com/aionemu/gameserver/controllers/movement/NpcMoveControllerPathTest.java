@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +64,16 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
+	void chaseRepathCooldownScalesWithTargetDistance() {
+		assertEquals(500, NpcMoveController.chaseRepathInterval(30));
+		assertEquals(750, NpcMoveController.chaseRepathInterval(31));
+		assertEquals(1_000, NpcMoveController.chaseRepathInterval(61));
+		assertTrue(NpcMoveController.shouldRepathChase(false, 1_000, 1_001, 61));
+		assertFalse(NpcMoveController.shouldRepathChase(true, 1_000, 1_999, 61));
+		assertTrue(NpcMoveController.shouldRepathChase(true, 1_000, 2_000, 61));
+	}
+
+	@Test
 	void finalOrMissingPathRequiresRecalculation() {
 		assertFalse(NpcMoveController.hasIntermediateWaypoint(null));
 		assertFalse(NpcMoveController.hasIntermediateWaypoint(new float[0][]));
@@ -82,6 +94,14 @@ class NpcMoveControllerPathTest {
 		assertTrue(NpcMoveController.shouldKeepPathResult(null, false));
 		assertTrue(NpcMoveController.shouldKeepPathResult(new float[][] {{1, 1, 1}}, false));
 		assertFalse(NpcMoveController.shouldKeepPathResult(new float[][] {{1, 1, 1}}, true));
+	}
+
+	@Test
+	void failedPointMoveEndsOnlyAfterTheReactionDelayAndPendingRequest() {
+		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, false, false, 6_000));
+		assertTrue(NpcMoveController.shouldFinishFailedPointMove(1_000, false, false, 6_001));
+		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, true, false, 7_000));
+		assertFalse(NpcMoveController.shouldFinishFailedPointMove(1_000, false, true, 7_000));
 	}
 
 	@Test
@@ -151,10 +171,15 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void movingChaseTargetPacketsAreThrottled() {
-		assertFalse(NpcMoveController.shouldBroadcastDestination(true, true, 1_199, 1_000));
-		assertTrue(NpcMoveController.shouldBroadcastDestination(true, true, 1_200, 1_000));
-		assertTrue(NpcMoveController.shouldBroadcastDestination(false, true, 1_001, 1_000));
-		assertFalse(NpcMoveController.shouldBroadcastDestination(true, false, 2_000, 1_000));
+		assertFalse(NpcMoveController.shouldBroadcastDestination(true, false, true, 1_199, 1_000));
+		assertTrue(NpcMoveController.shouldBroadcastDestination(true, false, true, 1_200, 1_000));
+		assertTrue(NpcMoveController.shouldBroadcastDestination(false, false, true, 1_001, 1_000));
+		assertFalse(NpcMoveController.shouldBroadcastDestination(true, false, false, 2_000, 1_000));
+	}
+
+	@Test
+	void intermediateChaseWaypointsAreBroadcastImmediately() {
+		assertTrue(NpcMoveController.shouldBroadcastDestination(true, true, true, 1_001, 1_000));
 	}
 
 	@Test
@@ -164,9 +189,40 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
+	void crowdProjectionKeepsTheCurrentSegmentHeightAndRejectsLayerJumps() {
+		float[] projected = {1, 2, 3.2f};
+
+		assertSame(projected, NpcMoveController.stableAvoidanceProjection(3, projected));
+		assertEquals(3, projected[2]);
+		assertEquals(null, NpcMoveController.stableAvoidanceProjection(3, new float[] {1, 2, 3.3f}));
+	}
+
+	@Test
+	void pathMovePacketStartsAtThePreviousServerStep() throws Exception {
+		String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
+		String method = source.substring(source.indexOf("private void moveToLocation"),
+				source.indexOf("void sampleStuckShadow"));
+		String compact = method.replaceAll("\\s+", " ");
+
+		assertTrue(compact.contains("new SM_MOVE(owner.getObjectId(), ownerX, ownerY, ownerZ, "
+				+ "targetDestX, targetDestY, targetDestZ, heading, movementMask)"));
+		assertFalse(method.contains("new SM_MOVE((Creature)this.owner)"));
+	}
+
+	@Test
 	void pathMovementKeepsItsPathHeight() {
 		assertFalse(NpcMoveController.shouldAdjustGeoHeight(new float[][] {{1, 2, 3}}));
 		assertTrue(NpcMoveController.shouldAdjustGeoHeight(null));
+	}
+
+	@Test
+	void directPathStepDoesNotRepeatGeoValidation() {
+		float[][] path = {{1, 2, 3}};
+
+		assertTrue(NpcMoveController.isTrustedPathStep(path, 1, 2, 3, 1, 2, 3));
+		assertFalse(NpcMoveController.isTrustedPathStep(path, 1, 2, 3, 1, 2.1f, 3));
+		assertFalse(NpcMoveController.isTrustedPathStep(null, 1, 2, 3, 1, 2, 3));
 	}
 
 	@Test
@@ -191,6 +247,79 @@ class NpcMoveControllerPathTest {
 		float[][] newPath = {{2, 2, 2}};
 
 		assertSame(newPath, NpcMoveController.consumePath(newPath, oldPath));
+	}
+
+	@Test
+	void oldRequestOrObstacleVersionCannotInstallAPath() {
+		assertTrue(NpcMoveController.shouldAcceptPathResult(7, 7, 3, 3));
+		assertFalse(NpcMoveController.shouldAcceptPathResult(6, 7, 3, 3));
+		assertFalse(NpcMoveController.shouldAcceptPathResult(7, 7, 2, 3));
+	}
+
+	@Test
+	void stuckProgressUsesRouteDirectionAndRemainingDistance() {
+		assertTrue(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0.2f, 0, 0, 10, 0, 0, 10, 2, 500));
+		assertFalse(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0, 0.2f, 0, 10, 0, 0, 10, 2, 500));
+		assertTrue(NpcMoveController.hasMeaningfulProgress(0, 0, 0, 0, 0, 0.2f, 0, 0, 1, 1, 2, 500));
+	}
+
+	@Test
+	void stuckShadowOnlyCountsAndCanSelfRecover() {
+		NpcMoveController controller = new NpcMoveController(null);
+		float[][] path = {{10, 0, 0}, {20, 0, 0}};
+		NpcMoveController.RecoveryMetrics before = NpcMoveController.recoveryMetrics();
+
+		controller.sampleStuckShadow(0, 0, 0, 10, 0, 0, 1, 1_000, path, 10, 0);
+		controller.sampleStuckShadow(0, 0, 0, 10, 0, 0, 1, 1_500, path, 10, 0);
+		controller.sampleStuckShadow(0, 0, 0, 10, 0, 0, 1, 2_000, path, 10, 0);
+		controller.sampleStuckShadow(0, 0, 0, 10, 0, 0, 1, 2_500, path, 10, 0);
+		controller.sampleStuckShadow(1, 0, 0, 10, 0, 0, 1, 3_000, path, 9, 0);
+
+		NpcMoveController.RecoveryMetrics after = NpcMoveController.recoveryMetrics();
+		assertEquals(before.stuckSuspected() + 1, after.stuckSuspected());
+		assertEquals(before.stuckConfirmed() + 1, after.stuckConfirmed());
+		assertEquals(before.stuckSelfRecovered() + 1, after.stuckSelfRecovered());
+	}
+
+	@Test
+	void stuckRecoveryIsBoundedAndKeepsTheOldPathOnFailure() {
+		assertTrue(NpcMoveController.shouldRequestStuckRecovery(true, false, 0, 0, 1_000));
+		assertFalse(NpcMoveController.shouldRequestStuckRecovery(true, true, 0, 0, 1_000));
+		assertFalse(NpcMoveController.shouldRequestStuckRecovery(true, false, 1, 1_000, 1_749));
+		assertTrue(NpcMoveController.shouldRequestStuckRecovery(true, false, 1, 1_000, 1_750));
+		assertFalse(NpcMoveController.shouldRequestStuckRecovery(true, false, 2, 0, 2_000));
+		assertEquals(0.35f, NpcMoveController.blockedSegmentRadius(0));
+		assertEquals(0.75f, NpcMoveController.blockedSegmentRadius(1));
+
+		float[][] oldPath = {{1, 1, 1}};
+		assertSame(oldPath, NpcMoveController.installPathResult(oldPath, null, true));
+		assertSame(oldPath, NpcMoveController.installPathResult(oldPath, new float[0][], true));
+	}
+
+	@Test
+	void waypointSkipIsBoundedByItsCooldownAndKeepsTheSelectedCandidate() {
+		float[][] path = {{1, 0, 0}, {2, 0, 0}, {3, 0, 0}, {4, 0, 0}};
+
+		assertTrue(NpcMoveController.shouldTryWaypointSkip(path, 3, 0, 1_000));
+		assertFalse(NpcMoveController.shouldTryWaypointSkip(path, 3, 1_000, 1_249));
+		assertTrue(NpcMoveController.shouldTryWaypointSkip(path, 3, 1_000, 1_250));
+		assertFalse(NpcMoveController.shouldTryWaypointSkip(path, 0, 0, 1_000));
+		assertArrayEquals(new float[][] {{3, 0, 0}, {4, 0, 0}}, NpcMoveController.remainingPath(path, 2));
+	}
+
+	@Test
+	void groundMeleeTargetsUseStableDistributedAttackSlots() {
+		assertTrue(NpcMoveController.shouldUseAttackSlot(false, 2));
+		assertFalse(NpcMoveController.shouldUseAttackSlot(true, 2));
+		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 8));
+		assertEquals(NpcMoveController.attackSlotOffsetDegrees(10, 20),
+				NpcMoveController.attackSlotOffsetDegrees(10, 20));
+		assertFalse(NpcMoveController.attackSlotOffsetDegrees(10, 20)
+				== NpcMoveController.attackSlotOffsetDegrees(11, 20));
+
+		float[] slot = NpcMoveController.attackSlotCandidate(10, 0, 0, 0, 5, 1.5f, 0);
+		assertEquals(1.5f, Math.hypot(slot[0], slot[1]), 0.001f);
+		assertEquals(5, slot[2]);
 	}
 
 	@Test
@@ -224,6 +353,41 @@ class NpcMoveControllerPathTest {
 		assertArrayEquals(new float[] {0.9f, 1.2f, 3},
 				NpcMoveController.localAvoidanceTarget(0, 0, 0, 3, 4, 10, 1.5f), 0.001f);
 		assertEquals(null, NpcMoveController.localAvoidanceTarget(1, 1, 1, 1, 1, 3, 1.5f));
+	}
+
+	@Test
+	void localAvoidanceRequiresStraightMovement() throws Exception {
+		String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
+		String methods = source.substring(source.indexOf("private float[] avoidNearbyNpcs"),
+				source.indexOf("private static NpcCrowdManager.Agent"));
+
+		assertEquals(2, methods.split("canMoveStraight", -1).length - 1);
+		assertFalse(methods.contains("canReachWaypoint"));
+	}
+
+	@Test
+	void blockedChaseStepInvalidatesThePathAndStartsRecovery() throws ReflectiveOperationException {
+		NpcMoveController controller = new NpcMoveController(null);
+		Field cachedPathValid = NpcMoveController.class.getDeclaredField("cachedPathValid");
+		cachedPathValid.setAccessible(true);
+		cachedPathValid.set(controller, true);
+		Field firstPathFailureAt = NpcMoveController.class.getDeclaredField("firstPathFailureAt");
+		firstPathFailureAt.setAccessible(true);
+
+		controller.blockedPathStep();
+
+		assertFalse(cachedPathValid.getBoolean(controller));
+		assertTrue(firstPathFailureAt.getLong(controller) > 0);
+	}
+
+	@Test
+	void crowdYieldDoesNotInvalidateThePath() throws Exception {
+		String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
+		String branch = source.substring(source.indexOf("float[] avoidance ="), source.indexOf("if (pathStopSent)"));
+
+		assertFalse(branch.contains("blockedPathStep()"));
 	}
 
 	@Test

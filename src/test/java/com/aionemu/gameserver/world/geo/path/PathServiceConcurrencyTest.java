@@ -109,6 +109,7 @@ class PathServiceConcurrencyTest {
 			});
 
 			assertThrows(ExecutionException.class, () -> result.get(1, TimeUnit.SECONDS));
+			assertEquals(1, service.metrics().failed());
 		} finally {
 			service.destroy();
 		}
@@ -116,10 +117,31 @@ class PathServiceConcurrencyTest {
 
 	@Test
 	void distinguishesDefinitiveSearchFailuresFromQueuePressure() {
-		assertTrue(PathService.isDefinitivePathFailure(
+		assertFalse(PathService.isDefinitivePathFailure(
 				new PathService.IncompletePathSearchException(PathData.SearchStatus.NODE_LIMIT, 10)));
+		assertTrue(PathService.isDefinitivePathFailure(
+				new PathService.IncompletePathSearchException(PathData.SearchStatus.NO_PATH, 10)));
 		assertFalse(PathService.isDefinitivePathFailure(new TimeoutException()));
 		assertFalse(PathService.isDefinitivePathFailure(new RejectedExecutionException()));
+	}
+
+	@Test
+	void classifiesPathResultsWithoutCollapsingTransientFailures() {
+		assertEquals(PathService.PathResultStatus.FOUND, PathService.resultStatus(new float[0][], null));
+		assertEquals(PathService.PathResultStatus.NO_PATH, PathService.resultStatus(null, null));
+		assertEquals(PathService.PathResultStatus.NODE_LIMIT, PathService.resultStatus(null,
+				new PathService.IncompletePathSearchException(PathData.SearchStatus.NODE_LIMIT, 10)));
+		assertEquals(PathService.PathResultStatus.INTERRUPTED, PathService.resultStatus(null,
+				new PathService.IncompletePathSearchException(PathData.SearchStatus.INTERRUPTED, 10)));
+		assertEquals(PathService.PathResultStatus.TIMEOUT, PathService.resultStatus(null, new TimeoutException()));
+		assertEquals(PathService.PathResultStatus.QUEUE_EXPIRED,
+				PathService.resultStatus(null, new PathService.QueueExpiredException("queued")));
+		assertEquals(PathService.PathResultStatus.REJECTED,
+				PathService.resultStatus(null, new RejectedExecutionException()));
+		assertEquals(PathService.PathResultStatus.CANCELLED,
+				PathService.resultStatus(null, new CancellationException()));
+		assertEquals(PathService.PathResultStatus.FAILED,
+				PathService.resultStatus(null, new IllegalStateException()));
 	}
 
 	@Test
@@ -147,8 +169,10 @@ class PathServiceConcurrencyTest {
 
 			ExecutionException failure = assertThrows(ExecutionException.class,
 					() -> queued.get(1, TimeUnit.SECONDS));
-			assertTrue(failure.getCause() instanceof RejectedExecutionException);
+			assertTrue(failure.getCause() instanceof PathService.QueueExpiredException);
 			assertFalse(PathService.isDefinitivePathFailure(failure.getCause()));
+			assertEquals(1, service.metrics().queueExpired());
+			assertEquals(0, service.metrics().timedOut());
 		} finally {
 			releaseWorkers.countDown();
 			service.destroy();

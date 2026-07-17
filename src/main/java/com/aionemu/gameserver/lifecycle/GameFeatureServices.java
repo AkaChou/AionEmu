@@ -63,6 +63,7 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<LadderService> ladderServiceProvider;
     /** 攻城服务提供者 / Siege service provider. */
     private static volatile ObjectProvider<SiegeService> siegeServiceProvider;
+    private static volatile SiegeService resolvedSiegeService;
     /** 基地服务提供者 / Base service provider. */
     private static volatile ObjectProvider<BaseService> baseServiceProvider;
     /** A-Station 服务提供者 / A-Station service provider */
@@ -173,6 +174,7 @@ public final class GameFeatureServices implements DisposableBean {
         GameFeatureServices.ffaServiceProvider = ffaServiceProvider;
         GameFeatureServices.ladderServiceProvider = ladderServiceProvider;
         GameFeatureServices.siegeServiceProvider = siegeServiceProvider;
+        resolvedSiegeService = null;
         GameFeatureServices.baseServiceProvider = baseServiceProvider;
         GameFeatureServices.aStationServiceProvider = aStationServiceProvider;
         GameFeatureServices.f2pServiceProvider = f2pServiceProvider;
@@ -331,11 +333,14 @@ public final class GameFeatureServices implements DisposableBean {
      * Siege service
      */
     public static SiegeService siegeService() {
-        ObjectProvider<SiegeService> provider = siegeServiceProvider;
-        if (provider == null) {
-            return SiegeService.getInstance();
+        SiegeService resolved = resolvedSiegeService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(SiegeService::getInstance);
+        ObjectProvider<SiegeService> provider = siegeServiceProvider;
+        resolved = provider == null ? SiegeService.getInstance() : provider.getIfAvailable(SiegeService::getInstance);
+        resolvedSiegeService = resolved;
+        return resolved;
     }
 
     /**
@@ -556,6 +561,7 @@ public final class GameFeatureServices implements DisposableBean {
         ffaServiceProvider = null;
         ladderServiceProvider = null;
         siegeServiceProvider = null;
+        resolvedSiegeService = null;
         baseServiceProvider = null;
         aStationServiceProvider = null;
         f2pServiceProvider = null;

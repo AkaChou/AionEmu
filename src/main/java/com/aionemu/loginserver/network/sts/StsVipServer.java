@@ -19,7 +19,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** STS endpoint that returns account_vip data to the China client. */
+/**
+ * STS endpoint that returns account_vip data to the China client.
+ * TODO: STS 服务尚未实现完成，当前仅用于联调。 / STS is not fully implemented and is for integration testing only.
+ */
 @Slf4j
 public final class StsVipServer {
 

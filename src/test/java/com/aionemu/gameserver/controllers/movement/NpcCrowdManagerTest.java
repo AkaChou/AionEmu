@@ -3,6 +3,7 @@ package com.aionemu.gameserver.controllers.movement;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.CompletableFuture;
@@ -32,6 +33,17 @@ class NpcCrowdManagerTest {
 	}
 
 	@Test
+	void overlappingAgentsCanMoveTogetherWhenTheyAreNotConverging() {
+		long now = 1000;
+		NpcCrowdManager.Agent first = new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f);
+		NpcCrowdManager.Agent second = new NpcCrowdManager.Agent(20, 1, 1, 0, 0, 0, 0.5f);
+		NpcCrowdManager.choose(first, 1, 0, 0, (x, y, z) -> true, now, 100);
+
+		assertArrayEquals(new float[] {1, 0, 0},
+				NpcCrowdManager.choose(second, 1, 0, 0, (x, y, z) -> true, now, 100));
+	}
+
+	@Test
 	void normalizesDisplacementsFromDifferentFrameDurations() {
 		float distance = NpcCrowdManager.predictedDistance(1, 0, 0, 1, 0, 0,
 				0, 0.5f, 0, 2.5f, 0, 0, 100, 250);
@@ -42,13 +54,13 @@ class NpcCrowdManagerTest {
 	@Test
 	void discoversAgentsInAdjacentSpatialBucketsWithoutKnownList() {
 		long now = 1000;
-		NpcCrowdManager.Agent first = new NpcCrowdManager.Agent(10, 1, 1, 4.2f, 0, 0, 0.5f);
-		NpcCrowdManager.Agent second = new NpcCrowdManager.Agent(20, 1, 1, 3.8f, 0, 0, 0.5f);
-		NpcCrowdManager.choose(first, 3.2f, 0, 0, (x, y, z) -> true, now, 100);
+		NpcCrowdManager.Agent first = new NpcCrowdManager.Agent(10, 1, 1, 4.8f, 0, 0, 0.1f);
+		NpcCrowdManager.Agent second = new NpcCrowdManager.Agent(20, 1, 1, 3.2f, 0, 0, 0.1f);
+		NpcCrowdManager.choose(first, 3.8f, 0, 0, (x, y, z) -> true, now, 100);
 
-		float[] step = NpcCrowdManager.choose(second, 4.8f, 0, 0, (x, y, z) -> true, now, 100);
+		float[] step = NpcCrowdManager.choose(second, 4.2f, 0, 0, (x, y, z) -> true, now, 100);
 
-		assertTrue(step == null || Math.abs(step[1]) > 0.1f || step[0] < 4.8f);
+		assertTrue(Math.abs(step[1]) > 0.1f);
 	}
 
 	@Test
@@ -66,10 +78,10 @@ class NpcCrowdManagerTest {
 	@Test
 	void scansLocalDirectionsWhenTheStraightMoveWouldCollide() {
 		long now = 1000;
-		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, 0, 0.5f), 1, 0, 0,
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, 0, 0.1f), 1, 0, 0,
 				(x, y, z) -> true, now, 100);
 
-		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, 0,
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.1f), 1, 0, 0,
 				(x, y, z) -> true, now, 100);
 
 		assertNotNull(step);
@@ -78,16 +90,50 @@ class NpcCrowdManagerTest {
 	}
 
 	@Test
-	void keepsDirectSlopeMovementStableWhenCrowded() {
+	void keepsSlopeHeightStableWhenCrowded() {
 		long now = 1000;
-		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, -1, 0.5f), 1, 0, -1,
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, -1, 0.1f), 1, 0, -1,
 				(x, y, z) -> true, now, 100);
 
-		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, -1,
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.1f), 1, 0, -1,
 				(x, y, z) -> true, now, 100);
 
 		assertNotNull(step);
-		assertArrayEquals(new float[] {1, 0, -1}, step);
+		assertTrue(Math.abs(step[1]) > 0.1f);
+		assertEquals(-1, step[2]);
+	}
+
+	@Test
+	void usesStableFifteenThirtyFortyFiveDegreeCandidatesWithoutRotatingZ() {
+		var rightFirst = NpcCrowdManager.candidates(1, 0, 0, 10, 1, 0, -2);
+		var leftFirst = NpcCrowdManager.candidates(-1, 0, 0, 10, 1, 0, -2);
+
+		assertEquals(7, rightFirst.size());
+		assertTrue(rightFirst.get(1)[1] > 0);
+		assertTrue(rightFirst.get(2)[1] < 0);
+		assertTrue(leftFirst.get(1)[1] < 0);
+		for (float[] candidate : rightFirst) {
+			assertEquals(8, candidate[2]);
+			assertTrue(candidate[0] >= 0);
+		}
+	}
+
+	@Test
+	void projectsOnlyTheSelectedSideCandidateBackOntoThePathLayer() {
+		long now = 1000;
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, 0, 0.1f), 1, 0, 0,
+				(x, y, z) -> true, now, 100);
+		int[] projections = {0};
+
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.1f), 1, 0, 0,
+				(x, y, z) -> {
+					projections[0]++;
+					return new float[] {x, y, 7};
+				}, (x, y, z) -> true, now, 100);
+
+		assertNotNull(step);
+		assertEquals(1, projections[0]);
+		assertEquals(7, step[2]);
 	}
 
 	@Test
@@ -140,10 +186,10 @@ class NpcCrowdManagerTest {
 	void checksPassabilityOnlyForCollisionFreeCandidates() {
 		long now = 1000;
 		// 先占位一个邻居，迫使直达碰撞，只应探测偏转候选。
-		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, 0, 0.5f), 1, 0, 0,
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 1, 0, 0, 0.1f), 1, 0, 0,
 				(x, y, z) -> true, now, 100);
 		int[] checks = {0};
-		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, 0,
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.1f), 1, 0, 0,
 				(x, y, z) -> {
 					checks[0]++;
 					return Math.abs(y) > 0.01f;
@@ -155,15 +201,27 @@ class NpcCrowdManagerTest {
 	}
 
 	@Test
-	void fallsBackToPassableDirectStepWhenCrowded() {
+	void followsPassableDirectPathWhenCrowdAvoidanceHasNoCandidate() {
 		long now = 1000;
-		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 0, 0, 0, 10), 1, 0, 0,
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 0, 0, 0, 10), 0, 0, 0,
 				(x, y, z) -> true, now, 100);
 
 		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, 0,
 				(x, y, z) -> true, now, 100);
 
 		assertArrayEquals(new float[] {1, 0, 0}, step);
+	}
+
+	@Test
+	void stopsWhenCrowdAndPassabilityRejectEveryCandidate() {
+		long now = 1000;
+		NpcCrowdManager.choose(new NpcCrowdManager.Agent(20, 1, 1, 0, 0, 0, 10), 0, 0, 0,
+				(x, y, z) -> true, now, 100);
+
+		float[] step = NpcCrowdManager.choose(new NpcCrowdManager.Agent(10, 1, 1, 0, 0, 0, 0.5f), 1, 0, 0,
+				(x, y, z) -> false, now, 100);
+
+		assertNull(step);
 	}
 
 }

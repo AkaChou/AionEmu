@@ -11,11 +11,13 @@
 ```bash
 python3 scripts/patch_game_dll_vip.py \
   --source /path/to/Game.dll.sts-auth-original \
-  --out /path/to/Game.vip-world.dll
+  --out /path/to/Game.vip-world.dll \
+  --sts-ip 127.0.0.1
 ```
 
 - `--source`：原始 `Game.dll` 文件路径，文件的 SHA-256 必须为 `f928a5dbc3d4d54e71f1968f38a75745882ef29f459d81b7b0fe50ac7cf490ad`。
 - `--out`：生成文件路径；父目录不存在时会自动创建。
+- `--sts-ip`：STS 服务的 IPv4 地址，默认值为 `127.0.0.1`。
 
 路径可以是绝对路径，也可以是相对于当前工作目录的相对路径。成功后脚本会打印输入路径、输出路径和生成文件的 SHA-256。
 
@@ -30,10 +32,12 @@ python3 scripts/patch_game_dll_vip.py \
 ```bash
 python3 scripts/patch_game_dll_vip.py \
   --source /path/to/Game.dll.sts-auth-original \
-  --out /path/to/Game.vip-world.dll
+  --out /path/to/Game.vip-world.dll \
+  --sts-ip 127.0.0.1
 ```
 
 - `--source`: Path to the original `Game.dll`. Its SHA-256 must be `f928a5dbc3d4d54e71f1968f38a75745882ef29f459d81b7b0fe50ac7cf490ad`.
 - `--out`: Output DLL path. Missing parent directories are created automatically.
+- `--sts-ip`: IPv4 address of the STS service. Defaults to `127.0.0.1`.
 
 Paths may be absolute or relative to the current working directory. On success, the script prints the source path, output path, and generated file SHA-256.

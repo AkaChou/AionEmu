@@ -14,7 +14,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 
 class GameWorldServicesRuntimeBridgeTest {
 
@@ -62,6 +64,23 @@ class GameWorldServicesRuntimeBridgeTest {
     }
 
     @Test
+    void worldServicesCacheResolvedSpringServices() {
+        GameWorldServices worldServices = new GameWorldServices(
+            prototypeProvider(GeoService.class),
+            prototypeProvider(PathService.class),
+            prototypeProvider(DropRegistrationService.class)
+        );
+
+        try {
+            assertSame(GameWorldServices.geoService(), GameWorldServices.geoService());
+            assertSame(GameWorldServices.pathService(), GameWorldServices.pathService());
+            assertSame(GameWorldServices.dropRegistrationService(), GameWorldServices.dropRegistrationService());
+        } finally {
+            worldServices.destroy();
+        }
+    }
+
+    @Test
     void dropServiceUsesWorldServicesBridgeForDropRegistration() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropService.java"));
 
@@ -78,6 +97,7 @@ class GameWorldServicesRuntimeBridgeTest {
             Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropDistributionService.java"),
             Path.of("src/main/java/com/aionemu/gameserver/ai2/AI2Actions.java"),
             Path.of("src/main/java/com/aionemu/gameserver/controllers/NpcController.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_LOOT_STATUS.java"),
             Path.of("src/main/java/com/aionemu/gameserver/model/team2/common/service/PlayerTeamDistributionService.java"),
             Path.of("src/main/java/com/aionemu/gameserver/ai/ChestAI2.java"),
             Path.of("src/main/java/com/aionemu/gameserver/ai/siege/Treasure_Box_Success_BossAI2.java")
@@ -109,6 +129,15 @@ class GameWorldServicesRuntimeBridgeTest {
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
+    }
+
+    private <T> ObjectProvider<T> prototypeProvider(Class<T> type) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        RootBeanDefinition definition = new RootBeanDefinition(type);
+        definition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+        definition.setInstanceSupplier(() -> instance(type));
+        beanFactory.registerBeanDefinition(type.getName(), definition);
         return beanFactory.getBeanProvider(type);
     }
 }

@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.util.function.Supplier;
-
 import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
@@ -38,6 +36,11 @@ public final class GameMovementLoopServices implements DisposableBean {
      */
     private static volatile ObjectProvider<ZoneUpdateService> zoneUpdateServiceProvider;
 
+    private static volatile MovementNotifyTask resolvedMovementNotifyTask;
+    private static volatile MoveTaskManager resolvedMoveTaskManager;
+    private static volatile PlayerMoveTaskManager resolvedPlayerMoveTaskManager;
+    private static volatile ZoneUpdateService resolvedZoneUpdateService;
+
     /**
      * 构造并注册各移动循环任务的实例提供者。
      * Construct and register instance providers for each movement-loop task.
@@ -55,6 +58,10 @@ public final class GameMovementLoopServices implements DisposableBean {
         GameMovementLoopServices.moveTaskManagerProvider = moveTaskManagerProvider;
         GameMovementLoopServices.playerMoveTaskManagerProvider = playerMoveTaskManagerProvider;
         GameMovementLoopServices.zoneUpdateServiceProvider = zoneUpdateServiceProvider;
+        resolvedMovementNotifyTask = null;
+        resolvedMoveTaskManager = null;
+        resolvedPlayerMoveTaskManager = null;
+        resolvedZoneUpdateService = null;
         MovementNotifyTask.setInstanceProvider(movementNotifyTaskProvider);
         MoveTaskManager.setInstanceProvider(moveTaskManagerProvider);
         PlayerMoveTaskManager.setInstanceProvider(playerMoveTaskManagerProvider);
@@ -68,7 +75,15 @@ public final class GameMovementLoopServices implements DisposableBean {
      * @return 移动通知任务 / Movement-notify task
      */
     public static MovementNotifyTask movementNotifyTask() {
-        return getIfAvailable(movementNotifyTaskProvider, MovementNotifyTask::getInstance);
+        MovementNotifyTask resolved = resolvedMovementNotifyTask;
+        if (resolved != null) {
+            return resolved;
+        }
+        ObjectProvider<MovementNotifyTask> provider = movementNotifyTaskProvider;
+        resolved = provider == null ? MovementNotifyTask.getInstance()
+                : provider.getIfAvailable(MovementNotifyTask::getInstance);
+        resolvedMovementNotifyTask = resolved;
+        return resolved;
     }
 
     /**
@@ -78,7 +93,15 @@ public final class GameMovementLoopServices implements DisposableBean {
      * @return 移动任务管理器 / Move-task manager
      */
     public static MoveTaskManager moveTaskManager() {
-        return getIfAvailable(moveTaskManagerProvider, MoveTaskManager::getInstance);
+        MoveTaskManager resolved = resolvedMoveTaskManager;
+        if (resolved != null) {
+            return resolved;
+        }
+        ObjectProvider<MoveTaskManager> provider = moveTaskManagerProvider;
+        resolved = provider == null ? MoveTaskManager.getInstance()
+                : provider.getIfAvailable(MoveTaskManager::getInstance);
+        resolvedMoveTaskManager = resolved;
+        return resolved;
     }
 
     /**
@@ -88,7 +111,15 @@ public final class GameMovementLoopServices implements DisposableBean {
      * @return 玩家移动任务管理器 / Player-move-task manager
      */
     public static PlayerMoveTaskManager playerMoveTaskManager() {
-        return getIfAvailable(playerMoveTaskManagerProvider, PlayerMoveTaskManager::getInstance);
+        PlayerMoveTaskManager resolved = resolvedPlayerMoveTaskManager;
+        if (resolved != null) {
+            return resolved;
+        }
+        ObjectProvider<PlayerMoveTaskManager> provider = playerMoveTaskManagerProvider;
+        resolved = provider == null ? PlayerMoveTaskManager.getInstance()
+                : provider.getIfAvailable(PlayerMoveTaskManager::getInstance);
+        resolvedPlayerMoveTaskManager = resolved;
+        return resolved;
     }
 
     /**
@@ -98,25 +129,15 @@ public final class GameMovementLoopServices implements DisposableBean {
      * @return 区域更新服务 / Zone-update service
      */
     public static ZoneUpdateService zoneUpdateService() {
-        return getIfAvailable(zoneUpdateServiceProvider, ZoneUpdateService::getInstance);
-    }
-
-    /**
-     * 从提供者解析实例；提供者为空或无可用 Bean 时使用回退。
-     * Resolve an instance from the provider; use fallback when provider is null or no bean is available.
-     *
-     * @param <T> 实例类型 / Instance type
-     * Spring provider
-     *
-     * @param fallback 回退供应器 / Fallback supplier
-     * @param fallback
-     * @return 解析到的实例 / Resolved instance
-     */
-    private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
-        if (provider == null) {
-            return fallback.get();
+        ZoneUpdateService resolved = resolvedZoneUpdateService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(fallback);
+        ObjectProvider<ZoneUpdateService> provider = zoneUpdateServiceProvider;
+        resolved = provider == null ? ZoneUpdateService.getInstance()
+                : provider.getIfAvailable(ZoneUpdateService::getInstance);
+        resolvedZoneUpdateService = resolved;
+        return resolved;
     }
 
     /**
@@ -129,6 +150,10 @@ public final class GameMovementLoopServices implements DisposableBean {
         moveTaskManagerProvider = null;
         playerMoveTaskManagerProvider = null;
         zoneUpdateServiceProvider = null;
+        resolvedMovementNotifyTask = null;
+        resolvedMoveTaskManager = null;
+        resolvedPlayerMoveTaskManager = null;
+        resolvedZoneUpdateService = null;
         MovementNotifyTask.setInstanceProvider(null);
         MoveTaskManager.setInstanceProvider(null);
         PlayerMoveTaskManager.setInstanceProvider(null);

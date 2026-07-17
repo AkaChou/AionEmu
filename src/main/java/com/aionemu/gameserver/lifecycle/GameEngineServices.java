@@ -26,6 +26,7 @@ public final class GameEngineServices implements DisposableBean {
      * Spring provider for the skill engine.
      */
     private static volatile ObjectProvider<SkillEngine> skillEngineProvider;
+    private static volatile SkillEngine resolvedSkillEngine;
     /**
      * 副本引擎的 Spring 提供者。
      * Spring provider for the instance engine.
@@ -57,6 +58,7 @@ public final class GameEngineServices implements DisposableBean {
             ObjectProvider<AI2Engine> ai2EngineProvider, ObjectProvider<ChatProcessor> chatProcessorProvider) {
         GameEngineServices.questEngineProvider = questEngineProvider;
         GameEngineServices.skillEngineProvider = skillEngineProvider;
+        resolvedSkillEngine = null;
         GameEngineServices.instanceEngineProvider = instanceEngineProvider;
         GameEngineServices.ai2EngineProvider = ai2EngineProvider;
         GameEngineServices.chatProcessorProvider = chatProcessorProvider;
@@ -88,11 +90,15 @@ public final class GameEngineServices implements DisposableBean {
      * Skill engine
      */
     public static SkillEngine skillEngine() {
-        ObjectProvider<SkillEngine> provider = skillEngineProvider;
-        if (provider == null) {
-            return GameEngineServiceFallbacks.skillEngine();
+        SkillEngine resolved = resolvedSkillEngine;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameEngineServiceFallbacks::skillEngine);
+        ObjectProvider<SkillEngine> provider = skillEngineProvider;
+        resolved = provider == null ? GameEngineServiceFallbacks.skillEngine()
+                : provider.getIfAvailable(GameEngineServiceFallbacks::skillEngine);
+        resolvedSkillEngine = resolved;
+        return resolved;
     }
 
     /**
@@ -145,6 +151,7 @@ public final class GameEngineServices implements DisposableBean {
     public void destroy() {
         questEngineProvider = null;
         skillEngineProvider = null;
+        resolvedSkillEngine = null;
         instanceEngineProvider = null;
         ai2EngineProvider = null;
         chatProcessorProvider = null;

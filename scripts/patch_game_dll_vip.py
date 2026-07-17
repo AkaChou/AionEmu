@@ -2,7 +2,8 @@
 """Generate the Aion 5.8 VIP Game.dll in one step.
 
 Usage:
-  python3 scripts/patch_game_dll_vip.py --source /path/to/Game.dll --out /path/to/Game.vip-world.dll
+  python3 scripts/patch_game_dll_vip.py --source /path/to/Game.dll \
+    --out /path/to/Game.vip-world.dll [--sts-ip 127.0.0.1]
 """
 
 from __future__ import annotations
@@ -11,10 +12,12 @@ import argparse
 import base64
 import hashlib
 import struct
+from ipaddress import IPv4Address
 from pathlib import Path
 
 SOURCE_SHA256 = "f928a5dbc3d4d54e71f1968f38a75745882ef29f459d81b7b0fe50ac7cf490ad"
-OUTPUT_SHA256 = "7e17fdce6984f0a0af298f42ef97e3844659b9d008fabde53320ba69b32982dc"
+DEFAULT_OUTPUT_SHA256 = "ce638adf8c3bb46014a0c1545a6b341795f8ba853961a0a9a7502617a4d35105"
+DEFAULT_STS_IP = IPv4Address("127.0.0.1")
 
 PUBLIC_KEY_B64 = (
     "BAAAAAEAAQAAAQAAJ0c1jqcaK7IXH/cicgYe0G6tgli1zi4xeo+6o3arvfFJYffb"
@@ -27,6 +30,8 @@ PUBLIC_KEY_B64 = (
 
 PUBLIC_KEY_OFFSET = 0xE4D270
 PUBLIC_KEY_FIELD_SIZE = 368
+STS_IP_OFFSET = 0xE4DDF8
+STS_IP_ORIGINAL = b"172.20.53.100\0\0\0"
 VERIFY_OFFSET = 0x876F13
 VERIFY_ORIGINAL = bytes.fromhex("e818e9ffff85c0740c")
 VERIFY_PATCH = bytes.fromhex("33c09090909090eb0c")
@@ -72,13 +77,15 @@ def replace_exact(data: bytearray, offset: int, original: bytes, patched: bytes,
     data[offset : offset + len(patched)] = patched
 
 
-def patch_sts(data: bytearray) -> None:
+def patch_sts(data: bytearray, sts_ip: IPv4Address) -> None:
     raw_key = base64.b64decode(PUBLIC_KEY_B64, validate=True)
     key_type, exponent, modulus_length = struct.unpack_from("<III", raw_key)
     if (len(PUBLIC_KEY_B64), len(raw_key), key_type, exponent, modulus_length) != (360, 268, 4, 65537, 256):
         raise SystemExit("embedded STS public key is invalid")
     data[PUBLIC_KEY_OFFSET : PUBLIC_KEY_OFFSET + PUBLIC_KEY_FIELD_SIZE] = bytes(PUBLIC_KEY_FIELD_SIZE)
     data[PUBLIC_KEY_OFFSET : PUBLIC_KEY_OFFSET + len(PUBLIC_KEY_B64)] = PUBLIC_KEY_B64.encode("ascii")
+    patched_ip = str(sts_ip).encode("ascii").ljust(len(STS_IP_ORIGINAL), b"\0")
+    replace_exact(data, STS_IP_OFFSET, STS_IP_ORIGINAL, patched_ip, "STS IP")
     replace_exact(data, VERIFY_OFFSET, VERIFY_ORIGINAL, VERIFY_PATCH, "STS verify")
     replace_exact(data, RSA_ENCRYPT_OFFSET, RSA_ENCRYPT_ORIGINAL, RSA_ENCRYPT_PATCH, "STS RSA")
 
@@ -175,6 +182,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate Game.vip-world.dll")
     parser.add_argument("--source", type=Path, required=True, help="source Game.dll path")
     parser.add_argument("--out", type=Path, required=True, help="output DLL path")
+    parser.add_argument(
+        "--sts-ip",
+        type=IPv4Address,
+        default=DEFAULT_STS_IP,
+        help=f"STS IPv4 address (default: {DEFAULT_STS_IP})",
+    )
     args = parser.parse_args()
 
     if not args.source.is_file():
@@ -184,16 +197,17 @@ def main() -> int:
     if source_hash != SOURCE_SHA256:
         raise SystemExit(f"unexpected source SHA-256: {source_hash}")
 
-    patch_sts(data)
+    patch_sts(data, args.sts_ip)
     patch_vip(data)
     output_hash = hashlib.sha256(data).hexdigest()
-    if output_hash != OUTPUT_SHA256:
+    if args.sts_ip == DEFAULT_STS_IP and output_hash != DEFAULT_OUTPUT_SHA256:
         raise SystemExit(f"unexpected output SHA-256: {output_hash}")
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_bytes(data)
     print(f"source: {args.source}")
     print(f"output: {args.out}")
+    print(f"STS IP: {args.sts_ip}")
     print(f"SHA-256: {output_hash}")
     return 0
 

@@ -83,8 +83,11 @@ public class Shutdown extends Thread {
             log.error(I18n.get("log.8a48277abecd", t));
         }
 
-        // TODO: STS 尚未实现完成，当前未启动，无需关闭。 / STS is not fully implemented and is not started.
-        // StsVipServer.shutdownIfStarted();
+        try {
+            StsVipServer.shutdownIfStarted();
+        } catch (Throwable t) {
+            log.error(I18n.get("log.aa00f008e844"), t);
+        }
 
         // 在线程池关闭前先关闭 cron 服务 / shutdown cron service prior to threadpool shutdown
         try {

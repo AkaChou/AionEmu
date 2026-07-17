@@ -32,4 +32,15 @@ class PlayerEnterWorldVipTest {
 		assertTrue(basePack < vipPack);
 		assertEquals(vipPack, source.lastIndexOf("PacketSendUtility.sendPacket(activePlayer, SM_CHAR_BM_PACK_LIST.vip("));
 	}
+
+	@Test
+	void sendsCharSelectScoreBeforeActiveBenefits() throws Exception {
+		String source = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CHARACTER_LIST.java"));
+		int scorePack = source.indexOf("SM_CHAR_BM_PACK_LIST.vipForCharSelect(");
+		int vipPack = source.indexOf("SM_CHAR_BM_PACK_LIST.vip(");
+
+		assertTrue(scorePack >= 0);
+		assertTrue(scorePack < vipPack);
+	}
 }

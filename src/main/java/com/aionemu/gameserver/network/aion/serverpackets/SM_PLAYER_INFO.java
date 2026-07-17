@@ -367,8 +367,13 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeC(raceId == 0 ? 3 : 5); // Language: Asmodians 3/Elyos 5
 		writeC(player.getConquerorInfo().getRank()); // Conqueror 4.8
 		writeC(player.getProtectorInfo().getRank()); // Protector 4.8
-		writeC(6); // Vip Rank Icon.
+		writeC(activeVipLevel(player.getPlayerAccount()));
 		writeD(1); // unk 5.5
         writeD(1); // unk 5.5
+	}
+
+	static int activeVipLevel(Account account) {
+		int level = Byte.toUnsignedInt(account.getVipLevel());
+		return level <= 6 && account.getVipRemainingSeconds() > 0 ? level : 0;
 	}
 }

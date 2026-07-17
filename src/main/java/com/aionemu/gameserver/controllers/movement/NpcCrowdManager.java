@@ -12,7 +12,9 @@ final class NpcCrowdManager {
 
 	private static final float BUCKET_SIZE = 4;
 	private static final long PREDICTION_MILLIS = 667;
+	private static final long SIDE_HOLD_MILLIS = 667;
 	private static final long STALE_MILLIS = 5000;
+	private static final int[] CANDIDATE_ANGLES = {15, 30, 45};
 	private static final Map<WorldKey, CrowdWorld> WORLDS = new ConcurrentHashMap<>();
 
 	@FunctionalInterface
@@ -20,11 +22,22 @@ final class NpcCrowdManager {
 		boolean test(float x, float y, float z);
 	}
 
+	@FunctionalInterface
+	interface Projection {
+		float[] project(float x, float y, float z);
+	}
+
 	static float[] choose(Agent owner, float desiredX, float desiredY, float desiredZ, Passability passability, long now,
 			long elapsedMillis) {
+		return choose(owner, desiredX, desiredY, desiredZ, (x, y, z) -> new float[] {x, y, z}, passability, now,
+				elapsedMillis);
+	}
+
+	static float[] choose(Agent owner, float desiredX, float desiredY, float desiredZ, Projection projection,
+			Passability passability, long now, long elapsedMillis) {
 		WorldKey key = new WorldKey(owner.worldId, owner.instanceId);
-		return WORLDS.computeIfAbsent(key, ignored -> new CrowdWorld()).choose(owner, desiredX, desiredY, desiredZ, passability, now,
-				Math.max(1, elapsedMillis));
+		return WORLDS.computeIfAbsent(key, ignored -> new CrowdWorld()).choose(owner, desiredX, desiredY, desiredZ,
+				projection, passability, now, Math.max(1, elapsedMillis));
 	}
 
 	static void remove(int ownerId) {
@@ -50,18 +63,25 @@ final class NpcCrowdManager {
 		return world == null ? 0 : world.agentCount();
 	}
 
-	private static List<float[]> candidates(float x, float y, float z, float vx, float vy, float vz) {
-		List<float[]> result = new ArrayList<>(12);
+	static List<float[]> candidates(int preferredSide, float x, float y, float z, float vx, float vy, float vz) {
+		List<float[]> result = new ArrayList<>(7);
 		result.add(new float[] {x + vx, y + vy, z + vz});
 		if (vx * vx + vy * vy > 0.000001f) {
-			for (int direction = 1; direction < 12; direction++) {
-				double angle = direction * Math.PI / 6;
-				float cos = (float) Math.cos(angle);
-				float sin = (float) Math.sin(angle);
-				result.add(new float[] {x + vx * cos - vy * sin, y + vx * sin + vy * cos, z + vz * cos});
+			int side = preferredSide < 0 ? -1 : 1;
+			for (int degrees : CANDIDATE_ANGLES) {
+				addCandidate(result, side * degrees, x, y, z, vx, vy, vz);
+				addCandidate(result, -side * degrees, x, y, z, vx, vy, vz);
 			}
 		}
 		return result;
+	}
+
+	private static void addCandidate(List<float[]> result, int degrees, float x, float y, float z, float vx, float vy,
+			float vz) {
+		double angle = Math.toRadians(degrees);
+		float cos = (float) Math.cos(angle);
+		float sin = (float) Math.sin(angle);
+		result.add(new float[] {x + vx * cos - vy * sin, y + vx * sin + vy * cos, z + vz});
 	}
 
 	static float predictedDistance(float x, float y, float z, float vx, float vy, float vz,
@@ -92,9 +112,12 @@ final class NpcCrowdManager {
 			float dy = owner.y - other.agent.y;
 			float dz = owner.z - other.agent.z;
 			float currentDistance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
-			float separating = dx * (vx - other.vx * otherScale) + dy * (vy - other.vy * otherScale)
-					+ dz * (vz - other.vz * otherScale);
-			if (currentDistance < clearance && separating > 0) {
+			float relativeX = vx - other.vx * otherScale;
+			float relativeY = vy - other.vy * otherScale;
+			float relativeZ = vz - other.vz * otherScale;
+			float separating = dx * relativeX + dy * relativeY + dz * relativeZ;
+			float relativeSpeed = relativeX * relativeX + relativeY * relativeY + relativeZ * relativeZ;
+			if (currentDistance < clearance && (separating > 0 || relativeSpeed < 0.0001f)) {
 				continue;
 			}
 			if (predictedDistance(owner.x, owner.y, owner.z, vx, vy, vz, other.agent.x, other.agent.y, other.agent.z,
@@ -115,17 +138,20 @@ final class NpcCrowdManager {
 		private final Map<Bucket, Set<Integer>> buckets = new HashMap<>();
 		private int cleanupTick;
 
-		private float[] choose(Agent owner, float desiredX, float desiredY, float desiredZ,
+		private float[] choose(Agent owner, float desiredX, float desiredY, float desiredZ, Projection projection,
 				Passability passability, long now, long elapsedMillis) {
 			List<AgentMotion> neighbors;
+			int preferredSide;
 			synchronized (this) {
 				AgentState state = update(owner, now);
 				neighbors = neighbors(state.bucket, owner.id, now);
+				preferredSide = state.sideUntil > now && state.preferredSide != 0
+						? state.preferredSide : (owner.id & 1) == 0 ? 1 : -1;
 			}
-			// 先廉价碰撞，再对真正可能采用的候选做 passability，避免先扫 12 次 geo。
+			// 先廉价碰撞，再投影 PATH 高度和检查通行，避免无效候选触发 geo。
 			float[] direct = new float[] {desiredX, desiredY, desiredZ};
-			boolean directPreferred = Math.abs(desiredZ - owner.z) > 0.0001f
-					|| collisionFree(owner, desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z, neighbors, elapsedMillis);
+			boolean directPreferred = collisionFree(owner, desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z,
+					neighbors, elapsedMillis);
 			if (directPreferred
 					&& passability.test(desiredX, desiredY, desiredZ)) {
 				synchronized (this) {
@@ -133,12 +159,12 @@ final class NpcCrowdManager {
 					if (state == null) {
 						return null;
 					}
-					updateMovement(state, owner, direct, elapsedMillis, now);
+					updateMovement(state, owner, direct, desiredX, desiredY, elapsedMillis, now);
 					cleanup(now, false);
 				}
 				return direct;
 			}
-			List<float[]> candidates = candidates(owner.x, owner.y, owner.z,
+			List<float[]> candidates = candidates(preferredSide, owner.x, owner.y, owner.z,
 					desiredX - owner.x, desiredY - owner.y, desiredZ - owner.z);
 			float[] selected = null;
 			for (int i = 1; i < candidates.size(); i++) {
@@ -146,9 +172,12 @@ final class NpcCrowdManager {
 				float vx = candidate[0] - owner.x;
 				float vy = candidate[1] - owner.y;
 				float vz = candidate[2] - owner.z;
-				if (collisionFree(owner, vx, vy, vz, neighbors, elapsedMillis)
-						&& passability.test(candidate[0], candidate[1], candidate[2])) {
-					selected = candidate;
+				if (!collisionFree(owner, vx, vy, vz, neighbors, elapsedMillis)) {
+					continue;
+				}
+				float[] projected = projection.project(candidate[0], candidate[1], candidate[2]);
+				if (projected != null && passability.test(projected[0], projected[1], projected[2])) {
+					selected = projected;
 					break;
 				}
 			}
@@ -160,18 +189,27 @@ final class NpcCrowdManager {
 				if (state == null) {
 					return null;
 				}
-				updateMovement(state, owner, selected, elapsedMillis, now);
+				updateMovement(state, owner, selected, desiredX, desiredY, elapsedMillis, now);
 				cleanup(now, false);
 			}
 			return selected;
 		}
 
-		private static void updateMovement(AgentState state, Agent owner, float[] selected, long elapsedMillis, long now) {
+		private static void updateMovement(AgentState state, Agent owner, float[] selected, float desiredX, float desiredY,
+				long elapsedMillis, long now) {
 			state.vx = selected == null ? 0 : selected[0] - owner.x;
 			state.vy = selected == null ? 0 : selected[1] - owner.y;
 			state.vz = selected == null ? 0 : selected[2] - owner.z;
 			state.elapsedMillis = elapsedMillis;
 			state.updatedAt = now;
+			if (selected != null) {
+				float cross = (desiredX - owner.x) * (selected[1] - owner.y)
+						- (desiredY - owner.y) * (selected[0] - owner.x);
+				if (Math.abs(cross) > 0.0001f) {
+					state.preferredSide = cross > 0 ? 1 : -1;
+					state.sideUntil = now + SIDE_HOLD_MILLIS;
+				}
+			}
 		}
 
 		private AgentState update(Agent owner, long now) {
@@ -263,6 +301,8 @@ final class NpcCrowdManager {
 		private float vz;
 		private long elapsedMillis = 1;
 		private long updatedAt;
+		private int preferredSide;
+		private long sideUntil;
 
 		private AgentState(Agent agent, Bucket bucket, long updatedAt) {
 			this.agent = agent;

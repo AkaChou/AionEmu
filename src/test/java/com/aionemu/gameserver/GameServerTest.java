@@ -52,7 +52,11 @@ class GameServerTest {
 	void loadsGeoDataDefaultsWithoutOverrideProperties() {
 		assertDoesNotThrow(() -> ConfigurableProcessor.process(GeoDataConfig.class, new Properties()));
 		assertFalse(readBooleanConfig("GEO_PATH_ENABLE"));
-		assertEquals(10, readIntConfig("GEO_PATH_CACHE_SIZE"));
+		assertFalse(readBooleanConfig("GEO_PATH_DISTANCE_TIERS_ENABLE"));
+		assertTrue(readBooleanConfig("GEO_PATH_RECOVERY_ENABLE"));
+		assertFalse(readBooleanConfig("GEO_PATH_HIERARCHICAL_ENABLE"));
+		assertEquals(3, readIntConfig("GEO_PATH_WAYPOINT_LOOKAHEAD"));
+		assertEquals(32, readIntConfig("GEO_PATH_CACHE_SIZE"));
 		assertEquals(50000, readIntConfig("GEO_PATH_MAX_NODES"));
 		assertEquals(250, readIntConfig("GEO_PATH_TIMEOUT_MS"));
 		assertEquals(2, readFloatConfig("GEO_PATH_SPATIAL_STEP"), 0.001f);
@@ -62,6 +66,10 @@ class GameServerTest {
 	void loadsGeoPathOverrideProperties() {
 		Properties properties = new Properties();
 		properties.setProperty("gameserver.geo.path.enable", "true");
+		properties.setProperty("gameserver.geo.path.distance.tiers.enable", "true");
+		properties.setProperty("gameserver.geo.path.recovery.enable", "false");
+		properties.setProperty("gameserver.geo.path.hierarchical.enable", "true");
+		properties.setProperty("gameserver.geo.path.waypoint.lookahead", "5");
 		properties.setProperty("gameserver.geo.path.cache.size", "7");
 		properties.setProperty("gameserver.geo.path.max.nodes", "123");
 		properties.setProperty("gameserver.geo.path.timeout.ms", "400");
@@ -70,6 +78,10 @@ class GameServerTest {
 		ConfigurableProcessor.process(GeoDataConfig.class, properties);
 
 		assertTrue(readBooleanConfig("GEO_PATH_ENABLE"));
+		assertTrue(readBooleanConfig("GEO_PATH_DISTANCE_TIERS_ENABLE"));
+		assertFalse(readBooleanConfig("GEO_PATH_RECOVERY_ENABLE"));
+		assertTrue(readBooleanConfig("GEO_PATH_HIERARCHICAL_ENABLE"));
+		assertEquals(5, readIntConfig("GEO_PATH_WAYPOINT_LOOKAHEAD"));
 		assertEquals(7, readIntConfig("GEO_PATH_CACHE_SIZE"));
 		assertEquals(123, readIntConfig("GEO_PATH_MAX_NODES"));
 		assertEquals(400, readIntConfig("GEO_PATH_TIMEOUT_MS"));

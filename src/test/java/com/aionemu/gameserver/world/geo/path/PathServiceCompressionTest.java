@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +56,107 @@ class PathServiceCompressionTest {
 	}
 
 	@Test
+	void groundSmoothingFallsBackWhenGeoRejectsTheLongestPathSegment() {
+		float[] start = {0, 0, 10};
+		float[] first = {1, 0, 11};
+		float[] second = {1, 1, 12};
+		float[] target = {2, 1, 13};
+
+		float[][] result = PathService.simplifyGroundPath(start, List.of(first, second, target),
+				(from, to) -> true, (from, to) -> from != start || to != target);
+
+		assertEquals(2, result.length);
+		assertEquals(second, result[0]);
+		assertEquals(target, result[1]);
+		assertEquals(12, result[0][2]);
+		assertEquals(13, result[1][2]);
+	}
+
+	@Test
+	void groundSmoothingKeepsRawAStarStepsWhenGeoRejectsEveryShortcut() {
+		float[] start = {0, 0, 10};
+		float[] first = {1, 0, 11};
+		float[] second = {2, 0, 12};
+
+		float[][] result = PathService.simplifyGroundPath(start, List.of(first, second),
+				(from, to) -> true, (from, to) -> false);
+
+		assertEquals(2, result.length);
+		assertEquals(first, result[0]);
+		assertEquals(second, result[1]);
+	}
+
+	@Test
+	void groundSmoothingKeepsSlopeBreaksButStillCompressesLinearSlopes() {
+		float[] start = {0, 0, 0};
+		float[] crest = {1, 0, 1};
+		float[] flat = {2, 0, 1};
+
+		float[][] brokenSlope = PathService.simplifyGroundPath(start, List.of(crest, flat),
+				(from, to) -> true, (from, to) -> true);
+		float[][] linearSlope = PathService.simplifyGroundPath(start,
+				List.of(new float[] {1, 0, 0.5f}, flat), (from, to) -> true, (from, to) -> true);
+
+		assertEquals(2, brokenSlope.length);
+		assertEquals(crest, brokenSlope[0]);
+		assertEquals(1, linearSlope.length);
+		assertEquals(flat, linearSlope[0]);
+	}
+
+	@Test
+	void waypointSkipChecksAtMostThreePointsAndOnlyGeoChecksPathCandidates() {
+		float[] start = {0, 0, 0};
+		float[][] path = {{1, 0, 0}, {2, 0, 0}, {3, 0, 0}, {4, 0, 0}, {5, 0, 0}};
+		AtomicInteger pathChecks = new AtomicInteger();
+		AtomicInteger geoChecks = new AtomicInteger();
+
+		int index = PathService.waypointSkipIndex(start, path, 3, (from, to) -> {
+			pathChecks.incrementAndGet();
+			return to != path[3];
+		}, (from, to) -> {
+			geoChecks.incrementAndGet();
+			return true;
+		});
+
+		assertEquals(2, index);
+		assertEquals(2, pathChecks.get());
+		assertEquals(1, geoChecks.get());
+	}
+
+	@Test
+	void waypointSkipFallsBackToANearerPathPointWhenGeoBlocksTheFarthestOne() {
+		float[] start = {0, 0, 0};
+		float[][] path = {{1, 0, 0}, {2, 0, 0}, {3, 0, 0}, {4, 0, 0}};
+
+		int index = PathService.waypointSkipIndex(start, path, 3, (from, to) -> true,
+				(from, to) -> to != path[3]);
+
+		assertEquals(2, index);
+	}
+
+	@Test
+	void waypointSkipDoesNotCutThroughASlopeBreak() {
+		float[] start = {0, 0, 0};
+		float[][] path = {{1, 0, 1}, {2, 0, 1}, {3, 0, 1}};
+
+		assertEquals(0, PathService.waypointSkipIndex(start, path, 2,
+				(from, to) -> true, (from, to) -> true));
+	}
+
+	@Test
+	void nearestNodeBridgeIsPrependedBeforeTheAStarRoute() {
+		float[] bridge = {0.25f, 0.25f, 1};
+		float[][] route = {{0.75f, 0.25f, 1}, {1.25f, 0.25f, 1}};
+
+		float[][] result = PathService.prependWaypoint(bridge, route);
+
+		assertEquals(3, result.length);
+		assertEquals(bridge, result[0]);
+		assertEquals(route[0], result[1]);
+		assertEquals(route[1], result[2]);
+	}
+
+	@Test
 	void fallsBackToBoundedGeoSegmentsOutsidePathData() {
 		float[][] result = PathService.directGroundPath(new float[] {0, 0, 0}, new float[] {120, 0, 12},
 				(start, end) -> end[0] - start[0] <= 50);
@@ -90,16 +192,37 @@ class PathServiceCompressionTest {
 				source.indexOf("private static float[][] geoGroundPath"));
 
 		assertEquals(1, method.split("searchAStar\\(", -1).length - 1);
-		assertFalse(method.contains("EdgePassability"));
+		assertTrue(method.contains("request.blockedSegment()::allows"));
+		assertFalse(method.contains("EdgePassability geo"));
 	}
 
 	@Test
-	void groundWaypointUsesBoundedPathSearchBeforeGeoFallback() throws IOException {
+	void asynchronousSearchUsesTheSameImmutableEndpointsAsItsCacheKey() throws IOException {
+		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/path/PathService.java"));
+		String navigation = source.substring(source.indexOf("private CompletableFuture<float[][]> navigateAsync"),
+				source.indexOf("static int pathCacheCell"));
+		String ground = source.substring(source.indexOf("private float[][] findGroundPath"),
+				source.indexOf("private static float[][] geoGroundPath"));
+		String spatial = source.substring(source.indexOf("private float[][] findSpatialPath"),
+				source.indexOf("private WaterArea waterArea"));
+		String compactSpatial = spatial.replaceAll("\\s+", " ");
+
+		assertTrue(navigation.contains("PathRequest request = snapshot"));
+		assertTrue(navigation.contains("pathCacheKey(request.worldId()"));
+		assertTrue(ground.contains("map.projectPoint(request.startX(), request.startY(), request.startZ()"));
+		assertTrue(ground.contains("map.searchAStar(pathStart.x(), pathStart.y(), pathStart.z()"));
+		assertTrue(compactSpatial.contains("SpatialPathfinder.findProgressive(request.startX(), request.startY(), request.startZ()"));
+		assertFalse(ground.contains("owner.getX()"));
+		assertFalse(spatial.contains("owner.getX()"));
+	}
+
+	@Test
+	void groundWaypointUsesBoundedPathSearchBeforeStraightFallback() throws IOException {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/path/PathService.java"));
 		String method = source.substring(source.indexOf("public boolean canReachWaypoint"),
 				source.indexOf("public long obstacleVersion"));
 
-		assertTrue(method.indexOf("groundWaypointStatus") < method.indexOf("canPass("));
+		assertTrue(method.indexOf("groundWaypointStatus") < method.indexOf("canMoveStraight("));
 		assertTrue(method.contains("status != PathData.SearchStatus.INVALID_POSITION"));
 		assertTrue(method.contains("WAYPOINT_SEARCH_MAX_NODES"));
 		assertFalse(method.contains(", 1, terrain"));
@@ -115,6 +238,25 @@ class PathServiceCompressionTest {
 		assertEquals(0, PathService.pathCacheCell(0.4f));
 		assertEquals(1, PathService.pathCacheCell(1.4f));
 		assertFalse(a.equals(c));
+	}
+
+	@Test
+	void recoveryBlocksOnlyTheFailedFirstEdgeOnTheSameLayer() {
+		PathService.BlockedSegment blocked = new PathService.BlockedSegment(0.25f, 0.25f, 1,
+				2.25f, 0.25f, 1, 0.35f, 2_000);
+
+		assertTrue(blocked.active(1_000));
+		assertFalse(blocked.allows(0.25f, 0.25f, 1, 0.75f, 0.25f, 1));
+		assertTrue(blocked.allows(0.25f, 0.25f, 1, 0.75f, 0.75f, 1));
+		assertTrue(blocked.allows(0.25f, 0.25f, 3, 0.75f, 0.25f, 3));
+	}
+
+	@Test
+	void recoveryRequestsBypassTheSharedResultCache() {
+		PathService.BlockedSegment blocked = new PathService.BlockedSegment(0, 0, 0, 1, 0, 0, 0.35f, 2_000);
+
+		assertTrue(PathService.usesResultCache(null));
+		assertFalse(PathService.usesResultCache(blocked));
 	}
 
 	@Test

@@ -9,8 +9,8 @@ import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 抽象碰撞观察者：在移动时对几何体做射线检测并回调。
@@ -78,7 +78,7 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 							float zMax = z + 0.05f + creature.getObjectTemplate().getBoundRadius().getUpper();
 							float zMin = z - 0.11f;
 							if (!creature.isFlying()) {
-								float geoZ = GeoService.getInstance().getZ(creature.getWorldId(), x, y, z, 100.0f, creature.getInstanceId());
+									float geoZ = GameWorldServices.geoService().getZ(creature.getWorldId(), x, y, z, 100.0f, creature.getInstanceId());
 								if (!Float.isNaN(geoZ)) {
 									zMin = geoZ - 0.11f;
 								}

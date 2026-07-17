@@ -9,12 +9,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.skillengine.model.Skill;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 地形区域材质行为者：根据脚下地形材质周期施加技能。
@@ -41,7 +41,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 
 	@Override
 	public synchronized void moved() {
-		int materialId = GeoService.getInstance().getTerrainMaterialAt(creature.getWorldId(), creature.getX(), creature.getY(), creature.getZ(),
+		int materialId = GameWorldServices.geoService().getTerrainMaterialAt(creature.getWorldId(), creature.getX(), creature.getY(), creature.getZ(),
 				creature.getInstanceId());
 		if (materialId == lastMaterialId && !currentSkills.get().isEmpty() && hasActiveTask()) {
 			return;

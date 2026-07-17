@@ -16,7 +16,9 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 
 class GameThreadPoolLifecycleTest {
 
@@ -66,6 +68,17 @@ class GameThreadPoolLifecycleTest {
         assertFalse(servicesSource.contains("ThreadPoolManager.getInstance()"));
         assertTrue(servicesSource.contains("fallbackThreadPoolManager()"));
         assertTrue(servicesSource.contains("new ThreadPoolManager()"));
+    }
+
+    @Test
+    void gameThreadPoolServicesCachesResolvedSpringManager() {
+        GameThreadPoolServices services = new GameThreadPoolServices(prototypeProvider(ThreadPoolManager.class));
+
+        try {
+            assertSame(GameThreadPoolServices.threadPoolManager(), GameThreadPoolServices.threadPoolManager());
+        } finally {
+            services.destroy();
+        }
     }
 
     @Test
@@ -188,6 +201,15 @@ class GameThreadPoolLifecycleTest {
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
+    }
+
+    private <T> ObjectProvider<T> prototypeProvider(Class<T> type) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        RootBeanDefinition definition = new RootBeanDefinition(type);
+        definition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+        definition.setInstanceSupplier(() -> objenesis.newInstance(type));
+        beanFactory.registerBeanDefinition(type.getName(), definition);
         return beanFactory.getBeanProvider(type);
     }
 

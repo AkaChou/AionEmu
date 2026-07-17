@@ -8,7 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
@@ -101,7 +101,7 @@ public class CondSkillLauncherEffect extends EffectTemplate {
 
 	private Effect applyConditionalEffect(Effect parentEffect) {
 		if (!parentEffect.getSkillTemplate().isPassive()) {
-			return SkillEngine.getInstance().applyEffect(skillId, parentEffect.getEffected(), parentEffect.getEffected());
+			return GameEngineServices.skillEngine().applyEffect(skillId, parentEffect.getEffected(), parentEffect.getEffected());
 		}
 		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		if (template == null) {

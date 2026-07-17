@@ -53,6 +53,21 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.path.enable", defaultValue = "false")
 	public static boolean GEO_PATH_ENABLE;
 
+	/** 按 NPC 与玩家距离降低非战斗移动和追击重寻频率。 / Distance-tiered NPC movement and chase repathing. */
+	@Property(key = "gameserver.geo.path.distance.tiers.enable", defaultValue = "false")
+	public static boolean GEO_PATH_DISTANCE_TIERS_ENABLE;
+
+	@Property(key = "gameserver.geo.path.recovery.enable", defaultValue = "true")
+	public static boolean GEO_PATH_RECOVERY_ENABLE;
+
+	/** 长距离地面路径使用 PATH block 分层走廊，并在失败时回退普通 A*。 */
+	@Property(key = "gameserver.geo.path.hierarchical.enable", defaultValue = "false")
+	public static boolean GEO_PATH_HIERARCHICAL_ENABLE;
+
+	/** 运行期最多前视的 PATH 路点数；0=禁用。 / Runtime PATH waypoint lookahead; 0 = disabled. */
+	@Property(key = "gameserver.geo.path.waypoint.lookahead", defaultValue = "3")
+	public static int GEO_PATH_WAYPOINT_LOOKAHEAD;
+
 	/** 内存中保留的 PATH 地图数；0=不限制。 / Cached PATH maps; 0 = unlimited. */
 	@Property(key = "gameserver.geo.path.cache.size", defaultValue = "32")
 	public static int GEO_PATH_CACHE_SIZE;

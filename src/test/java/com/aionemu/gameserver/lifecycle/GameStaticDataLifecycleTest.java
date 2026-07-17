@@ -69,6 +69,14 @@ class GameStaticDataLifecycleTest {
     }
 
     @Test
+    void adminReloadUsesStaticDataServicesBridgeForXmlDataLoader() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/commands/admin/Reload.java"));
+
+        assertFalse(source.contains("XmlDataLoader.getInstance()"));
+        assertTrue(source.contains("GameStaticDataServices.xmlDataLoader()"));
+    }
+
+    @Test
     void staticDataLifecycleInitializesMovementLoopsAfterStaticData() {
         AtomicInteger loads = new AtomicInteger();
         AtomicInteger movementLoops = new AtomicInteger();

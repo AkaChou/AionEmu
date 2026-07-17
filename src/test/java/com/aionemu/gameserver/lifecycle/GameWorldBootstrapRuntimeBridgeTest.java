@@ -15,7 +15,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 
 class GameWorldBootstrapRuntimeBridgeTest {
 
@@ -77,6 +79,26 @@ class GameWorldBootstrapRuntimeBridgeTest {
             assertSame(world, GameWorldBootstrapServices.world());
         } finally {
             worldBootstrapServices.destroy();
+        }
+    }
+
+    @Test
+    void worldBootstrapServicesCacheResolvedSpringServices() {
+        GameWorldBootstrapServices services = new GameWorldBootstrapServices(
+            prototypeProvider(IDFactory.class),
+            prototypeProvider(ZoneService.class),
+            prototypeProvider(HotspotTeleportService.class),
+            prototypeProvider(RoadService.class),
+            prototypeProvider(World.class)
+        );
+
+        try {
+            assertSame(GameWorldBootstrapServices.idFactory(), GameWorldBootstrapServices.idFactory());
+            assertSame(GameWorldBootstrapServices.zoneService(), GameWorldBootstrapServices.zoneService());
+            assertSame(GameWorldBootstrapServices.hotspotTeleportService(), GameWorldBootstrapServices.hotspotTeleportService());
+            assertSame(GameWorldBootstrapServices.world(), GameWorldBootstrapServices.world());
+        } finally {
+            services.destroy();
         }
     }
 
@@ -148,6 +170,15 @@ class GameWorldBootstrapRuntimeBridgeTest {
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
+    }
+
+    private <T> ObjectProvider<T> prototypeProvider(Class<T> type) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        RootBeanDefinition definition = new RootBeanDefinition(type);
+        definition.setScope(ConfigurableBeanFactory.SCOPE_PROTOTYPE);
+        definition.setInstanceSupplier(() -> instance(type));
+        beanFactory.registerBeanDefinition(type.getName(), definition);
         return beanFactory.getBeanProvider(type);
     }
 }

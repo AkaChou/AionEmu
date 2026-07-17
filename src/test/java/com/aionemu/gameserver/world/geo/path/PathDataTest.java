@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
@@ -140,6 +142,50 @@ class PathDataTest {
 	}
 
 	@Test
+	void reusesThreadLocalAStarWorkspace() throws Exception {
+		Path path = directory.resolve("1.path");
+		Path index = directory.resolve("1.idx");
+		byte[] data = flatLinkedPath();
+		Files.write(path, data);
+		Files.write(index, index(data, 137));
+		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+
+		map.findPath(0.25f, 0.25f, 1, 1.25f, 0.25f, 1, 100, (x, y) -> Float.NaN);
+		Object workspace = currentSearchWorkspace();
+		Object firstNode = ((Object[]) field(workspace, "nodes"))[0];
+		Object firstSearchNode = ((Object[]) field(workspace, "searchNodes"))[0];
+		Object firstOpenNode = ((Object[]) field(workspace, "openNodes"))[0];
+		Object openQueue = field(workspace, "open");
+
+		map.findPath(0.25f, 0.25f, 1, 1.25f, 0.25f, 1, 100, (x, y) -> Float.NaN);
+
+		assertSame(firstNode, ((Object[]) field(workspace, "nodes"))[0]);
+		assertSame(firstSearchNode, ((Object[]) field(workspace, "searchNodes"))[0]);
+		assertSame(firstOpenNode, ((Object[]) field(workspace, "openNodes"))[0]);
+		assertSame(openQueue, field(workspace, "open"));
+	}
+
+	@Test
+	void projectsAndFindsTheNearestReachablePointOnTheSameLayer() throws Exception {
+		Path path = directory.resolve("1.path");
+		Path index = directory.resolve("1.idx");
+		byte[] data = flatLinkedPath((byte) 0xff);
+		Files.write(path, data);
+		Files.write(index, index(data, 137));
+		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+
+		assertEquals(new PathData.PathPoint(0.25f, 0.25f, 1),
+				map.projectPoint(0.25f, 0.25f, 1.5f, (x, y) -> Float.NaN));
+		assertNull(map.projectPoint(0.25f, 0.25f, 2, (x, y) -> Float.NaN));
+		PathData.PathPoint nearest = map.nearestPathPoint(0.25f, 0.25f, 1, 2, 0.7f,
+				(x, y) -> Float.NaN, (x, y, z) -> x > 0.5f);
+
+		assertNotNull(nearest);
+		assertEquals(0.75f, nearest.x());
+		assertEquals(1, nearest.z());
+	}
+
+	@Test
 	void distinguishesNodeBudgetExhaustionFromNoPath() throws Exception {
 		Path path = directory.resolve("1.path");
 		Path index = directory.resolve("1.idx");
@@ -168,6 +214,7 @@ class PathDataTest {
 				(x, y) -> Float.NaN, null);
 
 		assertEquals(PathData.SearchStatus.FOUND, result.status());
+		assertEquals(PathData.SearchMode.DIRECT, result.mode());
 		assertEquals(0, result.processedNodes());
 		assertEquals(List.of(new PathData.PathPoint(0.25f, 0.25f, 1),
 				new PathData.PathPoint(15.75f, 15.75f, 1)), result.path());
@@ -191,6 +238,21 @@ class PathDataTest {
 	}
 
 	@Test
+	void preservesSmallTerrainCurvesThatWouldSinkTheModel() throws Exception {
+		Path path = directory.resolve("1.path");
+		Path index = directory.resolve("1.idx");
+		byte[] data = terrainLinkedPath();
+		Files.write(path, data);
+		Files.write(index, index(data, 137));
+		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.HeightProvider terrain = (x, y) -> x > 1 && x < 1.5f ? 1.15f : 1;
+
+		assertFalse(map.canWalkStraight(0.25f, 0.25f, 1, 2.25f, 0.25f, 1, terrain, null));
+		PathData.SearchResult result = map.searchAStar(0.25f, 0.25f, 1, 2.25f, 0.25f, 1, 100, terrain, null);
+		assertTrue(result.path().stream().anyMatch(point -> point.z() == 1.15f));
+	}
+
+	@Test
 	void groundSearchFindsDetoursBeyondOneHundredMeters() throws Exception {
 		Path path = directory.resolve("1.path");
 		Path index = directory.resolve("1.idx");
@@ -210,6 +272,74 @@ class PathDataTest {
 
 		assertEquals(PathData.SearchStatus.FOUND, result.status());
 		assertTrue(result.processedNodes() > 0);
+	}
+
+	@Test
+	void hierarchicalBlockCorridorReducesLongRetailSearches() throws Exception {
+		int columns = 12;
+		int rows = 5;
+		Path path = directory.resolve("1.path");
+		Path index = directory.resolve("1.idx");
+		byte[] data = flatBlockGridPath(columns, rows, true, true);
+		Files.write(path, data);
+		Files.write(index, index(data, columns * 16, rows * 16, 1, 137, 0,
+				blockOffsets(columns * rows)));
+		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		float targetX = columns * 16 - 0.25f;
+
+		PathData.SearchResult lowLevel = map.searchAStar(0.25f, 0.25f, 1, targetX, 0.25f, 1,
+				50_000, (x, y) -> 1, null, false);
+		PathData.SearchResult hierarchical = map.searchAStar(0.25f, 0.25f, 1, targetX, 0.25f, 1,
+				50_000, (x, y) -> 1, null, true);
+
+		assertEquals(PathData.SearchStatus.FOUND, hierarchical.status());
+		assertEquals(PathData.SearchMode.HIERARCHICAL, hierarchical.mode(),
+				"hierarchicalNodes=" + hierarchical.processedNodes() + " lowLevelNodes=" + lowLevel.processedNodes());
+		assertTrue(hierarchical.abstractNodes() > 0);
+		assertTrue(lowLevel.status() != PathData.SearchStatus.FOUND
+				|| hierarchical.processedNodes() * 2 < lowLevel.processedNodes());
+	}
+
+	@Test
+	void hierarchicalCorridorFallsBackWhenRuntimeObstacleNeedsAWiderDetour() throws Exception {
+		int columns = 16;
+		int rows = 5;
+		Path path = directory.resolve("1.path");
+		Path index = directory.resolve("1.idx");
+		byte[] data = flatBlockGridPath(columns, rows, false, false);
+		Files.write(path, data);
+		Files.write(index, index(data, columns * 16, rows * 16, 1, 137, 0,
+				blockOffsets(columns * rows)));
+		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathData.EdgePassability wallWithDistantGap = (startX, startY, startZ, targetX, targetY, targetZ) ->
+				!crosses(startX, targetX, 128) || Math.max(startY, targetY) >= 48;
+
+		PathData.SearchResult result = map.searchAStar(0.25f, 0.25f, 1, columns * 16 - 0.25f, 0.25f, 1,
+				50_000, (x, y) -> 1, wallWithDistantGap, true);
+
+		assertEquals(PathData.SearchStatus.FOUND, result.status());
+		assertEquals(PathData.SearchMode.HIERARCHICAL_FALLBACK, result.mode());
+		assertTrue(result.processedNodes() > 8_192);
+	}
+
+	@Test
+	void hierarchicalSearchReportsFallbackWhenTheAbstractGraphHasNoRoute() throws Exception {
+		int columns = 9;
+		int rows = 2;
+		Path path = directory.resolve("1.path");
+		Path index = directory.resolve("1.idx");
+		byte[] data = flatBlockGridPath(columns, rows, true, false);
+		Files.write(path, data);
+		Files.write(index, index(data, columns * 16, rows * 16, 1, 137, 0,
+				blockOffsets(columns * rows)));
+		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+
+		PathData.SearchResult result = map.searchAStar(0.25f, 0.25f, 1, columns * 16 - 0.25f, 0.25f, 1,
+				100, (x, y) -> 1, null, true);
+
+		assertEquals(PathData.SearchStatus.NODE_LIMIT, result.status());
+		assertEquals(PathData.SearchMode.HIERARCHICAL_FALLBACK, result.mode());
+		assertTrue(result.abstractNodes() > 0);
 	}
 
 	@Test
@@ -308,10 +438,10 @@ class PathDataTest {
 		Files.write(index, index(data, 137));
 
 		PathData.MapData map = PathData.MapData.load(path.toFile(), index.toFile());
+		PathService.BlockedSegment blocked = new PathService.BlockedSegment(0.25f, 0.25f, 1,
+				1.25f, 0.25f, 1, 0.35f, Long.MAX_VALUE);
 		List<PathData.PathPoint> result = map.findPath(0.25f, 0.25f, 1, 1.25f, 0.25f, 1, 100,
-				(x, y) -> Float.NaN,
-				(startX, startY, startZ, targetX, targetY, targetZ) -> !(startX == 0.25f && startY == 0.25f
-						&& targetX == 0.75f && targetY == 0.25f));
+				(x, y) -> Float.NaN, blocked::allows);
 
 		assertNotNull(result);
 		assertEquals(new PathData.PathPoint(0.75f, 0.75f, 1), result.get(1));
@@ -454,6 +584,40 @@ class PathDataTest {
 		return buffer.array();
 	}
 
+	private static byte[] flatBlockGridPath(int columns, int rows, boolean wall, boolean bottomGap) {
+		ByteBuffer buffer = ByteBuffer.allocate(137 + columns * rows * 23).order(ByteOrder.LITTLE_ENDIAN);
+		buffer.position(16);
+		buffer.putInt(0x00060005);
+		buffer.position(128);
+		buffer.putInt(1).put((byte) 0);
+		buffer.putInt(0);
+		for (int row = 0; row < rows; row++) {
+			for (int column = 0; column < columns; column++) {
+				boolean gap = bottomGap && row + 1 == rows;
+				boolean eastWall = wall && !gap && column == columns / 2 - 1;
+				boolean westWall = wall && !gap && column == columns / 2;
+				putFlatSectorBlock(buffer, 0x0f,
+						column + 1 < columns && !eastWall ? 0 : -1,
+						row + 1 < rows ? 0 : -1,
+						column > 0 && !westWall ? 0 : -1,
+						row > 0 ? 0 : -1);
+			}
+		}
+		return buffer.array();
+	}
+
+	private static int[] blockOffsets(int blocks) {
+		int[] offsets = new int[blocks];
+		for (int i = 0; i < offsets.length; i++) {
+			offsets[i] = 137 + i * 23;
+		}
+		return offsets;
+	}
+
+	private static boolean crosses(float start, float target, float coordinate) {
+		return start < coordinate && target >= coordinate || target < coordinate && start >= coordinate;
+	}
+
 	private static byte[] portalPath() {
 		ByteBuffer buffer = ByteBuffer.allocate(187).order(ByteOrder.LITTLE_ENDIAN);
 		buffer.position(16);
@@ -526,6 +690,18 @@ class PathDataTest {
 			buffer.putInt(blockOffset);
 		}
 		return buffer.array();
+	}
+
+	private static Object currentSearchWorkspace() throws Exception {
+		Field workspace = PathData.MapData.class.getDeclaredField("SEARCH_WORKSPACE");
+		workspace.setAccessible(true);
+		return ((ThreadLocal<?>) workspace.get(null)).get();
+	}
+
+	private static Object field(Object target, String name) throws Exception {
+		Field field = target.getClass().getDeclaredField(name);
+		field.setAccessible(true);
+		return field.get(target);
 	}
 
 	private static void restore(String key, String value) {

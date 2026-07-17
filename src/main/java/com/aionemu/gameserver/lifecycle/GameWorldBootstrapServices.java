@@ -40,6 +40,11 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      */
     private static volatile ObjectProvider<World> worldProvider;
 
+    private static volatile IDFactory resolvedIdFactory;
+    private static volatile ZoneService resolvedZoneService;
+    private static volatile HotspotTeleportService resolvedHotspotTeleportService;
+    private static volatile World resolvedWorld;
+
     /**
      * 构造并注册各世界引导组件的实例提供者。
      * Construct and register instance providers for world-bootstrap components.
@@ -58,6 +63,10 @@ public final class GameWorldBootstrapServices implements DisposableBean {
         GameWorldBootstrapServices.zoneServiceProvider = zoneServiceProvider;
         GameWorldBootstrapServices.hotspotTeleportServiceProvider = hotspotTeleportServiceProvider;
         GameWorldBootstrapServices.worldProvider = worldProvider;
+        resolvedIdFactory = null;
+        resolvedZoneService = null;
+        resolvedHotspotTeleportService = null;
+        resolvedWorld = null;
         IDFactory.setInstanceProvider(idFactoryProvider);
         ZoneService.setInstanceProvider(zoneServiceProvider);
         HotspotTeleportService.setInstanceProvider(hotspotTeleportServiceProvider);
@@ -72,11 +81,15 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * IDFactory instance
      */
     public static IDFactory idFactory() {
-        ObjectProvider<IDFactory> provider = idFactoryProvider;
-        if (provider == null) {
-            return GameWorldBootstrapFallbacks.idFactory();
+        IDFactory resolved = resolvedIdFactory;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameWorldBootstrapFallbacks::idFactory);
+        ObjectProvider<IDFactory> provider = idFactoryProvider;
+        resolved = provider == null ? GameWorldBootstrapFallbacks.idFactory()
+                : provider.getIfAvailable(GameWorldBootstrapFallbacks::idFactory);
+        resolvedIdFactory = resolved;
+        return resolved;
     }
 
     /**
@@ -86,11 +99,15 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * ZoneService instance
      */
     public static ZoneService zoneService() {
-        ObjectProvider<ZoneService> provider = zoneServiceProvider;
-        if (provider == null) {
-            return GameWorldBootstrapFallbacks.zoneService();
+        ZoneService resolved = resolvedZoneService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameWorldBootstrapFallbacks::zoneService);
+        ObjectProvider<ZoneService> provider = zoneServiceProvider;
+        resolved = provider == null ? GameWorldBootstrapFallbacks.zoneService()
+                : provider.getIfAvailable(GameWorldBootstrapFallbacks::zoneService);
+        resolvedZoneService = resolved;
+        return resolved;
     }
 
     /**
@@ -100,11 +117,15 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * HotspotTeleportService instance
      */
     public static HotspotTeleportService hotspotTeleportService() {
-        ObjectProvider<HotspotTeleportService> provider = hotspotTeleportServiceProvider;
-        if (provider == null) {
-            return GameWorldBootstrapFallbacks.hotspotTeleportService();
+        HotspotTeleportService resolved = resolvedHotspotTeleportService;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameWorldBootstrapFallbacks::hotspotTeleportService);
+        ObjectProvider<HotspotTeleportService> provider = hotspotTeleportServiceProvider;
+        resolved = provider == null ? GameWorldBootstrapFallbacks.hotspotTeleportService()
+                : provider.getIfAvailable(GameWorldBootstrapFallbacks::hotspotTeleportService);
+        resolvedHotspotTeleportService = resolved;
+        return resolved;
     }
 
     /**
@@ -114,11 +135,15 @@ public final class GameWorldBootstrapServices implements DisposableBean {
      * World instance
      */
     public static World world() {
-        ObjectProvider<World> provider = worldProvider;
-        if (provider == null) {
-            return GameWorldBootstrapFallbacks.world();
+        World resolved = resolvedWorld;
+        if (resolved != null) {
+            return resolved;
         }
-        return provider.getIfAvailable(GameWorldBootstrapFallbacks::world);
+        ObjectProvider<World> provider = worldProvider;
+        resolved = provider == null ? GameWorldBootstrapFallbacks.world()
+                : provider.getIfAvailable(GameWorldBootstrapFallbacks::world);
+        resolvedWorld = resolved;
+        return resolved;
     }
 
     /**
@@ -131,6 +156,10 @@ public final class GameWorldBootstrapServices implements DisposableBean {
         zoneServiceProvider = null;
         hotspotTeleportServiceProvider = null;
         worldProvider = null;
+        resolvedIdFactory = null;
+        resolvedZoneService = null;
+        resolvedHotspotTeleportService = null;
+        resolvedWorld = null;
         IDFactory.setInstanceProvider(null);
         ZoneService.setInstanceProvider(null);
         HotspotTeleportService.setInstanceProvider(null);

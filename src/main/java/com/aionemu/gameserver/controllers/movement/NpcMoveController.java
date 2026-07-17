@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * NPC 移动控制器：目标追踪、寻路缓存、巡逻路径、回家与跟随马达。
@@ -53,6 +54,9 @@ public class NpcMoveController
     private static final float MOVE_OFFSET = 0.05f;
     /** 追击目标相对路径终点偏移超过该值则重寻。 / Repath chase when target drifts this far from path end. */
     static final float CHASE_REPATH_DISTANCE = 2.0f;
+    private static final long CHASE_REPATH_NEAR_INTERVAL_MS = 500;
+    private static final long CHASE_REPATH_MID_INTERVAL_MS = 750;
+    private static final long CHASE_REPATH_FAR_INTERVAL_MS = 1_000;
     /** 同起点/终点的可达性结果复用窗口。 / Reuse reach checks for the same endpoints this long. */
     private static final long REACH_CHECK_CACHE_MS = 100;
     private static final long PATH_RETRY_DELAY_MS = 500;
@@ -63,6 +67,32 @@ public class NpcMoveController
     private static final long HOME_RETURN_TIMEOUT_MS = 60_000;
     private static final long HOME_SP_RETURN_TIMEOUT_MS = 30_000;
     private static final long CHASE_MOVE_BROADCAST_INTERVAL_MS = 200;
+    private static final long WAYPOINT_SKIP_INTERVAL_MS = 250;
+    private static final long STUCK_SAMPLE_INTERVAL_MS = 500;
+    private static final long STUCK_SAMPLE_MAX_DELAY_MS = 1_500;
+    private static final float STUCK_MIN_PROGRESS = 0.10f;
+    private static final float STUCK_EXPECTED_PROGRESS_RATIO = 0.15f;
+    private static final int STUCK_SUSPECTED_WINDOWS = 2;
+    private static final int STUCK_CONFIRMED_WINDOWS = 3;
+    private static final long STUCK_REPLAN_COOLDOWN_MS = 750;
+    private static final long STUCK_BLOCKED_SEGMENT_TTL_MS = 5_000;
+    private static final int STUCK_REPLAN_MAX_ATTEMPTS = 2;
+    private static final float TARGET_SLOT_RECALC_DISTANCE = 1;
+    private static final float TARGET_SLOT_MAX_ATTACK_RANGE = 4;
+    private static final float NEAREST_PATH_RECOVERY_RADIUS = 2;
+    private static final float NEAREST_PATH_RECOVERY_VERTICAL = 0.7f;
+    private static final float LOCAL_AVOIDANCE_HEIGHT_TOLERANCE = 0.25f;
+    private static final int[] TARGET_SLOT_ADJUSTMENTS = {0, 20, -20, 40, -40};
+    private static final LongAdder stuckSuspected = new LongAdder();
+    private static final LongAdder stuckConfirmed = new LongAdder();
+    private static final LongAdder stuckSelfRecovered = new LongAdder();
+    private static final LongAdder stuckReplanAttempts = new LongAdder();
+    private static final LongAdder stuckReplanFound = new LongAdder();
+    private static final LongAdder stuckReplanFailed = new LongAdder();
+    private static final LongAdder waypointSkipAttempts = new LongAdder();
+    private static final LongAdder waypointSkipSuccess = new LongAdder();
+    private static final LongAdder nearestNodeAttempts = new LongAdder();
+    private static final LongAdder nearestNodeSuccess = new LongAdder();
     /** 当前目的地类型 / Current destination type */
     private Destination destination = Destination.TARGET_OBJECT;
     /** Point X / Point X */
@@ -106,10 +136,14 @@ public class NpcMoveController
     private float pendingPathX = Float.NaN, pendingPathY, pendingPathZ;
     /** 在途请求提交时间。 / Time when the pending request was submitted. */
     private long pendingPathStartedAt;
+    /** 当前请求代际与在途请求快照。 / Current request generation and pending snapshot. */
+    private long pathRequestId, pendingPathRequestId, pendingPathObstacleVersion;
     /** 瞬时调度失败后的下一次重试时间。 / Earliest retry time after a transient scheduling failure. */
     private long pathRetryAt;
     /** 当前 PATH 等待阶段是否已经广播停止。 / Whether stop was already broadcast for the current PATH wait. */
     private boolean pathStopSent;
+    /** 上次移动目的地是否为中间 PATH 路点。 / Whether the previous destination was an intermediate PATH waypoint. */
+    private boolean previousIntermediateWaypoint;
     private long lastMoveBroadcastAt;
     /** 最近一次确定无路的目标坐标。 / Last destination that was confirmed unreachable. */
     private float failedPathX = Float.NaN, failedPathY, failedPathZ;
@@ -131,6 +165,24 @@ public class NpcMoveController
     private boolean fullHealOnHomeReturn;
     /** 数字追击超时后要返回的当前巡逻点；为空时返回出生点。 / Current waypoint used after numeric chase timeout; null means spawn. */
     private RouteStep homeReturnWaypoint;
+    /** Shadow Stuck 采样状态；仅观测，不触发恢复。 / Shadow Stuck sampling state; observation only. */
+    private long progressSampleAt, progressRequestId;
+    private float progressX, progressY, progressZ;
+    private float progressWaypointX, progressWaypointY, progressWaypointZ;
+    private float progressRemainingDistance;
+    private int progressPathLength, noProgressWindows;
+    private boolean stuckShadowConfirmed;
+    private int stuckReplanAttemptCount;
+    private long lastStuckReplanAt;
+    private boolean pendingPathRecovery;
+    private long lastWaypointSkipAt;
+    private boolean nearestRecoveryAttempted;
+    private float[][] recoveryBridgePath;
+    private int trackedTargetId, chaseSlotTargetId;
+    private boolean chaseSlotValid;
+    private int chaseSlotAdjustment;
+    private float trackedTargetX = Float.NaN, trackedTargetY, trackedTargetZ;
+    private float chaseSlotAnchorX, chaseSlotAnchorY, chaseSlotX, chaseSlotY, chaseSlotZ;
     /** 跟随马达 / Follow motor */
     private FollowMotor _followMotor;
 
@@ -215,6 +267,18 @@ public class NpcMoveController
         return true;
     }
 
+    static long chaseRepathInterval(double targetDistance) {
+        if (targetDistance <= 30) {
+            return CHASE_REPATH_NEAR_INTERVAL_MS;
+        }
+        return targetDistance <= 60 ? CHASE_REPATH_MID_INTERVAL_MS : CHASE_REPATH_FAR_INTERVAL_MS;
+    }
+
+    static boolean shouldRepathChase(boolean distanceTiersEnabled, long lastReplanAt, long now, double targetDistance) {
+        return !distanceTiersEnabled || lastReplanAt == 0
+                || now - lastReplanAt >= chaseRepathInterval(targetDistance);
+    }
+
     static boolean shouldRetargetPath(float[][] path, boolean targetReachable) {
         return targetReachable && path != null && path.length == 1;
     }
@@ -241,14 +305,77 @@ public class NpcMoveController
         return !chasingTarget || currentMask == MovementMask.IMMEDIATE;
     }
 
-    static boolean shouldBroadcastDestination(boolean chasingTarget, boolean destinationChanged, long now,
-            long lastBroadcastAt) {
-        return destinationChanged && (!chasingTarget || now - lastBroadcastAt >= CHASE_MOVE_BROADCAST_INTERVAL_MS);
+    static boolean shouldBroadcastDestination(boolean chasingTarget, boolean pathWaypointTransition,
+            boolean destinationChanged, long now, long lastBroadcastAt) {
+        return destinationChanged && (pathWaypointTransition || !chasingTarget
+                || now - lastBroadcastAt >= CHASE_MOVE_BROADCAST_INTERVAL_MS);
     }
 
     static boolean avoidanceChangedStep(float x, float y, float z, float[] avoidance) {
         return Math.abs(avoidance[0] - x) > 0.0001f || Math.abs(avoidance[1] - y) > 0.0001f
                 || Math.abs(avoidance[2] - z) > 0.0001f;
+    }
+
+    static boolean hasMeaningfulProgress(float sampleX, float sampleY, float sampleZ, float currentX, float currentY,
+            float currentZ, float waypointX, float waypointY, float waypointZ, float previousRemaining, float speed,
+            long sampleMillis) {
+        float directionX = waypointX - sampleX;
+        float directionY = waypointY - sampleY;
+        float directionLength = (float) Math.hypot(directionX, directionY);
+        float projected = directionLength <= MOVE_OFFSET ? 0
+                : ((currentX - sampleX) * directionX + (currentY - sampleY) * directionY) / directionLength;
+        float remaining = (float) MathUtil.getDistance(currentX, currentY, currentZ, waypointX, waypointY, waypointZ);
+        float required = Math.max(STUCK_MIN_PROGRESS, speed * sampleMillis / 1000f * STUCK_EXPECTED_PROGRESS_RATIO);
+        return projected >= required || previousRemaining - remaining >= required;
+    }
+
+    public static RecoveryMetrics recoveryMetrics() {
+        return new RecoveryMetrics(stuckSuspected.sum(), stuckConfirmed.sum(), stuckSelfRecovered.sum(),
+                stuckReplanAttempts.sum(), stuckReplanFound.sum(), stuckReplanFailed.sum(), waypointSkipAttempts.sum(),
+                waypointSkipSuccess.sum(), nearestNodeAttempts.sum(), nearestNodeSuccess.sum());
+    }
+
+    public record RecoveryMetrics(long stuckSuspected, long stuckConfirmed, long stuckSelfRecovered,
+            long replanAttempts, long replanFound, long replanFailed, long waypointSkipAttempts,
+            long waypointSkipSuccess, long nearestNodeAttempts, long nearestNodeSuccess) {}
+
+    static boolean shouldRequestStuckRecovery(boolean confirmed, boolean requestPending, int attempts,
+            long lastAttemptAt, long now) {
+        return confirmed && !requestPending && attempts < STUCK_REPLAN_MAX_ATTEMPTS
+                && (lastAttemptAt == 0 || now - lastAttemptAt >= STUCK_REPLAN_COOLDOWN_MS);
+    }
+
+    static float blockedSegmentRadius(int attempt) {
+        return attempt <= 0 ? 0.35f : 0.75f;
+    }
+
+    static float[][] installPathResult(float[][] current, float[][] result, boolean recovery) {
+        return recovery && (result == null || result.length == 0) ? current : result;
+    }
+
+    static boolean shouldTryWaypointSkip(float[][] path, int lookahead, long lastAttemptAt, long now) {
+        return path != null && path.length > 1 && lookahead > 0
+                && (lastAttemptAt == 0 || now - lastAttemptAt >= WAYPOINT_SKIP_INTERVAL_MS);
+    }
+
+    static boolean shouldUseAttackSlot(boolean spatialPath, float attackDistance) {
+        return !spatialPath && attackDistance > 0.75f && attackDistance <= TARGET_SLOT_MAX_ATTACK_RANGE;
+    }
+
+    static int attackSlotOffsetDegrees(int ownerId, int targetId) {
+        return (Math.floorMod(ownerId * 31 ^ targetId, 7) - 3) * 20;
+    }
+
+    static float[] attackSlotCandidate(float ownerX, float ownerY, float targetX, float targetY, float targetZ,
+            float radius, int offsetDegrees) {
+        double angle = Math.atan2(ownerY - targetY, ownerX - targetX);
+        if (ownerX == targetX && ownerY == targetY) {
+            angle = Math.toRadians(offsetDegrees * 3);
+        } else {
+            angle += Math.toRadians(offsetDegrees);
+        }
+        return new float[] {targetX + (float) Math.cos(angle) * radius,
+                targetY + (float) Math.sin(angle) * radius, targetZ};
     }
 
     static boolean shouldAdjustGeoHeight(float[][] path) {
@@ -287,6 +414,7 @@ public class NpcMoveController
             pointX = x;
             pointY = y;
             pointZ = z;
+            resetTargetTracking();
             resetPath();
         }
         updateLastMove();
@@ -300,6 +428,7 @@ public class NpcMoveController
     public void moveToHome() {
         clearPathFailureContext();
         clearPathPullAttempts();
+        resetTargetTracking();
         if (started.compareAndSet(false, true)) {
             if (owner.getAi2().isLogging()) {
                 AI2Logger.moveinfo(owner, "MC: moveToHome started");
@@ -325,6 +454,7 @@ public class NpcMoveController
                 AI2Logger.moveinfo(owner, "MC: moveToNextPoint started");
             }
             destination = Destination.POINT;
+            resetTargetTracking();
             resetPath();
         }
         updateLastMove();
@@ -345,6 +475,7 @@ public class NpcMoveController
             return;
         }
         if (!owner.canPerformMove() || (owner.getAi2().getSubState() == AISubState.CAST)) {
+            resetStuckShadow();
             if (owner.getAi2().isLogging()) {
                 AI2Logger.moveinfo(owner, "moveToDestination can't perform move");
             }
@@ -374,20 +505,30 @@ public class NpcMoveController
             case TARGET_OBJECT:
                 VisibleObject target = owner.getTarget();
                 if (!(target instanceof Creature creature)) {
+                    resetTargetTracking();
                     cancelFollow();
                     return;
                 }
                 if (usesPath()) {
-                    if (targetsAnotherObject(cachedPathValid, cachedPathTargetId, pendingPath != null, pendingPathTargetId,
+                    boolean targetChanged = trackedTargetId != creature.getObjectId();
+                    if (targetChanged) {
+                        resetTargetTracking();
+                        trackedTargetId = creature.getObjectId();
+                        resetPath();
+                    }
+                    if (!targetChanged && targetsAnotherObject(cachedPathValid, cachedPathTargetId, pendingPath != null, pendingPathTargetId,
                             creature.getObjectId())) {
                         resetPath();
                     }
-                    if ((MathUtil.getDistance(target.getX(), target.getY(), pointZ, pointX, pointY, pointZ) > MOVE_CHECK_OFFSET)) {
-                        offset = owner.getController().getAttackDistanceToTarget();
-                        pointX = target.getX();
-                        pointY = target.getY();
+                    long now = System.currentTimeMillis();
+                    if (targetMoved(target.getX(), target.getY(), target.getZ())) {
+                        float attackDistance = owner.getController().getAttackDistanceToTarget();
                         boolean spatialPath = GameWorldServices.pathService().usesSpatialPath(owner);
-                        pointZ = getTargetZ(spatialPath, creature);
+                        float targetZ = getTargetZ(spatialPath, creature);
+                        updateTargetDestination(creature, spatialPath, targetZ, attackDistance);
+                        trackedTargetX = target.getX();
+                        trackedTargetY = target.getY();
+                        trackedTargetZ = target.getZ();
                         float[][] path = pathSnapshot();
                         boolean targetReachable = path != null && path.length == 1
                                 && canReachWaypointCached(pointX, pointY, pointZ);
@@ -396,14 +537,15 @@ public class NpcMoveController
                                 : pathDestinationDrift(path, pointX, pointY, pointZ);
                         if (shouldRetargetPath(path, targetReachable)) {
                             retargetPath(path, pointX, pointY, pointZ);
-                        } else if (shouldInvalidatePath(path, pendingPath != null, destinationDrift)) {
+                        } else if (shouldInvalidatePath(path, pendingPath != null, destinationDrift)
+                                && shouldRepathChase(GeoDataConfig.GEO_PATH_DISTANCE_TIERS_ENABLE, lastPathReplan, now,
+                                        MathUtil.getDistance(owner, creature))) {
                             // 保留旧路径继续走，避免重寻期间原地停住。
                             invalidateChasePath();
                         }
                     }
                     boolean retryFailedPath = shouldRetryFailedPath(failedPathX, failedPathY, failedPathZ, pointX, pointY,
                             pointZ, failedPathObstacleVersion, currentObstacleVersion());
-                    long now = System.currentTimeMillis();
                     if (!retryFailedPath && tryPathAvoidance(creature, now)) {
                         updateLastMove();
                         return;
@@ -418,11 +560,11 @@ public class NpcMoveController
                             requestTargetPath(creature);
                         }
                     }
-                    float[][] path = pathSnapshot();
+                    float[][] path = skipWaypoints(pathSnapshot(), now);
                     if (path != null && path.length > 0) {
                         float[] p1 = path[0];
                         assert p1.length == 3;
-                        moveToLocation(p1[0], p1[1], p1[2], offset, path);
+                        moveToLocation(p1[0], p1[1], p1[2], pathMoveOffset(path), path);
                     } else if (!GameWorldServices.pathService().hasPathingData(owner)) {
                         moveToLocation(pointX, pointY, pointZ, offset);
                     } else {
@@ -467,10 +609,10 @@ public class NpcMoveController
                     finishFailedHomeReturn();
                     return;
                 }
-                float[][] path = pathSnapshot();
+                float[][] path = skipWaypoints(pathSnapshot(), now);
                 if (path != null && path.length > 0) {
                     float[] p1 = path[0];
-                    moveToLocation(p1[0], p1[1], p1[2], offset, path);
+                    moveToLocation(p1[0], p1[1], p1[2], pathMoveOffset(path), path);
                 } else if (!GameWorldServices.pathService().hasPathingData(owner)) {
                     moveToLocation(pointX, pointY, pointZ, offset);
                 } else {
@@ -495,6 +637,73 @@ public class NpcMoveController
         return resolvedTargetZ(spatialPath, targetZ, groundZ);
     }
 
+    private boolean targetMoved(float x, float y, float z) {
+        return !Float.isFinite(trackedTargetX)
+                || MathUtil.getDistance(trackedTargetX, trackedTargetY, trackedTargetZ, x, y, z) > MOVE_CHECK_OFFSET;
+    }
+
+    private void updateTargetDestination(Creature target, boolean spatialPath, float targetZ, float attackDistance) {
+        if (shouldUseAttackSlot(spatialPath, attackDistance)) {
+            boolean refresh = chaseSlotTargetId != target.getObjectId()
+                    || MathUtil.getDistance(chaseSlotAnchorX, chaseSlotAnchorY, target.getX(), target.getY())
+                            >= TARGET_SLOT_RECALC_DISTANCE;
+            if (refresh) {
+                float[] slot = findAttackSlot(target, targetZ, attackDistance);
+                chaseSlotTargetId = target.getObjectId();
+                chaseSlotAnchorX = target.getX();
+                chaseSlotAnchorY = target.getY();
+                chaseSlotValid = slot != null;
+                if (slot != null) {
+                    chaseSlotX = slot[0];
+                    chaseSlotY = slot[1];
+                    chaseSlotZ = slot[2];
+                }
+            }
+            if (chaseSlotTargetId == target.getObjectId() && chaseSlotValid) {
+                pointX = chaseSlotX;
+                pointY = chaseSlotY;
+                pointZ = chaseSlotZ;
+                offset = MOVE_OFFSET;
+                return;
+            }
+        } else {
+            chaseSlotTargetId = 0;
+            chaseSlotValid = false;
+        }
+        offset = attackDistance;
+        pointX = target.getX();
+        pointY = target.getY();
+        pointZ = targetZ;
+    }
+
+    private float[] findAttackSlot(Creature target, float targetZ, float attackDistance) {
+        float radius = Math.max(0.5f, attackDistance - 0.25f);
+        int baseOffset = attackSlotOffsetDegrees(owner.getObjectId(), target.getObjectId());
+        for (int attempt = 0; attempt < TARGET_SLOT_ADJUSTMENTS.length; attempt++) {
+            int index = (chaseSlotAdjustment + attempt) % TARGET_SLOT_ADJUSTMENTS.length;
+            int adjustment = TARGET_SLOT_ADJUSTMENTS[index];
+            float[] candidate = attackSlotCandidate(owner.getX(), owner.getY(), target.getX(), target.getY(), targetZ,
+                    radius, baseOffset + adjustment);
+            float[] projected = GameWorldServices.pathService().projectGroundPoint(owner, candidate[0], candidate[1],
+                    candidate[2]);
+            if (projected != null) {
+                chaseSlotAdjustment = index;
+                return projected;
+            }
+        }
+        return null;
+    }
+
+    private void resetTargetTracking() {
+        trackedTargetId = 0;
+        trackedTargetX = Float.NaN;
+        trackedTargetY = 0;
+        trackedTargetZ = 0;
+        chaseSlotTargetId = 0;
+        chaseSlotValid = false;
+        chaseSlotAdjustment = 0;
+    }
+
     /**
      * 按速度插值向坐标推进，处理掩码广播与路径缓存消费。
      * Interpolate toward coordinates by speed; handle mask broadcast and path-cache consumption.
@@ -512,6 +721,9 @@ public class NpcMoveController
         float ownerX = ((Npc)this.owner).getX();
         float ownerY = ((Npc)this.owner).getY();
         float ownerZ = ((Npc)this.owner).getZ();
+        boolean intermediateWaypoint = hasIntermediateWaypoint(path);
+        boolean pathWaypointTransition = intermediateWaypoint || previousIntermediateWaypoint;
+        previousIntermediateWaypoint = intermediateWaypoint;
         boolean destinationChanged = targetX != this.targetDestX || targetY != this.targetDestY || targetZ != this.targetDestZ;
         boolean directionChanged = destinationChanged && shouldRestartMovement(destination == Destination.TARGET_OBJECT, movementMask);
         if (destinationChanged) {
@@ -541,6 +753,7 @@ public class NpcMoveController
             AI2Logger.moveinfo((Creature)this.owner, "futureDist: " + futureDistPassed + " dist: " + dist);
         }
         if (dist == 0.0f) {
+            resetStuckShadow();
             pathStopSent = false;
             boolean pathCompleted = consumeWaypoint(path);
             if (((Npc)this.owner).getAi2().getState() == AIState.RETURNING
@@ -559,13 +772,14 @@ public class NpcMoveController
         float newX = (this.targetDestX - ownerX) * distFraction + ownerX;
         float newY = (this.targetDestY - ownerY) * distFraction + ownerY;
         float newZ = (this.targetDestZ - ownerZ) * distFraction + ownerZ;
-        float[] avoidance = usesPath() ? avoidNearbyNpcs(newX, newY, newZ, now, elapsedMillis) : null;
+        float[] avoidance = usesPath() ? avoidNearbyNpcs(newX, newY, newZ, path, now, elapsedMillis) : null;
         if (avoidance != null) {
             directionChanged |= avoidanceChangedStep(newX, newY, newZ, avoidance);
             newX = avoidance[0];
             newY = avoidance[1];
             newZ = avoidance[2];
         } else if (usesPath()) {
+            sampleStuckShadow(ownerX, ownerY, ownerZ, targetX, targetY, targetZ, currentSpeed, now, path, dist, offset);
             updateLastMove();
             return;
         }
@@ -592,6 +806,8 @@ public class NpcMoveController
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
         }
         com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
+        sampleStuckShadow(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ, currentSpeed, now, path,
+                (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ), offset);
         boolean reachedWaypoint = reachedWaypoint(targetX, targetY, targetZ, owner.getX(), owner.getY(), owner.getZ());
         if (reachedWaypoint && consumeWaypoint(path) && owner.getAi2().getState() == AIState.RETURNING
                 && shouldCompleteHomeReturn(true, isHomeReturnDestinationReached())) {
@@ -599,8 +815,8 @@ public class NpcMoveController
             return;
         }
         byte newMask = this.getMoveMask(directionChanged);
-        boolean broadcastDestination = shouldBroadcastDestination(destination == Destination.TARGET_OBJECT, destinationChanged, now,
-                lastMoveBroadcastAt);
+        boolean broadcastDestination = shouldBroadcastDestination(destination == Destination.TARGET_OBJECT,
+                pathWaypointTransition, destinationChanged, now, lastMoveBroadcastAt);
         if (shouldBroadcastMovement(this.movementMask, newMask, broadcastDestination || directionChanged)) {
             if (this.movementMask != newMask) {
                 if (((Npc)this.owner).getAi2().isLogging()) {
@@ -609,7 +825,93 @@ public class NpcMoveController
                 this.movementMask = newMask;
             }
             lastMoveBroadcastAt = now;
-            PacketSendUtility.broadcastPacket(this.owner, new SM_MOVE((Creature)this.owner));
+            PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), ownerX, ownerY, ownerZ,
+                    targetDestX, targetDestY, targetDestZ, heading, movementMask));
+        }
+    }
+
+    void sampleStuckShadow(float x, float y, float z, float waypointX, float waypointY, float waypointZ,
+            float speed, long now, float[][] path, float remaining, float stopOffset) {
+        if (path == null || path.length == 0 || speed <= MOVE_OFFSET
+                || destination == Destination.TARGET_OBJECT && path.length == 1 && remaining <= stopOffset) {
+            resetStuckShadow();
+            return;
+        }
+        if (progressSampleAt == 0 || progressRequestId != pathRequestId || progressPathLength != path.length) {
+            resetStuckShadow();
+            beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, path.length);
+            return;
+        }
+        long sampleMillis = now - progressSampleAt;
+        if (sampleMillis < STUCK_SAMPLE_INTERVAL_MS) {
+            return;
+        }
+        if (sampleMillis <= 0 || sampleMillis > STUCK_SAMPLE_MAX_DELAY_MS) {
+            resetStuckShadow();
+            beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, path.length);
+            return;
+        }
+        boolean progressed = hasMeaningfulProgress(progressX, progressY, progressZ, x, y, z, waypointX, waypointY,
+                waypointZ, progressRemainingDistance, speed, sampleMillis);
+        int previousWindows = noProgressWindows;
+        if (progressed) {
+            if (previousWindows >= STUCK_SUSPECTED_WINDOWS) {
+                stuckSelfRecovered.increment();
+                logStuckShadow("SELF_RECOVERED", waypointX, waypointY, waypointZ, speed, sampleMillis);
+            }
+            if (stuckReplanAttemptCount > 0) {
+                cancelPendingStuckRecovery();
+                clearPathFailureContext();
+            }
+            noProgressWindows = 0;
+            stuckShadowConfirmed = false;
+        } else {
+            noProgressWindows++;
+            if (previousWindows < STUCK_SUSPECTED_WINDOWS && noProgressWindows >= STUCK_SUSPECTED_WINDOWS) {
+                stuckSuspected.increment();
+                lastWaypointSkipAt = 0;
+                logStuckShadow("SUSPECTED", waypointX, waypointY, waypointZ, speed, sampleMillis);
+            }
+            if (!stuckShadowConfirmed && noProgressWindows >= STUCK_CONFIRMED_WINDOWS) {
+                stuckShadowConfirmed = true;
+                stuckConfirmed.increment();
+                logStuckShadow("CONFIRMED", waypointX, waypointY, waypointZ, speed, sampleMillis);
+            }
+            tryStuckRecovery(progressX, progressY, progressZ, waypointX, waypointY, waypointZ, now);
+        }
+        beginStuckSample(x, y, z, waypointX, waypointY, waypointZ, remaining, now, path.length);
+    }
+
+    private void beginStuckSample(float x, float y, float z, float waypointX, float waypointY, float waypointZ,
+            float remaining, long now, int pathLength) {
+        progressSampleAt = now;
+        progressRequestId = pathRequestId;
+        progressX = x;
+        progressY = y;
+        progressZ = z;
+        progressWaypointX = waypointX;
+        progressWaypointY = waypointY;
+        progressWaypointZ = waypointZ;
+        progressRemainingDistance = remaining;
+        progressPathLength = pathLength;
+    }
+
+    private void resetStuckShadow() {
+        progressSampleAt = 0;
+        progressRequestId = 0;
+        progressPathLength = 0;
+        noProgressWindows = 0;
+        stuckShadowConfirmed = false;
+    }
+
+    private void logStuckShadow(String status, float waypointX, float waypointY, float waypointZ, float speed,
+            long sampleMillis) {
+        if (owner != null && owner.getAi2().isLogging()) {
+            AI2Logger.info(owner.getAi2(), "PATH stuck shadow status=" + status + " requestId=" + pathRequestId
+                    + " windows=" + noProgressWindows + " sampleMs=" + sampleMillis + " speed=" + speed
+                    + " from=(" + progressX + ',' + progressY + ',' + progressZ + ") waypointBefore=("
+                    + progressWaypointX + ',' + progressWaypointY + ',' + progressWaypointZ + ") waypointNow=("
+                    + waypointX + ',' + waypointY + ',' + waypointZ + ")");
         }
     }
 
@@ -676,6 +978,9 @@ public class NpcMoveController
         pointY = 0;
         pointZ = 0;
         pathStopSent = false;
+        previousIntermediateWaypoint = false;
+        resetTargetTracking();
+        resetStuckShadow();
         resetPath();
         NpcCrowdManager.remove(owner.getObjectId());
     }
@@ -685,22 +990,40 @@ public class NpcMoveController
             moveToLocation(pointX, pointY, pointZ, offset);
             return;
         }
+        long now = System.currentTimeMillis();
         if (!cachedPathValid && GameWorldServices.pathService().hasPathingData(owner)
-                && System.currentTimeMillis() >= pathRetryAt) {
+                && now >= pathRetryAt) {
             requestLocationPath();
         }
-        float[][] path = pathSnapshot();
+        float[][] path = skipWaypoints(pathSnapshot(), now);
         if (path != null && path.length > 0) {
             float[] waypoint = path[0];
-            moveToLocation(waypoint[0], waypoint[1], waypoint[2], offset, path);
+            moveToLocation(waypoint[0], waypoint[1], waypoint[2], pathMoveOffset(path), path);
         } else if (!GameWorldServices.pathService().hasPathingData(owner)) {
             moveToLocation(pointX, pointY, pointZ, offset);
+        } else if (shouldFinishFailedPointMove(firstPathFailureAt, pathFailureHandled, pendingPath != null, now)) {
+            pathFailureHandled = true;
+            finishFailedPointMove();
         } else {
             stopForPath();
         }
     }
 
+    private void finishFailedPointMove() {
+        NpcAI2 npcAI = (NpcAI2) owner.getAi2();
+        boolean walking = npcAI.isInState(AIState.WALKING);
+        boolean retryRandomWalk = walking && npcAI.isInSubState(AISubState.WALK_RANDOM);
+        abortMove();
+        clearPathFailureContext();
+        if (retryRandomWalk) {
+            WalkManager.startRandomWalking(npcAI);
+        } else if (walking) {
+            WalkManager.stopWalking(npcAI);
+        }
+    }
+
     private void stopForPath() {
+        resetStuckShadow();
         if (shouldSendPathStop(pathStopSent)) {
             pathStopSent = true;
             setAndSendStopMove(owner);
@@ -735,6 +1058,34 @@ public class NpcMoveController
         return reachResult;
     }
 
+    private float[][] skipWaypoints(float[][] path, long now) {
+        int lookahead = Math.max(0, GeoDataConfig.GEO_PATH_WAYPOINT_LOOKAHEAD);
+        if (!shouldTryWaypointSkip(path, lookahead, lastWaypointSkipAt, now)) {
+            return path;
+        }
+        lastWaypointSkipAt = now;
+        waypointSkipAttempts.increment();
+        int firstIndex = GameWorldServices.pathService().waypointSkipIndex(owner, path, lookahead);
+        if (firstIndex == 0) {
+            return path;
+        }
+        float[][] skipped;
+        synchronized (this) {
+            if (cachedPath != path) {
+                return cachedPath;
+            }
+            skipped = remainingPath(path, firstIndex);
+            cachedPath = skipped;
+        }
+        waypointSkipSuccess.increment();
+        resetStuckShadow();
+        return skipped;
+    }
+
+    private float pathMoveOffset(float[][] path) {
+        return path != null && path == recoveryBridgePath ? 0 : offset;
+    }
+
     static boolean canReuseReachCheck(long now, long checkedAt, float fromX, float fromY, float fromZ,
             float cachedFromX, float cachedFromY, float cachedFromZ, float toX, float toY, float toZ,
             float cachedToX, float cachedToY, float cachedToZ) {
@@ -749,9 +1100,29 @@ public class NpcMoveController
                 && Math.abs(z - otherZ) <= MOVE_CHECK_OFFSET;
     }
 
-    private float[] avoidNearbyNpcs(float targetX, float targetY, float targetZ, long now, long elapsedMillis) {
+    private float[] avoidNearbyNpcs(float targetX, float targetY, float targetZ, float[][] path, long now,
+            long elapsedMillis) {
         return NpcCrowdManager.choose(crowdAgent(owner), targetX, targetY, targetZ,
-                (x, y, z) -> GameWorldServices.pathService().canReachWaypoint(owner, x, y, z), now, elapsedMillis);
+                this::projectLocalAvoidanceStep,
+                (x, y, z) -> isTrustedPathStep(path, targetX, targetY, targetZ, x, y, z)
+                        || GameWorldServices.pathService().canMoveStraight(owner, x, y, z), now, elapsedMillis);
+    }
+
+    private float[] projectLocalAvoidanceStep(float x, float y, float z) {
+        return stableAvoidanceProjection(z, GameWorldServices.pathService().projectLocalStep(owner, x, y, z));
+    }
+
+    static float[] stableAvoidanceProjection(float intendedZ, float[] projected) {
+        if (projected == null || Math.abs(projected[2] - intendedZ) > LOCAL_AVOIDANCE_HEIGHT_TOLERANCE) {
+            return null;
+        }
+        projected[2] = intendedZ;
+        return projected;
+    }
+
+    static boolean isTrustedPathStep(float[][] path, float targetX, float targetY, float targetZ,
+            float candidateX, float candidateY, float candidateZ) {
+        return path != null && candidateX == targetX && candidateY == targetY && candidateZ == targetZ;
     }
 
     private boolean tryPathAvoidance(Creature target, long now) {
@@ -769,7 +1140,8 @@ public class NpcMoveController
         float oldY = owner.getY();
         float oldZ = owner.getZ();
         float[] step = NpcCrowdManager.choose(crowdAgent(owner), desired[0], desired[1], desired[2],
-                (x, y, z) -> GameWorldServices.pathService().canReachWaypoint(owner, x, y, z), now,
+                this::projectLocalAvoidanceStep,
+                (x, y, z) -> GameWorldServices.pathService().canMoveStraight(owner, x, y, z), now,
                 Math.max(1, now - lastMoveUpdate));
         if (step == null) {
             return false;
@@ -781,6 +1153,116 @@ public class NpcMoveController
         resetPath();
         requestTargetPath(target);
         return true;
+    }
+
+    void blockedPathStep() {
+        resetPath();
+        if (destination == Destination.TARGET_OBJECT) {
+            recordPathFailure(pointX, pointY, pointZ, false);
+        }
+    }
+
+    private synchronized void tryStuckRecovery(float fromX, float fromY, float fromZ, float waypointX,
+            float waypointY, float waypointZ, long now) {
+        if (owner == null || !GeoDataConfig.GEO_PATH_RECOVERY_ENABLE
+                || GameWorldServices.pathService().usesSpatialPath(owner)) {
+            return;
+        }
+        Creature target = owner.getTarget() instanceof Creature creature ? creature : null;
+        if (destination == Destination.TARGET_OBJECT && target == null) {
+            return;
+        }
+        if (!shouldRequestStuckRecovery(stuckShadowConfirmed, pendingPath != null, stuckReplanAttemptCount,
+                lastStuckReplanAt, now)) {
+            if (stuckShadowConfirmed && pendingPath == null && stuckReplanAttemptCount >= STUCK_REPLAN_MAX_ATTEMPTS) {
+                tryNearestPathRecovery(target);
+            }
+            return;
+        }
+        if (target != null && chaseSlotTargetId == target.getObjectId() && chaseSlotValid) {
+            refreshAttackSlotForRecovery(target);
+        }
+        float radius = blockedSegmentRadius(stuckReplanAttemptCount);
+        PathService.BlockedSegment blocked = new PathService.BlockedSegment(fromX, fromY, fromZ, waypointX,
+                waypointY, waypointZ, radius, now + STUCK_BLOCKED_SEGMENT_TTL_MS);
+        stuckReplanAttemptCount++;
+        lastStuckReplanAt = now;
+        stuckReplanAttempts.increment();
+        pendingPathTargetId = target == null ? 0 : target.getObjectId();
+        pendingPathX = pointX;
+        pendingPathY = pointY;
+        pendingPathZ = pointZ;
+        recordPathFailure(pendingPathX, pendingPathY, pendingPathZ, false);
+        pathRequested(true);
+        pendingPath = destination == Destination.TARGET_OBJECT
+                ? GameWorldServices.pathService().navigateToTargetAsync(owner, pendingPathX, pendingPathY, pendingPathZ, blocked)
+                : GameWorldServices.pathService().navigateToLocationAsync(owner, pendingPathX, pendingPathY, pendingPathZ, blocked);
+        logPathRequest("stuck-recovery-" + stuckReplanAttemptCount);
+    }
+
+    private void refreshAttackSlotForRecovery(Creature target) {
+        int previousAdjustment = chaseSlotAdjustment;
+        chaseSlotAdjustment = (chaseSlotAdjustment + 1) % TARGET_SLOT_ADJUSTMENTS.length;
+        float attackDistance = owner.getController().getAttackDistanceToTarget();
+        float[] slot = findAttackSlot(target, getTargetZ(false, target), attackDistance);
+        if (slot == null) {
+            chaseSlotAdjustment = previousAdjustment;
+            return;
+        }
+        chaseSlotAnchorX = target.getX();
+        chaseSlotAnchorY = target.getY();
+        chaseSlotX = pointX = slot[0];
+        chaseSlotY = pointY = slot[1];
+        chaseSlotZ = pointZ = slot[2];
+        offset = MOVE_OFFSET;
+    }
+
+    private void tryNearestPathRecovery(Creature target) {
+        if (nearestRecoveryAttempted) {
+            return;
+        }
+        nearestRecoveryAttempted = true;
+        nearestNodeAttempts.increment();
+        float[] point = GameWorldServices.pathService().nearestGroundPoint(owner, NEAREST_PATH_RECOVERY_RADIUS,
+                NEAREST_PATH_RECOVERY_VERTICAL);
+        if (point == null) {
+            return;
+        }
+        clearPathFailureContext();
+        nearestRecoveryAttempted = true;
+        pathRequestId++;
+        cachedObstacleVersion = currentObstacleVersion();
+        cachedPathTargetId = target == null ? 0 : target.getObjectId();
+        cachedPath = new float[][] {{point[0], point[1], point[2]}};
+        recoveryBridgePath = cachedPath;
+        cachedPathValid = true;
+        lastWaypointSkipAt = 0;
+        nearestNodeSuccess.increment();
+        if (owner.getAi2().isLogging()) {
+            AI2Logger.info(owner.getAi2(), "PATH nearest-node recovery to=(" + point[0] + ',' + point[1] + ','
+                    + point[2] + ")");
+        }
+    }
+
+    private synchronized void cancelPendingStuckRecovery() {
+        if (pendingPathRecovery && pendingPath != null) {
+            pathRequestId++;
+            pendingPath.cancel(true);
+            pendingPath = null;
+            pendingPathTargetId = 0;
+            pendingPathX = Float.NaN;
+            pendingPathStartedAt = 0;
+            pendingPathRequestId = 0;
+            pendingPathObstacleVersion = 0;
+        }
+        pendingPathRecovery = false;
+        clearStuckRecoveryState();
+    }
+
+    private void clearStuckRecoveryState() {
+        stuckReplanAttemptCount = 0;
+        lastStuckReplanAt = 0;
+        nearestRecoveryAttempted = false;
     }
 
     private static NpcCrowdManager.Agent crowdAgent(Npc npc) {
@@ -822,29 +1304,41 @@ public class NpcMoveController
 
     private synchronized void resetPath() {
         if (pendingPath != null) {
+            pathRequestId++;
             pendingPath.cancel(true);
             pendingPath = null;
         }
         pendingPathTargetId = 0;
         pendingPathX = Float.NaN;
         pendingPathStartedAt = 0;
+        pendingPathRequestId = 0;
+        pendingPathObstacleVersion = 0;
+        pendingPathRecovery = false;
         cachedPathTargetId = 0;
         cachedPath = null;
+        recoveryBridgePath = null;
         cachedPathValid = false;
         pathRetryAt = 0;
+        lastWaypointSkipAt = 0;
+        clearStuckRecoveryState();
     }
 
     /** 作废缓存并取消在途请求，但保留旧路点供追击继续。 / Drop validity and pending request; keep old waypoints for chase. */
     private synchronized void invalidateChasePath() {
         if (pendingPath != null) {
+            pathRequestId++;
             pendingPath.cancel(true);
             pendingPath = null;
         }
         pendingPathTargetId = 0;
         pendingPathX = Float.NaN;
         pendingPathStartedAt = 0;
+        pendingPathRequestId = 0;
+        pendingPathObstacleVersion = 0;
+        pendingPathRecovery = false;
         cachedPathValid = false;
         pathRetryAt = 0;
+        clearStuckRecoveryState();
     }
 
     private synchronized float[][] pathSnapshot() {
@@ -854,6 +1348,7 @@ public class NpcMoveController
     private synchronized void retargetPath(float[][] path, float x, float y, float z) {
         if (cachedPath == path) {
             cachedPath = new float[][] {{x, y, z}};
+            lastWaypointSkipAt = 0;
         }
     }
 
@@ -861,7 +1356,11 @@ public class NpcMoveController
         if (path == null || cachedPath != path) {
             return false;
         }
+        if (recoveryBridgePath == path) {
+            recoveryBridgePath = null;
+        }
         cachedPath = consumePath(cachedPath, path);
+        lastWaypointSkipAt = 0;
         if (cachedPath == null) {
             cachedPathValid = false;
             return true;
@@ -898,13 +1397,21 @@ public class NpcMoveController
     }
 
     private void pathRequested() {
+        pathRequested(false);
+    }
+
+    private void pathRequested(boolean recovery) {
         pendingPathStartedAt = lastPathReplan = System.currentTimeMillis();
-        rememberObstacleVersion();
+        pendingPathRequestId = ++pathRequestId;
+        pendingPathObstacleVersion = currentObstacleVersion();
+        cachedObstacleVersion = pendingPathObstacleVersion;
+        pendingPathRecovery = recovery;
     }
 
     private void logPathRequest(String kind) {
         if (owner.getAi2().isLogging()) {
             AI2Logger.info(owner.getAi2(), "PATH request kind=" + kind
+                    + " requestId=" + pendingPathRequestId + " obstacleVersion=" + pendingPathObstacleVersion
                     + " from=(" + owner.getX() + ',' + owner.getY() + ',' + owner.getZ() + ") to=("
                     + pendingPathX + ',' + pendingPathY + ',' + pendingPathZ + ") distance="
                     + MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(), pendingPathX, pendingPathY, pendingPathZ));
@@ -920,58 +1427,100 @@ public class NpcMoveController
         float targetX = pendingPathX;
         float targetY = pendingPathY;
         float targetZ = pendingPathZ;
+        long requestId = pendingPathRequestId;
+        long obstacleVersion = pendingPathObstacleVersion;
+        boolean recovery = pendingPathRecovery;
         long elapsed = Math.max(0, System.currentTimeMillis() - pendingPathStartedAt);
         try {
-            cachedPath = request.getNow(null);
-            cachedPathTargetId = targetId;
-            if (cachedPath == null) {
-                cachedPathValid = true;
-                recordPathFailure(targetX, targetY, targetZ, false);
-                logPathResult("NO_PATH", elapsed);
-            } else if (isEmptyPathResult(cachedPath)) {
-                cachedPath = null;
-                cachedPathValid = false;
+            if (!shouldAcceptPathResult(requestId, pathRequestId, obstacleVersion, currentObstacleVersion())) {
+                if (!recovery) {
+                    cachedPath = null;
+                    cachedPathValid = false;
+                }
+                pathRetryAt = System.currentTimeMillis();
+                logPathResult("STALE", elapsed, requestId, obstacleVersion);
+                return;
+            }
+            float[][] result = request.getNow(null);
+            cachedPath = installPathResult(cachedPath, result, recovery);
+            if (result == null) {
+                if (recovery) {
+                    stuckReplanFailed.increment();
+                    recordPathFailure(targetX, targetY, targetZ, true);
+                } else {
+                    cachedPathValid = true;
+                    recordPathFailure(targetX, targetY, targetZ, false);
+                }
+                logPathResult("NO_PATH", elapsed, requestId, obstacleVersion);
+            } else if (isEmptyPathResult(result)) {
+                if (!recovery) {
+                    cachedPath = null;
+                    cachedPathValid = false;
+                } else {
+                    stuckReplanFailed.increment();
+                }
                 pathRetryAt = System.currentTimeMillis() + PATH_RETRY_DELAY_MS;
-                logPathResult("EMPTY", elapsed);
+                logPathResult("EMPTY", elapsed, requestId, obstacleVersion);
             } else {
+                cachedPathTargetId = targetId;
                 cachedPathValid = true;
+                lastWaypointSkipAt = 0;
                 if (destination == Destination.POINT) {
                     pointZ = resolvedPointZ(pointZ, cachedPath);
                 }
+                if (recovery) {
+                    stuckReplanFound.increment();
+                    pendingPathRecovery = false;
+                }
                 clearPathFailureContext();
-                logPathResult("FOUND points=" + cachedPath.length, elapsed);
+                logPathResult("FOUND points=" + cachedPath.length, elapsed, requestId, obstacleVersion);
             }
         } catch (CancellationException ignored) {
-            cachedPath = null;
-            cachedPathValid = false;
+            if (!recovery) {
+                cachedPath = null;
+                cachedPathValid = false;
+            }
             pathRetryAt = System.currentTimeMillis() + PATH_RETRY_DELAY_MS;
-            logPathResult("CANCELLED", elapsed);
+            logPathResult("CANCELLED", elapsed, requestId, obstacleVersion);
         } catch (CompletionException e) {
-            cachedPath = null;
-            cachedPathValid = false;
+            if (recovery) {
+                stuckReplanFailed.increment();
+            } else {
+                cachedPath = null;
+                cachedPathValid = false;
+            }
             Throwable failure = e.getCause();
             if (PathService.isDefinitivePathFailure(failure)) {
                 recordPathFailure(targetX, targetY, targetZ, true);
             } else {
                 pathRetryAt = System.currentTimeMillis() + PATH_RETRY_DELAY_MS;
             }
-            logPathResult(failure == null ? e.getClass().getSimpleName() : failure.getClass().getSimpleName(), elapsed);
+            logPathResult(PathService.failureStatus(failure == null ? e : failure).name(), elapsed, requestId, obstacleVersion);
         } finally {
-            if (pendingPath == request) {
+            if (pendingPath == request && pendingPathRequestId == requestId) {
                 pendingPath = null;
                 pendingPathTargetId = 0;
                 pendingPathX = Float.NaN;
                 pendingPathStartedAt = 0;
+                pendingPathRequestId = 0;
+                pendingPathObstacleVersion = 0;
+                pendingPathRecovery = false;
             }
         }
     }
 
-    private void logPathResult(String status, long elapsed) {
+    private void logPathResult(String status, long elapsed, long requestId, long obstacleVersion) {
         if (owner.getAi2().isLogging()) {
             AI2Logger.info(owner.getAi2(), "PATH result status=" + status
-                    + " elapsedMs=" + elapsed + " targetId=" + pendingPathTargetId + " to=(" + pendingPathX + ','
-                    + pendingPathY + ',' + pendingPathZ + ")");
+                    + " elapsedMs=" + elapsed + " requestId=" + requestId + " obstacleVersion=" + obstacleVersion
+                    + " targetId=" + pendingPathTargetId + " to=(" + pendingPathX + ',' + pendingPathY + ','
+                    + pendingPathZ + ")");
         }
+    }
+
+    static boolean shouldAcceptPathResult(long requestId, long currentRequestId, long obstacleVersion,
+            long currentObstacleVersion) {
+        return requestId == currentRequestId && obstacleVersion == currentObstacleVersion;
     }
 
     static boolean isEmptyPathResult(float[][] path) {
@@ -1002,6 +1551,10 @@ public class NpcMoveController
 
     static boolean shouldReactToPathFailure(long firstFailureAt, boolean handled, long now) {
         return !handled && firstFailureAt > 0 && now - firstFailureAt > PATH_FAILURE_REACTION_DELAY_MS;
+    }
+
+    static boolean shouldFinishFailedPointMove(long firstFailureAt, boolean handled, boolean requestPending, long now) {
+        return !requestPending && shouldReactToPathFailure(firstFailureAt, handled, now);
     }
 
     static boolean shouldTryPathAvoidance(long firstFailureAt, long lastAttemptAt, int attempts, long now) {
@@ -1123,6 +1676,8 @@ public class NpcMoveController
         pathFailureHandled = false;
         lastPathAvoidanceAt = 0;
         pathAvoidanceAttempts = 0;
+        clearStuckRecoveryState();
+        resetStuckShadow();
     }
 
     private void recordPathFailure(float targetX, float targetY, float targetZ, boolean definitive) {
@@ -1187,12 +1742,20 @@ public class NpcMoveController
         return remaining;
     }
 
-    static float[][] consumePath(float[][] current, float[][] movedPath) {
-        return current == movedPath ? remainingPath(current, true) : current;
+    static float[][] remainingPath(float[][] path, int firstIndex) {
+        if (path == null || firstIndex <= 0) {
+            return path;
+        }
+        if (firstIndex >= path.length) {
+            return null;
+        }
+        float[][] remaining = new float[path.length - firstIndex][];
+        System.arraycopy(path, firstIndex, remaining, 0, remaining.length);
+        return remaining;
     }
 
-    private void rememberObstacleVersion() {
-        cachedObstacleVersion = GameWorldServices.pathService().obstacleVersion(owner.getWorldId(), owner.getInstanceId());
+    static float[][] consumePath(float[][] current, float[][] movedPath) {
+        return current == movedPath ? remainingPath(current, true) : current;
     }
 
     /**

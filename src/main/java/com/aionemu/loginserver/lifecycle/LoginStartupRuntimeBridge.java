@@ -156,8 +156,7 @@ public class LoginStartupRuntimeBridge {
      */
     public void connectNetwork() {
         LoginNetworkServices.serverTransport().connect();
-        // TODO: STS 尚未实现完成，暂不启动。 / STS is not fully implemented; keep it disabled.
-        // StsVipServer.startIfEnabled();
+        StsVipServer.startIfEnabled();
     }
 
     /**

@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class GameMaintenanceServicesRuntimeBridgeTest {
 
@@ -43,19 +45,44 @@ class GameMaintenanceServicesRuntimeBridgeTest {
     }
 
     @Test
+    void maintenanceServicesShugoAccessorUsesSpringProviderBeforeLegacyFallback() {
+        ShugoImperialTombSpawnManager manager = new ShugoImperialTombSpawnManager();
+        GameMaintenanceServices services = new GameMaintenanceServices(
+            null,
+            null,
+            provider(ShugoImperialTombSpawnManager.class, manager),
+            null
+        );
+
+        try {
+            assertSame(manager, GameMaintenanceServices.shugoImperialTombSpawnManager());
+        } finally {
+            services.destroy();
+        }
+    }
+
+    @Test
     void gameServerCodeUsesMaintenanceBridgeInsteadOfDirectSingleton() throws IOException {
         try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
             for (Path source : stream
                 .filter(path -> path.toString().endsWith(".java"))
                 .filter(path -> !path.endsWith(Path.of("services/ranking/SeasonRankingUpdateService.java")))
+                .filter(path -> !path.endsWith(Path.of("spawnengine/ShugoImperialTombSpawnManager.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameMaintenanceServiceFallbacks.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameMaintenanceServices.java")))
                 .toList()) {
                 String content = Files.readString(source);
 
+                assertFalse(content.contains("ShugoImperialTombSpawnManager.getInstance()"), source.toString());
                 assertFalse(content.contains("SeasonRankingUpdateService.getInstance()"), source.toString());
             }
         }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
