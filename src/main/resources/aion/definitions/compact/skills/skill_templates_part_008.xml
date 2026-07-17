@@ -9576,7 +9576,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3742" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G1" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <startconditions>
       <mp value="146" delta="0" />
     </startconditions>
@@ -9626,7 +9626,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3743" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G2" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <group_ref id="SG_2FA153B0E0F62AFC" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -9674,7 +9674,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3744" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G3" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <startconditions>
       <mp value="202" delta="0" />
     </startconditions>
@@ -9724,7 +9724,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3745" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G4" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <startconditions>
       <mp value="230" delta="0" />
     </startconditions>
@@ -9774,7 +9774,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3746" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G5" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <startconditions>
       <mp value="258" delta="0" />
     </startconditions>
@@ -9824,7 +9824,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3747" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G6" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <startconditions>
       <mp value="286" delta="0" />
     </startconditions>
@@ -9874,7 +9874,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3748" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G7" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="7" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <startconditions>
       <mp value="314" delta="0" />
     </startconditions>
@@ -9924,7 +9924,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3749" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G8" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="8" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <group_ref id="SG_674565517C52517B" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -9972,7 +9972,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3750" name="광역 침식" nameId="4574903" name_desc="EL_AreaCage_G9" stack="SKILL_EL_AreaCage" skill_group_name="EL_AreaCage" delayId="1772" lvl="9" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="100" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <startconditions>
       <mp value="373" delta="0" />
     </startconditions>
@@ -11035,7 +11035,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3781" name="마법 강탈" nameId="4574965" name_desc="EL_Disenchantment_G1" stack="SKILL_EL_Disenchantment" skill_group_name="EL_Disenchantment" delayId="1061" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="500" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2FFEB707E878FE18" />
+    <group_ref id="SG_A00078BBBA29956C" />
     <startconditions>
       <dp value="2000" />
       <chain category="MWE_CHAINL_1TH" />
@@ -11460,7 +11460,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3790" name="저주의 구름" nameId="4574969" name_desc="EL_PlagueSwam_G1" stack="SKILL_EL_PlagueSwam" skill_group_name="EL_PlagueSwam" delayId="177" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="90" activation="ACTIVE" cooldown="18000" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2FFEB707E878FE18" />
+    <group_ref id="SG_A00078BBBA29956C" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11521,7 +11521,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3791" name="저주의 구름" nameId="4574969" name_desc="EL_PlagueSwam_G2" stack="SKILL_EL_PlagueSwam" skill_group_name="EL_PlagueSwam" delayId="177" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="90" activation="ACTIVE" cooldown="18000" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2FFEB707E878FE18" />
+    <group_ref id="SG_A00078BBBA29956C" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11582,7 +11582,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3792" name="저주의 구름" nameId="4574969" name_desc="EL_PlagueSwam_G3" stack="SKILL_EL_PlagueSwam" skill_group_name="EL_PlagueSwam" delayId="177" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="90" activation="ACTIVE" cooldown="18000" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2FFEB707E878FE18" />
+    <group_ref id="SG_A00078BBBA29956C" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11643,7 +11643,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3793" name="저주의 구름" nameId="4574969" name_desc="EL_PlagueSwam_G4" stack="SKILL_EL_PlagueSwam" skill_group_name="EL_PlagueSwam" delayId="177" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="90" activation="ACTIVE" cooldown="18000" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2FFEB707E878FE18" />
+    <group_ref id="SG_A00078BBBA29956C" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11704,7 +11704,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3794" name="저주의 구름" nameId="4574969" name_desc="EL_PlagueSwam_G5" stack="SKILL_EL_PlagueSwam" skill_group_name="EL_PlagueSwam" delayId="177" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="90" activation="ACTIVE" cooldown="18000" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2FFEB707E878FE18" />
+    <group_ref id="SG_A00078BBBA29956C" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11765,7 +11765,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3795" name="저주의 구름" nameId="4574969" name_desc="EL_PlagueSwam_G6" stack="SKILL_EL_PlagueSwam" skill_group_name="EL_PlagueSwam" delayId="177" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="90" activation="ACTIVE" cooldown="18000" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2FFEB707E878FE18" />
+    <group_ref id="SG_A00078BBBA29956C" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -13544,7 +13544,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3848" name="대지의 칼날" nameId="4575099" name_desc="EL_GaiaGrab_G1" stack="SKILL_EL_GaiaGrab" skill_group_name="EL_GaiaGrab" delayId="276" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="150" duration="1000" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <group_ref id="SG_7680439C5F1B9A74" />
     <group_ref id="SG_F697CB5CF13CF25A" />
     <effects>
@@ -13579,7 +13579,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3849" name="광역 흡수" nameId="4574599" name_desc="EL_EnergySink_G1" stack="SKILL_EL_EnergySink" skill_group_name="EL_EnergySink" delayId="1301" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <group_ref id="SG_615111C1D2DA9DA7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -13613,7 +13613,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3850" name="광역 흡수" nameId="4574599" name_desc="EL_EnergySink_G2" stack="SKILL_EL_EnergySink" skill_group_name="EL_EnergySink" delayId="1301" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <group_ref id="SG_615111C1D2DA9DA7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -13647,7 +13647,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3851" name="광역 흡수" nameId="4574599" name_desc="EL_EnergySink_G3" stack="SKILL_EL_EnergySink" skill_group_name="EL_EnergySink" delayId="1301" lvl="3" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD9AF9B61E8035D6" />
+    <group_ref id="SG_2340061D04EA2EED" />
     <group_ref id="SG_615111C1D2DA9DA7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15204,7 +15204,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3878" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G1" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="53" delta="0" />
     </startconditions>
@@ -15231,7 +15231,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3879" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G2" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="2" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="62" delta="0" />
     </startconditions>
@@ -15258,7 +15258,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3880" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G3" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="3" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="73" delta="0" />
     </startconditions>
@@ -15285,7 +15285,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3881" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G4" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="4" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="84" delta="0" />
     </startconditions>
@@ -15312,7 +15312,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3882" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G5" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="5" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="94" delta="0" />
     </startconditions>
@@ -15339,7 +15339,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3883" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G6" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="6" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="105" delta="0" />
     </startconditions>
@@ -15366,7 +15366,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3884" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G7" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="7" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="116" delta="0" />
     </startconditions>
@@ -15393,7 +15393,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3885" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G8" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="8" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="132" delta="0" />
     </startconditions>
@@ -15420,7 +15420,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3886" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G9" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="9" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="150" delta="0" />
     </startconditions>
@@ -15447,7 +15447,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3887" name="안정" nameId="4572333" name_desc="PR_Stigma_Suggestion_G10" stack="SKILL_PR_Stigma_Suggestion" skill_group_name="PR_Stigma_Suggestion" delayId="1201" lvl="10" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ADDE513A67AE23AA" />
+    <group_ref id="SG_9A1A30E8812806F4" />
     <startconditions>
       <mp value="169" delta="0" />
     </startconditions>
@@ -17046,7 +17046,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3923" name="찬란한 가호" nameId="4572407" name_desc="PR_HolyCircle_G1" stack="SKILL_PR_HolyCircle" skill_group_name="PR_HolyCircle" delayId="1212" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="2" req_dispel_count="50" activation="ACTIVE" cooldown="18000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <group_ref id="SG_1DA281374D14FE51" />
     <useconditions>
       <idianchargeweapon value="10615" />
@@ -17402,7 +17402,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3932" name="구원의 광휘" nameId="4572419" name_desc="PR_MassRestoreLife_G1" stack="SKILL_PR_MassRestoreLife" skill_group_name="PR_MassRestoreLife" delayId="1214" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="true" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="580" delta="0" />
     </startconditions>
@@ -17436,7 +17436,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3933" name="구원의 광휘" nameId="4572419" name_desc="PR_MassRestoreLife_G2" stack="SKILL_PR_MassRestoreLife" skill_group_name="PR_MassRestoreLife" delayId="1214" lvl="2" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="true" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="624" delta="0" />
     </startconditions>
@@ -17470,7 +17470,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3934" name="구원의 광휘" nameId="4572419" name_desc="PR_MassRestoreLife_G3" stack="SKILL_PR_MassRestoreLife" skill_group_name="PR_MassRestoreLife" delayId="1214" lvl="3" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="true" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="669" delta="0" />
     </startconditions>
@@ -17589,7 +17589,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3938" name="정화의 광휘" nameId="4572429" name_desc="PR_MassDispel_G1" stack="SKILL_PR_MassDispel" skill_group_name="PR_MassDispel" delayId="1216" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="37" delta="0" />
     </startconditions>
@@ -18703,7 +18703,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3977" name="치유의 광휘" nameId="4572457" name_desc="PR_HolyLightwave_1_G1" stack="SKILL_PR_HolyLightwave" skill_group_name="PR_HolyLightwave" skill_group="PR_HolyLightwave" delayId="1221" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="30" duration="2400" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" charge_set_name="PR_HolyLightwave1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="357" delta="0" />
     </startconditions>
@@ -18730,7 +18730,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3978" name="치유의 광휘" nameId="4572461" name_desc="PR_HolyLightwave_2_G1" stack="SKILL_PR_HolyLightwave" skill_group_name="PR_HolyLightwave" skill_group="PR_HolyLightwave" delayId="1221" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="1000" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="430" delta="0" />
     </startconditions>
@@ -18757,7 +18757,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3979" name="치유의 광휘" nameId="4572463" name_desc="PR_HolyLightwave_3_G1" stack="SKILL_PR_HolyLightwave" skill_group_name="PR_HolyLightwave" skill_group="PR_HolyLightwave" delayId="1221" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="5000" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="550" delta="0" />
     </startconditions>
@@ -19076,7 +19076,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3992" name="정화의 물결" nameId="4572471" name_desc="PR_Tranquility_G1" stack="SKILL_PR_Tranquility" skill_group_name="PR_Tranquility" delayId="1223" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NOSHOW" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_F9D065CFF0F2CDE0" />
+    <group_ref id="SG_08505F74D31F9CFB" />
     <startconditions>
       <mp value="513" delta="0" />
     </startconditions>
@@ -19121,7 +19121,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3993" name="정화의 물결" nameId="4572471" name_desc="PR_Tranquility_G2" stack="SKILL_PR_Tranquility" skill_group_name="PR_Tranquility" delayId="1223" lvl="2" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NOSHOW" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_F9D065CFF0F2CDE0" />
+    <group_ref id="SG_08505F74D31F9CFB" />
     <startconditions>
       <mp value="567" delta="0" />
     </startconditions>
@@ -19166,7 +19166,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3994" name="정화의 물결" nameId="4572471" name_desc="PR_Tranquility_G3" stack="SKILL_PR_Tranquility" skill_group_name="PR_Tranquility" delayId="1223" lvl="3" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NOSHOW" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_F9D065CFF0F2CDE0" />
+    <group_ref id="SG_08505F74D31F9CFB" />
     <startconditions>
       <mp value="642" delta="0" />
     </startconditions>
@@ -19211,7 +19211,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3995" name="정화의 물결" nameId="4572471" name_desc="PR_Tranquility_G4" stack="SKILL_PR_Tranquility" skill_group_name="PR_Tranquility" delayId="1223" lvl="4" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NOSHOW" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_F9D065CFF0F2CDE0" />
+    <group_ref id="SG_08505F74D31F9CFB" />
     <startconditions>
       <mp value="729" delta="0" />
     </startconditions>
@@ -19256,7 +19256,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3996" name="정화의 물결" nameId="4572471" name_desc="PR_Tranquility_G5" stack="SKILL_PR_Tranquility" skill_group_name="PR_Tranquility" delayId="1223" lvl="5" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NOSHOW" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_F9D065CFF0F2CDE0" />
+    <group_ref id="SG_08505F74D31F9CFB" />
     <startconditions>
       <mp value="821" delta="0" />
     </startconditions>
@@ -19301,7 +19301,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3997" name="정화의 물결" nameId="4572471" name_desc="PR_Tranquility_G6" stack="SKILL_PR_Tranquility" skill_group_name="PR_Tranquility" delayId="1223" lvl="6" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NOSHOW" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="1000" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_F9D065CFF0F2CDE0" />
+    <group_ref id="SG_08505F74D31F9CFB" />
     <startconditions>
       <mp value="919" delta="0" />
     </startconditions>
@@ -19815,7 +19815,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4006" name="비상의 광휘" nameId="4572491" name_desc="PR_CircleOfWings_G1" stack="SKILL_PR_CircleOfWings" skill_group_name="PR_CircleOfWings" delayId="1227" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <group_ref id="SG_2F5DABEB1340EC08" />
     <effects>
       <fpheal duration1="0" duration2="15000" randomtime="0" effectid="939401" e="1" basiclvl="10" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" checktime="3000" value="2" delta="0" />
@@ -19840,7 +19840,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4007" name="비상의 광휘" nameId="4572491" name_desc="PR_CircleOfWings_G2" stack="SKILL_PR_CircleOfWings" skill_group_name="PR_CircleOfWings" delayId="1227" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="57" delta="0" />
     </startconditions>
@@ -19867,7 +19867,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4008" name="비상의 광휘" nameId="4572491" name_desc="PR_CircleOfWings_G3" stack="SKILL_PR_CircleOfWings" skill_group_name="PR_CircleOfWings" delayId="1227" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <group_ref id="SG_4BEB34B58E56975E" />
     <effects>
       <fpheal duration1="0" duration2="15000" randomtime="0" effectid="939401" e="1" basiclvl="30" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" checktime="3000" value="4" delta="0" />
@@ -19892,7 +19892,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4009" name="비상의 광휘" nameId="4572491" name_desc="PR_CircleOfWings_G4" stack="SKILL_PR_CircleOfWings" skill_group_name="PR_CircleOfWings" delayId="1227" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="73" delta="0" />
     </startconditions>
@@ -19919,7 +19919,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4010" name="비상의 광휘" nameId="4572491" name_desc="PR_CircleOfWings_G5" stack="SKILL_PR_CircleOfWings" skill_group_name="PR_CircleOfWings" delayId="1227" lvl="5" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="82" delta="0" />
     </startconditions>

@@ -141,7 +141,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11347" name="이속 증가" nameId="4581725" name_desc="IDRUN_Buff_speed_01" stack="SKILL_IDRUN_Buff_speed_01" skill_group_name="IDRUN_Buff_speed_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="NEVER" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_218A9B2BBCC494D8" />
+    <group_ref id="SG_370F7D15F77264C4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="20000" randomtime="0" effectid="10012" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -164,7 +164,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11348" name="이속 증가" nameId="4581727" name_desc="IDRUN_Buff_speed_02" stack="SKILL_IDRUN_Buff_speed_02" skill_group_name="IDRUN_Buff_speed_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="NEVER" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_218A9B2BBCC494D8" />
+    <group_ref id="SG_370F7D15F77264C4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="20000" randomtime="0" effectid="10012" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -9581,7 +9581,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11520" name="스티그마 분쇄 파동 II" nameId="577907" name_desc="Stigma_SeismicWave_G2" stack="SKILL_Stigma_SeismicWave_G2" skill_group_name="Stigma_SeismicWave_G2" delayId="335" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A0331439AD880C2F" />
+    <group_ref id="SG_3BAAB61BF42CAD94" />
     <startconditions>
       <mp value="279" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H STAFF_2H" />
@@ -10224,7 +10224,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11535" name="스티그마 분쇄 파동 II" nameId="577907" name_desc="Stigma_Fake_SeismicWave_G2" stack="SKILL_Stigma_Fake_SeismicWave_G2" skill_group_name="Stigma_Fake_SeismicWave_G2" delayId="335" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A0331439AD880C2F" />
+    <group_ref id="SG_3BAAB61BF42CAD94" />
     <startconditions>
       <mp value="558" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H STAFF_2H" />
@@ -10482,7 +10482,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11542" name="스티그마 위협의 포효 I" nameId="579323" name_desc="Stigma_Howling_G1" stack="SKILL_Stigma_Howling_G1" skill_group_name="Stigma_Howling_G1" delayId="356" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F96B559AA4EABDE4" />
+    <group_ref id="SG_B1646E233AFA027D" />
     <effects>
       <statdown duration1="0" duration2="30000" randomtime="0" effectid="102641" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="15960" element="FIRE">
         <change stat="PHYSICAL_ATTACK" func="ADD" value="-250" delta="0" />
@@ -11533,7 +11533,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11572" name="스티그마 연막탄 I" nameId="579579" name_desc="Stigma_BlindingBurst_G1" stack="SKILL_Stigma_BlindingBurst_G1" skill_group_name="Stigma_BlindingBurst_G1" delayId="651" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F96B559AA4EABDE4" />
+    <group_ref id="SG_B1646E233AFA027D" />
     <group_ref id="SG_C27A6EF20028CB3C" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11866,7 +11866,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11581" name="스티그마 천벌의 낙인 I" nameId="579597" name_desc="Stigma_Tremor_G1" stack="SKILL_Stigma_Tremor_G1" skill_group_name="Stigma_Tremor_G1" delayId="782" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F6BD02B77DB32EEB" />
+    <group_ref id="SG_2D0BC1F076C00CBE" />
     <startconditions>
       <mp value="594" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -12868,7 +12868,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11609" name="스티그마 공포의 절규 I" nameId="579653" name_desc="Stigma_TerrorSpirit_G1" stack="SKILL_Stigma_TerrorSpirit_G1" skill_group_name="Stigma_TerrorSpirit_G1" delayId="1084" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="1000" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F6BD02B77DB32EEB" />
+    <group_ref id="SG_2D0BC1F076C00CBE" />
     <startconditions>
       <mp value="1140" delta="0" />
     </startconditions>
@@ -14089,7 +14089,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11895" name="심연의 폭풍 I" nameId="577389" name_desc="Abyss_RankerSkill_AbyssianStrom_G1" stack="SKILL_Abyss_RankerSkill_AbyssianStrom_G1" skill_group_name="Abyss_RankerSkill_AbyssianStrom_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_379101F5F03B1494" />
+    <group_ref id="SG_0AD728112B05E70F" />
     <startconditions>
       <mp value="10200" delta="0" />
       <form value="AVATAR" />
@@ -14116,7 +14116,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11896" name="심연의 폭풍 II" nameId="577393" name_desc="Abyss_RankerSkill_AbyssianStrom_G2" stack="SKILL_Abyss_RankerSkill_AbyssianStrom_G2" skill_group_name="Abyss_RankerSkill_AbyssianStrom_G2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_94B281873919C90D" />
+    <group_ref id="SG_54E420A0EC07984B" />
     <startconditions>
       <mp value="10800" delta="0" />
       <form value="AVATAR" />
@@ -14143,7 +14143,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11897" name="심연의 폭풍 III" nameId="577397" name_desc="Abyss_RankerSkill_AbyssianStrom_G3" stack="SKILL_Abyss_RankerSkill_AbyssianStrom_G3" skill_group_name="Abyss_RankerSkill_AbyssianStrom_G3" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_F52AEDD842214BD0" />
+    <group_ref id="SG_CDF2414A7FDC436E" />
     <startconditions>
       <mp value="11500" delta="0" />
       <form value="AVATAR" />
@@ -14170,7 +14170,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11898" name="심연의 폭풍 IV" nameId="577401" name_desc="Abyss_RankerSkill_AbyssianStrom_G4" stack="SKILL_Abyss_RankerSkill_AbyssianStrom_G4" skill_group_name="Abyss_RankerSkill_AbyssianStrom_G4" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_F52AEDD842214BD0" />
+    <group_ref id="SG_CDF2414A7FDC436E" />
     <startconditions>
       <mp value="11900" delta="0" />
       <form value="AVATAR" />
@@ -14311,7 +14311,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11904" name="심연의 파동 I" nameId="577427" name_desc="Abyss_RankerSkill_DevanianShock_G1" stack="SKILL_Abyss_RankerSkill_DevanianShock_G1" skill_group_name="Abyss_RankerSkill_DevanianShock_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_F52AEDD842214BD0" />
+    <group_ref id="SG_CDF2414A7FDC436E" />
     <startconditions>
       <mp value="25400" delta="0" />
       <form value="AVATAR" />
@@ -14819,7 +14819,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11919" name="심연의 폭풍 I" nameId="577389" name_desc="Abyss_RankerSkill_AbyssianStrom_G1_test" stack="SKILL_Abyss_RankerSkill_AbyssianStrom_G1_test" skill_group_name="Abyss_RankerSkill_AbyssianStrom_G1_test" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_379101F5F03B1494" />
+    <group_ref id="SG_0AD728112B05E70F" />
     <startconditions>
       <mp value="10200" delta="0" />
     </startconditions>

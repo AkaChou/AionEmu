@@ -4717,7 +4717,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2668" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G1" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="100" delta="-2" />
       <riderobot />
@@ -4810,7 +4810,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2671" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G2" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="104" delta="-3" />
       <riderobot />
@@ -4897,7 +4897,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2674" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G3" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="106" delta="-3" />
       <riderobot />
@@ -4990,7 +4990,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2677" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G4" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="4" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="119" delta="-3" />
       <riderobot />
@@ -5083,7 +5083,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2680" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G5" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="5" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="139" delta="-4" />
       <riderobot />
@@ -5176,7 +5176,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2683" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G6" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="6" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="172" delta="-5" />
       <riderobot />
@@ -5269,7 +5269,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2686" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G7" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="7" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="194" delta="-5" />
       <riderobot />
@@ -5358,7 +5358,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2689" name="이디움 포격" nameId="4573661" name_desc="RI_EathiumBlast_3_G8" stack="SKILL_RI_EathiumBlast" skill_group_name="RI_EathiumBlast" delayId="1744" lvl="8" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4935318494BB70A9" />
+    <group_ref id="SG_E334BA8A8C736ED9" />
     <startconditions>
       <mp value="197" delta="-5" />
       <riderobot />
@@ -13135,7 +13135,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2852" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_1_G1" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="1836" cooldown_delta="-36" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_OverloadExplosion1">
-    <group_ref id="SG_0F346122A5432EA8" />
+    <group_ref id="SG_DE61CCBA298FB44A" />
     <startconditions>
       <mp value="204" delta="0" />
       <riderobot />
@@ -13165,7 +13165,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2853" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_2_G1" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_203F64E916343430" />
+    <group_ref id="SG_43D58EED229FC671" />
     <startconditions>
       <mp value="311" delta="0" />
       <riderobot />
@@ -13199,7 +13199,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2854" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_3_G1" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="1" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3716C853CF183925" />
+    <group_ref id="SG_EAB81D1E6FA25849" />
     <startconditions>
       <mp value="402" delta="0" />
       <riderobot />
@@ -13233,7 +13233,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2855" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_1_G2" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="1836" cooldown_delta="-36" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_OverloadExplosion2">
-    <group_ref id="SG_0F346122A5432EA8" />
+    <group_ref id="SG_DE61CCBA298FB44A" />
     <startconditions>
       <mp value="242" delta="0" />
       <riderobot />
@@ -13261,7 +13261,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2856" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_2_G2" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_203F64E916343430" />
+    <group_ref id="SG_43D58EED229FC671" />
     <startconditions>
       <mp value="334" delta="0" />
       <riderobot />
@@ -13295,7 +13295,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2857" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_3_G2" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="2" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3716C853CF183925" />
+    <group_ref id="SG_EAB81D1E6FA25849" />
     <startconditions>
       <mp value="431" delta="0" />
       <riderobot />
@@ -13329,7 +13329,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2858" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_1_G3" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="1836" cooldown_delta="-36" duration="1100" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="RI_OverloadExplosion3">
-    <group_ref id="SG_0F346122A5432EA8" />
+    <group_ref id="SG_DE61CCBA298FB44A" />
     <startconditions>
       <mp value="285" delta="0" />
       <riderobot />
@@ -13359,7 +13359,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2859" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_2_G3" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="1700" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_203F64E916343430" />
+    <group_ref id="SG_43D58EED229FC671" />
     <startconditions>
       <mp value="362" delta="0" />
       <riderobot />
@@ -13393,7 +13393,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2860" name="이디움 폭발" nameId="4573777" name_desc="RI_OverloadExplosion_3_G3" stack="SKILL_RI_OverloadExplosion" skill_group_name="RI_OverloadExplosion" delayId="1767" lvl="3" skilltype="PHYSICAL" type_message="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="5" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3716C853CF183925" />
+    <group_ref id="SG_EAB81D1E6FA25849" />
     <startconditions>
       <mp value="469" delta="0" />
       <riderobot />
@@ -15655,7 +15655,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2922" name="주신의 보호" nameId="4573807" name_desc="KN_InvinsibleProtect_G1" stack="SKILL_KN_InvinsibleProtect" skill_group_name="KN_InvinsibleProtect" delayId="1978" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="6120" cooldown_delta="-120" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_59DF7E7EC9F13083" />
+    <group_ref id="SG_BAE30F1A8AE8BA1B" />
     <startconditions>
       <mp value="404" delta="0" />
     </startconditions>
@@ -15819,7 +15819,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2926" name="비호의 갑옷" nameId="4573817" name_desc="KN_Sentinel_G1" stack="SKILL_KN_Sentinel" skill_group_name="KN_Sentinel" delayId="483" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3899CB5AE0428083" />
+    <group_ref id="SG_3E5F19A6AEED66DD" />
     <startconditions>
       <mp value="206" delta="0" />
     </startconditions>
@@ -15857,7 +15857,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2927" name="비호의 갑옷" nameId="4573817" name_desc="KN_Sentinel_G2" stack="SKILL_KN_Sentinel" skill_group_name="KN_Sentinel" delayId="483" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3899CB5AE0428083" />
+    <group_ref id="SG_3E5F19A6AEED66DD" />
     <group_ref id="SG_B42AE0D2D76DB2F1" />
     <group_ref id="SG_70D3EC04207DF00C" />
     <effects>
@@ -15893,7 +15893,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2928" name="비호의 갑옷" nameId="4573817" name_desc="KN_Sentinel_G3" stack="SKILL_KN_Sentinel" skill_group_name="KN_Sentinel" delayId="483" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3899CB5AE0428083" />
+    <group_ref id="SG_3E5F19A6AEED66DD" />
     <startconditions>
       <mp value="236" delta="0" />
     </startconditions>
@@ -15931,7 +15931,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2929" name="비호의 갑옷" nameId="4573817" name_desc="KN_Sentinel_G4" stack="SKILL_KN_Sentinel" skill_group_name="KN_Sentinel" delayId="483" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3899CB5AE0428083" />
+    <group_ref id="SG_3E5F19A6AEED66DD" />
     <group_ref id="SG_E108A0D849E606ED" />
     <group_ref id="SG_70D3EC04207DF00C" />
     <effects>
@@ -15967,7 +15967,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2930" name="비호의 갑옷" nameId="4573817" name_desc="KN_Sentinel_G5" stack="SKILL_KN_Sentinel" skill_group_name="KN_Sentinel" delayId="483" lvl="5" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3899CB5AE0428083" />
+    <group_ref id="SG_3E5F19A6AEED66DD" />
     <startconditions>
       <mp value="266" delta="0" />
     </startconditions>
@@ -16005,7 +16005,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2931" name="비호의 갑옷" nameId="4573817" name_desc="KN_Sentinel_G6" stack="SKILL_KN_Sentinel" skill_group_name="KN_Sentinel" delayId="483" lvl="6" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3899CB5AE0428083" />
+    <group_ref id="SG_3E5F19A6AEED66DD" />
     <startconditions>
       <mp value="282" delta="0" />
     </startconditions>
@@ -17400,7 +17400,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2968" name="STR_SKILLN_KN_FortitudeWave" nameId="0" name_desc="KN_FortitudeWave_G1" stack="SKILL_KN_FortitudeWave" skill_group_name="KN_FortitudeWave" delayId="1973" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <group_ref id="SG_2FA525E897B725EE" />
     <group_ref id="SG_BF9CEF9B39728D49" />
     <effects>
@@ -17444,7 +17444,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2969" name="STR_SKILLN_KN_FortitudeWave" nameId="0" name_desc="KN_FortitudeWave_G2" stack="SKILL_KN_FortitudeWave" skill_group_name="KN_FortitudeWave" delayId="1973" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <group_ref id="SG_F7EE82CAA7477989" />
     <group_ref id="SG_BF9CEF9B39728D49" />
     <effects>
@@ -17488,7 +17488,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2970" name="STR_SKILLN_KN_FortitudeWave" nameId="0" name_desc="KN_FortitudeWave_G3" stack="SKILL_KN_FortitudeWave" skill_group_name="KN_FortitudeWave" delayId="1973" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="240" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -17535,7 +17535,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2971" name="STR_SKILLN_KN_FortitudeWave" nameId="0" name_desc="KN_FortitudeWave_G4" stack="SKILL_KN_FortitudeWave" skill_group_name="KN_FortitudeWave" delayId="1973" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="275" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -17582,7 +17582,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2972" name="STR_SKILLN_KN_FortitudeWave" nameId="0" name_desc="KN_FortitudeWave_G5" stack="SKILL_KN_FortitudeWave" skill_group_name="KN_FortitudeWave" delayId="1973" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="310" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -17629,7 +17629,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2973" name="STR_SKILLN_KN_FortitudeWave" nameId="0" name_desc="KN_FortitudeWave_G6" stack="SKILL_KN_FortitudeWave" skill_group_name="KN_FortitudeWave" delayId="1973" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="343" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -17708,7 +17708,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2975" name="STR_SKILLN_KN_GrandProtection" nameId="0" name_desc="KN_GrandProtection_G1" stack="SKILL_KN_GrandProtection" skill_group_name="KN_GrandProtection" delayId="459" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="MAINTAIN" cooldown="1200" duration="0" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" max_maintain_count="5" target_stop="1">
-    <group_ref id="SG_15D553B6208D49AF" />
+    <group_ref id="SG_6891A0497F9D8D46" />
     <group_ref id="SG_8760DA8FF9AD8CBF" />
     <effects>
       <protect duration1="0" duration2="30000" randomtime="0" effectid="151" e="1" basiclvl="10" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="586" hitdelta="0" hitvalue="100" percent="true" radius="25" delta="0" value="100" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
@@ -17740,7 +17740,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2976" name="STR_SKILLN_KN_GrandProtection" nameId="0" name_desc="KN_GrandProtection_G2" stack="SKILL_KN_GrandProtection" skill_group_name="KN_GrandProtection" delayId="459" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="MAINTAIN" cooldown="1200" duration="0" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" max_maintain_count="5" target_stop="1">
-    <group_ref id="SG_15D553B6208D49AF" />
+    <group_ref id="SG_6891A0497F9D8D46" />
     <startconditions>
       <mp value="175" delta="0" />
     </startconditions>
@@ -17774,7 +17774,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2977" name="STR_SKILLN_KN_GrandProtection" nameId="0" name_desc="KN_GrandProtection_G3" stack="SKILL_KN_GrandProtection" skill_group_name="KN_GrandProtection" delayId="459" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="MAINTAIN" cooldown="1200" duration="0" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" max_maintain_count="5" target_stop="1">
-    <group_ref id="SG_15D553B6208D49AF" />
+    <group_ref id="SG_6891A0497F9D8D46" />
     <startconditions>
       <mp value="185" delta="0" />
     </startconditions>
@@ -17808,7 +17808,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2978" name="STR_SKILLN_KN_GrandProtection" nameId="0" name_desc="KN_GrandProtection_G4" stack="SKILL_KN_GrandProtection" skill_group_name="KN_GrandProtection" delayId="459" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="MAINTAIN" cooldown="1200" duration="0" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" max_maintain_count="5" target_stop="1">
-    <group_ref id="SG_15D553B6208D49AF" />
+    <group_ref id="SG_6891A0497F9D8D46" />
     <startconditions>
       <mp value="195" delta="0" />
     </startconditions>
@@ -17842,7 +17842,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2979" name="STR_SKILLN_KN_GrandProtection" nameId="0" name_desc="KN_GrandProtection_G5" stack="SKILL_KN_GrandProtection" skill_group_name="KN_GrandProtection" delayId="459" lvl="5" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="MAINTAIN" cooldown="1200" duration="0" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" max_maintain_count="5" target_stop="1">
-    <group_ref id="SG_15D553B6208D49AF" />
+    <group_ref id="SG_6891A0497F9D8D46" />
     <group_ref id="SG_7680439C5F1B9A74" />
     <effects>
       <protect duration1="0" duration2="30000" randomtime="0" effectid="151" e="1" basiclvl="40" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="8062" hitdelta="0" hitvalue="60" percent="true" radius="25" delta="0" value="100" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
@@ -17874,7 +17874,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2980" name="STR_SKILLN_KN_GrandProtection" nameId="0" name_desc="KN_GrandProtection_G6" stack="SKILL_KN_GrandProtection" skill_group_name="KN_GrandProtection" delayId="459" lvl="6" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="MAINTAIN" cooldown="1200" duration="0" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" max_maintain_count="5" target_stop="1">
-    <group_ref id="SG_15D553B6208D49AF" />
+    <group_ref id="SG_6891A0497F9D8D46" />
     <startconditions>
       <mp value="218" delta="0" />
     </startconditions>
@@ -19629,7 +19629,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3010" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G1" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <group_ref id="SG_03BA05480C821F7E" />
     <group_ref id="SG_6326B1B7D33C2D4D" />
     <effects>
@@ -19663,7 +19663,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3011" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G2" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="2" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <startconditions>
       <mp value="60" delta="0" />
     </startconditions>
@@ -19702,7 +19702,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3012" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G3" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="3" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <startconditions>
       <mp value="68" delta="0" />
     </startconditions>
@@ -19741,7 +19741,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3013" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G4" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="4" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <startconditions>
       <mp value="76" delta="0" />
     </startconditions>
@@ -19780,7 +19780,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3014" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G5" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="5" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <startconditions>
       <mp value="84" delta="0" />
     </startconditions>
@@ -19819,7 +19819,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3015" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G6" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="6" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <startconditions>
       <mp value="95" delta="0" />
     </startconditions>
@@ -19858,7 +19858,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3016" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G7" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="7" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <startconditions>
       <mp value="108" delta="0" />
     </startconditions>
@@ -19897,7 +19897,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3017" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G8" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="8" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <startconditions>
       <mp value="122" delta="0" />
     </startconditions>
@@ -19936,7 +19936,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3018" name="STR_SKILLN_KN_MassiveProvoke" nameId="0" name_desc="KN_MassiveProvoke_G9" stack="SKILL_KN_MassiveProvoke" skill_group_name="KN_MassiveProvoke" skill_group="KN_MassiveProvoke" delayId="442" lvl="9" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="120" duration="0" penalty_skill_id="9041" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7247DCDF19C60783" />
+    <group_ref id="SG_62BDE8DE435F26D5" />
     <group_ref id="SG_C9C3EAECDD62B3A1" />
     <group_ref id="SG_6326B1B7D33C2D4D" />
     <effects>

@@ -87,14 +87,12 @@ public class StumbleEffect extends EffectTemplate {
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(effector.getHeading()));
 		float x1 = (float) (Math.cos(radian) * direction);
 		float y1 = (float) (Math.sin(radian) * direction);
-		float z = effected.getZ();
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
 		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, effected.getX() + x1,
 				effected.getY() + y1, effected.getZ(), true, intentions);
 		x1 = closestCollision.x;
 		y1 = closestCollision.y;
-		z = closestCollision.z;
-		effect.setTargetLoc(x1, y1, z);
+		effect.setTargetLoc(x1, y1, effected instanceof Npc ? effected.getZ() : closestCollision.z);
 	}
 
 	/**

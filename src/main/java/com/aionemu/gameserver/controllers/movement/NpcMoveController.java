@@ -9,6 +9,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
+import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
@@ -301,19 +302,15 @@ public class NpcMoveController
         return currentMask != newMask || destinationChanged;
     }
 
-    static boolean shouldRestartMovement(boolean chasingTarget, byte currentMask) {
-        return !chasingTarget || currentMask == MovementMask.IMMEDIATE;
+    static boolean shouldRestartMovement(boolean enhancedHomeReturn, boolean chasingTarget, byte currentMask) {
+        return enhancedHomeReturn ? currentMask == MovementMask.IMMEDIATE
+                : !chasingTarget || currentMask == MovementMask.IMMEDIATE;
     }
 
     static boolean shouldBroadcastDestination(boolean chasingTarget, boolean pathWaypointTransition,
             boolean destinationChanged, long now, long lastBroadcastAt) {
         return destinationChanged && (pathWaypointTransition || !chasingTarget
                 || now - lastBroadcastAt >= CHASE_MOVE_BROADCAST_INTERVAL_MS);
-    }
-
-    static boolean avoidanceChangedStep(float x, float y, float z, float[] avoidance) {
-        return Math.abs(avoidance[0] - x) > 0.0001f || Math.abs(avoidance[1] - y) > 0.0001f
-                || Math.abs(avoidance[2] - z) > 0.0001f;
     }
 
     static boolean hasMeaningfulProgress(float sampleX, float sampleY, float sampleZ, float currentX, float currentY,
@@ -378,8 +375,9 @@ public class NpcMoveController
                 targetY + (float) Math.sin(angle) * radius, targetZ};
     }
 
-    static boolean shouldAdjustGeoHeight(float[][] path) {
-        return path == null;
+    static boolean shouldAdjustGeoHeight(boolean enhancedHomeReturn, boolean returning, boolean spawnDestination,
+            float[][] path) {
+        return path == null && (enhancedHomeReturn && returning || !returning && !spawnDestination);
     }
 
     /**
@@ -605,7 +603,8 @@ public class NpcMoveController
                         && shouldRequestHomePath(cachedPathValid, retryFailedPath, pendingPath != null, now, pathRetryAt)) {
                     requestLocationPath();
                 }
-                if (shouldFinishFailedHomeReturn(firstPathFailureAt, retryFailedPath, pendingPath != null)) {
+                if (shouldFinishFailedHomeReturn(AIConfig.ENHANCED_HOME_RETURN, firstPathFailureAt, retryFailedPath,
+                        pendingPath != null)) {
                     finishFailedHomeReturn();
                     return;
                 }
@@ -725,7 +724,9 @@ public class NpcMoveController
         boolean pathWaypointTransition = intermediateWaypoint || previousIntermediateWaypoint;
         previousIntermediateWaypoint = intermediateWaypoint;
         boolean destinationChanged = targetX != this.targetDestX || targetY != this.targetDestY || targetZ != this.targetDestZ;
-        boolean directionChanged = destinationChanged && shouldRestartMovement(destination == Destination.TARGET_OBJECT, movementMask);
+        boolean directionChanged = destinationChanged && shouldRestartMovement(
+                AIConfig.ENHANCED_HOME_RETURN && destination == Destination.HOME,
+                destination == Destination.TARGET_OBJECT, movementMask);
         if (destinationChanged) {
             this.heading = (byte)(Math.toDegrees(Math.atan2(targetY - ownerY, targetX - ownerX)) / 3.0);
         }
@@ -772,17 +773,6 @@ public class NpcMoveController
         float newX = (this.targetDestX - ownerX) * distFraction + ownerX;
         float newY = (this.targetDestY - ownerY) * distFraction + ownerY;
         float newZ = (this.targetDestZ - ownerZ) * distFraction + ownerZ;
-        float[] avoidance = usesPath() ? avoidNearbyNpcs(newX, newY, newZ, path, now, elapsedMillis) : null;
-        if (avoidance != null) {
-            directionChanged |= avoidanceChangedStep(newX, newY, newZ, avoidance);
-            newX = avoidance[0];
-            newY = avoidance[1];
-            newZ = avoidance[2];
-        } else if (usesPath()) {
-            sampleStuckShadow(ownerX, ownerY, ownerZ, targetX, targetY, targetZ, currentSpeed, now, path, dist, offset);
-            updateLastMove();
-            return;
-        }
         if (pathStopSent) {
             pathStopSent = false;
             directionChanged = true;
@@ -790,17 +780,19 @@ public class NpcMoveController
         if (ownerX == newX && ownerY == newY && ((Npc)this.owner).getSpawn().getRandomWalk() > 0) {
             return;
         }
-        if (shouldAdjustGeoHeight(path) && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
+        boolean returning = owner.getAi2().getState() == AIState.RETURNING;
+        SpawnTemplate spawn = owner.getSpawn();
+        boolean spawnDestination = spawn.getX() == targetDestX && spawn.getY() == targetDestY && spawn.getZ() == targetDestZ;
+        if (shouldAdjustGeoHeight(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination, path)
+                && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
                 && !GameWorldServices.pathService().usesSpatialPath(owner)
-                && owner.getAi2().getSubState() != AISubState.WALK_PATH && owner.getAi2().getState() != AIState.RETURNING
+                && owner.getAi2().getSubState() != AISubState.WALK_PATH
                 && owner.getGameStats().checkGeoNeedUpdate()) {
-            if (owner.getSpawn().getX() != targetDestX || owner.getSpawn().getY() != targetDestY || owner.getSpawn().getZ() != targetDestZ) {
-                float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
-                if (Math.abs(newZ - geoZ) > 1) {
-                    directionChanged = true;
-                }
-                newZ = geoZ ;
+            float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
+            if (Math.abs(newZ - geoZ) > 1) {
+                directionChanged = true;
             }
+            newZ = geoZ;
         }
         if (((Npc)this.owner).getAi2().isLogging()) {
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
@@ -982,7 +974,6 @@ public class NpcMoveController
         resetTargetTracking();
         resetStuckShadow();
         resetPath();
-        NpcCrowdManager.remove(owner.getObjectId());
     }
 
     private void moveAlongPath() {
@@ -1100,14 +1091,6 @@ public class NpcMoveController
                 && Math.abs(z - otherZ) <= MOVE_CHECK_OFFSET;
     }
 
-    private float[] avoidNearbyNpcs(float targetX, float targetY, float targetZ, float[][] path, long now,
-            long elapsedMillis) {
-        return NpcCrowdManager.choose(crowdAgent(owner), targetX, targetY, targetZ,
-                this::projectLocalAvoidanceStep,
-                (x, y, z) -> isTrustedPathStep(path, targetX, targetY, targetZ, x, y, z)
-                        || GameWorldServices.pathService().canMoveStraight(owner, x, y, z), now, elapsedMillis);
-    }
-
     private float[] projectLocalAvoidanceStep(float x, float y, float z) {
         return stableAvoidanceProjection(z, GameWorldServices.pathService().projectLocalStep(owner, x, y, z));
     }
@@ -1118,11 +1101,6 @@ public class NpcMoveController
         }
         projected[2] = intendedZ;
         return projected;
-    }
-
-    static boolean isTrustedPathStep(float[][] path, float targetX, float targetY, float targetZ,
-            float candidateX, float candidateY, float candidateZ) {
-        return path != null && candidateX == targetX && candidateY == targetY && candidateZ == targetZ;
     }
 
     private boolean tryPathAvoidance(Creature target, long now) {
@@ -1139,11 +1117,8 @@ public class NpcMoveController
         float oldX = owner.getX();
         float oldY = owner.getY();
         float oldZ = owner.getZ();
-        float[] step = NpcCrowdManager.choose(crowdAgent(owner), desired[0], desired[1], desired[2],
-                this::projectLocalAvoidanceStep,
-                (x, y, z) -> GameWorldServices.pathService().canMoveStraight(owner, x, y, z), now,
-                Math.max(1, now - lastMoveUpdate));
-        if (step == null) {
+        float[] step = projectLocalAvoidanceStep(desired[0], desired[1], desired[2]);
+        if (step == null || !GameWorldServices.pathService().canMoveStraight(owner, step[0], step[1], step[2])) {
             return false;
         }
         moveToLocation(step[0], step[1], step[2], 0);
@@ -1263,11 +1238,6 @@ public class NpcMoveController
         stuckReplanAttemptCount = 0;
         lastStuckReplanAt = 0;
         nearestRecoveryAttempted = false;
-    }
-
-    private static NpcCrowdManager.Agent crowdAgent(Npc npc) {
-        return new NpcCrowdManager.Agent(npc.getObjectId(), npc.getWorldId(), npc.getInstanceId(), npc.getX(), npc.getY(), npc.getZ(),
-                npc.getCollision());
     }
 
     private boolean prepareGroundPath() {
@@ -1586,8 +1556,9 @@ public class NpcMoveController
         return spReturn && hasHomeReturnTimedOut(startedAt, HOME_SP_RETURN_TIMEOUT_MS, now);
     }
 
-    static boolean shouldFinishFailedHomeReturn(long firstFailureAt, boolean retryFailedPath, boolean requestPending) {
-        return firstFailureAt > 0 && !retryFailedPath && !requestPending;
+    static boolean shouldFinishFailedHomeReturn(boolean enhancedHomeReturn, long firstFailureAt, boolean retryFailedPath,
+            boolean requestPending) {
+        return !enhancedHomeReturn && firstFailureAt > 0 && !retryFailedPath && !requestPending;
     }
 
     static boolean shouldCompleteHomeReturn(boolean pathFinished, boolean homeReached) {
@@ -1599,8 +1570,8 @@ public class NpcMoveController
         return !requestPending && !cachedPathValid && retryFailedPath && now >= retryAt;
     }
 
-    static float returnSpeed(float baseSpeed, int percent) {
-        return baseSpeed * Math.max(0, percent) / 100f;
+    static float returnSpeed(float baseSpeed, int percent, boolean returningToWaypoint) {
+        return returningToWaypoint ? baseSpeed : baseSpeed * Math.max(0, percent) / 100f;
     }
 
     private float movementSpeed(Npc npc) {
@@ -1610,7 +1581,7 @@ public class NpcMoveController
         var definition = DataManager.NPC_PATH_BEHAVIOR_DATA == null ? null
                 : DataManager.NPC_PATH_BEHAVIOR_DATA.get(npc.getNpcId());
         int percent = definition == null ? 150 : definition.returnSpeedPercent();
-        return returnSpeed(npc.getGameStats().getMovementSpeedFloat(), percent);
+        return returnSpeed(npc.getGameStats().getMovementSpeedFloat(), percent, isReturningToWaypoint());
     }
 
     private static boolean isSpReturn(Npc npc) {

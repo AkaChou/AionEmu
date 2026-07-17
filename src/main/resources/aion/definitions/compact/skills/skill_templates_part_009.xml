@@ -5126,7 +5126,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4170" name="파멸의 목소리" nameId="4572613" name_desc="PR_GodsVoice_G1" stack="SKILL_PR_GodsVoice" skill_group_name="PR_GodsVoice" delayId="1251" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="6000" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D197034CDDDBF555" />
+    <group_ref id="SG_6C14E671C7E7B471" />
     <group_ref id="SG_6817993A542935B0" />
     <effects>
       <spellatkinstant value="624" delta="27" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -5187,7 +5187,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4171" name="파멸의 목소리" nameId="4572613" name_desc="PR_GodsVoice_G2" stack="SKILL_PR_GodsVoice" skill_group_name="PR_GodsVoice" delayId="1251" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="6000" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D197034CDDDBF555" />
+    <group_ref id="SG_6C14E671C7E7B471" />
     <group_ref id="SG_6817993A542935B0" />
     <effects>
       <spellatkinstant value="684" delta="30" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -5248,7 +5248,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4172" name="파멸의 목소리" nameId="4572613" name_desc="PR_GodsVoice_G3" stack="SKILL_PR_GodsVoice" skill_group_name="PR_GodsVoice" delayId="1251" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="6000" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D197034CDDDBF555" />
+    <group_ref id="SG_6C14E671C7E7B471" />
     <group_ref id="SG_6817993A542935B0" />
     <effects>
       <spellatkinstant value="743" delta="33" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -5309,7 +5309,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4173" name="파멸의 목소리" nameId="4572613" name_desc="PR_GodsVoice_G4" stack="SKILL_PR_GodsVoice" skill_group_name="PR_GodsVoice" delayId="1251" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="6000" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D197034CDDDBF555" />
+    <group_ref id="SG_6C14E671C7E7B471" />
     <group_ref id="SG_6817993A542935B0" />
     <effects>
       <spellatkinstant value="803" delta="36" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -5370,7 +5370,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4174" name="파멸의 목소리" nameId="4572613" name_desc="PR_GodsVoice_G5" stack="SKILL_PR_GodsVoice" skill_group_name="PR_GodsVoice" delayId="1251" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="6000" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D197034CDDDBF555" />
+    <group_ref id="SG_6C14E671C7E7B471" />
     <group_ref id="SG_6817993A542935B0" />
     <effects>
       <spellatkinstant value="865" delta="37" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -5431,7 +5431,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4175" name="파멸의 목소리" nameId="4572613" name_desc="PR_GodsVoice_G6" stack="SKILL_PR_GodsVoice" skill_group_name="PR_GodsVoice" delayId="1251" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="6000" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D197034CDDDBF555" />
+    <group_ref id="SG_6C14E671C7E7B471" />
     <group_ref id="SG_6817993A542935B0" />
     <effects>
       <spellatkinstant value="925" delta="40" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -5492,7 +5492,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4176" name="쾌유의 광휘" nameId="4572619" name_desc="PR_MassEmergentHeal_G1" stack="SKILL_PR_MassEmergentHeal" skill_group_name="PR_MassEmergentHeal" delayId="1252" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="291" delta="0" />
     </startconditions>
@@ -5534,7 +5534,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4177" name="쾌유의 광휘" nameId="4572619" name_desc="PR_MassEmergentHeal_G2" stack="SKILL_PR_MassEmergentHeal" skill_group_name="PR_MassEmergentHeal" delayId="1252" lvl="2" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="321" delta="0" />
     </startconditions>
@@ -5576,7 +5576,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4178" name="쾌유의 광휘" nameId="4572619" name_desc="PR_MassEmergentHeal_G3" stack="SKILL_PR_MassEmergentHeal" skill_group_name="PR_MassEmergentHeal" delayId="1252" lvl="3" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="364" delta="0" />
     </startconditions>
@@ -5618,7 +5618,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4179" name="쾌유의 광휘" nameId="4572619" name_desc="PR_MassEmergentHeal_G4" stack="SKILL_PR_MassEmergentHeal" skill_group_name="PR_MassEmergentHeal" delayId="1252" lvl="4" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="413" delta="0" />
     </startconditions>
@@ -5660,7 +5660,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4180" name="쾌유의 광휘" nameId="4572619" name_desc="PR_MassEmergentHeal_G5" stack="SKILL_PR_MassEmergentHeal" skill_group_name="PR_MassEmergentHeal" delayId="1252" lvl="5" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="465" delta="0" />
     </startconditions>
@@ -5702,7 +5702,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4181" name="쾌유의 광휘" nameId="4572619" name_desc="PR_MassEmergentHeal_G6" stack="SKILL_PR_MassEmergentHeal" skill_group_name="PR_MassEmergentHeal" delayId="1252" lvl="6" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="521" delta="0" />
     </startconditions>
@@ -6146,7 +6146,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4188" name="회복의 가호" nameId="4572631" name_desc="PR_HealingGrace_G1" stack="SKILL_PR_HealingGrace" skill_group_name="PR_HealingGrace" delayId="1254" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_50996079698BB38B" />
+    <group_ref id="SG_F0455675260F748D" />
     <group_ref id="SG_08CFEA5E486E6ED2" />
     <group_ref id="SG_F7569D3AAE23C3D1" />
     <effects>
@@ -6196,7 +6196,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4189" name="회복의 가호" nameId="4572631" name_desc="PR_HealingGrace_G2" stack="SKILL_PR_HealingGrace" skill_group_name="PR_HealingGrace" delayId="1254" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_50996079698BB38B" />
+    <group_ref id="SG_F0455675260F748D" />
     <group_ref id="SG_23CC48DA37C397D3" />
     <group_ref id="SG_F7569D3AAE23C3D1" />
     <effects>
@@ -6246,7 +6246,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4190" name="회복의 가호" nameId="4572631" name_desc="PR_HealingGrace_G3" stack="SKILL_PR_HealingGrace" skill_group_name="PR_HealingGrace" delayId="1254" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_50996079698BB38B" />
+    <group_ref id="SG_F0455675260F748D" />
     <startconditions>
       <mp value="179" delta="0" />
     </startconditions>
@@ -6298,7 +6298,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4191" name="회복의 가호" nameId="4572631" name_desc="PR_HealingGrace_G4" stack="SKILL_PR_HealingGrace" skill_group_name="PR_HealingGrace" delayId="1254" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_50996079698BB38B" />
+    <group_ref id="SG_F0455675260F748D" />
     <startconditions>
       <mp value="207" delta="0" />
     </startconditions>
@@ -6350,7 +6350,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4192" name="회복의 가호" nameId="4572631" name_desc="PR_HealingGrace_G5" stack="SKILL_PR_HealingGrace" skill_group_name="PR_HealingGrace" delayId="1254" lvl="5" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_50996079698BB38B" />
+    <group_ref id="SG_F0455675260F748D" />
     <startconditions>
       <mp value="238" delta="0" />
     </startconditions>
@@ -6514,7 +6514,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4195" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G1" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="227" delta="0" />
     </startconditions>
@@ -6546,7 +6546,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4196" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G2" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="2" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="257" delta="0" />
     </startconditions>
@@ -6578,7 +6578,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4197" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G3" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="3" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="287" delta="0" />
     </startconditions>
@@ -6610,7 +6610,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4198" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G4" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="4" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="317" delta="0" />
     </startconditions>
@@ -6642,7 +6642,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4199" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G5" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="5" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="360" delta="0" />
     </startconditions>
@@ -6674,7 +6674,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4200" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G6" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="6" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="408" delta="0" />
     </startconditions>
@@ -6706,7 +6706,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4201" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G7" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="7" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="460" delta="0" />
     </startconditions>
@@ -6738,7 +6738,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4202" name="치유의 바람" nameId="4572643" name_desc="PR_MassHeal_G8" stack="SKILL_PR_MassHeal" skill_group_name="PR_MassHeal" delayId="1221" lvl="8" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="515" delta="0" />
     </startconditions>
@@ -7224,7 +7224,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4220" name="면죄" nameId="4572655" name_desc="PR_HolyGrail_G1" stack="SKILL_PR_HolyGrail" skill_group_name="PR_HolyGrail" delayId="1258" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="18000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <group_ref id="SG_6817993A542935B0" />
     <useconditions>
       <idianchargeweapon value="5308" />
@@ -13028,7 +13028,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4384" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G1" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -13051,7 +13051,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4385" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G2" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="2" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -13074,7 +13074,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4386" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G3" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="3" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -13097,7 +13097,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4387" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G4" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="4" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -13120,7 +13120,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4388" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G5" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="5" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -13143,7 +13143,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4389" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G6" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="6" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -13166,7 +13166,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4390" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G7" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="7" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -13189,7 +13189,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4391" name="평온 변주곡" nameId="4572053" name_desc="Ba_SongofSerenity_1_G8" stack="SKILL_Ba_SongofSerenity" skill_group_name="Ba_SongofSerenity" delayId="1274" lvl="8" skilltype="MAGICAL" skillsubtype="HEAL" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="true" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_C98A44A1B9F45BF6" />
+    <group_ref id="SG_333E10BADECF5803" />
     <group_ref id="SG_8C3B7DE9E913FE8E" />
     <group_ref id="SG_AB0642E9F8E1D6CA" />
     <effects>
@@ -17024,7 +17024,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4483" name="정화의 야상곡" nameId="4572197" name_desc="Ba_MassDispel_G1" stack="SKILL_Ba_MassDispel" skill_group_name="Ba_MassDispel" delayId="1295" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="350" delta="-10" />
     </startconditions>
@@ -17051,7 +17051,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4484" name="면죄의 선율" nameId="4572207" name_desc="Ba_SongofBless_G1" stack="SKILL_Ba_SongofBless" skill_group_name="Ba_SongofBless" delayId="1296" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="true" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="366" delta="0" />
       <weapon weapon="HARP_2H" />
@@ -17111,7 +17111,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4485" name="면죄의 선율" nameId="4572207" name_desc="Ba_SongofBless_G2" stack="SKILL_Ba_SongofBless" skill_group_name="Ba_SongofBless" delayId="1296" lvl="2" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="true" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="413" delta="0" />
       <weapon weapon="HARP_2H" />
@@ -17171,7 +17171,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="4486" name="면죄의 선율" nameId="4572207" name_desc="Ba_SongofBless_G3" stack="SKILL_Ba_SongofBless" skill_group_name="Ba_SongofBless" delayId="1296" lvl="3" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="true" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_3E6B1EC860297D8B" />
+    <group_ref id="SG_FCF183688BCDA86E" />
     <startconditions>
       <mp value="462" delta="0" />
       <weapon weapon="HARP_2H" />

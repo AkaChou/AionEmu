@@ -3546,7 +3546,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8892" name="바람의 화음" nameId="4577583" name_desc="Ba_N_SongofWind_G1_AddEffect" stack="SKILL_Ba_N_SongofWind_G1_AddEffect" skill_group_name="Ba_N_SongofWind_G1_AddEffect" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <boostspellattack duration1="0" duration2="30000" randomtime="0" effectid="988921" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3588,7 +3588,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8893" name="바람의 화음" nameId="4577583" name_desc="Ba_N_SongofWind_G2_AddEffect" stack="SKILL_Ba_N_SongofWind_G2_AddEffect" skill_group_name="Ba_N_SongofWind_G2_AddEffect" delayId="0" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <boostspellattack duration1="0" duration2="30000" randomtime="0" effectid="988921" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3630,7 +3630,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8894" name="바람의 화음" nameId="4577583" name_desc="Ba_N_SongofWind_G3_AddEffect" stack="SKILL_Ba_N_SongofWind_G3_AddEffect" skill_group_name="Ba_N_SongofWind_G3_AddEffect" delayId="0" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <boostspellattack duration1="0" duration2="30000" randomtime="0" effectid="988921" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3672,7 +3672,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8895" name="바람의 화음" nameId="4577583" name_desc="Ba_N_SongofWind_G4_AddEffect" stack="SKILL_Ba_N_SongofWind_G4_AddEffect" skill_group_name="Ba_N_SongofWind_G4_AddEffect" delayId="0" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <boostspellattack duration1="0" duration2="30000" randomtime="0" effectid="988921" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3714,7 +3714,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8896" name="바람의 화음" nameId="4577583" name_desc="Ba_N_SongofWind_G5_AddEffect" stack="SKILL_Ba_N_SongofWind_G5_AddEffect" skill_group_name="Ba_N_SongofWind_G5_AddEffect" delayId="0" lvl="5" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <boostspellattack duration1="0" duration2="30000" randomtime="0" effectid="988921" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3756,7 +3756,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8897" name="바람의 화음" nameId="4577583" name_desc="Ba_N_SongofWind_G6_AddEffect" stack="SKILL_Ba_N_SongofWind_G6_AddEffect" skill_group_name="Ba_N_SongofWind_G6_AddEffect" delayId="0" lvl="6" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <boostspellattack duration1="0" duration2="30000" randomtime="0" effectid="988921" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3798,7 +3798,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8898" name="바람의 화음" nameId="4577583" name_desc="Ba_N_SongofWind_G7_AddEffect" stack="SKILL_Ba_N_SongofWind_G7_AddEffect" skill_group_name="Ba_N_SongofWind_G7_AddEffect" delayId="0" lvl="7" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <boostspellattack duration1="0" duration2="30000" randomtime="0" effectid="988921" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3840,7 +3840,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8899" name="환희의 선율" nameId="4572039" name_desc="Ba_N_SongofWarmth_G1_AddEffect" stack="SKILL_Ba_N_SongofWarmth_G1_AddEffect" skill_group_name="Ba_N_SongofWarmth_G1_AddEffect" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="112241" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3891,7 +3891,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8900" name="환희의 선율" nameId="4572039" name_desc="Ba_N_SongofWarmth_G2_AddEffect" stack="SKILL_Ba_N_SongofWarmth_G2_AddEffect" skill_group_name="Ba_N_SongofWarmth_G2_AddEffect" delayId="0" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="112241" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3942,7 +3942,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8901" name="환희의 선율" nameId="4572039" name_desc="Ba_N_SongofWarmth_G3_AddEffect" stack="SKILL_Ba_N_SongofWarmth_G3_AddEffect" skill_group_name="Ba_N_SongofWarmth_G3_AddEffect" delayId="0" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="112241" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -3993,7 +3993,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8902" name="환희의 선율" nameId="4572039" name_desc="Ba_N_SongofWarmth_G4_AddEffect" stack="SKILL_Ba_N_SongofWarmth_G4_AddEffect" skill_group_name="Ba_N_SongofWarmth_G4_AddEffect" delayId="0" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="112241" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -4044,7 +4044,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8903" name="환희의 선율" nameId="4572039" name_desc="Ba_N_SongofWarmth_G5_AddEffect" stack="SKILL_Ba_N_SongofWarmth_G5_AddEffect" skill_group_name="Ba_N_SongofWarmth_G5_AddEffect" delayId="0" lvl="5" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="112241" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -4095,7 +4095,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8904" name="환희의 선율" nameId="4572039" name_desc="Ba_N_SongofWarmth_G6_AddEffect" stack="SKILL_Ba_N_SongofWarmth_G6_AddEffect" skill_group_name="Ba_N_SongofWarmth_G6_AddEffect" delayId="0" lvl="6" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_7D344BB2EAC2A5D3" />
+    <group_ref id="SG_15DA2B35B5FE50B7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="30000" randomtime="0" effectid="112241" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -10744,7 +10744,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9147" name="주신의 방패" nameId="4577323" name_desc="ALL_HolyProtection_L_Panalty_G1" stack="SKILL_ALL_HolyProtection_L_Panalty_G1" skill_group_name="ALL_HolyProtection_L_Panalty_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_F5A2DF3AA998EB8F" />
+    <group_ref id="SG_F9D2BBD172605534" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_42932B51EF6E85B7" />
     <group_ref id="SG_FDCEBBAB040BAEAF" />
@@ -10769,7 +10769,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9148" name="주신의 방패" nameId="4577323" name_desc="ALL_HolyProtection_D_Panalty_G1" stack="SKILL_ALL_HolyProtection_D_Panalty_G1" skill_group_name="ALL_HolyProtection_D_Panalty_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_F5A2DF3AA998EB8F" />
+    <group_ref id="SG_F9D2BBD172605534" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_42932B51EF6E85B7" />
     <group_ref id="SG_FDCEBBAB040BAEAF" />
@@ -10970,7 +10970,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9154" name="춤추는 불꽃" nameId="4579173" name_desc="signet6_2" stack="SKILL_signet6_2" skill_group_name="signet6_2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" pvp_duration="65" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1A4DC3822BDE0C89" />
+    <group_ref id="SG_BFEEDC82B4B6AFBA" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_7AE19AFA06CA666A" />
     <group_ref id="SG_FDCEBBAB040BAEAF" />
@@ -11008,7 +11008,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9155" name="불꽃 화상" nameId="4579215" name_desc="signet6_1" stack="SKILL_signet6_1" skill_group_name="signet6_1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" pvp_duration="65" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_AE2F753C46282082" />
+    <group_ref id="SG_050B1C8515A267A5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="145" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" />
@@ -11434,7 +11434,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9168" name="도약 강진 추가 효과" nameId="4579223" name_desc="HDE_LeapStrike_Add" stack="SKILL_HDE_LeapStrike_Add" skill_group_name="HDE_LeapStrike_Add" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3E90DB21F17F53BB" />
+    <group_ref id="SG_1A42A10BB4BEBA80" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="50" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH">
@@ -11475,7 +11475,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9169" name="암석 주먹 1단계" nameId="4579127" name_desc="HDE_Penalty_BoostHate1_G1" stack="SKILL_HDE_Penalty_BoostHate1_G1" skill_group_name="HDE_Penalty_BoostHate1_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3E90DB21F17F53BB" />
+    <group_ref id="SG_1A42A10BB4BEBA80" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <hostileup duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" value="1" delta="0" timed_value="300556" timed_delta="0" timed_duration="8000" split_totem_hate="false" />
@@ -12632,7 +12632,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9195" name="춤추는 불꽃" nameId="4579173" name_desc="IDTransform_signet6_2" stack="SKILL_IDTransform_signet6_2" skill_group_name="IDTransform_signet6_2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" pvp_duration="65" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1A4DC3822BDE0C89" />
+    <group_ref id="SG_BFEEDC82B4B6AFBA" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_7AE19AFA06CA666A" />
     <group_ref id="SG_FDCEBBAB040BAEAF" />
@@ -12670,7 +12670,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9196" name="불꽃 화상" nameId="4579215" name_desc="IDTransform_signet6_1" stack="SKILL_IDTransform_signet6_1" skill_group_name="IDTransform_signet6_1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" pvp_duration="65" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_AE2F753C46282082" />
+    <group_ref id="SG_050B1C8515A267A5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="200" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" />
@@ -13319,7 +13319,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9219" name="불꽃 화상" nameId="4580777" name_desc="Ev_WI_Meteor_proc_signet6_1" stack="SKILL_Ev_WI_Meteor_proc_signet6_1" skill_group_name="Ev_WI_Meteor_proc_signet6_1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" pvp_duration="65" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_AE2F753C46282082" />
+    <group_ref id="SG_050B1C8515A267A5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="350" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -13776,7 +13776,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9235" name="각인 폭발" nameId="4581963" name_desc="IDEvent_Defcannon_laser_01" stack="SKILL_IDEvent_Defcannon_laser_01" skill_group_name="IDEvent_Defcannon_laser_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_60A81CDA2789886A" />
+    <group_ref id="SG_A959D88DBD26CCBE" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="350" delta="100" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -13868,7 +13868,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9237" name="관심 집중" nameId="4581967" name_desc="IDEvent_Defbarricade_01" stack="SKILL_IDEvent_Defbarricade_01" skill_group_name="IDEvent_Defbarricade_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_D47AA98B503448A1" />
+    <group_ref id="SG_350609040C628D23" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_99B9A1E47B7CACCA" />
     <group_ref id="SG_E454B3AD9690C227" />
@@ -13924,7 +13924,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9239" name="강력한 발목 공격" nameId="4581987" name_desc="IDEvent_Defcannon_range_02" stack="SKILL_IDEvent_Defcannon_range_02" skill_group_name="IDEvent_Defcannon_range_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF" req_dispel_level="2" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_60A81CDA2789886A" />
+    <group_ref id="SG_A959D88DBD26CCBE" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <procatk_instant value="1500" delta="100" mode="ADD" checkprotector="false" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="1000" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -14020,7 +14020,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9241" name="강력한 공중 속박" nameId="4581991" name_desc="IDEvent_Defcannon_pull_02" stack="SKILL_IDEvent_Defcannon_pull_02" skill_group_name="IDEvent_Defcannon_pull_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF" req_dispel_level="2" req_dispel_count="10" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_60A81CDA2789886A" />
+    <group_ref id="SG_A959D88DBD26CCBE" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="250" delta="100" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -14067,7 +14067,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9242" name="강력한 관심 집중" nameId="4581993" name_desc="IDEvent_Defbarricade_02" stack="SKILL_IDEvent_Defbarricade_02" skill_group_name="IDEvent_Defbarricade_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="PROVOKED" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_D47AA98B503448A1" />
+    <group_ref id="SG_350609040C628D23" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_99B9A1E47B7CACCA" />
     <group_ref id="SG_E454B3AD9690C227" />
@@ -14192,7 +14192,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9247" name="난폭한 폭발" nameId="4582217" name_desc="IDAb1_Heroes_Area_Random_Skill" stack="SKILL_IDAb1_Heroes_Area_Random_Skill" skill_group_name="IDAb1_Heroes_Area_Random_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_8C0CF0C0FE9894A8" />
+    <group_ref id="SG_D7B5622223F86BF9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="1000" delta="1000" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="100" hopb="0" element="FIRE" />

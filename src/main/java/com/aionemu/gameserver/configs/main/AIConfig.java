@@ -46,6 +46,13 @@ public class AIConfig {
 	public static boolean ACTIVE_NPC_MOVEMENT;
 
 	/**
+	 * 是否启用更平滑但成本更高的 NPC 回家移动。
+	 * Whether smoother but more expensive NPC home-return movement is enabled.
+	 */
+	@Property(key = "gameserver.ai.home.return.enhanced.enable", defaultValue = "false")
+	public static boolean ENHANCED_HOME_RETURN;
+
+	/**
 	 * NPC 移动最小延迟（秒）。
 	 * Minimum NPC movement delay in seconds.
 	 */

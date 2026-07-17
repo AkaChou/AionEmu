@@ -1,12 +1,9 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.ArmsfusionService;
-import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
  * 请求武器融合的客户端包。
@@ -48,11 +45,6 @@ public class CM_FUSION_WEAPONS extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		VisibleObject target = player.getTarget();
-		if (target instanceof Npc && target.getObjectId() == npcObjId) {
-			ArmsfusionService.fusionWeapons(player, firstItemId, secondItemId);
-		} else {
-			AuditLogger.info(player, "tried to fuse weapons without targeting the requested NPC");
-		}
+		ArmsfusionService.fusionWeapons(player, firstItemId, secondItemId);
 	}
 }

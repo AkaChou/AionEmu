@@ -386,7 +386,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9831" name="카스파의 눈물" nameId="592829" name_desc="item_deva_damage_earth1" stack="SKILL_item_deva_damage_earth1" skill_group_name="item_deva_damage_earth1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7013EF4957C62F3F" />
+    <group_ref id="SG_D5269A2D93059213" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" value="5000" delta="0" critprobmod1="0" critadddmg2="0" />
@@ -494,7 +494,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="9835" name="폭발 구슬" nameId="592997" name_desc="item_deva_Cromede_AEDamage" stack="SKILL_item_deva_Cromede_AEDamage" skill_group_name="item_deva_Cromede_AEDamage" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7013EF4957C62F3F" />
+    <group_ref id="SG_D5269A2D93059213" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" value="2000" delta="0" critprobmod1="0" critadddmg2="0" />

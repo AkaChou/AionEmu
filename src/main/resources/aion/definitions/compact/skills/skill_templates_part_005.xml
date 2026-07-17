@@ -1361,7 +1361,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2069" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G1" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster1">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="173" delta="-5" />
       <weapon weapon="CANNON_2H" />
@@ -1390,7 +1390,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2070" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G1" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <group_ref id="SG_AC49B92F545E28A5" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -1414,7 +1414,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2071" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G1" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="288" delta="-8" />
       <weapon weapon="CANNON_2H" />
@@ -1444,7 +1444,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2072" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G2" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster2">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="258" delta="-7" />
       <weapon weapon="CANNON_2H" />
@@ -1473,7 +1473,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2073" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G2" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="289" delta="-8" />
       <weapon weapon="CANNON_2H" />
@@ -1503,7 +1503,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2074" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G2" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="322" delta="-9" />
       <weapon weapon="CANNON_2H" />
@@ -1533,7 +1533,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2075" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G3" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster3">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="268" delta="-7" />
       <weapon weapon="CANNON_2H" />
@@ -1562,7 +1562,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2076" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G3" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="302" delta="-8" />
       <weapon weapon="CANNON_2H" />
@@ -1592,7 +1592,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2077" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G3" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="342" delta="-9" />
       <weapon weapon="CANNON_2H" />
@@ -1622,7 +1622,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2078" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G4" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster4">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="282" delta="-7" />
       <weapon weapon="CANNON_2H" />
@@ -1651,7 +1651,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2079" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G4" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="320" delta="-9" />
       <weapon weapon="CANNON_2H" />
@@ -1681,7 +1681,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2080" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G4" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="361" delta="-10" />
       <weapon weapon="CANNON_2H" />
@@ -1711,7 +1711,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2081" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G5" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster5">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="307" delta="-9" />
       <weapon weapon="CANNON_2H" />
@@ -1740,7 +1740,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2082" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G5" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="346" delta="-10" />
       <weapon weapon="CANNON_2H" />
@@ -1770,7 +1770,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2083" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G5" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="391" delta="-11" />
       <weapon weapon="CANNON_2H" />
@@ -1800,7 +1800,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2084" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G6" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster6">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="356" delta="-10" />
       <weapon weapon="CANNON_2H" />
@@ -1829,7 +1829,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2085" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G6" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="400" delta="-11" />
       <weapon weapon="CANNON_2H" />
@@ -1859,7 +1859,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2086" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G6" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="452" delta="-13" />
       <weapon weapon="CANNON_2H" />
@@ -1889,7 +1889,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2087" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G7" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="7" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster7">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="381" delta="-10" />
       <weapon weapon="CANNON_2H" />
@@ -1918,7 +1918,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2088" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G7" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="7" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="429" delta="-11" />
       <weapon weapon="CANNON_2H" />
@@ -1948,7 +1948,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2089" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G7" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="7" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="485" delta="-13" />
       <weapon weapon="CANNON_2H" />
@@ -1978,7 +1978,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2090" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_1_G8" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="8" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="300" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_VassBlaster8">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="431" delta="-12" />
       <weapon weapon="CANNON_2H" />
@@ -2007,7 +2007,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2091" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_2_G8" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="8" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="486" delta="-13" />
       <weapon weapon="CANNON_2H" />
@@ -2037,7 +2037,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2092" name="방사 포격" nameId="4573193" name_desc="Gu_VassBlaster_3_G8" stack="SKILL_Gu_VassBlaster" skill_group_name="Gu_VassBlaster" delayId="1822" lvl="8" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9DE018B72F22B696" />
+    <group_ref id="SG_13E8E1B6EE372D03" />
     <startconditions>
       <mp value="548" delta="-15" />
       <weapon weapon="CANNON_2H" />
@@ -6800,7 +6800,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2204" name="절혼 포격" nameId="4573343" name_desc="Gu_MentalicBlaster_1_G1" stack="SKILL_Gu_MentalicBlaster" skill_group_name="Gu_MentalicBlaster" delayId="1840" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_MentalicBlaster1">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="165" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -6842,7 +6842,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2205" name="절혼 포격" nameId="4573343" name_desc="Gu_MentalicBlaster_2_G1" stack="SKILL_Gu_MentalicBlaster" skill_group_name="Gu_MentalicBlaster" delayId="1840" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="215" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -6885,7 +6885,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2206" name="절혼 포격" nameId="4573343" name_desc="Gu_MentalicBlaster_3_G1" stack="SKILL_Gu_MentalicBlaster" skill_group_name="Gu_MentalicBlaster" delayId="1840" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <startconditions>
       <mp value="267" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -6928,7 +6928,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2207" name="절혼 포격" nameId="4573343" name_desc="Gu_MentalicBlaster_1_G2" stack="SKILL_Gu_MentalicBlaster" skill_group_name="Gu_MentalicBlaster" delayId="1840" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_MentalicBlaster2">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="189" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -6970,7 +6970,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2208" name="절혼 포격" nameId="4573343" name_desc="Gu_MentalicBlaster_2_G2" stack="SKILL_Gu_MentalicBlaster" skill_group_name="Gu_MentalicBlaster" delayId="1840" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="249" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -7013,7 +7013,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2209" name="절혼 포격" nameId="4573343" name_desc="Gu_MentalicBlaster_3_G2" stack="SKILL_Gu_MentalicBlaster" skill_group_name="Gu_MentalicBlaster" delayId="1840" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <startconditions>
       <mp value="307" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -7800,7 +7800,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2233" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G1" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="159" delta="-4" />
       <weapon weapon="CANNON_2H" />
@@ -7836,7 +7836,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2234" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G1" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <startconditions>
       <mp value="196" delta="-5" />
       <weapon weapon="CANNON_2H" />
@@ -7914,7 +7914,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2236" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G2" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="194" delta="-5" />
       <weapon weapon="CANNON_2H" />
@@ -7950,7 +7950,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2237" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G2" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <group_ref id="SG_AC49B92F545E28A5" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -8022,7 +8022,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2239" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G3" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="233" delta="-6" />
       <weapon weapon="CANNON_2H" />
@@ -8058,7 +8058,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2240" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G3" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <startconditions>
       <mp value="255" delta="-7" />
       <weapon weapon="CANNON_2H" />
@@ -8136,7 +8136,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2242" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G4" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="280" delta="-8" />
       <weapon weapon="CANNON_2H" />
@@ -8172,7 +8172,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2243" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G4" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <startconditions>
       <mp value="304" delta="-8" />
       <weapon weapon="CANNON_2H" />
@@ -8250,7 +8250,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2245" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G5" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="296" delta="-8" />
       <weapon weapon="CANNON_2H" />
@@ -8286,7 +8286,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2246" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G5" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <startconditions>
       <mp value="323" delta="-9" />
       <weapon weapon="CANNON_2H" />
@@ -8364,7 +8364,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2248" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G6" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="315" delta="-9" />
       <weapon weapon="CANNON_2H" />
@@ -8400,7 +8400,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2249" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G6" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <startconditions>
       <mp value="344" delta="-10" />
       <weapon weapon="CANNON_2H" />
@@ -8478,7 +8478,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2251" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G7" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="7" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="334" delta="-9" />
       <weapon weapon="CANNON_2H" />
@@ -8514,7 +8514,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2252" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G7" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="7" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <startconditions>
       <mp value="365" delta="-10" />
       <weapon weapon="CANNON_2H" />
@@ -8592,7 +8592,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2254" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_2_G8" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="8" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="1800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BE902DDCB684C4FE" />
+    <group_ref id="SG_5D504E06772B54DC" />
     <startconditions>
       <mp value="366" delta="-10" />
       <weapon weapon="CANNON_2H" />
@@ -8628,7 +8628,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2255" name="충격포" nameId="4573359" name_desc="Gu_ShockCannon_3_G8" stack="SKILL_Gu_ShockCannon" skill_group_name="Gu_ShockCannon" delayId="1843" lvl="8" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="2900" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_580995C69904E1DF" />
+    <group_ref id="SG_1105BDE716B00E2A" />
     <startconditions>
       <mp value="399" delta="-11" />
       <weapon weapon="CANNON_2H" />
@@ -13011,7 +13011,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2371" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_1_G1" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="1224" cooldown_delta="-24" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="GU_SupportFire1">
-    <group_ref id="SG_8E53074F7B874B39" />
+    <group_ref id="SG_BC209C52DDD222E6" />
     <startconditions>
       <mp value="298" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13038,7 +13038,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2372" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_2_G1" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_285AF9DC43E83AE4" />
+    <group_ref id="SG_D2D2CAE147BA0A12" />
     <startconditions>
       <mp value="362" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13066,7 +13066,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2373" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_3_G1" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F67DD99CDB2543F2" />
+    <group_ref id="SG_406FFE388F558D0B" />
     <startconditions>
       <mp value="452" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13094,7 +13094,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2374" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_1_G2" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="1224" cooldown_delta="-24" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="GU_SupportFire2">
-    <group_ref id="SG_8E53074F7B874B39" />
+    <group_ref id="SG_BC209C52DDD222E6" />
     <startconditions>
       <mp value="339" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13121,7 +13121,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2375" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_2_G2" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_285AF9DC43E83AE4" />
+    <group_ref id="SG_D2D2CAE147BA0A12" />
     <startconditions>
       <mp value="401" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13149,7 +13149,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2376" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_3_G2" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F67DD99CDB2543F2" />
+    <group_ref id="SG_406FFE388F558D0B" />
     <startconditions>
       <mp value="489" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13177,7 +13177,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2377" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_1_G3" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="1224" cooldown_delta="-24" duration="1200" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="GU_SupportFire3">
-    <group_ref id="SG_8E53074F7B874B39" />
+    <group_ref id="SG_BC209C52DDD222E6" />
     <startconditions>
       <mp value="380" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13204,7 +13204,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2378" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_2_G3" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="800" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_285AF9DC43E83AE4" />
+    <group_ref id="SG_D2D2CAE147BA0A12" />
     <startconditions>
       <mp value="445" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -13232,7 +13232,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2379" name="다중 포격" nameId="4573435" name_desc="GU_SupportFire_3_G3" stack="SKILL_GU_SupportFire" skill_group_name="GU_SupportFire" delayId="1853" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="3000" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F67DD99CDB2543F2" />
+    <group_ref id="SG_406FFE388F558D0B" />
     <startconditions>
       <mp value="524" delta="0" />
       <weapon weapon="CANNON_2H" />

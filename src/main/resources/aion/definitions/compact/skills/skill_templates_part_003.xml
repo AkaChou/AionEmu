@@ -3303,7 +3303,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1127" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G1" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3330,7 +3330,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1128" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G2" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3357,7 +3357,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1129" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G3" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3384,7 +3384,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1130" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G4" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3411,7 +3411,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1131" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G5" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3438,7 +3438,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1132" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G6" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3465,7 +3465,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1133" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G7" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="7" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3492,7 +3492,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1134" name="화살 폭우" nameId="4575783" name_desc="RA_SpoutArrow_G8" stack="SKILL_RA_SpoutArrow" skill_group_name="RA_SpoutArrow" delayId="702" lvl="8" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="180" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_289BEF2D9E1F8B57" />
+    <group_ref id="SG_46E9CEE8A10B6B9A" />
     <group_ref id="SG_A33B3BD78B69C2FC" />
     <group_ref id="SG_2DFFF85D727CA03B" />
     <effects>
@@ -3519,7 +3519,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1135" name="화살 폭풍" nameId="4575937" name_desc="RA_ArrowStorm_G1" stack="SKILL_RA_ArrowStorm" skill_group_name="RA_ArrowStorm" delayId="651" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_332AD0BC828C19C8" />
+    <group_ref id="SG_DCF7BB235CA85B77" />
     <startconditions>
       <mp value="184" delta="0" />
       <weapon weapon="BOW" />
@@ -3552,7 +3552,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1136" name="화살 폭풍" nameId="4575937" name_desc="RA_ArrowStorm_G2" stack="SKILL_RA_ArrowStorm" skill_group_name="RA_ArrowStorm" delayId="651" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_332AD0BC828C19C8" />
+    <group_ref id="SG_DCF7BB235CA85B77" />
     <startconditions>
       <mp value="204" delta="0" />
       <weapon weapon="BOW" />
@@ -3585,7 +3585,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1137" name="화살 폭풍" nameId="4575937" name_desc="RA_ArrowStorm_G3" stack="SKILL_RA_ArrowStorm" skill_group_name="RA_ArrowStorm" delayId="651" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_332AD0BC828C19C8" />
+    <group_ref id="SG_DCF7BB235CA85B77" />
     <startconditions>
       <mp value="224" delta="0" />
       <weapon weapon="BOW" />
@@ -3618,7 +3618,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1138" name="화살 폭풍" nameId="4575937" name_desc="RA_ArrowStorm_G4" stack="SKILL_RA_ArrowStorm" skill_group_name="RA_ArrowStorm" delayId="651" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_332AD0BC828C19C8" />
+    <group_ref id="SG_DCF7BB235CA85B77" />
     <startconditions>
       <mp value="244" delta="0" />
       <weapon weapon="BOW" />
@@ -3651,7 +3651,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1139" name="화살 폭풍" nameId="4575937" name_desc="RA_ArrowStorm_G5" stack="SKILL_RA_ArrowStorm" skill_group_name="RA_ArrowStorm" delayId="651" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_332AD0BC828C19C8" />
+    <group_ref id="SG_DCF7BB235CA85B77" />
     <startconditions>
       <mp value="264" delta="0" />
       <weapon weapon="BOW" />
@@ -3684,7 +3684,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1140" name="화살 폭풍" nameId="4575937" name_desc="RA_ArrowStorm_G6" stack="SKILL_RA_ArrowStorm" skill_group_name="RA_ArrowStorm" delayId="651" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_332AD0BC828C19C8" />
+    <group_ref id="SG_DCF7BB235CA85B77" />
     <startconditions>
       <mp value="284" delta="0" />
       <weapon weapon="BOW" />
@@ -4697,7 +4697,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1167" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G1" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="91" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -4753,7 +4753,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1168" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G2" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="114" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -4807,7 +4807,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1169" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G3" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="3" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="137" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -4863,7 +4863,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1170" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G4" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="4" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="160" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -4919,7 +4919,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1171" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G5" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="5" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="183" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -4975,7 +4975,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1172" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G6" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="6" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="206" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -5031,7 +5031,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1173" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G7" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="7" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="229" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -5087,7 +5087,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1174" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G8" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="8" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="252" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -5143,7 +5143,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1175" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G9" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="9" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="275" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -5199,7 +5199,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1176" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G10" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="10" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="298" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -5255,7 +5255,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1177" name="겨울의 속박" nameId="4575941" name_desc="WI_FrozenField_G11" stack="SKILL_WI_FrozenField" skill_group_name="WI_FrozenField" delayId="940" lvl="11" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" chain_skill_prob="100" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="321" delta="0" />
       <chain category="M_CHAINC_1TH_1" />
@@ -8284,7 +8284,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1245" name="루미엘의 진노" nameId="4576003" name_desc="WI_AbysalSlayer_G1" stack="SKILL_WI_AbysalSlayer" skill_group_name="WI_AbysalSlayer" delayId="1453" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" ultra_skill="true">
-    <group_ref id="SG_45F4E417501F5F45" />
+    <group_ref id="SG_D0427BF5F5DCD201" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_B07DED10105F456F" />
     <effects>
@@ -8313,7 +8313,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1246" name="루미엘의 진노" nameId="4576003" name_desc="WI_AbysalSlayer_G2" stack="SKILL_WI_AbysalSlayer" skill_group_name="WI_AbysalSlayer" delayId="1453" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" ultra_skill="true">
-    <group_ref id="SG_45F4E417501F5F45" />
+    <group_ref id="SG_D0427BF5F5DCD201" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_B07DED10105F456F" />
     <effects>
@@ -8342,7 +8342,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1247" name="루미엘의 진노" nameId="4576003" name_desc="WI_AbysalSlayer_G3" stack="SKILL_WI_AbysalSlayer" skill_group_name="WI_AbysalSlayer" delayId="1453" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" ultra_skill="true">
-    <group_ref id="SG_45F4E417501F5F45" />
+    <group_ref id="SG_D0427BF5F5DCD201" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_B07DED10105F456F" />
     <effects>
@@ -8371,7 +8371,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1248" name="루미엘의 진노" nameId="4576003" name_desc="WI_AbysalSlayer_G4" stack="SKILL_WI_AbysalSlayer" skill_group_name="WI_AbysalSlayer" delayId="1453" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" ultra_skill="true">
-    <group_ref id="SG_45F4E417501F5F45" />
+    <group_ref id="SG_D0427BF5F5DCD201" />
     <group_ref id="SG_1DA281374D14FE51" />
     <group_ref id="SG_B07DED10105F456F" />
     <effects>
@@ -12131,7 +12131,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1340" name="수면의 바람" nameId="4576243" name_desc="Wi_windsleep_G1" stack="SKILL_Wi_windsleep" skill_group_name="Wi_windsleep" delayId="1400" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" no_jump_cancel="true" pvp_duration="40" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5F6CFBEEFD892BA5" />
+    <group_ref id="SG_DF7705DB0A20724A" />
     <startconditions>
       <mp value="830" delta="0" />
     </startconditions>
@@ -12200,7 +12200,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1341" name="수면의 바람" nameId="4576243" name_desc="Wi_windsleep_G2" stack="SKILL_Wi_windsleep" skill_group_name="Wi_windsleep" delayId="1400" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" no_jump_cancel="true" pvp_duration="40" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5F6CFBEEFD892BA5" />
+    <group_ref id="SG_DF7705DB0A20724A" />
     <startconditions>
       <mp value="930" delta="0" />
     </startconditions>
@@ -12269,7 +12269,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1342" name="수면의 바람" nameId="4576243" name_desc="Wi_windsleep_G3" stack="SKILL_Wi_windsleep" skill_group_name="Wi_windsleep" delayId="1400" lvl="3" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" no_jump_cancel="true" pvp_duration="40" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5F6CFBEEFD892BA5" />
+    <group_ref id="SG_DF7705DB0A20724A" />
     <startconditions>
       <mp value="1030" delta="0" />
     </startconditions>
@@ -14490,7 +14490,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1394" name="운석 소환" nameId="4576099" name_desc="WI_RaisingStorm_G3" stack="SKILL_WI_RaisingStorm" skill_group_name="WI_RaisingStorm" delayId="142" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="1500" apply_casting_time_bonus="true" no_jump_cancel="true" pvp_damage="80" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="473" delta="0" />
       <chain category="M_CHAINE_1TH_1" time="3000" selfcount="4" />
@@ -14532,7 +14532,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1395" name="운석 소환" nameId="4576099" name_desc="WI_RaisingStorm_G4" stack="SKILL_WI_RaisingStorm" skill_group_name="WI_RaisingStorm" delayId="142" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="1500" apply_casting_time_bonus="true" no_jump_cancel="true" pvp_damage="80" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="530" delta="0" />
       <chain category="M_CHAINE_1TH_1" time="3000" selfcount="4" />
@@ -18142,7 +18142,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1477" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G1" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <startconditions>
       <mp value="99" delta="0" />
     </startconditions>
@@ -18170,7 +18170,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1478" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G2" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <startconditions>
       <mp value="113" delta="0" />
     </startconditions>
@@ -18198,7 +18198,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1479" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G3" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="3" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <startconditions>
       <mp value="127" delta="0" />
     </startconditions>
@@ -18226,7 +18226,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1480" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G4" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="4" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <group_ref id="SG_5D87B04E4C4E7A1D" />
     <group_ref id="SG_93E804A18E7A2A6D" />
     <effects>
@@ -18252,7 +18252,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1481" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G5" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="5" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <startconditions>
       <mp value="155" delta="0" />
     </startconditions>
@@ -18280,7 +18280,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1482" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G6" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="6" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <startconditions>
       <mp value="169" delta="0" />
     </startconditions>
@@ -18308,7 +18308,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1483" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G7" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="7" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <group_ref id="SG_E61AE43AB4496F87" />
     <group_ref id="SG_93E804A18E7A2A6D" />
     <effects>
@@ -18334,7 +18334,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1484" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G8" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="8" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <startconditions>
       <mp value="197" delta="0" />
     </startconditions>
@@ -18362,7 +18362,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1485" name="평화의 은혜" nameId="4576157" name_desc="WI_AbsenceSoul_G9" stack="SKILL_WI_AbsenceSoul" skill_group_name="WI_AbsenceSoul" delayId="1553" lvl="9" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1200" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_62161D6F94986745" />
+    <group_ref id="SG_B3B9E96B4DF99ADB" />
     <group_ref id="SG_3F0642A5AB9A65ED" />
     <group_ref id="SG_93E804A18E7A2A6D" />
     <effects>
@@ -18956,7 +18956,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1506" name="화산 대폭발" nameId="4576161" name_desc="WI_Light_Stigma_VolcanicFlame_G1" stack="SKILL_WI_Stigma_VolcanicFlame" skill_group_name="WI_Stigma_VolcanicFlame" skill_group="WI_Stigma_VolcanicFlame" delayId="1455" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D5D7B2E9233C367C" />
+    <group_ref id="SG_D0DBC63DAD331E74" />
     <startconditions>
       <mp value="564" delta="0" />
     </startconditions>
@@ -18986,7 +18986,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1507" name="화산 대폭발" nameId="4576161" name_desc="WI_Light_Stigma_VolcanicFlame_G2" stack="SKILL_WI_Stigma_VolcanicFlame" skill_group_name="WI_Stigma_VolcanicFlame" skill_group="WI_Stigma_VolcanicFlame" delayId="1455" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D5D7B2E9233C367C" />
+    <group_ref id="SG_D0DBC63DAD331E74" />
     <startconditions>
       <mp value="615" delta="0" />
     </startconditions>
@@ -19016,7 +19016,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1508" name="화산 대폭발" nameId="4576161" name_desc="WI_Light_Stigma_VolcanicFlame_G3" stack="SKILL_WI_Stigma_VolcanicFlame" skill_group_name="WI_Stigma_VolcanicFlame" skill_group="WI_Stigma_VolcanicFlame" delayId="1455" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D5D7B2E9233C367C" />
+    <group_ref id="SG_D0DBC63DAD331E74" />
     <startconditions>
       <mp value="666" delta="0" />
     </startconditions>
@@ -19046,7 +19046,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1509" name="화산 대폭발" nameId="4576161" name_desc="WI_Light_Stigma_VolcanicFlame_G4" stack="SKILL_WI_Stigma_VolcanicFlame" skill_group_name="WI_Stigma_VolcanicFlame" skill_group="WI_Stigma_VolcanicFlame" delayId="1455" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="2000" apply_casting_time_bonus="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D5D7B2E9233C367C" />
+    <group_ref id="SG_D0DBC63DAD331E74" />
     <startconditions>
       <mp value="717" delta="0" />
     </startconditions>

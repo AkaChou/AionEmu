@@ -127,7 +127,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1543" name="화염의 원무" nameId="4576181" name_desc="WI_Meteor_G1" stack="SKILL_WI_Meteor" skill_group_name="WI_Meteor" delayId="1573" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1200" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_08D61F0657A04DE4" />
+    <group_ref id="SG_0A0D922E4FD2AAFC" />
     <group_ref id="SG_9019AE686536EEF1" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -171,7 +171,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1544" name="화염의 원무" nameId="4576181" name_desc="WI_Meteor_G2" stack="SKILL_WI_Meteor" skill_group_name="WI_Meteor" delayId="1573" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1200" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_08D61F0657A04DE4" />
+    <group_ref id="SG_0A0D922E4FD2AAFC" />
     <group_ref id="SG_B824ABDA15C53967" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -217,7 +217,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1545" name="화염의 원무" nameId="4576181" name_desc="WI_Meteor_G3" stack="SKILL_WI_Meteor" skill_group_name="WI_Meteor" delayId="1573" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1200" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_08D61F0657A04DE4" />
+    <group_ref id="SG_0A0D922E4FD2AAFC" />
     <startconditions>
       <mp value="373" delta="0" />
     </startconditions>
@@ -265,7 +265,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1546" name="화염의 원무" nameId="4576181" name_desc="WI_Meteor_G4" stack="SKILL_WI_Meteor" skill_group_name="WI_Meteor" delayId="1573" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1200" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_08D61F0657A04DE4" />
+    <group_ref id="SG_0A0D922E4FD2AAFC" />
     <startconditions>
       <mp value="406" delta="0" />
     </startconditions>
@@ -313,7 +313,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1547" name="화염의 원무" nameId="4576181" name_desc="WI_Meteor_G5" stack="SKILL_WI_Meteor" skill_group_name="WI_Meteor" delayId="1573" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1200" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_08D61F0657A04DE4" />
+    <group_ref id="SG_0A0D922E4FD2AAFC" />
     <startconditions>
       <mp value="439" delta="0" />
     </startconditions>
@@ -361,7 +361,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1548" name="화염의 원무" nameId="4576181" name_desc="WI_Meteor_G6" stack="SKILL_WI_Meteor" skill_group_name="WI_Meteor" delayId="1573" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1200" duration="1500" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_08D61F0657A04DE4" />
+    <group_ref id="SG_0A0D922E4FD2AAFC" />
     <startconditions>
       <mp value="472" delta="0" />
     </startconditions>
@@ -450,7 +450,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1550" name="환영의 회오리" nameId="4576187" name_desc="WI_IllusionStorm_G1" stack="SKILL_WI_IllusionStorm" skill_group_name="WI_IllusionStorm" skill_group="WI_IllusionStorm" delayId="1439" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <startconditions>
       <mp value="146" delta="0" />
     </startconditions>
@@ -495,7 +495,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1551" name="환영의 회오리" nameId="4576187" name_desc="WI_IllusionStorm_G2" stack="SKILL_WI_IllusionStorm" skill_group_name="WI_IllusionStorm" skill_group="WI_IllusionStorm" delayId="1439" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <startconditions>
       <mp value="286" delta="0" />
     </startconditions>
@@ -540,7 +540,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1552" name="환영의 회오리" nameId="4576187" name_desc="WI_IllusionStorm_G3" stack="SKILL_WI_IllusionStorm" skill_group_name="WI_IllusionStorm" skill_group="WI_IllusionStorm" delayId="1439" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <group_ref id="SG_D3528B81CE484A4B" />
     <group_ref id="SG_507DE95AC599FED1" />
     <effects>
@@ -583,7 +583,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1553" name="환영의 회오리" nameId="4576187" name_desc="WI_IllusionStorm_G4" stack="SKILL_WI_IllusionStorm" skill_group_name="WI_IllusionStorm" skill_group="WI_IllusionStorm" delayId="1439" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <startconditions>
       <mp value="566" delta="0" />
     </startconditions>
@@ -628,7 +628,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1554" name="환영의 회오리" nameId="4576187" name_desc="WI_IllusionStorm_G5" stack="SKILL_WI_IllusionStorm" skill_group_name="WI_IllusionStorm" skill_group="WI_IllusionStorm" delayId="1439" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <startconditions>
       <mp value="706" delta="0" />
     </startconditions>
@@ -673,7 +673,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1555" name="환영의 회오리" nameId="4576187" name_desc="WI_IllusionStorm_G6" stack="SKILL_WI_IllusionStorm" skill_group_name="WI_IllusionStorm" skill_group="WI_IllusionStorm" delayId="1439" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <startconditions>
       <mp value="846" delta="0" />
     </startconditions>
@@ -1707,7 +1707,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1576" name="고취의 주문" nameId="4572689" name_desc="CH_ImprovedAllAttack_G1" stack="SKILL_CH_ImprovedAllAttack" skill_group_name="CH_ImprovedAllAttack" delayId="1505" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="252" delta="-7" />
     </startconditions>
@@ -1774,7 +1774,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1577" name="고취의 주문" nameId="4572689" name_desc="CH_ImprovedAllAttack_G2" stack="SKILL_CH_ImprovedAllAttack" skill_group_name="CH_ImprovedAllAttack" delayId="1505" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="263" delta="-8" />
     </startconditions>
@@ -1842,7 +1842,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1578" name="고취의 주문" nameId="4572689" name_desc="CH_ImprovedAllAttack_G3" stack="SKILL_CH_ImprovedAllAttack" skill_group_name="CH_ImprovedAllAttack" delayId="1505" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="281" delta="-8" />
     </startconditions>
@@ -1910,7 +1910,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1579" name="고취의 주문" nameId="4572689" name_desc="CH_ImprovedAllAttack_G4" stack="SKILL_CH_ImprovedAllAttack" skill_group_name="CH_ImprovedAllAttack" delayId="1505" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="300" delta="-9" />
     </startconditions>
@@ -8071,7 +8071,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1727" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G1" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="224" delta="0" />
     </startconditions>
@@ -8100,7 +8100,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1728" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G2" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <group_ref id="SG_E108A0D849E606ED" />
     <group_ref id="SG_8CBC5CE7D1B4C9AC" />
     <effects>
@@ -8128,7 +8128,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1729" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G3" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="272" delta="0" />
     </startconditions>
@@ -8158,7 +8158,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1730" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G4" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="298" delta="0" />
     </startconditions>
@@ -8188,7 +8188,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1731" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G5" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="5" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="311" delta="0" />
     </startconditions>
@@ -8218,7 +8218,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1732" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G6" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="6" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <group_ref id="SG_674565517C52517B" />
     <group_ref id="SG_8CBC5CE7D1B4C9AC" />
     <effects>
@@ -8246,7 +8246,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1733" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G7" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="7" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="372" delta="0" />
     </startconditions>
@@ -8276,7 +8276,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1734" name="생명의 주문" nameId="4572831" name_desc="CH_ImprovedLifeStream_G8" stack="SKILL_CH_ImprovedLifeStream" skill_group_name="CH_ImprovedLifeStream" delayId="1529" lvl="8" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="418" delta="0" />
     </startconditions>
@@ -8986,7 +8986,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1755" name="수호의 주문" nameId="4572861" name_desc="CH_ImprovedAllDefend_G1" stack="SKILL_CH_ImprovedAllDefend" skill_group_name="CH_ImprovedAllDefend" delayId="1533" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <startconditions>
       <mp value="309" delta="-9" />
     </startconditions>
@@ -9174,7 +9174,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1758" name="신속의 주문" nameId="4572877" name_desc="CH_Zest_G1" stack="SKILL_CH_Zest" skill_group_name="CH_Zest" delayId="1537" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <group_ref id="SG_2D930829A25EAFB0" />
     <group_ref id="SG_54EB0EBED5D967B1" />
     <effects>
@@ -11732,7 +11732,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1810" name="질풍의 주문" nameId="4572935" name_desc="CH_Providence_G1" stack="SKILL_CH_Providence" skill_group_name="CH_Providence" delayId="1547" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="18000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <group_ref id="SG_6817993A542935B0" />
     <useconditions>
       <idianchargeweapon value="2104" />
@@ -11783,7 +11783,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1811" name="차단의 장막" nameId="4572941" name_desc="CH_AngelicWall_G2" stack="SKILL_CH_AngelicWall" skill_group_name="CH_AngelicWall" delayId="1344" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="2" req_dispel_count="50" activation="ACTIVE" cooldown="3000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="565" delta="0" />
     </startconditions>
@@ -11834,7 +11834,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1812" name="차단의 장막" nameId="4572941" name_desc="CH_AngelicWall_G3" stack="SKILL_CH_AngelicWall" skill_group_name="CH_AngelicWall" delayId="1344" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="2" req_dispel_count="50" activation="ACTIVE" cooldown="3000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="636" delta="0" />
     </startconditions>
@@ -11885,7 +11885,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1813" name="차단의 장막" nameId="4572941" name_desc="CH_AngelicWall_G4" stack="SKILL_CH_AngelicWall" skill_group_name="CH_AngelicWall" delayId="1344" lvl="4" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="2" req_dispel_count="50" activation="ACTIVE" cooldown="3000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="true" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="712" delta="0" />
     </startconditions>
@@ -12575,7 +12575,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1826" name="천벌의 낙인" nameId="4572953" name_desc="CH_Tremor_G1" stack="SKILL_CH_Tremor" skill_group_name="CH_Tremor" delayId="1550" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" penalty_skill_id="8999" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4CEEA3E921864C3D" />
+    <group_ref id="SG_7F1FE59417B916C2" />
     <group_ref id="SG_1DA281374D14FE51" />
     <effects>
       <skillatk value="296" delta="32" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="2322" element="FIRE">
@@ -12604,7 +12604,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1827" name="천벌의 낙인" nameId="4572953" name_desc="CH_Tremor_G2" stack="SKILL_CH_Tremor" skill_group_name="CH_Tremor" delayId="1550" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" penalty_skill_id="9000" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4CEEA3E921864C3D" />
+    <group_ref id="SG_7F1FE59417B916C2" />
     <group_ref id="SG_1DA281374D14FE51" />
     <effects>
       <skillatk value="321" delta="35" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="2567" element="FIRE">
@@ -12633,7 +12633,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1828" name="천벌의 낙인" nameId="4572953" name_desc="CH_Tremor_G3" stack="SKILL_CH_Tremor" skill_group_name="CH_Tremor" delayId="1550" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" penalty_skill_id="9001" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4CEEA3E921864C3D" />
+    <group_ref id="SG_7F1FE59417B916C2" />
     <group_ref id="SG_1DA281374D14FE51" />
     <effects>
       <skillatk value="439" delta="50" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="2720" element="FIRE">
@@ -12662,7 +12662,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1829" name="천벌의 낙인" nameId="4572953" name_desc="CH_Tremor_G4" stack="SKILL_CH_Tremor" skill_group_name="CH_Tremor" delayId="1550" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" penalty_skill_id="9002" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4CEEA3E921864C3D" />
+    <group_ref id="SG_7F1FE59417B916C2" />
     <group_ref id="SG_1DA281374D14FE51" />
     <effects>
       <skillatk value="476" delta="55" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="2898" element="FIRE">
@@ -12691,7 +12691,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1830" name="천벌의 낙인" nameId="4572953" name_desc="CH_Tremor_G5" stack="SKILL_CH_Tremor" skill_group_name="CH_Tremor" delayId="1550" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" penalty_skill_id="9003" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4CEEA3E921864C3D" />
+    <group_ref id="SG_7F1FE59417B916C2" />
     <group_ref id="SG_1DA281374D14FE51" />
     <effects>
       <skillatk value="546" delta="62" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="3025" element="FIRE">
@@ -12720,7 +12720,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1831" name="천벌의 낙인" nameId="4572953" name_desc="CH_Tremor_G6" stack="SKILL_CH_Tremor" skill_group_name="CH_Tremor" delayId="1550" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="3000" duration="0" penalty_skill_id="9004" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4CEEA3E921864C3D" />
+    <group_ref id="SG_7F1FE59417B916C2" />
     <group_ref id="SG_1DA281374D14FE51" />
     <effects>
       <skillatk value="640" delta="72" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="3140" element="FIRE">
@@ -12749,7 +12749,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1832" name="철벽의 주문" nameId="4572961" name_desc="CH_ImprovedBody_G1" stack="SKILL_CH_ImprovedBody" skill_group_name="CH_ImprovedBody" delayId="1551" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="303" delta="0" />
     </startconditions>
@@ -12803,7 +12803,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1833" name="철벽의 주문" nameId="4572961" name_desc="CH_ImprovedBody_G2" stack="SKILL_CH_ImprovedBody" skill_group_name="CH_ImprovedBody" delayId="1551" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="325" delta="0" />
     </startconditions>
@@ -12859,7 +12859,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1834" name="철벽의 주문" nameId="4572961" name_desc="CH_ImprovedBody_G3" stack="SKILL_CH_ImprovedBody" skill_group_name="CH_ImprovedBody" delayId="1551" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="334" delta="0" />
     </startconditions>
@@ -13453,7 +13453,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1851" name="쾌속의 주문" nameId="4572983" name_desc="CH_Chant_ImprovedFly_G1" stack="SKILL_CH_Chant_ImprovedFly" skill_group_name="CH_Chant_ImprovedFly" delayId="1566" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3000" duration="0" apply_casting_time_bonus="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_27741A1AA5816A7C" />
+    <group_ref id="SG_98E1B9B2A2156B95" />
     <group_ref id="SG_2D930829A25EAFB0" />
     <useconditions>
       <idianchargeweapon value="351" />
@@ -15370,7 +15370,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1901" name="광풍격" nameId="4572835" name_desc="CH_Tornado_G1" stack="SKILL_CH_Tornado" skill_group_name="CH_Tornado" delayId="1562" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <group_ref id="SG_E3E12CE55DBE510D" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15396,7 +15396,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1902" name="광풍격" nameId="4572835" name_desc="CH_Tornado_G2" stack="SKILL_CH_Tornado" skill_group_name="CH_Tornado" delayId="1562" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <startconditions>
       <mp value="197" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -15425,7 +15425,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1903" name="광풍격" nameId="4572835" name_desc="CH_Tornado_G3" stack="SKILL_CH_Tornado" skill_group_name="CH_Tornado" delayId="1562" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5DAB1BCF046FCF13" />
+    <group_ref id="SG_68BE599B27967FB6" />
     <group_ref id="SG_F13CF199A52D1A8D" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15451,7 +15451,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1904" name="낙인의 주문" nameId="4572725" name_desc="CH_Brand_G1" stack="SKILL_CH_Brand" skill_group_name="CH_Brand" delayId="1563" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B584F00F00BFF057" />
+    <group_ref id="SG_569AA16935047D5D" />
     <startconditions>
       <mp value="402" delta="0" />
     </startconditions>
@@ -15522,7 +15522,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1905" name="낙인의 주문" nameId="4572725" name_desc="CH_Brand_G2" stack="SKILL_CH_Brand" skill_group_name="CH_Brand" delayId="1563" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B584F00F00BFF057" />
+    <group_ref id="SG_569AA16935047D5D" />
     <startconditions>
       <mp value="445" delta="0" />
     </startconditions>
@@ -15594,7 +15594,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1906" name="낙인의 주문" nameId="4572725" name_desc="CH_Brand_G3" stack="SKILL_CH_Brand" skill_group_name="CH_Brand" delayId="1563" lvl="3" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" apply_casting_time_bonus="true" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B584F00F00BFF057" />
+    <group_ref id="SG_569AA16935047D5D" />
     <startconditions>
       <mp value="486" delta="0" />
     </startconditions>
@@ -15666,7 +15666,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1907" name="선동의 주문" nameId="4572967" name_desc="CH_PhysicalEnhancement_G1" stack="SKILL_CH_PhysicalEnhancement" skill_group_name="CH_PhysicalEnhancement" delayId="1684" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="297" delta="0" />
     </startconditions>
@@ -15737,7 +15737,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1908" name="선동의 주문" nameId="4572967" name_desc="CH_PhysicalEnhancement_G2" stack="SKILL_CH_PhysicalEnhancement" skill_group_name="CH_PhysicalEnhancement" delayId="1684" lvl="2" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="318" delta="0" />
     </startconditions>
@@ -15808,7 +15808,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="1909" name="선동의 주문" nameId="4572967" name_desc="CH_PhysicalEnhancement_G3" stack="SKILL_CH_PhysicalEnhancement" skill_group_name="CH_PhysicalEnhancement" delayId="1684" lvl="3" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="606" cooldown_delta="-6" duration="0" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_D19D8CE06DAFDB04" />
+    <group_ref id="SG_45D1BE9416CF6968" />
     <startconditions>
       <mp value="334" delta="0" />
     </startconditions>
@@ -20241,7 +20241,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2004" name="대공 포격" nameId="4573113" name_desc="Gu_WingBlaster_1_G1" stack="SKILL_Gu_WingBlaster" skill_group_name="Gu_WingBlaster" delayId="1859" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="CHARGE" cooldown="1800" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_WingBlaster1">
-    <group_ref id="SG_82D700D4DE275203" />
+    <group_ref id="SG_6A4D941E887504B6" />
     <startconditions>
       <mp value="434" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -20311,7 +20311,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2005" name="대공 포격" nameId="4573113" name_desc="Gu_WingBlaster_2_G1" stack="SKILL_Gu_WingBlaster" skill_group_name="Gu_WingBlaster" delayId="1859" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EE796320BE54CB6" />
+    <group_ref id="SG_28841CEE90A8E429" />
     <startconditions>
       <mp value="487" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -20384,7 +20384,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2006" name="대공 포격" nameId="4573113" name_desc="Gu_WingBlaster_3_G1" stack="SKILL_Gu_WingBlaster" skill_group_name="Gu_WingBlaster" delayId="1859" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <startconditions>
       <mp value="540" delta="0" />
       <weapon weapon="CANNON_2H" />
@@ -20693,7 +20693,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2015" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_1_G1" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_CondensedBlaster1">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20720,7 +20720,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2016" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_2_G1" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_071B1F1B1522FDFA" />
+    <group_ref id="SG_F03DE1011BA08492" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20748,7 +20748,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2017" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_3_G1" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_15A37E166650900C" />
+    <group_ref id="SG_95C83BB5384B30FE" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20776,7 +20776,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2018" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_1_G2" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_CondensedBlaster2">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20803,7 +20803,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2019" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_2_G2" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_071B1F1B1522FDFA" />
+    <group_ref id="SG_F03DE1011BA08492" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <group_ref id="SG_CE47140A75FA3AAB" />
@@ -20829,7 +20829,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2020" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_3_G2" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="2" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_15A37E166650900C" />
+    <group_ref id="SG_95C83BB5384B30FE" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20857,7 +20857,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2021" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_1_G3" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_CondensedBlaster3">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20884,7 +20884,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2022" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_2_G3" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_071B1F1B1522FDFA" />
+    <group_ref id="SG_F03DE1011BA08492" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20912,7 +20912,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2023" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_3_G3" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="3" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_15A37E166650900C" />
+    <group_ref id="SG_95C83BB5384B30FE" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20940,7 +20940,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2024" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_1_G4" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_CondensedBlaster4">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20967,7 +20967,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2025" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_2_G4" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_071B1F1B1522FDFA" />
+    <group_ref id="SG_F03DE1011BA08492" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -20995,7 +20995,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2026" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_3_G4" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="4" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_15A37E166650900C" />
+    <group_ref id="SG_95C83BB5384B30FE" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -21023,7 +21023,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2027" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_1_G5" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_CondensedBlaster5">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -21050,7 +21050,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2028" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_2_G5" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_071B1F1B1522FDFA" />
+    <group_ref id="SG_F03DE1011BA08492" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -21078,7 +21078,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2029" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_3_G5" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="5" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_15A37E166650900C" />
+    <group_ref id="SG_95C83BB5384B30FE" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -21106,7 +21106,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2030" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_1_G6" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="CHARGE" cooldown="600" duration="1200" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT" charge_set_name="Gu_CondensedBlaster6">
-    <group_ref id="SG_9C2EA997E5256911" />
+    <group_ref id="SG_2E5BBA0C1E3B34E4" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>
@@ -21133,7 +21133,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2031" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_2_G6" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="800" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_071B1F1B1522FDFA" />
+    <group_ref id="SG_F03DE1011BA08492" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <group_ref id="SG_CE47140A75FA3AAB" />
@@ -21159,7 +21159,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="2032" name="마력 포격" nameId="4573137" name_desc="Gu_CondensedBlaster_3_G6" stack="SKILL_Gu_CondensedBlaster" skill_group_name="Gu_CondensedBlaster" delayId="1815" lvl="6" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="600" duration="3000" no_jump_cancel="true" cancel_rate="15" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_15A37E166650900C" />
+    <group_ref id="SG_95C83BB5384B30FE" />
     <group_ref id="SG_004A08631777E586" />
     <group_ref id="SG_DDEB99DBFA496877" />
     <effects>

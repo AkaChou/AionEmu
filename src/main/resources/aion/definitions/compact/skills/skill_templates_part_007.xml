@@ -5434,7 +5434,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3162" name="STR_SKILLN_KN_LandSnacher" nameId="0" name_desc="KN_LandSnacher_G1" stack="SKILL_KN_LandSnacher" skill_group_name="KN_LandSnacher" delayId="525" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="6000" duration="2000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E0030042475663C" />
+    <group_ref id="SG_D3A73F6604EE7762" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5489,7 +5489,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3163" name="STR_SKILLN_KN_LandSnacher" nameId="0" name_desc="KN_LandSnacher_G2" stack="SKILL_KN_LandSnacher" skill_group_name="KN_LandSnacher" delayId="525" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="6000" duration="2000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E0030042475663C" />
+    <group_ref id="SG_D3A73F6604EE7762" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5544,7 +5544,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3164" name="STR_SKILLN_KN_LandSnacher" nameId="0" name_desc="KN_LandSnacher_G3" stack="SKILL_KN_LandSnacher" skill_group_name="KN_LandSnacher" delayId="525" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="6000" duration="2000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E0030042475663C" />
+    <group_ref id="SG_D3A73F6604EE7762" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5599,7 +5599,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3165" name="STR_SKILLN_KN_LandSnacher" nameId="0" name_desc="KN_LandSnacher_G4" stack="SKILL_KN_LandSnacher" skill_group_name="KN_LandSnacher" delayId="525" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="6000" duration="2000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E0030042475663C" />
+    <group_ref id="SG_D3A73F6604EE7762" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5654,7 +5654,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3166" name="STR_SKILLN_KN_LandSnacher" nameId="0" name_desc="KN_LandSnacher_G5" stack="SKILL_KN_LandSnacher" skill_group_name="KN_LandSnacher" delayId="525" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="6000" duration="2000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E0030042475663C" />
+    <group_ref id="SG_D3A73F6604EE7762" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5709,7 +5709,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3167" name="STR_SKILLN_KN_LandSnacher" nameId="0" name_desc="KN_LandSnacher_G6" stack="SKILL_KN_LandSnacher" skill_group_name="KN_LandSnacher" delayId="525" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="6000" duration="2000" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E0030042475663C" />
+    <group_ref id="SG_D3A73F6604EE7762" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8443,7 +8443,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3236" name="섬광탄" nameId="4574153" name_desc="AS_WideNewBlindingBurst_G1" stack="SKILL_AS_WideNewBlindingBurst" skill_group_name="AS_WideNewBlindingBurst" delayId="803" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <group_ref id="SG_A651D43248DB9DF0" />
     <group_ref id="SG_1E63B3F6D7139D1F" />
     <effects>
@@ -8503,7 +8503,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3237" name="섬광탄" nameId="4574153" name_desc="AS_WideNewBlindingBurst_G2" stack="SKILL_AS_WideNewBlindingBurst" skill_group_name="AS_WideNewBlindingBurst" delayId="803" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="163" delta="0" />
     </startconditions>
@@ -8565,7 +8565,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3238" name="섬광탄" nameId="4574153" name_desc="AS_WideNewBlindingBurst_G3" stack="SKILL_AS_WideNewBlindingBurst" skill_group_name="AS_WideNewBlindingBurst" delayId="803" lvl="3" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1836" cooldown_delta="-36" duration="0" remain_cooltime_on_login="true" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <startconditions>
       <mp value="179" delta="0" />
     </startconditions>
@@ -12599,7 +12599,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="3338" name="연막탄" nameId="4574299" name_desc="AS_BlindingBurst_G1" stack="SKILL_AS_BlindingBurst" skill_group_name="AS_BlindingBurst" skill_group="AS_BlindingBurst" delayId="802" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1800" duration="0" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FD01D84C68EA8F37" />
+    <group_ref id="SG_7D0B4DA486DE2AC6" />
     <group_ref id="SG_098F4A201104250B" />
     <group_ref id="SG_1E63B3F6D7139D1F" />
     <effects>

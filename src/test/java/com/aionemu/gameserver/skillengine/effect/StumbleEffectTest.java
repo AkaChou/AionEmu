@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 class StumbleEffectTest {
 
 	@Test
-	void knockdownSnapsDestinationToGroundWithoutLoweringIt() throws IOException {
+	void npcKnockdownKeepsCurrentHeight() throws IOException {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/skillengine/effect/StumbleEffect.java")).replaceAll("\\s+", " ");
 
-		assertTrue(source.contains("effected.getY() + y1, effected.getZ(), true, intentions)"),
-				"stumble knockdown must not lower the destination before correcting it to the ground");
+		assertTrue(source.contains("effect.setTargetLoc(x1, y1, effected instanceof Npc ? effected.getZ() : closestCollision.z);"),
+				"NPC knockdown must not move the monster to a lower geo layer");
 	}
 }

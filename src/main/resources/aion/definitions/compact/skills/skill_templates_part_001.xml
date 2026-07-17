@@ -6358,7 +6358,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="240" name="GM의 갑옷" nameId="4560477" name_desc="GM_GMSHIELD" stack="SKILL_GM_GMSHIELD" skill_group_name="GM_GMSHIELD" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="2" req_dispel_count="50" activation="ACTIVE" cooldown="10" duration="0" spend_time_on_logout="true" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_957EBD89DB17704E" />
+    <group_ref id="SG_64632B0BDEC9CC70" />
     <effects>
       <statup duration1="0" duration2="600000" randomtime="0" effectid="101741" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0">
         <change stat="MAXHP" func="ADD" value="2000" delta="0" />
@@ -6431,7 +6431,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="241" name="GM의 태풍" nameId="4560483" name_desc="GM_GMSTORM" stack="SKILL_GM_GMSTORM" skill_group_name="GM_GMSTORM" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="2" req_dispel_count="50" activation="ACTIVE" cooldown="10" duration="0" spend_time_on_logout="true" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_957EBD89DB17704E" />
+    <group_ref id="SG_64632B0BDEC9CC70" />
     <effects>
       <statup duration1="0" duration2="3600000" randomtime="0" effectid="101741" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="0">
         <change stat="MAXHP" func="ADD" value="1000" delta="0" />
@@ -7074,7 +7074,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="261" name="오드 폭발" nameId="576407" name_desc="Q_OddBurn" stack="SKILL_Q_OddBurn" skill_group_name="Q_OddBurn" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="10" duration="5000" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0D799D47C4B022F4" />
+    <group_ref id="SG_8B85D7B533DED9BA" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="19" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -7296,7 +7296,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="270" name="화염 작렬" nameId="585479" name_desc="Q_OddBurn_lv2" stack="SKILL_Q_OddBurn_lv2" skill_group_name="Q_OddBurn_lv2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="10" duration="5000" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0D799D47C4B022F4" />
+    <group_ref id="SG_8B85D7B533DED9BA" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="180" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -7333,7 +7333,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="271" name="오드 대폭발" nameId="585481" name_desc="Q_OddBurn_lv3" stack="SKILL_Q_OddBurn_lv3" skill_group_name="Q_OddBurn_lv3" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="10" duration="5000" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0D799D47C4B022F4" />
+    <group_ref id="SG_8B85D7B533DED9BA" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="1000" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -8979,7 +8979,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="324" name="수호슝의 맹타" nameId="4571207" name_desc="IDSweep_KN1_Base" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_95FE85A18E2233AB" />
+    <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_F64009CCDF87C798" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9012,7 +9012,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="325" name="수호슝의 도발" nameId="4571209" name_desc="IDSweep_KN2_Hate" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="20" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_95FE85A18E2233AB" />
+    <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_8133CC106622534F" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9047,7 +9047,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="326" name="수호슝의 나포" nameId="4571211" name_desc="IDSweep_KN3_Snatch" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="150" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_87B6B91C22035B47" />
+    <group_ref id="SG_9C30C538C88250CD" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_17CFDFD1EF9C44E4" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9160,7 +9160,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="329" name="검슝의 일격" nameId="4571217" name_desc="IDSweep_FI1_Base" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_95FE85A18E2233AB" />
+    <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_9C04B3A4C5F95C2F" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9229,7 +9229,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="331" name="검슝의 회오리" nameId="4571221" name_desc="IDSweep_FI3_Turn" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="50" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_95FE85A18E2233AB" />
+    <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_9D1A7A4C1F74F91D" />
@@ -9263,7 +9263,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="332" name="검슝의 속박" nameId="4571223" name_desc="IDSweep_FI4_Aerial" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_95FE85A18E2233AB" />
+    <group_ref id="SG_47E9D43AE8F7B782" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_694B8C09934B0983" />
@@ -9314,7 +9314,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="333" name="검슝의 격노" nameId="4571225" name_desc="IDSweep_FI5_Rage" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_08C48068D7F559DB" />
+    <group_ref id="SG_D3E27EEE398256FA" />
     <group_ref id="SG_0E255BC1FBCD4373" />
     <group_ref id="SG_B36772F7218852CA" />
     <group_ref id="SG_55A23D1576CC6767" />
@@ -9365,7 +9365,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="334" name="마도슝의 폭발" nameId="4571227" name_desc="IDSweep_WI1_Base" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8217075703AC58F9" />
+    <group_ref id="SG_D819FC3488071C43" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_E6E24CD1265193A0" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9398,7 +9398,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="335" name="마도슝의 낙뢰" nameId="4571229" name_desc="IDSweep_WI2_Storm" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="60" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_552009A2954702F5" />
+    <group_ref id="SG_FFEFC79B301FDB30" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_18CA426DA736B63A" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9431,7 +9431,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="336" name="마도슝의 불꽃" nameId="4571231" name_desc="IDSweep_WI3_Laser" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" cancel_rate="10" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_567F16C27FB18F34" />
+    <group_ref id="SG_46201384B712534B" />
     <group_ref id="SG_9CDE6CE20408F24E" />
     <group_ref id="SG_194292AC2E25064E" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9464,7 +9464,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="337" name="마도슝의 빙결" nameId="4571233" name_desc="IDSweep_WI4_Frost" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="150" duration="0" apply_casting_time_bonus="true" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_2E92DA941CACBF30" />
+    <group_ref id="SG_1B611F40B9DE9D53" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_175504E878136A18" />
     <group_ref id="SG_A5011E5C0B0A4E73" />
@@ -9515,7 +9515,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="338" name="마도슝의 화염" nameId="4571235" name_desc="IDSweep_WI5_Fireshork" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1500" apply_casting_time_bonus="true" no_jump_cancel="true" pvp_damage="50" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7DFA6BB61B0B26BB" />
+    <group_ref id="SG_7AE60D105949D9F2" />
     <group_ref id="SG_0E255BC1FBCD4373" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_0F7A61D2812C08D4" />
@@ -11576,7 +11576,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="400" name="검슝의 돌진" nameId="4577237" name_desc="IDSweep_FI2_DashATK" stack="SKILL_IDSweep_Skill" skill_group_name="IDSweep_Skill" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="40" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_AC52CCA27B9B9DD4" />
+    <group_ref id="SG_4F113C226021BC8D" />
     <group_ref id="SG_B9F518957876556E" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_70B81A1A8D9ADE26" />
@@ -11843,7 +11843,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="407" name="인던 테스트 스킬 2" nameId="4578437" name_desc="IDLuna_Test_2" stack="SKILL_IDLuna_Test_2" skill_group_name="IDLuna_Test_2" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F5A883606630B729" />
+    <group_ref id="SG_2357DCF3F45ACA62" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104121" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="6000" delta="0" critprobmod1="0" critadddmg2="50" />
@@ -12011,7 +12011,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="411" name="영혼의 맹타" nameId="4578415" name_desc="IDLuna_Def_Base" stack="SKILL_IDLuna_Def_Base" skill_group_name="IDLuna_Def_Base" delayId="411" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="5" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9F5C3427A3F21055" />
+    <group_ref id="SG_EE832C7945AF8D2B" />
     <group_ref id="SG_B8124842795135AB" />
     <group_ref id="SG_BCAE465DAB7FAC1E" />
     <group_ref id="SG_48353FC414EC4F68" />
@@ -12043,7 +12043,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="412" name="암흑의 분쇄" nameId="4578417" name_desc="IDLuna_Def_Aerial" stack="SKILL_IDLuna_Def_Aerial" skill_group_name="IDLuna_Def_Aerial" delayId="412" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="40" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F5A883606630B729" />
+    <group_ref id="SG_2357DCF3F45ACA62" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104121" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="7200" delta="0" critprobmod1="0" critadddmg2="50" />
@@ -12234,7 +12234,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="417" name="공포의 속박" nameId="4578427" name_desc="IDLuna_Siege_Restrict" stack="SKILL_IDLuna_Siege_Restrict" skill_group_name="IDLuna_Siege_Restrict" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1BB511C5EA2B6B4D" />
+    <group_ref id="SG_EE4C200D4F78694C" />
     <group_ref id="SG_B8124842795135AB" />
     <group_ref id="SG_4FA29CB32A1CA800" />
     <group_ref id="SG_A29CD938D162D622" />
@@ -12282,7 +12282,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="418" name="암흑의 파동" nameId="4578429" name_desc="IDLuna_Siege_Wave" stack="SKILL_IDLuna_Siege_Wave" skill_group_name="IDLuna_Siege_Wave" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="40" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_AADF303E749B2C85" />
+    <group_ref id="SG_B3DE792BB2CD20CB" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="104181" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="10" hoptype="SKILLLV" hopa="0" hopb="0" element="FIRE" value="4000" delta="0" critprobmod1="0" critadddmg2="50" />
@@ -12649,7 +12649,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="430" name="주신의 보호" nameId="4573807" name_desc="IDRUN_Test_KN_02" stack="SKILL_IDRUN_Test_06" skill_group_name="IDRUN_Test_06" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="300" cooldown_delta="-120" duration="0" remain_cooltime_on_login="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_59DF7E7EC9F13083" />
+    <group_ref id="SG_BAE30F1A8AE8BA1B" />
     <effects>
       <shield duration1="0" duration2="5000" randomtime="0" effectid="154" e="1" basiclvl="230" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="780" hitdelta="0" hitvalue="70" percent="true" delta="0" value="10000000" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
       <statup duration1="0" duration2="15000" randomtime="0" effectid="119782" e="2" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect="1" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -12880,7 +12880,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="435" name="속박의 손길" nameId="4582519" name_desc="IDRUN_Test_WI_03" stack="SKILL_IDRUN_Test_11" skill_group_name="IDRUN_Test_11" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="1" activation="ACTIVE" cooldown="200" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7A67683E1883460C" />
+    <group_ref id="SG_E98FE678C0EB3579" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <spellatkinstant value="1" delta="1" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="104351" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -12924,7 +12924,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="436" name="광역 속박의 손길" nameId="4582523" name_desc="IDRUN_Test_WI_03_1" stack="SKILL_IDRUN_Test_12" skill_group_name="IDRUN_Test_12" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="1" activation="ACTIVE" cooldown="300" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EA3A6DA474988BC" />
+    <group_ref id="SG_885871269DA8F2CC" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <spellatkinstant value="1" delta="1" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="104361" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -12999,7 +12999,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="438" name="무력화의 일격" nameId="599391" name_desc="IDRUN_Test_KN_03_1" stack="SKILL_IDRUN_Test_14" skill_group_name="IDRUN_Test_14" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1EA3A6DA474988BC" />
+    <group_ref id="SG_885871269DA8F2CC" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <snare duration1="0" duration2="5000" randomtime="0" effectid="104381" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="60" hopb="60" element="WATER">
@@ -13291,7 +13291,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="453" name="공중 속박" nameId="4575969" name_desc="IDRUN_Test_common_10" stack="SKILL_IDRUN_Test_22" skill_group_name="IDRUN_Test_22" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="200" duration="0" apply_casting_time_bonus="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7A67683E1883460C" />
+    <group_ref id="SG_E98FE678C0EB3579" />
     <effects>
       <openaerial duration1="0" duration2="2000" randomtime="0" effectid="104531" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
     </effects>
@@ -13419,7 +13419,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="456" name="주신의 보호" nameId="4573807" name_desc="IDRUN_InvinsibleProtect_G1" stack="SKILL_IDRUN_InvinsibleProtect" skill_group_name="IDRUN_InvinsibleProtect" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="200" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_91D0DB93ACADB8D8" />
+    <group_ref id="SG_B7CF606CB8DF08FF" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <shield duration1="0" duration2="5000" randomtime="0" effectid="104561" e="1" basiclvl="230" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="0" hopb="780" hitdelta="0" hitvalue="100" percent="true" delta="0" value="10000000" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
@@ -13545,7 +13545,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="458" name="광역 포획의 사슬" nameId="4582531" name_desc="IDRUN_TripleSnacher_G1" stack="SKILL_IDRUN_TripleSnacher" skill_group_name="IDRUN_TripleSnacher" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E7914783A581A776" />
+    <group_ref id="SG_A66756D5E17A5EB0" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <spellatkinstant value="1" delta="1" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="104351" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="500" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE">
@@ -13773,7 +13773,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="464" name="빙결의 보호" nameId="4582517" name_desc="IDRUN_Protect" stack="SKILL_IDRUN_Test_27" skill_group_name="IDRUN_Test_27" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="300" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_91D0DB93ACADB8D8" />
+    <group_ref id="SG_B7CF606CB8DF08FF" />
     <group_ref id="SG_B8124842795135AB" />
     <effects>
       <shield duration1="0" duration2="8000" randomtime="0" effectid="104641" e="1" basiclvl="230" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="500" hoptype="SKILLLV" hopa="0" hopb="780" hitdelta="0" hitvalue="100" percent="true" delta="0" value="10000000" hittype="EVERYHIT" hittypeprob1="0" hittypeprob2="1000" />
@@ -15383,7 +15383,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="539" name="고갈의 파동" nameId="4575269" name_desc="FI_WhirlDrain_G1" stack="SKILL_FI_WhirlDrain" skill_group_name="FI_WhirlDrain" delayId="95" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="19" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />

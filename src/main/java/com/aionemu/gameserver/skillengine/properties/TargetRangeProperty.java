@@ -36,7 +36,9 @@ public class TargetRangeProperty {
 	public static final boolean set(final Skill skill, Properties properties) {
 
 		TargetRangeAttribute value = properties.getTargetType();
-		int distance = properties.getTargetDistance();
+		int distance = properties.getEffectiveRange() > 0 ? properties.getEffectiveRange()
+				: properties.getTargetDistance();
+		int altitude = properties.getEffectiveAltitude();
 		int maxcount = properties.getTargetMaxCount();
 
 		final List<Creature> effectedList = skill.getEffectedList();
@@ -56,6 +58,7 @@ public class TargetRangeProperty {
 			// 修复前：使用 firstTarget.getKnownList()，当 firstTarget != effector 时，可能导致 NPC 太贴近玩家反而不会被 AOE 打中
 			// 修复后：使用 skill.getEffector().getKnownList()，确保始终使用施法者的已知对象列表
 			List<VisibleObject> areaKnownObjects = skill.getEffector().getKnownList().getKnownObjectsSnapshot();
+			float centerZ = skill.isPointSkill() ? skill.getZ() : firstTarget.getZ();
 			for (VisibleObject nextCreature : areaKnownObjects) {
 				if (((nextCreature instanceof Creature)) && (firstTarget != nextCreature)
 						&& (((Creature) nextCreature).getLifeStats() != null)
@@ -63,11 +66,18 @@ public class TargetRangeProperty {
 						&& ((!(skill.getEffector() instanceof Trap))
 								|| (((Trap) skill.getEffector()).getCreator() != nextCreature))
 						&& ((!(nextCreature instanceof Player)) || (!((Player) nextCreature).isProtectionActive()))) {
+					if (altitude > 0 && Math.abs(centerZ - nextCreature.getZ()) > altitude) {
+						continue;
+					}
 					if (skill.isPointSkill()) {
 						float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
 						float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
-						if (MathUtil.isIn3dRange(skill.getX(), skill.getY(), skill.getZ(), nextCreature.getX(),
-								nextCreature.getY(), nextCreature.getZ(), distance + targetCollision + creatureCollision + 1)) {
+						float radius = distance + targetCollision + creatureCollision + 1;
+						boolean inRange = altitude > 0
+								? MathUtil.getDistance(skill.getX(), skill.getY(), nextCreature.getX(), nextCreature.getY()) < radius
+								: MathUtil.isIn3dRange(skill.getX(), skill.getY(), skill.getZ(), nextCreature.getX(),
+										nextCreature.getY(), nextCreature.getZ(), radius);
+						if (inRange) {
 							if (skill.shouldAffectTarget(nextCreature)) {
 								skill.getEffectedList().add((Creature) nextCreature);
 							}
@@ -92,8 +102,9 @@ public class TargetRangeProperty {
 						if (range.contains(PositionUtil.getAngleToTarget(firstTarget, nextCreature))) {
 							float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
 							float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
-							if (MathUtil.isIn3dRange(firstTarget, nextCreature,
-									distance + targetCollision + creatureCollision)) {
+							float radius = distance + targetCollision + creatureCollision;
+							if (altitude > 0 ? MathUtil.isInRange(firstTarget, nextCreature, radius)
+									: MathUtil.isIn3dRange(firstTarget, nextCreature, radius)) {
 								if (skill.shouldAffectTarget(nextCreature)) {
 									skill.getEffectedList().add((Creature) nextCreature);
 								}
@@ -102,8 +113,9 @@ public class TargetRangeProperty {
 					} else {
 						float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
 						float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
-						if (MathUtil.isIn3dRange(firstTarget, nextCreature,
-								distance + targetCollision + creatureCollision)) {
+						float radius = distance + targetCollision + creatureCollision;
+						if (altitude > 0 ? MathUtil.isInRange(firstTarget, nextCreature, radius)
+								: MathUtil.isIn3dRange(firstTarget, nextCreature, radius)) {
 							if (skill.shouldAffectTarget(nextCreature)) {
 								skill.getEffectedList().add((Creature) nextCreature);
 							}

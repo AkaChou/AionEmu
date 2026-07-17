@@ -72,6 +72,11 @@ public class ArmsfusionService {
 					SM_SYSTEM_MESSAGE.STR_COMPOUND_ERROR_NOT_AVAILABLE(firstItem.getNameId()));
 			return;
 		}
+		if (!secondItem.getItemTemplate().isTwoHandWeapon()) {
+			PacketSendUtility.sendPacket(player,
+					SM_SYSTEM_MESSAGE.STR_COMPOUND_ERROR_NOT_AVAILABLE(secondItem.getNameId()));
+			return;
+		}
 		if (firstItem.getItemTemplate().getWeaponType() != secondItem.getItemTemplate().getWeaponType()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_COMPOUND_ERROR_DIFFERENT_TYPE);
 			return;

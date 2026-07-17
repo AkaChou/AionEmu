@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.skillengine.properties;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Comparator;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.skillengine.model.Skill;
@@ -29,22 +28,13 @@ public class MaxCountProperty {
 
 		switch (value) {
 		case AREA:
-			int areaCounter = 0;
 			final Creature firstTarget = skill.getFirstTarget();
 			if (firstTarget == null) {
 				return false;
 			}
-			SortedMap<Double, Creature> sortedMap = new TreeMap<Double, Creature>();
-			for (Creature creature : skill.getEffectedList()) {
-				sortedMap.put(MathUtil.getDistance(firstTarget, creature), creature);
-			}
-			skill.getEffectedList().clear();
-			for (Creature creature : sortedMap.values()) {
-				if (areaCounter >= maxcount) {
-					break;
-				}
-				skill.getEffectedList().add(creature);
-				areaCounter++;
+			if (maxcount > 0 && skill.getEffectedList().size() > maxcount) {
+				skill.getEffectedList().sort(Comparator.comparingDouble(creature -> MathUtil.getDistance(firstTarget, creature)));
+				skill.getEffectedList().subList(maxcount, skill.getEffectedList().size()).clear();
 			}
 		default:
 			break;

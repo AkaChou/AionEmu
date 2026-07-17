@@ -653,7 +653,7 @@ public class ItemTemplate extends VisibleObjectTemplate {
 
 	/** 是否为双手武器 / Whether two hand weapon */
 	public boolean isTwoHandWeapon() {
-		if (!isWeapon()) {
+		if (!isWeapon() || weaponType == null) {
 			return false;
 		}
 		return weaponType.getRequiredSlots() == 2;

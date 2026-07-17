@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skill_data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/skills.xsd">
   <skill_template skill_id="540" name="고갈의 파동" nameId="4575269" name_desc="FI_WhirlDrain_G2" stack="SKILL_FI_WhirlDrain" skill_group_name="FI_WhirlDrain" delayId="95" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="37" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -33,7 +33,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="541" name="고갈의 파동" nameId="4575269" name_desc="FI_WhirlDrain_G3" stack="SKILL_FI_WhirlDrain" skill_group_name="FI_WhirlDrain" delayId="95" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="55" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -65,7 +65,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="542" name="고갈의 파동" nameId="4575269" name_desc="FI_WhirlDrain_G4" stack="SKILL_FI_WhirlDrain" skill_group_name="FI_WhirlDrain" delayId="95" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="73" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -97,7 +97,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="543" name="고갈의 파동" nameId="4575269" name_desc="FI_WhirlDrain_G5" stack="SKILL_FI_WhirlDrain" skill_group_name="FI_WhirlDrain" delayId="95" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="91" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -129,7 +129,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="544" name="고갈의 파동" nameId="4575269" name_desc="FI_WhirlDrain_G6" stack="SKILL_FI_WhirlDrain" skill_group_name="FI_WhirlDrain" delayId="95" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="109" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -430,7 +430,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="554" name="광폭 찍기" nameId="4575461" name_desc="FI_FlyingSlash_G1" stack="SKILL_FI_FlyingSlash" skill_group_name="FI_FlyingSlash" skill_group="FI_FlyingSlash" delayId="100" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1800" duration="0" no_jump_cancel="true" cancel_rate="10" ground="true" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_AC52CCA27B9B9DD4" />
+    <group_ref id="SG_4F113C226021BC8D" />
     <startconditions>
       <mp value="227" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H STAFF_2H" />
@@ -459,7 +459,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="555" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G1" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="69" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -501,7 +501,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="556" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G2" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="75" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -543,7 +543,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="557" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G3" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="81" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -583,7 +583,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="558" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G4" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="87" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -625,7 +625,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="559" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G5" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="93" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -667,7 +667,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="560" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G6" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="99" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -709,7 +709,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="561" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G7" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="7" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="105" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -751,7 +751,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="562" name="광폭 파동" nameId="4575287" name_desc="FI_SeismicBillow_G8" stack="SKILL_FI_SeismicBillow" skill_group_name="FI_SeismicBillow" delayId="358" lvl="8" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <startconditions>
       <mp value="112" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -3139,7 +3139,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="621" name="분노 폭발" nameId="4575335" name_desc="FI_RageBurst_G1" stack="SKILL_FI_RageBurst" skill_group_name="FI_RageBurst" delayId="231" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1800" duration="0" penalty_skill_id="8674" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_76298CB8EB35938A" />
+    <group_ref id="SG_FB1C893E123B9516" />
     <startconditions>
       <mp value="210" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -3175,7 +3175,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="622" name="분노 폭발" nameId="4575335" name_desc="FI_RageBurst_G2" stack="SKILL_FI_RageBurst" skill_group_name="FI_RageBurst" delayId="231" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1800" duration="0" penalty_skill_id="8674" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_76298CB8EB35938A" />
+    <group_ref id="SG_FB1C893E123B9516" />
     <startconditions>
       <mp value="227" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -3211,7 +3211,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="623" name="분노 폭발" nameId="4575335" name_desc="FI_RageBurst_G3" stack="SKILL_FI_RageBurst" skill_group_name="FI_RageBurst" delayId="231" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1800" duration="0" penalty_skill_id="8674" chain_skill_prob="100" cancel_rate="20" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_76298CB8EB35938A" />
+    <group_ref id="SG_FB1C893E123B9516" />
     <startconditions>
       <mp value="244" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -3709,7 +3709,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="635" name="분노의 파동" nameId="4575371" name_desc="FI_Whirlwind_G1" stack="SKILL_FI_Whirlwind" skill_group_name="FI_Whirlwind" delayId="365" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6EE597F5D66759EA" />
+    <group_ref id="SG_0498CBF121606D54" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3735,7 +3735,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="636" name="분노의 파동" nameId="4575371" name_desc="FI_Whirlwind_G2" stack="SKILL_FI_Whirlwind" skill_group_name="FI_Whirlwind" delayId="365" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6EE597F5D66759EA" />
+    <group_ref id="SG_0498CBF121606D54" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3761,7 +3761,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="637" name="분노의 파동" nameId="4575371" name_desc="FI_Whirlwind_G3" stack="SKILL_FI_Whirlwind" skill_group_name="FI_Whirlwind" delayId="365" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6EE597F5D66759EA" />
+    <group_ref id="SG_0498CBF121606D54" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3787,7 +3787,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="638" name="분노의 파동" nameId="4575371" name_desc="FI_Whirlwind_G4" stack="SKILL_FI_Whirlwind" skill_group_name="FI_Whirlwind" delayId="365" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6EE597F5D66759EA" />
+    <group_ref id="SG_0498CBF121606D54" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3813,7 +3813,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="639" name="분노의 파동" nameId="4575371" name_desc="FI_Whirlwind_G5" stack="SKILL_FI_Whirlwind" skill_group_name="FI_Whirlwind" delayId="365" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6EE597F5D66759EA" />
+    <group_ref id="SG_0498CBF121606D54" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3839,7 +3839,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="640" name="분노의 파동" nameId="4575371" name_desc="FI_Whirlwind_G6" stack="SKILL_FI_Whirlwind" skill_group_name="FI_Whirlwind" delayId="365" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="18000" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6EE597F5D66759EA" />
+    <group_ref id="SG_0498CBF121606D54" />
     <group_ref id="SG_C2B7F8F9ADDD9FA5" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3865,7 +3865,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="641" name="분쇄의 회오리" nameId="4575507" name_desc="FI_movewhirl_G1" stack="SKILL_FI_movewhirl" skill_group_name="FI_movewhirl" delayId="101" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="909" cooldown_delta="-9" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="187" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -3895,7 +3895,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="642" name="분쇄의 회오리" nameId="4575507" name_desc="FI_movewhirl_G2" stack="SKILL_FI_movewhirl" skill_group_name="FI_movewhirl" delayId="101" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="909" cooldown_delta="-9" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="207" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -3925,7 +3925,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="643" name="분쇄의 회오리" nameId="4575507" name_desc="FI_movewhirl_G3" stack="SKILL_FI_movewhirl" skill_group_name="FI_movewhirl" delayId="101" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="909" cooldown_delta="-9" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="227" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -3955,7 +3955,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="644" name="살기 파열" nameId="4575375" name_desc="FI_Stigma_ShockBurst_G1" stack="SKILL_FI_Stigma_ShockBurst" skill_group_name="FI_Stigma_ShockBurst" skill_group="FI_Stigma_ShockBurst" delayId="321" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E13CA325ADED1B2B" />
+    <group_ref id="SG_AECC63D6C2315716" />
     <group_ref id="SG_5EC6CC2B63FEDF37" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -4011,7 +4011,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="645" name="살기 파열" nameId="4575375" name_desc="FI_Stigma_ShockBurst_G2" stack="SKILL_FI_Stigma_ShockBurst" skill_group_name="FI_Stigma_ShockBurst" skill_group="FI_Stigma_ShockBurst" delayId="321" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E13CA325ADED1B2B" />
+    <group_ref id="SG_AECC63D6C2315716" />
     <group_ref id="SG_3D0D1E0A20EBCD2A" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -4067,7 +4067,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="646" name="살기 파열" nameId="4575375" name_desc="FI_Stigma_ShockBurst_G3" stack="SKILL_FI_Stigma_ShockBurst" skill_group_name="FI_Stigma_ShockBurst" skill_group="FI_Stigma_ShockBurst" delayId="321" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E13CA325ADED1B2B" />
+    <group_ref id="SG_AECC63D6C2315716" />
     <group_ref id="SG_F7EE82CAA7477989" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -4123,7 +4123,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="647" name="살기 파열" nameId="4575375" name_desc="FI_Stigma_ShockBurst_G4" stack="SKILL_FI_Stigma_ShockBurst" skill_group_name="FI_Stigma_ShockBurst" skill_group="FI_Stigma_ShockBurst" delayId="321" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="600" duration="0" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E13CA325ADED1B2B" />
+    <group_ref id="SG_AECC63D6C2315716" />
     <startconditions>
       <mp value="221" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -5224,7 +5224,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="670" name="압력 파동" nameId="4575391" name_desc="FI_SeismicImpact_G1" stack="SKILL_FI_SeismicImpact" skill_group_name="FI_SeismicImpact" delayId="355" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="10" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="52" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -5255,7 +5255,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="671" name="압력 파동" nameId="4575391" name_desc="FI_SeismicImpact_G2" stack="SKILL_FI_SeismicImpact" skill_group_name="FI_SeismicImpact" delayId="355" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="10" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="58" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -5288,7 +5288,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="672" name="압력 파동" nameId="4575391" name_desc="FI_SeismicImpact_G3" stack="SKILL_FI_SeismicImpact" skill_group_name="FI_SeismicImpact" delayId="355" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="10" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="64" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -5321,7 +5321,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="673" name="압력 파동" nameId="4575391" name_desc="FI_SeismicImpact_G4" stack="SKILL_FI_SeismicImpact" skill_group_name="FI_SeismicImpact" delayId="355" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="10" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="70" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -5350,7 +5350,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="674" name="압력 파동" nameId="4575391" name_desc="FI_SeismicImpact_G5" stack="SKILL_FI_SeismicImpact" skill_group_name="FI_SeismicImpact" delayId="355" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="10" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="76" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -5383,7 +5383,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="675" name="압력 파동" nameId="4575391" name_desc="FI_SeismicImpact_G6" stack="SKILL_FI_SeismicImpact" skill_group_name="FI_SeismicImpact" delayId="355" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="80" duration="0" no_jump_cancel="true" chain_skill_prob="10" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="82" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -5603,7 +5603,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="682" name="용참 파동" nameId="4575561" name_desc="FI_DragonSlash_G1" stack="SKILL_FI_DragonSlash" skill_group_name="FI_DragonSlash" delayId="99" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" no_jump_cancel="true" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0048526509FA9976" />
+    <group_ref id="SG_4ED03F51894991F0" />
     <startconditions>
       <mp value="227" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -5637,7 +5637,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="683" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G1" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="19" delta="0" />
     </startconditions>
@@ -5675,7 +5675,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="684" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G2" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="2" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="39" delta="0" />
     </startconditions>
@@ -5713,7 +5713,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="685" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G3" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="3" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="59" delta="0" />
     </startconditions>
@@ -5751,7 +5751,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="686" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G4" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="4" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <group_ref id="SG_098F4A201104250B" />
     <group_ref id="SG_E724349300F20E53" />
     <effects>
@@ -5787,7 +5787,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="687" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G5" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="5" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="99" delta="0" />
     </startconditions>
@@ -5825,7 +5825,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="688" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G6" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="6" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="119" delta="0" />
     </startconditions>
@@ -5863,7 +5863,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="689" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G7" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="7" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="139" delta="0" />
     </startconditions>
@@ -5901,7 +5901,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="690" name="위협의 포효" nameId="4575479" name_desc="FI_Howling_G8" stack="SKILL_FI_Howling" skill_group_name="FI_Howling" delayId="264" lvl="8" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="3060" cooldown_delta="-60" duration="0" remain_cooltime_on_login="true" cancel_rate="20" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <group_ref id="SG_3A570CCD041AA646" />
     <group_ref id="SG_E724349300F20E53" />
     <effects>
@@ -6181,7 +6181,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="698" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G1" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <startconditions>
       <mp value="19" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -6238,7 +6238,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="699" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G2" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <startconditions>
       <mp value="32" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -6295,7 +6295,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="700" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G3" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <group_ref id="SG_5A5F82DFA33CD52B" />
     <group_ref id="SG_6BB176A00168343B" />
     <effects>
@@ -6349,7 +6349,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="701" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G4" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <group_ref id="SG_A70E845E5BD64631" />
     <group_ref id="SG_6BB176A00168343B" />
     <effects>
@@ -6403,7 +6403,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="702" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G5" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <startconditions>
       <mp value="71" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -6460,7 +6460,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="703" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G6" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <startconditions>
       <mp value="84" delta="0" />
       <weapon weapon="SWORD_2H DAGGER_1H MACE_1H POLEARM_2H STAFF_2H SWORD_1H" />
@@ -6517,7 +6517,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="704" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G7" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="7" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <group_ref id="SG_9E383032EC6F1594" />
     <group_ref id="SG_6BB176A00168343B" />
     <effects>
@@ -6571,7 +6571,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="705" name="지진 파동" nameId="4575395" name_desc="FI_HeavyImpact_G8" stack="SKILL_FI_HeavyImpact" skill_group_name="FI_HeavyImpact" delayId="379" lvl="8" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D173E5BDE815F2EA" />
+    <group_ref id="SG_8BAC1376922099A1" />
     <group_ref id="SG_10E47B35A4B09E97" />
     <group_ref id="SG_6BB176A00168343B" />
     <effects>
@@ -7765,7 +7765,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="733" name="파멸의 맹타" nameId="4575545" name_desc="FI_ChargingShock_G1" stack="SKILL_FI_ChargingShock" skill_group_name="FI_ChargingShock" delayId="249" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="0" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="50" delta="-1" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -7802,7 +7802,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="734" name="파멸의 맹타" nameId="4575545" name_desc="FI_ChargingShock_G2" stack="SKILL_FI_ChargingShock" skill_group_name="FI_ChargingShock" delayId="249" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="0" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="129" delta="-4" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -7839,7 +7839,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="735" name="파멸의 맹타" nameId="4575545" name_desc="FI_ChargingShock_G3" stack="SKILL_FI_ChargingShock" skill_group_name="FI_ChargingShock" delayId="249" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="0" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="207" delta="-6" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -7876,7 +7876,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="736" name="파멸의 맹타" nameId="4575545" name_desc="FI_ChargingShock_G4" stack="SKILL_FI_ChargingShock" skill_group_name="FI_ChargingShock" delayId="249" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="0" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="285" delta="-8" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -7913,7 +7913,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="737" name="파멸의 맹타" nameId="4575545" name_desc="FI_ChargingShock_G5" stack="SKILL_FI_ChargingShock" skill_group_name="FI_ChargingShock" delayId="249" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="0" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="364" delta="-11" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -7950,7 +7950,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="738" name="파멸의 맹타" nameId="4575545" name_desc="FI_ChargingShock_G6" stack="SKILL_FI_ChargingShock" skill_group_name="FI_ChargingShock" delayId="249" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="900" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="0" stigma="ADVANCED" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0F43E5FABD11C51B" />
+    <group_ref id="SG_ED1DCE19B5533780" />
     <startconditions>
       <mp value="442" delta="-13" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -8257,7 +8257,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="749" name="회생의 파동" nameId="4575415" name_desc="FI_WhirlTornado_G1" stack="SKILL_FI_WhirlTornado" skill_group_name="FI_WhirlTornado" delayId="96" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="57" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -8288,7 +8288,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="750" name="회생의 파동" nameId="4575415" name_desc="FI_WhirlTornado_G2" stack="SKILL_FI_WhirlTornado" skill_group_name="FI_WhirlTornado" delayId="96" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="111" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -8319,7 +8319,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="751" name="회생의 파동" nameId="4575415" name_desc="FI_WhirlTornado_G3" stack="SKILL_FI_WhirlTornado" skill_group_name="FI_WhirlTornado" delayId="96" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="165" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -8350,7 +8350,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="752" name="회생의 파동" nameId="4575415" name_desc="FI_WhirlTornado_G4" stack="SKILL_FI_WhirlTornado" skill_group_name="FI_WhirlTornado" delayId="96" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="219" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -8381,7 +8381,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="753" name="회생의 파동" nameId="4575415" name_desc="FI_WhirlTornado_G5" stack="SKILL_FI_WhirlTornado" skill_group_name="FI_WhirlTornado" delayId="96" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="273" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -8412,7 +8412,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="754" name="회생의 파동" nameId="4575415" name_desc="FI_WhirlTornado_G6" stack="SKILL_FI_WhirlTornado" skill_group_name="FI_WhirlTornado" delayId="96" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="1224" cooldown_delta="-24" duration="0" remain_cooltime_on_login="true" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_84F422D8ED50B0A6" />
+    <group_ref id="SG_426F0E415FEEFC35" />
     <startconditions>
       <mp value="327" delta="0" />
       <weapon weapon="SWORD_2H POLEARM_2H" />
@@ -8530,7 +8530,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="758" name="흡수 파동" nameId="4575565" name_desc="FI_DrainWave_G1" stack="SKILL_FI_DrainWave" skill_group_name="FI_DrainWave" delayId="97" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="400" duration="0" no_jump_cancel="true" chain_skill_prob="10" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E996EF70EEF6139" />
+    <group_ref id="SG_ADFFFA6B449520D7" />
     <group_ref id="SG_F9DB080F400DED16" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -8894,7 +8894,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="769" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G1" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -8919,7 +8919,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="770" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G2" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="2" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -8944,7 +8944,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="771" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G3" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="3" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -8969,7 +8969,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="772" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G4" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="4" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -8994,7 +8994,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="773" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G5" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="5" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -9019,7 +9019,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="774" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G6" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="6" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -9044,7 +9044,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="775" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G7" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="7" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -9069,7 +9069,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="776" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G8" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="8" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -9094,7 +9094,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="777" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G9" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="9" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -9119,7 +9119,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="778" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G10" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="10" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -9144,7 +9144,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="779" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G11" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="11" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>
@@ -9169,7 +9169,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="780" name="흡혈 파동" nameId="4575435" name_desc="FI_SeismicDrain_G12" stack="SKILL_FI_SeismicDrain" skill_group_name="FI_SeismicDrain" skill_group="FI_SeismicDrain" delayId="335" lvl="12" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" no_jump_cancel="true" chain_skill_prob="100" cancel_rate="10" stigma="BASIC" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D8BC14CB85684193" />
+    <group_ref id="SG_714CB18E8AA3E4F5" />
     <group_ref id="SG_694E95B230FFBF02" />
     <group_ref id="SG_6C00C608C4861584" />
     <effects>

@@ -10939,7 +10939,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8610" name="복수의 힘" nameId="586801" name_desc="Slayer_Light_Buff_G1" stack="SKILL_Slayer_Light_Buff_G1" skill_group_name="Slayer_Light_Buff_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_15F92FB24C3F2B59" />
+    <group_ref id="SG_C8D04913778D2901" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10978,7 +10978,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="8611" name="처단의 힘" nameId="586805" name_desc="Slayer_Dark_Buff_G1" stack="SKILL_Slayer_Dark_Buff_G1" skill_group_name="Slayer_Dark_Buff_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="BUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_15F92FB24C3F2B59" />
+    <group_ref id="SG_C8D04913778D2901" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>

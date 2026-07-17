@@ -12,11 +12,28 @@ import java.util.Properties;
 
 import com.aionemu.commons.configuration.ConfigurableProcessor;
 import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
 import org.junit.jupiter.api.Test;
 
 class GameServerTest {
+
+	@Test
+	void enhancedHomeReturnIsDisabledByDefaultAndCanBeEnabled() {
+		boolean original = AIConfig.ENHANCED_HOME_RETURN;
+		try {
+			ConfigurableProcessor.process(AIConfig.class, new Properties());
+			assertFalse(AIConfig.ENHANCED_HOME_RETURN);
+
+			Properties properties = new Properties();
+			properties.setProperty("gameserver.ai.home.return.enhanced.enable", "true");
+			ConfigurableProcessor.process(AIConfig.class, properties);
+			assertTrue(AIConfig.ENHANCED_HOME_RETURN);
+		} finally {
+			AIConfig.ENHANCED_HOME_RETURN = original;
+		}
+	}
 
 	@Test
 	void resolvesConfiguredGameRuntimeDirectories() throws IOException {

@@ -163,10 +163,11 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void movingChaseTargetDoesNotRestartTheMoveAnimation() {
-		assertTrue(NpcMoveController.shouldRestartMovement(true, MovementMask.IMMEDIATE));
-		assertFalse(NpcMoveController.shouldRestartMovement(true, MovementMask.NPC_STARTMOVE));
-		assertFalse(NpcMoveController.shouldRestartMovement(true, MovementMask.NPC_RUN_SLOW));
-		assertTrue(NpcMoveController.shouldRestartMovement(false, MovementMask.NPC_RUN_SLOW));
+		assertTrue(NpcMoveController.shouldRestartMovement(false, true, MovementMask.IMMEDIATE));
+		assertFalse(NpcMoveController.shouldRestartMovement(false, true, MovementMask.NPC_STARTMOVE));
+		assertFalse(NpcMoveController.shouldRestartMovement(false, true, MovementMask.NPC_RUN_SLOW));
+		assertTrue(NpcMoveController.shouldRestartMovement(false, false, MovementMask.NPC_RUN_SLOW));
+		assertFalse(NpcMoveController.shouldRestartMovement(true, false, MovementMask.NPC_RUN_SLOW));
 	}
 
 	@Test
@@ -183,13 +184,7 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
-	void directCrowdStepDoesNotRestartTheMoveAnimation() {
-		assertFalse(NpcMoveController.avoidanceChangedStep(1, 2, 3, new float[] {1, 2, 3}));
-		assertTrue(NpcMoveController.avoidanceChangedStep(1, 2, 3, new float[] {1, 2.1f, 3}));
-	}
-
-	@Test
-	void crowdProjectionKeepsTheCurrentSegmentHeightAndRejectsLayerJumps() {
+	void localAvoidanceProjectionKeepsTheCurrentSegmentHeightAndRejectsLayerJumps() {
 		float[] projected = {1, 2, 3.2f};
 
 		assertSame(projected, NpcMoveController.stableAvoidanceProjection(3, projected));
@@ -212,17 +207,11 @@ class NpcMoveControllerPathTest {
 
 	@Test
 	void pathMovementKeepsItsPathHeight() {
-		assertFalse(NpcMoveController.shouldAdjustGeoHeight(new float[][] {{1, 2, 3}}));
-		assertTrue(NpcMoveController.shouldAdjustGeoHeight(null));
-	}
-
-	@Test
-	void directPathStepDoesNotRepeatGeoValidation() {
-		float[][] path = {{1, 2, 3}};
-
-		assertTrue(NpcMoveController.isTrustedPathStep(path, 1, 2, 3, 1, 2, 3));
-		assertFalse(NpcMoveController.isTrustedPathStep(path, 1, 2, 3, 1, 2.1f, 3));
-		assertFalse(NpcMoveController.isTrustedPathStep(null, 1, 2, 3, 1, 2, 3));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(true, true, true, new float[][] {{1, 2, 3}}));
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(true, true, true, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, true, true, null));
+		assertTrue(NpcMoveController.shouldAdjustGeoHeight(false, false, false, null));
+		assertFalse(NpcMoveController.shouldAdjustGeoHeight(false, false, true, null));
 	}
 
 	@Test
@@ -359,11 +348,12 @@ class NpcMoveControllerPathTest {
 	void localAvoidanceRequiresStraightMovement() throws Exception {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
-		String methods = source.substring(source.indexOf("private float[] avoidNearbyNpcs"),
-				source.indexOf("private static NpcCrowdManager.Agent"));
+		String method = source.substring(source.indexOf("private boolean tryPathAvoidance"),
+				source.indexOf("void blockedPathStep"));
 
-		assertEquals(2, methods.split("canMoveStraight", -1).length - 1);
-		assertFalse(methods.contains("canReachWaypoint"));
+		assertEquals(1, method.split("canMoveStraight", -1).length - 1);
+		assertFalse(method.contains("canReachWaypoint"));
+		assertFalse(method.contains("NpcCrowdManager"));
 	}
 
 	@Test
@@ -379,15 +369,6 @@ class NpcMoveControllerPathTest {
 
 		assertFalse(cachedPathValid.getBoolean(controller));
 		assertTrue(firstPathFailureAt.getLong(controller) > 0);
-	}
-
-	@Test
-	void crowdYieldDoesNotInvalidateThePath() throws Exception {
-		String source = Files.readString(Path.of(
-				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
-		String branch = source.substring(source.indexOf("float[] avoidance ="), source.indexOf("if (pathStopSent)"));
-
-		assertFalse(branch.contains("blockedPathStep()"));
 	}
 
 	@Test
@@ -415,11 +396,12 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
-	void failedHomePathTeleportsOnlyAfterTheRequestCompletes() {
-		assertTrue(NpcMoveController.shouldFinishFailedHomeReturn(1_000, false, false));
-		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(0, false, false));
-		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(1_000, true, false));
-		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(1_000, false, true));
+	void enhancedHomeReturnWaitsForTheTimeoutAfterPathFailure() {
+		assertTrue(NpcMoveController.shouldFinishFailedHomeReturn(false, 1_000, false, false));
+		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(true, 1_000, false, false));
+		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(false, 0, false, false));
+		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(false, 1_000, true, false));
+		assertFalse(NpcMoveController.shouldFinishFailedHomeReturn(false, 1_000, false, true));
 	}
 
 	@Test
@@ -431,9 +413,10 @@ class NpcMoveControllerPathTest {
 	}
 
 	@Test
-	void returnSpeedKeepsCurrentStatModifiersAndAppliesPercentage() {
-		assertEquals(3f, NpcMoveController.returnSpeed(2f, 150));
-		assertEquals(12f, NpcMoveController.returnSpeed(6f, 200));
+	void waypointReturnKeepsPatrolSpeedAndSpawnReturnAppliesPercentage() {
+		assertEquals(2f, NpcMoveController.returnSpeed(2f, 150, true));
+		assertEquals(3f, NpcMoveController.returnSpeed(2f, 150, false));
+		assertEquals(12f, NpcMoveController.returnSpeed(6f, 200, false));
 	}
 
 	@Test

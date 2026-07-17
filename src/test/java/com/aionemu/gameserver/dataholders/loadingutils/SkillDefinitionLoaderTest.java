@@ -87,6 +87,11 @@ class SkillDefinitionLoaderTest {
 		assertEquals(3, data.getSkillTemplate(838).getProperties().getTargetDistance());
 		assertEquals(26, data.getSkillTemplate(838).getProperties().getEffectiveAngle());
 		assertEquals(5, data.getSkillTemplate(838).getProperties().getEffectiveWidth());
+		for (int skillId : new int[] { 555, 670, 758, 769 }) {
+			assertEquals(7, data.getSkillTemplate(skillId).getProperties().getEffectiveRange());
+			assertEquals(5, data.getSkillTemplate(skillId).getProperties().getEffectiveAltitude());
+			assertEquals(0, data.getSkillTemplate(skillId).getProperties().getEffectiveAngle());
+		}
 		assertEquals(100, data.getSkillTemplate(838).getChainSkillProb());
 		assertTrue(data.getSkillTemplate(2993).isStance());
 		assertTrue(data.getSkillTemplate(601).getStartconditions().getConditions().stream()

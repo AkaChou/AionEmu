@@ -86,6 +86,25 @@ class TargetRangePropertyTest {
 	}
 
 	@Test
+	void fireballAreaUsesEffectiveRangeAndAltitude() {
+		TestCreature effector = new TestCreature(1);
+		TestCreature sameFloor = new TestCreature(2, 6f, 0f, 4f, 0f);
+		TestCreature otherFloor = new TestCreature(3, 1f, 0f, 6f, 0f);
+		effector.getKnownList().getKnownObjects().put(sameFloor.getObjectId(), sameFloor);
+		effector.getKnownList().getKnownObjects().put(otherFloor.getObjectId(), otherFloor);
+		Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);
+		Properties properties = new Properties();
+		properties.targetType = TargetRangeAttribute.AREA;
+		properties.effectiveRange = 7;
+		properties.effectiveAltitude = 5;
+
+		TargetRangeProperty.set(skill, properties);
+
+		assertTrue(skill.getEffectedList().contains(sameFloor));
+		assertFalse(skill.getEffectedList().contains(otherFloor));
+	}
+
+	@Test
 	void onlyOneOtherTargetRejectsEffector() {
 		TestCreature effector = new TestCreature(1);
 		Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);

@@ -1797,7 +1797,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10383" name="폭탄 구슬 효과" nameId="599213" name_desc="item_idarena_skill_01" stack="SKILL_item_idarena_skill_01" skill_group_name="item_idarena_skill_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_98B1C4A7706E25BE" />
+    <group_ref id="SG_CB859BDC198EDE93" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_7AC56FD6651BD7C7" />
     <group_ref id="SG_BB0B3BD26B8FCCC6" />
@@ -1831,7 +1831,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10384" name="속박의 구슬 효과" nameId="599215" name_desc="item_idarena_skill_02" stack="SKILL_item_idarena_skill_02" skill_group_name="item_idarena_skill_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_98B1C4A7706E25BE" />
+    <group_ref id="SG_CB859BDC198EDE93" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <root duration1="0" duration2="5000" randomtime="0" effectid="20003" e="1" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="EARTH" />
@@ -2608,7 +2608,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10400" name="속박의 구슬 효과" nameId="4560075" name_desc="item_idarena_skill_02b" stack="SKILL_item_idarena_skill_02b" skill_group_name="item_idarena_skill_02b" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_98B1C4A7706E25BE" />
+    <group_ref id="SG_CB859BDC198EDE93" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <root duration1="0" duration2="7000" randomtime="0" effectid="20003" e="1" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="EARTH" />
@@ -6505,7 +6505,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10505" name="[기타] 단일 공격 광역 넉백" nameId="4562201" name_desc="item_IDEvent01_Canon" stack="SKILL_item_IDEvent01_Canon" skill_group_name="item_IDEvent01_Canon" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_DF32EAB32948CF8B" />
+    <group_ref id="SG_59239D02E1F537FA" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="5000" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
@@ -7681,7 +7681,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10532" name="광역 스네어" nameId="4562603" name_desc="item_IDEvent01_TargetAreaSlow" stack="SKILL_item_IDEvent01_TargetAreaSlow" skill_group_name="item_IDEvent01_TargetAreaSlow" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_C7FDE8D833A4E99A" />
+    <group_ref id="SG_E6E1C6DE81BDFE5F" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_D9FA28ECF6AE440E" />
     <group_ref id="SG_FDCEBBAB040BAEAF" />
@@ -8999,7 +8999,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10577" name="저주의 냉기" nameId="4563493" name_desc="item_IDEvent01_AreaRoot2" stack="SKILL_item_IDEvent01_AreaRoot2" skill_group_name="item_IDEvent01_AreaRoot2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_05BFAF89A3A7763D" />
+    <group_ref id="SG_76FC62714C5C09AF" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <paralyze duration1="0" duration2="7000" randomtime="0" effectid="20002" e="1" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -9101,7 +9101,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10581" name="[이벤트] 범위 냉각" nameId="4563689" name_desc="item_IDEvent01_AreaFrozen" stack="SKILL_item_IDEvent01_AreaFrozen" skill_group_name="item_IDEvent01_AreaFrozen" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_05BFAF89A3A7763D" />
+    <group_ref id="SG_76FC62714C5C09AF" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <stun duration1="0" duration2="5000" randomtime="0" effectid="20000" e="1" basiclvl="200" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -10311,7 +10311,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10624" name="폭탄 구슬 효과" nameId="599213" name_desc="item_idldf5re_02_key" stack="SKILL_item_idldf5re_02_key" skill_group_name="item_idldf5re_02_key" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_9163201CD510DA1D" />
+    <group_ref id="SG_F0486B158E3C6ED7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="1000" critprobmod1="0" critadddmg2="0" />
@@ -17488,7 +17488,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10796" name="폭탄 구슬 효과" nameId="1648701" name_desc="idkamar_boom_skill_01" stack="SKILL_idkamar_boom_skill_01" skill_group_name="idkamar_boom_skill_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_98B1C4A7706E25BE" />
+    <group_ref id="SG_CB859BDC198EDE93" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_7AC56FD6651BD7C7" />
     <group_ref id="SG_BB0B3BD26B8FCCC6" />
@@ -17987,7 +17987,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10811" name="정령수 마티니 효과" nameId="4567739" name_desc="world_event_cocktail_effect_04" stack="SKILL_world_event_cocktail_effect_04" skill_group_name="world_event_cocktail_effect_04" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="SPEC" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" no_save_on_logout="true" cancel_rate="0" conflict_id="21" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
-    <group_ref id="SG_958483E6624A9CBF" />
+    <group_ref id="SG_4861AC9258ABAEDF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_707E2073820DC3D5" />

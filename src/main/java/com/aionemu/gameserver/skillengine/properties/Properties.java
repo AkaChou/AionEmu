@@ -94,6 +94,12 @@ public class Properties {
 	@XmlAttribute(name = "effective_width")
 	private int effectiveWidth;
 
+	@XmlAttribute(name = "effective_range")
+	protected int effectiveRange;
+
+	@XmlAttribute(name = "effective_altitude")
+	protected int effectiveAltitude;
+
 	/**
 	 * 有效角度（扇形范围）。
 	 * Effective angle for cone range.
@@ -349,6 +355,14 @@ public class Properties {
 	 */
 	public int getEffectiveWidth() {
 		return effectiveWidth;
+	}
+
+	public int getEffectiveRange() {
+		return effectiveRange;
+	}
+
+	public int getEffectiveAltitude() {
+		return effectiveAltitude;
 	}
 
 	/**

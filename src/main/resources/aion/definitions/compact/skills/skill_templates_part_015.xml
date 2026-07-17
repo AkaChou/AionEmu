@@ -790,7 +790,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10849" name="섬광탄" nameId="4568043" name_desc="item_idf5_td_war_Stun" stack="SKILL_item_idf5_td_war_Stun" skill_group_name="item_idf5_td_war_Stun" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_A4FC552D43F6B19C" />
+    <group_ref id="SG_D18AC0B62EC074FB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="6531" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="2000" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -832,7 +832,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10850" name="대전차 수류탄" nameId="4568047" name_desc="item_idf5_td_war_Dispel" stack="SKILL_item_idf5_td_war_Dispel" skill_group_name="item_idf5_td_war_Dispel" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_C839C01060C536F1" />
+    <group_ref id="SG_DAC706E736A97DF9" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="21531" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="2000" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -4307,7 +4307,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10923" name="추가 경험치 획득 - 50%" nameId="4569347" name_desc="world_event_winter_xp_boost_01" stack="SKILL_world_event_winter_xp_boost_01" skill_group_name="world_event_winter_xp_boost_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BOOST" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="INDIRECT" target_stop="1">
-    <group_ref id="SG_958483E6624A9CBF" />
+    <group_ref id="SG_4861AC9258ABAEDF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4334,7 +4334,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10924" name="채집 숙련도 향상 - 200%" nameId="4569349" name_desc="world_event_winter_gather_boost_01" stack="SKILL_world_event_winter_gather_boost_01" skill_group_name="world_event_winter_gather_boost_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BOOST" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_958483E6624A9CBF" />
+    <group_ref id="SG_4861AC9258ABAEDF" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillxpboost duration1="0" duration2="1800000" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -4368,7 +4368,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10925" name="AP 증폭 효과 - 30%" nameId="4569351" name_desc="world_event_winter_ap_boost_01" stack="SKILL_world_event_winter_ap_boost_01" skill_group_name="world_event_winter_ap_boost_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BOOST" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_958483E6624A9CBF" />
+    <group_ref id="SG_4861AC9258ABAEDF" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <apboost duration1="0" duration2="1800000" randomtime="0" effectid="0" e="1" basiclvl="1" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -4388,7 +4388,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10926" name="제작 숙련도 향상 - 200%" nameId="4569353" name_desc="world_event_winter_craft_boost_01" stack="SKILL_world_event_winter_craft_boost_01" skill_group_name="world_event_winter_craft_boost_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BOOST" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
-    <group_ref id="SG_958483E6624A9CBF" />
+    <group_ref id="SG_4861AC9258ABAEDF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4428,7 +4428,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10927" name="아이템 획득 기회 증가 - 20%" nameId="4569355" name_desc="world_event_winter_drop_boost_01" stack="SKILL_world_event_winter_drop_boost_01" skill_group_name="world_event_winter_drop_boost_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BOOST" tslot_level="0" dispel_category="NEVER" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_958483E6624A9CBF" />
+    <group_ref id="SG_4861AC9258ABAEDF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_B61C8300465F8B7E" />
@@ -4445,7 +4445,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="10928" name="행정관의 특혜 효과" nameId="4569357" name_desc="world_event_winter_start_kit" stack="SKILL_world_event_winter_start_kit" skill_group_name="world_event_winter_start_kit" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BOOST" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="true" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE" target_stop="1">
-    <group_ref id="SG_958483E6624A9CBF" />
+    <group_ref id="SG_4861AC9258ABAEDF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -9705,7 +9705,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11056" name="칼크겔름의 핵 던지기" nameId="4577579" name_desc="lf6_golem_shiled_skill" stack="SKILL_lf6_golem_shiled_skill" skill_group_name="lf6_golem_shiled_skill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_9163201CD510DA1D" />
+    <group_ref id="SG_F0486B158E3C6ED7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" value="50" delta="0" percent="true" maxdamage="102000" critprobmod1="0" critadddmg2="0" />
@@ -12632,7 +12632,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11119" name="폭발" nameId="4579687" name_desc="IDLuna_siege_bombing_01" stack="SKILL_IDLuna_siege_bombing_01" skill_group_name="IDLuna_siege_bombing_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_12966174E1288425" />
+    <group_ref id="SG_30E6423DB61FF44F" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="10000" delta="0" critprobmod1="0" critadddmg2="0" />
@@ -12667,7 +12667,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11120" name="폭발" nameId="4579689" name_desc="IDLuna_siege_bombing_02" stack="SKILL_IDLuna_siege_bombing_02" skill_group_name="IDLuna_siege_bombing_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_12966174E1288425" />
+    <group_ref id="SG_30E6423DB61FF44F" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" critprobmod1="0" critadddmg2="0" />
@@ -12720,7 +12720,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11122" name="폭발" nameId="4579693" name_desc="IDLuna_siege_bombing_03" stack="SKILL_IDLuna_siege_bombing_03" skill_group_name="IDLuna_siege_bombing_03" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_12966174E1288425" />
+    <group_ref id="SG_30E6423DB61FF44F" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="15000" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -12755,7 +12755,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11123" name="일격" nameId="4579695" name_desc="IDLuna_def_NPC_Hranger_01" stack="SKILL_IDLuna_def_NPC_Hranger_01" skill_group_name="IDLuna_def_NPC_Hranger_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_93362508E06CCFBE" />
+    <group_ref id="SG_775B8899E80C7B47" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="2500" delta="0" critprobmod1="0" critadddmg2="0" />
@@ -12775,7 +12775,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11124" name="기공포" nameId="4579697" name_desc="IDLuna_def_NPC_Hwizard_01" stack="SKILL_IDLuna_def_NPC_Hwizard_01" skill_group_name="IDLuna_def_NPC_Hwizard_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_93362508E06CCFBE" />
+    <group_ref id="SG_775B8899E80C7B47" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="3000" delta="0" critprobmod1="0" critadddmg2="0" />
@@ -13492,7 +13492,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11163" name="칼날 날리기" nameId="4575405" name_desc="IDLuna_def_NPC_Hkinght_01" stack="SKILL_IDLuna_def_NPC_Hkinght_01" skill_group_name="IDLuna_def_NPC_Hkinght_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_93362508E06CCFBE" />
+    <group_ref id="SG_775B8899E80C7B47" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <noreducespellatk duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" value="2000" delta="0" critprobmod1="0" critadddmg2="0" />
@@ -17612,7 +17612,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11262" name="실명" nameId="4580693" name_desc="IDEternity_War_Scroll_Blind_ItemSkill" stack="SKILL_IDEternity_War_Scroll_Blind_ItemSkill" skill_group_name="IDEternity_War_Scroll_Blind_ItemSkill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
-    <group_ref id="SG_F5B3ABFA58A770AA" />
+    <group_ref id="SG_296A3EBAAF9B51CC" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <blind duration1="0" duration2="8000" randomtime="0" effectid="10112603" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="100" />
@@ -17635,7 +17635,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="11263" name="침묵&amp;봉쇄" nameId="4580695" name_desc="IDEternity_War_Scroll_Silence_ItemSkill" stack="SKILL_IDEternity_War_Scroll_Silence_ItemSkill" skill_group_name="IDEternity_War_Scroll_Silence_ItemSkill" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT" target_stop="1">
-    <group_ref id="SG_F5B3ABFA58A770AA" />
+    <group_ref id="SG_296A3EBAAF9B51CC" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <silence duration1="0" duration2="8000" randomtime="0" effectid="10112604" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />

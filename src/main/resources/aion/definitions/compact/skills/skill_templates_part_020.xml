@@ -55,7 +55,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17692" name="범위 벼락" nameId="581551" name_desc="DGAS_H_SpellStun_TA" stack="SKILL_DGAS_H_SpellStun_TA" skill_group_name="DGAS_H_SpellStun_TA" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_03144C4A3A4DA7B7" />
+    <group_ref id="SG_A19D59BAAF8EA978" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_2681D0DBECAAEE7A" />
@@ -94,7 +94,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17693" name="범위 단죄의 일격" nameId="581553" name_desc="DGAS_H_SatkSlow_TA" stack="SKILL_DGAS_H_SatkSlow_TA" skill_group_name="DGAS_H_SatkSlow_TA" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A35CE409BA3C5BB8" />
+    <group_ref id="SG_D485416A499DDCCB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_97394833AC492385" />
@@ -133,7 +133,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17694" name="화염 폭발" nameId="581555" name_desc="DGAS_H_SpellLongFire_TA" stack="SKILL_DGAS_H_SpellLongFire_TA" skill_group_name="DGAS_H_SpellLongFire_TA" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_03144C4A3A4DA7B7" />
+    <group_ref id="SG_A19D59BAAF8EA978" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_08996B15F111050E" />
@@ -156,7 +156,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17695" name="얼음 파도" nameId="581557" name_desc="DGAS_H_SpellLongIce_TA" stack="SKILL_DGAS_H_SpellLongIce_TA" skill_group_name="DGAS_H_SpellLongIce_TA" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_03144C4A3A4DA7B7" />
+    <group_ref id="SG_A19D59BAAF8EA978" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_04B3CA333079F8FF" />
@@ -218,7 +218,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17697" name="범위 실명" nameId="581561" name_desc="DGWI_H_Blind_TA" stack="SKILL_DGWI_H_Blind_TA" skill_group_name="DGWI_H_Blind_TA" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="25" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_03144C4A3A4DA7B7" />
+    <group_ref id="SG_A19D59BAAF8EA978" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_049A14D2A4B729A6" />
@@ -388,7 +388,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17703" name="범위 내려찍기" nameId="581573" name_desc="DGPR_H_SKnockdown_TA" stack="SKILL_DGPR_H_SKnockdown_TA" skill_group_name="DGPR_H_SKnockdown_TA" delayId="3" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A35CE409BA3C5BB8" />
+    <group_ref id="SG_D485416A499DDCCB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -460,7 +460,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17705" name="범위 기합 II" nameId="581577" name_desc="DGPR_H_SUpPyDefMid_TA" stack="SKILL_DGPR_H_SUpPyDefMid_TA" skill_group_name="DGPR_H_SUpPyDefMid_TA" delayId="6" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_47F8F1EE1A31CD23" />
+    <group_ref id="SG_68F15D5EBC097A84" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -490,7 +490,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17706" name="벼락" nameId="581579" name_desc="DGPR_H_ShieldStun_TA" stack="SKILL_DGPR_H_ShieldStun_TA" skill_group_name="DGPR_H_ShieldStun_TA" delayId="3" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1500" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A35CE409BA3C5BB8" />
+    <group_ref id="SG_D485416A499DDCCB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_A93C1F9ADD432EE5" />
@@ -804,7 +804,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17716" name="정확한 한발" nameId="581721" name_desc="NRA_SATKLgStunTA_mortal_ADDleh" stack="SKILL_NRA_SATKLgStunTA_mortal_ADDleh" skill_group_name="NRA_SATKLgStunTA_mortal_ADDleh" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="16412" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E7914783A581A776" />
+    <group_ref id="SG_A66756D5E17A5EB0" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -848,7 +848,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17717" name="훌륭한 마법" nameId="581735" name_desc="NWI_SpellongParTA_mortal_ADDleh" stack="SKILL_NWI_SpellongParTA_mortal_ADDleh" skill_group_name="NWI_SpellongParTA_mortal_ADDleh" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="16412" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_80DE509143EF2CAF" />
+    <group_ref id="SG_466677ACB996BA3E" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -889,7 +889,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17718" name="멋드러진 신폭" nameId="581717" name_desc="NPR_SpellKBMorTA_addHealLeh" stack="SKILL_NPR_SpellKBMorTA_addHealLeh" skill_group_name="NPR_SpellKBMorTA_addHealLeh" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="16413" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_887DE9A8E372E34B" />
+    <group_ref id="SG_F5884D2BBDDD8ECA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_4F5C8A008C2D0BDA" />
@@ -1063,7 +1063,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17723" name="날개신경독" nameId="581755" name_desc="GNAS_HasPoiFPatkLongTA_LC" stack="SKILL_GNAS_HasPoiFPatkLongTA_LC" skill_group_name="GNAS_HasPoiFPatkLongTA_LC" delayId="11" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1128,7 +1128,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17724" name="심각하게 오염된 물기" nameId="581749" name_desc="BNAS_DiseaseSATKTALong_Liquid" stack="SKILL_BNAS_DiseaseSATKTALong_Liquid" skill_group_name="BNAS_DiseaseSATKTALong_Liquid" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B437DBAEE2A7F2F1" />
+    <group_ref id="SG_C31D8E23099A49DA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1326,7 +1326,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17728" name="생체폭발" nameId="581831" name_desc="NTRAP_SpellATKTA_Drake" stack="SKILL_NTRAP_SpellATKTA_Drake" skill_group_name="NTRAP_SpellATKTA_Drake" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6DDCA7B84B381C00" />
+    <group_ref id="SG_243DEBB0E2D282BA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <spellatkinstant value="107" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -1478,7 +1478,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17732" name="피로회복" nameId="581809" name_desc="NPR_SDattSUSpeedStun1TA_Sam" stack="SKILL_NPR_SDattSUSpeedStun1TA_Sam" skill_group_name="NPR_SDattSUSpeedStun1TA_Sam" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="30" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A5914766477CF095" />
+    <group_ref id="SG_270F0A43A4C72171" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1554,7 +1554,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17733" name="정신안정" nameId="581825" name_desc="NPR_SUConNoskillStun1_Sam" stack="SKILL_NPR_SUConNoskillStun1_Sam" skill_group_name="NPR_SUConNoskillStun1_Sam" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="30" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A5914766477CF095" />
+    <group_ref id="SG_270F0A43A4C72171" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1831,7 +1831,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17740" name="물리 반사 주문" nameId="4580343" name_desc="IDEternity_03_Reflector_P" stack="SKILL_IDEternity_03_Reflector_P" skill_group_name="IDEternity_03_Reflector_P" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="0" penalty_skill_id="17743" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_766288E0920CC098" />
+    <group_ref id="SG_D02280F65F5EB57F" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1865,7 +1865,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17741" name="마법 반사 주문" nameId="4580345" name_desc="IDEternity_03_Reflector_M" stack="SKILL_IDEternity_03_Reflector_M" skill_group_name="IDEternity_03_Reflector_M" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="0" penalty_skill_id="17742" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_766288E0920CC098" />
+    <group_ref id="SG_D02280F65F5EB57F" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -1955,7 +1955,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17744" name="공격력 강화 주문" nameId="4580351" name_desc="IDEternity_03_Atk" stack="SKILL_IDEternity_03_Atk" skill_group_name="IDEternity_03_Atk" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="0" penalty_skill_id="17743" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_6D54A0471D54E092" />
+    <group_ref id="SG_40B76BFC99F75ABB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="86400000" randomtime="0" effectid="10177441" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1">
@@ -1991,7 +1991,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17745" name="공격속도 강화 주문" nameId="4580353" name_desc="IDEternity_03_AtkSpeed" stack="SKILL_IDEternity_03_AtkSpeed" skill_group_name="IDEternity_03_AtkSpeed" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="0" penalty_skill_id="17742" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_6D54A0471D54E092" />
+    <group_ref id="SG_40B76BFC99F75ABB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="86400000" randomtime="0" effectid="10177451" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1">
@@ -2022,7 +2022,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17746" name="방어력 강화 주문" nameId="4580355" name_desc="IDEternity_03_Def" stack="SKILL_IDEternity_03_Def" skill_group_name="IDEternity_03_Def" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="0" penalty_skill_id="17743" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_6D54A0471D54E092" />
+    <group_ref id="SG_40B76BFC99F75ABB" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <statup duration1="0" duration2="86400000" randomtime="0" effectid="10177461" e="1" basiclvl="100" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1">
@@ -2087,7 +2087,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17748" name="꿈의 시작" nameId="4580359" name_desc="IDEternity_03_Sleep" stack="SKILL_IDEternity_03_Sleep" skill_group_name="IDEternity_03_Sleep" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_ECA52A550EB003E1" />
+    <group_ref id="SG_A45E0D7CFC3D757D" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <sleep duration1="0" duration2="10000" randomtime="0" effectid="20106" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="SKILLLV" hopa="0" hopb="3536" element="FIRE" />
@@ -2113,7 +2113,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17749" name="꿈의 왜곡" nameId="4580361" name_desc="IDEternity_03_SleepATK" stack="SKILL_IDEternity_03_SleepATK" skill_group_name="IDEternity_03_SleepATK" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_ECA52A550EB003E1" />
+    <group_ref id="SG_A45E0D7CFC3D757D" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="30" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
@@ -2350,7 +2350,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17754" name="오싹한 공포" nameId="4580371" name_desc="IDEternity_03_Fear" stack="SKILL_IDEternity_03_Fear" skill_group_name="IDEternity_03_Fear" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_ECA52A550EB003E1" />
+    <group_ref id="SG_A45E0D7CFC3D757D" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="60" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="60" hopb="60" element="EARTH" />
@@ -2568,7 +2568,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17762" name="낙석" nameId="4562677" name_desc="IDEternity_03_FallingRock_SkillDmg" stack="SKILL_IDEternity_03_FallingRock_SkillDmg" skill_group_name="IDEternity_03_FallingRock_SkillDmg" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_08C48068D7F559DB" />
+    <group_ref id="SG_D3E27EEE398256FA" />
     <effects>
       <spellatkinstant value="2500" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH" />
     </effects>
@@ -2682,7 +2682,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17766" name="경보해제" nameId="4580481" name_desc="IDEternity_03_Dispel_01" stack="SKILL_IDEternity_03_Dispel_01" skill_group_name="IDEternity_03_Dispel_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_451DF60571A27EEA" />
+    <group_ref id="SG_EBEE5F5649E35457" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTID" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -2710,7 +2710,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17767" name="경보해제" nameId="4580481" name_desc="IDEternity_03_Dispel_02" stack="SKILL_IDEternity_03_Dispel_02" skill_group_name="IDEternity_03_Dispel_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_451DF60571A27EEA" />
+    <group_ref id="SG_EBEE5F5649E35457" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTID" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -2738,7 +2738,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17768" name="경보해제" nameId="4580481" name_desc="IDEternity_03_Dispel_03" stack="SKILL_IDEternity_03_Dispel_03" skill_group_name="IDEternity_03_Dispel_03" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_451DF60571A27EEA" />
+    <group_ref id="SG_EBEE5F5649E35457" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTID" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -2833,7 +2833,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17771" name="난폭한 포획" nameId="4580555" name_desc="IDEternity_03_Pulled_Dummy" stack="SKILL_IDEternity_03_Pulled_Dummy" skill_group_name="IDEternity_03_Pulled_Dummy" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_24B27950AE80103A" />
+    <group_ref id="SG_BB303CD022E0001C" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_385F8550BA936193" />
     <group_ref id="SG_6EA033AACFB96F89" />
@@ -3004,7 +3004,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17776" name="경보해제" nameId="4580481" name_desc="IDEternity_03_Dispel_P" stack="SKILL_IDEternity_03_Dispel_P" skill_group_name="IDEternity_03_Dispel_P" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_BF1563ADF13A00F7" />
+    <group_ref id="SG_A22995F82BFA1EE4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTID" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -3033,7 +3033,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17777" name="경보해제" nameId="4580481" name_desc="IDEternity_03_Dispel_M" stack="SKILL_IDEternity_03_Dispel_M" skill_group_name="IDEternity_03_Dispel_M" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applyhealboost="false" applymphealboost="false" ammospeed="0" obstacle="5" hostile_type="NONE">
-    <group_ref id="SG_BF1563ADF13A00F7" />
+    <group_ref id="SG_A22995F82BFA1EE4" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTID" delta="0" value="255" dispel_level_delta="0" dispel_level="100" dpower="0" power="100">
@@ -3208,7 +3208,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17782" name="충격 폭탄 I" nameId="576691" name_desc="CallSlave_StormServant_G1" stack="SKILL_CallSlave_StormServant_G1" skill_group_name="CallSlave_StormServant_G1" delayId="0" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="10" duration="0" cancel_rate="10" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_58346D8848858EAE" />
+    <group_ref id="SG_BDD6D8878D04D495" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="200" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
@@ -3416,7 +3416,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17789" name="오드 레이" nameId="577203" name_desc="NWI_Spellatk_LC_Po_DefObj" stack="SKILL_NWI_Spellatk_LC_Po_DefObj" skill_group_name="NWI_Spellatk_LC_Po_DefObj" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_257E6D611568351B" />
+    <group_ref id="SG_7AB6768DC38208F6" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3469,7 +3469,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17790" name="폭발" nameId="577205" name_desc="NWI_SpellatkAr_Ar_DefObj" stack="SKILL_NWI_SpellatkAr_Ar_DefObj" skill_group_name="NWI_SpellatkAr_Ar_DefObj" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3950DC7A18C6CAFB" />
+    <group_ref id="SG_73BDA2A645884EA5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3496,7 +3496,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17791" name="오드 레이" nameId="577221" name_desc="NWI_Spellatk_LC_Po_DefObj2" stack="SKILL_NWI_Spellatk_LC_Po_DefObj2" skill_group_name="NWI_Spellatk_LC_Po_DefObj2" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_257E6D611568351B" />
+    <group_ref id="SG_7AB6768DC38208F6" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -3522,7 +3522,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17792" name="이드폭주" nameId="4569597" name_desc="F6_Raid_Hyperion_AreaFire2" stack="SKILL_F6_Raid_Hyperion_AreaFire2" skill_group_name="F6_Raid_Hyperion_AreaFire2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="5000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_68E2D4D737C4E06A" />
+    <group_ref id="SG_0AD3B672C55CA334" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="380" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -3732,7 +3732,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17802" name="얼음 파도 I 효과" nameId="577277" name_desc="AreaTidal_G1" stack="SKILL_AreaTidal_G1" skill_group_name="AreaTidal_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_FD0446A897FBC9AF" />
+    <group_ref id="SG_3CDD486E747932B8" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="1891" delta="35" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -3773,7 +3773,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17803" name="용암 파도 I 효과" nameId="577281" name_desc="AreaMagma_G1" stack="SKILL_AreaMagma_G1" skill_group_name="AreaMagma_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_FD0446A897FBC9AF" />
+    <group_ref id="SG_3CDD486E747932B8" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="1891" delta="35" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -3814,7 +3814,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17804" name="그라운드 버스트 I 효과" nameId="577285" name_desc="GroundBurst_G1" stack="SKILL_GroundBurst_G1" skill_group_name="GroundBurst_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_FD0446A897FBC9AF" />
+    <group_ref id="SG_3CDD486E747932B8" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatk duration1="0" duration2="30000" randomtime="0" effectid="115501" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" checktime="6000" value="50" delta="0" mrresist="false" />
@@ -3840,7 +3840,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17806" name="올가미 덫 III 효과" nameId="582255" name_desc="HeavensTrap_G3" stack="SKILL_HeavensTrap_G3" skill_group_name="HeavensTrap_G3" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="2" hostile_type="DIRECT">
-    <group_ref id="SG_8D3C4B778ECD87D1" />
+    <group_ref id="SG_28B64B7C313F1C05" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="504" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="EARTH">
@@ -3869,7 +3869,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17807" name="중독의 덫 I 효과" nameId="582285" name_desc="PoisonTrap_G1" stack="SKILL_PoisonTrap_G1" skill_group_name="PoisonTrap_G1" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="2" hostile_type="DIRECT">
-    <group_ref id="SG_8D3C4B778ECD87D1" />
+    <group_ref id="SG_28B64B7C313F1C05" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <poison duration1="0" duration2="24000" randomtime="0" effectid="20005" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="EARTH" checktime="6000" delta="5" value="129" />
@@ -3897,7 +3897,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17808" name="중독의 덫 II 효과" nameId="582289" name_desc="PoisonTrap_G2" stack="SKILL_PoisonTrap_G2" skill_group_name="PoisonTrap_G2" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="2" hostile_type="DIRECT">
-    <group_ref id="SG_8D3C4B778ECD87D1" />
+    <group_ref id="SG_28B64B7C313F1C05" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <poison duration1="0" duration2="24000" randomtime="0" effectid="20005" e="1" basiclvl="20" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="EARTH" checktime="6000" delta="6" value="229" />
@@ -3926,7 +3926,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17809" name="중독의 덫 III 효과" nameId="582291" name_desc="PoisonTrap_G3" stack="SKILL_PoisonTrap_G3" skill_group_name="PoisonTrap_G3" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="2" hostile_type="DIRECT">
-    <group_ref id="SG_8D3C4B778ECD87D1" />
+    <group_ref id="SG_28B64B7C313F1C05" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <poison duration1="0" duration2="24000" randomtime="0" effectid="20005" e="1" basiclvl="40" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="0" hopb="1" element="EARTH" checktime="6000" delta="6" value="337" />
@@ -3955,7 +3955,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17810" name="투시의 덫 I 효과" nameId="582715" name_desc="FairyFlare_G1" stack="SKILL_FairyFlare_G1" skill_group_name="FairyFlare_G1" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="2" hostile_type="NONE">
-    <group_ref id="SG_C65C08F3D4D3DA8E" />
+    <group_ref id="SG_9DD5CB39A9B57FF7" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <dispel duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" dispeltype="EFFECTTYPE" delta="0" value="3" dispel_level_delta="0" dispel_level="3" dpower="0" power="50">
@@ -4116,7 +4116,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17815" name="심연의 기운 I" nameId="577441" name_desc="AbyssianServant_G1" stack="SKILL_AbyssianServant_G1" skill_group_name="AbyssianServant_G1" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BBA0BDB496C2760A" />
+    <group_ref id="SG_ADFCF230FF5BCC2A" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="800" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -4143,7 +4143,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17816" name="심연의 기운 II" nameId="577443" name_desc="AbyssianServant_G2" stack="SKILL_AbyssianServant_G2" skill_group_name="AbyssianServant_G2" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="100" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_BBA0BDB496C2760A" />
+    <group_ref id="SG_ADFCF230FF5BCC2A" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <skillatk value="1400" delta="0" mode="ADD" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="9999" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -4314,7 +4314,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17821" name="암흑일침" nameId="582809" name_desc="BNAS_SATKFallNoFlyTA_Chain1_Lc_Poi" stack="SKILL_BNAS_SATKFallNoFlyTA_Chain1_Lc_Poi" skill_group_name="BNAS_SATKFallNoFlyTA_Chain1_Lc_Poi" delayId="13" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4397,7 +4397,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17823" name="낙수" nameId="582821" name_desc="BNEL_CloseSATKTA40_Chain2" stack="SKILL_BNEL_CloseSATKTA40_Chain2" skill_group_name="BNEL_CloseSATKTA40_Chain2" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EEF17E786FA6C180" />
+    <group_ref id="SG_57C3699C6D359C4D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_4621C62D64479499" />
@@ -4438,7 +4438,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17824" name="신성부유" nameId="582831" name_desc="BNEL_OpenDot40_12s_Area" stack="SKILL_BNEL_OpenDot40_12s_Area" skill_group_name="BNEL_OpenDot40_12s_Area" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="5000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EEF17E786FA6C180" />
+    <group_ref id="SG_57C3699C6D359C4D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4487,7 +4487,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17825" name="용암족쇄" nameId="582849" name_desc="BNEL_RSnareDotTA40_Nc" stack="SKILL_BNEL_RSnareDotTA40_Nc" skill_group_name="BNEL_RSnareDotTA40_Nc" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E8019203C0A32B95" />
+    <group_ref id="SG_5AF4A37C222C5E51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <snare duration1="0" duration2="120000" randomtime="0" effectid="20007" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="FIRE">
@@ -4535,7 +4535,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17826" name="신성회수" nameId="582855" name_desc="BNEL_ShrParBufCSDDefTA40_AddRef" stack="SKILL_BNEL_ShrParBufCSDDefTA40_AddRef" skill_group_name="BNEL_ShrParBufCSDDefTA40_AddRef" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" penalty_skill_id="17817" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E8019203C0A32B95" />
+    <group_ref id="SG_5AF4A37C222C5E51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4602,7 +4602,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17827" name="깊은수면" nameId="582861" name_desc="BNEL_SleepSDDefTA40_No" stack="SKILL_BNEL_SleepSDDefTA40_No" skill_group_name="BNEL_SleepSDDefTA40_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E8019203C0A32B95" />
+    <group_ref id="SG_5AF4A37C222C5E51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4713,7 +4713,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17829" name="강력한 일격" nameId="582883" name_desc="BNFI_KBFPATKinsTA20_Po" stack="SKILL_BNFI_KBFPATKinsTA20_Po" skill_group_name="BNFI_KBFPATKinsTA20_Po" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_137CA234B3EECECD" />
+    <group_ref id="SG_BDF6E756C4A16CCB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4795,7 +4795,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17831" name="냉혹한 내려치기" nameId="582877" name_desc="BNFI_CloseSDDef40_chain2_ArK" stack="SKILL_BNFI_CloseSDDef40_chain2_ArK" skill_group_name="BNFI_CloseSDDef40_chain2_ArK" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="4" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_1A3E65E6CFEAA768" />
+    <group_ref id="SG_00088EFE094C30FE" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -4909,7 +4909,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17833" name="끈적이는 진액" nameId="582897" name_desc="BNFI_NoFLySnareSatkTA_Lc_Poi" stack="SKILL_BNFI_NoFLySnareSatkTA_Lc_Poi" skill_group_name="BNFI_NoFLySnareSatkTA_Lc_Poi" delayId="13" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_06A1A1E262702EEF" />
+    <group_ref id="SG_D9B8B46BEFBA3813" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <skillatk value="39" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -4971,7 +4971,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17834" name="결정화" nameId="582903" name_desc="BNFI_OpDeformGOdiHTA25_cha1_Poi" stack="SKILL_BNFI_OpDeformGOdiHTA25_cha1_Poi" skill_group_name="BNFI_OpDeformGOdiHTA25_cha1_Poi" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="4" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_137CA234B3EECECD" />
+    <group_ref id="SG_BDF6E756C4A16CCB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5023,7 +5023,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17835" name="진기 빠진 오드화" nameId="582909" name_desc="BNFI_ParDeformSDHPTA40_AddSUDef" stack="SKILL_BNFI_ParDeformSDHPTA40_AddSUDef" skill_group_name="BNFI_ParDeformSDHPTA40_AddSUDef" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" penalty_skill_id="17812" cancel_rate="0" conflict_id="4" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_1A3E65E6CFEAA768" />
+    <group_ref id="SG_00088EFE094C30FE" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_51261CF0E352531C" />
@@ -5084,7 +5084,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17836" name="분쇄울림" nameId="582915" name_desc="BNFI_RSnareNoflyFallTA40_No" stack="SKILL_BNFI_RSnareNoflyFallTA40_No" skill_group_name="BNFI_RSnareNoflyFallTA40_No" delayId="8" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_1A3E65E6CFEAA768" />
+    <group_ref id="SG_00088EFE094C30FE" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <skillatk value="39" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WIND" />
@@ -5147,7 +5147,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17837" name="오드폭발" nameId="582927" name_desc="BNFI_SPellATKLrTA30_Nr" stack="SKILL_BNFI_SPellATKLrTA30_Nr" skill_group_name="BNFI_SPellATKLrTA30_Nr" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="10000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5172,7 +5172,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17838" name="광기폭발" nameId="582931" name_desc="BNFI_SpellKDTA35_Assshield" stack="SKILL_BNFI_SpellKDTA35_Assshield" skill_group_name="BNFI_SpellKDTA35_Assshield" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" penalty_skill_id="16415" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_1A3E65E6CFEAA768" />
+    <group_ref id="SG_00088EFE094C30FE" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5320,7 +5320,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17841" name="뜨거운 정령화" nameId="582825" name_desc="BNEL_DeformconfuTA3_EleFire" stack="SKILL_BNEL_DeformconfuTA3_EleFire" skill_group_name="BNEL_DeformconfuTA3_EleFire" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B3DF1ABFA025C9BC" />
+    <group_ref id="SG_F3077E52021C2A24" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5365,7 +5365,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17842" name="정기흡수" nameId="582867" name_desc="BNEL_SpellDrainMpattTA10_ch1" stack="SKILL_BNEL_SpellDrainMpattTA10_ch1" skill_group_name="BNEL_SpellDrainMpattTA10_ch1" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CD040D76E210B2B8" />
+    <group_ref id="SG_31E48FC86A8DAF74" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5505,7 +5505,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17845" name="암흑올가미" nameId="582965" name_desc="GNFI_PulledTA_NReg_Nc_Lc" stack="SKILL_GNFI_PulledTA_NReg_Nc_Lc" skill_group_name="GNFI_PulledTA_NReg_Nc_Lc" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_1A09F8124965E734" />
+    <group_ref id="SG_979F26161382ACBC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <skillatk value="23" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0">
@@ -5587,7 +5587,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17847" name="독기분출" nameId="582981" name_desc="NAS_PoisonHTA16_Gas" stack="SKILL_NAS_PoisonHTA16_Gas" skill_group_name="NAS_PoisonHTA16_Gas" delayId="11" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D0CCBDD9D2F7F89F" />
+    <group_ref id="SG_A485D64BFB4EA8AC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5631,7 +5631,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17848" name="생명흡입" nameId="582945" name_desc="BNPR_PullSDrainLrHTA3_Chain1_LC" stack="SKILL_BNPR_PullSDrainLrHTA3_Chain1_LC" skill_group_name="BNPR_PullSDrainLrHTA3_Chain1_LC" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CD040D76E210B2B8" />
+    <group_ref id="SG_31E48FC86A8DAF74" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <skillatk value="49" delta="0" mode="PERCENT" rnddmg="0" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER">
@@ -5827,7 +5827,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17852" name="화염구" nameId="583005" name_desc="NWI_SpellFPAKLrTA_Lc_Chain1" stack="SKILL_NWI_SpellFPAKLrTA_Lc_Chain1" skill_group_name="NWI_SpellFPAKLrTA_Lc_Chain1" delayId="13" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5869,7 +5869,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17853" name="화염족쇄" nameId="582843" name_desc="BNEL_RootLongtimeTA4_DotFire_LC" stack="SKILL_BNEL_RootLongtimeTA4_DotFire_LC" skill_group_name="BNEL_RootLongtimeTA4_DotFire_LC" delayId="8" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E89DB82CA9FEE6A" />
+    <group_ref id="SG_8FDA50DA2043EBFC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5918,7 +5918,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17854" name="필살태풍" nameId="583019" name_desc="GNMA_SpellAirTA_MortalMu" stack="SKILL_GNMA_SpellAirTA_MortalMu" skill_group_name="GNMA_SpellAirTA_MortalMu" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B9A577CDEBBC4E90" />
+    <group_ref id="SG_E78F34509822ED00" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -5965,7 +5965,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17855" name="대뇌강타" nameId="583023" name_desc="GNWI_NoSkillKBTA7_Lc_No" stack="SKILL_GNWI_NoSkillKBTA7_Lc_No" skill_group_name="GNWI_NoSkillKBTA7_Lc_No" delayId="5" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="8" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E92CAF907E4B88A3" />
+    <group_ref id="SG_A86EF6812D8FBB19" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <spellatkinstant value="49" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER">
@@ -6023,7 +6023,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17856" name="저주의 석상" nameId="583025" name_desc="BNEL_PolyParSDDeflongTA40_No" stack="SKILL_BNEL_PolyParSDDeflongTA40_No" skill_group_name="BNEL_PolyParSDDeflongTA40_No" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D9D136C2362ED4BC" />
+    <group_ref id="SG_0F3828599D1EF3B4" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -6121,7 +6121,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17858" name="석상화" nameId="583055" name_desc="BNEL_ParDeformSDDefTA16" stack="SKILL_BNEL_ParDeformSDDefTA16" skill_group_name="BNEL_ParDeformSDDefTA16" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="6" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_06A1A1E262702EEF" />
+    <group_ref id="SG_D9B8B46BEFBA3813" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -6189,7 +6189,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17859" name="강력한 석상화" nameId="583057" name_desc="BNEL_ParDeformSDDefTA40" stack="SKILL_BNEL_ParDeformSDDefTA40" skill_group_name="BNEL_ParDeformSDDefTA40" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="6" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E8019203C0A32B95" />
+    <group_ref id="SG_5AF4A37C222C5E51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -6321,7 +6321,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17861" name="죽음의 수면" nameId="583061" name_desc="BNEL_MPattSleepTA40_AddReflect60" stack="SKILL_BNEL_MPattSleepTA40_AddReflect60" skill_group_name="BNEL_MPattSleepTA40_AddReflect60" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" penalty_skill_id="17857" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E8019203C0A32B95" />
+    <group_ref id="SG_5AF4A37C222C5E51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -6717,7 +6717,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17870" name="기절타" nameId="583445" name_desc="BNKN_StunATKTA30_AddShield_no" stack="SKILL_BNKN_StunATKTA30_AddShield_no" skill_group_name="BNKN_StunATKTA30_AddShield_no" delayId="12" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="17864" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -6762,7 +6762,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17871" name="주변물리치기" nameId="583421" name_desc="BNKN_SatkKD30_AddPhyatt_Area" stack="SKILL_BNKN_SatkKD30_AddPhyatt_Area" skill_group_name="BNKN_SatkKD30_AddPhyatt_Area" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" penalty_skill_id="16399" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_AD79DDF42E462861" />
@@ -6790,7 +6790,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17872" name="충격" nameId="577201" name_desc="GNWI_StunAr2_Ar_MovObj" stack="SKILL_GNWI_StunAr2_Ar_MovObj" skill_group_name="GNWI_StunAr2_Ar_MovObj" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_568995D7700DCF6F" />
+    <group_ref id="SG_5FA55659356FFEBB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_040766C2012EF6C9" />
@@ -6828,7 +6828,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17873" name="충격" nameId="577201" name_desc="GNWI_StunAr3_Ar_MovObj" stack="SKILL_GNWI_StunAr3_Ar_MovObj" skill_group_name="GNWI_StunAr3_Ar_MovObj" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_568995D7700DCF6F" />
+    <group_ref id="SG_5FA55659356FFEBB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_040766C2012EF6C9" />
@@ -6866,7 +6866,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17874" name="강습" nameId="583435" name_desc="BNKN_SatkStunTA20_Chain1" stack="SKILL_BNKN_SatkStunTA20_Chain1" skill_group_name="BNKN_SatkStunTA20_Chain1" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1BC5D8ED385A774" />
+    <group_ref id="SG_B008EF9D394A97F8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -6911,7 +6911,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17875" name="검기발사" nameId="571163" name_desc="NFI_SatkSword_ArLr_Long_PwAtk_GC" stack="SKILL_NFI_SatkSword_ArLr_Long_PwAtk_GC" skill_group_name="NFI_SatkSword_ArLr_Long_PwAtk_GC" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A7F943BDF4AB6F64" />
+    <group_ref id="SG_F4DA1C29266C296B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_6A3658EC8BDF62D2" />
@@ -6940,7 +6940,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17876" name="검기발사" nameId="571163" name_desc="NFI_SatkSword_ArLr_Long_ChAtk1_GC" stack="SKILL_NFI_SatkSword_ArLr_Long_ChAtk1_GC" skill_group_name="NFI_SatkSword_ArLr_Long_ChAtk1_GC" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A7F943BDF4AB6F64" />
+    <group_ref id="SG_F4DA1C29266C296B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_6A3658EC8BDF62D2" />
@@ -6969,7 +6969,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17877" name="큰범위밀기" nameId="568977" name_desc="NFI_KnockDown_ArLr_DwAtk_GC" stack="SKILL_NFI_KnockDown_ArLr_DwAtk_GC" skill_group_name="NFI_KnockDown_ArLr_DwAtk_GC" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_34E1B1F1C67F94F3" />
+    <group_ref id="SG_A1D7CE9AC71F588D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_F42801D04C0AD75F" />
@@ -6997,7 +6997,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17878" name="큰범위밀기" nameId="568977" name_desc="NFI_KnockDown_ArLr_ArAtk_GC" stack="SKILL_NFI_KnockDown_ArLr_ArAtk_GC" skill_group_name="NFI_KnockDown_ArLr_ArAtk_GC" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_34E1B1F1C67F94F3" />
+    <group_ref id="SG_A1D7CE9AC71F588D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_F42801D04C0AD75F" />
@@ -7025,7 +7025,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17879" name="강타" nameId="569383" name_desc="NFI_SDownPyDeShort_ArLr_PhBr_GC" stack="SKILL_NFI_SDownPyDeShort_ArLr_PhBr_GC" skill_group_name="NFI_SDownPyDeShort_ArLr_PhBr_GC" delayId="4" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_34E1B1F1C67F94F3" />
+    <group_ref id="SG_A1D7CE9AC71F588D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_86D38EC34553A80F" />
@@ -7068,7 +7068,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17880" name="강타" nameId="569383" name_desc="NFI_SDownPyDeShort_ArLr_Nr_GC" stack="SKILL_NFI_SDownPyDeShort_ArLr_Nr_GC" skill_group_name="NFI_SDownPyDeShort_ArLr_Nr_GC" delayId="4" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_34E1B1F1C67F94F3" />
+    <group_ref id="SG_A1D7CE9AC71F588D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_86D38EC34553A80F" />
@@ -7111,7 +7111,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17881" name="돌려세우기" nameId="568869" name_desc="NAS_Spin_ArLr_ArAtk_GC" stack="SKILL_NAS_Spin_ArLr_ArAtk_GC" skill_group_name="NAS_Spin_ArLr_ArAtk_GC" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_34E1B1F1C67F94F3" />
+    <group_ref id="SG_A1D7CE9AC71F588D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_41486A3A76637326" />
@@ -7139,7 +7139,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17882" name="돌려세우기" nameId="568869" name_desc="NAS_Spin_ArLr_PwAtk_GC" stack="SKILL_NAS_Spin_ArLr_PwAtk_GC" skill_group_name="NAS_Spin_ArLr_PwAtk_GC" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_34E1B1F1C67F94F3" />
+    <group_ref id="SG_A1D7CE9AC71F588D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_41486A3A76637326" />
@@ -7167,7 +7167,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17883" name="순간 철갑화" nameId="569269" name_desc="NFI_Rage_ArLr_PhBr_GC" stack="SKILL_NFI_Rage_ArLr_PhBr_GC" skill_group_name="NFI_Rage_ArLr_PhBr_GC" delayId="6" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_0EAC149CB55D0993" />
+    <group_ref id="SG_7DDA7F8C44384251" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -7212,7 +7212,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17884" name="순간 철갑화" nameId="569269" name_desc="NFI_Rage_ArLr_Nr_GC" stack="SKILL_NFI_Rage_ArLr_Nr_GC" skill_group_name="NFI_Rage_ArLr_Nr_GC" delayId="6" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_0EAC149CB55D0993" />
+    <group_ref id="SG_7DDA7F8C44384251" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -7257,7 +7257,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17885" name="마비파동" nameId="571399" name_desc="NWI_Paralyze_ArLr_Long_PhBr_GC" stack="SKILL_NWI_Paralyze_ArLr_Long_PhBr_GC" skill_group_name="NWI_Paralyze_ArLr_Long_PhBr_GC" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7F0CE3D7197733B1" />
+    <group_ref id="SG_FCF236516EA77611" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_5A303EABBAB3D8B9" />
@@ -7283,7 +7283,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17886" name="마비파동" nameId="571399" name_desc="NWI_Paralyze_ArLr_Long_Nr_GC" stack="SKILL_NWI_Paralyze_ArLr_Long_Nr_GC" skill_group_name="NWI_Paralyze_ArLr_Long_Nr_GC" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7F0CE3D7197733B1" />
+    <group_ref id="SG_FCF236516EA77611" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_5A303EABBAB3D8B9" />
@@ -7309,7 +7309,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17887" name="공포발산" nameId="571135" name_desc="NEL_Fear_ArLr_Long_PhBr_GC" stack="SKILL_NEL_Fear_ArLr_Long_PhBr_GC" skill_group_name="NEL_Fear_ArLr_Long_PhBr_GC" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7F0CE3D7197733B1" />
+    <group_ref id="SG_FCF236516EA77611" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_700D305FF00DDB58" />
@@ -7338,7 +7338,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17888" name="공포발산" nameId="571135" name_desc="NEL_Fear_ArLr_Long_Nr_GC" stack="SKILL_NEL_Fear_ArLr_Long_Nr_GC" skill_group_name="NEL_Fear_ArLr_Long_Nr_GC" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7F0CE3D7197733B1" />
+    <group_ref id="SG_FCF236516EA77611" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_700D305FF00DDB58" />
@@ -7367,7 +7367,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17889" name="날개태우기" nameId="571143" name_desc="NEL_Fall_ArLr_LC_PhBr2_GC" stack="SKILL_NEL_Fall_ArLr_LC_PhBr2_GC" skill_group_name="NEL_Fall_ArLr_LC_PhBr2_GC" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A7F943BDF4AB6F64" />
+    <group_ref id="SG_F4DA1C29266C296B" />
     <group_ref id="SG_6D8F009A191E5D68" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_C954AFF9DAB1A038" />
@@ -7399,7 +7399,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17890" name="날개태우기" nameId="571143" name_desc="NEL_Fall_ArLr_LC_Po_GC" stack="SKILL_NEL_Fall_ArLr_LC_Po_GC" skill_group_name="NEL_Fall_ArLr_LC_Po_GC" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A7F943BDF4AB6F64" />
+    <group_ref id="SG_F4DA1C29266C296B" />
     <group_ref id="SG_6D8F009A191E5D68" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_C954AFF9DAB1A038" />
@@ -7455,7 +7455,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17892" name="밀어앉히기" nameId="583425" name_desc="BNKN_SatkKDTA20_Chain2" stack="SKILL_BNKN_SatkKDTA20_Chain2" skill_group_name="BNKN_SatkKDTA20_Chain2" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="65" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1BC5D8ED385A774" />
+    <group_ref id="SG_B008EF9D394A97F8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -7487,7 +7487,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17893" name="분노의 화염우" nameId="583441" name_desc="BNKN_SpellATKfireRainTA_No" stack="SKILL_BNKN_SpellATKfireRainTA_No" skill_group_name="BNKN_SpellATKfireRainTA_No" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -7528,7 +7528,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17894" name="데바의 정신세계" nameId="583415" name_desc="BNKN_DrainDeQooSDHPTA_Po_Nc" stack="SKILL_BNKN_DrainDeQooSDHPTA_Po_Nc" skill_group_name="BNKN_DrainDeQooSDHPTA_Po_Nc" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EEF17E786FA6C180" />
+    <group_ref id="SG_57C3699C6D359C4D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <spellatkdraininstant duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" delta="0" value="181" applymboost="true" hp_percent_delta="0" hp_percent="100" critprobmod1="0" critadddmg2="0" />
@@ -7630,7 +7630,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17896" name="강력한내려침" nameId="583409" name_desc="BNFI_SStunNoFlyTA40_Ch_Po" stack="SKILL_BNFI_SStunNoFlyTA40_Ch_Po" skill_group_name="BNFI_SStunNoFlyTA40_Ch_Po" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_B1552B8838626322" />
@@ -7687,7 +7687,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17897" name="무한한힘" nameId="583517" name_desc="GNFI_ParaBoltTA30_AddSUPhyatt" stack="SKILL_GNFI_ParaBoltTA30_AddSUPhyatt" skill_group_name="GNFI_ParaBoltTA30_AddSUPhyatt" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" penalty_skill_id="16399" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_969F02B901856EC3" />
+    <group_ref id="SG_E7B3C2C776DDF549" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -7728,7 +7728,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17898" name="이상기류" nameId="583483" name_desc="BNPR_NoFlyStun3sHTA40ApFly_Lc_No" stack="SKILL_BNPR_NoFlyStun3sHTA40ApFly_Lc_No" skill_group_name="BNPR_NoFlyStun3sHTA40ApFly_Lc_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E8019203C0A32B95" />
+    <group_ref id="SG_5AF4A37C222C5E51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_B1552B8838626322" />
@@ -7785,7 +7785,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17899" name="매혹의 이끌림" nameId="583489" name_desc="BNPR_PullMPattH90TA40_Lc_No_Poi" stack="SKILL_BNPR_PullMPattH90TA40_Lc_No_Poi" skill_group_name="BNPR_PullMPattH90TA40_Lc_No_Poi" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_E8019203C0A32B95" />
+    <group_ref id="SG_5AF4A37C222C5E51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_9944A7BDC7D6CF7A" />
@@ -7813,7 +7813,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17900" name="이성상실" nameId="583493" name_desc="BNPR_SpellDrainShrBlindTA15_ch1_No" stack="SKILL_BNPR_SpellDrainShrBlindTA15_ch1_No" skill_group_name="BNPR_SpellDrainShrBlindTA15_ch1_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_96A27417D62F0DC4" />
+    <group_ref id="SG_ACB692D123B81FE7" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -7987,7 +7987,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17903" name="독기폭탄" nameId="583541" name_desc="NGR_BomblehparPoiTA7_Po" stack="SKILL_NGR_BomblehparPoiTA7_Po" skill_group_name="NGR_BomblehparPoiTA7_Po" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="6000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_143F71082A18A545" />
+    <group_ref id="SG_5117ED60C46A4F51" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8029,7 +8029,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17904" name="폭발폭탄" nameId="583553" name_desc="NGR_BomblehparTA7_Po" stack="SKILL_NGR_BomblehparTA7_Po" skill_group_name="NGR_BomblehparTA7_Po" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="6000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6E6472F4B5CB3948" />
+    <group_ref id="SG_BE55F2C918D046E0" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_04B3CA333079F8FF" />
@@ -8202,7 +8202,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17909" name="돌려버리기" nameId="583341" name_desc="BNAS_SPinTA20_Po" stack="SKILL_BNAS_SPinTA20_Po" skill_group_name="BNAS_SPinTA20_Po" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1BC5D8ED385A774" />
+    <group_ref id="SG_B008EF9D394A97F8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_DE573D955F950FE7" />
@@ -8284,7 +8284,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17912" name="생체문양폭파" nameId="583333" name_desc="BNAS_SigBurstConTA40C2_No_AddSuAtt1" stack="SKILL_BNAS_SigBurstConTA40C2_No_AddSuAtt1" skill_group_name="BNAS_SigBurstConTA40C2_No_AddSuAtt1" delayId="17" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="17866" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_969F02B901856EC3" />
+    <group_ref id="SG_E7B3C2C776DDF549" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_FBA2F55DEEB6DF71" />
@@ -8340,7 +8340,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17913" name="문양폭파" nameId="583337" name_desc="BNAS_SignetBurstTA40_No_AddSuAtt2" stack="SKILL_BNAS_SignetBurstTA40_No_AddSuAtt2" skill_group_name="BNAS_SignetBurstTA40_No_AddSuAtt2" delayId="17" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="17867" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_2FE519D2836DB041" />
@@ -8481,7 +8481,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17916" name="냉동" nameId="583457" name_desc="BNPEL_SnareSlowDotTA40_AddRefSh_Nr" stack="SKILL_BNPEL_SnareSlowDotTA40_AddRefSh_Nr" skill_group_name="BNPEL_SnareSlowDotTA40_AddRefSh_Nr" delayId="8" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="17868" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EEF17E786FA6C180" />
+    <group_ref id="SG_57C3699C6D359C4D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8551,7 +8551,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17917" name="수력파동" nameId="583469" name_desc="BNPEL_SpellLongTA15_Water" stack="SKILL_BNPEL_SpellLongTA15_Water" skill_group_name="BNPEL_SpellLongTA15_Water" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_96A27417D62F0DC4" />
+    <group_ref id="SG_ACB692D123B81FE7" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_2C43571F49E57A16" />
@@ -8573,7 +8573,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17918" name="강력한 수력파동" nameId="583473" name_desc="BNPEL_SpellLongTA40_Water" stack="SKILL_BNPEL_SpellLongTA40_Water" skill_group_name="BNPEL_SpellLongTA40_Water" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EEF17E786FA6C180" />
+    <group_ref id="SG_57C3699C6D359C4D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_2C43571F49E57A16" />
@@ -8595,7 +8595,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17919" name="급속냉동" nameId="583451" name_desc="BNPEL_ParDotTA40c8_ice_Area" stack="SKILL_BNPEL_ParDotTA40c8_ice_Area" skill_group_name="BNPEL_ParDotTA40c8_ice_Area" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D2680249A0914F25" />
+    <group_ref id="SG_A34DB83F6CDEEC34" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8639,7 +8639,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17920" name="냉수타" nameId="583463" name_desc="BNPEL_SpellLongStunTA15_Ch1_Water" stack="SKILL_BNPEL_SpellLongStunTA15_Ch1_Water" skill_group_name="BNPEL_SpellLongStunTA15_Ch1_Water" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_96A27417D62F0DC4" />
+    <group_ref id="SG_ACB692D123B81FE7" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8824,7 +8824,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17924" name="돌풍" nameId="583375" name_desc="BNEL_SpellATKSpinTA25_Poi" stack="SKILL_BNEL_SpellATKSpinTA25_Poi" skill_group_name="BNEL_SpellATKSpinTA25_Poi" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_941FEC334591CE1B" />
+    <group_ref id="SG_1B6D82CAD39F4F5D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8854,7 +8854,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17925" name="혼령강풍" nameId="583379" name_desc="BNEL_SpellKBMPattSTA15_Ch1_Poi" stack="SKILL_BNEL_SpellKBMPattSTA15_Ch1_Poi" skill_group_name="BNEL_SpellKBMPattSTA15_Ch1_Poi" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_96A27417D62F0DC4" />
+    <group_ref id="SG_ACB692D123B81FE7" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8904,7 +8904,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17926" name="혼령강하" nameId="583385" name_desc="BNEL_SpellKDMPattTA15_Ch2_Po" stack="SKILL_BNEL_SpellKDMPattTA15_Ch2_Po" skill_group_name="BNEL_SpellKDMPattTA15_Ch2_Po" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_96A27417D62F0DC4" />
+    <group_ref id="SG_ACB692D123B81FE7" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -8954,7 +8954,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17927" name="한맺힌 일격" nameId="583357" name_desc="BNEL_CurseShortStunTA30_No" stack="SKILL_BNEL_CurseShortStunTA30_No" skill_group_name="BNEL_CurseShortStunTA30_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EEF17E786FA6C180" />
+    <group_ref id="SG_57C3699C6D359C4D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -9005,7 +9005,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17928" name="수타" nameId="583565" name_desc="GNWI_SpellSmallTA_Water_LC" stack="SKILL_GNWI_SpellSmallTA_Water_LC" skill_group_name="GNWI_SpellSmallTA_Water_LC" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="65" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="30" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -9411,7 +9411,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17941" name="저주의 물결" nameId="583643" name_desc="NEL_CurseTA5_No" stack="SKILL_NEL_CurseTA5_No" skill_group_name="NEL_CurseTA5_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_ECFC193AC22D0F59" />
+    <group_ref id="SG_2E5E8173134BCFB6" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -9522,7 +9522,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17946" name="난사" nameId="571355" name_desc="NRA_SatkTALong_LC_Nr" stack="SKILL_NRA_SatkTALong_LC_Nr" skill_group_name="NRA_SatkTALong_LC_Nr" delayId="3" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="65" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -9656,7 +9656,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17950" name="일격파동" nameId="583655" name_desc="BNAS_SatkTA20_Nr" stack="SKILL_BNAS_SatkTA20_Nr" skill_group_name="BNAS_SatkTA20_Nr" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1BC5D8ED385A774" />
+    <group_ref id="SG_B008EF9D394A97F8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_62C925A38F27D165" />
@@ -9679,7 +9679,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17951" name="기절파" nameId="583657" name_desc="BNSC_StunSA10_Nr" stack="SKILL_BNSC_StunSA10_Nr" skill_group_name="BNSC_StunSA10_Nr" delayId="12" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CCFC3085A746F8E3" />
+    <group_ref id="SG_BF88C6BA04337060" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_AA19324D1E688630" />
@@ -9777,7 +9777,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17954" name="연타파동" nameId="583663" name_desc="BNAS_SatkChain1TA10_Po" stack="SKILL_BNAS_SatkChain1TA10_Po" skill_group_name="BNAS_SatkChain1TA10_Po" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CCFC3085A746F8E3" />
+    <group_ref id="SG_BF88C6BA04337060" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_1E884670E29FC4B8" />
@@ -9800,7 +9800,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17955" name="상처폭발" nameId="583665" name_desc="BNAS_SignetBurTA40_AddSUCriNo" stack="SKILL_BNAS_SignetBurTA40_AddSUCriNo" skill_group_name="BNAS_SignetBurTA40_AddSUCriNo" delayId="17" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="17929" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10091,7 +10091,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17963" name="축복의 암기사슬" nameId="584875" name_desc="BNFI_RsnareTA20M15S_AssShield" stack="SKILL_BNFI_RsnareTA20M15S_AssShield" skill_group_name="BNFI_RsnareTA20M15S_AssShield" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" penalty_skill_id="16409" cancel_rate="50" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1BC5D8ED385A774" />
+    <group_ref id="SG_B008EF9D394A97F8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10272,7 +10272,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17968" name="일격" nameId="584953" name_desc="NCH_SatkTA10_Nr" stack="SKILL_NCH_SatkTA10_Nr" skill_group_name="NCH_SatkTA10_Nr" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_46EB6275CBA8C974" />
+    <group_ref id="SG_D22A4C1911F7AF0A" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_61C76D25F811AE7F" />
@@ -10296,7 +10296,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17969" name="폭발" nameId="584973" name_desc="NGR_BombCKrallTA15_Po" stack="SKILL_NGR_BombCKrallTA15_Po" skill_group_name="NGR_BombCKrallTA15_Po" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D0CCBDD9D2F7F89F" />
+    <group_ref id="SG_A485D64BFB4EA8AC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_CA4AD62BC3B87293" />
@@ -10318,7 +10318,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17970" name="화염사슬" nameId="584829" name_desc="BNEL_RSnareDotTA20_Nc" stack="SKILL_BNEL_RSnareDotTA20_Nc" skill_group_name="BNEL_RSnareDotTA20_Nc" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="50" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D9D136C2362ED4BC" />
+    <group_ref id="SG_0F3828599D1EF3B4" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10561,7 +10561,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17975" name="뇌격" nameId="584999" name_desc="NWI_Paralyze_ThunderTA_Nc_No" stack="SKILL_NWI_Paralyze_ThunderTA_Nc_No" skill_group_name="NWI_Paralyze_ThunderTA_Nc_No" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9593A85D703A2A35" />
+    <group_ref id="SG_CC2C219B498CBC05" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <spellatkinstant value="60" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -10796,7 +10796,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17981" name="재연타" nameId="584949" name_desc="NCH_Satk_chain2TA15_Mu" stack="SKILL_NCH_Satk_chain2TA15_Mu" skill_group_name="NCH_Satk_chain2TA15_Mu" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="65" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_D0CCBDD9D2F7F89F" />
+    <group_ref id="SG_A485D64BFB4EA8AC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_9BBCA8BD13D60302" />
@@ -10853,7 +10853,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17983" name="수비를 위한 방해" nameId="584925" name_desc="BNRA_SnareTA7S5_AddSUpPMdef" stack="SKILL_BNRA_SnareTA7S5_AddSUpPMdef" skill_group_name="BNRA_SnareTA7S5_AddSUpPMdef" delayId="8" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="17982" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_55A4712AF4D478E2" />
+    <group_ref id="SG_237FC97397F85A52" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10913,7 +10913,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17985" name="깊은수면" nameId="584847" name_desc="BNEL_SleepSDDefTA20_No" stack="SKILL_BNEL_SleepSDDefTA20_No" skill_group_name="BNEL_SleepSDDefTA20_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F503C23C9B5940C2" />
+    <group_ref id="SG_AD24C0EA9FDDE42E" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -10963,7 +10963,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17986" name="강풍파동" nameId="584969" name_desc="NEL_SpellKDTA_Air_Lc" stack="SKILL_NEL_SpellKDTA_Air_Lc" skill_group_name="NEL_SpellKDTA_Air_Lc" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B3DF1ABFA025C9BC" />
+    <group_ref id="SG_F3077E52021C2A24" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_25D1EA2B62230141" />
@@ -10989,7 +10989,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17987" name="유체이탈" nameId="584977" name_desc="NGR_CurseShapeTA_Ghost" stack="SKILL_NGR_CurseShapeTA_Ghost" skill_group_name="NGR_CurseShapeTA_Ghost" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9A542CC3AB9E0B72" />
+    <group_ref id="SG_1850D229EED539D3" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11041,7 +11041,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17988" name="광역 혼절 II" nameId="583797" name_desc="AGC_SpellStunTA_Mid" stack="SKILL_AGC_SpellStunTA_Mid" skill_group_name="AGC_SpellStunTA_Mid" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0232E45E005CCFA9" />
+    <group_ref id="SG_2DE4CCEF2DCE0EA3" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11084,7 +11084,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17989" name="광역 혼절 III" nameId="583799" name_desc="AGC_SpellStunTA_Lr" stack="SKILL_AGC_SpellStunTA_Lr" skill_group_name="AGC_SpellStunTA_Lr" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="STUN" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F86BBD4A92C68F77" />
+    <group_ref id="SG_CEF5536A7CB0DAA8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11127,7 +11127,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17990" name="광역 공중 속박 I" nameId="583801" name_desc="AGC_OpenAerial_TA" stack="SKILL_AGC_OpenAerial_TA" skill_group_name="AGC_OpenAerial_TA" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A7F943BDF4AB6F64" />
+    <group_ref id="SG_F4DA1C29266C296B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11159,7 +11159,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17991" name="광역 공중 속박 II" nameId="583803" name_desc="AGC_OpenAerialTA_Mid" stack="SKILL_AGC_OpenAerialTA_Mid" skill_group_name="AGC_OpenAerialTA_Mid" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0232E45E005CCFA9" />
+    <group_ref id="SG_2DE4CCEF2DCE0EA3" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_2156E3AEE7EEB2F8" />
@@ -11187,7 +11187,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17992" name="광역 공중 속박 III" nameId="583805" name_desc="AGC_OpenAerialTA_Lr" stack="SKILL_AGC_OpenAerialTA_Lr" skill_group_name="AGC_OpenAerialTA_Lr" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F86BBD4A92C68F77" />
+    <group_ref id="SG_CEF5536A7CB0DAA8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11219,7 +11219,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17993" name="광역 낙하 I" nameId="583807" name_desc="AGC_CloseAerial_TA" stack="SKILL_AGC_CloseAerial_TA" skill_group_name="AGC_CloseAerial_TA" delayId="3" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A7F943BDF4AB6F64" />
+    <group_ref id="SG_F4DA1C29266C296B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11265,7 +11265,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17994" name="광역 낙하 II" nameId="583809" name_desc="AGC_CloseAerialTA_Mid" stack="SKILL_AGC_CloseAerialTA_Mid" skill_group_name="AGC_CloseAerialTA_Mid" delayId="3" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0232E45E005CCFA9" />
+    <group_ref id="SG_2DE4CCEF2DCE0EA3" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_9CC6EAE667706730" />
@@ -11308,7 +11308,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17995" name="광역 낙하 III" nameId="583811" name_desc="AGC_CloseAerialTA_Lr" stack="SKILL_AGC_CloseAerialTA_Lr" skill_group_name="AGC_CloseAerialTA_Lr" delayId="3" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F86BBD4A92C68F77" />
+    <group_ref id="SG_CEF5536A7CB0DAA8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11354,7 +11354,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17996" name="광역 추락 I" nameId="583813" name_desc="AGC_Fall_TA" stack="SKILL_AGC_Fall_TA" skill_group_name="AGC_Fall_TA" delayId="13" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="30" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2765F7B5A44049B8" />
+    <group_ref id="SG_D1ACC7C407965533" />
     <group_ref id="SG_6D8F009A191E5D68" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11398,7 +11398,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17997" name="광역 추락 II" nameId="583815" name_desc="AGC_FallTA_Mid" stack="SKILL_AGC_FallTA_Mid" skill_group_name="AGC_FallTA_Mid" delayId="13" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="30" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F799C62D05D29C85" />
+    <group_ref id="SG_3A3F4AE61240DEDA" />
     <group_ref id="SG_6D8F009A191E5D68" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11442,7 +11442,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17998" name="광역 추락 III" nameId="583817" name_desc="AGC_FallTA_Lr" stack="SKILL_AGC_FallTA_Lr" skill_group_name="AGC_FallTA_Lr" delayId="13" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="30" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_72A948FCA3EB93CB" />
+    <group_ref id="SG_4D6D6A555C8731FB" />
     <group_ref id="SG_6D8F009A191E5D68" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11486,7 +11486,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="17999" name="광역 영혼의 동결 I" nameId="583819" name_desc="AGC_Silence_TA" stack="SKILL_AGC_Silence_TA" skill_group_name="AGC_Silence_TA" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_0232E45E005CCFA9" />
+    <group_ref id="SG_2DE4CCEF2DCE0EA3" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11527,7 +11527,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18000" name="광역 영혼의 동결 II" nameId="583821" name_desc="AGC_SilenceTA_Lr" stack="SKILL_AGC_SilenceTA_Lr" skill_group_name="AGC_SilenceTA_Lr" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F86BBD4A92C68F77" />
+    <group_ref id="SG_CEF5536A7CB0DAA8" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11568,7 +11568,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18001" name="광역 기합 I" nameId="583823" name_desc="AGC_SUpPyDef_TA" stack="SKILL_AGC_SUpPyDef_TA" skill_group_name="AGC_SUpPyDef_TA" delayId="6" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_A18162BD982EC13F" />
+    <group_ref id="SG_8DDB8D8E42D3BF35" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11613,7 +11613,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18002" name="광역 기합 II" nameId="583825" name_desc="AGC_SUpPyDefTA_Lr" stack="SKILL_AGC_SUpPyDefTA_Lr" skill_group_name="AGC_SUpPyDefTA_Lr" delayId="6" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_A18162BD982EC13F" />
+    <group_ref id="SG_8DDB8D8E42D3BF35" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -11738,7 +11738,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18010" name="신장의 격노" nameId="583831" name_desc="AGC_DeathField_TA" stack="SKILL_AGC_DeathField_TA" skill_group_name="AGC_DeathField_TA" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="100" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_72A948FCA3EB93CB" />
+    <group_ref id="SG_4D6D6A555C8731FB" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_44552119ABAFD090" />
@@ -12178,7 +12178,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18021" name="조그만게 바보같이" nameId="584913" name_desc="BNKN_SDMaxHPSnareDfSpriggTA10S30m_No" stack="SKILL_BNKN_SDMaxHPSnareDfSpriggTA10S30m_No" skill_group_name="BNKN_SDMaxHPSnareDfSpriggTA10S30m_No" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_50A4FAF9D9C8C717" />
+    <group_ref id="SG_57C2AEB1D6C70F01" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12377,7 +12377,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18025" name="영혼의 저주" nameId="584805" name_desc="BNEL_CurseS1800MPattTA5_LC_No" stack="SKILL_BNEL_CurseS1800MPattTA5_LC_No" skill_group_name="BNEL_CurseS1800MPattTA5_LC_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12427,7 +12427,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18026" name="일격파동" nameId="584939" name_desc="GNFI_Satk5TA_LC" stack="SKILL_GNFI_Satk5TA_LC" skill_group_name="GNFI_Satk5TA_LC" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_C9A3E6B518F80BD2" />
@@ -12451,7 +12451,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18027" name="필살의 절단" nameId="584865" name_desc="BNEL_SpellFPATK_MortalTA7_LC_Po" stack="SKILL_BNEL_SpellFPATK_MortalTA7_LC_Po" skill_group_name="BNEL_SpellFPATK_MortalTA7_LC_Po" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_8E89DB82CA9FEE6A" />
+    <group_ref id="SG_8FDA50DA2043EBFC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12495,7 +12495,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18028" name="일격파동" nameId="584881" name_desc="BNFI_Satk10TA_Mu" stack="SKILL_BNFI_Satk10TA_Mu" skill_group_name="BNFI_Satk10TA_Mu" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CCFC3085A746F8E3" />
+    <group_ref id="SG_BF88C6BA04337060" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_62C925A38F27D165" />
@@ -12519,7 +12519,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18029" name="공중 속박" nameId="584871" name_desc="BNFI_OpenArialTA20_LC" stack="SKILL_BNFI_OpenArialTA20_LC" skill_group_name="BNFI_OpenArialTA20_LC" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F503C23C9B5940C2" />
+    <group_ref id="SG_AD24C0EA9FDDE42E" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12597,7 +12597,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18031" name="생기흡수" nameId="584859" name_desc="BNEL_SpellDrainMpattTA3_ch1" stack="SKILL_BNEL_SpellDrainMpattTA3_ch1" skill_group_name="BNEL_SpellDrainMpattTA3_ch1" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_89C46BF123736DC9" />
+    <group_ref id="SG_2AA98CA02B4C6FD4" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12648,7 +12648,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18032" name="영혼강탈" nameId="584823" name_desc="BNEL_ParMPattTA3_AddReflect60" stack="SKILL_BNEL_ParMPattTA3_AddReflect60" skill_group_name="BNEL_ParMPattTA3_AddReflect60" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" penalty_skill_id="17857" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_4475F30C9BC010EA" />
+    <group_ref id="SG_9B9997401010E566" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12690,7 +12690,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18033" name="치명적인 독" nameId="584795" name_desc="BNAS_SatkPoisonHTA40m_Mortal" stack="SKILL_BNAS_SatkPoisonHTA40m_Mortal" skill_group_name="BNAS_SatkPoisonHTA40m_Mortal" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_2BE612556E2F0AE9" />
+    <group_ref id="SG_FFA2A73BBCABDBC5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12734,7 +12734,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18034" name="신경흡수" nameId="584817" name_desc="BNEL_ParC8NoFlyDrainTA5_LC_No" stack="SKILL_BNEL_ParC8NoFlyDrainTA5_LC_No" skill_group_name="BNEL_ParC8NoFlyDrainTA5_LC_No" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_FDD6A6EF65597069" />
+    <group_ref id="SG_DA4050655F24D97B" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12798,7 +12798,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18035" name="화염우" nameId="584853" name_desc="BNEL_SPellDotTA20_FireRain" stack="SKILL_BNEL_SPellDotTA20_FireRain" skill_group_name="BNEL_SPellDotTA20_FireRain" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_F503C23C9B5940C2" />
+    <group_ref id="SG_AD24C0EA9FDDE42E" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -12840,7 +12840,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18036" name="저주받은자의 혼돈" nameId="584811" name_desc="BNEL_KBAimCurseConTA40_No" stack="SKILL_BNEL_KBAimCurseConTA40_No" skill_group_name="BNEL_KBAimCurseConTA40_No" delayId="10" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="65" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="35" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EEF17E786FA6C180" />
+    <group_ref id="SG_57C3699C6D359C4D" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -13505,7 +13505,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18058" name="기폭" nameId="4568931" name_desc="IDInfinity_Mine_NormalFire" stack="SKILL_IDInfinity_Mine_NormalFire" skill_group_name="IDInfinity_Mine_NormalFire" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_F54CBF7EF92A41C1" />
+    <group_ref id="SG_CB2DA1BE27DEE558" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="200" delta="2" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="500" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -13532,7 +13532,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18059" name="부패한 체액" nameId="596401" name_desc="IDInfinity_Sacrifice_PoisonPit" stack="SKILL_IDInfinity_Sacrifice_PoisonPit" skill_group_name="IDInfinity_Sacrifice_PoisonPit" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_28E79CC78B03E9D5" />
+    <group_ref id="SG_F98080ED9631F634" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_226DC13E9AA2430D" />
     <group_ref id="SG_FDCEBBAB040BAEAF" />
@@ -13577,7 +13577,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18061" name="충격" nameId="4581095" name_desc="IDInfinity_SpellATK_Paralyze" stack="SKILL_IDInfinity_SpellATK_Paralyze" skill_group_name="IDInfinity_SpellATK_Paralyze" delayId="3" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="false" applyhealboost="false" applymphealboost="false" applymcrit="false" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_9E1C81F1FACEA9FC" />
+    <group_ref id="SG_C1898B9D20029383" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -13716,7 +13716,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18066" name="원한의 얼음폭풍" nameId="4565905" name_desc="IDInfinity_Blizzard" stack="SKILL_IDInfinity_Blizzard" skill_group_name="IDInfinity_Blizzard" delayId="1015" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="3" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_80A05F857DA8CB07" />
+    <group_ref id="SG_2228BFADA542B355" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -14480,7 +14480,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18077" name="아티팩트 폭발" nameId="4581361" name_desc="IDInfinity_Artifact_Explosion" stack="SKILL_IDInfinity_Artifact_Explosion" skill_group_name="IDInfinity_Artifact_Explosion" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_A361A67FA29D61EA" />
+    <group_ref id="SG_CD4FCF34BE47AE42" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
       <spellatkinstant value="150" delta="2" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="0" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -14504,7 +14504,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18078" name="폭탄 폭발" nameId="4581363" name_desc="IDInfinity_Boom_Explosion_01" stack="SKILL_IDInfinity_Boom_Explosion_01" skill_group_name="IDInfinity_Boom_Explosion_01" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_A361A67FA29D61EA" />
+    <group_ref id="SG_CD4FCF34BE47AE42" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_572441F7FE8B4C48" />
     <group_ref id="SG_2ACD179D86475473" />
@@ -14526,7 +14526,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18079" name="폭탄 폭발" nameId="4581365" name_desc="IDInfinity_Boom_Explosion_02" stack="SKILL_IDInfinity_Boom_Explosion_02" skill_group_name="IDInfinity_Boom_Explosion_02" delayId="0" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="5" hostile_type="DIRECT">
-    <group_ref id="SG_A361A67FA29D61EA" />
+    <group_ref id="SG_CD4FCF34BE47AE42" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_572441F7FE8B4C48" />
     <group_ref id="SG_2ACD179D86475473" />
@@ -15537,7 +15537,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18106" name="독가스" nameId="586779" name_desc="BNAS_PoisonTrap_TA" stack="SKILL_BNAS_PoisonTrap_TA" skill_group_name="BNAS_PoisonTrap_TA" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5027A295553C43FA" />
+    <group_ref id="SG_F8EEFFCF25457B41" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15646,7 +15646,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18109" name="공포의 절규" nameId="581521" name_desc="DGFI_H_FearTA_SmallArea" stack="SKILL_DGFI_H_FearTA_SmallArea" skill_group_name="DGFI_H_FearTA_SmallArea" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_7CCE4ED97545DC88" />
+    <group_ref id="SG_6DC8F13FCA965B39" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15883,7 +15883,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18115" name="신경독가스" nameId="586855" name_desc="BNAS_PoisonSnareTrap_TA" stack="SKILL_BNAS_PoisonSnareTrap_TA" skill_group_name="BNAS_PoisonSnareTrap_TA" delayId="11" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_5027A295553C43FA" />
+    <group_ref id="SG_F8EEFFCF25457B41" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15933,7 +15933,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18116" name="격류 해제" nameId="586867" name_desc="BNMA_Dispel_ATKBuff_WaterGolem" stack="SKILL_BNMA_Dispel_ATKBuff_WaterGolem" skill_group_name="BNMA_Dispel_ATKBuff_WaterGolem" delayId="7" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_562F9E346BFF28EB" />
+    <group_ref id="SG_F7CDB77C470E5956" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15964,7 +15964,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18117" name="수호막 제거" nameId="586873" name_desc="BNMA_Dispel_DEFBuff_WaterGolem" stack="SKILL_BNMA_Dispel_DEFBuff_WaterGolem" skill_group_name="BNMA_Dispel_DEFBuff_WaterGolem" delayId="7" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_562F9E346BFF28EB" />
+    <group_ref id="SG_F7CDB77C470E5956" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -15995,7 +15995,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18118" name="원한의 상처" nameId="586883" name_desc="BNAS_Bleed_Lr" stack="SKILL_BNAS_Bleed_Lr" skill_group_name="BNAS_Bleed_Lr" delayId="11" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="3" req_dispel_count="30" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_638D57F06C4F0A3C" />
+    <group_ref id="SG_BFDCCCC7E4B0D498" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_C2CC60562AEFD637" />
@@ -16032,7 +16032,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18119" name="원한의 깊은 상처" nameId="587493" name_desc="BNAS_SatkApBleAdd_Lr" stack="SKILL_BNAS_SatkApBleAdd_Lr" skill_group_name="BNAS_SatkApBleAdd_Lr" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_638D57F06C4F0A3C" />
+    <group_ref id="SG_BFDCCCC7E4B0D498" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -16066,7 +16066,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18120" name="원혼의 절규" nameId="586889" name_desc="BNEL_SnareFear5S_TA" stack="SKILL_BNEL_SnareFear5S_TA" skill_group_name="BNEL_SnareFear5S_TA" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="30" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_887DE9A8E372E34B" />
+    <group_ref id="SG_F5884D2BBDDD8ECA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_E036D9FCB3C32246" />
@@ -16132,7 +16132,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18122" name="강한 공기 파동" nameId="586907" name_desc="BNWI_SpellLrTA_IDLF1" stack="SKILL_BNWI_SpellLrTA_IDLF1" skill_group_name="BNWI_SpellLrTA_IDLF1" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_CD040D76E210B2B8" />
+    <group_ref id="SG_31E48FC86A8DAF74" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_78826E1FE045569D" />
@@ -16154,7 +16154,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18123" name="미세 광파" nameId="586913" name_desc="BNWI_SpellShortDotSA_Fire" stack="SKILL_BNWI_SpellShortDotSA_Fire" skill_group_name="BNWI_SpellShortDotSA_Fire" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3FD248125B8E0FAB" />
+    <group_ref id="SG_5BBF392E1E4C8CEF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <spellatkinstant value="66" delta="0" mode="PERCENT" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="FIRE" />
@@ -16216,7 +16216,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18125" name="광파 그물" nameId="586925" name_desc="BNEL_SpellAtkSnareSA_Sr" stack="SKILL_BNEL_SpellAtkSnareSA_Sr" skill_group_name="BNEL_SpellAtkSnareSA_Sr" delayId="13" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="2" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3FD248125B8E0FAB" />
+    <group_ref id="SG_5BBF392E1E4C8CEF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <spellatkinstant value="104" delta="0" mode="ADD" duration1="0" duration2="0" randomtime="0" effectid="0" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" element="WATER" />
@@ -16259,7 +16259,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18126" name="감전" nameId="586931" name_desc="BNWI_SatkAddSnareiceSA_Nr" stack="SKILL_BNWI_SatkAddSnareiceSA_Nr" skill_group_name="BNWI_SatkAddSnareiceSA_Nr" delayId="8" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3FD248125B8E0FAB" />
+    <group_ref id="SG_5BBF392E1E4C8CEF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_ADC92D4D6A729219" />
     <group_ref id="SG_2633134E7EB40DE5" />
@@ -16289,7 +16289,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18127" name="혼돈파" nameId="586937" name_desc="BNGR_ConfuSnareSA_Crazy" stack="SKILL_BNGR_ConfuSnareSA_Crazy" skill_group_name="BNGR_ConfuSnareSA_Crazy" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="5" req_dispel_count="100" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3FD248125B8E0FAB" />
+    <group_ref id="SG_5BBF392E1E4C8CEF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <effects>
       <confuse duration1="0" duration2="5000" randomtime="0" effectid="20104" e="1" basiclvl="0" noresist="false" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="SKILLLV" hopa="60" hopb="60" element="EARTH" />
@@ -16336,7 +16336,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18128" name="거신 소환" nameId="586943" name_desc="BNEL_SpellSm_Earth" stack="SKILL_BNEL_SpellSm_Earth" skill_group_name="BNEL_SpellSm_Earth" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="30" duration="3000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_3FD248125B8E0FAB" />
+    <group_ref id="SG_5BBF392E1E4C8CEF" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -16385,7 +16385,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18130" name="브라우니폭탄효과" nameId="587385" name_desc="Q_IDLF1_BrownieBomb" stack="SKILL_Q_IDLF1_BrownieBomb" skill_group_name="Q_IDLF1_BrownieBomb" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="95" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_EA2BC2BFBC133C59" />
+    <group_ref id="SG_40EAE58A5E2625F5" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_CD12CA07A0A802E8" />
@@ -16602,7 +16602,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18136" name="집게 누르기" nameId="587417" name_desc="BNKN_SKnockDownSlow_TA" stack="SKILL_BNKN_SKnockDownSlow_TA" skill_group_name="BNKN_SKnockDownSlow_TA" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_F80BF4E1C4E6E400" />
+    <group_ref id="SG_0997E0533519FDDC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -16718,7 +16718,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18139" name="자폭" nameId="579951" name_desc="AWI_SpellAr_Lr_Nr_BombManSummon" stack="SKILL_AWI_SpellAr_Lr_Nr_BombManSummon" skill_group_name="AWI_SpellAr_Lr_Nr_BombManSummon" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EBB143F4199AB52A" />
+    <group_ref id="SG_18D490006F854A60" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_9061C364B7C5E0C0" />
@@ -16756,7 +16756,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18140" name="자폭" nameId="579957" name_desc="AWI_SpellAr_Lr_Nr_BombManSummon2" stack="SKILL_AWI_SpellAr_Lr_Nr_BombManSummon2" skill_group_name="AWI_SpellAr_Lr_Nr_BombManSummon2" delayId="2" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_EBB143F4199AB52A" />
+    <group_ref id="SG_18D490006F854A60" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_9061C364B7C5E0C0" />
@@ -16794,7 +16794,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18141" name="전사의 격려 I" nameId="579963" name_desc="ACH_StatupAr_Lr_Nr_Officer" stack="SKILL_ACH_StatupAr_Lr_Nr_Officer" skill_group_name="ACH_StatupAr_Lr_Nr_Officer" delayId="227" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_EBB143F4199AB52A" />
+    <group_ref id="SG_18D490006F854A60" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -16823,7 +16823,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18142" name="전사의 격려 I" nameId="579969" name_desc="APR_StatupAr_Lr_Nr_Officer" stack="SKILL_APR_StatupAr_Lr_Nr_Officer" skill_group_name="APR_StatupAr_Lr_Nr_Officer" delayId="775" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_06B03866C1774923" />
+    <group_ref id="SG_0897A8EE83EE1CB2" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -16858,7 +16858,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18143" name="전사의 기합 I" nameId="579975" name_desc="ACH_StatupAr_Lr_Nr_OfficerF" stack="SKILL_ACH_StatupAr_Lr_Nr_OfficerF" skill_group_name="ACH_StatupAr_Lr_Nr_OfficerF" delayId="6" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_06B03866C1774923" />
+    <group_ref id="SG_0897A8EE83EE1CB2" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -16903,7 +16903,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18144" name="전사의 기합 I" nameId="579981" name_desc="APR_StatupAr_Lr_Nr_OfficerF" stack="SKILL_APR_StatupAr_Lr_Nr_OfficerF" skill_group_name="APR_StatupAr_Lr_Nr_OfficerF" delayId="775" lvl="1" skilltype="MAGICAL" skillsubtype="HEAL" tslot="BUFF" tslot_level="0" dispel_category="BUFF" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="INDIRECT">
-    <group_ref id="SG_06B03866C1774923" />
+    <group_ref id="SG_0897A8EE83EE1CB2" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17040,7 +17040,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18147" name="쇠다리 차기" nameId="587433" name_desc="BNKN_ChainAtk2KD_TA" stack="SKILL_BNKN_ChainAtk2KD_TA" skill_group_name="BNKN_ChainAtk2KD_TA" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="NONE">
-    <group_ref id="SG_F80BF4E1C4E6E400" />
+    <group_ref id="SG_0997E0533519FDDC" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17103,7 +17103,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18149" name="공포의 등장" nameId="580029" name_desc="AEL_FearAr_Lr_PwAtk_DrakanSummon" stack="SKILL_AEL_FearAr_Lr_PwAtk_DrakanSummon" skill_group_name="AEL_FearAr_Lr_PwAtk_DrakanSummon" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_593E4E8484CC5AD3" />
+    <group_ref id="SG_A75DCABD96621206" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17384,7 +17384,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18156" name="강력한 끌어오기" nameId="587571" name_desc="NKN_PulledC2TA3_SrtMotion_No" stack="SKILL_NKN_PulledC2TA3_SrtMotion_No" skill_group_name="NKN_PulledC2TA3_SrtMotion_No" delayId="2" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_80DE509143EF2CAF" />
+    <group_ref id="SG_466677ACB996BA3E" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17413,7 +17413,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18157" name="강력한 폭발" nameId="587587" name_desc="NMA_SpellStrongTA7_Nr" stack="SKILL_NMA_SpellStrongTA7_Nr" skill_group_name="NMA_SpellStrongTA7_Nr" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_02286197A53EE9E3" />
+    <group_ref id="SG_B2BD346C4D85AD95" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17438,7 +17438,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18158" name="분노의 독기 분출" nameId="587511" name_desc="NAS_PoisonNTA_AddSuPyAtt_Nr" stack="SKILL_NAS_PoisonNTA_AddSuPyAtt_Nr" skill_group_name="NAS_PoisonNTA_AddSuPyAtt_Nr" delayId="11" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="16399" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6DDCA7B84B381C00" />
+    <group_ref id="SG_243DEBB0E2D282BA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17566,7 +17566,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18162" name="공포에 걸린 쿠쿠" nameId="587529" name_desc="NEL_FearDeformQuC3TA_Nr" stack="SKILL_NEL_FearDeformQuC3TA_Nr" skill_group_name="NEL_FearDeformQuC3TA_Nr" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="4000" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_887DE9A8E372E34B" />
+    <group_ref id="SG_F5884D2BBDDD8ECA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_792A6AF2A104FADD" />
@@ -17631,7 +17631,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18163" name="정령을 위한 흡수" nameId="587535" name_desc="NEL_SpellAtkMPattTA5_SumEL" stack="SKILL_NEL_SpellAtkMPattTA5_SumEL" skill_group_name="NEL_SpellAtkMPattTA5_SumEL" delayId="4" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_31E8A70FE7B60D59" />
+    <group_ref id="SG_D082519DBF04685C" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17728,7 +17728,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18165" name="보호막만들기" nameId="587551" name_desc="NFI_SPellATKNTA5_addShield_No" stack="SKILL_NFI_SPellATKNTA5_addShield_No" skill_group_name="NFI_SPellATKNTA5_addShield_No" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="2500" penalty_skill_id="16409" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6DDCA7B84B381C00" />
+    <group_ref id="SG_243DEBB0E2D282BA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_78826E1FE045569D" />
@@ -17751,7 +17751,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18166" name="강력한 발목잡기" nameId="587545" name_desc="NFI_SnareStrongLongC2TA3_short_Poi" stack="SKILL_NFI_SnareStrongLongC2TA3_short_Poi" skill_group_name="NFI_SnareStrongLongC2TA3_short_Poi" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_31E8A70FE7B60D59" />
+    <group_ref id="SG_D082519DBF04685C" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17879,7 +17879,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18169" name="지옥불길" nameId="587567" name_desc="NGR_XDrakanWiTrap_No" stack="SKILL_NGR_XDrakanWiTrap_No" skill_group_name="NGR_XDrakanWiTrap_No" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="0" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6DDCA7B84B381C00" />
+    <group_ref id="SG_243DEBB0E2D282BA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_B23F927BE44BF377" />
@@ -17953,7 +17953,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18172" name="강력한 정기 흡수" nameId="587583" name_desc="NKN_SpellAtkNTA5_AddHealins" stack="SKILL_NKN_SpellAtkNTA5_AddHealins" skill_group_name="NKN_SpellAtkNTA5_AddHealins" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3000" penalty_skill_id="16401" cancel_rate="30" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_6DDCA7B84B381C00" />
+    <group_ref id="SG_243DEBB0E2D282BA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -17978,7 +17978,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18173" name="장거리 무력화" nameId="587591" name_desc="NRA_SatkSnareSlowC3TA3_Lr_Poi" stack="SKILL_NRA_SatkSnareSlowC3TA3_Lr_Poi" skill_group_name="NRA_SatkSnareSlowC3TA3_Lr_Poi" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="10" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="35" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="25" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_B437DBAEE2A7F2F1" />
+    <group_ref id="SG_C31D8E23099A49DA" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_C1DC399CD3CFED6A" />
@@ -18067,7 +18067,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18175" name="썩은나무저주" nameId="587603" name_desc="NWI_SleepDeformSpellDelay6sTA_No" stack="SKILL_NWI_SleepDeformSpellDelay6sTA_No" skill_group_name="NWI_SleepDeformSpellDelay6sTA_No" delayId="12" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="20" activation="ACTIVE" cooldown="0" duration="2500" cancel_rate="40" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_80DE509143EF2CAF" />
+    <group_ref id="SG_466677ACB996BA3E" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_C21E85F67292CCC6" />
@@ -18486,7 +18486,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18185" name="팽개치기" nameId="587845" name_desc="BNKN_SatkKDTA_KK" stack="SKILL_BNKN_SatkKDTA_KK" skill_group_name="BNKN_SatkKDTA_KK" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="3500" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1932260963E0AA1" />
+    <group_ref id="SG_543B88088570A867" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -18517,7 +18517,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18186" name="발 구르기" nameId="587849" name_desc="BNKN_SaddtoKDTA_KK" stack="SKILL_BNKN_SaddtoKDTA_KK" skill_group_name="BNKN_SaddtoKDTA_KK" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1932260963E0AA1" />
+    <group_ref id="SG_543B88088570A867" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <group_ref id="SG_0B07A0015624C7F0" />
@@ -18543,7 +18543,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18187" name="우렁찬 괴성" nameId="587853" name_desc="BNKN_FearSnareTA_KK" stack="SKILL_BNKN_FearSnareTA_KK" skill_group_name="BNKN_FearSnareTA_KK" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_MENTAL" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="2000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_A1932260963E0AA1" />
+    <group_ref id="SG_543B88088570A867" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -19010,7 +19010,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18197" name="지진 파동" nameId="587907" name_desc="BNFI_SatkSnareTA_Captain" stack="SKILL_BNFI_SatkSnareTA_Captain" skill_group_name="BNFI_SatkSnareTA_Captain" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_94119A5FD31086C9" />
+    <group_ref id="SG_8865D2D3528B9399" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -19055,7 +19055,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18198" name="검기 파열" nameId="587913" name_desc="BNFI_SatkRDTA_Captain" stack="SKILL_BNFI_SatkRDTA_Captain" skill_group_name="BNFI_SatkRDTA_Captain" delayId="1" lvl="1" skilltype="PHYSICAL" skillsubtype="ATTACK" tslot="NONE" tslot_level="0" dispel_category="NONE" req_dispel_level="0" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_94119A5FD31086C9" />
+    <group_ref id="SG_8865D2D3528B9399" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
@@ -19086,7 +19086,7 @@
     </retail>
   </skill_template>
   <skill_template skill_id="18199" name="지옥의 고통" nameId="587917" name_desc="BNFI_SpellatkDoTTA_Captain" stack="SKILL_BNFI_SpellatkDoTTA_Captain" skill_group_name="BNFI_SpellatkDoTTA_Captain" delayId="1" lvl="1" skilltype="MAGICAL" skillsubtype="DEBUFF" tslot="DEBUFF" tslot_level="0" dispel_category="DEBUFF_PHYSICAL" req_dispel_level="1" req_dispel_count="50" activation="ACTIVE" cooldown="0" duration="1000" cancel_rate="0" conflict_id="0" noremoveatdie="false" remove_flyend="false" applymboost="true" applyhealboost="false" applymphealboost="false" applymcrit="true" ammospeed="0" obstacle="4" hostile_type="DIRECT">
-    <group_ref id="SG_94119A5FD31086C9" />
+    <group_ref id="SG_8865D2D3528B9399" />
     <group_ref id="SG_D55A0F508CA0DAB6" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
