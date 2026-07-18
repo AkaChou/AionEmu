@@ -882,6 +882,10 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			doReward(player);
 		}
 		startPrepareTimer();
+		if (spawnRace != null) {
+			return;
+		}
+		spawnRace = player.getRace();
 		instanceReward.addPoints(20000);
 		//Siege Weapon * *//
 		final int siegeweapon1 = spawnRace == Race.ASMODIANS ? 701610 : 701596;

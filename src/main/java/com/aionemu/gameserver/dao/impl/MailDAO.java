@@ -228,23 +228,26 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      */
     @Override
     public boolean storeLetter(Timestamp time, Letter letter) {
-        boolean result = false;
-
-        switch (letter.getLetterPersistentState()) {
-            case NEW:
-                result = saveLetter(time, letter);
-                break;
-            case UPDATE_REQUIRED:
-                result = updateLetter(time, letter);
-                break;
-            default:
-                return true;
-        }
-
-        if (result) {
+        try (Connection con = DatabaseFactory.getConnection()) {
+            storeLetterInTransaction(con, time, letter);
             letter.setPersistState(PersistentState.UPDATED);
+            return true;
+        } catch (SQLException e) {
+            log.error(I18n.get("log.2d8239fcf778", letter.getRecipientId(), e));
+            return false;
         }
-        return result;
+    }
+
+    @Override
+    public void storeLetterInTransaction(Connection con, Timestamp time, Letter letter) throws SQLException {
+        boolean result = switch (letter.getLetterPersistentState()) {
+            case NEW -> saveLetter(con, time, letter);
+            case UPDATE_REQUIRED -> updateLetter(con, time, letter);
+            default -> true;
+        };
+        if (!result) {
+            throw new SQLException("No mail row changed for letter " + letter.getObjectId());
+        }
     }
 
     /**
@@ -255,14 +258,13 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * letter
      * whether successful
      */
-    private boolean saveLetter(final Timestamp time, final Letter letter) {
+    private boolean saveLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
         int attachedItemId = 0;
         if (letter.getAttachedItem() != null) {
             attachedItemId = letter.getAttachedItem().getObjectId();
         }
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_MAIL_QUERY)) {
+        try (PreparedStatement stmt = con.prepareStatement(INSERT_MAIL_QUERY)) {
 
             stmt.setInt(1, letter.getObjectId());
             stmt.setInt(2, letter.getRecipientId());
@@ -276,12 +278,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
             stmt.setTimestamp(10, time);
             stmt.setLong(11, letter.getAttachedAp());
 
-            stmt.executeUpdate();
-            return true;
-
-        } catch (SQLException e) {
-            log.error(I18n.get("log.17b9caa7691c", letter.getRecipientId(), e));
-            return false;
+            return stmt.executeUpdate() > 0;
         }
     }
 
@@ -293,14 +290,13 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
      * letter
      * whether successful
      */
-    private boolean updateLetter(final Timestamp time, final Letter letter) {
+    private boolean updateLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
         int attachedItemId = 0;
         if (letter.getAttachedItem() != null) {
             attachedItemId = letter.getAttachedItem().getObjectId();
         }
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_MAIL_QUERY)) {
+        try (PreparedStatement stmt = con.prepareStatement(UPDATE_MAIL_QUERY)) {
 
             stmt.setBoolean(1, letter.isUnread());
             stmt.setInt(2, attachedItemId);
@@ -310,12 +306,18 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
             stmt.setLong(6, letter.getAttachedAp());
             stmt.setInt(7, letter.getObjectId());
 
-            stmt.executeUpdate();
-            return true;
+            return stmt.executeUpdate() > 0;
+        }
+    }
 
-        } catch (SQLException e) {
-            log.error(I18n.get("log.f5a95e9e6233", letter.getRecipientId(), e));
-            return false;
+    @Override
+    public void updateMailCounterInTransaction(Connection con, String playerName, int count) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(UPDATE_MAIL_COUNTER_QUERY)) {
+            stmt.setInt(1, count);
+            stmt.setString(2, playerName);
+            if (stmt.executeUpdate() == 0) {
+                throw new SQLException("No player row changed for mail counter: " + playerName);
+            }
         }
     }
 

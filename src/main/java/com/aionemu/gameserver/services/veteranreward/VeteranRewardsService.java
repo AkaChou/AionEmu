@@ -3,44 +3,29 @@ package com.aionemu.gameserver.services.veteranreward;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Collection;
 
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.VeteranRewardsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.gameobjects.Item;
-import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
-import com.aionemu.gameserver.model.gameobjects.player.Mailbox;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
-import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.veteranrewards.VeteranRewards;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.item.ItemFactory;
-import com.aionemu.gameserver.services.player.PlayerMailboxState;
-import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
-import com.aionemu.gameserver.world.World;
 
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 老兵奖励服务，按定时任务从数据库加载奖励并通过邮件发放。
@@ -180,15 +165,12 @@ public class VeteranRewardsService {
 			count = -1;
 		}
 
-		SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype);
+		SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype, id);
 
 		if (item != 0) {
 		} else if (kinah > 0) {
 		}
 
-		if (id > 1) {
-			RecycleVeteranReward(id);
-		}
 	}
 
 	/**
@@ -231,24 +213,14 @@ public class VeteranRewardsService {
 		}
 
 		if (recipientType == RecipientType.PLAYER) {
-			SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype);
+			SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype, 0);
 		} else {
 			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (recipientType.isAllowed(player.getCommonData().getRace())) {
-					SendVeteranRewardMail(Sender, player.getName(), Title, Message, item, count, kinah, mailtype);
+					SendVeteranRewardMail(Sender, player.getName(), Title, Message, item, count, kinah, mailtype, 0);
 				}
 			}
 		}
-	}
-
-	/**
-	 * 删除已处理的老兵奖励记录。
-	 * Delete a processed veteran reward record.
-	 *
-	 * Reward ID
-	 */
-	private void RecycleVeteranReward(final int rewardId) {
-		getDAO().delVeteranReward(rewardId);
 	}
 
 	/**
@@ -264,8 +236,8 @@ public class VeteranRewardsService {
 	 * Attached kinah
 	 * @param mailtype           邮件类型编码 / Mail type code
 	 */
-	private void SendVeteranRewardMail(String sender, String recipientName, String title, String message,
-			int attachedItemObjId, int attachedItemCount, int attachedKinahCount, int mailtype) {
+	private boolean SendVeteranRewardMail(String sender, String recipientName, String title, String message,
+			int attachedItemObjId, int attachedItemCount, int attachedKinahCount, int mailtype, int rewardId) {
 		if (attachedItemObjId != 0) {
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(attachedItemObjId);
 			if (itemTemplate == null) {
@@ -273,12 +245,12 @@ public class VeteranRewardsService {
 					// log.error(I18n.get("log.9f83472dcd76", sender, recipientName, // "] RETURN ITEM ID:", itemTemplate, " ITEM COUNT "
 					//, attachedItemCount, attachedKinahCount));
 				}
-				return;
+				return false;
 			}
 		}
 
 		if (attachedItemCount == 0) {
-			return;
+			return false;
 		}
 
 		if (recipientName.length() > 16) {
@@ -286,7 +258,7 @@ public class VeteranRewardsService {
 				// log.error(I18n.get("log.d82411483d33", sender, recipientName, // "] ITEM RETURN", attachedItemObjId, " ITEM COUNT "
 				//, attachedItemCount, attachedKinahCount));
 			}
-			return;
+			return false;
 		}
 
 		if (sender.length() > 16) {
@@ -294,7 +266,7 @@ public class VeteranRewardsService {
 				// log.error(I18n.get("log.50e74bfd8bb0", sender, recipientName, // "] ITEM RETURN", attachedItemObjId, " ITEM COUNT "
 				//, attachedItemCount, attachedKinahCount));
 			}
-			return;
+			return false;
 		}
 
 		if (title.length() > 20) {
@@ -312,49 +284,7 @@ public class VeteranRewardsService {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
 				log.error(I18n.get("log.c085309347c4", recipientName));
 			}
-			return;
-		}
-
-		Player onlineRecipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
-
-		if (recipientCommonData.isOnline()) {
-			if (!onlineRecipient.getMailbox().haveFreeSlots()) {
-				if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-					// log.error(I18n.get("log.9152b5a91e37", sender, // onlineRecipient.getName(), attachedItemObjId
-					//, attachedItemCount, attachedKinahCount, // " MAILBOX FULL "));
-				}
-				return;
-			}
-		} else {
-			if (recipientCommonData.getMailboxLetters() >= 100) {
-				if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {
-					// log.error(I18n.get("log.4f69a14c14ed", sender, recipientName, // "] ITEM RETURN ", attachedItemObjId, " ITEM COUNT "
-					//, attachedItemCount, attachedKinahCount));
-				}
-				return;
-			}
-			onlineRecipient = null;
-		}
-
-		Item attachedItem = null;
-		int finalAttachedKinahCount = 0;
-		int finalAttachedApCount = 0;
-		int itemId = attachedItemObjId;
-		long count = attachedItemCount;
-
-		if (itemId != 0) {
-			Item senderItem = ItemFactory.newItem(itemId, count);
-
-			if (senderItem != null) {
-				senderItem.setEquipped(false);
-				senderItem.setEquipmentSlot(0);
-				senderItem.setItemLocation(StorageType.MAILBOX.getId());
-				attachedItem = senderItem;
-			}
-		}
-
-		if (attachedKinahCount > 0) {
-			finalAttachedKinahCount = attachedKinahCount;
+			return false;
 		}
 
 		LetterType type;
@@ -366,48 +296,17 @@ public class VeteranRewardsService {
 			type = LetterType.NORMAL;
 		}
 
-		String finalSender = sender;
+		SystemMailService.TransactionAction transactionAction = rewardId > 1
+				? con -> getDAO().deleteInTransaction(con, rewardId) : null;
+		boolean delivered = GameFeatureServices.systemMailService().sendMail(sender, recipientName, title, message,
+				attachedItemObjId, attachedItemCount, attachedKinahCount, 0, type, transactionAction);
 
-		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
-				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
-				type);
-
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
-			return;
-		}
-
-		if (attachedItem != null) {
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
-				return;
-			}
-		}
-
-		if (onlineRecipient != null) {
-			Mailbox recipientMailbox = onlineRecipient.getMailbox();
-			recipientMailbox.putLetterToMailbox(newLetter);
-			PacketSendUtility.sendPacket(onlineRecipient, new SM_MAIL_SERVICE(onlineRecipient.getMailbox()));
-			recipientMailbox.isMailListUpdateRequired = true;
-
-			if (recipientMailbox.mailBoxState != 0) {
-				boolean isPostman = (recipientMailbox.mailBoxState
-						& PlayerMailboxState.EXPRESS) == PlayerMailboxState.EXPRESS;
-				PacketSendUtility.sendPacket(onlineRecipient,
-						new SM_MAIL_SERVICE(onlineRecipient, recipientMailbox.getLetters(), isPostman));
-			}
-			PacketSendUtility.sendPacket(onlineRecipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
-		}
-
-		if (!recipientCommonData.isOnline()) {
-			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
-		}
-
-		if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
+		if (delivered && VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
 			// " + "Item: " +
 			// " + "Item Count: " + attachedItemCount + " / "
 			// " + "Status: successfully."));
 		}
+		return delivered;
 	}
 
 	private VeteranRewardsDAO getDAO() {

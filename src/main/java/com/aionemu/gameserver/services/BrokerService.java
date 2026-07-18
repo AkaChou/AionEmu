@@ -9,6 +9,8 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.main.BrokerConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
@@ -46,9 +49,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemFactory;
+import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
-import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
@@ -67,7 +70,6 @@ public class BrokerService {
 	private ConcurrentMap<Integer, BrokerItem> elyosSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
 	private ConcurrentMap<Integer, BrokerItem> asmodianBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
 	private ConcurrentMap<Integer, BrokerItem> asmodianSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private BrokerPeriodicTaskManager saveManager;
 	private Future<?> expiredItemsTask;
 	private ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<Integer, BrokerPlayerCache>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
@@ -102,7 +104,6 @@ public class BrokerService {
 	 */
 	public BrokerService() {
 		initBrokerService();
-		saveManager = new BrokerPeriodicTaskManager(brokerSaveDelay());
 		scheduleExpiredItemsTask();
 	}
 
@@ -111,7 +112,6 @@ public class BrokerService {
 	 * Reload broker listed and settled items from the database.
 	 */
 	public synchronized void reload() {
-		saveManager.reschedule(brokerSaveDelay());
 		if (expiredItemsTask != null) {
 			expiredItemsTask.cancel(false);
 		}
@@ -126,10 +126,6 @@ public class BrokerService {
 				checkExpiredItems();
 			}
 		}, delay, delay);
-	}
-
-	private int brokerSaveDelay() {
-		return Math.max(BrokerConfig.SAVE_MANAGER_INTERVAL * 1000, 6000);
 	}
 
 	private void initBrokerService() {
@@ -329,21 +325,7 @@ public class BrokerService {
 		if (buyingItem == null) {
 			return;
 		}
-		long price = buyingItem.getPrice();
-		float PricePerItem = (float) price / (float) buyingItem.getItemCount();
-		long TotalBuyPrice = (long) (PricePerItem * itemCount);
-		if (itemCount > buyingItem.getItemCount()) {
-			if (BrokerConfig.ANTI_HACK_PUNISHMENT == 0) {
-				PacketSendUtility.sendMessage(player,
-						"Sorry, you can not buy items more than total count! are you hacking!");
-			} else if (BrokerConfig.ANTI_HACK_PUNISHMENT == 1) {
-				PacketSendUtility.sendMessage(player,
-						"Sorry, you can not buy items more than total count! are you hacking! you have been kicked from game due to malfunction data.");
-				player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
-			}
-			log.info(I18n.get("log.bfe59bc3716e", player.getName(), buyingItem.getItemId(), (buyingItem.getItemCount() + itemCount), itemCount, (LoggingConfig.ENABLE_ADVANCED_LOGGING
-									? " [Item Name: " + buyingItem.getItem().getItemName()
-									: "]"), buyingItem.getSeller(), TotalBuyPrice));
+		if (itemCount <= 0) {
 			return;
 		}
 		if ((buyingItem.isSold() || buyingItem.isSettled()) && (buyingItem.getItem() != null)) {
@@ -362,34 +344,90 @@ public class BrokerService {
 			return;
 		}
 		synchronized (this) {
+			if (itemCount > buyingItem.getItemCount()) {
+				long attemptedTotal = (long) (((float) buyingItem.getPrice() / buyingItem.getItemCount()) * itemCount);
+				if (BrokerConfig.ANTI_HACK_PUNISHMENT == 0) {
+					PacketSendUtility.sendMessage(player,
+							"Sorry, you can not buy items more than total count! are you hacking!");
+				} else if (BrokerConfig.ANTI_HACK_PUNISHMENT == 1) {
+					PacketSendUtility.sendMessage(player,
+							"Sorry, you can not buy items more than total count! are you hacking! you have been kicked from game due to malfunction data.");
+					player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
+				}
+				log.info(I18n.get("log.bfe59bc3716e", player.getName(), buyingItem.getItemId(),
+						(buyingItem.getItemCount() + itemCount), itemCount, (LoggingConfig.ENABLE_ADVANCED_LOGGING
+								? " [Item Name: " + buyingItem.getItem().getItemName() : "]"), buyingItem.getSeller(), attemptedTotal));
+				return;
+			}
 			if (buyingItem.isSold() || buyingItem.isCanceled()) {
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_VENDOR_SOLD_OUT(buyingItem.getItem().getNameId()));
 				return;
 			}
+			long price = buyingItem.getPrice();
+			float pricePerItem = (float) price / (float) buyingItem.getItemCount();
+			long totalBuyPrice = (long) (pricePerItem * itemCount);
 			Item item = buyingItem.getItem();
 			if (player.getInventory().isFull(item.getItemTemplate().getExtraInventoryId())) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 				return;
 			}
-			if (player.getInventory().getKinah() < TotalBuyPrice) {
+			if (player.getInventory().getKinah() < totalBuyPrice) {
 				return;
 			}
-			boolean isBuyWholeItem = false;
-			Item newItem = null;
-			if (itemCount == buyingItem.getItemCount()) {
-				isBuyWholeItem = true;
-				getRaceBrokerItems(playerRace).remove(itemUniqueId);
-				putToSettled(playerRace, buyingItem, true);
+			boolean isBuyWholeItem = itemCount == buyingItem.getItemCount();
+			long originalBrokerCount = buyingItem.getItemCount();
+			long originalBrokerPrice = buyingItem.getPrice();
+			boolean originalSold = buyingItem.isSold();
+			boolean originalSettled = buyingItem.isSettled();
+			Timestamp originalSettleTime = buyingItem.getSettleTime();
+			PersistentState originalBrokerState = buyingItem.getPersistentState();
+			long originalItemCount = item.getItemCount();
+			int originalItemLocation = item.getItemLocation();
+			PersistentState originalItemState = item.getPersistentState();
+			Item kinahItem = player.getInventory().getKinahItem();
+			PersistentState originalKinahState = kinahItem.getPersistentState();
+			BrokerItem splitSettledItem = null;
+			Item itemToBuy = item;
+			List<BrokerItem> brokerChanges;
+			List<InventorySave> inventoryChanges = new ArrayList<>();
+			if (isBuyWholeItem) {
+				buyingItem.removeItem();
+				buyingItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
+				brokerChanges = List.of(buyingItem);
 			} else {
 				item.setItemCount(buyingItem.getItemCount() - itemCount);
 				buyingItem.setItemCount(buyingItem.getItemCount() - itemCount);
-				buyingItem.setPrice(price - TotalBuyPrice);
-				isBuyWholeItem = false;
+				buyingItem.setPrice(price - totalBuyPrice);
 				buyingItem.setPersistentState(PersistentState.UPDATE_ITEM_BROKER);
-				saveManager.add(new BrokerOpSaveTask(buyingItem, item, null, buyingItem.getSellerId()));
-				newItem = BuySplitSell(playerRace, buyingItem, TotalBuyPrice, itemCount);
+				itemToBuy = ItemFactory.newItem(item.getItemId(), itemCount);
+				copyItemInfo(item, itemToBuy);
+				splitSettledItem = createSplitSale(playerRace, buyingItem, itemToBuy, totalBuyPrice, itemCount);
+				brokerChanges = List.of(buyingItem, splitSettledItem);
+				inventoryChanges.add(new InventorySave(buyingItem.getSellerId(), List.of(item)));
 			}
+			player.getInventory().decreaseKinah(totalBuyPrice);
+			Item boughtItem = player.getInventory().add(itemToBuy);
+			if (boughtItem == null) {
+				restoreFailedPurchase(player, buyingItem, item, itemToBuy, totalBuyPrice, originalBrokerCount,
+						originalBrokerPrice, originalSold, originalSettled, originalSettleTime, originalBrokerState,
+						originalItemCount, originalItemLocation, originalItemState, originalKinahState, !isBuyWholeItem);
+				return;
+			}
+			inventoryChanges.add(new InventorySave(player.getObjectId(), List.of(boughtItem, kinahItem)));
+			if (!new BrokerOpSaveTask(brokerChanges, inventoryChanges).save()) {
+				restoreFailedPurchase(player, buyingItem, item, boughtItem, totalBuyPrice, originalBrokerCount,
+						originalBrokerPrice, originalSold, originalSettled, originalSettleTime, originalBrokerState,
+						originalItemCount, originalItemLocation, originalItemState, originalKinahState, !isBuyWholeItem);
+				return;
+			}
+			if (isBuyWholeItem) {
+				getRaceBrokerItems(playerRace).remove(itemUniqueId);
+				getRaceBrokerSettledItems(playerRace).put(itemUniqueId, buyingItem);
+			} else {
+				getRaceBrokerSettledItems(playerRace).put(splitSettledItem.getItemUniqueId(), splitSettledItem);
+			}
+			notifySellerOfSale(buyingItem);
 			if (!isEmptyCache) {
 				BrokerItem[] newCache;
 				if (isBuyWholeItem) {
@@ -403,11 +441,6 @@ public class BrokerService {
 				}
 				getPlayerCache(player).setBrokerListCache(newCache);
 			}
-			player.getInventory().decreaseKinah(TotalBuyPrice);
-			Item boughtItem = player.getInventory().add(isBuyWholeItem ? item : newItem);
-			BrokerOpSaveTask bost = new BrokerOpSaveTask(null, boughtItem, player.getInventory().getKinahItem(),
-					player.getObjectId());
-			saveManager.add(bost);
 		}
 		showRequestedItems(player, getPlayerCache(player).getBrokerMaskCache(),
 				getPlayerCache(player).getBrokerSortTypeCache(), getPlayerCache(player).getBrokerStartPageCache(),
@@ -419,38 +452,51 @@ public class BrokerService {
 	 * @param brokerItem
 	 * @param TotalBuyPrice
 	 */
-	private Item BuySplitSell(Race race, BrokerItem brokerItem, long TotalBuyPrice, long BuyItemCount) {
-		Item item = brokerItem.getItem();
-		int itemNameId = item.getNameId();
+	private BrokerItem createSplitSale(Race race, BrokerItem brokerItem, Item newItem, long totalBuyPrice,
+			long buyItemCount) {
 		BrokerRace brRace;
 		if (race == Race.ASMODIANS) {
 			brRace = BrokerRace.ASMODIAN;
 		} else if (race == Race.ELYOS) {
 			brRace = BrokerRace.ELYOS;
 		} else {
-			return item;
+			throw new IllegalArgumentException("Unsupported broker race " + race);
 		}
-		Item newItem = ItemFactory.newItem(item.getItemId(), BuyItemCount);
-		copyItemInfo(item, newItem);
-		BrokerItem newBrokerItem = new BrokerItem(newItem, TotalBuyPrice, brokerItem.getSeller(),
+		BrokerItem newBrokerItem = new BrokerItem(newItem, totalBuyPrice, brokerItem.getSeller(),
 				brokerItem.getSellerId(), brRace, brokerItem.isSplitSell());
-		newBrokerItem.setItemCount(BuyItemCount);
+		newBrokerItem.setItemCount(buyItemCount);
 		newBrokerItem.removeItem();
 		newBrokerItem.setPersistentState(PersistentState.NEW);
-		saveManager.add(new BrokerOpSaveTask(newBrokerItem));
-		if (race == Race.ASMODIANS) {
-			asmodianBrokerItems.put(brokerItem.getItemUniqueId(), brokerItem);
-			asmodianSettledItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
-		} else if (race == Race.ELYOS) {
-			elyosBrokerItems.put(brokerItem.getItemUniqueId(), brokerItem);
-			elyosSettledItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
-		}
+		return newBrokerItem;
+	}
+
+	private void notifySellerOfSale(BrokerItem brokerItem) {
 		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
 		if (seller != null) {
 			PacketSendUtility.sendPacket(seller, new SM_BROKER_SERVICE(true, getTotalSettledKinah(seller)));
-			PacketSendUtility.sendPacket(seller, SM_SYSTEM_MESSAGE.STR_VENDOR_REGISTER_SOLD_OUT(itemNameId));
+			PacketSendUtility.sendPacket(seller, SM_SYSTEM_MESSAGE.STR_VENDOR_REGISTER_SOLD_OUT(brokerItem.getItem().getNameId()));
 		}
-		return newItem;
+	}
+
+	private void restoreFailedPurchase(Player player, BrokerItem buyingItem, Item brokerItem, Item boughtItem,
+			long totalBuyPrice, long originalBrokerCount, long originalBrokerPrice, boolean originalSold,
+			boolean originalSettled, Timestamp originalSettleTime, PersistentState originalBrokerState,
+			long originalItemCount, int originalItemLocation, PersistentState originalItemState,
+			PersistentState originalKinahState, boolean releaseBoughtItemId) {
+		if (player.getInventory().getItemByObjId(boughtItem.getObjectId()) != null) {
+			player.getInventory().remove(boughtItem);
+			PacketSendUtility.sendPacket(player, new SM_DELETE_ITEM(boughtItem.getObjectId()));
+		}
+		player.getInventory().increaseKinah(totalBuyPrice);
+		player.getInventory().getKinahItem().setPersistentState(originalKinahState);
+		brokerItem.setItemCount(originalItemCount);
+		brokerItem.setItemLocation(originalItemLocation);
+		brokerItem.setPersistentState(originalItemState);
+		buyingItem.restoreTransactionState(originalBrokerCount, originalBrokerPrice, originalSold, originalSettled,
+				originalSettleTime, originalBrokerState);
+		if (releaseBoughtItemId) {
+			ItemService.releaseItemId(boughtItem);
+		}
 	}
 
 	/**
@@ -498,8 +544,14 @@ public class BrokerService {
 	 * @param brokerItem
 	 * @param isSold
 	 */
-	private void putToSettled(Race race, BrokerItem brokerItem, boolean isSold) {
+	private boolean putToSettled(Race race, BrokerItem brokerItem, boolean isSold) {
 		int itemNameId = brokerItem.getItem().getNameId();
+		long originalItemCount = brokerItem.getItemCount();
+		long originalPrice = brokerItem.getPrice();
+		boolean originalSold = brokerItem.isSold();
+		boolean originalSettled = brokerItem.isSettled();
+		Timestamp originalSettleTime = brokerItem.getSettleTime();
+		PersistentState originalState = brokerItem.getPersistentState();
 
 		if (isSold) {
 			brokerItem.removeItem();
@@ -508,6 +560,11 @@ public class BrokerService {
 		}
 
 		brokerItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		if (!new BrokerOpSaveTask(brokerItem).save()) {
+			brokerItem.restoreTransactionState(originalItemCount, originalPrice, originalSold, originalSettled,
+					originalSettleTime, originalState);
+			return false;
+		}
 
 		if (race == Race.ASMODIANS) {
 			asmodianSettledItems.put(brokerItem.getItemUniqueId(), brokerItem);
@@ -517,14 +574,13 @@ public class BrokerService {
 
 		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
 
-		saveManager.add(new BrokerOpSaveTask(brokerItem));
-
 		if (seller != null) {
 			PacketSendUtility.sendPacket(seller, new SM_BROKER_SERVICE(true, getTotalSettledKinah(seller)));
 			if (isSold) {
 				PacketSendUtility.sendPacket(seller, SM_SYSTEM_MESSAGE.STR_VENDOR_REGISTER_SOLD_OUT(itemNameId));
 			}
 		}
+		return true;
 	}
 
 	private int getRegisteredItemsCount(Player player) {
@@ -615,8 +671,15 @@ public class BrokerService {
 			return;
 		}
 
+		Item sourceItem = itemToRegister;
+		int originalItemLocation = sourceItem.getItemLocation();
+		PersistentState originalItemState = sourceItem.getPersistentState();
+		Item kinahItem = player.getInventory().getKinahItem();
+		PersistentState originalKinahState = kinahItem.getPersistentState();
+		boolean splitStack = itemToRegister.getItemTemplate().isStackable() && count < itemToRegister.getItemCount();
+
 		player.getInventory().decreaseKinah(registrationCommition);
-		if (itemToRegister.getItemTemplate().isStackable() && count < itemToRegister.getItemCount()) {
+		if (splitStack) {
 			int itemId = itemToRegister.getItemId();
 			player.getInventory().decreaseItemCount(itemToRegister, count);
 			itemToRegister = ItemFactory.newItem(itemId, count);
@@ -629,16 +692,33 @@ public class BrokerService {
 
 		BrokerItem newBrokerItem = new BrokerItem(itemToRegister, TotalItemPrice, player.getName(),
 				player.getObjectId(), brRace, isSplitSell);
+		List<Item> inventoryChanges = new ArrayList<>();
+		if (splitStack) {
+			inventoryChanges.add(sourceItem);
+		}
+		inventoryChanges.add(itemToRegister);
+		inventoryChanges.add(kinahItem);
+		if (!new BrokerOpSaveTask(List.of(newBrokerItem),
+				List.of(new InventorySave(player.getObjectId(), inventoryChanges))).save()) {
+			player.getInventory().increaseKinah(registrationCommition);
+			player.getInventory().getKinahItem().setPersistentState(originalKinahState);
+			if (splitStack) {
+				player.getInventory().increaseItemCount(sourceItem, count);
+				sourceItem.setPersistentState(originalItemState);
+				ItemService.releaseItemId(itemToRegister);
+			} else {
+				itemToRegister.setItemLocation(originalItemLocation);
+				player.getInventory().add(itemToRegister);
+				itemToRegister.setPersistentState(originalItemState);
+			}
+			return;
+		}
 
 		if (brRace == BrokerRace.ASMODIAN) {
 			asmodianBrokerItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
 		} else if (brRace == BrokerRace.ELYOS) {
 			elyosBrokerItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
 		}
-
-		BrokerOpSaveTask bost = new BrokerOpSaveTask(newBrokerItem, itemToRegister,
-				player.getInventory().getKinahItem(), player.getObjectId());
-		saveManager.add(bost);
 
 		PacketSendUtility.sendPacket(player, new SM_BROKER_SERVICE(newBrokerItem, 0, registeredItemsCount));
 	}
@@ -834,9 +914,27 @@ public class BrokerService {
 				return;
 			}
 			synchronized (this) {
-				player.getInventory().add(brokerItem.getItem());
+				if (brokerItems.get(brokerItemId) != brokerItem || brokerItem.isSold() || brokerItem.isSettled()
+						|| brokerItem.isCanceled()) {
+					return;
+				}
+				Item item = brokerItem.getItem();
+				int originalItemLocation = item.getItemLocation();
+				PersistentState originalItemState = item.getPersistentState();
+				PersistentState originalBrokerState = brokerItem.getPersistentState();
+				if (player.getInventory().add(item) == null) {
+					return;
+				}
 				brokerItem.setPersistentState(PersistentState.DELETED);
-				saveManager.add(new BrokerOpSaveTask(brokerItem));
+				if (!new BrokerOpSaveTask(List.of(brokerItem),
+						List.of(new InventorySave(player.getObjectId(), List.of(item)))).save()) {
+					player.getInventory().remove(item);
+					PacketSendUtility.sendPacket(player, new SM_DELETE_ITEM(item.getObjectId()));
+					item.setItemLocation(originalItemLocation);
+					item.setPersistentState(originalItemState);
+					brokerItem.setPersistentState(originalBrokerState);
+					return;
+				}
 				brokerItem.setIsCanceled(true);
 				brokerItems.remove(brokerItemId);
 			}
@@ -907,10 +1005,13 @@ public class BrokerService {
 	 *
 	 * @param player 玩家 / player
 	 */
-	public void settleAccount(Player player) {
+	public synchronized void settleAccount(Player player) {
 		Race playerRace = player.getRace();
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(playerRace);
 		List<BrokerItem> collectedItems = new ArrayList<BrokerItem>();
+		List<BrokerItem> brokerItemsToDelete = new ArrayList<>();
+		List<Item> inventoryItems = new ArrayList<>();
+		List<SettlementChange> settlementChanges = new ArrayList<>();
 		int playerId = player.getObjectId();
 		long kinahCollect = 0;
 		boolean itemsLeft = false;
@@ -923,32 +1024,22 @@ public class BrokerService {
 
 		for (BrokerItem item : collectedItems) {
 			if (item.isSold()) {
-				boolean result = false;
-				if (playerRace == Race.ASMODIANS) {
-					result = asmodianSettledItems.remove(item.getItemUniqueId()) != null;
-				} else if (playerRace == Race.ELYOS) {
-					result = elyosSettledItems.remove(item.getItemUniqueId()) != null;
-				}
-
-				if (result) {
-					item.setPersistentState(PersistentState.DELETED);
-					saveManager.add(new BrokerOpSaveTask(item));
-					kinahCollect += item.getPrice();
-				}
+				settlementChanges.add(new SettlementChange(item, item.getPersistentState(), null, 0, null));
+				item.setPersistentState(PersistentState.DELETED);
+				brokerItemsToDelete.add(item);
+				kinahCollect += item.getPrice();
 			} else {
 				if (item.getItem() != null) {
-					Item resultItem = player.getInventory().add(item.getItem());
+					Item returnedItem = item.getItem();
+					int originalLocation = returnedItem.getItemLocation();
+					PersistentState originalItemState = returnedItem.getPersistentState();
+					Item resultItem = player.getInventory().add(returnedItem);
 					if (resultItem != null) {
-						boolean result = false;
-						if (playerRace == Race.ASMODIANS) {
-							result = asmodianSettledItems.remove(item.getItemUniqueId()) != null;
-						} else if (playerRace == Race.ELYOS) {
-							result = elyosSettledItems.remove(item.getItemUniqueId()) != null;
-						}
-						if (result) {
-							item.setPersistentState(PersistentState.DELETED);
-							saveManager.add(new BrokerOpSaveTask(item));
-						}
+						settlementChanges.add(new SettlementChange(item, item.getPersistentState(), returnedItem,
+								originalLocation, originalItemState));
+						item.setPersistentState(PersistentState.DELETED);
+						brokerItemsToDelete.add(item);
+						inventoryItems.add(returnedItem);
 					} else {
 						itemsLeft = true;
 					}
@@ -957,7 +1048,37 @@ public class BrokerService {
 				}
 			}
 		}
-		player.getInventory().increaseKinah(kinahCollect);
+		Item kinahItem = player.getInventory().getKinahItem();
+		PersistentState originalKinahState = kinahItem == null ? PersistentState.NOACTION : kinahItem.getPersistentState();
+		if (kinahCollect > 0) {
+			player.getInventory().increaseKinah(kinahCollect);
+			kinahItem = player.getInventory().getKinahItem();
+			inventoryItems.add(kinahItem);
+		}
+
+		List<InventorySave> inventoryChanges = inventoryItems.isEmpty() ? List.of()
+				: List.of(new InventorySave(playerId, inventoryItems));
+		if (!brokerItemsToDelete.isEmpty()
+				&& !new BrokerOpSaveTask(brokerItemsToDelete, inventoryChanges).save()) {
+			if (kinahCollect > 0) {
+				player.getInventory().decreaseKinah(kinahCollect);
+				kinahItem.setPersistentState(originalKinahState);
+			}
+			for (SettlementChange change : settlementChanges) {
+				if (change.returnedItem() != null) {
+					player.getInventory().remove(change.returnedItem());
+					PacketSendUtility.sendPacket(player, new SM_DELETE_ITEM(change.returnedItem().getObjectId()));
+					change.returnedItem().setItemLocation(change.itemLocation());
+					change.returnedItem().setPersistentState(change.itemState());
+				}
+				change.brokerItem().setPersistentState(change.brokerState());
+			}
+			itemsLeft = true;
+		} else {
+			for (BrokerItem item : brokerItemsToDelete) {
+				brokerSettledItems.remove(item.getItemUniqueId());
+			}
+		}
 
 		showSettledItems(player);
 
@@ -966,7 +1087,7 @@ public class BrokerService {
 		}
 	}
 
-	private void checkExpiredItems() {
+	private synchronized void checkExpiredItems() {
 		Map<Integer, BrokerItem> asmoBrokerItems = getRaceBrokerItems(Race.ASMODIANS);
 		Map<Integer, BrokerItem> elyosBrokerItems = getRaceBrokerItems(Race.ELYOS);
 
@@ -974,29 +1095,32 @@ public class BrokerService {
 
 		for (BrokerItem item : asmoBrokerItems.values()) {
 			if (item != null && item.getExpireTime().getTime() <= currentTime.getTime()) {
-				// putToSettled(Race.ASMODIANS, item, false);
-				this.expireItem(Race.ASMODIANS, item);
-				asmodianBrokerItems.remove(item.getItemUniqueId());
+				if (this.expireItem(Race.ASMODIANS, item)) {
+					asmodianBrokerItems.remove(item.getItemUniqueId());
+				}
 			}
 		}
 
 		for (BrokerItem item : elyosBrokerItems.values()) {
 			if (item != null && item.getExpireTime().getTime() <= currentTime.getTime()) {
-				// putToSettled(Race.ELYOS, item, false);
-				this.expireItem(Race.ELYOS, item);
-				this.elyosBrokerItems.remove(item.getItemUniqueId());
+				if (this.expireItem(Race.ELYOS, item)) {
+					this.elyosBrokerItems.remove(item.getItemUniqueId());
+				}
 			}
 		}
 	}
 
-	private void expireItem(Race race, BrokerItem item) {
+	private boolean expireItem(Race race, BrokerItem item) {
+		PersistentState originalState = item.getPersistentState();
+		item.setPersistentState(PersistentState.DELETED);
+		BrokerDAO brokerDAO = DAOManager.getDAO(BrokerDAO.class);
 		if (GameFeatureServices.systemMailService().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
-				item.getItem(), 0, 0, LetterType.NORMAL)) {
-			item.setPersistentState(PersistentState.DELETED);
-			saveManager.add(new BrokerOpSaveTask(item));
-		} else {
-			this.putToSettled(race, item, false);
+				item.getItem(), 0, 0, LetterType.NORMAL, con -> brokerDAO.storeInTransaction(con, item))) {
+			item.setPersistentState(PersistentState.UPDATED);
+			return true;
 		}
+		item.setPersistentState(originalState);
+		return this.putToSettled(race, item, false);
 	}
 
 		/**
@@ -1050,37 +1174,10 @@ public class BrokerService {
 		return getPlayerCache(player).getBrokerListCache();
 	}
 
-	/**
-	 * 经纪行操作的 FIFO 周期落库任务管理器。
-	 * FIFO periodic task manager for frequent broker save operations.
-	 */
-	public static final class BrokerPeriodicTaskManager extends AbstractFIFOPeriodicTaskManager<BrokerOpSaveTask> {
+	private record InventorySave(int playerId, List<Item> items) {}
 
-		private static final String CALLED_METHOD_NAME = "brokerOperation()";
-
-		/**
-		 * @param period
-		 */
-		/**
-		 * 构造周期任务管理器。
-		 * Construct the periodic task manager.
-		 *
-		 * @param period 执行周期（毫秒） / period in milliseconds
-		 */
-		public BrokerPeriodicTaskManager(int period) {
-			super(period);
-		}
-
-		@Override
-		protected void callTask(BrokerOpSaveTask task) {
-			task.run();
-		}
-
-		@Override
-		protected String getCalledMethodName() {
-			return CALLED_METHOD_NAME;
-		}
-	}
+	private record SettlementChange(BrokerItem brokerItem, PersistentState brokerState, Item returnedItem,
+			int itemLocation, PersistentState itemState) {}
 
 	/**
 	 * 经纪行操作后的批量落库任务（一次提交相关物品变更）。
@@ -1088,22 +1185,12 @@ public class BrokerService {
 	 */
 	public static final class BrokerOpSaveTask implements Runnable {
 
-		private BrokerItem brokerItem;
-		private Item item;
-		private Item kinahItem;
-		private int playerId;
+		private final List<BrokerItem> brokerItems;
+		private final List<InventorySave> inventorySaves;
 
-		/**
-		 * @param brokerItem
-		 * @param item
-		 * @param kinahItem
-		 * @param playerId
-		 */
-		private BrokerOpSaveTask(BrokerItem brokerItem, Item item, Item kinahItem, int playerId) {
-			this.brokerItem = brokerItem;
-			this.item = item;
-			this.kinahItem = kinahItem;
-			this.playerId = playerId;
+		private BrokerOpSaveTask(List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
+			this.brokerItems = List.copyOf(brokerItems);
+			this.inventorySaves = List.copyOf(inventorySaves);
 		}
 
 		/**
@@ -1116,21 +1203,44 @@ public class BrokerService {
 		 * @param brokerItem 经纪行物品 / broker item
 		 */
 		public BrokerOpSaveTask(BrokerItem brokerItem) {
-			this.brokerItem = brokerItem;
+			this(List.of(brokerItem), List.of());
 		}
 
 		@Override
 		public void run() {
-			// 先保存物品以保持外键一致性 / first save item for FK consistency
-			if (item != null) {
-				DAOManager.getDAO(InventoryDAO.class).store(item, playerId);
+			save();
+		}
+
+		private boolean save() {
+			InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
+			BrokerDAO brokerDAO = DAOManager.getDAO(BrokerDAO.class);
+			try (Connection con = DatabaseFactory.getConnection()) {
+				con.setAutoCommit(false);
+				try {
+					for (InventorySave inventorySave : inventorySaves) {
+						inventoryDAO.storeInTransaction(con, inventorySave.items(), inventorySave.playerId(), null, null);
+					}
+					for (BrokerItem brokerItem : brokerItems) {
+						brokerDAO.storeInTransaction(con, brokerItem);
+					}
+					con.commit();
+				} catch (SQLException e) {
+					con.rollback();
+					throw e;
+				}
+			} catch (SQLException e) {
+				log.error(I18n.get("log.30a6c4139e12",
+						inventorySaves.stream().map(InventorySave::playerId).distinct().toList(), e));
+				return false;
 			}
-			if (brokerItem != null) {
-				DAOManager.getDAO(BrokerDAO.class).store(brokerItem);
+
+			for (InventorySave inventorySave : inventorySaves) {
+				inventoryDAO.markStored(inventorySave.items());
 			}
-			if (kinahItem != null) {
-				DAOManager.getDAO(InventoryDAO.class).store(kinahItem, playerId);
+			for (BrokerItem brokerItem : brokerItems) {
+				brokerItem.setPersistentState(PersistentState.UPDATED);
 			}
+			return true;
 		}
 	}
 

@@ -72,6 +72,9 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 				spawn(215450, 503.947f, 623.82227f, 103.695724f, (byte) 90); //Ebonlord Vasana.
 			break;
 		}
+		HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700472, 377.06046f, 512.4419f, 102.618126f, (byte) 114));
+		HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700473, 628.6996f, 451.98642f, 102.63267f, (byte) 48));
+		HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700474, 503.7779f, 630.8419f, 104.54881f, (byte) 90));
     }
 	/**
 	 * NPC 掉落表注册时处理。
@@ -154,20 +157,6 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			}
 		}
 		return false;
-	}
-	
-	/**
-	 * 玩家进入副本时处理。
-	 * Handle a player entering the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
-		HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700472, 377.06046f, 512.4419f, 102.618126f, (byte) 114));
-        HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700473, 628.6996f, 451.98642f, 102.63267f, (byte) 48));
-        HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700474, 503.7779f, 630.8419f, 104.54881f, (byte) 90));
 	}
 	
 	private void startHamateIsleStoreroomTimer() {

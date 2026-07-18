@@ -11,7 +11,11 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Calendar;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,13 +23,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
+import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Mailbox;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -40,6 +48,7 @@ import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemFactory;
+import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
@@ -134,27 +143,25 @@ public class MailService {
 		}
 
 		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
-		if (recipient != null) {
-			if (!recipient.getMailbox().haveFreeSlots()) {
-				PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.RECIPIENT_MAILBOX_FULL));
-				return;
-			}
-		} else if (recipientCommonData.getMailboxLetters() > 99) {
+		Mailbox recipientMailbox = recipient == null ? null : recipient.getMailbox();
+		if ((recipientMailbox != null && !recipientMailbox.haveFreeSlots())
+				|| (recipientMailbox == null && recipientCommonData.getMailboxLetters() > 99)) {
 			PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.RECIPIENT_MAILBOX_FULL));
 			return;
 		}
 
+		Storage senderInventory = sender.getInventory();
 		if (!validateMailSendPrice(sender, attachedKinahCount, attachedItemObjId, attachedItemCount)) {
 			return;
 		}
+		InventorySnapshot inventorySnapshot = InventorySnapshot.capture(senderInventory);
 		Item attachedItem = null;
+		boolean createdAttachedItem = false;
 		int finalAttachedKinahCount = 0;
 		int finaAttachedApCount = 0;
 
 		int kinahMailCommission = 0;
 		int itemMailCommission = 0;
-
-		Storage senderInventory = sender.getInventory();
 
 		if (attachedItemObjId != 0 && attachedItemCount > 0) {
 			Item senderItem = senderInventory.getItemByObjId(attachedItemObjId);
@@ -202,13 +209,13 @@ public class MailService {
 				if (dispo == null || dispo.getId() == 0 || dispo.getCount() == 0) { // can not be traded, hack
 					return;
 				}
+				if (senderItem.getWrappableCount() <= senderItem.getItemTemplate().getWrappableCount()
+						&& !senderItem.isPacked()) {
+					return;
+				}
 				if (senderInventory.getItemCountByItemId(dispo.getId()) >= dispo.getCount()) {
 					senderInventory.decreaseByItemId(dispo.getId(), dispo.getCount());
 				} else {
-					return;
-				}
-				if (senderItem.getWrappableCount() <= senderItem.getItemTemplate().getWrappableCount()
-						&& !senderItem.isPacked()) {
 					return;
 				}
 			}
@@ -220,10 +227,15 @@ public class MailService {
 				attachedItem = senderItem;
 			} else if (senderItem.getItemCount() > attachedItemCount) {
 				attachedItem = ItemFactory.newItem(senderItem.getItemTemplate().getTemplateId(), attachedItemCount);
+				createdAttachedItem = attachedItem != null;
 				senderInventory.decreaseItemCount(senderItem, attachedItemCount);
 			}
 
 			if (attachedItem == null) {
+				inventorySnapshot.restore();
+				if (createdAttachedItem && attachedItem != null) {
+					ItemService.releaseItemId(attachedItem);
+				}
 				return;
 			}
 			attachedItem.setEquipped(false);
@@ -253,6 +265,10 @@ public class MailService {
 			senderInventory.decreaseKinah(finalMailKinah);
 		} else {
 			AuditLogger.info(sender, "Mail kinah exploit.");
+			inventorySnapshot.restore();
+			if (createdAttachedItem && attachedItem != null) {
+				ItemService.releaseItemId(attachedItem);
+			}
 			return;
 		}
 
@@ -262,26 +278,21 @@ public class MailService {
 				attachedItem, finalAttachedKinahCount, finaAttachedApCount, title, message, sender.getName(), time,
 				true, letterType);
 
-		// 先保存附加物品以保持外键一致性 / first save attached item for FK consistency
-		if (attachedItem != null) {
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
-				return;
+		if (!storeSentMail(sender, recipientCommonData, recipientMailbox, attachedItem, newLetter, time)) {
+			inventorySnapshot.restore();
+			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
+			if (createdAttachedItem && attachedItem != null) {
+				ItemService.releaseItemId(attachedItem);
 			}
-		}
-		// 保存信件 / save letter
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
 			return;
 		}
+		PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.MAIL_SEND_SECCESS));
 		/**
 		 * 在线收件人：写入邮箱并推送邮件相关数据包。
 		 * Online recipient: put letter into mailbox and push mail update packets.
 		 */
-		if (recipient != null) {
-			Mailbox recipientMailbox = recipient.getMailbox();
+		if (recipientMailbox != null) {
 			recipientMailbox.putLetterToMailbox(newLetter);
-
-			// 发送者的数据包 / packets for sender
-			PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.MAIL_SEND_SECCESS));
 
 			// 收件人的数据包 / packets for recipient
 			PacketSendUtility.sendPacket(recipient, new SM_MAIL_SERVICE(recipientMailbox));
@@ -300,18 +311,48 @@ public class MailService {
 			}
 		}
 
-		if (attachedItem != null) {
+	}
+
+	private boolean storeSentMail(Player sender, PlayerCommonData recipientCommonData, Mailbox recipientMailbox,
+			Item attachedItem, Letter letter, Timestamp time) {
+		InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
+		MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
+		List<Item> senderItems = sender.getDirtyItemsToUpdate();
+		Integer accountId = sender.getPlayerAccount() == null ? null : sender.getPlayerAccount().getId();
+		Integer legionId = sender.getLegion() == null ? null : sender.getLegion().getLegionId();
+		int mailboxLetters = recipientCommonData.getMailboxLetters() + 1;
+
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
+				inventoryDAO.storeInTransaction(con, senderItems, sender.getObjectId(), accountId, legionId);
+				if (attachedItem != null) {
+					inventoryDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
+				}
+				mailDAO.storeLetterInTransaction(con, time, letter);
+				if (recipientMailbox == null) {
+					mailDAO.updateMailCounterInTransaction(con, recipientCommonData.getName(), mailboxLetters);
+				}
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			log.error(I18n.get("log.d40fe011fd92", sender.getObjectId(), recipientCommonData.getPlayerObjId(), e));
+			return false;
 		}
 
-		/**
-		 * 离线收件人：更新已加载公共数据与数据库邮件计数。
-		 * Offline recipient: update loaded common data and DB mail counter.
-		 */
-		if (!recipientCommonData.isOnline()) {
-			PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.MAIL_SEND_SECCESS));
-			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
+		inventoryDAO.markStored(senderItems);
+		sender.markDirtyItemContainersStored();
+		if (attachedItem != null) {
+			inventoryDAO.markStored(List.of(attachedItem));
 		}
+		letter.setPersistState(com.aionemu.gameserver.model.gameobjects.PersistentState.UPDATED);
+		if (recipientMailbox == null) {
+			recipientCommonData.setMailboxLetters(mailboxLetters);
+		}
+		return true;
 	}
 
 	/**
@@ -345,39 +386,107 @@ public class MailService {
 		if (letter == null) {
 			return;
 		}
+		Item attachedItem = letter.getAttachedItem();
+		long attachedKinah = letter.getAttachedKinah();
+		long attachedAp = letter.getAttachedAp();
+		PersistentState letterState = letter.getLetterPersistentState();
 		switch (attachmentType) {
 		case 0: {
-			Item attachedItem = letter.getAttachedItem();
 			if (attachedItem == null)
 				return;
 			if (player.getInventory().isFull()) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 				return;
 			}
+			boolean packed = attachedItem.isPacked();
+			PersistentState itemState = attachedItem.getPersistentState();
 			if (attachedItem.isPacked()) {
 				attachedItem.setPacked(false);
 			}
-			player.getInventory().add(attachedItem);
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, player.getObjectId())) {
+			if (player.getInventory().add(attachedItem) == null) {
+				attachedItem.setPacked(packed);
+				attachedItem.setPersistentState(itemState);
+				return;
+			}
+			letter.removeAttachedItem();
+			if (!storeClaimedAttachment(player, letter, List.of(attachedItem), null)) {
+				player.getInventory().remove(attachedItem);
+				attachedItem.setItemLocation(StorageType.MAILBOX.getId());
+				attachedItem.setPacked(packed);
+				attachedItem.setPersistentState(itemState);
+				letter.restoreAttachments(attachedItem, attachedKinah, attachedAp, letterState);
+				PacketSendUtility.sendPacket(player, new SM_DELETE_ITEM(attachedItem.getObjectId()));
 				return;
 			}
 			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(letterId, attachmentType));
-			letter.removeAttachedItem();
 			break;
 		}
 		case 1: {
-			player.getInventory().increaseKinah(letter.getAttachedKinah());
-			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(letterId, attachmentType));
+			if (attachedKinah <= 0) {
+				return;
+			}
+			Item kinahItem = player.getInventory().getKinahItem();
+			PersistentState kinahState = kinahItem == null ? PersistentState.NOACTION : kinahItem.getPersistentState();
+			player.getInventory().increaseKinah(attachedKinah);
+			kinahItem = player.getInventory().getKinahItem();
 			letter.removeAttachedKinah();
+			if (!storeClaimedAttachment(player, letter, List.of(kinahItem), null)) {
+				player.getInventory().decreaseKinah(attachedKinah);
+				kinahItem.setPersistentState(kinahState);
+				letter.restoreAttachments(attachedItem, attachedKinah, attachedAp, letterState);
+				return;
+			}
+			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(letterId, attachmentType));
 			break;
 		}
 		case 2: {
-			AbyssPointsService.addAp(player, (int) letter.getAttachedAp());
-			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(letterId, attachmentType));
+			if (attachedAp <= 0 || attachedAp > Integer.MAX_VALUE) {
+				return;
+			}
+			AbyssRank rank = player.getAbyssRank();
+			AbyssRank storedRank = new AbyssRank(rank.getDailyAP(), rank.getDailyGP(), rank.getWeeklyAP(), rank.getWeeklyGP(),
+					rank.getAp(), rank.getGp(), rank.getRank().getId(), rank.getTopRanking(), rank.getDailyKill(),
+					rank.getWeeklyKill(), rank.getAllKill(), rank.getMaxRank(), rank.getLastKill(), rank.getLastAP(),
+					rank.getLastGP(), rank.getLastUpdate());
+			storedRank.setPersistentState(rank.getPersistentState() == PersistentState.NEW
+					? PersistentState.NEW : PersistentState.UPDATE_REQUIRED);
+			storedRank.addAp((int) attachedAp, player);
 			letter.removeAttachedAP();
+			if (!storeClaimedAttachment(player, letter, List.of(), storedRank)) {
+				letter.restoreAttachments(attachedItem, attachedKinah, attachedAp, letterState);
+				return;
+			}
+			AbyssPointsService.addAp(player, (int) attachedAp);
+			player.getAbyssRank().setPersistentState(PersistentState.UPDATED);
+			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(letterId, attachmentType));
 			break;
 		}
 		}
+	}
+
+	private boolean storeClaimedAttachment(Player player, Letter letter, List<Item> items, AbyssRank abyssRank) {
+		InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
+		MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
+				inventoryDAO.storeInTransaction(con, items, player.getObjectId(), null, null);
+				if (abyssRank != null) {
+					DAOManager.getDAO(AbyssRankDAO.class).storeInTransaction(con, player.getObjectId(), abyssRank);
+				}
+				mailDAO.storeLetterInTransaction(con, letter.getTimeStamp(), letter);
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			log.error(I18n.get("log.9b61ee4df55e", player.getObjectId(), letter.getObjectId(), e));
+			return false;
+		}
+		inventoryDAO.markStored(items);
+		letter.setPersistState(PersistentState.UPDATED);
+		return true;
 	}
 
 	/**
@@ -453,6 +562,53 @@ public class MailService {
 			return true;
 		}
 		return false;
+	}
+
+	private record ItemSnapshot(Item item, long count, int location, PersistentState state) {}
+
+	private record InventorySnapshot(Storage inventory, PersistentState state, List<ItemSnapshot> items,
+			List<Item> deletedItems) {
+
+		private static InventorySnapshot capture(Storage inventory) {
+			List<ItemSnapshot> items = new ArrayList<>();
+			for (Item item : inventory.getItemsWithKinah()) {
+				items.add(new ItemSnapshot(item, item.getItemCount(), item.getItemLocation(), item.getPersistentState()));
+			}
+			return new InventorySnapshot(inventory, inventory.getPersistentState(), items,
+					new ArrayList<>(inventory.getDeletedItems()));
+		}
+
+		private void restore() {
+			for (ItemSnapshot snapshot : items) {
+				Item item = snapshot.item();
+				if (item.getItemTemplate().isKinah()) {
+					long difference = snapshot.count() - inventory.getKinah();
+					if (difference > 0) {
+						inventory.increaseKinah(difference);
+					} else if (difference < 0) {
+						inventory.decreaseKinah(-difference);
+					}
+				} else {
+					Item currentItem = inventory.getItemByObjId(item.getObjectId());
+					if (currentItem == null) {
+						item.setItemCount(snapshot.count());
+						item.setItemLocation(snapshot.location());
+						inventory.add(item);
+					} else {
+						long difference = snapshot.count() - currentItem.getItemCount();
+						if (difference > 0) {
+							inventory.increaseItemCount(currentItem, difference);
+						} else if (difference < 0) {
+							inventory.decreaseItemCount(currentItem, -difference);
+						}
+					}
+				}
+				item.setItemLocation(snapshot.location());
+				item.setPersistentState(snapshot.state());
+			}
+			inventory.getDeletedItems().removeIf(item -> !deletedItems.contains(item));
+			inventory.setPersistentState(state);
+		}
 	}
 
 	/**

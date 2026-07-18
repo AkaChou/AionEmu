@@ -468,7 +468,6 @@ public class EffectController {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.isHideEffect() && owner.getVisualState() < 10) {
 				effect.endEffect();
-				abnormalEffectMap.remove(effect.getStack());
 			}
 		}
 	}
@@ -481,7 +480,6 @@ public class EffectController {
 		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.isParalyzeEffect()) {
 				effect.endEffect();
-				abnormalEffectMap.remove(effect.getStack());
 			}
 		}
 	}
@@ -638,7 +636,6 @@ public class EffectController {
 			if (remove) {
 				if (removePower(effect, power)) {
 					effect.endEffect();
-					abnormalEffectMap.remove(effect.getStack());
 				} else if (owner instanceof Player) {
 					PacketSendUtility.sendPacket((Player) owner, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_DISPELCOUNT);
 				}
@@ -690,7 +687,6 @@ public class EffectController {
 			if (remove) {
 				if (removePower(effect, power)) {
 					effect.endEffect();
-					abnormalEffectMap.remove(effect.getStack());
 				} else if (owner instanceof Player) {
 					PacketSendUtility.sendPacket((Player) owner, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_DISPELCOUNT);
 				}
@@ -855,28 +851,23 @@ public class EffectController {
 						&& !entry.getValue().isEnchantOptionBoost() && !entry.getValue().isDeathPenaltyReduce()
 						&& !entry.getValue().isOdellaRecoverIncrease()) {
 					entry.getValue().endEffect();
-					abnormalEffectMap.remove(entry.getKey());
 				}
 			}
 
 			for (Effect effect : effectsSnapshot(noshowEffects)) {
 				effect.endEffect();
 			}
-			noshowEffects.clear();
 		} else {
 			// 登出时移除全部效果 / remove all effects on logout
 			for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 				effect.endEffect();
 			}
-			abnormalEffectMap.clear();
 			for (Effect effect : effectsSnapshot(noshowEffects)) {
 				effect.endEffect();
 			}
-			noshowEffects.clear();
 			for (Effect effect : effectsSnapshot(passiveEffectMap)) {
 				effect.endEffect();
 			}
-			passiveEffectMap.clear();
 		}
 	}
 

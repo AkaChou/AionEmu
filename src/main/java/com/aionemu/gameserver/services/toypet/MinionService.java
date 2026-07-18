@@ -4,6 +4,7 @@ package com.aionemu.gameserver.services.toypet;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.sql.Timestamp;
 import java.util.Iterator;
@@ -333,6 +334,8 @@ public class MinionService {
 		
 		MinionController controller = new MinionController();
 		Minion minion = new Minion(minionTemplate, controller, minionCommonData, player);
+		GameWorldBootstrapServices.world().setPosition(minion, player.getWorldId(), player.getInstanceId(),
+				player.getX(), player.getY(), player.getZ(), player.getHeading());
 		
 		if (player.getMinion() != null) {
 			despawnMinion(player, player.getMinionList().getLastUsed());

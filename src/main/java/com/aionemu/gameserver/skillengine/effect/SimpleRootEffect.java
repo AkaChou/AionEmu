@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
@@ -16,7 +15,7 @@ import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.utils.PositionUtil;
 
 /**
  * 简易击退/定身效果：将目标小幅击退并施加击退异常。
@@ -35,8 +34,8 @@ public class SimpleRootEffect extends EffectTemplate {
 	}
 
 	/**
-	 * 目标已有特定异常时失败，否则按踉跄抗性结算。
-	 * Fails if certain abnormals are present; otherwise uses stagger resistance.
+	 * 目标已有特定异常时失败，否则按踉跄抗性结算并计算后退落点。
+	 * Fails if certain abnormals are present; otherwise calculates a move-away landing point.
 	 */
 	@Override
 	public void calculate(Effect effect) {
@@ -44,35 +43,32 @@ public class SimpleRootEffect extends EffectTemplate {
 				|| effect.getEffected().getEffectController().hasAbnormalEffect(8678)) {
 			return;
 		}
-		super.calculate(effect, StatEnum.STAGGER_RESISTANCE, null);
+		if (!super.calculate(effect, StatEnum.STAGGER_RESISTANCE, null)) {
+			return;
+		}
+		effect.setSkillMoveType(SkillMoveType.KNOCKBACK);
+		final Creature effector = effect.getEffector();
+		final Creature effected = effect.getEffected();
+		byte moveAwayHeading = PositionUtil.getMoveAwayHeading(effector, effected);
+		Vector3f closestCollision = GameWorldServices.geoService().findMovementCollision(effected,
+				MathUtil.convertHeadingToDegree(moveAwayHeading), 0.7f);
+		effect.setTargetLoc(closestCollision.x, closestCollision.y, closestCollision.z);
 	}
 
 	/**
-	 * 计算击退落点，更新位置并广播强制移动。
-	 * Computes knockback landing, updates position, and broadcasts forced move.
+	 * 更新至预先计算的击退落点并广播强制移动。
+	 * Moves to the precomputed knockback landing point and broadcasts forced movement.
 	 */
 	@Override
 	public void startEffect(final Effect effect) {
 		final Creature effected = effect.getEffected();
-		final Creature effector = effect.getEffector();
-		byte heading = effect.getEffector().getHeading();
 		effect.setSpellStatus(SpellStatus.NONE);
-		effect.setSkillMoveType(SkillMoveType.KNOCKBACK);
 		effect.getEffected().getEffectController().setAbnormal(AbnormalState.KNOCKBACK.getId());
 		effect.setAbnormal(AbnormalState.KNOCKBACK.getId());
-		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(heading));
-		float x1 = (float) (Math.cos(radian) * 0.7f);
-		float y1 = (float) (Math.sin(radian) * 0.7f);
-		float z = effected.getZ();
-		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, effector.getX() + x1,
-				effector.getY() + y1, effected.getZ() - 0.4f, false, intentions);
-		x1 = closestCollision.x;
-		y1 = closestCollision.y;
-		z = closestCollision.z;
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, x1, y1, z, heading, false);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(),
+				effect.getTargetZ(), effected.getHeading(), false);
 		PacketSendUtility.broadcastPacketAndReceive(effected,
-				new SM_FORCED_MOVE(effect.getEffector(), effected.getObjectId(), x1, y1, z));
+				new SM_FORCED_MOVE(effect.getEffector(), effected.getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));
 	}
 
 	/**

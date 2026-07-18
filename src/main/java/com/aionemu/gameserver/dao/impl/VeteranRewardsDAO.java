@@ -68,13 +68,20 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	 */
 	@Override
 	public void delVeteranReward(final int id_veteran_reward) {
-		try (Connection con = DatabaseFactory.getConnection();
-			 PreparedStatement stmt_2 = con.prepareStatement(DELETE_QUERY)) {
-
-			stmt_2.setInt(1, id_veteran_reward);
-			stmt_2.executeUpdate();
-		} catch (Exception e) {
+		try (Connection con = DatabaseFactory.getConnection()) {
+			deleteInTransaction(con, id_veteran_reward);
+		} catch (SQLException e) {
 			log.error(I18n.get("log.b1edbfafc1a6", e));
+		}
+	}
+
+	@Override
+	public void deleteInTransaction(Connection con, int rewardId) throws SQLException {
+		try (PreparedStatement stmt = con.prepareStatement(DELETE_QUERY)) {
+			stmt.setInt(1, rewardId);
+			if (stmt.executeUpdate() == 0) {
+				throw new SQLException("No veteran reward row deleted for id " + rewardId);
+			}
 		}
 	}
 

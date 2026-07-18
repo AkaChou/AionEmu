@@ -53,7 +53,10 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
+		if (spawnRace != null) {
+			return;
+		}
+		spawnRace = player.getRace();
 		// 须击杀阿弗兰、萨拉斯瓦蒂、拉克希米与宁巴卡，指挥官巴卡尔玛才会出现。 / You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear.
 		sendMsgByRace(1400757, Race.PC_ALL, 10000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -66,10 +69,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				spawn(237276, 495.48535f, 392.0867f, 616.5717f, (byte) 89); //Akhal's Phantasm.
 			}
 		}, 10000);
-		if (spawnRace == null) {
-			spawnRace = player.getRace();
-			SpawnIDDF3DragonSP();
-		}
+		SpawnIDDF3DragonSP();
 	}
 	
 	private void SpawnIDDF3DragonSP() {

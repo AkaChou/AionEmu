@@ -5,7 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.broker.BrokerRace;
 import com.aionemu.gameserver.model.gameobjects.BrokerItem;
@@ -158,33 +157,28 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
             return false;
         }
 
-        boolean result = false;
-
-        switch (item.getPersistentState()) {
-            case NEW:
-                result = insertBrokerItem(item);
-                if (result && item.getItem() != null) {
-                    DAOManager.getDAO(InventoryDAO.class).store(item.getItem(), item.getSellerId());
-                }
-                break;
-            case DELETED:
-                result = deleteBrokerItem(item);
-                break;
-            case UPDATE_ITEM_BROKER:
-                result = updateItem(item);
-                break;
-            case UPDATE_REQUIRED:
-                result = updateBrokerItem(item);
-                break;
-            default:
-                return true;
-        }
-
-        if (result) {
+        try (Connection con = DatabaseFactory.getConnection()) {
+            storeInTransaction(con, item);
             item.setPersistentState(PersistentState.UPDATED);
+            return true;
+        } catch (SQLException e) {
+            log.error(I18n.get("log.96bb344ecaba", item.getItemUniqueId(), e));
+            return false;
         }
+    }
 
-        return result;
+    @Override
+    public void storeInTransaction(Connection con, BrokerItem item) throws SQLException {
+        boolean result = switch (item.getPersistentState()) {
+            case NEW -> insertBrokerItem(con, item);
+            case DELETED -> deleteBrokerItem(con, item);
+            case UPDATE_ITEM_BROKER -> updateItem(con, item);
+            case UPDATE_REQUIRED -> updateBrokerItem(con, item);
+            default -> true;
+        };
+        if (!result) {
+            throw new SQLException("No broker row changed for item " + item.getItemUniqueId());
+        }
     }
 
     /**
@@ -194,9 +188,8 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * @param item 交易所物品 / broker item
      * whether successful
      */
-    private boolean insertBrokerItem(final BrokerItem item) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(INSERT_BROKER_QUERY)) {
+    private boolean insertBrokerItem(Connection con, final BrokerItem item) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(INSERT_BROKER_QUERY)) {
 
             stmt.setInt(1, item.getItemUniqueId());
             stmt.setInt(2, item.getItemId());
@@ -212,9 +205,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
             stmt.setBoolean(12, item.isSettled());
             stmt.setBoolean(13, item.isSplitSell());
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.bb61b04fa5de", item.getItemUniqueId(), e));
-            return false;
         }
     }
 
@@ -225,17 +215,13 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * @param item 交易所物品 / broker item
      * whether successful
      */
-    private boolean deleteBrokerItem(final BrokerItem item) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(DELETE_BROKER_QUERY)) {
+    private boolean deleteBrokerItem(Connection con, final BrokerItem item) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(DELETE_BROKER_QUERY)) {
 
             stmt.setInt(1, item.getItemUniqueId());
             stmt.setInt(2, item.getSellerId());
             stmt.setTimestamp(3, item.getExpireTime());
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.95bf95cbc259", item.getItemUniqueId(), e));
-            return false;
         }
     }
 
@@ -268,9 +254,8 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * @param item 交易所物品 / broker item
      * whether successful
      */
-    private boolean updateBrokerItem(final BrokerItem item) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_BROKER_QUERY)) {
+    private boolean updateBrokerItem(Connection con, final BrokerItem item) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(UPDATE_BROKER_QUERY)) {
 
             stmt.setBoolean(1, item.isSold());
             stmt.setTimestamp(2, item.getSettleTime());
@@ -278,9 +263,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
             stmt.setTimestamp(4, item.getExpireTime());
             stmt.setInt(5, item.getSellerId());
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.9f5dfd524c38", item.getItemUniqueId(), e));
-            return false;
         }
     }
 
@@ -291,9 +273,8 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
      * @param item 交易所物品 / broker item
      * whether successful
      */
-    private boolean updateItem(final BrokerItem item) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(UPDATE_ITEM_QUERY)) {
+    private boolean updateItem(Connection con, final BrokerItem item) throws SQLException {
+        try (PreparedStatement stmt = con.prepareStatement(UPDATE_ITEM_QUERY)) {
 
             stmt.setLong(1, item.getItemCount());
             stmt.setLong(2, item.getPrice());
@@ -305,9 +286,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
             stmt.setTimestamp(8, item.getExpireTime());
             stmt.setInt(9, item.getSellerId());
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.1207068b8cf6", item.getItemUniqueId(), e));
-            return false;
         }
     }
 

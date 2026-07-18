@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.BrokerItem;
@@ -26,6 +28,10 @@ public abstract class BrokerDAO implements IDFactoryAwareDAO {
 	 * whether successful
 	 */
 	public abstract boolean store(BrokerItem brokerItem);
+
+	public void storeInTransaction(Connection connection, BrokerItem brokerItem) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * 购买前校验物品是否仍可购买。

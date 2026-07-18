@@ -49,6 +49,9 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
         spawnCarpusIsleStoreroomRings();
+		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700475, 524.4908f, 706.2591f, 191.8985f, (byte) 90));
+		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700476, 522.22754f, 421.55646f, 199.75935f, (byte) 29));
+		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700477, 671.581f, 565.1735f, 206.14534f, (byte) 60));
     }
 	/**
 	 * NPC 掉落表注册时处理。
@@ -128,20 +131,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			}
 		}
 		return false;
-	}
-	
-	/**
-	 * 玩家进入副本时处理。
-	 * Handle a player entering the instance.
-	 *
-	 * @param player 玩家 / player
-	 */
-	@Override
-	public void onEnterInstance(final Player player) {
-		super.onInstanceCreate(instance);
-		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700475, 524.4908f, 706.2591f, 191.8985f, (byte) 90));
-		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700476, 522.22754f, 421.55646f, 199.75935f, (byte) 29));
-		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700477, 671.581f, 565.1735f, 206.14534f, (byte) 60));
 	}
 	
 	private void startCarpusIsleStoreroomChamberTimer() {

@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -11,8 +15,10 @@ import java.util.concurrent.ConcurrentMap;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
+import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.trade.Exchange;
@@ -25,7 +31,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EXCHANGE_REQUEST;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
@@ -42,11 +47,6 @@ public class ExchangeService {
 	/** 玩家对象 ID 到交易会话 / Player objectId to exchange session */
 	private ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<Integer, Exchange>();
 
-	/** 交易后异步存库任务管理器。 / Periodic save manager for post-trade inventory writes. */
-	private ExchangePeriodicTaskManager saveManager;
-
-	/** 交易存库延迟（毫秒）。 / Exchange save delay in milliseconds. */
-	private final int DELAY_EXCHANGE_SAVE = 5000;
 	private static volatile ObjectProvider<ExchangeService> instanceProvider;
 
 	/**
@@ -78,7 +78,6 @@ public class ExchangeService {
 	 * Default constructor: initializes the periodic exchange save task.
 	 */
 	public ExchangeService() {
-		saveManager = new ExchangePeriodicTaskManager(DELAY_EXCHANGE_SAVE);
 	}
 
 	/**
@@ -340,6 +339,8 @@ public class ExchangeService {
 	private void performTrade(Player activePlayer, Player currentPartner) {
 		Exchange exchange1 = getCurrentExchange(activePlayer);
 		Exchange exchange2 = getCurrentExchange(currentPartner);
+		InventorySnapshot activeInventory = InventorySnapshot.capture(activePlayer);
+		InventorySnapshot partnerInventory = InventorySnapshot.capture(currentPartner);
 
 		if (!validateExchange(activePlayer, currentPartner)) {
 			cleanupExchanges(true, activePlayer, currentPartner);
@@ -348,19 +349,31 @@ public class ExchangeService {
 
 		if (!removeItemsFromInventory(activePlayer, exchange1)
 				|| !removeItemsFromInventory(currentPartner, exchange2)) {
+			activeInventory.restore(activePlayer);
+			partnerInventory.restore(currentPartner);
 			cleanupExchanges(true, activePlayer, currentPartner);
 			AuditLogger.info(activePlayer, "Exchange kinah exploit partner: " + currentPartner.getName());
 			return;
 		}
 
+		if (!putItemToInventory(currentPartner, exchange1, exchange2)
+				|| !putItemToInventory(activePlayer, exchange2, exchange1)) {
+			activeInventory.restore(activePlayer);
+			partnerInventory.restore(currentPartner);
+			cleanupExchanges(true, activePlayer, currentPartner);
+			return;
+		}
+
+		ExchangeOpSaveTask saveTask = new ExchangeOpSaveTask(exchange1.getActiveplayer().getObjectId(),
+				exchange2.getActiveplayer().getObjectId(), exchange1.getItemsToUpdate(), exchange2.getItemsToUpdate());
+		if (!saveTask.save()) {
+			activeInventory.restore(activePlayer);
+			partnerInventory.restore(currentPartner);
+			cleanupExchanges(true, activePlayer, currentPartner);
+			return;
+		}
 		PacketSendUtility.sendPacket(activePlayer, new SM_EXCHANGE_CONFIRMATION(0));
 		PacketSendUtility.sendPacket(currentPartner, new SM_EXCHANGE_CONFIRMATION(0));
-
-		putItemToInventory(currentPartner, exchange1, exchange2);
-		putItemToInventory(activePlayer, exchange2, exchange1);
-
-		saveManager.add(new ExchangeOpSaveTask(exchange1.getActiveplayer().getObjectId(),
-				exchange2.getActiveplayer().getObjectId(), exchange1.getItemsToUpdate(), exchange2.getItemsToUpdate()));
 		cleanupExchanges(false, activePlayer, currentPartner);
 	}
 
@@ -469,11 +482,13 @@ public class ExchangeService {
 	 * @param exchange1 对方挂出内容 / partner offer
 	 * @param exchange2 己方会话（用于收集待更新物品） / own session (collects items to update)
 	 */
-	private void putItemToInventory(Player player, Exchange exchange1, Exchange exchange2) {
+	private boolean putItemToInventory(Player player, Exchange exchange1, Exchange exchange2) {
 		for (ExchangeItem exchangeItem : exchange1.getItems().values()) {
 			Item itemToPut = exchangeItem.getItem();
 			itemToPut.setEquipmentSlot(0);
-			player.getInventory().add(itemToPut);
+			if (player.getInventory().add(itemToPut) == null) {
+				return false;
+			}
 			exchange2.addItemToUpdate(itemToPut);
 		}
 		long kinahToExchange = exchange1.getKinahCount();
@@ -481,31 +496,63 @@ public class ExchangeService {
 			player.getInventory().increaseKinah(exchange1.getKinahCount());
 			exchange2.addItemToUpdate(player.getInventory().getKinahItem());
 		}
+		return true;
 	}
 
-	/**
-	 * 交易后周期性 FIFO 存库任务管理器。
-	 * Periodic FIFO save-task manager used after exchanges.
-	 */
-	public static final class ExchangePeriodicTaskManager extends AbstractFIFOPeriodicTaskManager<ExchangeOpSaveTask> {
+	private record ItemSnapshot(Item item, long count, int location, long equipmentSlot, PersistentState state) {}
 
-		private static final String CALLED_METHOD_NAME = "exchangeOperation()";
+	private record InventorySnapshot(Storage inventory, PersistentState state, List<ItemSnapshot> items,
+			List<Item> deletedItems) {
 
-		/**
-		 * 周期（毫秒） / period in milliseconds
-		 */
-		public ExchangePeriodicTaskManager(int period) {
-			super(period);
+		private static InventorySnapshot capture(Player player) {
+			Storage inventory = player.getInventory();
+			List<ItemSnapshot> items = new ArrayList<>();
+			for (Item item : inventory.getItemsWithKinah()) {
+				items.add(new ItemSnapshot(item, item.getItemCount(), item.getItemLocation(), item.getEquipmentSlot(),
+						item.getPersistentState()));
+			}
+			return new InventorySnapshot(inventory, inventory.getPersistentState(), items,
+					new ArrayList<>(inventory.getDeletedItems()));
 		}
 
-		@Override
-		protected void callTask(ExchangeOpSaveTask task) {
-			task.run();
-		}
-
-		@Override
-		protected String getCalledMethodName() {
-			return CALLED_METHOD_NAME;
+		private void restore(Player player) {
+			for (Item currentItem : new ArrayList<>(inventory.getItems())) {
+				if (items.stream().noneMatch(snapshot -> snapshot.item().getObjectId() == currentItem.getObjectId())) {
+					inventory.remove(currentItem);
+					PacketSendUtility.sendPacket(player, new SM_DELETE_ITEM(currentItem.getObjectId()));
+				}
+			}
+			for (ItemSnapshot snapshot : items) {
+				Item item = snapshot.item();
+				if (item.getItemTemplate().isKinah()) {
+					long difference = snapshot.count() - inventory.getKinah();
+					if (difference > 0) {
+						inventory.increaseKinah(difference);
+					} else if (difference < 0) {
+						inventory.decreaseKinah(-difference);
+					}
+				} else {
+					Item currentItem = inventory.getItemByObjId(item.getObjectId());
+					if (currentItem == null) {
+						item.setItemCount(snapshot.count());
+						item.setEquipmentSlot(snapshot.equipmentSlot());
+						item.setItemLocation(snapshot.location());
+						inventory.add(item);
+					} else {
+						long difference = snapshot.count() - currentItem.getItemCount();
+						if (difference > 0) {
+							inventory.increaseItemCount(currentItem, difference);
+						} else if (difference < 0) {
+							inventory.decreaseItemCount(currentItem, -difference);
+						}
+					}
+				}
+				item.setEquipmentSlot(snapshot.equipmentSlot());
+				item.setItemLocation(snapshot.location());
+				item.setPersistentState(snapshot.state());
+			}
+			inventory.getDeletedItems().removeIf(item -> !deletedItems.contains(item));
+			inventory.setPersistentState(state);
 		}
 	}
 
@@ -535,8 +582,28 @@ public class ExchangeService {
 
 		@Override
 		public void run() {
-			DAOManager.getDAO(InventoryDAO.class).store(player1Items, player1Id);
-			DAOManager.getDAO(InventoryDAO.class).store(player2Items, player2Id);
+			save();
+		}
+
+		public boolean save() {
+			InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
+			try (Connection con = DatabaseFactory.getConnection()) {
+				con.setAutoCommit(false);
+				try {
+					inventoryDAO.storeInTransaction(con, player1Items, player1Id, null, null);
+					inventoryDAO.storeInTransaction(con, player2Items, player2Id, null, null);
+					con.commit();
+				} catch (SQLException e) {
+					con.rollback();
+					throw e;
+				}
+			} catch (SQLException e) {
+				log.error(I18n.get("log.39a7be863899", player1Id, player2Id, e));
+				return false;
+			}
+			inventoryDAO.markStored(player1Items);
+			inventoryDAO.markStored(player2Items);
+			return true;
 		}
 	}
 

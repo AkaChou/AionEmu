@@ -7542,7 +7542,6 @@
 		<!-- Shushu -->
 		<spawn npc_id="217177" respawn_time="1800">
 			<spot x="637.80286" y="1530.0216" z="279.21143" h="61"/>
-		  <spot x="637.802856" y="1530.021606" z="279.21143" h="60"/>
 		</spawn>
 		<!-- Luigir -->
 		<spawn npc_id="799558" respawn_time="295">

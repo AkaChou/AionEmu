@@ -104,13 +104,8 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
         List<EquippedStigmasEntry> skillsActive = Lists.newArrayList(
             player.getEquipedStigmaList().getAllItems()
         );
-        List<EquippedStigmasEntry> skillsDeleted = Lists.newArrayList(
-            player.getEquipedStigmaList().getDeletedItems()
-        );
-
-        store(player, skillsActive);
-        store(player, skillsDeleted);
-        return true;
+        skillsActive.addAll(Lists.newArrayList(player.getEquipedStigmaList().getDeletedItems()));
+        return store(player, skillsActive);
     }
 
     /**
@@ -120,23 +115,27 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * 玩家 / player
      * @param skills 灵魂石条目列表 / stigma entry list
      */
-    private void store(Player player, List<EquippedStigmasEntry> skills) {
+    private boolean store(Player player, List<EquippedStigmasEntry> skills) {
         try (Connection con = DatabaseFactory.getConnection()) {
             con.setAutoCommit(false);
-
-            deleteItems(con, player, skills);
-            addItems(con, player, skills);
-            updateItems(con, player, skills);
-
-            con.commit();
+            try {
+                deleteItems(con, player, skills);
+                addItems(con, player, skills);
+                updateItems(con, player, skills);
+                con.commit();
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            }
         } catch (SQLException e) {
             log.error(I18n.get("log.6790b402b724", player.getObjectId(), e));
-            return;
+            return false;
         }
 
         for (EquippedStigmasEntry skill : skills) {
             skill.setPersistentState(PersistentState.UPDATED);
         }
+        return true;
     }
 
     /**
@@ -147,7 +146,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * @param player 玩家 / player
      * @param items 条目列表 / entry list
      */
-    private void addItems(Connection con, Player player, List<EquippedStigmasEntry> items) {
+    private void addItems(Connection con, Player player, List<EquippedStigmasEntry> items) throws SQLException {
         Collection<EquippedStigmasEntry> skillsToInsert = Collections2.filter(items, itemsToInsertPredicate);
         if (GenericValidator.isBlankOrNull(skillsToInsert)) {
             return;
@@ -161,8 +160,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
                 ps.addBatch();
             }
             ps.executeBatch();
-        } catch (SQLException e) {
-            log.error(I18n.get("log.b4df25263a5f", player.getObjectId(), e));
         }
     }
 
@@ -174,7 +171,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * 玩家 / player
      * entry list
      */
-    private void updateItems(Connection con, Player player, List<EquippedStigmasEntry> skills) {
+    private void updateItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
         Collection<EquippedStigmasEntry> skillsToUpdate = Collections2.filter(skills, itemsToUpdatePredicate);
         if (GenericValidator.isBlankOrNull(skillsToUpdate)) {
             return;
@@ -188,8 +185,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
                 ps.addBatch();
             }
             ps.executeBatch();
-        } catch (SQLException e) {
-            log.error(I18n.get("log.06bcbf6b0649", player.getObjectId(), e));
         }
     }
 
@@ -201,7 +196,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
      * 玩家 / player
      * entry list
      */
-    private void deleteItems(Connection con, Player player, List<EquippedStigmasEntry> skills) {
+    private void deleteItems(Connection con, Player player, List<EquippedStigmasEntry> skills) throws SQLException {
         Collection<EquippedStigmasEntry> skillsToDelete = Collections2.filter(skills, itemsToDeletePredicate);
         if (GenericValidator.isBlankOrNull(skillsToDelete)) {
             return;
@@ -215,8 +210,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
                 ps.addBatch();
             }
             ps.executeBatch();
-        } catch (SQLException e) {
-            log.error(I18n.get("log.a0aecdf644ac", player.getObjectId(), e));
         }
     }
 

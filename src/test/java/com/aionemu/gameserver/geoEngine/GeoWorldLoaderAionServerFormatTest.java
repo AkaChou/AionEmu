@@ -10,9 +10,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
@@ -193,6 +195,41 @@ class GeoWorldLoaderAionServerFormatTest {
 		assertEquals(2F, second.getZ(2F, 2F), 0.01F);
 		assertEquals(9, first.getTerrainMaterialAt(2.5F, 2.5F, 3F, 1));
 		assertEquals(7, second.getTerrainMaterialAt(2.5F, 2.5F, 2F, 1));
+	}
+
+	@Test
+	void disabledTerrainPolicyMatchesResourcesAndSkipsPngs() throws Exception {
+		Set<Integer> pathMaps = new HashSet<>();
+		try (var files = Files.list(Path.of("src/main/resources/aion/geo/path"))) {
+			files.filter(path -> path.getFileName().toString().endsWith(".path.gz"))
+					.map(path -> path.getFileName().toString().replace(".path.gz", ""))
+					.map(Integer::parseInt)
+					.forEach(pathMaps::add);
+		}
+		Set<Integer> terrainMaps = new HashSet<>();
+		try (var files = Files.list(Path.of("src/main/resources/aion/geo"))) {
+			files.map(path -> path.getFileName().toString())
+					.filter(name -> name.endsWith(".png") && !name.endsWith("_materials.png"))
+					.map(name -> name.substring(0, name.length() - ".png".length()))
+					.flatMap(name -> Arrays.stream(name.split(",")))
+					.map(Integer::parseInt)
+					.forEach(terrainMaps::add);
+		}
+		pathMaps.removeAll(terrainMaps);
+		assertEquals(pathMaps, GeoWorldLoader.TERRAIN_DISABLED_MAPS);
+
+		oldDataDir = System.getProperty("aion.game.data.dir");
+		System.setProperty("aion.game.data.dir", dataDir.toString());
+		Path geoDir = dataDir.resolve("geo");
+		Files.createDirectories(geoDir);
+		writeTerrainPng(geoDir.resolve("400010000.png"), 64);
+		writeTerrainMaterialPng(geoDir.resolve("400010000_materials.png"), 7);
+		GeoMap map = new GeoMap("400010000", 4096);
+
+		GeoWorldLoader.loadTerrains(List.of(map));
+
+		assertFalse(map.hasTerrain());
+		assertFalse(map.hasTerrainMaterials());
 	}
 
 	@Test

@@ -824,30 +824,26 @@ public class Player extends Creature {
 		if (cubeStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 			dirtyItems.addAll(cubeStorage.getItemsWithKinah());
 			dirtyItems.addAll(cubeStorage.getDeletedItems());
-			cubeStorage.setPersistentState(PersistentState.UPDATED);
 		}
 
 		IStorage regularWhStorage = getStorage(StorageType.REGULAR_WAREHOUSE.getId());
 		if (regularWhStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 			dirtyItems.addAll(regularWhStorage.getItemsWithKinah());
 			dirtyItems.addAll(regularWhStorage.getDeletedItems());
-			regularWhStorage.setPersistentState(PersistentState.UPDATED);
 		}
 
 		IStorage accountWhStorage = getStorage(StorageType.ACCOUNT_WAREHOUSE.getId());
 		if (accountWhStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 			dirtyItems.addAll(accountWhStorage.getItemsWithKinah());
 			dirtyItems.addAll(accountWhStorage.getDeletedItems());
-			accountWhStorage.setPersistentState(PersistentState.UPDATED);
 		}
 
 		IStorage legionWhStorage = getStorage(StorageType.LEGION_WAREHOUSE.getId());
 		if (legionWhStorage != null) {
-			if (legionWhStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-				dirtyItems.addAll(legionWhStorage.getItemsWithKinah());
-				dirtyItems.addAll(legionWhStorage.getDeletedItems());
-				legionWhStorage.setPersistentState(PersistentState.UPDATED);
-			}
+				if (legionWhStorage.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
+					dirtyItems.addAll(legionWhStorage.getItemsWithKinah());
+					dirtyItems.addAll(legionWhStorage.getDeletedItems());
+				}
 		}
 
 		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
@@ -855,7 +851,6 @@ public class Player extends Creature {
 			if (petBag != null && petBag.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 				dirtyItems.addAll(petBag.getItemsWithKinah());
 				dirtyItems.addAll(petBag.getDeletedItems());
-				petBag.setPersistentState(PersistentState.UPDATED);
 			}
 		}
 
@@ -864,17 +859,38 @@ public class Player extends Creature {
 			if (cabinet != null && cabinet.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 				dirtyItems.addAll(cabinet.getItemsWithKinah());
 				dirtyItems.addAll(cabinet.getDeletedItems());
-				cabinet.setPersistentState(PersistentState.UPDATED);
 			}
 		}
 
 		Equipment equipment = getEquipment();
 		if (equipment.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 			dirtyItems.addAll(equipment.getEquippedItems());
-			equipment.setPersistentState(PersistentState.UPDATED);
 		}
 
 		return dirtyItems;
+	}
+
+	public void markDirtyItemContainersStored() {
+		for (int storageId : new int[] { StorageType.CUBE.getId(), StorageType.REGULAR_WAREHOUSE.getId(),
+				StorageType.ACCOUNT_WAREHOUSE.getId(), StorageType.LEGION_WAREHOUSE.getId() }) {
+			IStorage storage = getStorage(storageId);
+			if (storage != null) {
+				storage.setPersistentState(PersistentState.UPDATED);
+			}
+		}
+		for (int storageId = StorageType.PET_BAG_MIN; storageId <= StorageType.PET_BAG_MAX; storageId++) {
+			IStorage storage = getStorage(storageId);
+			if (storage != null) {
+				storage.setPersistentState(PersistentState.UPDATED);
+			}
+		}
+		for (int storageId = StorageType.HOUSE_WH_MIN; storageId <= StorageType.HOUSE_WH_MAX; storageId++) {
+			IStorage storage = getStorage(storageId);
+			if (storage != null) {
+				storage.setPersistentState(PersistentState.UPDATED);
+			}
+		}
+		getEquipment().setPersistentState(PersistentState.UPDATED);
 	}
 
 	/**

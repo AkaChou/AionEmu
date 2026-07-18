@@ -169,13 +169,23 @@ public class BrokerItem implements Comparable<BrokerItem> {
 			}
 			break;
 		case UPDATE_REQUIRED:
-			if (this.state == PersistentState.NEW) {
-				break;
+			if (this.state != PersistentState.NEW) {
+				this.state = PersistentState.UPDATE_REQUIRED;
 			}
 			break;
 		default:
 			this.state = persistentState;
 		}
+	}
+
+	public void restoreTransactionState(long itemCount, long price, boolean sold, boolean settled,
+			Timestamp settleTime, PersistentState persistentState) {
+		this.itemCount = itemCount;
+		this.price = price;
+		this.isSold = sold;
+		this.isSettled = settled;
+		this.settleTime = settleTime;
+		this.state = persistentState;
 	}
 
 	/** 获取持久化状态。 / Returns the persistent state. */

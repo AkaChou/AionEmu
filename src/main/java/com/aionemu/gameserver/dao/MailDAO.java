@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import com.aionemu.gameserver.model.gameobjects.Letter;
@@ -35,6 +37,14 @@ public abstract class MailDAO implements IDFactoryAwareDAO {
 	 * 若 successful 则为 true / true if successful
 	 */
 	public abstract boolean storeLetter(Timestamp time, Letter letter);
+
+	public void storeLetterInTransaction(Connection connection, Timestamp time, Letter letter) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	public void updateMailCounterInTransaction(Connection connection, String playerName, int count) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * 加载玩家邮箱内容。

@@ -54,6 +54,17 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
 
     @Override
     public boolean update(final PlayerTransferTask task) {
+        try (Connection con = DatabaseFactory.getConnection()) {
+            updateInTransaction(con, task);
+            return true;
+        } catch (SQLException e) {
+            log.error(I18n.get("log.84835322c373", task.id, e));
+            return false;
+        }
+    }
+
+    @Override
+    public void updateInTransaction(Connection con, final PlayerTransferTask task) throws SQLException {
         StringBuilder query = new StringBuilder("UPDATE player_transfers SET status = ?, comment = ?");
 
         switch (task.status) {
@@ -68,19 +79,16 @@ public class PlayerTransferDAO extends com.aionemu.loginserver.dao.PlayerTransfe
 
         query.append(" WHERE id = ?");
 
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement st = con.prepareStatement(query.toString())) {
+        try (PreparedStatement st = con.prepareStatement(query.toString())) {
 
             st.setByte(1, task.status);
             st.setString(2, task.comment);
             st.setInt(3, task.id);
 
-            return st.executeUpdate() > 0;
-        } catch (SQLException e) {
-            log.error(I18n.get("log.84835322c373", task.id, e));
+            if (st.executeUpdate() == 0) {
+                throw new SQLException("No player transfer row changed for " + task.id);
+            }
         }
-
-        return false;
     }
 
     @Override

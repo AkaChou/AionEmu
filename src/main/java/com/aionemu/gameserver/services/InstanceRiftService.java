@@ -6,13 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
+import org.quartz.CronExpression;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -50,6 +54,7 @@ public class InstanceRiftService {
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, InstanceRiftLocation> instanceRift;
 	private final ConcurrentMap<Integer, RiftInstance<?>> activeInstanceRift = new ConcurrentHashMap<Integer, RiftInstance<?>>();
+	private final ConcurrentMap<Integer, Long> instanceRiftEndTimes = new ConcurrentHashMap<>();
 
 	/**
 	 * 加载副本裂隙地点并刷关闭态 NPC。
@@ -61,6 +66,7 @@ public class InstanceRiftService {
 			for (InstanceRiftLocation loc : getInstanceRiftLocations().values()) {
 				spawn(loc, InstanceRiftStateType.CLOSED);
 			}
+			restoreOpenInstances();
 			log.info(I18n.get("log.da34bb44d09e", instanceRift.size()));
 		} else {
 			log.info(I18n.get("log.a881539ad74c"));
@@ -96,6 +102,7 @@ public class InstanceRiftService {
 					GameCronServices.cronService().schedule(task, instanceTime);
 				}
 			}
+			restoreOpenInstances();
 		}
 	}
 
@@ -106,18 +113,23 @@ public class InstanceRiftService {
 	 * @param id 地点 ID / location id
 	 */
 	public void startInstanceRift(final int id) {
+		startInstanceRift(id, TimeUnit.HOURS.toMillis(CustomConfig.INSTANCE_RIFT_DURATION));
+	}
+
+	private synchronized void startInstanceRift(final int id, long durationMillis) {
 		RiftInstance<?> rift = new Rift(instanceRift.get(id));
-		if (activeInstanceRift.putIfAbsent(id, rift) != null) {
-			return;
+		if (activeInstanceRift.putIfAbsent(id, rift) == null) {
+			rift.start();
+			instanceRiftMsg(id);
 		}
-		rift.start();
-		instanceRiftMsg(id);
+		long endTime = System.currentTimeMillis() + durationMillis;
+		instanceRiftEndTimes.merge(id, endTime, Math::max);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				stopInstanceRift(id);
+				stopInstanceRift(id, endTime);
 			}
-		}, CustomConfig.INSTANCE_RIFT_DURATION * 3600 * 1000);
+		}, durationMillis);
 	}
 
 	/**
@@ -126,12 +138,45 @@ public class InstanceRiftService {
 	 *
 	 * @param id 地点 ID / location id
 	 */
-	public void stopInstanceRift(int id) {
+	public synchronized void stopInstanceRift(int id) {
+		instanceRiftEndTimes.remove(id);
 		RiftInstance<?> rift = activeInstanceRift.remove(id);
 		if (rift == null || rift.isClosed()) {
 			return;
 		}
 		rift.stop();
+	}
+
+	private synchronized void stopInstanceRift(int id, long endTime) {
+		if (instanceRiftEndTimes.remove(id, endTime)) {
+			stopInstanceRift(id);
+		}
+	}
+
+	private void restoreOpenInstances() {
+		if (instanceSchedule == null || instanceRift == null) {
+			return;
+		}
+		long now = System.currentTimeMillis();
+		long durationMillis = TimeUnit.HOURS.toMillis(CustomConfig.INSTANCE_RIFT_DURATION);
+		for (Instance instance : instanceSchedule.getInstancesList()) {
+			long remainingMillis = 0;
+			for (String instanceTime : instance.getInstanceTimes()) {
+				remainingMillis = Math.max(remainingMillis, getRemainingOpenMillis(instanceTime, durationMillis, now));
+			}
+			if (remainingMillis > 0) {
+				startInstanceRift(instance.getId(), remainingMillis);
+			}
+		}
+	}
+
+	static long getRemainingOpenMillis(String cronExpression, long durationMillis, long now) {
+		try {
+			Date start = new CronExpression(cronExpression).getTimeBefore(new Date(now + 1000));
+			return start == null ? 0 : Math.max(0, start.getTime() + durationMillis - now);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Invalid instance schedule: " + cronExpression, e);
+		}
 	}
 
 	/**

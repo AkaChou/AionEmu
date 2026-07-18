@@ -25,6 +25,20 @@ class CreatureControllerTest {
 	}
 
 	@Test
+	void cancelledTaskCannotBeReplacedByItsRunningCallback() {
+		TestCreatureController controller = new TestCreatureController();
+		NoopFuture current = new NoopFuture();
+		NoopFuture replacement = new NoopFuture();
+		controller.addTask(TaskId.HOTSPOT_TELEPORT, current);
+
+		controller.cancelTask(TaskId.HOTSPOT_TELEPORT);
+
+		assertFalse(controller.replaceTask(TaskId.HOTSPOT_TELEPORT, current, replacement));
+		assertTrue(replacement.isCancelled());
+		assertFalse(controller.hasTask(TaskId.HOTSPOT_TELEPORT));
+	}
+
+	@Test
 	void cancelAllTasksKeepsRespawnTaskTracked() {
 		TestCreatureController controller = new TestCreatureController();
 		NoopFuture respawn = new NoopFuture();

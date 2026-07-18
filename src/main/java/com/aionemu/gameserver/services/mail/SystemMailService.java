@@ -5,12 +5,16 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -19,6 +23,7 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
+import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Mailbox;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -28,6 +33,7 @@ import com.aionemu.gameserver.model.templates.mail_reward.MailRewardTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemFactory;
+import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -39,6 +45,10 @@ import com.aionemu.gameserver.world.World;
  */
 @Slf4j(topic = "SYSMAIL_LOG")
 public class SystemMailService {
+	@FunctionalInterface
+	public interface TransactionAction {
+		void execute(Connection connection) throws SQLException;
+	}
 
 	/** Spring provider used to override the default singleton / Spring provider used to override the default singleton */
 	private static volatile ObjectProvider<SystemMailService> instanceProvider;
@@ -93,6 +103,13 @@ public class SystemMailService {
 	 */
 	public boolean sendMail(String sender, String recipientName, String title, String message, int attachedItemObjId,
 			long attachedItemCount, long attachedKinahCount, long attachedAPCount, LetterType letterType) {
+		return sendMail(sender, recipientName, title, message, attachedItemObjId, attachedItemCount,
+				attachedKinahCount, attachedAPCount, letterType, null);
+	}
+
+	public boolean sendMail(String sender, String recipientName, String title, String message, int attachedItemObjId,
+			long attachedItemCount, long attachedKinahCount, long attachedAPCount, LetterType letterType,
+			TransactionAction transactionAction) {
 		if (attachedItemObjId != 0) {
 			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(attachedItemObjId);
 			if (itemTemplate == null) {
@@ -156,13 +173,16 @@ public class SystemMailService {
 		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 				letterType);
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
-			return false;
-		}
-		if (attachedItem != null) {
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
-				return false;
+		boolean stored = transactionAction == null
+				? storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, newLetter, time)
+				: storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, newLetter, time,
+						transactionAction);
+		if (!stored) {
+			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
+			if (attachedItem != null) {
+				ItemService.releaseItemId(attachedItem);
 			}
+			return false;
 		}
 		recipientMailbox = getLoadedMailbox(recipient);
 		if (recipientMailbox != null) {
@@ -179,9 +199,6 @@ public class SystemMailService {
 				// 快递邮件已到达。 / Express mail has arrived.
 				PacketSendUtility.sendPacket(recipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
 			}
-		}
-		if (!recipientCommonData.isOnline() || (recipient != null && recipientMailbox == null)) {
-			updateMailboxCounter(recipientCommonData, recipient, recipientMailbox);
 		}
 		return true;
 	}
@@ -202,6 +219,12 @@ public class SystemMailService {
 	 */
 	public boolean sendSystemMail(String sender, String sysTitle, String sysMessage, String recipientName, Item item,
 			long attachedKinahCount, long attachedApCount, LetterType type) {
+		return sendSystemMail(sender, sysTitle, sysMessage, recipientName, item, attachedKinahCount, attachedApCount,
+				type, null);
+	}
+
+	public boolean sendSystemMail(String sender, String sysTitle, String sysMessage, String recipientName, Item item,
+			long attachedKinahCount, long attachedApCount, LetterType type, TransactionAction transactionAction) {
 		String title = sysTitle;
 		String message = sysMessage;
 		Item attachedItem = item;
@@ -228,19 +251,31 @@ public class SystemMailService {
 		if (recipientCommonData.isOnline()) {
 			onlineRecipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		}
-		attachedItem.setEquipped(false);
-		attachedItem.setEquipmentSlot(0);
-		attachedItem.setItemLocation(StorageType.MAILBOX.getId());
+		boolean originalEquipped = attachedItem != null && attachedItem.isEquipped();
+		long originalEquipmentSlot = attachedItem == null ? 0 : attachedItem.getEquipmentSlot();
+		int originalItemLocation = attachedItem == null ? 0 : attachedItem.getItemLocation();
+		PersistentState originalItemState = attachedItem == null ? PersistentState.NOACTION : attachedItem.getPersistentState();
+		if (attachedItem != null) {
+			attachedItem.setEquipped(false);
+			attachedItem.setEquipmentSlot(0);
+			attachedItem.setItemLocation(StorageType.MAILBOX.getId());
+		}
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, attachedKinahCount, attachedApCount, title, message, sender, time, true, type);
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
-			return false;
-		}
-		if (attachedItem != null) {
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
-				return false;
+		boolean stored = transactionAction == null
+				? storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time)
+				: storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time,
+						transactionAction);
+		if (!stored) {
+			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
+			if (attachedItem != null) {
+				attachedItem.setEquipped(originalEquipped);
+				attachedItem.setEquipmentSlot(originalEquipmentSlot);
+				attachedItem.setItemLocation(originalItemLocation);
+				attachedItem.setPersistentState(originalItemState);
 			}
+			return false;
 		}
 		recipientMailbox = getLoadedMailbox(onlineRecipient);
 		if (recipientMailbox != null) {
@@ -252,9 +287,6 @@ public class SystemMailService {
 			if (type == LetterType.EXPRESS || type == LetterType.BLACKCLOUD) {
 				PacketSendUtility.sendPacket(onlineRecipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
 			}
-		}
-		if (!recipientCommonData.isOnline() || (onlineRecipient != null && recipientMailbox == null)) {
-			updateMailboxCounter(recipientCommonData, onlineRecipient, recipientMailbox);
 		}
 		return true;
 	}
@@ -291,14 +323,51 @@ public class SystemMailService {
 	 * @param recipient 在线玩家实例 / online player instance
 	 * @param recipientMailbox 已加载邮箱 / loaded mailbox
 	 */
-	private void updateMailboxCounter(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox) {
+	protected boolean storeMail(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox,
+			Item attachedItem, Letter letter, Timestamp time) {
+		return storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, letter, time, null);
+	}
+
+	private boolean storeMail(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox,
+			Item attachedItem, Letter letter, Timestamp time, TransactionAction transactionAction) {
+		InventoryDAO inventoryDAO = DAOManager.getDAO(InventoryDAO.class);
+		MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
 		PlayerCommonData counterData = recipientMailbox == null && recipient != null && recipient.getCommonData() != null
 				? recipient.getCommonData() : recipientCommonData;
-		counterData.setMailboxLetters(counterData.getMailboxLetters() + 1);
-		DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(counterData);
-		if (counterData != recipientCommonData) {
-			recipientCommonData.setMailboxLetters(counterData.getMailboxLetters());
+		int mailboxLetters = counterData.getMailboxLetters() + 1;
+		try (Connection con = DatabaseFactory.getConnection()) {
+			con.setAutoCommit(false);
+			try {
+				if (attachedItem != null) {
+					inventoryDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
+				}
+				mailDAO.storeLetterInTransaction(con, time, letter);
+				if (recipientMailbox == null) {
+					mailDAO.updateMailCounterInTransaction(con, counterData.getName(), mailboxLetters);
+				}
+				if (transactionAction != null) {
+					transactionAction.execute(con);
+				}
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
+		} catch (SQLException e) {
+			log.error(I18n.get("log.bf6c47a4810b", recipientCommonData.getPlayerObjId(), e));
+			return false;
 		}
+		if (attachedItem != null) {
+			inventoryDAO.markStored(List.of(attachedItem));
+		}
+		letter.setPersistState(PersistentState.UPDATED);
+		if (recipientMailbox == null) {
+			counterData.setMailboxLetters(mailboxLetters);
+			if (counterData != recipientCommonData) {
+				recipientCommonData.setMailboxLetters(mailboxLetters);
+			}
+		}
+		return true;
 	}
 
 	/**

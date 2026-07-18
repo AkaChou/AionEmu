@@ -9,6 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SkillData;
@@ -139,6 +142,47 @@ class EffectControllerTest {
 		assertDoesNotThrow(() -> controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 0, 1, false));
 		assertNull(controller.abnormalEffect("matching"));
 		assertSame(unrelatedEffect, controller.abnormalEffect("unrelated"));
+	}
+
+	@Test
+	void dispelDoesNotRemoveReplacementAddedWhileOldEffectEnds() throws Exception {
+		TestEffectController controller = new TestEffectController();
+		CountDownLatch oldEffectCleared = new CountDownLatch(1);
+		CountDownLatch finishOldEffect = new CountDownLatch(1);
+		AtomicReference<Throwable> failure = new AtomicReference<>();
+		TestEffect oldEffect = abnormalEffect(controller, "same", 10, 1, 1).afterClear(() -> {
+			oldEffectCleared.countDown();
+			try {
+				finishOldEffect.await();
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new AssertionError(e);
+			}
+		});
+		TestEffect replacementEffect = abnormalEffect(controller, "same", 11, 2, 1);
+		controller.addEffect(oldEffect);
+
+		Thread dispel = new Thread(() -> {
+			try {
+				controller.removeEffectByDispelCat(DispelCategoryType.BUFF, SkillTargetSlot.BUFF, 1, 0, 1,
+						false);
+			} catch (Throwable t) {
+				failure.set(t);
+			}
+		});
+		dispel.start();
+		try {
+			assertTrue(oldEffectCleared.await(5, TimeUnit.SECONDS));
+			controller.addEffect(replacementEffect);
+		} finally {
+			finishOldEffect.countDown();
+		}
+		dispel.join(5000);
+
+		assertFalse(dispel.isAlive());
+		assertNull(failure.get());
+		assertFalse(replacementEffect.ended());
+		assertSame(replacementEffect, controller.abnormalEffect("same"));
 	}
 
 	@Test
@@ -390,6 +434,8 @@ class EffectControllerTest {
 		private final TestEffectController controller;
 		private boolean ended;
 		private boolean useRealPower;
+		private Runnable afterClear = () -> {
+		};
 
 		private TestEffect(TestEffectController controller, SkillTemplate skillTemplate) {
 			this(controller, skillTemplate, 0);
@@ -404,6 +450,7 @@ class EffectControllerTest {
 		public synchronized void endEffect() {
 			ended = true;
 			clearFromController();
+			afterClear.run();
 		}
 
 		@Override
@@ -418,6 +465,11 @@ class EffectControllerTest {
 		private TestEffect withPower(int power) {
 			setPower(power);
 			useRealPower = true;
+			return this;
+		}
+
+		private TestEffect afterClear(Runnable action) {
+			afterClear = action;
 			return this;
 		}
 

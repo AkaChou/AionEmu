@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Set;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -26,6 +28,10 @@ public abstract class VeteranRewardsDAO implements DAO {
 	 * veteran reward id
 	 */
 	public abstract void delVeteranReward(final int id_veteran_reward);
+
+	public void deleteInTransaction(Connection connection, int rewardId) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * 返回实现唯一类名标识。

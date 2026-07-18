@@ -31,7 +31,6 @@
 		<!-- Wavering Surkana -->
 		<spawn npc_id="730699">
 			<spot x="503.91858" y="514.51959" z="416.87329" entity_id="9"/>
-			<spot x="503.91858" y="514.51959" z="416.87296" entity_id="47"/>
 		</spawn>
 		<!-- Greater Blessed Relics -->
 		<spawn npc_id="831990">

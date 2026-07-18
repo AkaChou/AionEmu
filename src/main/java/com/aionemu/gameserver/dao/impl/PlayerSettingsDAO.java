@@ -98,45 +98,49 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
+			try {
+				try (PreparedStatement stmt = con.prepareStatement(REPLACE_QUERY)) {
+					if (uiSettings != null) {
+						stmt.setInt(1, playerId);
+						stmt.setInt(2, 0);
+						stmt.setBytes(3, uiSettings);
+						stmt.addBatch();
+					}
 
-			try (PreparedStatement stmt = con.prepareStatement(REPLACE_QUERY)) {
-				if (uiSettings != null) {
+					if (shortcuts != null) {
+						stmt.setInt(1, playerId);
+						stmt.setInt(2, 1);
+						stmt.setBytes(3, shortcuts);
+						stmt.addBatch();
+					}
+
+					if (houseBuddies != null) {
+						stmt.setInt(1, playerId);
+						stmt.setInt(2, 2);
+						stmt.setBytes(3, houseBuddies);
+						stmt.addBatch();
+					}
+
 					stmt.setInt(1, playerId);
-					stmt.setInt(2, 0);
-					stmt.setBytes(3, uiSettings);
+					stmt.setInt(2, -1);
+					stmt.setInt(3, display);
 					stmt.addBatch();
-				}
 
-				if (shortcuts != null) {
 					stmt.setInt(1, playerId);
-					stmt.setInt(2, 1);
-					stmt.setBytes(3, shortcuts);
+					stmt.setInt(2, -2);
+					stmt.setInt(3, deny);
 					stmt.addBatch();
+
+					stmt.executeBatch();
 				}
-
-				if (houseBuddies != null) {
-					stmt.setInt(1, playerId);
-					stmt.setInt(2, 2);
-					stmt.setBytes(3, houseBuddies);
-					stmt.addBatch();
-				}
-
-				stmt.setInt(1, playerId);
-				stmt.setInt(2, -1);
-				stmt.setInt(3, display);
-				stmt.addBatch();
-
-				stmt.setInt(1, playerId);
-				stmt.setInt(2, -2);
-				stmt.setInt(3, deny);
-				stmt.addBatch();
-
-				stmt.executeBatch();
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
 			}
-
-			con.commit();
 		} catch (SQLException e) {
 			log.error(I18n.get("log.19b35d703bb1", playerId, e));
+			return;
 		}
 
 		playerSettings.setPersistentState(PersistentState.UPDATED);

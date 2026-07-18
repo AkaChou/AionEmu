@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.aionemu.commons.database.dao.DAO;
@@ -29,6 +31,10 @@ public abstract class PlayerTransferDAO implements DAO {
      * @return 是否更新成功 / True if updated
      */
     public abstract boolean update(PlayerTransferTask task);
+
+	public void updateInTransaction(Connection connection, PlayerTransferTask task) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
     /**
      * 返回实现唯一类名标识。

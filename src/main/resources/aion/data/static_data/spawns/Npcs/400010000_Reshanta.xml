@@ -217,7 +217,6 @@
 		<!-- Haug -->
         <spawn npc_id="278040" respawn_time="60">
             <spot h="74" z="1655.4773" y="2716.4824" x="420.30707"/>
-          <spot x="418.900391" y="2716.463623" z="1655.4775" h="75"/>
         </spawn>
 		<!-- Altak -->
         <spawn npc_id="278041" respawn_time="60">
@@ -238,7 +237,6 @@
 		<!-- Tern -->
         <spawn npc_id="278045" respawn_time="60">
             <spot h="15" z="1642.3323" y="2617.391" x="486.45337" walker_id="Tern"/>
-          <spot x="487.371277" y="2618.566406" z="1642.3315" h="75"/>
         </spawn>
 		<!-- Bokbor -->
         <spawn npc_id="278046" respawn_time="60">
@@ -455,7 +453,6 @@
 		<!-- Noiman -->
         <spawn npc_id="278136" respawn_time="60">
             <spot h="46" z="1594.2235" y="2497.5515" x="238.77199"/>
-          <spot x="238.535889" y="2497.698730" z="1594.2235" h="48"/>
         </spawn>
 		<!-- Jafnhar -->
         <spawn npc_id="278137" respawn_time="60">
@@ -560,7 +557,6 @@
 		<!-- Lucius -->
         <spawn npc_id="278510" respawn_time="60">
             <spot h="104" z="1546.1555" y="571.9754" x="2392.9153"/>
-          <spot x="2394.222168" y="572.742920" z="1546.1555" h="105"/>
         </spawn>
 		<!-- Minon -->
         <spawn npc_id="278511" respawn_time="60">
@@ -669,7 +665,6 @@
 		<!-- Aries -->
         <spawn npc_id="278538" respawn_time="60">
             <spot h="32" z="1546.0913" y="519.0901" x="2380.9385"/>
-          <spot x="2382.409180" y="520.547668" z="1546.0913" h="45"/>
         </spawn>
 		<!-- Ara -->
         <spawn npc_id="278539" respawn_time="60">
@@ -686,7 +681,6 @@
 		<!-- Trian -->
         <spawn npc_id="278542" respawn_time="60">
             <spot z="1546.093" y="549.5384" x="2383.9844"/>
-          <spot x="2384.333008" y="549.711426" z="1546.093" h="75"/>
         </spawn>
 		<!-- Rupus -->
         <spawn npc_id="278543" respawn_time="60">
@@ -731,7 +725,6 @@
 		<!-- Caranos -->
         <spawn npc_id="278553" respawn_time="60">
             <spot h="44" z="1527.9968" y="662.56995" x="2260.041" walker_id="Caranos"/>
-          <spot x="2269.307617" y="650.565613" z="1528.0334" h="105"/>
         </spawn>
 		<!-- Claudia -->
         <spawn npc_id="278554" respawn_time="60">
@@ -888,7 +881,6 @@
 		<!-- Sileni -->
         <spawn npc_id="278628" respawn_time="60">
             <spot h="10" z="1513.9065" y="602.0919" x="2485.9043"/>
-          <spot x="2486.040039" y="602.224487" z="1513.9066" h="11"/>
         </spawn>
 		<!-- Adrastea -->
         <spawn npc_id="278629" respawn_time="60">
@@ -897,7 +889,6 @@
 		<!-- Lachesis -->
         <spawn npc_id="278630" respawn_time="60">
             <spot h="37" z="1513.9073" y="590.25104" x="2520.2463"/>
-          <spot x="2520.104004" y="590.707886" z="1513.9073" h="40"/>
         </spawn>
 		<!-- Erdias -->
         <spawn npc_id="278631" respawn_time="60">
@@ -910,7 +901,6 @@
 		<!-- Larentia -->
         <spawn npc_id="278633" respawn_time="60">
             <spot h="90" z="1513.9066" y="646.02045" x="2509.2595"/>
-          <spot x="2509.093750" y="645.521973" z="1513.9065" h="88"/>
         </spawn>
 		<!-- Glaucos -->
         <spawn npc_id="278634" respawn_time="60">
@@ -1083,7 +1073,6 @@
 		<!-- Guuminerk -->
         <spawn npc_id="279025" respawn_time="60">
             <spot h="10" z="1533.6819" y="671.07477" x="2330.839"/>
-          <spot x="2331.474121" y="671.512451" z="1533.6816" h="30"/>
         </spawn>
 		<!-- Sienrurerk -->
         <spawn npc_id="279026" respawn_time="60">
@@ -1125,7 +1114,6 @@
 		<!-- Juimonmonerk -->
         <spawn npc_id="279037" respawn_time="60">
             <spot z="1639.0138" y="2521.996" x="439.95816"/>
-          <spot x="440.579712" y="2522.602295" z="1639.0138" h="75"/>
         </spawn>
 		<!-- Fayrunerk -->
         <spawn npc_id="279038" respawn_time="60">
@@ -1214,7 +1202,6 @@
 		<!-- Tostig -->
         <spawn npc_id="799870" respawn_time="60">
             <spot h="44" z="1655.3513" y="2693.8757" x="432.61865"/>
-          <spot x="432.063171" y="2694.166016" z="1655.3513" h="38"/>
         </spawn>
 		<!-- Kisment -->
         <spawn npc_id="799871" respawn_time="60">
@@ -1443,12 +1430,10 @@
 		<!-- Morheim Teleport Device -->
 		<spawn npc_id="730077" respawn_time="60">
 			<spot x="565.86841" y="2554.1604" z="1636.5536" entity_id="271"/>
-			<spot x="565.77783" y="2554.2268" z="1636.6040" entity_id="275"/>
 		</spawn>
 		<!-- Beluslan Teleport Device -->
 		<spawn npc_id="730078" respawn_time="60">
 			<spot x="459.78528" y="2527.0132" z="1639.5238" entity_id="276"/>
-			<spot x="459.62891" y="2527.1196" z="1639.4033" entity_id="993"/>
 		</spawn>
 		<!-- The History Of Struggles Primum -->
 		<spawn npc_id="730129" respawn_time="60">

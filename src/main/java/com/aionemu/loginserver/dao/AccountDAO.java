@@ -1,5 +1,8 @@
 package com.aionemu.loginserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.loginserver.model.Account;
 
@@ -63,6 +66,10 @@ public abstract class AccountDAO implements DAO {
      * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateAccount(Account account);
+
+	public void updateInTransaction(Connection connection, Account account) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
     /**
      * 更新账号最近登录的游戏服。

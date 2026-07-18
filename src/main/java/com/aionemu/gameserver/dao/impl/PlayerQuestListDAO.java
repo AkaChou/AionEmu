@@ -115,31 +115,23 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			return;
 		}
 
-		Connection con = null;
-		try {
-			con = DatabaseFactory.getConnection();
+		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
+			try {
+				deleteQuest(con, player.getObjectId(), qsList);
+				addQuests(con, player.getObjectId(), qsList);
+				updateQuests(con, player.getObjectId(), qsList);
+				con.commit();
+			} catch (SQLException e) {
+				con.rollback();
+				throw e;
+			}
 
-			deleteQuest(con, player.getObjectId(), qsList);
-			addQuests(con, player.getObjectId(), qsList);
-			updateQuests(con, player.getObjectId(), qsList);
-
-			con.commit();
+			for (QuestState qs : qsList) {
+				qs.setPersistentState(PersistentState.UPDATED);
+			}
 		} catch (SQLException e) {
 			log.error(I18n.get("log.0b87b3157dfe", player.getObjectId(), e));
-			try {
-				if (con != null) {
-					con.rollback();
-				}
-			} catch (SQLException rollbackEx) {
-				log.error(I18n.get("log.cc07b223d6ff", player.getObjectId(), rollbackEx));
-			}
-		} finally {
-			DatabaseFactory.close(con);
-		}
-
-		for (QuestState qs : qsList) {
-			qs.setPersistentState(PersistentState.UPDATED);
 		}
 	}
 
@@ -151,16 +143,14 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * player id
 	 * @param states 任务状态集合 / quest state collection
 	 */
-	private void addQuests(Connection con, int playerId, Collection<QuestState> states) {
+	private void addQuests(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
 		Collection<QuestState> statesToAdd = Collections2.filter(states, questsToAddPredicate);
 
 		if (GenericValidator.isBlankOrNull(statesToAdd)) {
 			return;
 		}
 
-		PreparedStatement ps = null;
-		try {
-			ps = con.prepareStatement(INSERT_QUERY);
+		try (PreparedStatement ps = con.prepareStatement(INSERT_QUERY)) {
 			int count = 0;
 
 			for (QuestState qs : statesToAdd) {
@@ -173,14 +163,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			}
 
 			ps.executeBatch();
-			con.commit();
-
 			log.debug("Inserted {} quests for player {}", statesToAdd.size(), playerId);
-
-		} catch (SQLException e) {
-			log.error(I18n.get("log.da16c1afddab", playerId, e));
-		} finally {
-			DatabaseFactory.close(ps);
 		}
 	}
 
@@ -227,16 +210,14 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * player id
 	 * @param states 任务状态集合 / quest state collection
 	 */
-	private void updateQuests(Connection con, int playerId, Collection<QuestState> states) {
+	private void updateQuests(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
 		Collection<QuestState> statesToUpdate = Collections2.filter(states, questsToUpdatePredicate);
 
 		if (GenericValidator.isBlankOrNull(statesToUpdate)) {
 			return;
 		}
 
-		PreparedStatement ps = null;
-		try {
-			ps = con.prepareStatement(UPDATE_QUERY);
+		try (PreparedStatement ps = con.prepareStatement(UPDATE_QUERY)) {
 			int count = 0;
 
 			for (QuestState qs : statesToUpdate) {
@@ -249,14 +230,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			}
 
 			ps.executeBatch();
-			con.commit();
-
 			log.debug("Updated {} quests for player {}", statesToUpdate.size(), playerId);
-
-		} catch (SQLException e) {
-			log.error(I18n.get("log.5683a1b9dbd2", playerId, e));
-		} finally {
-			DatabaseFactory.close(ps);
 		}
 	}
 
@@ -304,16 +278,14 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	 * player id
 	 * @param states 任务状态集合 / quest state collection
 	 */
-	private void deleteQuest(Connection con, int playerId, Collection<QuestState> states) {
+	private void deleteQuest(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
 		Collection<QuestState> statesToDelete = Collections2.filter(states, questsToDeletePredicate);
 
 		if (GenericValidator.isBlankOrNull(statesToDelete)) {
 			return;
 		}
 
-		PreparedStatement ps = null;
-		try {
-			ps = con.prepareStatement(DELETE_QUERY);
+		try (PreparedStatement ps = con.prepareStatement(DELETE_QUERY)) {
 			int count = 0;
 
 			for (QuestState qs : statesToDelete) {
@@ -327,14 +299,7 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 			}
 
 			ps.executeBatch();
-			con.commit();
-
 			log.debug("Deleted {} quests for player {}", statesToDelete.size(), playerId);
-
-		} catch (SQLException e) {
-			log.error(I18n.get("log.b17ca301d7ad", playerId, e));
-		} finally {
-			DatabaseFactory.close(ps);
 		}
 	}
 

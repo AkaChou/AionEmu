@@ -6913,7 +6913,6 @@
     </spawn>
 	<spawn npc_id="700913" respawn_time="60">
 	  <spot x="893.3" y="1774.1" z="326.25"/> <!-- entity_id="2392" find the right ID -->
-	  <spot x="893.278015" y="1774.051392" z="326.25"/>
 	</spawn>
     <spawn npc_id="798999" respawn_time="120">
       <spot x="1086.237793" y="1605.188843" z="407.90628" h="86"/>

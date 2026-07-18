@@ -302,7 +302,11 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
         Integer accountId = player.getPlayerAccount() != null ? player.getPlayerAccount().getId() : null;
         Integer legionId = player.getLegion() != null ? player.getLegion().getLegionId() : null;
         List<Item> allPlayerItems = player.getDirtyItemsToUpdate();
-        return store(allPlayerItems, playerId, accountId, legionId);
+        if (!store(allPlayerItems, playerId, accountId, legionId)) {
+            return false;
+        }
+        player.markDirtyItemContainersStored();
+        return true;
     }
 
     /**
@@ -361,6 +365,27 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
      */
     @Override
     public boolean store(List<Item> items, Integer playerId, Integer accountId, Integer legionId) {
+        try (Connection con = DatabaseFactory.getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                storeInTransaction(con, items, playerId, accountId, legionId);
+                con.commit();
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            }
+        } catch (SQLException e) {
+            log.error(I18n.get("log.c240e77dc213", playerId, e));
+            return false;
+        }
+
+        markStored(items);
+        return true;
+    }
+
+    @Override
+    public void storeInTransaction(Connection con, List<Item> items, Integer playerId, Integer accountId,
+                                   Integer legionId) throws SQLException {
         Collection<Item> itemsToUpdate = new ArrayList<>();
         Collection<Item> itemsToInsert = new ArrayList<>();
         Collection<Item> itemsToDelete = new ArrayList<>();
@@ -378,38 +403,22 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
             }
         }
 
-        boolean deleteResult = false;
-        boolean insertResult = false;
-        boolean updateResult = false;
+        deleteItems(con, itemsToDelete);
+        insertItems(con, itemsToInsert, playerId, accountId, legionId);
+        updateItems(con, itemsToUpdate, playerId, accountId, legionId);
+    }
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            con.setAutoCommit(false);
-
-            deleteResult = deleteItems(con, itemsToDelete);
-            insertResult = insertItems(con, itemsToInsert, playerId, accountId, legionId);
-            updateResult = updateItems(con, itemsToUpdate, playerId, accountId, legionId);
-
-            con.commit();
-        } catch (SQLException e) {
-            log.error(I18n.get("log.c240e77dc213", playerId, e));
-            return false;
-        }
-
+    @Override
+    public void markStored(Collection<Item> items) {
         for (Item item : items) {
             if (item != null) {
+                boolean deleted = item.getPersistentState() == PersistentState.DELETED;
                 item.setPersistentState(PersistentState.UPDATED);
-            }
-        }
-
-        if (!itemsToDelete.isEmpty() && deleteResult) {
-            for (Item item : itemsToDelete) {
-                if (item != null) {
+                if (deleted) {
                     ItemService.releaseItemId(item);
                 }
             }
         }
-
-        return deleteResult && insertResult && updateResult;
     }
 
     private boolean store(Item item, int playerId, int accountId, Integer legionId) {
@@ -476,7 +485,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 stmt.addBatch();
             }
 
-            stmt.executeBatch();
+            ensureBatchChanged(stmt.executeBatch(), items.size(), "insert");
             return true;
         } catch (SQLException e) {
             log.error(I18n.get("log.f078e8399e22", e));
@@ -528,7 +537,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 stmt.addBatch();
             }
 
-            stmt.executeBatch();
+            ensureBatchChanged(stmt.executeBatch(), items.size(), "update");
             return true;
         } catch (SQLException e) {
             log.error(I18n.get("log.ac4bea7b080f", e));
@@ -547,11 +556,23 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
                 stmt.addBatch();
             }
 
-            stmt.executeBatch();
+            ensureBatchChanged(stmt.executeBatch(), items.size(), "delete");
             return true;
         } catch (SQLException e) {
             log.error(I18n.get("log.8c6bf238353d", e));
             throw e;
+        }
+    }
+
+    private void ensureBatchChanged(int[] results, int expected, String operation) throws SQLException {
+        if (results.length != expected) {
+            throw new SQLException("Inventory " + operation + " batch returned " + results.length
+                    + " results for " + expected + " items");
+        }
+        for (int result : results) {
+            if (result == 0 || result == Statement.EXECUTE_FAILED) {
+                throw new SQLException("Inventory " + operation + " batch did not change every row");
+            }
         }
     }
 

@@ -384,7 +384,7 @@ public class NpcMoveController
      * 开始向当前目标对象移动。
      * Start moving toward the current target object.
      */
-    public void moveToTargetObject() {
+    public synchronized void moveToTargetObject() {
         destination = Destination.TARGET_OBJECT;
         if (!started.getAndSet(true)) {
             if (owner.getAi2().isLogging()) {
@@ -403,7 +403,7 @@ public class NpcMoveController
      * @param y 目标 Y / Target Y
      * @param z 目标 Z / Target Z
      */
-    public void moveToPoint(float x, float y, float z) {
+    public synchronized void moveToPoint(float x, float y, float z) {
         if (started.compareAndSet(false, true)) {
             if (owner.getAi2().isLogging()) {
                 AI2Logger.moveinfo(owner, "MC: moveToPoint started");
@@ -423,21 +423,21 @@ public class NpcMoveController
      * 开始返回出生点。
      * Start returning to the spawn/home point.
      */
-    public void moveToHome() {
+    public synchronized void moveToHome() {
         clearPathFailureContext();
         clearPathPullAttempts();
         resetTargetTracking();
-        if (started.compareAndSet(false, true)) {
+        if (!started.getAndSet(true)) {
             if (owner.getAi2().isLogging()) {
                 AI2Logger.moveinfo(owner, "MC: moveToHome started");
             }
-            resetPath();
-            Point3D target = getHomeReturnDestination();
-            destination = Destination.HOME;
-            pointX = target.getX();
-            pointY = target.getY();
-            pointZ = target.getZ();
         }
+        resetPath();
+        Point3D target = getHomeReturnDestination();
+        destination = Destination.HOME;
+        pointX = target.getX();
+        pointY = target.getY();
+        pointZ = target.getZ();
         updateLastMove();
         GameMovementLoopServices.moveTaskManager().addCreature(owner);
     }
@@ -446,7 +446,7 @@ public class NpcMoveController
      * 开始向下一个巡逻点移动。
      * Start moving toward the next walk-route point.
      */
-    public void moveToNextPoint() {
+    public synchronized void moveToNextPoint() {
         if (started.compareAndSet(false, true)) {
             if (owner.getAi2().isLogging()) {
                 AI2Logger.moveinfo(owner, "MC: moveToNextPoint started");

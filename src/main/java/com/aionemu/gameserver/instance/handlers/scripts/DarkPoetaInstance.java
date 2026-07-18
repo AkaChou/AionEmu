@@ -477,18 +477,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
+						stopInstance();
 					}
 				}, 5000);
 			break;
@@ -564,18 +553,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    stopInstance(player);
-				    }
-			    });
+				stopInstance();
             }
         }, 14400000));
     }
@@ -611,6 +589,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	@Override
 	public void onEnterInstance(final Player player) {
 		startPrepareTimer();
+		if (spawnRace != null) {
+			return;
+		}
+		spawnRace = player.getRace();
 		final int npc1 = spawnRace == Race.ASMODIANS ? 805732 : 805728;
 		final int npc2 = spawnRace == Race.ASMODIANS ? 805733 : 805729;
 		final int npc3 = spawnRace == Race.ASMODIANS ? 805734 : 805730;
@@ -660,10 +642,9 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
 	 *
-	 * @param player 玩家 / player
 	 */
 	
-	protected void stopInstance(Player player) {
+	protected void stopInstance() {
         stopInstanceTask();
         instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));

@@ -1,0 +1,10 @@
+[
+  {
+    "label": "Run AionEmu standalone",
+    "command": "mvn -DskipTests compile dependency:build-classpath -Dmdep.outputFile=target/runtime-classpath.txt && exec java -cp \"target/classes:$(cat target/runtime-classpath.txt)\" com.aionemu.AionBootApplication",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always"
+  }
+]

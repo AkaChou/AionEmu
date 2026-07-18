@@ -524,6 +524,18 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	}
 
 	/**
+	 * 仅当当前任务仍为预期任务时替换它，否则取消替换任务。
+	 * Replaces a task only if it is still the expected task; otherwise cancels the replacement.
+	 */
+	public boolean replaceTask(TaskId taskId, Future<?> expected, Future<?> replacement) {
+		boolean replaced = tasks.replace(taskId.ordinal(), expected, replacement);
+		if (!replaced) {
+			replacement.cancel(false);
+		}
+		return replaced;
+	}
+
+	/**
 	 * 取消所有可取消任务。
 	 * Cancels all cancellable tasks.
 	 *

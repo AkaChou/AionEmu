@@ -30,9 +30,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /** 更新玩家上次排名与时间 / Update player last rank and timestamp */
     private static final String UPDATE_LAST_RANK = "UPDATE ladder_player SET last_rank = ?, last_update = ? WHERE player_id = ?";
 
-    /** 检查玩家天梯记录是否存在 / Check whether a player ladder row exists */
-    private static final String SELECT_CHECK_EXISTS = "SELECT 1 FROM ladder_player WHERE player_id = ? LIMIT 1";
-
     /** 按列查询玩家天梯字段（占位模板） / Select a ladder column by player (placeholder template) */
     private static final String SELECT_GET_DATA = "SELECT ? FROM ladder_player WHERE player_id = ?";
 
@@ -298,22 +295,14 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     private void addPlayerLadderData(Player player, String column, int value) {
         int playerId = player.getObjectId();
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            if (checkExists(playerId)) {
-                String query = "UPDATE ladder_player SET " + column + " = " + column + " + ? WHERE player_id = ?";
-                try (PreparedStatement stmt = con.prepareStatement(query)) {
-                    stmt.setInt(1, value);
-                    stmt.setInt(2, playerId);
-                    stmt.executeUpdate();
-                }
-            } else {
-                String query = "INSERT INTO ladder_player (player_id, " + column + ") VALUES (?, ?)";
-                try (PreparedStatement stmt = con.prepareStatement(query)) {
-                    stmt.setInt(1, playerId);
-                    stmt.setInt(2, "rating".equals(column) ? 1000 + value : value);
-                    stmt.executeUpdate();
-                }
-            }
+        String query = "INSERT INTO ladder_player (player_id, " + column + ") VALUES (?, ?) "
+                + "ON DUPLICATE KEY UPDATE " + column + " = " + column + " + ?";
+        try (Connection con = DatabaseFactory.getConnection();
+             PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, playerId);
+            stmt.setInt(2, "rating".equals(column) ? 1000 + value : value);
+            stmt.setInt(3, value);
+            stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(I18n.get("log.58ec4d70c9e9", player.getObjectId(), e));
         }
@@ -330,22 +319,13 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     private void setPlayerLadderData(Player player, String column, int value) {
         int playerId = player.getObjectId();
 
-        try (Connection con = DatabaseFactory.getConnection()) {
-            if (checkExists(playerId)) {
-                String query = "UPDATE ladder_player SET " + column + " = ? WHERE player_id = ?";
-                try (PreparedStatement stmt = con.prepareStatement(query)) {
-                    stmt.setInt(1, value);
-                    stmt.setInt(2, playerId);
-                    stmt.executeUpdate();
-                }
-            } else {
-                String query = "INSERT INTO ladder_player (player_id, " + column + ") VALUES (?, ?)";
-                try (PreparedStatement stmt = con.prepareStatement(query)) {
-                    stmt.setInt(1, playerId);
-                    stmt.setInt(2, value);
-                    stmt.executeUpdate();
-                }
-            }
+        String query = "INSERT INTO ladder_player (player_id, " + column + ") VALUES (?, ?) "
+                + "ON DUPLICATE KEY UPDATE " + column + " = VALUES(" + column + ")";
+        try (Connection con = DatabaseFactory.getConnection();
+             PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, playerId);
+            stmt.setInt(2, value);
+            stmt.executeUpdate();
         } catch (SQLException e) {
             log.error(I18n.get("log.4ea6502ae269", player.getObjectId(), e));
         }
@@ -530,28 +510,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
             data = new PlayerLadderData(player, 1000, 0, 0, 0, 0, new Timestamp(0));
         }
         return data;
-    }
-
-    /**
-     * 检查玩家是否已有天梯记录。
-     * Checks whether a ladder row exists for the player.
-     *
-     * player id
-     *
-     * @param playerId 若 the row exists 则为 true / true if the row exists
-     */
-    private boolean checkExists(int playerId) {
-        try (Connection con = DatabaseFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(SELECT_CHECK_EXISTS)) {
-
-            stmt.setInt(1, playerId);
-            try (ResultSet rset = stmt.executeQuery()) {
-                return rset.next();
-            }
-        } catch (SQLException e) {
-            log.error(I18n.get("log.c59d3338d886", playerId, e));
-            return false;
-        }
     }
 
     /**

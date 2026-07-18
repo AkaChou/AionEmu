@@ -107,7 +107,6 @@
 		<!-- Frontal Barricade -->
 		<spawn npc_id="833863">
 		    <spot x="229.51772" y="210.93599" z="160.23035" entity_id="1"/>
-			<spot x="229.51772" y="210.93599" z="160.23035" entity_id="51"/>
 		</spawn>
 		<!-- Rear Barricade -->
 		<spawn npc_id="833864">
