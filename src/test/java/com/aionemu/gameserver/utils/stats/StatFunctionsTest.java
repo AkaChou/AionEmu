@@ -3,8 +3,8 @@ package com.aionemu.gameserver.utils.stats;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import org.junit.jupiter.api.AfterEach;
@@ -14,13 +14,13 @@ class StatFunctionsTest {
 
 	@AfterEach
 	void resetMagicBoostCap() {
-		CustomConfig.MAGICBOOST_CAP = 6500;
+		SkillConfig.MAGICBOOST_CAP = 6500;
 		RateConfig.DAMAGE_MULTIPLIER = 1f;
 	}
 
 	@Test
 	void capsMagicBoostForDamageAtConfiguredLimit() {
-		CustomConfig.MAGICBOOST_CAP = 6500;
+		SkillConfig.MAGICBOOST_CAP = 6500;
 
 		assertEquals(6500, StatFunctions.capMagicBoostForDamage(7200));
 		assertEquals(6400, StatFunctions.capMagicBoostForDamage(6400));

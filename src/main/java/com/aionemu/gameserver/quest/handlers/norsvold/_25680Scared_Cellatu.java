@@ -120,8 +120,8 @@ public class _25680Scared_Cellatu extends QuestHandler {
 					} case STEP_TO_6: {
 						changeQuestStep(env, 5, 6, false);
 						npc.getController().onDelete();
-						QuestService.addNewSpawn(210100000, 1, 806695, npc.getX(), npc.getY(), npc.getZ(), (byte) 0);
-						QuestService.addNewSpawn(210100000, 1, 282465, npc.getX(), npc.getY(), npc.getZ(), (byte) 0);
+						QuestService.addNewSpawnForSeconds(210100000, 1, 806695, 3038, 1343, 220, (byte) 55, 29);
+						QuestService.addNewSpawnForSeconds(210100000, 1, 282465, 3038, 1343, 220, (byte) 0, 10);
 						return closeDialogWindow(env);
 					}
 				}

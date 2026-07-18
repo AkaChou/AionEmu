@@ -39,6 +39,13 @@ public class AIConfig {
 	public static int AGGRO_LEVEL_IMMUNE;
 
 	/**
+	 * 是否让等级不超过 2、生命值低于 10 且原 AI 不是 aggressive 的野兽使用胆怯 AI。
+	 * Whether level-2-or-lower beasts with less than 10 HP and a non-aggressive original AI use the fearful-beast AI.
+	 */
+	@Property(key = "gameserver.npc.fearful_beast.enable", defaultValue = "true")
+	public static boolean ENABLE_FEARFUL_BEAST_AI;
+
+	/**
 	 * 是否启用 NPC 移动。
 	 * Whether NPC movement is enabled.
 	 */
@@ -49,7 +56,7 @@ public class AIConfig {
 	 * 是否启用更平滑但成本更高的 NPC 回家移动。
 	 * Whether smoother but more expensive NPC home-return movement is enabled.
 	 */
-	@Property(key = "gameserver.ai.home.return.enhanced.enable", defaultValue = "false")
+	@Property(key = "gameserver.ai.home.return.enhanced.enable", defaultValue = "true")
 	public static boolean ENHANCED_HOME_RETURN;
 
 	/**

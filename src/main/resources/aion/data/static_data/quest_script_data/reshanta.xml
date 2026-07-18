@@ -59,6 +59,9 @@
 	<monster_hunt id="1756" start_npc_ids="279000">
 		<monster var="0" end_var="10" npc_ids="253694 253695"/>
 	</monster_hunt>
+	<monster_hunt id="1770" start_npc_ids="278531">
+		<monster var="0" end_var="1" npc_ids="256674"/>
+	</monster_hunt>
 	<monster_hunt id="1840" start_npc_ids="271067">
 		<monster var="0" end_var="44" npc_ids="214752"/>
 	</monster_hunt>
@@ -76,6 +79,15 @@
 	<monster_hunt id="1844" start_npc_ids="270165">
 		<monster var="0" end_var="80" npc_ids="215180"/>
 		<monster var="1" end_var="1" npc_ids="215220"/>
+	</monster_hunt>
+	<monster_hunt id="13861" start_npc_ids="268080" reward="true">
+		<monster var="0" end_var="1" npc_ids="233633"/>
+	</monster_hunt>
+	<monster_hunt id="13865" start_npc_ids="270165" reward="true">
+		<monster var="0" end_var="1" npc_ids="233719"/>
+	</monster_hunt>
+	<monster_hunt id="13869" start_npc_ids="269265" reward="true">
+		<monster var="0" end_var="1" npc_ids="233676"/>
 	</monster_hunt>
 	<monster_hunt id="2730" start_npc_ids="278091">
 		<monster var="0" end_var="5" npc_ids="253739"/>
@@ -101,6 +113,9 @@
 		<monster var="0" end_var="5" npc_ids="253687 253688"/>
 		<monster var="1" end_var="3" npc_ids="253692 253693"/>
 	</monster_hunt>
+	<monster_hunt id="2768" start_npc_ids="278031">
+		<monster var="0" end_var="1" npc_ids="256674"/>
+	</monster_hunt>
 	<monster_hunt id="2844" start_npc_ids="269266">
 		<monster var="0" end_var="80" npc_ids="215137"/>
 		<monster var="1" end_var="1" npc_ids="215177"/>
@@ -108,5 +123,14 @@
 	<monster_hunt id="2845" start_npc_ids="215220">
 		<monster var="0" end_var="80" npc_ids="215180"/>
 		<monster var="1" end_var="1" npc_ids="215220"/>
+	</monster_hunt>
+	<monster_hunt id="23861" start_npc_ids="268081" reward="true">
+		<monster var="0" end_var="1" npc_ids="233633"/>
+	</monster_hunt>
+	<monster_hunt id="23865" start_npc_ids="270166" reward="true">
+		<monster var="0" end_var="1" npc_ids="233719"/>
+	</monster_hunt>
+	<monster_hunt id="23869" start_npc_ids="269266" reward="true">
+		<monster var="0" end_var="1" npc_ids="233676"/>
 	</monster_hunt>
 </quest_scripts>

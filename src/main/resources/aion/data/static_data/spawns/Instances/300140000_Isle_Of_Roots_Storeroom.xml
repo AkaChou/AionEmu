@@ -385,6 +385,10 @@
 		<spawn npc_id="215134">
 			<spot x="527.3" y="729.667" z="192.52" h="79"/>
 		</spawn>
+		<!-- Enraged Krotan Lord -->
+		<spawn npc_id="233633">
+			<spot x="526.401001" y="845.379883" z="200.000000" h="90"/>
+		</spawn>
 		<!-- Ranx Juggernaut -->
 		<spawn npc_id="215289">
 			<spot x="434.992" y="457.147" z="197.709" h="18"/>

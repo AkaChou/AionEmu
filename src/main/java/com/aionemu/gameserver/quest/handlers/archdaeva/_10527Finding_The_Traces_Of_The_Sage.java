@@ -133,6 +133,8 @@ public class _10527Finding_The_Traces_Of_The_Sage extends QuestHandler
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 5) {
+							QuestService.addNewSpawnForSeconds(210100000, player.getInstanceId(), 244137, env.getVisibleObject().getX(),
+									env.getVisibleObject().getY(), env.getVisibleObject().getZ(), player.getHeading(), 10);
                             changeQuestStep(env, 5, 6, false);
 							return closeDialogWindow(env);
                         }
@@ -151,6 +153,8 @@ public class _10527Finding_The_Traces_Of_The_Sage extends QuestHandler
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 8) {
+							QuestService.addNewSpawnForSeconds(210100000, player.getInstanceId(), 244138, env.getVisibleObject().getX(),
+									env.getVisibleObject().getY(), env.getVisibleObject().getZ(), player.getHeading(), 10);
                             changeQuestStep(env, 8, 9, false);
 							return closeDialogWindow(env);
                         }

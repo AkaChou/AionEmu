@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
@@ -33,6 +34,9 @@ public class DpUseAction extends Action {
 	 */
 	@Override
 	public void act(Skill skill) {
+		if (!SkillConfig.CONSUME_DP) {
+			return;
+		}
 		Player effector = (Player) skill.getEffector();
 		int currentDp = effector.getCommonData().getDp();
 

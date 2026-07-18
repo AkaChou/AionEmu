@@ -7,6 +7,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AI2Engine;
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.ObserveController;
 import com.aionemu.gameserver.controllers.attack.AggroList;
@@ -609,7 +610,7 @@ public abstract class Creature extends VisibleObject {
 		 * not be blocked
 		 */
 		if (skillCoolDownsBase != null && skillCoolDownsBase.get(delayId) != null) {
-			if ((template.getDuration() + template.getCooldown() * 100 + skillCoolDownsBase.get(delayId)) < System
+			if ((template.getDuration() + SkillConfig.scaleCooldown(template.getCooldown()) * 100 + skillCoolDownsBase.get(delayId)) < System
 					.currentTimeMillis()) {
 				return false;
 			}

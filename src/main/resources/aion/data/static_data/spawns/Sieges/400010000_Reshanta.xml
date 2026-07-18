@@ -8557,6 +8557,10 @@
 		<siege_spawn siege_id="1221">
 			<siege_race race="ASMODIANS">
 				<siege_mod mod="PEACE">
+					<!-- Lifton -->
+					<spawn npc_id="268081" respawn_time="120">
+						<spot h="32" z="2946.260742" y="885.474976" x="1399.895508"/>
+					</spawn>
 					<!-- Krotan Bodyguard
 					<Thunder Shout Legion> -->
 					<spawn npc_id="279364" respawn_time="295">
@@ -9761,6 +9765,10 @@
 			</siege_race>
 			<siege_race race="ELYOS">
 				<siege_mod mod="PEACE">
+					<!-- Dirandera -->
+					<spawn npc_id="268080" respawn_time="120">
+						<spot h="32" z="2946.260742" y="885.474976" x="1399.895508"/>
+					</spawn>
 					<!-- Krotan Bodyguard
 					<Nezekan's Shield Legion> -->
 					<spawn npc_id="279069" respawn_time="295">
@@ -10624,6 +10632,10 @@
 		<siege_spawn siege_id="1231">
 			<siege_race race="ASMODIANS">
 				<siege_mod mod="PEACE">
+					<!-- Eraugea -->
+					<spawn npc_id="269266" respawn_time="120">
+						<spot h="65" z="2992.915039" y="1653.679443" x="1925.277100"/>
+					</spawn>
 					<!-- Kysis Keeper
 					<Thunder Shout Legion> -->
 					<spawn npc_id="279554" respawn_time="295">
@@ -11912,6 +11924,10 @@
 			</siege_race>
 			<siege_race race="ELYOS">
 				<siege_mod mod="PEACE">
+					<!-- Paean -->
+					<spawn npc_id="269265" respawn_time="120">
+						<spot h="65" z="2992.915039" y="1653.679443" x="1925.277100"/>
+					</spawn>
 					<!-- Kysis Keeper
 					<Nezekan's Shield Legion> -->
 					<spawn npc_id="279260" respawn_time="295">
@@ -12593,6 +12609,10 @@
 		<siege_spawn siege_id="1241">
 			<siege_race race="ASMODIANS">
 				<siege_mod mod="PEACE">
+					<!-- Herder -->
+					<spawn npc_id="270166" respawn_time="120">
+						<spot h="103" z="2932.399414" y="1952.458740" x="1206.864746"/>
+					</spawn>
 				    <!-- Miren Blade
 					<Thunder Shout Legion> -->
 					<spawn npc_id="279456" respawn_time="295">
@@ -13828,6 +13848,10 @@
 			</siege_race>
 			<siege_race race="ELYOS">
 				<siege_mod mod="PEACE">
+					<!-- Poeas -->
+					<spawn npc_id="270165" respawn_time="120">
+						<spot h="103" z="2932.399414" y="1952.458740" x="1206.864746"/>
+					</spawn>
 					<!-- Miren Blade
 					<Nezekan's Shield Legion> -->
 					<spawn npc_id="279162" respawn_time="295">

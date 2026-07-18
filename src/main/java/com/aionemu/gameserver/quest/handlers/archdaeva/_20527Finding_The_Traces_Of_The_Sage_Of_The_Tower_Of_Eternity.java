@@ -133,6 +133,8 @@ public class _20527Finding_The_Traces_Of_The_Sage_Of_The_Tower_Of_Eternity exten
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 5) {
+							QuestService.addNewSpawnForSeconds(220110000, player.getInstanceId(), 244140, env.getVisibleObject().getX(),
+									env.getVisibleObject().getY(), env.getVisibleObject().getZ(), player.getHeading(), 10);
                             changeQuestStep(env, 5, 6, false);
 							return closeDialogWindow(env);
                         }
@@ -151,6 +153,8 @@ public class _20527Finding_The_Traces_Of_The_Sage_Of_The_Tower_Of_Eternity exten
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 8) {
+							QuestService.addNewSpawnForSeconds(220110000, player.getInstanceId(), 244141, env.getVisibleObject().getX(),
+									env.getVisibleObject().getY(), env.getVisibleObject().getZ(), player.getHeading(), 10);
                             changeQuestStep(env, 8, 9, false);
 							return closeDialogWindow(env);
                         }

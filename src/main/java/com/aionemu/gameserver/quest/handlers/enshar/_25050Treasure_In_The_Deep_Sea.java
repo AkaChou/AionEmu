@@ -78,7 +78,8 @@ public class _25050Treasure_In_The_Deep_Sea extends QuestHandler {
                     }
                 } else if (dialog == QuestDialog.STEP_TO_3) {
 					removeQuestItem(env, 182215719, 1);
-					QuestService.addNewSpawn(220080000, player.getInstanceId(), 805160, 2046.8f, 1588.8f, 348.4f, (byte) 90);
+					QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 805160, 2046.8f, 1588.8f, 348.4f,
+							(byte) 90, 300);
 					changeQuestStep(env, 2, 3, false);
                     return closeDialogWindow(env);
                 }

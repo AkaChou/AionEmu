@@ -78,7 +78,7 @@ public class _15613Prometheus_Unbound extends QuestHandler {
                             return sendQuestDialog(env, 2034);
                         }
 					} case STEP_TO_4: {
-						QuestService.addNewSpawn(220110000, 1, 806198, 1278.2848f, 2896.9226f, 252.33464f, (byte) 58);
+						QuestService.addNewSpawnForSeconds(220110000, 1, 806198, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 100);
 						changeQuestStep(env, 3, 4, false);
 						return closeDialogWindow(env);
 					}

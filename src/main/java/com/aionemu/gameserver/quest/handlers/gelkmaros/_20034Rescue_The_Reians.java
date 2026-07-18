@@ -234,7 +234,7 @@ public class _20034Rescue_The_Reians extends QuestHandler {
         int var = qs.getQuestVarById(0);
         if (targetId == 216592) {
             if (var == 4) {
-                QuestService.addNewSpawn(300150000, instanceId, 799341, 561.8763f, 192.25128f, 135.88919f, (byte) 30);
+                QuestService.addNewSpawnForSeconds(300150000, instanceId, 799341, 562, 189, 136, (byte) 30, 5000);
                 qs.setQuestVarById(0, var + 1);
                 updateQuestStatus(env);
                 return true;
@@ -253,6 +253,7 @@ public class _20034Rescue_The_Reians extends QuestHandler {
         if (qs == null || qs.getStatus() != QuestStatus.START || qs.getQuestVars().getQuestVars() != 4) {
             return false;
         }
+        QuestService.addNewSpawnForSeconds(300150000, player.getInstanceId(), 216592, 562, 189, 136, (byte) 30, 5000);
         return true;
     }
 }

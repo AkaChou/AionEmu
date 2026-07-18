@@ -125,6 +125,14 @@ public class _20503Ancient_Evil_Plans extends QuestHandler
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             int var = qs.getQuestVarById(0);
             if (var == 3) {
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 805221, player.getX(), player.getY(),
+						player.getZ(), player.getHeading(), 120);
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 804859, player.getX() - 2,
+						player.getY(), player.getZ(), player.getHeading(), 120);
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 804860, player.getX() + 2,
+						player.getY(), player.getZ(), player.getHeading(), 120);
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 804861, player.getX(), player.getY() + 2,
+						player.getZ(), player.getHeading(), 120);
 				playQuestMovie(env, 862);
                 return true;
             }

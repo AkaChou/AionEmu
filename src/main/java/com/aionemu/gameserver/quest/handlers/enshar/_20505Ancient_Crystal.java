@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.services.QuestService;
 
 /**
  * 恩沙尔任务脚本：Ancient Crystal（任务 ID 20505）。
@@ -97,6 +98,8 @@ public class _20505Ancient_Crystal extends QuestHandler
 							return sendQuestDialog(env, 1694);
 						}
 					} case STEP_TO_3: {
+						QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 219950, npc.getX(), npc.getY(),
+								npc.getZ(), npc.getHeading(), 300);
                         changeQuestStep(env, 2, 3, false);
 						return closeDialogWindow(env);
 					}
@@ -112,6 +115,8 @@ public class _20505Ancient_Crystal extends QuestHandler
 							return sendQuestDialog(env, 2035);
 						}
 					} case STEP_TO_4: {
+						QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 219951, npc.getX(), npc.getY(),
+								npc.getZ(), npc.getHeading(), 300);
                         changeQuestStep(env, 3, 4, false);
 						return closeDialogWindow(env);
 					}

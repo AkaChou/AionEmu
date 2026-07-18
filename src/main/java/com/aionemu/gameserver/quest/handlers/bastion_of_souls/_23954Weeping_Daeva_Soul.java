@@ -79,7 +79,9 @@ public class _23954Weeping_Daeva_Soul extends QuestHandler {
 						}
 					} case STEP_TO_2: {
 						changeQuestStep(env, 1, 2, false);
-						QuestService.addNewSpawn(120010000, 1, 247093, player.getX(), player.getY(), player.getZ(), (byte) 0);
+						QuestService.addNewSpawnForSeconds(120010000, 1, 247093, 988, 1161, 200, (byte) 29, 100);
+						QuestService.addNewSpawnForSeconds(120010000, 1, 247093, 988, 1161, 200, (byte) 29, 100);
+						QuestService.addNewSpawnForSeconds(120010000, 1, 247093, 988, 1161, 200, (byte) 29, 100);
 						return closeDialogWindow(env);
 					} case SET_REWARD: {
 					    qs.setQuestVar(4);

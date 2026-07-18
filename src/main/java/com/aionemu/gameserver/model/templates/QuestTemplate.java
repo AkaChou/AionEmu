@@ -105,6 +105,8 @@ public class QuestTemplate {
 	protected Boolean cannotShare;
 	@XmlAttribute(name = "cannot_giveup")
 	protected Boolean cannotGiveup;
+	@XmlAttribute(name = "can_report")
+	protected Boolean canReport;
 	@XmlAttribute(name = "bounty_reward")
 	protected Boolean bountyReward;
 	@XmlAttribute(name = "use_class_reward")
@@ -439,6 +441,10 @@ public class QuestTemplate {
 		} else {
 			return cannotGiveup;
 		}
+	}
+
+	public boolean isCanReport() {
+		return canReport != null && canReport;
 	}
 
 	/**

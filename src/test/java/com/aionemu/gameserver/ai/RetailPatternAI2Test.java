@@ -5,7 +5,9 @@ import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.controllers.VisibleObjectController;
+import com.aionemu.gameserver.controllers.attack.AggroList;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
+import com.aionemu.gameserver.controllers.movement.NpcMoveController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.RetailAiData;
@@ -49,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -901,6 +904,27 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void resumesThinkingAfterFleeReturnsToIdle() throws ReflectiveOperationException {
+		ObjenesisStd objenesis = new ObjenesisStd();
+		SkillNpc owner = objenesis.newInstance(SkillNpc.class);
+		owner.setLifeStats(objenesis.newInstance(FixedNpcLifeStats.class));
+		setField(Creature.class, owner, "aggroList", new AggroList(owner));
+		setField(Creature.class, owner, "moveController", new RecordingNpcMoveController(owner));
+		RecordingRetailPatternAI2 ai = new RecordingRetailPatternAI2();
+		setField(AbstractAI.class, ai, "owner", owner);
+		setField(RetailPatternAI2.class, ai, "pattern", new Pattern("flee", Map.of()));
+		setField(RetailPatternAI2.class, ai, "fleeMoveTask", new CompletableFuture<>());
+		ai.setStateIfNot(AIState.FEAR);
+
+		Method stopFlee = RetailPatternAI2.class.getDeclaredMethod("stopFlee", Creature.class, boolean.class);
+		stopFlee.setAccessible(true);
+		stopFlee.invoke(ai, owner, false);
+
+		assertEquals(AIState.IDLE, ai.getState());
+		assertEquals(1, ai.thinkCalls);
+	}
+
+	@Test
 	void supportsRetailWaypointMovementAndArrivalConditions() {
 		Pattern pattern = new Pattern("waypoint_test", Map.of(
 			"on_wake_up", List.of(new Rule(2, "PLANNED", List.of(), List.of(new Operation("goto_waypoint",
@@ -1741,6 +1765,27 @@ class RetailPatternAI2Test {
 			lastSkillId = skillId;
 			lastSkillLevel = skillLevel;
 			return true;
+		}
+	}
+
+	private static final class RecordingNpcMoveController extends NpcMoveController {
+
+		private RecordingNpcMoveController(Npc owner) {
+			super(owner);
+		}
+
+		@Override
+		public void abortMove() {
+		}
+	}
+
+	private static final class RecordingRetailPatternAI2 extends RetailPatternAI2 {
+
+		private int thinkCalls;
+
+		@Override
+		public void think() {
+			thinkCalls++;
 		}
 	}
 

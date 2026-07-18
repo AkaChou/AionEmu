@@ -191,7 +191,7 @@ public class _20504Tiamats_Shadow extends QuestHandler {
                     case 219949: { //Cursed Gilgamesh.
 						qs.setQuestVar(5);
 						updateQuestStatus(env);
-						QuestService.addNewSpawn(220080000, 1, 804742, npc.getX(), npc.getY(), npc.getZ(), (byte) 0);
+						QuestService.addNewSpawnForSeconds(220080000, 1, 804742, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 300);
 						return true;
 					}
                 }

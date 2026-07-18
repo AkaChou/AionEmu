@@ -71,9 +71,7 @@
 	<!-- [Event/Daily] Cranky Grankers -->
 	<item_collecting start_npc_ids="831033 831039" id="51012"/>
 	<!-- [Event/Daily] Cutie-Wootie Choco Wuv -->
-    <monster_hunt start_npc_ids="202549" id="51019">
-        <monster var="0" npc_ids="217161" end_var="15"/>
-    </monster_hunt>
+	<item_collecting start_npc_ids="202549" id="51019"/>
 	<!-- [Event/Daily] Chocolate, Extra-Bitter -->
 	<item_collecting start_npc_ids="202549" id="51020"/>
 	<!-- [Event/Daily] Candypocalypse -->

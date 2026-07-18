@@ -108,7 +108,8 @@ public class _25023Sprouting_Developments extends QuestHandler {
             @Override
             public void run() {
                 PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 0, 1, 0), true);
-				QuestService.addNewSpawn(220080000, player.getInstanceId(), 805161, player.getX() + 2, player.getY() + 2, player.getZ() + 1, (byte) 0);
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 805161, player.getX() + 2, player.getY() + 2,
+						player.getZ() + 1, player.getHeading(), 120);
 				removeQuestItem(env, 182215711, 1);
 				qs.setStatus(QuestStatus.REWARD);
 				updateQuestStatus(env);

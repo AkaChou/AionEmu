@@ -141,7 +141,8 @@ public class _25601Anima_Curse extends QuestHandler {
 			}
             int var = qs.getQuestVarById(0);
             if (var == 3) {
-				QuestService.addNewSpawn(220110000, 1, 806196, player.getX(), player.getY(), player.getZ(), (byte) 0); //Anima's Ghost.
+				QuestService.addNewSpawnForSeconds(220110000, 1, 806196, player.getX(), player.getY(), player.getZ(),
+						player.getHeading(), 300);
                 return HandlerResult.fromBoolean(useQuestItem(env, item, 3, 4, false));
             }
         }

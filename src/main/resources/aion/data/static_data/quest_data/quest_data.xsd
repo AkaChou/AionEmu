@@ -48,6 +48,7 @@
 		<xs:attribute name="count_recover_limited_quest" type="xs:int" default="1"/>
 		<xs:attribute name="cannot_share" type="xs:boolean" default="false"/>
 		<xs:attribute name="cannot_giveup" type="xs:boolean" default="false"/>
+		<xs:attribute name="can_report" type="xs:boolean" default="false"/>
 		<xs:attribute name="bounty_reward" type="xs:boolean" default="false"/>
 		<xs:attribute name="use_class_reward" type="xs:int" default="0"/>
 		<xs:attribute name="race_permitted" type="Race"/>

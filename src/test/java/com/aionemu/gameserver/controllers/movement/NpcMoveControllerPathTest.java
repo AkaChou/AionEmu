@@ -17,7 +17,9 @@ import org.objenesis.ObjenesisStd;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.geometry.Point3D;
@@ -25,6 +27,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
+import com.aionemu.gameserver.world.WorldPosition;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 class NpcMoveControllerPathTest {
 
@@ -516,6 +520,40 @@ class NpcMoveControllerPathTest {
 		assertEquals(6, target.getZ());
 		controller.clearHomeReturn();
 		assertFalse(controller.isReturningToWaypoint());
+	}
+
+	@Test
+	void waypointReturnUsesTheSameGroundHeightCorrectionAsPatrol() throws ReflectiveOperationException {
+		boolean oldGeoEnable = GeoDataConfig.GEO_ENABLE;
+		boolean oldNpcMove = GeoDataConfig.GEO_NPC_MOVE;
+		Field resolvedGeoService = GameWorldServices.class.getDeclaredField("resolvedGeoService");
+		resolvedGeoService.setAccessible(true);
+		Object oldGeoService = resolvedGeoService.get(null);
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		owner.setPosition(new WorldPosition(210030000));
+		NpcMoveController controller = new NpcMoveController(owner);
+		controller.currentRoute = List.of(new RouteStep(1540, 1442, 125, 0));
+
+		try {
+			GeoDataConfig.GEO_ENABLE = true;
+			GeoDataConfig.GEO_NPC_MOVE = true;
+			resolvedGeoService.set(null, new GeoService() {
+				@Override
+				public float getZ(int worldId, float x, float y, float z, float defaultUp, int instanceId) {
+					assertEquals(210030000, worldId);
+					assertEquals(124, z);
+					return 102.5f;
+				}
+			});
+
+			controller.requestReturnToCurrentWaypoint();
+
+			assertEquals(102.5f, controller.getHomeReturnDestination().getZ());
+		} finally {
+			GeoDataConfig.GEO_ENABLE = oldGeoEnable;
+			GeoDataConfig.GEO_NPC_MOVE = oldNpcMove;
+			resolvedGeoService.set(null, oldGeoService);
+		}
 	}
 
 	@Test

@@ -294,6 +294,10 @@
 		<spawn npc_id="215220">
 			<spot x="527.545" y="729.912" z="192.515" h="52"/>
 		</spawn>
+		<!-- Enraged Miren Prince -->
+		<spawn npc_id="233719">
+			<spot x="526.456238" y="845.340210" z="200.000000" h="90"/>
+		</spawn>
 		<!-- Ranx Sniper -->
 		<spawn npc_id="215182">
 			<spot x="520.23" y="330.73" z="179.91017" h="65" walker_id="C79DBF81B1DB8AD15F64684B45932E98C429594B" walker_index="1"/>

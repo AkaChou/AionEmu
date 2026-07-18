@@ -6,6 +6,7 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.services.QuestService;
 
 /**
  * 恩沙尔任务脚本：An Offering Of Peace（任务 ID 25052）。
@@ -53,6 +54,8 @@ public class _25052An_Offering_Of_Peace extends QuestHandler {
 			}
             else if (dialog == QuestDialog.SET_REWARD) {
                 giveQuestItem(env, 182215721, 1);
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 220032, player.getX(), player.getY(),
+						player.getZ(), player.getHeading(), 300);
                 changeQuestStep(env, 0, 1, false);
 				qs.setStatus(QuestStatus.REWARD);
 				updateQuestStatus(env);

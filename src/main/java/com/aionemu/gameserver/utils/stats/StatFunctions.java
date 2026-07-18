@@ -10,9 +10,9 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.FallDamageConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
+import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.observer.AttackerCriticalStatus;
@@ -734,7 +734,7 @@ public class StatFunctions {
 		if (magicBoost < 0) {
 			return 0;
 		}
-		return Math.min(magicBoost, CustomConfig.MAGICBOOST_CAP);
+		return Math.min(magicBoost, SkillConfig.MAGICBOOST_CAP);
 	}
 
 	/**

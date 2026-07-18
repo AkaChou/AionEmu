@@ -171,6 +171,8 @@ public class _10031A_Risk_For_The_Obelisk extends QuestHandler {
 				    case USE_OBJECT: {
                         if (var == 8) {
                             removeQuestItem(env, 182215617, 1);
+							QuestService.addNewSpawnForSeconds(210050000, player.getInstanceId(), 700600, 2192, 368, 431,
+									(byte) 90, 30);
 							changeQuestStep(env, 8, 9, false);
 							return closeDialogWindow(env);
                         }

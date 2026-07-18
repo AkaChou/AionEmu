@@ -9,6 +9,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.services.QuestService;
 
 /**
  * 希格尼娅任务脚本：Research The Ruins（任务 ID 10501）。
@@ -109,6 +110,8 @@ public class _10501Research_The_Ruins extends QuestHandler {
 						}
 					} case STEP_TO_5: {
 						giveQuestItem(env, 182215598, 1);
+						QuestService.addNewSpawnForSeconds(210070000, player.getInstanceId(), 236250, npc.getX(), npc.getY(),
+								npc.getZ(), npc.getHeading(), 60);
                         changeQuestStep(env, 4, 5, false);
 						return closeDialogWindow(env);
 					}

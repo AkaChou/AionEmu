@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
@@ -118,6 +119,8 @@ public class _10035Soar_To_The_Corridor extends QuestHandler {
                             if (var == 6) {
                                 removeQuestItem(env, 182215629, 1);
 								Npc npc = (Npc) env.getVisibleObject();
+								QuestService.addNewSpawnForSeconds(210050000, player.getInstanceId(), 700641, 1377, 2297, 296,
+										(byte) 90, 10);
 								qs.setQuestVar(7);
 								updateQuestStatus(env);
 								return closeDialogWindow(env);

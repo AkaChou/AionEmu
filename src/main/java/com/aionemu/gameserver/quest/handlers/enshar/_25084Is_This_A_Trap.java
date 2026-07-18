@@ -109,8 +109,10 @@ public class _25084Is_This_A_Trap extends QuestHandler {
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
 				int var = qs.getQuestVarById(0);
 				if (var == 2) {
-					QuestService.addNewSpawn(220080000, player.getInstanceId(), 220038, 1471.4f, 58.2f, 202.3f, (byte) 19);
-					QuestService.addNewSpawn(220080000, player.getInstanceId(), 220038, 1475.5f, 58.3f, 202.3f, (byte) 53);
+					QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 220038, player.getX() - 2,
+							player.getY() + 2, player.getZ(), (byte) 19, 300);
+					QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 220038, player.getX() + 2,
+							player.getY() - 2, player.getZ(), (byte) 53, 300);
 					changeQuestStep(env, 2, 3, false);
 					qs.setStatus(QuestStatus.REWARD);
 					updateQuestStatus(env);

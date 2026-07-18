@@ -558,6 +558,7 @@ public class PlayerController extends CreatureController<Player> {
 			}
 			GameGameplayServices.duelService().loseDuel(player);
 		}
+		player.getCommonData().setDp(0);
 		if (GameFeatureServices.ffaService().isInArena(player) && player.isFFA()) {
 			player.getAggroList().clear();
 			GameFeatureServices.ffaService().onDie(player, master);
@@ -1223,6 +1224,7 @@ public class PlayerController extends CreatureController<Player> {
 			player.unsetState(CreatureState.FLYING);
 			player.setState(CreatureState.ACTIVE);
 			player.setState(CreatureState.GLIDING);
+			player.setFlyState(2);
 			player.getGameStats().updateStatsAndSpeedVisually();
 		} else {
 			player.unsetState(CreatureState.FLIGHT_TELEPORT);

@@ -55,7 +55,7 @@ public class _25051Treasure_Of_Ancient_King extends QuestHandler {
                         return sendQuestDialog(env, 1011);
                     }
                 } else if (env.getDialog() == QuestDialog.STEP_TO_1) {
-					QuestService.addNewSpawn(220080000, player.getInstanceId(), 805160, 2046.8f, 1588.8f, 348.4f, (byte) 90);
+					QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 805160, 2046, 1588, 348, (byte) 90, 300);
 					changeQuestStep(env, 0, 1, false);
                     return closeDialogWindow(env);
                 }
@@ -87,7 +87,8 @@ public class _25051Treasure_Of_Ancient_King extends QuestHandler {
                     }
                 } else if (dialog == QuestDialog.SET_REWARD) {
 					removeQuestItem(env, 182215720, 1);
-					QuestService.addNewSpawn(220080000, player.getInstanceId(), 220031, 1933.8f, 1418.8f, 359.6f, (byte) 37);
+					QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 220031, player.getX(), player.getY(),
+							player.getZ(), player.getHeading(), 300);
 					qs.setStatus(QuestStatus.REWARD);
 					changeQuestStep(env, 3, 4, false);
                     return closeDialogWindow(env);

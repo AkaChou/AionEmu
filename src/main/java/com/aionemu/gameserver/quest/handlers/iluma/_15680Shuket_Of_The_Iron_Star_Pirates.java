@@ -102,7 +102,7 @@ public class _15680Shuket_Of_The_Iron_Star_Pirates extends QuestHandler {
 					} case STEP_TO_5: {
 						removeQuestItem(env, 182216205, 1);
 						changeQuestStep(env, 4, 5, false);
-						QuestService.addNewSpawn(220110000, 1, 806693, player.getX(), player.getY(), player.getZ(), (byte) 0);
+						QuestService.addNewSpawnForSeconds(220110000, 1, 806693, 2740, 1762, 221, (byte) 45, 300);
 						return closeDialogWindow(env);
 					} case SET_REWARD: {
 						changeQuestStep(env, 7, 8, true);
@@ -122,8 +122,8 @@ public class _15680Shuket_Of_The_Iron_Star_Pirates extends QuestHandler {
 							return sendQuestDialog(env, 2717);
 						}
 					} case STEP_TO_6: {
-						QuestService.addNewSpawn(220110000, 1, 806694, npc.getX(), npc.getY(), npc.getZ(), (byte) 0);
-						QuestService.addNewSpawn(220110000, 1, 282465, npc.getX(), npc.getY(), npc.getZ(), (byte) 0);
+						QuestService.addNewSpawnForSeconds(220110000, 1, 806694, 2740, 1762, 221, (byte) 45, 300);
+						QuestService.addNewSpawnForSeconds(220110000, 1, 282465, 2740, 1762, 221, (byte) 45, 10);
 						changeQuestStep(env, 5, 6, false);
 						npc.getController().onDelete();
 						return closeDialogWindow(env);

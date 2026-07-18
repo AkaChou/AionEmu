@@ -396,6 +396,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 				|| !getOwner().isSpawned()) {
 			return;
 		}
+		if (getOwner() instanceof Player player) {
+			player.setNextSkillUse(nextSkillUseAfterAttack(player.getNextSkillUse(), System.currentTimeMillis(), time));
+		}
 
 	/**
 	 * 计算并应用伤害 / Calculate and apply damage
@@ -431,6 +434,10 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		} else {
 			GameThreadPoolServices.threadPoolManager().schedule(new DelayedOnAttack(target, creature, damage, attackStatus), time);
 		}
+	}
+
+	static long nextSkillUseAfterAttack(long currentNextSkillUse, long attackStart, int attackTime) {
+		return attackTime > 0 ? Math.max(currentNextSkillUse, attackStart + attackTime) : currentNextSkillUse;
 	}
 
 	/**

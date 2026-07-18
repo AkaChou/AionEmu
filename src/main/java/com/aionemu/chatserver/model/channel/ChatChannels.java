@@ -47,6 +47,7 @@ public class ChatChannels {
         addTradeChannel("trade_LF1A");
         addTradeChannel("trade_LF3");
         addTradeChannel("trade_LF4");
+		addTradeChannel("trade_LF4_M1");
 		addTradeChannel("trade_LF5");
 		addTradeChannel("trade_LF5_Ship");
         addTradeChannel("trade_LF2A");
@@ -211,6 +212,7 @@ public class ChatChannels {
         addRegionChannel(210030000, "public_LF1A");
         addRegionChannel(210040000, "public_LF3");
         addRegionChannel(210050000, "public_LF4");
+		addRegionChannel(210050000, "public_LF4_M1");
 		addRegionChannel(210070000, "public_LF5");
 		addRegionChannel(210080000, "public_LF5_Ship");
 		addRegionChannel(210090000, "public_LDF5_Under_L");

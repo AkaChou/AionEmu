@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
@@ -217,6 +218,8 @@ public class _10507A_Big_Plot_To_Foil extends QuestHandler
             int var = qs.getQuestVarById(0);
 			if (zoneName == ZoneName.get("LF5_SENSORYAREA_Q10507_210070000")) {
 				if (var == 7) {
+					QuestService.addNewSpawnForSeconds(210070000, player.getInstanceId(), 236266, player.getX(), player.getY(),
+							player.getZ(), player.getHeading(), 100);
 					playQuestMovie(env, 993);
 					return true;
 				}

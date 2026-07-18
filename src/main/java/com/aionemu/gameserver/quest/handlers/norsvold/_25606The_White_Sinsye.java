@@ -161,7 +161,8 @@ public class _25606The_White_Sinsye extends QuestHandler {
             int var = qs.getQuestVarById(0);
 			if (zoneName == ZoneName.get("DF6_SENSORY_AREA_Q25606_A_DYNAMIC_ENV_220110000")) {
 				if (var == 0) {
-					QuestService.addNewSpawn(220110000, 1, 806178, player.getX(), player.getY(), player.getZ(), (byte) 0); // ?.
+					QuestService.addNewSpawnForSeconds(220110000, 1, 806178, player.getX(), player.getY(), player.getZ(),
+							player.getHeading(), 300);
 					changeQuestStep(env, 0, 1, false);
 					return true;
 				}

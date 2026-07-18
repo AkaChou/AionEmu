@@ -71,6 +71,10 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				QuestService.startQuest(env);
 				return;
 			}
+			if (questTemplate != null && QuestService.isReportedRewardAction(dialogId)) {
+				QuestService.finishReportedQuest(player, questId, dialogId);
+				return;
+			}
 			if (GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questId, dialogId))) {
 				return;
 			}

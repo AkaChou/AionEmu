@@ -104,7 +104,7 @@ public class _10506Mind_Over_Matter extends QuestHandler
                         changeQuestStep(env, 1, 2, false);
 						return closeDialogWindow(env);
 					} case STEP_TO_6: {
-						QuestService.addNewSpawn(210070000, 1, 236263, npc.getX(), npc.getY(), npc.getZ(), (byte) 0); //Noep's Ego.
+						QuestService.addNewSpawnForSeconds(210070000, 1, 236263, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 120);
 						changeQuestStep(env, 5, 6, false);
 						return closeDialogWindow(env);
 					} case SET_REWARD: {

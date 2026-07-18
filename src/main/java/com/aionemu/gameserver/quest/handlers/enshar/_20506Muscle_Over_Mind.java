@@ -148,13 +148,13 @@ public class _20506Muscle_Over_Mind extends QuestHandler
 			return false;
 		} if (targetId == 219956) {
 			if (var == 3) {
-				QuestService.addNewSpawn(220080000, 1, 219957, npc.getX(), npc.getY(), npc.getZ(), (byte) 0);
+				QuestService.addNewSpawnForSeconds(220080000, 1, 219957, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 300);
 				changeQuestStep(env, 3, 4, false);
 				return true;
 			}
 		} if (targetId == 219957) {
 			if (var == 4) {
-				QuestService.addNewSpawn(220080000, 1, 804743, npc.getX(), npc.getY(), npc.getZ(), (byte) 0);
+				QuestService.addNewSpawnForSeconds(220080000, 1, 804743, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), 300);
 				changeQuestStep(env, 4, 5, false);
 				return true;
 			}
@@ -169,7 +169,7 @@ public class _20506Muscle_Over_Mind extends QuestHandler
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             int var = qs.getQuestVarById(0);
             if (var == 2) {
-				QuestService.addNewSpawn(220080000, 1, 219956, 1938.0f, 83.9f, 235.0f, (byte) 90);
+				QuestService.addNewSpawnForSeconds(220080000, 1, 219956, 1938.0f, 83.9f, 235.0f, (byte) 90, 600);
                 changeQuestStep(env, 2, 3, false);
                 return true;
             }

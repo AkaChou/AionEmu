@@ -27,6 +27,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
+import com.aionemu.gameserver.model.DialogAction;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TaskId;
@@ -115,6 +116,34 @@ public final class QuestService {
 	 */
 	public static boolean finishQuest(QuestEnv env) {
 		return finishQuest(env, 0);
+	}
+
+	public static boolean finishReportedQuest(Player player, int questId, int dialogActionId) {
+		QuestTemplate template = questsData.getQuestById(questId);
+		QuestState state = player.getQuestStateList().getQuestState(questId);
+		int rewardDialogId = reportedRewardDialogId(dialogActionId);
+		if (!canFinishReportedQuest(template, state, dialogActionId)) {
+			return false;
+		}
+		return finishQuest(new QuestEnv(null, player, questId, rewardDialogId));
+	}
+
+	static boolean canFinishReportedQuest(QuestTemplate template, QuestState state, int dialogActionId) {
+		return reportedRewardDialogId(dialogActionId) >= 0 && template != null && template.isCanReport()
+			&& state != null && state.getStatus() == QuestStatus.REWARD;
+	}
+
+	static int reportedRewardDialogId(int dialogActionId) {
+		if (dialogActionId == DialogAction.AUTO_REWARD.id()) {
+			return 0;
+		}
+		int first = DialogAction.QUEST_AUTO_REWARD_1.id();
+		int last = DialogAction.QUEST_AUTO_REWARD_15.id();
+		return dialogActionId >= first && dialogActionId <= last ? dialogActionId - first + 8 : -1;
+	}
+
+	public static boolean isReportedRewardAction(int dialogActionId) {
+		return reportedRewardDialogId(dialogActionId) >= 0;
 	}
 
 	/**
@@ -944,6 +973,21 @@ public final class QuestService {
 	}
 
 	/**
+	 * 生成限时任务对象，到时后自动 despawn。
+	 * Spawns a timed quest object that despawns after the given seconds.
+	 */
+	public static VisibleObject addNewSpawnForSeconds(int worldId, int instanceId, int templateId, float x, float y, float z,
+			byte heading, int lifetimeSeconds) {
+		VisibleObject object = spawnQuestNpc(worldId, instanceId, templateId, x, y, z, heading);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (object.isSpawned()) {
+				object.getController().onDelete();
+			}
+		}, lifetimeSeconds * 1000L);
+		return object;
+	}
+
+	/**
 	 * 生成限时任务 NPC，到时后自动 despawn。
 	 * Spawns a timed quest NPC that despawns after the given minutes.
 	 *
@@ -957,21 +1001,7 @@ public final class QuestService {
 	 * @param timeInMin 存活分钟数 / lifetime in minutes
 	 */
 	public static void addNewSpawn(int worldId, int instanceId, int templateId, float x, float y, float z, byte heading, int timeInMin) {
-		final Npc npc = (Npc) spawnQuestNpc(worldId, instanceId, templateId, x, y, z, (byte) 0);
-		if (!npc.getPosition().isInstanceMap()) {
-			despawnQuestNpc(npc, timeInMin);
-		}
-	}
-
-	private static void despawnQuestNpc(final Npc npc, int timeInMin) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
-					npc.getController().onDelete();
-				}
-			}
-		}, 60000 * timeInMin);
+		addNewSpawnForSeconds(worldId, instanceId, templateId, x, y, z, heading, timeInMin * 60);
 	}
 
 	/**

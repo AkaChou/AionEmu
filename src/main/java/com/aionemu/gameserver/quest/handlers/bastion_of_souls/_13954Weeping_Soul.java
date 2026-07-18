@@ -79,7 +79,9 @@ public class _13954Weeping_Soul extends QuestHandler {
 						}
 					} case STEP_TO_2: {
 						changeQuestStep(env, 1, 2, false);
-						QuestService.addNewSpawn(110010000, 1, 247093, player.getX(), player.getY(), player.getZ(), (byte) 0);
+						QuestService.addNewSpawnForSeconds(110010000, 1, 247093, 1939, 1768, 576, (byte) 55, 100);
+						QuestService.addNewSpawnForSeconds(110010000, 1, 247093, 1939, 1768, 576, (byte) 55, 100);
+						QuestService.addNewSpawnForSeconds(110010000, 1, 247093, 1939, 1768, 576, (byte) 55, 100);
 						return closeDialogWindow(env);
 					} case SET_REWARD: {
 					    qs.setQuestVar(4);

@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.ai2.AiNames;
+import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.Race;
@@ -169,6 +170,10 @@ public class NpcTemplate extends VisibleObjectTemplate {
 
 	/** 返回 ai / Returns the ai */
 	public String getAi() {
+		if (AIConfig.ENABLE_FEARFUL_BEAST_AI && npcType == NpcType.ATTACKABLE && level <= 2 && race == Race.BEAST
+				&& statsTemplate != null && statsTemplate.getMaxHp() < 10 && !"aggressive".equals(ai)) {
+			return "fearful_beast";
+		}
 		return (!"noaction".equals(ai) && level > 1 && getAbyssNpcType().equals(AbyssNpcType.TELEPORTER))
 				? "siege_teleporter"
 				: ai;

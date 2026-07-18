@@ -1363,7 +1363,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		runEvent("on_stop_to_flee", null, source);
 		if (getState() == AIState.WALKING && waypointMoving) {
 			WalkManager.startWalkingToWaypoint(this, walker(getOwner()), waypointIndex);
-		} else if (getState() != AIState.IDLE && getState() != AIState.FEAR) {
+		} else if (getState() != AIState.FEAR) {
 			think();
 		}
 	}

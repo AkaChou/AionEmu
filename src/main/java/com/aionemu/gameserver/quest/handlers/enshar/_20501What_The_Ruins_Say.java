@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
@@ -143,6 +144,8 @@ public class _20501What_The_Ruins_Say extends QuestHandler
 							return sendQuestDialog(env, 3058);
 						}
 					} case SET_REWARD: {
+						QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 219935, npc.getX(), npc.getY(),
+								npc.getZ(), npc.getHeading(), 600);
 						changeQuestStep(env, 6, 7, false); 
                         qs.setStatus(QuestStatus.REWARD);
 						updateQuestStatus(env);

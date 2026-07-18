@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
@@ -141,6 +142,10 @@ public class _20507Its_Worse_Than_We_Thought extends QuestHandler
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             int var = qs.getQuestVarById(0);
             if (var == 4) {
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 219954, player.getX() - 2,
+						player.getY(), player.getZ(), player.getHeading(), 300);
+				QuestService.addNewSpawnForSeconds(220080000, player.getInstanceId(), 219955, player.getX() + 2,
+						player.getY(), player.getZ(), player.getHeading(), 300);
 				playQuestMovie(env, 864);
                 return true;
             }

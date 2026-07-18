@@ -152,6 +152,10 @@ public class _10034Found_Underground extends QuestHandler
 					break;
 				} case 700604: {
 					if (var == 4 && dialog == QuestDialog.USE_OBJECT) {
+						QuestService.addNewSpawnForSeconds(300160000, player.getInstanceId(), 730229, 744, 885, 153,
+								(byte) 90, 720);
+						QuestService.addNewSpawnForSeconds(300160000, player.getInstanceId(), 804815, 776, 876, 151,
+								(byte) 90, 60);
 						return useQuestObject(env, 4, 5, false, 0);
 					}
 					break;
@@ -211,7 +215,6 @@ public class _10034Found_Underground extends QuestHandler
 		switch (env.getTargetId()) {
 			case 216531:
 			    if (var == 5)  {
-					QuestService.addNewSpawn(300160000, instanceId, 730229, 740.4573f, 874.8399f, 152.78526f, (byte) 23); //Traveller's Bag.
 					qs.setQuestVarById(0, var + 1);
 					updateQuestStatus(env);
 					return true;

@@ -139,7 +139,8 @@ public class _25605An_Adventure_In_Time extends QuestHandler {
 			}
             int var = qs.getQuestVarById(0);
             if (var == 3) {
-				QuestService.addNewSpawn(220110000, 1, 806199, player.getX(), player.getY(), player.getZ(), (byte) 0); //?? ? ?.
+				QuestService.addNewSpawnForSeconds(220110000, 1, 806199, player.getX(), player.getY(), player.getZ(),
+						player.getHeading(), 300);
                 return HandlerResult.fromBoolean(useQuestItem(env, item, 3, 4, false));
             }
         }
