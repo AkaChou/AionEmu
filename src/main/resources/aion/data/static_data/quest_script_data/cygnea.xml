@@ -4,6 +4,7 @@
     Quest Cygnea 4.8/4.9
 	Make By (Encom)
  -->
+    <report_to id="15098" start_npc_ids="804964" end_npc_ids="804964"/>
     <!-- Cygnea Fountain Of Luck (Elyos Only) -->
 	<fountain_rewards id="15205" start_npc_ids="701429 804788"/>
 	<!-- [Daily/Repeat] Sending A Message (Elyos Only) -->

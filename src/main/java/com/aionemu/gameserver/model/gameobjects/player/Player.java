@@ -139,6 +139,7 @@ public class Player extends Creature {
 	public InRoll inRoll;
 	public InGameShop inGameShop;
 	public WindstreamPath windstreamPath;
+	public WindstreamPath pendingWindstreamPath;
 	private PlayerAppearance playerAppearance;
 	private PlayerAppearance savedPlayerAppearance;
 	private PlayerCommonData playerCommonData;

@@ -56,9 +56,10 @@ public final class WindstreamDefinitionLoader {
 				}
 				String windPathFile = text(requiredChild(wind, "file"));
 				String documentName = "windpath/" + windPathFile.substring(0, windPathFile.lastIndexOf('.')) + ".xml";
-				List<Point3D> points = points(requiredDocument(documents, documentName));
+				List<Point3D> sourcePoints = points(requiredDocument(documents, documentName));
 				int durationMillis = Math.round(decimal(group, "fly_time") * 1000);
-				verifyEndpoints(groupId, group, points);
+				verifyEndpoints(groupId, group, sourcePoints);
+				List<Point3D> points = samplePoints(sourcePoints);
 				for (int mapId : mapIds) {
 					routesByMap.computeIfAbsent(mapId, key -> new ArrayList<>())
 						.add(new WindstreamRoute(mapId, groupId, durationMillis, points));
@@ -130,6 +131,14 @@ public final class WindstreamDefinitionLoader {
 		}
 		if (result.size() < 2) {
 			throw new IllegalStateException("Windstream route has fewer than two points");
+		}
+		return result;
+	}
+
+	private static List<Point3D> samplePoints(List<Point3D> sourcePoints) {
+		List<Point3D> result = new ArrayList<>((sourcePoints.size() + 9) / 10);
+		for (int i = 0; i < sourcePoints.size(); i += 10) {
+			result.add(sourcePoints.get(i));
 		}
 		return result;
 	}

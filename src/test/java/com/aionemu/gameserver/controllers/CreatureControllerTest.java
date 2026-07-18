@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,13 +11,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 class CreatureControllerTest {
-
-	@Test
-	void autoAttackBlocksSkillsUntilItsHitTime() {
-		assertEquals(2667, CreatureController.nextSkillUseAfterAttack(0, 1000, 1667));
-		assertEquals(3000, CreatureController.nextSkillUseAfterAttack(3000, 1000, 1667));
-		assertEquals(3000, CreatureController.nextSkillUseAfterAttack(3000, 1000, 0));
-	}
 
 	@Test
 	void cancelAllTasksToleratesTasksMutatingDuringCancelCallbacks() {

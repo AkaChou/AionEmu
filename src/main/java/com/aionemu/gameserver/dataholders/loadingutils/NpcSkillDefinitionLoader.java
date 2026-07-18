@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import com.aionemu.boot.i18n.I18n;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ final class NpcSkillDefinitionLoader {
 			}
 			reader.close();
 			if (sourceOrphanCount > 0) {
-				log.warn("Skipped {} retail NPC skill definitions without a source skill ID in {}", sourceOrphanCount, file.getPath());
+				log.warn(I18n.get("log.npc_skills.orphans_skipped", sourceOrphanCount, file.getPath()));
 			}
 			return new NpcSkillData(assignments);
 		} catch (Exception e) {

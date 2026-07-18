@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
@@ -357,7 +358,7 @@ class GeoWorldLoaderAionServerFormatTest {
 			detachAppender(logger, appender);
 		}
 
-		assertTrue(hasLog(appender, "Missing geo mesh world/missing in world 1001"));
+		assertTrue(hasLog(appender, I18n.get("log.5c6e2bc4186d", "world/missing", 1001)));
 	}
 
 	@Test

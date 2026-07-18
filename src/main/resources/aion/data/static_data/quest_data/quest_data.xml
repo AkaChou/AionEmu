@@ -5082,6 +5082,25 @@
   <quest id="1851" name="Dispatched Shugo Craftsmen" nameId="1104651" minlevel_permitted="45" max_repeat_count="1" cannot_share="false" race_permitted="ELYOS" category="QUEST">
     <rewards gold="125280" exp="1665056" ap="100"/>
   </quest>
+  <quest id="1867" name="[紧急指令]塔拉尼斯的指令" nameId="1104667" minlevel_permitted="45" max_repeat_count="255" cannot_share="false" cannot_giveup="false" race_permitted="ELYOS" category="PUBLIC" repeat_cycle="ALL">
+    <rewards exp="3166358">
+      <reward_item item_id="188052064" count="1"/>
+      <reward_item item_id="188052129" count="1"/>
+    </rewards>
+  </quest>
+  <quest id="1868" name="据点前浮现的岛" nameId="1104668" minlevel_permitted="50" max_repeat_count="1" cannot_share="false" cannot_giveup="false" race_permitted="ELYOS" category="IMPORTANT">
+    <rewards exp="2010386" gold="92940">
+      <reward_item item_id="186000469" count="5"/>
+    </rewards>
+  </quest>
+  <quest id="1869" name="[每日/组队]迫近据点的威胁" nameId="1104669" minlevel_permitted="50" max_repeat_count="255" cannot_share="false" cannot_giveup="false" race_permitted="ELYOS" category="QUEST" repeat_cycle="ALL">
+    <rewards exp="2110906" ap="600">
+      <reward_item item_id="188054228" count="1"/>
+    </rewards>
+    <start_conditions>
+      <finished quest_id="1868"/>
+    </start_conditions>
+  </quest>
   <quest id="1870" name="[Daily/Group] The Sealed Place" nameId="1104670" minlevel_permitted="50" max_repeat_count="255" repeat_cycle="ALL" cannot_share="false" race_permitted="ELYOS" category="QUEST">
     <collect_items>
       <collect_item item_id="182215905" count="4"/>
@@ -5114,6 +5133,9 @@
     <quest_drop npc_id="220294" item_id="182215906" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="220295" item_id="182215906" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="220296" item_id="182215906" chance="100" drop_each_member="1"/>
+  </quest>
+  <quest id="1871" name="来自上层的召唤" nameId="1104671" minlevel_permitted="70" max_repeat_count="1" cannot_share="false" cannot_giveup="false" race_permitted="ELYOS" category="IMPORTANT">
+    <rewards exp="2222866" gold="87390" ap="1500"/>
   </quest>
   <quest id="1872" name="[Urgent Orders] Annihilation of the Invaders of the Sulphur Fortress" nameId="1104672" minlevel_permitted="50" max_repeat_count="255" race_permitted="ELYOS" category="PUBLIC">
     <rewards exp="3166358">
@@ -11628,16 +11650,24 @@
     <quest_drop npc_id="215172" item_id="182205685" chance="100" drop_each_member="1"/>
     <quest_drop npc_id="215214" item_id="182205685" chance="100" drop_each_member="1"/>
   </quest>
-  <quest id="2852" name="[Emergency Command] Votan's Order" nameId="1104952" minlevel_permitted="45" max_repeat_count="255" race_permitted="ASMODIANS" category="PUBLIC" repeat_cycle="ALL">
+  <quest id="2852" name="[紧急指令]布塔恩的指令" nameId="1104952" minlevel_permitted="45" max_repeat_count="255" race_permitted="ASMODIANS" category="PUBLIC" repeat_cycle="ALL">
     <rewards exp="3166358">
       <reward_item item_id="188052064" count="1"/>
       <reward_item item_id="188052130" count="1"/>
     </rewards>
   </quest>
-  <quest id="2869" name="[Daily/Group] Defend the Landing Site" nameId="1104969" minlevel_permitted="50" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST">
+  <quest id="2868" name="据点前浮现的岛" nameId="1104968" minlevel_permitted="50" max_repeat_count="1" cannot_share="false" cannot_giveup="false" race_permitted="ASMODIANS" category="IMPORTANT">
+    <rewards exp="2010386" gold="92940">
+      <reward_item item_id="186000469" count="5"/>
+    </rewards>
+  </quest>
+  <quest id="2869" name="[每日/组队]迫近据点的威胁" nameId="1104969" minlevel_permitted="50" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST" repeat_cycle="ALL">
     <rewards exp="2110906" ap="600">
       <reward_item item_id="188054228" count="1"/>
     </rewards>
+    <start_conditions>
+      <finished quest_id="2868"/>
+    </start_conditions>
   </quest>
   <quest id="2870" name="[Daily/Group] The Sealed Place" nameId="1104970" minlevel_permitted="50" max_repeat_count="255" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>
@@ -11671,6 +11701,9 @@
     <quest_drop npc_id="220294" item_id="182215908" chance="33" drop_each_member="1"/>
     <quest_drop npc_id="220295" item_id="182215908" chance="33" drop_each_member="1"/>
     <quest_drop npc_id="220296" item_id="182215908" chance="33" drop_each_member="1"/>
+  </quest>
+  <quest id="2871" name="来自欧比斯上层的召唤" nameId="1104971" minlevel_permitted="70" max_repeat_count="1" cannot_share="false" cannot_giveup="false" race_permitted="ASMODIANS" category="IMPORTANT">
+    <rewards exp="2222866" gold="87390" ap="1500"/>
   </quest>
   <quest id="2872" name="[Urgent Orders] Elimination of the threat to the Sulphur Fortress" nameId="1104972" minlevel_permitted="50" max_repeat_count="255" race_permitted="ASMODIANS" category="PUBLIC">
     <rewards exp="3166358">
@@ -29213,6 +29246,9 @@
   <quest id="14204" name="Veritable Treasure" nameId="1802351" minlevel_permitted="49" max_repeat_count="1" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="108110" exp="7667186"/>
   </quest>
+  <quest id="14210" name="安特里夏觉醒的地方" nameId="1111700" minlevel_permitted="66" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ELYOS" category="IMPORTANT">
+    <rewards exp="8868125" gold="155160"/>
+  </quest>
   <quest id="14211" name="Empyrean Scribe" nameId="1800565" minlevel_permitted="66" max_repeat_count="1" race_permitted="ELYOS" category="IMPORTANT" repeat_cycle="WED" cannot_share="true">
     <rewards gp="100"/>
   </quest>
@@ -29633,6 +29669,9 @@
       <reward_item item_id="186000231" count="12"/>
       <reward_item item_id="186000237" count="30"/>
     </rewards>
+  </quest>
+  <quest id="15098" name="龙界的悲剧" nameId="1800810" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ELYOS" category="SIGNIFICANT">
+    <rewards exp="30721"/>
   </quest>
   <quest id="15100" name="Desert Vermin" nameId="1800812" minlevel_permitted="64" max_repeat_count="1" race_permitted="ELYOS" category="IMPORTANT">
     <rewards gold="150660" exp="9981788">
@@ -39605,6 +39644,9 @@
       <finished quest_id="24202"/>
     </start_conditions>
   </quest>
+  <quest id="24210" name="寻找正在觉醒的安特里夏" nameId="1111701" minlevel_permitted="66" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ASMODIANS" category="IMPORTANT">
+    <rewards exp="8868125" gold="155160"/>
+  </quest>
   <quest id="24211" name="Agent's Appreciation" nameId="1800566" minlevel_permitted="66" max_repeat_count="1" race_permitted="ASMODIANS" category="IMPORTANT" repeat_cycle="WED" cannot_share="true">
     <rewards gp="100"/>
   </quest>
@@ -40126,6 +40168,9 @@
       <reward_item item_id="186000237" count="30"/>
     </rewards>
     <quest_drop npc_id="702768" item_id="182215736" chance="100" drop_each_member="1"/>
+  </quest>
+  <quest id="25099" name="龙界的悲剧" nameId="1801116" minlevel_permitted="10" max_repeat_count="1" cannot_share="true" cannot_giveup="false" race_permitted="ASMODIANS" category="SIGNIFICANT">
+    <rewards exp="30721"/>
   </quest>
   <quest id="25200" name="Break Elyos, Take Token" nameId="1801240" minlevel_permitted="65" maxlevel_permitted="999" max_repeat_count="255" cannot_share="true" race_permitted="ASMODIANS" category="QUEST">
     <collect_items>

@@ -29,6 +29,12 @@ class WindstreamDefinitionLoaderTest {
 		assertEquals(405, questRoute.getId());
 		assertTrue(questRoute.contains(0, 1407, 366, 590, 45));
 		assertFalse(questRoute.contains(0, 1500, 366, 590, 45));
+		WindstreamRoute kasparOutbound = data.getRoute(210130000, 390001);
+		assertTrue(kasparOutbound.contains(600, 2582, 334, 529, 45));
+		WindstreamRoute kasparReturn = data.getRoute(210130000, 389001);
+		assertFalse(kasparReturn.contains(500, 2450.58f, 332.34f, 501.94f, 45));
+		WindstreamRoute kasparHill = data.getRoute(210130000, 407001);
+		assertTrue(kasparHill.contains(9500, 2514.431f, 333.30823f, 485.11697f, 45));
 		assertNull(data.getRoute(210130000, 77001));
 		assertNotNull(data.getRoute(600041100, 218001));
 		assertNotNull(data.getRoute(600040000, 218001));

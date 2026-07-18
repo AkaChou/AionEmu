@@ -239,7 +239,7 @@ public class XmlDataLoader {
 
 	public SkillData loadSkillData() {
 		SkillData data = SkillDefinitionLoader.load(Config.definitionFile(SKILL_DEFINITIONS_DIR));
-		log.info("Loaded {} compact skill templates", data.size());
+		log.info(I18n.get("log.static_data.compact_skills_loaded", data.size()));
 		return data;
 	}
 
@@ -268,7 +268,7 @@ public class XmlDataLoader {
 
 	public NpcPathBehaviorData loadNpcPathBehaviorData() {
 		NpcPathBehaviorData data = NpcPathBehaviorDefinitionLoader.load(Config.definitionFile(NPC_PATH_BEHAVIOR_FILE));
-		log.info("Loaded {} NPC path behaviors", data.size());
+		log.info(I18n.get("log.static_data.npc_paths_loaded", data.size()));
 		return data;
 	}
 
@@ -280,9 +280,9 @@ public class XmlDataLoader {
 			Config.definitionFile(RETAIL_DIRECT_PORTALS_FILE), Config.definitionFile(RETAIL_NPC_SCORES_FILE),
 			Config.definitionFile(RETAIL_GROUP_CONTROLLERS_FILE), Config.definitionFile(RETAIL_NPC_PARTIES_FILE),
 			Config.definitionFile(RETAIL_DYNAMIC_AREAS_FILE));
-		log.info("Loaded {} retail condition spawns", data.conditionSpawnCount());
-		log.info("Loaded {} retail NPC parties with {} members", data.npcPartyCount(), data.npcPartyMemberCount());
-		log.info("Loaded {} retail dynamic areas", data.dynamicAreaCount());
+		log.info(I18n.get("log.static_data.condition_spawns_loaded", data.conditionSpawnCount()));
+		log.info(I18n.get("log.static_data.npc_parties_loaded", data.npcPartyCount(), data.npcPartyMemberCount()));
+		log.info(I18n.get("log.static_data.dynamic_areas_loaded", data.dynamicAreaCount()));
 		return data;
 	}
 
@@ -297,7 +297,7 @@ public class XmlDataLoader {
 			unmarshaller.setSchema(SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
 				.newSchema(schemaFile));
 			WalkerData data = (WalkerData) unmarshaller.unmarshal(file);
-			log.info("Loaded {} retail AI waypoint paths", data.size());
+			log.info(I18n.get("log.static_data.ai_waypoints_loaded", data.size()));
 			return data;
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load retail AI waypoints from " + file.getPath(), e);

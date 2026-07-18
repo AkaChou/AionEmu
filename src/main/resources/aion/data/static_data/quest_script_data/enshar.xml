@@ -4,6 +4,7 @@
     Quest Enshar 4.8/4.9
 	Make By (Encom)
  -->
+	<report_to id="25099" start_npc_ids="804963" end_npc_ids="804963"/>
 	<!-- Boss Toss (Asmodians Only) -->
 	<fountain_rewards id="25205" start_npc_ids="701430 804759"/>
 	<!-- [Daily] Elyos In Enshar ? (Asmodians Only) -->

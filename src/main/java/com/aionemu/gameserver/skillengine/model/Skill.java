@@ -1068,16 +1068,14 @@ public class Skill {
 	}
 
 	private float calculateChargeTimeMultiplier() {
+		BonusChargeType bonusType = chargeTemplate.getBonusChargeType();
 		float speedRatio;
-		switch (chargeTemplate.getBonusChargeType()) {
-		case PHYSICAL:
+		if (bonusType == BonusChargeType.PHYSICAL) {
 			Stat2 attackSpeed = effector.getGameStats().getAttackSpeed();
 			speedRatio = attackSpeed.getBase() == 0 ? 1 : attackSpeed.getCurrent() / (float) attackSpeed.getBase();
-			break;
-		case MAGICAL:
+		} else if (bonusType == BonusChargeType.MAGICAL) {
 			speedRatio = skillTemplate.getDuration() == 0 ? 1 : duration / (float) skillTemplate.getDuration();
-			break;
-		default:
+		} else {
 			return 1;
 		}
 		return 1 - (1 - speedRatio) * 0.5f;

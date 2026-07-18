@@ -1,0 +1,16 @@
+package com.aionemu.gameserver.quest.handlers.reshanta;
+
+public class _2868IslandsNearTheLanding extends AbstractReshantaSurvey {
+
+	public _2868IslandsNearTheLanding() {
+		super(2868, 278001, 278003,
+			"AB1_SENSORYAREA_Q1868D_400010000",
+			"AB1_SENSORYAREA_Q1868H_400010000",
+			"AB1_SENSORYAREA_Q1868A_400010000",
+			"AB1_SENSORYAREA_Q1868E_400010000",
+			"AB1_SENSORYAREA_Q1868B_400010000",
+			"AB1_SENSORYAREA_Q1868F_400010000",
+			"AB1_SENSORYAREA_Q1868C_400010000",
+			"AB1_SENSORYAREA_Q1868G_400010000");
+	}
+}

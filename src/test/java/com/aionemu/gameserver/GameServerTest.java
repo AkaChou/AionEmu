@@ -20,16 +20,16 @@ import org.junit.jupiter.api.Test;
 class GameServerTest {
 
 	@Test
-	void enhancedHomeReturnIsDisabledByDefaultAndCanBeEnabled() {
+	void enhancedHomeReturnIsEnabledByDefaultAndCanBeDisabled() {
 		boolean original = AIConfig.ENHANCED_HOME_RETURN;
 		try {
 			ConfigurableProcessor.process(AIConfig.class, new Properties());
-			assertFalse(AIConfig.ENHANCED_HOME_RETURN);
+			assertTrue(AIConfig.ENHANCED_HOME_RETURN);
 
 			Properties properties = new Properties();
-			properties.setProperty("gameserver.ai.home.return.enhanced.enable", "true");
+			properties.setProperty("gameserver.ai.home.return.enhanced.enable", "false");
 			ConfigurableProcessor.process(AIConfig.class, properties);
-			assertTrue(AIConfig.ENHANCED_HOME_RETURN);
+			assertFalse(AIConfig.ENHANCED_HOME_RETURN);
 		} finally {
 			AIConfig.ENHANCED_HOME_RETURN = original;
 		}

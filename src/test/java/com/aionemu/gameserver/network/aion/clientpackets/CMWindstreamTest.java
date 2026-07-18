@@ -20,7 +20,17 @@ class CMWindstreamTest {
 		assertTrue(flyStateSync >= 0);
 		assertTrue(flyStateSync < source.indexOf("player.getGameStats().updateStatsAndSpeedVisually();"));
 		assertTrue(source.contains("player.isUsingFlyTeleport() || player.isInPlayerMode(PlayerMode.WINDSTREAM) || !player.isFlying()"));
-		assertFalse(source.contains("route.contains("));
+		assertTrue(source.contains("ENTER_MAX_DISTANCE = 45"));
+		assertTrue(source.indexOf("route.contains(distance, player.getX(), player.getY(), player.getZ(), ENTER_MAX_DISTANCE)")
+			< source.indexOf("case 1:"));
+		assertTrue(source.contains("pendingPath.teleportId != teleportId || pendingPath.distance != distance"));
+		assertTrue(source.contains("new SM_WINDSTREAM(state, 0)"));
 		assertFalse(source.contains("isStrongWind"));
+		assertFalse(Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_MOVE_IN_AIR.java")).contains(
+				"windstreamPath.accepts("));
+		assertTrue(Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/controllers/PlayerController.java")).contains(
+				"if (player.isInPlayerMode(PlayerMode.WINDSTREAM)) {\n\t\t\tplayer.unsetPlayerMode(PlayerMode.WINDSTREAM);"));
 	}
 }

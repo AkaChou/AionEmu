@@ -118,7 +118,7 @@ public final class PathService implements DisposableBean {
 		int count = data.scan();
 		log.info(I18n.get("log.c4851e9f54bf", count, System.currentTimeMillis() - start));
 		if (waterVolumeCount > 0) {
-			log.info("Loaded {} local water volumes", waterVolumeCount);
+			log.info(I18n.get("log.path.water_volumes_loaded", waterVolumeCount));
 		}
 	}
 
@@ -1154,7 +1154,7 @@ public final class PathService implements DisposableBean {
 				result.completeExceptionally(e);
 			} catch (ExecutionException e) {
 				if (!(e.getCause() instanceof IncompletePathSearchException || e.getCause() instanceof CancellationException)) {
-					log.warn("PATH request failed", e.getCause());
+					log.warn(I18n.get("log.path.request_failed"), e.getCause());
 				}
 				result.completeExceptionally(e.getCause());
 			} finally {

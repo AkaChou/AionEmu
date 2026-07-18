@@ -506,6 +506,31 @@
 	<zone mapid="220110000" name="DF6_SENSORY_AREA_Q25606_C_DYNAMIC_ENV_220110000" area_type="SPHERE" zone_type="SUB">
 		<sphere x="566.99786" y="1300.4863" z="291.53223" r="10.0"/>
 	</zone>
+	<!-- Reshanta -->
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868A_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1523.55" y="1194.48" z="1505.65" r="4.09"/>
+	</zone>
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868B_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1739.71" y="1691.72" z="1519.17" r="4.09"/>
+	</zone>
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868C_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1320.18" y="1968.39" z="1515.72" r="4.09"/>
+	</zone>
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868D_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1256.07" y="1564.23" z="1468.01" r="4.09"/>
+	</zone>
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868E_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1699.24" y="1389.11" z="1560.98" r="4.09"/>
+	</zone>
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868F_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1578.58" y="1882.42" z="1560.98" r="4.09"/>
+	</zone>
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868G_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1095.20" y="1805.80" z="1541.41" r="4.09"/>
+	</zone>
+	<zone mapid="400010000" name="AB1_SENSORYAREA_Q1868H_400010000" area_type="SPHERE" zone_type="SUB">
+		<sphere x="1268.90" y="1330.19" z="1560.98" r="4.09"/>
+	</zone>
 	<!-- Lower_udas_temple -->
     <zone mapid="300160000" name="SENSORYAREA_Q30011_300160000" area_type="SPHERE" zone_type="SUB">
         <sphere x="1641.6322" y="978.67078" z="110.00001" r="10.0"/>

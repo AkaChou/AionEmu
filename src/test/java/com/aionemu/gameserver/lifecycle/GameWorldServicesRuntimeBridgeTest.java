@@ -99,8 +99,7 @@ class GameWorldServicesRuntimeBridgeTest {
             Path.of("src/main/java/com/aionemu/gameserver/controllers/NpcController.java"),
             Path.of("src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_LOOT_STATUS.java"),
             Path.of("src/main/java/com/aionemu/gameserver/model/team2/common/service/PlayerTeamDistributionService.java"),
-            Path.of("src/main/java/com/aionemu/gameserver/ai/ChestAI2.java"),
-            Path.of("src/main/java/com/aionemu/gameserver/ai/siege/Treasure_Box_Success_BossAI2.java")
+            Path.of("src/main/java/com/aionemu/gameserver/ai/ChestAI2.java")
         );
 
         for (Path source : sources) {

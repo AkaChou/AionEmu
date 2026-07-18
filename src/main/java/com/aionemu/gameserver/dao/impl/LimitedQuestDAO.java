@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.impl;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.DatabaseFactory;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +37,7 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 				return false;
 			}
 		} catch (SQLException e) {
-			log.error("Failed to acquire limited quest slot for quest {}", questId, e);
+			log.error(I18n.get("log.limited_quest.acquire_failed", questId), e);
 			return false;
 		}
 	}
@@ -63,7 +64,7 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 				return false;
 			}
 		} catch (SQLException e) {
-			log.error("Failed to recover limited quest slots for quest {}", questId, e);
+			log.error(I18n.get("log.limited_quest.recover_failed", questId), e);
 			return false;
 		}
 	}
@@ -82,7 +83,7 @@ public class LimitedQuestDAO extends com.aionemu.gameserver.dao.LimitedQuestDAO 
 		} catch (SQLException rollbackError) {
 			cause.addSuppressed(rollbackError);
 		}
-		log.error("Limited quest counter transaction failed", cause);
+		log.error(I18n.get("log.limited_quest.transaction_failed"), cause);
 	}
 
 	@Override

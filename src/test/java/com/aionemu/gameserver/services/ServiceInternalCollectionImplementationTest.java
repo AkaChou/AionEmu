@@ -61,8 +61,9 @@ class ServiceInternalCollectionImplementationTest {
 		String source = Files
 				.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java"));
 
-		assertTrue(source.contains("private Set<Integer> noReductionMaps;"));
-		assertTrue(source.contains("noReductionMaps = new HashSet<Integer>();"));
+		assertTrue(source.contains("private volatile Set<Integer> noReductionMaps = Set.of();"));
+		assertTrue(source.contains("Set<Integer> maps = new HashSet<>();"));
+		assertTrue(source.contains("noReductionMaps = Set.copyOf(maps);"));
 		assertFalse(source.contains("private List<Integer> noReductionMaps;"));
 	}
 

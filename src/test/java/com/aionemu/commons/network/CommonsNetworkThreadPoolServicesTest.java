@@ -70,7 +70,7 @@ class CommonsNetworkThreadPoolServicesTest {
         assertTrue(handlerSource.contains("CommonsNetworkThreadPoolServices.threadPoolManager()"));
 
         assertFalse(serverSource.contains("new NettyConnectionHandler(cfg.factory())"));
-        assertTrue(serverSource.contains("new NettyConnectionHandler(cfg.factory(), connectionExecutor.get())"));
+		assertTrue(serverSource.contains("new NettyConnectionHandler(cfg.factory(), connectionExecutor.get(), serviceContext)"));
 
         assertFalse(shutdownSource.contains("com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown()"));
         assertTrue(shutdownSource.contains("CommonsNetworkThreadPoolServices.threadPoolManager().shutdown()"));

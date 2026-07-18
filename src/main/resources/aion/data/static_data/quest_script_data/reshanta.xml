@@ -8,6 +8,16 @@
 	<report_to id="1732" start_npc_ids="278593" end_npc_ids="278592" item_id="182202104"/>
 	<report_to id="2729" start_npc_ids="278057" end_npc_ids="278091" item_id="182205601"/>
 	<report_to id="2731" start_npc_ids="278091" end_npc_ids="278088" item_id="182205602"/>
+	<report_to_many id="1871" start_npc_ids="278501" end_npc_ids="805351">
+		<npc_infos var="0" npc_id="278506" quest_dialog="1352"/>
+		<npc_infos var="1" npc_id="278513" quest_dialog="1352"/>
+		<npc_infos var="2" npc_id="278514" quest_dialog="2375" close_dialog="1009"/>
+	</report_to_many>
+	<report_to_many id="2871" start_npc_ids="278001" end_npc_ids="805356">
+		<npc_infos var="0" npc_id="278006" quest_dialog="1352"/>
+		<npc_infos var="1" npc_id="278014" quest_dialog="1352"/>
+		<npc_infos var="2" npc_id="278015" quest_dialog="2375" close_dialog="1009"/>
+	</report_to_many>
 	
 	<!-- Silver For The Fountain -->
 	<fountain_rewards id="1717" start_npc_ids="806559"/>
@@ -115,6 +125,14 @@
 	</monster_hunt>
 	<monster_hunt id="2768" start_npc_ids="278031">
 		<monster var="0" end_var="1" npc_ids="256674"/>
+	</monster_hunt>
+	<monster_hunt id="1869" start_npc_ids="278501">
+		<monster var="0" end_var="6" npc_ids="220257 220258 220262 220263 220267 220268 220272 220273"/>
+		<monster var="1" end_var="6" npc_ids="220277 220278 220282 220283 220287 220288 220292 220293"/>
+	</monster_hunt>
+	<monster_hunt id="2869" start_npc_ids="278001">
+		<monster var="0" end_var="6" npc_ids="220257 220258 220262 220263 220267 220268 220272 220273"/>
+		<monster var="1" end_var="6" npc_ids="220277 220278 220282 220283 220287 220288 220292 220293"/>
 	</monster_hunt>
 	<monster_hunt id="2844" start_npc_ids="269266">
 		<monster var="0" end_var="80" npc_ids="215137"/>

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.templates.npc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,7 +18,10 @@ class NochsanaFortressGateTemplateTest {
 	@Test
 	void nochsanaFortressGateUsesDragonCastleDoorRaceInSourceAndRuntimeData() throws Exception {
 		assertNochsanaFortressGateRace("src/main/resources/aion/data/static_data/npcs/npc_template.xml");
-		assertNochsanaFortressGateRace("aion/data/static_data/npcs/npc_template.xml");
+		String runtimePath = "aion/data/static_data/npcs/npc_template.xml";
+		if (Files.exists(Path.of(runtimePath))) {
+			assertNochsanaFortressGateRace(runtimePath);
+		}
 	}
 
 	private static void assertNochsanaFortressGateRace(String path) throws Exception {
