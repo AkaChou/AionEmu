@@ -115,7 +115,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(5728, data.conditionSpawnCount());
+		assertEquals(5770, data.conditionSpawnCount());
 		assertEquals(40, data.sensoryAreaCount());
 		var sensoryArea = data.findSensoryArea(301550000, 220582, 980.914185f, 774.380676f, 1046.33447f);
 		assertNotNull(sensoryArea);
@@ -162,6 +162,10 @@ class RetailAiDefinitionLoaderTest {
 		assertTrue(data.supportsConditionVariable(300800000, "cSetIdPortal"));
 		assertTrue(data.supportsConditionVariable(300800000, "cProtection01"));
 		assertEquals(18, data.getConditionSpawns(300800000).size());
+		assertTrue(data.supportsConditionVariable(301690000, "f6_mission_start"));
+		assertTrue(data.supportsConditionVariable(301690000, "f6_mission_spawn"));
+		assertEquals(42, data.getConditionSpawns(301690000).size());
+		assertTrue(RetailPatternAI2.supports(data.getPattern(244145)));
 		var unsupportedGauge = java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(pattern -> pattern.events().keySet().stream().anyMatch(event -> event.startsWith("on_gauge_")))
 			.filter(pattern -> !RetailPatternAI2.supports(pattern)).map(RetailAiData.Pattern::name).toList();

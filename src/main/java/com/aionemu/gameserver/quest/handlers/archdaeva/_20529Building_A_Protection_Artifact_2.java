@@ -1,19 +1,15 @@
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.QuestService;
-import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.world.WorldMapInstance;
+import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 大天使任务脚本：Building A Protection Artifact 2（任务 ID 20529）。
@@ -164,15 +160,13 @@ public class _20529Building_A_Protection_Artifact_2 extends QuestHandler {
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 7) {
-							playQuestMovie(env, 878);
-                            changeQuestStep(env, 7, 8, false);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-								@Override
-								public void run() {
-									QuestService.addNewSpawn(301690000, player.getInstanceId(), 244129, (float) 172.000, (float) 156.000, (float) 230.53053, (byte) 96); //.
-									QuestService.addNewSpawn(301690000, player.getInstanceId(), 806299, (float) 173.08958, (float) 153.30316, (float) 230.3820, (byte) 67); // ?.
-								}
-							}, 30000);
+							Npc controller = player.getPosition().getWorldMapInstance().getNpc(244145);
+							if (controller == null) {
+								return false;
+							}
+							PacketSendUtility.sendPacket(player,
+								new SM_PLAY_MOVIE(0, 0, 878, 0, controller.getObjectId()));
+							changeQuestStep(env, 7, 8, false);
 							return closeDialogWindow(env);
                         }
 					}

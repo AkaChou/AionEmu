@@ -200,6 +200,38 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void aetherMineUsesRetailConditionFlowWithoutLegacySpawns() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherMineQInstance.java")));
+
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "301690000");
+		assertTrue(world.contains("<variable name=\"f6_mission_start\"/>"));
+		assertTrue(world.contains("<variable name=\"f6_mission_spawn\"/>"));
+		assertEquals(42, count(world, "<condition "));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301690000_Aether_Mine.xml"));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"244145\">"));
+		assertTrue(staticSpawns.contains("x=\"320.514862\" y=\"263.688446\" z=\"261.491791\""));
+
+		for (String quest : new String[] { "_10529Protection_Artifact_2", "_20529Building_A_Protection_Artifact_2" }) {
+			String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/quest/handlers/archdaeva/" + quest + ".java"));
+			assertFalse(source.contains("GameThreadPoolServices"));
+			assertFalse(source.contains("QuestService.addNewSpawn"));
+			assertTrue(source.contains("getNpc(244145)"));
+			assertTrue(source.contains("controller.getObjectId()"));
+		}
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(Pattern.compile("<world\\b(?=[^>]*\\bid=\"301690000\")(?=[^>]*\\bbehavior=\"RETAIL_AI_QUEST\")[^>]*/>")
+			.matcher(coverage).find());
+	}
+
+	@Test
 	void infinityShardUsesRetailPatternAndConditionSpawnsWithoutLegacyPath() throws Exception {
 		Path conditions = Path.of("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
 		String world = worldBlock(Files.readString(conditions), "300800000");

@@ -976,6 +976,7 @@ REGISTERED
 - [x] 完成 Sulfur、Carpus、Hamate、Treasure Island、Danuar 三变体、Adma、Padmarashka、Cradle 和 Transidium 的首批恢复迁移；
 - [x] 完成 Infinity Shard（`300800000`）真端 Retail AI/条件出生接管，删除旧 handler、Hyperion/Ide Resonator Java AI、手工护盾/出口/奖励和私服掉落；
 - [x] 完成 Nochsana 与 Alquimia 的真端掉落收口，删除重复钥匙、私服奖励和无业务价值 handler；
+- [x] 完成奥德矿脉（`301690000`）真端种族任务链，条件出生接管初始敌人、裂隙、任务对象、最终 Boss 和友方 NPC；
 - [ ] 删除只提供重复通用逻辑的 handler。
 
 验收：
@@ -1104,7 +1105,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 47% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia 等旧 handler 已删除，Nochsana 已清除私服掉落并收缩为最小真端交互；剩余 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 48% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine 等旧 handler 已删除，Nochsana 已清除私服掉落并收缩为最小真端交互；剩余 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1269,3 +1270,7 @@ REGISTERED
 - Nochsana 批次验证通过：`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest test`、`mvn -q -DskipTests compile`、副本静态出生 XML 与 `git diff --check`。
 - 完成阿尔奎米亚研究所（`320110000`）真端单轨替换：现有 `AlquimiaResearchCenterInstance` 只重复注册 `214027 -> 185000006`、`214034 -> 185000007` 两把已在真端 `npc_drops` 中以 100% 定义的钥匙，并向 `214028` 注入真端掉落表不存在的私服烙印包 `188053787`，因此完整删除该 handler。
 - 320110000 的静态刷怪、NPC Pattern、钥匙、出口和掉落继续由真端数据负责；覆盖重新生成为 `MATCHMAKER`，来源 `matchmaker.xml:323,407`。行为闭包调整为 104 张 `HANDLER`、3 张 `MATCHMAKER`，总数仍为 139。
+- 完成奥德矿脉任务副本（`301690000`，真端 `IDF6_Q`）单轨替换：以 `IDF6_Q/world_N.xml`、`LF6_G_Din_02_Enter_Attack_74` 和任务 `10529`/`20529` 为权威，静态补入真端控制 NPC `244145`；玩家进入其感知范围后由 Retail Pattern AI 按天族/魔族写入 `f6_mission_start = 1/2`，电影结束后经 `CM_PLAY_MOVIE_END -> RetailPatternAI2.onQuitCutscene` 写入 `f6_mission_spawn = 1/2`、清除初始阶段并删除控制 NPC。
+- 使用条件出生转换器定向生成 `5729..5770` 共 42 条条件、42 个槽位和 2 个变量，接管 `244111..244113`、`244127..244129`、`703317`、`703325`、`731709`、`731715`、`806293`、`806294`、`806298`、`806299` 等种族分支对象；不保留旧 handler 的 16 个手工点位、重复死亡删除或传送裂隙生成。
+- 删除 `AetherMineQInstance`；任务脚本删除 30 秒 `GameThreadPoolServices` 延迟和 `QuestService.addNewSpawn` 手刷 Boss/友方 NPC，电影包改为携带 `244145` 的对象 ID，使客户端电影结束事件回到真端 Pattern 链。覆盖重新生成为 103 张 `HANDLER`、15 张 `RETAIL_AI_QUEST`，139 张图总数不变；生产 handler 仍有 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices`。
+- 奥德矿脉批次验证通过：条件转换器 19 项测试；`mvn -q -DskipTests compile`；`InstanceHandlerRecoveryMigrationTest`、`RetailAiDefinitionLoaderTest`、`RetailConditionSpawnEngineTest`、`RetailPatternAI2Test`；正式副本生成器 `--check`；条件出生和静态出生 XSD 校验；定向重生成 SHA-256 `93a019b6b923358453f099cfcac7af8cdda134d75cd1244e69bdc5bd51d6c023` 字节一致及 `git diff --check`。

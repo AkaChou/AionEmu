@@ -53554,4 +53554,302 @@
       </group>
     </condition>
   </world>
+  <world id="301690000" name="IDF6_Q">
+    <variable name="f6_mission_spawn"/>
+    <variable name="f6_mission_start"/>
+    <condition id="5729" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="227.786728" y="180.093536" z="240.782303" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.4"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5730" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#1">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="227.786728" y="180.093536" z="240.782303" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.4"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5731" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="172.481277" y="149.922882" z="237.300598" heading="30" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5732" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#2">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="172.481277" y="149.922882" z="237.300598" heading="30" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5733" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="288.330902" y="218.399216" z="246.071182" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5734" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#3">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="288.330902" y="218.399216" z="246.071182" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5735" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#4">
+      <group probability="1000">
+        <slot>
+          <npc id="703317" probability="10000" x="164.676666" y="150.92424" z="232.88237" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5736" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#4">
+      <group probability="1000">
+        <slot>
+          <npc id="703325" probability="10000" x="164.676666" y="150.92424" z="232.88237" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5737" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="197.193771" y="167.38884" z="235.926239" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.5"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5738" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#5">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="197.193771" y="167.38884" z="235.926239" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.5"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5739" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDF6_Q/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="731709" probability="10000" x="248.594833" y="189.85466" z="236.011002" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5740" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="false" group_mode="all" source="IDF6_Q/world_N.xml#6">
+      <group probability="1000">
+        <slot>
+          <npc id="731715" probability="10000" x="248.594833" y="189.85466" z="236.011002" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5741" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="214.984619" y="168.937103" z="231.079132" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5742" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#7">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="214.984619" y="168.937103" z="231.079132" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5743" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="290.265778" y="202.985596" z="246.218033" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5744" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#8">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="290.265778" y="202.985596" z="246.218033" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5745" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="207.753174" y="179.690308" z="232.096146" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5746" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#9">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="207.753174" y="179.690308" z="232.096146" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5747" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#10">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="259.776215" y="195.548294" z="237.60936" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5748" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#10">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="259.776215" y="195.548294" z="237.60936" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5749" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="304.2836" y="218.133499" z="264.826477" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5750" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#11">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="304.2836" y="218.133499" z="264.826477" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.1"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5751" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="168.991562" y="158.072678" z="237.431305" heading="30" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5752" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#12">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="168.991562" y="158.072678" z="237.431305" heading="30" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5753" expression="f6_mission_spawn == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="244113" probability="10000" x="172.973434" y="156.893463" z="235.556091" heading="280" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5754" expression="f6_mission_spawn == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#13">
+      <group probability="1000">
+        <slot>
+          <npc id="244129" probability="10000" x="172.973434" y="156.893463" z="235.556091" heading="280" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5755" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#14">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="179.770645" y="168.437805" z="230.300598" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5756" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#14">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="179.770645" y="168.437805" z="230.300598" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5757" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#15">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="187.031097" y="152.089203" z="230.431305" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5758" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#15">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="187.031097" y="152.089203" z="230.431305" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5759" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#16">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="311.013916" y="238.293961" z="258.250366" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5760" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#16">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="311.013916" y="238.293961" z="258.250366" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5761" expression="f6_mission_spawn == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#17">
+      <group probability="1000">
+        <slot>
+          <npc id="806294" probability="10000" x="173.751999" y="153.865768" z="235.556091" heading="100" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5762" expression="f6_mission_spawn == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#17">
+      <group probability="1000">
+        <slot>
+          <npc id="806299" probability="10000" x="173.751999" y="153.865768" z="235.556091" heading="100" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5763" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#18">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="277.151001" y="202.819229" z="253.162903" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.3"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5764" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#18">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="277.151001" y="202.819229" z="253.162903" heading="0" initial_delay="0" initial_delay_extra="0" walker="retail:301690000:npcpathidf6_q_npc_5.3"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5765" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="244112" probability="10000" x="338.763916" y="238.668961" z="258.250366" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5766" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#19">
+      <group probability="1000">
+        <slot>
+          <npc id="244128" probability="10000" x="338.763916" y="238.668961" z="258.250366" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5767" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#20">
+      <group probability="1000">
+        <slot>
+          <npc id="244111" probability="10000" x="322.985291" y="223.455475" z="258.250366" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5768" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#20">
+      <group probability="1000">
+        <slot>
+          <npc id="244127" probability="10000" x="322.985291" y="223.455475" z="258.250366" heading="0" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5769" expression="f6_mission_start == 1" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="806293" probability="10000" x="321.39389" y="260.169952" z="260.225006" heading="45" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <condition id="5770" expression="f6_mission_start == 2" page_start="0" page_end="255" despawn_at_other="true" group_mode="all" source="IDF6_Q/world_N.xml#21">
+      <group probability="1000">
+        <slot>
+          <npc id="806298" probability="10000" x="321.39389" y="260.169952" z="260.225006" heading="45" initial_delay="0" initial_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+  </world>
 </condition_spawns>
