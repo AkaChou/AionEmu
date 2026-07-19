@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
@@ -18,6 +19,16 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 class NpcControllerTest {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
+
+	@Test
+	void onlyGroundMonstersHaveTheirSpawnHeightCorrected() {
+		assertTrue(NpcController.shouldCorrectGroundSpawnHeight(true, true, false, NpcType.ATTACKABLE));
+		assertTrue(NpcController.shouldCorrectGroundSpawnHeight(true, true, false, NpcType.AGGRESSIVE));
+		assertFalse(NpcController.shouldCorrectGroundSpawnHeight(true, true, true, NpcType.ATTACKABLE));
+		assertFalse(NpcController.shouldCorrectGroundSpawnHeight(false, true, false, NpcType.ATTACKABLE));
+		assertFalse(NpcController.shouldCorrectGroundSpawnHeight(true, false, false, NpcType.ATTACKABLE));
+		assertFalse(NpcController.shouldCorrectGroundSpawnHeight(true, true, false, NpcType.NON_ATTACKABLE));
+	}
 
 	@Test
 	void scheduleRespawnReturnsTaskSoDuplicateSchedulesCanBeCancelled() {
