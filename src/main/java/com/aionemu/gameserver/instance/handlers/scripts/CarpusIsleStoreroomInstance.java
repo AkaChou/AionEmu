@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.drop.DropItem;
@@ -20,7 +18,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 卡普斯岛储藏室副本事件处理器。
@@ -32,12 +29,8 @@ import java.util.concurrent.Future;
 @InstanceID(300050000)
 public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 {
-	/** carpus 岛储藏室任务 / carpus isle storeroom task */
-		private Future<?> carpusIsleStoreroomTask;
-	/** 是否启动计时器 / is start timer */
-		private boolean isStartTimer = false;
 	/** carpus isle storeroom treasure box suscess / carpus isle storeroom treasure box suscess */
-		private List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+		private final List<Npc> treasureBoxes = new ArrayList<>();
 	
 	/**
 	 * 副本创建时初始化逻辑。
@@ -49,9 +42,15 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
         spawnCarpusIsleStoreroomRings();
-		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700475, 524.4908f, 706.2591f, 191.8985f, (byte) 90));
-		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700476, 522.22754f, 421.55646f, 199.75935f, (byte) 29));
-		CarpusIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700477, 671.581f, 565.1735f, 206.14534f, (byte) 60));
+		if (!runtimeState().getBoolean("carpus.expired", false)) {
+			treasureBoxes.add((Npc) spawn(700475, 524.4908f, 706.2591f, 191.8985f, (byte) 90));
+			treasureBoxes.add((Npc) spawn(700476, 522.22754f, 421.55646f, 199.75935f, (byte) 29));
+			treasureBoxes.add((Npc) spawn(700477, 671.581f, 565.1735f, 206.14534f, (byte) 60));
+			long deadline = runtimeState().getLong("carpus.deadline", 0);
+			if (deadline > 0) {
+				scheduleDeadline("treasure", deadline, this::expireTreasure);
+			}
+		}
     }
 	/**
 	 * NPC 掉落表注册时处理。
@@ -108,9 +107,8 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("CARPUS_ISLE_STOREROOM")) {
-		    if (!isStartTimer) {
-			    isStartTimer = true;
-			    System.currentTimeMillis();
+		    if (runtimeState().getLong("carpus.deadline", 0) == 0) {
+				startCarpusIsleStoreroomChamberTimer();
 			    instance.doOnAllPlayers(new Visitor<Player>() {
 			        /**
 			         * 处理 visit。
@@ -119,9 +117,8 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			         * @param player 玩家 / player
 			         */
 			        @Override
-			        public void visit(Player player) {
+					public void visit(Player player) {
 						if (player.isOnline()) {
-							startCarpusIsleStoreroomChamberTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
 							// 龙族防护魔法结界已激活。 / The Balaur protective magic ward has been activated.
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
@@ -134,21 +131,17 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	}
 	
 	private void startCarpusIsleStoreroomChamberTimer() {
-		carpusIsleStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				// 所有龙族宝箱已消失。 / All Balaur treasure chests have disappeared.
-				sendMsg(1400244);
-				CarpusIsleStoreroomTreasureBoxSuscess.get(0).getController().onDelete();
-				CarpusIsleStoreroomTreasureBoxSuscess.get(1).getController().onDelete();
-				CarpusIsleStoreroomTreasureBoxSuscess.get(2).getController().onDelete();
-			}
-		}, 900000); //15 Minutes.
+		long deadline = System.currentTimeMillis() + 900_000;
+		runtimeState().put("carpus.deadline", deadline);
+		scheduleDeadline("treasure", deadline, this::expireTreasure);
     }
+
+	private void expireTreasure() {
+		runtimeState().put("carpus.expired", true);
+		sendMsg(1400244);
+		treasureBoxes.forEach(box -> box.getController().onDelete());
+		treasureBoxes.clear();
+	}
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {

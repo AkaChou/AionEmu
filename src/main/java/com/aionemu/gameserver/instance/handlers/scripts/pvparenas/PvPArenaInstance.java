@@ -30,7 +30,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.ArenaReward;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -50,10 +51,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class PvPArenaInstance extends GeneralInstanceHandler
 {
-	/** 击杀奖励分 / kill bonus points */
-	protected int killBonus;
-	/** 死亡扣分 / death fine */
-	protected int deathFine;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 副本奖励对象 / instance reward object */
@@ -71,7 +68,8 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	public boolean onDie(Player player, Creature lastAttacker) {
 		PvPArenaPlayerReward ownerReward = getPlayerReward(player.getObjectId());
 		ownerReward.endBoostMoraleEffect(player);
-		ownerReward.applyBoostMoraleEffect(player);
+		ownerReward.applyBoostMoraleEffect(player,
+				instanceReward.getRebirthBuffDuration(instanceReward.getRank(ownerReward.getPoints())));
 		sendPacket();
 		if (lastAttacker != null && lastAttacker != player) {
 			if (lastAttacker instanceof Player) {
@@ -94,9 +92,9 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		int rank = 0;
 		if (victim instanceof Player) {
 			PvPArenaPlayerReward victimFine = getPlayerReward(victim.getObjectId());
-			victimFine.addPoints(deathFine);
-			bonus = killBonus;
 			rank = instanceReward.getRank(victimFine.getPoints());
+			victimFine.addPoints(-instanceReward.getDeathScore(rank));
+			bonus = instanceReward.getKillScore() * instanceReward.getScoreModifier(rank) / 100;
 		} else {
 			bonus = getNpcBonus(((Npc) victim).getNpcId());
 		} if (bonus == 0) {
@@ -111,12 +109,11 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				continue;
 			} if (master instanceof Player) {
 				Player attaker = (Player) master;
-				int rewardPoints = (victim instanceof Player && instanceReward.getRound() == 3 && rank == 0 ? bonus * 3 : bonus) * damager.getDamage() / victim.getAggroList().getTotalDamage();
+				int rewardPoints = bonus * damager.getDamage() / victim.getAggroList().getTotalDamage();
 				getPlayerReward(attaker.getObjectId()).addPoints(rewardPoints);
 				sendSystemMsg(attaker, victim, rewardPoints);
 			}
 		} if (instanceReward.hasCapPoints()) {
-			instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 			reward();
 		}
 		sendPacket();
@@ -169,11 +166,15 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		Integer object = player.getObjectId();
 		if (!containPlayer(object)) {
 			instanceReward.regPlayerReward(object);
-			getPlayerReward(object).applyBoostMoraleEffect(player);
+			PvPArenaPlayerReward playerReward = getPlayerReward(object);
+			playerReward.setRewardRate(rewardRate(player));
+			playerReward.applyBoostMoraleEffect(player, instanceReward.getRebirthBuffDuration(0));
 			instanceReward.setRndPosition(object);
 		} else {
+			getPlayerReward(object).setRewardRate(rewardRate(player));
 			instanceReward.portToPosition(player);
 		}
+		applyStageBuff(player);
 		sendPacket();
 	}
 	
@@ -274,7 +275,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
-		getPlayerReward(player.getObjectId()).updateLogOutTime();
+		getPlayerReward(player.getObjectId()).beginAbsence();
 	}
 	
 	/**
@@ -285,7 +286,10 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogin(Player player) {
-		getPlayerReward(player.getObjectId()).updateBonusTime();
+		PvPArenaPlayerReward playerReward = getPlayerReward(player.getObjectId());
+		playerReward.endAbsence();
+		playerReward.setRewardRate(rewardRate(player));
+		applyStageBuff(player);
 	}
 	
 	/**
@@ -305,80 +309,48 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			spawnBlessedRelics(0);
 		}
 		instanceReward.setInstanceStartTime();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed && !instanceReward.isRewarded() && canStart()) {
-					openDoors();
-					// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-					sendMsgByRace(1401181, Race.PC_ALL, 0);
-					instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-					sendPacket();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						/**
-						 * 处理 run。
-						 * Handle run.
-						 */
-						@Override
-						public void run() {
-							if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-								instanceReward.setRound(2);
-								instanceReward.setRndZone();
-								sendPacket();
-								changeZone();
-								// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
-								sendMsgByRace(1401491, Race.PC_ALL, 2000);
-								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-									/**
-									 * 处理 run。
-									 * Handle run.
-									 */
-									@Override
-									public void run() {
-										if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-											instanceReward.setRound(3);
-											instanceReward.setRndZone();
-											sendPacket();
-											changeZone();
-											// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
-											sendMsgByRace(1401491, Race.PC_ALL, 2000);
-											GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-												/**
-												 * 处理 run。
-												 * Handle run.
-												 */
-												@Override
-												public void run() {
-													if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-                                                        instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-                                                        reward();
-														sendPacket();
-                                                    }
-                                                }
-                                            }, 180000);
-                                        }
-                                    }
-                                }, 180000);
-                            }
-                        }
-                    }, 180000);
-                }
-            }
-        }, 120000);
-    }
+		GameThreadPoolServices.threadPoolManager().schedule(this::startBattle,
+				instanceReward.getWaitTimeSeconds() * 1000L);
+	}
+
+	private void startBattle() {
+		if (isInstanceDestroyed || instanceReward.isRewarded() || !canStart()) {
+			return;
+		}
+		openDoors();
+		sendMsgByRace(1401181, Race.PC_ALL, 0);
+		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		sendPacket();
+		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
+				instanceReward.getStageTimeSeconds() * 1000L);
+	}
+
+	private void finishRound() {
+		if (isInstanceDestroyed || instanceReward.isRewarded()) {
+			return;
+		}
+		if (instanceReward.getRound() == 3) {
+			finishBattle();
+			return;
+		}
+		removeStageBuffs();
+		instanceReward.setRound(instanceReward.getRound() + 1);
+		instanceReward.setRndZone();
+		applyStageBuffs();
+		changeZone();
+		if (instanceReward.getRound() == instanceReward.getScoreModifierStartStage()) {
+			sendMsgByRace(1401491, Race.PC_ALL, 2000);
+		}
+		sendPacket();
+		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
+				instanceReward.getStageTimeSeconds() * 1000L);
+	}
 	
 	private boolean canStart() {
-		if (instance.getPlayersInside().size() < 2) {
-			onInstanceDestroy();
+		if (instanceReward.getInstanceRewards().isEmpty()) {
 			// 独自一人时无法使用。 / Unavailable to use when you're alone.
 			sendMsgByRace(1403045, Race.PC_ALL, 0);
-			instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-			reward();
-			sendPacket();
+			finishBattle();
 			return false;
 		}
 		return true;
@@ -479,11 +451,12 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onLeaveInstance(Player player) {
-		PvPArenaPlayerReward playerReward = getPlayerReward(player.getObjectId());
+		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
 		if (playerReward != null) {
 			playerReward.endBoostMoraleEffect(player);
+			playerReward.endStageBuff(player);
+			playerReward.beginAbsence();
 			instanceReward.clearPosition(playerReward.getPosition(), Boolean.FALSE);
-			instanceReward.removePlayerReward(playerReward);
 		}
 	}
 	/**
@@ -531,55 +504,39 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	 * Handle reward.
 	 */
 	
-	protected void reward() {
-		for (Player player : instance.getPlayersInside()) {
-			if (PlayerActions.isAlreadyDead(player))
-				PlayerReviveService.duelRevive(player);
-			    PvPArenaPlayerReward reward = getPlayerReward(player.getObjectId());
-			if (!reward.isRewarded()) {
-				reward.setRewarded();
-				// <欧比斯点数> / <Abyss Points>
-				AbyssPointsService.addAp(player, reward.getBasicAP() + reward.getRankingAP() + reward.getScoreAP());
-				// <荣耀点数> / <Glory Points>
-				AbyssPointsService.addGp(player, reward.getBasicGP() + reward.getRankingGP() + reward.getScoreGP());
-				int courage = reward.getBasicCourage() + reward.getRankingCourage() + reward.getScoreCourage();
-				if (courage != 0) {
-					ItemService.addItem(player, 186000137, courage);
-				}
-				int crucible = reward.getBasicCrucible() + reward.getRankingCrucible() + reward.getScoreCrucible();
-				if (crucible != 0) {
-					ItemService.addItem(player, 186000130, crucible);
-				}
-				int opportunity = reward.getOpportunity();
-				if (opportunity != 0) {
-					ItemService.addItem(player, 186000165, opportunity);
-				}
-				int gloryTicket = reward.getGloryTicket();
-				if (gloryTicket != 0) {
-					ItemService.addItem(player, 186000185, gloryTicket);
-				}
-				int mithrilMedal = reward.getMithrilMedal();
-				if (mithrilMedal != 0) {
-					ItemService.addItem(player, 186000147, mithrilMedal); 
-				}
-				int platinumMedal = reward.getPlatinumMedal();
-				if (platinumMedal != 0) {
-					ItemService.addItem(player, 186000096, platinumMedal);
-				}
-				int gloriousInsignia = reward.getGloriousInsignia();
-				if (gloriousInsignia != 0) {
-					ItemService.addItem(player, 182213259, gloriousInsignia);
-				}
-				int lifeSerum = reward.getLifeSerum();
-				if (lifeSerum != 0) {
-					ItemService.addItem(player, 162000077, lifeSerum);
-				}
-				int infinity = reward.getBasicInfinity() + reward.getRankingInfinity() + reward.getScoreInfinity();
-				if (infinity != 0) {
-					ItemService.addItem(player, 186000442, infinity);
-				}
-			}
+	protected synchronized void reward() {
+		finishBattle();
+	}
+
+	private synchronized void finishBattle() {
+		if (isInstanceDestroyed || instanceReward.isRewarded()) {
+			return;
 		}
+		removeStageBuffs();
+		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		long endedAt = System.currentTimeMillis();
+		for (PvPArenaPlayerReward playerReward : instanceReward.getInstanceRewards()) {
+			playerReward.finalizePlaytimeBonus(instanceReward.getTotalPlayMillis(), endedAt);
+		}
+		int playerCount = instanceReward.getInstanceRewards().size();
+		int totalScore = instanceReward.getTotalPoints();
+		for (PvPArenaPlayerReward playerReward : instanceReward.getInstanceRewards()) {
+			int rank = instanceReward.getRank(playerReward.getScorePoints());
+			ArenaReward arenaReward = InstanceSettlementService.arenaReward(instanceReward.getArenaRow(), rank,
+					playerCount, playerReward.getScorePoints(), totalScore, playerReward.getRewardRate());
+			playerReward.applyArenaReward(arenaReward);
+			Player player = instance.getPlayer(playerReward.getOwner());
+			if (player == null) {
+				InstanceSettlementService.queue(instance, playerReward.getOwner(), "arena", arenaReward.plan());
+				continue;
+			}
+			if (PlayerActions.isAlreadyDead(player)) {
+				PlayerReviveService.duelRevive(player);
+			}
+			InstanceSettlementService.settle(instance.getDynamicInstance().getInstanceUid(), player, "arena",
+					arenaReward.plan());
+		}
+		sendPacket();
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
@@ -597,7 +554,45 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
-		}, 10000);
+			}, 60000);
+	}
+
+	private double rewardRate(Player player) {
+		if (instanceReward.isSoloArena()) {
+			return player.getRates().getDisciplineRewardRate();
+		}
+		if (instanceReward.isGlory()) {
+			return player.getRates().getGloryRewardRate();
+		}
+		return player.getRates().getChaosRewardRate();
+	}
+
+	private void applyStageBuffs() {
+		for (Player player : instance.getPlayersInside()) {
+			applyStageBuff(player);
+		}
+	}
+
+	private void applyStageBuff(Player player) {
+		if (!instanceReward.isStartProgress()) {
+			return;
+		}
+		int buffId = instanceReward.getStageEndBuffId(instanceReward.getRound());
+		int targetRank = instanceReward.getStageEndBuffTargetRank(instanceReward.getRound());
+		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+		if (buffId > 0 && playerReward != null
+				&& instanceReward.getRank(playerReward.getPoints()) + 1 >= targetRank) {
+			playerReward.applyStageBuff(player, buffId, instanceReward.getStageTimeSeconds() * 1000);
+		}
+	}
+
+	private void removeStageBuffs() {
+		for (Player player : instance.getPlayersInside()) {
+			PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+			if (playerReward != null) {
+				playerReward.endStageBuff(player);
+			}
+		}
 	}
 	/**
 	 * 处理 spawnRings。

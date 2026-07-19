@@ -30,52 +30,14 @@ public class IdgelDomeReward extends InstanceReward<IdgelDomePlayerReward> {
 	private Point3D elyosStartPosition;
 	protected WorldMapInstance instance;
 	private long instanceTime;
-	private int bonusTime;
 	private final byte buffId;
 
 	public IdgelDomeReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId);
 		this.instance = instance;
 		capPoints = 30000;
-		bonusTime = 12000;
 		buffId = 15;
 		setStartPositions();
-	}
-
-	/** 欧比斯奖励。 / Abyss Reward. */
-	public int AbyssReward(boolean isWin, boolean isKunaxKilled) {
-		int KunaxKilled = 1993;
-		int Win = 3163;
-		int Loss = 1031;
-		if (isKunaxKilled) {
-			return isWin ? (Win + KunaxKilled) : (Loss + KunaxKilled);
-		} else {
-			return isWin ? Win : Loss;
-		}
-	}
-
-	/** 荣耀奖励 / Glory Reward */
-	public int GloryReward(boolean isWin, boolean isKunaxKilled) {
-		int KunaxKilled = 50;
-		int Win = 150;
-		int Loss = 30;
-		if (isKunaxKilled) {
-			return isWin ? (Win + KunaxKilled) : (Loss + KunaxKilled);
-		} else {
-			return isWin ? Win : Loss;
-		}
-	}
-
-	/** 经验奖励。 / Exp Reward. */
-	public int ExpReward(boolean isWin, boolean isKunaxKilled) {
-		int KunaxKilled = 20000;
-		int Win = 10000;
-		int Loss = 5000;
-		if (isKunaxKilled) {
-			return isWin ? (Win + KunaxKilled) : (Loss + KunaxKilled);
-		} else {
-			return isWin ? Win : Loss;
-		}
 	}
 
 	/** 排序点。 / Sort points. */
@@ -153,7 +115,7 @@ public class IdgelDomeReward extends InstanceReward<IdgelDomePlayerReward> {
 	/** Reg 玩家 Reward / Reg Player Reward */
 	public void regPlayerReward(Player player) {
 		if (!containPlayer(player.getObjectId())) {
-			addPlayerReward(new IdgelDomePlayerReward(player.getObjectId(), bonusTime, buffId, player.getRace()));
+			addPlayerReward(new IdgelDomePlayerReward(player.getObjectId(), buffId, player.getRace()));
 		}
 	}
 

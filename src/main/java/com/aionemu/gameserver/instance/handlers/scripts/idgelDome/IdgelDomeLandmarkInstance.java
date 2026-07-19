@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.LandMarkReward;
@@ -25,9 +24,10 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.LandMarkPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.BattleResult;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -70,6 +70,8 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
     /** 地标任务 / landmark task */
         private final List<Future<?>> landMarkTask = new ArrayList<Future<?>>();
+	private boolean elyosTargetCompleted;
+	private boolean asmodianTargetCompleted;
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
@@ -298,49 +300,31 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	 */
 	
 	protected void reward() {
-        int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
-        int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
-        int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
+        int elyosPoints = getPointsByRace(Race.ELYOS).intValue();
+        int asmodianPoints = getPointsByRace(Race.ASMODIANS).intValue();
+        int minimumTeamSize = (int) Math.min(
+                landMarkReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ELYOS).count(),
+                landMarkReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ASMODIANS).count());
+        long endedAt = System.currentTimeMillis();
         for (Player player : instance.getPlayersInside()) {
             if (PlayerActions.isAlreadyDead(player)) {
 				PlayerReviveService.duelRevive(player);
 			}
 			LandMarkPlayerReward playerReward = landMarkReward.getPlayerReward(player.getObjectId());
-			int abyssPoint = 3163;
-			int gloryPoint = 150;
-			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
-			if (player.getRace().equals(landMarkReward.getWinnerRace())) {
-                abyssPoint += landMarkReward.AbyssReward(true, true);
-                gloryPoint += landMarkReward.GloryReward(true, true);
-				expPoint += landMarkReward.ExpReward(true, true);
-                playerReward.setBonusAp(landMarkReward.AbyssReward(true, true));
-                playerReward.setBonusGp(landMarkReward.GloryReward(true, true));
-				playerReward.setBonusExp(landMarkReward.ExpReward(true, true));
-				playerReward.setBrokenSpinel(188100391);
-				playerReward.setBonusReward(186000243);
-				playerReward.setLandMarkBox(188053030);
-				playerReward.setAdditionalReward(188055396); //? ? ? ??.
-			} else {
-                abyssPoint += landMarkReward.AbyssReward(false, false);
-                gloryPoint += landMarkReward.GloryReward(false, false);
-				expPoint += landMarkReward.ExpReward(false, false);
-				playerReward.setRewardAp(landMarkReward.AbyssReward(false, false));
-                playerReward.setRewardGp(landMarkReward.GloryReward(false, false));
-				playerReward.setRewardExp(landMarkReward.ExpReward(false, false));
-				playerReward.setBrokenSpinel(188100391);
-				playerReward.setBonusReward(186000243);
-            }
-			ItemService.addItem(player, 188055396, 1); //? ? ? ??.
-            ItemService.addItem(player, 188053030, 1);
-            ItemService.addItem(player, 188100391, 750); //5.5
-			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
-            player.getCommonData().addExp(expPoint, RewardType.HUNTING);
+            int teamScore = player.getRace() == Race.ELYOS ? elyosPoints : asmodianPoints;
+            int opposingScore = player.getRace() == Race.ELYOS ? asmodianPoints : elyosPoints;
+            int calculateMask = player.getRace() == Race.ELYOS && elyosTargetCompleted ? 1
+                    : player.getRace() == Race.ASMODIANS && asmodianTargetCompleted ? 2 : 0;
+            BattleResult result = InstanceSettlementService.battlegroundResult(teamScore, opposingScore);
+            double bonusRate = InstanceSettlementService.battlegroundBonusRate(
+                    playerReward.calculateParticipation(instanceTime, endedAt), teamScore, opposingScore);
+            RewardPlan base = InstanceSettlementService.battlegroundPlan(instance, result, 0, teamScore,
+                    calculateMask, minimumTeamSize);
+            RewardPlan total = InstanceSettlementService.battlegroundPlan(instance, result, bonusRate, teamScore,
+                    calculateMask, minimumTeamSize);
+            InstanceSettlementService.applyBattlegroundDisplay(playerReward, base, total);
+            InstanceSettlementService.settleBattleground(instance, player, result, bonusRate, teamScore,
+                    calculateMask, minimumTeamSize);
         }
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
@@ -551,6 +535,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 			break;
 			case 806346: //解封装置。 / Unsealing Device.
 			    point = 50000;
+				elyosTargetCompleted = true;
 				despawnNpc(npc);
 				// 天族正在激活装置的最后阶段。 / The Elyos are activating the last stage of the device.
 				sendMsgByRace(1403431, Race.PC_ALL, 0);
@@ -580,6 +565,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 			break;
 			case 806378: //解封装置。 / Unsealing Device.
 			    point = 50000;
+				asmodianTargetCompleted = true;
 				despawnNpc(npc);
 				// 魔族正在激活装置的最后阶段。 / The Asmodians are activating the last stage of the device.
 				sendMsgByRace(1403438, Race.PC_ALL, 0);
@@ -849,6 +835,10 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
+		LandMarkPlayerReward reward = landMarkReward.getPlayerReward(player.getObjectId());
+		if (reward != null) {
+			reward.updateLogOutTime();
+		}
 		removeItems(player);
 	}
 	
@@ -867,6 +857,10 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
      */
     @Override
     public void onPlayerLogin(Player player) {
+        LandMarkPlayerReward reward = landMarkReward.getPlayerReward(player.getObjectId());
+        if (reward != null) {
+            reward.updateBonusTime();
+        }
         landMarkReward.sendPacket(10, player.getObjectId());
     }
 }

@@ -67,6 +67,20 @@ class TransactionSafetyTest {
 		assertTrue(source.contains("this.state = PersistentState.UPDATE_REQUIRED"));
 	}
 
+	@Test
+	void instanceSettlementUsesOneCommitBoundaryAndLedgerLock() throws IOException {
+		String service = source("gameserver/services/instance/InstanceSettlementService.java");
+		String ledger = source("gameserver/dao/impl/InstanceRewardLedgerDAO.java");
+		assertTrue(service.contains("ledger().lockOrCreate(connection"));
+		assertTrue(service.contains("inventoryDAO.storeInTransaction(connection"));
+		assertTrue(service.contains("storeExpInTransaction(connection"));
+		assertTrue(service.contains("storeInTransaction(connection, player.getObjectId(), storedRank)"));
+		assertTrue(service.contains("ledger().complete(connection"));
+		assertEquals(1, occurrences(service, "connection.commit();"));
+		assertTrue(service.contains("connection.rollback();"));
+		assertTrue(ledger.contains("FOR UPDATE"));
+	}
+
 	private static String source(String relativePath) throws IOException {
 		return Files.readString(Path.of("src/main/java/com/aionemu/" + relativePath));
 	}

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.instance.playerreward.HarmonyGroupReward;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
-import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
  * 团结训练场副本事件处理器。
@@ -20,92 +19,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 @InstanceID(301100000)
 public class UnityTrainingGroundInstance extends HarmonyArenaInstance
 {
-	/**
-	 * 副本创建时初始化逻辑。
-	 * Initialize logic when the instance is created.
-	 *
-	 * @param instance 世界地图实例 / world-map instance
-	 */
-	@Override
-	public void onInstanceCreate(WorldMapInstance instance) {
-		killBonus = 1000;
-		deathFine = -150;
-		super.onInstanceCreate(instance);
-	}
-	
-	/**
-	 * 处理 reward。
-	 * Handle reward.
-	 */
-	@Override
-	protected void reward() {
-		float totalScoreAP = (1.0f * 3) * 100;
-		float totalScoreGP = (1.0f * 3) * 100;
-		float totalScoreCourage = (1.0f * 3) * 100;
-		float totalScoreInfinity = (1.0f * 3) * 100;
-		int totalPoints = instanceReward.getTotalPoints();
-		for (HarmonyGroupReward group : instanceReward.getGroups()) {
-			int score = group.getPoints();
-			int rank = instanceReward.getRank(score);
-			float percent = group.getParticipation();
-			float scoreRate = ((float) score / (float) totalPoints);
-			int basicAP = 100;
-			int rankingAP = 0;
-			basicAP *= percent;
-			int basicGP = 100;
-			int rankingGP = 0;
-			basicGP *= percent;
-			int basicCoI = 0;
-			int rankingCoI = 0;
-			basicCoI *= percent;
-			int basicCiI = 0;
-			int rankingCiI = 0;
-			basicCiI *= percent;
-			int scoreAP = (int) (totalScoreAP * scoreRate);
-			int scoreGP = (int) (totalScoreGP * scoreRate);
-			switch (rank) {
-				case 0:
-					rankingAP = 681;
-					rankingGP = 481;
-					rankingCoI = 49;
-					rankingCiI = 49;
-					group.setGloryTicket(1);
-				break;
-				case 1:
-					rankingAP = 487;
-					rankingGP = 287;
-					rankingCoI = 20;
-					rankingCiI = 20;
-				break;
-				case 2:
-					rankingAP = 251;
-					rankingGP = 151;
-					rankingCoI = 1;
-					rankingCiI = 1;
-				break;
-			}
-			rankingAP *= percent;
-			rankingGP *= percent;
-			rankingCoI *= percent;
-			rankingCiI *= percent;
-			int scoreCoI = (int) (totalScoreCourage * scoreRate);
-			int scoreCiI = (int) (totalScoreInfinity * scoreRate);
-			group.setBasicAP(basicAP);
-			group.setRankingAP(rankingAP);
-			group.setScoreAP(scoreAP);
-			group.setBasicGP((int)(basicGP * 0.1));
-			group.setRankingGP((int) (rankingGP * 0.1));
-			group.setScoreGP((int)(scoreGP * 0.1));
-			group.setBasicCourage(basicCoI);
-			group.setRankingCourage(rankingCoI);
-			group.setScoreCourage(scoreCoI);
-			group.setBasicInfinity(basicCiI);
-			group.setRankingInfinity(rankingCiI);
-			group.setScoreInfinity(scoreCiI);
-		}
-		super.reward();
-	}
-	
 	/**
 	 * 处理 spawnRings。
 	 * Handle spawnRings.

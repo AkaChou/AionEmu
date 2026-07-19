@@ -1,17 +1,18 @@
 package com.aionemu.gameserver.model.instance.instancereward;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.aionemu.gameserver.model.autogroup.AGPlayer;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.playerreward.HarmonyGroupReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
+import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import java.util.ArrayList;
 
 /**
  * HarmonyArena 奖励，用于副本相关逻辑。
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  */
 
 public class HarmonyArenaReward extends PvPArenaReward {
-	private List<HarmonyGroupReward> groups = new ArrayList<HarmonyGroupReward>();
+	private final List<HarmonyGroupReward> groups = new ArrayList<>();
 
 	public HarmonyArenaReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId, instance);
@@ -38,7 +39,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 
 	/** 返回 harmony group inside / Returns the harmony group inside */
 	public List<HarmonyGroupReward> getHarmonyGroupInside() {
-		List<HarmonyGroupReward> harmonyGroups = new ArrayList<HarmonyGroupReward>();
+		List<HarmonyGroupReward> harmonyGroups = new ArrayList<>();
 		for (HarmonyGroupReward group : groups) {
 			for (AGPlayer agp : group.getAGPlayers()) {
 				if (agp.isInInstance()) {
@@ -52,7 +53,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 
 	/** 返回 players inside / Returns the players inside */
 	public List<Player> getPlayersInside(HarmonyGroupReward group) {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player playerInside : instance.getPlayersInside()) {
 			if (group.containPlayer(playerInside.getObjectId())) {
 				players.add(playerInside);
@@ -69,6 +70,27 @@ public class HarmonyArenaReward extends PvPArenaReward {
 	/** 返回组 / Returns the groups*/
 	public List<HarmonyGroupReward> getGroups() {
 		return groups;
+	}
+
+	public List<HarmonyGroupReward> getParticipatingGroups() {
+		List<HarmonyGroupReward> participating = new ArrayList<>();
+		for (HarmonyGroupReward group : groups) {
+			for (AGPlayer player : group.getAGPlayers()) {
+				if (containPlayer(player.getObjectId())) {
+					participating.add(group);
+					break;
+				}
+			}
+		}
+		return participating;
+	}
+
+	@Override
+	public void regPlayerReward(Integer object) {
+		if (!containPlayer(object)) {
+			addPlayerReward(new PvPArenaPlayerReward(object, 0, 0,
+					getArenaRow().requiredInt("score_playtime_bonus"), getBuffId()));
+		}
 	}
 
 	/** 发送数据包。 / Send packet. */
@@ -97,13 +119,20 @@ public class HarmonyArenaReward extends PvPArenaReward {
 
 	/** 排序队伍点。 / Sort group points. */
 	public List<HarmonyGroupReward> sortGroupPoints() {
-		return RewardCollections.sortedByScoreDescending(groups, HarmonyGroupReward::getPoints);
+		return RewardCollections.sortedByScoreDescending(getParticipatingGroups(), HarmonyGroupReward::getPoints);
 	}
 
 	/** 返回 total points / Returns the total points */
 	@Override
 	public int getTotalPoints() {
-		return RewardCollections.sum(groups, HarmonyGroupReward::getPoints);
+		return RewardCollections.sum(getParticipatingGroups(), HarmonyGroupReward::getPoints);
+	}
+
+	@Override
+	public boolean hasCapPoints() {
+		List<HarmonyGroupReward> participating = getParticipatingGroups();
+		return InstanceSettlementService.arenaScoreLimitReached(getArenaRow(),
+				RewardCollections.maxPoints(participating), RewardCollections.minPoints(participating));
 	}
 
 	/** 清空。 / Clear. */

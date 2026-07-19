@@ -20,7 +20,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.KamarBattlefieldReward;
@@ -29,8 +28,10 @@ import com.aionemu.gameserver.model.instance.playerreward.KamarBattlefieldPlayer
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.BattleResult;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -60,8 +61,6 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 {
 	/** 副本时间戳 / instance timestamp */
 		private long instanceTime;
-	/** 种族 killedvarga / race killed varga */
-		private Race RaceKilledVarga = null;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
     /** 败方倍率 / losing-group multiplier */
@@ -488,52 +487,31 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 	 */
 	
     protected void reward() {
-        int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
-        int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
-        int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
+		int elyosPoints = getPointsByRace(Race.ELYOS).intValue();
+		int asmodianPoints = getPointsByRace(Race.ASMODIANS).intValue();
+		int minimumTeamSize = (int) Math.min(
+				kamarBattlefieldReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ELYOS).count(),
+				kamarBattlefieldReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ASMODIANS).count());
+		long endedAt = System.currentTimeMillis();
         for (Player player : instance.getPlayersInside()) {
             if (PlayerActions.isAlreadyDead(player)) {
 				PlayerReviveService.duelRevive(player);
 			}
 			KamarBattlefieldPlayerReward playerReward = kamarBattlefieldReward.getPlayerReward(player.getObjectId());
-			int abyssPoint = 3163;
-			int gloryPoint = 150;
-			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
-			if (player.getRace().equals(kamarBattlefieldReward.getWinnerRace())) {
-                abyssPoint += kamarBattlefieldReward.AbyssReward(true, isVargaKilled(player.getRace()));
-                gloryPoint += kamarBattlefieldReward.GloryReward(true, isVargaKilled(player.getRace()));
-				expPoint += kamarBattlefieldReward.ExpReward(true, isVargaKilled(player.getRace()));
-                playerReward.setBonusAp(kamarBattlefieldReward.AbyssReward(true, isVargaKilled(player.getRace())));
-                playerReward.setBonusGp(kamarBattlefieldReward.GloryReward(true, isVargaKilled(player.getRace())));
-				playerReward.setBonusExp(kamarBattlefieldReward.ExpReward(true, isVargaKilled(player.getRace())));
-				playerReward.setBrokenSpinel(188100391);
-				playerReward.setBonusReward(186000243);
-				playerReward.setKamarRewardBox(188052660);
-			} else {
-                abyssPoint += kamarBattlefieldReward.AbyssReward(false, isVargaKilled(player.getRace()));
-                gloryPoint += kamarBattlefieldReward.GloryReward(false, isVargaKilled(player.getRace()));
-				expPoint += kamarBattlefieldReward.ExpReward(false, isVargaKilled(player.getRace()));
-				playerReward.setRewardAp(kamarBattlefieldReward.AbyssReward(false, isVargaKilled(player.getRace())));
-                playerReward.setRewardGp(kamarBattlefieldReward.GloryReward(false, isVargaKilled(player.getRace())));
-				playerReward.setRewardExp(kamarBattlefieldReward.ExpReward(false, isVargaKilled(player.getRace())));
-				playerReward.setBrokenSpinel(188100391);
-				playerReward.setBonusReward(186000243);
-            } if (RaceKilledVarga == player.getRace()) {
-			    playerReward.setAdditionalReward(188052670);
-				ItemService.addItem(player, 188052670, 1);
+			int teamScore = player.getRace() == Race.ELYOS ? elyosPoints : asmodianPoints;
+			int opposingScore = player.getRace() == Race.ELYOS ? asmodianPoints : elyosPoints;
+			BattleResult result = InstanceSettlementService.battlegroundResult(teamScore, opposingScore);
+			double bonusRate = InstanceSettlementService.battlegroundBonusRate(
+					playerReward.calculateParticipation(instanceTime, endedAt), teamScore, opposingScore);
+			RewardPlan base = InstanceSettlementService.battlegroundPlan(instance, result, 0, teamScore, 0,
+					minimumTeamSize);
+			RewardPlan total = InstanceSettlementService.battlegroundPlan(instance, result, bonusRate, teamScore, 0,
+					minimumTeamSize);
+			InstanceSettlementService.applyBattlegroundDisplay(playerReward, base, total);
+			if (InstanceSettlementService.settleBattleground(instance, player, result, bonusRate, teamScore, 0,
+					minimumTeamSize)) {
+				GameEngineServices.questEngine().onKamarReward(new QuestEnv(null, player, 0, 0));
 			}
-			ItemService.addItem(player, 188052660, 1);
-            ItemService.addItem(player, 188100391, 750); //5.5
-			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
-            player.getCommonData().addExp(expPoint, RewardType.HUNTING);
-            QuestEnv env = new QuestEnv(null, player, 0, 0);
-            GameEngineServices.questEngine().onKamarReward(env);
         }
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
@@ -608,13 +586,6 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
         }
         updateScore(player, player, -points, false);
         return true;
-    }
-	
-	private boolean isVargaKilled(Race PlayerRace) {
-    	if (PlayerRace == RaceKilledVarga) {
-    		return true;
-    	}
-    	return false;
     }
 	
 	private MutableInt getPvpKillsByRace(Race race) {
@@ -782,7 +753,6 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
                 // 瓦尔加指挥官已死亡。 / Commander Varga has died.
                 sendMsgByRace(1401846, Race.PC_ALL, 0);
-				RaceKilledVarga = mostPlayerDamage.getRace();
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
@@ -941,6 +911,10 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
+		KamarBattlefieldPlayerReward reward = kamarBattlefieldReward.getPlayerReward(player.getObjectId());
+		if (reward != null) {
+			reward.updateLogOutTime();
+		}
 		removeEffects(player);
 	}
 	
@@ -1151,8 +1125,12 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
      *
      * @param player 玩家 / player
      */
-    @Override
-    public void onPlayerLogin(Player player) {
+	@Override
+	public void onPlayerLogin(Player player) {
+		KamarBattlefieldPlayerReward reward = kamarBattlefieldReward.getPlayerReward(player.getObjectId());
+		if (reward != null) {
+			reward.updateBonusTime();
+		}
         kamarBattlefieldReward.sendPacket(10, player.getObjectId());
     }
 }

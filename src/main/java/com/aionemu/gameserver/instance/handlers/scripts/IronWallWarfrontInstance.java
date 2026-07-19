@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.IronWallWarfrontReward;
@@ -26,9 +25,10 @@ import com.aionemu.gameserver.model.instance.playerreward.IronWallWarfrontPlayer
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.BattleResult;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -62,8 +62,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         private long instanceTime;
     /** 门映射 / door map */
     private Map<Integer, StaticDoor> doors;
-    /** 种族 killedcommander / race killed commander */
-        private Race RaceKilledCommander = null;
     /** iron wall warfront reward / iron wall warfront reward */
         protected IronWallWarfrontReward ironWallWarfrontReward;
     /** 败方倍率 / losing-group multiplier */
@@ -74,8 +72,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
     /** ironwall 任务 / iron wall task */
         private final List<Future<?>> ironWallTask = new ArrayList<Future<?>>();
-    /** 种族 killedcommanderstatic / race killed commander static */
-        private static Race RaceKilledCommanderStatic = null;
     /** iron wall base static / iron wall base static */
         private static int ironWallBaseStatic = 0;
     /** 实例 / instance static */
@@ -157,9 +153,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             HANDLERS.put(s, new NpcHandler(400));
         }
 
-        HANDLERS.put(233544, new NpcHandler(200000, (n, p) -> {
-            RaceKilledCommanderStatic = p.getRace();
-        }));
+        HANDLERS.put(233544, new NpcHandler(200000));
 
         int[][] baseOfficers = {
             {233518, 1, 831875, 233517, 233528, 831885, 233498, 233497, 233508},
@@ -483,49 +477,29 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      */
     
     protected void reward() {
-        int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
-        int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
-        int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
+        int elyosPoints = getPointsByRace(Race.ELYOS).intValue();
+        int asmodianPoints = getPointsByRace(Race.ASMODIANS).intValue();
+        int minimumTeamSize = (int) Math.min(
+                ironWallWarfrontReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ELYOS).count(),
+                ironWallWarfrontReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ASMODIANS).count());
+        long endedAt = System.currentTimeMillis();
         for (Player player : instance.getPlayersInside()) {
             if (PlayerActions.isAlreadyDead(player)) {
                 PlayerReviveService.duelRevive(player);
             }
             IronWallWarfrontPlayerReward playerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
-            int abyssPoint = 3163;
-            int gloryPoint = 300;
-            int expPoint = 10000;
-            playerReward.setRewardAp(abyssPoint);
-            playerReward.setRewardGp(gloryPoint);
-            playerReward.setRewardExp(expPoint);
-            if (player.getRace().equals(ironWallWarfrontReward.getWinnerRace())) {
-                abyssPoint += ironWallWarfrontReward.AbyssReward(true, isCommanderKilled(player.getRace()));
-                gloryPoint += ironWallWarfrontReward.GloryReward(true, isCommanderKilled(player.getRace()));
-                expPoint += ironWallWarfrontReward.ExpReward(true, isCommanderKilled(player.getRace()));
-                playerReward.setBonusAp(ironWallWarfrontReward.AbyssReward(true, isCommanderKilled(player.getRace())));
-                playerReward.setBonusGp(ironWallWarfrontReward.GloryReward(true, isCommanderKilled(player.getRace())));
-                playerReward.setBonusExp(ironWallWarfrontReward.ExpReward(true, isCommanderKilled(player.getRace())));
-                playerReward.setBrokenSpinel(188100391);
-                playerReward.setBonusReward(186000243);
-            } else {
-                abyssPoint += ironWallWarfrontReward.AbyssReward(false, isCommanderKilled(player.getRace()));
-                gloryPoint += ironWallWarfrontReward.GloryReward(false, isCommanderKilled(player.getRace()));
-                expPoint += ironWallWarfrontReward.ExpReward(false, isCommanderKilled(player.getRace()));
-                playerReward.setRewardAp(ironWallWarfrontReward.AbyssReward(false, isCommanderKilled(player.getRace())));
-                playerReward.setRewardGp(ironWallWarfrontReward.GloryReward(false, isCommanderKilled(player.getRace())));
-                playerReward.setRewardExp(ironWallWarfrontReward.ExpReward(false, isCommanderKilled(player.getRace())));
-                playerReward.setBrokenSpinel(188100391);
-                playerReward.setBonusReward(186000243);
-            }
-            if (RaceKilledCommander == player.getRace()) {
-                playerReward.setMedalBundle(188052938);
-                ItemService.addItem(player, 188052938, 1);
-            }
-            ItemService.addItem(player, 188100391, 750);
-            ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, abyssPoint);
-            AbyssPointsService.addGp(player, gloryPoint);
-            player.getCommonData().addExp(expPoint, RewardType.HUNTING);
+            int teamScore = player.getRace() == Race.ELYOS ? elyosPoints : asmodianPoints;
+            int opposingScore = player.getRace() == Race.ELYOS ? asmodianPoints : elyosPoints;
+            BattleResult result = InstanceSettlementService.battlegroundResult(teamScore, opposingScore);
+            double bonusRate = InstanceSettlementService.battlegroundBonusRate(
+                    playerReward.calculateParticipation(instanceTime, endedAt), teamScore, opposingScore);
+            RewardPlan base = InstanceSettlementService.battlegroundPlan(instance, result, 0, teamScore, 0,
+                    minimumTeamSize);
+            RewardPlan total = InstanceSettlementService.battlegroundPlan(instance, result, bonusRate, teamScore, 0,
+                    minimumTeamSize);
+            InstanceSettlementService.applyBattlegroundDisplay(playerReward, base, total);
+            InstanceSettlementService.settleBattleground(instance, player, result, bonusRate, teamScore, 0,
+                    minimumTeamSize);
         }
         for (Npc npc : instance.getNpcs()) {
             npc.getController().onDelete();
@@ -600,10 +574,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         }
         updateScore(player, player, -points, false);
         return true;
-    }
-    
-    private boolean isCommanderKilled(Race PlayerRace) {
-        return PlayerRace == RaceKilledCommander;
     }
     
     private MutableInt getPvpKillsByRace(Race race) {
@@ -732,7 +702,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             return;
         }
         
-        RaceKilledCommanderStatic = RaceKilledCommander;
         NpcHandler handler = HANDLERS.get(npc.getNpcId());
         
         if (handler != null) {
@@ -755,7 +724,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
             updateScore(mostPlayerDamage, npc, handler.points, false);
         }
         
-        RaceKilledCommander = RaceKilledCommanderStatic;
     }
     
     /**
@@ -1030,6 +998,15 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         playerReward.endBoostMoraleEffect(player);
         removeItems(player);
     }
+
+    @Override
+    public void onPlayerLogOut(Player player) {
+        IronWallWarfrontPlayerReward reward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+        if (reward != null) {
+            reward.updateLogOutTime();
+        }
+        removeItems(player);
+    }
     
     /**
      * 玩家登录到该副本时处理。
@@ -1039,6 +1016,10 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
      */
     @Override
     public void onPlayerLogin(Player player) {
+        IronWallWarfrontPlayerReward reward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+        if (reward != null) {
+            reward.updateBonusTime();
+        }
         ironWallWarfrontReward.sendPacket(10, player.getObjectId());
     }
 }

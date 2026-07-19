@@ -24,6 +24,8 @@ import com.aionemu.gameserver.model.instance.playerreward.SecretMunitionsFactory
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -47,8 +49,6 @@ import java.util.concurrent.Future;
 @InstanceID(301640000)
 public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 {
-	/** 军阶 / rank */
-		private int rank;
 	/** 开始时间 / start time */
 	private long startTime;
 	/** 技能种族 / skill race */
@@ -487,12 +487,8 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 878600) { //Rank S.
-			rank = 1;
-		} else {
-			rank = 6;
-		}
-		return rank;
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
 	}
 	
    /**
@@ -712,30 +708,12 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	public void doReward(Player player) {
 		SecretMunitionsFactoryPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (!playerReward.isRewarded()) {
-			playerReward.setRewarded();
 			int factoryRank = instanceReward.getRank();
-			switch (factoryRank) {
-				case 1: //Rank S
-					playerReward.setMechaturerkSecretBox(1);
-					// 机械图尔克的特殊宝箱。 / Mechaturerk's Secret Box.
-					ItemService.addItem(player, 188055475, 1);
-				break;
-				case 2: //Rank A
-				    playerReward.setMechaturerkNormalTreasureChest(1);
-					// 机械图尔克的特殊宝箱。 / Mechaturerk’s Normal Treasure Chest.
-					ItemService.addItem(player, 188055647, 1);
-				break;
-				case 3: //Rank B
-				    playerReward.setMechaturerkSpecialTreasureBox(1);
-					// 机械图尔克的特殊宝箱。 / Mechaturerk’s Special Treasure Box.
-					ItemService.addItem(player, 188055648, 1);
-				break;
-				case 4: //Rank C
-				    playerReward.setMechaturerkSpecialTreasureBox(1);
-					// 机械图尔克的特殊宝箱。 / Mechaturerk’s Special Treasure Box.
-					ItemService.addItem(player, 188055648, 1);
-				break;
-			}
+			RewardPlan plan = InstanceSettlementService.lunaPlan(mapId, factoryRank);
+			playerReward.setMechaturerkSecretBox(Math.toIntExact(plan.itemCount(188055475)));
+			playerReward.setMechaturerkNormalTreasureChest(Math.toIntExact(plan.itemCount(188055647)));
+			InstanceSettlementService.settleLuna(instance, player, factoryRank);
+			playerReward.setRewarded();
 		}
 	}
 	

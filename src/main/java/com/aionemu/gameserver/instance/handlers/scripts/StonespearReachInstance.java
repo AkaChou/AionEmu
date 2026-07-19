@@ -21,6 +21,8 @@ import com.aionemu.gameserver.model.instance.playerreward.StonespearReachPlayerR
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -42,8 +44,6 @@ import java.util.concurrent.Future;
 
 @InstanceID(301500000)
 public class StonespearReachInstance extends GeneralInstanceHandler {
-	/** 排名 / rank */
-	private int rank;
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
 	/** 开始时间 / start time */
@@ -835,20 +835,8 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 71600) { //Rank S.
-			rank = 1;
-		} else if (totalPoints >= 41000) { //Rank A.
-			rank = 2;
-		} else if (totalPoints >= 26000) { //Rank B.
-			rank = 3;
-		} else if (totalPoints >= 14000) { //Rank C.
-			rank = 4;
-		} else if (totalPoints >= 8800) { //Rank D.
-			rank = 5;
-		} else {
-			rank = 6;
-		}
-		return rank;
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
 	}
 	
 	/**
@@ -937,20 +925,11 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	public void doReward(Player player) {
 		StonespearReachPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (!playerReward.isRewarded()) {
-			playerReward.setRewarded();
 			int reachRank = instanceReward.getRank();
-			switch (reachRank) {
-				case 1: //Rank S
-				break;
-				case 2: //Rank A
-				break;
-				case 3: //Rank B
-				break;
-				case 4: //Rank C
-				break;
-				case 5: //Rank D
-				break;
-			}
+			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, reachRank);
+			playerReward.setScoreAP(plan.ap());
+			InstanceSettlementService.settleTimeAttack(instance, player, reachRank);
+			playerReward.setRewarded();
 		}
 	}
 	

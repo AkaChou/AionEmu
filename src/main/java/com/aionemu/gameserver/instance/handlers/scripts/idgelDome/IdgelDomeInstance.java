@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.IdgelDomeReward;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
@@ -25,9 +24,10 @@ import com.aionemu.gameserver.model.instance.playerreward.IdgelDomePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.BattleResult;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -318,50 +318,30 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	 */
 	
     protected void reward() {
-        int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
-        int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
-        int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
+        int elyosPoints = getPointsByRace(Race.ELYOS).intValue();
+        int asmodianPoints = getPointsByRace(Race.ASMODIANS).intValue();
+        int minimumTeamSize = (int) Math.min(
+                idgelDomeReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ELYOS).count(),
+                idgelDomeReward.getInstanceRewards().stream().filter(r -> r.getRace() == Race.ASMODIANS).count());
+        long endedAt = System.currentTimeMillis();
         for (Player player : instance.getPlayersInside()) {
             if (PlayerActions.isAlreadyDead(player)) {
 				PlayerReviveService.duelRevive(player);
 			}
 			IdgelDomePlayerReward playerReward = idgelDomeReward.getPlayerReward(player.getObjectId());
-			int abyssPoint = 3163;
-			int gloryPoint = 150;
-			int expPoint = 10000;
-			playerReward.setRewardAp((int) abyssPoint);
-            playerReward.setRewardGp((int) gloryPoint);
-			playerReward.setRewardExp((int) expPoint);
-			if (player.getRace().equals(idgelDomeReward.getWinnerRace())) {
-                abyssPoint += idgelDomeReward.AbyssReward(true, isKunaxKilled(player.getRace()));
-                gloryPoint += idgelDomeReward.GloryReward(true, isKunaxKilled(player.getRace()));
-				expPoint += idgelDomeReward.ExpReward(true, isKunaxKilled(player.getRace()));
-                playerReward.setBonusAp(idgelDomeReward.AbyssReward(true, isKunaxKilled(player.getRace())));
-                playerReward.setBonusGp(idgelDomeReward.GloryReward(true, isKunaxKilled(player.getRace())));
-				playerReward.setBonusExp(idgelDomeReward.ExpReward(true, isKunaxKilled(player.getRace())));
-				playerReward.setBloodMark(186000236);
-				playerReward.setBonusReward(186000243);
-				playerReward.setIdgelDomeBox(188053030);
-			} else {
-                abyssPoint += idgelDomeReward.AbyssReward(false, isKunaxKilled(player.getRace()));
-                gloryPoint += idgelDomeReward.GloryReward(false, isKunaxKilled(player.getRace()));
-				expPoint += idgelDomeReward.ExpReward(false, isKunaxKilled(player.getRace()));
-				playerReward.setRewardAp(idgelDomeReward.AbyssReward(false, isKunaxKilled(player.getRace())));
-                playerReward.setRewardGp(idgelDomeReward.GloryReward(false, isKunaxKilled(player.getRace())));
-				playerReward.setRewardExp(idgelDomeReward.ExpReward(false, isKunaxKilled(player.getRace())));
-				playerReward.setBloodMark(186000236);
-				playerReward.setBonusReward(186000243);
-            } if (RaceKilledKunax == player.getRace()) {
-			    playerReward.setAdditionalReward(188053032);
-				ItemService.addItem(player, 188053032, 1);
-			}
-            ItemService.addItem(player, 188053030, 1);
-            ItemService.addItem(player, 186000236, 1);
-			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, (int) abyssPoint);
-            AbyssPointsService.addGp(player, (int) gloryPoint);
-            player.getCommonData().addExp(expPoint, RewardType.HUNTING);
+            int teamScore = player.getRace() == Race.ELYOS ? elyosPoints : asmodianPoints;
+            int opposingScore = player.getRace() == Race.ELYOS ? asmodianPoints : elyosPoints;
+            int calculateMask = RaceKilledKunax == player.getRace() ? 1 : 0;
+            BattleResult result = InstanceSettlementService.battlegroundResult(teamScore, opposingScore);
+            double bonusRate = InstanceSettlementService.battlegroundBonusRate(
+                    playerReward.calculateParticipation(instanceTime, endedAt), teamScore, opposingScore);
+            RewardPlan base = InstanceSettlementService.battlegroundPlan(instance, result, 0, teamScore,
+                    calculateMask, minimumTeamSize);
+            RewardPlan total = InstanceSettlementService.battlegroundPlan(instance, result, bonusRate, teamScore,
+                    calculateMask, minimumTeamSize);
+            InstanceSettlementService.applyBattlegroundDisplay(playerReward, base, total);
+            InstanceSettlementService.settleBattleground(instance, player, result, bonusRate, teamScore,
+                    calculateMask, minimumTeamSize);
         }
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
@@ -436,13 +416,6 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         }
         updateScore(player, player, -points, false);
         return true;
-    }
-	
-	private boolean isKunaxKilled(Race PlayerRace) {
-    	if (PlayerRace == RaceKilledKunax) {
-    		return true;
-    	}
-    	return false;
     }
 	
 	private MutableInt getPvpKillsByRace(Race race) {
@@ -836,6 +809,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogOut(Player player) {
+		IdgelDomePlayerReward reward = idgelDomeReward.getPlayerReward(player.getObjectId());
+		if (reward != null) {
+			reward.updateLogOutTime();
+		}
 		removeItems(player);
 	}
 	
@@ -854,6 +831,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
      */
     @Override
     public void onPlayerLogin(Player player) {
+        IdgelDomePlayerReward reward = idgelDomeReward.getPlayerReward(player.getObjectId());
+        if (reward != null) {
+            reward.updateBonusTime();
+        }
         idgelDomeReward.sendPacket(10, player.getObjectId());
     }
 }

@@ -1,18 +1,16 @@
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+import java.util.List;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.DescriptionId;
-import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.actions.PlayerActions;
+import com.aionemu.gameserver.model.autogroup.AGPlayer;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
@@ -22,20 +20,13 @@ import com.aionemu.gameserver.model.instance.instancereward.HarmonyArenaReward;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.playerreward.HarmonyGroupReward;
 import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
-import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DIE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.ArenaReward;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
-import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -49,10 +40,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class HarmonyArenaInstance extends GeneralInstanceHandler
 {
-	/** 击杀奖励分 / kill bonus points */
-	protected int killBonus = 1000;
-	/** 死亡扣分 / death fine */
-	protected int deathFine = -150;
 	/** 副本奖励对象 / instance reward object */
 	protected HarmonyArenaReward instanceReward;
 	/** 副本是否已销毁 / whether the instance is destroyed */
@@ -78,13 +65,22 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	@Override
 	public void onEnterInstance(final Player player) {
 		Integer object = player.getObjectId();
+		HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(object);
+		if (group == null) {
+			throw new IllegalStateException("Harmony player has no retail match side: " + object);
+		}
 		if (!instanceReward.containPlayer(object)) {
 			instanceReward.regPlayerReward(object);
-			instanceReward.getPlayerReward(object).applyBoostMoraleEffect(player);
+			PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(object);
+			playerReward.setRewardRate(player.getRates().getHarmonyRewardRate());
+			playerReward.applyBoostMoraleEffect(player, instanceReward.getRebirthBuffDuration(0));
 			instanceReward.setRndPosition(object);
 		} else {
+			instanceReward.getPlayerReward(object).endAbsence();
+			instanceReward.getPlayerReward(object).setRewardRate(player.getRates().getHarmonyRewardRate());
 			instanceReward.portToPosition(player);
 		}
+		applyStageBuff(player);
 		sendEnterPacket(player);
 	}
 	
@@ -109,13 +105,12 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), object));
 				} else {
 					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(10, getTime(), getInstanceReward(), opponent.getObjectId()));
-					if (object != opponent.getObjectId()) {
+					if (!object.equals(opponent.getObjectId())) {
 						PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), object));
 					}
 				}
 			}
 		});
-		Integer NullObject = null;
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), getInstanceReward(), null));
 		instanceReward.sendPacket(4, object);
 	}
@@ -128,9 +123,12 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		int rank = 0;
 		if (victim instanceof Player) {
 			final HarmonyGroupReward victimGroup = instanceReward.getHarmonyGroupReward(victim.getObjectId());
-			victimGroup.addPoints(deathFine);
-			bonus = killBonus;
+			if (victimGroup == null) {
+				return;
+			}
 			rank = instanceReward.getRank(victimGroup.getPoints());
+			victimGroup.addPoints(-instanceReward.getDeathScore(rank));
+			bonus = instanceReward.getKillScore() * instanceReward.getScoreModifier(rank) / 100;
 			instanceReward.sendPacket(10, victim.getObjectId());
 		} else {
 			bonus = getNpcBonus(((Npc) victim).getNpcId());
@@ -146,15 +144,17 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 				continue;
 			} if (master instanceof Player) {
 				Player attaker = (Player) master;
-				int rewardPoints = (victim instanceof Player && instanceReward.getRound() == 3 && rank == 0 ? bonus * 3 : bonus) * damager.getDamage() / victim.getAggroList().getTotalDamage();
-				instanceReward.getHarmonyGroupReward(attaker.getObjectId()).addPoints(rewardPoints);
+				HarmonyGroupReward attackerGroup = instanceReward.getHarmonyGroupReward(attaker.getObjectId());
+				if (attackerGroup == null) {
+					continue;
+				}
+				int rewardPoints = bonus * damager.getDamage() / victim.getAggroList().getTotalDamage();
+				attackerGroup.addPoints(rewardPoints);
 				sendSystemMsg(attaker, victim, rewardPoints);
 				instanceReward.sendPacket(10, attaker.getObjectId());
 			}
 		} if (instanceReward.hasCapPoints()) {
-			instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-			reward();
-			instanceReward.sendPacket(5, null);
+			finishBattle(true);
 		}
 	}
 	
@@ -216,7 +216,21 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onPlayerLogin(Player player) {
+		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+		if (playerReward != null) {
+			playerReward.endAbsence();
+			playerReward.setRewardRate(player.getRates().getHarmonyRewardRate());
+			applyStageBuff(player);
+		}
 		sendEnterPacket(player);
+	}
+
+	@Override
+	public void onPlayerLogOut(Player player) {
+		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+		if (playerReward != null) {
+			playerReward.beginAbsence();
+		}
 	}
 	
 	/**
@@ -232,73 +246,43 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
 		instanceReward.setInstanceStartTime();
 		spawnRings();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed && !instanceReward.isRewarded() && canStart()) {
-					openDoors();
-					// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-					sendMsgByRace(1401181, Race.PC_ALL, 0);
-					instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-					instanceReward.sendPacket(10, null);
-					instanceReward.sendPacket(2, null);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						/**
-						 * 处理 run。
-						 * Handle run.
-						 */
-						@Override
-						public void run() {
-							if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-								instanceReward.setRound(2);
-								instanceReward.setRndZone();
-								instanceReward.sendPacket(10, null);
-								instanceReward.sendPacket(2, null);
-								changeZone();
-								// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
-								sendMsgByRace(1401491, Race.PC_ALL, 2000);
-								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-									/**
-									 * 处理 run。
-									 * Handle run.
-									 */
-									@Override
-									public void run() {
-										if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-											instanceReward.setRound(3);
-											instanceReward.setRndZone();
-											instanceReward.sendPacket(10, null);
-											instanceReward.sendPacket(2, null);
-											changeZone();
-											// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
-											sendMsgByRace(1401491, Race.PC_ALL, 2000);
-											GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-												/**
-												 * 处理 run。
-												 * Handle run.
-												 */
-												@Override
-												public void run() {
-													if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
-														instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-														reward();
-														instanceReward.sendPacket(5, null);
-													}
-												}
-											}, 180000);
-										}
-									}
-								}, 180000);
-							}
-						}
-					}, 180000);
-				}
-			}
-		}, 120000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::startBattle,
+				instanceReward.getWaitTimeSeconds() * 1000L);
+	}
+
+	private void startBattle() {
+		if (isInstanceDestroyed || instanceReward.isRewarded() || !canStart()) {
+			return;
+		}
+		openDoors();
+		sendMsgByRace(1401181, Race.PC_ALL, 0);
+		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+		instanceReward.sendPacket(10, null);
+		instanceReward.sendPacket(2, null);
+		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
+				instanceReward.getStageTimeSeconds() * 1000L);
+	}
+
+	private void finishRound() {
+		if (isInstanceDestroyed || instanceReward.isRewarded()) {
+			return;
+		}
+		if (instanceReward.getRound() == 3) {
+			finishBattle(true);
+			return;
+		}
+		removeStageBuffs();
+		instanceReward.setRound(instanceReward.getRound() + 1);
+		instanceReward.setRndZone();
+		applyStageBuffs();
+		instanceReward.sendPacket(10, null);
+		instanceReward.sendPacket(2, null);
+		changeZone();
+		if (instanceReward.getRound() == instanceReward.getScoreModifierStartStage()) {
+			sendMsgByRace(1401491, Race.PC_ALL, 2000);
+		}
+		GameThreadPoolServices.threadPoolManager().schedule(this::finishRound,
+				instanceReward.getStageTimeSeconds() * 1000L);
 	}
 	/**
 	 * 处理 spawnRings。
@@ -309,13 +293,10 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 	
 	private boolean canStart() {
-		if (instance.getPlayersInside().size() < 2) {
-			onInstanceDestroy();
+		if (instanceReward.getParticipatingGroups().size() < 2) {
 			// 独自一人时无法使用。 / Unavailable to use when you're alone.
 			sendMsgByRace(1403045, Race.PC_ALL, 0);
-			instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-			reward();
-			instanceReward.sendPacket(5, null);
+			finishBattle(false);
 			return false;
 		}
 		return true;
@@ -337,21 +318,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	
-	private void sendPacket(final AionServerPacket packet) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, packet);
-			}
-		});
-	}
-	
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -363,8 +329,9 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
 		if (playerReward != null) {
 			playerReward.endBoostMoraleEffect(player);
+			playerReward.endStageBuff(player);
+			playerReward.beginAbsence();
 			instanceReward.clearPosition(playerReward.getPosition(), Boolean.FALSE);
-			instanceReward.removePlayerReward(playerReward);
 		}
 	}
 	/**
@@ -425,29 +392,52 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 * Handle reward.
 	 */
 	
-	protected void reward() {
-		if (instanceReward.canRewarded()) {
-			for (Player player : instance.getPlayersInside()) {
-				HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(player.getObjectId());
-				float playerRate = player.getRates().getGloryRewardRate();
-				// <欧比斯点数> / <Abyss Points>
-				AbyssPointsService.addAp(player, group.getBasicAP() + group.getRankingAP() + (int) (group.getScoreAP() * playerRate));
-				// <荣耀点数> / <Glory Points>
-				AbyssPointsService.addGp(player, group.getBasicGP() + group.getRankingGP() + (int) (group.getScoreGP() * playerRate));
-				int courage = group.getBasicCourage() + group.getRankingCourage() + (int) (group.getScoreCourage()* playerRate);
-				if (courage != 0) {
-					ItemService.addItem(player, 186000137, courage);
-				}
-				int gloryTicket = group.getGloryTicket();
-				if (gloryTicket != 0) {
-					ItemService.addItem(player, 186000185, gloryTicket);
-				}
-				int infinity = group.getBasicInfinity() + group.getRankingInfinity() + (int) (group.getScoreInfinity()* playerRate);
-				if (infinity != 0) {
-					ItemService.addItem(player, 186000442, infinity);
+	protected synchronized void reward() {
+		finishBattle(true);
+	}
+
+	private synchronized void finishBattle(boolean settleRewards) {
+		if (isInstanceDestroyed || instanceReward.isRewarded()) {
+			return;
+		}
+		removeStageBuffs();
+		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		long endedAt = System.currentTimeMillis();
+		for (PvPArenaPlayerReward playerReward : instanceReward.getInstanceRewards()) {
+			playerReward.finalizePlaytimeBonus(instanceReward.getTotalPlayMillis(), endedAt);
+			HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(playerReward.getOwner());
+			if (group != null) {
+				group.addPoints(playerReward.getTimeBonus());
+			}
+		}
+		List<HarmonyGroupReward> groups = instanceReward.getParticipatingGroups();
+		if (settleRewards && instanceReward.canRewarded() && !groups.isEmpty()) {
+			int groupCount = groups.size();
+			int totalScore = instanceReward.getTotalPoints();
+			for (HarmonyGroupReward group : groups) {
+				int rank = instanceReward.getRank(group.getPoints());
+				for (AGPlayer member : group.getAGPlayers()) {
+					PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(member.getObjectId());
+					if (playerReward == null) {
+						continue;
+					}
+					ArenaReward arenaReward = InstanceSettlementService.arenaReward(instanceReward.getArenaRow(), rank,
+							groupCount, group.getPoints(), totalScore, playerReward.getRewardRate());
+					playerReward.applyArenaReward(arenaReward);
+					Player player = instance.getPlayer(member.getObjectId());
+					if (player == null) {
+						InstanceSettlementService.queue(instance, member.getObjectId(), "arena", arenaReward.plan());
+						continue;
+					}
+					if (PlayerActions.isAlreadyDead(player)) {
+						PlayerReviveService.duelRevive(player);
+					}
+					InstanceSettlementService.settle(instance.getDynamicInstance().getInstanceUid(), player, "arena",
+							arenaReward.plan());
 				}
 			}
 		}
+		instanceReward.sendPacket(5, null);
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
@@ -468,7 +458,36 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
-		}, 10000);
+		}, 60000);
+	}
+
+	private void applyStageBuffs() {
+		for (Player player : instance.getPlayersInside()) {
+			applyStageBuff(player);
+		}
+	}
+
+	private void applyStageBuff(Player player) {
+		if (!instanceReward.isStartProgress()) {
+			return;
+		}
+		int buffId = instanceReward.getStageEndBuffId(instanceReward.getRound());
+		int targetRank = instanceReward.getStageEndBuffTargetRank(instanceReward.getRound());
+		PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+		HarmonyGroupReward group = instanceReward.getHarmonyGroupReward(player.getObjectId());
+		if (buffId > 0 && playerReward != null && group != null
+				&& instanceReward.getRank(group.getPoints()) + 1 >= targetRank) {
+			playerReward.applyStageBuff(player, buffId, instanceReward.getStageTimeSeconds() * 1000);
+		}
+	}
+
+	private void removeStageBuffs() {
+		for (Player player : instance.getPlayersInside()) {
+			PvPArenaPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+			if (playerReward != null) {
+				playerReward.endStageBuff(player);
+			}
+		}
 	}
 	
 	/**
@@ -482,14 +501,22 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	@Override
 	public boolean onDie(Player player, Creature lastAttacker) {
 		PvPArenaPlayerReward ownerReward = instanceReward.getPlayerReward(player.getObjectId());
+		HarmonyGroupReward ownerGroup = instanceReward.getHarmonyGroupReward(player.getObjectId());
+		if (ownerReward == null || ownerGroup == null) {
+			return true;
+		}
 		ownerReward.endBoostMoraleEffect(player);
-		ownerReward.applyBoostMoraleEffect(player);
+		ownerReward.applyBoostMoraleEffect(player,
+				instanceReward.getRebirthBuffDuration(instanceReward.getRank(ownerGroup.getPoints())));
 		instanceReward.sendPacket(4, player.getObjectId());
 		if (lastAttacker != null && lastAttacker != player) {
 			if (lastAttacker instanceof Player) {
 				Player winner = (Player) lastAttacker;
 				Integer winnerObj = winner.getObjectId();
-				instanceReward.getHarmonyGroupReward(winnerObj).addPvPKillToPlayer();
+				HarmonyGroupReward winnerGroup = instanceReward.getHarmonyGroupReward(winnerObj);
+				if (winnerGroup != null) {
+					winnerGroup.addPvPKillToPlayer();
+				}
 				int worldId = winner.getWorldId();
 				GameEngineServices.questEngine().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
 			}

@@ -19,9 +19,9 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.SealedArgentManorReward;
 import com.aionemu.gameserver.model.instance.playerreward.SealedArgentManorPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -42,8 +42,6 @@ import java.util.concurrent.Future;
 @InstanceID(301510000)
 public class SealedArgentManorInstance extends GeneralInstanceHandler
 {
-	/** 军阶 / rank */
-		private int rank;
 	/** 开始时间 / start time */
 	private long startTime;
 	/** 准备计时器 / timer prepare */
@@ -71,11 +69,11 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * visible object
 	 * result
 	 */
-	
+
 	protected SealedArgentManorPlayerReward getPlayerReward(Integer object) {
 		return (SealedArgentManorPlayerReward) instanceReward.getPlayerReward(object);
 	}
-	
+
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
@@ -86,11 +84,11 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	protected void addPlayerReward(Player player) {
 		instanceReward.addPlayerReward(new SealedArgentManorPlayerReward(player.getObjectId()));
 	}
-	
+
 	private boolean containPlayer(Integer object) {
 		return instanceReward.containPlayer(object);
 	}
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -107,7 +105,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 *
 	 * npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -150,7 +148,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -188,7 +186,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
             break;
         }
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -251,7 +249,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			sendPacket(npc.getObjectTemplate().getNameId(), points);
 		}
 	}
-	
+
    /**
 	 * @return 你：have up to 15min to finish the instance。 / You have up to 15min to finish the instance
 	 */
@@ -259,7 +257,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 		long result = (int) (System.currentTimeMillis() - startTime);
 		return instanceTimerSeconds - (int) result;
 	}
-	
+
 	private void sendPacket(final int nameId, final int point) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -277,28 +275,16 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 16000) { //Rank S.
-			rank = 1;
-		} else if (totalPoints >= 11500) { //Rank A.
-			rank = 2;
-		} else if (totalPoints >= 11500) { //Rank B.
-			rank = 3;
-		} else if (totalPoints >= 10100) { //Rank C.
-			rank = 4;
-		} else if (totalPoints >= 8100) { //Rank D.
-			rank = 5;
-		} else {
-			rank = 6;
-		}
-		return rank;
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
 	}
 	/**
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
 		sealedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -322,7 +308,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
             }
         }, 900000));
     }
-	
+
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
@@ -342,7 +328,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -376,7 +362,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 		}
 		startPrepareTimer();
 	}
-	
+
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
 			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -403,7 +389,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	private void startMainInstanceTimer() {
 		if (!timerPrepare.isDone()) {
 			timerPrepare.cancel(false);
@@ -418,7 +404,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	protected void stopInstance(Player player) {
         stopInstanceTask();
         instanceReward.setRank(6);
@@ -428,7 +414,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 		// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Sealed Argent Manor>");
 		sendPacket(0, 0);
 	}
-	
+
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
@@ -439,39 +425,26 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	public void doReward(Player player) {
 		SealedArgentManorPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (!playerReward.isRewarded()) {
-			playerReward.setRewarded();
 			int manorRank = instanceReward.getRank();
+			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, manorRank);
+			playerReward.setScoreAP(plan.ap());
+			int itemCount = plan.items().isEmpty() ? 0 : Math.toIntExact(plan.items().getFirst().count());
 			switch (manorRank) {
 				case 1: //Rank S
-					playerReward.setScoreAP(14000);
-					playerReward.setGreaterArgentManorBox(1);
-					ItemService.addItem(player, 188054114, 1); //Greater Argent Manor Box.
+					playerReward.setGreaterArgentManorBox(itemCount);
 				break;
 				case 2: //Rank A
-				    playerReward.setScoreAP(12000);
-					playerReward.setArgentManorBox(1);
-					ItemService.addItem(player, 188054115, 1); //Argent Manor Box.
+					playerReward.setArgentManorBox(itemCount);
 				break;
-				case 3: //Rank B
-				    playerReward.setScoreAP(10000);
-					playerReward.setLesserArgentManorBox(1);
-					ItemService.addItem(player, 188054116, 1); //Lesser Argent Manor Box.
-				break;
-				case 4: //Rank C
-				    playerReward.setScoreAP(5000);
-					playerReward.setLesserArgentManorBox(1);
-					ItemService.addItem(player, 188054116, 1); //Lesser Argent Manor Box.
-				break;
-				case 5: //Rank D
-				    playerReward.setScoreAP(2500);
-					playerReward.setLesserArgentManorBox(1);
-					ItemService.addItem(player, 188054116, 1); //Lesser Argent Manor Box.
+				case 3, 4, 5: //Rank B-D
+					playerReward.setLesserArgentManorBox(itemCount);
 				break;
 			}
-			AbyssPointsService.addAp(player, playerReward.getScoreAP());
+			InstanceSettlementService.settleTimeAttack(instance, player, manorRank);
+			playerReward.setRewarded();
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {
 			/**
@@ -494,7 +467,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	 * 阵营 / race
 	 * time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -520,7 +493,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -537,7 +510,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 		instanceReward.clear();
 		doors.clear();
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -568,7 +541,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			}
 		}
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : sealedTask) {
 			if (task != null) {
@@ -576,19 +549,19 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			}
         }
     }
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -599,7 +572,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
     public void onPlayerLogOut(Player player) {
         removeEffects(player);
     }
-	
+
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
@@ -610,7 +583,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
 	}
-	
+
     private void removeEffects(Player player) {
         PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(19316);

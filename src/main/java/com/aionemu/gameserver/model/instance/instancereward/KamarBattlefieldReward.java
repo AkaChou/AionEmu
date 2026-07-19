@@ -30,52 +30,14 @@ public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlaye
 	private Point3D elyosStartPosition;
 	protected WorldMapInstance instance;
 	private long instanceTime;
-	private int bonusTime;
 	private final byte buffId;
 
 	public KamarBattlefieldReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId);
 		this.instance = instance;
 		capPoints = 30000;
-		bonusTime = 12000;
 		buffId = 10;
 		setStartPositions();
-	}
-
-	/** 欧比斯奖励。 / Abyss Reward. */
-	public int AbyssReward(boolean isWin, boolean isVargaKilled) {
-		int VargaKilled = 1993;
-		int Win = 3163;
-		int Loss = 1031;
-		if (isVargaKilled) {
-			return isWin ? (Win + VargaKilled) : (Loss + VargaKilled);
-		} else {
-			return isWin ? Win : Loss;
-		}
-	}
-
-	/** 荣耀奖励 / Glory Reward */
-	public int GloryReward(boolean isWin, boolean isVargaKilled) {
-		int VargaKilled = 50;
-		int Win = 150;
-		int Loss = 30;
-		if (isVargaKilled) {
-			return isWin ? (Win + VargaKilled) : (Loss + VargaKilled);
-		} else {
-			return isWin ? Win : Loss;
-		}
-	}
-
-	/** 经验奖励。 / Exp Reward. */
-	public int ExpReward(boolean isWin, boolean isVargaKilled) {
-		int VargaKilled = 20000;
-		int Win = 10000;
-		int Loss = 5000;
-		if (isVargaKilled) {
-			return isWin ? (Win + VargaKilled) : (Loss + VargaKilled);
-		} else {
-			return isWin ? Win : Loss;
-		}
 	}
 
 	/** 排序点。 / Sort points. */
@@ -154,8 +116,7 @@ public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlaye
 	/** Reg 玩家 Reward / Reg Player Reward */
 	public void regPlayerReward(Player player) {
 		if (!containPlayer(player.getObjectId())) {
-			addPlayerReward(
-					new KamarBattlefieldPlayerReward(player.getObjectId(), bonusTime, buffId, player.getRace()));
+			addPlayerReward(new KamarBattlefieldPlayerReward(player.getObjectId(), buffId, player.getRace()));
 		}
 	}
 

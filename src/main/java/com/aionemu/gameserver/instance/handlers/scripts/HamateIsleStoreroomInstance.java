@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -21,7 +19,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 哈马特岛储藏室副本事件处理器。
@@ -33,12 +30,8 @@ import java.util.concurrent.Future;
 @InstanceID(300070000)
 public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 {
-	/** 哈马特岛储藏室任务 / hamate isle storeroom task */
-		private Future<?> hamateIsleStoreroomTask;
-	/** 是否启动计时器 / is start timer */
-		private boolean isStartTimer = false;
 	/** hamate isle storeroom treasure box suscess / hamate isle storeroom treasure box suscess */
-		private List<Npc> HamateIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+		private final List<Npc> treasureBoxes = new ArrayList<>();
 	
 	/**
 	 * 副本创建时初始化逻辑。
@@ -50,32 +43,28 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
 		spawnHamateIsleStoreroomRings();
-		switch (Rnd.get(1, 2)) {
-			case 1:
-				spawn(214780, 381.35986f, 510.61307f, 102.618126f, (byte) 111); //Dakaer Diabolist.
-			break;
-			case 2:
-				spawn(214781, 381.35986f, 510.61307f, 102.618126f, (byte) 111); //Dakaer Bloodmender.
-			break;
-		} switch (Rnd.get(1, 2)) {
-			case 1:
-				spawn(214782, 625.4933f, 455.0907f, 102.63267f, (byte) 47); //Dakaer Adjutant.
-			break;
-			case 2:
-				spawn(214784, 625.4933f, 455.0907f, 102.63267f, (byte) 47); //Dakaer Physician.
-			break;
-		} switch (Rnd.get(1, 2)) {
-			case 1:
-				spawn(215449, 503.947f, 623.82227f, 103.695724f, (byte) 90); //Relic Protector Kael.
-			break;
-			case 2:
-				spawn(215450, 503.947f, 623.82227f, 103.695724f, (byte) 90); //Ebonlord Vasana.
-			break;
+		spawnSelectedNpc("hamate.guard.1", 214780, 214781, 381.35986f, 510.61307f, 102.618126f, (byte) 111);
+		spawnSelectedNpc("hamate.guard.2", 214782, 214784, 625.4933f, 455.0907f, 102.63267f, (byte) 47);
+		spawnSelectedNpc("hamate.guard.3", 215449, 215450, 503.947f, 623.82227f, 103.695724f, (byte) 90);
+		if (!runtimeState().getBoolean("hamate.expired", false)) {
+			treasureBoxes.add((Npc) spawn(700472, 377.06046f, 512.4419f, 102.618126f, (byte) 114));
+			treasureBoxes.add((Npc) spawn(700473, 628.6996f, 451.98642f, 102.63267f, (byte) 48));
+			treasureBoxes.add((Npc) spawn(700474, 503.7779f, 630.8419f, 104.54881f, (byte) 90));
+			long deadline = runtimeState().getLong("hamate.deadline", 0);
+			if (deadline > 0) {
+				scheduleDeadline("treasure", deadline, this::expireTreasure);
+			}
 		}
-		HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700472, 377.06046f, 512.4419f, 102.618126f, (byte) 114));
-		HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700473, 628.6996f, 451.98642f, 102.63267f, (byte) 48));
-		HamateIsleStoreroomTreasureBoxSuscess.add((Npc) spawn(700474, 503.7779f, 630.8419f, 104.54881f, (byte) 90));
     }
+
+	private void spawnSelectedNpc(String key, int firstNpcId, int secondNpcId, float x, float y, float z, byte heading) {
+		int npcId = runtimeState().getInt(key, 0);
+		if (npcId == 0) {
+			npcId = Rnd.get(1, 2) == 1 ? firstNpcId : secondNpcId;
+			runtimeState().put(key, npcId);
+		}
+		spawn(npcId, x, y, z, heading);
+	}
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -134,9 +123,8 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("HAMATE_ISLE_STOREROOM")) {
-		    if (!isStartTimer) {
-			    isStartTimer = true;
-			    System.currentTimeMillis();
+		    if (runtimeState().getLong("hamate.deadline", 0) == 0) {
+				startHamateIsleStoreroomTimer();
 			    instance.doOnAllPlayers(new Visitor<Player>() {
 			        /**
 			         * 处理 visit。
@@ -145,9 +133,8 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			         * @param player 玩家 / player
 			         */
 			        @Override
-			        public void visit(Player player) {
+					public void visit(Player player) {
 						if (player.isOnline()) {
-							startHamateIsleStoreroomTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
 							// 龙族防护魔法结界已激活。 / The Balaur protective magic ward has been activated.
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_START_IDABRE);
@@ -160,21 +147,17 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	}
 	
 	private void startHamateIsleStoreroomTimer() {
-		hamateIsleStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				// 所有龙族宝箱已消失。 / All Balaur treasure chests have disappeared.
-				sendMsg(1400244);
-				HamateIsleStoreroomTreasureBoxSuscess.get(0).getController().onDelete();
-				HamateIsleStoreroomTreasureBoxSuscess.get(1).getController().onDelete();
-				HamateIsleStoreroomTreasureBoxSuscess.get(2).getController().onDelete();
-			}
-		}, 900000); //15 Minutes.
+		long deadline = System.currentTimeMillis() + 900_000;
+		runtimeState().put("hamate.deadline", deadline);
+		scheduleDeadline("treasure", deadline, this::expireTreasure);
     }
+
+	private void expireTreasure() {
+		runtimeState().put("hamate.expired", true);
+		sendMsg(1400244);
+		treasureBoxes.forEach(box -> box.getController().onDelete());
+		treasureBoxes.clear();
+	}
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {

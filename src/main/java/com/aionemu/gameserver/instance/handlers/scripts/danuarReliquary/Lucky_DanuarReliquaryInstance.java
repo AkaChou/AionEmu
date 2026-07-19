@@ -1,23 +1,18 @@
 package com.aionemu.gameserver.instance.handlers.scripts.danuarReliquary;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 幸运达努亚尔圣物匣副本事件处理器。
@@ -33,10 +28,24 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 		private int ideanKilled;
 	/** 克隆莫多尔已击杀 / clone modor killed */
 		private int cloneModorKilled;
-	/** luckyreliquary 任务 / lucky reliquary task */
-		private Future<?> luckyReliquaryTask;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
+
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		ideanKilled = runtimeState().getInt("danuar.idean_killed", 0);
+		cloneModorKilled = runtimeState().getInt("danuar.clone_killed", 0);
+		restoreDeadIdeans();
+		if (runtimeState().getBoolean("danuar.complete", false)) {
+			spawnCompletion();
+		} else if (cloneModorKilled >= 5) {
+			spawn(231305, 256.45197f, 257.91986f, 241.78688f, (byte) 90);
+		} else if (ideanKilled >= 3) {
+			spawn(231304, 256.45197f, 257.91986f, 241.78688f, (byte) 90);
+		}
+		restoreBombDeadlines();
+	}
 	
 	/**
 	 * NPC 掉落表注册时处理。
@@ -67,46 +76,31 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 * 莫多尔启动了达努亚怨念炸弹 / Modor activated the Danuar Bomb of grudge
 	 */
 	private void startLuckyReliquaryTimer() {
-		// 莫多尔激活了怨恨的达努阿尔炸弹。你有 15 分钟击败她。 / Modor activated the Danuar Bomb of grudge. You have 15 minutes to defeat her.
-		sendMsgByRace(1401676, Race.PC_ALL, 5000);
-		this.sendMessage(1401677, 10 * 60 * 1000); //10 minutes elapsed.
-		this.sendMessage(1401678, 15 * 60 * 1000); //The bomb has detonated.
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-				    luckyReliquaryTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						/**
-						 * 处理 run。
-						 * Handle run.
-						 */
-						@Override
-						public void run() {
-							instance.doOnAllPlayers(new Visitor<Player>() {
-								/**
-								 * 处理 visit。
-								 * Handle visit.
-								 *
-								 * @param player 玩家 / player
-								 */
-								@Override
-								public void visit(Player player) {
-									onExitInstance(player);
-								}
-							});
-							onInstanceDestroy();
-						}
-					}, 900000); //15 Minutes.
-				}
-			}
-		});
+		if (runtimeState().getLong("danuar.bomb_deadline", 0) != 0) {
+			return;
+		}
+		long deadline = System.currentTimeMillis() + 900_000;
+		runtimeState().put("danuar.bomb_deadline", deadline);
+		restoreBombDeadlines();
     }
+
+	private void restoreBombDeadlines() {
+		long deadline = runtimeState().getLong("danuar.bomb_deadline", 0);
+		if (deadline == 0 || runtimeState().getBoolean("danuar.complete", false)
+				|| runtimeState().getBoolean("danuar.expired", false)) {
+			return;
+		}
+		scheduleDeadline("bomb_warning", deadline - 895_000, () -> sendRaceMessage(1401676));
+		scheduleDeadline("bomb_ten_minutes", deadline - 300_000, () -> sendRaceMessage(1401677));
+		scheduleDeadline("bomb_expire", deadline, this::expireBomb);
+	}
+
+	private void expireBomb() {
+		runtimeState().put("danuar.expired", true);
+		sendRaceMessage(1401678);
+		instance.doOnAllPlayers((Visitor<Player>) this::onExitInstance);
+		onInstanceDestroy();
+	}
 	
 	/**
 	 * 处理死亡事件。
@@ -116,7 +110,6 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 284380:
 			case 284381:
@@ -132,10 +125,13 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 			case 284378: //Idean Lapilima.
 			case 284379: //Idean Obscura.
 				ideanKilled ++;
+				runtimeState().put("danuar.idean_killed", ideanKilled);
+				runtimeState().put("danuar.dead." + npc.getNpcId(), true);
 				if (ideanKilled == 1) {
 				} else if (ideanKilled == 2) {
 				} else if (ideanKilled == 3) {
 				    spawn(231304, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Cursed Queen's Modor.
+					startLuckyReliquaryTimer();
 					instance.doOnAllPlayers(new Visitor<Player>() {
 					    /**
 					     * 处理 visit。
@@ -146,7 +142,6 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 					    @Override
 					    public void visit(Player player) {
 						    if (player.isOnline()) {
-							    startLuckyReliquaryTimer();
 							    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); //15 Minutes.
 						    }
 					    }
@@ -156,6 +151,7 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 			break;
 			case 284383: //Clone's Modor.
 				cloneModorKilled ++;
+				runtimeState().put("danuar.clone_killed", cloneModorKilled);
 				if (cloneModorKilled == 1) {
 				} else if (cloneModorKilled == 2) {
 				} else if (cloneModorKilled == 3) {
@@ -166,26 +162,45 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 			break;
 			case 231305: //Enraged Queen's Modor.
-				luckyReliquaryTask.cancel(true);
-				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <[Lucky] Danuar Reliquary>");
-				spawn(730907, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Lucky Danuar Reliquary Exit.
-				spawn(701795, 256.39725f, 255.52034f, 241.78006f, (byte) 90); //Lucky Danuar Reliquary Box.
-				instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
-				        if (player.isOnline()) {
-						    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-					    }
-				    }
-			    });
+				completeReliquary();
 			break;
 		}
+	}
+
+	private void completeReliquary() {
+		if (runtimeState().getBoolean("danuar.complete", false)) {
+			return;
+		}
+		runtimeState().put("danuar.complete", true);
+		cancelDeadline("bomb_warning");
+		cancelDeadline("bomb_ten_minutes");
+		cancelDeadline("bomb_expire");
+		spawnCompletion();
+		instance.doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
+			}
+		});
+	}
+
+	private void spawnCompletion() {
+		spawn(730907, 256.45197f, 257.91986f, 241.78688f, (byte) 90);
+		spawn(701795, 256.39725f, 255.52034f, 241.78006f, (byte) 90);
+	}
+
+	private void restoreDeadIdeans() {
+		for (int npcId : new int[] { 284377, 284378, 284379 }) {
+			if (runtimeState().getBoolean("danuar.dead." + npcId, false)) {
+				Npc npc = getNpc(npcId);
+				if (npc != null) {
+					npc.getController().onDelete();
+				}
+			}
+		}
+	}
+
+	private void sendRaceMessage(int messageId) {
+		instance.doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId)));
 	}
 	
 	private void sendMsg(final String str) {
@@ -210,48 +225,6 @@ public class Lucky_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 * 阵营 / race
 	 * time
 	 */
-	
-	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
-			}
-		}, time);
-	}
-	
-	private void sendMessage(final int msgId, long delay) {
-        if (delay == 0) {
-            this.sendMsg(msgId);
-        } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                /**
-                 * 处理 run。
-                 * Handle run.
-                 */
-                public void run() {
-                    sendMsg(msgId);
-                }
-            }, delay);
-        }
-    }
 	
 	/**
 	 * 副本销毁时清理资源。

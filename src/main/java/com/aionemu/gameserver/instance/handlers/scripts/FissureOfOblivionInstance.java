@@ -25,7 +25,8 @@ import com.aionemu.gameserver.model.instance.playerreward.FissureOfOblivionPlaye
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -44,8 +45,6 @@ import java.util.concurrent.Future;
 @InstanceID(302100000)
 public class FissureOfOblivionInstance extends GeneralInstanceHandler {
 
-    /** 排名 / rank */
-    private int rank;
     /** 开始时间 / start time */
     private long startTime;
     /** 准备计时器 / timer prepare */
@@ -793,19 +792,8 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
     }
     
     private int checkRank(int totalPoints) {
-        if (totalPoints >= 23550) { //Rank S
-            return 1;
-        } else if (totalPoints >= 21200) { //Rank A
-            return 2;
-        } else if (totalPoints >= 17700) { //Rank B
-            return 3;
-        } else if (totalPoints >= 14100) { //Rank C
-            return 4;
-        } else if (totalPoints >= 9400) { //Rank D
-            return 5;
-        } else {
-            return 6;
-        }
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
     }
     
     protected void startInstanceTask() {
@@ -929,20 +917,11 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
     public void doReward(Player player) {
         FissureOfOblivionPlayerReward playerReward = getPlayerReward(player.getObjectId());
         if (!playerReward.isRewarded()) {
-            playerReward.setRewarded();
             int oblivionRank = instanceReward.getRank();
-            int amount = 0;
-            switch (oblivionRank) {
-                case 1: amount = 5; break;
-                case 2: amount = 4; break;
-                case 3: amount = 3; break;
-                case 4: amount = 2; break;
-                case 5: amount = 1; break;
-            }
-            if (amount > 0) {
-                playerReward.setFrozenMarbleOfMemory(amount);
-                ItemService.addItem(player, 186000448, amount);
-            }
+			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, oblivionRank);
+			playerReward.setFrozenMarbleOfMemory(Math.toIntExact(plan.itemCount(186000448)));
+			InstanceSettlementService.settleTimeAttack(instance, player, oblivionRank);
+			playerReward.setRewarded();
         }
     }
     

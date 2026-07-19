@@ -22,7 +22,8 @@ import com.aionemu.gameserver.model.instance.playerreward.IDEventDefPlayerReward
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -44,8 +45,6 @@ import java.util.concurrent.Future;
 @InstanceID(301631000)
 public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 {
-	/** 军阶 / rank */
-		private int rank;
 	/** 开始时间 / start time */
 	private long startTime;
 	/** 技能种族 / skill race */
@@ -568,16 +567,8 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 500000) { //Rank S.
-			rank = 1;
-		} else if (totalPoints >= 220000) { //Rank A.
-			rank = 2;
-		} else if (totalPoints >= 10000) { //Rank B.
-			rank = 3;
-		} else {
-			rank = 6;
-		}
-		return rank;
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
 	}
 	
    /**
@@ -741,26 +732,14 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	public void doReward(Player player) {
 		IDEventDefPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (!playerReward.isRewarded()) {
-			playerReward.setRewarded();
 			int IDEventDefRank = instanceReward.getRank();
-			switch (IDEventDefRank) {
-				case 1: //Rank S
-				    playerReward.setScoreAP(25000);
-					playerReward.setWrapCashIDEventDefLiveSRank(1);
-					ItemService.addItem(player, 188058265, 1); //S?  ??.
-				break;
-				case 2: //Rank A
-				    playerReward.setScoreAP(15000);
-					playerReward.setWrapCashIDEventDefLiveARank(1);
-					ItemService.addItem(player, 188058266, 1); //A?  ??.
-				break;
-				case 3: //Rank B
-				    playerReward.setScoreAP(10000);
-					playerReward.setWrapCashIDEventDefLiveBRank(1);
-					ItemService.addItem(player, 188058267, 1); //B?  ??.
-				break;
-			}
-			AbyssPointsService.addAp(player, playerReward.getScoreAP());
+			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, IDEventDefRank);
+			playerReward.setScoreAP(plan.ap());
+			playerReward.setWrapCashIDEventDefLiveSRank(Math.toIntExact(plan.itemCount(188058265)));
+			playerReward.setWrapCashIDEventDefLiveARank(Math.toIntExact(plan.itemCount(188058266)));
+			playerReward.setWrapCashIDEventDefLiveBRank(Math.toIntExact(plan.itemCount(188058267)));
+			InstanceSettlementService.settleTimeAttack(instance, player, IDEventDefRank);
+			playerReward.setRewarded();
 		}
 	}
 	

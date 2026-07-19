@@ -6,7 +6,6 @@ import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
-import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.Race;
@@ -16,14 +15,11 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
-import com.aionemu.gameserver.model.templates.tower_reward.TowerStageRewardTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -601,80 +597,8 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      */
     
     public void rewardForFloorId(Player player) {
-        final TowerStageRewardTemplate reward = DataManager.TOWER_REWARD_DATA.getTowerReward(player.getFloor());
         int floor = player.getFloor();
-        
-        int itemId1 = reward.getItemId();
-        int itemCount1 = reward.getItemCount();
-        if (itemId1 != 0 && itemCount1 != 0) {
-            ItemService.addItem(player, itemId1, itemCount1);
-        }
-        
-        int itemId2 = reward.getItemId2();
-        int itemCount2 = reward.getItemCount2();
-        if (itemId2 != 0 && itemCount2 != 0) {
-            ItemService.addItem(player, itemId2, itemCount2);
-        }
-        
-        int kinahCount = reward.getKinahCount();
-        if (kinahCount != 0) {
-            ItemService.addItem(player, 182400001, kinahCount);
-        }
-        
-        int expCount = reward.getExpCount();
-        if (expCount != 0) {
-            player.getCommonData().addExp(expCount, RewardType.QUEST);
-        }
-        
-        int apCount = reward.getApCount();
-        if (apCount != 0) {
-            AbyssPointsService.addAp(player, apCount);
-        }
-        
-        int gpCount = reward.getGpCount();
-        if (gpCount != 0) {
-            AbyssPointsService.addGp(player, gpCount);
-        }
-        
-        if (floor % 5 == 0 && floor <= 40) {
-            switch (floor) {
-                case 5:
-                    ItemService.addItem(player, 162002009, 1);
-                    ItemService.addItem(player, 186000389, 5);
-                    break;
-                case 10:
-                    ItemService.addItem(player, 162002010, 1);
-                    ItemService.addItem(player, 186000389, 10);
-                    break;
-                case 15:
-                    ItemService.addItem(player, 162002011, 1);
-                    ItemService.addItem(player, 186000389, 15);
-                    break;
-                case 20:
-                    ItemService.addItem(player, 162002012, 1);
-                    ItemService.addItem(player, 186000389, 20);
-                    break;
-                case 25:
-                    ItemService.addItem(player, 162002013, 1);
-                    ItemService.addItem(player, 186000389, 25);
-                    break;
-                case 30:
-                    ItemService.addItem(player, 162002014, 1);
-                    ItemService.addItem(player, 186000389, 30);
-                    break;
-                case 35:
-                    ItemService.addItem(player, 162002015, 1);
-                    ItemService.addItem(player, 186000389, 35);
-                    break;
-                case 40:
-                    ItemService.addItem(player, 162002016, 1);
-                    ItemService.addItem(player, 186000389, 100);
-                    ItemService.addItem(player, 188052207, 1);
-                    break;
-            }
-        }
-        
-        PacketSendUtility.sendMessage(player, "You received a reward for completing floor " + floor + "!");
+        InstanceSettlementService.settleInfinity(instance, player, floor);
     }
     
     /**

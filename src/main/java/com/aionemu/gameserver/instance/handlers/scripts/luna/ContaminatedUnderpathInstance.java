@@ -23,7 +23,8 @@ import com.aionemu.gameserver.model.instance.playerreward.ContaminatedUnderpathP
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -48,8 +49,6 @@ import java.util.concurrent.Future;
 @InstanceID(301630000)
 public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 {
-	/** 排名 / rank */
-	private int rank;
 	/** 开始时间 / start time */
 	private long startTime;
 	/** 技能种族 / skill race */
@@ -958,20 +957,8 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 549000) { //Rank S.
-			rank = 1;
-		} else if (totalPoints >= 544000) { //Rank A.
-			rank = 2;
-		} else if (totalPoints >= 50) { //Rank B.
-			rank = 3;
-		} else if (totalPoints >= 50) { //Rank C.
-			rank = 4;
-		} else if (totalPoints >= 50) { //Rank D.
-			rank = 5;
-		} else {
-			rank = 6;
-		}
-		return rank;
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
 	}
 	
 	protected void startInstanceTask() {
@@ -1291,30 +1278,12 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	public void doReward(Player player) {
 		ContaminatedUnderpathPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (!playerReward.isRewarded()) {
-			playerReward.setRewarded();
 			int contaminatedRank = instanceReward.getRank();
-			switch (contaminatedRank) {
-				case 1: //Rank S
-					playerReward.setContaminatedPremiumRewardBundle(1);
-					// 污染高级奖励包。 / Contaminated Premium Reward Bundle.
-					ItemService.addItem(player, 188055598, 1);
-				break;
-				case 2: //Rank A
-				    playerReward.setContaminatedHighestRewardBundle(1);
-					// 污染最高奖励包。 / Contaminated Highest Reward Bundle.
-					ItemService.addItem(player, 188055599, 1);
-				break;
-				case 3: //Rank B
-				    playerReward.setContaminatedUnderpathSpecialPouch(1);
-					// 污染地下通道特殊袋。 / Contaminated Underpath Special Pouch.
-					ItemService.addItem(player, 188055664, 1);
-				break;
-				case 4: //Rank C
-				    playerReward.setContaminatedUnderpathSpecialPouch(1);
-					// 污染地下通道特殊袋。 / Contaminated Underpath Special Pouch.
-					ItemService.addItem(player, 188055664, 1);
-				break;
-			}
+			RewardPlan plan = InstanceSettlementService.lunaPlan(mapId, contaminatedRank);
+			playerReward.setContaminatedPremiumRewardBundle(Math.toIntExact(plan.itemCount(188055598)));
+			playerReward.setContaminatedHighestRewardBundle(Math.toIntExact(plan.itemCount(188055599)));
+			InstanceSettlementService.settleLuna(instance, player, contaminatedRank);
+			playerReward.setRewarded();
 		}
 	}
 	

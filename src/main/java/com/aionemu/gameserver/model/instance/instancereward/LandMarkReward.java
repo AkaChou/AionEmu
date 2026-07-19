@@ -30,52 +30,14 @@ public class LandMarkReward extends InstanceReward<LandMarkPlayerReward> {
 	private Point3D elyosStartPosition;
 	protected WorldMapInstance instance;
 	private long instanceTime;
-	private int bonusTime;
 	private final byte buffId;
 
 	public LandMarkReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId);
 		this.instance = instance;
 		capPoints = 999999;
-		bonusTime = 12000;
 		buffId = 15;
 		setStartPositions();
-	}
-
-	/** 欧比斯奖励。 / Abyss Reward. */
-	public int AbyssReward(boolean isWin, boolean isTimeUp) {
-		int TimeUp = 1993;
-		int Win = 3163;
-		int Loss = 1031;
-		if (isTimeUp) {
-			return isWin ? (Win + TimeUp) : (Loss + TimeUp);
-		} else {
-			return isWin ? Win : Loss;
-		}
-	}
-
-	/** 荣耀奖励 / Glory Reward */
-	public int GloryReward(boolean isWin, boolean isTimeUp) {
-		int TimeUp = 50;
-		int Win = 150;
-		int Loss = 30;
-		if (isTimeUp) {
-			return isWin ? (Win + TimeUp) : (Loss + TimeUp);
-		} else {
-			return isWin ? Win : Loss;
-		}
-	}
-
-	/** 经验奖励。 / Exp Reward. */
-	public int ExpReward(boolean isWin, boolean isTimeUp) {
-		int TimeUp = 2000;
-		int Win = 9000;
-		int Loss = 1000;
-		if (isTimeUp) {
-			return isWin ? (Win + TimeUp) : (Loss + TimeUp);
-		} else {
-			return isWin ? Win : Loss;
-		}
 	}
 
 	/** 排序点。 / Sort points. */
@@ -153,7 +115,7 @@ public class LandMarkReward extends InstanceReward<LandMarkPlayerReward> {
 	/** Reg 玩家 Reward / Reg Player Reward */
 	public void regPlayerReward(Player player) {
 		if (!containPlayer(player.getObjectId())) {
-			addPlayerReward(new LandMarkPlayerReward(player.getObjectId(), bonusTime, buffId, player.getRace()));
+			addPlayerReward(new LandMarkPlayerReward(player.getObjectId(), buffId, player.getRace()));
 		}
 	}
 

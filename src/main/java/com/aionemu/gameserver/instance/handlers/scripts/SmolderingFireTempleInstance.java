@@ -21,7 +21,8 @@ import com.aionemu.gameserver.model.instance.playerreward.SmolderingPlayerReward
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -43,8 +44,6 @@ import java.util.concurrent.Future;
 @InstanceID(302000000)
 public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 {
-	/** 军阶 / rank */
-		private int rank;
 	/** 开始时间 / start time */
 	private long startTime;
 	/** vengeful obscura / vengeful obscura */
@@ -371,20 +370,8 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 878600) { //Rank S.
-			rank = 1;
-		} else if (totalPoints >= 463800) { //Rank A.
-			rank = 2;
-		} else if (totalPoints >= 165100) { //Rank B.
-			rank = 3;
-		} else if (totalPoints >= 54000) { //Rank C.
-			rank = 4;
-		} else if (totalPoints >= 180) { //Rank D.
-			rank = 5;
-		} else {
-			rank = 6;
-		}
-		return rank;
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
 	}
 	/**
 	 * 启动副本计时/任务。
@@ -523,30 +510,11 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	public void doReward(Player player) {
 		SmolderingPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (!playerReward.isRewarded()) {
-			playerReward.setRewarded();
 			int smolderingRank = instanceReward.getRank();
-			switch (smolderingRank) {
-				case 1: //Rank S
-					playerReward.setSmolderingKey(6);
-					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
-					ItemService.addItem(player, 185000270, 6);
-				break;
-				case 2: //Rank A
-					playerReward.setSmolderingKey(4);
-					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
-					ItemService.addItem(player, 185000270, 4);
-				break;
-				case 3: //Rank B
-					playerReward.setSmolderingKey(3);
-					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
-					ItemService.addItem(player, 185000270, 3);
-				break;
-				case 4: //Rank C
-					playerReward.setSmolderingKey(2);
-					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
-					ItemService.addItem(player, 185000270, 2);
-				break;
-			}
+			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, smolderingRank);
+			playerReward.setSmolderingKey(Math.toIntExact(plan.itemCount(185000270)));
+			InstanceSettlementService.settleTimeAttack(instance, player, smolderingRank);
+			playerReward.setRewarded();
 		}
 	}
 	

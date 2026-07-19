@@ -1,13 +1,13 @@
 package com.aionemu.gameserver.model.instance.instancereward;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.dataholders.RetailInstanceData.Row;
 import com.aionemu.gameserver.model.instance.instanceposition.ChaosInstancePosition;
 import com.aionemu.gameserver.model.instance.instanceposition.DisciplineInstancePosition;
 import com.aionemu.gameserver.model.instance.instanceposition.GenerealInstancePosition;
@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.instance.instanceposition.HarmonyInstancePos
 import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -29,8 +30,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	private List<Integer> zones = new ArrayList<Integer>();
 	private int round = 1;
 	private Integer zone;
-	private int bonusTime;
-	private int capPoints;
+	private final Row arenaRow;
 	private long instanceTime;
 	private final byte buffId;
 	protected WorldMapInstance instance;
@@ -39,28 +39,25 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	public PvPArenaReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId);
 		this.instance = instance;
+		if (instance.getDynamicInstance() == null) {
+			throw new IllegalStateException("PvP arena requires a retail dynamic instance");
+		}
+		arenaRow = InstanceSettlementService.arenaRow(mapId, instance.getDynamicInstance().getSpawnPage());
 		boolean isSolo = isSoloArena();
-		capPoints = isSolo ? 14400 : 50000;
-		bonusTime = isSolo ? 8100 : 12000;
-		Collections.addAll(zones, isSolo ? new Integer[] { 1, 2, 3, 4 } : new Integer[] { 1, 2, 3, 4, 5, 6 });
-		int positionSize;
+		for (int stage = 1; stage <= arenaRow.requiredInt("stage_count"); stage++) {
+			zones.add(stage);
+		}
+		int positionSize = arenaRow.requiredInt("alias_count");
 		if (isSolo) {
-			positionSize = 4;
-			buffId = 8;
 			instancePosition = new DisciplineInstancePosition();
 		} else if (isGlory()) {
-			buffId = 7;
-			positionSize = 8;
 			instancePosition = new GloryInstancePosition();
 		} else if (mapId == 300450000 || mapId == 300570000 || mapId == 301100000) {
-			buffId = 7;
-			positionSize = 12;
 			instancePosition = new HarmonyInstancePosition();
 		} else {
-			buffId = 7;
-			positionSize = 12;
 			instancePosition = new ChaosInstancePosition();
 		}
+		buffId = (byte) arenaRow.requiredInt("rebirthbuff");
 		instancePosition.initsialize(mapId, instanceId);
 		for (int i = 1; i <= positionSize; i++) {
 			positions.put(i, Boolean.FALSE);
@@ -82,7 +79,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 
 	/** 返回 cap points / Returns the cap points */
 	public int getCapPoints() {
-		return capPoints;
+		return arenaRow.requiredInt("score_limit_top");
 	}
 
 	/** 设置 rnd zone / Sets the rnd zone */
@@ -132,7 +129,10 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	/** Reg 玩家 Reward / Reg Player Reward */
 	public void regPlayerReward(Integer object) {
 		if (!containPlayer(object)) {
-			addPlayerReward(new PvPArenaPlayerReward(object, bonusTime, buffId));
+			int initialScore = isStartProgress() ? arenaRow.requiredInt("basescore_lateenter")
+					: arenaRow.requiredInt("basescore_enter");
+			addPlayerReward(new PvPArenaPlayerReward(object, initialScore,
+					arenaRow.requiredInt("score_limit_bottom"), arenaRow.requiredInt("score_playtime_bonus"), buffId));
 		}
 	}
 
@@ -154,24 +154,13 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		regPlayerReward(object);
 		setRndPosition(object);
 		PvPArenaPlayerReward playerReward = getPlayerReward(object);
-		playerReward.applyBoostMoraleEffect(player);
+		playerReward.applyBoostMoraleEffect(player, getRebirthBuffDuration(getRank(playerReward.getPoints())));
 		instancePosition.port(player, zone, playerReward.getPosition());
 	}
 
 	/** 排序点。 / Sort points. */
 	public List<PvPArenaPlayerReward> sortPoints() {
 		return RewardCollections.sortedByScoreDescending(getInstanceRewards(), PvPArenaPlayerReward::getScorePoints);
-	}
-
-	/**
-	 * @param rewardedPlayer Whether reward opportunity token
-	 */
-	public boolean canRewardOpportunityToken(PvPArenaPlayerReward rewardedPlayer) {
-		if (rewardedPlayer != null) {
-			int rank = getRank(rewardedPlayer.getScorePoints());
-			return isSoloArena() && rank == 1 || rank > 2;
-		}
-		return false;
 	}
 
 	/** 获取军阶。 / Returns the rank. */
@@ -189,10 +178,8 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	 * @return Whether cap points
 	 */
 	public boolean hasCapPoints() {
-		if (isSoloArena()
-				&& (RewardCollections.maxPoints(getInstanceRewards()) - RewardCollections.minPoints(getInstanceRewards()) >= 1500))
-			return true;
-		return RewardCollections.maxPoints(getInstanceRewards()) >= capPoints;
+		return InstanceSettlementService.arenaScoreLimitReached(arenaRow,
+				RewardCollections.maxPoints(getInstanceRewards()), RewardCollections.minPoints(getInstanceRewards()));
 	}
 
 	/** 返回 total points / Returns the total points */
@@ -245,10 +232,12 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 		if (isRewarded()) {
 			return 0;
 		}
-		if (result < 120000) {
-			return (int) (120000 - result);
+		long waitMillis = arenaRow.requiredInt("wait_time_limit") * 1000L;
+		long stageMillis = arenaRow.requiredInt("stage_time_limit") * 1000L;
+		if (result < waitMillis) {
+			return (int) (waitMillis - result);
 		} else {
-			return (int) (180000 * getRound() - (result - 120000));
+			return (int) Math.max(0, stageMillis * getRound() - (result - waitMillis));
 		}
 	}
 
@@ -272,6 +261,58 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	/** 返回增益 ID / Returns the buff id */
 	public byte getBuffId() {
 		return buffId;
+	}
+
+	public int getZone() {
+		return zone;
+	}
+
+	public Row getArenaRow() {
+		return arenaRow;
+	}
+
+	public int getWaitTimeSeconds() {
+		return arenaRow.requiredInt("wait_time_limit");
+	}
+
+	public int getStageTimeSeconds() {
+		return arenaRow.requiredInt("stage_time_limit");
+	}
+
+	public int getScoreModifierStartStage() {
+		return arenaRow.intValue("scoremod_start_stage", 0);
+	}
+
+	public int getStageEndBuffId(int stage) {
+		return arenaRow.intValue("stageendbuff_" + String.format("%02d", stage), 0);
+	}
+
+	public int getStageEndBuffTargetRank(int stage) {
+		return arenaRow.intValue("stageendbuff_targetrank_" + String.format("%02d", stage), Integer.MAX_VALUE);
+	}
+
+	public int getKillScore() {
+		return arenaRow.requiredInt("score_get_pc_kill");
+	}
+
+	public int getDeathScore(int rank) {
+		return arenaRow.requiredInt("score_lose_pc_die") * getScoreModifier(rank) / 100;
+	}
+
+	public int getScoreModifier(int rank) {
+		if (round < arenaRow.intValue("scoremod_start_stage", Integer.MAX_VALUE)) {
+			return 100;
+		}
+		return arenaRow.intValue("scoremod_rank" + String.format("%02d", rank + 1), 100);
+	}
+
+	public int getRebirthBuffDuration(int rank) {
+		return arenaRow.intValue("rebirthbuff_duration_rank" + String.format("%02d", rank + 1),
+				arenaRow.requiredInt("rebirthbuff_duration"));
+	}
+
+	public long getTotalPlayMillis() {
+		return arenaRow.requiredInt("stage_time_limit") * 3000L;
 	}
 
 	/** 清空。 / Clear. */

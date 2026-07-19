@@ -24,9 +24,9 @@ import com.aionemu.gameserver.model.instance.playerreward.EternalBastionPlayerRe
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService;
+import com.aionemu.gameserver.services.instance.InstanceSettlementService.RewardPlan;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -48,8 +48,6 @@ import java.util.concurrent.Future;
 @InstanceID(300540000)
 public class TheEternalBastionInstance extends GeneralInstanceHandler
 {
-	/** 军阶 / rank */
-		private int rank;
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
 	/** 开始时间 / start time */
@@ -765,22 +763,8 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	}
 	
 	private int checkRank(int totalPoints) {
-		if (totalPoints >= 90000) { //Rank S.
-			rank = 1;
-		} else if (totalPoints >= 82000) { //Rank A.
-			rank = 2;
-		} else if (totalPoints >= 60000) { //Rank B.
-			rank = 3;
-		} else if (totalPoints >= 30000) { //Rank C.
-			rank = 4;
-		} else if (totalPoints >= 5000) { //Rank D.
-			rank = 5;
-		} else if (totalPoints >= 2000) { //Rank F.
-			rank = 6;
-		} else {
-			rank = 8;
-		}
-	    return rank;
+		return InstanceSettlementService.timeAttackRank(mapId, totalPoints,
+				Math.max(0, System.currentTimeMillis() - startTime) / 1000);
 	}
 	/**
 	 * 停止副本并结算。
@@ -823,46 +807,16 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	public void doReward(Player player) {
 		EternalBastionPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (!playerReward.isRewarded()) {
-			playerReward.setRewarded();
 			int bastionRank = instanceReward.getRank();
-			switch (bastionRank) {
-				case 1: //Rank S
-					playerReward.setScoreAP(35000);
-					playerReward.setCeramium(1);
-					ItemService.addItem(player, 186000242, 1);
-					playerReward.setHighestGradeMaterialBox(1);
-					ItemService.addItem(player, 188052594, 1);
-					playerReward.setHighestGradeMaterialSupportBundle(1);
-					ItemService.addItem(player, 188052596, 1);
-				break;
-				case 2: //Rank A
-					playerReward.setScoreAP(25000);
-					playerReward.setCeramium(1);
-					ItemService.addItem(player, 186000242, 1);
-					playerReward.setHighestGradeMaterialBox(1);
-					ItemService.addItem(player, 188052594, 1);
-					playerReward.setHighGradeMaterialSupportBundle(1);
-					ItemService.addItem(player, 188052597, 1);
-				break;
-				case 3: //Rank B
-					playerReward.setScoreAP(15000);
-					playerReward.setCeramium(1);
-					ItemService.addItem(player, 186000242, 1);
-					playerReward.setHighGradeMaterialBox(1);
-					ItemService.addItem(player, 188052595, 1);
-					playerReward.setLowGradeMaterialSupportBundle(1);
-					ItemService.addItem(player, 188052598, 1);
-				break;
-				case 4: //Rank C
-					playerReward.setScoreAP(11000);
-					playerReward.setLowGradeMaterialSupportBundle(1);
-					ItemService.addItem(player, 188052598, 1);
-				break;
-				case 5: //Rank D
-				    playerReward.setScoreAP(7000);
-				break;
-			}
-			AbyssPointsService.addAp(player, playerReward.getScoreAP());
+			RewardPlan plan = InstanceSettlementService.timeAttackPlan(mapId, bastionRank);
+			playerReward.setScoreAP(plan.ap());
+			playerReward.setHighestGradeMaterialBox(Math.toIntExact(plan.itemCount(188052594)));
+			playerReward.setHighGradeMaterialBox(Math.toIntExact(plan.itemCount(188052595)));
+			playerReward.setHighestGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052596)));
+			playerReward.setHighGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052597)));
+			playerReward.setLowGradeMaterialSupportBundle(Math.toIntExact(plan.itemCount(188052598)));
+			InstanceSettlementService.settleTimeAttack(instance, player, bastionRank);
+			playerReward.setRewarded();
 		}
 	}
 	

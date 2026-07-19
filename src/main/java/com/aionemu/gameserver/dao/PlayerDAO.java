@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +44,10 @@ public abstract class PlayerDAO implements IDFactoryAwareDAO {
 	 * 玩家 / player
 	 */
 	public abstract void storePlayer(Player player);
+
+	public void storeExpInTransaction(Connection connection, int playerId, long exp) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * 保存新创建的角色。

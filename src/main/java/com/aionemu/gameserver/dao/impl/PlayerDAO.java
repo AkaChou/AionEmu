@@ -51,6 +51,7 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
     private static final String SELECT_PLAYER_NAMES_QUERY = "SELECT id, `name` FROM players WHERE id IN (%s)";
     /** 更新玩家完整数据 / Update full player row */
     private static final String UPDATE_PLAYER_QUERY = "UPDATE players SET " +  "name = ?, exp = ?, recoverexp = ?, x = ?, y = ?, z = ?, heading = ?, " + "world_id = ?, gender = ?, race = ?, player_class = ?, last_online = ?, " + "quest_expands = ?, npc_expands = ?, advenced_stigma_slot_size = ?, " + "warehouse_size = ?, note = ?, title_id = ?, bonus_title_id = ?, " + "dp = ?, soul_sickness = ?, mailbox_letters = ?, reposte_energy = ?, " + "mentor_flag_time = ?, world_owner = ?, stamps = ?, rewarded_pass = ?, " + "last_stamp = ?, passport_time = ?, is_archdaeva = ?, creativity_point = ?, " + "aura_of_growth = ?, join_legion_id = ?, join_state = ?, berdin_star = ?, " + "abyss_favor = ?, luna_consume = ?, muni_keys = ?, luna_consume_count = ?, " + "wardrobe_slot = ?, frenzy_points = ?, frenzy_count = ?, toc_floor = ?, " + "stone_cp = ?, golden_dice = ?, sweep_reset = ?, minion_skill_points = ?, " + "minion_function_time = ? WHERE id = ?";
+	private static final String UPDATE_EXP_QUERY = "UPDATE players SET exp = ? WHERE id = ?";
 
     /** 插入新角色 / Insert a new player */
     private static final String INSERT_PLAYER_QUERY = "INSERT INTO players " + "(id, `name`, account_id, account_name, x, y, z, heading, " + "world_id, gender, race, player_class, quest_expands, npc_expands, " + "warehouse_size, bonus_title_id, is_archdaeva,wardrobe_slot, " + "online, stamps, rewarded_pass) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2, 0, 0, 1)";
@@ -247,6 +248,17 @@ public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
             playerCommonDataByName.put(player.getName().toLowerCase(), player.getCommonData());
         }
     }
+
+	@Override
+	public void storeExpInTransaction(Connection connection, int playerId, long exp) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement(UPDATE_EXP_QUERY)) {
+			statement.setLong(1, exp);
+			statement.setInt(2, playerId);
+			if (statement.executeUpdate() != 1) {
+				throw new SQLException("Unknown player " + playerId);
+			}
+		}
+	}
 
     /**
      * 插入新创建的角色记录，并按配置写入缓存。

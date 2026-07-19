@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 
-import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import com.aionemu.gameserver.model.instance.instancereward.EngulfedOphidanBridg
 import com.aionemu.gameserver.model.instance.instancereward.EternalBastionReward;
 import com.aionemu.gameserver.model.instance.instancereward.EvergaleCanyonReward;
 import com.aionemu.gameserver.model.instance.instancereward.FissureOfOblivionReward;
-import com.aionemu.gameserver.model.instance.instancereward.HallOfTenacityReward;
 import com.aionemu.gameserver.model.instance.instancereward.HarmonyArenaReward;
 import com.aionemu.gameserver.model.instance.instancereward.IDEventDefReward;
 import com.aionemu.gameserver.model.instance.instancereward.IdgelDomeReward;
@@ -29,14 +27,16 @@ import com.aionemu.gameserver.model.instance.instancereward.SecretMunitionsFacto
 import com.aionemu.gameserver.model.instance.instancereward.ShugoEmperorVaultReward;
 import com.aionemu.gameserver.model.instance.instancereward.SmolderingReward;
 import com.aionemu.gameserver.model.instance.instancereward.StonespearReachReward;
+import com.aionemu.gameserver.model.instance.instancereward.TreasureIslandReward;
 import com.aionemu.gameserver.model.instance.playerreward.ContaminatedUnderpathPlayerReward;
+import com.aionemu.gameserver.model.instance.playerreward.BattlegroundPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.CruciblePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.DredgionPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.EngulfedOphidanBridgePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.EternalBastionPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.EvergaleCanyonPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.FissureOfOblivionPlayerReward;
-import com.aionemu.gameserver.model.instance.playerreward.HallOfTenacityPlayerReward;
+import com.aionemu.gameserver.model.instance.tournament.TournamentScore;
 import com.aionemu.gameserver.model.instance.playerreward.HarmonyGroupReward;
 import com.aionemu.gameserver.model.instance.playerreward.IDEventDefPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.IdgelDomePlayerReward;
@@ -54,7 +54,6 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 向客户端同步各类副本/战场计分板、奖励与玩家状态的服务端包。
@@ -73,8 +72,15 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	private Integer object;
 	private int PlayerStatus = 0;
 	private int PlayerRaceId = 0;
-	private Player player;
-	private Player opponent;
+	private TournamentScore tournamentScore;
+
+	public SM_INSTANCE_SCORE(int mapId, int instanceTime, InstanceScoreType instanceScoreType,
+			TournamentScore tournamentScore) {
+		this.mapId = mapId;
+		this.instanceTime = instanceTime;
+		this.instanceScoreType = instanceScoreType;
+		this.tournamentScore = tournamentScore;
+	}
 
 	/**
 	 * 按类型同步计分，并附带目标对象、玩家状态与种族。
@@ -115,6 +121,12 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		this.instanceReward = instanceReward;
 		this.object = object;
 		instanceScoreType = instanceReward.getInstanceScoreType();
+	}
+
+	public SM_INSTANCE_SCORE(int type, int instanceTime, InstanceReward instanceReward, Integer object,
+			List<Player> players) {
+		this(type, instanceTime, instanceReward, object);
+		this.players = players;
 	}
 
 	/**
@@ -178,45 +190,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		this.instanceScoreType = instanceReward.getInstanceScoreType();
 	}
 
-	/**
-	 * 按类型同步指定玩家的计分信息。
-	 * Syncs score info for a specific player by type.
-	 *
-	 * @param type 同步类型 / sync type
-	 * target player
-	 * @param instanceTime 副本剩余/经过时间 / instance time
-	 * @param instanceReward 副本奖励上下文 / instance reward context
-	 */
-	public SM_INSTANCE_SCORE(int type, Player player, int instanceTime, InstanceReward instanceReward) {
-		this.mapId = instanceReward.getMapId();
-		this.type = type;
-		this.player = player;
-		this.instanceTime = instanceTime;
-		this.instanceReward = instanceReward;
-		instanceScoreType = instanceReward.getInstanceScoreType();
-	}
-
-	/**
-	 * 按类型同步玩家与对手的计分信息（如 1v1 场景）。
-	 * Syncs score info for a player and opponent by type (e.g. 1v1).
-	 *
-	 * @param type 同步类型 / sync type
-	 * target player
-	 * opponent player
-	 * @param instanceTime 副本剩余/经过时间 / instance time
-	 * @param instanceReward 副本奖励上下文 / instance reward context
-	 */
-	public SM_INSTANCE_SCORE(int type, Player player, Player opponent, int instanceTime,
-			InstanceReward instanceReward) {
-		this.mapId = instanceReward.getMapId();
-		this.type = type;
-		this.player = player;
-		this.opponent = opponent;
-		this.instanceTime = instanceTime;
-		this.instanceReward = instanceReward;
-		instanceScoreType = instanceReward.getInstanceScoreType();
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void writeImpl(AionConnection con) {
@@ -226,6 +199,10 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 		writeD(mapId);
 		writeD(instanceTime);
 		writeD(instanceScoreType.getId());
+		if (tournamentScore != null) {
+			writeB(tournamentScore.payload());
+			return;
+		}
 		switch (mapId) {
 		case 300450000: // Arena Of Harmony 3.9
 		case 300570000: // Harmony Training Grounds 3.9
@@ -254,34 +231,16 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 5:
-				writeD(harmonyGroupReward.getBasicAP());
-				writeD(harmonyGroupReward.getBasicGP());
-				writeD(harmonyGroupReward.getScoreAP());
-				writeD(harmonyGroupReward.getScoreGP());
-				writeD(harmonyGroupReward.getRankingAP());
-				writeD(harmonyGroupReward.getRankingGP());
-				writeD(186000137);
-				writeD(harmonyGroupReward.getBasicCourage());
-				writeD(harmonyGroupReward.getScoreCourage());
-				writeD(harmonyGroupReward.getRankingCourage());
-				writeD(186000442); // ë¬´í•œì�˜ í…œíŽ˜ë¥´ íœ˜ìž¥.
-				writeD(harmonyGroupReward.getBasicInfinity());
-				writeD(harmonyGroupReward.getScoreInfinity());
-				writeD(harmonyGroupReward.getRankingInfinity());
-				if (harmonyGroupReward.getGloryTicket() != 0) {
-					writeD(186000185);
-					writeD(harmonyGroupReward.getGloryTicket());
+				PvPArenaPlayerReward harmonyPlayerReward = harmonyArena.getPlayerReward(object);
+				if (harmonyArena.isRewarded() && harmonyArena.canRewarded() && harmonyPlayerReward != null) {
+					writeArenaReward(harmonyPlayerReward);
 				} else {
-					writeD(0);
-					writeD(0);
+					writeB(new byte[76]);
 				}
 				writeD(0);
 				writeD(0);
 				writeD(0);
-				writeD(0);
-				writeD(0);
-				writeD(0);
-				writeD((int) harmonyGroupReward.getParticipation() * 100);
+				writeD(harmonyPlayerReward == null ? 0 : harmonyPlayerReward.getParticipationPercent());
 				writeD(harmonyGroupReward.getPoints());
 				break;
 			case 6:
@@ -366,25 +325,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 5:
-				writeD((int) kbpr.getParticipation());
-				writeD(kbpr.getRewardExp());
-				writeD(kbpr.getBonusExp());
-				writeD(kbpr.getRewardAp());
-				writeD(kbpr.getBonusAp());
-				writeD(kbpr.getRewardGp());
-				writeD(kbpr.getBonusGp());
-				// 奖励。 / Reward.
-				writeD(kbpr.getKamarRewardBox());
-				writeQ(kbpr.getRewardCount());
-				writeD(kbpr.getBrokenSpinel());
-				writeQ(kbpr.getRewardCount());
-				writeD(kbpr.getBonusReward());
-				writeQ(kbpr.getRewardCount());
-				writeD(kbpr.getBonusReward2());
-				writeQ(kbpr.getRewardCount());
-				writeD(kbpr.getAdditionalReward());
-				writeQ(kbpr.getAdditionalRewardCount());
-				writeC(1);
+				writeBattlegroundReward(kbpr, 5);
 				break;
 			case 6:
 				int counter = 0;
@@ -484,25 +425,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 5:
-				writeD((int) eobpr.getParticipation());
-				writeD(eobpr.getRewardExp());
-				writeD(eobpr.getBonusExp());
-				writeD(eobpr.getRewardAp());
-				writeD(eobpr.getBonusAp());
-				writeD(eobpr.getRewardGp());
-				writeD(eobpr.getBonusGp());
-				// 奖励。 / Reward.
-				writeD(eobpr.getOphidanVictoryBox());
-				writeQ(eobpr.getRewardCount());
-				writeD(eobpr.getBrokenSpinel());
-				writeQ(eobpr.getRewardCount());
-				writeD(eobpr.getBonusReward());
-				writeQ(eobpr.getRewardCount());
-				writeD(eobpr.getBonusReward2());
-				writeQ(eobpr.getRewardCount());
-				writeD(eobpr.getAdditionalReward());
-				writeQ(eobpr.getAdditionalRewardCount());
-				writeC(1);
+				writeBattlegroundReward(eobpr, 5);
 				break;
 			case 6:
 				int counter = 0;
@@ -592,25 +515,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 5:
-				writeD((int) iwwpr.getParticipation());
-				writeD(iwwpr.getRewardExp());
-				writeD(iwwpr.getBonusExp());
-				writeD(iwwpr.getRewardAp());
-				writeD(iwwpr.getBonusAp());
-				writeD(iwwpr.getRewardGp());
-				writeD(iwwpr.getBonusGp());
-				// 奖励。 / Reward.
-				writeD(iwwpr.getMedalBundle());
-				writeQ(iwwpr.getRewardCount());
-				writeD(iwwpr.getBrokenSpinel());
-				writeQ(iwwpr.getRewardCount());
-				writeD(iwwpr.getBonusReward());
-				writeQ(iwwpr.getRewardCount());
-				writeD(iwwpr.getBonusReward2());
-				writeQ(iwwpr.getRewardCount());
-				writeD(iwwpr.getAdditionalReward());
-				writeQ(iwwpr.getAdditionalRewardCount());
-				writeC(1);
+				writeBattlegroundReward(iwwpr, 5);
 				break;
 			case 6:
 				int counter = 0;
@@ -700,25 +605,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 5:
-				writeD((int) idpr.getParticipation());
-				writeD(idpr.getRewardExp());
-				writeD(idpr.getBonusExp());
-				writeD(idpr.getRewardAp());
-				writeD(idpr.getBonusAp());
-				writeD(idpr.getRewardGp());
-				writeD(idpr.getBonusGp());
-				// 奖励。 / Reward.
-				writeD(idpr.getIdgelDomeBox());
-				writeQ(idpr.getRewardCount());
-				writeD(idpr.getBloodMark());
-				writeQ(idpr.getRewardCount());
-				writeD(idpr.getBonusReward());
-				writeQ(idpr.getRewardCount());
-				writeD(idpr.getBonusReward2());
-				writeQ(idpr.getRewardCount());
-				writeD(idpr.getAdditionalReward());
-				writeQ(idpr.getAdditionalRewardCount());
-				writeC(1);
+				writeBattlegroundReward(idpr, 5);
 				break;
 			case 6:
 				int counter = 0;
@@ -808,25 +695,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 5:
-				writeD((int) lmpr.getParticipation());
-				writeD(lmpr.getRewardExp());
-				writeD(lmpr.getBonusExp());
-				writeD(lmpr.getRewardAp());
-				writeD(lmpr.getBonusAp());
-				writeD(lmpr.getRewardGp());
-				writeD(lmpr.getBonusGp());
-				// 奖励。 / Reward.
-				writeD(lmpr.getLandMarkBox());
-				writeQ(lmpr.getRewardCount());
-				writeD(lmpr.getBrokenSpinel());
-				writeQ(lmpr.getRewardCount());
-				writeD(lmpr.getBonusReward());
-				writeQ(lmpr.getRewardCount());
-				writeD(lmpr.getBonusReward2());
-				writeQ(lmpr.getRewardCount());
-				writeD(lmpr.getAdditionalReward());
-				writeQ(lmpr.getAdditionalRewardCount());
-				writeC(1);
+				writeBattlegroundReward(lmpr, 5);
 				break;
 			case 6:
 				int counter = 0;
@@ -916,23 +785,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(object);
 				break;
 			case 5:
-				writeD((int) ecpr.getParticipation());
-				writeD(ecpr.getRewardExp());
-				writeD(ecpr.getBonusExp());
-				writeD(ecpr.getRewardAp());
-				writeD(ecpr.getBonusAp());
-				writeD(ecpr.getRewardGp());
-				writeD(ecpr.getBonusGp());
-				// 奖励。 / Reward.
-				writeD(ecpr.getCoinIdEternityWar01());
-				writeQ(ecpr.getRewardCount());
-				writeD(ecpr.getBrokenSpinel());
-				writeQ(ecpr.getRewardCount());
-				writeD(ecpr.getCashMinionContract01());
-				writeQ(ecpr.getRewardCount());
-				writeD(ecpr.getIDEternityWarStigma());
-				writeQ(ecpr.getRewardCount());
-				writeC(1);
+				writeBattlegroundReward(ecpr, 4);
 				break;
 			case 6:
 				int counter = 0;
@@ -996,6 +849,55 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(ecpr.getRace().getRaceId());
 				writeD(TeamScore6 == OppositeTeamScore6 ? 65535 : 0);
 				break;
+			}
+			break;
+		case 301700000: // Treasure Island of Courage 5.8
+			TreasureIslandReward treasure = (TreasureIslandReward) instanceReward;
+			if (object == null) {
+				object = ownerObject;
+			}
+			BattlegroundPlayerReward treasurePlayer = treasure.getPlayerReward(object);
+			writeC(type);
+			switch (type) {
+				case 3:
+					writeD(15);
+					writeD(PlayerStatus);
+					writeD(object);
+					writeD(PlayerRaceId);
+					break;
+				case 4:
+					writeD(15);
+					writeD(PlayerStatus);
+					writeD(object);
+					break;
+				case 5:
+					writeTreasureIslandReward(treasurePlayer);
+					break;
+				case 6:
+					writeD(100);
+					writeTreasureIslandStatuses(Race.ELYOS);
+					writeTreasureIslandStatuses(Race.ASMODIANS);
+					writeTreasureIslandTeam(treasure, Race.ELYOS);
+					writeTreasureIslandTeam(treasure, Race.ASMODIANS);
+					break;
+				case 7:
+					writeD(treasurePlayer.getRace().getRaceId());
+					writeTreasureIslandTable(treasurePlayer.getRace());
+					break;
+				case 10:
+					writeC(0);
+					writeD(0);
+					writeD(treasure.getPointsByRace(treasurePlayer.getRace()));
+					writeD(treasurePlayer.getRace().getRaceId());
+					writeD(object);
+					break;
+				case 11:
+					writeC(0);
+					writeD(0);
+					writeD(treasure.getPointsByRace(treasurePlayer.getRace()));
+					writeD(treasurePlayer.getRace().getRaceId());
+					writeD(treasure.isPreparing() ? 65535 : 1);
+					break;
 			}
 			break;
 		case 300300000: // Empyrean Crucible 2.5
@@ -1288,7 +1190,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeD(isRewarded ? playerReward.getTimeBonus() : 0);
 				writeD(0);
 				writeD(0);
-				writeH(isRewarded ? (short) (playerReward.getParticipation() * 100) : 0);
+				writeH(isRewarded ? playerReward.getParticipationPercent() : 0);
 				writeS(player.getName(), 54);
 				playerCount++;
 			}
@@ -1296,135 +1198,40 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 				writeB(new byte[92 * (12 - playerCount)]);
 			}
 			if (isRewarded && arenaReward.canRewarded() && rewardedPlayer != null) {
-				writeD(rewardedPlayer.getBasicAP());
-				writeD(rewardedPlayer.getBasicGP());
-				writeD(rewardedPlayer.getRankingAP());
-				writeD(rewardedPlayer.getRankingGP());
-				writeD(rewardedPlayer.getScoreAP());
-				writeD(rewardedPlayer.getScoreGP());
-				if (mapId == 300550000) { // Arena Of Glory.
-					writeB(new byte[32]);
-					if (rewardedPlayer.getMithrilMedal() != 0) {
-						writeD(186000147); // Mithril Medal.
-						writeD(rewardedPlayer.getMithrilMedal());
-					} else if (rewardedPlayer.getPlatinumMedal() != 0) {
-						writeD(186000096); // Platinum Medal.
-						writeD(rewardedPlayer.getPlatinumMedal());
-					} else if (rewardedPlayer.getLifeSerum() != 0) {
-						writeD(162000077); // Fine Life Serum.
-						writeD(rewardedPlayer.getLifeSerum());
-					} else {
-						writeD(0);
-						writeD(0);
-					}
-					if (rewardedPlayer.getGloriousInsignia() != 0) {
-						writeD(182213259); // Glorious Insignia.
-						writeD(rewardedPlayer.getGloriousInsignia());
-					} else {
-						writeD(0);
-						writeD(0);
-					}
-				} else {
-					writeD(186000130); // Crucible Insignia.
-					writeD(rewardedPlayer.getBasicCrucible());
-					writeD(rewardedPlayer.getScoreCrucible());
-					writeD(rewardedPlayer.getRankingCrucible());
-					writeD(186000137); // Courage Insignia.
-					writeD(rewardedPlayer.getBasicCourage());
-					writeD(rewardedPlayer.getScoreCourage());
-					writeD(rewardedPlayer.getRankingCourage());
-					writeD(186000442); // ë¬´í•œì�˜ í…œíŽ˜ë¥´ íœ˜ìž¥.
-					writeD(rewardedPlayer.getBasicInfinity());
-					writeD(rewardedPlayer.getScoreInfinity());
-					writeD(rewardedPlayer.getRankingInfinity());
-					if (rewardedPlayer.getOpportunity() != 0) {
-						writeD(186000165); // Opportunity Token.
-						writeD(rewardedPlayer.getOpportunity());
-					} else if (rewardedPlayer.getGloryTicket() != 0) {
-						writeD(186000185); // Arena Of Glory Ticket.
-						writeD(rewardedPlayer.getGloryTicket());
-					} else {
-						writeD(0);
-						writeD(0);
-					}
-					writeD(0);
-					writeD(0);
-				}
+				writeArenaReward(rewardedPlayer);
 			} else {
-				writeB(new byte[60]);
+				writeB(new byte[76]);
 			}
 			writeD(arenaReward.getBuffId());
-			writeD(0);
+			writeD(arenaReward.getZone());
 			writeD(arenaReward.getRound());
 			writeD(arenaReward.getCapPoints());
-			writeD(3);
+			writeD(arenaReward.getScoreModifierStartStage());
 			writeD(0);
 			break;
-		case 302310000: // Arena Of Tenacity
-			writeD(type);
-			switch (type) {
-			case 4:
-				writeC(player.getHOTVSId()); // match side: 0 or 1
-				writeC(0x0E);// unk static
-				writeH(0x10);// unk static
-				break;
-			case 5:
-				writeC(player.getHOTVSId()); // match side: 0 or 1
-				writeC(0x0E);// unk static
-				writeH(0x10);// unk static
-				break;
-			case 6:
-				writeC(player.getHOTVSId()); // match side: 0 or 1
-				writeC(0x0E);// unk static
-				writeH(0x10);// unk static
-				writeD(0);// this player win count
-
-				writeC(opponent.getHOTVSId()); // opponent match side: 0 or 1
-				writeC(0x0E);// unk static
-				writeH(0x10);// unk static
-				writeD(0);// this player win count
-				break;
-			case 11:
-				writeD(1);// 未知 / unk
-				writeD(opponent.getHOTMyOpponentObjId());// player objectId
-				writeD(player.getObjectId());// opponent objectId
-				break;
-			}
-			break;
-		case 302320000: // Hall Of Tenacity
-			HallOfTenacityReward hot = (HallOfTenacityReward) instanceReward;
-			List<Player> members = hot.getPlayersInside();
-			writeD(type);
-			switch (type) {
-			case 0: // Enter Hall Of Tenacity
-				writeD(5); // 未知 / unk
-				writeD(players.size());
-				for (Player p : players) {
-					writeD(p.getObjectId());
-					writeS(p.getName() + " - ENCOM", 52);
-					writeD(p.getPlayerClass().getClassId());
-					writeH(p.getLevel());
-					writeC(p.getHOTVSId()); // match side: 0 or 1
-					writeC(0x0E);// unk static
-					writeH(0x10);// unk static
-					writeD(p.getHOTCoupleId()); // match slot: 0 to 15
-					writeD(0);// 未知 / unk
-					writeD(0);// 未知 / unk
-					writeH(0);// 未知 / unk
-					writeC(0);// 未知 / unk
-					log.info(I18n.get("log.e3b9fa7335db", p.getName(), p.getHOTCoupleId(), p.getHOTVSId()));
-				}
-				break;
-			case 9:// competition points
-				for (Player p : players) {
-					HallOfTenacityPlayerReward hotRewardedPlayer = hot.getPlayerReward(p.getObjectId());
-					writeD(p.getObjectId());
-					writeD(hotRewardedPlayer.getCompetitionPoint());
-				}
-				break;
-			}
-			break;
 		}
+	}
+
+	private void writeArenaReward(PvPArenaPlayerReward reward) {
+		writeD(reward.getBasicAP());
+		writeD(reward.getBasicGP());
+		writeD(reward.getScoreAP());
+		writeD(reward.getScoreGP());
+		writeD(reward.getRankingAP());
+		writeD(reward.getRankingGP());
+		writeD(reward.getItem1Id());
+		writeD(reward.getBasicItem1());
+		writeD(reward.getPlayItem1());
+		writeD(reward.getRankItem1());
+		writeD(reward.getItem2Id());
+		writeD(reward.getBasicItem2());
+		writeD(reward.getPlayItem2());
+		writeD(reward.getRankItem2());
+		writeD(reward.getBonusItem1Id());
+		writeD(reward.getBonusItem1Count());
+		writeD(reward.getBonusItem2Id());
+		writeD(reward.getBonusItem2Count());
+		writeD(0);
 	}
 
 	private void fillTableWithGroup(Race race) {
@@ -1608,5 +1415,85 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 			writeB(new byte[69 * (12 - count)]);
 		}
 		writeB(new byte[828]);
+	}
+
+	private void writeBattlegroundReward(BattlegroundPlayerReward reward, int itemSlots) {
+		writeD((int) (reward.getParticipation() * 100));
+		writeD(reward.getRewardExp());
+		writeD(reward.getBonusExp());
+		writeD(reward.getRewardAp());
+		writeD(reward.getBonusAp());
+		writeD(reward.getRewardGp());
+		writeD(reward.getBonusGp());
+		for (int slot = 0; slot < itemSlots; slot++) {
+			writeD(reward.getRewardItemId(slot));
+			writeQ(reward.getRewardItemCount(slot));
+		}
+		writeC(1);
+	}
+
+	private void writeTreasureIslandStatuses(Race race) {
+		int count = 0;
+		for (Player current : players) {
+			if (current.getRace() != race || count == 96) {
+				continue;
+			}
+			writeD(15);
+			writeD(current.getLifeStats().isAlreadyDead() ? 60 : 0);
+			writeD(current.getObjectId());
+			count++;
+		}
+		writeB(new byte[12 * (96 - count)]);
+	}
+
+	private void writeTreasureIslandTeam(TreasureIslandReward reward, Race race) {
+		writeC(0);
+		writeD(0);
+		writeD(reward.getPointsByRace(race));
+		writeD(race.getRaceId());
+		writeD(reward.isPreparing() ? 65535 : 1);
+	}
+
+	private void writeTreasureIslandTable(Race race) {
+		TreasureIslandReward treasure = (TreasureIslandReward) instanceReward;
+		int count = 0;
+		for (Player current : players) {
+			if (current.getRace() != race || count == 96) {
+				continue;
+			}
+			BattlegroundPlayerReward currentReward = treasure.getPlayerReward(current.getObjectId());
+			if (currentReward == null) {
+				continue;
+			}
+			writeD(current.getObjectId());
+			writeC(current.getPlayerClass().getClassId());
+			writeC(current.getAbyssRank().getRank().getId());
+			writeC(0);
+			writeH(0);
+			writeD(currentReward.getPvPKills());
+			writeD(currentReward.getPoints());
+			writeS(current.getName(), 52);
+			count++;
+		}
+		writeB(new byte[69 * (96 - count)]);
+	}
+
+	private void writeTreasureIslandReward(BattlegroundPlayerReward reward) {
+		writeD((int) (reward.getParticipation() * 100));
+		writeD(reward.getRewardExp());
+		writeD(reward.getBonusExp());
+		writeD(reward.getRewardAp());
+		writeD(reward.getBonusAp());
+		writeD(reward.getRewardGp());
+		writeD(reward.getBonusGp());
+		writeD(reward.getRewardItemId(0));
+		writeD((int) reward.getRewardItemCount(0));
+		writeD(0);
+		writeB(new byte[28]);
+		writeQ(0);
+		writeB(new byte[16]);
+		writeC(0);
+		writeB(new byte[12]);
+		writeB(new byte[24]);
 	}
 }
