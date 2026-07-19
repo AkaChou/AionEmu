@@ -18,6 +18,8 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertMigrated("TransidiumAnnexInstance", "scheduleDeadline(\"start\"", "transidium.hangar_barricade");
 		assertMigrated("TheobomosLabInstance", "scheduleDeadline(\"stone\"", "theobomos.ifrit_deadline");
 		assertMigrated("DraupnirCaveInstance", "scheduleDeadline(\"gate_raid_2\"", "draupnir.adjutants");
+		assertMigrated("crucible/CrucibleChallengeInstance", "scheduleDeadline(\"bonus_spawn\"",
+				"crucible.bonus_spawning_done");
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {

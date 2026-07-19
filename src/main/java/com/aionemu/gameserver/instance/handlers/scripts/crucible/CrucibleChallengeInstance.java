@@ -2,7 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -34,7 +33,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 熔炉挑战副本事件处理器。
@@ -54,8 +52,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		private int stage1Count;
 	/** 奖励统计 / reward count */
 		private int rewardCount;
-	/** bonus timer / bonus timer */
-		private Future<?> bonusTimer;
 	
 	/**
 	 * 副本创建时初始化逻辑。
@@ -66,8 +62,15 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
+		dieCount = runtimeState().getInt("crucible.die_count", 0);
+		spawnCount = runtimeState().getInt("crucible.spawn_count", 0);
+		stage1Count = runtimeState().getInt("crucible.stage1_count", 0);
+		rewardCount = runtimeState().getInt("crucible.reward_count", 0);
+		String stage = runtimeState().get("crucible.stage");
+		stageType = stage == null ? StageType.DEFAULT : StageType.valueOf(stage);
 		sp(205668, 345.77954f, 1662.6697f, 95.25f, (byte) 0, 10000);
 		sp(205682, 383.3434f, 1667.2977f, 97.79293f, (byte) 60, 10000);
+		restoreBonusStage();
 	}
 	
 	private void removeItems(Player player) {
@@ -207,6 +210,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217784:
 				npcId = npc.getNpcId();
 				stage1Count++;
+				runtimeState().put("crucible.stage1_count", stage1Count);
 				if (stage1Count == 2) {
 					sp(npcId, 342.855f, 1652.6703f, 95.63069f, (byte) 0, 1000);
 					sp(npcId, 342.83942f, 1673.2863f, 95.66078f, (byte) 0, 2000);
@@ -422,7 +426,8 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				// 波比被杜卡基厨师抓住……整只烤了！ / Poppy was captured by the Dukaki Cooks... and roasted whole!
 				sendMsgByRace(1401075, Race.PC_ALL, 0);
 				sp(218570, 1780.5371f, 307.3513f, 469.25f, (byte) 0, 0); //Whole Roast Poppy.
-				bonusTimer.cancel(false);
+				runtimeState().put("crucible.bonus_failed", true);
+				cancelBonusSpawner();
 				passStage2();
 			break;
 			case 217797:
@@ -440,6 +445,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case 217803:
 				despawnNpc(npc);
 				dieCount++;
+				runtimeState().put("crucible.die_count", dieCount);
 				if (dieCount == 5) {
 					// 还剩 5 名杜卡基厨师。 / There are 5 Dukaki Cooks remaining.
 					sendMsgByRace(1401068, Race.PC_ALL, 0);
@@ -447,7 +453,8 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 					sendMsgByRace(1401069, Race.PC_ALL, 2000);
 					// 波比几乎到达避难处。再坚持一点！ / Poppy has almost reached the refuge. Just a little bit further!
 					sendMsgByRace(1401070, Race.PC_ALL, 4000);
-				} if (bonusTimer.isCancelled() && getNpcs(217803).isEmpty()) {
+				} if (runtimeState().getBoolean("crucible.bonus_spawning_done", false)
+						&& getNpcs(217803).isEmpty()) {
 					passStage2();
 					Npc poppy = getNpc(217802);
 					if (poppy != null) {
@@ -536,6 +543,10 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 	
 	private void startBonusStage2() {
+		if (runtimeState().getBoolean("crucible.bonus_started", false)) {
+			return;
+		}
+		runtimeState().put("crucible.bonus_started", true);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
@@ -560,20 +571,47 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				startWalk((Npc) spawn(217802, 1780.5371f, 307.3513f, 469.25f, (byte) 0), "PoppyOnTheRun"); //Poppy.
 			}
 		}, 1000);
-		bonusTimer = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			/**
-			 * 处理 run。
-			 * Handle run.
-			 */
-			@Override
-			public void run() {
-				spawnCount++;
+		long deadline = System.currentTimeMillis() + 12_000;
+		runtimeState().put("crucible.bonus_deadline", deadline);
+		scheduleDeadline("bonus_spawn", deadline, this::spawnNextBonus);
+	}
+
+	private void restoreBonusStage() {
+		if (!runtimeState().getBoolean("crucible.bonus_started", false)
+				|| runtimeState().getBoolean("crucible.bonus_complete", false)) {
+			return;
+		}
+		if (!runtimeState().getBoolean("crucible.bonus_failed", false)) {
+			startWalk((Npc) spawn(217802, 1780.5371f, 307.3513f, 469.25f, (byte) 0), "PoppyOnTheRun");
+			int restoredSpawnCount = spawnCount;
+			for (int sequence = dieCount + 1; sequence <= restoredSpawnCount; sequence++) {
+				spawnCount = sequence;
 				spawnBonus2();
-				if (spawnCount == 10) {
-					bonusTimer.cancel(false);
-				}
 			}
-		}, 12000, 4000);
+			spawnCount = restoredSpawnCount;
+		}
+		long deadline = runtimeState().getLong("crucible.bonus_deadline", 0);
+		if (deadline > 0 && !runtimeState().getBoolean("crucible.bonus_spawning_done", false)) {
+			scheduleDeadline("bonus_spawn", deadline, this::spawnNextBonus);
+		}
+	}
+
+	private void spawnNextBonus() {
+		spawnCount++;
+		runtimeState().put("crucible.spawn_count", spawnCount);
+		spawnBonus2();
+		if (spawnCount >= 10) {
+			runtimeState().put("crucible.bonus_spawning_done", true);
+			return;
+		}
+		long deadline = System.currentTimeMillis() + 4_000;
+		runtimeState().put("crucible.bonus_deadline", deadline);
+		scheduleDeadline("bonus_spawn", deadline, this::spawnNextBonus);
+	}
+
+	private void cancelBonusSpawner() {
+		cancelDeadline("bonus_spawn");
+		runtimeState().put("crucible.bonus_deadline", 0);
 	}
 	
 	private void startWalk(final Npc npc, final String walkId) {
@@ -641,12 +679,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
 		instanceReward.clear();
-		if (bonusTimer != null) {
-			bonusTimer.cancel(false);
-		}
+		cancelDeadline("bonus_spawn");
 	}
 	
 	private void passStage2() {
+		runtimeState().put("crucible.bonus_complete", true);
+		cancelBonusSpawner();
 		setEvent(StageType.PASS_STAGE_2, 0);
 		//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 		sendMsgByRace(1400929, Race.PC_ALL, 2000);
@@ -960,6 +998,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void setEvent(StageType type, int time) {
 		this.stageType = type;
+		runtimeState().put("crucible.stage", type.name());
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
@@ -1126,6 +1165,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 					return;
 				}
 				rewardCount++;
+				runtimeState().put("crucible.reward_count", rewardCount);
 				Player player = null;
 				if (!instance.getPlayersInside().isEmpty()) {
 					player = instance.getPlayersInside().get(0);
