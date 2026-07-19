@@ -173,6 +173,8 @@ class RetailAiDefinitionLoaderTest {
 		for (int npcId : new int[] { 220424, 220425, 220426 }) {
 			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
 		}
+		assertEquals("DrGuard_PhA_L48", data.getPattern(214159).name());
+		assertTrue(RetailPatternAI2.supports(data.getPattern(214159)));
 		var unsupportedGauge = java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(pattern -> pattern.events().keySet().stream().anyMatch(event -> event.startsWith("on_gauge_")))
 			.filter(pattern -> !RetailPatternAI2.supports(pattern)).map(RetailAiData.Pattern::name).toList();

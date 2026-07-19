@@ -200,6 +200,27 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void indratuFortressUsesRetailAiAndDropsWithoutLegacyHandler() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/IndratuFortressInstance.java")));
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/ai/instance/indratuFortress/Brigadier_IndratuAI2.java")));
+
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_004.xml"));
+		assertFalse(npcDropBlock(drops, "214159").contains("item_id=\"188053787\""));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/310090000_Indratu_Fortress.xml"));
+		assertTrue(staticSpawns.contains("<spawn npc_id=\"214159\">"));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("behavior=\"MATCHMAKER\" behavior_source=\"matchmaker.xml:315,matchmaker.xml:404\""
+			+ " classification=\"standard\" cooltime_id=\"1\" creation_ids=\"32,215,233\" id=\"310090000\""));
+	}
+
+	@Test
 	void aetherMineUsesRetailConditionFlowWithoutLegacySpawns() throws Exception {
 		assertFalse(Files.exists(Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherMineQInstance.java")));

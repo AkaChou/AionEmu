@@ -978,6 +978,7 @@ REGISTERED
 - [x] 完成 Nochsana 与 Alquimia 的真端掉落收口，删除重复钥匙、私服奖励和无业务价值 handler；
 - [x] 完成奥德矿脉（`301690000`）真端种族任务链，条件出生接管初始敌人、裂隙、任务对象、最终 Boss 和友方 NPC；
 - [x] 完成西奥博莫斯试验室（`301610000`）真端 Boss/门/出口/掉落接管，handler 仅保留真端数据未表达的钥匙宝箱生成；
+- [x] 完成因德拉图要塞（`310090000`）真端 AI/掉落收口，删除私服烙印包 handler 和已被 Retail Pattern 接管的旧 Java AI；
 - [ ] 删除只提供重复通用逻辑的 handler。
 
 验收：
@@ -1106,7 +1107,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 49% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine 等旧 handler 已删除，Nochsana、Theobomos Test Chamber 已收缩为真端数据未表达的最小交互；剩余 35 个声明 `Future`、61 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 50% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine、Indratu 等旧 handler 已删除，Nochsana、Theobomos Test Chamber 已收缩为真端数据未表达的最小交互；剩余 35 个声明 `Future`、61 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1279,3 +1280,6 @@ REGISTERED
 - 删除静态常驻的 `220426` 和旧 `Desecrated_IfritAI2`，由真端 Pattern 接管 Boss 召唤、技能、元素生物、消息、脱战清理、狂暴和死亡变量；子 Boss 门由 `IDF6_Lap_SubBoss_01/02` 的 `control_door` 接管，不再手开旧门 ID 或延迟广播私服消息。
 - `TheobomosTestChamberInstance` 从 183 行缩减为 15 行，只保留 Boss 死亡生成钥匙宝箱 `806221`：该宝箱不在 `IDF6_Lap/world_N.xml`，但 `chest_templates.xml` 的 `185000264` 钥匙约束、真端 `IDF6_LAP_ARMOR_LOOK_R_69A` 掉落及两套独立 5.8 服务端实现均确认这一职责。删除 `onDropRegistered`，钥匙回归真端 40% 概率，Boss/宝箱奖励回归真端 common drop groups，移除烙印包、随机装备箱等私服注入；生产 handler 直接使用 `GameThreadPoolServices` 的文件降至 61，含 `Future` 的文件仍为 35。
 - 西奥博莫斯试验室批次验证通过：`mvn -q -DskipTests compile`；`InstanceHandlerRecoveryMigrationTest`、`RetailAiDefinitionLoaderTest`、`RetailPatternAI2Test`、`RetailConditionSpawnEngineTest`；正式副本生成器 `--check`；条件出生和静态出生 XSD 校验及 `git diff --check`。
+- 完成因德拉图要塞（`310090000`，真端 `IDLF3_Castle_Indratoo`）真端单轨替换：静态出生继续保留 Boss `214159`、门和传送对象，Boss 使用真端 `DrGuard_PhA_L48` Pattern 与生成的 common drop groups；删除仅向每名玩家注入私服烙印包 `188053787` 的 `IndratuFortressInstance`，并删除已被 Retail Pattern 接管的旧 `Brigadier_IndratuAI2`。
+- 因德拉图要塞不再注册专用 handler，覆盖重新生成为 `MATCHMAKER`，来源 `matchmaker.xml:315,404`；行为闭包调整为 102 张 `HANDLER`、4 张 `MATCHMAKER`，139 张图总数不变。生产 handler 的 `Future` 和 `GameThreadPoolServices` 数量不变。
+- 因德拉图要塞批次验证通过：`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,RetailAiDefinitionLoaderTest,RetailPatternAI2Test test`、`mvn -q -DskipTests compile`、正式副本生成器 `--check`、静态出生/coverage/manifest XML 解析及 `git diff --check`。
