@@ -1,6 +1,6 @@
 # 真端副本全套迁移技术方案
 
-> 状态：实施中（2026-07-20）。静态数据、次数冷却、动态实例基础、Portal/Luna 统一准入、结算账本、时间攻击、无限塔、battleground、arena PvP、tournament 和 Luna 奖励已接管；自动匹配与 handler 状态恢复仍在实施。
+> 状态：实施中（2026-07-20）。静态数据、次数冷却、动态实例基础、Portal/Luna 统一准入、结算账本、时间攻击、Infinity Shard、无限塔、battleground、arena PvP、tournament 和 Luna 奖励已接管；自动匹配与 handler 状态恢复仍在实施。
 > 目标：以 58Server 5.8 真端副本数据和行为为权威，完整替换 AionEmu 当前副本创建、进入、冷却、次数、持久化、匹配、评分与奖励机制。
 > 执行策略：单轨替换，不做新旧兼容。新机制接管一条运行路径时，旧逻辑和旧数据必须在同一实施批次清理。
 
@@ -974,6 +974,7 @@ REGISTERED
 - [ ] 删除已迁移字段和调度代码；
 - [x] 对 18 个无 handler 地图确认数据驱动覆盖；
 - [x] 完成 Sulfur、Carpus、Hamate、Treasure Island、Danuar 三变体、Adma、Padmarashka、Cradle 和 Transidium 的首批恢复迁移；
+- [x] 完成 Infinity Shard（`300800000`）真端 Retail AI/条件出生接管，删除旧 handler、Hyperion/Ide Resonator Java AI、手工护盾/出口/奖励和私服掉落；
 - [ ] 删除只提供重复通用逻辑的 handler。
 
 验收：
@@ -1102,7 +1103,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 43% | 2026-07-20 | 139 图行为闭包；37 个 handler 移除私有关键任务，剩余 35 个声明 `Future`、63 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 45% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma 等旧 handler 已删除，剩余 35 个声明 `Future`、62 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1258,3 +1259,7 @@ REGISTERED
 - 完成哈拉梅尔（`300200000`）真端单轨替换：以 `idnovice/world_N.xml`、`NpcAIPatterns_LDF4_PJW.xml` 和真端 NPC/AI/掉落数据为权威，`IDNovice_Hameroon` Retail Pattern AI 接管召唤、职业宝箱、457 电影、出口和死亡清理；删除旧 handler 的 HTML、随机掉落、成长药、手刷宝箱/出口、重复钥匙掉落和线程池消息。
 - 哈拉梅尔没有真端条件刷新缺口，静态出生保留 `216922` 等常驻对象，不新增宝箱/出口兼容出生；删除只验证旧 `sendMovie` 私有列表的 `HaramelInstanceTest`。生产 handler 直接使用 `GameThreadPoolServices` 的文件降至 63 个，含 `Future` 的文件仍为 35 个。
 - 哈拉梅尔批次验证通过：`mvn -q -DskipTests compile`；`InstanceHandlerRecoveryMigrationTest`、`RetailAiDefinitionLoaderTest`、`RetailConditionSpawnEngineTest`、`RetailPatternAI2Test`；静态出生 XML、相关 AI XML 和 `git diff --check` 均通过。
+- 完成 Infinity Shard（`300800000`）真端单轨替换：以 `idruneweapon/world_N.xml`、`npcaipatterns_idruneweapon_kmj.xml`、真端条件出生、NPC/技能/掉落数据为权威，Hyperion 的充能、护盾、阶段召唤、失败处理、出口和奖励箱全部由 Retail AI 与 `cSetCharge`、`cSetFastCharge`、`cSetIdPortal`、`cProtection01..04`、`cSetVritra2/4/6/10` 条件出生接管。
+- 删除 `InfinityShardInstance`、`HyperionAI2`、`IdeResonatorAI2` 三条旧 Java 路径，清除手工 `284437` 护盾、护盾死亡计数、`730842`/`802184` 手工生成、Hyperion/奖励箱私服掉落和线程池系统消息；静态出生不含旧 `284437`，出口由 `cSetIdPortal == 1` 条件出生生成。
+- 重新生成 `coverage.xml`/`manifest.xml`，300800000 归类为真端 `MATCHMAKER`（`matchmaker.xml:324`），同时消除已删除 Haramel/Adma handler 的陈旧 coverage 引用；大小写差异经加载器验证为不影响绑定，未引入无行为收益的名称改动。
+- Infinity Shard 批次验证通过：`mvn -q -Dtest=RetailAiDefinitionLoaderTest,RetailPatternAI2Test,InstanceHandlerRecoveryMigrationTest test`；Pattern 231073 支持校验、18 条条件出生、关键变量/出口/护盾断言及旧文件删除断言均通过。

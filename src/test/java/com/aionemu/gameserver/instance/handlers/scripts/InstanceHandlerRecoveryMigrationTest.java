@@ -163,6 +163,34 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertTrue(hameroonPattern.contains("play_cutscene_by_user_indicator"));
 	}
 
+	@Test
+	void infinityShardUsesRetailPatternAndConditionSpawnsWithoutLegacyPath() throws Exception {
+		Path conditions = Path.of("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
+		String world = worldBlock(Files.readString(conditions), "300800000");
+		assertTrue(world.contains("<variable name=\"csetcharge\"/>"));
+		assertTrue(world.contains("<variable name=\"csetfastcharge\"/>"));
+		assertTrue(world.contains("expression=\"cSetCharge==1\""));
+		assertTrue(world.contains("expression=\"cSetIdPortal==1\""));
+		assertTrue(world.contains("expression=\"cProtection01 &gt;= 3\""));
+		assertTrue(world.contains("npc id=\"284765\""));
+		assertTrue(world.contains("npc id=\"730842\""));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/300800000_Infinity_Shard.xml"));
+		assertFalse(staticSpawns.contains("npc_id=\"284437\""));
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/InfinityShardInstance.java")));
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/ai/instance/infinityShard/HyperionAI2.java")));
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/ai/instance/infinityShard/IdeResonatorAI2.java")));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		assertTrue(coverage.contains("id=\"300800000\""));
+		assertTrue(coverage.contains("behavior=\"MATCHMAKER\" behavior_source=\"matchmaker.xml:324\""));
+	}
+
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));

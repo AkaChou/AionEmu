@@ -155,6 +155,13 @@ class RetailAiDefinitionLoaderTest {
 		for (int npcId : new int[] { 251812, 251813, 251814, 257300, 257305, 257310, 855729 }) {
 			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
 		}
+		assertNotNull(data.getPattern(231073));
+		assertTrue(RetailPatternAI2.supports(data.getPattern(231073)), data.getPattern(231073).name());
+		assertTrue(data.supportsConditionVariable(300800000, "cSetCharge"));
+		assertTrue(data.supportsConditionVariable(300800000, "cSetFastCharge"));
+		assertTrue(data.supportsConditionVariable(300800000, "cSetIdPortal"));
+		assertTrue(data.supportsConditionVariable(300800000, "cProtection01"));
+		assertEquals(18, data.getConditionSpawns(300800000).size());
 		var unsupportedGauge = java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(pattern -> pattern.events().keySet().stream().anyMatch(event -> event.startsWith("on_gauge_")))
 			.filter(pattern -> !RetailPatternAI2.supports(pattern)).map(RetailAiData.Pattern::name).toList();
