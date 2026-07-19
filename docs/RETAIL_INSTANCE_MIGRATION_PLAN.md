@@ -980,6 +980,7 @@ REGISTERED
 - [x] 完成西奥博莫斯试验室（`301610000`）真端 Boss/门/出口/掉落接管，handler 仅保留真端数据未表达的钥匙宝箱生成；
 - [x] 完成因德拉图要塞（`310090000`）真端 AI/掉落收口，删除私服烙印包 handler 和已被 Retail Pattern 接管的旧 Java AI；
 - [x] 完成暗影法庭（`320120000`）真端任务/钥匙掉落收口，删除重复掉落与无权威来源电影 handler；
+- [x] 完成奥德遗传实验室（`310050000`）真端钥匙掉落收口，handler 仅保留离本钥匙清理；
 - [ ] 删除只提供重复通用逻辑的 handler。
 
 验收：
@@ -1108,7 +1109,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 51% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine、Indratu、Shadow Court 等旧 handler 已删除，Nochsana、Theobomos Test Chamber 已收缩为真端数据未表达的最小交互；剩余 35 个声明 `Future`、61 个直接使用 `GameThreadPoolServices` 的生产 handler |
+| 阶段 4：handler 状态迁移 | 进行中 | 52% | 2026-07-20 | 139 图行为闭包；Infinity Shard、Haramel、Adma、Alquimia、Aether Mine、Indratu、Shadow Court 等旧 handler 已删除，Nochsana、Theobomos Test Chamber、Aetherogenetics Lab 已收缩为真端数据未表达的最小交互；剩余 35 个声明 `Future`、61 个直接使用 `GameThreadPoolServices` 的生产 handler |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1287,3 +1288,6 @@ REGISTERED
 - 完成暗影法庭（`320120000`，真端 `IDDC1_Arena_3F`）真端单轨替换：`214347`、`214349`、`214351`、`214353`、`214357`、`214360`、`214531` 的七把钥匙均已由生成的真端掉落表以 100% 提供；静态出生保留所有钥匙怪与出口 `700369`，任务 `_24046The_Shadow_Calls` 负责进入、退出和任务推进。
 - 删除重复注册七把钥匙的 `ShadowCourtInstance`；其 423 电影在真端世界、NPC Pattern 和任务数据中均无触发来源，两套独立 5.8 实现也不包含该逻辑，因此不保留旧私服电影路径。覆盖重新生成为 `RETAIL_AI_QUEST`，来源 `_24046The_Shadow_Calls.java`；行为闭包调整为 101 张 `HANDLER`、16 张 `RETAIL_AI_QUEST`，139 张图总数不变。
 - 暗影法庭批次验证通过：`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest,RetailInstanceDataTest test`、`mvn -q -DskipTests compile`、正式副本生成器 `--check`、静态出生/coverage/manifest XML 解析及 `git diff --check`。
+- 完成奥德遗传实验室（`310050000`，真端 `IDLF3LP`）真端单轨收缩：钥匙来源恢复为 `212341 -> 185000001`、`212175 -> 185000002`、`212196 -> 185000003`、`212193 -> 185000004`、`212342 -> 185000005`，均使用生成的真端 100% 掉落；删除旧 handler 对 `212193` 的错误随机钥匙 3/4、对 `212202` 的错误钥匙 5 注入，以及 `212211 -> 188053787` 私服烙印包。
+- `AetherogeneticsLabInstance` 从 142 行缩减为 29 行，只保留玩家离本或登出时清理五把副本钥匙；删除未使用门字段、空死亡分支、随机数、掉落注册和无调用消息方法，不保留兼容掉落。
+- 奥德遗传实验室批次验证通过：`mvn -q -Dtest=InstanceHandlerRecoveryMigrationTest test`、`mvn -q -DskipTests compile`、正式副本生成器 `--check`、静态出生/真端掉落 XML 解析及 `git diff --check`。

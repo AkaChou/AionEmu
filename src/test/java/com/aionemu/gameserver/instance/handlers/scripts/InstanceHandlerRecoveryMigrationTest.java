@@ -249,6 +249,34 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void aetherogeneticsLabUsesRetailKeyDropsAndKeepsOnlyKeyCleanup() throws Exception {
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherogeneticsLabInstance.java"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertFalse(handler.contains("188053787"));
+		assertFalse(handler.contains("onDie"));
+		assertFalse(handler.contains("GameWorldServices"));
+		assertTrue(handler.contains("onPlayerLogOut"));
+		assertTrue(handler.contains("onLeaveInstance"));
+		for (int itemId = 185000001; itemId <= 185000005; itemId++) {
+			assertTrue(handler.contains(Integer.toString(itemId)));
+		}
+
+		String drops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_002.xml"));
+		String[][] keys = {
+			{ "212341", "185000001" }, { "212175", "185000002" }, { "212196", "185000003" },
+			{ "212193", "185000004" }, { "212342", "185000005" }
+		};
+		for (String[] key : keys) {
+			assertTrue(npcDropBlock(drops, key[0])
+				.contains("item_id=\"" + key[1] + "\" chance=\"100.00\""));
+		}
+		assertFalse(npcDropBlock(drops, "212202").contains("item_id=\"185000005\""));
+		assertFalse(npcDropBlock(drops, "212211").contains("item_id=\"188053787\""));
+	}
+
+	@Test
 	void aetherMineUsesRetailConditionFlowWithoutLegacySpawns() throws Exception {
 		assertFalse(Files.exists(Path.of(
 			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AetherMineQInstance.java")));
