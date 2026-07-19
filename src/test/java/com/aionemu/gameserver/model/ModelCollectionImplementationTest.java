@@ -174,7 +174,6 @@ class ModelCollectionImplementationTest {
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TrialsOfEternityInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EngulfedOphidanBridgeInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DarkPoetaInstance.java",
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DivineTowerInstanceL.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/KumukiCaveInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/AbyssalSplinterInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/ShugoImperialTombInstance.java",
@@ -207,7 +206,6 @@ class ModelCollectionImplementationTest {
 	@Test
 	void finalSimpleInstanceFutureTaskListsUseJdkLists() throws Exception {
 		List<String> instanceScripts = List.of(
-				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DivineTowerInstanceD.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/ChantraDredgionInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/TerathDredgionInstance.java",
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/BeshmundirTempleInstance.java",

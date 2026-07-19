@@ -42,8 +42,6 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertMigrated("SmolderingFireTempleInstance", "scheduleDeadline(\"expire\"",
 				"smolder.kill.");
 		assertSourceExcludes("SmolderingFireTempleInstance", "GameThreadPoolServices");
-		assertNoFuture("DivineTowerInstanceL");
-		assertNoFuture("DivineTowerInstanceD");
 		assertNoFuture("AbyssalSplinterInstance");
 		assertNoFuture("UnstableAbyssalSplinterInstance");
 		assertNoFuture("GraveOfSteelStoreroomInstance");
@@ -61,6 +59,21 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertSourceExcludes("ShugoVaultTimeAttackInstance", "GameThreadPoolServices");
 		assertNoFuture("TheShugoEmperorVaultInstance");
 		assertNoFuture("EmperorTrillirunerkSafeInstance");
+	}
+
+	@Test
+	void divineTowersUseRetailMatchAndAiWithoutEmptyHandlers() throws Exception {
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DivineTowerInstanceL.java")));
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/DivineTowerInstanceD.java")));
+
+		String coverage = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/instance/coverage.xml"));
+		for (String worldId : new String[] { "310160000", "320160000" }) {
+			assertTrue(Pattern.compile("<world\\b(?=[^>]*\\bid=\\\"" + worldId
+				+ "\\\")(?=[^>]*\\bbehavior=\\\"MATCHMAKER\\\")[^>]*/>").matcher(coverage).find());
+		}
 	}
 
 	@Test
