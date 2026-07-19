@@ -14,6 +14,7 @@ import com.aionemu.gameserver.dataholders.NpcSkillData;
 import com.aionemu.gameserver.dataholders.PetDopingData;
 import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.RetailAiData;
+import com.aionemu.gameserver.dataholders.RetailInstanceData;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WalkerData;
@@ -64,6 +65,8 @@ public class XmlDataLoader {
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/compact/npc_drops";
 	private static final String HOTSPOT_LOCATION_DEFINITIONS_FILE = "./definitions/compact/hotspot_location/hotspot_location.xml";
+	private static final String RETAIL_INSTANCE_DEFINITIONS_DIR = "./definitions/compact/instance";
+	private static final String RETAIL_INSTANCE_SCHEMA_FILE = "./definitions/schemas/retail-instance-data.xsd";
 	private static final String SKILL_DEFINITIONS_DIR = "./definitions/compact/skills";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = SKILL_DEFINITIONS_DIR + "/npc-skills.xml";
 	private static final String MOTION_DEFINITIONS_FILE = SKILL_DEFINITIONS_DIR + "/motion_times.xml";
@@ -229,6 +232,11 @@ public class XmlDataLoader {
 
 	public HotspotLocationData loadHotspotLocationData() {
 		return HotspotLocationData.load(Config.definitionFile(HOTSPOT_LOCATION_DEFINITIONS_FILE));
+	}
+
+	public RetailInstanceData loadRetailInstanceData() {
+		return RetailInstanceData.load(Config.definitionFile(RETAIL_INSTANCE_DEFINITIONS_DIR),
+			Config.definitionFile(RETAIL_INSTANCE_SCHEMA_FILE));
 	}
 
 	public NpcSkillData loadNpcSkillData() {

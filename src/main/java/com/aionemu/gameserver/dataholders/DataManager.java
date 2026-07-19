@@ -204,6 +204,7 @@ public final class DataManager {
         LoadedStaticData loadedData = loadStaticData(loader);
         StaticData data = loadedData.staticData();
         ItemData itemData = loadedData.itemData();
+        RetailInstanceData retailInstanceData = loadedData.retailInstanceData();
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             WORLD_MAPS_DATA = data.worldMapsData;
             PLAYER_EXPERIENCE_TABLE = data.playerExperienceTable;
@@ -249,6 +250,7 @@ public final class DataManager {
             PET_MERCHAND_DATA = data.petMerchandData;
             GUIDE_HTML_DATA = data.guideData;
             ROAD_DATA = data.roadData;
+            RETAIL_INSTANCE_DATA = retailInstanceData;
             DISASSEMBLY_ITEMS_DATA = data.disassemblyItemSetsData;
             AI_DATA = data.aiData;
             NPC_PATH_BEHAVIOR_DATA = data.npcPathBehaviorData;
@@ -375,8 +377,8 @@ public final class DataManager {
     }
 
     /**
-     * 并行加载主静态数据、物品数据与技能数据。
-     * Loads main static data, item data, and skill data in parallel.
+     * 并行加载主静态数据、物品数据、技能数据与零售副本数据。
+     * Loads main static data, item data, skill data, and retail instance data in parallel.
      *
      * XML data loader
      *
@@ -386,12 +388,15 @@ public final class DataManager {
     static LoadedStaticData loadStaticData(XmlDataLoader loader) {
         CompletableFuture<ItemData> itemDataFuture = CompletableFuture.supplyAsync(loader::loadItemData);
         CompletableFuture<SkillData> skillDataFuture = CompletableFuture.supplyAsync(loader::loadSkillData);
+        CompletableFuture<RetailInstanceData> retailInstanceDataFuture = CompletableFuture
+                .supplyAsync(loader::loadRetailInstanceData);
         try {
             StaticData staticData = loader.loadStaticData(skillDataFuture::join);
-            return new LoadedStaticData(staticData, itemDataFuture.join());
+            return new LoadedStaticData(staticData, itemDataFuture.join(), retailInstanceDataFuture.join());
         } catch (CompletionException e) {
             itemDataFuture.cancel(true);
             skillDataFuture.cancel(true);
+            retailInstanceDataFuture.cancel(true);
             Throwable cause = e.getCause();
             if (cause instanceof Error error) {
                 throw error;
@@ -403,15 +408,16 @@ public final class DataManager {
         } catch (RuntimeException | Error e) {
             itemDataFuture.cancel(true);
             skillDataFuture.cancel(true);
+            retailInstanceDataFuture.cancel(true);
             throw e;
         }
     }
 
     /**
-     * 并行加载结果：主静态数据 + 物品数据。
-     * Parallel-load result holding main static data and item data.
+     * 并行加载结果：主静态数据、物品数据与零售副本数据。
+     * Parallel-load result holding main static data, item data, and retail instance data.
      */
-    record LoadedStaticData(StaticData staticData, ItemData itemData) {
+    record LoadedStaticData(StaticData staticData, ItemData itemData, RetailInstanceData retailInstanceData) {
     }
 
     /**

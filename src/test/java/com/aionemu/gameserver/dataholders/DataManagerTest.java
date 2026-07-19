@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -17,17 +18,23 @@ import org.junit.jupiter.api.Test;
 class DataManagerTest {
 
 	@Test
-	void itemAndSkillDataLoadingStartBeforeMainStaticDataFinishes() {
+	void itemSkillAndRetailInstanceDataLoadingStartBeforeMainStaticDataFinishes() {
 		StaticData staticData = new StaticData();
 		ItemData itemData = new ItemData();
 		SkillData skillData = new SkillData();
+		RetailInstanceData retailInstanceData = RetailInstanceData.load(
+			new File("src/main/resources/aion/definitions/compact/instance"),
+			new File("src/main/resources/aion/definitions/schemas/retail-instance-data.xsd"));
 		CountDownLatch itemStarted = new CountDownLatch(1);
 		CountDownLatch skillStarted = new CountDownLatch(1);
+		CountDownLatch retailInstanceStarted = new CountDownLatch(1);
 		XmlDataLoader loader = new XmlDataLoader() {
 			@Override
 			public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier) {
 				assertTrue(await(itemStarted), "item data loading should start while main static data is still loading");
 				assertTrue(await(skillStarted), "skill data loading should start while main static data is still loading");
+				assertTrue(await(retailInstanceStarted),
+					"retail instance data loading should start while main static data is still loading");
 				staticData.skillData = skillDataSupplier.get();
 				return staticData;
 			}
@@ -43,6 +50,12 @@ class DataManagerTest {
 				skillStarted.countDown();
 				return skillData;
 			}
+
+			@Override
+			public RetailInstanceData loadRetailInstanceData() {
+				retailInstanceStarted.countDown();
+				return retailInstanceData;
+			}
 		};
 
 		DataManager.LoadedStaticData loaded = DataManager.loadStaticData(loader);
@@ -50,6 +63,7 @@ class DataManagerTest {
 		assertSame(staticData, loaded.staticData());
 		assertSame(itemData, loaded.itemData());
 		assertSame(skillData, loaded.staticData().skillData);
+		assertSame(retailInstanceData, loaded.retailInstanceData());
 		assertNotNull(loaded);
 	}
 

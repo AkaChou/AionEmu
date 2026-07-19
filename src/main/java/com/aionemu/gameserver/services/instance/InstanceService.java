@@ -27,7 +27,6 @@ import java.util.WeakHashMap;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.InstanceConfig;
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailInstanceData;
 import com.aionemu.gameserver.instance.InstanceEngine;
@@ -74,9 +73,6 @@ public class InstanceService {
 	 * Loads instance aggro map configuration.
 	 */
 	public static void load() {
-		DataManager.RETAIL_INSTANCE_DATA = RetailInstanceData.load(
-			Config.definitionFile("./definitions/compact/instance"),
-			Config.definitionFile("./definitions/schemas/retail-instance-data.xsd"));
 		instanceAggro.clear();
 		for (String s : CustomConfig.INSTANCES_MOB_AGGRO.split(",")) {
 			instanceAggro.add(Integer.parseInt(s));
