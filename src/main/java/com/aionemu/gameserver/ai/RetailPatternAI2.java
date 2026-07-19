@@ -156,6 +156,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private static final Set<String> WAKE_UP_EVENTS = Set.of("on_enter_wakeup_state", "on_leave_wakeup_state");
 	private static final Set<String> RETAIL_IDLE_EVENTS = Set.of(
 		"on_wake_up", "on_enter_idle_state", "on_enter_wakeup_state", "on_leave_wakeup_state");
+	private static final Set<String> RETAIL_COMBAT_SKILL_EVENTS = Set.of(
+		"on_enter_attack_state", "on_battle_timer");
 	private static final String WAKE_UP_TIMER = "WAKE_UP_STATE";
 	private static final Set<String> SENSORY_EVENTS = Set.of(
 		"on_user_enter_sensory_area", "on_user_leave_sensory_area");
@@ -518,6 +520,19 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	static boolean shouldUseDefaultIdleThinking(Pattern pattern) {
 		return pattern == null || Collections.disjoint(pattern.events().keySet(), RETAIL_IDLE_EVENTS);
+	}
+
+	@Override
+	protected boolean usesScriptedSkillRotation() {
+		return hasScriptedCombatSkills(pattern);
+	}
+
+	static boolean hasScriptedCombatSkills(Pattern pattern) {
+		return pattern != null && pattern.events().entrySet().stream()
+			.filter(event -> RETAIL_COMBAT_SKILL_EVENTS.contains(event.getKey()))
+			.flatMap(event -> event.getValue().stream())
+			.flatMap(rule -> rule.actions().stream())
+			.anyMatch(RetailPatternAI2::isSkillAction);
 	}
 
 	@Override

@@ -184,6 +184,34 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void detectsScriptedCombatSkillRotations() {
+		Rule skillRule = new Rule(1, "PLANNED", List.of(), List.of(new Operation("use_skill", Map.of(
+			"target", "OBJI_CUR_TARGET", "skill", "SKILLI_INDEX_0", "skill_level", "0"))));
+		Rule idleRule = new Rule(1, "DIRECT", List.of(), List.of(new Operation("do_nothing", Map.of())));
+
+		assertTrue(RetailPatternAI2.hasScriptedCombatSkills(
+			new Pattern("combat", Map.of("on_battle_timer", List.of(skillRule)))));
+		assertFalse(RetailPatternAI2.hasScriptedCombatSkills(
+			new Pattern("idle", Map.of("on_wake_up", List.of(idleRule)))));
+
+		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
+		try {
+			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+			Pattern admaDeathknight = new XmlDataLoader().loadRetailAiData().getPattern(214696);
+
+			assertNotNull(admaDeathknight);
+			assertEquals("Adma_DeathknightNamed", admaDeathknight.name());
+			assertTrue(RetailPatternAI2.hasScriptedCombatSkills(admaDeathknight));
+		} finally {
+			if (previousDefinitions == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previousDefinitions);
+			}
+		}
+	}
+
+	@Test
 	void supportsMasterEventsOnlyWhenNpcHasMaster() {
 		Pattern pattern = new Pattern("master", Map.of(
 			"on_master_attacked", List.of(new Rule(1, "INSTANT",

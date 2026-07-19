@@ -7537,6 +7537,10 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	 * 选择下一次攻击意图（普攻/技能/换目标/结束）。
 	 * Choose the next attack intention (simple/skill/switch/finish).
 	 */
+	protected boolean usesScriptedSkillRotation() {
+		return false;
+	}
+
     @Override
 	public AttackIntention chooseAttackIntention() {
 		VisibleObject currentTarget = getTarget();
@@ -7546,6 +7550,8 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 		} if (currentTarget == null || !currentTarget.getObjectId().equals(mostHated.getObjectId())) {
 			onCreatureEvent(AIEventType.TARGET_CHANGED, mostHated);
 			return AttackIntention.SWITCH_TARGET;
+		} if (usesScriptedSkillRotation()) {
+			return AttackIntention.SIMPLE_ATTACK;
 		} if (getOwner().getObjectTemplate().getAttackRange() == 0) {
 			NpcSkillEntry skill = getOwner().getSkillList().getRandomSkill();
 			if (skill != null) {
