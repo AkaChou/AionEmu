@@ -1,10 +1,12 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +52,38 @@ class InstanceHandlerRecoveryMigrationTest {
 		assertNoFuture("TalocsHollowInstance");
 		assertNoFuture("BeshmundirTempleInstance");
 		assertNoFuture("KumukiCaveInstance");
+		assertMigrated("ShugoVaultTimeAttackInstance", "scheduleDeadline(\"expire\"", "idsweep.");
+		assertSourceContains("ShugoVaultTimeAttackInstance", "RetailConditionSpawnEngine.setVariable");
+		assertSourceContains("ShugoVaultTimeAttackInstance", "S_REWARD_VARIABLE");
+		assertSourceExcludes("ShugoVaultTimeAttackInstance", "GameThreadPoolServices");
+		assertNoFuture("TheShugoEmperorVaultInstance");
+		assertNoFuture("EmperorTrillirunerkSafeInstance");
+	}
+
+	@Test
+	void idsweepUsesRetailConditionClosureAndRemovesSafeStaticCombatSpawns() throws Exception {
+		String conditions = Files.readString(Path.of(
+				"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String vault = worldBlock(conditions, "301400000");
+		String safe = worldBlock(conditions, "301590000");
+		assertTrue(vault.contains("1STAGE_2START"));
+		assertTrue(vault.contains("4STAGE_ELITE"));
+		assertTrue(safe.contains("SpecialServer_Cond == 0"));
+		assertTrue(safe.contains("SpecialServer_Cond == 1"));
+		assertTrue(safe.contains("npc id=\"246773\""));
+		assertTrue(safe.contains("npc id=\"244061\""));
+		assertTrue(safe.contains("npc id=\"246773\""));
+		assertTrue(vault.contains("npc id=\"235647\""));
+		assertTrue(vault.contains("IDSweep_Reward"));
+		assertTrue(vault.contains("npc id=\"832932\""));
+		assertTrue(safe.contains("IDSweep_Reward_S"));
+		assertTrue(safe.contains("npc id=\"832932\""));
+		assertEquals(221, count(vault, "<condition "));
+		assertEquals(410, count(safe, "<condition "));
+
+		String staticSpawns = Files.readString(Path.of(
+				"src/main/resources/aion/data/static_data/spawns/Instances/301590000_Emperor_Trillirunerk_Safe.xml"));
+		assertFalse(staticSpawns.matches("(?s).*npc_id=\"235[0-9]+\".*"));
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
@@ -68,5 +102,22 @@ class InstanceHandlerRecoveryMigrationTest {
 		String source = Files.readString(Path.of(
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));
 		assertFalse(source.contains(forbidden));
+	}
+
+	private static void assertSourceContains(String className, String required) throws Exception {
+		String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));
+		assertTrue(source.contains(required));
+	}
+
+	private static String worldBlock(String source, String worldId) {
+		var matcher = Pattern.compile("<world id=\\\"" + worldId + "\\\".*?</world>", Pattern.DOTALL)
+				.matcher(source);
+		assertTrue(matcher.find());
+		return matcher.group();
+	}
+
+	private static int count(String source, String needle) {
+		return (int) ((source.length() - source.replace(needle, "").length()) / needle.length());
 	}
 }

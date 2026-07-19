@@ -31,8 +31,6 @@ class InstanceSettlementServiceTest {
 	private static final List<String> TIME_ATTACK_HANDLERS = List.of(
 			"SealedArgentManorInstance.java",
 			"TheEternalBastionInstance.java",
-			"TheShugoEmperorVaultInstance.java",
-			"EmperorTrillirunerkSafeInstance.java",
 			"SmolderingFireTempleInstance.java",
 			"FissureOfOblivionInstance.java",
 			"StonespearReachInstance.java",
@@ -252,6 +250,15 @@ class InstanceSettlementServiceTest {
 			assertTrue(rank.find(), relative);
 			assertTrue(rank.group(1).contains("InstanceSettlementService.timeAttackRank("), relative);
 			assertFalse(rank.group(1).contains(">="), relative);
+		}
+		String shugoShared = Files.readString(handlers.resolve("ShugoVaultTimeAttackInstance.java"));
+		assertTrue(shugoShared.contains("InstanceSettlementService.settleTimeAttack("));
+		assertTrue(shugoShared.contains("InstanceSettlementService.timeAttackRank("));
+		for (String relative : List.of("TheShugoEmperorVaultInstance.java", "EmperorTrillirunerkSafeInstance.java")) {
+			String source = Files.readString(handlers.resolve(relative));
+			assertTrue(source.contains("extends ShugoVaultTimeAttackInstance"), relative);
+			assertFalse(source.contains("Future<?>"), relative);
+			assertFalse(source.contains("checkRank("), relative);
 		}
 		for (String relative : List.of("luna/ContaminatedUnderpathInstance.java",
 				"luna/SecretMunitionsFactoryInstance.java")) {

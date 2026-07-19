@@ -115,7 +115,7 @@ class RetailAiDefinitionLoaderTest {
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());
 		assertEquals(276, data.skillAreaCount());
-		assertEquals(5129, data.conditionSpawnCount());
+		assertEquals(5715, data.conditionSpawnCount());
 		assertEquals(40, data.sensoryAreaCount());
 		var sensoryArea = data.findSensoryArea(301550000, 220582, 980.914185f, 774.380676f, 1046.33447f);
 		assertNotNull(sensoryArea);
