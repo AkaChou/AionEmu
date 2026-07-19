@@ -32,6 +32,11 @@ class InstanceHandlerRecoveryMigrationTest {
 				"hexway.next_deadline");
 		assertMigrated("LowerUdasTempleInstance", "scheduleDeadline(\"chest\"",
 				"lower_udas.next_deadline");
+		assertMigrated("AbyssStoreroomInstance", "scheduleDeadline(\"barrier_\"",
+				"storeroom.next_deadline");
+		assertNoFuture("GraveOfSteelStoreroomInstance");
+		assertNoFuture("IsleOfRootsStoreroomInstance");
+		assertNoFuture("TwilightBattlefieldStoreroomInstance");
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
@@ -39,6 +44,12 @@ class InstanceHandlerRecoveryMigrationTest {
 				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));
 		assertTrue(source.contains(deadline));
 		assertTrue(source.contains(state));
+		assertFalse(source.contains("Future<?>"));
+	}
+
+	private static void assertNoFuture(String className) throws Exception {
+		String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/" + className + ".java"));
 		assertFalse(source.contains("Future<?>"));
 	}
 }
