@@ -232,6 +232,47 @@ class InstanceHandlerRecoveryMigrationTest {
 	}
 
 	@Test
+	void theobomosTestChamberUsesRetailBossFlowAndDrops() throws Exception {
+		String handler = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheobomosTestChamberInstance.java"));
+		assertTrue(handler.contains("npc.getNpcId() == 220426"));
+		assertTrue(handler.contains("spawn(806221"));
+		assertFalse(handler.contains("GameThreadPoolServices"));
+		assertFalse(handler.contains("onDropRegistered"));
+		assertFalse(handler.contains("StaticDoor"));
+		assertFalse(handler.contains("spawn(806206"));
+		for (String privateReward : new String[] { "188053789", "188058413", "188057620", "166040001",
+			"188057618", "188057619", "188054908", "188054909" }) {
+			assertFalse(handler.contains(privateReward));
+		}
+		assertFalse(Files.exists(Path.of(
+			"src/main/java/com/aionemu/gameserver/ai/instance/theobomosTestChamber/Desecrated_IfritAI2.java")));
+
+		String conditions = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/ai/condition-spawns.xml"));
+		String world = worldBlock(conditions, "301610000");
+		assertEquals(6, count(world, "<condition "));
+		assertTrue(world.contains("boss_summon == 2"));
+		assertTrue(world.contains("boss_summon_check == 4"));
+		assertTrue(world.contains("End_Boss_Die == 1"));
+		assertTrue(world.contains("npc id=\"806206\""));
+
+		String staticSpawns = Files.readString(Path.of(
+			"src/main/resources/aion/data/static_data/spawns/Instances/301610000_Theobomos_Test_Chamber.xml"));
+		assertFalse(staticSpawns.contains("npc_id=\"220426\""));
+		assertTrue(staticSpawns.contains("npc_id=\"248975\""));
+
+		String bossDrops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_009.xml"));
+		assertTrue(npcDropBlock(bossDrops, "220425")
+			.contains("item_id=\"185000264\" chance=\"40.00\""));
+		String chestDrops = Files.readString(Path.of(
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_018.xml"));
+		assertTrue(npcDropBlock(chestDrops, "806221")
+			.contains("common_drop_group name=\"IDF6_LAP_ARMOR_LOOK_R_69A\""));
+	}
+
+	@Test
 	void infinityShardUsesRetailPatternAndConditionSpawnsWithoutLegacyPath() throws Exception {
 		Path conditions = Path.of("src/main/resources/aion/definitions/compact/ai/condition-spawns.xml");
 		String world = worldBlock(Files.readString(conditions), "300800000");

@@ -60,10 +60,6 @@
 		<spawn npc_id="220425">
 	        <spot x="212.22456" y="232.8701" z="204.25641" h="0"/>
 		</spawn>
-		<!-- IDF6_Lap_GodElemental_67_Ah -->
-		<spawn npc_id="220426">
-	        <spot x="299.1629" y="119.63935" z="196.01414" h="63"/>
-		</spawn>
 		<!-- IDF6_Lap_Out_Portal_StartPoint -->
 		<spawn npc_id="806223">
 			<spot x="213.16000" y="376.51001" z="202.63000" entity_id="1"/>

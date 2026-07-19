@@ -166,6 +166,13 @@ class RetailAiDefinitionLoaderTest {
 		assertTrue(data.supportsConditionVariable(301690000, "f6_mission_spawn"));
 		assertEquals(42, data.getConditionSpawns(301690000).size());
 		assertTrue(RetailPatternAI2.supports(data.getPattern(244145)));
+		assertTrue(data.supportsConditionVariable(301610000, "boss_summon"));
+		assertTrue(data.supportsConditionVariable(301610000, "boss_summon_check"));
+		assertTrue(data.supportsConditionVariable(301610000, "End_Boss_Die"));
+		assertEquals(6, data.getConditionSpawns(301610000).size());
+		for (int npcId : new int[] { 220424, 220425, 220426 }) {
+			assertTrue(RetailPatternAI2.supports(data.getPattern(npcId)), data.getPattern(npcId).name());
+		}
 		var unsupportedGauge = java.util.stream.StreamSupport.stream(data.patterns().spliterator(), false)
 			.filter(pattern -> pattern.events().keySet().stream().anyMatch(event -> event.startsWith("on_gauge_")))
 			.filter(pattern -> !RetailPatternAI2.supports(pattern)).map(RetailAiData.Pattern::name).toList();
