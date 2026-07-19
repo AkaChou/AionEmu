@@ -108,6 +108,25 @@ class RetailConditionSpawnEngineTest {
 		assertFalse(RetailConditionSpawnEngine.consumeFlag(flags, "FLAGVARI_ALPHA_1"));
 	}
 
+	@Test
+	void persistsConditionVariablesAndFlags() {
+		RetailAiData previous = DataManager.RETAIL_AI_DATA;
+		WorldMapInstance instance = OBJENESIS.newInstance(TestWorldMapInstance.class);
+		try {
+			DataManager.RETAIL_AI_DATA = retailAiData();
+			assertTrue(RetailConditionSpawnEngine.setVariable(instance, "wave", 4, 0));
+			assertTrue(RetailConditionSpawnEngine.setFlag(instance, "gate", true));
+			var restored = com.aionemu.gameserver.model.instance.InstanceRuntimeState.decode(
+				instance.getRuntimeState().encode());
+
+			assertEquals(4, restored.getInt("retail.condition.variable.wave", 0));
+			assertTrue(restored.getBoolean("retail.condition.flag.gate", false));
+		} finally {
+			RetailConditionSpawnEngine.clear(instance);
+			DataManager.RETAIL_AI_DATA = previous;
+		}
+	}
+
 	private static RetailAiData retailAiData() {
 		ConditionSpawnNpc npc = new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null);
 		ConditionSpawnChoice choice = new ConditionSpawnChoice(10_000, null, List.of(npc));

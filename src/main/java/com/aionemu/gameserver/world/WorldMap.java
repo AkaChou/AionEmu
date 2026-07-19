@@ -367,6 +367,10 @@ public class WorldMap {
 		return nextInstanceId.incrementAndGet();
 	}
 
+	public void reserveInstanceId(int instanceId) {
+		nextInstanceId.accumulateAndGet(instanceId, Math::max);
+	}
+
 	/**
 	 * 是否副本类型地图。
 	 * Whether this is an instance-type map.

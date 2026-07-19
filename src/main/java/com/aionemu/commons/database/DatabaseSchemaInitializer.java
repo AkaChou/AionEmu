@@ -16,8 +16,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * 数据库 schema 初始化器，在空库时导入内置基线 SQL
@@ -60,6 +67,7 @@ final class DatabaseSchemaInitializer {
 
         try (Connection connection = DriverManager.getConnection(target.serverUrl(), user, password)) {
             if (hasTables(connection, target.database())) {
+                migrateRetailInstances(connection, target.database());
                 migrateGodstoneProcCount(connection, target.database());
                 migrateLimitedQuestCounters(connection, target.database());
                 migrateAccountVip(connection, target.database());
@@ -71,6 +79,94 @@ final class DatabaseSchemaInitializer {
             executeScript(connection, schemaResource);
         } catch (SQLException | IOException e) {
             throw new IllegalStateException("Failed to initialize database schema for " + target.database(), e);
+        }
+    }
+
+    private static void migrateRetailInstances(Connection connection, String database) throws SQLException, IOException {
+        if (!"al_server_gs".equals(database)) {
+            return;
+        }
+        executeScript(connection, "db/mysql/retail_instance_schema.sql");
+        if (!hasTable(connection, database, "portal_cooldowns")) {
+            return;
+        }
+        Map<Integer, Integer> syncByWorld = loadInstanceSyncKeys();
+        String select = "SELECT player_id, world_id, reuse_time, entry_count FROM `al_server_gs`.`portal_cooldowns`";
+        String insert = "INSERT INTO `al_server_gs`.`player_instance_limits` "
+            + "(player_id, limit_key, reset_at, used, bonus_available, purchased_count, purchase_step, updated_at) "
+            + "VALUES (?,?,?,?,0,0,0,?) ON DUPLICATE KEY UPDATE "
+            + "reset_at=GREATEST(reset_at,VALUES(reset_at)), used=GREATEST(used,VALUES(used)), updated_at=VALUES(updated_at)";
+        boolean autoCommit = connection.getAutoCommit();
+        connection.setAutoCommit(false);
+        try (Statement query = connection.createStatement();
+                ResultSet rows = query.executeQuery(select);
+                PreparedStatement save = connection.prepareStatement(insert)) {
+            long now = System.currentTimeMillis();
+            while (rows.next()) {
+                int worldId = rows.getInt("world_id");
+                Integer syncId = syncByWorld.get(worldId);
+                if (syncId == null) {
+                    throw new SQLException("Cannot migrate portal_cooldowns world_id " + worldId + " to a retail sync key");
+                }
+                save.setInt(1, rows.getInt("player_id"));
+                save.setInt(2, syncId);
+                save.setLong(3, rows.getLong("reuse_time"));
+                save.setInt(4, Math.max(0, rows.getInt("entry_count")));
+                save.setLong(5, now);
+                save.addBatch();
+            }
+            save.executeBatch();
+            try (Statement drop = connection.createStatement()) {
+                drop.execute("DROP TABLE `al_server_gs`.`portal_cooldowns`");
+            }
+            connection.commit();
+        } catch (Exception e) {
+            connection.rollback();
+            if (e instanceof SQLException sqlException) {
+                throw sqlException;
+            }
+            throw new IOException("Failed to migrate retail instance limits", e);
+        } finally {
+            connection.setAutoCommit(autoCommit);
+        }
+    }
+
+    private static Map<Integer, Integer> loadInstanceSyncKeys() throws IOException {
+        String resource = "aion/definitions/compact/instance/limits.xml";
+        try (InputStream input = DatabaseSchemaInitializer.class.getClassLoader().getResourceAsStream(resource)) {
+            if (input == null) {
+                throw new IOException("Missing " + resource);
+            }
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            NodeList rules = factory.newDocumentBuilder().parse(input).getElementsByTagName("instance_rule");
+            Map<Integer, Integer> result = new HashMap<>();
+            for (int i = 0; i < rules.getLength(); i++) {
+                Element rule = (Element) rules.item(i);
+                String syncId = rule.getAttribute("coolt_sync_id");
+                if (!syncId.isEmpty()) {
+                    result.put(Integer.parseInt(rule.getAttribute("world_id")), Integer.parseInt(syncId));
+                }
+            }
+            return result;
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException("Failed to read retail instance sync keys", e);
+        }
+    }
+
+    private static boolean hasTable(Connection connection, String database, String table) throws SQLException {
+        String query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=? AND table_name=?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, database);
+            statement.setString(2, table);
+            try (ResultSet result = statement.executeQuery()) {
+                result.next();
+                return result.getInt(1) > 0;
+            }
         }
     }
 

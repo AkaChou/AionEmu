@@ -5,12 +5,16 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.StageType;
+import com.aionemu.gameserver.model.instance.InstanceObjectRegistry;
+import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.NpcShoutsService;
+import com.aionemu.gameserver.services.instance.InstanceDeadlineScheduler;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -48,6 +52,47 @@ public class GeneralInstanceHandler implements InstanceHandler {
 		this.instance = instance;
 		this.instanceId = instance.getInstanceId();
 		this.mapId = instance.getMapId();
+		restoreDoors();
+	}
+
+	protected final InstanceRuntimeState runtimeState() {
+		return instance.getRuntimeState();
+	}
+
+	protected final void scheduleDeadline(String key, long deadline, Runnable action) {
+		InstanceDeadlineScheduler.schedule(instance, getClass().getName() + '.' + key, deadline, action);
+	}
+
+	protected final void cancelDeadline(String key) {
+		InstanceDeadlineScheduler.cancel(instance, getClass().getName() + '.' + key);
+	}
+
+	protected final void setDoorState(int entityId, boolean open) {
+		StaticDoor door = instance.getDoors().get(entityId);
+		if (door == null) {
+			throw new IllegalStateException("Missing instance door entity " + entityId + " in world " + mapId);
+		}
+		runtimeState().put("door." + entityId, open);
+		door.setOpen(open);
+	}
+
+	protected final VisibleObject resolveObject(String stableKey) {
+		return InstanceObjectRegistry.resolve(instance, stableKey);
+	}
+
+	protected final void bindObject(String businessKey, VisibleObject object) {
+		InstanceObjectRegistry.bind(instance, businessKey, object);
+	}
+
+	private void restoreDoors() {
+		for (var entry : runtimeState().snapshot("door.").entrySet()) {
+			int entityId = Integer.parseInt(entry.getKey().substring("door.".length()));
+			StaticDoor door = instance.getDoors().get(entityId);
+			if (door == null) {
+				throw new IllegalStateException("Cannot restore instance door entity " + entityId + " in world " + mapId);
+			}
+			door.setOpen(Boolean.parseBoolean(entry.getValue()));
+		}
 	}
 
 	/**

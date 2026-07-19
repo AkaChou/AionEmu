@@ -4,6 +4,8 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.model.flypath.FlyPathType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.instance.DynamicInstance;
+import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.model.templates.windstreams.Location2D;
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
 import com.aionemu.gameserver.world.MapRegion;
@@ -41,6 +43,28 @@ class RetailWindstreamEngineTest {
 		} finally {
 			RetailWindstreamEngine.clear(first);
 			RetailWindstreamEngine.clear(second);
+			DataManager.WINDSTREAM_DATA = previous;
+		}
+	}
+
+	@Test
+	void restoresPersistedWindstreamState() {
+		WindstreamData previous = DataManager.WINDSTREAM_DATA;
+		Location2D location = new Location2D(159, 1, FlyPathType.ONE_WAY);
+		WorldMapInstance first = new ObjenesisStd().newInstance(TestWorldMapInstance.class);
+		WorldMapInstance restored = new ObjenesisStd().newInstance(TestWorldMapInstance.class);
+		try {
+			DataManager.WINDSTREAM_DATA = new WindstreamData(
+				List.of(new WindstreamTemplate(300250000, List.of(location))), List.of());
+			assertTrue(RetailWindstreamEngine.setEnabled(first, 159, false));
+			restored.setDynamicInstance(new DynamicInstance(1, 300250000, 1, 1, 1, DynamicInstance.OWNER_MATCH,
+				1, (byte) 0, DynamicInstance.ACTIVE, (byte) 0, 0, 0, 0, 0, 1, "", 0),
+				InstanceRuntimeState.decode(first.getRuntimeState().encode()));
+
+			assertEquals(0, RetailWindstreamEngine.state(restored, location));
+		} finally {
+			RetailWindstreamEngine.clear(first);
+			RetailWindstreamEngine.clear(restored);
 			DataManager.WINDSTREAM_DATA = previous;
 		}
 	}

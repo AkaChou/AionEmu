@@ -68,7 +68,7 @@ public final class DataManager {
     public static PetDopingData PET_DOPING_DATA;
     public static PetMerchandData PET_MERCHAND_DATA;
     public static RoadData ROAD_DATA;
-    public static InstanceCooltimeData INSTANCE_COOLTIME_DATA;
+    public static RetailInstanceData RETAIL_INSTANCE_DATA;
     public static DisassemblyItemSetsData DISASSEMBLY_ITEMS_DATA;
     public static AIData AI_DATA;
     public static NpcPathBehaviorData NPC_PATH_BEHAVIOR_DATA;
@@ -81,7 +81,6 @@ public final class DataManager {
     public static ItemGroupsData ITEM_GROUPS_DATA;
     public static AssemblyItemsData ASSEMBLY_ITEM_DATA;
     public static SpawnsData2 SPAWNS_DATA2;
-    public static AutoGroupData AUTO_GROUP;
     public static EventData EVENT_DATA;
     public static PanelSkillsData PANEL_SKILL_DATA;
     public static InstanceBuffData INSTANCE_BUFF_DATA;
@@ -156,7 +155,6 @@ public final class DataManager {
     public static ReviveInstanceStartPointsData REVIVE_INSTANCE_START_POINTS;
     public static OutpostData OUTPOST_DATA;
     public static StoneCpData STONE_CP_DATA;
-    public static TowerRewardData TOWER_REWARD_DATA;
     public static ShugoSweepRewardData SHUGO_SWEEP_REWARD_DATA;
     public static SkillSkinData SKILL_SKIN_DATA;
 
@@ -251,7 +249,6 @@ public final class DataManager {
             PET_MERCHAND_DATA = data.petMerchandData;
             GUIDE_HTML_DATA = data.guideData;
             ROAD_DATA = data.roadData;
-            INSTANCE_COOLTIME_DATA = data.instanceCooltimeData;
             DISASSEMBLY_ITEMS_DATA = data.disassemblyItemSetsData;
             AI_DATA = data.aiData;
             NPC_PATH_BEHAVIOR_DATA = data.npcPathBehaviorData;
@@ -263,7 +260,6 @@ public final class DataManager {
             SPAWNS_DATA2 = data.spawnsData2;
             ITEM_GROUPS_DATA = data.itemGroupsData;
             ASSEMBLY_ITEM_DATA = data.assemblyItemData;
-            AUTO_GROUP = data.autoGroupData;
             EVENT_DATA = data.eventData;
             PANEL_SKILL_DATA = data.panelSkillsData;
             INSTANCE_BUFF_DATA = data.instanceBuffData;
@@ -339,7 +335,6 @@ public final class DataManager {
             TOWER_OF_ETERNITY_DATA = data.towerOfEternity;
             REVIVE_INSTANCE_START_POINTS = data.reviveInstanceStartPoints;
             OUTPOST_DATA = data.outpostLocation;
-            TOWER_REWARD_DATA = data.towerReward;
             SHUGO_SWEEP_REWARD_DATA = data.shugoSweepsRewardData;
             SKILL_SKIN_DATA = data.skillSkinData;
         });

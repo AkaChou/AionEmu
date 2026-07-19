@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services.instance;
 import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai.RetailAreaEngine;
 import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
+import com.aionemu.gameserver.ai.RetailSensoryAreaEngine;
 import com.aionemu.gameserver.ai.RetailWindstreamEngine;
 
 import com.aionemu.boot.i18n.I18n;
@@ -26,16 +27,18 @@ import java.util.WeakHashMap;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.InstanceConfig;
-import com.aionemu.gameserver.configs.main.MembershipConfig;
+import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.RetailInstanceData;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.instance.DynamicInstance;
+import com.aionemu.gameserver.model.instance.InstanceObjectRegistry;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.league.League;
-import com.aionemu.gameserver.model.templates.InstanceCooltime;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -71,6 +74,9 @@ public class InstanceService {
 	 * Loads instance aggro map configuration.
 	 */
 	public static void load() {
+		DataManager.RETAIL_INSTANCE_DATA = RetailInstanceData.load(
+			Config.definitionFile("./definitions/compact/instance"),
+			Config.definitionFile("./definitions/schemas/retail-instance-data.xsd"));
 		instanceAggro.clear();
 		for (String s : CustomConfig.INSTANCES_MOB_AGGRO.split(",")) {
 			instanceAggro.add(Integer.parseInt(s));
@@ -88,6 +94,18 @@ public class InstanceService {
 	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
 	public synchronized static WorldMapInstance getNextAvailableInstance(int worldId, int ownerId) {
+		int creationId = DynamicInstanceManager.defaultCreationId(worldId, ownerId != 0);
+		byte ownerType = ownerId == 0 ? DynamicInstance.OWNER_NONE : DynamicInstance.OWNER_PLAYER;
+		return getNextAvailableInstance(worldId, ownerId, creationId, ownerType, (byte) 0);
+	}
+
+	public synchronized static WorldMapInstance getNextAvailableInstance(int worldId, int ownerId, int creationId,
+			byte ownerType, byte difficulty) {
+		return getNextAvailableInstance(worldId, ownerId, creationId, ownerType, ownerId, difficulty);
+	}
+
+	public synchronized static WorldMapInstance getNextAvailableInstance(int worldId, int personalOwnerId, int creationId,
+			byte ownerType, int ownerId, byte difficulty) {
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		if (!map.isInstanceType()) {
 			throw new UnsupportedOperationException("Invalid call for next available instance  of " + worldId);
@@ -95,14 +113,24 @@ public class InstanceService {
 		int nextInstanceId = map.getNextInstanceId();
 		log.info(I18n.get("log.a698e49af03a", worldId, nextInstanceId, ownerId));
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId,
-				ownerId);
-		map.addInstance(nextInstanceId, worldMapInstance);
-		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), (byte) 0, ownerId);
-		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
-		if (map.isInstanceType()) {
+				personalOwnerId);
+		boolean added = false;
+		try {
+			DynamicInstance dynamic = DynamicInstanceManager.attachNew(worldMapInstance, creationId, ownerType, ownerId,
+					difficulty);
+			map.addInstance(nextInstanceId, worldMapInstance);
+			added = true;
+			SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), dynamic.getSpawnPage(), personalOwnerId);
+			GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
 			startInstanceChecker(worldMapInstance);
+			return worldMapInstance;
+		} catch (RuntimeException | Error e) {
+			if (added) {
+				map.removeWorldMapInstance(nextInstanceId);
+			}
+			DynamicInstanceManager.archive(worldMapInstance);
+			throw e;
 		}
-		return worldMapInstance;
 	}
 
 	/**
@@ -140,8 +168,11 @@ public class InstanceService {
 		try {
 			RetailConditionSpawnEngine.clear(instance);
 			RetailAreaEngine.clear(instance);
+			RetailSensoryAreaEngine.clear(instance);
 			RetailWindstreamEngine.clear(instance);
 			RetailDynamicAreaEngine.clear(instance);
+			InstanceDeadlineScheduler.clearTransient(instance);
+			InstanceObjectRegistry.clear(instance);
 			log.info(I18n.get("log.e1c9d831d4ea", worldId, instanceId));
 			Iterator<VisibleObject> it = instance.objectIterator();
 			while (it.hasNext()) {
@@ -163,6 +194,7 @@ public class InstanceService {
 			}
 		} finally {
 			pathService.instanceDestroyed(worldId, instanceId);
+			DynamicInstanceManager.archive(instance);
 		}
 	}
 
@@ -177,6 +209,7 @@ public class InstanceService {
 		Integer obj = player.getObjectId();
 		instance.register(obj);
 		instance.setSoloPlayerObj(obj);
+		DynamicInstanceManager.reserveMember(instance, player, 0, (byte) player.getRace().getRaceId());
 	}
 
 	/**
@@ -188,6 +221,9 @@ public class InstanceService {
 	 */
 	public static void registerGroupWithInstance(WorldMapInstance instance, PlayerGroup group) {
 		instance.registerGroup(group);
+		for (Player member : group.getMembers()) {
+			DynamicInstanceManager.reserveMember(instance, member, group.getTeamId(), (byte) member.getRace().getRaceId());
+		}
 	}
 
 	/**
@@ -199,6 +235,9 @@ public class InstanceService {
 	 */
 	public static void registerAllianceWithInstance(WorldMapInstance instance, PlayerAlliance group) {
 		instance.registerGroup(group);
+		for (Player member : group.getMembers()) {
+			DynamicInstanceManager.reserveMember(instance, member, group.getObjectId(), (byte) member.getRace().getRaceId());
+		}
 	}
 
 	/**
@@ -210,6 +249,11 @@ public class InstanceService {
 	 */
 	public static void registerLeagueWithInstance(WorldMapInstance instance, League group) {
 		instance.registerGroup(group);
+		for (PlayerAlliance alliance : group.getMembers()) {
+			for (Player member : alliance.getMembers()) {
+				DynamicInstanceManager.reserveMember(instance, member, group.getObjectId(), (byte) member.getRace().getRaceId());
+			}
+		}
 	}
 
 	/**
@@ -229,7 +273,7 @@ public class InstanceService {
 				return instance;
 			}
 		}
-		return null;
+		return DynamicInstanceManager.findReentryInstance(objectId, worldId);
 	}
 
 	/**
@@ -316,13 +360,8 @@ public class InstanceService {
 			boolean isPersonal = WorldMapType.getWorld(player.getWorldId()).isPersonal();
 			WorldMapInstance registeredInstance = isPersonal ? getPersonalInstance(worldId, lookupId)
 					: getRegisteredInstance(worldId, lookupId);
-			if (isPersonal) {
-				if (registeredInstance == null) {
-					registeredInstance = getNextAvailableInstance(player.getWorldId(), lookupId);
-				}
-				if (!registeredInstance.isRegistered(player.getObjectId())) {
-					registerPlayerWithInstance(registeredInstance, player);
-				}
+			if (registeredInstance == null) {
+				registeredInstance = getRegisteredInstance(worldId, player.getObjectId());
 			}
 			if (registeredInstance != null) {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, registeredInstance.getInstanceId(), player.getX(),
@@ -377,6 +416,8 @@ public class InstanceService {
 		if (instance.getEmptyInstanceTask() != null) {
 			instance.getEmptyInstanceTask().cancel(false);
 		}
+		long deadline = DynamicInstanceManager.markEmpty(instance, getScheduledDestroyDelayMillis(instance));
+		long delay = Math.max(1000L, deadline - System.currentTimeMillis());
 		pendingResets.add(instance);
 		instance.setEmptyInstanceTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -386,7 +427,7 @@ public class InstanceService {
 					destroyInstance(instance);
 				}
 			}
-		}, getScheduledDestroyDelayMillis(instance)));
+		}, delay));
 	}
 
 	/**
@@ -397,6 +438,12 @@ public class InstanceService {
 	 */
 	private static void startInstanceChecker(WorldMapInstance worldMapInstance) {
 		scheduleResetIfEmpty(worldMapInstance);
+	}
+
+	static void restoreDestroyTask(WorldMapInstance instance) {
+		if (isEmptyForResetAfterLeave(instance)) {
+			scheduleResetIfEmpty(instance);
+		}
 	}
 
 	/**
@@ -412,6 +459,7 @@ public class InstanceService {
 				instance.getEmptyInstanceTask().cancel(false);
 				instance.setEmptyInstanceTask(null);
 			}
+			DynamicInstanceManager.markActive(instance);
 			InstanceScaler.onPlayersChanged(instance);
 		}
 	}
@@ -466,6 +514,7 @@ public class InstanceService {
 	 * 玩家 / player
 	 */
 	public static void onEnterInstance(Player player) {
+		DynamicInstanceManager.markEntered(player.getPosition().getWorldMapInstance(), player);
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onEnterInstance(player);
@@ -488,6 +537,7 @@ public class InstanceService {
 	 */
 	public static void onLeaveInstance(Player player) {
 		WorldMapInstance instance = player.getPosition().getWorldMapInstance();
+		DynamicInstanceManager.markLeft(instance, player, getScheduledDestroyDelayMillis(instance));
 		instance.getInstanceHandler().onLeaveInstance(player);
 		for (Item item : player.getInventory().getItems()) {
 			if (item.getItemTemplate().getOwnershipWorld() == player.getWorldId()) {
@@ -541,19 +591,6 @@ public class InstanceService {
 	 */
 	public static boolean isAggro(int mapId) {
 		return instanceAggro.contains(mapId);
-	}
-
-	/**
-	 * 计算玩家在指定地图的冷却倍率。
-	 * Computes the instance cooldown rate for a player on a map.
-	 *
-	 * 玩家 / player
-	 * map id
-	 * cooldown rate
-	 */
-	public static int getInstanceRate(Player player, int mapId) {
-		return player.havePermission(MembershipConfig.INSTANCES_COOLDOWN) && !InstanceConfig.isCooldownExcluded(mapId)
-				? InstanceConfig.COOLDOWN_RATE : 1;
 	}
 
 	/**
@@ -614,22 +651,11 @@ public class InstanceService {
 	 * @return 最大人数，无模板则为 0 / max players, or 0 if no template
 	 */
 	static int getMaxPlayers(int mapId) {
-		InstanceCooltime template = DataManager.INSTANCE_COOLTIME_DATA.getInstanceCooltimeByWorldId(mapId);
-		if (template == null) {
+		RetailInstanceData.Row rule = DataManager.RETAIL_INSTANCE_DATA.limit(mapId);
+		if (rule == null) {
 			return 0;
 		}
-		return Math.max(valueOrZero(template.getMaxMemberLight()), valueOrZero(template.getMaxMemberDark()));
-	}
-
-	/**
-	 * 将可能为 null 的 Integer 转为 0。
-	 * Converts a nullable Integer to 0 when null.
-	 *
-	 * value
-	 * non-null int
-	 */
-	private static int valueOrZero(Integer value) {
-		return value == null ? 0 : value;
+		return Math.max(rule.intValue("max_member_light", 0), rule.intValue("max_member_dark", 0));
 	}
 
 	/**
@@ -642,14 +668,8 @@ public class InstanceService {
 	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
 	public synchronized static WorldMapInstance getNextBgInstance(int worldId) {
-		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
-		int nextInstanceId = map.getNextInstanceId();
-		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId);
-		map.addInstance(nextInstanceId, worldMapInstance);
+		WorldMapInstance worldMapInstance = getNextAvailableInstance(worldId);
 		StaticDoorSpawnManager.spawnTemplate(worldId, worldMapInstance.getInstanceId());
-		if (map.isInstanceType()) {
-			startInstanceChecker(worldMapInstance);
-		}
 		return worldMapInstance;
 	}
 }

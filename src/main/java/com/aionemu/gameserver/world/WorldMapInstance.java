@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
@@ -25,6 +26,8 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.Trap;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.instance.DynamicInstance;
+import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.league.League;
@@ -93,6 +96,10 @@ public abstract class WorldMapInstance {
 	 * Instance id (channel).
 	 */
 	private int instanceId;
+
+	private DynamicInstance dynamicInstance;
+	private InstanceRuntimeState runtimeState = new InstanceRuntimeState();
+	private Map<Class<?>, Object> transientStates = new ConcurrentHashMap<>();
 
 	/** 本实例相关任务 ID / quest ids related to this instance */
 	private final List<Integer> questIds = new ArrayList<Integer>();
@@ -454,6 +461,54 @@ public abstract class WorldMapInstance {
 		return instanceId;
 	}
 
+	public long getInstanceUid() {
+		return dynamicInstance == null ? 0 : dynamicInstance.getInstanceUid();
+	}
+
+	public DynamicInstance getDynamicInstance() {
+		return dynamicInstance;
+	}
+
+	public InstanceRuntimeState getRuntimeState() {
+		if (runtimeState == null) {
+			synchronized (this) {
+				if (runtimeState == null) {
+					runtimeState = new InstanceRuntimeState();
+				}
+			}
+		}
+		return runtimeState;
+	}
+
+	public <T> T getTransientState(Class<T> type) {
+		Map<Class<?>, Object> states = transientStates;
+		return states == null ? null : type.cast(states.get(type));
+	}
+
+	public <T> T getOrCreateTransientState(Class<T> type, Supplier<T> factory) {
+		if (transientStates == null) {
+			synchronized (this) {
+				if (transientStates == null) {
+					transientStates = new ConcurrentHashMap<>();
+				}
+			}
+		}
+		return type.cast(transientStates.computeIfAbsent(type, ignored -> factory.get()));
+	}
+
+	public <T> T removeTransientState(Class<T> type) {
+		Map<Class<?>, Object> states = transientStates;
+		return states == null ? null : type.cast(states.remove(type));
+	}
+
+	public void setDynamicInstance(DynamicInstance dynamicInstance, InstanceRuntimeState runtimeState) {
+		if (this.dynamicInstance != null) {
+			throw new IllegalStateException("Dynamic instance already assigned");
+		}
+		this.dynamicInstance = dynamicInstance;
+		this.runtimeState = runtimeState;
+	}
+
 	/**
 	 * 是否新手分流实例（instanceId 超过 twinCount）。
 	 * Whether this is a beginner overflow instance (id above twinCount).
@@ -567,6 +622,10 @@ public abstract class WorldMapInstance {
 	 */
 	public void register(int objectId) {
 		registeredObjects.add(objectId);
+	}
+
+	public void unregister(int objectId) {
+		registeredObjects.remove(objectId);
 	}
 
 	/**

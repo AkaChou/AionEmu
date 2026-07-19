@@ -22,17 +22,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 /** 真端实例级动态区域。 */
 public final class RetailAreaEngine {
 
-	private static final Map<WorldMapInstance, Map<String, Boolean>> RESURRECT_STATES = new ConcurrentHashMap<>();
-	private static final Map<WorldMapInstance, Map<String, Boolean>> QUEST_STATES = new ConcurrentHashMap<>();
-	private static final Map<WorldMapInstance, Map<String, Boolean>> LIMIT_NOPARK_STATES = new ConcurrentHashMap<>();
-	private static final Map<WorldMapInstance, Map<String, Boolean>> LIMIT_NORECALL_STATES = new ConcurrentHashMap<>();
-	private static final Map<Player, QuestPresence> QUEST_PRESENCE =
-		Collections.synchronizedMap(new WeakHashMap<>());
+	private static final String STATE_PREFIX = "retail.area.";
+	private static final String RESURRECT_PREFIX = STATE_PREFIX + "resurrect.";
+	private static final String QUEST_PREFIX = STATE_PREFIX + "quest.";
+	private static final String NOPARK_PREFIX = STATE_PREFIX + "nopark.";
+	private static final String NORECALL_PREFIX = STATE_PREFIX + "norecall.";
 
 	private RetailAreaEngine() {
 	}
@@ -60,24 +58,20 @@ public final class RetailAreaEngine {
 		if (areaType.equals("AI_CONTROL_AREA_GROUPCTRL")) {
 			return RetailGroupControlEngine.setAreaEnabled(instance, prefix, enabled);
 		} else if (areaType.equals("AI_CONTROL_AREA_RESURRECT")) {
-			Map<String, Boolean> states = RESURRECT_STATES.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
 			for (ResurrectArea area : DataManager.RETAIL_AI_DATA.getResurrectAreas(instance.getMapId())) {
 				if (matchesPrefix(area.name(), prefix)) {
-					states.put(key(area.name()), enabled);
+					instance.getRuntimeState().put(RESURRECT_PREFIX + key(area.name()), enabled);
 				}
 			}
 		} else if (areaType.equals("AI_CONTROL_AREA_QUESTSCRIPT")) {
-			Map<String, Boolean> states = QUEST_STATES.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
 			DataManager.RETAIL_AI_DATA.findQuestAreas(instance.getMapId(), prefix)
-				.forEach(area -> states.put(key(area.name()), enabled));
+				.forEach(area -> instance.getRuntimeState().put(QUEST_PREFIX + key(area.name()), enabled));
 			instance.getPlayersInside().forEach(RetailAreaEngine::onPlayerMoved);
 		} else {
 			boolean noPark = areaType.equals("AI_CONTROL_AREA_LIMIT_NOPARK");
-			Map<WorldMapInstance, Map<String, Boolean>> stateStore = noPark
-				? LIMIT_NOPARK_STATES : LIMIT_NORECALL_STATES;
-			Map<String, Boolean> states = stateStore.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
+			String statePrefix = noPark ? NOPARK_PREFIX : NORECALL_PREFIX;
 			for (LimitArea area : DataManager.RETAIL_AI_DATA.findLimitAreas(instance.getMapId(), prefix)) {
-				states.put(key(area.name()), enabled);
+				instance.getRuntimeState().put(statePrefix + key(area.name()), enabled);
 				if (!noPark) {
 					var packet = new SM_DYNAMIC_LIMIT_AREA_INFO(area.name(), enabled);
 					instance.getPlayersInside().forEach(player -> PacketSendUtility.sendPacket(player, packet));
@@ -94,18 +88,19 @@ public final class RetailAreaEngine {
 		}
 		WorldMapInstance instance = player.getPosition().getWorldMapInstance();
 		List<QuestArea> entered;
-		synchronized (QUEST_PRESENCE) {
-			QuestPresence presence = QUEST_PRESENCE.get(player);
+		State state = state(instance);
+		synchronized (state.questPresence) {
+			QuestPresence presence = state.questPresence.get(player);
 			if (presence == null || presence.instance() != instance) {
 				presence = new QuestPresence(instance, new HashSet<>());
 			}
 			entered = enteredQuestAreas(DataManager.RETAIL_AI_DATA.getQuestAreas(player.getWorldId()).stream()
-				.filter(RetailAreaEngine::hasQuestTemplates).toList(), QUEST_STATES.getOrDefault(instance, Map.of()),
+				.filter(RetailAreaEngine::hasQuestTemplates).toList(), states(instance, QUEST_PREFIX),
 				presence.areas(), player.getX(), player.getY(), player.getZ());
 			if (presence.areas().isEmpty()) {
-				QUEST_PRESENCE.remove(player);
+				state.questPresence.remove(player);
 			} else {
-				QUEST_PRESENCE.put(player, presence);
+				state.questPresence.put(player, presence);
 			}
 		}
 		for (QuestArea area : entered) {
@@ -116,15 +111,18 @@ public final class RetailAreaEngine {
 	}
 
 	public static void onPlayerDespawned(Player player) {
-		QUEST_PRESENCE.remove(player);
+		WorldMapInstance instance = player.getPosition().getWorldMapInstance();
+		State state = instance.getTransientState(State.class);
+		if (state != null) {
+			state.questPresence.remove(player);
+		}
 	}
 
 	public static LocationAliasPoint findResurrectPoint(Player player) {
 		if (DataManager.RETAIL_AI_DATA == null) {
 			return null;
 		}
-		Map<String, Boolean> states = RESURRECT_STATES.getOrDefault(
-			player.getPosition().getWorldMapInstance(), Map.of());
+		Map<String, Boolean> states = states(player.getPosition().getWorldMapInstance(), RESURRECT_PREFIX);
 		return findResurrectPoint(DataManager.RETAIL_AI_DATA.getResurrectAreas(player.getWorldId()), states,
 			player.getRace().getRaceId(), player.getTribe().name(), player.getX(), player.getY(), player.getZ());
 	}
@@ -135,7 +133,7 @@ public final class RetailAreaEngine {
 		}
 		WorldMapInstance instance = player.getPosition().getWorldMapInstance();
 		return isNoPark(DataManager.RETAIL_AI_DATA.getLimitAreas(player.getWorldId()),
-			LIMIT_NOPARK_STATES.getOrDefault(instance, Map.of()), player.getRace().getRaceId(), secondsOffline,
+			states(instance, NOPARK_PREFIX), player.getRace().getRaceId(), secondsOffline,
 			player.getX(), player.getY(), player.getZ());
 	}
 
@@ -145,14 +143,14 @@ public final class RetailAreaEngine {
 		}
 		WorldMapInstance instance = player.getPosition().getWorldMapInstance();
 		return isNoRecall(DataManager.RETAIL_AI_DATA.getLimitAreas(player.getWorldId()),
-			LIMIT_NORECALL_STATES.getOrDefault(instance, Map.of()), player.getX(), player.getY(), player.getZ());
+			states(instance, NORECALL_PREFIX), player.getX(), player.getY(), player.getZ());
 	}
 
 	public static Map<String, Boolean> getNoRecallStates(WorldMapInstance instance) {
 		if (DataManager.RETAIL_AI_DATA == null) {
 			return Map.of();
 		}
-		Map<String, Boolean> overrides = LIMIT_NORECALL_STATES.getOrDefault(instance, Map.of());
+		Map<String, Boolean> overrides = states(instance, NORECALL_PREFIX);
 		Map<String, Boolean> states = new LinkedHashMap<>();
 		for (LimitArea area : DataManager.RETAIL_AI_DATA.getLimitAreas(instance.getMapId())) {
 			if (area.dynamic()) {
@@ -163,14 +161,9 @@ public final class RetailAreaEngine {
 	}
 
 	public static void clear(WorldMapInstance instance) {
-		RESURRECT_STATES.remove(instance);
-		QUEST_STATES.remove(instance);
-		LIMIT_NOPARK_STATES.remove(instance);
-		LIMIT_NORECALL_STATES.remove(instance);
+		instance.removeTransientState(State.class);
+		instance.getRuntimeState().removePrefix(STATE_PREFIX);
 		RetailGroupControlEngine.clear(instance);
-		synchronized (QUEST_PRESENCE) {
-			QUEST_PRESENCE.values().removeIf(presence -> presence.instance() == instance);
-		}
 	}
 
 	static List<QuestArea> enteredQuestAreas(Iterable<QuestArea> areas, Map<String, Boolean> states,
@@ -240,6 +233,21 @@ public final class RetailAreaEngine {
 
 	private static String key(String name) {
 		return name.toLowerCase(Locale.ROOT);
+	}
+
+	private static State state(WorldMapInstance instance) {
+		return instance.getOrCreateTransientState(State.class, State::new);
+	}
+
+	private static Map<String, Boolean> states(WorldMapInstance instance, String prefix) {
+		Map<String, Boolean> states = new LinkedHashMap<>();
+		instance.getRuntimeState().snapshot(prefix).forEach((name, value) ->
+			states.put(name.substring(prefix.length()), Boolean.parseBoolean(value)));
+		return states;
+	}
+
+	private static final class State {
+		private final Map<Player, QuestPresence> questPresence = Collections.synchronizedMap(new WeakHashMap<>());
 	}
 
 	private record QuestPresence(WorldMapInstance instance, Set<QuestArea> areas) {

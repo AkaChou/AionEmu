@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.services.instance.DynamicInstanceManager;
 import com.aionemu.gameserver.utils.Util;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,8 @@ public class GameSpawnGateway {
      * Print the spawns section and spawn all entities.
      */
     public void spawn() {
-        Util.printSection(I18n.get("console.section.spawns"));
-        SpawnEngine.spawnAll();
+		Util.printSection(I18n.get("console.section.spawns"));
+		SpawnEngine.spawnAll();
+		DynamicInstanceManager.restore();
     }
 }

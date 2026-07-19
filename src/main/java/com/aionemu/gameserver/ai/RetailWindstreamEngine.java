@@ -8,13 +8,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /** 真端 AI 控制的实例级风道开关。 */
 public final class RetailWindstreamEngine {
 
-	private static final Map<WorldMapInstance, Map<Integer, Integer>> STATES = new ConcurrentHashMap<>();
+	private static final String STATE_PREFIX = "retail.windstream.";
 
 	private RetailWindstreamEngine() {
 	}
@@ -29,7 +26,7 @@ public final class RetailWindstreamEngine {
 			return false;
 		}
 		int state = enabled ? 1 : 0;
-		STATES.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>()).put(groupId, state);
+		instance.getRuntimeState().put(stateKey(groupId), state);
 		instance.doOnAllPlayers(player -> send(player, location, state));
 		return true;
 	}
@@ -46,11 +43,15 @@ public final class RetailWindstreamEngine {
 	}
 
 	public static void clear(WorldMapInstance instance) {
-		STATES.remove(instance);
+		instance.getRuntimeState().removePrefix(STATE_PREFIX);
 	}
 
 	static int state(WorldMapInstance instance, Location2D location) {
-		return STATES.getOrDefault(instance, Map.of()).getOrDefault(location.getId(), location.getState());
+		return instance.getRuntimeState().getInt(stateKey(location.getId()), location.getState());
+	}
+
+	private static String stateKey(int groupId) {
+		return STATE_PREFIX + groupId;
 	}
 
 	private static WindstreamTemplate template(int mapId) {

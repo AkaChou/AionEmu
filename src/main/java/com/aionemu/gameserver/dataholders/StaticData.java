@@ -107,8 +107,6 @@ public class StaticData {
 	public GuideHtmlData guideData;
 	@XmlElement(name = "roads")
 	public RoadData roadData;
-	@XmlElement(name = "instance_cooltimes")
-	public InstanceCooltimeData instanceCooltimeData;
 	@XmlElement(name = "disassemblyitemsets")
 	public DisassemblyItemSetsData disassemblyItemSetsData;
 	@XmlElement(name = "ai_templates")
@@ -125,8 +123,6 @@ public class StaticData {
 	public CosmeticItemsData cosmeticItemsData;
 	@XmlElement(name = "npc_drops")
 	public NpcDropData npcDropData;
-	@XmlElement(name = "auto_groups")
-	public AutoGroupData autoGroupData;
 	@XmlElement(name = "events_config")
 	public EventData eventData;
 	@XmlElement(name = "spawns")
@@ -281,8 +277,6 @@ public class StaticData {
 	public OutpostData outpostLocation;
 	@XmlElement(name = "stones_cp")
 	public StoneCpData stoneCp;
-	@XmlElement(name = "tower_reward_templates")
-	public TowerRewardData towerReward;
 	@XmlElement(name = "shugo_sweeps")
 	public ShugoSweepRewardData shugoSweepsRewardData;
 	@XmlElement(name = "skill_skins")
@@ -345,14 +339,12 @@ public class StaticData {
 		log.info(I18n.get("log.861f6a3b8237", petData.size()));
 		log.info(I18n.get("log.23acbd6ac8e3", guideData.size()));
 		log.info(I18n.get("log.41cb4bc71597", roadData.size()));
-		log.info(I18n.get("log.cc9cb867aece", instanceCooltimeData.size()));
 		log.info(I18n.get("log.d35d8517e6f0", disassemblyItemSetsData.size()));
 		log.info(I18n.get("log.7d0656872005", aiData.size()));
 		log.info(I18n.get("log.b5ce3e0bbfb7", flyPath.size()));
 		log.info(I18n.get("log.1b0dc7dfa0c2", assembledNpcData.size()));
 		log.info(I18n.get("log.e4cbb71f003a", cosmeticItemsData.size()));
 		log.info(I18n.get("log.4103f2b9b4db", npcDropData.size()));
-		log.info(I18n.get("log.546e904b6600", autoGroupData.size()));
 		log.info(I18n.get("log.2bcccf8f811f", spawnsData2.size()));
 		log.info(I18n.get("log.a8fed52a5964", eventData.size()));
 		log.info(I18n.get("log.c43241318695", panelSkillsData.size()));
@@ -427,7 +419,6 @@ public class StaticData {
 		log.info(I18n.get("log.530721e609d0", reviveInstanceStartPoints.size()));
 		log.info(I18n.get("log.59300f3e2648", outpostLocation.size()));
 		log.info(I18n.get("log.009450541e78", stoneCp.size()));
-		log.info(I18n.get("log.b9b36be371d6", towerReward.size()));
 		log.info(I18n.get("log.825d4d1861a2", shugoSweepsRewardData.size()));
 		log.info(I18n.get("log.de747e09a243", skillSkinData.size()));
 	}

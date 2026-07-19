@@ -9,6 +9,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -21,13 +22,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 /** 真端实例级条件变量与条件刷怪。 */
 public final class RetailConditionSpawnEngine {
 
-	private static final Map<WorldMapInstance, State> STATES = new ConcurrentHashMap<>();
+	private static final String STATE_PREFIX = "retail.condition.";
 
 	private RetailConditionSpawnEngine() {
 	}
@@ -47,8 +47,7 @@ public final class RetailConditionSpawnEngine {
 		if (DataManager.RETAIL_AI_DATA == null || DataManager.RETAIL_AI_DATA.getConditionSpawns(instance.getMapId()).isEmpty()) {
 			return;
 		}
-		State state = STATES.computeIfAbsent(instance,
-			ignored -> new State(DataManager.RETAIL_AI_DATA.getConditionSpawns(instance.getMapId())));
+		State state = state(instance);
 		synchronized (state) {
 			evaluate(instance, state);
 		}
@@ -58,11 +57,12 @@ public final class RetailConditionSpawnEngine {
 		if (!supports(instance.getMapId(), variable)) {
 			return false;
 		}
-		State state = STATES.computeIfAbsent(instance,
-			ignored -> new State(DataManager.RETAIL_AI_DATA.getConditionSpawns(instance.getMapId())));
+		State state = state(instance);
 		synchronized (state) {
 			String name = variable.toLowerCase(Locale.ROOT);
-			state.variables.put(name, nextValue(state.variables.getOrDefault(name, 0), set, modify));
+			int value = nextValue(state.variables.getOrDefault(name, 0), set, modify);
+			state.variables.put(name, value);
+			state.runtime.put(variableKey(name), value);
 			evaluate(instance, state);
 		}
 		return true;
@@ -82,22 +82,36 @@ public final class RetailConditionSpawnEngine {
 	}
 
 	public static boolean setFlag(WorldMapInstance instance, String flag, boolean set) {
-		State state = STATES.computeIfAbsent(instance, RetailConditionSpawnEngine::newState);
+		State state = state(instance);
 		synchronized (state) {
-			return updateFlag(state.flags, flag, set);
+			boolean changed = updateFlag(state.flags, flag, set);
+			if (changed) {
+				String key = flagKey(flag);
+				if (set) {
+					state.runtime.put(key, true);
+				} else {
+					state.runtime.remove(key);
+				}
+			}
+			return changed;
 		}
 	}
 
 	public static boolean testFlag(WorldMapInstance instance, String flag, boolean expected) {
-		State state = STATES.computeIfAbsent(instance, RetailConditionSpawnEngine::newState);
+		State state = state(instance);
 		synchronized (state) {
-			return consumeFlag(state.flags, flag) == expected;
+			boolean value = consumeFlag(state.flags, flag);
+			if (value) {
+				state.runtime.remove(flagKey(flag));
+			}
+			return value == expected;
 		}
 	}
 
 	public static void clear(WorldMapInstance instance) {
-		State state = STATES.remove(instance);
+		State state = instance.removeTransientState(State.class);
 		if (state == null) {
+			instance.getRuntimeState().removePrefix(STATE_PREFIX);
 			return;
 		}
 		synchronized (state) {
@@ -105,6 +119,7 @@ public final class RetailConditionSpawnEngine {
 			state.active.clear();
 			active.forEach(RetailConditionSpawnEngine::delete);
 		}
+		instance.getRuntimeState().removePrefix(STATE_PREFIX);
 	}
 
 	static int nextValue(int current, int set, int modify) {
@@ -124,9 +139,10 @@ public final class RetailConditionSpawnEngine {
 		return flags.remove(flag.toLowerCase(Locale.ROOT));
 	}
 
-	private static State newState(WorldMapInstance instance) {
-		return new State(DataManager.RETAIL_AI_DATA == null ? List.of()
-			: DataManager.RETAIL_AI_DATA.getConditionSpawns(instance.getMapId()));
+	private static State state(WorldMapInstance instance) {
+		return instance.getOrCreateTransientState(State.class, () -> new State(instance.getRuntimeState(),
+			DataManager.RETAIL_AI_DATA == null ? List.of()
+				: DataManager.RETAIL_AI_DATA.getConditionSpawns(instance.getMapId())));
 	}
 
 	private static void evaluate(WorldMapInstance instance, State state) {
@@ -138,6 +154,7 @@ public final class RetailConditionSpawnEngine {
 			} else if (!matches && active != null && condition.despawnAtOther()) {
 				state.active.remove(condition.id());
 				delete(active);
+				state.runtime.removePrefix(conditionKey(condition.id()));
 			}
 		}
 	}
@@ -145,19 +162,29 @@ public final class RetailConditionSpawnEngine {
 	private static void activate(WorldMapInstance instance, State state, ConditionSpawn condition) {
 		ActiveSpawn active = new ActiveSpawn();
 		state.active.put(condition.id(), active);
-		List<ConditionSpawnGroup> groups = condition.groupMode().equals("all")
-			? condition.groups() : List.of(select(condition.groups(), 1000, ConditionSpawnGroup::probability));
-		for (ConditionSpawnGroup group : groups) {
-			for (List<ConditionSpawnChoice> slot : group.slots()) {
-				ConditionSpawnChoice choice = select(slot, 10000, ConditionSpawnChoice::probability);
-				for (ConditionSpawnNpc npc : choice.members()) {
-					long delay = (long) (npc.initialDelay() + Rnd.get(0, npc.initialDelayExtra())) * 1000;
+		List<Integer> groupIndexes = selectedGroups(state, condition);
+		for (int groupIndex : groupIndexes) {
+			ConditionSpawnGroup group = condition.groups().get(groupIndex);
+			for (int slotIndex = 0; slotIndex < group.slots().size(); slotIndex++) {
+				List<ConditionSpawnChoice> slot = group.slots().get(slotIndex);
+				int choiceIndex = selectedChoice(state, condition.id(), groupIndex, slotIndex, slot);
+				ConditionSpawnChoice choice = slot.get(choiceIndex);
+				for (int memberIndex = 0; memberIndex < choice.members().size(); memberIndex++) {
+					ConditionSpawnNpc npc = choice.members().get(memberIndex);
+					String deadlineKey = conditionKey(condition.id()) + "deadline." + groupIndex + '.' + slotIndex + '.' + memberIndex;
+					long deadline = state.runtime.getLong(deadlineKey, 0);
+					if (deadline == 0) {
+						deadline = System.currentTimeMillis()
+							+ (long) (npc.initialDelay() + Rnd.get(0, npc.initialDelayExtra())) * 1000;
+						state.runtime.put(deadlineKey, deadline);
+					}
+					long delay = Math.max(0, deadline - System.currentTimeMillis());
 					if (delay == 0) {
 						spawn(instance, state, condition.id(), active, choice.partyId(), npc);
 					} else {
 						active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 							synchronized (state) {
-								if (STATES.get(instance) == state && state.active.get(condition.id()) == active) {
+								if (instance.getTransientState(State.class) == state && state.active.get(condition.id()) == active) {
 									spawn(instance, state, condition.id(), active, choice.partyId(), npc);
 								}
 							}
@@ -166,6 +193,48 @@ public final class RetailConditionSpawnEngine {
 				}
 			}
 		}
+	}
+
+	private static List<Integer> selectedGroups(State state, ConditionSpawn condition) {
+		if (condition.groupMode().equals("all")) {
+			List<Integer> indexes = new ArrayList<>(condition.groups().size());
+			for (int i = 0; i < condition.groups().size(); i++) {
+				indexes.add(i);
+			}
+			return indexes;
+		}
+		String key = conditionKey(condition.id()) + "group";
+		int index = state.runtime.getInt(key, -1);
+		if (index < 0) {
+			ConditionSpawnGroup selected = select(condition.groups(), 1000, ConditionSpawnGroup::probability);
+			index = condition.groups().indexOf(selected);
+			state.runtime.put(key, index);
+		}
+		return List.of(index);
+	}
+
+	private static int selectedChoice(State state, int conditionId, int groupIndex, int slotIndex,
+			List<ConditionSpawnChoice> choices) {
+		String key = conditionKey(conditionId) + "choice." + groupIndex + '.' + slotIndex;
+		int index = state.runtime.getInt(key, -1);
+		if (index < 0) {
+			ConditionSpawnChoice selected = select(choices, 10000, ConditionSpawnChoice::probability);
+			index = choices.indexOf(selected);
+			state.runtime.put(key, index);
+		}
+		return index;
+	}
+
+	private static String variableKey(String variable) {
+		return STATE_PREFIX + "variable." + variable.toLowerCase(Locale.ROOT);
+	}
+
+	private static String flagKey(String flag) {
+		return STATE_PREFIX + "flag." + flag.toLowerCase(Locale.ROOT);
+	}
+
+	private static String conditionKey(int conditionId) {
+		return STATE_PREFIX + "spawn." + conditionId + '.';
 	}
 
 	private static void spawn(WorldMapInstance instance, State state, int conditionId, ActiveSpawn active,
@@ -202,13 +271,19 @@ public final class RetailConditionSpawnEngine {
 	}
 
 	private static final class State {
+		private final InstanceRuntimeState runtime;
 		private final List<ConditionSpawn> conditions;
 		private final Map<String, Integer> variables = new HashMap<>();
 		private final Set<String> flags = new HashSet<>();
 		private final Map<Integer, ActiveSpawn> active = new HashMap<>();
 
-		private State(List<ConditionSpawn> conditions) {
+		private State(InstanceRuntimeState runtime, List<ConditionSpawn> conditions) {
+			this.runtime = runtime;
 			this.conditions = conditions;
+			runtime.snapshot(STATE_PREFIX + "variable.").forEach((key, value) ->
+				variables.put(key.substring((STATE_PREFIX + "variable.").length()), Integer.parseInt(value)));
+			runtime.snapshot(STATE_PREFIX + "flag.").keySet().forEach(key ->
+				flags.add(key.substring((STATE_PREFIX + "flag.").length())));
 		}
 	}
 

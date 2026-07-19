@@ -34,7 +34,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 /** 真端 InAreaObjCtrl 团队区域控制。 */
@@ -43,7 +42,7 @@ public final class RetailGroupControlEngine {
 
 	private static final long REFRESH_INTERVAL = 10_000;
 	private static final long ASK_COOLDOWN_SECONDS = 600;
-	private static final Map<WorldMapInstance, InstanceState> STATES = new ConcurrentHashMap<>();
+	private static final String STATE_PREFIX = "retail.group_control.";
 
 	private RetailGroupControlEngine() {
 	}
@@ -57,7 +56,7 @@ public final class RetailGroupControlEngine {
 		if (DataManager.RETAIL_AI_DATA == null || DataManager.RETAIL_AI_DATA.getGroupControllers(instance.getMapId()).isEmpty()) {
 			return;
 		}
-		STATES.computeIfAbsent(instance, RetailGroupControlEngine::createState);
+		instance.getOrCreateTransientState(InstanceState.class, () -> createState(instance));
 	}
 
 	public static boolean setAreaEnabled(WorldMapInstance instance, String prefix, boolean enabled) {
@@ -65,11 +64,12 @@ public final class RetailGroupControlEngine {
 			return false;
 		}
 		initialize(instance);
-		InstanceState state = STATES.get(instance);
+		InstanceState state = instance.getTransientState(InstanceState.class);
 		if (state != null) {
 			for (ControllerState controller : state.controllers) {
 				if (matchesPrefix(controller.definition.area1(), prefix)) {
 					controller.enabled = enabled;
+					instance.getRuntimeState().put(enabledKey(controller.definition.id()), enabled);
 				}
 			}
 		}
@@ -77,10 +77,11 @@ public final class RetailGroupControlEngine {
 	}
 
 	public static void clear(WorldMapInstance instance) {
-		InstanceState state = STATES.remove(instance);
+		InstanceState state = instance.removeTransientState(InstanceState.class);
 		if (state != null) {
 			state.close();
 		}
+		instance.getRuntimeState().removePrefix(STATE_PREFIX);
 	}
 
 	private static InstanceState createState(WorldMapInstance instance) {
@@ -90,7 +91,8 @@ public final class RetailGroupControlEngine {
 		}
 		List<ControllerState> controllers = DataManager.RETAIL_AI_DATA.getGroupControllers(instance.getMapId()).stream()
 			.map(definition -> new ControllerState(definition,
-				requireArea(areas, definition.area1()), requireArea(areas, definition.area2())))
+				requireArea(areas, definition.area1()), requireArea(areas, definition.area2()),
+				instance.getRuntimeState().getBoolean(enabledKey(definition.id()), true)))
 			.toList();
 		InstanceState state = new InstanceState(instance, controllers);
 		state.task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
@@ -229,6 +231,10 @@ public final class RetailGroupControlEngine {
 		return name.regionMatches(true, 0, prefix, 0, prefix.length());
 	}
 
+	private static String enabledKey(int controllerId) {
+		return STATE_PREFIX + controllerId + ".enabled";
+	}
+
 	static record MembershipDelta(Set<Integer> entrants, Set<Integer> confirmedLeaves, Set<Integer> pendingLeaves) {
 	}
 
@@ -258,14 +264,16 @@ public final class RetailGroupControlEngine {
 		private final List<PlayerAlliance> alliances = new ArrayList<>();
 		private final List<League> leagues = new ArrayList<>();
 		private final Map<Player, Long> askedUntil = new WeakHashMap<>();
-		private volatile boolean enabled = true;
+		private volatile boolean enabled;
 		private boolean closed;
 		private Set<Integer> pendingRemoval = Set.of();
 
-		private ControllerState(GroupController definition, GroupControlArea area1, GroupControlArea area2) {
+		private ControllerState(GroupController definition, GroupControlArea area1, GroupControlArea area2,
+				boolean enabled) {
 			this.definition = definition;
 			this.area1 = area1;
 			this.area2 = area2;
+			this.enabled = enabled;
 		}
 
 		private Set<Player> members() {

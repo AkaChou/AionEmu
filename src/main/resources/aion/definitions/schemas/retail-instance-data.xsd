@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="OpenRow">
+    <xs:anyAttribute processContents="skip"/>
+  </xs:complexType>
+  <xs:element name="retail_instances">
+    <xs:complexType>
+      <xs:sequence><xs:element name="instance" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/></xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="retail_instance_limits">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="instance_rule" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/>
+        <xs:element name="cooldown" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="retail_matchmaking">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="match" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/>
+        <xs:element name="team_match" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="retail_rewards">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="table" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence><xs:element name="row" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/></xs:sequence>
+            <xs:attribute name="name" type="xs:NCName" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="retail_instance_manifest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="source" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/>
+        <xs:element name="client_file" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/>
+        <xs:element name="launch" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/>
+        <xs:element name="validation" type="OpenRow"/>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="region" type="xs:NCName" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="retail_instance_coverage">
+    <xs:complexType>
+      <xs:sequence><xs:element name="world" type="OpenRow" minOccurs="1" maxOccurs="unbounded"/></xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

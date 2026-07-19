@@ -4,6 +4,8 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailAiData;
 import com.aionemu.gameserver.dataholders.RetailAiData.DynamicArea;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.instance.DynamicInstance;
+import com.aionemu.gameserver.model.instance.InstanceRuntimeState;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -75,6 +77,30 @@ class RetailDynamicAreaEngineTest {
 			RetailDynamicAreaEngine.clear(second);
 			DataManager.RETAIL_AI_DATA = previous;
 		}
+	}
+
+	@Test
+	void restoresPersistedAreaStateInAnotherRuntimeInstance() {
+		RetailAiData previous = DataManager.RETAIL_AI_DATA;
+		DynamicArea area = area(JUMP, 0, 0, true);
+		WorldMapInstance first = new ObjenesisStd().newInstance(TestWorldMapInstance.class);
+		WorldMapInstance restored = new ObjenesisStd().newInstance(TestWorldMapInstance.class);
+		try {
+			DataManager.RETAIL_AI_DATA = data(area);
+			assertTrue(RetailDynamicAreaEngine.setEnabled(first, JUMP, area.id(), false));
+			restored.setDynamicInstance(dynamic(), InstanceRuntimeState.decode(first.getRuntimeState().encode()));
+
+			assertFalse(RetailDynamicAreaEngine.state(restored, area, 12));
+		} finally {
+			RetailDynamicAreaEngine.clear(first);
+			RetailDynamicAreaEngine.clear(restored);
+			DataManager.RETAIL_AI_DATA = previous;
+		}
+	}
+
+	private static DynamicInstance dynamic() {
+		return new DynamicInstance(1, WORLD_ID, 1, 1, 1, DynamicInstance.OWNER_MATCH, 1, (byte) 0,
+			DynamicInstance.ACTIVE, (byte) 0, 0, 0, 0, 0, 1, "", 0);
 	}
 
 	private static DynamicArea area(String type, int startTime, int endTime, boolean alwaysEnabled) {

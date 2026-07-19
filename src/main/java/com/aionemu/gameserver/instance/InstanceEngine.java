@@ -114,7 +114,9 @@ public class InstanceEngine implements GameEngine {
 	final void addInstanceHandlerClass(Class<? extends InstanceHandler> handler) {
 		InstanceID idAnnotation = handler.getAnnotation(InstanceID.class);
 		if (idAnnotation != null) {
-			handlers.put(idAnnotation.value(), handler);
+			for (int worldId : idAnnotation.value()) {
+				handlers.put(worldId, handler);
+			}
 		}
 	}
 
