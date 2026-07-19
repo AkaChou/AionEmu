@@ -3393,10 +3393,10 @@
       <collect_item item_id="182201820" count="1"/>
     </collect_items>
     <rewards gold="69360" exp="484471"/>
-    <rewards gold="9900" exp="581250 ">
+    <rewards gold="9900" exp="581250">
       <reward_item item_id="162000048" count="3"/>
     </rewards>
-    <rewards gold="6600" exp="581250 ">
+    <rewards gold="6600" exp="581250">
       <reward_item item_id="162000048" count="3"/>
     </rewards>
     <quest_drop npc_id="212084" item_id="182201818" chance="100" drop_each_member="1"/>

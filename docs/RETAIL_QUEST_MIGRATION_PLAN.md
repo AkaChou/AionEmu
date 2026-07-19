@@ -185,6 +185,7 @@ data/Quest/Quest.pak
 | D batch 03 发布后当前 `quest_data.xml` | `b51cbba1e3ebc65a6d8f483544e7dce206020a5e22d91c145bacbb15b543d4e8` |
 | D batch 04 发布后当前 `quest_data.xml` | `396c2dba28a34ba8c65c0c5711a818b3b8731c3f7bc53a04da8da3c3d6a5f24e` |
 | definitions 目录迁移后当前 `quest_data.xml` | `a9a06f60a620d11d02a4002511aa840409da638335798254806548d49d1eaaad` |
+| XSD 空白修正后当前 `quest_data.xml` | `7e78a76459c7aa4c90b91fd0ccae5a8178784245d79f1d80df760c0d7ac13f47` |
 | 当前 `quest_data.xsd` | `e1bda40d671e1c36911b670daac0f97425fa0b18201bec500422bb4fd3b8e5f9` |
 | 当前 `quest_script_data.xsd` | `8c13e3334cd9f35727a2b648878462e1aae6c325eca9bb24d503e9b136f94aa2` |
 
@@ -1409,7 +1410,7 @@ CSV 固定字段为 `quest_id, scope, kind, source, evidence, status, blocker`�
 | D batch 06 隔离 Quest / 正式模板 / Java handler / XML 行为 | 8 / 0 / 0 / 0 |
 | D batch 07 隔离 Quest / 正式模板 / Java handler / XML 行为 | 7 / 0 / 0 / 0 |
 | D batch 07 后正式隔离 / 生产 D 类剩余 / AI 阻断 | 42 / 0 / 0 |
-| v22 受管文件 / 残留旧输出 | 56 / 0 |
+| v23 受管文件 / 残留旧输出 | 56 / 0 |
 | 活动物品任务明确隔离 | 2 |
 | `reward_repeat_count` 条件兼容 / 独立语义 | 221 / 44 |
 | `bm_restrict_category` 固定客户端 / 真端 | `3477 / 3477`，值域均为 `{1}` |
@@ -1439,6 +1440,8 @@ CSV 固定字段为 `quest_id, scope, kind, source, evidence, status, blocker`�
 2026-07-19 D batch 07 复核：迁移器 v21 语法检查、自检和连续两次完整审计通过；受管允许清单为 15 个 Quest XML、6 个行为 XML、35 个报告，共 56 个文件，残留旧输出为 0。完整审计结果保持 `6476 / 6462 / 3573 / 81`，`2010/9510/9615/9652/12999/15097/20015` 为 `7/7 isolated`，正式模板、Java handler、XML 行为均为 0，AI 生产阻断为 0，正式隔离总数为 42，生产 D 类剩余 0。基础/China 7 个节点、客户端 3 个行为源和真端 9 个通用行为 XML 零覆盖、恢复源码语义命中 `9/0/2/0/0/0/0`、DLL 原始 32 位命中 `1/0/7/0/0/0/0`、`9615` 两个未知引擎调用与四个数据块交叉引用、NPCServer `12999` 加载期 AddQuest 特例、社区 `2010` UNUSED/`9510` 冲突/`20015` TODO，以及电影 `18/19/32` 存在但无 Quest 绑定均已冻结。D batch 07 报告和发布清单 SHA-256 分别为 `489264a90c1478665d99c527d99bea63cb31406fb40d8309c432962816be3c92`、`3af9529a8e331511b7a1bdfa3027f2a56b2c80e977782dcf478cb87118b8e08b`，两次复跑一致。
 
 2026-07-19 definitions 目录迁移复核：Quest 模板、挑战任务、82 个 XML 行为和 3 个 XSD 已迁移到 `aion/definitions`，旧 static_data Quest 模板/行为目录删除；`static_data.xml/xsd` 仍是唯一启动加载入口，管理员 Quest 热重载改用 `Config.definitionFile`。82/82 行为 XML 和挑战任务通过新 Schema 路径校验；全量 `quest_data.xml` 仍只被既有第 3396、3399 行两处 `exp="581250 "` 尾空格阻断。干净 HEAD 副本上的 JDK 25 `XmlDataLoaderTest`、4 个 Quest 专项测试和 `GameServerTest` 合计 44/44 通过。迁移器 v22 自检及连续两次完整审计通过，覆盖保持 `6476 / 6462 / 3573 / 81`、AI 阻断 0、受管文件 56、残留旧输出 0，发布清单 SHA-256 两次均为 `23d2b7e5f457854ae2d3e6870a9847571b99659074fbff1d6454616ea5860daa`。
+
+2026-07-19 全量模板 XSD 收尾：Quest `1535` 两个奖励节点的 `exp="581250 "` 已规范为 `exp="581250"`，未改变数值语义；正式全量 `quest_data.xml` 现已通过 `quest_data.xsd`，历史 XSD 阻断归零。当前配套工作树上的 JDK 25 `XmlDataLoaderTest` 为 20/20；仅应用已提交 HEAD 的隔离副本仍被无关实例迁移中尚未提交的 `runtimeState/scheduleDeadline` 基类改动阻断。迁移器 v23 自检及连续两次完整审计通过，覆盖仍为 `6476 / 6462 / 3573 / 81`、AI 阻断 0、受管文件 56、残留旧输出 0，发布清单 SHA-256 两次均为 `4659fb8a40a57d083918726bb068d6d30485936c4b819490d6ee9d9e56c89b26`。
 
 ### 16.4 运行测试矩阵
 
@@ -1582,9 +1585,9 @@ CSV 固定字段为 `quest_id, scope, kind, source, evidence, status, blocker`�
 - [x] 已发布批次的候选 Quest XML、候选行为 XML、`event.xml` 和正式行为 XML 通过 XSD；当前 Quest 总数为 6,476，第二批新增行为 6 条、第三批新增行为 2 条、第四和第五批复用现有行为，C batch 01 复用 `report_to_many`，C batch 02/03 复用 `report_to`，C batch 04 新增 4 个具体 Java handler、2 条 `monster_hunt` 和 8 个区域，D batch 01 新增 1 个共享基类与 2 个薄 handler，D batch 02 新增 1 个独立 Java handler，D batch 03 新增 1 个共享基类与 2 个薄 handler，D batch 04 新增 1 个独立 Java handler；已发布的四个 D 批次均不新增 XML 行为，D batch 05/06/07 不生成任何正式资源。
 - [x] JDK 25 下 `mvn -DskipTests compile` 通过；`XmlDataLoaderTest` 20/20、`RetailPatternAI2Test` 76/76、`QuestReportEligibilityTest` 2/2、`ReportToTest` 1/1，共 99/99 成功。
 - [x] C batch 04 在 JDK 25 下复跑 `ReshantaQuestMigrationTest` 2/2、`XmlDataLoaderTest` 20/20；迁移器自检与两次完整审计均通过，关键生成物摘要一致。
-- [x] 迁移器 v22 清理自检通过；生成前删除被替代的旧 Quest XML、Quest 行为 XML 和报告，不删除历史取证目录；PAK 临时证据只进系统临时目录；受管文件 56 个、残留旧输出为 0，连续两次完整审计摘要一致。
+- [x] 迁移器 v23 清理自检通过；生成前删除被替代的旧 Quest XML、Quest 行为 XML 和报告，不删除历史取证目录；PAK 临时证据只进系统临时目录；受管文件 56 个、残留旧输出为 0，连续两次完整审计摘要一致。
 - [x] Quest XML/XSD 已单路径迁移到 `aion/definitions`；旧 Quest 目录不存在，启动合并、Schema、热重载、专项测试和迁移审计均引用新路径。
-- [x] 已发布批次的生成 Quest 模板、生成行为、`event.xml` 和 `reshanta.xml` 通过对应 XSD；正式全量 `quest_data.xml` 仅被 `HEAD` 已存在的第 3396、3399 行两处 `exp="581250 "` 尾空格阻断，本轮未修改该历史数据，`XmlDataLoaderTest` 已证明当前运行加载通过。
+- [x] 已发布批次的生成 Quest 模板、生成行为、`event.xml` 和 `reshanta.xml` 通过对应 XSD；正式全量 `quest_data.xml` 的两处历史 `exp` 尾空格已修正，当前全量 XSD 校验通过。
 - [x] 相同输入重复生成得到相同输出摘要。
 - [x] `41600-41614` 完成 LDF4b 隔离终审；固定客户端世界 ID、关卡资产、目标覆盖和服务端 world/GEO/spawn 证据已固化。
 - [ ] 非 LDF4b 的 `50019/51019/80341` 获得不猜值的出生证据并完成真实流程验收；`41615-41622` 保持地图级隔离，不以 GM 强制流程替代自然入口。
