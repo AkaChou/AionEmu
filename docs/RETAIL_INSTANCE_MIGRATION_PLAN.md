@@ -968,7 +968,7 @@ REGISTERED
 
 任务：
 
-- [ ] 将剩余 53 个含任务字段的生产 handler 迁移到 deadline；
+- [ ] 将剩余 52 个含任务字段的生产 handler 迁移到 deadline；
 - [ ] 将阶段、门、动态对象和积分迁入公共状态；
 - [ ] 为特殊对象补 stable key；
 - [ ] 删除已迁移字段和调度代码；
@@ -1102,7 +1102,7 @@ REGISTERED
 | 阶段 1：静态数据转换和加载 | 完成 | 100% | 2026-07-19 | 6 个生成 XML、统一 XSD、`RetailInstanceDataTest`、旧静态模型删除 |
 | 阶段 2：动态实例和状态持久化 | 进行中 | 70% | 2026-07-19 | 四张表、`instanceUid`、公共状态、稳定对象键、deadline、创建/恢复/销毁、成员资格 |
 | 阶段 3：统一进入、冷却和次数 | 进行中 | 95% | 2026-07-19 | 真端次数/冷却/购买次数、生产进入路径统一准入与失败补偿、旧 DAO/模型删除 |
-| 阶段 4：handler 状态迁移 | 进行中 | 25% | 2026-07-19 | 139 图行为闭包；18 个 handler 批次移除私有关键任务，剩余 53 个含 `Future` 文件 |
+| 阶段 4：handler 状态迁移 | 进行中 | 26% | 2026-07-19 | 139 图行为闭包；19 个 handler 批次移除私有关键任务，剩余 52 个含 `Future` 文件 |
 | 阶段 5：积分和奖励 | 进行中 | 95% | 2026-07-19 | reward ledger、timeattack、infinity、battleground、IDRun、arena PvP、tournament、Luna |
 | 阶段 6：完整匹配 | 进行中 | 95% | 2026-07-19 | 158+1 条定义、数据化适配器、阵营/职业/shuffle、动态实例、统一准入、超时/补位/惩罚、Team Match 协议与恢复 |
 | 阶段 7：全量闭包和发布 | 进行中 | 10% | 2026-07-19 | 139 图静态与行为闭包报告已完成 |
@@ -1192,3 +1192,9 @@ REGISTERED
 - Linkgate 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
 - 完成 Drakenseer's Lair 真端 10 分钟绝对截止时间、1 分钟启动提示、最后 1 分钟警告、三座护盾导管计数、Akhal 护盾解除、超时退出和完成出口恢复；删除私有任务列表与直接线程池调度，剩余含 `Future` 的生产 handler 文件降至 53。
 - Drakenseer 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
+- 完成 Right Wing Chamber 15 分钟宝箱截止时间、15 分 10 秒退出截止时间、剩余倒计时、134 个古代宝箱和两段消失消息恢复；删除按玩家重复创建的任务、两个私有 `Future` 和固定索引清理，剩余含 `Future` 的生产 handler 文件降至 52。
+- Right Wing 批次验证通过：`mvn -q -DskipTests compile`、`InstanceHandlerRecoveryMigrationTest,InstanceDeadlineSchedulerTest` 和生成器 `--check`。
+- 修复真端 NPC 点位迁移的副本重生语义：`generate_retail_npc_spawns.py` 不再把副本内 `npc_type="ATTACKABLE"` 的 `spawn_time` 写成 AionEmu `respawn_time`，非攻击型机关仍保留原刷新配置。
+- 使用修正后的迁移器重生成钢铁钩爪号、德拉乌尼尔洞穴、阿德玛城寨、阿图拉姆、活动阿图拉姆和黑暗普埃塔，删除 159 个攻击型组的 `respawn_time`，点位数量不变且二次生成字节一致。
+- 删除 18 个已由副本 handler 动态创建和控制的 Boss 静态 spawn，避免初始双刷以及死亡后被静态刷新器重新创建。
+- 新增迁移器回归测试，覆盖副本攻击型怪不重生、非攻击型机关保留刷新和新增攻击型组不写重生时间。

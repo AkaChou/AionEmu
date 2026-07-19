@@ -24,6 +24,8 @@ class InstanceHandlerRecoveryMigrationTest {
 				"linkgate.expire_deadline");
 		assertMigrated("DrakenseerLairInstance", "scheduleDeadline(\"expire\"",
 				"drakenseer.enhancers");
+		assertMigrated("RightWingChamberInstance", "scheduleDeadline(\"chests\"",
+				"rightwing.exit_deadline");
 	}
 
 	private static void assertMigrated(String className, String deadline, String state) throws Exception {
