@@ -6,8 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class DatabaseSchemaInitializerTest {
 
@@ -56,6 +59,24 @@ class DatabaseSchemaInitializerTest {
         assertTrue(schema.contains("`quest_id` int(10) unsigned NOT NULL"));
         assertTrue(schema.contains("`remaining` int(10) unsigned NOT NULL"));
         assertTrue(schema.contains("PRIMARY KEY (`quest_id`)"));
+    }
+
+    @Test
+    void loadsInstanceSyncKeysFromExternalDefinitions(@TempDir Path definitionsDir) throws IOException {
+        Path limits = definitionsDir.resolve("compact/instance/limits.xml");
+        Files.createDirectories(limits.getParent());
+        Files.writeString(limits, "<rules><instance_rule world_id=\"300010000\" coolt_sync_id=\"42\"/></rules>");
+        String previous = System.getProperty("aion.game.definitions.dir");
+        try {
+            System.setProperty("aion.game.definitions.dir", definitionsDir.toString());
+            assertEquals(42, DatabaseSchemaInitializer.loadInstanceSyncKeys().get(300010000));
+        } finally {
+            if (previous == null) {
+                System.clearProperty("aion.game.definitions.dir");
+            } else {
+                System.setProperty("aion.game.definitions.dir", previous);
+            }
+        }
     }
 
     @Test

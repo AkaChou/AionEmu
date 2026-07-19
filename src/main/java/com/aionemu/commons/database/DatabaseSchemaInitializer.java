@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -131,9 +133,13 @@ final class DatabaseSchemaInitializer {
         }
     }
 
-    private static Map<Integer, Integer> loadInstanceSyncKeys() throws IOException {
+    static Map<Integer, Integer> loadInstanceSyncKeys() throws IOException {
         String resource = "aion/definitions/compact/instance/limits.xml";
-        try (InputStream input = DatabaseSchemaInitializer.class.getClassLoader().getResourceAsStream(resource)) {
+        String definitionsDir = System.getProperty("aion.game.definitions.dir");
+        InputStream source = definitionsDir == null
+            ? DatabaseSchemaInitializer.class.getClassLoader().getResourceAsStream(resource)
+            : Files.newInputStream(Path.of(definitionsDir).resolve("compact/instance/limits.xml"));
+        try (InputStream input = source) {
             if (input == null) {
                 throw new IOException("Missing " + resource);
             }
